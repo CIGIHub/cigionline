@@ -1,0 +1,15 @@
+name: cigionline
+type: 'python:3.8'
+mounts:
+  'web/uploads':
+    source: local
+    source_path: uploads
+relationships:
+    postgresdatabase: 'dbpostgres:postgresql'
+build:
+  |
+    pip install -r requirements.txt
+    python manage.py migrate
+web:
+  commands:
+    start: "python manage.py runserver"
