@@ -93,6 +93,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'cigionline',
+        'USER': 'cigi',
+        'PASSWORD': 'cigi',
         'CONN_MAX_AGE': 600,
     }
 }
