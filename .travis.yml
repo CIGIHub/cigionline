@@ -1,9 +1,6 @@
 language: python
 python:
   - "3.7"
-env:
-  global:
-    - PGPORT=5433
 efore_install:
   - sudo apt-get update
   - sudo apt-get --yes remove postgresql\*
