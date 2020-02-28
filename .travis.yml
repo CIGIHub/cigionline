@@ -24,6 +24,8 @@ install:
   - pip install -r requirements.txt
 before_script:
   - psql -c "CREATE DATABASE cigionline;" -U postgres
+  - psql -c "CREATE ROLE cigi LOGIN PASSWORD 'cigi';" -U postgres
+  - psql -c "GRANT ALL PRIVILEGES ON DATABASE cigionline TO cigi;" -U postgres
   - python manage.py migrate
 script:
   - python manage.py test
