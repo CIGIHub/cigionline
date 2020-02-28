@@ -1,3 +1,4 @@
+---
 language: python
 python:
   - "3.7"
@@ -21,7 +22,6 @@ before_install:
 install:
   - pip install -r requirements.txt
 before_script:
-  - sleep 10
   - psql -c "CREATE DATABASE cigionline;" -U postgres
   - python manage.py migrate
 script:
