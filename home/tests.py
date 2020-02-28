@@ -4,6 +4,7 @@ from wagtail.tests.utils.form_data import nested_form_data
 
 from .models import HomePage
 
+
 class HomePageTests(WagtailPageTests):
     def test_cannot_create_homepage(self):
         """
