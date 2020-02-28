@@ -2,14 +2,6 @@
 language: python
 python:
   - "3.7"
-env:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
 before_install:
   - sudo apt-get update
   - sudo apt-get --yes remove postgresql\*
@@ -24,8 +16,7 @@ install:
   - pip install -r requirements.txt
 before_script:
   - psql -c "CREATE DATABASE cigionline;" -U postgres
-  - psql -c "CREATE ROLE cigi LOGIN PASSWORD 'cigi';" -U postgres
-  - psql -c "GRANT ALL PRIVILEGES ON DATABASE cigionline TO cigi;" -U postgres
+  - psql -c "CREATE ROLE cigi LOGIN PASSWORD 'cigi' superuser;" -U postgres
   - python manage.py migrate
 script:
   - python manage.py test
