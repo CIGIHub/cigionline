@@ -1,4 +1,4 @@
-{% load static wagtailuserbar %}
+{% load compress static wagtailuserbar %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -18,7 +18,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/cigionline.css' %}">
+        {% compress css %}
+          <link rel="stylesheet" type="text/x-scss" href="{% static 'css/cigionline.scss' %}">
+        {% endcompress %}
 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
@@ -31,7 +33,9 @@
         {% block content %}{% endblock %}
 
         {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/cigionline.js' %}"></script>
+        {% compress js %}
+          <script type="text/javascript" src="{% static 'js/cigionline.js' %}"></script>
+        {% endcompress %}
 
         {% block extra_js %}
             {# Override this in templates to add extra javascript #}
