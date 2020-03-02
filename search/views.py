@@ -5,7 +5,7 @@ from wagtail.core.models import Page
 from wagtail.search.models import Query
 
 
-def search(request):
+def search(request):  # pragma: no cover
     search_query = request.GET.get('query', None)
     page = request.GET.get('page', 1)
 

@@ -1,0 +1,4 @@
+[run]
+omit =
+  cigionline/settings/*
+  */migrations/*
