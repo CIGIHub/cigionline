@@ -19,4 +19,6 @@ before_script:
   - psql -c "CREATE ROLE cigi LOGIN PASSWORD 'cigi' superuser;" -U postgres
   - python manage.py migrate
 script:
-  - python manage.py test
+  - coverage run --source='.' manage.py test
+after_success:
+  - coveralls

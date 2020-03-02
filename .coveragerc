@@ -1,0 +1,5 @@
+[run]
+omit =
+  cigionline/settings/*
+  cigionline/wsgi.py
+  */migrations/*
