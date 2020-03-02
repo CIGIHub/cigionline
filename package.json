@@ -1,0 +1,15 @@
+{
+  "name": "cigionline",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CIGIHub/cigionline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CIGIHub/cigionline/issues"
+  },
+  "homepage": "https://github.com/CIGIHub/cigionline#readme",
+  "dependencies": {
+    "foundation-sites": "6.6.1"
+  }
+}

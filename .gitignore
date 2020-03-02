@@ -74,3 +74,6 @@ target/
 
 #Mac Stuff
 .DS_Store
+
+# npm dependencies
+/node_modules
