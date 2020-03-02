@@ -23,7 +23,7 @@ l18n==2018.5
 lazy-object-proxy==1.4.3
 libsass==0.19.4
 mccabe==0.6.1
-Pillow==6.2.2
+Pillow==7.0.0
 psycopg2==2.8.4
 pycodestyle==2.4.0
 pyflakes==2.0.0
