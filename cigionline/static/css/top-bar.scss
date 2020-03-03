@@ -1,0 +1,39 @@
+header {
+  background-color: $black;
+
+  .cigi-top-bar {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    nav {
+      ul {
+        margin-bottom: 0;
+
+        a {
+          color: $white;
+          display: block;
+          font-family: $primary-font-family;
+          font-size: .75rem;
+          font-weight: 500;
+          padding: 2em .8em;
+
+          &:hover {
+            color: $cigi-primary-colour;
+          }
+        }
+      }
+    }
+
+    .cigi-logo {
+      svg {
+        display: block;
+        fill: $white;
+        height: 2.5em;
+        margin-bottom: .5em;
+        margin-top: .5em;
+      }
+    }
+  }
+}

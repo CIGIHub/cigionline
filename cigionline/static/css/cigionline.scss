@@ -1,5 +1,7 @@
 @import 'foundation-settings';
 @import 'foundation';
+@import 'variables';
+@import 'top-bar';
 
 // Global styles
 @include foundation-global-styles;
@@ -8,6 +10,9 @@
 
 // Grids
 @include foundation-xy-grid-classes;
+
+// Containers
+@include foundation-menu;
 
 // Helpers
 @include foundation-float-classes;
