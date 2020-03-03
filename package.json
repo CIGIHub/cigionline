@@ -10,6 +10,7 @@
   },
   "homepage": "https://github.com/CIGIHub/cigionline#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-pro": "^5.12.1",
     "foundation-sites": "6.6.1"
   }
 }
