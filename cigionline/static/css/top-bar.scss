@@ -23,9 +23,9 @@ header {
           color: $white;
           display: block;
           font-family: $primary-font-family;
-          font-size: .75rem;
+          font-size: 0.75rem;
           font-weight: 500;
-          padding: 2em .8em;
+          padding: 2em 0.8em;
 
           &:hover {
             color: $cigi-primary-colour;
@@ -33,7 +33,7 @@ header {
         }
 
         button {
-          padding: 2em .5em;
+          padding: 2em 0.5em;
         }
       }
     }
@@ -43,8 +43,8 @@ header {
         display: block;
         fill: $white;
         height: 2.5em;
-        margin-bottom: .5em;
-        margin-top: .5em;
+        margin-bottom: 0.5em;
+        margin-top: 0.5em;
       }
     }
   }
