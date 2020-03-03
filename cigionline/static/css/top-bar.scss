@@ -8,10 +8,18 @@ header {
     justify-content: space-between;
 
     nav {
+      display: flex;
+      flex-direction: row;
+
       ul {
         margin-bottom: 0;
 
-        a {
+        &.menu-icons {
+          padding-left: 1em;
+        }
+
+        a,
+        button {
           color: $white;
           display: block;
           font-family: $primary-font-family;
@@ -24,8 +32,8 @@ header {
           }
         }
 
-        i {
-          color: $white;
+        button {
+          padding: 2em .5em;
         }
       }
     }
