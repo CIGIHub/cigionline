@@ -39,7 +39,9 @@
       {% include "includes/top-bar.html" %}
     {% endblock %}
 
-    {% block content %}{% endblock %}
+    <main>
+      {% block content %}{% endblock %}
+    </main>
 
     {# Global javascript #}
     {% compress js %}
