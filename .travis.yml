@@ -18,6 +18,7 @@ before_script:
   - psql -c "CREATE DATABASE cigionline;" -U postgres
   - psql -c "CREATE ROLE cigi LOGIN PASSWORD 'cigi' superuser;" -U postgres
   - python manage.py migrate
+  - python manage.py collectstatic
 script:
   - coverage run --source='.' manage.py test
 after_success:
