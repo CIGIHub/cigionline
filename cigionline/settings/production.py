@@ -12,4 +12,7 @@ except ImportError:
 if 'SECRET_KEY' in os.environ:
     SECRET_KEY = os.environ['SECRET_KEY']
 
+if 'ALLOWED_HOSTS' in os.environ:
+    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
+
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
