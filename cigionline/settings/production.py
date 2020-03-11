@@ -2,7 +2,7 @@ import dj_database_url
 import os
 from .base import *
 
-DEBUG = True  # @todo fix this
+DEBUG = False
 
 try:
     from .local import *
