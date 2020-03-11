@@ -18,6 +18,7 @@ if 'SECRET_KEY' in os.environ:
 if 'ALLOWED_HOSTS' in os.environ:
     ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
 
+logger.info('Checking DATABASE_URL')
 if 'DATABASE_URL' in os.environ:
     logger.info('Setting DATABASE_URL:')
     logger.info(os.environ['DATABASE_URL'])
