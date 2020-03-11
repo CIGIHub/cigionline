@@ -5,7 +5,7 @@ from .base import *
 
 logger = logging.getLogger(__name__)
 
-DEBUG = False
+DEBUG = True  # @todo fix this
 
 try:
     from .local import *
