@@ -35,13 +35,6 @@ http {
 		server_name _;
 		keepalive_timeout 5;
 
-		location / {
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header Host $http_host;
-      proxy_redirect off;
-      proxy_pass http://app_server;
-		}
-
     <% if ENV['STATIC_PROXY'] %>
       location ^~ /static/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -50,5 +43,12 @@ http {
         proxy_pass http://<%= ENV['STATIC_PROXY'] %>;
       }
     <% end %>
+
+		location / {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+      proxy_pass http://app_server;
+		}
 	}
 }
