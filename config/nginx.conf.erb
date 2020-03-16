@@ -32,7 +32,7 @@ http {
 
   <% if ENV['STATIC_PROXY'] %>
     upstream static_server {
-      server_name <%= ENV['STATIC_PROXY'] %>;
+      server <%= ENV['STATIC_PROXY'] %>;
     }
   <% end %>
 
