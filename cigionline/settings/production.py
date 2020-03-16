@@ -30,5 +30,7 @@ if 'AWS_SECRET_ACCESS_KEY' in os.environ:
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 if 'AWS_STORAGE_BUCKET_NAME' in os.environ:
     AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
+    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_S3_CUSTOM_DOMAIN']
 AWS_DEFAULT_ACL = None
 AWS_LOCATION = 'static'
