@@ -30,12 +30,6 @@ http {
 		 server unix:/tmp/nginx.socket fail_timeout=0;
  	}
 
-  <% if ENV['STATIC_PROXY'] %>
-    upstream static_server {
-      server <%= ENV['STATIC_PROXY'] %>;
-    }
-  <% end %>
-
 	server {
 		listen <%= ENV["PORT"] %>;
 		server_name _;
@@ -48,13 +42,8 @@ http {
       proxy_pass http://app_server;
 		}
 
-    <% if ENV['STATIC_PROXY'] %>
-      location ~/static(.*)$ {
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_pass http://static_server/static$1;
-      }
-    <% end %>
+    location /static/ {
+      proxy_pass http://d3b5by4znflse5.cloudfront.net/;
+    }
 	}
 }
