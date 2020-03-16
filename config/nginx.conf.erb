@@ -30,6 +30,12 @@ http {
 		 server unix:/tmp/nginx.socket fail_timeout=0;
  	}
 
+  <% if ENV['STATIC_PROXY'] %>
+    upstream static_server {
+      server_name <%= ENV['STATIC_PROXY'] %>;
+    }
+  <% end %>
+
 	server {
 		listen <%= ENV["PORT"] %>;
 		server_name _;
@@ -43,11 +49,11 @@ http {
 		}
 
     <% if ENV['STATIC_PROXY'] %>
-      location ^~ /static/ {
+      location ~/static(.*)$ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_redirect off;
-        proxy_pass http://<%= ENV['STATIC_PROXY'] %>$1;
+        proxy_pass http://static_server$1;
       }
     <% end %>
 	}
