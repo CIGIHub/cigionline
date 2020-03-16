@@ -49,7 +49,7 @@ http {
             proxy_cache_valid any 0;
             client_max_body_size 32M;
             resolver 8.8.8.8 valid=10s;
-      			proxy_pass app_server;
+      			proxy_pass http://app_server;
     		}
   	}
 }
