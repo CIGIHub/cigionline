@@ -44,7 +44,7 @@ http {
 
     <% if ENV['STATIC_PROXY'] %>
       location /static/ {
-        proxy_pass http://<%= ENV['STATIC_PROXY'] %>/;
+        proxy_pass http://<%= ENV['STATIC_PROXY'] %>/static/;
       }
     <% end %>
 	}
