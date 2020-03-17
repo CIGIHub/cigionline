@@ -33,7 +33,6 @@ if 'AWS_STORAGE_BUCKET_NAME' in os.environ:
 if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
     AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_S3_CUSTOM_DOMAIN']
 AWS_DEFAULT_ACL = None
-AWS_LOCATION = 'static'
 if 'STATIC_URL' in os.environ:
     STATIC_URL = os.environ['STATIC_URL']
 COMPRESS_ENABLED = True
