@@ -1,0 +1,19 @@
+section {
+  &.hero {
+    background-color: $black;
+    padding-bottom: 2rem;
+    padding-top: 6rem;
+
+    h1 {
+      color: $white;
+      font-family: 'futura-pt', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 400;
+      margin-bottom: 0;
+
+      @media screen and (min-width: 40em) {
+        font-size: 2.5rem;
+      }
+    }
+  }
+}
