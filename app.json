@@ -2,6 +2,14 @@
   "name": "CIGIOnline",
   "website": "https://www.cigionline.org",
   "repository": "https://github.com/CIGIHub/cigionline",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev"
+    },
+    {
+      "plan": "papertrail:choklad"
+    }
+  ],
   "buildpacks": [
     {
       "url": "https://github.com/heroku/heroku-buildpack-nginx"
@@ -12,5 +20,10 @@
     {
       "url": "heroku/python"
     }
-  ]
+  ],
+  "formation": {
+    "web": {
+      "size": "free"
+    }
+  }
 }
