@@ -5,6 +5,7 @@ class HomePage(Page):
     """Singleton model for the home page."""
 
     max_count = 1
+    subpage_types = ['research.TopicListPage']
     templates = 'home/home_page.html'
 
     class Meta:
