@@ -1,0 +1,16 @@
+{
+  "name": "CIGIOnline",
+  "website": "https://www.cigionline.org",
+  "repository": "https://github.com/CIGIHub/cigionline",
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nginx"
+    },
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
