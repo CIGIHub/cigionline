@@ -1,4 +1,4 @@
-asgiref==3.2.5
+asgiref==3.2.7
 astroid==2.3.3
 beautifulsoup4==4.6.0
 boto3==1.12.19
