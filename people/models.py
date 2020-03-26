@@ -25,20 +25,34 @@ class PersonPage(Page):
     address_line2 = models.CharField(blank=True, max_length=255)
     address_postal_code = models.CharField(blank=True, max_length=32)
     address_province = models.CharField(blank=True, max_length=255)
+    archive = models.BooleanField(default=False)
+    board_position = models.CharField(blank=True, max_length=255)
     body = StreamField([
         ('paragraph', blocks.RichTextBlock())
     ], blank=True)
+    education = StreamField([
+        ('education', blocks.StructBlock([
+            ('degree', blocks.CharBlock()),
+            ('school', blocks.CharBlock()),
+            ('school_website', blocks.URLBlock()),
+            ('year', blocks.IntegerBlock())
+        ]))
+    ])
     email = models.EmailField(blank=True)
     first_name = models.CharField(blank=True, max_length=255)
     last_name = models.CharField(blank=True, max_length=255)
+    linkedin_url = models.URLField(blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
+    position = models.CharField(blank=True, max_length=255)
+    twitter_username = models.CharField(blank=True, max_length=255)
+    website = models.URLField(blank=True)
 
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             FieldPanel('first_name'),
             FieldPanel('last_name'),
-            FieldPanel('email'),
-            FieldPanel('phone_number')
+            FieldPanel('position'),
+            FieldPanel('board_position')
         ], heading='General Information'),
         MultiFieldPanel([
             StreamFieldPanel('body')
@@ -50,7 +64,18 @@ class PersonPage(Page):
             FieldPanel('address_province'),
             FieldPanel('address_postal_code'),
             FieldPanel('address_country')
-        ], heading='Address')
+        ], heading='Address'),
+        MultiFieldPanel([
+            FieldPanel('email'),
+            FieldPanel('phone_number'),
+            FieldPanel('twitter_username'),
+            FieldPanel('linkedin_url'),
+            FieldPanel('website')
+        ], heading='Contact Information'),
+        MultiFieldPanel([
+            StreamFieldPanel('education')
+        ], heading='Education'),
+        FieldPanel('archive')
     ]
     parent_page_types = ['people.PersonListPage']
     subpage_types = []
