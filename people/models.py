@@ -37,7 +37,7 @@ class PersonPage(Page):
             ('school_website', blocks.URLBlock()),
             ('year', blocks.IntegerBlock())
         ]))
-    ])
+    ], blank=True)
     email = models.EmailField(blank=True)
     first_name = models.CharField(blank=True, max_length=255)
     last_name = models.CharField(blank=True, max_length=255)
