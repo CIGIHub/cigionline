@@ -33,10 +33,10 @@ class PersonPage(Page):
     ], blank=True)
     education = StreamField([
         ('education', blocks.StructBlock([
-            ('degree', blocks.CharBlock()),
-            ('school', blocks.CharBlock()),
-            ('school_website', blocks.URLBlock()),
-            ('year', blocks.IntegerBlock())
+            ('degree', blocks.CharBlock(required=True)),
+            ('school', blocks.CharBlock(required=True)),
+            ('school_website', blocks.URLBlock(required=False)),
+            ('year', blocks.IntegerBlock(required=False))
         ]))
     ], blank=True)
     email = models.EmailField(blank=True)
