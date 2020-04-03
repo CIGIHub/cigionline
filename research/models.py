@@ -17,7 +17,7 @@ class TopicListPage(Page):
 
 class TopicPage(Page):
     """View topic page"""
-    description = RichTextField(blank=True, null=False)
+    description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
