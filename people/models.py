@@ -3,6 +3,7 @@ from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamField
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 
 class PersonListPage(Page):
@@ -40,6 +41,13 @@ class PersonPage(Page):
     ], blank=True)
     email = models.EmailField(blank=True)
     first_name = models.CharField(blank=True, max_length=255)
+    image_landscape = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
     last_name = models.CharField(blank=True, max_length=255)
     linkedin_url = models.URLField(blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
@@ -75,6 +83,9 @@ class PersonPage(Page):
         MultiFieldPanel([
             StreamFieldPanel('education')
         ], heading='Education'),
+        MultiFieldPanel([
+            ImageChooserPanel('image_landscape')
+        ], heading='Images'),
         FieldPanel('archive')
     ]
     parent_page_types = ['people.PersonListPage']
