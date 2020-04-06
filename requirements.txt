@@ -3,7 +3,7 @@ astroid==2.3.3
 beautifulsoup4==4.6.0
 boto3==1.12.35
 botocore==1.15.35
-certifi==2019.11.28
+certifi==2020.4.5.1
 chardet==3.0.4
 coverage==5.0.4
 coveralls==1.11.1
