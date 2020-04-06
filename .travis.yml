@@ -9,8 +9,8 @@ before_install:
   - sudo sed -i 's/port = 5433/port = 5432/' /etc/postgresql/11/main/postgresql.conf
   - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
   - sudo service postgresql restart 11
-  - nvm install 10.16.3
-  - nvm alias default 10.16.3
+  - nvm install 12.16.1
+  - nvm alias default 12.16.1
   - pip --version
   - python --version
   - psql --version
