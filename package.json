@@ -9,8 +9,11 @@
     "url": "https://github.com/CIGIHub/cigionline/issues"
   },
   "homepage": "https://github.com/CIGIHub/cigionline#readme",
+  "engines": {
+    "node": "12.16.1"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-pro": "5.13.0",
-    "foundation-sites": "6.6.1"
+    "foundation-sites": "6.6.2"
   }
 }
