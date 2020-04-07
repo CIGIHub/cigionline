@@ -45,6 +45,9 @@ class PersonPage(Page):
         ]))
     ], blank=True)
     email = models.EmailField(blank=True)
+    expertise = StreamField([
+        ('expertise', blocks.CharBlock(required=True))
+    ], blank=True)
     first_name = models.CharField(blank=True, max_length=255)
     image_landscape = models.ForeignKey(
         'wagtailimages.Image',
@@ -68,37 +71,68 @@ class PersonPage(Page):
     website = models.URLField(blank=True)
 
     content_panels = Page.content_panels + [
-        MultiFieldPanel([
-            FieldPanel('first_name'),
-            FieldPanel('last_name'),
-            FieldPanel('position'),
-            FieldPanel('board_position')
-        ], heading='General Information'),
-        MultiFieldPanel([
-            StreamFieldPanel('body')
-        ], heading='Biography'),
-        MultiFieldPanel([
-            FieldPanel('address_line1'),
-            FieldPanel('address_line2'),
-            FieldPanel('address_city'),
-            FieldPanel('address_province'),
-            FieldPanel('address_postal_code'),
-            FieldPanel('address_country')
-        ], heading='Address'),
-        MultiFieldPanel([
-            FieldPanel('email'),
-            FieldPanel('phone_number'),
-            FieldPanel('twitter_username'),
-            FieldPanel('linkedin_url'),
-            FieldPanel('website')
-        ], heading='Contact Information'),
-        MultiFieldPanel([
-            StreamFieldPanel('education')
-        ], heading='Education'),
-        MultiFieldPanel([
-            ImageChooserPanel('image_landscape'),
-            ImageChooserPanel('image_square')
-        ], heading='Images'),
+        MultiFieldPanel(
+            [
+                FieldPanel('first_name'),
+                FieldPanel('last_name'),
+                FieldPanel('position'),
+                FieldPanel('board_position')
+            ],
+            heading='General Information',
+            classname='collapsible'
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('body')
+            ],
+            heading='Biography',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('address_line1'),
+                FieldPanel('address_line2'),
+                FieldPanel('address_city'),
+                FieldPanel('address_province'),
+                FieldPanel('address_postal_code'),
+                FieldPanel('address_country')
+            ],
+            heading='Address',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('email'),
+                FieldPanel('phone_number'),
+                FieldPanel('twitter_username'),
+                FieldPanel('linkedin_url'),
+                FieldPanel('website')
+            ],
+            heading='Contact Information',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('education')
+            ],
+            heading='Education',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('expertise')
+            ],
+            heading='Expertise',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('image_landscape'),
+                ImageChooserPanel('image_square')
+            ],
+            heading='Images',
+            classname='collapsible collapsed'
+        )
     ]
     settings_panels = Page.settings_panels + [
         FieldPanel('archive')
