@@ -20,13 +20,18 @@ class PersonListPage(Page):
 
 class PersonPage(Page):
     """View person page"""
+
+    class ArchiveStatus(models.IntegerChoices):
+        UNARCHIVED = (0, 'No')
+        ARCHIVED = (1, 'Yes')
+
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)
     address_line2 = models.CharField(blank=True, max_length=255)
     address_postal_code = models.CharField(blank=True, max_length=32)
     address_province = models.CharField(blank=True, max_length=255)
-    archive = models.BooleanField(default=False)
+    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
     board_position = models.CharField(blank=True, max_length=255)
     body = StreamField([
         ('paragraph', blocks.RichTextBlock())
@@ -94,6 +99,8 @@ class PersonPage(Page):
             ImageChooserPanel('image_landscape'),
             ImageChooserPanel('image_square')
         ], heading='Images'),
+    ]
+    settings_panels = Page.settings_panels + [
         FieldPanel('archive')
     ]
     parent_page_types = ['people.PersonListPage']
