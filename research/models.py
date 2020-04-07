@@ -25,7 +25,7 @@ class TopicPage(Page):
         ARCHIVED = (1, 'Yes')
 
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
-    archive = models.IntegerField(max_length=1, choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
+    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
