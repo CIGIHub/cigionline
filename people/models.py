@@ -48,6 +48,13 @@ class PersonPage(Page):
         on_delete=models.SET_NULL,
         related_name='+'
     )
+    image_square = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
     last_name = models.CharField(blank=True, max_length=255)
     linkedin_url = models.URLField(blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
@@ -84,7 +91,8 @@ class PersonPage(Page):
             StreamFieldPanel('education')
         ], heading='Education'),
         MultiFieldPanel([
-            ImageChooserPanel('image_landscape')
+            ImageChooserPanel('image_landscape'),
+            ImageChooserPanel('image_square')
         ], heading='Images'),
         FieldPanel('archive')
     ]
