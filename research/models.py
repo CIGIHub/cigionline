@@ -1,3 +1,5 @@
+from django.db import models
+
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -17,11 +19,21 @@ class TopicListPage(Page):
 
 class TopicPage(Page):
     """View topic page"""
+
+    class ArchiveStatus(models.IntegerChoices):
+        UNARCHIVED = (0, 'No')
+        ARCHIVED = (1, 'Yes')
+
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
     ]
+    settings_panels = Page.settings_panels + [
+        FieldPanel('archive')
+    ]
+
     parent_page_types = ['research.TopicListPage']
     subpage_types = []
     templates = 'research/topic_page.html'
