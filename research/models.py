@@ -18,9 +18,13 @@ class TopicListPage(Page):
 class TopicPage(Page):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    archive = CharField(max_length=3, choices=['Yes', 'Mo'])
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
+    ]
+    settings_panels = Page.settings_panels + [
+        FieldPanel('archive')
     ]
     parent_page_types = ['research.TopicListPage']
     subpage_types = []
