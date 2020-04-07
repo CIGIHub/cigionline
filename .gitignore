@@ -77,3 +77,6 @@ target/
 
 # npm dependencies
 /node_modules
+
+# Text editors
+.vscode
