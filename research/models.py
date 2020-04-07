@@ -19,8 +19,13 @@ class TopicListPage(Page):
 
 class TopicPage(Page):
     """View topic page"""
+
+    class ArchiveStatus(models.IntegerChoices):
+        UNARCHIVED = (0, 'No')
+        ARCHIVED = (1, 'Yes')
+
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
-    archive = models.CharField(max_length=3, choices=['Yes', 'Mo'])
+    archive = models.IntegerField(max_length=1, choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
@@ -28,6 +33,7 @@ class TopicPage(Page):
     settings_panels = Page.settings_panels + [
         FieldPanel('archive')
     ]
+
     parent_page_types = ['research.TopicListPage']
     subpage_types = []
     templates = 'research/topic_page.html'
