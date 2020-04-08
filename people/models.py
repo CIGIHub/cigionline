@@ -54,14 +54,24 @@ class PersonPage(Page):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name='+',
+        verbose_name='Landscape Image'
+    )
+    image_media = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Media Photo'
     )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name='+',
+        verbose_name='Square Image'
     )
     languages = StreamField([
         ('language', blocks.CharBlock(required=True))
@@ -138,7 +148,8 @@ class PersonPage(Page):
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_landscape'),
-                ImageChooserPanel('image_square')
+                ImageChooserPanel('image_square'),
+                ImageChooserPanel('image_media')
             ],
             heading='Images',
             classname='collapsible collapsed'
