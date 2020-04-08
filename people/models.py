@@ -1,7 +1,7 @@
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core import blocks
-from wagtail.core.fields import StreamField
+from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -33,9 +33,13 @@ class PersonPage(Page):
     address_province = models.CharField(blank=True, max_length=255)
     archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
     board_position = models.CharField(blank=True, max_length=255)
-    body = StreamField([
-        ('paragraph', blocks.RichTextBlock())
-    ], blank=True)
+    body = StreamField(
+        [
+            ('paragraph', blocks.RichTextBlock())
+        ],
+        blank=True,
+        verbose_name='Full Biography'
+    )
     education = StreamField([
         ('education', blocks.StructBlock([
             ('degree', blocks.CharBlock(required=True)),
@@ -80,6 +84,7 @@ class PersonPage(Page):
     linkedin_url = models.URLField(blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
+    short_bio = RichTextField(blank=True, verbose_name='Short Biography')
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
 
@@ -96,6 +101,7 @@ class PersonPage(Page):
         ),
         MultiFieldPanel(
             [
+                FieldPanel('short_bio'),
                 StreamFieldPanel('body')
             ],
             heading='Biography',
