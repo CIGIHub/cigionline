@@ -1,4 +1,5 @@
 from django.db import models
+from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
@@ -85,6 +86,7 @@ class PersonPage(Page):
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
 
@@ -158,6 +160,13 @@ class PersonPage(Page):
                 ImageChooserPanel('image_media')
             ],
             heading='Images',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics')
+            ],
+            heading='Related',
             classname='collapsible collapsed'
         )
     ]
