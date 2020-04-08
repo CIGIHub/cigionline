@@ -63,6 +63,9 @@ class PersonPage(Page):
         on_delete=models.SET_NULL,
         related_name='+'
     )
+    languages = StreamField([
+        ('language', blocks.CharBlock(required=True))
+    ], blank=True)
     last_name = models.CharField(blank=True, max_length=255)
     linkedin_url = models.URLField(blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
@@ -109,6 +112,13 @@ class PersonPage(Page):
                 FieldPanel('website')
             ],
             heading='Contact Information',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('languages')
+            ],
+            heading='Additional Information',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
