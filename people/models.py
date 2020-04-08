@@ -4,6 +4,7 @@ from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamField
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
+from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
@@ -40,6 +41,13 @@ class PersonPage(Page):
         ],
         blank=True,
         verbose_name='Full Biography'
+    )
+    curriculum_vitae = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
     )
     education = StreamField([
         ('education', blocks.StructBlock([
@@ -134,7 +142,8 @@ class PersonPage(Page):
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('languages')
+                StreamFieldPanel('languages'),
+                DocumentChooserPanel('curriculum_vitae')
             ],
             heading='Additional Information',
             classname='collapsible collapsed'
