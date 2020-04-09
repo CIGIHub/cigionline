@@ -1,5 +1,42 @@
+// Breakpoints
+$breakpoints: (
+  small: 0,
+  medium: 640px,
+  large: 1024px,
+  xlarge: 1200px,
+  xxlarge: 1440px,
+);
+
 // Colours
 $cigi-primary-colour: #e6023b;
 
 // Fonts
 $primary-font-family: futura-pt, sans-serif;
+
+// Font Weights
+$sans-regular: 400;
+$sans-medium: 500;
+$sans-demi: 600;
+$sans-bold: 700;
+$sans-extrabold: 800;
+
+$serif-regular: 400;
+$serif-bold: bold;
+
+// Colours
+$black: #000000;
+$white: #ffffff;
+$cigi-light-pink: #fce5eb;
+$cigi-pink: #e6023b;
+$cigi-dark-pink: #bf0332;
+$twitter-blue: #55acee;
+$facebook-blue: #3b5998;
+$rss: #f99b3a;
+$unpublished: #ffe6e5;
+$color--blue: #2592ec;
+$color-dark-blue: #195c94;
+$color-publication: $cigi-pink;
+$color-opinion: #4caba5;
+$color-multimedia: #f47b27;
+$color-event: #edba53;
+$color-media: #8e50bd;

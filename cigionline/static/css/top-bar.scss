@@ -3,7 +3,6 @@ header {
   position: sticky;
 
   .cigi-top-bar {
-    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -37,15 +36,54 @@ header {
           padding: 2em 0.5em;
         }
       }
+
+      .desktop-menu {
+        display: none;
+
+        @include breakpoint(large) {
+          display: flex;
+        }
+      }
     }
 
     .cigi-logo {
+      a {
+        display: block;
+        height: 18px;
+        position: relative;
+        transition: height 0.5s ease;
+      }
+
       svg {
         display: block;
         fill: $white;
         height: 2.5em;
         margin-bottom: 0.5em;
         margin-top: 0.5em;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: opacity 0.5s ease, height 0.5s ease;
+      }
+
+      .small-logo {
+        opacity: 1;
+        width: 32.27px;
+
+        @include breakpoint(large) {
+          opacity: 0;
+        }
+      }
+
+      .large-logo {
+        opacity: 0;
+        display: none;
+        width: 136.92px;
+
+        @include breakpoint(large) {
+          display: block;
+          opacity: 1;
+        }
       }
     }
   }
