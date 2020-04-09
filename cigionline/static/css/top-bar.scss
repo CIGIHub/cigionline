@@ -6,6 +6,44 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+
+    .cigi-logo {
+      a {
+        display: flex;
+        transition: height 0.5s ease;
+
+        @include breakpoint(large) {
+          padding: 0.7rem 0;
+        }
+      }
+
+      svg {
+        fill: $white;
+        transition: opacity 0.5s ease;
+      }
+
+      .small-logo {
+        opacity: 1;
+        width: 32.27px;
+        position: absolute;
+        top: 50%;
+        margin-top: -9px;
+
+        @include breakpoint(large) {
+          opacity: 0;
+        }
+      }
+
+      .large-logo {
+        opacity: 0;
+        width: 136.92px;
+
+        @include breakpoint(large) {
+          opacity: 1;
+        }
+      }
+    }
 
     nav {
       display: flex;
@@ -16,6 +54,8 @@ header {
 
         &.menu-icons {
           padding-left: 1em;
+          display: flex;
+          align-items: center;
         }
 
         a,
@@ -24,16 +64,13 @@ header {
           display: block;
           font-family: $primary-font-family;
           font-size: 0.75rem;
-          font-weight: 500;
-          padding: 2em 0.8em;
+          font-weight: $sans-medium;
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
 
           &:hover {
             color: $cigi-primary-colour;
           }
-        }
-
-        button {
-          padding: 2em 0.5em;
         }
       }
 
@@ -42,47 +79,6 @@ header {
 
         @include breakpoint(large) {
           display: flex;
-        }
-      }
-    }
-
-    .cigi-logo {
-      a {
-        display: block;
-        height: 18px;
-        position: relative;
-        transition: height 0.5s ease;
-      }
-
-      svg {
-        display: block;
-        fill: $white;
-        height: 2.5em;
-        margin-bottom: 0.5em;
-        margin-top: 0.5em;
-        position: absolute;
-        left: 0;
-        top: 0;
-        transition: opacity 0.5s ease, height 0.5s ease;
-      }
-
-      .small-logo {
-        opacity: 1;
-        width: 32.27px;
-
-        @include breakpoint(large) {
-          opacity: 0;
-        }
-      }
-
-      .large-logo {
-        opacity: 0;
-        display: none;
-        width: 136.92px;
-
-        @include breakpoint(large) {
-          display: block;
-          opacity: 1;
         }
       }
     }
