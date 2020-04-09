@@ -8,6 +8,13 @@ from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
+class PersonType(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class PersonListPage(Page):
     """Person list page"""
 
@@ -91,6 +98,7 @@ class PersonPage(Page):
     ], blank=True)
     last_name = models.CharField(blank=True, max_length=255)
     linkedin_url = models.URLField(blank=True)
+    person_types = ParentalManyToManyField('people.PersonType', blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
@@ -142,6 +150,7 @@ class PersonPage(Page):
         ),
         MultiFieldPanel(
             [
+                FieldPanel('person_types'),
                 StreamFieldPanel('languages'),
                 DocumentChooserPanel('curriculum_vitae')
             ],
