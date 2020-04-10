@@ -7,8 +7,10 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'foundation-settings';
 @import 'foundation';
 @import 'variables';
+@import 'mixins';
 @import 'top-bar';
 @import 'hero';
+@import 'footer';
 
 // Global styles
 @include foundation-global-styles;

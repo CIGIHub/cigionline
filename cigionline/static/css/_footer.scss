@@ -1,0 +1,57 @@
+footer {
+  background: $black;
+  color: $white;
+  position: relative;
+
+  .logo-container {
+    margin: 4em auto 0.5em;
+    width: 70px;
+
+    .cigi-logo {
+      fill: $white;
+      height: 39px;
+    }
+  }
+
+  .footer-bracket {
+    width: 100%;
+    display: none;
+
+    @include breakpoint(medium) {
+      display: block;
+    }
+  }
+
+  .all-topics {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    list-style-type: none;
+    padding: 1rem 0;
+
+    .topic {
+      flex: 0 0 50%;
+      @include link($color: $white, $hover-color: $cigi-pink);
+
+      a {
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: $sans-regular;
+        font-family: $primary-font-family;
+      }
+
+      @include breakpoint(medium) {
+        flex: 0 0 30%;
+      }
+
+      @include breakpoint(large) {
+        flex: 0 0 23%;
+      }
+    }
+
+
+    .topic-count {
+      color: $cigi-medium-grey;
+    }
+  }
+}

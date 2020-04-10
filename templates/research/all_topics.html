@@ -1,0 +1,5 @@
+<ul class="all-topics">
+  {% for topic in all_topics %}
+  <li class="topic"><a href="/topics/{{ topic.slug }}">{{ topic.title }}</a></li>
+  {% endfor %}
+</ul>
