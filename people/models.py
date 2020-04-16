@@ -18,13 +18,41 @@ class PersonType(models.Model):
 class PersonListPage(Page):
     """Person list page"""
 
-    max_count = 1
-    parent_page_types = ['home.HomePage']
+    class PersonListPageType(models.TextChoices):
+        DEFAULT = 0
+        EXPERTS = 1
+        STAFF = 2
+
+    max_count = 3
+    parent_page_types = ['core.HomePage']
     subpage_types = ['people.PersonPage']
     templates = 'people/person_list_page.html'
+    person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
     class Meta:
         verbose_name = 'Person List Page'
+
+    @property
+    def person_pages(self):
+        if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
+            return PersonPage.objects.live().filter(
+                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                person_types__name='Expert',
+            )
+        elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
+            return PersonPage.objects.live().filter(
+                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                person_types__name='Staff',
+            )
+        return []
+
+    def get_template(self, request, *args, **kwargs):
+        original_template = super(PersonListPage, self).get_template(request, *args, **kwargs)
+        if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
+            return 'people/person_list_experts_page.html'
+        elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
+            return 'people/person_list_staff_page.html'
+        return original_template
 
 
 class PersonPage(Page):
@@ -69,21 +97,14 @@ class PersonPage(Page):
         ('expertise', blocks.CharBlock(required=True))
     ], blank=True)
     first_name = models.CharField(blank=True, max_length=255)
-    image_landscape = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Landscape Image'
-    )
     image_media = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Media Photo'
+        verbose_name='Media Photo',
+        help_text='A high resolution image that is downloadable from the expert\'s page.'
     )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
@@ -91,7 +112,8 @@ class PersonPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Square Image'
+        verbose_name='Square Image',
+        help_text='For circular profile images that are used throughout the website.'
     )
     languages = StreamField([
         ('language', blocks.CharBlock(required=True))
@@ -173,7 +195,6 @@ class PersonPage(Page):
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_landscape'),
                 ImageChooserPanel('image_square'),
                 ImageChooserPanel('image_media')
             ],

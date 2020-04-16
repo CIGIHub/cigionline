@@ -9,7 +9,7 @@ class TopicListPage(Page):
     """Topic list page"""
 
     max_count = 1
-    parent_page_types = ['home.HomePage']
+    parent_page_types = ['core.HomePage']
     subpage_types = ['research.TopicPage']
     templates = 'research/topic_list_page.html'
 

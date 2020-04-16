@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'compressor',
-    'home',
+    'core',
     'people',
     'research',
     'search',
