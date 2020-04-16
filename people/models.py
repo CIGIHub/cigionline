@@ -1,3 +1,4 @@
+from core.models import CorePage
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
@@ -15,7 +16,7 @@ class PersonType(models.Model):
         return self.name
 
 
-class PersonListPage(Page):
+class PersonListPage(CorePage):
     """Person list page"""
 
     class PersonListPageType(models.TextChoices):
@@ -23,7 +24,7 @@ class PersonListPage(Page):
         EXPERTS = 1
         STAFF = 2
 
-    max_count = 3
+    # max_count = 3
     parent_page_types = ['core.HomePage']
     subpage_types = ['people.PersonPage']
     templates = 'people/person_list_page.html'
