@@ -19,16 +19,17 @@ class PersonType(models.Model):
 class PersonListPage(CorePage):
     """Person list page"""
 
-    class PersonListPageType(models.TextChoices):
+    class PersonListPageType(models.IntegerChoices):
         DEFAULT = 0
         EXPERTS = 1
         STAFF = 2
+
+    person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
     # max_count = 3
     parent_page_types = ['core.HomePage']
     subpage_types = ['people.PersonPage']
     templates = 'people/person_list_page.html'
-    person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
     class Meta:
         verbose_name = 'Person List Page'
@@ -211,7 +212,7 @@ class PersonPage(Page):
         )
     ]
     settings_panels = Page.settings_panels + [
-        FieldPanel('archive')
+        FieldPanel('archive'),
     ]
     parent_page_types = ['people.PersonListPage']
     subpage_types = []

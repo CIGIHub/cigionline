@@ -15,7 +15,7 @@ def create_homepage(apps, schema_editor):
 
     # Create content type for homepage model
     homepage_content_type, __ = ContentType.objects.get_or_create(
-        model='homepage', app_label='home')
+        model='homepage', app_label='core')
 
     # Create a new homepage
     homepage = HomePage.objects.create(
@@ -44,7 +44,7 @@ def remove_homepage(apps, schema_editor):
     HomePage.objects.filter(slug='home', depth=2).delete()
 
     # Delete content type for homepage model
-    ContentType.objects.filter(model='homepage', app_label='home').delete()
+    ContentType.objects.filter(model='homepage', app_label='core').delete()
 
 
 class Migration(migrations.Migration):

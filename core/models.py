@@ -1,3 +1,4 @@
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 
@@ -20,6 +21,18 @@ class CorePage(Page):
     """Page with subtitle."""
 
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
+
+    # Override content_panels to put the title panel within a MultiFieldPanel
+    content_panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel('title'),
+                FieldPanel('subtitle')
+            ],
+            heading='Title',
+            classname='collapsible'
+        )
+    ]
 
     class Meta:
         abstract = True
