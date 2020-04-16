@@ -3,37 +3,7 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'fontawesome-pro/scss/fontawesome';
 @import 'fontawesome-pro/scss/regular';
 
-// Foundation
-@import 'foundation-settings';
-@import 'foundation';
 @import 'variables';
+@import 'global';
 @import 'top-bar';
 @import 'hero';
-
-// Global styles
-@include foundation-global-styles;
-@include foundation-forms;
-@include foundation-typography;
-
-// Grids
-@include foundation-xy-grid-classes;
-
-// Containers
-@include foundation-menu;
-
-// Helpers
-@include foundation-float-classes;
-@include foundation-visibility-classes;
-
-
-// Global styles
-
-button {
-  cursor: pointer;
-
-  &:active,
-  &:focus {
-    box-shadow: none !important;
-    outline: none !important;
-  }
-}
