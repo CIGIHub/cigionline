@@ -1,4 +1,4 @@
-from home.models import HomePage
+from core.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 

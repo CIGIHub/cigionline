@@ -1,6 +1,6 @@
-from home.models import HomePage
+from core.models import BasicPage, HomePage
 from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import nested_form_data
+from wagtail.tests.utils.form_data import nested_form_data, rich_text
 
 from .models import PersonListPage, PersonPage
 
@@ -12,7 +12,7 @@ class PersonListPageTests(WagtailPageTests):
         """
         self.assertAllowedParentPageTypes(
             PersonListPage,
-            {HomePage},
+            {BasicPage, HomePage},
         )
 
     def test_personlistpage_child_page_types(self):
@@ -31,28 +31,8 @@ class PersonListPageTests(WagtailPageTests):
         home_page = HomePage.objects.get()
         self.assertCanCreate(home_page, PersonListPage, nested_form_data({
             'title': 'People',
+            'subtitle': rich_text('')
         }))
-
-    def test_cannot_create_second_personlistpage(self):
-        """
-        Test that a PersonListPage cannot be created if a PersonListPage already
-        exists.
-        """
-        home_page = HomePage.objects.get()
-        # Create the first PersonListPage
-        self.assertCanCreate(home_page, PersonListPage, nested_form_data({
-            'title': 'People',
-        }))
-        try:
-            self.assertCanCreate(home_page, PersonListPage, nested_form_data({
-                'title': 'People 2',
-            }))
-            self.fail('Expected to error')
-        except AssertionError as ae:
-            if str(ae) == 'Creating a people.personlistpage returned a 403':
-                pass
-            else:
-                raise ae
 
 
 class PersonPageTests(WagtailPageTests):

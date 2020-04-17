@@ -28,12 +28,13 @@ class PersonListPage(CorePage):
     person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
     # max_count = 3
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['core.BasicPage', 'core.HomePage']
     subpage_types = ['people.PersonPage']
     templates = 'people/person_list_page.html'
 
     class Meta:
         verbose_name = 'Person List Page'
+        verbose_name_plural = 'Person List Pages'
 
     @property
     def person_pages(self):
