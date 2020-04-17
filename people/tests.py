@@ -7,18 +7,12 @@ from .models import PeoplePage, PersonListPage, PersonPage
 
 class PeoplePageTests(WagtailPageTests):
     def test_peoplepage_parent_page_types(self):
-        """
-        Verify allowed parent page types.
-        """
         self.assertAllowedParentPageTypes(
             PeoplePage,
             {HomePage},
         )
 
     def test_people_page_child_page_types(self):
-        """
-        Verify allowed child page types.
-        """
         self.assertAllowedSubpageTypes(
             PeoplePage,
             {PersonPage},
@@ -51,18 +45,12 @@ class PersonListPageTests(WagtailPageTests):
     fixtures = ["people.json"]
 
     def test_personlistpage_parent_page_types(self):
-        """
-        Verify allowed parent page types.
-        """
         self.assertAllowedParentPageTypes(
             PersonListPage,
             {BasicPage, HomePage},
         )
 
     def test_personlistpage_child_page_types(self):
-        """
-        Verify allowed child page types.
-        """
         self.assertAllowedSubpageTypes(
             PersonListPage,
             {},
@@ -577,18 +565,12 @@ class PersonListPageTests(WagtailPageTests):
 
 class PersonPageTests(WagtailPageTests):
     def test_personpage_parent_page_types(self):
-        """
-        Verify allowed parent page types.
-        """
         self.assertAllowedParentPageTypes(
             PersonPage,
             {PeoplePage},
         )
 
     def test_personpage_child_page_types(self):
-        """
-        Verify allowed child page types.
-        """
         self.assertAllowedSubpageTypes(
             PersonPage,
             {},

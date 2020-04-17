@@ -103,7 +103,7 @@
     "numchild": 48,
     "title": "People",
     "slug": "people",
-    "content_type": ["people", "personlistpage"],
+    "content_type": ["people", "peoplepage"],
     "live": false,
     "url_path": "/home/people/",
     "expired": false
@@ -2297,12 +2297,9 @@
     "topics": []
   }
 }, {
-  "model": "people.personlistpage",
+  "model": "people.peoplepage",
   "pk": 4,
-  "fields": {
-    "subtitle": "",
-    "person_list_page_type": 0
-  }
+  "fields": {}
 }, {
   "model": "people.personlistpage",
   "pk": 5,

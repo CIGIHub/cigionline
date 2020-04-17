@@ -10,15 +10,27 @@ from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
-class PersonType(models.Model):
-    name = models.CharField(max_length=255)
+class PeoplePage(Page):
+    """
+    A special singleton page that isn't published, but is the parent to all the
+    person pages at the path /people.
+    """
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = ['people.PersonPage']
+    templates = 'people/person_list_page.html'
 
-    def __str__(self):
-        return self.name
+    class Meta:
+        verbose_name = 'Person List Page'
+        verbose_name_plural = 'Person List Pages'
 
 
 class PersonListPage(CorePage):
-    """Person list page"""
+    """
+    The pages that show people. There are currently 2 on our website:
+    /experts and /about/staff. This was made into a separate page model so that
+    PersonPage's could not be created as children of these paths.
+    """
 
     class PersonListPageType(models.IntegerChoices):
         DEFAULT = 0
@@ -57,21 +69,6 @@ class PersonListPage(CorePage):
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return 'people/person_list_staff_page.html'
         return original_template
-
-
-class PeoplePage(Page):
-    """
-    A special singleton page that isn't published, but is the parent to all the
-    person pages at the path /people/
-    """
-    max_count = 1
-    parent_page_types = ['core.HomePage']
-    subpage_types = ['people.PersonPage']
-    templates = 'people/person_list_page.html'
-
-    class Meta:
-        verbose_name = 'Person List Page'
-        verbose_name_plural = 'Person List Pages'
 
 
 class PersonPage(Page):
@@ -238,3 +235,33 @@ class PersonPage(Page):
     class Meta:
         verbose_name = 'Person Page'
         verbose_name_plural = 'Person Pages'
+
+
+class PersonType(models.Model):
+    """
+    A Django model that stores the person types. This isn't allowed to be
+    edited in the admin interface. To insert/remove data - a migration needs to
+    be created.
+
+    The available person types are:
+    - Board Member
+    - CIGI Chair
+    - Commission
+    - Expert
+    - External profile
+    - G20 Expert
+    - Management Team
+    - Media Contact
+    - Person
+    - Program Director
+    - Program Manager
+    - Research Advisor
+    - Research Associate
+    - Research Fellow
+    - Speaker
+    - Staff
+    """
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
