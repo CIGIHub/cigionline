@@ -1,7 +1,50 @@
 from core.models import BasicPage, HomePage
 from wagtail.tests.utils import WagtailPageTests
+from wagtail.tests.utils.form_data import nested_form_data, rich_text
 
-from .models import PersonListPage, PersonPage
+from .models import PeoplePage, PersonListPage, PersonPage
+
+
+class PeoplePageTests(WagtailPageTests):
+    def test_peoplepage_parent_page_types(self):
+        """
+        Verify allowed parent page types.
+        """
+        self.assertAllowedParentPageTypes(
+            PeoplePage,
+            {HomePage},
+        )
+
+    def test_people_page_child_page_types(self):
+        """
+        Verify allowed child page types.
+        """
+        self.assertAllowedSubpageTypes(
+            PeoplePage,
+            {PersonPage},
+        )
+
+    def test_can_create_under_homepage(self):
+        home_page = HomePage.objects.get()
+        self.assertCanCreate(home_page, PeoplePage, nested_form_data({
+            'title': 'People',
+        }))
+
+    def test_cannot_create_second_peoplepage(self):
+        home_page = HomePage.objects.get()
+        self.assertCanCreate(home_page, PeoplePage, nested_form_data({
+            'title': 'People',
+        }))
+        try:
+            self.assertCanCreate(home_page, PeoplePage, nested_form_data({
+                'title': 'People 2',
+            }))
+            self.fail('Expected to error')
+        except AssertionError as ae:
+            if str(ae) == 'Creating a people.peoplepage returned a 403':
+                pass
+            else:
+                raise ae
 
 
 class PersonListPageTests(WagtailPageTests):
@@ -22,8 +65,22 @@ class PersonListPageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             PersonListPage,
-            {PersonPage},
+            {},
         )
+
+    def test_cannot_create_third_personlistpage(self):
+        home_page = HomePage.objects.get()
+        try:
+            self.assertCanCreate(home_page, PersonListPage, nested_form_data({
+                'title': 'Person List Page',
+                'subtitle': rich_text(''),
+            }))
+            self.fail('Expected to error')
+        except AssertionError as ae:
+            if str(ae) == 'Creating a people.personlistpage returned a 403':
+                pass
+            else:
+                raise ae
 
     def test_experts_page_should_not_show_live_board_member(self):
         experts_page = PersonListPage.objects.get(title='Experts')
@@ -525,7 +582,7 @@ class PersonPageTests(WagtailPageTests):
         """
         self.assertAllowedParentPageTypes(
             PersonPage,
-            {PersonListPage},
+            {PeoplePage},
         )
 
     def test_personpage_child_page_types(self):

@@ -27,9 +27,9 @@ class PersonListPage(CorePage):
 
     person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
-    # max_count = 3
+    max_count = 2
     parent_page_types = ['core.BasicPage', 'core.HomePage']
-    subpage_types = ['people.PersonPage']
+    subpage_types = []
     templates = 'people/person_list_page.html'
 
     class Meta:
@@ -57,6 +57,21 @@ class PersonListPage(CorePage):
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return 'people/person_list_staff_page.html'
         return original_template
+
+
+class PeoplePage(Page):
+    """
+    A special singleton page that isn't published, but is the parent to all the
+    person pages at the path /people/
+    """
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = ['people.PersonPage']
+    templates = 'people/person_list_page.html'
+
+    class Meta:
+        verbose_name = 'Person List Page'
+        verbose_name_plural = 'Person List Pages'
 
 
 class PersonPage(Page):
@@ -216,7 +231,7 @@ class PersonPage(Page):
     settings_panels = Page.settings_panels + [
         FieldPanel('archive'),
     ]
-    parent_page_types = ['people.PersonListPage']
+    parent_page_types = ['people.PeoplePage']
     subpage_types = []
     templates = 'people/person_page.html'
 
