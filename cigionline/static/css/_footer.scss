@@ -18,8 +18,8 @@ footer {
       display: block;
     }
 
-    width: 100%;
     display: none;
+    width: 100%;
   }
 
   .all-topics {
@@ -31,22 +31,19 @@ footer {
 
     .topic {
       @include link($color: $white, $hover-color: $cigi-pink);
-      
       @include breakpoint(medium) {
         flex: 0 0 30%;
       }
-      
       @include breakpoint(large) {
         flex: 0 0 23%;
       }
-      
       flex: 0 0 50%;
-      
+
       a {
-        text-transform: uppercase;
+        font-family: $primary-font-family;
         font-size: 12px;
         font-weight: $sans-regular;
-        font-family: $primary-font-family;
+        text-transform: uppercase;
       }
     }
 
