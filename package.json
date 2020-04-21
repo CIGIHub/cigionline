@@ -13,7 +13,6 @@
     "node": "12.16.1"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-pro": "5.13.0",
-    "foundation-sites": "6.6.3"
+    "@fortawesome/fontawesome-pro": "5.13.0"
   }
 }
