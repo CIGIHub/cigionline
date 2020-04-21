@@ -46,11 +46,12 @@ header {
     }
 
     nav {
-      display: flex;
-      flex-direction: row;
-
       ul {
-        margin-bottom: 0;
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        margin: 0;
+        padding: 0;
 
         &.menu-icons {
           padding-left: 1em;
@@ -71,6 +72,14 @@ header {
           &:hover {
             color: $cigi-primary-colour;
           }
+        }
+
+        button {
+          padding: 2em 0.5em;
+        }
+
+        .menu-break {
+          margin-left: 2em;
         }
       }
 

@@ -1,0 +1,36 @@
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+
+  &:active,
+  &:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+[class*='container-'] {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}
+
+.container-lg {
+  max-width: 67.5rem;
+}
+
+.container-md {
+  max-width: 55rem;
+}
+
+.container-sm {
+  max-width: 40rem;
+}
