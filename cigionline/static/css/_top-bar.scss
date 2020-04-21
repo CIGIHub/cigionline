@@ -3,19 +3,19 @@ header {
   position: sticky;
 
   .cigi-top-bar {
+    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
 
     .cigi-logo {
       a {
-        display: flex;
-        transition: height 0.5s ease;
-
         @include breakpoint(large) {
           padding: 0.7rem 0;
         }
+
+        display: flex;
+        transition: height 0.5s ease;
       }
 
       svg {
@@ -24,24 +24,24 @@ header {
       }
 
       .small-logo {
-        opacity: 1;
-        width: 32.27px;
-        position: absolute;
-        top: 50%;
-        margin-top: -9px;
-
         @include breakpoint(large) {
           opacity: 0;
         }
+
+        margin-top: -9px;
+        opacity: 1;
+        position: absolute;
+        top: 50%;
+        width: 32.27px;
       }
 
       .large-logo {
-        opacity: 0;
-        width: 136.92px;
-
         @include breakpoint(large) {
           opacity: 1;
         }
+
+        opacity: 0;
+        width: 136.92px;
       }
     }
 
@@ -54,9 +54,9 @@ header {
         padding: 0;
 
         &.menu-icons {
-          padding-left: 1em;
-          display: flex;
           align-items: center;
+          display: flex;
+          padding-left: 1em;
         }
 
         a,
@@ -84,11 +84,10 @@ header {
       }
 
       .desktop-menu {
-        display: none;
-
         @include breakpoint(large) {
           display: flex;
-        }
+        } 
+        display: none;
       }
     }
   }
