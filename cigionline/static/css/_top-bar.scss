@@ -86,7 +86,7 @@ header {
       .desktop-menu {
         @include breakpoint(large) {
           display: flex;
-        } 
+        }
         display: none;
       }
     }
