@@ -14,12 +14,12 @@ footer {
   }
 
   .footer-bracket {
-    width: 100%;
-    display: none;
-
     @include breakpoint(medium) {
       display: block;
     }
+
+    width: 100%;
+    display: none;
   }
 
   .all-topics {
@@ -30,22 +30,23 @@ footer {
     padding: 1rem 0;
 
     .topic {
-      flex: 0 0 50%;
       @include link($color: $white, $hover-color: $cigi-pink);
-
+      
+      @include breakpoint(medium) {
+        flex: 0 0 30%;
+      }
+      
+      @include breakpoint(large) {
+        flex: 0 0 23%;
+      }
+      
+      flex: 0 0 50%;
+      
       a {
         text-transform: uppercase;
         font-size: 12px;
         font-weight: $sans-regular;
         font-family: $primary-font-family;
-      }
-
-      @include breakpoint(medium) {
-        flex: 0 0 30%;
-      }
-
-      @include breakpoint(large) {
-        flex: 0 0 23%;
       }
     }
 
