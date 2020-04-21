@@ -1,8 +1,8 @@
 from ..models import TopicPage
 from django import template
 
-
 register = template.Library()
+
 
 @register.inclusion_tag('research/all_topics.html')
 def all_topics():
