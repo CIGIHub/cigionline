@@ -25,7 +25,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'compressor',
-    'home',
+    'core',
+    'people',
     'research',
     'search',
 
@@ -151,7 +152,6 @@ STATICFILES_FINDERS = [
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
     'node_modules/@fortawesome',
-    'node_modules/foundation-sites/scss',
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
