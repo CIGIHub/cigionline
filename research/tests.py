@@ -1,4 +1,4 @@
-from home.models import HomePage
+from core.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
@@ -48,8 +48,11 @@ class TopicListPageTests(WagtailPageTests):
                 'title': 'Topics 2',
             }))
             self.fail('Expected to error')
-        except AssertionError:
-            pass
+        except AssertionError as ae:
+            if str(ae) == 'Creating a research.topiclistpage returned a 403':
+                pass
+            else:
+                raise ae
 
 
 class TopicPageTests(WagtailPageTests):
