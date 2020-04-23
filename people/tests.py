@@ -562,6 +562,13 @@ class PersonListPageTests(WagtailPageTests):
         staff_draft = PersonPage.objects.get(title='Staff Draft')
         self.assertNotIn(staff_draft, staff_directory_page.person_pages)
 
+    def test_staff_directory_page_order_accent_insensitive(self):
+        staff_directory_page = PersonListPage.objects.get(title='Staff Directory')
+        staff_pages = list(staff_directory_page.person_pages)
+        kimi_raikkonen = PersonPage.objects.get(title='Kimi Räikkönen')
+        daniel_ricciardo = PersonPage.objects.get(title='Daniel Ricciardo')
+        self.assertLess(staff_pages.index(kimi_raikkonen), staff_pages.index(daniel_ricciardo))
+
 
 class PersonPageTests(WagtailPageTests):
     def test_personpage_parent_page_types(self):
