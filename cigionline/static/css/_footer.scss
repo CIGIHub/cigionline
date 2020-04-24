@@ -1,7 +1,6 @@
 footer {
   background: $black;
   color: $white;
-  position: relative;
 
   .logo-container {
     margin: 0 auto 0.5rem;
@@ -23,22 +22,24 @@ footer {
     width: 100%;
   }
 
-  .all-topics {
-    display: flex;
-    flex-wrap: wrap;
+  .highlighted-topics {
+    @include display-grid;
+    @include breakpoint($medium) {
+      -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @include breakpoint($large) {
+      -ms-grid-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     list-style-type: none;
     margin: 0;
     padding: 1rem 0;
 
     .topic {
       @include link($color: $white, $hover-color: $cigi-pink);
-      @include breakpoint($medium) {
-        flex: 0 0 30%;
-      }
-      @include breakpoint($large) {
-        flex: 0 0 23%;
-      }
-      flex: 0 0 50%;
 
       a {
         font-family: $primary-font-family;

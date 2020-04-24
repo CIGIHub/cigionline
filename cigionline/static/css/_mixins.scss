@@ -16,3 +16,8 @@
     @content;
   }
 }
+
+@mixin display-grid {
+  display: -ms-grid;
+  display: grid;
+}

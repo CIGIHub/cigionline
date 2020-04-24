@@ -1,0 +1,7 @@
+<ul class="highlighted-topics">
+  {% for topic in highlighted_topics %}
+    <li class="topic">
+      <a href="/topics/{{ topic.slug }}">{{ topic.title }}</a>
+    </li>
+  {% endfor %}
+</ul>

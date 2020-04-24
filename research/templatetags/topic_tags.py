@@ -4,7 +4,7 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag('research/all_topics.html')
-def all_topics():
-    all_topics = TopicPage.objects.all()
-    return {'all_topics': all_topics}
+@register.inclusion_tag('research/highlighted_topics.html')
+def highlighted_topics():
+    highlighted_topics = TopicPage.objects.live()
+    return {'highlighted_topics': highlighted_topics}
