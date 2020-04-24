@@ -60,7 +60,7 @@ class BasicPage(CorePage):
             classname='collapsible'
         )
     ]
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['core.BasicPage', 'core.HomePage']
     subpage_types = ['core.BasicPage', 'people.PersonListPage']
     template = 'core/basic_page.html'
 
