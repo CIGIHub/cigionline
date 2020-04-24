@@ -1,4 +1,5 @@
 from core.models import HomePage
+from django.template import Context, Template
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
@@ -73,3 +74,30 @@ class TopicPageTests(WagtailPageTests):
             TopicPage,
             {},
         )
+
+
+class HighlightedTopicsTests(WagtailPageTests):
+    TEMPLATE = Template("{% load topic_tags %} {% highlighted_topics %}")
+
+    def setUp(self):
+        for n in range(5):
+            TopicPage.objects.create(path="/test{0}".format(n), depth=1, title="test{0}".format(n), slug="test{0}".format(n), archive=0, live=True)
+
+    def test_topics_show_up(self):
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertIn("test4", rendered)
+        self.assertNotIn("test5", rendered)
+
+    def test_topics_not_live_do_not_show_up(self):
+        TopicPage.objects.create(path="/test6", depth=1, title="test6", slug="test6", archive=0, live=False)
+        topic1 = TopicPage.objects.get(title="test1")
+
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertIn("test1", rendered)
+        self.assertNotIn("test6", rendered)
+
+        # See if topic disappears after unpublishing
+        setattr(topic1, 'live', False)
+        topic1.save()
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertNotIn("test1", rendered)
