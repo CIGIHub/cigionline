@@ -86,7 +86,7 @@ class HighlightedTopicsTests(WagtailPageTests):
     def test_correct_number_of_topics_render(self):
         for n in range(5):
             TopicPage.objects.create(path="/topic{0}".format(n), depth=1, title="topic{0}".format(n), slug="topic{0}".format(n), archive=0, live=True)
-            
+
         rendered = self.TEMPLATE.render(Context({}))
         self.assertIn("topic4", rendered)
         self.assertNotIn("topic5", rendered)
