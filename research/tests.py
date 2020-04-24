@@ -79,25 +79,20 @@ class TopicPageTests(WagtailPageTests):
 class HighlightedTopicsTests(WagtailPageTests):
     TEMPLATE = Template("{% load topic_tags %} {% highlighted_topics %}")
 
-    def setUp(self):
+    def test_if_no_topics_template_should_be_empty(self):
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertEqual(' <ul class="highlighted-topics">\n  \n</ul>\n', rendered)
+
+    def test_correct_number_of_topics_render(self):
         for n in range(5):
-            TopicPage.objects.create(path="/test{0}".format(n), depth=1, title="test{0}".format(n), slug="test{0}".format(n), archive=0, live=True)
-
-    def test_topics_show_up(self):
+            TopicPage.objects.create(path="/topic{0}".format(n), depth=1, title="topic{0}".format(n), slug="topic{0}".format(n), archive=0, live=True)
+            
         rendered = self.TEMPLATE.render(Context({}))
-        self.assertIn("test4", rendered)
-        self.assertNotIn("test5", rendered)
+        self.assertIn("topic4", rendered)
+        self.assertNotIn("topic5", rendered)
 
-    def test_topics_not_live_do_not_show_up(self):
-        TopicPage.objects.create(path="/test6", depth=1, title="test6", slug="test6", archive=0, live=False)
-        topic1 = TopicPage.objects.get(title="test1")
+    def test_topics_not_live_do_not_render(self):
+        TopicPage.objects.create(path="/topic1", depth=1, title="topic1", slug="topic1", archive=0, live=False)
 
         rendered = self.TEMPLATE.render(Context({}))
-        self.assertIn("test1", rendered)
-        self.assertNotIn("test6", rendered)
-
-        # See if topic disappears after unpublishing
-        setattr(topic1, 'live', False)
-        topic1.save()
-        rendered = self.TEMPLATE.render(Context({}))
-        self.assertNotIn("test1", rendered)
+        self.assertNotIn("topic1", rendered)
