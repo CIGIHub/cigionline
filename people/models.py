@@ -141,6 +141,19 @@ class PersonPage(Page):
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
+    publications = StreamField([
+        ('publications', blocks.StructBlock([
+            ('author', blocks.CharBlock(required=True)),
+            ('location_in_work', blocks.CharBlock(required=False)),
+            ('publisher_info', blocks.CharBlock(required=False)),
+            ('publication_type', blocks.CharBlock(required=True)),
+            ('secondary_author', blocks.CharBlock(required=False)),
+            ('secondary_title', blocks.CharBlock(required=False)),
+            ('title', blocks.CharBlock(required=False)),
+            ('url', blocks.URLBlock(required=False)),
+            ('year', blocks.IntegerBlock(required=False))
+        ]))
+    ], blank=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
@@ -224,7 +237,14 @@ class PersonPage(Page):
             ],
             heading='Related',
             classname='collapsible collapsed'
-        )
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('publications')
+            ],
+            heading='Publications',
+            classname='collapsible collapsed'
+        ),
     ]
     settings_panels = Page.settings_panels + [
         FieldPanel('archive'),
