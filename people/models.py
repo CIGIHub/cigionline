@@ -79,6 +79,20 @@ class PersonPage(Page):
         UNARCHIVED = (0, 'No')
         ARCHIVED = (1, 'Yes')
 
+    class PublicationTypes(models.TextChoices):
+        GENERIC = 'Generic'
+        BOOK = 'Book'
+        BOOK_SECTION = 'Book Section'
+        EDITED_BOOK = 'Edited Book'
+        ELECTRONIC_ARTICLE = 'Electronic Article'
+        ELECTRONIC_BOOK = 'Electronic Book'
+        JOURNAL_ARTICLE = 'Journal Article'
+        NEWSPAPER_ARTICLE = 'Newspaper Article'
+        REPORT = 'Report'
+        THESIS = 'Thesis'
+        WEB_PAGE = 'Web Page'
+
+
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)
@@ -146,7 +160,11 @@ class PersonPage(Page):
             ('author', blocks.CharBlock(required=True)),
             ('location_in_work', blocks.CharBlock(required=False)),
             ('publisher_info', blocks.CharBlock(required=False)),
-            ('publication_type', blocks.CharBlock(required=True)),
+            ('publication_type', blocks.ChoiceBlock(
+                required=True,
+                choices=PublicationTypes.choices,
+                default=PublicationTypes.GENERIC,
+            )),
             ('secondary_author', blocks.CharBlock(required=False)),
             ('secondary_title', blocks.CharBlock(required=False)),
             ('title', blocks.CharBlock(required=False)),
