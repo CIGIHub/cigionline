@@ -2,6 +2,8 @@ from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamField
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
+from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.images.blocks import ImageChooserBlock
 
 
 class HomePage(Page):
@@ -46,7 +48,15 @@ class BasicPage(CorePage):
 
     body = StreamField(
         [
-            ('paragraph', blocks.RichTextBlock())
+            ('paragraph', blocks.RichTextBlock()),
+            ('image', ImageChooserBlock()),
+            ('block_quote', blocks.RichTextBlock()),
+        ],
+        blank=True,
+    )
+    related_files = StreamField(
+        [
+            ('file', DocumentChooserBlock()),
         ],
         blank=True,
     )
@@ -54,11 +64,18 @@ class BasicPage(CorePage):
     content_panels = CorePage.content_panels + [
         MultiFieldPanel(
             [
-                StreamFieldPanel('body')
+                StreamFieldPanel('body'),
             ],
             heading='Body',
             classname='collapsible'
-        )
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('related_files'),
+            ],
+            heading='Related Files',
+            classname='collapsible collapsed',
+        ),
     ]
     parent_page_types = ['core.BasicPage', 'core.HomePage']
     subpage_types = ['core.BasicPage', 'people.PersonListPage']
