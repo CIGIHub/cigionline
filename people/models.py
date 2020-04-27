@@ -163,7 +163,6 @@ class PersonPage(Page):
             ('publication_type', blocks.ChoiceBlock(
                 required=True,
                 choices=PublicationTypes.choices,
-                default=PublicationTypes.GENERIC,
             )),
             ('secondary_author', blocks.CharBlock(required=False)),
             ('secondary_title', blocks.CharBlock(required=False)),
