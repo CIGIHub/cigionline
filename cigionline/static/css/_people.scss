@@ -1,0 +1,45 @@
+.person-page {
+  .hero {
+    .content {
+      .short-bio {
+        color: $white;
+      }
+    }
+
+    .portrait-circle {
+      border-radius: 50%;
+    }
+  }
+
+  &.expert {
+    .main {
+      .expertise-section {
+        padding: 1rem;
+        border: 1px solid #e9e9e9;
+        margin: 3rem 0;
+
+        .expertise-item {
+          &:after {
+            content: ', ';
+          }
+
+          &:last-child:after {
+            content: '';
+          }
+        }
+
+        .contact {
+          .contact-item {
+            a {
+              overflow: hidden;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.staff {
+
+  }
+}

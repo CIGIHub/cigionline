@@ -1,13 +1,110 @@
 {% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify|lower}}{% endfor %}{% endblock %}
 
 {% block content %}
+{% define page.expertise as expertises %}
+{% define page.email as email %}
+{% define page.twitter_username as twitter %}
+{% define page.website as website %}
+{% define page.linkedin_url as linkedin %}
+{% define page.image_media as image_media %}
+{% define page.phone_number as phone %}
+{% define page.curriculum_vitae as cv %}
+  
   <section class="hero">
-    <div class="grid-container">
-      <div class="grid-x">
-        <div class="cell">
-          <h1>{{self.title}}</h1>
+    <div class="container-lg">
+      <div class="content">
+        <h1>{{page.title}}</h1>
+        <div class="short-bio">
+          {{page.short_bio|richtext}}
         </div>
       </div>
+      {% if page.image_square %}
+        {% image page.image_square fill-140x140 class="portrait-circle" %}
+      {% endif %}
     </div>
   </section>
+  <section class="main container-sm">
+    {% if not page.archive %}
+      {% if expertises or email or twitter or website or linkedin or image_media or phone or cv %}
+        <div class="expertise-section">
+          {% if expertises %}
+            <div class="meta">Expertise</div>
+            <div class="meta">
+              {% for expertise in expertises %}
+                <span class="expertise-item">{{expertise}}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+          
+          {% if email or twitter or website or linkedin or image_media or phone or cv %}
+            <hr>
+          {% endif %}
+
+          <div class="contact">
+            {% if phone %}
+              <div class="contact-item">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                {{ phone }}
+              </div>
+            {% endif %}
+
+            {% if email %}
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                {{ email }}
+              </div>
+            {% endif %}
+
+            {% if twitter %}
+              <div class="contact-item">
+                <i class="fab fa-twitter"></i>
+                <a href="https://twitter.com/{{ twitter }}" target="_blank">
+                  {{ twitter }}
+                </a>
+              </div>
+            {% endif %}
+
+            {% if linkedin %}
+              <div class="contact-item">
+                <i class="fab fa-linkedin-in"></i>
+                <a href="{{ linkedin }}" target="_blank">{{ linkedin|no_protocol }}</a>
+              </div>
+            {% endif %}
+
+            {% if website %}
+              <div class="contact-item">
+                <i class="fas fa-link"></i>
+                <a href="{{ website }}" target="_blank">{{ website|no_protocol }}</a>
+              </div>
+            {% endif %}
+
+            {% if cv %}
+              <div class="contact-item">
+                <i class="far fa-newspaper" aria-hidden="true"></i>
+                <a href="{{ cv }}" target="_blank">
+                  Curriculum Vitae
+                </a>
+              </div>
+            {% endif %}
+
+            {% if image_media %}
+              <div class="contact-item">
+                <i class="fas fa-download"></i>
+                <a href="{{ image_media }}" target="_blank">
+                  High-resolution Photo
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      <div class="full-bio">
+        {{page.body}}
+      </div>
+    {% endif %}
+  </section>
+
 {% endblock content %}
