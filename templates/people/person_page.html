@@ -14,7 +14,7 @@
 {% define page.curriculum_vitae as cv %}
   
   <section class="hero">
-    <div class="container-lg">
+    <div class="container-lg grid-container">
       <div class="content">
         <h1>{{page.title}}</h1>
         <div class="short-bio">
@@ -22,7 +22,9 @@
         </div>
       </div>
       {% if page.image_square %}
-        {% image page.image_square fill-140x140 class="portrait-circle" %}
+        <div class="portrait-circle">
+          {% image page.image_square fill-140x140 %}
+        </div>
       {% endif %}
     </div>
   </section>
@@ -47,63 +49,85 @@
             {% if phone %}
               <div class="contact-item">
                 <i class="fa fa-phone" aria-hidden="true"></i>
-                {{ phone }}
+                <span>
+                  {{ phone }}
+                </span>
               </div>
             {% endif %}
 
             {% if email %}
               <div class="contact-item">
                 <i class="fas fa-envelope"></i>
-                {{ email }}
+                <span>
+                  <a href="mailto:{{ email }}">
+                    {{ email }}
+                  </a>
+                </span>
               </div>
             {% endif %}
 
             {% if twitter %}
               <div class="contact-item">
                 <i class="fab fa-twitter"></i>
-                <a href="https://twitter.com/{{ twitter }}" target="_blank">
-                  {{ twitter }}
-                </a>
+                <span>
+                  <a href="https://twitter.com/{{ twitter }}" target="_blank">
+                    {{ twitter }}
+                  </a>
+                </span>
               </div>
             {% endif %}
 
             {% if linkedin %}
               <div class="contact-item">
                 <i class="fab fa-linkedin-in"></i>
-                <a href="{{ linkedin }}" target="_blank">{{ linkedin|no_protocol }}</a>
+                <span>
+                  <a href="{{ linkedin }}" target="_blank">{{ linkedin|no_protocol }}</a>
+                </span>
               </div>
             {% endif %}
 
             {% if website %}
               <div class="contact-item">
                 <i class="fas fa-link"></i>
-                <a href="{{ website }}" target="_blank">{{ website|no_protocol }}</a>
+                <span>
+                  <a href="{{ website }}" target="_blank">{{ website|no_protocol }}</a>
+                </span>
               </div>
             {% endif %}
 
             {% if cv %}
               <div class="contact-item">
                 <i class="far fa-newspaper" aria-hidden="true"></i>
-                <a href="{{ cv }}" target="_blank">
-                  Curriculum Vitae
-                </a>
+                <span>
+                  <a href="{{ cv }}" target="_blank">
+                    Curriculum Vitae
+                    {{cv}}
+                  </a>
+                </span>
               </div>
             {% endif %}
 
             {% if image_media %}
+              {% image image_media original as high_res %}
               <div class="contact-item">
                 <i class="fas fa-download"></i>
-                <a href="{{ image_media }}" target="_blank">
+                <span>
+                  <a href="{{ high_res.url }}" target="_blank">
                   High-resolution Photo
-                </a>
+                  </a>
+                </span>
               </div>
             {% endif %}
           </div>
         </div>
       {% endif %}
-      <div class="full-bio">
-        {{page.body}}
-      </div>
+
+      {% if page.body %}
+        <div class="full-bio">
+          <h2>Bio</h2>
+          {{page.body}}
+        </div>
+      {% endif %}
     {% endif %}
   </section>
 

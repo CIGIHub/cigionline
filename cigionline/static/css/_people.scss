@@ -1,13 +1,24 @@
 .person-page {
   .hero {
+    // remove later
+    .grid-container {
+      align-items: end;
+      display: grid;
+      grid-template-columns: 75% 25%;
+    }
+
     .content {
+      max-width: 530px;
+
       .short-bio {
         color: $white;
       }
     }
 
     .portrait-circle {
-      border-radius: 50%;
+      img {
+        border-radius: 50%;
+      }
     }
   }
 
@@ -29,9 +40,24 @@
         }
 
         .contact {
+          columns: 3;
+
           .contact-item {
             a {
-              overflow: hidden;
+              color: #000000;
+              overflow-x: hidden;
+              display: inline-block;
+              line-height: 1.2rem;
+              text-overflow: ellipsis;
+              width: calc(100% - 30px);
+              white-space: nowrap;
+            }
+
+            i {
+              color: #e6023b;
+              line-height: 1.2rem;
+              width: 22px;
+              vertical-align: top;
             }
           }
         }
