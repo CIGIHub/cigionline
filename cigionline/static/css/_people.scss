@@ -10,6 +10,11 @@
     .content {
       max-width: 530px;
 
+      .topics {
+        .topic {
+          font-weight: 500;
+        }
+      }
       .short-bio {
         color: $white;
       }
@@ -18,6 +23,20 @@
     .portrait-circle {
       img {
         border-radius: 50%;
+      }
+    }
+
+    &.archived {
+      background: $white;
+
+      .content {
+        h1, .person-type {
+          color: $black;
+        }
+
+        h1 {
+          margin-top: 0;
+        }
       }
     }
   }

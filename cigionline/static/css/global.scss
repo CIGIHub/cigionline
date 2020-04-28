@@ -68,3 +68,18 @@ h2 {
   line-height: 17px;
   text-transform: uppercase;
 }
+
+.topics {
+  .topic {
+    font-size: 12px;
+    text-transform: uppercase;
+
+    &:after {
+      content: ', ';
+    }
+
+    &:last-child:after {
+      content: '';
+    }
+  }
+}
