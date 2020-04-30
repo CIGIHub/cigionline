@@ -24,29 +24,8 @@ class HomePage(Page):
         verbose_name = 'Home Page'
 
 
-class CorePage(Page):
+class BasicPageAbstract(Page):
     """Page with subtitle."""
-
-    subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
-
-    # Override content_panels to put the title panel within a MultiFieldPanel
-    content_panels = [
-        MultiFieldPanel(
-            [
-                FieldPanel('title'),
-                FieldPanel('subtitle')
-            ],
-            heading='Title',
-            classname='collapsible'
-        )
-    ]
-
-    class Meta:
-        abstract = True
-
-
-class BasicPage(CorePage):
-    """Page with StreamField body"""
 
     body = StreamField(
         [
@@ -71,14 +50,18 @@ class BasicPage(CorePage):
         verbose_name='Hero Image',
         help_text='A large image to be displayed prominently on the page.',
     )
-    related_files = StreamField(
-        [
-            ('file', DocumentChooserBlock()),
-        ],
-        blank=True,
-    )
+    subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
 
-    content_panels = CorePage.content_panels + [
+    # Override content_panels to put the title panel within a MultiFieldPanel
+    content_panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel('title'),
+                FieldPanel('subtitle')
+            ],
+            heading='Title',
+            classname='collapsible'
+        ),
         MultiFieldPanel(
             [
                 StreamFieldPanel('body'),
@@ -88,16 +71,33 @@ class BasicPage(CorePage):
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('related_files'),
-            ],
-            heading='Related Files',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
                 ImageChooserPanel('image_hero'),
             ],
             heading='Images',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class BasicPage(BasicPageAbstract):
+    """Page with StreamField body"""
+
+    related_files = StreamField(
+        [
+            ('file', DocumentChooserBlock()),
+        ],
+        blank=True,
+    )
+
+    content_panels = BasicPageAbstract.content_panels + [
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('related_files'),
+            ],
+            heading='Related Files',
             classname='collapsible collapsed',
         ),
     ]

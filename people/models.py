@@ -1,4 +1,4 @@
-from core.models import CorePage
+from core.models import BasicPageAbstract
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
@@ -26,7 +26,7 @@ class PeoplePage(Page):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonListPage(CorePage):
+class PersonListPage(BasicPageAbstract):
     """
     The pages that show people. There are currently 2 on our website:
     /experts and /about/staff. This was made into a separate page model so that
@@ -37,10 +37,11 @@ class PersonListPage(CorePage):
         DEFAULT = 0
         EXPERTS = 1
         STAFF = 2
+        LEADERSHIP = 3
 
     person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
-    max_count = 2
+    max_count = 3
     parent_page_types = ['core.BasicPage', 'core.HomePage']
     subpage_types = []
     templates = 'people/person_list_page.html'
@@ -48,6 +49,15 @@ class PersonListPage(CorePage):
     class Meta:
         verbose_name = 'Person List Page'
         verbose_name_plural = 'Person List Pages'
+
+    @property
+    def board_members(self):
+        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+            return PersonPage.objects.live().filter(
+                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                person_types__name='Board Member',
+            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+        return []
 
     @property
     def person_pages(self):
@@ -63,12 +73,23 @@ class PersonListPage(CorePage):
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         return []
 
+    @property
+    def senior_management(self):
+        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+            return PersonPage.objects.live().filter(
+                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                person_types__name='Management Team',
+            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+        return []
+
     def get_template(self, request, *args, **kwargs):
         original_template = super(PersonListPage, self).get_template(request, *args, **kwargs)
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
             return 'people/person_list_experts_page.html'
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return 'people/person_list_staff_page.html'
+        elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+            return 'people/person_list_leadership_page.html'
         return original_template
 
 

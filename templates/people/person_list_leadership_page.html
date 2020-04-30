@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+  {% for block in self.body %}
+    {% include_block block %}
+  {% endfor %}
+
+  <h2>Board Members</h2>
+  {% for board_member in page.board_members %}
+    <p>{{ board_member.title }}</p>
+  {% endfor %}
+  <h2>Senior Management</h2>
+  {% for manager in page.senior_management %}
+    <p>{{ manager.title }}</p>
+  {% endfor %}
+{% endblock %}
