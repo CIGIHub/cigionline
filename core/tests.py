@@ -4,7 +4,7 @@ from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
-from .models import BasicPage, HomePage
+from .models import BasicPage, FundingPage, HomePage
 
 
 class BasicPageTests(WagtailPageTests):
@@ -23,7 +23,21 @@ class BasicPageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {BasicPage, PersonListPage}
+            {BasicPage, FundingPage, PersonListPage}
+        )
+
+
+class FundingPageTests(WagtailPageTests):
+    def test_fundingpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            FundingPage,
+            {BasicPage},
+        )
+
+    def test_fundingpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            FundingPage,
+            {},
         )
 
 

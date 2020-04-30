@@ -102,9 +102,24 @@ class BasicPage(BasicPageAbstract):
         ),
     ]
     parent_page_types = ['core.BasicPage', 'core.HomePage']
-    subpage_types = ['core.BasicPage', 'people.PersonListPage']
+    subpage_types = ['core.BasicPage', 'core.FundingPage', 'people.PersonListPage']
     template = 'core/basic_page.html'
 
     class Meta:
         verbose_name = 'Basic Page'
         verbose_name_plural = 'Basic Pages'
+
+
+class FundingPage(BasicPageAbstract):
+    """
+    A special singleton page for /about/funding that contains a hardcoded
+    table with the funding details.
+    """
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    templates = 'core/funding_page.html'
+
+    class Meta:
+        verbose_name = 'Funding Page'
