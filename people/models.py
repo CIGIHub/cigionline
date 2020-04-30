@@ -156,7 +156,7 @@ class PersonPage(Page):
     position = models.CharField(blank=True, max_length=255)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
     external_publications = StreamField([
-        ('external_publications', blocks.StructBlock([
+        ('external_publication', blocks.StructBlock([
             ('author', blocks.CharBlock(required=True)),
             ('location_in_work', blocks.CharBlock(required=False)),
             ('publisher_info', blocks.CharBlock(required=False)),
