@@ -79,7 +79,7 @@ class PersonPage(Page):
         UNARCHIVED = (0, 'No')
         ARCHIVED = (1, 'Yes')
 
-    class PublicationTypes(models.TextChoices):
+    class ExternalPublicationTypes(models.TextChoices):
         GENERIC = 'Generic'
         BOOK = 'Book'
         BOOK_SECTION = 'Book Section'
@@ -155,14 +155,14 @@ class PersonPage(Page):
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
-    publications = StreamField([
-        ('publications', blocks.StructBlock([
+    external_publications = StreamField([
+        ('external_publications', blocks.StructBlock([
             ('author', blocks.CharBlock(required=True)),
             ('location_in_work', blocks.CharBlock(required=False)),
             ('publisher_info', blocks.CharBlock(required=False)),
             ('publication_type', blocks.ChoiceBlock(
                 required=True,
-                choices=PublicationTypes.choices,
+                choices=ExternalPublicationTypes.choices,
             )),
             ('secondary_author', blocks.CharBlock(required=False)),
             ('secondary_title', blocks.CharBlock(required=False)),
@@ -257,9 +257,9 @@ class PersonPage(Page):
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('publications')
+                StreamFieldPanel('external_publications')
             ],
-            heading='Publications',
+            heading='External Publications',
             classname='collapsible collapsed'
         ),
     ]
