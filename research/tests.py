@@ -96,3 +96,9 @@ class HighlightedTopicsTests(WagtailPageTests):
 
         rendered = self.TEMPLATE.render(Context({}))
         self.assertNotIn("topic1", rendered)
+
+    def test_topics_archived_do_not_render(self):
+        TopicPage.objects.create(path="/topic1", depth=1, title="topic1", slug="topic1", archive=1, live=True)
+
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertNotIn("topic1", rendered)
