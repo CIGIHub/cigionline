@@ -1,4 +1,5 @@
 from core.models import CorePage
+from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalManyToManyField
@@ -54,12 +55,12 @@ class PersonListPage(CorePage):
             return PersonPage.objects.live().filter(
                 archive=PersonPage.ArchiveStatus.UNARCHIVED,
                 person_types__name__in=['CIGI Chair', 'Expert'],
-            ).order_by(Lower('last_name'), Lower('first_name'))
+            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return PersonPage.objects.live().filter(
                 archive=PersonPage.ArchiveStatus.UNARCHIVED,
                 person_types__name='Staff',
-            ).order_by(Lower('last_name'), Lower('first_name'))
+            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         return []
 
     def get_template(self, request, *args, **kwargs):

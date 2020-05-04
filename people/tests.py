@@ -322,6 +322,18 @@ class PersonListPageTests(WagtailPageTests):
         staff_draft = PersonPage.objects.get(title='Staff Draft')
         self.assertNotIn(staff_draft, experts_page.person_pages)
 
+    def test_experts_page_order_accent_insensitive(self):
+        experts_page = PersonListPage.objects.get(title='Experts')
+        expert_pages = list(experts_page.person_pages)
+        kimi_raikkonen = PersonPage.objects.get(title='Kimi Räikkönen')
+        daniel_ricciardo = PersonPage.objects.get(title='Daniel Ricciardo')
+        self.assertIn(kimi_raikkonen, expert_pages)
+        self.assertIn(daniel_ricciardo, expert_pages)
+        self.assertLess(
+            expert_pages.index(kimi_raikkonen),
+            expert_pages.index(daniel_ricciardo),
+        )
+
     def test_staff_directory_page_should_not_show_live_board_member(self):
         staff_directory_page = PersonListPage.objects.get(title='Staff Directory')
         board_member_live = PersonPage.objects.get(title='Board Member Live')
@@ -561,6 +573,18 @@ class PersonListPageTests(WagtailPageTests):
         staff_directory_page = PersonListPage.objects.get(title='Staff Directory')
         staff_draft = PersonPage.objects.get(title='Staff Draft')
         self.assertNotIn(staff_draft, staff_directory_page.person_pages)
+
+    def test_staff_directory_page_order_accent_insensitive(self):
+        staff_directory_page = PersonListPage.objects.get(title='Staff Directory')
+        staff_pages = list(staff_directory_page.person_pages)
+        kimi_raikkonen = PersonPage.objects.get(title='Kimi Räikkönen')
+        daniel_ricciardo = PersonPage.objects.get(title='Daniel Ricciardo')
+        self.assertIn(kimi_raikkonen, staff_pages)
+        self.assertIn(daniel_ricciardo, staff_pages)
+        self.assertLess(
+            staff_pages.index(kimi_raikkonen),
+            staff_pages.index(daniel_ricciardo),
+        )
 
 
 class PersonPageTests(WagtailPageTests):
