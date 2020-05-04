@@ -43,6 +43,10 @@
       {% block content %}{% endblock %}
     </main>
 
+    {% block footer %}
+      {% include "includes/footer.html" %}
+    {% endblock %}
+
     {# Global javascript #}
     {% compress js %}
       <script type="text/javascript" src="{% static 'js/cigionline.js' %}"></script>

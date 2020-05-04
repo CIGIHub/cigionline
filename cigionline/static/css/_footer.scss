@@ -1,0 +1,57 @@
+footer {
+  background: $black;
+  color: $white;
+  font-size: 0.75rem;
+  margin-top: 5em;
+  padding-top: 5em;
+
+  .logo-container {
+    margin: 0 auto 0.7em;
+    width: 6em;
+
+    .cigi-logo {
+      fill: $white;
+    }
+  }
+
+  .footer-bracket {
+    @include breakpoint($medium) {
+      display: block;
+    }
+
+    display: none;
+    width: 100%;
+  }
+
+  .highlighted-topics {
+    @include display-grid;
+    @include breakpoint($medium) {
+      -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @include breakpoint($large) {
+      -ms-grid-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    list-style-type: none;
+    margin: 0;
+    padding: 1.25em 0;
+
+    .topic {
+      @include link($color: $white, $hover-color: $cigi-pink);
+      padding: 0.2em;
+
+      a {
+        font-family: $primary-font-family;
+        font-weight: $sans-regular;
+        text-transform: uppercase;
+      }
+    }
+
+    .topic-count {
+      color: $cigi-medium-grey;
+    }
+  }
+}
