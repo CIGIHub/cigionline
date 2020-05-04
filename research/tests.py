@@ -1,4 +1,5 @@
 from core.models import HomePage
+from django.template import Context, Template
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
@@ -73,3 +74,31 @@ class TopicPageTests(WagtailPageTests):
             TopicPage,
             {},
         )
+
+
+class HighlightedTopicsTests(WagtailPageTests):
+    TEMPLATE = Template("{% load topic_tags %} {% highlighted_topics %}")
+
+    def test_if_no_topics_template_should_be_empty(self):
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertEqual(' \n\n\n<ul class="highlighted-topics">\n  \n</ul>\n', rendered)
+
+    def test_correct_number_of_topics_render(self):
+        for n in range(5):
+            TopicPage.objects.create(path="/topic{0}".format(n), depth=1, title="topic{0}".format(n), slug="topic{0}".format(n), archive=0, live=True)
+
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertIn("topic4", rendered)
+        self.assertNotIn("topic5", rendered)
+
+    def test_topics_not_live_do_not_render(self):
+        TopicPage.objects.create(path="/topic1", depth=1, title="topic1", slug="topic1", archive=0, live=False)
+
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertNotIn("topic1", rendered)
+
+    def test_topics_archived_do_not_render(self):
+        TopicPage.objects.create(path="/topic1", depth=1, title="topic1", slug="topic1", archive=1, live=True)
+
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertNotIn("topic1", rendered)
