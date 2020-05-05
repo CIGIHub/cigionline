@@ -16,6 +16,7 @@
 
 {% if not page.archive %}
   <section class="hero">
+<<<<<<< HEAD
     <div class="container-lg grid-container">
       <div class="content">
         <h1>{{page.title}}</h1>
@@ -42,6 +43,10 @@
           Former {% for person_type in page.person_types.all %}{{person_type}}{% endfor %}
         </div>
       </div>
+=======
+    <div class="container-lg">
+      <h1>{{self.title}}</h1>
+>>>>>>> master
     </div>
   </section>
 {% endif %}
