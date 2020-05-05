@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags wagtailimages_tags core_tags %}
 
-{% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify|lower}}{% endfor %}{% endblock %}
+{% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify}}{% endfor %}{% endblock %}
 
 {% block content %}
 {% with page.expertise as expertises %}
@@ -57,12 +57,11 @@
               <span class="expertise-item">{{expertise}}</span>
             {% endfor %}
           </div>
+          {% if email or twitter or website or linkedin or image_media or phone or cv %}
+            <hr>
+          {% endif %}
         {% endif %}
         
-        {% if email or twitter or website or linkedin or image_media or phone or cv %}
-          <hr>
-        {% endif %}
-
         <div class="contact">
           {% if phone %}
             <div class="contact-item">
