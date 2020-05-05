@@ -1,7 +1,7 @@
 body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-family: futura-pt,Helvetica,sans-serif;
+  font-family: $primary-font-family;
   margin: 0;
 }
 
@@ -58,28 +58,4 @@ h2 {
 
 .container-sm {
   max-width: 40rem;
-}
-
-.meta {
-  color: #6d6d6d;
-  font-size: 12px;
-  font-family: futura-pt,Helvetica,sans-serif;
-  font-weight: 400;
-  line-height: 17px;
-  text-transform: uppercase;
-}
-
-.topics {
-  .topic {
-    font-size: 12px;
-    text-transform: uppercase;
-
-    &:after {
-      content: ', ';
-    }
-
-    &:last-child:after {
-      content: '';
-    }
-  }
 }
