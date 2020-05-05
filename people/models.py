@@ -79,6 +79,20 @@ class PersonPage(Page):
         UNARCHIVED = (0, 'No')
         ARCHIVED = (1, 'Yes')
 
+    class ExternalPublicationTypes(models.TextChoices):
+        GENERIC = 'Generic'
+        BOOK = 'Book'
+        BOOK_SECTION = 'Book Section'
+        EDITED_BOOK = 'Edited Book'
+        ELECTRONIC_ARTICLE = 'Electronic Article'
+        ELECTRONIC_BOOK = 'Electronic Book'
+        JOURNAL_ARTICLE = 'Journal Article'
+        NEWSPAPER_ARTICLE = 'Newspaper Article'
+        REPORT = 'Report'
+        THESIS = 'Thesis'
+        WEB_PAGE = 'Web Page'
+
+
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)
@@ -141,6 +155,22 @@ class PersonPage(Page):
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
+    external_publications = StreamField([
+        ('external_publication', blocks.StructBlock([
+            ('author', blocks.CharBlock(required=True)),
+            ('location_in_work', blocks.CharBlock(required=False)),
+            ('publisher_info', blocks.CharBlock(required=False)),
+            ('publication_type', blocks.ChoiceBlock(
+                required=True,
+                choices=ExternalPublicationTypes.choices,
+            )),
+            ('secondary_author', blocks.CharBlock(required=False)),
+            ('secondary_title', blocks.CharBlock(required=False)),
+            ('title', blocks.CharBlock(required=False)),
+            ('url', blocks.URLBlock(required=False)),
+            ('year', blocks.IntegerBlock(required=False))
+        ]))
+    ], blank=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
@@ -224,7 +254,14 @@ class PersonPage(Page):
             ],
             heading='Related',
             classname='collapsible collapsed'
-        )
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('external_publications')
+            ],
+            heading='External Publications',
+            classname='collapsible collapsed'
+        ),
     ]
     settings_panels = Page.settings_panels + [
         FieldPanel('archive'),
