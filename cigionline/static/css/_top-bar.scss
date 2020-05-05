@@ -10,7 +10,7 @@ header {
 
     .cigi-logo {
       a {
-        @include breakpoint(large) {
+        @include breakpoint($large) {
           padding: 0.7rem 0;
         }
 
@@ -24,7 +24,7 @@ header {
       }
 
       .small-logo {
-        @include breakpoint(large) {
+        @include breakpoint($large) {
           opacity: 0;
         }
 
@@ -36,7 +36,7 @@ header {
       }
 
       .large-logo {
-        @include breakpoint(large) {
+        @include breakpoint($large) {
           opacity: 1;
         }
 
@@ -84,7 +84,7 @@ header {
       }
 
       .desktop-menu {
-        @include breakpoint(large) {
+        @include breakpoint($large) {
           display: flex;
         }
         display: none;

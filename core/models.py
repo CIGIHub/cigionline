@@ -1,7 +1,11 @@
+from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
+from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 
 class HomePage(Page):
@@ -20,9 +24,32 @@ class HomePage(Page):
         verbose_name = 'Home Page'
 
 
-class CorePage(Page):
+class BasicPageAbstract(Page):
     """Page with subtitle."""
 
+    body = StreamField(
+        [
+            ('paragraph', blocks.RichTextBlock()),
+            ('image', ImageChooserBlock()),
+            ('block_quote', blocks.StructBlock([
+                ('quote', blocks.RichTextBlock(required=True)),
+                ('quote_author', blocks.CharBlock(required=False)),
+                ('author_title', blocks.CharBlock(required=False)),
+                ('image', ImageChooserBlock(required=False)),
+            ])),
+
+        ],
+        blank=True,
+    )
+    image_hero = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Hero Image',
+        help_text='A large image to be displayed prominently on the page.',
+    )
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
 
     # Override content_panels to put the title panel within a MultiFieldPanel
@@ -34,36 +61,65 @@ class CorePage(Page):
             ],
             heading='Title',
             classname='collapsible'
-        )
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible'
+        ),
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('image_hero'),
+            ],
+            heading='Images',
+            classname='collapsible collapsed',
+        ),
     ]
 
     class Meta:
         abstract = True
 
 
-class BasicPage(CorePage):
+class BasicPage(BasicPageAbstract):
     """Page with StreamField body"""
 
-    body = StreamField(
+    related_files = StreamField(
         [
-            ('paragraph', blocks.RichTextBlock())
+            ('file', DocumentChooserBlock()),
         ],
         blank=True,
     )
 
-    content_panels = CorePage.content_panels + [
+    content_panels = BasicPageAbstract.content_panels + [
         MultiFieldPanel(
             [
-                StreamFieldPanel('body')
+                StreamFieldPanel('related_files'),
             ],
-            heading='Body',
-            classname='collapsible'
-        )
+            heading='Related Files',
+            classname='collapsible collapsed',
+        ),
     ]
-    parent_page_types = ['core.HomePage']
-    subpage_types = ['core.BasicPage', 'people.PersonListPage']
+    parent_page_types = ['core.BasicPage', 'core.HomePage']
+    subpage_types = ['core.BasicPage', 'core.FundingPage', 'people.PersonListPage']
     template = 'core/basic_page.html'
 
     class Meta:
         verbose_name = 'Basic Page'
         verbose_name_plural = 'Basic Pages'
+
+
+class FundingPage(BasicPageAbstract):
+    """
+    A special singleton page for /about/funding that contains a hardcoded
+    table with the funding details.
+    """
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    templates = 'core/funding_page.html'
+
+    class Meta:
+        verbose_name = 'Funding Page'

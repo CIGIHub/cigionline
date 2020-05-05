@@ -138,6 +138,20 @@
   }
 }, {
   "model": "wagtailcore.page",
+  "pk": 57,
+  "fields": {
+    "path": "000100010004",
+    "depth": 3,
+    "numchild": 0,
+    "title": "Leadership",
+    "slug": "leadership",
+    "content_type": ["people", "personlistpage"],
+    "live": true,
+    "url_path": "/home/leadership/",
+    "expired": false
+  }
+}, {
+  "model": "wagtailcore.page",
   "pk": 7,
   "fields": {
     "path": "0001000100010001",
@@ -2394,6 +2408,7 @@
   "model": "people.personlistpage",
   "pk": 5,
   "fields": {
+    "body": "[]",
     "subtitle": "",
     "person_list_page_type": 1
   }
@@ -2401,7 +2416,16 @@
   "model": "people.personlistpage",
   "pk": 6,
   "fields": {
+    "body": "[]",
     "subtitle": "",
     "person_list_page_type": 2
+  }
+}, {
+  "model": "people.personlistpage",
+  "pk": 57,
+  "fields": {
+    "body": "[]",
+    "subtitle": "",
+    "person_list_page_type": 3
   }
 }]
