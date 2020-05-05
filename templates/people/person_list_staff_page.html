@@ -1,7 +1,24 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags %}
 
 {% block content %}
-  {% for person in page.person_pages %}
-    <p>{{ person.title }}</p>
-  {% endfor %}
+  <section class="hero">
+    <div class="container-lg">
+      <h1>{{self.title}}</h1>
+    </div>
+  </section>
+  <section>
+    <div class="container-lg">
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </div>
+  </section>
+  <section>
+    <div class="container-lg">
+      {% for person in page.person_pages %}
+        <p>{{ person.title }}</p>
+      {% endfor %}
+    </div>
+  </section>
 {% endblock %}
