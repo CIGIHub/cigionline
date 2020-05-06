@@ -113,7 +113,6 @@ class PersonPage(Page):
         THESIS = 'Thesis'
         WEB_PAGE = 'Web Page'
 
-
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)
@@ -155,7 +154,7 @@ class PersonPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Media Photo',
+        verbose_name='Media photo',
         help_text='A high resolution image that is downloadable from the expert\'s page.'
     )
     image_square = models.ForeignKey(
@@ -164,7 +163,7 @@ class PersonPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Square Image',
+        verbose_name='Square image',
         help_text='For circular profile images that are used throughout the website.'
     )
     languages = StreamField([
