@@ -15,7 +15,6 @@ header {
       a {
         align-items: center;
         display: flex;
-        transition: height 0.5s ease;
       }
 
       svg {
@@ -27,7 +26,7 @@ header {
         @include breakpoint($large) {
           opacity: 0;
         }
-        
+
         opacity: 1;
         position: absolute;
         width: 2em;
@@ -48,12 +47,10 @@ header {
         display: flex;
         list-style: none;
         margin: 0;
-        padding: 0;
 
         a,
         button {
           color: $white;
-          display: block;
           font-size: 0.75rem;
           font-weight: $sans-medium;
 
