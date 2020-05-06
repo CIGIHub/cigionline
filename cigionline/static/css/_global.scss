@@ -1,7 +1,14 @@
 body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  font-family: $primary-font-family;
   margin: 0;
+}
+
+a {
+  color: #e6023b;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 button {
