@@ -4,6 +4,8 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'fontawesome-pro/scss/regular';
 
 @import 'variables';
+@import 'mixins';
 @import 'global';
-@import 'top-bar';
 @import 'hero';
+@import 'top-bar';
+@import 'footer';

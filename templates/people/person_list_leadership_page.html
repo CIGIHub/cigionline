@@ -16,8 +16,13 @@
   </section>
   <section>
     <div class="container-lg">
-      {% for person in page.person_pages %}
-        <p>{{ person.title }}</p>
+      <h2>Board Members</h2>
+      {% for board_member in page.board_members %}
+        <p>{{ board_member.title }}</p>
+      {% endfor %}
+      <h2>Senior Management</h2>
+      {% for manager in page.senior_management %}
+        <p>{{ manager.title }}</p>
       {% endfor %}
     </div>
   </section>
