@@ -56,7 +56,7 @@ class PersonListPageTests(WagtailPageTests):
             {},
         )
 
-    def test_cannot_create_third_personlistpage(self):
+    def test_cannot_create_fourth_personlistpage(self):
         home_page = HomePage.objects.get()
         try:
             self.assertCanCreate(home_page, PersonListPage, nested_form_data({
@@ -297,7 +297,6 @@ class PersonListPageTests(WagtailPageTests):
         self.assertNotIn(speaker_live, experts_page.person_pages)
 
     def test_experts_page_should_not_show_archived_speaker(self):
-
         experts_page = PersonListPage.objects.get(title='Experts')
         speaker_archived = PersonPage.objects.get(title='Speaker Archived')
         self.assertNotIn(speaker_archived, experts_page.person_pages)
@@ -333,6 +332,14 @@ class PersonListPageTests(WagtailPageTests):
             expert_pages.index(kimi_raikkonen),
             expert_pages.index(daniel_ricciardo),
         )
+
+    def test_experts_page_should_not_show_board_members(self):
+        experts_page = PersonListPage.objects.get(title='Experts')
+        self.assertEqual(list(experts_page.board_members), [])
+
+    def test_experts_page_should_not_show_senior_management(self):
+        experts_page = PersonListPage.objects.get(title='Experts')
+        self.assertEqual(list(experts_page.senior_management), [])
 
     def test_staff_directory_page_should_not_show_live_board_member(self):
         staff_directory_page = PersonListPage.objects.get(title='Staff Directory')
@@ -585,6 +592,24 @@ class PersonListPageTests(WagtailPageTests):
             staff_pages.index(kimi_raikkonen),
             staff_pages.index(daniel_ricciardo),
         )
+
+    def test_staff_directory_page_should_not_show_board_members(self):
+        staff_directory_page = PersonListPage.objects.get(title='Staff Directory')
+        self.assertEqual(list(staff_directory_page.board_members), [])
+
+    def test_staff_directory_page_should_not_show_senior_management(self):
+        staff_directory_page = PersonListPage.objects.get(title='Staff Directory')
+        self.assertEqual(list(staff_directory_page.senior_management), [])
+
+    def test_leadership_page_board_members(self):
+        leadership_page = PersonListPage.objects.get(title='Leadership')
+        board_member_live = PersonPage.objects.get(title='Board Member Live')
+        self.assertEqual(list(leadership_page.board_members), [board_member_live])
+
+    def test_leadership_page_senior_management(self):
+        leadership_page = PersonListPage.objects.get(title='Leadership')
+        management_team_live = PersonPage.objects.get(title='Management Team Live')
+        self.assertEqual(list(leadership_page.senior_management), [management_team_live])
 
 
 class PersonPageTests(WagtailPageTests):

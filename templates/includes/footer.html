@@ -1,0 +1,12 @@
+{% load topic_tags %}
+
+
+<footer>
+  <div class="container-lg">
+    <div class="logo-container">
+      {% include "./footer_cigi_logo.svg" %}
+    </div>
+    {% include "./footer_bracket.svg" %}
+    {% highlighted_topics %}
+  </div>
+</footer>
