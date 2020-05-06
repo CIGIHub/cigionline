@@ -84,7 +84,7 @@ class BasicPageAbstract(Page):
         abstract = True
 
 
-class FeatureablePage(Page):
+class FeatureablePageAbstract(Page):
     feature_subtitle = models.CharField(blank=True, max_length=255)
     feature_title = models.CharField(blank=True, max_length=255)
     image_feature = models.ForeignKey(
@@ -155,7 +155,7 @@ class FundingPage(BasicPageAbstract):
         verbose_name = 'Funding Page'
 
 
-class AnnualReportListPage(Page):
+class AnnualReportListPage(BasicPageAbstract):
     max_count = 1
     parent_page_types = ['core.BasicPage']
     subpage_types = ['core.AnnualReportPage']
@@ -165,7 +165,7 @@ class AnnualReportListPage(Page):
         verbose_name = 'Annual Report List Page'
 
 
-class AnnualReportPage(FeatureablePage):
+class AnnualReportPage(FeatureablePageAbstract):
     """View annual report page"""
 
     image_poster = models.ForeignKey(
@@ -205,7 +205,7 @@ class AnnualReportPage(FeatureablePage):
     )
     year = models.IntegerField(validators=[MinValueValidator(2005), MaxValueValidator(2050)])
 
-    content_panels = FeatureablePage.content_panels + [
+    content_panels = FeatureablePageAbstract.content_panels + [
         MultiFieldPanel(
             [
                 FieldPanel('year'),
