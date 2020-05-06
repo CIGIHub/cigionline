@@ -2,43 +2,58 @@
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            {% block title %}
-                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-                {% with self.get_site.site_name as site_name %}
-                    {% if site_name %}- {{ site_name }}{% endif %}
-                {% endwith %}
-            {% endblock %}
-        </title>
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      {% block title %}
+        {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+      {% endblock %}
+      {% block title_suffix %}
+        {% with self.get_site.site_name as site_name %}
+          {% if site_name %}- {{ site_name }}{% endif %}
+        {% endwith %}
+      {% endblock %}
+    </title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {# Global stylesheets #}
-        {% compress css %}
-          <link rel="stylesheet" type="text/x-scss" href="{% static 'css/cigionline.scss' %}">
-        {% endcompress %}
+    {# Fonts #}
+    <link rel="stylesheet" href="https://use.typekit.net/two4qwo.css">
+    {% block extra_fonts %}
+      {# Override this in templates to add extra fonts #}
+    {% endblock %}
 
-        {% block extra_css %}
-            {# Override this in templates to add extra stylesheets #}
-        {% endblock %}
-    </head>
+    {# Global stylesheets #}
+    {% compress css %}
+      <link rel="stylesheet" type="text/x-scss" href="{% static 'css/cigionline.scss' %}">
+    {% endcompress %}
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% wagtailuserbar %}
+    {% block extra_css %}
+      {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+    {% wagtailuserbar %}
 
-        {% block content %}{% endblock %}
+    {% block header %}
+      {% include "includes/top-bar.html" %}
+    {% endblock %}
 
-        {# Global javascript #}
-        {% compress js %}
-          <script type="text/javascript" src="{% static 'js/cigionline.js' %}"></script>
-        {% endcompress %}
+    <main>
+      {% block content %}{% endblock %}
+    </main>
 
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
-        {% endblock %}
-    </body>
+    {% block footer %}
+      {% include "includes/footer.html" %}
+    {% endblock %}
+
+    {# Global javascript #}
+    {% compress js %}
+      <script type="text/javascript" src="{% static 'js/cigionline.js' %}"></script>
+    {% endcompress %}
+
+    {% block extra_js %}
+      {# Override this in templates to add extra javascript #}
+    {% endblock %}
+  </body>
 </html>

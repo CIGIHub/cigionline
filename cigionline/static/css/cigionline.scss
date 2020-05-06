@@ -1,0 +1,11 @@
+// Fontawesome
+$fa-font-path: '../fontawesome-pro/webfonts';
+@import 'fontawesome-pro/scss/fontawesome';
+@import 'fontawesome-pro/scss/regular';
+
+@import 'variables';
+@import 'mixins';
+@import 'global';
+@import 'hero';
+@import 'top-bar';
+@import 'footer';

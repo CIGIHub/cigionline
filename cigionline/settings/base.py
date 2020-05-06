@@ -25,7 +25,9 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'compressor',
-    'home',
+    'core',
+    'people',
+    'research',
     'search',
 
     'wagtail.contrib.forms',
@@ -46,8 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.postgres',
+    'django.contrib.sessions',
     'django.contrib.staticfiles',
 ]
 
@@ -149,6 +152,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
+    'node_modules/@fortawesome',
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
