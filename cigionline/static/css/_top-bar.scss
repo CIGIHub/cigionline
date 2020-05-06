@@ -11,6 +11,7 @@ header {
       @include breakpoint($large) {
         padding: 0.7em 0;
       }
+
       a {
         align-items: center;
         display: flex;
@@ -26,6 +27,7 @@ header {
         @include breakpoint($large) {
           opacity: 0;
         }
+        
         opacity: 1;
         position: absolute;
         width: 2em;
@@ -35,6 +37,7 @@ header {
         @include breakpoint($large) {
           opacity: 1;
         }
+
         opacity: 0;
         width: 8.5em;
       }
@@ -67,6 +70,7 @@ header {
           @include breakpoint($large) {
             display: flex;
           }
+
           align-items: center;
           display: none;
 
