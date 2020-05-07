@@ -10,13 +10,14 @@
     .content {
       max-width: 530px;
 
+      .short-bio {
+        color: $white;
+      }
+
       .topics {
         .topic {
           font-weight: 500;
         }
-      }
-      .short-bio {
-        color: $white;
       }
     }
 
@@ -30,7 +31,8 @@
       background: $white;
 
       .content {
-        h1, .person-type {
+        h1,
+        .person-type {
           color: $black;
         }
 
@@ -43,17 +45,19 @@
 
   .main {
     .expertise-section {
-      padding: 1rem;
-      border: 1px solid #e9e9e9;
-      margin: 3rem 0;
+      border: 1px solid $cigi-light-grey;
+      margin: 3em 0;
+      padding: 1em;
 
       .expertise-item {
-        &:after {
+        &::after {
           content: ', ';
         }
 
-        &:last-child:after {
-          content: '';
+        &:last-child {
+          &::after {
+            content: '';
+          }
         }
       }
 
@@ -62,10 +66,10 @@
 
         .contact-item {
           a {
-            color: #000000;
-            overflow: hidden;
+            color: $black;
             display: inline-block;
-            line-height: 1.2rem;
+            line-height: 1.2em;
+            overflow: hidden;
             text-overflow: ellipsis;
             width: calc(100% - 30px);
             white-space: nowrap;
@@ -73,16 +77,12 @@
 
           i {
             color: #e6023b;
-            line-height: 1.2rem;
-            width: 22px;
+            line-height: 1.2em;
             vertical-align: top;
+            width: 22px;
           }
         }
       }
     }
-  }
-
-  &.staff {
-
   }
 }
