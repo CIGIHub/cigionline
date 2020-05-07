@@ -72,28 +72,28 @@
 
           {% if email %}
             <div class="contact-item">
-              <i class="fas fa-envelope"></i>
+              <i class="fas fa-envelope" aria-hidden="true"></i>
               <span><a href="mailto:{{ email }}">{{ email }}</a></span>
             </div>
           {% endif %}
 
           {% if twitter %}
             <div class="contact-item">
-              <i class="fab fa-twitter"></i>
+              <i class="fab fa-twitter" aria-hidden="true"></i>
               <span><a href="https://twitter.com/{{ twitter }}" target="_blank">{{ twitter }}</a></span>
             </div>
           {% endif %}
 
           {% if linkedin %}
             <div class="contact-item">
-              <i class="fab fa-linkedin-in"></i>
+              <i class="fab fa-linkedin-in" aria-hidden="true"></i>
               <span><a href="{{ linkedin }}" target="_blank">{{ linkedin|no_protocol }}</a></span>
             </div>
           {% endif %}
 
           {% if website %}
             <div class="contact-item">
-              <i class="fas fa-link"></i>
+              <i class="fas fa-link" aria-hidden="true"></i>
               <span><a href="{{ website }}" target="_blank">{{ website|no_protocol }}</a></span>
             </div>
           {% endif %}
@@ -108,7 +108,7 @@
           {% if image_media %}
             {% image image_media original as high_res %}
             <div class="contact-item">
-              <i class="fas fa-download"></i>
+              <i class="fas fa-download" aria-hidden="true"></i>
               <span><a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a></span>
             </div>
           {% endif %}
@@ -122,6 +122,67 @@
         <h2>Bio</h2>
         {{ page.body }}
       </div>
+    {% endif %}
+
+    {% if page.external_publications %}
+    {% with publication.value.publication_type|lower as type %}
+      <h2>Select Publications</h2>
+      <ol>
+        {% for publication in page.external_publications %}
+          <li>
+            {% if publication.value.author %}
+              <span>{{publication.value.author}}</span>.
+            {% endif %}
+
+            {% if publication.value.year %}
+              <span>{{publication.value.year}}</span>.
+            {% endif %}
+
+            {% if publication.value.title %}
+              <span>
+                {% if type == 'book' or type == 'edited_book' or type == 'e_book' %}
+                  <em>
+                    {% if publication.value.url %}
+                      <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>.
+                    {% else %}
+                      {{ publication.value.title }}.
+                    {% endif %}
+                  </em>  
+                {% else %}
+                  {% if publication.value.url %}
+                    <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>.
+                  {% else %}
+                    {{ publication.value.title }}.
+                  {% endif %}
+                {% endif %}
+              </span>
+            {% endif %}
+
+            {% if type == 'report' or type == 'thesis' and publication.value.secondary_title %}
+              <span>{{ publication.value.secondary_title }}</span>.
+            {% elif type == 'generic' or type == 'book_section' and publication.value.secondary_title %}
+              <span><em>{{ publication.value.secondary_title }}</em></span>.
+            {% endif %}
+              
+            {% if publication.value.secondary_author %}
+              <span>{{ publication.value.secondary_author }}<span>.
+            {% endif %}
+
+            {% if type == 'book' or type == 'edited_book' and publication.value.secondary_title %}
+              <span><em>{{ publication.value.secondary_title }}</em></span>.
+            {% endif %}
+
+            {% if publication.value.publisher %}
+              <span><em>{{ publication.value.publisher }}</em><span>.
+            {% endif %}
+            
+            {% if publication.value.location %}
+              <span>{{ publication.value.location }}<span>.
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    {% endwith %}
     {% endif %}
   {% endif %}
 </section>

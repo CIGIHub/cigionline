@@ -1,10 +1,12 @@
 .person-page {
   .hero {
-    // remove later
     .grid-container {
+      @include breakpoint($medium) {
+        grid-template-columns: 70% 25%;
+        grid-column-gap: 5%;
+      }
+
       align-items: end;
-      display: grid;
-      grid-template-columns: 75% 25%;
     }
 
     .content {
@@ -22,6 +24,8 @@
     }
 
     .portrait-circle {
+      padding-top: 1em;
+
       img {
         border-radius: 50%;
       }
@@ -46,8 +50,12 @@
   .main {
     .expertise-section {
       border: 1px solid $cigi-light-grey;
-      margin: 3em 0;
+      margin: 1em 0;
       padding: 1em;
+      
+      @include breakpoint($medium) {
+        margin: 3em 0;
+      }
 
       .expertise-item {
         &::after {
@@ -62,7 +70,9 @@
       }
 
       .contact {
-        columns: 3;
+        @include breakpoint($medium) {
+          columns: 3;
+        }
 
         .contact-item {
           a {
@@ -71,12 +81,12 @@
             line-height: 1.2em;
             overflow: hidden;
             text-overflow: ellipsis;
-            width: calc(100% - 30px);
             white-space: nowrap;
+            width: calc(100% - 30px);
           }
 
           i {
-            color: #e6023b;
+            color: $cigi-pink;
             line-height: 1.2em;
             vertical-align: top;
             width: 22px;
