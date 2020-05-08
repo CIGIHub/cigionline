@@ -9,6 +9,10 @@ a {
   color: $cigi-pink;
   text-decoration: none;
   transition: color 0.2s ease;
+
+  &:hover {
+    color: $cigi-dark-pink;
+  }
 }
 
 button {
@@ -28,16 +32,22 @@ hr {
   border: 0;
   height: 1px;
   margin: 1em 0;
-  width: 100%;
 }
 
 h2 {
-  border-top: 3px solid $black;
+  border-top: 0.25em solid $black;
   color: $black;
   display: inline-block;
   font-size: 0.75rem;
   font-weight: $sans-medium;
   text-transform: uppercase;
+}
+
+ol,
+ul {
+  line-height: 1.5em;
+  margin: 0 0 1em 1em;
+  padding: 0;
 }
 
 [class*='container-'] {

@@ -8,3 +8,8 @@ register = template.Library()
 def highlighted_topics():
     highlighted_topics = TopicPage.objects.live().filter(archive=0).order_by('title')
     return {'highlighted_topics': highlighted_topics}
+
+
+@register.inclusion_tag('research/topics.html')
+def topics(topics):
+    return {'topics': topics.order_by('title')}

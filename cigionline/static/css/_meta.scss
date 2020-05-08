@@ -10,11 +10,12 @@
     text-transform: uppercase;
 
     &::after {
+      color: $black;
       content: ', ';
     }
 
     &:last-child {
-      ::after {
+      &::after {
         content: '';
       }
     }

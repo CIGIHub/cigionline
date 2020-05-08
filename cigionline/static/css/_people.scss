@@ -2,24 +2,23 @@
   .hero {
     .grid-container {
       @include breakpoint($medium) {
-        grid-template-columns: 70% 25%;
+        -ms-grid-columns: 1fr 5% 25%;
         grid-column-gap: 5%;
+        grid-template-columns: 1fr 25%;
       }
 
       align-items: end;
     }
 
     .content {
-      max-width: 530px;
+      max-width: 33rem;
 
       .short-bio {
         color: $white;
       }
 
-      .topics {
-        .topic {
-          font-weight: 500;
-        }
+      .topic {
+        font-weight: $sans-medium;
       }
     }
 
@@ -49,13 +48,12 @@
 
   .main {
     .expertise-section {
-      border: 1px solid $cigi-light-grey;
-      margin: 1em 0;
-      padding: 1em;
-      
       @include breakpoint($medium) {
         margin: 3em 0;
       }
+      border: 1px solid $cigi-light-grey;
+      margin: 1em 0;
+      padding: 1em;
 
       .expertise-item {
         &::after {
@@ -82,16 +80,23 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            width: calc(100% - 30px);
+            width: 9.5em;
           }
 
           i {
             color: $cigi-pink;
             line-height: 1.2em;
+            margin-right: 0.3em;
             vertical-align: top;
-            width: 22px;
           }
         }
+      }
+    }
+
+    .external-publications {
+      .external-publication {
+        border-bottom: 1px solid #e9e9e9;
+        padding: 1em 0;
       }
     }
   }
