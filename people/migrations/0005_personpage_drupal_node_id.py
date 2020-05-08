@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='personpage',
             name='drupal_node_id',
-            field=models.IntegerField(null=True),
+            field=models.IntegerField(blank=True, null=True),
         ),
     ]

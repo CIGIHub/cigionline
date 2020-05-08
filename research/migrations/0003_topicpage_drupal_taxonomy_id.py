@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='topicpage',
             name='drupal_taxonomy_id',
-            field=models.IntegerField(null=True),
+            field=models.IntegerField(blank=True, null=True),
         ),
     ]

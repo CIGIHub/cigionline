@@ -27,7 +27,7 @@ class TopicPage(Page):
     archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
-    drupal_taxonomy_id = models.IntegerField(null=True)
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
