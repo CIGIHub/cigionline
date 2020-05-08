@@ -126,62 +126,64 @@
 
     {% if page.external_publications %}
     {% with publication.value.publication_type|lower as type %}
-      <h2>Select Publications</h2>
-      <ol class="external-publications">
-        {% for publication in page.external_publications %}
-          <li class="external-publication">
-            {% if publication.value.author %}
-              <span>{{publication.value.author}}</span>.
-            {% endif %}
+      <div class="external-publications">
+        <h2>Select Publications</h2>
+        <ol>
+          {% for publication in page.external_publications %}
+            <li class="external-publication">
+              {% if publication.value.author %}
+                <span>{{publication.value.author}}</span>.
+              {% endif %}
 
-            {% if publication.value.year %}
-              <span>{{publication.value.year}}</span>.
-            {% endif %}
+              {% if publication.value.year %}
+                <span>{{publication.value.year}}</span>.
+              {% endif %}
 
-            {% if publication.value.title %}
-              <span>
-                {% if type == 'book' or type == 'edited_book' or type == 'e_book' %}
-                  <em>
+              {% if publication.value.title %}
+                <span>
+                  {% if type == 'book' or type == 'edited_book' or type == 'e_book' %}
+                    <em>
+                      {% if publication.value.url %}
+                        <a href="{{ publication.value.url }}">"{{ publication.value.title }}"</a>.
+                      {% else %}
+                        {{ publication.value.title }}.
+                      {% endif %}
+                    </em>
+                  {% else %}
                     {% if publication.value.url %}
                       <a href="{{ publication.value.url }}">"{{ publication.value.title }}"</a>.
                     {% else %}
-                      {{ publication.value.title }}.
+                      "{{ publication.value.title }}".
                     {% endif %}
-                  </em>
-                {% else %}
-                  {% if publication.value.url %}
-                    <a href="{{ publication.value.url }}">"{{ publication.value.title }}"</a>.
-                  {% else %}
-                    "{{ publication.value.title }}".
                   {% endif %}
-                {% endif %}
-              </span>
-            {% endif %}
+                </span>
+              {% endif %}
 
-            {% if type == 'report' or type == 'thesis' and publication.value.secondary_title %}
-              <span>{{ publication.value.secondary_title }}</span>.
-            {% elif type == 'generic' or type == 'book_section' and publication.value.secondary_title %}
-              <span><em>{{ publication.value.secondary_title }}</em></span>.
-            {% endif %}
+              {% if type == 'report' or type == 'thesis' and publication.value.secondary_title %}
+                <span>{{ publication.value.secondary_title }}</span>.
+              {% elif type == 'generic' or type == 'book_section' and publication.value.secondary_title %}
+                <span><em>{{ publication.value.secondary_title }}</em></span>.
+              {% endif %}
+                
+              {% if publication.value.secondary_author %}
+                <span>{{ publication.value.secondary_author }}<span>.
+              {% endif %}
+
+              {% if type == 'book' or type == 'edited_book' and publication.value.secondary_title %}
+                <span><em>{{ publication.value.secondary_title }}</em></span>.
+              {% endif %}
+
+              {% if publication.value.publisher_info %}
+                <span><em>{{ publication.value.publisher_info }}</em><span>.
+              {% endif %}
               
-            {% if publication.value.secondary_author %}
-              <span>{{ publication.value.secondary_author }}<span>.
-            {% endif %}
-
-            {% if type == 'book' or type == 'edited_book' and publication.value.secondary_title %}
-              <span><em>{{ publication.value.secondary_title }}</em></span>.
-            {% endif %}
-
-            {% if publication.value.publisher_info %}
-              <span><em>{{ publication.value.publisher_info }}</em><span>.
-            {% endif %}
-            
-            {% if publication.value.location_in_work %}
-              <span>{{ publication.value.location_in_work }}<span>.
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ol>
+              {% if publication.value.location_in_work %}
+                <span>{{ publication.value.location_in_work }}<span>.
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
     {% endwith %}
     {% endif %}
   {% endif %}
