@@ -1,6 +1,8 @@
 from core.models import BasicPageAbstract, ShareablePageAbstract
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 
 class PublicationListPage(BasicPageAbstract):
@@ -28,6 +30,25 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
         help_text='An image of the cover of the publication.',
     )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('image_cover'),
+            ],
+            heading='Images',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
+    ]
 
     parent_page_types = ['publications.PublicationListPage']
     subpage_types = []

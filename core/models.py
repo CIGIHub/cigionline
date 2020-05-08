@@ -54,29 +54,32 @@ class BasicPageAbstract(Page):
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
 
     # Override content_panels to put the title panel within a MultiFieldPanel
+    title_panel = MultiFieldPanel(
+        [
+            FieldPanel('title'),
+            FieldPanel('subtitle')
+        ],
+        heading='Title',
+        classname='collapsible'
+    )
+    body_panel = MultiFieldPanel(
+        [
+            StreamFieldPanel('body'),
+        ],
+        heading='Body',
+        classname='collapsible'
+    )
+    images_panel = MultiFieldPanel(
+        [
+            ImageChooserPanel('image_hero'),
+        ],
+        heading='Images',
+        classname='collapsible collapsed',
+    )
     content_panels = [
-        MultiFieldPanel(
-            [
-                FieldPanel('title'),
-                FieldPanel('subtitle')
-            ],
-            heading='Title',
-            classname='collapsible'
-        ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('body'),
-            ],
-            heading='Body',
-            classname='collapsible'
-        ),
-        MultiFieldPanel(
-            [
-                ImageChooserPanel('image_hero'),
-            ],
-            heading='Images',
-            classname='collapsible collapsed',
-        ),
+        title_panel,
+        body_panel,
+        images_panel,
     ]
 
     class Meta:
