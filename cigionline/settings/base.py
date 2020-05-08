@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'compressor',
     'core',
     'people',
+    'publications',
     'research',
     'search',
 
