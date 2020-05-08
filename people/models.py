@@ -324,5 +324,8 @@ class PersonType(models.Model):
     """
     name = models.CharField(max_length=255)
 
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(null=True)
+
     def __str__(self):
         return self.name
