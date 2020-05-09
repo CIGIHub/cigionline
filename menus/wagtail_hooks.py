@@ -24,6 +24,7 @@ class MenuAdmin(ModelAdmin):
     menu_label = 'Menus'
     menu_icon = 'list-ul'
     menu_order = 100
+    ordering = ['name']
     permission_helper_class = MenuAdminPermissionHelper
     add_to_settings_menu = True
     exclude_from_explorer = False
