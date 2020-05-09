@@ -113,6 +113,10 @@ class PersonPage(Page):
         THESIS = 'Thesis'
         WEB_PAGE = 'Web Page'
 
+    @property
+    def is_staff(self):
+        return self.person_types.filter(name='Staff').exists()
+        
 
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
