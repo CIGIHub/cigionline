@@ -5,7 +5,11 @@
 }
 
 .topics {
+  list-style-type: none;
+  margin: 0;
+
   .topic {
+    display: inline;
     font-size: 0.75rem;
     text-transform: uppercase;
 

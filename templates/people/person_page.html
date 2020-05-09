@@ -35,12 +35,14 @@
     <div class="container-sm">
       <div class="content">
         {% if page.topics %}
-          {% topics page.topics.all %}
+          {% topics page.topics %}
         {% endif %}
         <h1>{{page.title}}</h1>
-        <div class="person-type">
-          Former {% for person_type in page.person_types.all %}{{person_type}}{% endfor %}
-        </div>
+        {% if page.position %}
+          <div class="position">
+            {% if not 'Former' in page.position %}Former {% endif %}{{ page.position }}
+          </div>
+        {% endif %}
       </div>
     </div>
   </section>
@@ -161,18 +163,22 @@
                 </span>
               {% endif %}
 
-              {% if type == 'report' or type == 'thesis' and publication.value.secondary_title %}
-                <span>{{ publication.value.secondary_title }}</span>.
-              {% elif type == 'generic' or type == 'book_section' and publication.value.secondary_title %}
-                <span><em>{{ publication.value.secondary_title }}</em></span>.
+              {% if publication.value.secondary_title %}
+                {% if type == 'report' or type == 'thesis' %}
+                  <span>{{ publication.value.secondary_title }}</span>.
+                {% elif type != 'book' or type != 'edited_book' %}
+                  <span><em>{{ publication.value.secondary_title }}</em></span>.
+                {% endif %}
               {% endif %}
                 
               {% if publication.value.secondary_author %}
                 <span>{{ publication.value.secondary_author }}<span>.
               {% endif %}
-
-              {% if type == 'book' or type == 'edited_book' and publication.value.secondary_title %}
-                <span><em>{{ publication.value.secondary_title }}</em></span>.
+              
+              {% if publication.value.secondary_title %}
+                {% if type == 'book' or type == 'edited_book' %}
+                  <span><em>{{ publication.value.secondary_title }}</em></span>.
+                {% endif %}
               {% endif %}
 
               {% if publication.value.publisher_info %}
