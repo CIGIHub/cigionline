@@ -1,3 +1,7 @@
+{% load wagtailcore_tags menu_tags %}
+
+{% get_menu_items 'main' as main_menu_items %}
+
 <header>
   <div class="container-lg cigi-top-bar">
     <a href="/" class="cigi-logo">
@@ -9,27 +13,11 @@
     </a>
     <nav>
       <ul class="menu desktop-menu">
-        <li>
-          <a href="#">Research</a>
-        </li>
-        <li>
-          <a href="#">Publications</a>
-        </li>
-        <li>
-          <a href="#">Experts</a>
-        </li>
-        <li>
-          <a href="#">Opinions</a>
-        </li>
-        <li>
-          <a href="#">Multimedia</a>
-        </li>
-        <li>
-          <a href="#">Events</a>
-        </li>
-        <li>
-          <a href="#">About</a>
-        </li>
+        {% for menu_item in main_menu_items %}
+          <li>
+            <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
+          </li>
+        {% endfor %}
         <li class="menu-break">
           <button>
             <i class="far fa-search"></i>
