@@ -29,13 +29,17 @@ class Menu(ClusterableModel):
 
 class MenuItem(Orderable):
     title = models.CharField(max_length=32)
-    link_url = models.CharField(blank=True, max_length=512)
     link_page = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
         blank=True,
         related_name='+',
         on_delete=models.CASCADE,
+    )
+    link_url = models.CharField(
+        blank=True,
+        max_length=512,
+        help_text='An external URL (https://...) or an internal URL (/interactives/2019annualreport/). This field is only considered if there is no link page.',
     )
     menu = ParentalKey('Menu', related_name='menu_items', on_delete=models.CASCADE)
     submenu = models.ForeignKey(
@@ -44,12 +48,13 @@ class MenuItem(Orderable):
         blank=True,
         related_name='+',
         on_delete=models.CASCADE,
+        help_text='Related submenu to show in the hamburger menu.'
     )
 
     panels = [
         FieldPanel('title'),
-        FieldPanel('link_url'),
         PageChooserPanel('link_page'),
+        FieldPanel('link_url'),
         FieldPanel('submenu'),
     ]
 
