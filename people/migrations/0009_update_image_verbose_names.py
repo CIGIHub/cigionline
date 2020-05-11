@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailimages', '0001_squashed_0021'),
-        ('people', '0005_expand_person_list_page'),
+        ('people', '0008_external_publications_url_title'),
     ]
 
     operations = [
