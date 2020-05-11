@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('menus', '0002_populate_menus'),
-        ('core', '0006_fundingpage'),
+        ('core', '0007_annualreportpage'),
     ]
 
     operations = [
