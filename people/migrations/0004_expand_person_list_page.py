@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailimages', '0001_squashed_0021'),
-        ('people', '0004_personpage_external_publications'),
+        ('people', '0003_personpage_external_publications'),
     ]
 
     operations = [
