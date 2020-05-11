@@ -43,7 +43,7 @@ header {
     }
 
     nav {
-      .desktop-menu {
+      ul {
         display: flex;
         list-style: none;
         margin: 0;
@@ -51,24 +51,20 @@ header {
         a,
         button {
           color: $white;
+          display: block;
           font-size: 0.75rem;
-          font-weight: $sans-medium;
+          padding: 1.7em .9em;
 
           &:hover {
             color: $cigi-primary-colour;
           }
         }
 
-        .menu-break {
-          margin-left: 1.5em;
-        }
-
-        .menu-item {
+        li {
           @include breakpoint($large) {
-            display: flex;
+            display: inline-block;
           }
 
-          align-items: center;
           display: none;
 
           a {
@@ -77,10 +73,11 @@ header {
           }
         }
 
-        .overlay-controls {
-          align-items: center;
-          display: flex;
+        .menu-break {
+          margin-left: 1.5em;
+        }
 
+        .overlay-controls {
           .overlay-controls-button {
             padding-left: 0.5em;
             padding-right: 0.5em;
