@@ -113,7 +113,6 @@ class PersonPage(Page):
         THESIS = 'Thesis'
         WEB_PAGE = 'Web Page'
 
-
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)
@@ -189,12 +188,16 @@ class PersonPage(Page):
             ('secondary_title', blocks.CharBlock(required=False)),
             ('title', blocks.CharBlock(required=False)),
             ('url', blocks.URLBlock(required=False)),
+            ('url_title', blocks.CharBlock(required=False)),
             ('year', blocks.IntegerBlock(required=False))
         ]))
     ], blank=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -321,6 +324,9 @@ class PersonType(models.Model):
     - Staff
     """
     name = models.CharField(max_length=255)
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.name
