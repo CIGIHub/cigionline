@@ -24,17 +24,13 @@ footer {
   }
 
   .highlighted-topics {
-    @include display-grid;
     @include breakpoint($medium) {
-      -ms-grid-columns: 1fr 1fr 1fr;
-      grid-template-columns: 1fr 1fr 1fr;
+      columns: 3;
     }
     @include breakpoint($large) {
-      -ms-grid-columns: 1fr 1fr 1fr 1fr;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      columns: 4;
     }
-    -ms-grid-columns: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
+    columns: 2;
     list-style-type: none;
     margin: 0;
     padding: 1.25em 0;
