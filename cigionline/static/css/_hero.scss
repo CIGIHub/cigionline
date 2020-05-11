@@ -52,11 +52,11 @@ section {
             padding: 0;
 
             li {
+              @include link($color: $white, $hover-color: $cigi-pink);
+
               border-bottom: 1px solid $border-grey;
               padding-bottom: .2em;
               padding-top: .2em;
-
-              @include link($color: $white, $hover-color: $cigi-pink);
             }
           }
         }
