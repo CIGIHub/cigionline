@@ -8,7 +8,7 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('people', '0005_expand_person_list_page'),
+        ('people', '0007_populate_person_types'),
     ]
 
     operations = [
