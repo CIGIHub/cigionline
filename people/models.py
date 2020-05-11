@@ -189,6 +189,7 @@ class PersonPage(Page):
             ('secondary_title', blocks.CharBlock(required=False)),
             ('title', blocks.CharBlock(required=False)),
             ('url', blocks.URLBlock(required=False)),
+            ('url_title', blocks.CharBlock(required=False)),
             ('year', blocks.IntegerBlock(required=False))
         ]))
     ], blank=True)
