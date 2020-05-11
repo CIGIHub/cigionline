@@ -51,7 +51,7 @@ header {
           color: $white;
           display: block;
           font-size: 0.75rem;
-          padding: 1.7em .9em;
+          padding: 1.7em 0.9em;
 
           &:hover {
             color: $cigi-primary-colour;
@@ -77,12 +77,11 @@ header {
           &.menu-break {
             margin-left: 1.5em;
           }
-          
+
           .overlay-controls-button {
             @include breakpoint($large) {
               padding: 1.7em 0.5em;
             }
-
             padding: 0.7em 0.5em;
           }
         }
