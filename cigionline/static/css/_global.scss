@@ -1,5 +1,12 @@
 body {
+  font-family: $primary-font-family;
   margin: 0;
+}
+
+a {
+  color: $cigi-pink;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 button {
