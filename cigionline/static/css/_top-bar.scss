@@ -12,10 +12,8 @@ header {
         padding: 0.7em 0;
       }
 
-      a {
-        align-items: center;
-        display: flex;
-      }
+      align-items: center;
+      display: flex;
 
       svg {
         fill: $white;
@@ -34,10 +32,10 @@ header {
 
       .large-logo {
         @include breakpoint($large) {
-          opacity: 1;
+          display: block;
         }
 
-        opacity: 0;
+        display: none;
         width: 8.5em;
       }
     }
@@ -73,14 +71,19 @@ header {
           }
         }
 
-        .menu-break {
-          margin-left: 1.5em;
-        }
-
         .overlay-controls {
+          display: inline-block;
+
+          &.menu-break {
+            margin-left: 1.5em;
+          }
+          
           .overlay-controls-button {
-            padding-left: 0.5em;
-            padding-right: 0.5em;
+            @include breakpoint($large) {
+              padding: 1.7em 0.5em;
+            }
+
+            padding: 0.7em 0.5em;
           }
         }
       }
