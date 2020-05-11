@@ -8,7 +8,7 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('people', '0003_activate_pg_unaccent_extension'),
+        ('people', '0002_activate_pg_unaccent_extension'),
     ]
 
     operations = [
