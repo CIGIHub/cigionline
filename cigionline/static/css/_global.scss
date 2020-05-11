@@ -3,6 +3,12 @@ body {
   margin: 0;
 }
 
+a {
+  color: $cigi-pink;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
 button {
   background-color: transparent;
   border: 0;
