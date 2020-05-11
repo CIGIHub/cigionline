@@ -31,9 +31,14 @@ http {
  	}
 
 	server {
-		listen <%= ENV["PORT"] %>;
+		listen <%= ENV['PORT'] %>;
 		server_name _;
 		keepalive_timeout 5;
+
+		<% if ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
+      auth_basic "Restricted";
+      auth_basic_user_file <%= "#{ENV["HOME"]}/config/htpasswd" %>;
+    <% end %>
 
 		location / {
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
