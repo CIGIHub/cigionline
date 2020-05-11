@@ -50,6 +50,15 @@ class BasicPageAbstract(Page):
         verbose_name='Hero Image',
         help_text='A large image to be displayed prominently on the page.',
     )
+    submenu = models.ForeignKey(
+        'menus.Menu',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Submenu',
+        help_text='Select a submenu to appear in the right section of the hero.',
+    )
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
 
     # Override content_panels to put the title panel within a MultiFieldPanel
@@ -74,6 +83,16 @@ class BasicPageAbstract(Page):
                 ImageChooserPanel('image_hero'),
             ],
             heading='Images',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel('submenu'),
+            ],
+            heading='Submenu',
             classname='collapsible collapsed',
         ),
     ]
