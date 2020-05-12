@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <section class="hero">
-    <div class="container-lg">
-      <h1>{{self.title}}</h1>
-    </div>
-  </section>
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 {% endblock content %}
