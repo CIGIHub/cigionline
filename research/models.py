@@ -26,6 +26,9 @@ class TopicPage(Page):
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
     archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
 
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
+
     content_panels = Page.content_panels + [
         FieldPanel('description')
     ]

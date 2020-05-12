@@ -159,7 +159,7 @@ class PersonPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Media Photo',
+        verbose_name='Media photo',
         help_text='A high resolution image that is downloadable from the expert\'s page.'
     )
     image_square = models.ForeignKey(
@@ -168,7 +168,7 @@ class PersonPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Square Image',
+        verbose_name='Square image',
         help_text='For circular profile images that are used throughout the website.'
     )
     languages = StreamField([
@@ -193,12 +193,16 @@ class PersonPage(Page):
             ('secondary_title', blocks.CharBlock(required=False)),
             ('title', blocks.CharBlock(required=False)),
             ('url', blocks.URLBlock(required=False)),
+            ('url_title', blocks.CharBlock(required=False)),
             ('year', blocks.IntegerBlock(required=False))
         ]))
     ], blank=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -325,6 +329,9 @@ class PersonType(models.Model):
     - Staff
     """
     name = models.CharField(max_length=255)
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.name
