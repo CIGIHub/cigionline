@@ -134,7 +134,7 @@
         <h2>Select Publications</h2>
         <ol>
           {% for publication in page.external_publications %}
-            <li class="external-publication">
+            <li>
               {% if publication.value.author %}
                 <span>{{publication.value.author}}</span>.
               {% endif %}
@@ -148,14 +148,14 @@
                   {% if type == 'book' or type == 'edited_book' or type == 'e_book' %}
                     <em>
                       {% if publication.value.url %}
-                        <a href="{{ publication.value.url }}">"{{ publication.value.title }}"</a>.
+                        <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>.
                       {% else %}
                         {{ publication.value.title }}.
                       {% endif %}
                     </em>
                   {% else %}
                     {% if publication.value.url %}
-                      <a href="{{ publication.value.url }}">"{{ publication.value.title }}"</a>.
+                      "<a href="{{ publication.value.url }}">{{ publication.value.title }}</a>".
                     {% else %}
                       "{{ publication.value.title }}".
                     {% endif %}
