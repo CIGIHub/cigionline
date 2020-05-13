@@ -5,7 +5,35 @@ from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
-from .models import BasicPage, FundingPage, HomePage
+from .models import AnnualReportListPage, AnnualReportPage, BasicPage, FundingPage, HomePage
+
+
+class AnnualReportListPageTests(WagtailPageTests):
+    def test_annualreportlistpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            AnnualReportListPage,
+            {BasicPage},
+        )
+
+    def test_annualreportlistpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            AnnualReportListPage,
+            {AnnualReportPage},
+        )
+
+
+class AnnualReportPageTests(WagtailPageTests):
+    def test_annualreportpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            AnnualReportPage,
+            {AnnualReportListPage},
+        )
+
+    def test_annualreportpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            AnnualReportPage,
+            {},
+        )
 
 
 class BasicPageTests(WagtailPageTests):
@@ -24,7 +52,7 @@ class BasicPageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {BasicPage, FundingPage, PersonListPage}
+            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage}
         )
 
 
