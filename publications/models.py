@@ -1,7 +1,9 @@
 from core.models import BasicPageAbstract, ShareablePageAbstract
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.core.blocks import PageChooserBlock
+from wagtail.core.fields import StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
@@ -20,6 +22,12 @@ class PublicationListPage(BasicPageAbstract):
 class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
     """View publication page"""
 
+    authors = StreamField(
+        [
+            ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+        ],
+        blank=True,
+    )
     image_cover = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -34,6 +42,13 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('authors'),
+            ],
+            heading='Authors',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_cover'),
