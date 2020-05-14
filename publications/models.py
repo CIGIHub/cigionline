@@ -2,7 +2,7 @@ from core.models import BasicPageAbstract, ShareablePageAbstract
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
-from wagtail.core.blocks import PageChooserBlock
+from wagtail.core.blocks import CharBlock, PageChooserBlock
 from wagtail.core.fields import StreamField
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -25,6 +25,7 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
     authors = StreamField(
         [
             ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('external_author', CharBlock(required=True)),
         ],
         blank=True,
     )
