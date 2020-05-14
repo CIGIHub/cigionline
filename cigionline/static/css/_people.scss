@@ -1,28 +1,24 @@
 .person-page {
   .hero {
-    .grid-container {
+    .hero-container {
       @include breakpoint($medium) {
-        -ms-grid-columns: 1fr 5% 25%;
-        grid-column-gap: 5%;
-        grid-template-columns: 1fr 25%;
+        align-items: flex-end;
+        flex-direction: row;
       }
 
-      align-items: end;
+      flex-direction: column;
     }
 
-    .content {
+    .hero-main {
       max-width: 33rem;
 
       .short-bio {
-        color: $white;
-      }
-
-      .topic {
-        font-weight: $sans-medium;
+        color: $cigi-medium-light-grey;
       }
     }
 
     .portrait-circle {
+      margin-right: 5em;
       padding-top: 1em;
 
       img {
@@ -33,7 +29,7 @@
     &.archived {
       background: $white;
 
-      .content {
+      .hero-main {
         h1,
         .position {
           color: $black;
@@ -41,6 +37,11 @@
 
         h1 {
           margin-top: 0;
+          margin-bottom: 0;
+        }
+
+        .topic {
+          font-weight: $sans-medium;
         }
       }
     }
@@ -48,11 +49,8 @@
 
   .main {
     .expertise-section {
-      @include breakpoint($medium) {
-        margin: 3em 0;
-      }
       border: 1px solid $cigi-light-grey;
-      margin: 1em 0;
+      margin: 3em 0;
       padding: 1em;
 
       .expertise-item {

@@ -1,18 +1,71 @@
 section {
   &.hero {
+    @include breakpoint($medium) {
+      padding-top: 6em;
+    }
+    
     background-color: $black;
-    padding-bottom: 2rem;
-    padding-top: 6rem;
+    font-size: 1rem;
+    padding-bottom: 2em;
+    padding-top: 4em;
 
-    h1 {
-      @include breakpoint($medium) {
-        font-size: 2.5rem;
+    .hero-container {
+      display: flex;
+      justify-content: space-between;
+
+      .hero-main {
+        @include breakpoint($medium) {
+          max-width: 60%;
+        }
+
+        h1 {
+          color: $white;
+          font-size: 1.75em;
+          font-weight: $sans-regular;
+          margin-bottom: 0;
+
+          @media screen and (min-width: 40em) {
+            font-size: 2.5rem;
+          }
+        }
+
+        h2 {
+          color: $cigi-medium-light-grey;
+          font-size: 1em;
+          font-weight: $sans-regular;
+        }
       }
 
-      color: $white;
-      font-size: 1.75rem;
-      font-weight: $sans-regular;
-      margin-bottom: 0;
+      aside {
+        nav {
+          h2 {
+            color: $white;
+            font-size: 0.75em;
+            font-weight: 500;
+            text-transform: uppercase;
+
+            span {
+              border-top: 3px solid $white;
+            }
+          }
+
+          ul {
+            columns: 2;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+              @include link($color: $white, $hover-color: $cigi-pink);
+
+              border-bottom: 1px solid $border-grey;
+              break-inside: avoid-column;
+              padding-bottom: .2em;
+              padding-top: .2em;
+            }
+          }
+        }
+      }
     }
   }
 }
