@@ -29,6 +29,12 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
         ],
         blank=True,
     )
+    editors = StreamField(
+        [
+            ('editor', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('external_editor', CharBlock(required=True)),
+        ]
+    )
     image_cover = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -51,6 +57,13 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
                 StreamFieldPanel('authors'),
             ],
             heading='Authors',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('editors'),
+            ],
+            heading='Editors',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
