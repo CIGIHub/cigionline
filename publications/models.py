@@ -40,6 +40,9 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
     )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
