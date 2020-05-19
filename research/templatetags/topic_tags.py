@@ -12,5 +12,5 @@ def highlighted_topics():
 
 @register.inclusion_tag('research/topics.html')
 def topics(topics):
-    topics = topics.live().filter(archive=0).order_by('title')
+    topics = topics.live().order_by('title')
     return {'topics': topics}

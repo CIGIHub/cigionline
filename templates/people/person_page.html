@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags topic_tags %}
+{% load static wagtailcore_tags wagtailimages_tags core_tags %}
 
 {% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify}}{% endfor %}{% endblock %}
 
@@ -13,51 +13,38 @@
 {% with page.phone_number as phone %}
 {% with page.curriculum_vitae as cv %}
   
-
-{% if not page.archive %}
-  <section class="hero">
+<article>
+  <section class="hero{% if page.archive %} archived{% endif %}">
     <div class="container-lg hero-container">
       <div class="hero-main">
         <h1>{{page.title}}</h1>
-        <div class="short-bio">
-          {{page.short_bio|richtext}}
-        </div>
+        {% if page.position and page.archive %}
+          <div class="position">
+            {% if not 'Former' in page.position %}Former {% endif %}{{ page.position }}
+          </div>
+        {% else %}
+          <div class="short-bio">
+            {{page.short_bio|richtext}}
+          </div>
+        {% endif %}
       </div>
-      {% if page.image_square %}
+      {% if page.image_square and not page.archive %}
         <div class="portrait-circle">
           {% image page.image_square fill-140x140 %}
         </div>
       {% endif %}
     </div>
   </section>
-{% else %}
-  <section class="hero archived">
-    <div class="container-sm hero-container">
-      <div class="hero-main">
-        {% if page.topics %}
-          {% topics page.topics %}
-        {% endif %}
-        <h1>{{page.title}}</h1>
-        {% if page.position %}
-          <div class="position">
-            {% if not 'Former' in page.position %}Former {% endif %}{{ page.position }}
-          </div>
-        {% endif %}
-      </div>
-    </div>
-  </section>
-{% endif %}
 
-<section class="main container-sm">
   {% if not page.archive %}
-    {% if page.is_staff == False %}
-      {% if expertises or email or twitter or website or linkedin or image_media or phone or cv %}
-        <div class="expertise-section">
+    {% if expertises or email or twitter or website or linkedin or image_media or phone or cv %}
+      <section class="expertise container-sm">
+        <div class="expertise-container">
           {% if expertises %}
             <div class="meta">Expertise</div>
             <div class="meta">
               {% for expertise in expertises %}
-                <span class="expertise-item">{{expertise}}</span>
+                <span class="expertise-item">{{ expertise }}</span>
               {% endfor %}
             </div>
             {% if email or twitter or website or linkedin or image_media or phone or cv %}
@@ -115,26 +102,26 @@
                 <span><a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a></span>
               </div>
             {% endif %}
-
           </div>
         </div>
-      {% endif %}
+      </section>
     {% endif %}
 
     {% if page.body %}
-      <div class="full-bio">
-        <h2>Bio</h2>
+      <section class="main container-sm">
+        <h2 class="paragraph-heading">Bio</h2>
         {{ page.body }}
-      </div>
+      </section>
     {% endif %}
 
     {% if page.external_publications %}
     {% with publication.value.publication_type|lower as type %}
-      <div class="external-publications">
-        <h2>Select Publications</h2>
-        <ol>
-          {% for publication in page.external_publications %}
-            <li>
+      <section class="external-publications container-sm">
+        <h2 class="paragraph-heading">Select Publications</h2>
+        {% for publication in page.external_publications %}
+          <article>
+            <div class="counter">{{ forloop.counter }}.</div>
+            <div>
               {% if publication.value.author %}
                 <span>{{publication.value.author}}</span>.
               {% endif %}
@@ -188,14 +175,14 @@
               {% if publication.value.location_in_work %}
                 <span>{{ publication.value.location_in_work }}<span>.
               {% endif %}
-            </li>
-          {% endfor %}
-        </ol>
-      </div>
+            </div>
+          </article>
+        {% endfor %}
+      </section>
     {% endwith %}
     {% endif %}
   {% endif %}
-</section>
+</article>
 
 {%endwith%}{%endwith%}{%endwith%}{%endwith%}{%endwith%}{%endwith%}{%endwith%}{%endwith%}
 {% endblock content %}

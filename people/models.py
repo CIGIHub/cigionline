@@ -114,8 +114,8 @@ class PersonPage(Page):
         WEB_PAGE = 'Web Page'
 
     @property
-    def is_staff(self):
-        return self.person_types.filter(name='Staff').exists()
+    def topics(self):
+        return self.topics.live().order_by('title')
 
 
     address_city = models.CharField(blank=True, max_length=255)

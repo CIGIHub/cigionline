@@ -9,19 +9,13 @@
   margin: 0;
 
   .topic {
+    @include comma-separated;
     display: inline;
     font-size: 0.75rem;
     text-transform: uppercase;
 
     &::after {
       color: $black;
-      content: ', ';
-    }
-
-    &:last-child {
-      &::after {
-        content: '';
-      }
     }
   }
 }

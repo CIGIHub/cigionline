@@ -13,6 +13,26 @@ a {
   }
 }
 
+article {
+  section {
+    margin-top: 3em;
+    margin-bottom: 3em;
+
+    &.hero {
+      margin-top: 0;
+    }
+
+    &.main {
+      ol,
+      ul {
+        line-height: 1.5em;
+        margin: 0 0 1em 1em;
+        padding: 0;
+      }
+    }
+  }
+}
+
 button {
   background-color: transparent;
   border: 0;
@@ -32,22 +52,6 @@ hr {
   margin: 1em 0;
 }
 
-h2 {
-  border-top: 0.25em solid $black;
-  color: $black;
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: $sans-medium;
-  text-transform: uppercase;
-}
-
-ol,
-ul {
-  line-height: 1.5em;
-  margin: 0 0 1em 1em;
-  padding: 0;
-}
-
 [class*='container-'] {
   margin-left: auto;
   margin-right: auto;
@@ -65,4 +69,13 @@ ul {
 
 .container-sm {
   max-width: 40rem;
+}
+
+.paragraph-heading {
+  border-top: 0.25em solid $black;
+  color: $black;
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: $sans-medium;
+  text-transform: uppercase;
 }

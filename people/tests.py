@@ -626,12 +626,3 @@ class PersonPageTests(WagtailPageTests):
             PersonPage,
             {},
         )
-
-    def test_personpage_is_staff_should_return_correct_boolean(self):
-        staff = PersonPage.objects.get(title="Staff Live")
-        expert = PersonPage.objects.get(title="Expert Live")
-        staff_and_expert = PersonPage.objects.get(title="Kimi Räikkönen")
-
-        self.assertTrue(staff.is_staff)
-        self.assertFalse(expert.is_staff)
-        self.assertTrue(staff_and_expert.is_staff)

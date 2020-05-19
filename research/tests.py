@@ -123,16 +123,16 @@ class TopicsTagTests(WagtailPageTests):
         self.assertIn('topic4', rendered)
         self.assertNotIn('topic5', rendered)
 
-    def test_topics_not_live_do_not_render(self):
+    def test_topics_not_live_should_not_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=False)
         test_topics = TopicPage.objects.all()
 
         rendered = self.TEMPLATE.render(Context({'test_topics': test_topics}))
         self.assertNotIn('topic1', rendered)
 
-    def test_topics_archived_do_not_render(self):
+    def test_topics_archived_should_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=True)
         test_topics = TopicPage.objects.all()
 
         rendered = self.TEMPLATE.render(Context({'test_topics': test_topics}))
-        self.assertNotIn('topic1', rendered)
+        self.assertIn('topic1', rendered)
