@@ -46,16 +46,16 @@
       .expertise-container {
         border: 1px solid $cigi-light-grey;
         padding: 1em;
-  
+
         .expertise-item {
           @include comma-separated;
         }
-  
+
         .contact {
           @include breakpoint($medium) {
             columns: 3;
           }
-  
+
           .contact-item {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
 
@@ -67,7 +67,7 @@
               white-space: nowrap;
               width: 9.5em;
             }
-  
+
             i {
               color: $cigi-pink;
               line-height: 1.2em;
@@ -81,8 +81,8 @@
 
     &.external-publications {
       article {
-        display: flex;
         border-bottom: 1px solid $cigi-light-grey;
+        display: flex;
         padding: 1em 0;
 
         .counter {
