@@ -93,35 +93,6 @@ class BasicPageAbstract(Page):
         images_panel,
     ]
 
-    class Meta:
-        abstract = True
-
-
-class ShareablePageAbstract(Page):
-    social_title = models.CharField(blank=True, max_length=255)
-    social_description = models.CharField(blank=True, max_length=255)
-    image_social = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Social image',
-        help_text='An image that is used when sharing on social media.',
-    )
-
-    promote_panels = Page.promote_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('social_title'),
-                FieldPanel('social_description'),
-                ImageChooserPanel('image_social'),
-            ],
-            heading='Social Media',
-            classname='collapsible collapsed',
-        ),
-    ]
-
     settings_panels = Page.settings_panels + [
         MultiFieldPanel(
             [
@@ -157,6 +128,42 @@ class FeatureablePageAbstract(Page):
                 ImageChooserPanel('image_feature'),
             ],
             heading='Feature Information',
+        ),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class PublishablePageAbstract(Page):
+    publishing_date = models.DateField()
+
+    class Meta:
+        abstract = True
+
+
+class ShareablePageAbstract(Page):
+    social_title = models.CharField(blank=True, max_length=255)
+    social_description = models.CharField(blank=True, max_length=255)
+    image_social = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Social image',
+        help_text='An image that is used when sharing on social media.',
+    )
+
+    promote_panels = Page.promote_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel('social_title'),
+                FieldPanel('social_description'),
+                ImageChooserPanel('image_social'),
+            ],
+            heading='Social Media',
+            classname='collapsible collapsed',
         ),
     ]
 

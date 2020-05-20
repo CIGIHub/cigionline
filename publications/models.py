@@ -1,6 +1,7 @@
 from core.models import (
     BasicPageAbstract,
     FeatureablePageAbstract,
+    PublishablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
@@ -34,7 +35,12 @@ class PublicationListPage(BasicPageAbstract):
         verbose_name = 'Publication List Page'
 
 
-class PublicationPage(BasicPageAbstract, FeatureablePageAbstract, ShareablePageAbstract):
+class PublicationPage(
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    PublishablePageAbstract,
+    ShareablePageAbstract,
+):
     """View publication page"""
 
     class BookFormats(models.TextChoices):
@@ -131,6 +137,13 @@ class PublicationPage(BasicPageAbstract, FeatureablePageAbstract, ShareablePageA
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible',
+        ),
         MultiFieldPanel(
             [
                 StreamFieldPanel('authors'),
