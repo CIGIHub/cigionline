@@ -1,7 +1,15 @@
-from core.models import BasicPageAbstract, ShareablePageAbstract
+from core.models import (
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    ShareablePageAbstract,
+)
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    StreamFieldPanel,
+)
 from wagtail.core.blocks import (
     CharBlock,
     PageChooserBlock,
@@ -26,7 +34,7 @@ class PublicationListPage(BasicPageAbstract):
         verbose_name = 'Publication List Page'
 
 
-class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
+class PublicationPage(BasicPageAbstract, FeatureablePageAbstract, ShareablePageAbstract):
     """View publication page"""
 
     class BookFormats(models.TextChoices):
