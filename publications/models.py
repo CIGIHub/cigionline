@@ -2,7 +2,13 @@ from core.models import BasicPageAbstract, ShareablePageAbstract
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
-from wagtail.core.blocks import CharBlock, PageChooserBlock, StructBlock, URLBlock
+from wagtail.core.blocks import (
+    CharBlock,
+    PageChooserBlock,
+    RichTextBlock,
+    StructBlock,
+    URLBlock,
+)
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -60,12 +66,21 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
     )
     book_publisher = models.CharField(blank=True, max_length=255)
     book_publisher_url = models.URLField(blank=True)
-    book_purchase_links = StreamField([
-        ('purchase_link', StructBlock([
-            ('link_text', CharBlock(required=True)),
-            ('url', URLBlock(required=True)),
-        ]))
-    ], blank=True)
+    book_purchase_links = StreamField(
+        [
+            ('purchase_link', StructBlock([
+                ('link_text', CharBlock(required=True)),
+                ('url', URLBlock(required=True)),
+            ])),
+        ],
+        blank=True,
+    )
+    editorial_reviews = StreamField(
+        [
+            ('editorial_review', RichTextBlock()),
+        ],
+        blank=True,
+    )
     editors = StreamField(
         [
             ('editor', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -136,6 +151,13 @@ class PublicationPage(BasicPageAbstract, ShareablePageAbstract):
                 FieldPanel('book_excerpt'),
             ],
             heading='Book Info',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('editorial_reviews'),
+            ],
+            heading='Editorial Reviews',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
