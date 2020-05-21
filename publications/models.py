@@ -111,6 +111,15 @@ class PublicationPage(
         verbose_name='Cover image',
         help_text='An image of the cover of the publication.',
     )
+    image_poster = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster image',
+        help_text='A poster image which will be used in the highlights section of the homepage.',
+    )
     isbn = models.CharField(
         blank=True,
         max_length=32,
