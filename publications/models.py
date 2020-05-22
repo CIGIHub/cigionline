@@ -19,6 +19,7 @@ from wagtail.core.blocks import (
     URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
+from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -138,6 +139,19 @@ class PublicationPage(
         verbose_name='Hardcover ISBN',
         help_text='Enter the ISBN for the hardcover version of this publication.',
     )
+    pdf_downloads = StreamField(
+        [
+            ('pdf_download', StructBlock([
+                ('file', DocumentChooserBlock(required=True)),
+                ('button_text', CharBlock(
+                    required=False,
+                    help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".',
+                )),
+            ], label='PDF Download'))
+        ],
+        blank=True,
+        verbose_name='PDF Downloads',
+    )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -195,6 +209,13 @@ class PublicationPage(
                 ImageChooserPanel('image_cover'),
             ],
             heading='Images',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('pdf_downloads'),
+            ],
+            heading='Media',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
