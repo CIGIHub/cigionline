@@ -103,6 +103,11 @@ class PublicationPage(
         ],
         blank=True,
     )
+    embed_youtube = models.URLField(
+        blank=True,
+        verbose_name='YouTube Embed',
+        help_text='Enter the YouTube URL (https://www.youtube.com/watch?v=4-Xkn1U1DkA) or short URL (https://youtu.be/o5acQ2GxKbQ) to add an embedded video.',
+    )
     image_cover = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -214,6 +219,7 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 StreamFieldPanel('pdf_downloads'),
+                FieldPanel('embed_youtube'),
             ],
             heading='Media',
             classname='collapsible collapsed',
