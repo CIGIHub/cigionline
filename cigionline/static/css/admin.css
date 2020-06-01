@@ -2,3 +2,87 @@
   fill: #fff;
   width: 100%;
 }
+
+header {
+  background-color: #000;
+}
+
+header .breadcrumb {
+  background-color: #000;
+}
+
+header .breadcrumb li a:after {
+  color: #e6023b;
+}
+
+header .breadcrumb li:hover {
+  background-color: #e6023b;
+}
+
+header .breadcrumb li:hover a:after {
+  color: #fff;
+}
+
+.status-tag.primary:hover {
+  background-color: #fff;
+  border-color: #e6023b !important;
+  color: #e6023b !important;
+}
+
+.status-tag.primary.lock-status {
+  color: #bf0332;
+}
+
+.status-tag.primary.lock-status:hover {
+  background-color: #e6023b;
+  color: #fff !important;
+}
+
+ul.tab-nav.merged {
+  background-color: #000;
+}
+
+ul.tab-nav.merged li a {
+  background-color: #6d6d6d;
+  border-color: #929292;
+}
+
+ul.tab-nav.merged li a:hover {
+  border-color: #e6023b;
+}
+
+ul.tab-nav.merged li.active a {
+  background-color: #fff;
+  border-color: #e6023b;
+}
+
+main form .tab-content .title-wrapper {
+  background-color: #fce5eb;
+}
+
+main form .tab-content .title-wrapper:before {
+  background-color: #e6023b;
+}
+
+.page-explorer table.listing thead tr.index {
+  background-color: #000;
+}
+
+.page-explorer table.listing thead tr.index .button,
+.page-explorer table.listing thead tr.index .t-inverted .u-btn-current {
+  border-color: #fff;
+}
+
+.page-explorer table.listing thead tr.index .button:hover,
+.page-explorer table.listing thead tr.index .t-inverted .u-btn-current:hover {
+  background-color: transparent;
+  border-color: #e6023b;
+  /* color: #e6023b; */
+}
+
+.page-explorer table.listing thead tr.index .button.bicolor {
+  background-color: transparent;
+}
+.page-explorer table.listing thead tr.index .button.bicolor:before {
+  background-color: transparent;
+}
