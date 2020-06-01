@@ -67,7 +67,6 @@ class PublicationPage(
     )
     book_format = models.CharField(
         blank=True,
-        null=True,
         max_length=2,
         choices=BookFormats.choices,
         verbose_name='Format',
