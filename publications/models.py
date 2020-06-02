@@ -234,7 +234,7 @@ class PublicationPage(
 
     parent_page_types = ['publications.PublicationListPage']
     subpage_types = []
-    templates = 'publications.publication_page.html'
+    templates = 'publications/publication_page.html'
 
     class Meta:
         verbose_name = 'Publication'
