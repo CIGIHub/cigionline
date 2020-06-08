@@ -23,7 +23,7 @@ class JobPostingPage(
     FeatureablePageAbstract,
     ShareablePageAbstract,
 ):
-    closing_date = models.DateField()
+    closing_date = models.DateField(blank=True, null=True)
     description = StreamField(
         BasicPageAbstract.body_streamfield_blocks,
         blank=True,
