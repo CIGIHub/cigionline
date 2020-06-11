@@ -1,3 +1,4 @@
+from careers.models import JobPostingListPage
 from people.models import PeoplePage, PersonListPage
 from research.models import TopicListPage
 from wagtail.core.models import Page
@@ -76,7 +77,13 @@ class HomePageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             HomePage,
-            {BasicPage, PeoplePage, PersonListPage, TopicListPage}
+            {
+                BasicPage,
+                JobPostingListPage,
+                PeoplePage,
+                PersonListPage,
+                TopicListPage,
+            }
         )
 
     def test_cannot_create_homepage(self):
