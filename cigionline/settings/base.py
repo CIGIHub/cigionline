@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'core',
     'menus',
     'people',
+    'publications',
     'research',
     'search',
 

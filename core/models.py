@@ -20,6 +20,7 @@ class HomePage(Page):
         'core.BasicPage',
         'people.PeoplePage',
         'people.PersonListPage',
+        'publications.PublicationListPage',
         'research.TopicListPage'
     ]
     templates = 'core/home_page.html'
@@ -133,6 +134,13 @@ class FeatureablePageAbstract(Page):
             heading='Feature Information',
         ),
     ]
+
+    class Meta:
+        abstract = True
+
+
+class PublishablePageAbstract(Page):
+    publishing_date = models.DateField()
 
     class Meta:
         abstract = True

@@ -1,5 +1,6 @@
 from careers.models import JobPostingListPage
 from people.models import PeoplePage, PersonListPage
+from publications.models import PublicationListPage
 from research.models import TopicListPage
 from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
@@ -82,6 +83,7 @@ class HomePageTests(WagtailPageTests):
                 JobPostingListPage,
                 PeoplePage,
                 PersonListPage,
+                PublicationListPage,
                 TopicListPage,
             }
         )
