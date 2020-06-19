@@ -1,3 +1,4 @@
+from events.models import EventListPage
 from people.models import PeoplePage, PersonListPage
 from publications.models import PublicationListPage
 from research.models import TopicListPage
@@ -77,7 +78,14 @@ class HomePageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             HomePage,
-            {BasicPage, PeoplePage, PersonListPage, PublicationListPage, TopicListPage}
+            {
+                BasicPage,
+                EventListPage,
+                PeoplePage,
+                PersonListPage,
+                PublicationListPage,
+                TopicListPage,
+            }
         )
 
     def test_cannot_create_homepage(self):
