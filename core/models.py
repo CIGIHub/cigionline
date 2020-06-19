@@ -16,6 +16,7 @@ class HomePage(Page):
     max_count = 1
     subpage_types = [
         'core.BasicPage',
+        'events.EventListPage',
         'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',
