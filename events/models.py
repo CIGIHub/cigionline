@@ -23,6 +23,8 @@ class EventPage(
     FeatureablePageAbstract,
     ShareablePageAbstract,
 ):
+    event_end = models.DateTimeField(blank=True, null=True)
+    event_start = models.DateTimeField()
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
     location_address2 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 2)')
     location_city = models.CharField(blank=True, max_length=255, verbose_name='City')
@@ -38,6 +40,14 @@ class EventPage(
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('event_start'),
+                FieldPanel('event_end'),
+            ],
+            heading='Event Details',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('location_name'),
