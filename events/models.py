@@ -24,6 +24,12 @@ class EventPage(
     ShareablePageAbstract,
 ):
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
+    location_address2 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 2)')
+    location_city = models.CharField(blank=True, max_length=255, verbose_name='City')
+    location_country = models.CharField(blank=True, max_length=255, verbose_name='Country')
+    location_name = models.CharField(blank=True, max_length=255)
+    location_postal_code = models.CharField(blank=True, max_length=32, verbose_name='Postal Code')
+    location_province = models.CharField(blank=True, max_length=255, verbose_name='Province/State')
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -34,7 +40,13 @@ class EventPage(
         BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
+                FieldPanel('location_name'),
                 FieldPanel('location_address1'),
+                FieldPanel('location_address2'),
+                FieldPanel('location_city'),
+                FieldPanel('location_province'),
+                FieldPanel('location_postal_code'),
+                FieldPanel('location_country'),
             ],
             heading='Location',
             classname='collapsible collapsed',
