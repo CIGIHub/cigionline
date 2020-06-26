@@ -4,8 +4,12 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
+from modelcluster.fields import ParentalManyToManyField
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.core.blocks import CharBlock, PageChooserBlock
+from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
+from wagtail.documents.blocks import DocumentChooserBlock
 
 
 class EventListPage(BasicPageAbstract):
@@ -32,6 +36,7 @@ class EventPage(
         INVITATION_ONLY = (1, 'Invitation Only')
         NO_RSVP = (2, 'No RSVP Required')
 
+    embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
     event_start = models.DateTimeField()
@@ -45,6 +50,21 @@ class EventPage(
     location_postal_code = models.CharField(blank=True, max_length=32, verbose_name='Postal Code')
     location_province = models.CharField(blank=True, max_length=255, verbose_name='Province/State')
     registration_url = models.URLField(blank=True, max_length=512)
+    related_files = StreamField(
+        [
+            ('file', DocumentChooserBlock()),
+        ],
+        blank=True,
+    )
+    speakers = StreamField(
+        [
+            ('speaker', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('external_speaker', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+    twitter_hashtag = models.CharField(blank=True, max_length=64)
     website_button_text = models.CharField(
         blank=True,
         max_length=64,
@@ -74,6 +94,13 @@ class EventPage(
         ),
         MultiFieldPanel(
             [
+                StreamFieldPanel('speakers'),
+            ],
+            heading='Speakers',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
                 FieldPanel('location_name'),
                 FieldPanel('location_address1'),
                 FieldPanel('location_address2'),
@@ -87,9 +114,25 @@ class EventPage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('embed_youtube'),
+                StreamFieldPanel('related_files'),
+            ],
+            heading='Media',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('twitter_hashtag'),
                 FieldPanel('flickr_album_url'),
             ],
             heading='Event Social Media',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
             classname='collapsible collapsed',
         ),
     ]
