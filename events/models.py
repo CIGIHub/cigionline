@@ -23,8 +23,20 @@ class EventPage(
     FeatureablePageAbstract,
     ShareablePageAbstract,
 ):
+    class EventAccessOptions(models.IntegerChoices):
+        PRIVATE = (0, 'Private')
+        PUBLIC = (1, 'Public')
+
+    class InvitationTypes(models.IntegerChoices):
+        RSVP_REQUIRED = (0, 'RSVP Required')
+        INVITATION_ONLY = (1, 'Invitation Only')
+        NO_RSVP = (2, 'No RSVP Required')
+
+    event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
     event_start = models.DateTimeField()
+    flickr_album_url = models.URLField(blank=True)
+    invitation_type = models.IntegerField(choices=InvitationTypes.choices, default=InvitationTypes.RSVP_REQUIRED)
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
     location_address2 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 2)')
     location_city = models.CharField(blank=True, max_length=255, verbose_name='City')
@@ -32,6 +44,13 @@ class EventPage(
     location_name = models.CharField(blank=True, max_length=255)
     location_postal_code = models.CharField(blank=True, max_length=32, verbose_name='Postal Code')
     location_province = models.CharField(blank=True, max_length=255, verbose_name='Province/State')
+    registration_url = models.URLField(blank=True, max_length=512)
+    website_button_text = models.CharField(
+        blank=True,
+        max_length=64,
+        help_text='Override the button text for the event website. If empty, the button will read "Event Website".'
+    )
+    website_url = models.URLField(blank=True, max_length=512)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -42,8 +61,13 @@ class EventPage(
         BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
+                FieldPanel('event_access'),
                 FieldPanel('event_start'),
                 FieldPanel('event_end'),
+                FieldPanel('invitation_type'),
+                FieldPanel('website_url'),
+                FieldPanel('website_button_text'),
+                FieldPanel('registration_url'),
             ],
             heading='Event Details',
             classname='collapsible collapsed',
@@ -60,7 +84,14 @@ class EventPage(
             ],
             heading='Location',
             classname='collapsible collapsed',
-        )
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('flickr_album_url'),
+            ],
+            heading='Event Social Media',
+            classname='collapsible collapsed',
+        ),
     ]
     promote_panels = Page.promote_panels \
         + FeatureablePageAbstract.featureable_promote_panels \
