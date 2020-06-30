@@ -613,6 +613,8 @@ class PersonListPageTests(WagtailPageTests):
 
 
 class PersonPageTests(WagtailPageTests):
+    fixtures = ["people.json"]
+
     def test_personpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PersonPage,

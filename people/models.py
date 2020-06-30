@@ -113,6 +113,11 @@ class PersonPage(Page):
         THESIS = 'Thesis'
         WEB_PAGE = 'Web Page'
 
+    @property
+    def topics(self):
+        return self.topics.live().order_by('title')
+
+
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)

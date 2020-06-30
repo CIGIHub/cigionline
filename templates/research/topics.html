@@ -1,8 +1,8 @@
 {% load wagtailcore_tags %}
 
 
-<ul class="highlighted-topics">
-  {% for topic in highlighted_topics %}
+<ul class="topics">
+  {% for topic in topics %}
     <li class="topic">
       <a href="{% pageurl topic %}">{{ topic }}</a>
     </li>
