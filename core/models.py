@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
@@ -15,6 +16,7 @@ class HomePage(Page):
 
     max_count = 1
     subpage_types = [
+        'careers.JobPostingListPage',
         'core.BasicPage',
         'people.PeoplePage',
         'people.PersonListPage',
@@ -30,18 +32,20 @@ class HomePage(Page):
 class BasicPageAbstract(Page):
     """Page with subtitle."""
 
-    body = StreamField(
-        [
-            ('paragraph', blocks.RichTextBlock()),
-            ('image', ImageChooserBlock()),
-            ('block_quote', blocks.StructBlock([
-                ('quote', blocks.RichTextBlock(required=True)),
-                ('quote_author', blocks.CharBlock(required=False)),
-                ('author_title', blocks.CharBlock(required=False)),
-                ('image', ImageChooserBlock(required=False)),
-            ])),
+    body_streamfield_blocks = [
+        ('paragraph', blocks.RichTextBlock()),
+        ('image', ImageChooserBlock()),
+        ('block_quote', blocks.StructBlock([
+            ('quote', blocks.RichTextBlock(required=True)),
+            ('quote_author', blocks.CharBlock(required=False)),
+            ('author_title', blocks.CharBlock(required=False)),
+            ('image', ImageChooserBlock(required=False)),
+        ])),
+        ('table', TableBlock()),
+    ]
 
-        ],
+    body = StreamField(
+        body_streamfield_blocks,
         blank=True,
     )
     image_hero = models.ForeignKey(
