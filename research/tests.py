@@ -77,28 +77,62 @@ class TopicPageTests(WagtailPageTests):
 
 
 class HighlightedTopicsTests(WagtailPageTests):
-    TEMPLATE = Template("{% load topic_tags %} {% highlighted_topics %}")
+    TEMPLATE = Template('{% load topic_tags %} {% highlighted_topics %}')
 
     def test_if_no_topics_template_should_be_empty(self):
         rendered = self.TEMPLATE.render(Context({}))
+
         self.assertEqual(' \n\n\n<ul class="highlighted-topics">\n  \n</ul>\n', rendered)
 
     def test_correct_number_of_topics_render(self):
         for n in range(5):
-            TopicPage.objects.create(path="/topic{0}".format(n), depth=1, title="topic{0}".format(n), slug="topic{0}".format(n), archive=0, live=True)
-
+            TopicPage.objects.create(path='/topic{0}'.format(n), depth=1, title='topic{0}'.format(n), slug='topic{0}'.format(n), archive=0, live=True)
         rendered = self.TEMPLATE.render(Context({}))
-        self.assertIn("topic4", rendered)
-        self.assertNotIn("topic5", rendered)
+
+        self.assertIn('topic4', rendered)
+        self.assertNotIn('topic5', rendered)
 
     def test_topics_not_live_do_not_render(self):
-        TopicPage.objects.create(path="/topic1", depth=1, title="topic1", slug="topic1", archive=0, live=False)
-
+        TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=0, live=False)
         rendered = self.TEMPLATE.render(Context({}))
-        self.assertNotIn("topic1", rendered)
+
+        self.assertNotIn('topic1', rendered)
 
     def test_topics_archived_do_not_render(self):
-        TopicPage.objects.create(path="/topic1", depth=1, title="topic1", slug="topic1", archive=1, live=True)
-
+        TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=True)
         rendered = self.TEMPLATE.render(Context({}))
-        self.assertNotIn("topic1", rendered)
+
+        self.assertNotIn('topic1', rendered)
+
+
+class TopicsTagTests(WagtailPageTests):
+    TEMPLATE = Template('{% load topic_tags %} {% topics test_topics %}')
+
+    def test_if_no_topics_template_should_be_empty(self):
+        test_topics = TopicPage.objects.all()
+        rendered = self.TEMPLATE.render(Context({'test_topics': test_topics}))
+
+        self.assertEqual(' \n\n\n<ul class="topics">\n  \n</ul>\n', rendered)
+
+    def test_correct_number_of_topics_render(self):
+        for n in range(5):
+            TopicPage.objects.create(path='/topic{0}'.format(n), depth=1, title='topic{0}'.format(n), slug='topic{0}'.format(n), archive=0, live=True)
+        test_topics = TopicPage.objects.all()
+        rendered = self.TEMPLATE.render(Context({'test_topics': test_topics}))
+
+        self.assertIn('topic4', rendered)
+        self.assertNotIn('topic5', rendered)
+
+    def test_topics_not_live_should_not_render(self):
+        TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=False)
+        test_topics = TopicPage.objects.all()
+
+        rendered = self.TEMPLATE.render(Context({'test_topics': test_topics}))
+        self.assertNotIn('topic1', rendered)
+
+    def test_topics_archived_should_render(self):
+        TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=True)
+        test_topics = TopicPage.objects.all()
+
+        rendered = self.TEMPLATE.render(Context({'test_topics': test_topics}))
+        self.assertIn('topic1', rendered)

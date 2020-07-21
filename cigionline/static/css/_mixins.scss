@@ -21,3 +21,15 @@
   display: -ms-grid;
   display: grid;
 }
+
+@mixin comma-separated {
+  &::after {
+    content: ', ';
+  }
+
+  &:last-child {
+    &::after {
+      content: '';
+    }
+  }
+}
