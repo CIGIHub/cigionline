@@ -239,3 +239,49 @@ class PublicationPage(
     class Meta:
         verbose_name = 'Publication'
         verbose_name_plural = 'Publications'
+
+
+class PublicationSeriesListPage(BasicPageAbstract):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = ['publications.PublicationSeriesPage']
+    templates = 'publications/publication_series_list_page.html'
+
+    class Meta:
+        verbose_name = 'Publication Series List Page'
+
+
+class PublicationSeriesPage(
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    PublishablePageAbstract,
+):
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible',
+        ),
+        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    parent_page_types = ['publications.PublicationSeriesListPage']
+    subpage_types = []
+    templates = 'publications/publication_series_page.html'
+
+    class Meta:
+        verbose_name = 'Publication Series'
+        verbose_name_plural = 'Publication Series'
