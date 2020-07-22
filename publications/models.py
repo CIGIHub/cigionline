@@ -9,6 +9,7 @@ from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
+    PageChooserPanel,
     StreamFieldPanel,
 )
 from wagtail.core.blocks import (
@@ -156,6 +157,13 @@ class PublicationPage(
         blank=True,
         verbose_name='PDF Downloads',
     )
+    publication_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -226,6 +234,10 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                PageChooserPanel(
+                    'publication_series',
+                    ['publications.PublicationSeriesPage'],
+                ),
             ],
             heading='Related',
             classname='collapsible collapsed',
