@@ -258,6 +258,9 @@ class PublicationSeriesPage(
 ):
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
+    # Reference field for Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
