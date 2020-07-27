@@ -127,15 +127,18 @@ class FeatureablePageAbstract(Page):
         help_text='Image used when featuring on landing pages such as the home page',
     )
 
+    feature_panel = MultiFieldPanel(
+        [
+            FieldPanel('feature_title'),
+            FieldPanel('feature_subtitle'),
+            ImageChooserPanel('image_feature'),
+        ],
+        heading='Feature Information',
+        classname='collapsible collapsed',
+    )
+
     promote_panels = Page.promote_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('feature_title'),
-                FieldPanel('feature_subtitle'),
-                ImageChooserPanel('image_feature'),
-            ],
-            heading='Feature Information',
-        ),
+        feature_panel,
     ]
 
     class Meta:
@@ -162,16 +165,18 @@ class ShareablePageAbstract(Page):
         help_text='An image that is used when sharing on social media.',
     )
 
+    social_panel = MultiFieldPanel(
+        [
+            FieldPanel('social_title'),
+            FieldPanel('social_description'),
+            ImageChooserPanel('image_social'),
+        ],
+        heading='Social Media',
+        classname='collapsible collapsed',
+    )
+
     promote_panels = Page.promote_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('social_title'),
-                FieldPanel('social_description'),
-                ImageChooserPanel('image_social'),
-            ],
-            heading='Social Media',
-            classname='collapsible collapsed',
-        ),
+        social_panel,
     ]
 
     class Meta:
