@@ -18,6 +18,8 @@ class HomePage(Page):
     subpage_types = [
         'careers.JobPostingListPage',
         'core.BasicPage',
+        'multimedia.MultimediaSeriesListPage',
+        'multimedia.MultimediaSeriesPage',
         'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',
@@ -97,14 +99,15 @@ class BasicPageAbstract(Page):
         images_panel,
     ]
 
+    submenu_panel = MultiFieldPanel(
+        [
+            FieldPanel('submenu'),
+        ],
+        heading='Submenu',
+        classname='collapsible collapsed',
+    )
     settings_panels = Page.settings_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('submenu'),
-            ],
-            heading='Submenu',
-            classname='collapsible collapsed',
-        ),
+        submenu_panel,
     ]
 
     class Meta:
@@ -169,6 +172,30 @@ class ShareablePageAbstract(Page):
             heading='Social Media',
             classname='collapsible collapsed',
         ),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class ThemeablePageAbstract(Page):
+    theme = models.ForeignKey(
+        'core.Theme',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
+    theme_panel = MultiFieldPanel(
+        [
+
+        ],
+        heading='Theme',
+        classname='collapsible collapsed',
+    )
+    settings_panels = Page.settings_panels + [
+        theme_panel,
     ]
 
     class Meta:
@@ -301,3 +328,13 @@ class AnnualReportPage(FeatureablePageAbstract):
     class Meta:
         verbose_name = 'Annual Report Page'
         verbose_name_plural = 'Annual Report Pages'
+
+
+class Theme(models.Model):
+    name = models.CharField(max_length=255)
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
