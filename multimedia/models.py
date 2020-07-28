@@ -52,6 +52,15 @@ class MultimediaSeriesPage(
         related_name='+',
         verbose_name='Series Logo',
     )
+    image_poster = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster Image',
+        help_text='A poster image which will be used in the highlights section of the homepage.',
+    )
     podcast_apple_url = models.URLField(
         blank=True,
         verbose_name='Apple Podcast URL',
@@ -86,6 +95,7 @@ class MultimediaSeriesPage(
             [
                 ImageChooserPanel('image_hero'),
                 ImageChooserPanel('image_banner'),
+                ImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
