@@ -194,7 +194,7 @@ class ThemeablePageAbstract(Page):
 
     theme_panel = MultiFieldPanel(
         [
-
+            FieldPanel('theme'),
         ],
         heading='Theme',
         classname='collapsible collapsed',
