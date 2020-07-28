@@ -68,7 +68,7 @@ class BasicPageAbstract(Page):
         verbose_name='Submenu',
         help_text='Select a submenu to appear in the right section of the hero.',
     )
-    subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
+    subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
 
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
