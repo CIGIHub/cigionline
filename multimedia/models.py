@@ -25,6 +25,53 @@ class MultimediaListPage(BasicPageAbstract):
         verbose_name = 'Multimedia List Page'
 
 
+class MultimediaPage(
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    PublishablePageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('image_hero'),
+            ],
+            heading='Images',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+    ]
+
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
+    ]
+
+    parent_page_types = ['multimedia.MultimediaListPage']
+    subpage_typse = []
+    templates = 'multimedia/multimedia_page.html'
+
+    class Meta:
+        verbose_name = 'Multimedia'
+        verbose_name_plural = 'Multimedia'
+
+
 class MultimediaSeriesListPage(Page):
     """
     A singleton page that isn't published, but is the parent to all the
