@@ -1,7 +1,25 @@
 from core.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 
-from .models import MultimediaSeriesListPage, MultimediaSeriesPage
+from .models import (
+    MultimediaListPage,
+    MultimediaSeriesListPage,
+    MultimediaSeriesPage,
+)
+
+
+class MultimediaListPageTests(WagtailPageTests):
+    def test_multimedialistpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            MultimediaListPage,
+            {HomePage},
+        )
+
+    def test_multimedialistpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            MultimediaListPage,
+            {},
+        )
 
 
 class MultimediaSeriesListPageTests(WagtailPageTests):

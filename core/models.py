@@ -18,6 +18,7 @@ class HomePage(Page):
     subpage_types = [
         'careers.JobPostingListPage',
         'core.BasicPage',
+        'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
         'multimedia.MultimediaSeriesPage',
         'people.PeoplePage',

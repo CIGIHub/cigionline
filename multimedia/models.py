@@ -15,6 +15,16 @@ from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
+class MultimediaListPage(BasicPageAbstract):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'multimedia/multimedia_list_page.html'
+
+    class Meta:
+        verbose_name = 'Multimedia List Page'
+
+
 class MultimediaSeriesListPage(Page):
     """
     A singleton page that isn't published, but is the parent to all the
