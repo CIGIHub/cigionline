@@ -10,6 +10,7 @@ from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
+    PageChooserPanel,
 )
 from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -32,6 +33,14 @@ class MultimediaPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    multimedia_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -50,6 +59,16 @@ class MultimediaPage(
                 ImageChooserPanel('image_hero'),
             ],
             heading='Images',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                PageChooserPanel(
+                    'multimedia_series',
+                    ['multimedia.MultimediaSeriesPage'],
+                ),
+            ],
+            heading='Related',
             classname='collapsible collapsed',
         ),
     ]
