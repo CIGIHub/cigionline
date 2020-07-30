@@ -1,6 +1,7 @@
 from core.models import (
     BasicPageAbstract,
     FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
     PublishablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
@@ -37,6 +38,7 @@ class MultimediaListPage(BasicPageAbstract):
 class MultimediaPage(
     BasicPageAbstract,
     FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
     PublishablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
@@ -153,6 +155,7 @@ class MultimediaPage(
             heading='Related',
             classname='collapsible collapsed',
         ),
+        FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
 
     promote_panels = Page.promote_panels + [

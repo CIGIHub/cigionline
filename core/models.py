@@ -208,6 +208,37 @@ class ThemeablePageAbstract(Page):
         abstract = True
 
 
+class FromTheArchivesPageAbstract(Page):
+    from_the_archives = models.BooleanField(
+        default=False,
+        verbose_name='From the Archives',
+        help_text='When enabled, show the "From the Archives" label if content is featured on front page.',
+    )
+    from_the_archives_blurb = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+        verbose_name='From the Archives Blurb',
+        help_text='Block displayed on page.',
+    )
+
+    from_the_archives_panel = MultiFieldPanel(
+        [
+            FieldPanel('from_the_archives'),
+            FieldPanel('from_the_archives_blurb'),
+        ],
+        heading='From the Archives',
+        classname='collapsible collapsed',
+    )
+
+    content_panels = Page.content_panels + [
+        from_the_archives_panel,
+    ]
+
+    class Meta:
+        abstract = True
+
+
 class BasicPage(BasicPageAbstract):
     """Page with StreamField body"""
 
