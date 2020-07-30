@@ -11,7 +11,15 @@ from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
+    StreamFieldPanel,
 )
+from wagtail.core.blocks import (
+    CharBlock,
+    IntegerBlock,
+    StructBlock,
+    TextBlock,
+)
+from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -45,6 +53,23 @@ class MultimediaPage(
         verbose_name='Multimedia URL',
         help_text='The URL of the multimedia source from YouTube or Simplecast.',
     )
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+    video_chapters = StreamField(
+        [
+            ('video_chapter', StructBlock([
+                ('chapter_title', CharBlock(required=True)),
+                ('location_time', IntegerBlock(required=True)),
+                ('chapter_description', TextBlock()),
+            ])),
+        ],
+        blank=True,
+    )
+    youtube_id = models.CharField(
+        blank=True,
+        max_length=32,
+        verbose_name='YouTube ID',
+        help_text='Enter just the YouTube ID for this video. This is the series of letters and numbers found either at www.youtube.com/embed/[here], or www.youtube.com/watch?v=[here]. This is used for the video chaptering below.',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -69,10 +94,19 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('youtube_id'),
+                StreamFieldPanel('video_chapters'),
+            ],
+            heading='Video Chapters',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
                 PageChooserPanel(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
+                FieldPanel('topics'),
             ],
             heading='Related',
             classname='collapsible collapsed',
