@@ -53,6 +53,22 @@ class MultimediaPage(
         verbose_name='Multimedia URL',
         help_text='The URL of the multimedia source from YouTube or Simplecast.',
     )
+    podcast_audio_duration = models.CharField(blank=True, max_length=8)
+    podcast_audio_file_size = models.IntegerField(blank=True, null=True)
+    podcast_audio_url = models.URLField(blank=True)
+    podcast_episode = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Episode Number',
+    )
+    podcast_season = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Season Number',
+    )
+    podcast_video_duration = models.CharField(blank=True, max_length=8)
+    podcast_video_file_size = models.IntegerField(blank=True, null=True)
+    podcast_video_url = models.URLField(blank=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     video_chapters = StreamField(
         [
@@ -98,6 +114,32 @@ class MultimediaPage(
                 StreamFieldPanel('video_chapters'),
             ],
             heading='Video Chapters',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('podcast_season'),
+                FieldPanel('podcast_episode'),
+                MultiFieldPanel(
+                    [
+                        FieldPanel('podcast_audio_url'),
+                        FieldPanel('podcast_audio_duration'),
+                        FieldPanel('podcast_audio_file_size'),
+                    ],
+                    heading='Audio',
+                    classname='collapsible collapsed',
+                ),
+                MultiFieldPanel(
+                    [
+                        FieldPanel('podcast_video_url'),
+                        FieldPanel('podcast_video_duration'),
+                        FieldPanel('podcast_video_file_size'),
+                    ],
+                    heading='Video',
+                    classname='collapsible collapsed',
+                ),
+            ],
+            heading='Podcast Details',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
