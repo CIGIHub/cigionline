@@ -40,6 +40,11 @@ class MultimediaPage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
+    multimedia_url = models.URLField(
+        blank=True,
+        verbose_name='Multimedia URL',
+        help_text='The URL of the multimedia source from YouTube or Simplecast.',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -50,6 +55,7 @@ class MultimediaPage(
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
+                FieldPanel('multimedia_url'),
             ],
             heading='General Information',
             classname='collapsible',
