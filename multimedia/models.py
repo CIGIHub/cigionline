@@ -59,7 +59,7 @@ class MultimediaPage(
             ('video_chapter', StructBlock([
                 ('chapter_title', CharBlock(required=True)),
                 ('location_time', IntegerBlock(required=True)),
-                ('chapter_description', TextBlock()),
+                ('chapter_description', TextBlock(required=False)),
             ])),
         ],
         blank=True,
