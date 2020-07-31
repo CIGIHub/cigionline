@@ -18,6 +18,7 @@ from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
     PageChooserBlock,
+    RichTextBlock,
     StructBlock,
     TextBlock,
 )
@@ -95,6 +96,19 @@ class MultimediaPage(
         blank=True,
     )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
+    transcript = StreamField(
+        [
+            ('accordion', StructBlock([
+                ('title', CharBlock(required=True)),
+                ('text', RichTextBlock(required=True)),
+            ])),
+            ('read_more', StructBlock([
+                ('title', CharBlock(required=True)),
+                ('text', RichTextBlock(required=True)),
+            ])),
+        ],
+        blank=True,
+    )
     video_chapters = StreamField(
         [
             ('video_chapter', StructBlock([
@@ -135,18 +149,17 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_square'),
-            ],
-            heading='Images',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
                 FieldPanel('youtube_id'),
                 StreamFieldPanel('video_chapters'),
             ],
             heading='Video Chapters',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('transcript'),
+            ],
+            heading='Transcript',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
@@ -175,6 +188,14 @@ class MultimediaPage(
                 ),
             ],
             heading='Podcast Details',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_square'),
+            ],
+            heading='Images',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
