@@ -45,6 +45,10 @@ class MultimediaPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    class MultimediaTypes(models.TextChoices):
+        AUDIO = ('audio', 'Audio')
+        VIDEO = ('video', 'Video')
+
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -59,6 +63,11 @@ class MultimediaPage(
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
+    )
+    multimedia_type = models.CharField(
+        blank=False,
+        max_length=8,
+        choices=MultimediaTypes.choices,
     )
     multimedia_url = models.URLField(
         blank=True,
@@ -134,6 +143,7 @@ class MultimediaPage(
         BasicPageAbstract.body_panel,
         MultiFieldPanel(
             [
+                FieldPanel('multimedia_type'),
                 FieldPanel('publishing_date'),
                 FieldPanel('multimedia_url'),
             ],
