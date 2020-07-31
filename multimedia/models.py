@@ -17,6 +17,7 @@ from wagtail.admin.edit_handlers import (
 from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
+    PageChooserBlock,
     StructBlock,
     TextBlock,
 )
@@ -82,9 +83,17 @@ class MultimediaPage(
         null=True,
         verbose_name='Season Number',
     )
+    podcast_subtitle = models.CharField(blank=True, max_length=255)
     podcast_video_duration = models.CharField(blank=True, max_length=8)
     podcast_video_file_size = models.IntegerField(blank=True, null=True)
     podcast_video_url = models.URLField(blank=True)
+    speakers = StreamField(
+        [
+            ('speaker', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('external_speaker', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     video_chapters = StreamField(
         [
@@ -119,6 +128,13 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
+                StreamFieldPanel('speakers'),
+            ],
+            heading='Speakers',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
                 ImageChooserPanel('image_hero'),
                 ImageChooserPanel('image_square'),
             ],
@@ -135,6 +151,7 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('podcast_subtitle'),
                 FieldPanel('podcast_season'),
                 FieldPanel('podcast_episode'),
                 StreamFieldPanel('podcast_guests'),
