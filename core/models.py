@@ -18,6 +18,7 @@ class HomePage(Page):
     subpage_types = [
         'careers.JobPostingListPage',
         'core.BasicPage',
+        'events.EventListPage',
         'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',
@@ -125,7 +126,7 @@ class FeatureablePageAbstract(Page):
         help_text='Image used when featuring on landing pages such as the home page',
     )
 
-    promote_panels = Page.promote_panels + [
+    featureable_promote_panels = [
         MultiFieldPanel(
             [
                 FieldPanel('feature_title'),
@@ -135,6 +136,8 @@ class FeatureablePageAbstract(Page):
             heading='Feature Information',
         ),
     ]
+
+    promote_panels = Page.promote_panels + featureable_promote_panels
 
     class Meta:
         abstract = True
@@ -160,7 +163,7 @@ class ShareablePageAbstract(Page):
         help_text='An image that is used when sharing on social media.',
     )
 
-    promote_panels = Page.promote_panels + [
+    shareable_promote_panels = [
         MultiFieldPanel(
             [
                 FieldPanel('social_title'),
@@ -171,6 +174,8 @@ class ShareablePageAbstract(Page):
             classname='collapsible collapsed',
         ),
     ]
+
+    promote_panels = Page.promote_panels + shareable_promote_panels
 
     class Meta:
         abstract = True
