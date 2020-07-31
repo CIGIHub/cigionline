@@ -43,6 +43,14 @@ class MultimediaPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    image_square = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Square image',
+    )
     multimedia_series = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
@@ -62,6 +70,12 @@ class MultimediaPage(
         blank=True,
         null=True,
         verbose_name='Episode Number',
+    )
+    podcast_guests = StreamField(
+        [
+            ('guest', CharBlock(required=True)),
+        ],
+        blank=True,
     )
     podcast_season = models.IntegerField(
         blank=True,
@@ -106,6 +120,7 @@ class MultimediaPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_square'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -122,6 +137,7 @@ class MultimediaPage(
             [
                 FieldPanel('podcast_season'),
                 FieldPanel('podcast_episode'),
+                StreamFieldPanel('podcast_guests'),
                 MultiFieldPanel(
                     [
                         FieldPanel('podcast_audio_url'),
