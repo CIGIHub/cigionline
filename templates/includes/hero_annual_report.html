@@ -1,0 +1,10 @@
+{% load menu_tags %}
+
+<section class="hero-annual-report">
+  <div class="container-lg hero-container">
+    <div class="hero-main">
+      <h1>{{title}}</h1>
+      {% include "includes/social_links.html" with title=title %}
+    </div>
+  </div>
+</section>

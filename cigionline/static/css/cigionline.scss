@@ -2,10 +2,16 @@
 $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'fontawesome-pro/scss/fontawesome';
 @import 'fontawesome-pro/scss/regular';
+@import 'fontawesome-pro/scss/solid';
+@import 'fontawesome-pro/scss/light';
+@import 'fontawesome-pro/scss/brands';
 
 @import 'variables';
 @import 'mixins';
 @import 'global';
+@import 'table';
+@import 'buttons';
 @import 'hero';
 @import 'top-bar';
 @import 'footer';
+@import 'annual_report';

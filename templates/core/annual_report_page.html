@@ -1,5 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title %}
+  {% include "includes/hero_annual_report.html" with title=self.title %}
+
+  <section class="container-sm annual-reports">
+    <table>
+      <tr class="meta">
+        <th>YEAR</th>
+        <th>TYPE</th>
+        <th>FORMAT</th>
+        <th>LANGUAGE</th>
+        <th></th>
+      </tr>
+      {% if page.report_interactive %}
+        <tr>
+          <td>{{ page.year }}</td>
+          <td>Annual Report</td>
+          <td>Digital Interactive</td>
+          <td>English</td>
+          <td class="annual-reports-cta">
+            <a class="button" href="{{ page.report_interactive }}">
+              Explore
+              <i class="fas fa-mouse-pointer"></i>
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if page.report_english %}
+        <tr>
+          <td>{{ page.year }}</td>
+          <td>Annual Report</td>
+          <td>Print</td>
+          <td>English</td>
+          <td class="annual-reports-cta">
+            <a class="download-button" href="{{ page.report_english.url }}">
+              <i class="fas fa-download"></i>
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if page.report_french %}
+        <tr>
+          <td>{{ page.year }}</td>
+          <td>Rapport annuel</td>
+          <td>Print</td>
+          <td>en français</td>
+          <td class="annual-reports-cta">
+            <a class="download-button" href="{{ page.report_french.url }}">
+              <i class="fas fa-download"></i>
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if page.report_financial %}
+        <tr>
+          <td>{{ page.year }}</td>
+          <td>Financial Statement</td>
+          <td>Print</td>
+          <td>English</td>
+          <td class="annual-reports-cta">
+            <a class="download-button" href="{{ page.report_financial }}">
+              <i class="fas fa-download"></i>
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+  </section>
 {% endblock content %}
