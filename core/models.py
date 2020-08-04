@@ -19,6 +19,7 @@ class HomePage(Page):
         'careers.JobPostingListPage',
         'core.BasicPage',
         'events.EventListPage',
+        'newsletters.NewsletterListPage',
         'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',

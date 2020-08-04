@@ -1,5 +1,6 @@
 from careers.models import JobPostingListPage
 from events.models import EventListPage
+from newsletters.models import NewsletterListPage
 from people.models import PeoplePage, PersonListPage
 from publications.models import PublicationListPage
 from research.models import TopicListPage
@@ -83,6 +84,7 @@ class HomePageTests(WagtailPageTests):
                 BasicPage,
                 EventListPage,
                 JobPostingListPage,
+                NewsletterListPage,
                 PeoplePage,
                 PersonListPage,
                 PublicationListPage,
