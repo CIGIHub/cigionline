@@ -19,6 +19,9 @@ class HomePage(Page):
         'careers.JobPostingListPage',
         'core.BasicPage',
         'events.EventListPage',
+        'multimedia.MultimediaListPage',
+        'multimedia.MultimediaSeriesListPage',
+        'multimedia.MultimediaSeriesPage',
         'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',
@@ -68,7 +71,7 @@ class BasicPageAbstract(Page):
         verbose_name='Submenu',
         help_text='Select a submenu to appear in the right section of the hero.',
     )
-    subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic'])
+    subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
 
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
@@ -99,14 +102,15 @@ class BasicPageAbstract(Page):
         images_panel,
     ]
 
+    submenu_panel = MultiFieldPanel(
+        [
+            FieldPanel('submenu'),
+        ],
+        heading='Submenu',
+        classname='collapsible collapsed',
+    )
     settings_panels = Page.settings_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('submenu'),
-            ],
-            heading='Submenu',
-            classname='collapsible collapsed',
-        ),
+        submenu_panel,
     ]
 
     class Meta:
@@ -126,18 +130,19 @@ class FeatureablePageAbstract(Page):
         help_text='Image used when featuring on landing pages such as the home page',
     )
 
-    featureable_promote_panels = [
-        MultiFieldPanel(
-            [
-                FieldPanel('feature_title'),
-                FieldPanel('feature_subtitle'),
-                ImageChooserPanel('image_feature'),
-            ],
-            heading='Feature Information',
-        ),
-    ]
+    feature_panel = MultiFieldPanel(
+        [
+            FieldPanel('feature_title'),
+            FieldPanel('feature_subtitle'),
+            ImageChooserPanel('image_feature'),
+        ],
+        heading='Feature Information',
+        classname='collapsible collapsed',
+    )
 
-    promote_panels = Page.promote_panels + featureable_promote_panels
+    promote_panels = Page.promote_panels + [
+        feature_panel,
+    ]
 
     class Meta:
         abstract = True
@@ -163,19 +168,74 @@ class ShareablePageAbstract(Page):
         help_text='An image that is used when sharing on social media.',
     )
 
-    shareable_promote_panels = [
-        MultiFieldPanel(
-            [
-                FieldPanel('social_title'),
-                FieldPanel('social_description'),
-                ImageChooserPanel('image_social'),
-            ],
-            heading='Social Media',
-            classname='collapsible collapsed',
-        ),
+    social_panel = MultiFieldPanel(
+        [
+            FieldPanel('social_title'),
+            FieldPanel('social_description'),
+            ImageChooserPanel('image_social'),
+        ],
+        heading='Social Media',
+        classname='collapsible collapsed',
+    )
+
+    promote_panels = Page.promote_panels + [
+        social_panel,
     ]
 
-    promote_panels = Page.promote_panels + shareable_promote_panels
+    class Meta:
+        abstract = True
+
+
+class ThemeablePageAbstract(Page):
+    theme = models.ForeignKey(
+        'core.Theme',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
+    theme_panel = MultiFieldPanel(
+        [
+            FieldPanel('theme'),
+        ],
+        heading='Theme',
+        classname='collapsible collapsed',
+    )
+    settings_panels = Page.settings_panels + [
+        theme_panel,
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class FromTheArchivesPageAbstract(Page):
+    from_the_archives = models.BooleanField(
+        default=False,
+        verbose_name='From the Archives',
+        help_text='When enabled, show the "From the Archives" label if content is featured on front page.',
+    )
+    from_the_archives_blurb = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+        verbose_name='From the Archives Blurb',
+        help_text='Block displayed on page.',
+    )
+
+    from_the_archives_panel = MultiFieldPanel(
+        [
+            FieldPanel('from_the_archives'),
+            FieldPanel('from_the_archives_blurb'),
+        ],
+        heading='From the Archives',
+        classname='collapsible collapsed',
+    )
+
+    content_panels = Page.content_panels + [
+        from_the_archives_panel,
+    ]
 
     class Meta:
         abstract = True
@@ -307,3 +367,13 @@ class AnnualReportPage(FeatureablePageAbstract):
     class Meta:
         verbose_name = 'Annual Report Page'
         verbose_name_plural = 'Annual Report Pages'
+
+
+class Theme(models.Model):
+    name = models.CharField(max_length=255)
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
