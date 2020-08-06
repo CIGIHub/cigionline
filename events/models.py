@@ -136,9 +136,10 @@ class EventPage(
             classname='collapsible collapsed',
         ),
     ]
-    promote_panels = Page.promote_panels \
-        + FeatureablePageAbstract.featureable_promote_panels \
-        + ShareablePageAbstract.shareable_promote_panels
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+    ]
 
     parent_page_types = ['events.EventListPage']
     subpage_types = []

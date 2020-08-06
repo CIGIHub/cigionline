@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'core',
     'events',
     'menus',
+    'multimedia',
     'newsletters',
     'people',
     'publications',
