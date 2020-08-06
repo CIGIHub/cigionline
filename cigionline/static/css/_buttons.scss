@@ -26,7 +26,6 @@
 
   svg {
     display: inline;
-    height: 1em;
   }
 
   &:hover {
@@ -46,11 +45,9 @@
   flex-direction: column;
   flex-shrink: 0;
   font-size: 12px;
-  height: 25px;
   justify-content: center;
-  width: 25px;
   margin-top: 0.5em;
-
+  width: 30px;
 
   &.with-description {
     width: auto;
