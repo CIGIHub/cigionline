@@ -9,6 +9,7 @@ from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
+    PageChooserPanel,
     StreamFieldPanel,
 )
 from wagtail.core.blocks import (
@@ -156,6 +157,13 @@ class PublicationPage(
         blank=True,
         verbose_name='PDF Downloads',
     )
+    publication_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -226,6 +234,10 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                PageChooserPanel(
+                    'publication_series',
+                    ['publications.PublicationSeriesPage'],
+                ),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -239,3 +251,52 @@ class PublicationPage(
     class Meta:
         verbose_name = 'Publication'
         verbose_name_plural = 'Publications'
+
+
+class PublicationSeriesListPage(BasicPageAbstract):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = ['publications.PublicationSeriesPage']
+    templates = 'publications/publication_series_list_page.html'
+
+    class Meta:
+        verbose_name = 'Publication Series List Page'
+
+
+class PublicationSeriesPage(
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    PublishablePageAbstract,
+):
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+
+    # Reference field for Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible',
+        ),
+        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    parent_page_types = ['publications.PublicationSeriesListPage']
+    subpage_types = []
+    templates = 'publications/publication_series_page.html'
+
+    class Meta:
+        verbose_name = 'Publication Series'
+        verbose_name_plural = 'Publication Series'
