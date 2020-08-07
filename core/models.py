@@ -26,6 +26,7 @@ class HomePage(Page):
         'people.PersonListPage',
         'publications.PublicationListPage',
         'publications.PublicationSeriesListPage',
+        'research.ResearchActivityListPage',
         'research.TopicListPage'
     ]
     templates = 'core/home_page.html'
