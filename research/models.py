@@ -11,17 +11,17 @@ from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
-class ResearchActivityListPage(Page):
+class ProjectListPage(Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
-    subpage_types = ['research.ResearchActivityPage']
-    templates = 'research/research_activity_list_page.html'
+    subpage_types = ['research.ProjectPage']
+    templates = 'research/project_list_page.html'
 
     class Meta:
-        verbose_name = 'Research Activity List Page'
+        verbose_name = 'Project List Page'
 
 
-class ResearchActivityPage(
+class ProjectPage(
     BasicPageAbstract,
     FeatureablePageAbstract,
     PublishablePageAbstract,
@@ -54,13 +54,13 @@ class ResearchActivityPage(
         ShareablePageAbstract.social_panel,
     ]
 
-    parent_page_types = ['research.ResearchActivityListPage']
+    parent_page_types = ['research.ProjectListPage']
     subpage_types = []
-    templates = 'research/research_activity_page.html'
+    templates = 'research/project_page.html'
 
     class Meta:
-        verbose_name = 'Research Activity'
-        verbose_name_plural = 'Research Activities'
+        verbose_name = 'Project'
+        verbose_name_plural = 'Projects'
 
 
 class TopicListPage(Page):
