@@ -23,8 +23,10 @@
 }
 
 @mixin social-links($color: $black, $background: $cigi-light-grey, $hover-color: $cigi-pink) {
-  a:hover > .fa-circle {
-    color: $hover-color;
+  a {
+    &:hover > .fa-circle {
+      color: $hover-color;
+    }
   }
 
   .fa-circle {
