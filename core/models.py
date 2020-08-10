@@ -46,6 +46,8 @@ class BasicPageAbstract(Page):
             ('quote_author', blocks.CharBlock(required=False)),
             ('author_title', blocks.CharBlock(required=False)),
             ('image', ImageChooserBlock(required=False)),
+            ('link_url', blocks.URLBlock(required=False)),
+            ('link_text', blocks.CharBlock(required=False)),
         ])),
         ('table', TableBlock()),
     ]
@@ -242,7 +244,11 @@ class FromTheArchivesPageAbstract(Page):
         abstract = True
 
 
-class BasicPage(BasicPageAbstract):
+class BasicPage(
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    ShareablePageAbstract,
+):
     """Page with StreamField body"""
 
     related_files = StreamField(
@@ -261,6 +267,11 @@ class BasicPage(BasicPageAbstract):
             classname='collapsible collapsed',
         ),
     ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+    ]
+
     parent_page_types = ['core.BasicPage', 'core.HomePage']
     subpage_types = ['core.AnnualReportListPage', 'core.BasicPage', 'core.FundingPage', 'people.PersonListPage']
     template = 'core/basic_page.html'
