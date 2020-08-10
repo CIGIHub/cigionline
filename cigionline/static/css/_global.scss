@@ -59,3 +59,11 @@ button {
   line-height: 17px;
   text-transform: uppercase;
 }
+
+.social-links {
+  @include social-links($color: $black, $background: $cigi-light-grey, $hover-color: $cigi-pink);
+
+  .facebook-share-link {
+    cursor: pointer;
+  }
+}

@@ -56,35 +56,11 @@ section {
 
               border-bottom: 1px solid $border-grey;
               break-inside: avoid-column;
-              padding-bottom: .2em;
-              padding-top: .2em;
+              padding-bottom: 0.2em;
+              padding-top: 0.2em;
             }
           }
         }
-      }
-    }
-  }
-
-  &.hero-annual-report {
-    padding-bottom: 2em;
-    
-    .hero-main {
-      @include breakpoint($medium) {
-        text-align: center;
-      }
-
-      h1 {
-        font-size: 1.75em;
-        font-weight: 400;
-        margin-bottom: 0.363636em;
-
-        @include breakpoint($medium) {
-          font-size: 2.75em;
-        }
-      }
-
-      .social-links {
-        @include social-links($color: $black, $background: $cigi-light-grey, $hover-color: $cigi-pink);
       }
     }
   }
