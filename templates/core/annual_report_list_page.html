@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block body_class %}annual-report-list{% endblock %}
+
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+
+  <section class="container-lg featured">
+  </section>
+  <section class="annual-reports-list">
+  </section>
+  
 {% endblock content %}
