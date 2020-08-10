@@ -18,6 +18,30 @@ a {
   color: $cigi-pink;
   text-decoration: none;
   transition: color 0.2s ease;
+
+  &:hover {
+    color: $cigi-dark-pink;
+  }
+}
+
+article {
+  section {
+    margin-bottom: 3em;
+    margin-top: 3em;
+
+    &.hero {
+      margin-top: 0;
+    }
+
+    &.main {
+      ol,
+      ul {
+        line-height: 1.5em;
+        margin: 0 0 1em 1em;
+        padding: 0;
+      }
+    }
+  }
 }
 
 button {
@@ -30,6 +54,13 @@ button {
     box-shadow: none !important;
     outline: none !important;
   }
+}
+
+hr {
+  background: $cigi-light-grey;
+  border: 0;
+  height: 1px;
+  margin: 1em 0;
 }
 
 [class*='container-'] {
@@ -66,4 +97,12 @@ button {
   .facebook-share-link {
     cursor: pointer;
   }
+}
+.paragraph-heading {
+  border-top: 0.25em solid $black;
+  color: $black;
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: $sans-medium;
+  text-transform: uppercase;
 }

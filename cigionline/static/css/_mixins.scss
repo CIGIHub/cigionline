@@ -39,3 +39,15 @@
     font-size: 0.9em;
   }
 }
+
+@mixin comma-separated {
+  &::after {
+    content: ', ';
+  }
+
+  &:last-child {
+    &::after {
+      content: '';
+    }
+  }
+}

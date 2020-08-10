@@ -1,9 +1,12 @@
 section {
   &.hero {
+    @include breakpoint($medium) {
+      padding-top: 6em;
+    }
     background-color: $black;
     font-size: 1rem;
     padding-bottom: 2em;
-    padding-top: 6em;
+    padding-top: 4em;
 
     .hero-container {
       display: flex;
@@ -17,7 +20,7 @@ section {
         h1 {
           color: $white;
           font-size: 1.75em;
-          font-weight: 400;
+          font-weight: $sans-regular;
           margin-bottom: 0;
 
           @media screen and (min-width: 40em) {
@@ -28,7 +31,7 @@ section {
         h2 {
           color: $cigi-medium-light-grey;
           font-size: 1em;
-          font-weight: 400;
+          font-weight: $sans-regular;
         }
       }
 
