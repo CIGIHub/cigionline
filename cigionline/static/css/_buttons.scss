@@ -73,7 +73,12 @@ table {
   }
 }
 
-input[type='submit'],
+input {
+  &[type='submit'] {
+    @extend %button;
+  }
+}
+
 .button {
   @extend %button;
 }

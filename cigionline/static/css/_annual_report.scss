@@ -1,23 +1,25 @@
-body.annual-report {
-  .hero-annual-report {
-    padding: 4em 0 4em;
+body {
+  &.annual-report {
+    .hero-annual-report {
+      padding: 4em 0;
 
-    .hero-main {
-      text-align: center;
+      .hero-main {
+        text-align: center;
 
-      h1 {
-        font-size: 2em;
-        font-weight: 400;
-        margin-bottom: 0.363636em;
+        h1 {
+          font-size: 2em;
+          font-weight: 400;
+          margin-bottom: 0.363636em;
 
-        @include breakpoint($medium) {
-          font-size: 2.75em;
+          @include breakpoint($medium) {
+            font-size: 2.75em;
+          }
         }
       }
     }
-  }
 
-  .annual-reports-cta {
-    text-align: center;
+    .annual-reports-cta {
+      text-align: center;
+    }
   }
 }
