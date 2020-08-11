@@ -1,12 +1,15 @@
 body {
   &.annual-report {
-    .hero-annual-report {
+    .hero {
+      background-color: $white;
       padding: 4em 0;
 
-      .hero-main {
+      .hero-container {
+        justify-content: center;
         text-align: center;
 
         h1 {
+          color: $black;
           font-size: 2em;
           font-weight: 400;
           margin-bottom: 0.363636em;

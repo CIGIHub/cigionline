@@ -3,6 +3,7 @@ section {
     @include breakpoint($medium) {
       padding-top: 6em;
     }
+
     background-color: $black;
     font-size: 1rem;
     padding-bottom: 2em;
