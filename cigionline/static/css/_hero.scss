@@ -10,7 +10,12 @@ section {
 
     .hero-container {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
+
+      @include breakpoint($medium) {
+        flex-direction: row;
+      }
 
       .hero-main {
         @include breakpoint($medium) {
@@ -36,6 +41,10 @@ section {
       }
 
       aside {
+        @include breakpoint($medium) {
+          margin-left: 3em;
+        }
+
         nav {
           h2 {
             color: $white;

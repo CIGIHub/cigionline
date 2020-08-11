@@ -1,20 +1,48 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags %}
 
+{% block body_class %}person-list-staff-page{% endblock %}
+
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% if self.body %}
   <section>
-    <div class="container-lg">
+    <div class="container-md">
       {% for block in self.body %}
         {% include_block block %}
       {% endfor %}
     </div>
   </section>
+  {% endif %}
   <section>
-    <div class="container-lg">
-      {% for person in page.person_pages %}
-        <p>{{ person.title }}</p>
-      {% endfor %}
+    <div class="container-sm">
+      <div class="pager">Show All | A | B | C | ...</div>
+      <table class="staff-directory">
+        <tr>
+          <th>NAME</th>
+          <th>CONTACT</th>
+        </tr>
+        {% for person in page.person_pages %}
+        <tr>
+          <td>
+            <a class="name" href="{{ person.link }}">{{ person.title }}</a>
+            <div class="position">{{ person.position }}</div>
+          </td>
+          <td>
+            {% if person.phone_number %}
+              <div>
+                <i class="fas fa-phone"></i><span>{{ person.phone_number }}</div>
+              </div>  
+            {% endif %}
+            {% if person.email %}
+              <div>
+                <i class="fas fa-envelope"></i><span><a href="mailto:{{ person.email }}">{{ person.email }}</a></div>
+              </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </section>
 {% endblock %}
