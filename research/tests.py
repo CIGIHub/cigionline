@@ -1,4 +1,4 @@
-from core.models import HomePage
+from core.models import BasicPage, HomePage
 from django.template import Context, Template
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
@@ -24,7 +24,7 @@ class ProjectPageTests(WagtailPageTests):
     def test_projectpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ProjectPage,
-            {ProjectListPage},
+            {BasicPage, ProjectListPage},
         )
 
     def test_projectpage_child_page_types(self):

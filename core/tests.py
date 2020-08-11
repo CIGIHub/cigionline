@@ -3,7 +3,7 @@ from events.models import EventListPage
 from multimedia.models import MultimediaListPage, MultimediaSeriesListPage, MultimediaSeriesPage
 from people.models import PeoplePage, PersonListPage
 from publications.models import PublicationListPage, PublicationSeriesListPage
-from research.models import ProjectListPage, TopicListPage
+from research.models import ProjectListPage, ProjectPage, TopicListPage
 from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
@@ -55,7 +55,7 @@ class BasicPageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage}
+            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage, ProjectPage}
         )
 
 

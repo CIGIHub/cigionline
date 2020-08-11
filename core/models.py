@@ -38,7 +38,8 @@ class HomePage(Page):
 class BasicPageAbstract(Page):
     """Page with subtitle."""
 
-    body_streamfield_blocks = [
+    # Body StreamField blocks
+    body_default_blocks = [
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
         ('block_quote', blocks.StructBlock([
@@ -51,9 +52,12 @@ class BasicPageAbstract(Page):
         ])),
         ('table', TableBlock()),
     ]
+    body_poster_block = [
+        ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')),
+    ]
 
     body = StreamField(
-        body_streamfield_blocks,
+        body_default_blocks,
         blank=True,
     )
     image_hero = models.ForeignKey(
@@ -273,7 +277,13 @@ class BasicPage(
     ]
 
     parent_page_types = ['core.BasicPage', 'core.HomePage']
-    subpage_types = ['core.AnnualReportListPage', 'core.BasicPage', 'core.FundingPage', 'people.PersonListPage']
+    subpage_types = [
+        'core.AnnualReportListPage',
+        'core.BasicPage',
+        'core.FundingPage',
+        'people.PersonListPage',
+        'research.ProjectPage',
+    ]
     template = 'core/basic_page.html'
 
     class Meta:

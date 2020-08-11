@@ -6,8 +6,17 @@ from core.models import (
 )
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
-from wagtail.core.fields import RichTextField
+from wagtail.core.blocks import (
+    CharBlock,
+    DateBlock,
+    RichTextBlock,
+    StreamBlock,
+    StructBlock,
+    URLBlock,
+)
+from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
@@ -27,6 +36,49 @@ class ProjectPage(
     PublishablePageAbstract,
     ShareablePageAbstract,
 ):
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + BasicPageAbstract.body_poster_block + [
+            ('igc_timeline', StructBlock([
+                ('date', CharBlock(required=True)),
+                ('title', CharBlock(required=False)),
+                ('body', RichTextBlock(required=False)),
+                ('location', CharBlock(required=False)),
+                ('countries_represented', ImageChooserBlock(required=False)),
+                ('outcomes', StreamBlock(
+                    [
+                        ('outcome', StructBlock([
+                            ('date', DateBlock(required=False)),
+                            ('text', RichTextBlock(required=False)),
+                        ])),
+                    ],
+                )),
+                ('witnesses', StreamBlock(
+                    [
+                        ('witness_date', StructBlock([
+                            ('date', DateBlock(required=False)),
+                            ('witnesses', StreamBlock(
+                                [
+                                    ('witnesses_full_session', StructBlock([
+                                        ('title', CharBlock(required=False)),
+                                        ('witness_transcript', URLBlock(required=False)),
+                                        ('witness_video', URLBlock(required=False)),
+                                    ])),
+                                    ('witness', StructBlock([
+                                        ('name', CharBlock(required=False)),
+                                        ('title', CharBlock(required=False)),
+                                        ('witness_transcript', URLBlock(required=False)),
+                                        ('witness_video', URLBlock(required=False)),
+                                    ])),
+                                ],
+                            )),
+                        ])),
+                    ],
+                )),
+            ])),
+        ],
+        blank=True,
+    )
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -54,7 +106,7 @@ class ProjectPage(
         ShareablePageAbstract.social_panel,
     ]
 
-    parent_page_types = ['research.ProjectListPage']
+    parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
     subpage_types = []
     templates = 'research/project_page.html'
 
