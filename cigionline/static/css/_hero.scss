@@ -41,8 +41,10 @@ section {
       }
 
       aside {
+        margin-top: 2em;
+
         @include breakpoint($medium) {
-          margin-left: 3em;
+          margin: 0 0 0 3em;
         }
 
         nav {
