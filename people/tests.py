@@ -628,12 +628,13 @@ class PersonPageTests(WagtailPageTests):
             {},
         )
 
+
 class PeopleTagsTests(WagtailPageTests):
     def test_clean_phone_filter_blank_string(self):
         self.assertEqual('', clean_phone_number(''))
 
     def test_clean_phone_filter_number_with_dots(self):
         self.assertEqual('1 2 3 4 5', clean_phone_number('1.2.3.4.5'))
-    
+
     def test_clean_phone_filter_number_with_capital_text(self):
         self.assertEqual('1 2 3 4 5 ext 6789', clean_phone_number('1.2.3.4.5 EXT 6789'))
