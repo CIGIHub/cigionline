@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags people_tags %}
 
 {% block body_class %}person-list-staff-page{% endblock %}
 
@@ -31,12 +31,14 @@
             <div class="staff-directory-contact">
               {% if person.phone_number %}
                 <div>
-                  <i class="fas fa-phone"></i><span>{{ person.phone_number }}</span>
+                  <i class="fas fa-phone"></i>
+                  <span>{{ person.phone_number|clean_phone_number }}</span>
                 </div>  
               {% endif %}
               {% if person.email %}
                 <div>
-                  <i class="fas fa-envelope"></i><span><a href="mailto:{{ person.email }}">{{ person.email }}</a></span>
+                  <i class="fas fa-envelope"></i>
+                  <span><a href="mailto:{{ person.email }}">{{ person.email }}</a></span>
                 </div>
               {% endif %}
             </div>
