@@ -4,4 +4,4 @@ register = template.Library()
 
 @register.filter
 def clean_phone_number(value):
-    return value.replace('.', ' ').lower();
+    return value.replace('.', ' ').lower()
