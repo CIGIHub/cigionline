@@ -24,14 +24,21 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+    'careers',
     'compressor',
     'core',
+    'events',
+    'menus',
+    'multimedia',
     'people',
+    'publications',
     'research',
     'search',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
+    'wagtail.contrib.modeladmin',
+    'wagtail.contrib.table_block',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -174,3 +181,6 @@ WAGTAIL_SITE_NAME = "cigionline"
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
+
+WAGTAIL_USER_TIME_ZONES = ['America/Toronto']
+TIME_ZONE = 'America/Toronto'

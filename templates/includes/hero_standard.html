@@ -1,0 +1,25 @@
+{% load menu_tags %}
+
+<section class="hero">
+  <div class="container-lg hero-container">
+    <div class="hero-main">
+      <h1>{{title}}</h1>
+      <h2>{{subtitle|safe}}</h2>
+    </div>
+    <aside>
+      {% if submenu %}
+        {% get_menu_items submenu.slug as submenu_items %}
+        <nav aria-label="secondary">
+          <h2><span>More</span></h2>
+          <ul>
+            {% for submenu_item in submenu_items %}
+              <li>
+                <a href="{{ submenu_item.link }}">{{ submenu_item.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+    </aside>
+  </div>
+</section>

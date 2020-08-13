@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+
+
+<ul class="topics">
+  {% for topic in topics %}
+    <li class="topic">
+      <a href="{% pageurl topic %}">{{ topic }}</a>
+    </li>
+  {% endfor %}
+</ul>

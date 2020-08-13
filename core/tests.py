@@ -1,10 +1,42 @@
+from careers.models import JobPostingListPage
+from events.models import EventListPage
+from multimedia.models import MultimediaListPage, MultimediaSeriesListPage, MultimediaSeriesPage
 from people.models import PeoplePage, PersonListPage
+from publications.models import PublicationListPage, PublicationSeriesListPage
 from research.models import TopicListPage
 from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
-from .models import BasicPage, FundingPage, HomePage
+from .models import AnnualReportListPage, AnnualReportPage, BasicPage, FundingPage, HomePage
+
+
+class AnnualReportListPageTests(WagtailPageTests):
+    def test_annualreportlistpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            AnnualReportListPage,
+            {BasicPage},
+        )
+
+    def test_annualreportlistpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            AnnualReportListPage,
+            {AnnualReportPage},
+        )
+
+
+class AnnualReportPageTests(WagtailPageTests):
+    def test_annualreportpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            AnnualReportPage,
+            {AnnualReportListPage},
+        )
+
+    def test_annualreportpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            AnnualReportPage,
+            {},
+        )
 
 
 class BasicPageTests(WagtailPageTests):
@@ -23,7 +55,7 @@ class BasicPageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {BasicPage, FundingPage, PersonListPage}
+            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage}
         )
 
 
@@ -48,7 +80,19 @@ class HomePageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             HomePage,
-            {BasicPage, PeoplePage, PersonListPage, TopicListPage}
+            {
+                BasicPage,
+                EventListPage,
+                JobPostingListPage,
+                MultimediaListPage,
+                MultimediaSeriesListPage,
+                MultimediaSeriesPage,
+                PeoplePage,
+                PersonListPage,
+                PublicationListPage,
+                PublicationSeriesListPage,
+                TopicListPage,
+            }
         )
 
     def test_cannot_create_homepage(self):

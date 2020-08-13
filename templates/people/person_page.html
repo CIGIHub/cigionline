@@ -1,9 +1,179 @@
 {% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify}}{% endfor %}{% endblock %}
 
 {% block content %}
-  <section class="hero">
-    <div class="container-lg">
-      <h1>{{self.title}}</h1>
+ 
+<article>
+  <section class="hero{% if page.archive %} archived{% endif %}">
+    <div class="container-lg hero-container">
+      <div class="hero-main">
+        <h1>{{page.title}}</h1>
+        {% if page.position and page.archive %}
+          <div class="position">
+            {% if not 'Former' in page.position %}Former {% endif %}{{ page.position }}
+          </div>
+        {% else %}
+          <div class="short-bio">
+            {{page.short_bio|richtext}}
+          </div>
+        {% endif %}
+      </div>
+      {% if page.image_square and not page.archive %}
+        <div class="portrait-circle">
+          {% image page.image_square fill-140x140 %}
+        </div>
+      {% endif %}
     </div>
   </section>
+
+  {% if not page.archive %}
+    {% if page.expertise or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number or page.curriculum_vitae %}
+      <section class="expertise container-sm">
+        <div class="expertise-container">
+          {% if page.expertise %}
+            <div class="meta">Expertise</div>
+            <div class="meta">
+              {% for expertise in page.expertise %}
+                <span class="expertise-item">{{ expertise }}</span>
+              {% endfor %}
+            </div>
+            {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number or page.curriculum_vitae %}
+              <hr>
+            {% endif %}
+          {% endif %}
+          
+          <div class="contact">
+            {% if page.phone_number %}
+              <div class="contact-item">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>{{ page.phone_number }}</span>
+              </div>
+            {% endif %}
+
+            {% if page.email %}
+              <div class="contact-item">
+                <i class="fas fa-envelope" aria-hidden="true"></i>
+                <span><a href="mailto:{{ page.email }}">{{ page.email }}</a></span>
+              </div>
+            {% endif %}
+
+            {% if page.twitter_username %}
+              <div class="contact-item">
+                <i class="fab fa-twitter" aria-hidden="true"></i>
+                <span><a href="https://twitter.com/{{ page.twitter_username }}" target="_blank">{{ page.twitter_username }}</a></span>
+              </div>
+            {% endif %}
+
+            {% if page.linkedin_url %}
+              <div class="contact-item">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                <span><a href="{{ page.linkedin_url }}" target="_blank">{{ page.linkedin_url|no_protocol }}</a></span>
+              </div>
+            {% endif %}
+
+            {% if page.website %}
+              <div class="contact-item">
+                <i class="fas fa-link" aria-hidden="true"></i>
+                <span><a href="{{ page.website }}" target="_blank">{{ page.website|no_protocol }}</a></span>
+              </div>
+            {% endif %}
+
+            {% if page.curriculum_vitae %}
+              <div class="contact-item">
+                <i class="far fa-newspaper" aria-hidden="true"></i>
+                <span><a href="{{ page.curriculum_vitae.url }}" target="_blank">Curriculum Vitae</a></span>
+              </div>
+            {% endif %}
+
+            {% if page.image_media %}
+              {% image page.image_media original as high_res %}
+              <div class="contact-item">
+                <i class="fas fa-download" aria-hidden="true"></i>
+                <span><a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a></span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if page.body %}
+      <section class="body container-sm">
+        <h2 class="paragraph-heading">Bio</h2>
+        {{ page.body }}
+      </section>
+    {% endif %}
+
+    {% if page.external_publications %}
+    {% with publication.value.publication_type|lower as type %}
+      <section class="external-publications container-sm">
+        <h2 class="paragraph-heading">Select Publications</h2>
+        {% for publication in page.external_publications %}
+          <article>
+            <div class="counter">{{ forloop.counter }}.</div>
+            <div>
+              {% if publication.value.author %}
+                <span>{{publication.value.author}}</span>.
+              {% endif %}
+
+              {% if publication.value.year %}
+                <span>{{publication.value.year}}</span>.
+              {% endif %}
+
+              {% if publication.value.title %}
+                <span>
+                  {% if type == 'book' or type == 'edited_book' or type == 'e_book' %}
+                    <em>
+                      {% if publication.value.url %}
+                        <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>.
+                      {% else %}
+                        {{ publication.value.title }}.
+                      {% endif %}
+                    </em>
+                  {% else %}
+                    {% if publication.value.url %}
+                      "<a href="{{ publication.value.url }}">{{ publication.value.title }}</a>".
+                    {% else %}
+                      "{{ publication.value.title }}".
+                    {% endif %}
+                  {% endif %}
+                </span>
+              {% endif %}
+
+              {% if publication.value.secondary_title %}
+                {% if type == 'report' or type == 'thesis' %}
+                  <span>{{ publication.value.secondary_title }}</span>.
+                {% elif type != 'book' or type != 'edited_book' %}
+                  <span><em>{{ publication.value.secondary_title }}</em></span>.
+                {% endif %}
+              {% endif %}
+                
+              {% if publication.value.secondary_author %}
+                <span>{{ publication.value.secondary_author }}<span>.
+              {% endif %}
+              
+              {% if publication.value.secondary_title %}
+                {% if type == 'book' or type == 'edited_book' %}
+                  <span><em>{{ publication.value.secondary_title }}</em></span>.
+                {% endif %}
+              {% endif %}
+
+              {% if publication.value.publisher_info %}
+                <span><em>{{ publication.value.publisher_info }}</em><span>.
+              {% endif %}
+              
+              {% if publication.value.location_in_work %}
+                <span>{{ publication.value.location_in_work }}<span>.
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+    {% endwith %}
+    {% endif %}
+  {% endif %}
+</article>
+
 {% endblock content %}

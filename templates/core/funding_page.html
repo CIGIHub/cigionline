@@ -2,12 +2,7 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-  <section class="hero">
-    <div class="container-lg">
-      <h1>{{self.title}}</h1>
-      <h2>{{self.subtitle}}</h2>
-    </div>
-  </section>
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <section>
     <div class="container-lg">
       {% for block in self.body %}
