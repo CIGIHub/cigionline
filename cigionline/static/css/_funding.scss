@@ -71,19 +71,20 @@ body {
             position: relative;
           }
 
-          &.total:before {
-            background: $cigi-dark-grey;
-            content: '';
-            height: 1px;
-            left: 0;
-            margin: 0 5%;
-            position: absolute;
-            top: 0;
-            width: 90%;
+          &.total {
+            &::before {
+              background: $cigi-dark-grey;
+              content: '';
+              height: 1px;
+              left: 0;
+              margin: 0 5%;
+              position: absolute;
+              top: 0;
+              width: 90%;
           }
 
           &.final-total {
-            &:before {
+            &::before {
               background: transparent;
               border-bottom: 1px solid $cigi-dark-grey;
               border-top: 1px solid $cigi-dark-grey;
