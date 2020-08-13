@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags %}
 
+{% block body_class %}funding-page{% endblock %}
+
 {% block content %}
+<article>
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <section>
-    <div class="container-lg">
+    <div class="container-sm">
       {% for block in self.body %}
         {% include_block block %}
       {% endfor %}
     </div>
   </section>
-  <section>
+  <section class="funding-container">
     <div class="container-lg">
       <h2>Fiscal 2019 Funding</h2>
       <br>
@@ -19,7 +22,7 @@
           <tr>
             <th width="190" class="no-right-border"></th>
             <th></th>
-            <th colspan='2' class="center">{{year}}</th>
+            <th colspan='2' class="center">2018-19</th>
           </tr>
           <tr>
             <th width="190">Core Funding Sources</th>
@@ -320,8 +323,7 @@
         <li>University of New South Wales</li>
         <li>University of Pennsylvania</li>
       </ul>
-      <p>&nbsp;</p>
-      <p>&nbsp;</p>
     </div>
   </section>
+</article>  
 {% endblock content %}

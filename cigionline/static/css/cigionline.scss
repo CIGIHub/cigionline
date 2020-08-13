@@ -8,6 +8,7 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 
 @import 'variables';
 @import 'mixins';
+@import 'utility';
 @import 'grids';
 @import 'footer';
 @import 'global';
@@ -15,3 +16,4 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'meta';
 @import 'people';
 @import 'top-bar';
+@import 'funding';

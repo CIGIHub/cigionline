@@ -1,5 +1,14 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: $primary-font-family;
+  line-height: 1.25em;
   margin: 0;
 }
 
@@ -31,6 +40,20 @@ article {
       }
     }
   }
+
+  h2 {
+    border-top: 3px solid $black;
+    color: $black;
+    display: inline-block;
+    font-size: 0.75em;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: $cigi-dark-grey;
+    margin: 1em 0;
+  }
 }
 
 button {
@@ -52,6 +75,44 @@ hr {
   margin: 1em 0;
 }
 
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 0.75em;
+  width: 100%;
+
+  td {
+    padding: 1.33em 0.833em;
+    text-align: left;
+    vertical-align: middle;
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+
+  th {
+    border-left: 1px solid $cigi-light-grey;
+    color: $cigi-text-grey;
+    font-weight: 500;
+    padding: 0 0.833em;
+    text-align: left;
+
+    &:first-child {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+
+  tr {
+    border-bottom: 1px solid $cigi-light-grey;
+  }
+}
+
 [class*='container-'] {
   margin-left: auto;
   margin-right: auto;
@@ -68,7 +129,7 @@ hr {
 }
 
 .container-sm {
-  max-width: 40rem;
+  max-width: 45rem;
 }
 
 .paragraph-heading {

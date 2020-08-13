@@ -1,0 +1,140 @@
+body {
+  &.funding-page {
+    .rich-text {
+      h2 {
+        border: 0;
+        color: $cigi-dark-grey;
+        display: block;
+        font-size: 1.31em;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        margin: 1em 0 0.5em;
+        text-transform: none;
+      }
+
+      ul {
+        line-height: 1.75em;
+        margin: 0 0 0 3em;
+      }
+    }
+
+    .funding-container {
+      h2 {
+        margin: 2em 0;
+      }
+
+      p {
+        font-size: 0.875em;
+      }
+
+      ul {
+        @media (min-width: $medium) {
+          columns: 3;
+
+          li {
+            display: inline-block;
+            font-size: 0.875em;
+            width: 100%;
+          }
+        }
+
+        list-style: none;
+
+        li {
+          color: $cigi-dark-grey;
+          padding: 0.25em 0;
+        }
+      }
+
+      table {
+        p {
+          font-size: 1.17em;
+        }
+
+        th {
+          border-bottom: 1px solid $cigi-dark-grey;
+          border-right: 1px solid $cigi-dark-grey;
+
+          &:last-child {
+            border-right: 0;
+          }
+        }
+
+        td {
+          border-right: 1px solid $cigi-dark-grey;
+
+          &.text-right {
+            text-align: right;
+          }
+
+          &.total {
+            position: relative;
+          }
+
+          &.total:before {
+            background: $cigi-dark-grey;
+            content: '';
+            height: 1px;
+            left: 0;
+            margin: 0 5%;
+            position: absolute;
+            top: 0;
+            width: 90%;
+          }
+
+          &.final-total {
+            &:before {
+              background: transparent;
+              border-bottom: 1px solid $cigi-dark-grey;
+              border-top: 1px solid $cigi-dark-grey;
+              height: 0.25em;
+            }
+          }
+
+          &:last-child {
+            border-right: 0;
+          }
+        }
+
+        .no-padding {
+          td {
+            padding: 0 1em;
+
+            &:last-child {
+              padding: 0 3em 0 1em;
+            }
+          }
+        }
+
+        .final-total {
+          td {
+            padding-top: 0.5em;
+          }
+        }
+
+        .small-grey {
+          color: $cigi-dark-grey;
+          font-size: 0.9em;
+        }
+
+        .no-right-border {
+          border-right: 0;
+        }
+
+        &.donations {
+          td {
+            padding: 0.5em;
+          }
+
+          .underline {
+            border-bottom: 1px solid $cigi-dark-grey;
+          }
+
+          .overline {
+            border-top: 4px double $cigi-dark-grey;
+          }
+        }
+      }
+    }
+  }
+}
