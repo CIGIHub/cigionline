@@ -51,6 +51,7 @@ class ProjectPage(
                             ('text', RichTextBlock(required=False)),
                         ])),
                     ],
+                    required=False,
                 )),
                 ('witnesses', StreamBlock(
                     [
@@ -73,6 +74,7 @@ class ProjectPage(
                             )),
                         ])),
                     ],
+                    required=False,
                 )),
             ])),
         ],
