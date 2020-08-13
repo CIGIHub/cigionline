@@ -81,17 +81,18 @@ body {
               position: absolute;
               top: 0;
               width: 90%;
-          }
+            }
 
-          &.final-total {
-            &::before {
-              background: transparent;
-              border-bottom: 1px solid $cigi-dark-grey;
-              border-top: 1px solid $cigi-dark-grey;
-              height: 0.25em;
+            &.final-total {
+              &::before {
+                background: transparent;
+                border-bottom: 1px solid $cigi-dark-grey;
+                border-top: 1px solid $cigi-dark-grey;
+                height: 0.25em;
+              }
             }
           }
-
+          
           &:last-child {
             border-right: 0;
           }
