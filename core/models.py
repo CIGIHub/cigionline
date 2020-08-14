@@ -40,12 +40,14 @@ class BasicPageAbstract(Page):
     body_streamfield_blocks = [
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
-        ('block_quote', blocks.StructBlock([
+        ('block_quote', blocks.StructBlock(
+          [
             ('quote', blocks.RichTextBlock(required=True)),
             ('quote_author', blocks.CharBlock(required=False)),
             ('author_title', blocks.CharBlock(required=False)),
             ('image', ImageChooserBlock(required=False)),
-        ])),
+          ],
+          template = 'blocks/block_quote.html')),
         ('table', TableBlock()),
     ]
 

@@ -1,10 +1,19 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <section>
-    <div class="container-lg">
+    <div class="container-sm">
+      {% if self.image_hero %}
+        <div class="image">
+          {% image self.image_hero fill-960x486 %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+  <section>
+    <div class="container-sm">
       {% for block in self.body %}
         {% include_block block %}
       {% endfor %}

@@ -1,0 +1,25 @@
+.block-block-quote {
+  font-size: 1.5em;
+  line-height: 130%;
+  overflow: auto;
+  position: relative;
+
+  blockquote {
+    padding: 1rem;
+    position: relative;
+
+    &::before {
+      border-bottom: 5px solid $cigi-pink;
+      content: '';
+      height: 5px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 80px;
+    }
+
+    @media (min-width: $medium) {
+      padding: 1rem 2rem;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+
+<div class="block-block-quote">
+  {% if value.image %}
+    <div class="image">{% image value.image max-500x300 %}</div>
+  {% endif %}
+  
+  <blockquote>{{value.quote}}</blockquote>
+  
+  {% if value.quote_author %}
+    <div class="author">{{ value.quote_author }}</div>
+  {% endif %}
+  
+  {% if value.author_title %}
+    <div class="author-title">{{ value.author_title }}</div>
+  {% endif %}
+</div>
