@@ -33,18 +33,6 @@ article {
   }
 }
 
-button {
-  background-color: transparent;
-  border: 0;
-  cursor: pointer;
-
-  &:active,
-  &:focus {
-    box-shadow: none !important;
-    outline: none !important;
-  }
-}
-
 hr {
   background: $cigi-light-grey;
   border: 0;
@@ -57,18 +45,6 @@ hr {
   margin-right: auto;
   padding-left: 0.625rem;
   padding-right: 0.625rem;
-}
-
-.container-lg {
-  max-width: 67.5rem;
-}
-
-.container-md {
-  max-width: 55rem;
-}
-
-.container-sm {
-  max-width: 40rem;
 }
 
 .paragraph-heading {
