@@ -6,13 +6,18 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'fontawesome-pro/scss/light';
 @import 'fontawesome-pro/scss/brands';
 
+@import 'global/normalize';
 @import 'global/variables';
 @import 'global/mixins';
-@import 'global/types';
+@import 'global/type';
+
 @import 'layout/grids';
 @import 'layout/footer';
 @import 'layout/top-bar';
 @import 'layout/hero';
 @import 'layout/grids';
+
+@import 'objects/buttons';
 @import 'objects/meta';
+
 @import 'pages/people';
