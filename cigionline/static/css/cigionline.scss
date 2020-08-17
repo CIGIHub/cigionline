@@ -7,6 +7,7 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'fontawesome-pro/scss/brands';
 
 @import 'global/normalize';
+@import 'global/resets';
 @import 'global/variables';
 @import 'global/mixins';
 @import 'global/type';
@@ -15,9 +16,10 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'layout/footer';
 @import 'layout/top-bar';
 @import 'layout/hero';
-@import 'layout/grids';
+@import 'layout/sections';
 
 @import 'objects/buttons';
 @import 'objects/meta';
+@import 'objects/paragraphs';
 
 @import 'pages/people';
