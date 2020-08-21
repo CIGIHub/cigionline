@@ -5,6 +5,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
+from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.core.blocks import (
     CharBlock,
@@ -80,6 +81,7 @@ class ProjectPage(
         ],
         blank=True,
     )
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -99,6 +101,13 @@ class ProjectPage(
                 ImageChooserPanel('image_hero'),
             ],
             heading='Images',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
             classname='collapsible collapsed',
         ),
     ]
