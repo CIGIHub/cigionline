@@ -252,6 +252,21 @@ class FromTheArchivesPageAbstract(Page):
         abstract = True
 
 
+class ArchiveablePageAbstract(Page):
+    class ArchiveStatus(models.IntegerChoices):
+        UNARCHIVED = (0, 'No')
+        ARCHIVED = (1, 'Yes')
+
+    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel('archive'),
+    ]
+
+    class Meta:
+        abstract = True
+
+
 class BasicPage(
     BasicPageAbstract,
     FeatureablePageAbstract,

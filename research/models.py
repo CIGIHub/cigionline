@@ -1,4 +1,5 @@
 from core.models import (
+    ArchiveablePageAbstract,
     BasicPageAbstract,
     FeatureablePageAbstract,
     PublishablePageAbstract,
@@ -33,6 +34,7 @@ class ProjectListPage(Page):
 
 
 class ProjectPage(
+    ArchiveablePageAbstract,
     BasicPageAbstract,
     FeatureablePageAbstract,
     PublishablePageAbstract,
@@ -146,24 +148,15 @@ class TopicListPage(Page):
         verbose_name = 'Topic List Page'
 
 
-class TopicPage(Page):
+class TopicPage(ArchiveablePageAbstract):
     """View topic page"""
-
-    class ArchiveStatus(models.IntegerChoices):
-        UNARCHIVED = (0, 'No')
-        ARCHIVED = (1, 'Yes')
-
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
-    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
-    ]
-    settings_panels = Page.settings_panels + [
-        FieldPanel('archive')
     ]
 
     parent_page_types = ['research.TopicListPage']

@@ -1,4 +1,4 @@
-from core.models import BasicPageAbstract
+from core.models import ArchiveablePageAbstract, BasicPageAbstract
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
@@ -54,7 +54,7 @@ class PersonListPage(BasicPageAbstract):
     def board_members(self):
         if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
                 person_types__name='Board Member',
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         return []
@@ -63,12 +63,12 @@ class PersonListPage(BasicPageAbstract):
     def person_pages(self):
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
             return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
                 person_types__name__in=['CIGI Chair', 'Expert'],
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
                 person_types__name='Staff',
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         return []
@@ -77,7 +77,7 @@ class PersonListPage(BasicPageAbstract):
     def senior_management(self):
         if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
+                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
                 person_types__name='Management Team',
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         return []
@@ -93,12 +93,8 @@ class PersonListPage(BasicPageAbstract):
         return original_template
 
 
-class PersonPage(Page):
+class PersonPage(ArchiveablePageAbstract):
     """View person page"""
-
-    class ArchiveStatus(models.IntegerChoices):
-        UNARCHIVED = (0, 'No')
-        ARCHIVED = (1, 'Yes')
 
     class ExternalPublicationTypes(models.TextChoices):
         GENERIC = 'Generic'
@@ -117,14 +113,12 @@ class PersonPage(Page):
     def topics(self):
         return self.topics.live().order_by('title')
 
-
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)
     address_line2 = models.CharField(blank=True, max_length=255)
     address_postal_code = models.CharField(blank=True, max_length=32)
     address_province = models.CharField(blank=True, max_length=255)
-    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
     board_position = models.CharField(blank=True, max_length=255)
     body = StreamField(
         [
@@ -292,9 +286,7 @@ class PersonPage(Page):
             classname='collapsible collapsed'
         ),
     ]
-    settings_panels = Page.settings_panels + [
-        FieldPanel('archive'),
-    ]
+
     parent_page_types = ['people.PeoplePage']
     subpage_types = []
     templates = 'people/person_page.html'
