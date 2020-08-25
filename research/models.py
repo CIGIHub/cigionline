@@ -11,6 +11,7 @@ from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamField
 from wagtail.core.blocks import (
     CharBlock,
     DateBlock,
+    PageChooserBlock,
     RichTextBlock,
     StreamBlock,
     StructBlock,
@@ -84,6 +85,20 @@ class ProjectPage(
         ],
         blank=True,
     )
+    project_leads = StreamField(
+        [
+            ('project_lead', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('external_project_lead', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
+    project_members = StreamField(
+        [
+            ('project_member', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('external_project_member', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -104,6 +119,14 @@ class ProjectPage(
             ],
             heading='General Information',
             classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('project_leads'),
+                StreamFieldPanel('project_members'),
+            ],
+            heading='People',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
