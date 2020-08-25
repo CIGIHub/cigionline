@@ -85,6 +85,12 @@ class ProjectPage(
         ],
         blank=True,
     )
+    project_contacts = StreamField(
+        [
+            ('contact', PageChooserBlock(required=True, page_type='people.PersonPage')),
+        ],
+        blank=True,
+    )
     project_leads = StreamField(
         [
             ('project_lead', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -124,6 +130,7 @@ class ProjectPage(
             [
                 StreamFieldPanel('project_leads'),
                 StreamFieldPanel('project_members'),
+                StreamFieldPanel('project_contacts'),
             ],
             heading='People',
             classname='collapsible collapsed',
