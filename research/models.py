@@ -105,6 +105,7 @@ class ProjectPage(
         ],
         blank=True,
     )
+    project_types = ParentalManyToManyField('research.ProjectType', blank=True)
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -122,6 +123,7 @@ class ProjectPage(
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
+                FieldPanel('project_types'),
             ],
             heading='General Information',
             classname='collapsible',
@@ -164,6 +166,21 @@ class ProjectPage(
     class Meta:
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
+
+
+class ProjectType(models.Model):
+    """
+    A Django model that stores the project types. This isn't allowed to be
+    edited in the admin interface. To insert/remove data - a migration needs to
+    be created.
+    """
+    name = models.CharField(max_length=255)
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class TopicListPage(Page):
