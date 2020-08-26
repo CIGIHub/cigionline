@@ -173,6 +173,7 @@ class PersonPage(ArchiveablePageAbstract):
     person_types = ParentalManyToManyField('people.PersonType', blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
     external_publications = StreamField([
         ('external_publication', blocks.StructBlock([
@@ -258,7 +259,8 @@ class PersonPage(ArchiveablePageAbstract):
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('expertise')
+                StreamFieldPanel('expertise'),
+                FieldPanel('projects'),
             ],
             heading='Expertise',
             classname='collapsible collapsed'
