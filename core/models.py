@@ -22,6 +22,7 @@ class HomePage(Page):
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
         'multimedia.MultimediaSeriesPage',
+        'newsletters.NewsletterListPage',
         'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',
