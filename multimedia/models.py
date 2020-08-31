@@ -97,6 +97,7 @@ class MultimediaPage(
     podcast_video_duration = models.CharField(blank=True, max_length=8)
     podcast_video_file_size = models.IntegerField(blank=True, null=True)
     podcast_video_url = models.URLField(blank=True)
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     speakers = StreamField(
         [
             ('speaker', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -215,6 +216,7 @@ class MultimediaPage(
                     ['multimedia.MultimediaSeriesPage'],
                 ),
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',

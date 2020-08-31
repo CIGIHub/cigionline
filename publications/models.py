@@ -157,6 +157,7 @@ class PublicationPage(
         blank=True,
         verbose_name='PDF Downloads',
     )
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     publication_series = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
@@ -238,6 +239,7 @@ class PublicationPage(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
                 ),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -268,6 +270,7 @@ class PublicationSeriesPage(
     FeatureablePageAbstract,
     PublishablePageAbstract,
 ):
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
@@ -287,6 +290,7 @@ class PublicationSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
