@@ -42,6 +42,11 @@ class BasicPageAbstract(Page):
 
     # Body StreamField blocks
     body_default_blocks = [
+        ('chart', blocks.StructBlock([
+            ('title', blocks.CharBlock(required=True)),
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
         ('block_quote', blocks.StructBlock([
