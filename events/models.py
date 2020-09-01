@@ -49,6 +49,7 @@ class EventPage(
     location_name = models.CharField(blank=True, max_length=255)
     location_postal_code = models.CharField(blank=True, max_length=32, verbose_name='Postal Code')
     location_province = models.CharField(blank=True, max_length=255, verbose_name='Province/State')
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     registration_url = models.URLField(blank=True, max_length=512)
     related_files = StreamField(
         [
@@ -131,6 +132,7 @@ class EventPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',

@@ -25,7 +25,7 @@ class JobPostingPage(
 ):
     closing_date = models.DateField(blank=True, null=True)
     description = StreamField(
-        BasicPageAbstract.body_streamfield_blocks,
+        BasicPageAbstract.body_default_blocks,
         blank=True,
     )
     related_files = StreamField(
