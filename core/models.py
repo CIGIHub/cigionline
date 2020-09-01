@@ -52,6 +52,15 @@ class BasicPageAbstract(Page):
             ('link_url', blocks.URLBlock(required=False)),
             ('link_text', blocks.CharBlock(required=False)),
         ])),
+        ('embedded_video', blocks.StructBlock([
+            ('video_url', blocks.URLBlock(required=True)),
+            ('caption', blocks.CharBlock(required=False)),
+            ('image', ImageChooserBlock(required=False)),
+            ('aspect_ratio', blocks.ChoiceBlock(choices=[
+                ('landscape', 'Landscape'),
+                ('square', 'Square'),
+            ])),
+        ])),
         ('table', TableBlock()),
         ('text_border_block', blocks.StructBlock([
             ('text', blocks.RichTextBlock(required=True)),
