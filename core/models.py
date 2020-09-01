@@ -55,7 +55,7 @@ class BasicPageAbstract(Page):
         ('table', TableBlock()),
         ('text_border_block', blocks.StructBlock([
             ('text', blocks.RichTextBlock(required=True)),
-            ('border_colour', blocks.CharBlock(required=True)),
+            ('border_colour', blocks.CharBlock(required=False)),
         ])),
     ]
     body_poster_block = [
