@@ -71,6 +71,7 @@ class BasicPageAbstract(Page):
             ('source', blocks.CharBlock(required=False)),
         ])),
         ('table', TableBlock()),
+        ('text_background_block', blocks.RichTextBlock()),
         ('text_border_block', blocks.StructBlock([
             ('text', blocks.RichTextBlock(required=True)),
             ('border_colour', blocks.CharBlock(required=False)),
