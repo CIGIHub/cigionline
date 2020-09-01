@@ -70,6 +70,10 @@ class BasicPageAbstract(Page):
             ('quote', blocks.RichTextBlock(required=True)),
             ('source', blocks.CharBlock(required=False)),
         ])),
+        ('external_videos', blocks.ListBlock(blocks.StructBlock([
+            ('title', blocks.CharBlock(required=True)),
+            ('video_url', blocks.URLBlock(required=True)),
+        ]))),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
         ('text_border_block', blocks.StructBlock([
