@@ -66,6 +66,10 @@ class BasicPageAbstract(Page):
                 ('square', 'Square'),
             ])),
         ])),
+        ('external_quote', blocks.StructBlock([
+            ('quote', blocks.RichTextBlock(required=True)),
+            ('source', blocks.CharBlock(required=False)),
+        ])),
         ('table', TableBlock()),
         ('text_border_block', blocks.StructBlock([
             ('text', blocks.RichTextBlock(required=True)),
