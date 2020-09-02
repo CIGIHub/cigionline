@@ -16,6 +16,7 @@ class HomePage(Page):
 
     max_count = 1
     subpage_types = [
+        'articles.ArticleLandingPage',
         'articles.ArticleListPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
@@ -74,6 +75,16 @@ class BasicPageAbstract(Page):
             ('title', blocks.CharBlock(required=True)),
             ('video_url', blocks.URLBlock(required=True)),
         ]))),
+        ('pull_quote_left', blocks.StructBlock([
+            ('quote', blocks.RichTextBlock(required=True)),
+            ('quote_author', blocks.CharBlock(required=False)),
+            ('author_title', blocks.CharBlock(required=False)),
+        ])),
+        ('pull_quote_right', blocks.StructBlock([
+            ('quote', blocks.RichTextBlock(required=True)),
+            ('quote_author', blocks.CharBlock(required=False)),
+            ('author_title', blocks.CharBlock(required=False)),
+        ])),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
         ('text_border_block', blocks.StructBlock([
