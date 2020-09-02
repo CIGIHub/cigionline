@@ -85,6 +85,7 @@ class BasicPageAbstract(Page):
             ('quote_author', blocks.CharBlock(required=False)),
             ('author_title', blocks.CharBlock(required=False)),
         ])),
+        ('recommended', blocks.PageChooserBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
         ('text_border_block', blocks.StructBlock([
