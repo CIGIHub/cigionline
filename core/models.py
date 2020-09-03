@@ -117,6 +117,13 @@ class BasicPageAbstract(Page):
             ('text', blocks.RichTextBlock(required=True)),
             ('border_colour', blocks.CharBlock(required=False)),
         ])),
+        ('tool_tip', blocks.StructBlock([
+            ('anchor', blocks.CharBlock(required=True)),
+            ('text', blocks.RichTextBlock(required=True)),
+            ('name', blocks.CharBlock(required=False)),
+            ('title', blocks.CharBlock(required=False)),
+            ('image', ImageChooserBlock(required=False)),
+        ])),
     ]
     body_poster_block = [
         ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')),
