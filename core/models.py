@@ -69,6 +69,10 @@ class BasicPageAbstract(Page):
             ('link_url', blocks.URLBlock(required=False)),
             ('link_text', blocks.CharBlock(required=False)),
         ])),
+        ('embedded_multimedia', blocks.StructBlock([
+            ('multimedia_url', blocks.URLBlock(required=True)),
+            ('title', blocks.CharBlock(required=False)),
+        ])),
         ('embedded_video', blocks.StructBlock([
             ('video_url', blocks.URLBlock(required=True)),
             ('caption', blocks.CharBlock(required=False)),
