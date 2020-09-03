@@ -50,6 +50,14 @@ class BasicPageAbstract(Page):
         ])),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
+        ('image_full_bleed', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
+        ('image_scroll', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
         ('block_quote', blocks.StructBlock([
             ('quote', blocks.RichTextBlock(required=True)),
             ('quote_author', blocks.CharBlock(required=False)),
