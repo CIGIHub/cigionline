@@ -49,7 +49,10 @@ class BasicPageAbstract(Page):
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
         ])),
         ('paragraph', blocks.RichTextBlock()),
-        ('image', ImageChooserBlock()),
+        ('image', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
         ('image_full_bleed', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
