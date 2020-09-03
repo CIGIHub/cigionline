@@ -43,6 +43,15 @@ class BasicPageAbstract(Page):
 
     # Body StreamField blocks
     body_default_blocks = [
+        ('accordion', blocks.StructBlock([
+            ('title', blocks.CharBlock(required=True)),
+            ('text', blocks.RichTextBlock(required=True)),
+            ('columns', blocks.ChoiceBlock(choices=[
+                ('one', 'One'),
+                ('two', 'Two'),
+                ('three', 'Three'),
+            ])),
+        ])),
         ('chart', blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('image', ImageChooserBlock(required=True)),
