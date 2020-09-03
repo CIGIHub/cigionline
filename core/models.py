@@ -99,6 +99,7 @@ class BasicPageAbstract(Page):
             ('title', blocks.CharBlock(required=True)),
             ('video_url', blocks.URLBlock(required=True)),
         ]))),
+        ('highlight_title', blocks.CharBlock(required=True)),
         ('inline_video', blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')),
         ('pull_quote_left', blocks.StructBlock([
             ('quote', blocks.RichTextBlock(required=True)),
