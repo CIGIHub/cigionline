@@ -264,7 +264,7 @@ class FeatureablePageAbstract(Page):
 
 
 class PublishablePageAbstract(Page):
-    publishing_date = models.DateField()
+    publishing_date = models.DateField(blank=False, null=True)
 
     class Meta:
         abstract = True
