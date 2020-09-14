@@ -3,6 +3,7 @@ from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalManyToManyField
+from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
@@ -122,7 +123,7 @@ class PersonPage(ArchiveablePageAbstract):
     board_position = models.CharField(blank=True, max_length=255)
     body = StreamField(
         [
-            ('paragraph', blocks.RichTextBlock())
+            ('paragraph', ParagraphBlock())
         ],
         blank=True,
         verbose_name='Full Biography'
