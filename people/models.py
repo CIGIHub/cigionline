@@ -46,41 +46,35 @@ class PersonListPage(BasicPageAbstract):
     subpage_types = []
     templates = 'people/person_list_page.html'
 
-    class Meta:
-        verbose_name = 'Person List Page'
-        verbose_name_plural = 'Person List Pages'
+    def get_context(self, request):
+        context = super().get_context(request)
 
-    @property
-    def board_members(self):
-        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
-            return PersonPage.objects.live().filter(
-                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                person_types__name='Board Member',
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        return []
-
-    @property
-    def person_pages(self):
+        people = []
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
-            return PersonPage.objects.live().filter(
+            people = PersonPage.objects.live().filter(
                 archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
                 person_types__name__in=['CIGI Chair', 'Expert'],
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
-            return PersonPage.objects.live().filter(
+            people = PersonPage.objects.live().filter(
                 archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
                 person_types__name='Staff',
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        return []
+        elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+            show = request.GET.get('show')
+            if show == 'senior-management':
+                people = PersonPage.objects.live().filter(
+                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+                    person_types__name='Management Team',
+                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            else:
+                people = PersonPage.objects.live().filter(
+                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+                    person_types__name='Board Member',
+                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+        context['people'] = people
 
-    @property
-    def senior_management(self):
-        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
-            return PersonPage.objects.live().filter(
-                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                person_types__name='Management Team',
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        return []
+        return context
 
     def get_template(self, request, *args, **kwargs):
         original_template = super(PersonListPage, self).get_template(request, *args, **kwargs)
@@ -91,6 +85,10 @@ class PersonListPage(BasicPageAbstract):
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             return 'people/person_list_leadership_page.html'
         return original_template
+
+    class Meta:
+        verbose_name = 'Person List Page'
+        verbose_name_plural = 'Person List Pages'
 
 
 class PersonPage(ArchiveablePageAbstract):
@@ -108,10 +106,6 @@ class PersonPage(ArchiveablePageAbstract):
         REPORT = 'Report'
         THESIS = 'Thesis'
         WEB_PAGE = 'Web Page'
-
-    @property
-    def topics(self):
-        return self.topics.live().order_by('title')
 
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
