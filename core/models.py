@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
@@ -41,7 +42,7 @@ class BasicPageAbstract(Page):
 
     # Body StreamField blocks
     body_default_blocks = [
-        ('paragraph', blocks.RichTextBlock()),
+        ('paragraph', ParagraphBlock()),
         ('image', ImageChooserBlock()),
         ('block_quote', blocks.StructBlock([
             ('quote', blocks.RichTextBlock(required=True)),

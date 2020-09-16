@@ -35,11 +35,13 @@ INSTALLED_APPS = [
     'publications',
     'research',
     'search',
+    'streams',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.table_block',
+    # 'wagtail.contrib.styleguide',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
