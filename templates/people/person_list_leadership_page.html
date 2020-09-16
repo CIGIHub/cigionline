@@ -10,13 +10,8 @@
   </section>
   <section>
     <div class="container-lg">
-      <h2>Board Members</h2>
-      {% for board_member in page.board_members %}
-        <p>{{ board_member.title }}</p>
-      {% endfor %}
-      <h2>Senior Management</h2>
-      {% for manager in page.senior_management %}
-        <p>{{ manager.title }}</p>
+      {% for person in people %}
+        <p>{{ person.title }}</p>
       {% endfor %}
     </div>
   </section>

@@ -119,7 +119,7 @@
     "slug": "experts",
     "content_type": ["people", "personlistpage"],
     "live": true,
-    "url_path": "/home/experts",
+    "url_path": "/home/experts/",
     "expired": false
   }
 }, {
@@ -161,7 +161,7 @@
     "slug": "board-member-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/board-member-live",
+    "url_path": "/home/people/board-member-live/",
     "expired": false
   }
 }, {
@@ -203,7 +203,7 @@
     "slug": "cigi-chair-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/cigi-chair-live",
+    "url_path": "/home/people/cigi-chair-live/",
     "expired": false
   }
 }, {
@@ -245,7 +245,7 @@
     "slug": "commision-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/commision-live",
+    "url_path": "/home/people/commision-live/",
     "expired": false
   }
 }, {
@@ -287,7 +287,7 @@
     "slug": "expert-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/expert-live",
+    "url_path": "/home/people/expert-live/",
     "expired": false
   }
 }, {
@@ -329,7 +329,7 @@
     "slug": "external-profile-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/external-profile-live",
+    "url_path": "/home/people/external-profile-live/",
     "expired": false
   }
 }, {
@@ -371,7 +371,7 @@
     "slug": "g20-expert-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/g20-expert-live",
+    "url_path": "/home/people/g20-expert-live/",
     "expired": false
   }
 }, {
@@ -413,7 +413,7 @@
     "slug": "management-team-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/management-team-live",
+    "url_path": "/home/people/management-team-live/",
     "expired": false
   }
 }, {
@@ -455,7 +455,7 @@
     "slug": "media-contact-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/media-contact-live",
+    "url_path": "/home/people/media-contact-live/",
     "expired": false
   }
 }, {
@@ -497,7 +497,7 @@
     "slug": "person-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/person-live",
+    "url_path": "/home/people/person-live/",
     "expired": false
   }
 }, {
@@ -539,7 +539,7 @@
     "slug": "program-director-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/program-director-live",
+    "url_path": "/home/people/program-director-live/",
     "expired": false
   }
 }, {
@@ -581,7 +581,7 @@
     "slug": "program-manager-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/program-manager-live",
+    "url_path": "/home/people/program-manager-live/",
     "expired": false
   }
 }, {
@@ -623,7 +623,7 @@
     "slug": "research-advisor-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/research-advisor-live",
+    "url_path": "/home/people/research-advisor-live/",
     "expired": false
   }
 }, {
@@ -665,7 +665,7 @@
     "slug": "research-associate-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/research-associate-live",
+    "url_path": "/home/people/research-associate-live/",
     "expired": false
   }
 }, {
@@ -707,7 +707,7 @@
     "slug": "research-fellow-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/research-fellow-live",
+    "url_path": "/home/people/research-fellow-live/",
     "expired": false
   }
 }, {
@@ -749,7 +749,7 @@
     "slug": "speaker-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/speaker-live",
+    "url_path": "/home/people/speaker-live/",
     "expired": false
   }
 }, {
@@ -791,7 +791,7 @@
     "slug": "staff-live",
     "content_type": ["people", "personpage"],
     "live": true,
-    "url_path": "/home/people/staff-live",
+    "url_path": "/home/people/staff-live/",
     "expired": false
   }
 }, {
