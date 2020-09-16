@@ -163,6 +163,7 @@ STATICFILES_FINDERS = [
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
     'node_modules/@fortawesome',
+    'node_modules/normalize.css',
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
