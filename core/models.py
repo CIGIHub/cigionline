@@ -2,6 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
+from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
@@ -84,7 +85,7 @@ class BasicPageAbstract(Page):
             ('image', ImageChooserBlock(required=True)),
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
         ])),
-        ('paragraph', blocks.RichTextBlock()),
+        ('paragraph', ParagraphBlock()),
         ('image', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
