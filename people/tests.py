@@ -609,6 +609,98 @@ class PersonListPageRequestTests(WagtailPageTests):
         self.assertEqual(list(response.context['people']), [management_team_live])
 
 
+class StaffPageRequestTests(WagtailPageTests):
+    fixtures = ['staff.json']
+
+    def setUp(self):
+        home_page = HomePage.objects.get()
+        home_page.numchild = 4
+        home_page.save()
+
+    def test_no_filter(self):
+        response = self.client.get('/staff/')
+
+        bianca_ayers = PersonPage.objects.get(title='Bianca Ayers')
+        self.assertIn(bianca_ayers, response.context['people'])
+
+        arham_buckner = PersonPage.objects.get(title='Arham Buckner')
+        self.assertIn(arham_buckner, response.context['people'])
+
+        angelina_clark = PersonPage.objects.get(title='Angelina Clark')
+        self.assertIn(angelina_clark, response.context['people'])
+
+        indi_dunn = PersonPage.objects.get(title='Indi Dunn')
+        self.assertIn(indi_dunn, response.context['people'])
+
+        teresa_ewing = PersonPage.objects.get(title='Teresa Ewing')
+        self.assertIn(teresa_ewing, response.context['people'])
+
+        chace_franco = PersonPage.objects.get(title='Chace Franco')
+        self.assertIn(chace_franco, response.context['people'])
+
+        maheen_gregory = PersonPage.objects.get(title='Maheen Gregory')
+        self.assertIn(maheen_gregory, response.context['people'])
+
+        julia_hogg = PersonPage.objects.get(title='Julia Hogg')
+        self.assertIn(julia_hogg, response.context['people'])
+
+        georgie_irwin = PersonPage.objects.get(title='Georgie Irwin')
+        self.assertIn(georgie_irwin, response.context['people'])
+
+        angela_jacobson = PersonPage.objects.get(title='Angela Jacobson')
+        self.assertIn(angela_jacobson, response.context['people'])
+
+        molly_keenan = PersonPage.objects.get(title='Molly Keenan')
+        self.assertIn(molly_keenan, response.context['people'])
+
+        roland_lovell = PersonPage.objects.get(title='Roland Lovell')
+        self.assertIn(roland_lovell, response.context['people'])
+
+        zainab_mckay = PersonPage.objects.get(title='Zainab Mckay')
+        self.assertIn(zainab_mckay, response.context['people'])
+
+        mahamed_neal = PersonPage.objects.get(title='Mahamed Neal')
+        self.assertIn(mahamed_neal, response.context['people'])
+
+        zayn_oconnor = PersonPage.objects.get(title='Zayn Oconnor')
+        self.assertIn(zayn_oconnor, response.context['people'])
+
+        eddie_parks = PersonPage.objects.get(title='Eddie Parks')
+        self.assertIn(eddie_parks, response.context['people'])
+
+        pamela_quinn = PersonPage.objects.get(title='Pamela Quinn')
+        self.assertIn(pamela_quinn, response.context['people'])
+
+        graham_rose = PersonPage.objects.get(title='Graham Rose')
+        self.assertIn(graham_rose, response.context['people'])
+
+        katlyn_stanton = PersonPage.objects.get(title='Katlyn Stanton')
+        self.assertIn(katlyn_stanton, response.context['people'])
+
+        beverly_travis = PersonPage.objects.get(title='Beverly Travis')
+        self.assertIn(beverly_travis, response.context['people'])
+
+        bryan_umbridge = PersonPage.objects.get(title='Bryan Umbridge')
+        self.assertIn(bryan_umbridge, response.context['people'])
+
+        deborah_villanueva = PersonPage.objects.get(title='Deborah Villanueva')
+        self.assertIn(deborah_villanueva, response.context['people'])
+
+        jamie_wilkins = PersonPage.objects.get(title='Jamie Wilkins')
+        self.assertIn(jamie_wilkins, response.context['people'])
+
+        frederick_xavier = PersonPage.objects.get(title='Frederick Xavier')
+        self.assertIn(frederick_xavier, response.context['people'])
+
+        jessie_yang = PersonPage.objects.get(title='Jessie Yang')
+        self.assertIn(jessie_yang, response.context['people'])
+
+        katharine_zhou = PersonPage.objects.get(title='Katharine Zhou')
+        self.assertIn(katharine_zhou, response.context['people'])
+
+        self.assertEquals(len(response.context['people']), 26)
+
+
 class PersonPageTests(WagtailPageTests):
     fixtures = ["people.json"]
 
