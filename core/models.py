@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from modelcluster.fields import ParentalManyToManyField
 from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.contrib.table_block.blocks import TableBlock
@@ -267,6 +268,22 @@ class ArchiveablePageAbstract(Page):
 
     class Meta:
         abstract = True
+
+
+class ContentPage(Page):
+    publishing_date = models.DateTimeField(blank=False, null=True)
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('publishing_date'),
+        FieldPanel('topics'),
+    ]
+
+    def on_form_bound(self):
+        self.bound_field = self.form[self.field_name]
+        heading = self.heading or self.bound_field.label
+        self.heading = heading
+        self.bound_field.label = heading
 
 
 class BasicPage(
