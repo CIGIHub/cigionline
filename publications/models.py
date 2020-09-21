@@ -4,6 +4,7 @@ from core.models import (
     PublishablePageAbstract,
     ShareablePageAbstract,
 )
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
@@ -32,6 +33,21 @@ class PublicationListPage(BasicPageAbstract):
     parent_page_types = ['core.HomePage']
     subpage_types = ['publications.PublicationPage']
     templates = 'publications/publication_list_page.html'
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        all_publications = PublicationPage.objects.live().public().order_by('-publishing_date')
+        paginator = Paginator(all_publications, 24)
+        page = request.GET.get('page')
+        try:
+            publications = paginator.page(page)
+        except PageNotAnInteger:
+            publications = paginator.page(1)
+        except EmptyPage:
+            publications = paginator.page(paginator.num_pages)
+        context['publications'] = publications
+        return context
 
     class Meta:
         verbose_name = 'Publication List Page'
