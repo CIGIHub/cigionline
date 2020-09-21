@@ -57,10 +57,19 @@ class PersonListPage(BasicPageAbstract):
                 person_types__name__in=['CIGI Chair', 'Expert'],
             ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
-            people = PersonPage.objects.live().filter(
-                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                person_types__name='Staff',
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            letter = request.GET.get('letter')
+            if letter:
+                letter = letter[0:1]
+                people = PersonPage.objects.live().filter(
+                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+                    last_name__istartswith=letter,
+                    person_types__name='Staff',
+                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            else:
+                people = PersonPage.objects.live().filter(
+                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+                    person_types__name='Staff',
+                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             show = request.GET.get('show')
             if show == 'senior-management':

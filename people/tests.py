@@ -856,6 +856,12 @@ class StaffPageRequestTests(WagtailPageTests):
         self.assertIn(katharine_zhou, response.context['people'])
         self.assertEqual(len(response.context['people']), 1)
 
+    def test_should_filter_first_character(self):
+        response = self.client.get('/staff/?letter=ch')
+        angelina_clark = PersonPage.objects.get(title='Angelina Clark')
+        self.assertIn(angelina_clark, response.context['people'])
+        self.assertEqual(len(response.context['people']), 1)
+
 
 class PersonPageTests(WagtailPageTests):
     fixtures = ["people.json"]
