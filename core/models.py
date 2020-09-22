@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
@@ -22,10 +23,12 @@ class HomePage(Page):
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
         'multimedia.MultimediaSeriesPage',
+        'newsletters.NewsletterListPage',
         'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',
         'publications.PublicationSeriesListPage',
+        'research.ProjectListPage',
         'research.TopicListPage'
     ]
     templates = 'core/home_page.html'
@@ -37,20 +40,30 @@ class HomePage(Page):
 class BasicPageAbstract(Page):
     """Page with subtitle."""
 
-    body_streamfield_blocks = [
-        ('paragraph', blocks.RichTextBlock()),
+    # Body StreamField blocks
+    body_default_blocks = [
+        ('paragraph', ParagraphBlock()),
         ('image', ImageChooserBlock()),
         ('block_quote', blocks.StructBlock([
             ('quote', blocks.RichTextBlock(required=True)),
             ('quote_author', blocks.CharBlock(required=False)),
             ('author_title', blocks.CharBlock(required=False)),
             ('image', ImageChooserBlock(required=False)),
+            ('link_url', blocks.URLBlock(required=False)),
+            ('link_text', blocks.CharBlock(required=False)),
         ])),
         ('table', TableBlock()),
+        ('text_border_block', blocks.StructBlock([
+            ('text', blocks.RichTextBlock(required=True)),
+            ('border_colour', blocks.CharBlock(required=True)),
+        ])),
+    ]
+    body_poster_block = [
+        ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')),
     ]
 
     body = StreamField(
-        body_streamfield_blocks,
+        body_default_blocks,
         blank=True,
     )
     image_hero = models.ForeignKey(
@@ -241,7 +254,26 @@ class FromTheArchivesPageAbstract(Page):
         abstract = True
 
 
-class BasicPage(BasicPageAbstract):
+class ArchiveablePageAbstract(Page):
+    class ArchiveStatus(models.IntegerChoices):
+        UNARCHIVED = (0, 'No')
+        ARCHIVED = (1, 'Yes')
+
+    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel('archive'),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class BasicPage(
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    ShareablePageAbstract,
+):
     """Page with StreamField body"""
 
     related_files = StreamField(
@@ -260,8 +292,19 @@ class BasicPage(BasicPageAbstract):
             classname='collapsible collapsed',
         ),
     ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+    ]
+
     parent_page_types = ['core.BasicPage', 'core.HomePage']
-    subpage_types = ['core.AnnualReportListPage', 'core.BasicPage', 'core.FundingPage', 'people.PersonListPage']
+    subpage_types = [
+        'core.AnnualReportListPage',
+        'core.BasicPage',
+        'core.FundingPage',
+        'people.PersonListPage',
+        'research.ProjectPage',
+    ]
     template = 'core/basic_page.html'
 
     class Meta:

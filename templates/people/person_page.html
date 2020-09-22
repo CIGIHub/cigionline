@@ -4,7 +4,7 @@
 {% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify}}{% endfor %}{% endblock %}
 
 {% block content %}
- 
+
 <article>
   <section class="hero{% if page.archive %} archived{% endif %}">
     <div class="container-lg hero-container">
@@ -43,7 +43,7 @@
               <hr>
             {% endif %}
           {% endif %}
-          
+
           <div class="contact">
             {% if page.phone_number %}
               <div class="contact-item">
@@ -100,9 +100,15 @@
     {% endif %}
 
     {% if page.body %}
-      <section class="body container-sm">
-        <h2 class="paragraph-heading">Bio</h2>
-        {{ page.body }}
+      <section class="body">
+        <div class="container-sm">
+          <h2 class="paragraph-heading">
+            Bio
+          </h2>
+        </div>
+        {% for block in self.body %}
+          {% include_block block %}
+        {% endfor %}
       </section>
     {% endif %}
 
@@ -149,11 +155,11 @@
                   <span><em>{{ publication.value.secondary_title }}</em></span>.
                 {% endif %}
               {% endif %}
-                
+
               {% if publication.value.secondary_author %}
                 <span>{{ publication.value.secondary_author }}<span>.
               {% endif %}
-              
+
               {% if publication.value.secondary_title %}
                 {% if type == 'book' or type == 'edited_book' %}
                   <span><em>{{ publication.value.secondary_title }}</em></span>.
@@ -163,7 +169,7 @@
               {% if publication.value.publisher_info %}
                 <span><em>{{ publication.value.publisher_info }}</em><span>.
               {% endif %}
-              
+
               {% if publication.value.location_in_work %}
                 <span>{{ publication.value.location_in_work }}<span>.
               {% endif %}

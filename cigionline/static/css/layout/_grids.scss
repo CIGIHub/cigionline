@@ -1,0 +1,22 @@
+.container-lg {
+  max-width: 67.5rem;
+}
+
+.container-md {
+  max-width: 55rem;
+}
+
+.container-sm {
+  max-width: 40rem;
+}
+
+.grid-container {
+  @include display-grid;
+}
+
+[class*='container-'] {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}

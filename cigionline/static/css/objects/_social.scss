@@ -1,0 +1,17 @@
+.social-links {
+  @include social-links($color: $black, $background: $cigi-light-grey, $hover-color: $cigi-pink);
+
+  .fa-circle {
+    transition: color 0.2s ease;
+  }
+
+  .fa-facebook-f,
+  .fa-twitter,
+  .fa-linkedin-in {
+    font-size: 0.9em;
+  }
+
+  .facebook-share-link {
+    cursor: pointer;
+  }
+}

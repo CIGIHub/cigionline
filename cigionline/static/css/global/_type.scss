@@ -1,0 +1,32 @@
+body {
+  font-family: $primary-font-family;
+}
+
+a {
+  color: $cigi-pink;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $cigi-dark-pink;
+  }
+}
+
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+
+  &:active,
+  &:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+hr {
+  background: $cigi-light-grey;
+  border: 0;
+  height: 1px;
+  margin: 1em 0;
+}
