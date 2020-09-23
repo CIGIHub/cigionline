@@ -37,7 +37,7 @@
   }
 }
 
-.download-button {
+.button--download {
   @extend %button;
   align-items: center;
   display: flex;
@@ -53,8 +53,14 @@
   }
 }
 
+.button--explore {
+  i {
+    margin-right: 0.3em;
+  }
+}
+
 table {
-  .download-button {
+  .button--download {
     margin: auto;
   }
 }

@@ -24,7 +24,7 @@ section {
           font-weight: $sans-regular;
           margin-bottom: 0.5em;
 
-          @media screen and (min-width: 40em) {
+          @media screen and (min-width: $medium) {
             font-size: 2.5rem;
           }
         }

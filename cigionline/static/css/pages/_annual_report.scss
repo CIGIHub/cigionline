@@ -21,8 +21,18 @@ body {
       }
     }
 
-    .annual-reports-cta {
+    .cta--annual-report {
       text-align: center;
+
+      .button--explore {
+        i {
+          display: none;
+
+          @include breakpoint($small) {
+            display: inline;
+          }
+        }
+      }
     }
   }
 }
