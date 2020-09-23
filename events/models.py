@@ -89,11 +89,11 @@ class EventPage(
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
+        FieldPanel('publishing_date', heading='Event start'),
+        FieldPanel('event_end'),
         MultiFieldPanel(
             [
                 FieldPanel('event_access'),
-                FieldPanel('publishing_date', heading='Event start'),
-                FieldPanel('event_end'),
                 FieldPanel('invitation_type'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
