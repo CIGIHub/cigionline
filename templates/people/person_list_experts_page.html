@@ -2,17 +2,59 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section>
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
-  <section>
-    <div class="container-lg">
-      {% for person in people %}
-        <p>{{ person.title }}</p>
-      {% endfor %}
-    </div>
-  </section>
+    {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+    <section>
+        {% for block in self.body %}
+            {% include_block block %}
+        {% endfor %}
+    </section>
+    <section>
+        <div class="container-lg">
+            <table class="custom-theme-table table-experts">
+                <thead>
+                <tr>
+                    <th colspan="3">Name</th>
+                    <th colspan="4">Expertise</th>
+                    <th colspan="4">Recent activity</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for person in people %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="table-mobile-text">Name</div>
+                            <div class="table-infos-wrapper">
+                                <a href="#" class="table-thumbnail-photo">
+                                    <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/images/square/Aaronson_Susan-Square.jpg?itok=SrzaGYMm);"></div>
+                                </a>
+                                <div class="table-infos">
+                                    <a href="#" class="table-infos-title-link">{{ person.title }}</a>
+                                    <div class="table-infos-function">Senior Fellow</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="4">
+                            <div class="table-mobile-text">Expertise</div>
+                            <div class="table-content">
+                                <span class="table-list-item">International Trade</span>,
+                                <span class="table-list-item">Digital Trade</span>,
+                                <span class="table-list-item">International Investments</span>,
+                                <span class="table-list-item">Progressive Trade</span>
+                            </div>
+                        </td>
+                        <td colspan="4">
+                            <div class="table-mobile-text">Recent Activity</div>
+                            <div class="table-content">
+                                <div class="table-recent-activity">
+                                    <span class="table-icon icon-opinion"><i class="fal fa-comment-dots"></i></span>
+                                    <a href="#">Can the Digital Economy Survive in a Splinternet?</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 {% endblock %}

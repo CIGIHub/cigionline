@@ -179,7 +179,7 @@ table.custom-theme-table {
       text-align: left;
       vertical-align: middle;
       border-bottom: 1px solid $cigi-light-grey;
-      
+
       .table-mobile-text {
         display: none;
       }
@@ -211,16 +211,21 @@ table.custom-theme-table {
         }
       }
 
-      .table-infos-icon {
+      .table-icon {
         flex: 0 0 32px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         width: 32px;
         height: 32px;
-        margin-right: 20px;
         border: 1px solid;
         border-radius: 100%;
+
+        &.icon-opinion {
+          border-color: #4caba5;
+          margin-right: 10px;
+          color: #4caba5;
+        }
       }
 
       .table-infos-date {
@@ -228,6 +233,11 @@ table.custom-theme-table {
         font-size: 12px;
         font-weight: 400;
         text-transform: uppercase;
+      }
+
+      .table-infos-function {
+        color: $cigi-text-grey;
+        font-size: .9rem;
       }
 
       .table-content-link {
@@ -261,17 +271,21 @@ table.custom-theme-table {
           color: $white;
         }
       }
-    }
-  }
 
-  &.table-publications {
-    tbody tr td:last-of-type {
-      text-align: center;
-    }
+      .table-thumbnail-photo {
+        @include aspect-ratio(1,1);
+        width: 100%;
+        max-width: 70px;
+        border-radius: 100%;
+        margin-right: 1rem;
+      }
 
-    .table-infos-icon {
-      border-color: $cigi-pink;
-      color: $cigi-pink;
+      .table-list-item {
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 400;
+        line-height: 17px;
+      }
     }
   }
 
@@ -306,8 +320,48 @@ table.custom-theme-table {
           font-size: 12px;
           color: $cigi-text-grey;
         }
+      }
+    }
+  }
 
-        .table-infos-icon {
+  &.table-publications {
+    tbody tr td:last-of-type {
+      .table-content {
+        justify-content: center;
+      }
+    }
+
+    .table-icon {
+      border-color: $cigi-pink;
+      color: $cigi-pink;
+      margin-right: 20px;
+    }
+
+    @media(max-width: 767.98px) {
+      .table-icon {
+        display: none;
+      }
+    }
+  }
+
+  &.table-experts {
+    .table-infos-wrapper {
+      flex-grow: 1;
+
+      .table-infos-title-link {
+        font-size: 17px;
+      }
+    }
+
+    tbody tr td {
+      &:first-of-type {
+        padding-left: 0;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      tbody tr td {
+        .table-mobile-text {
           display: none;
         }
       }

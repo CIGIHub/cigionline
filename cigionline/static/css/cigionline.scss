@@ -10,7 +10,7 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'global/bootstrap_variables_overwrite';
 
 //BS
-@import "bootstrap.scss";
+@import "bootstrap/dist/css/bootstrap.css";
 
 //GLOBAL
 @import 'normalize';

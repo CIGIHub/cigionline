@@ -16,7 +16,7 @@
     "@fortawesome/fontawesome-pro": "5.14.0",
     "@popperjs/core": "^2.5.1",
     "bootstrap": "^4.5.2",
-    "bootstrap-scss": "^4.5.2",
+    "jquery": "^3.5.1",
     "normalize.css": "^8.0.1"
   }
 }
