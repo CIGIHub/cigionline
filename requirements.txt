@@ -12,6 +12,7 @@ Django==3.1.1
 django-appconf==1.0.4
 django-compressor==2.4
 django-debug-toolbar==2.2
+django-compressor-toolkit==0.6.0
 django-libsass==0.8
 django-modelcluster==5.0.2
 django-storages==1.10

@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'careers',
     'compressor',
+    'compressor_toolkit',
     'core',
     'events',
     'menus',
@@ -81,7 +82,9 @@ ROOT_URLCONF = 'cigionline.urls'
 
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
+    ('module', 'compressor_toolkit.precompilers.ES6Compiler'),
 )
+
 
 TEMPLATES = [
     {
