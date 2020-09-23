@@ -3,17 +3,60 @@
 {% block content %}
     {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
-    {% include "includes/search-bar.html" %}
+    <div class="container-lg">
+        {% include "includes/search-bar.html" %}
 
-
-
-            <h2>hello</h2>
-            <ul>
-                {% for publication in publications %}
-                    <li>
-                        <a href="{{publication.url}}">{{publication.title}}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-
+        <table class="custom-theme-table table-publications">
+            <thead>
+            <tr>
+                <th colspan="6">Event</th>
+                <th colspan="2">Topic</th>
+                <th colspan="3">Expert</th>
+                <th colspan="0">PDF</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for publication in publications %}
+                <tr>
+                    <td colspan="6">
+                        <div class="table-mobile-text">Event</div>
+                        <div class="table-infos-wrapper">
+                            <span class="table-infos-icon">
+                                <i class="fal fa-file-alt"></i>
+                            </span>
+                            <div class="table-infos">
+                                <a href="{{publication.url}}" class="table-infos-title-link">{{publication.title}}</a>
+                                <div class="table-infos-date">October 27,2020</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="2">
+                        <div class="table-mobile-text">Topic</div>
+                        <div class="table-content">
+                            <a href="#" class="table-content-link">Financial System</a>,
+                            <a href="#" class="table-content-link">Lorem Ipsum</a>,
+                            <a href="#" class="table-content-link">Lorem Ipsum</a>,
+                        </div>
+                    </td>
+                    <td colspan="3">
+                        <div class="table-mobile-text">Expert</div>
+                        <div class="table-content">
+                            <a href="#" class="table-content-link table-content-link-black">James A. Haley</a>,
+                            <a href="#" class="table-content-link table-content-link-black">OLAF WEBER</a>,
+                            <a href="#" class="table-content-link table-content-link-black">VASUNDHARA SARAVADE</a>
+                        </div>
+                    </td>
+                    <td colspan="0">
+                        <div class="table-mobile-text">PDF</div>
+                        <div class="table-content">
+                            <a href="#" class="table-btn-icon">
+                                <i class="fa fas fa-download"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock content %}

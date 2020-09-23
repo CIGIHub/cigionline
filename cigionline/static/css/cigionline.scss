@@ -20,13 +20,15 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'global/global';
 @import 'global/helpers';
 
-//INCLUDES
+//LAYOUTS
 @import 'layout/grids';
 @import 'layout/hero';
 @import 'layout/sections';
 
+// INCLUDES
 @import 'includes/footer';
 @import 'includes/top-bar';
+@import 'includes/search-bar';
 
 
 //PAGES

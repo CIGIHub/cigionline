@@ -47,6 +47,7 @@ hr {
 }
 
 //FORM ELEMENTS
+
 .form-control {
   display: flex;
   align-items: center;
@@ -90,7 +91,7 @@ hr {
       font-size: 16px;
       font-weight: 400;
       line-height: 1.5;
-      color: $black;
+      color: $cigi-pink;
       text-align: center;
       white-space: nowrap;
       background-color: transparent;
@@ -129,10 +130,186 @@ hr {
         font-size: 12px;
         color: $cigi-pink;
         border: none;
+        transform: rotate(0deg);
+        transition: all 0.25s ease;
       }
 
       &:hover {
         text-decoration: none;
+      }
+
+      &[aria-expanded="true"] {
+        &:after {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+}
+
+// TABLES
+
+table.custom-theme-table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-wrap:break-word;
+  width: 100%;
+
+  thead {
+    tr th {
+      font-size: 14px;
+      color: $cigi-text-grey;
+      font-weight: 500;
+      text-align: left;
+      border-bottom: 1px solid $cigi-light-grey;
+      border-right: 1px solid $cigi-light-grey;
+
+      &:last-of-type {
+        border-right: none;
+      }
+      &:not(:first-of-type) {
+        padding: 0 10px;
+      }
+    }
+  }
+
+  tbody {
+    tr td {
+      padding: 16px 10px;
+      text-align: left;
+      vertical-align: middle;
+      border-bottom: 1px solid $cigi-light-grey;
+      
+      .table-mobile-text {
+        display: none;
+      }
+
+      .table-content {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        line-height: 1.25em;
+      }
+
+      .table-infos-wrapper {
+        display: flex;
+        align-items: center;
+      }
+
+      .table-infos {
+        line-height: 1.25em;
+      }
+
+      .table-infos-title-link {
+        color: $black;
+        font-size: 14px;
+        font-weight: 500;
+
+        &:hover {
+          color: $cigi-pink;
+          text-decoration: none;
+        }
+      }
+
+      .table-infos-icon {
+        flex: 0 0 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        margin-right: 20px;
+        border: 1px solid;
+        border-radius: 100%;
+      }
+
+      .table-infos-date {
+        color: $cigi-text-grey;
+        font-size: 12px;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+
+      .table-content-link {
+        font-size: 12px;
+        text-transform: uppercase;
+        &:hover {
+          text-decoration: none;
+        }
+
+        &.table-content-link-black {
+          color: $cigi-text-grey;
+          &:hover {
+            color: $cigi-pink;
+          }
+        }
+      }
+
+      .table-btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+        border: 1px solid $cigi-pink;
+        transition: all 0.25s ease;
+
+        &:hover {
+          text-decoration: none;
+          background: $cigi-pink;
+          color: $white;
+        }
+      }
+    }
+  }
+
+  &.table-publications {
+    tbody tr td:last-of-type {
+      text-align: center;
+    }
+
+    .table-infos-icon {
+      border-color: $cigi-pink;
+      color: $cigi-pink;
+    }
+  }
+
+  @media  (max-width: 767.98px) {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid $cigi-light-grey;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+
+      td {
+        border: none;
+        position: relative;
+        display: flex;
+        align-items: baseline;
+        padding: 0 0 0.25rem;
+        text-align: left !important;
+
+        .table-mobile-text {
+          display: inline-flex;
+          flex: 0 0 15%;
+          margin-right: 10px;
+          font-size: 12px;
+          color: $cigi-text-grey;
+        }
+
+        .table-infos-icon {
+          display: none;
+        }
       }
     }
   }
