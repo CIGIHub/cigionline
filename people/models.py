@@ -68,7 +68,7 @@ class PersonListPage(BasicPageAbstract):
                 if len(person.last_name) > 0:
                     last_name_letter = person.last_name[0]
                     if last_name_letter not in letters:
-                      letters.append(person.last_name[0])
+                        letters.append(person.last_name[0])
             if letter:
                 letter = letter[0:1]
                 people = people.filter(last_name__istartswith=letter)
