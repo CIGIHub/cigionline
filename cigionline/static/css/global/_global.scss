@@ -156,6 +156,10 @@ hr {
       border-radius: .25rem;
     }
 
+    .dropdown-menu.show {
+      width: 100%;
+    }
+
     .dropdown-item {
       text-transform: uppercase;
       font-size: 12px;
@@ -175,7 +179,6 @@ hr {
       transform: none !important;
       top:100% !important;
       display: block;
-      width: 100%;
       column-count: 4;
       column-fill: balance;
       column-gap: 15px;
