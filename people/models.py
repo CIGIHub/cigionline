@@ -11,6 +11,7 @@ from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
+
 class PeoplePage(Page):
     """
     A special singleton page that isn't published, but is the parent to all the
@@ -64,9 +65,10 @@ class PersonListPage(BasicPageAbstract):
                     person_types__name='Staff',
                 ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
             for person in people:
-              last_name_letter = person.last_name[0]
-              if last_name_letter not in letters: 
-                letters.append(person.last_name[0])
+                if len(person.last_name) > 0:
+                    last_name_letter = person.last_name[0]
+                    if last_name_letter not in letters:
+                      letters.append(person.last_name[0])
             if letter:
                 letter = letter[0:1]
                 people = people.filter(last_name__istartswith=letter)

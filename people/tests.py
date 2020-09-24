@@ -700,6 +700,7 @@ class StaffPageRequestTests(WagtailPageTests):
         self.assertIn(katharine_zhou, response.context['people'])
 
         self.assertEquals(len(response.context['people']), 26)
+        self.assertEquals(len(response.context['letters']), 26)
 
     def test_filter_a(self):
         response = self.client.get('/staff/?letter=a')
