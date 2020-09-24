@@ -817,6 +817,10 @@ class StaffPageRequestTests(WagtailPageTests):
         self.assertIn(angelina_clark, response.context['people'])
         self.assertEqual(len(response.context['people']), 1)
 
+    def test_should_return_empty_list_with_number(self):
+        response = self.client.get('/staff/?letter=12')
+        self.assertEqual(len(response.context['people']), 0)
+
 
 class PersonPageTests(WagtailPageTests):
     fixtures = ["people.json"]
