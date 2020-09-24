@@ -1,0 +1,26 @@
+.pager--alphabet {
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+
+    li {
+      @include link($color: $black, $hover-color: $cigi-dark-pink);
+
+      border-left: 1px solid $cigi-light-grey;
+      display: block;
+      padding: 0 0.5em;
+      text-align: center;
+      width: 30px;
+
+      &:last-child {
+        border-right: 1px solid $cigi-light-grey;
+        width: auto;
+      }
+
+      a {
+        font-size: .75em;
+        font-weight: 600;
+      }
+    }
+  }
+}

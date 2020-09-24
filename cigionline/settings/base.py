@@ -30,15 +30,18 @@ INSTALLED_APPS = [
     'events',
     'menus',
     'multimedia',
+    'newsletters',
     'people',
     'publications',
     'research',
     'search',
+    'streams',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.table_block',
+    # 'wagtail.contrib.styleguide',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -160,6 +163,7 @@ STATICFILES_FINDERS = [
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
     'node_modules/@fortawesome',
+    'node_modules/normalize.css',
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated

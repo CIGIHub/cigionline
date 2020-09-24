@@ -16,13 +16,25 @@
   {% endif %}
   <section>
     <div class="container-sm">
-      <div class="pager">Show All | A | B | C | ...</div>
+      <div class="pager--alphabet">
+        <ul>
+          {% for letter in letters %}
+            <li>
+              <a href="/about/staff?letter={{letter}}">{{letter}}</a>
+            </li>
+          {% endfor %}
+          <li>
+            <a href="/about/staff">Show All</a>
+          </li>
+        </ul>
+      </div>
+
       <div class="staff-directory">
         <div class="staff-directory-heading">
           <div class="staff-directory-name">NAME</div>
           <div class="staff-directory-contact">CONTACT</div>
         </div>
-        {% for person in page.person_pages %}
+        {% for person in people %}
           <div class="staff-directory-row">
             <div class="staff-directory-name">
               <a class="name" href="{{ person.link }}">{{ person.title }}</a>
