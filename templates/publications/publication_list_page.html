@@ -2,4 +2,12 @@
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+
+  <ul>
+    {% for publication in publications %}
+      <li>
+        <a href="{{publication.url}}">{{publication.title}}</a>
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock content %}
