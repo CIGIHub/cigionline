@@ -4,7 +4,7 @@
     {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
     <div class="container-lg">
-        {% include "includes/search-bar.html" %}
+        {% include "includes/search-bar-publications.html" %}
 
         <table class="custom-theme-table table-publications">
             <thead>
@@ -25,7 +25,7 @@
                                 <i class="fal fa-file-alt"></i>
                             </span>
                             <div class="table-infos">
-                                <a href="{{publication.url}}" class="table-infos-title-link">{{publication.title}}</a>
+                                <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
                                 <div class="table-infos-date">October 27,2020</div>
                             </div>
                         </div>

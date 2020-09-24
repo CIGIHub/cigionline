@@ -10,7 +10,8 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'global/bootstrap_variables_overwrite';
 
 //BS
-@import "bootstrap/dist/css/bootstrap.css";
+@import 'bootstrap/dist/css/bootstrap.css';
+
 
 //GLOBAL
 @import 'normalize';
@@ -24,6 +25,7 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'layout/grids';
 @import 'layout/hero';
 @import 'layout/sections';
+@import 'layout/tables';
 
 // INCLUDES
 @import 'includes/footer';

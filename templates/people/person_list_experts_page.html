@@ -10,6 +10,7 @@
     </section>
     <section>
         <div class="container-lg">
+            {% include 'includes/search-bar-experts.html' %}
             <table class="custom-theme-table table-experts">
                 <thead>
                 <tr>
@@ -25,6 +26,7 @@
                             <div class="table-mobile-text">Name</div>
                             <div class="table-infos-wrapper">
                                 <a href="#" class="table-thumbnail-photo">
+                                        {% comment %} ---insert person photo in background-image url --- {% endcomment %}
                                     <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/images/square/Aaronson_Susan-Square.jpg?itok=SrzaGYMm);"></div>
                                 </a>
                                 <div class="table-infos">
@@ -46,8 +48,18 @@
                             <div class="table-mobile-text">Recent Activity</div>
                             <div class="table-content">
                                 <div class="table-recent-activity">
-                                    <span class="table-icon icon-opinion"><i class="fal fa-comment-dots"></i></span>
-                                    <a href="#">Can the Digital Economy Survive in a Splinternet?</a>
+                                    {% comment %}
+                                    {% if recent-activity is opinion % }
+                                    {% endcomment %}
+                                        <span class="table-icon icon-opinion"><i class="fal fa-comment-dots"></i></span>
+                                     {% comment %}
+                                    {% endif recent-activity is publication}
+                                        <span class="table-icon icon-publication"><i class="fal fa-file-alt"></i></span>
+                                    {% else %}
+                                        <span class="table-icon icon-media"><i class="fal fa-bullhorn"></i></span>
+                                    {% endif}
+                                    {% endcomment %}
+                                    <a href="#" class="table-title-link">Can the Digital Economy Survive in a Splinternet?</a>
                                 </div>
                             </div>
                         </td>
