@@ -57,7 +57,7 @@
 }
 
 // PARAGRAPH IMAGE
-.paragraph-image {
+.paragraph-type-image {
   @include aspect-ratio(2,1);
   width: 100%;
   margin-bottom: 2rem;
