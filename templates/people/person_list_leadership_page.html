@@ -10,15 +10,36 @@
     </section>
     <section>
         <div class="container-sm">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/about/leadership/?show=board-members">Board Members</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/about/leadership/?show=senior-management">Senior Management</a>
-                </li>
-            </ul>
-            {% include 'includes/people_person_leadership_list.html' %}
+
+
+{#            <ul class="nav">#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" href="/about/leadership/?show=board-members">Board Members</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="/about/leadership/?show=senior-management">Senior Management</a>#}
+{#                </li>#}
+{#            </ul>#}
+{#            {% include 'includes/people_person_leadership_list.html' %}#}
+            <div class="people-person-leadership-nav d-flex align-items-center">
+                <span class="people-person-leadership-nav-text">Sort :</span>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="board-members-tab" data-toggle="tab" href="#board-members" role="tab" aria-controls="board-members" aria-selected="true">Board Members</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="senior-management-tab" data-toggle="tab" href="#senior-management" role="tab" aria-controls="senior-management" aria-selected="false">Senior Management</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="board-members" role="tabpanel" aria-labelledby="board-members-tab">
+                    {% include 'includes/people_person_leadership_list.html' %}
+                </div>
+                <div class="tab-pane fade" id="senior-management" role="tabpanel" aria-labelledby="senior-management-tab">
+                    {% include 'includes/people_person_leadership_list.html' %}
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}
