@@ -72,8 +72,8 @@ class PersonListPage(BasicPageAbstract):
 
         context['people'] = PersonPage.objects.live().filter(**personFilter, **person_type_filter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
-        context['senior-management-people'] = PersonPage.objects.live().filter(**personFilter, person_types__name='Management Team').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        context['board-members-people'] = PersonPage.objects.live().filter(**personFilter, person_types__name='Board Member').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+        context['senior_management_people'] = PersonPage.objects.live().filter(**personFilter, person_types__name='Management Team').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+        context['board_members_people'] = PersonPage.objects.live().filter(**personFilter, person_types__name='Board Member').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
         return context
 
