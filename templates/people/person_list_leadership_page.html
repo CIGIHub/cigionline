@@ -34,10 +34,10 @@
             </div>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="board-members" role="tabpanel" aria-labelledby="board-members-tab">
-                    {% include 'includes/people_person_leadership_list.html' %}
+                    {% include 'includes/people_person_leadership_list.html' with people_list=senior_management_people %}
                 </div>
                 <div class="tab-pane fade" id="senior-management" role="tabpanel" aria-labelledby="senior-management-tab">
-                    {% include 'includes/people_person_leadership_list.html' %}
+                    {% include 'includes/people_person_leadership_list.html' with people_list=board_members_people %}
                 </div>
             </div>
         </div>
