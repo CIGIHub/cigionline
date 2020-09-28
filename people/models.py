@@ -53,6 +53,7 @@ class PersonListPage(BasicPageAbstract):
         personFilter = {
             'archive': ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
         }
+        person_type_filter = dict()
 
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
             personFilter['person_types__name__in'] = ['CIGI Chair', 'Expert']
@@ -65,10 +66,14 @@ class PersonListPage(BasicPageAbstract):
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             show = request.GET.get('show')
             if show == 'senior-management':
-                personFilter['person_types__name'] = 'Management Team'
+                person_type_filter['person_types__name'] = 'Management Team'
             else:
-                personFilter['person_types__name'] = 'Board Member'
-        context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+                person_type_filter['person_types__name'] = 'Board Member'
+
+        context['people'] = PersonPage.objects.live().filter(**personFilter, **person_type_filter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+
+        context['senior-management-people'] = PersonPage.objects.live().filter(**personFilter, person_types__name='Management Team').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+        context['board-members-people'] = PersonPage.objects.live().filter(**personFilter, person_types__name='Board Member').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
         return context
 
