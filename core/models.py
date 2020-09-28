@@ -110,6 +110,10 @@ class BasicPageAbstract(Page):
             ('multimedia_url', blocks.URLBlock(required=True)),
             ('title', blocks.CharBlock(required=False)),
         ])),
+        ('embedded_tiktok', blocks.URLBlock(
+            help_text='Paste the link to the video here. It should look like this: https://www.tiktok.com/@who/video/6805515697175792901',
+            required=True,
+        )),
         ('embedded_video', blocks.StructBlock([
             ('video_url', blocks.URLBlock(required=True)),
             ('caption', blocks.CharBlock(required=False)),
