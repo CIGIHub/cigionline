@@ -27,7 +27,7 @@ class PeoplePage(Page):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonListPage(BasicPageAbstract):
+class PersonListPage(BasicPageAbstract, Page):
     """
     The pages that show people. There are currently 2 on our website:
     /experts and /about/staff. This was made into a separate page model so that
@@ -46,6 +46,15 @@ class PersonListPage(BasicPageAbstract):
     parent_page_types = ['core.BasicPage', 'core.HomePage']
     subpage_types = []
     templates = 'people/person_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -87,7 +96,7 @@ class PersonListPage(BasicPageAbstract):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonPage(ArchiveablePageAbstract):
+class PersonPage(ArchiveablePageAbstract, Page):
     """View person page"""
 
     class ExternalPublicationTypes(models.TextChoices):
@@ -277,6 +286,9 @@ class PersonPage(ArchiveablePageAbstract):
             heading='External Publications',
             classname='collapsible collapsed'
         ),
+    ]
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
     ]
 
     parent_page_types = ['people.PeoplePage']
