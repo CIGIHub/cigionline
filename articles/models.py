@@ -58,6 +58,13 @@ class ArticlePage(
             heading='Images',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
     ]
 
     promote_panels = Page.promote_panels + [
