@@ -2,11 +2,21 @@ from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
 from django.db import models
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    StreamFieldPanel,
+)
+from wagtail.core.blocks import (
+    CharBlock,
+    PageChooserBlock,
+)
+from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -35,21 +45,45 @@ class ArticlePage(
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    authors = StreamField(
+        [
+            ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('external_author', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
+    footnotes = RichTextField(blank=True)
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('body'),
+                FieldPanel('footnotes'),
+            ],
+            heading='Body',
+            classname='collapsible'
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
             classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('authors'),
+            ],
+            heading='Authors',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
@@ -65,6 +99,7 @@ class ArticlePage(
             heading='Related',
             classname='collapsible collapsed',
         ),
+        FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
 
     promote_panels = Page.promote_panels + [
