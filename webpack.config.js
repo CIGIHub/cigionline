@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const BundleTracker = require('webpack-bundle-tracker');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let plugins = [
     new webpack.DefinePlugin({
@@ -14,19 +15,22 @@ let plugins = [
         Popper: ['popper.js', 'default']
     }),
     new BundleTracker({filename: './webpack-stats.json'}),
+    new ExtractTextPlugin({
+        filename: '[name].css',
+        allChunks: true
+    })
 ]
 
 const config = {
     context: __dirname,
 
     entry: {
-        cigionlineJs: "./cigionline/static/js/cigionline.js",
-        cigionlineCss: "./cigionline/static/css/cigionline.scss",
+        cigionline: "./cigionline/static/index.js",
     },
 
     devtool: 'source-map',
     output: {
-        path: path.resolve('./bundles/'),
+        path: path.resolve('./static/bundles/'),
         filename: '[name].js',
     },
     plugins: plugins,
@@ -40,15 +44,15 @@ const config = {
             },
             {
                 test: /\.scss$/,
-                use: [
-                    // Creates `style` nodes from JS strings
-                    'style-loader',
-                    // Translates CSS into CommonJS
-                    'css-loader',
-                    // Compiles Sass to CSS
-                    'sass-loader',
-                ]
-
+                    use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: [
+                        {loader: 'css-loader', options: {sourceMap: true}},
+                        {loader: "postcss-loader", options: {sourceMap: 'inline'}},
+                        {loader: "resolve-url-loader", options: {sourceMap: true}},
+                        {loader: 'sass-loader', options: {sourceMap: true}}
+                    ]
+                })
             },
             {
                 test: /\.css$/,
@@ -67,10 +71,6 @@ const config = {
                         loader: 'file-loader',
                         options: {
                             name(file) {
-                                if (process.env.NODE_ENV === 'development') {
-                                    return '[name]-[hash].[ext]';
-                                }
-
                                 return '[name]-[hash].[ext]';
                             },
                         },

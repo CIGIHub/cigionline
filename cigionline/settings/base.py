@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'webpack_loader',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -81,9 +82,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'cigionline.urls'
 
-COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'),
-)
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -171,9 +169,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
-    'node_modules/@fortawesome',
-    'node_modules/bootstrap',
-    'node_modules/normalize.css',
+
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
