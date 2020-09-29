@@ -18,11 +18,20 @@ from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 
 
-class NewsletterListPage(BasicPageAbstract):
+class NewsletterListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.Homepage']
     subpage_types = ['newsletters.NewsletterPage']
     templates = 'newsletters/newsletter_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     class Meta:
         verbose_name = 'Newsletter List Page'
