@@ -1,7 +1,7 @@
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
@@ -32,8 +32,8 @@ class ArticleListPage(Page):
 
 class ArticlePage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 ):
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.

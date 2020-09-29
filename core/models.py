@@ -2,6 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
+from modelcluster.fields import ParentalManyToManyField
 from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.contrib.table_block.blocks import TableBlock
@@ -62,7 +63,7 @@ class HomePage(Page):
         verbose_name = 'Home Page'
 
 
-class BasicPageAbstract(Page):
+class BasicPageAbstract(models.Model):
     """Page with subtitle."""
 
     # Body StreamField blocks
@@ -216,12 +217,6 @@ class BasicPageAbstract(Page):
         heading='Images',
         classname='collapsible collapsed',
     )
-    content_panels = [
-        title_panel,
-        body_panel,
-        images_panel,
-    ]
-
     submenu_panel = MultiFieldPanel(
         [
             FieldPanel('submenu'),
@@ -229,15 +224,12 @@ class BasicPageAbstract(Page):
         heading='Submenu',
         classname='collapsible collapsed',
     )
-    settings_panels = Page.settings_panels + [
-        submenu_panel,
-    ]
 
     class Meta:
         abstract = True
 
 
-class FeatureablePageAbstract(Page):
+class FeatureablePageAbstract(models.Model):
     feature_subtitle = models.CharField(blank=True, max_length=255)
     feature_title = models.CharField(blank=True, max_length=255)
     image_feature = models.ForeignKey(
@@ -260,22 +252,11 @@ class FeatureablePageAbstract(Page):
         classname='collapsible collapsed',
     )
 
-    promote_panels = Page.promote_panels + [
-        feature_panel,
-    ]
-
     class Meta:
         abstract = True
 
 
-class PublishablePageAbstract(Page):
-    publishing_date = models.DateField(blank=False, null=True)
-
-    class Meta:
-        abstract = True
-
-
-class ShareablePageAbstract(Page):
+class ShareablePageAbstract(models.Model):
     social_title = models.CharField(blank=True, max_length=255)
     social_description = models.CharField(blank=True, max_length=255)
     image_social = models.ForeignKey(
@@ -298,15 +279,11 @@ class ShareablePageAbstract(Page):
         classname='collapsible collapsed',
     )
 
-    promote_panels = Page.promote_panels + [
-        social_panel,
-    ]
-
     class Meta:
         abstract = True
 
 
-class ThemeablePageAbstract(Page):
+class ThemeablePageAbstract(models.Model):
     theme = models.ForeignKey(
         'core.Theme',
         null=True,
@@ -322,15 +299,12 @@ class ThemeablePageAbstract(Page):
         heading='Theme',
         classname='collapsible collapsed',
     )
-    settings_panels = Page.settings_panels + [
-        theme_panel,
-    ]
 
     class Meta:
         abstract = True
 
 
-class FromTheArchivesPageAbstract(Page):
+class FromTheArchivesPageAbstract(models.Model):
     from_the_archives = models.BooleanField(
         default=False,
         verbose_name='From the Archives',
@@ -353,30 +327,51 @@ class FromTheArchivesPageAbstract(Page):
         classname='collapsible collapsed',
     )
 
-    content_panels = Page.content_panels + [
-        from_the_archives_panel,
-    ]
-
     class Meta:
         abstract = True
 
 
-class ArchiveablePageAbstract(Page):
+class ArchiveablePageAbstract(models.Model):
     class ArchiveStatus(models.IntegerChoices):
         UNARCHIVED = (0, 'No')
         ARCHIVED = (1, 'Yes')
 
     archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
 
-    settings_panels = Page.settings_panels + [
-        FieldPanel('archive'),
-    ]
+    archive_panel = MultiFieldPanel(
+        [
+            FieldPanel('archive'),
+        ],
+        heading='Archive',
+        classname='collapsible collapsed',
+    )
 
     class Meta:
         abstract = True
 
 
+class ContentPage(Page):
+    publishing_date = models.DateTimeField(blank=False, null=True)
+    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('publishing_date'),
+        FieldPanel('topics'),
+    ]
+
+    def on_form_bound(self):
+        self.bound_field = self.form[self.field_name]
+        heading = self.heading or self.bound_field.label
+        help_text = self.help_text or self.bound_field.help_text
+
+        self.heading = heading
+        self.bound_field.label = heading
+        self.help_text = help_text
+        self.bound_field.help_text = help_text
+
+
 class BasicPage(
+    Page,
     BasicPageAbstract,
     FeatureablePageAbstract,
     ShareablePageAbstract,
@@ -390,7 +385,10 @@ class BasicPage(
         blank=True,
     )
 
-    content_panels = BasicPageAbstract.content_panels + [
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
                 StreamFieldPanel('related_files'),
@@ -419,7 +417,7 @@ class BasicPage(
         verbose_name_plural = 'Pages'
 
 
-class FundingPage(BasicPageAbstract):
+class FundingPage(BasicPageAbstract, Page):
     """
     A special singleton page for /about/funding that contains a hardcoded
     table with the funding details.
@@ -430,21 +428,39 @@ class FundingPage(BasicPageAbstract):
     subpage_types = []
     templates = 'core/funding_page.html'
 
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
     class Meta:
         verbose_name = 'Funding Page'
 
 
-class AnnualReportListPage(BasicPageAbstract):
+class AnnualReportListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.BasicPage']
     subpage_types = ['core.AnnualReportPage']
     templates = 'core/annual_report_list_page.html'
 
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
     class Meta:
         verbose_name = 'Annual Report List Page'
 
 
-class AnnualReportPage(FeatureablePageAbstract):
+class AnnualReportPage(FeatureablePageAbstract, Page):
     """View annual report page"""
 
     image_poster = models.ForeignKey(
@@ -484,7 +500,7 @@ class AnnualReportPage(FeatureablePageAbstract):
     )
     year = models.IntegerField(validators=[MinValueValidator(2005), MaxValueValidator(2050)])
 
-    content_panels = FeatureablePageAbstract.content_panels + [
+    content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
                 FieldPanel('year'),
@@ -509,6 +525,9 @@ class AnnualReportPage(FeatureablePageAbstract):
             heading='Images',
             classname='collapsible collapsed',
         )
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
     ]
     parent_page_types = ['core.AnnualReportListPage']
     subpage_types = []
