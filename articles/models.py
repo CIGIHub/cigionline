@@ -3,6 +3,7 @@ from core.models import (
     ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 )
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
@@ -35,6 +36,7 @@ class ArticlePage(
     ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -61,6 +63,10 @@ class ArticlePage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+    ]
+
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
     ]
 
     parent_page_types = ['articles.ArticleListPage']

@@ -5,14 +5,15 @@ from django.db import migrations
 
 def populate_themes(apps, schema_editor):
     DEFAULT_THEMES = [
-        (1073, 'After-COVID'),
+        (1073, 'After-COVID Series'),
+        (1080, 'AI Series'),
         (1058, 'Big Tech'),
         (948, 'CIGI Campus'),
         (950, 'CIGI Trust'),
         (963, 'Cyber Series'),
         (951, 'Data Series'),
         (942, 'GCIG'),
-        (1075, 'Health Security'),
+        (1075, 'Health Security Series'),
         (1074, 'IGC'),
         (1056, 'Indigenous Lands Series'),
         (935, 'Innovation Series'),
