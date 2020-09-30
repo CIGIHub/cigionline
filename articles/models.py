@@ -7,6 +7,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
+from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
@@ -56,7 +57,20 @@ class ArticlePage(
         ],
         blank=True,
     )
+    cigi_people_mentioned = StreamField(
+        [
+            ('cigi_person', PageChooserBlock(required=True, page_type='people.PersonPage')),
+        ],
+        blank=True,
+    )
     footnotes = RichTextField(blank=True)
+    interviewers = StreamField(
+        [
+            ('interviewer', PageChooserBlock(required=True, page_type='people.PersonPage')),
+        ],
+        blank=True,
+    )
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -95,6 +109,9 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
+                StreamFieldPanel('cigi_people_mentioned'),
+                StreamFieldPanel('interviewers'),
             ],
             heading='Related',
             classname='collapsible collapsed',
