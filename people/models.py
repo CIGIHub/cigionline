@@ -59,7 +59,6 @@ class PersonListPage(BasicPageAbstract, Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        people = []
         letters = []
 
         personFilter = {
@@ -81,7 +80,7 @@ class PersonListPage(BasicPageAbstract, Page):
             else:
                 personFilter['person_types__name'] = 'Board Member'
         context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-    
+
         if self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             for person in context['people']:
                 if len(person.last_name) > 0:
