@@ -1,7 +1,7 @@
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 )
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -21,18 +21,28 @@ from wagtail.core.blocks import (
     URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
-class PublicationListPage(BasicPageAbstract):
+class PublicationListPage(BasicPageAbstract, Page):
     """Publication list page"""
 
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = ['publications.PublicationPage']
     templates = 'publications/publication_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
@@ -55,8 +65,8 @@ class PublicationListPage(BasicPageAbstract):
 
 class PublicationPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 ):
     """View publication page"""
@@ -181,7 +191,6 @@ class PublicationPage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -261,6 +270,10 @@ class PublicationPage(
             classname='collapsible collapsed',
         ),
     ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+    ]
 
     parent_page_types = ['publications.PublicationListPage']
     subpage_types = []
@@ -271,11 +284,20 @@ class PublicationPage(
         verbose_name_plural = 'Publications'
 
 
-class PublicationSeriesListPage(BasicPageAbstract):
+class PublicationSeriesListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = ['publications.PublicationSeriesPage']
     templates = 'publications/publication_series_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     class Meta:
         verbose_name = 'Publication Series List Page'
@@ -283,11 +305,10 @@ class PublicationSeriesListPage(BasicPageAbstract):
 
 class PublicationSeriesPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
 ):
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -311,6 +332,9 @@ class PublicationSeriesPage(
             heading='Related',
             classname='collapsible collapsed',
         ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
     ]
 
     parent_page_types = ['publications.PublicationSeriesListPage']
