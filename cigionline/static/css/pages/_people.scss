@@ -62,7 +62,7 @@
 
           .contact-item {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
-            line-height: 1.2em;
+            line-height: 1.25em;
 
             a {
               display: inline-block;
