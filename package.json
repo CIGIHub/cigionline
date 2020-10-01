@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack --mode development --progress --watch",
-    "build:prod": "rimraf assets/bundles && cross-env NODE_ENV=production webpack --mode production --progress"
+    "build:prod": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress"
   },
   "dependencies": {
     "@fortawesome/fontawesome-pro": "5.14.0",
