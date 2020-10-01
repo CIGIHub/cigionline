@@ -19,6 +19,7 @@ from wagtail.core.blocks import (
 )
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
+from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
@@ -64,6 +65,22 @@ class ArticlePage(
         blank=True,
     )
     footnotes = RichTextField(blank=True)
+    image_banner = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+    )
+    image_banner_small = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image Small'
+    )
     interviewers = StreamField(
         [
             ('interviewer', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -71,6 +88,12 @@ class ArticlePage(
         blank=True,
     )
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
+    related_files = StreamField(
+        [
+            ('file', DocumentChooserBlock()),
+        ],
+        blank=True,
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -102,6 +125,8 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_banner'),
+                ImageChooserPanel('image_banner_small'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -112,6 +137,7 @@ class ArticlePage(
                 FieldPanel('projects'),
                 StreamFieldPanel('cigi_people_mentioned'),
                 StreamFieldPanel('interviewers'),
+                StreamFieldPanel('related_files'),
             ],
             heading='Related',
             classname='collapsible collapsed',
