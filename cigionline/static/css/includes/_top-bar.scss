@@ -3,17 +3,21 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 5;
+  z-index: 1;
   width: 100%;
+  overflow: hidden;
 
   .cigi-top-bar {
     align-items: center;
     display: flex;
     justify-content: space-between;
+    transition: height .5s;
 
     &.scrolled-nav {
       height: 36px;
+
       .cigi-logo {
+
         .large-logo {
           opacity: 0;
         }
@@ -103,5 +107,15 @@ header {
         }
       }
     }
+  }
+
+  .overlay-content {
+    position: relative;
+    top: 0;
+    height: 430px;
+    text-align: center;
+    background: red;
+    z-index: -1;
+    transform: translate(0, 0);
   }
 }

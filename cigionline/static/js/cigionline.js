@@ -2,7 +2,6 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 
 
 // MAIN NAVIGATION SCROLL
-
 $(document).ready(function(){
   var scrollTop = 0;
   $(window).scroll(function(){
@@ -17,4 +16,12 @@ $(document).ready(function(){
 
   });
 
+});
+
+
+// SEARCH BAR OPEN
+
+$("#open-search-btn").click(function(){
+  $(this).toggleClass("open");
+  $('#search-overlay').toggleClass('open-search');
 });
