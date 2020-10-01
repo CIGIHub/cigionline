@@ -27,7 +27,7 @@ class PeoplePage(Page):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonListPage(BasicPageAbstract):
+class PersonListPage(BasicPageAbstract, Page):
     """
     The pages that show people. There are currently 2 on our website:
     /experts and /about/staff. This was made into a separate page model so that
@@ -47,42 +47,37 @@ class PersonListPage(BasicPageAbstract):
     subpage_types = []
     templates = 'people/person_list_page.html'
 
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
     def get_context(self, request):
         context = super().get_context(request)
 
-        people = []
+        personFilter = {
+            'archive': ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+        }
+
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
-            people = PersonPage.objects.live().filter(
-                archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                person_types__name__in=['CIGI Chair', 'Expert'],
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            personFilter['person_types__name__in'] = ['CIGI Chair', 'Expert']
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
+            personFilter['person_types__name'] = 'Staff'
             letter = request.GET.get('letter')
             if letter:
                 letter = letter[0:1]
-                people = PersonPage.objects.live().filter(
-                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                    last_name__istartswith=letter,
-                    person_types__name='Staff',
-                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-            else:
-                people = PersonPage.objects.live().filter(
-                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                    person_types__name='Staff',
-                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+                personFilter['last_name__istartswith'] = letter
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             show = request.GET.get('show')
             if show == 'senior-management':
-                people = PersonPage.objects.live().filter(
-                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                    person_types__name='Management Team',
-                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+                personFilter['person_types__name'] = 'Management Team'
             else:
-                people = PersonPage.objects.live().filter(
-                    archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-                    person_types__name='Board Member',
-                ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        context['people'] = people
+                personFilter['person_types__name'] = 'Board Member'
+        context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
         return context
 
@@ -101,7 +96,7 @@ class PersonListPage(BasicPageAbstract):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonPage(ArchiveablePageAbstract):
+class PersonPage(ArchiveablePageAbstract, Page):
     """View person page"""
 
     class ExternalPublicationTypes(models.TextChoices):
@@ -291,6 +286,9 @@ class PersonPage(ArchiveablePageAbstract):
             heading='External Publications',
             classname='collapsible collapsed'
         ),
+    ]
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
     ]
 
     parent_page_types = ['people.PeoplePage']
