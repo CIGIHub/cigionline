@@ -25,5 +25,6 @@ $(document).ready(function(){
   $("#open-search-btn").click(function(){
     $(this).toggleClass("open");
     $('#search-overlay').toggleClass('open-search');
+    $('body').toggleClass('disable-scroll');
   });
 });

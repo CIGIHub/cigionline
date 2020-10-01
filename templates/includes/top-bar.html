@@ -17,8 +17,9 @@
                         </li>
                     {% endfor %}
                     <li class="overlay-controls menu-break">
-                        <button class="overlay-controls-button" id="open-search-btn">
-                            <i class="far fa-search"></i>
+                        <button class="custom-nav-popup-btn overlay-controls-button" id="open-search-btn">
+                             <span class="icon-opened"><i class="far fa-times"></i></span>
+                            <span class="icon-closed"><i class="far fa-search"></i></span>
                         </button>
                     </li>
                     <li class="overlay-controls">
@@ -30,9 +31,9 @@
             </nav>
         </div>
     </div>
-    <div class="overlay-content-wrapper" id="search-overlay">
-        <div class="overlay-content-inner">
-            <div class="overlay-content overlay-content-search">
+    <div class="custom-popup-wrapper" id="search-overlay">
+        <div class="custom-popup-inner">
+            <div class="custom-popup-content custom-popup-nav-search">
                 <form action="">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Keyword Search" aria-label="search-bar" aria-describedby="search-bar">

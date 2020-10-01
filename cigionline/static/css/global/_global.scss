@@ -1,5 +1,9 @@
 body {
   font-family: $primary-font-family;
+
+  &.disable-scroll {
+    overflow: hidden;
+  }
 }
 
 //LINKS
