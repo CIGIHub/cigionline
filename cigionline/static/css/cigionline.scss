@@ -6,14 +6,23 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'fontawesome-pro/scss/light';
 @import 'fontawesome-pro/scss/brands';
 
-@import 'variables';
-@import 'mixins';
-@import 'utility';
-@import 'grids';
-@import 'footer';
-@import 'global';
-@import 'hero';
-@import 'meta';
-@import 'people';
-@import 'top-bar';
-@import 'funding';
+@import 'normalize';
+@import 'global/resets';
+@import 'global/variables';
+@import 'global/mixins';
+@import 'global/type';
+@import 'global/utility';
+
+@import 'layout/grids';
+@import 'layout/footer';
+@import 'layout/top-bar';
+@import 'layout/hero';
+@import 'layout/sections';
+@import 'layout/tables';
+
+@import 'objects/buttons';
+@import 'objects/meta';
+@import 'objects/paragraphs';
+
+@import 'pages/funding';
+@import 'pages/people';

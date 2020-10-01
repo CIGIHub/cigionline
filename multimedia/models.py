@@ -1,8 +1,8 @@
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
@@ -27,11 +27,20 @@ from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
-class MultimediaListPage(BasicPageAbstract):
+class MultimediaListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = []
     templates = 'multimedia/multimedia_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     class Meta:
         verbose_name = 'Multimedia List Page'
@@ -39,9 +48,9 @@ class MultimediaListPage(BasicPageAbstract):
 
 class MultimediaPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
@@ -97,6 +106,7 @@ class MultimediaPage(
     podcast_video_duration = models.CharField(blank=True, max_length=8)
     podcast_video_file_size = models.IntegerField(blank=True, null=True)
     podcast_video_url = models.URLField(blank=True)
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     speakers = StreamField(
         [
             ('speaker', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -104,7 +114,6 @@ class MultimediaPage(
         ],
         blank=True,
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
     transcript = StreamField(
         [
             ('accordion', StructBlock([
@@ -215,6 +224,7 @@ class MultimediaPage(
                     ['multimedia.MultimediaSeriesPage'],
                 ),
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -256,8 +266,8 @@ class MultimediaSeriesListPage(Page):
 
 class MultimediaSeriesPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
@@ -301,7 +311,6 @@ class MultimediaSeriesPage(
         verbose_name='Spotify Podcast URL',
         help_text='Enter the link to the Spotify Podcast landing page for the podcast.',
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)

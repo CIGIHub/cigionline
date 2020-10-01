@@ -4,15 +4,13 @@
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <section>
-    <div class="container-lg">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
   </section>
   <section>
     <div class="container-lg">
-      {% for person in page.person_pages %}
+      {% for person in people %}
         <p>{{ person.title }}</p>
       {% endfor %}
     </div>

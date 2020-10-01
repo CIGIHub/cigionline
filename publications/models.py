@@ -1,9 +1,10 @@
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 )
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
@@ -20,12 +21,13 @@ from wagtail.core.blocks import (
     URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
-class PublicationListPage(BasicPageAbstract):
+class PublicationListPage(BasicPageAbstract, Page):
     """Publication list page"""
 
     max_count = 1
@@ -33,14 +35,38 @@ class PublicationListPage(BasicPageAbstract):
     subpage_types = ['publications.PublicationPage']
     templates = 'publications/publication_list_page.html'
 
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        all_publications = PublicationPage.objects.live().public().order_by('-publishing_date')
+        paginator = Paginator(all_publications, 24)
+        page = request.GET.get('page')
+        try:
+            publications = paginator.page(page)
+        except PageNotAnInteger:
+            publications = paginator.page(1)
+        except EmptyPage:
+            publications = paginator.page(paginator.num_pages)
+        context['publications'] = publications
+        return context
+
     class Meta:
         verbose_name = 'Publication List Page'
 
 
 class PublicationPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 ):
     """View publication page"""
@@ -157,6 +183,7 @@ class PublicationPage(
         blank=True,
         verbose_name='PDF Downloads',
     )
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     publication_series = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
@@ -164,7 +191,6 @@ class PublicationPage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -238,10 +264,15 @@ class PublicationPage(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
                 ),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
         ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
     ]
 
     parent_page_types = ['publications.PublicationListPage']
@@ -253,11 +284,20 @@ class PublicationPage(
         verbose_name_plural = 'Publications'
 
 
-class PublicationSeriesListPage(BasicPageAbstract):
+class PublicationSeriesListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = ['publications.PublicationSeriesPage']
     templates = 'publications/publication_series_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     class Meta:
         verbose_name = 'Publication Series List Page'
@@ -265,10 +305,10 @@ class PublicationSeriesListPage(BasicPageAbstract):
 
 class PublicationSeriesPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
 ):
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
 
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -287,10 +327,14 @@ class PublicationSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
         ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
     ]
 
     parent_page_types = ['publications.PublicationSeriesListPage']

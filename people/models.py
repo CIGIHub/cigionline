@@ -1,8 +1,9 @@
-from core.models import BasicPageAbstract
+from core.models import ArchiveablePageAbstract, BasicPageAbstract
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalManyToManyField
+from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
@@ -26,7 +27,7 @@ class PeoplePage(Page):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonListPage(BasicPageAbstract):
+class PersonListPage(BasicPageAbstract, Page):
     """
     The pages that show people. There are currently 2 on our website:
     /experts and /about/staff. This was made into a separate page model so that
@@ -46,41 +47,39 @@ class PersonListPage(BasicPageAbstract):
     subpage_types = []
     templates = 'people/person_list_page.html'
 
-    class Meta:
-        verbose_name = 'Person List Page'
-        verbose_name_plural = 'Person List Pages'
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
-    @property
-    def board_members(self):
-        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
-            return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
-                person_types__name='Board Member',
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        return []
+    def get_context(self, request):
+        context = super().get_context(request)
 
-    @property
-    def person_pages(self):
+        personFilter = {
+            'archive': ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+        }
+
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
-            return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
-                person_types__name__in=['CIGI Chair', 'Expert'],
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            personFilter['person_types__name__in'] = ['CIGI Chair', 'Expert']
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
-            return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
-                person_types__name='Staff',
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        return []
+            personFilter['person_types__name'] = 'Staff'
+            letter = request.GET.get('letter')
+            if letter:
+                letter = letter[0:1]
+                personFilter['last_name__istartswith'] = letter
+        elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+            show = request.GET.get('show')
+            if show == 'senior-management':
+                personFilter['person_types__name'] = 'Management Team'
+            else:
+                personFilter['person_types__name'] = 'Board Member'
+        context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
-    @property
-    def senior_management(self):
-        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
-            return PersonPage.objects.live().filter(
-                archive=PersonPage.ArchiveStatus.UNARCHIVED,
-                person_types__name='Management Team',
-            ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        return []
+        return context
 
     def get_template(self, request, *args, **kwargs):
         original_template = super(PersonListPage, self).get_template(request, *args, **kwargs)
@@ -92,13 +91,13 @@ class PersonListPage(BasicPageAbstract):
             return 'people/person_list_leadership_page.html'
         return original_template
 
+    class Meta:
+        verbose_name = 'Person List Page'
+        verbose_name_plural = 'Person List Pages'
 
-class PersonPage(Page):
+
+class PersonPage(ArchiveablePageAbstract, Page):
     """View person page"""
-
-    class ArchiveStatus(models.IntegerChoices):
-        UNARCHIVED = (0, 'No')
-        ARCHIVED = (1, 'Yes')
 
     class ExternalPublicationTypes(models.TextChoices):
         GENERIC = 'Generic'
@@ -113,22 +112,16 @@ class PersonPage(Page):
         THESIS = 'Thesis'
         WEB_PAGE = 'Web Page'
 
-    @property
-    def topics(self):
-        return self.topics.live().order_by('title')
-
-
     address_city = models.CharField(blank=True, max_length=255)
     address_country = models.CharField(blank=True, max_length=255)
     address_line1 = models.CharField(blank=True, max_length=255)
     address_line2 = models.CharField(blank=True, max_length=255)
     address_postal_code = models.CharField(blank=True, max_length=32)
     address_province = models.CharField(blank=True, max_length=255)
-    archive = models.IntegerField(choices=ArchiveStatus.choices, default=ArchiveStatus.UNARCHIVED)
     board_position = models.CharField(blank=True, max_length=255)
     body = StreamField(
         [
-            ('paragraph', blocks.RichTextBlock())
+            ('paragraph', ParagraphBlock())
         ],
         blank=True,
         verbose_name='Full Biography'
@@ -179,6 +172,7 @@ class PersonPage(Page):
     person_types = ParentalManyToManyField('people.PersonType', blank=True)
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     short_bio = RichTextField(blank=True, verbose_name='Short Biography')
     external_publications = StreamField([
         ('external_publication', blocks.StructBlock([
@@ -264,7 +258,8 @@ class PersonPage(Page):
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('expertise')
+                StreamFieldPanel('expertise'),
+                FieldPanel('projects'),
             ],
             heading='Expertise',
             classname='collapsible collapsed'
@@ -293,8 +288,9 @@ class PersonPage(Page):
         ),
     ]
     settings_panels = Page.settings_panels + [
-        FieldPanel('archive'),
+        ArchiveablePageAbstract.archive_panel,
     ]
+
     parent_page_types = ['people.PeoplePage']
     subpage_types = []
     templates = 'people/person_page.html'

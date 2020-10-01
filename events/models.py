@@ -1,5 +1,6 @@
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
 )
@@ -12,11 +13,20 @@ from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 
 
-class EventListPage(BasicPageAbstract):
+class EventListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = ['events.EventPage']
     templates = 'events/event_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     class Meta:
         verbose_name = 'Event List Page'
@@ -24,6 +34,7 @@ class EventListPage(BasicPageAbstract):
 
 class EventPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
 ):
@@ -39,7 +50,6 @@ class EventPage(
     embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
-    event_start = models.DateTimeField()
     flickr_album_url = models.URLField(blank=True)
     invitation_type = models.IntegerField(choices=InvitationTypes.choices, default=InvitationTypes.RSVP_REQUIRED)
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
@@ -49,6 +59,7 @@ class EventPage(
     location_name = models.CharField(blank=True, max_length=255)
     location_postal_code = models.CharField(blank=True, max_length=32, verbose_name='Postal Code')
     location_province = models.CharField(blank=True, max_length=255, verbose_name='Province/State')
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     registration_url = models.URLField(blank=True, max_length=512)
     related_files = StreamField(
         [
@@ -63,7 +74,6 @@ class EventPage(
         ],
         blank=True,
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_hashtag = models.CharField(blank=True, max_length=64)
     website_button_text = models.CharField(
         blank=True,
@@ -79,11 +89,11 @@ class EventPage(
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
+        FieldPanel('publishing_date', heading='Event start'),
+        FieldPanel('event_end'),
         MultiFieldPanel(
             [
                 FieldPanel('event_access'),
-                FieldPanel('event_start'),
-                FieldPanel('event_end'),
                 FieldPanel('invitation_type'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
@@ -131,6 +141,7 @@ class EventPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',

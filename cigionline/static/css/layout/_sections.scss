@@ -1,0 +1,19 @@
+article {
+  section {
+    margin-bottom: 3em;
+    margin-top: 3em;
+
+    &.hero {
+      margin-top: 0;
+    }
+
+    &.main {
+      ol,
+      ul {
+        line-height: 1.5em;
+        margin: 0 0 1em 1em;
+        padding: 0;
+      }
+    }
+  }
+}
