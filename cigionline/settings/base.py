@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from os import path
+
 import os
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +28,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'careers',
     'compressor',
-    'compressor_toolkit',
     'core',
     'events',
     'menus',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'webpack_loader',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -80,11 +82,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'cigionline.urls'
 
-COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'),
-    ('module', 'compressor_toolkit.precompilers.ES6Compiler'),
-)
 
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
 
 TEMPLATES = [
     {
@@ -165,9 +169,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
-    'node_modules/@fortawesome',
-    'node_modules/bootstrap',
-    'node_modules/normalize.css',
+
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated

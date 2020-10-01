@@ -1,38 +1,22 @@
-// Fontawesome
 $fa-font-path: '../fontawesome-pro/webfonts';
-@import 'fontawesome-pro/scss/fontawesome';
-@import 'fontawesome-pro/scss/regular';
-@import 'fontawesome-pro/scss/solid';
-@import 'fontawesome-pro/scss/light';
-@import 'fontawesome-pro/scss/brands';
+@import '~@fortawesome/fontawesome-pro/css/all.css';
+@import '~bootstrap/dist/css/bootstrap.css';
 
-//variable
 @import 'global/bootstrap_variables_overwrite';
-
-//BS
-@import 'bootstrap/dist/css/bootstrap.css';
-
-
-//GLOBAL
-@import 'normalize';
 @import 'global/resets';
 @import 'global/variables';
 @import 'global/mixins';
 @import 'global/global';
 @import 'global/helpers';
 
-//LAYOUTS
 @import 'layout/grids';
 @import 'layout/hero';
 @import 'layout/sections';
 @import 'layout/tables';
 
-// INCLUDES
 @import 'includes/footer';
 @import 'includes/top-bar';
 @import 'includes/search-bar';
 @import "includes/people_person_leadership_list";
 
-
-//PAGES
 @import 'pages/people';

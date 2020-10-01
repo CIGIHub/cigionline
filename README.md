@@ -28,3 +28,12 @@ If you have a copy of the database file, it can be imported with the following c
 ``` shell
 $ pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cigionline <name of file>
 ```
+
+Compile frontend for development 
+
+``` shell
+$ npm install yarn -g
+$ yarn
+$ yarn start
+```
+

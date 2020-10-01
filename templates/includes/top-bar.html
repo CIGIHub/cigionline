@@ -3,34 +3,46 @@
 {% get_menu_items 'main' as main_menu_items %}
 
 <header>
-    <div class="container-lg cigi-top-bar" id="global-nav">
-        <a class="cigi-logo" href="/">
-            {% include "./header_cigi_logo_large.svg" %}
-            {% include "./header_cigi_logo_small.svg" %}
-        </a>
-        <nav aria-label="primary">
-            <ul class="menu desktop-menu">
-                {% for menu_item in main_menu_items %}
-                    <li>
-                        <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
+    <div class="main-navigation-wrapper">
+        <div class="container-lg cigi-top-bar" id="global-nav">
+            <a class="cigi-logo" href="/">
+                {% include "./header_cigi_logo_large.svg" %}
+                {% include "./header_cigi_logo_small.svg" %}
+            </a>
+            <nav aria-label="primary">
+                <ul class="menu desktop-menu">
+                    {% for menu_item in main_menu_items %}
+                        <li>
+                            <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
+                        </li>
+                    {% endfor %}
+                    <li class="overlay-controls menu-break">
+                        <button class="overlay-controls-button" id="open-search-btn">
+                            <i class="far fa-search"></i>
+                        </button>
                     </li>
-                {% endfor %}
-                <li class="overlay-controls menu-break">
-                    <button class="overlay-controls-button" id="open-search-btn">
-                        <i class="far fa-search"></i>
-                    </button>
-                </li>
-                <li class="overlay-controls">
-                    <button class="overlay-controls-button">
-                        <i class="far fa-bars"></i>
-                    </button>
-                </li>
-            </ul>
-        </nav>
+                    <li class="overlay-controls">
+                        <button class="overlay-controls-button">
+                            <i class="far fa-bars"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-    <div class="overlay-content" id="search-overlay">
-        something
+    <div class="overlay-content-wrapper" id="search-overlay">
+        <div class="overlay-content-inner">
+            <div class="overlay-content overlay-content-search">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Keyword Search" aria-label="search-bar" aria-describedby="search-bar">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="search-bar"><i class="far fa-search"></i></span>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
-
-
 </header>

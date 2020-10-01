@@ -1,4 +1,5 @@
 import 'bootstrap/dist/js/bootstrap.bundle';
+import './css/cigionline.scss';
 
 
 // MAIN NAVIGATION SCROLL
@@ -6,11 +7,11 @@ $(document).ready(function(){
   var scrollTop = 0;
   $(window).scroll(function(){
     scrollTop = $(window).scrollTop();
-     $('.counter').html(scrollTop);
+    $('.counter').html(scrollTop);
 
-    if (scrollTop >= 80) {
+    if (scrollTop >= 132) {
       $('#global-nav').addClass('scrolled-nav');
-    } else if (scrollTop < 80) {
+    } else if (scrollTop < 132) {
       $('#global-nav').removeClass('scrolled-nav');
     }
 
@@ -20,8 +21,9 @@ $(document).ready(function(){
 
 
 // SEARCH BAR OPEN
-
-$("#open-search-btn").click(function(){
-  $(this).toggleClass("open");
-  $('#search-overlay').toggleClass('open-search');
+$(document).ready(function(){
+  $("#open-search-btn").click(function(){
+    $(this).toggleClass("open");
+    $('#search-overlay').toggleClass('open-search');
+  });
 });
