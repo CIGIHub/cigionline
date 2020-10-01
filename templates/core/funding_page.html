@@ -6,7 +6,7 @@
 {% block content %}
 <article>
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section>
+  <section class="body">
     <div class="container-sm">
       {% for block in self.body %}
         {% include_block block %}
