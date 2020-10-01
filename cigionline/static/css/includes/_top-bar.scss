@@ -1,11 +1,27 @@
 header {
   background-color: $black;
-  position: sticky;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100%;
 
   .cigi-top-bar {
     align-items: center;
     display: flex;
     justify-content: space-between;
+
+    &.scrolled-nav {
+      height: 36px;
+      .cigi-logo {
+        .large-logo {
+          opacity: 0;
+        }
+        .small-logo {
+          opacity: 1;
+        }
+      }
+    }
 
     .cigi-logo {
       @include breakpoint($large) {
