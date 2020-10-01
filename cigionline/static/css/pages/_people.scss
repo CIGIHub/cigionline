@@ -52,27 +52,33 @@
         }
 
         .contact {
+          @include breakpoint($small) {
+            columns: 2;
+          }
+
           @include breakpoint($medium) {
             columns: 3;
           }
 
           .contact-item {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
+            line-height: 1.2em;
 
             a {
               display: inline-block;
-              line-height: 1.2em;
+              line-height: 1.25em;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              width: 9.5em;
+              width: calc(100% - 30px);
+              vertical-align: middle;
             }
 
             i {
               color: $cigi-pink;
-              line-height: 1.2em;
+              line-height: 1.25em;
               margin-right: 0.3em;
-              vertical-align: top;
+              vertical-align: middle;
             }
           }
         }
