@@ -18,7 +18,7 @@ before_install:
   - node --version
 install:
   - pip install -r requirements.txt
-  - npm yarn -g
+  - npm install yarn -g
   - yarn
   - yarn build:prod
 before_script:
