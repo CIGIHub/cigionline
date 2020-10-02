@@ -9,4 +9,5 @@ exclude =
     .mypy_cache,
     node_modules,
     static,
-    venv
+    venv,
+    cigionline/settings
