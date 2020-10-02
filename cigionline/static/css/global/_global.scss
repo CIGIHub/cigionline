@@ -86,22 +86,25 @@ hr {
 }
 
 .input-group {
-  .input-group-append {
-    .input-group-text {
-      display: flex;
-      align-items: center;
-      padding: 0 0 0.25rem;
-      margin-bottom: 0;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 1.5;
-      color: $cigi-pink;
-      text-align: center;
-      white-space: nowrap;
-      background-color: transparent;
-      border: none;
-      border-bottom: 2px solid $black;
-      border-radius: 0;
+  &.input-group-search {
+    .input-group-append {
+      .btn-search {
+        display: flex;
+        align-items: center;
+        width: auto;
+        margin-bottom: 0;
+        padding: 0 0 0.25rem;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: $cigi-pink;
+        text-align: center;
+        white-space: nowrap;
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid $black;
+        border-radius: 0;
+      }
     }
   }
 }
