@@ -9,9 +9,9 @@ $(document).ready(function(){
     scrollTop = $(window).scrollTop();
     $('.counter').html(scrollTop);
 
-    if (scrollTop >= 132) {
+    if (scrollTop >= 66) {
       $('#global-nav').addClass('scrolled-nav');
-    } else if (scrollTop < 132) {
+    } else if (scrollTop < 66) {
       $('#global-nav').removeClass('scrolled-nav');
     }
 
