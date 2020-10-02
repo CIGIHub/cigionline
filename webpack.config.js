@@ -30,7 +30,7 @@ const config = {
 
     devtool: 'source-map',
     output: {
-        path: path.resolve('./static/bundles/'),
+        path: path.resolve('./cigionline/static/bundles/'),
         filename: '[name].js',
     },
     plugins: plugins,
