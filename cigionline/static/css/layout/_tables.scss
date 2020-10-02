@@ -235,7 +235,12 @@ table.custom-theme-table {
 
       .table-title-link {
         font-size: 17px;
+        font-weight: 400;
       }
+    }
+
+    thead tr th {
+      font-size: 12px;
     }
 
     tbody tr td {

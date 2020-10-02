@@ -1,25 +1,25 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-    <ul class="people-person-leadership-list">
-        {% for person in people_list %}
-            <li>
-                <div class="people-person-leadership-list-info">
-                    <a href="#" class="people-person-leadership-list-photo">
-                        {% comment %} ---insert person photo in background-image url --- {% endcomment %}
-                        <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/jimsq.jpg?itok=b8BGhwW7);"></div>
-                    </a>
-                    <div>
-                        <a href="#" class="people-person-leadership-list-name">{{ person.title }}</a>
-                        <div class="people-person-leadership-list-function">
-                            CIGI founder and Chair of the CIGI Board of Directors
-                        </div>
-                    </div>
-                </div>
-                <p class="people-person-leadership-list-description">
-                    In addition to his commitment to CIGI, Jim Balsillie is also the founder of the Balsillie School of International Affairs, the Centre for Digital Rights, Arctic Research Foundation and co-founder of the Council of Canadian Innovators.
-                </p>
-            </li>
-        {% endfor %}
-    </ul>
+  <ul class="people-person-leadership-list">
+    {% for person in people_list %}
+      <li>
+        <div class="people-person-leadership-list-info">
+          <a href="#" class="people-person-leadership-list-photo">
+            {% comment %} ---insert person photo in background-image url --- {% endcomment %}
+            <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/jimsq.jpg?itok=b8BGhwW7);"></div>
+          </a>
+          <div>
+            <a href="#" class="people-person-leadership-list-name">{{ person.title }}</a>
+            <div class="people-person-leadership-list-function">
+              CIGI founder and Chair of the CIGI Board of Directors
+            </div>
+          </div>
+        </div>
+        <p class="people-person-leadership-list-description">
+          In addition to his commitment to CIGI, Jim Balsillie is also the founder of the Balsillie School of International Affairs, the Centre for Digital Rights, Arctic Research Foundation and co-founder of the Council of Canadian Innovators.
+        </p>
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock %}
