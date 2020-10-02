@@ -14,9 +14,7 @@ $(document).ready(function(){
     } else if (scrollTop < 66) {
       $('#global-nav').removeClass('scrolled-nav');
     }
-
   });
-
 });
 
 
