@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+
+  <ul>
+    {% for multimedia_page in multimedia %}
+      <li>
+        <a href="{{multimedia_page.url}}">{{multimedia_page.title}}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock content %}
