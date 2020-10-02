@@ -12,7 +12,6 @@ from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
-
 class HomePage(Page):
     """Singleton model for the home page."""
 
