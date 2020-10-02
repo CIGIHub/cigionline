@@ -13,15 +13,15 @@ header {
   }
 
   .cigi-top-bar {
+    @include breakpoint($large) {
+      height: 66px;
+    }
+
     align-items: center;
     display: flex;
     height: 36px;
     justify-content: space-between;
     transition: all .5s ease;
-
-    @include breakpoint($large) {
-      height: 66px;
-    }
 
     &.scrolled-nav {
       height: 36px;
@@ -166,6 +166,11 @@ header {
     transition: .3s ease-in-out;
 
     .custom-popup-inner {
+      @include breakpoint($large) {
+        height: 430px;
+        align-items: center;
+        padding-top: 0;
+      }
       position: absolute;
       top: 0;
       left: 0;
@@ -213,13 +218,6 @@ header {
       .custom-popup-inner {
         opacity: 1;
         transform: translate(0, 0);
-      }
-    }
-
-    @include breakpoint($large) {
-      .custom-popup-inner {
-        height: 430px;
-        align-items: center;
       }
     }
   }
