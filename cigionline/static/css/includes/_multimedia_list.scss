@@ -9,6 +9,7 @@
   }
 
   .multimedia-card-wrapper {
+
     .multimedia-card-image {
       @include aspect-ratio(4, 3);
       display: block;
