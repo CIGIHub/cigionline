@@ -3,8 +3,8 @@ body {
 }
 
 a {
-  color: $cigi-pink;
   text-decoration: none;
+  color: $cigi-pink;
   transition: color 0.2s ease;
 
   &:hover {
