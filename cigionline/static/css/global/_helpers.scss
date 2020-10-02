@@ -38,7 +38,7 @@
   position: relative;
   padding: 1rem 2rem;
   margin-bottom: 1rem;
-  
+
   &:before {
     border-bottom: 5px solid #e6023b;
     content: "";
@@ -61,4 +61,24 @@
   @include aspect-ratio(2,1);
   width: 100%;
   margin-bottom: 2rem;
+}
+
+
+// LISTS
+.custom-text-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+
+  li {
+    &:not(:only-child):after {
+      content: ", ";
+      margin-right: 2px;
+    }
+
+    &:last-child:after {
+      display: none;
+    }
+  }
 }

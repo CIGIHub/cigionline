@@ -1,0 +1,76 @@
+.multimedia-list-section {
+
+  .multimedia-list-row {
+    align-content: stretch;
+  }
+
+  .multimedia-list-col {
+    margin-bottom: 2em;
+  }
+
+  .multimedia-card-wrapper {
+    .multimedia-card-image {
+      @include aspect-ratio(4, 3);
+      display: block;
+      margin-bottom: .5em;
+      transition: all 0.3s ease;
+
+      &:hover {
+        filter: brightness(60%);
+      }
+    }
+
+    .multimedia-card-topic-list {
+      margin-bottom: 0.5em;
+
+      li, a {
+        color: $cigi-pink;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        line-height: 1.25em;
+      }
+
+      a:hover {
+        color: $cigi-dark-pink;
+      }
+    }
+
+    .multimedia-card-title {
+      margin-bottom: 0.5em;
+      a {
+        font-size: 17px;
+        font-weight: 400;
+        line-height: 1.45em;
+        color: $black;
+
+        &:hover {
+          color: $cigi-pink;
+        }
+      }
+    }
+
+    .multimedia-card-speakers-list {
+      margin-bottom: 0;
+
+      li, a {
+        color: #6d6d6d;
+        font-size: 12px;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+
+      a:hover {
+        color: $cigi-pink;
+      }
+    }
+
+    .multimedia-card-date {
+      margin-bottom: 0;
+      color: #6d6d6d;
+      font-size: 12px;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+  }
+}

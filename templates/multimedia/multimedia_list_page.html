@@ -2,13 +2,36 @@
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-
-  <ul>
-    {% for multimedia_page in multimedia %}
-      <li>
-        <a href="{{multimedia_page.url}}">{{multimedia_page.title}}</a>
-      </li>
-    {% endfor %}
-  </ul>
-
+  <div class="container-lg">
+    <section class="multimedia-list-section">
+      <div class="row row-cols-1 row-cols-md-3 multimedia-list-row">
+        {% for multimedia_page in multimedia %}
+          <div class="col multimedia-list-col">
+            <div class="multimedia-card-wrapper">
+              <a href="{{multimedia_page.url}}" class="multimedia-card-image">
+                <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/featured_landscape_medium/public/images/landscape/shutterstock_573033001_0_0.jpg?itok=G9WzWNQ3);"></div>
+              </a>
+              <ul class="custom-text-list multimedia-card-topic-list">
+                <li><a href="#">Platform Governance{{ multimedia.topics }}</a></li>
+                <li><a href="#">Emerging Technology{{ multimedia.topics }}</a></li>
+                <li><a href="#">Intellectual Property{{ multimedia.topics }}</a></li>
+              </ul>
+              <p class="multimedia-card-title">
+                <a href="{{multimedia_page.url}}">
+                  {{multimedia_page.title}}
+                </a>
+              </p>
+              <ul class="custom-text-list multimedia-card-speakers-list">
+                <li><a href="">The Honourable Catherine Mckenna{{ multimedia.speakers }}</a></li>
+                <li><a href="">Taylor Owen{{ multimedia.speakers }}</a></li>
+                <li><a href="">Heidi Tworek{{ multimedia.speakers }}</a></li>
+                <li>and more</li>
+              </ul>
+              <p class="multimedia-card-date">September 16, 2020 {{ multimedia.publishing_date }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
 {% endblock content %}
