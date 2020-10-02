@@ -2,9 +2,6 @@ eslint:
   enabled: true
   config_file: .eslintrc
 fail_on_violations: true
-flake8:
-  enabled: true
-  config_file: .flake8
 sass-lint:
   enabled: true
   config_file: .sass-lint.yml
