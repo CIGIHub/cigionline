@@ -1,2 +1,12 @@
 [flake8]
 ignore = BLK100, E501
+exclude =
+    .git,
+    __pycache__,
+    *.egg-info,
+    .nox,
+    .pytest_cache,
+    .mypy_cache,
+    node_modules,
+    static,
+    venv
