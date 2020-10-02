@@ -44,7 +44,7 @@ const config = {
             },
             {
                 test: /\.scss$/,
-                    use: ExtractTextPlugin.extract({
+                use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: [
                         {loader: 'css-loader', options: {sourceMap: true}},
@@ -95,7 +95,16 @@ const config = {
             },
             {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url-loader'
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name(file) {
+                                return '[name]-[hash].[ext]';
+                            },
+                        },
+                    },
+                ]
             },
         ]
     },
