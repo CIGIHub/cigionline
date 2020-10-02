@@ -1,8 +1,8 @@
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
@@ -37,8 +37,8 @@ class ProjectListPage(Page):
 class ProjectPage(
     ArchiveablePageAbstract,
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
 ):
     body = StreamField(
@@ -112,7 +112,6 @@ class ProjectPage(
         ],
         blank=True,
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -159,6 +158,10 @@ class ProjectPage(
         ShareablePageAbstract.social_panel,
     ]
 
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
+    ]
+
     parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
     subpage_types = []
     templates = 'research/project_page.html'
@@ -195,7 +198,7 @@ class TopicListPage(Page):
         verbose_name = 'Topic List Page'
 
 
-class TopicPage(ArchiveablePageAbstract):
+class TopicPage(ArchiveablePageAbstract, Page):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
 
@@ -204,6 +207,9 @@ class TopicPage(ArchiveablePageAbstract):
 
     content_panels = Page.content_panels + [
         FieldPanel('description')
+    ]
+    settings_panels = Page.content_panels + [
+        ArchiveablePageAbstract.archive_panel,
     ]
 
     parent_page_types = ['research.TopicListPage']
