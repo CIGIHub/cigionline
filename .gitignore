@@ -81,3 +81,5 @@ target/
 
 # Text editors
 .vscode
+
+cigionline/static/bundles/*
