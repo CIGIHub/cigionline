@@ -159,7 +159,7 @@ header {
   }
 
   .custom-popup-wrapper {
-    background: rgba(255,255,255,0.6);
+    background: $popup-overlay;
     height: 100vh;
     opacity: 0;
     overflow: hidden;
