@@ -23,6 +23,7 @@
 }
 
 // PARAGRAPHS
+
 .paragraph-heading {
   border-top: 0.25em solid $black;
   color: $black;
@@ -34,9 +35,10 @@
 
 // BLOCKQUOTES
 .paragraph-type-bloquote {
+  margin-bottom: 1rem;
   padding: 1rem 2rem;
   position: relative;
-  margin-bottom: 1rem;
+
 
   &::before {
     border-bottom: 5px solid $cigi-pink;
