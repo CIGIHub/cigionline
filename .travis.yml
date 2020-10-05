@@ -28,5 +28,6 @@ before_script:
   - python manage.py collectstatic
 script:
   - coverage run --source='.' manage.py test
+  - flake8
 after_success:
   - coveralls

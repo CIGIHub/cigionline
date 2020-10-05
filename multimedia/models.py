@@ -6,6 +6,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
@@ -41,6 +42,21 @@ class MultimediaListPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        all_multimedia = MultimediaPage.objects.live().public().order_by('-publishing_date')
+        paginator = Paginator(all_multimedia, 18)
+        page = request.GET.get('page')
+        try:
+            multimedia = paginator.page(page)
+        except PageNotAnInteger:
+            multimedia = paginator.page(1)
+        except EmptyPage:
+            multimedia = paginator.page(paginator.num_pages)
+        context['multimedia'] = multimedia
+        return context
 
     class Meta:
         verbose_name = 'Multimedia List Page'
