@@ -50,21 +50,21 @@ hr {
 //FORM ELEMENTS
 
 .form-control {
-  display: flex;
   align-items: center;
-  width: 100%;
-  height: 24px;
-  padding: 0 0 0.25rem;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: $black;
-  background-color: transparent;
   background-clip: padding-box;
+  background-color: transparent;
   border: none;
   border-bottom: 2px solid $black;
   border-radius: 0;
+  color: $black;
+  display: flex;
+  font-size: 16px;
+  font-weight: 400;
+  height: 24px;
+  line-height: 1.5;
+  padding: 0 0 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  width: 100%;
 
   &::-webkit-input-placeholder,
   &::placeholder {
@@ -72,11 +72,11 @@ hr {
   }
 
   &:focus {
-    outline: 0;
+    background-color: transparent;
+    border-color: $black;
     box-shadow: none;
     color: $black;
-    border-color: $black;
-    background-color: transparent;
+    outline: 0;
   }
 
 }

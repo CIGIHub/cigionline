@@ -39,22 +39,22 @@
 @mixin aspect-ratio($width, $height) {
   position: relative;
   overflow: hidden;
-  &:before {
+  &::before {
+    content: '';
     display: block;
-    content: "";
-    width: 100%;
     padding-top: ($height / $width) * 100%;
+    width: 100%;
   }
   > .img-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: #eeeeee;
-    background-repeat: no-repeat;
+    background-image: url('https://www.cigionline.org/sites/default/files/styles/person_square/public/images/square/Aaronson_Susan-Square.jpg?itok=SrzaGYMm');
     background-position: center center;
+    background-repeat: no-repeat;
     background-size: cover;
-    background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/images/square/Aaronson_Susan-Square.jpg?itok=SrzaGYMm);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 }
