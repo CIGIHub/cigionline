@@ -1,49 +1,49 @@
 .people-person-leadership-list-section {
 
   .people-person-leadership-nav {
-    display: flex;
     align-items: center;
+    display: flex;
     margin-bottom: 1em;
 
     .people-person-leadership-nav-text {
       color: $cigi-medium-grey;
-      font-weight: 400;
-      font-size: 0.9rem;
-      margin-right: 1em;
       flex: 0 0 auto;
+      font-size: 0.9rem;
+      font-weight: 400;
+      margin-right: 1em;
     }
 
     .nav-tabs {
-      border: none;
+      border: 0;
 
       .nav-item {
-        position: relative;
-        display: inline-flex;
         align-items: center;
+        display: inline-flex;
+        position: relative;
 
         &:not(:first-child) {
           padding-left: 1em;
 
-          &:before {
+          &::before {
+            color: $cigi-medium-grey;
+            content: '|';
+            display: inline-flex;
+            font-weight: 300;
+            left: 0;
             position: absolute;
             top: 0;
-            left: 0;
-            display: inline-flex;
-            content: '|';
-            font-weight: 300;
-            color: $cigi-medium-grey;
           }
         }
       }
 
       .nav-link {
-        margin-right: 1em;
-        padding: 0;
+        border: 0;
+        border-bottom: 3px solid transparent;
+        color: $black;
         font-size: 14px;
         font-weight: 700;
-        color: $black;
-        border: none;
-        border-bottom: 3px solid transparent;
+        margin-right: 1em;
+        padding: 0;
 
         &.active {
           border-bottom-color: $cigi-pink;
@@ -53,14 +53,17 @@
 
     @media(max-width: 374.98px) {
       align-items: baseline;
+
       .nav-tabs {
         flex-direction: column;
 
-        .nav-item:not(:first-child) {
-          padding-left: 0;
+        .nav-item {
+          &:not(:first-child) {
+            padding-left: 0;
 
-          &:before {
-            display: none;
+            &::before {
+              display: none;
+            }
           }
         }
       }
@@ -72,24 +75,24 @@
     list-style: none;
 
     li {
-      padding: 1em 0;
       border-bottom: 1px solid $cigi-light-grey;
+      padding: 1em 0;
     }
 
     .people-person-leadership-list-info {
-      display: flex;
       align-items: center;
+      display: flex;
       margin-bottom: 1em;
     }
 
     .people-person-leadership-list-photo {
       @include aspect-ratio(1, 1);
-      display: inline-block;
-      width: 70px;
-      height: 70px;
       border-radius: 100%;
-      margin-right: 1rem;
+      display: inline-block;
       flex: 0 0 70px;
+      height: 70px;
+      margin-right: 1rem;
+      width: 70px;
     }
 
     .people-person-leadership-list-name {

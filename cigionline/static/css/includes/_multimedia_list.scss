@@ -14,36 +14,69 @@
       @include aspect-ratio(4, 3);
       display: block;
       margin-bottom: .5em;
-      transition: all 0.3s ease;
+
+      &::before {
+        background: transparent;
+        transition: background-color 0.3s ease;
+      }
+
+      .multimedia-image-type {
+        align-items: center;
+        background: $cigi-pink;
+        bottom: 0;
+        color: $white;
+        display: inline-flex;
+        height: 40px;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        width: 40px;
+        z-index: 1;
+      }
+
+      .img-wrapper {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
 
       &:hover {
-        filter: brightness(60%);
+        &::before {
+          background-color: $black;
+        }
+
+        .img-wrapper {
+          opacity: 0.8;
+        }
       }
     }
 
     .multimedia-card-topic-list {
       margin-bottom: 0.5em;
 
-      li, a {
+      li,
+      a {
         color: $cigi-pink;
         font-size: 12px;
         font-weight: 500;
-        text-transform: uppercase;
         line-height: 1.25em;
+        text-transform: uppercase;
       }
 
-      a:hover {
-        color: $cigi-dark-pink;
+      a {
+        &:hover {
+          color: $cigi-dark-pink;
+        }
       }
     }
 
     .multimedia-card-title {
       margin-bottom: 0.2em;
+
       a {
+        color: $black;
         font-size: 17px;
         font-weight: 400;
         line-height: 1.45em;
-        color: $black;
 
         &:hover {
           color: $cigi-pink;
@@ -54,24 +87,27 @@
     .multimedia-card-speakers-list {
       margin-bottom: 0;
 
-      li, a {
-        color: #6d6d6d;
+      li,
+      a {
+        color: $cigi-text-grey;
         font-size: 12px;
         font-weight: 400;
-        text-transform: uppercase;
         line-height: normal;
+        text-transform: uppercase;
       }
 
-      a:hover {
-        color: $cigi-pink;
+      a {
+        &:hover {
+          color: $cigi-pink;
+        }
       }
     }
 
     .multimedia-card-date {
-      margin-bottom: 0;
-      color: #6d6d6d;
+      color: $cigi-text-grey;
       font-size: 12px;
       font-weight: 400;
+      margin-bottom: 0;
       text-transform: uppercase;
     }
   }
