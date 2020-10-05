@@ -70,7 +70,7 @@ const config = {
                     {
                         loader: 'file-loader',
                         options: {
-                            name(file) {
+                            name() {
                                 return '[name]-[hash].[ext]';
                             },
                         },
