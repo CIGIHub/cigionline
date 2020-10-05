@@ -3,7 +3,6 @@ body {
 }
 
 //LINKS
-
 a {
   color: $cigi-pink;
   text-decoration: none;
@@ -16,7 +15,6 @@ a {
 }
 
 //BUTTONS
-
 button {
   background-color: transparent;
   border: 0;
@@ -30,7 +28,6 @@ button {
 }
 
 //HR
-
 hr {
   background: $cigi-light-grey;
   border: 0;
@@ -39,7 +36,6 @@ hr {
 }
 
 //LAYOUTS
-
 [class*='container-'] {
   margin-left: auto;
   margin-right: auto;
@@ -48,23 +44,22 @@ hr {
 }
 
 //FORM ELEMENTS
-
 .form-control {
-  display: flex;
   align-items: center;
-  width: 100%;
-  height: 24px;
-  padding: 0 0 0.25rem;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: $black;
-  background-color: transparent;
   background-clip: padding-box;
-  border: none;
+  background-color: transparent;
+  border: 0;
   border-bottom: 2px solid $black;
   border-radius: 0;
+  color: $black;
+  display: flex;
+  font-size: 16px;
+  font-weight: 400;
+  height: 24px;
+  line-height: 1.5;
+  padding: 0 0 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  width: 100%;
 
   &::-webkit-input-placeholder,
   &::placeholder {
@@ -72,98 +67,96 @@ hr {
   }
 
   &:focus {
-    outline: 0;
+    background-color: transparent;
+    border-color: $black;
     box-shadow: none;
     color: $black;
-    border-color: $black;
-    background-color: transparent;
+    outline: 0;
   }
-
 }
 
 .input-group {
   .input-group-append {
     .input-group-text {
-      display: flex;
       align-items: center;
-      padding: 0 0 0.25rem;
-      margin-bottom: 0;
+      background-color: transparent;
+      border: 0;
+      border-bottom: 2px solid $black;
+      border-radius: 0;
+      color: $cigi-pink;
+      display: flex;
       font-size: 16px;
       font-weight: 400;
       line-height: 1.5;
-      color: $cigi-pink;
+      margin-bottom: 0;
+      padding: 0 0 0.25rem;
       text-align: center;
       white-space: nowrap;
-      background-color: transparent;
-      border: none;
-      border-bottom: 2px solid $black;
-      border-radius: 0;
     }
   }
 }
 
 // DROPDOWNS
-
 .dropdown {
   &.custom-dropdown {
     .dropdown-toggle {
-      display: flex;
       align-items: center;
+      border-bottom: 2px solid $black;
+      color: $black;
+      display: flex;
+      height: 24px;
       justify-content: space-between;
       width: 100%;
-      height: 24px;
-      color: $black;
-      border-bottom: 2px solid $black;
 
-      &:after {
-        display: inline-flex;
+      &::after {
         align-items: center;
+        border: 0;
+        color: $cigi-pink;
+        content: '\f078';
+        display: inline-flex;
+        font-family: 'Font Awesome 5 Pro';
+        font-size: 12px;
+        height: 12px;
         margin-left: 0;
+        transform: rotate(0deg);
+        transition: transform 0.25s ease;
         vertical-align: 0.255em;
         width: 12px;
-        height: 12px;
-        content: "\f078";
-        font-family: "Font Awesome 5 Pro";
-        font-size: 12px;
-        color: $cigi-pink;
-        border: none;
-        transform: rotate(0deg);
-        transition: all 0.25s ease;
       }
 
       &:hover {
         text-decoration: none;
       }
 
-      &[aria-expanded="true"] {
-        &:after {
+      &[aria-expanded='true'] {
+        &::after {
           transform: rotate(180deg);
         }
       }
     }
 
     .dropdown-menu {
-      padding: .5rem 0;
-      margin: .125rem 0 0;
-      font-size: 1rem;
-      color: $black;
-      text-align: left;
-      list-style: none;
-      background-color: #fff;
       background-clip: padding-box;
-      border: none;
-      box-shadow: 0 5px 10px #e9e9e9;
-      border-radius: .25rem;
-    }
+      background-color: $white;
+      border: 0;
+      border-radius: 0.25rem;
+      box-shadow: 0 5px 10px $cigi-light-grey;
+      color: $black;
+      font-size: 1rem;
+      list-style: none;
+      margin: 0.125rem 0 0;
+      padding: 0.5rem 0;
+      text-align: left;
 
-    .dropdown-menu.show {
-      width: 100%;
+      &.show {
+        width: 100%;
+      }
     }
 
     .dropdown-item {
-      text-transform: uppercase;
-      font-size: 12px;
       color: $black;
+      font-size: 12px;
+      text-transform: uppercase;
 
       &:hover {
         background-color: unset;
@@ -173,33 +166,32 @@ hr {
   }
 
   // to be fixed
-
   &.dropdown-full-width {
     position: static !important;
 
-    .dropdown-menu.show {
-      transform: none !important;
-      top:100% !important;
-      display: block;
-      column-count: 4;
-      column-fill: balance;
-      column-gap: 15px;
+    .dropdown-menu {
+      &.show {
+        column-count: 4;
+        column-fill: balance;
+        column-gap: 15px;
+        display: block;
+        top: 100% !important;
+        transform: none !important;
 
-      @media(max-width: 767.98px) {
-        column-count: 3;
+        @media (max-width: 767.98px) {
+          column-count: 3;
+        }
+
+        @media (max-width: 639.98px) {
+          column-count: 2;
+        }
       }
 
-      @media(max-width: 639.98px) {
-        column-count: 2;
+      .dropdown-item {
+        padding: 4px 15px;
+        white-space: normal;
+        word-break: break-word;
       }
-    }
-    .dropdown-item {
-      white-space: normal;
-      word-break: break-word;
-      padding: 4px 15px;
     }
   }
 }
-
-
-
