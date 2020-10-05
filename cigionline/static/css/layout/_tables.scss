@@ -267,8 +267,8 @@ table.table-related-files {
   tbody {
     tr td {
       font-size: .9em;
-      padding-top: .5em;
       padding-bottom: .5em;
+      padding-top: .5em;
     }
   }
 
@@ -276,7 +276,7 @@ table.table-related-files {
     width: 85%;
     padding-right: .5em;
 
-    @media(max-width:767.98px){
+    @media(max-width: 767.98px){
       width: 80%;
     }
   }
