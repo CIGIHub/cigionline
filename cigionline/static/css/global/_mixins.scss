@@ -37,16 +37,18 @@
 // IMAGES
 
 @mixin aspect-ratio($width, $height) {
-  position: relative;
   overflow: hidden;
+  position: relative;
+
   &::before {
     content: '';
     display: block;
     padding-top: ($height / $width) * 100%;
     width: 100%;
   }
+
   > .img-wrapper {
-    background: #eeeeee;
+    background: $whisper-grey;
     background-image: url('https://www.cigionline.org/sites/default/files/styles/person_square/public/images/square/Aaronson_Susan-Square.jpg?itok=SrzaGYMm');
     background-position: center center;
     background-repeat: no-repeat;
