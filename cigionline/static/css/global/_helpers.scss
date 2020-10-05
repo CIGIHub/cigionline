@@ -23,7 +23,6 @@
 }
 
 // PARAGRAPHS
-
 .paragraph-heading {
   border-top: 0.25em solid $black;
   color: $black;
@@ -35,13 +34,13 @@
 
 // BLOCKQUOTES
 .paragraph-type-bloquote {
-  position: relative;
   padding: 1rem 2rem;
+  position: relative;
   margin-bottom: 1rem;
-  
-  &:before {
-    border-bottom: 5px solid #e6023b;
-    content: "";
+
+  &::before {
+    border-bottom: 5px solid $cigi-pink;
+    content: '';
     height: 5px;
     left: 0;
     position: absolute;
@@ -50,7 +49,7 @@
   }
 
   blockquote {
-    color: #2f2f2f;
+    color: $cigi-dark-grey;
     font-size: 24px;
     line-height: 130%;
   }
@@ -58,7 +57,7 @@
 
 // PARAGRAPH IMAGE
 .paragraph-type-image {
-  @include aspect-ratio(2,1);
-  width: 100%;
+  @include aspect-ratio(2, 1);
   margin-bottom: 2rem;
+  width: 100%;
 }
