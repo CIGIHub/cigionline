@@ -29,7 +29,6 @@ table {
   }
 
   //CUSTOM THEME TABLE
-
   &.custom-theme-table {
     thead {
       tr {
@@ -228,9 +227,11 @@ table {
     &.table-publications {
       tbody {
         tr {
-          td:last-of-type {
-            .table-content {
-              justify-content: center;
+          td {
+            &:last-of-type {
+              .table-content {
+                justify-content: center;
+              }
             }
           }
         }
@@ -283,7 +284,6 @@ table {
   }
 
   //CORE RELATED FILES TABLE
-  
   &.table-related-files {
     thead {
       tr {
@@ -299,8 +299,8 @@ table {
       tr {
         td {
           font-size: 0.9em;
-          padding-top: 0.5em;
           padding-bottom: 0.5em;
+          padding-top: 0.5em;
         }
       }
     }

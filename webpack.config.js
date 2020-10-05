@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const BundleTracker = require('webpack-bundle-tracker');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-let plugins = [
+const plugins = [
   new webpack.DefinePlugin({
     __DEV__: process.env.NODE_ENV === 'development',
     __PROD__: process.env.NODE_ENV === 'production',
@@ -33,14 +33,14 @@ const config = {
     path: path.resolve('./cigionline/static/bundles/'),
     filename: '[name].js',
   },
-  plugins: plugins,
+  plugins,
 
   module: {
     rules: [
       {
         test: /\.jsx?$/,
         exclude: [/node_modules/, /vendor/],
-        use: ['babel-loader?cacheDirectory=true', 'source-map-loader']
+        use: ['babel-loader?cacheDirectory=true', 'source-map-loader'],
       },
       {
         test: /\.scss$/,
@@ -50,7 +50,7 @@ const config = {
             { loader: 'css-loader', options: { sourceMap: true } },
             { loader: 'postcss-loader', options: { sourceMap: 'inline' } },
             { loader: 'resolve-url-loader', options: { sourceMap: true } },
-            { loader: 'sass-loader', options: { sourceMap: true } }
+            { loader: 'sass-loader', options: { sourceMap: true } },
           ],
         }),
       },
