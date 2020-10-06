@@ -94,6 +94,13 @@ class ArticlePage(
         ],
         blank=True,
     )
+    website_button_text = models.CharField(
+        blank=True,
+        max_length=64,
+        help_text='Override the button text for the article website. If empty, the button will read "View Full Article".'
+    )
+    website_url = models.URLField(blank=True, max_length=512)
+    works_cited = RichTextField(blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -104,6 +111,7 @@ class ArticlePage(
             [
                 StreamFieldPanel('body'),
                 FieldPanel('footnotes'),
+                FieldPanel('works_cited'),
             ],
             heading='Body',
             classname='collapsible'
@@ -111,6 +119,8 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
+                FieldPanel('website_url'),
+                FieldPanel('website_button_text'),
             ],
             heading='General Information',
             classname='collapsible',
