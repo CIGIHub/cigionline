@@ -1,0 +1,66 @@
+// META
+
+.meta {
+  color: $cigi-text-grey;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.topics {
+  list-style-type: none;
+  margin: 0;
+
+  .topic {
+    @include comma-separated;
+    display: inline;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+
+    &::after {
+      color: $black;
+    }
+  }
+}
+
+// PARAGRAPHS
+
+.paragraph-heading {
+  border-top: 0.25em solid $black;
+  color: $black;
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: $sans-medium;
+  text-transform: uppercase;
+}
+
+// BLOCKQUOTES
+.paragraph-type-bloquote {
+  margin-bottom: 1rem;
+  padding: 1rem 2rem;
+  position: relative;
+
+
+  &::before {
+    border-bottom: 5px solid $cigi-pink;
+    content: '';
+    height: 5px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 80px;
+  }
+
+  blockquote {
+    color: $cigi-dark-grey;
+    font-size: 24px;
+    line-height: 130%;
+  }
+}
+
+// PARAGRAPH IMAGE
+.paragraph-type-image {
+  @include aspect-ratio(2, 1);
+  margin-bottom: 2rem;
+  width: 100%;
+}
+

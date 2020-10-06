@@ -2,17 +2,15 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section>
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
-  <section>
-    <div class="container-lg">
-      {% for person in people %}
-        <p>{{ person.title }}</p>
-      {% endfor %}
-    </div>
-  </section>
+{% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+<section>
+  {% for block in self.body %}
+  {% include_block block %}
+  {% endfor %}
+</section>
+<section>
+  <div class="container-sm">
+    {% include 'includes/people_person_leadership_list.html' %}
+  </div>
+</section>
 {% endblock %}

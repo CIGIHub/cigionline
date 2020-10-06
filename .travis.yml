@@ -18,7 +18,9 @@ before_install:
   - node --version
 install:
   - pip install -r requirements.txt
-  - npm install
+  - npm install yarn -g
+  - yarn
+  - yarn build:prod
 before_script:
   - psql -c "CREATE DATABASE cigionline;" -U postgres
   - psql -c "CREATE ROLE cigi LOGIN PASSWORD 'cigi' superuser;" -U postgres
