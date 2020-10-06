@@ -2,6 +2,9 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 import './css/cigionline.scss';
 
 
+(function($) {
+'use strict';
+
 // MAIN NAVIGATION SCROLL
 $(document).ready(function(){
   var scrollTop = 0;
@@ -26,3 +29,5 @@ $(document).ready(function(){
     $('body').toggleClass('disable-scroll');
   });
 });
+
+})(jQuery);
