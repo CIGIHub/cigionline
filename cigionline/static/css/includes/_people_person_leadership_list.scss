@@ -1,0 +1,38 @@
+.person-leadership-list {
+  list-style: none;
+
+  li {
+    border-bottom: 1px solid $cigi-light-grey;
+    padding: 1em 0;
+  }
+
+  .person-leadership-list-info {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1em;
+  }
+
+  .person-leadership-thumbnail-photo {
+    @include aspect-ratio(1, 1);
+    border-radius: 100%;
+    display: inline-block;
+    flex: 0 0 70px;
+    height: 70px;
+    margin-right: 1rem;
+    width: 70px;
+  }
+
+  .person-leadership-name {
+    color: $black;
+    font-size: 17px;
+
+    &:hover {
+      color: $cigi-pink;
+    }
+  }
+
+  .person-leadership-function {
+    color: $cigi-text-grey;
+    font-size: 0.9rem;
+  }
+}
