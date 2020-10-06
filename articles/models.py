@@ -11,6 +11,7 @@ from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
+    PageChooserPanel,
     StreamFieldPanel,
 )
 from wagtail.core.blocks import (
@@ -51,6 +52,36 @@ class ArticlePage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    class ArticleTypes(models.TextChoices):
+        CIGI_IN_THE_NEWS = ('cigi_in_the_news', 'CIGI in the News')
+        INTERVIEW = ('interview', 'Interview')
+        NEWS_RELEASE = ('news_release', 'News Release')
+        OP_ED = ('op_ed', 'Op-Ed')
+        OPINION = ('opinion', 'Opinion')
+
+    class Languages(models.TextChoices):
+        DA = ('da', 'Danish')
+        DE = ('de', 'German')
+        EL = ('el', 'Greek')
+        EN = ('en', 'English')
+        ES = ('es', 'Spanish')
+        FR = ('fr', 'French')
+        ID = ('id', 'Indonesian')
+        IT = ('it', 'Italian')
+        NL = ('nl', 'Dutch')
+        PL = ('pl', 'Polish')
+        PT = ('pt', 'Portugese')
+        RO = ('ro', 'Romanian')
+        SK = ('sk', 'Slovak')
+        SV = ('sv', 'Swedish')
+        TR = ('tr', 'Turkish')
+        ZH = ('zh', 'Chinese')
+
+    article_type = models.CharField(
+        blank=False,
+        max_length=32,
+        choices=ArticleTypes.choices,
+    )
     authors = StreamField(
         [
             ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -87,6 +118,20 @@ class ArticlePage(
         ],
         blank=True,
     )
+    language = models.CharField(
+        blank=True,
+        max_length=2,
+        choices=Languages.choices,
+        verbose_name='Language',
+        help_text='If this content is in a language other than English, please select the language from the list.',
+    )
+    multimedia_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     related_files = StreamField(
         [
@@ -118,9 +163,11 @@ class ArticlePage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('article_type'),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
+                FieldPanel('language'),
             ],
             heading='General Information',
             classname='collapsible',
@@ -145,6 +192,10 @@ class ArticlePage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                PageChooserPanel(
+                    'multimedia_series',
+                    ['multimedia.MultimediaSeriesPage'],
+                ),
                 StreamFieldPanel('cigi_people_mentioned'),
                 StreamFieldPanel('interviewers'),
                 StreamFieldPanel('related_files'),
