@@ -1,6 +1,5 @@
 import 'bootstrap/dist/js/bootstrap.bundle';
 import './css/cigionline.scss';
-
 (function($) {
   // MAIN NAVIGATION SCROLL
   $(document).ready(function() {
@@ -24,5 +23,4 @@ import './css/cigionline.scss';
       $('body').toggleClass('disable-scroll');
     });
   });
-
 })(jQuery);
