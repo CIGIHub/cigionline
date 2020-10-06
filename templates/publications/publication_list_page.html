@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -24,7 +25,7 @@
               <span class="table-icon"><i class="fal fa-file-alt"></i></span>
               <div class="table-infos">
                 <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
-                <div class="table-infos-date">{{ publication.publishing_date }}</div>
+                <div class="table-infos-date">{{ publication.publishing_date|date:"f/d/yy" }}</div>
               </div>
             </div>
           </td>
@@ -33,7 +34,7 @@
             <div class="table-content">
               <ul class="custom-text-list">
                 {% for topic in publication.topics.all %}
-                  <li><a href="{{ topic.slug }}" class="table-content-link">{{ topic }}</a></li>
+                  <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
                 {% endfor %}
               </ul>
             </div>
@@ -42,14 +43,12 @@
             <div class="table-mobile-text">Expert</div>
             <div class="table-content">
               <ul class="custom-text-list">
-                {% for author in publication.authors.all %}
-                    {% with author as author_blocks %}
-                        {% for author_block in author_blocks %}
-                            {% if author_block.block_type == 'author' %}
-                                <li><a href="{{ author_block.value.slug }}" class="table-content-link table-content-link-black">{{ author_block.value }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                    {% endwith %}
+                {% for author_streamfield in publication.authors.all %}
+                  <li>
+                    <a href="#" class="table-content-link table-content-link-black">
+                      {{ author_streamfield }}
+                    </a>
+                  </li>
                 {% endfor %}
               </ul>
             </div>
