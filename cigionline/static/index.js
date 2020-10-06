@@ -20,8 +20,8 @@ $(document).ready(function(){
 
 // SEARCH BAR OPEN
 $(document).ready(function(){
-  $("#open-search-btn").click(function(){
-    $(this).toggleClass("open");
+  $('#open-search-btn').click(function(){
+    $(this).toggleClass('open');
     $('#popup-search').toggleClass('opened-popup');
     $('body').toggleClass('disable-scroll');
   });
