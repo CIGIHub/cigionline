@@ -25,7 +25,7 @@
               <span class="table-icon"><i class="fal fa-file-alt"></i></span>
               <div class="table-infos">
                 <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
-                <div class="table-infos-date">{{ publication.publishing_date|date:"f/d/yy" }}</div>
+                <div class="table-infos-date">{{ publication.publishing_date|date:"F m, Y" }}</div>
               </div>
             </div>
           </td>
@@ -56,9 +56,15 @@
           <td colspan="0">
             <div class="table-mobile-text">PDF</div>
             <div class="table-content">
-              <a href="#" class="table-btn-icon">
-                <i class="fa fas fa-download"></i>
-              </a>
+                {% with publication.pdf_downloads as pdf_downloads_blocks %}
+                    {% for pdf_downloads_block in pdf_downloads_blocks %}
+                        {% if pdf_downloads_block.block_type == 'pdf_download' and forloop.first %}
+                            <a href="{{ pdf_downloads_block.value.file.url }}" class="table-btn-icon">
+                                <i class="fa fas fa-download"></i>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
             </div>
           </td>
         </tr>
