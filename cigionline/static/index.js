@@ -3,12 +3,11 @@ import './css/cigionline.scss';
 
 
 (function($) {
-  'use strict';
 
 // MAIN NAVIGATION SCROLL
-  $(document).ready(function(){
-    var scrollTop = 0;
-    $(window).scroll(function(){
+  $(document).ready(function() {
+    let scrollTop = 0;
+    $(window).scroll(function() {
       scrollTop = $(window).scrollTop();
       $('.counter').html(scrollTop);
 
@@ -22,8 +21,8 @@ import './css/cigionline.scss';
 
 
 // SEARCH BAR OPEN
-  $(document).ready(function(){
-    $('#open-search-btn').click(function(){
+  $(document).ready(function() {
+    $('#open-search-btn').click(function() {
       $(this).toggleClass('open');
       $('#popup-search').toggleClass('opened-popup');
       $('body').toggleClass('disable-scroll');
