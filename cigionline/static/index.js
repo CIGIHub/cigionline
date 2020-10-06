@@ -1,10 +1,8 @@
 import 'bootstrap/dist/js/bootstrap.bundle';
 import './css/cigionline.scss';
 
-
 (function($) {
-
-// MAIN NAVIGATION SCROLL
+  // MAIN NAVIGATION SCROLL
   $(document).ready(function() {
     let scrollTop = 0;
     $(window).scroll(function() {
@@ -18,9 +16,7 @@ import './css/cigionline.scss';
       }
     });
   });
-
-
-// SEARCH BAR OPEN
+  // SEARCH BAR OPEN
   $(document).ready(function() {
     $('#open-search-btn').click(function() {
       $(this).toggleClass('open');
