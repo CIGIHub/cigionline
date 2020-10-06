@@ -24,7 +24,7 @@
               <span class="table-icon"><i class="fal fa-file-alt"></i></span>
               <div class="table-infos">
                 <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
-                <div class="table-infos-date">October 27,2020</div>
+                <div class="table-infos-date">{{ publication.publishing_date }}</div>
               </div>
             </div>
           </td>
@@ -32,9 +32,9 @@
             <div class="table-mobile-text">Topic</div>
             <div class="table-content">
               <ul class="custom-text-list">
-                <li><a href="#" class="table-content-link">Financial System</a></li>
-                <li><a href="#" class="table-content-link">Lorem Ipsum</a></li>
-                <li><a href="#" class="table-content-link">Lorem Ipsum</a></li>
+                {% for topic in publication.topics.all %}
+                  <li><a href="{{ topic.slug }}" class="table-content-link">{{ topic }}</a></li>
+                {% endfor %}
               </ul>
             </div>
           </td>
@@ -42,9 +42,9 @@
             <div class="table-mobile-text">Expert</div>
             <div class="table-content">
               <ul class="custom-text-list">
-                <li><a href="#" class="table-content-link table-content-link-black">James A. Haley</a></li>
-                <li><a href="#" class="table-content-link table-content-link-black">OLAF WEBER</a></li>
-                <li><a href="#" class="table-content-link table-content-link-black">VASUNDHARA SARAVADE</a></li>
+                {% for author in publication.authors.all %}
+                  <li><a href="#" class="table-content-link table-content-link-black">{{ author }}</a></li>
+                {% endfor %}
               </ul>
             </div>
           </td>
