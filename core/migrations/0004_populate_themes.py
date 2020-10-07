@@ -6,6 +6,7 @@ from django.db import migrations
 def populate_themes(apps, schema_editor):
     DEFAULT_THEMES = [
         (1073, 'After-COVID'),
+        (1080, 'AI Series'),
         (1058, 'Big Tech'),
         (948, 'CIGI Campus'),
         (950, 'CIGI Trust'),
