@@ -27,17 +27,17 @@
                 </a>
               </p>
               <ul class="custom-text-list multimedia-card-speakers-list">
-                {% with multimedia_page.speakers as speaker_blocks %}
-                  {% for speaker_block in speaker_blocks %}
-                    {% if speaker_block.block_type == 'speaker' %}
-                      <li><a href="{{ speaker_block.value.url }}">{{ speaker_block.value }}</a></li>
-                    {% endif %}
-                  {% endfor %}
+              {% with 3 as speaker_limit %}
+                    {% with multimedia_page.speakers as speaker_blocks %}
+                      {% for speaker_block in speaker_blocks %}
+                        {% if forloop.counter <= speaker_limit %}
+                          <li><a href="{{ speaker_block.value.url }}">{{ speaker_block.value }}</a></li>
+                        {% elif forloop.counter == speaker_limit|add:1 %}
+                            <li>And more</li>
+                        {% endif %}
+                      {% endfor %}
+                    {% endwith %}
                 {% endwith %}
-{#                <li><a href="">The Honourable Catherine Mckenna{{ multimedia.speakers }}</a></li>#}
-{#                <li><a href="">Taylor Owen{{ multimedia.speakers }}</a></li>#}
-{#                <li><a href="">Heidi Tworek{{ multimedia.speakers }}</a></li>#}
-{#                <li>and more</li>#}
               </ul>
               <p class="multimedia-card-date">{{ multimedia_page.publishing_date|date:"F m, Y" }}</p>
             </div>
