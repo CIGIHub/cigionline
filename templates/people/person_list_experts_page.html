@@ -31,7 +31,7 @@
                 </a>
                 <div class="table-infos">
                   <a href="#" class="table-title-link">{{ person.title }}</a>
-                  <div class="table-infos-function">Senior Fellow</div>
+                  <div class="table-infos-function">{{ person.position }}</div>
                 </div>
               </div>
             </td>
@@ -39,10 +39,13 @@
               <div class="table-mobile-text">Expertise</div>
               <div class="table-content">
                 <ul class="custom-text-list">
-                  <li class="table-list-item">International Trade</li>
-                  <li class="table-list-item">Digital Trade</li>
-                  <li class="table-list-item">International Investments</li>
-                  <li class="table-list-item">Progressive Trade</li>
+                  {% with person.expertise as expertise_blocks %}
+                    {% for expertise_block in expertise_blocks %}
+                      {% if expertise_block.block_type == 'expertise' %}
+                        <li class="table-list-item">{{ expertise_block.value }}</li>
+                      {% endif %}
+                    {% endfor %}
+                  {% endwith %}
                 </ul>
               </div>
             </td>

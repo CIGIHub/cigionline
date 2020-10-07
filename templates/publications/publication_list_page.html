@@ -44,11 +44,11 @@
             <div class="table-content">
               <ul class="custom-text-list">
                 {% with publication.authors as author_blocks %}
-                    {% for author_block in author_blocks %}
-                        {% if author_block.block_type == 'author' %}
-                            <li><a href="{{ author_block.value.url }}" class="table-content-link table-content-link-black">{{ author_block.value }}</a></li>
-                        {% endif %}
-                    {% endfor %}
+                  {% for author_block in author_blocks %}
+                    {% if author_block.block_type == 'author' %}
+                      <li><a href="{{ author_block.value.url }}" class="table-content-link table-content-link-black">{{ author_block.value }}</a></li>
+                    {% endif %}
+                  {% endfor %}
                 {% endwith %}
               </ul>
             </div>
@@ -56,15 +56,15 @@
           <td colspan="0">
             <div class="table-mobile-text">PDF</div>
             <div class="table-content">
-                {% with publication.pdf_downloads as pdf_downloads_blocks %}
-                    {% for pdf_downloads_block in pdf_downloads_blocks %}
-                        {% if pdf_downloads_block.block_type == 'pdf_download' and forloop.first %}
-                            <a href="{{ pdf_downloads_block.value.file.url }}" class="table-btn-icon">
-                                <i class="fa fas fa-download"></i>
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                {% endwith %}
+              {% with publication.pdf_downloads as pdf_downloads_blocks %}
+                {% for pdf_downloads_block in pdf_downloads_blocks %}
+                  {% if pdf_downloads_block.block_type == 'pdf_download' and forloop.first %}
+                    <a href="{{ pdf_downloads_block.value.file.url }}" class="table-btn-icon">
+                      <i class="fa fas fa-download"></i>
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              {% endwith %}
             </div>
           </td>
         </tr>
