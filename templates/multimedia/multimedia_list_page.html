@@ -6,6 +6,7 @@
   <div class="container-lg">
     <section class="multimedia-list-section">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 multimedia-list-row">
+
         {% for multimedia_page in multimedia %}
           <div class="col multimedia-list-col">
             <div class="multimedia-card-wrapper">
@@ -16,16 +17,19 @@
                   <i class="fas fa-play"></i>
                 </div>
               </a>
+
               <ul class="custom-text-list multimedia-card-topic-list">
                 {% for topic in multimedia_page.topics.all %}
                   <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
                 {% endfor %}
               </ul>
+
               <p class="multimedia-card-title">
                 <a href="{{multimedia_page.url}}">
                   {{multimedia_page.title}}
                 </a>
               </p>
+
               <ul class="custom-text-list multimedia-card-speakers-list">
                 {% with multimedia_page.speakers as speaker_blocks %}
                   {% for speaker_block in speaker_blocks %}
@@ -34,9 +38,7 @@
                     {% endif %}
                   {% endfor %}
                 {% endwith %}
-{#                <li><a href="">The Honourable Catherine Mckenna{{ multimedia.speakers }}</a></li>#}
-{#                <li><a href="">Taylor Owen{{ multimedia.speakers }}</a></li>#}
-{#                <li><a href="">Heidi Tworek{{ multimedia.speakers }}</a></li>#}
+
 {#                <li>and more</li>#}
               </ul>
               <p class="multimedia-card-date">{{ multimedia_page.publishing_date|date:"F m, Y" }}</p>
