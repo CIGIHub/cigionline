@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -9,7 +10,7 @@
           <div class="col multimedia-list-col">
             <div class="multimedia-card-wrapper">
               <a href="{{multimedia_page.url}}" class="multimedia-card-image">
-                <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/featured_landscape_medium/public/images/landscape/shutterstock_573033001_0_0.jpg?itok=G9WzWNQ3);"></div>
+                <div class="img-wrapper" style="background-image: url('{{ multimedia.image_hero }}');"></div>
                 <div class="multimedia-image-type">
                   <i class="fas fa-play"></i>
                 </div>
@@ -25,12 +26,19 @@
                 </a>
               </p>
               <ul class="custom-text-list multimedia-card-speakers-list">
-                <li><a href="">The Honourable Catherine Mckenna{{ multimedia.speakers }}</a></li>
-                <li><a href="">Taylor Owen{{ multimedia.speakers }}</a></li>
-                <li><a href="">Heidi Tworek{{ multimedia.speakers }}</a></li>
-                <li>and more</li>
+                {% with multimedia.speakers as speaker_blocks %}
+                  {% for speaker_block in speaker_blocks %}
+                    {% if speaker_block.block_type == 'speaker' %}
+                      <li><a href="{{ speaker_block.value.url }}">{{ speaker_block.value }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+                {% endwith %}
+{#                <li><a href="">The Honourable Catherine Mckenna{{ multimedia.speakers }}</a></li>#}
+{#                <li><a href="">Taylor Owen{{ multimedia.speakers }}</a></li>#}
+{#                <li><a href="">Heidi Tworek{{ multimedia.speakers }}</a></li>#}
+{#                <li>and more</li>#}
               </ul>
-              <p class="multimedia-card-date">September 16, 2020 {{ multimedia.publishing_date }}</p>
+              <p class="multimedia-card-date">{{ multimedia.publishing_date }}</p>
             </div>
           </div>
         {% endfor %}
