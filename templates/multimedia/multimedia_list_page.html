@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -10,15 +10,16 @@
           <div class="col multimedia-list-col">
             <div class="multimedia-card-wrapper">
               <a href="{{multimedia_page.url}}" class="multimedia-card-image">
-                <div class="img-wrapper" style="background-image: url('{{ multimedia.image_hero }}');"></div>
+                {% image multimedia_page.image_hero width-400 as multimedia_image_hero %}
+                <div class="img-wrapper" style="background-image: url('{{ multimedia_image_hero.url }}');"></div>
                 <div class="multimedia-image-type">
                   <i class="fas fa-play"></i>
                 </div>
               </a>
               <ul class="custom-text-list multimedia-card-topic-list">
-                <li><a href="#">Platform Governance{{ multimedia.topics }}</a></li>
-                <li><a href="#">Emerging Technology{{ multimedia.topics }}</a></li>
-                <li><a href="#">Intellectual Property{{ multimedia.topics }}</a></li>
+                {% for topic in multimedia_page.topics.all %}
+                  <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
+                {% endfor %}
               </ul>
               <p class="multimedia-card-title">
                 <a href="{{multimedia_page.url}}">
@@ -26,7 +27,7 @@
                 </a>
               </p>
               <ul class="custom-text-list multimedia-card-speakers-list">
-                {% with multimedia.speakers as speaker_blocks %}
+                {% with multimedia_page.speakers as speaker_blocks %}
                   {% for speaker_block in speaker_blocks %}
                     {% if speaker_block.block_type == 'speaker' %}
                       <li><a href="{{ speaker_block.value.url }}">{{ speaker_block.value }}</a></li>
@@ -38,7 +39,7 @@
 {#                <li><a href="">Heidi Tworek{{ multimedia.speakers }}</a></li>#}
 {#                <li>and more</li>#}
               </ul>
-              <p class="multimedia-card-date">{{ multimedia.publishing_date }}</p>
+              <p class="multimedia-card-date">{{ multimedia_page.publishing_date|date:"F m, Y" }}</p>
             </div>
           </div>
         {% endfor %}
