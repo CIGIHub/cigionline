@@ -20,13 +20,13 @@
         </tr>
         </thead>
         <tbody>
+
         {% for person in people %}
           <tr>
             <td colspan="3">
               <div class="table-mobile-text">Name</div>
               <div class="table-infos-wrapper">
-                <a href="#" class="table-thumbnail-photo">
-                  {% comment %} ---insert person photo in background-image url --- {% endcomment %}
+                <a href="{{ person.url }}" class="table-thumbnail-photo">
                   <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/images/square/Aaronson_Susan-Square.jpg?itok=SrzaGYMm);"></div>
                 </a>
                 <div class="table-infos">
@@ -35,6 +35,7 @@
                 </div>
               </div>
             </td>
+
             <td colspan="4">
               <div class="table-mobile-text">Expertise</div>
               <div class="table-content">

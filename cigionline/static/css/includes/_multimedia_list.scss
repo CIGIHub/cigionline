@@ -74,9 +74,8 @@
 
       a {
         color: $black;
-        font-size: 17px;
+        font-size: 1.0625em;
         font-weight: 400;
-        line-height: 1.45em;
 
         &:hover {
           color: $cigi-pink;
@@ -85,12 +84,12 @@
     }
 
     .multimedia-card-speakers-list {
+      font-size: 0.75em;
       margin-bottom: 0;
 
       li,
       a {
         color: $cigi-text-grey;
-        font-size: 12px;
         font-weight: 400;
         line-height: normal;
         text-transform: uppercase;
@@ -105,7 +104,7 @@
 
     .multimedia-card-date {
       color: $cigi-text-grey;
-      font-size: 12px;
+      font-size: 0.75em;
       font-weight: 400;
       margin-bottom: 0;
       text-transform: uppercase;

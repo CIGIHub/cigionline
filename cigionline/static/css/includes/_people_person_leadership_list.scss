@@ -8,7 +8,7 @@
     .people-person-leadership-nav-text {
       color: $cigi-medium-grey;
       flex: 0 0 auto;
-      font-size: 0.9rem;
+      font-size: 0.9em;
       font-weight: 400;
       margin-right: 1em;
     }
@@ -40,7 +40,7 @@
         border: 0;
         border-bottom: 3px solid transparent;
         color: $black;
-        font-size: 14px;
+        font-size: 0.875em;
         font-weight: 700;
         margin-right: 1em;
         padding: 0;
@@ -91,13 +91,13 @@
       display: inline-block;
       flex: 0 0 70px;
       height: 70px;
-      margin-right: 1rem;
+      margin-right: 1em;
       width: 70px;
     }
 
     .people-person-leadership-list-name {
       color: $black;
-      font-size: 17px;
+      font-size: 1.0625em;
 
       &:hover {
         color: $cigi-pink;
@@ -106,7 +106,7 @@
 
     .people-person-leadership-list-function {
       color: $cigi-text-grey;
-      font-size: 0.9rem;
+      font-size: 0.9em;
     }
   }
 }
