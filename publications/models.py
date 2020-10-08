@@ -6,9 +6,10 @@ from core.models import (
 )
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -21,7 +22,7 @@ from wagtail.core.blocks import (
     URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -39,6 +40,18 @@ class PublicationListPage(BasicPageAbstract, Page):
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_publications',
+                    max_num=4,
+                    min_num=4,
+                    label='Publication',
+                ),
+            ],
+            heading='Featured Publications',
+            classname='collapsible collapsed',
+        ),
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
@@ -61,6 +74,28 @@ class PublicationListPage(BasicPageAbstract, Page):
 
     class Meta:
         verbose_name = 'Publication List Page'
+
+
+class PublicationListPageFeaturedPublication(Orderable):
+    publication_list_page = ParentalKey(
+        'publications.PublicationListPage',
+        related_name='featured_publications',
+    )
+    publication_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Publication',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'publication_page',
+            ['publications.PublicationPage'],
+        ),
+    ]
 
 
 class PublicationPage(
