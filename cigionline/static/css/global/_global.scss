@@ -40,7 +40,6 @@ hr {
 }
 
 //LAYOUTS
-
 [class*='container-'] {
   margin-left: auto;
   margin-right: auto;
@@ -60,7 +59,7 @@ hr {
   display: flex;
   font-size: 1em;
   font-weight: 400;
-  height: 1em;
+  height: 1.1em;
   line-height: 1.5;
   padding: 0 0 0.25em;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -94,7 +93,7 @@ hr {
         color: $cigi-pink;
         display: flex;
         font-weight: 400;
-        height: 1em;
+        height: 1.1em;
         line-height: 1.5;
         margin-bottom: 0;
         padding: 0 0 0.25em;
@@ -115,7 +114,7 @@ hr {
       color: $black;
       display: flex;
       font-size: 1em;
-      height: 1em;
+      height: 1.1em;
       justify-content: space-between;
       padding-bottom: .25em;
       width: 100%;
@@ -177,7 +176,7 @@ hr {
     }
   }
 
-  // to be fixed
+  // temporary layout fix
   &.dropdown-full-width {
     position: static !important;
 
