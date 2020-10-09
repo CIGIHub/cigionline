@@ -27,10 +27,10 @@
               <div class="table-mobile-text">Name</div>
               <div class="table-infos-wrapper">
                 <a href="{{ person.url }}" class="table-thumbnail-photo">
-                  <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/images/square/Aaronson_Susan-Square.jpg?itok=SrzaGYMm);"></div>
+                  <div class="img-wrapper" style="background-image: url('{{ person.image_square.file.url }}');"></div>
                 </a>
                 <div class="table-infos">
-                  <a href="#" class="table-title-link">{{ person.title }}</a>
+                  <a href="{{ person.url }}" class="table-title-link">{{ person.title }}</a>
                   <div class="table-infos-function">{{ person.position }}</div>
                 </div>
               </div>
