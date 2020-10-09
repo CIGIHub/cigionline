@@ -29,11 +29,11 @@ $(document).ready(function() {
 
   $(document).on('click', '.' + popup_open_class, function() {
     $('.' + popup_open_class).removeClass(popup_open_class);
-      $open_search_btn.removeClass('open');
-      $('body').toggleClass('disable-scroll');
+    $open_search_btn.removeClass('open');
+    $('body').toggleClass('disable-scroll');
   });
 
-    $('.custom-popup-inner').click(function(e) {
-        e.stopPropagation();
-    });
+  $('.custom-popup-inner').click(function(e) {
+    e.stopPropagation();
+  });
 });
