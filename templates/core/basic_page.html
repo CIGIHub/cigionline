@@ -12,7 +12,7 @@
 {% if self.related_files %}
   <section class="related-files">
     <div class="container-sm">
-      {% include "includes/core_related_files_table.html" with files=self.related_files %}
+      {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
     </div>
   </section>
 {% endif %}

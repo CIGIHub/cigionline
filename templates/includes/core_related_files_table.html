@@ -7,13 +7,16 @@
     </tr>
   </thead>
   <tbody>
-    {% for file in files %}
+    {% for file_block in file_blocks %}
     <tr>
       <td class="table-wide-lg">
-        {{file}}
+        <a href="{{file_block.value.url}}" title="{{file_block.value.title}}">
+          <i class="far fa-file-pdf"></i>
+          {{file_block.value.title}}
+        </a>
       </td>
       <td>
-        {{file.value.file_size|filesizeformat}}
+        {{file_block.value.file_size|filesizeformat}}
       </td>
     </tr>
     {% endfor %}
