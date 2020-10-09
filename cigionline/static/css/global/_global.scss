@@ -58,11 +58,11 @@ hr {
   border-radius: 0;
   color: $black;
   display: flex;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 400;
-  height: 24px;
+  height: 1em;
   line-height: 1.5;
-  padding: 0 0 0.25rem;
+  padding: 0 0 0.25em;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   width: 100%;
 
@@ -93,14 +93,14 @@ hr {
         border-top: 0;
         color: $cigi-pink;
         display: flex;
-        font-size: 16px;
         font-weight: 400;
+        height: 1em;
         line-height: 1.5;
         margin-bottom: 0;
-        padding: 0 0 0.25rem;
+        padding: 0 0 0.25em;
         text-align: center;
         white-space: nowrap;
-        width: auto;
+        width: 1em;
       }
     }
   }
@@ -114,8 +114,10 @@ hr {
       border-bottom: 2px solid $black;
       color: $black;
       display: flex;
-      height: 24px;
+      font-size: 1em;
+      height: 1em;
       justify-content: space-between;
+      padding-bottom: .25em;
       width: 100%;
 
       &::after {
@@ -125,13 +127,13 @@ hr {
         content: '\f078';
         display: inline-flex;
         font-family: 'Font Awesome 5 Pro';
-        font-size: 12px;
-        height: 12px;
+        font-size: 0.75em;
+        height: 1em;
         margin-left: 0;
         transform: rotate(0deg);
         transition: transform 0.25s ease;
         vertical-align: 0.255em;
-        width: 12px;
+        width: 0.75em;
       }
 
       &:hover {
@@ -149,13 +151,13 @@ hr {
       background-clip: padding-box;
       background-color: $white;
       border: 0;
-      border-radius: 0.25rem;
+      border-radius: 0.25em;
       box-shadow: 0 5px 10px $cigi-light-grey;
       color: $black;
-      font-size: 1rem;
+      font-size: 1em;
       list-style: none;
-      margin: 0.125rem 0 0;
-      padding: 0.5rem 0;
+      margin: 0.125em 0 0;
+      padding: 0.5em 0;
       text-align: left;
 
       &.show {
@@ -165,7 +167,7 @@ hr {
 
     .dropdown-item {
       color: $black;
-      font-size: 12px;
+      font-size: 0.75em;
       text-transform: uppercase;
 
       &:hover {
@@ -181,24 +183,23 @@ hr {
 
     .dropdown-menu {
       &.show {
-        column-count: 4;
-        column-fill: balance;
-        column-gap: 15px;
-        display: block;
-        top: 100% !important;
-        transform: none !important;
-
-        @media (max-width: 767.98px) {
+        @include media-breakpoint-down(md) {
           column-count: 3;
         }
 
-        @media (max-width: 575.98px) {
+        @include media-breakpoint-down (sm) {
           column-count: 2;
         }
+        column-count: 4;
+        column-fill: balance;
+        column-gap: 0.9375em;
+        display: block;
+        top: 100% !important;
+        transform: none !important;
       }
 
       .dropdown-item {
-        padding: 4px 15px;
+        padding: 0.25em .6875rem;
         white-space: normal;
         word-break: break-word;
       }
