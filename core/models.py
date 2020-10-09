@@ -44,7 +44,7 @@ class BasicPageAbstract(models.Model):
     # Body StreamField blocks
     body_default_blocks = [
         ('paragraph', ParagraphBlock()),
-        ('image', ImageChooserBlock()),
+        ('image', ImageChooserBlock(template='streams/paragraph_type_image.html')),
         ('block_quote', blocks.StructBlock(
             [
                 ('quote', blocks.RichTextBlock(required=True)),
