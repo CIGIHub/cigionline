@@ -1,0 +1,113 @@
+.multimedia-list-section {
+
+  .multimedia-list-row {
+    align-content: stretch;
+  }
+
+  .multimedia-list-col {
+    margin-bottom: 2em;
+  }
+
+  .multimedia-card-wrapper {
+
+    .multimedia-card-image {
+      @include aspect-ratio(4, 3);
+      display: block;
+      margin-bottom: .5em;
+
+      &::before {
+        background: transparent;
+        transition: background-color 0.3s ease;
+      }
+
+      .multimedia-image-type {
+        align-items: center;
+        background: $cigi-pink;
+        bottom: 0;
+        color: $white;
+        display: inline-flex;
+        height: 40px;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        width: 40px;
+        z-index: 1;
+      }
+
+      .img-wrapper {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover {
+        &::before {
+          background-color: $black;
+        }
+
+        .img-wrapper {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .multimedia-card-topic-list {
+      margin-bottom: 0.5em;
+
+      li,
+      a {
+        color: $cigi-pink;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.25em;
+        text-transform: uppercase;
+      }
+
+      a {
+        &:hover {
+          color: $cigi-dark-pink;
+        }
+      }
+    }
+
+    .multimedia-card-title {
+      margin-bottom: 0.2em;
+
+      a {
+        color: $black;
+        font-size: 1.0625em;
+        font-weight: 400;
+
+        &:hover {
+          color: $cigi-pink;
+        }
+      }
+    }
+
+    .multimedia-card-speakers-list {
+      font-size: 0.75em;
+      margin-bottom: 0;
+
+      li,
+      a {
+        color: $cigi-text-grey;
+        font-weight: 400;
+        line-height: normal;
+        text-transform: uppercase;
+      }
+
+      a {
+        &:hover {
+          color: $cigi-pink;
+        }
+      }
+    }
+
+    .multimedia-card-date {
+      color: $cigi-text-grey;
+      font-size: 0.75em;
+      font-weight: 400;
+      margin-bottom: 0;
+      text-transform: uppercase;
+    }
+  }
+}
