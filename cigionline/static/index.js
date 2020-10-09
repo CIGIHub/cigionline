@@ -18,17 +18,16 @@ $(document).ready(function() {
 // SEARCH BAR OPEN
 
 $(document).ready(function() {
-  const popupOpenClass = 'opened-popup';
   const $openSearchBtn = $('#open-search-btn');
 
   $openSearchBtn.click(function() {
     $(this).toggleClass('open');
-    $('#popup-search').toggleClass(popupOpenClass);
+    $('#popup-search').toggleClass('opened-popup');
     $('body').toggleClass('disable-scroll');
   });
 
-  $(document).on('click', '.' + popupOpenClass, function() {
-    $('.' + popupOpenClass).removeClass(popupOpenClass);
+  $(document).on('click', '.opened-popup', function() {
+    $(this).removeClass('opened-popup');
     $openSearchBtn.removeClass('open');
     $('body').toggleClass('disable-scroll');
   });
