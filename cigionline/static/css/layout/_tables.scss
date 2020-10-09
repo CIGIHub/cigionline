@@ -185,7 +185,7 @@ table {
     }
   }
 
-  @media (max-width: 767.98px) {
+  @include media-breakpoint-down(sm) {
     table,
     thead,
     tbody,
@@ -248,7 +248,7 @@ table {
       margin-right: 1.25em;
     }
 
-    @media(max-width: 767.98px) {
+    @include media-breakpoint-down(sm) {
       .table-icon {
         display: none;
       }
@@ -289,7 +289,7 @@ table {
       }
     }
 
-    @media (max-width: 767.98px) {
+    @include media-breakpoint-down(sm) {
       tbody {
         tr {
           td {
@@ -319,6 +319,12 @@ table {
 
   tbody {
     tr {
+      &:last-child {
+        td {
+          border-bottom-color: $border-box;
+        }
+      }
+
       td {
         font-size: .9em;
         padding-bottom: .5em;
@@ -328,12 +334,11 @@ table {
   }
 
   .table-wide-lg {
-    padding-right: .5em;
-    width: 85%;
-
-    @media(max-width: 767.98px) {
+    @include media-breakpoint-down(sm) {
       width: 80%;
     }
+    padding-right: .5em;
+    width: 85%;
   }
 }
 
