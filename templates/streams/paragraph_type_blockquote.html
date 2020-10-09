@@ -1,28 +1,30 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="paragraph-type-bloquote">
-  <blockquote>
-    {{ self.quote }}
-  </blockquote>
+  {% image self.image fill-300x300 %}
 
-  {% if self.author %}
-  <div class="paragraph-type-blockquote-author">
-    {{ self.author }}
+  <div class="paragraph-type-blockquote-content">
+    <blockquote>
+      {{ self.quote }}
+    </blockquote>
+
+    {% if self.author %}
+    <div class="paragraph-type-blockquote-author">
+      {{ self.author }}
+    </div>
+    {% endif %}
+
+    {% if self.author_title %}
+    <div class="paragraph-type-blockquote-author-title">
+      {{ self.author_title }}
+    </div>
+    {% endif %}
+
+    {% if self.link_url %}
+    <a href="{{ self.link_url }}" class="paragraph-type-blockquote-link">
+      {{ self.link_text }}
+      <i class="far fa-external-link"></i>
+    </a>
+    {% endif %}
   </div>
-  {% endif %}
-
-  {% if self.author_title %}
-  <div class="paragraph-type-blockquote-author-title">
-    {{ self.author_title }}
-  </div>
-  {% endif %}
-
-  {% image self.image width-1000 %}
-
-  {% if self.link_url %}
-  <a href="{{ self.link_url }}" class="paragraph-type-blockquote-link">
-    {{ self.link_text }}
-    <i class="far fa-external-link"></i>
-  </a>
-  {% endif %}
 </div>
