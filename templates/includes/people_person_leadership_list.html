@@ -6,7 +6,8 @@
       <li>
         <div class="people-person-leadership-list-info">
           <a href="{{ person.url }}" class="people-person-leadership-list-photo">
-            <div class="img-wrapper" style="background-image: url('{{ person.image_square.file.url }}');"></div>
+            {% image person.image_square width-300 as image_square %}
+            <div class="img-wrapper" style="background-image: url('{{ image_square.url }}');"></div>
           </a>
 
           <div>

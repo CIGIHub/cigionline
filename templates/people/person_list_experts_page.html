@@ -27,7 +27,8 @@
               <div class="table-mobile-text">Name</div>
               <div class="table-infos-wrapper">
                 <a href="{{ person.url }}" class="table-thumbnail-photo">
-                  <div class="img-wrapper" style="background-image: url('{{ person.image_square.file.url }}');"></div>
+                  {% image person.image_square width-300 as image_square %}
+                  <div class="img-wrapper" style="background-image: url('{{ image_square.url }}');"></div>
                 </a>
                 <div class="table-infos">
                   <a href="{{ person.url }}" class="table-title-link">{{ person.title }}</a>
