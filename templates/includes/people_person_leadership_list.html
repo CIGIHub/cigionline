@@ -7,7 +7,7 @@
         <div class="people-person-leadership-list-info">
           <a href="{{ person.url }}" class="people-person-leadership-list-photo">
             {% comment %} ---insert person photo in background-image url --- {% endcomment %}
-            <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/person_square/public/jimsq.jpg?itok=b8BGhwW7);"></div>
+            <div class="img-wrapper" style="background-image: url('{{ person.image_square.file.url }}');"></div>
           </a>
 
           <div>
