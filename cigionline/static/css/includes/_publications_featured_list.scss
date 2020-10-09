@@ -1,0 +1,38 @@
+.publications-featured-list-row {
+  align-content: stretch;
+}
+
+.publications-featured-list-col {
+  margin-bottom: 2em;
+}
+
+.publications-featured-list {
+  align-items: flex-start;
+  display: flex;
+  width: 100%;
+
+  .publications-featured-list-image-wrapper {
+    @include aspect-ratio(8, 11);
+    flex: 0 0 168px;
+    margin-right: 2em;
+    max-width: 168px;
+  }
+
+  .publications-featured-list-content {
+    .custom-text-list {
+      li,
+      a {
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+    }
+
+    .publications-featured-list-title {
+      font-size: 17px;
+      font-weight: 400;
+      margin-bottom: 0.25em;
+    }
+  }
+
+}

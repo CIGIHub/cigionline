@@ -1,18 +1,33 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
+<section class="featured-section publications-featured-section">
+  <h6 class="featured-section-title">Featured</h6>
 
-<div class="row row-cols-1 row-cols-sm-2">
-  {% for featured_publications in publications %}
-    <div class="col">
-      <div class="publications-featured-list">
-        <div class="publications-featured-list-image-wrapper">
+  <div class="row row-cols-1 row-cols-sm-2 publications-featured-list-row">
 
+    {% for featured_publications in publications %}
+      <div class="col publications-featured-list-col">
+        <div class="publications-featured-list">
+          <div class="publications-featured-list-image-wrapper">
+            <div class="img-wrapper" style="background-image: url(https://www.cigionline.org/sites/default/files/styles/book_cover/public/images/portrait/Corporate%20Citizen%20Cover%20high%20res_4.jpg?itok=Bb_PZluO);"></div>
+          </div>
+
+          <div class="publications-featured-list-content">
+            <ul class="custom-text-list">
+              {% for topic in featured_publications.topics.all %}
+                <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
+              {% endfor %}
+            </ul>
+
+            <p class="publications-featured-list-title">{{ featured_publications.title }}</p>
+
+            <p class="publications-featured-list-date">{{ featured_publications.publishing_date|date:"F m, Y"}}</p>
+
+            <p class="publications-featured-list-author">{{ featured_publications.authors }}</p>
+
+          </div>
         </div>
-        <img src="{{ publication_list_page.image_poster }}" alt="" class="img-fluid">
-        <p>{{ featured_publications.publishing_date|date:"F m, Y"}}</p>
-          <p>{{ featured_publications.authors }}</p>
-        <p>{{ featured_publications.title }}</p>
       </div>
-    </div>
-  {% endfor %}
-</div>
+    {% endfor %}
+  </div>
+</section>
