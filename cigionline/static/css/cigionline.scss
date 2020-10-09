@@ -1,8 +1,11 @@
 $fa-font-path: '../fontawesome-pro/webfonts';
 @import '~@fortawesome/fontawesome-pro/css/all.css';
-@import '~bootstrap/dist/css/bootstrap.css';
 
 @import 'global/bootstrap_variables_overwrite';
+
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/bootstrap';
+
 @import 'global/resets';
 @import 'global/variables';
 @import 'global/mixins';
@@ -18,5 +21,6 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'includes/top-bar';
 @import 'includes/search-bar';
 @import 'includes/people_person_leadership_list';
+@import 'includes/multimedia_list';
 
 @import 'pages/people';

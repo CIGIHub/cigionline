@@ -1,18 +1,18 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
 
 <div class="row row-cols-1 row-cols-sm-2">
-{#  {% for publication_list_page in publications %}#}
-{#    <div class="col">#}
-{#      <div class="publications-featured-list">#}
-{#        <div class="publications-featured-list-image-wrapper">#}
-{##}
-{#        </div>#}
-{#        <img src="{{ publication_list_page.image_poster }}" alt="" class="img-fluid">#}
-{#        <p>{{ publication_list_page.publishing_date}}</p>#}
-{#          <p>{{ publication_list_page.authors }}</p>#}
-{#        <p>{{ publication_list_page.title }}</p>#}
-{#      </div>#}
-{##}
-{#    </div>#}
-{#  {% endfor %}#}
+  {% for featured_publications in publications %}
+    <div class="col">
+      <div class="publications-featured-list">
+        <div class="publications-featured-list-image-wrapper">
+
+        </div>
+        <img src="{{ publication_list_page.image_poster }}" alt="" class="img-fluid">
+        <p>{{ featured_publications.publishing_date|date:"F m, Y"}}</p>
+          <p>{{ featured_publications.authors }}</p>
+        <p>{{ featured_publications.title }}</p>
+      </div>
+    </div>
+  {% endfor %}
 </div>
