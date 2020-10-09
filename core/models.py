@@ -45,14 +45,16 @@ class BasicPageAbstract(models.Model):
     body_default_blocks = [
         ('paragraph', ParagraphBlock()),
         ('image', ImageChooserBlock()),
-        ('block_quote', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-            ('image', ImageChooserBlock(required=False)),
-            ('link_url', blocks.URLBlock(required=False)),
-            ('link_text', blocks.CharBlock(required=False)),
-        ])),
+        ('block_quote', blocks.StructBlock(
+            [
+                ('quote', blocks.RichTextBlock(required=True)),
+                ('quote_author', blocks.CharBlock(required=False)),
+                ('author_title', blocks.CharBlock(required=False)),
+                ('image', ImageChooserBlock(required=False)),
+                ('link_url', blocks.URLBlock(required=False)),
+                ('link_text', blocks.CharBlock(required=False)),
+            ],
+            template='streams/paragraph_type_blockquote.html')),
         ('table', TableBlock()),
         ('text_border_block', blocks.StructBlock([
             ('text', blocks.RichTextBlock(required=True)),
