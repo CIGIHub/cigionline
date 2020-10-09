@@ -18,22 +18,22 @@ $(document).ready(function() {
 // SEARCH BAR OPEN
 
 $(document).ready(function() {
-  let popup_open_class = 'opened-popup';
-  let $open_search_btn = $('#open-search-btn');
+  const popupOpenClass = 'opened-popup';
+  const $openSearchBtn = $('#open-search-btn');
 
-  $open_search_btn.click(function() {
+  $openSearchBtn.click(function() {
     $(this).toggleClass('open');
-    $('#popup-search').toggleClass(popup_open_class);
+    $('#popup-search').toggleClass(popupOpenClass);
     $('body').toggleClass('disable-scroll');
   });
 
-  $(document).on('click', '.' + popup_open_class, function() {
-    $('.' + popup_open_class).removeClass(popup_open_class);
-      $open_search_btn.removeClass('open');
-      $('body').toggleClass('disable-scroll');
+  $(document).on('click', '.' + popupOpenClass, function() {
+    $('.' + popupOpenClass).removeClass(popupOpenClass);
+    $openSearchBtn.removeClass('open');
+    $('body').toggleClass('disable-scroll');
   });
 
-    $('.custom-popup-inner').click(function(e) {
-        e.stopPropagation();
-    });
+  $('.custom-popup-inner').click(function(e) {
+    e.stopPropagation();
+  });
 });
