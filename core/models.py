@@ -1,7 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
-from streams.blocks import ParagraphBlock, ParagraphImageBlock
+from streams.blocks import ParagraphBlock, ParagraphImageBlock, ParagraphBlockQuote
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
@@ -45,16 +45,7 @@ class BasicPageAbstract(models.Model):
     body_default_blocks = [
         ('paragraph', ParagraphBlock()),
         ('image', ParagraphImageBlock()),
-        ('block_quote', blocks.StructBlock(
-            [
-                ('quote', blocks.RichTextBlock(required=True)),
-                ('quote_author', blocks.CharBlock(required=False)),
-                ('author_title', blocks.CharBlock(required=False)),
-                ('image', ImageChooserBlock(required=False)),
-                ('link_url', blocks.URLBlock(required=False)),
-                ('link_text', blocks.CharBlock(required=False)),
-            ],
-            template='streams/paragraph_type_blockquote.html')),
+        ('block_quote', ParagraphBlockQuote()),
         ('table', TableBlock()),
         ('text_border_block', blocks.StructBlock([
             ('text', blocks.RichTextBlock(required=True)),
