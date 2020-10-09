@@ -2,13 +2,18 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import ParagraphBlock
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+    StreamFieldPanel,
+)
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
@@ -368,6 +373,28 @@ class ContentPage(Page):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
+
+
+class ContentPageRecommendedContent(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='recommended',
+    )
+    recommended_content_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Recommended Content',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'recommended_content_page',
+            ['core.ContentPage'],
+        )
+    ]
 
 
 class BasicPage(

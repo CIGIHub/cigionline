@@ -10,6 +10,7 @@ from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -94,6 +95,16 @@ class ArticlePage(
             ('cigi_person', PageChooserBlock(required=True, page_type='people.PersonPage')),
         ],
         blank=True,
+    )
+    embed_youtube = models.URLField(
+        blank=True,
+        verbose_name='YouTube Embed',
+        help_text='Enter the YouTube URL (https://www.youtube.com/watch?v=4-Xkn1U1DkA) or short URL (https://youtu.be/o5acQ2GxKbQ) to add an embedded video.',
+    )
+    embed_youtube_label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text='Add a label to appear below the embedded video.',
     )
     footnotes = RichTextField(blank=True)
     image_banner = models.ForeignKey(
@@ -186,6 +197,21 @@ class ArticlePage(
                 ImageChooserPanel('image_banner_small'),
             ],
             heading='Images',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('embed_youtube'),
+                FieldPanel('embed_youtube_label'),
+            ],
+            heading='Media',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel('recommended'),
+            ],
+            heading='Recommended',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
