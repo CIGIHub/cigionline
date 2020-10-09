@@ -28,15 +28,15 @@
   border-top: 0.25em solid $black;
   color: $black;
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.75em;
   font-weight: $sans-medium;
   text-transform: uppercase;
 }
 
 // BLOCKQUOTES
 .paragraph-type-bloquote {
-  margin-bottom: 1rem;
-  padding: 1rem 2rem;
+  margin-bottom: 1em;
+  padding: 1em 2em;
   position: relative;
 
   &::before {
@@ -46,12 +46,12 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 80px;
+    width: 5em;
   }
 
   blockquote {
     color: $cigi-dark-grey;
-    font-size: 24px;
+    font-size: 1.5em;
     line-height: 130%;
   }
 }
@@ -59,7 +59,7 @@
 // PARAGRAPH IMAGE
 .paragraph-type-image {
   @include aspect-ratio(2, 1);
-  margin-bottom: 2rem;
+  margin-bottom: 2em;
   width: 100%;
 }
 
