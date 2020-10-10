@@ -1,4 +1,4 @@
-.social-links {
+.social-buttons-round {
   @include social-links($color: $black, $background: $cigi-light-grey, $hover-color: $cigi-pink);
 
   .fa-circle {

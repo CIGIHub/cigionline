@@ -1,4 +1,4 @@
-{% load compress static wagtailuserbar %}
+{% load static wagtailuserbar webpack_loader %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -16,17 +16,13 @@
     </title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     {# Fonts #}
     <link rel="stylesheet" href="https://use.typekit.net/two4qwo.css">
     {% block extra_fonts %}
       {# Override this in templates to add extra fonts #}
     {% endblock %}
 
-    {# Global stylesheets #}
-    {% compress css %}
-      <link rel="stylesheet" type="text/x-scss" href="{% static 'css/cigionline.scss' %}">
-    {% endcompress %}
+    {% render_bundle 'cigionline' %}
 
     {% block extra_css %}
       {# Override this in templates to add extra stylesheets #}
@@ -46,11 +42,6 @@
     {% block footer %}
       {% include "includes/footer.html" %}
     {% endblock %}
-
-    {# Global javascript #}
-    {% compress js %}
-      <script type="text/javascript" src="{% static 'js/cigionline.js' %}"></script>
-    {% endcompress %}
 
     {% block extra_js %}
       {# Override this in templates to add extra javascript #}

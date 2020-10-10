@@ -426,6 +426,16 @@ class AnnualReportPage(FeatureablePageAbstract, Page):
     subpage_types = []
     templates = 'core/annual_report_page.html'
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context['reports'] = {
+          'report_english': self.report_english,
+          'report_interactive': self.report_interactive,
+          'report_french': self.report_french,
+          'report_financial': self.report_financial,
+        }
+        return context
+
     class Meta:
         verbose_name = 'Annual Report Page'
         verbose_name_plural = 'Annual Report Pages'
