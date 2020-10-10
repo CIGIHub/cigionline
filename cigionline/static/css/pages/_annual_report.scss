@@ -2,7 +2,11 @@ body {
   &.annual-report {
     .hero {
       background-color: $white;
-      padding: 4em 0;
+      padding: 4em 0 3em;
+
+      @include media-breakpoint-up(md) {
+        padding: 7em 0 4em;
+      }
 
       .hero-container {
         justify-content: center;
@@ -14,23 +18,31 @@ body {
           font-weight: 400;
           margin-bottom: 0.363636em;
 
-          @include breakpoint($medium) {
+          @include media-breakpoint-up(md) {
             font-size: 2.75em;
           }
         }
       }
     }
 
-    .cta--annual-report {
-      text-align: center;
-
-      .button--explore {
-        i {
-          display: none;
-
-          @include breakpoint($small) {
-            display: inline;
+    table {
+      tr {
+        td {
+          &:last-of-type {
+            .table-infos-wrapper {
+              justify-content: center;
+            }
           }
+        }
+
+        .table-mobile-text {
+          @include media-breakpoint-down(xs) {
+            flex: 0 0 30%;
+          }
+        }
+
+        .table-infos {
+          font-size: 0.75em;
         }
       }
     }

@@ -14,10 +14,10 @@
           <th>Type</th>
           <th>Format</th>
           <th>Language</th>
-          <th>Link</th>
+          <th></th>
         </tr>
       </thead>
-      {% for key, report in reports.items %}
+      {% for report_type, report in reports.items %}
       {% if report %}
       <tr>
         <td>
@@ -32,7 +32,7 @@
           <div class="table-mobile-text">Type</div>
           <div class="table-infos-wrapper">
             <div class="table-infos">
-              {% if key == 'report_french' %}
+              {% if report_type == 'report_french' %}
               Rapport annuel
               {% else %}
               Annual Report
@@ -44,7 +44,7 @@
           <div class="table-mobile-text">Format</div>
           <div class="table-infos-wrapper">
             <div class="table-infos">
-              {% if key == 'report_interactive' %}
+              {% if report_type == 'report_interactive' %}
               Digital Interactive
               {% else %}
               Print
@@ -56,7 +56,7 @@
           <div class="table-mobile-text">Language</div>
           <div class="table-infos-wrapper">
             <div class="table-infos">
-              {% if key == 'report_french' %}
+              {% if report_type == 'report_french' %}
               en français
               {% else %}
               English
@@ -68,8 +68,8 @@
           <div class="table-mobile-text">Link</div>
           <div class="table-infos-wrapper">
             <div class="table-infos">
-              {% if key == 'report_interactive' %}
-              <a href="{{ report }}" class="btn-icon">
+              {% if report_type == 'report_interactive' %}
+              <a href="{{ report }}" class="btn-icon-text">
                 <i class="fas fa-mouse-pointer"></i>
                 Explore
               </a>

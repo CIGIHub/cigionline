@@ -42,7 +42,7 @@ table {
         }
 
         &:not(:first-of-type) {
-          padding: 0 1em;
+          padding: 0 0.625em;
         }
       }
     }
@@ -52,6 +52,10 @@ table {
     tr {
       td {
         padding: 1em 0.625em;
+
+        &:first-of-type {
+          padding-left: 0;
+        }
 
         .table-mobile-text {
           display: none;
@@ -122,7 +126,7 @@ table {
 
         .table-infos-function {
           color: $cigi-text-grey;
-          font-size: .9em;
+          font-size: 0.9em;
         }
 
         .custom-text-list {
@@ -305,14 +309,13 @@ table {
 
 //CORE RELATED FILES TABLE
 
-
 .table-related-files {
   thead {
     tr {
       th {
         border-bottom-color: $border-box;
-        padding-bottom: .5em;
-        padding-top: .5em;
+        padding-bottom: 0.5em;
+        padding-top: 0.5em;
       }
     }
   }
@@ -326,9 +329,9 @@ table {
       }
 
       td {
-        font-size: .9em;
-        padding-bottom: .5em;
-        padding-top: .5em;
+        font-size: 0.9em;
+        padding-bottom: 0.5em;
+        padding-top: 0.5em;
       }
     }
   }
@@ -337,7 +340,7 @@ table {
     @include media-breakpoint-down(sm) {
       width: 80%;
     }
-    padding-right: .5em;
+    padding-right: 0.5em;
     width: 85%;
   }
 }

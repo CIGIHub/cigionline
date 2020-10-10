@@ -429,10 +429,10 @@ class AnnualReportPage(FeatureablePageAbstract, Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         context['reports'] = {
-          'report_english': self.report_english,
-          'report_interactive': self.report_interactive,
-          'report_french': self.report_french,
-          'report_financial': self.report_financial,
+            'report_english': self.report_english,
+            'report_interactive': self.report_interactive,
+            'report_french': self.report_french,
+            'report_financial': self.report_financial,
         }
         return context
 
