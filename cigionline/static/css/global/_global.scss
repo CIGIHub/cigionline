@@ -1,0 +1,208 @@
+body {
+  font-family: $primary-font-family;
+
+  &.disable-scroll {
+    overflow: hidden;
+  }
+}
+
+//LINKS
+a {
+  color: $cigi-pink;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $cigi-dark-pink;
+    text-decoration: none;
+  }
+}
+
+//BUTTONS
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+
+  &:active,
+  &:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+//HR
+hr {
+  background: $cigi-light-grey;
+  border: 0;
+  height: 1px;
+  margin: 1em 0;
+}
+
+//LAYOUTS
+[class*='container-'] {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}
+
+//FORM ELEMENTS
+.form-control {
+  align-items: center;
+  background-clip: padding-box;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid $black;
+  border-radius: 0;
+  color: $black;
+  display: flex;
+  font-size: 1em;
+  font-weight: 400;
+  height: 1.1em;
+  line-height: 1.5;
+  padding: 0 0 0.25em;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  width: 100%;
+
+  &::-webkit-input-placeholder,
+  &::placeholder {
+    color: $black;
+  }
+
+  &:focus {
+    background-color: transparent;
+    border-color: $black;
+    box-shadow: none;
+    color: $black;
+    outline: 0;
+  }
+}
+
+.input-group {
+  &.input-group-search {
+    .input-group-append {
+      .btn-search {
+        align-items: center;
+        background-color: transparent;
+        border-bottom: 2px solid $black;
+        border-left: 0;
+        border-radius: 0;
+        border-right: 0;
+        border-top: 0;
+        color: $cigi-pink;
+        display: flex;
+        font-weight: 400;
+        height: 1.1em;
+        line-height: 1.5;
+        margin-bottom: 0;
+        padding: 0 0 0.25em;
+        text-align: center;
+        white-space: nowrap;
+        width: 1em;
+      }
+    }
+  }
+}
+
+// DROPDOWNS
+.dropdown {
+  &.custom-dropdown {
+    .dropdown-toggle {
+      align-items: center;
+      border-bottom: 2px solid $black;
+      color: $black;
+      display: flex;
+      font-size: 1em;
+      height: 1.1em;
+      justify-content: space-between;
+      padding-bottom: .25em;
+      width: 100%;
+
+      &::after {
+        align-items: center;
+        border: 0;
+        color: $cigi-pink;
+        content: '\f078';
+        display: inline-flex;
+        font-family: 'Font Awesome 5 Pro';
+        font-size: 0.75em;
+        height: 1em;
+        margin-left: 0;
+        transform: rotate(0deg);
+        transition: transform 0.25s ease;
+        vertical-align: 0.255em;
+        width: 0.75em;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &[aria-expanded='true'] {
+        &::after {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .dropdown-menu {
+      background-clip: padding-box;
+      background-color: $white;
+      border: 0;
+      border-radius: 0.25em;
+      box-shadow: 0 5px 10px $cigi-light-grey;
+      color: $black;
+      font-size: 1em;
+      list-style: none;
+      margin: 0.125em 0 0;
+      padding: 0.5em 0;
+      text-align: left;
+
+      &.show {
+        width: 100%;
+      }
+    }
+
+    .dropdown-item {
+      color: $black;
+      font-size: 0.75em;
+      text-transform: uppercase;
+
+      &:hover {
+        background-color: unset;
+        color: $cigi-pink;
+      }
+    }
+  }
+
+  // temporary layout
+  &.dropdown-full-width {
+    position: static !important;
+
+    .dropdown-menu {
+      &.show {
+        @include media-breakpoint-down(md) {
+          column-count: 3;
+        }
+
+        @include media-breakpoint-down (sm) {
+          column-count: 2;
+        }
+        column-count: 4;
+        column-fill: balance;
+        column-gap: 0.9375em;
+        display: block;
+        top: 100% !important;
+        transform: none !important;
+      }
+
+      .dropdown-item {
+        padding: 0.25em .6875rem;
+        white-space: normal;
+        word-break: break-word;
+      }
+    }
+  }
+}
+

@@ -48,42 +48,42 @@
             {% if page.phone_number %}
               <div class="contact-item">
                 <i class="fa fa-phone" aria-hidden="true"></i>
-                <span>{{ page.phone_number }}</span>
+                {{ page.phone_number }}
               </div>
             {% endif %}
 
             {% if page.email %}
               <div class="contact-item">
                 <i class="fas fa-envelope" aria-hidden="true"></i>
-                <span><a href="mailto:{{ page.email }}">{{ page.email }}</a></span>
+                <a href="mailto:{{ page.email }}">{{ page.email }}</a>
               </div>
             {% endif %}
 
             {% if page.twitter_username %}
               <div class="contact-item">
                 <i class="fab fa-twitter" aria-hidden="true"></i>
-                <span><a href="https://twitter.com/{{ page.twitter_username }}" target="_blank">{{ page.twitter_username }}</a></span>
+                <a href="https://twitter.com/{{ page.twitter_username }}" target="_blank">{{ page.twitter_username }}</a>
               </div>
             {% endif %}
 
             {% if page.linkedin_url %}
               <div class="contact-item">
                 <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-                <span><a href="{{ page.linkedin_url }}" target="_blank">{{ page.linkedin_url|no_protocol }}</a></span>
+                <a href="{{ page.linkedin_url }}" target="_blank">{{ page.linkedin_url|no_protocol }}</a>
               </div>
             {% endif %}
 
             {% if page.website %}
               <div class="contact-item">
                 <i class="fas fa-link" aria-hidden="true"></i>
-                <span><a href="{{ page.website }}" target="_blank">{{ page.website|no_protocol }}</a></span>
+                <a href="{{ page.website }}" target="_blank">{{ page.website|no_protocol }}</a>
               </div>
             {% endif %}
 
             {% if page.curriculum_vitae %}
               <div class="contact-item">
                 <i class="far fa-newspaper" aria-hidden="true"></i>
-                <span><a href="{{ page.curriculum_vitae.url }}" target="_blank">Curriculum Vitae</a></span>
+                <a href="{{ page.curriculum_vitae.url }}" target="_blank">Curriculum Vitae</a>
               </div>
             {% endif %}
 
@@ -91,7 +91,7 @@
               {% image page.image_media original as high_res %}
               <div class="contact-item">
                 <i class="fas fa-download" aria-hidden="true"></i>
-                <span><a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a></span>
+                <a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a>
               </div>
             {% endif %}
           </div>
@@ -118,7 +118,7 @@
         <h2 class="paragraph-heading">Select Publications</h2>
         {% for publication in page.external_publications %}
           <article>
-            <div class="counter">{{ forloop.counter }}.</div>
+            <div class="external-publications-counter">{{ forloop.counter }}.</div>
             <div>
               {% if publication.value.author %}
                 <span>{{publication.value.author}}</span>.

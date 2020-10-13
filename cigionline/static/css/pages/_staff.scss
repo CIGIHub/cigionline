@@ -1,0 +1,99 @@
+body {
+  &.person-list-staff-page {
+    .pager-alphabet {
+      margin: 1em 0;
+
+      @media screen and (min-width: $small) {
+        margin: 3em 0 5em;
+      }
+
+      ul {
+        @include media-breakpoint-up(sm) {
+          justify-content: space-between;
+        }
+        display: flex;
+        flex-wrap: wrap;
+
+        li {
+          @include link($color: $black, $hover-color: $cigi-dark-pink);
+
+          border-left: 1px solid $cigi-light-grey;
+          display: block;
+          padding: 0 0.5em;
+          text-align: center;
+          width: 30px;
+
+          &:last-child {
+            width: auto;
+          }
+
+          a {
+            font-size: 0.75em;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .staff-directory {
+      @include link($color: $black, $hover-color: $cigi-pink);
+
+      i {
+        color: $cigi-pink;
+        margin-right: 0.3em;
+      }
+
+      .staff-directory-heading {
+        color: $cigi-text-grey;
+        display: none;
+        font-size: 0.67em;
+        font-weight: 500;
+        justify-content: space-between;
+        letter-spacing: 2.09px;
+        text-align: left;
+
+        @media screen and (min-width: $small) {
+          display: flex;
+        }
+      }
+
+      .staff-directory-row {
+        display: flex;
+        flex-direction: column;
+        font-size: 0.875em;
+        justify-content: space-between;
+        padding: 1.25em 0;
+
+        @media screen and (min-width: $small) {
+          flex-direction: row;
+        }
+
+        &:not(:first-child) {
+          border-bottom: 1px solid $cigi-light-grey;
+        }
+      }
+
+      .staff-directory-name {
+        padding: 0 1em 0.5em 0;
+
+        @media screen and (min-width: $small) {
+          padding: 0 1em 0 0;
+        }
+
+        .name {
+          font-size: 1rem;
+          font-weight: 700;
+        }
+      }
+
+      .staff-directory-contact {
+        flex-shrink: 0;
+        width: 200px;
+
+        .position {
+          color: $cigi-text-grey;
+        }
+      }
+    }
+  }
+}

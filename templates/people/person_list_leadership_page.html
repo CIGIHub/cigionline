@@ -9,10 +9,8 @@
     {% endfor %}
   </section>
   <section>
-    <div class="container-lg">
-      {% for person in people %}
-        <p>{{ person.title }}</p>
-      {% endfor %}
+    <div class="container-sm">
+      {% include 'includes/people_person_leadership_tabs.html' %}
     </div>
   </section>
 {% endblock %}
