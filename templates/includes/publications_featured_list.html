@@ -15,13 +15,15 @@
               </div>
 
               <div class="publications-featured-list-content">
-                {% if publication_page.topics %}
-                  <ul class="publications-featured-list-topics custom-text-list">
-                    {% for topic in publication_page.topics.all %}
-                      <li>{{ topic }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
+                {% with publication_page.topics.all as all_topics %}
+                  {% if all_topics %}
+                    <ul class="publications-featured-list-topics custom-text-list">
+                      {% for topic in all_topics %}
+                        <li>{{ topic }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
 
                 <p class="publications-featured-list-title">
                   {{ publication_page.title }}
