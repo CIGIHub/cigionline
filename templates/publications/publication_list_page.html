@@ -1,62 +1,76 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags %}
 
 {% block content %}
-{% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
-<div class="container-lg">
-  {% include "includes/publications_search_bar.html" %}
+  <div class="container-lg">
+    {% include "includes/publications_search_bar.html" %}
 
-  <table class="custom-theme-table table-publications">
-    <thead>
+    <table class="custom-theme-table table-publications">
+      <thead>
       <tr>
-        <th colspan="6">Event</th>
+        <th colspan="6">Title</th>
         <th colspan="2">Topic</th>
         <th colspan="3">Expert</th>
         <th colspan="0">PDF</th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       {% for publication in publications %}
-      <tr>
-        <td colspan="6">
-          <div class="table-mobile-text">Event</div>
-          <div class="table-infos-wrapper">
-            <span class="table-icon">
-              <i class="fal fa-file-alt"></i>
-            </span>
-            <div class="table-infos">
-              <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
-              <div class="table-infos-date">October 27,2020</div>
+        <tr>
+          <td colspan="6">
+            <div class="table-mobile-text">Title</div>
+            <div class="table-infos-wrapper">
+              <span class="table-icon"><i class="fal fa-file-alt"></i></span>
+              <div class="table-infos">
+                <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
+                <div class="table-infos-date">{{ publication.publishing_date|date:"F m, Y" }}</div>
+              </div>
             </div>
-          </div>
-        </td>
-        <td colspan="2">
-          <div class="table-mobile-text">Topic</div>
-          <div class="table-content">
-            <a href="#" class="table-content-link">Financial System</a>,
-            <a href="#" class="table-content-link">Lorem Ipsum</a>,
-            <a href="#" class="table-content-link">Lorem Ipsum</a>,
-          </div>
-        </td>
-        <td colspan="3">
-          <div class="table-mobile-text">Expert</div>
-          <div class="table-content">
-            <a href="#" class="table-content-link table-content-link-black">James A. Haley</a>,
-            <a href="#" class="table-content-link table-content-link-black">OLAF WEBER</a>,
-            <a href="#" class="table-content-link table-content-link-black">VASUNDHARA SARAVADE</a>
-          </div>
-        </td>
-        <td colspan="0">
-          <div class="table-mobile-text">PDF</div>
-          <div class="table-content">
-            <a href="#" class="table-btn-icon">
-              <i class="fa fas fa-download"></i>
-            </a>
-          </div>
-        </td>
-      </tr>
+          </td>
+          <td colspan="2">
+            <div class="table-mobile-text">Topic</div>
+            <div class="table-content">
+              <ul class="custom-text-list">
+                {% for topic in publication.topics.all %}
+                  <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </td>
+          <td colspan="3">
+            <div class="table-mobile-text">Expert</div>
+            <div class="table-content">
+              <ul class="custom-text-list">
+                {% with publication.authors as author_blocks %}
+                  {% for author_block in author_blocks %}
+                    {% if author_block.block_type == 'author' %}
+                      <li><a href="{{ author_block.value.url }}" class="table-content-link table-content-link-black">{{ author_block.value }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+                {% endwith %}
+              </ul>
+            </div>
+          </td>
+          <td colspan="0">
+            <div class="table-mobile-text">PDF</div>
+            <div class="table-content">
+              {% with publication.pdf_downloads as pdf_downloads_blocks %}
+                {% for pdf_downloads_block in pdf_downloads_blocks %}
+                  {% if pdf_downloads_block.block_type == 'pdf_download' and forloop.first %}
+                    <a href="{{ pdf_downloads_block.value.file.url }}" class="table-btn-icon">
+                      <i class="fa fas fa-download"></i>
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              {% endwith %}
+            </div>
+          </td>
+        </tr>
       {% endfor %}
-    </tbody>
-  </table>
-</div>
+      </tbody>
+    </table>
+  </div>
 {% endblock content %}
+
