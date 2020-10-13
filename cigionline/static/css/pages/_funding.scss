@@ -47,6 +47,8 @@ body {
       }
 
       table {
+        font-size: 0.75em;
+
         p {
           font-size: 1.17em;
         }
@@ -54,14 +56,23 @@ body {
         th {
           border-bottom: 1px solid $cigi-dark-grey;
           border-right: 1px solid $cigi-dark-grey;
+          color: $cigi-text-grey;
+          font-weight: 500;
+          padding: 0 0.833em;
+          text-align: left;
 
           &:last-child {
             border-right: 0;
+          }
+
+          &.center {
+            text-align: center;
           }
         }
 
         td {
           border-right: 1px solid $cigi-dark-grey;
+          padding: 1.33em 0.833em;
 
           &.text-right {
             text-align: right;
@@ -94,6 +105,10 @@ body {
           &:last-child {
             border-right: 0;
           }
+        }
+
+        tr {
+          border-bottom: 1px solid $cigi-light-grey;
         }
 
         .no-padding {
