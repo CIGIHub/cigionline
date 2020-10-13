@@ -4,9 +4,11 @@
   <h6 class="featured-section-title">Featured</h6>
 
   <div class="row row-cols-1 row-cols-md-2 publications-featured-list-row">
+
     {% for featured_publication in self.featured_publications.all %}
       {% with featured_publication.publication_page.contentpage.publicationpage as publication_page %}
         <div class="col publications-featured-list-col">
+
           <a href="{{ publication_page.url }}" class="publications-featured-list">
             <div class="publications-featured-list-inner">
               <div class="publications-featured-list-image-wrapper">
