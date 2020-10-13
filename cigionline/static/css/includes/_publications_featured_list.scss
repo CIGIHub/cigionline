@@ -7,32 +7,62 @@
 }
 
 .publications-featured-list {
-  align-items: flex-start;
-  display: flex;
+  display: block;
   width: 100%;
+
+  &:hover {
+    .publications-featured-list-image-wrapper {
+      box-shadow: 0 0 20px 0 $extra-light-box-shadow;
+      opacity: 1;
+      transform: translate3d(0, -0.3125em, 0);
+    }
+  }
+
+  .publications-featured-list-inner {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
 
   .publications-featured-list-image-wrapper {
     @include aspect-ratio(8, 11);
-    flex: 0 0 168px;
+    border: 1px solid $cigi-light-grey;
+    flex: 0 1 35%;
     margin-right: 2em;
-    max-width: 168px;
+    max-width: 35%;
+    opacity: .85;
+    transition: box-shadow 300ms ease 0s, opacity 300ms ease 0s, transform 300ms ease 0s;
+    width: 100%;
   }
 
   .publications-featured-list-content {
-    .custom-text-list {
-      li,
-      a {
-        font-size: 12px;
-        font-weight: 500;
-        text-transform: uppercase;
-      }
+    flex: 1 1 65%;
+
+    li,
+    .publications-featured-list-date {
+      font-size: 0.75em;
+      text-transform: uppercase;
+    }
+
+    .publications-featured-list-topics {
+      color: $cigi-pink;
+      font-weight: 500;
+      margin-bottom: 0.5em;
     }
 
     .publications-featured-list-title {
-      font-size: 17px;
+      color: $black;
+      font-size: 1.0625em;
       font-weight: 400;
       margin-bottom: 0.25em;
     }
-  }
 
+    .publications-featured-list-date,
+    .publications-featured-list-authors {
+      color: $cigi-text-grey;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
+  }
 }
