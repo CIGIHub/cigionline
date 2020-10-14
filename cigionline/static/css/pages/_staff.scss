@@ -1,11 +1,10 @@
 body {
   &.person-list-staff-page {
     .pager-alphabet {
-      margin: 1em 0;
-
       @include media-breakpoint-up(sm) {
         margin: 3em 0 5em;
       }
+      margin: 1em 0;
 
       ul {
         @include media-breakpoint-up(sm) {
@@ -16,7 +15,6 @@ body {
 
         li {
           @include link($color: $black, $hover-color: $cigi-dark-pink);
-
           border-left: 1px solid $cigi-light-grey;
           display: block;
           padding: 0 0.5em;
