@@ -23,6 +23,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtailmedia.edit_handlers import MediaChooserPanel
 
 
 class ArticleLandingPage(Page):
@@ -78,6 +79,10 @@ class ArticlePage(
         TR = ('tr', 'Turkish')
         ZH = ('zh', 'Chinese')
 
+    class HeroTitlePlacements(models.TextChoices):
+        BOTTOM = ('bottom', 'Bottom')
+        TOP = ('top', 'Top')
+
     article_type = models.CharField(
         blank=False,
         max_length=32,
@@ -107,6 +112,13 @@ class ArticlePage(
         help_text='Add a label to appear below the embedded video.',
     )
     footnotes = RichTextField(blank=True)
+    hero_title_placement = models.CharField(
+        blank=True,
+        max_length=16,
+        choices=HeroTitlePlacements.choices,
+        verbose_name='Hero Title Placement',
+        help_text='Placement of the title within the hero section. Currently only works on the Longform 2 theme.',
+    )
     image_banner = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -149,6 +161,14 @@ class ArticlePage(
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+    )
+    video_banner = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Video',
     )
     website_button_text = models.CharField(
         blank=True,
@@ -203,6 +223,7 @@ class ArticlePage(
             [
                 FieldPanel('embed_youtube'),
                 FieldPanel('embed_youtube_label'),
+                MediaChooserPanel('video_banner'),
             ],
             heading='Media',
             classname='collapsible collapsed',
