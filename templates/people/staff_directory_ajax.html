@@ -1,0 +1,25 @@
+{% load people_tags %}
+<div id="staff-directory-list">
+  {% for person in people %}
+  <div class="staff-directory-row">
+    <div class="staff-directory-name">
+      <a class="name" href="{{ person.link }}">{{ person.title }}</a>
+      <div class="position">{{ person.position }}</div>
+    </div>
+    <div class="staff-directory-contact">
+      {% if person.phone_number %}
+      <div>
+        <i class="fas fa-phone"></i>
+        <span>{{ person.phone_number|clean_phone_number }}</span>
+      </div>
+      {% endif %}
+      {% if person.email %}
+      <div>
+        <i class="fas fa-envelope"></i>
+        <span><a href="mailto:{{ person.email }}">{{ person.email }}</a></span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>

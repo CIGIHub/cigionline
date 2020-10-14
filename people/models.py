@@ -96,7 +96,10 @@ class PersonListPage(BasicPageAbstract, Page):
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
             return 'people/person_list_experts_page.html'
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
-            return 'people/person_list_staff_page.html'
+            if request.is_ajax():
+                return 'people/staff_directory_ajax.html'
+            else:
+                return 'people/person_list_staff_page.html'
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             return 'people/person_list_leadership_page.html'
         return original_template

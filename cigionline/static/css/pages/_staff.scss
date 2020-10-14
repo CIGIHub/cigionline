@@ -58,6 +58,7 @@ body {
       }
 
       .staff-directory-row {
+        border-bottom: 1px solid $cigi-light-grey;
         display: flex;
         flex-direction: column;
         font-size: 0.875em;
@@ -66,10 +67,6 @@ body {
 
         @media screen and (min-width: $small) {
           flex-direction: row;
-        }
-
-        &:not(:first-child) {
-          border-bottom: 1px solid $cigi-light-grey;
         }
       }
 

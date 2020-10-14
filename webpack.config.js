@@ -26,6 +26,7 @@ const config = {
 
   entry: {
     cigionline: './cigionline/static/index.js',
+    staffPage: './cigionline/static/staff.js',
   },
 
   devtool: 'source-map',

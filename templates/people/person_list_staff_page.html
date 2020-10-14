@@ -1,62 +1,68 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags people_tags %}
+{% load wagtailcore_tags people_tags webpack_loader %}
 
 {% block body_class %}person-list-staff-page{% endblock %}
 
-{% block content %}
-  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  {% if self.body %}
-    <section>
-      <div class="container-sm">
-        {% for block in self.body %}
-          {% include_block block %}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
-  <section>
-    <div class="container-sm">
-      <div class="pager-alphabet">
-        <ul>
-          {% for letter in letters %}
-            <li>
-              <a href="/about/staff?letter={{letter}}">{{letter}}</a>
-            </li>
-          {% endfor %}
-          <li>
-            <a href="/about/staff">Show All</a>
-          </li>
-        </ul>
-      </div>
+{% block extra_bundles %}
+{% render_bundle 'staffPage' %}
+{% endblock %}
 
-      <div class="staff-directory">
-        <div class="staff-directory-heading">
-          <div class="staff-directory-name">NAME</div>
-          <div class="staff-directory-contact">CONTACT</div>
-        </div>
+{% block content %}
+{% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+{% if self.body %}
+<section>
+  <div class="container-sm">
+    {% for block in self.body %}
+    {% include_block block %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+<section>
+  <div class="container-sm">
+    <div class="pager-alphabet">
+      <ul>
+        {% for letter in letters %}
+        <li>
+          <a href="/about/staff?letter={{letter}}">{{letter}}</a>
+        </li>
+        {% endfor %}
+        <li>
+          <a href="/about/staff">Show All</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="staff-directory">
+      <div class="staff-directory-heading">
+        <div class="staff-directory-name">NAME</div>
+        <div class="staff-directory-contact">CONTACT</div>
+      </div>
+      <div id="staff-directory-list">
         {% for person in people %}
-          <div class="staff-directory-row">
-            <div class="staff-directory-name">
-              <a class="name" href="{{ person.link }}">{{ person.title }}</a>
-              <div class="position">{{ person.position }}</div>
-            </div>
-            <div class="staff-directory-contact">
-              {% if person.phone_number %}
-                <div>
-                  <i class="fas fa-phone"></i>
-                  <span>{{ person.phone_number|clean_phone_number }}</span>
-                </div>  
-              {% endif %}
-              {% if person.email %}
-                <div>
-                  <i class="fas fa-envelope"></i>
-                  <span><a href="mailto:{{ person.email }}">{{ person.email }}</a></span>
-                </div>
-              {% endif %}
-            </div>
+        <div class="staff-directory-row">
+          <div class="staff-directory-name">
+            <a class="name" href="{{ person.link }}">{{ person.title }}</a>
+            <div class="position">{{ person.position }}</div>
           </div>
+          <div class="staff-directory-contact">
+            {% if person.phone_number %}
+            <div>
+              <i class="fas fa-phone"></i>
+              <span>{{ person.phone_number|clean_phone_number }}</span>
+            </div>
+            {% endif %}
+            {% if person.email %}
+            <div>
+              <i class="fas fa-envelope"></i>
+              <span><a href="mailto:{{ person.email }}">{{ person.email }}</a></span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
         {% endfor %}
       </div>
     </div>
-  </section>
+  </div>
+</section>
 {% endblock %}
