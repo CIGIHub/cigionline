@@ -3,7 +3,7 @@ body {
     .pager-alphabet {
       margin: 1em 0;
 
-      @media screen and (min-width: $small) {
+      @include media-breakpoint-up(sm) {
         margin: 3em 0 5em;
       }
 
@@ -44,6 +44,9 @@ body {
       }
 
       .staff-directory-heading {
+        @include media-breakpoint-up(sm) {
+          display: flex;
+        }
         color: $cigi-text-grey;
         display: none;
         font-size: 0.67em;
@@ -51,31 +54,25 @@ body {
         justify-content: space-between;
         letter-spacing: 2.09px;
         text-align: left;
-
-        @media screen and (min-width: $small) {
-          display: flex;
-        }
       }
 
       .staff-directory-row {
+        @include media-breakpoint-up(sm) {
+          flex-direction: row;
+        }
         border-bottom: 1px solid $cigi-light-grey;
         display: flex;
         flex-direction: column;
         font-size: 0.875em;
         justify-content: space-between;
         padding: 1.25em 0;
-
-        @media screen and (min-width: $small) {
-          flex-direction: row;
-        }
       }
 
       .staff-directory-name {
-        padding: 0 1em 0.5em 0;
-
-        @media screen and (min-width: $small) {
+        @include media-breakpoint-up(sm) {
           padding: 0 1em 0 0;
         }
+        padding: 0 1em 0.5em 0;
 
         .name {
           font-size: 1rem;
