@@ -90,6 +90,11 @@ class PersonListPageRequestTests(WagtailPageTests):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'people/person_list_staff_page.html')
 
+    def test_staff_page_ajax_returns_200(self):
+        response = self.client.get('/staff/', HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'includes/person_list_staff_page_staff_directory.html')
+
     def test_leadership_page_returns_200(self):
         response = self.client.get('/leadership/')
         self.assertEqual(response.status_code, 200)
@@ -822,6 +827,12 @@ class StaffPageRequestTests(WagtailPageTests):
     def test_should_return_empty_list_with_number(self):
         response = self.client.get('/staff/?letter=12')
         self.assertEqual(len(response.context['people']), 0)
+
+    def test_filter_z_ajax(self):
+        response = self.client.get('/staff/?letter=z', HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        katharine_zhou = PersonPage.objects.get(title='Katharine Zhou')
+        self.assertIn(katharine_zhou, response.context['people'])
+        self.assertEqual(len(response.context['people']), 1)
 
 
 class PersonPageTests(WagtailPageTests):
