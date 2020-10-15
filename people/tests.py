@@ -94,6 +94,11 @@ class PersonListPageRequestTests(WagtailPageTests):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'people/person_list_leadership_page.html')
 
+    def test_leadership_page_ajax_returns_200(self):
+        response = self.client.get('/leadership/?show=senior-management', HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'includes/people_person_leadership_list.html')
+
     def test_experts_page_should_not_show_live_board_member(self):
         response = self.client.get('/experts/')
         board_member_live = PersonPage.objects.get(title='Board Member Live')
