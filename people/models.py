@@ -88,7 +88,10 @@ class PersonListPage(BasicPageAbstract, Page):
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return 'people/person_list_staff_page.html'
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
-            return 'people/person_list_leadership_page.html'
+            if request.is_ajax():
+                return 'includes/people_person_leadership_list.html'
+            else:
+                return 'people/person_list_leadership_page.html'
         return original_template
 
     class Meta:

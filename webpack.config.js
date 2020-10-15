@@ -26,6 +26,7 @@ const config = {
 
   entry: {
     cigionline: './cigionline/static/index.js',
+    leadershipPage: './cigionline/static/leadership.js',
   },
 
   devtool: 'source-map',
