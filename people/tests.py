@@ -608,6 +608,14 @@ class PersonListPageRequestTests(WagtailPageTests):
         management_team_live = PersonPage.objects.get(title='Management Team Live')
         self.assertEqual(list(response.context['people']), [management_team_live])
 
+    def test_leadership_page_senior_management_ajax(self):
+        response = response = self.client.get(
+            '/leadership/?show=senior-management',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+        management_team_live = PersonPage.objects.get(title='Management Team Live')
+        self.assertEqual(list(response.context['people']), [management_team_live])
+
 
 class StaffPageRequestTests(WagtailPageTests):
     fixtures = ['staff.json']
