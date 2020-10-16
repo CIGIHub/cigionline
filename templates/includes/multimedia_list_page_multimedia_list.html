@@ -1,0 +1,50 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 multimedia-list-row" id="multimedia-list">
+  {% for page in content %}
+  <div class="col multimedia-list-col">
+    <div class="multimedia-card-wrapper">
+      <a href="{{page.url}}" class="multimedia-card-image">
+        {% image page.image_hero width-400 as multimedia_image_hero %}
+        <div class="img-wrapper" style="background-image: url('{{ multimedia_image_hero.url }}');"></div>
+        <div class="multimedia-image-type">
+          <i class="fas fa-play"></i>
+        </div>
+      </a>
+
+      <ul class="custom-text-list multimedia-card-topic-list">
+        {% for topic in page.topics.all %}
+        <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <p class="multimedia-card-title">
+        <a href="{{page.url}}">
+          {{page.title}}
+        </a>
+      </p>
+
+      <ul class="custom-text-list multimedia-card-speakers-list">
+        {% with 3 as speaker_limit %}
+        {% with page.speakers as speaker_blocks %}
+        {% for speaker_block in speaker_blocks %}
+        {% if forloop.counter <= speaker_limit %}
+        <li><a href="{{ speaker_block.value.url }}">{{ speaker_block.value }}</a></li>
+        {% elif forloop.counter == speaker_limit|add:1 %}
+        <li>And more</li>
+        {% endif %}
+        {% endfor %}
+        {% endwith %}
+        {% endwith %}
+      </ul>
+
+      <p class="multimedia-card-date">{{ page.publishing_date|date:"F m, Y" }}</p>
+
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="pagination">
+  {% include "includes/pagination_numbered.html" %}
+</div>

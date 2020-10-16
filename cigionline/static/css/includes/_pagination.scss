@@ -1,0 +1,28 @@
+.pagination-links-numbered {
+  position: relative;
+  text-align: center;
+  width: 100%;
+
+  li {
+    display: inline;
+    position: relative;
+
+    &.pagination-link-first {
+      @include media-breakpoint-up(sm) {
+        display: inline;
+      }
+      display: none;
+      left: 0;
+      position: absolute;
+    }
+
+    &.pagination-link-last {
+      @include media-breakpoint-up(sm) {
+        display: inline;
+      }
+      display: none;
+      position: absolute;
+      right: 0;
+    }
+  }
+}

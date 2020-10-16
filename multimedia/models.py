@@ -33,7 +33,8 @@ class MultimediaListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = []
-    templates = 'multimedia/multimedia_list_page.html'
+    template = 'multimedia/multimedia_list_page.html'
+    ajax_template = 'includes/multimedia_list_page_multimedia_list.html'
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -68,7 +69,7 @@ class MultimediaListPage(BasicPageAbstract, Page):
             multimedia = paginator.page(1)
         except EmptyPage:
             multimedia = paginator.page(paginator.num_pages)
-        context['multimedia'] = multimedia
+        context['content'] = multimedia
         return context
 
     class Meta:
