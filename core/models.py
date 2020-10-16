@@ -1,9 +1,10 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.forms.utils import flatatt
-from django.utils.html import format_html, format_html_join
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import ParagraphBlock
+from streams.blocks import (
+    ParagraphBlock,
+    AutoPlayVideoBlock,
+)
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
@@ -18,27 +19,6 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtailmedia.blocks import AbstractMediaChooserBlock
-
-
-class VideoBlock(AbstractMediaChooserBlock):
-    def render_basic(self, value, context=None):
-        if not value:
-            return ''
-
-        player_code = '''
-        <div>
-            <video width="320" height="240" controls>
-                {0}
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        '''
-
-        return format_html(player_code, format_html_join(
-            '\n', "<source{0}",
-            [[flatatt(s)] for s in value.sources]
-        ))
 
 
 class HomePage(Page):
@@ -82,10 +62,7 @@ class BasicPageAbstract(models.Model):
                 ('three', 'Three'),
             ])),
         ])),
-        ('autoplay_video', blocks.StructBlock([
-            ('video', VideoBlock(required=False)),
-            ('caption', blocks.CharBlock(required=False)),
-        ])),
+        ('autoplay_video', AutoPlayVideoBlock()),
         ('chart', blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('image', ImageChooserBlock(required=True)),
