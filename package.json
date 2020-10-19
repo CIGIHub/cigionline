@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-pro": "5.14.0",
-    "@popperjs/core": "^2.5.1",
+    "@popperjs/core": "^2.5.3",
     "bootstrap": "^4.5.2",
     "jquery": "^3.5.1",
     "normalize.css": "^8.0.1"
