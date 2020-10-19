@@ -267,5 +267,25 @@ class ArticlePage(
     templates = 'articles/article_page.html'
 
     class Meta:
-        verbose_name = 'Article'
-        verbose_name_plural = 'Articles'
+        verbose_name = 'Opinion'
+        verbose_name_plural = 'Opinions'
+
+
+class ArticleSeriesPage(
+    BasicPageAbstract,
+    ContentPage,
+    FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'articles/article_series_page.html'
+
+    class Meta:
+        verbose_name = 'Opinion Series'
+        verbose_name_plural = 'Opinion Series'
