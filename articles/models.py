@@ -300,6 +300,20 @@ class ArticleSeriesPage(
         related_name='+',
         verbose_name='Banner Image Small'
     )
+    image_poster = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster image',
+        help_text='A poster image which will be used in the highlights section of the homepage.',
+    )
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic'],
+    )
     video_banner = models.ForeignKey(
         'wagtailmedia.Media',
         null=True,
@@ -316,6 +330,7 @@ class ArticleSeriesPage(
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
             [
+                FieldPanel('short_description'),
                 StreamFieldPanel('body'),
             ],
             heading='Body',
@@ -341,6 +356,7 @@ class ArticleSeriesPage(
                 ImageChooserPanel('image_hero'),
                 ImageChooserPanel('image_banner'),
                 ImageChooserPanel('image_banner_small'),
+                ImageChooserPanel('image_poster'),
             ],
             heading='Image',
             classname='collapsible collapsed',
