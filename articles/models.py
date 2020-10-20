@@ -339,8 +339,17 @@ class ArticleSeriesPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_banner'),
+                ImageChooserPanel('image_banner_small'),
             ],
             heading='Image',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                MediaChooserPanel('video_banner'),
+            ],
+            heading='Media',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
