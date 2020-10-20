@@ -282,6 +282,47 @@ class ArticleSeriesPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('image_hero'),
+            ],
+            heading='Image',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+    ]
+
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
+    ]
+
     parent_page_types = ['core.HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
