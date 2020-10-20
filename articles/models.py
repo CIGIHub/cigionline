@@ -279,6 +279,36 @@ class ArticleSeriesPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    credits = RichTextField(blank=True)
+    credits_artwork = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    image_banner = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+    )
+    image_banner_small = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image Small'
+    )
+    video_banner = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Video',
+    )
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -297,6 +327,14 @@ class ArticleSeriesPage(
             ],
             heading='General Information',
             classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('credits'),
+                FieldPanel('credits_artwork'),
+            ],
+            heading='Credits',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
