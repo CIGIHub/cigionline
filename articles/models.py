@@ -10,7 +10,6 @@ from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
-    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
