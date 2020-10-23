@@ -1,12 +1,20 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
-from streams.blocks import ParagraphBlock
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import (
+    ParagraphBlock,
+    AutoPlayVideoBlock,
+)
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+    StreamFieldPanel,
+)
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
@@ -18,6 +26,8 @@ class HomePage(Page):
 
     max_count = 1
     subpage_types = [
+        'articles.ArticleLandingPage',
+        'articles.ArticleListPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
         'events.EventListPage',
@@ -43,8 +53,34 @@ class BasicPageAbstract(models.Model):
 
     # Body StreamField blocks
     body_default_blocks = [
+        ('accordion', blocks.StructBlock([
+            ('title', blocks.CharBlock(required=True)),
+            ('text', blocks.RichTextBlock(required=True)),
+            ('columns', blocks.ChoiceBlock(choices=[
+                ('one', 'One'),
+                ('two', 'Two'),
+                ('three', 'Three'),
+            ])),
+        ])),
+        ('autoplay_video', AutoPlayVideoBlock()),
+        ('chart', blocks.StructBlock([
+            ('title', blocks.CharBlock(required=True)),
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
         ('paragraph', ParagraphBlock()),
-        ('image', ImageChooserBlock()),
+        ('image', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
+        ('image_full_bleed', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
+        ('image_scroll', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+        ])),
         ('block_quote', blocks.StructBlock([
             ('quote', blocks.RichTextBlock(required=True)),
             ('quote_author', blocks.CharBlock(required=False)),
@@ -53,10 +89,63 @@ class BasicPageAbstract(models.Model):
             ('link_url', blocks.URLBlock(required=False)),
             ('link_text', blocks.CharBlock(required=False)),
         ])),
+        ('embedded_multimedia', blocks.StructBlock([
+            ('multimedia_url', blocks.URLBlock(required=True)),
+            ('title', blocks.CharBlock(required=False)),
+        ])),
+        ('embedded_tiktok', blocks.URLBlock(
+            help_text='Paste the link to the video here. It should look like this: https://www.tiktok.com/@who/video/6805515697175792901',
+            required=True,
+        )),
+        ('embedded_video', blocks.StructBlock([
+            ('video_url', blocks.URLBlock(required=True)),
+            ('caption', blocks.CharBlock(required=False)),
+            ('image', ImageChooserBlock(required=False)),
+            ('aspect_ratio', blocks.ChoiceBlock(choices=[
+                ('landscape', 'Landscape'),
+                ('square', 'Square'),
+            ])),
+        ])),
+        ('external_quote', blocks.StructBlock([
+            ('quote', blocks.RichTextBlock(required=True)),
+            ('source', blocks.CharBlock(required=False)),
+        ])),
+        ('external_videos', blocks.ListBlock(blocks.StructBlock([
+            ('title', blocks.CharBlock(required=True)),
+            ('video_url', blocks.URLBlock(required=True)),
+        ]))),
+        ('highlight_title', blocks.CharBlock(required=True)),
+        ('inline_video', blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')),
+        ('pull_quote_left', blocks.StructBlock([
+            ('quote', blocks.RichTextBlock(required=True)),
+            ('quote_author', blocks.CharBlock(required=False)),
+            ('author_title', blocks.CharBlock(required=False)),
+        ])),
+        ('pull_quote_right', blocks.StructBlock([
+            ('quote', blocks.RichTextBlock(required=True)),
+            ('quote_author', blocks.CharBlock(required=False)),
+            ('author_title', blocks.CharBlock(required=False)),
+        ])),
+        ('recommended', blocks.PageChooserBlock()),
         ('table', TableBlock()),
+        ('text_background_block', blocks.RichTextBlock()),
         ('text_border_block', blocks.StructBlock([
             ('text', blocks.RichTextBlock(required=True)),
-            ('border_colour', blocks.CharBlock(required=True)),
+            ('border_colour', blocks.CharBlock(required=False)),
+        ])),
+        ('tool_tip', blocks.StructBlock([
+            ('anchor', blocks.CharBlock(required=True)),
+            ('text', blocks.RichTextBlock(required=True)),
+            ('name', blocks.CharBlock(required=False)),
+            ('title', blocks.CharBlock(required=False)),
+            ('image', ImageChooserBlock(required=False)),
+        ])),
+        ('tweet', blocks.StructBlock([
+            ('tweet_id', blocks.IntegerBlock(
+                required=True,
+                help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
+                verbose_name='Tweet ID',
+            )),
         ])),
     ]
     body_poster_block = [
@@ -261,6 +350,28 @@ class ContentPage(Page):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
+
+
+class ContentPageRecommendedContent(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='recommended',
+    )
+    recommended_content_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Recommended Content',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'recommended_content_page',
+            ['core.ContentPage'],
+        )
+    ]
 
 
 class BasicPage(

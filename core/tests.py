@@ -1,3 +1,4 @@
+from articles.models import ArticleLandingPage, ArticleListPage
 from careers.models import JobPostingListPage
 from events.models import EventListPage
 from multimedia.models import MultimediaListPage, MultimediaSeriesListPage, MultimediaSeriesPage
@@ -82,6 +83,8 @@ class HomePageTests(WagtailPageTests):
         self.assertAllowedSubpageTypes(
             HomePage,
             {
+                ArticleLandingPage,
+                ArticleListPage,
                 BasicPage,
                 EventListPage,
                 JobPostingListPage,
