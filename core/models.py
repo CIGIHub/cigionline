@@ -334,7 +334,21 @@ class ArchiveablePageAbstract(models.Model):
 
 class ContentPage(Page):
     publishing_date = models.DateTimeField(blank=False, null=True)
+    search_terms = StreamField(
+        [
+            ('search_term', blocks.CharBlock()),
+        ],
+        blank=True,
+    )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
+
+    search_panel = MultiFieldPanel(
+        [
+            StreamFieldPanel('search_terms'),
+        ],
+        heading='Search Terms',
+        classname='collapsible collapsed',
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel('publishing_date'),
