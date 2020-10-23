@@ -228,13 +228,7 @@ class ArticlePage(
             heading='Media',
             classname='collapsible collapsed',
         ),
-        MultiFieldPanel(
-            [
-                InlinePanel('recommended'),
-            ],
-            heading='Recommended',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 FieldPanel('topics'),

@@ -268,6 +268,7 @@ class MultimediaPage(
             heading='Images',
             classname='collapsible collapsed',
         ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 PageChooserPanel(
