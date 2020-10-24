@@ -238,6 +238,27 @@ class FeatureablePageAbstract(models.Model):
         abstract = True
 
 
+class SearchablePageAbstract(models.Model):
+    search_terms = StreamField(
+        [
+            ('search_term', blocks.CharBlock()),
+        ],
+        blank=True,
+        help_text='A list of search terms for which this page will be elevated in the search results.',
+    )
+
+    search_panel = MultiFieldPanel(
+        [
+            StreamFieldPanel('search_terms'),
+        ],
+        heading='Search Terms',
+        classname='collapsible collapsed',
+    )
+
+    class Meta:
+        abstract = True
+
+
 class ShareablePageAbstract(models.Model):
     social_title = models.CharField(blank=True, max_length=255)
     social_description = models.CharField(blank=True, max_length=255)
@@ -332,24 +353,9 @@ class ArchiveablePageAbstract(models.Model):
         abstract = True
 
 
-class ContentPage(Page):
+class ContentPage(Page, SearchablePageAbstract):
     publishing_date = models.DateTimeField(blank=False, null=True)
-    search_terms = StreamField(
-        [
-            ('search_term', blocks.CharBlock()),
-        ],
-        blank=True,
-        help_text='A list of search terms for which this page will be elevated in the search results.',
-    )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
-
-    search_panel = MultiFieldPanel(
-        [
-            StreamFieldPanel('search_terms'),
-        ],
-        heading='Search Terms',
-        classname='collapsible collapsed',
-    )
 
     content_panels = Page.content_panels + [
         FieldPanel('publishing_date'),
