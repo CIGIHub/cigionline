@@ -485,7 +485,7 @@ class AnnualReportListPage(BasicPageAbstract, Page):
         verbose_name = 'Annual Report List Page'
 
 
-class AnnualReportPage(FeatureablePageAbstract, Page):
+class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     """View annual report page"""
 
     image_poster = models.ForeignKey(
@@ -553,6 +553,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page):
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
     ]
     parent_page_types = ['core.AnnualReportListPage']
     subpage_types = []
