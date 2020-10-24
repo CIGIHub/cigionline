@@ -339,6 +339,7 @@ class ContentPage(Page):
             ('search_term', blocks.CharBlock()),
         ],
         blank=True,
+        help_text='A list of search terms for which this page will be elevated in the search results.',
     )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
