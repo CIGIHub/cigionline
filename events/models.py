@@ -2,6 +2,7 @@ from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
@@ -191,6 +192,7 @@ class EventPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['events.EventListPage']
