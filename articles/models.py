@@ -10,7 +10,6 @@ from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
-    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -228,13 +227,7 @@ class ArticlePage(
             heading='Media',
             classname='collapsible collapsed',
         ),
-        MultiFieldPanel(
-            [
-                InlinePanel('recommended'),
-            ],
-            heading='Recommended',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
