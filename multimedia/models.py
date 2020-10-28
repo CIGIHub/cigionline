@@ -109,6 +109,14 @@ class MultimediaPage(
         AUDIO = ('audio', 'Audio')
         VIDEO = ('video', 'Video')
 
+    article_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Opinion series',
+    )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -274,6 +282,10 @@ class MultimediaPage(
                 PageChooserPanel(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
+                ),
+                PageChooserPanel(
+                    'article_series',
+                    ['articles.ArticleSeriesPage'],
                 ),
                 FieldPanel('topics'),
                 FieldPanel('projects'),

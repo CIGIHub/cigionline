@@ -82,6 +82,14 @@ class ArticlePage(
         BOTTOM = ('bottom', 'Bottom')
         TOP = ('top', 'Top')
 
+    article_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Opinion series',
+    )
     article_type = models.CharField(
         blank=False,
         max_length=32,
@@ -232,6 +240,10 @@ class ArticlePage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                PageChooserPanel(
+                    'article_series',
+                    ['articles.ArticleSeriesPage'],
+                ),
                 PageChooserPanel(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
