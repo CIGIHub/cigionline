@@ -408,6 +408,7 @@ class BasicPage(
     Page,
     BasicPageAbstract,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 ):
     """Page with StreamField body"""
@@ -434,6 +435,7 @@ class BasicPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['core.BasicPage', 'core.HomePage']
