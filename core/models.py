@@ -7,6 +7,7 @@ from streams.blocks import (
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -336,6 +337,14 @@ class ContentPage(Page):
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
+    recommended_panel = MultiFieldPanel(
+        [
+            InlinePanel('recommended'),
+        ],
+        heading='Recommended',
+        classname='collapsible collapsed',
+    )
+
     content_panels = Page.content_panels + [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
@@ -369,7 +378,7 @@ class ContentPageRecommendedContent(Orderable):
     panels = [
         PageChooserPanel(
             'recommended_content_page',
-            ['core.ContentPage'],
+            ['wagtailcore.Page'],
         )
     ]
 
