@@ -178,6 +178,7 @@ class EventPage(
             heading='Event Social Media',
             classname='collapsible collapsed',
         ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
