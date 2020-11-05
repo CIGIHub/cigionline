@@ -10,7 +10,6 @@ from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
-    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -228,13 +227,7 @@ class ArticlePage(
             heading='Media',
             classname='collapsible collapsed',
         ),
-        MultiFieldPanel(
-            [
-                InlinePanel('recommended'),
-            ],
-            heading='Recommended',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
@@ -267,5 +260,129 @@ class ArticlePage(
     templates = 'articles/article_page.html'
 
     class Meta:
-        verbose_name = 'Article'
-        verbose_name_plural = 'Articles'
+        verbose_name = 'Opinion'
+        verbose_name_plural = 'Opinions'
+
+
+class ArticleSeriesPage(
+    BasicPageAbstract,
+    ContentPage,
+    FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+    credits = RichTextField(blank=True)
+    credits_artwork = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    image_banner = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+    )
+    image_banner_small = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image Small'
+    )
+    image_poster = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster image',
+        help_text='A poster image which will be used in the highlights section of the homepage.',
+    )
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic'],
+    )
+    video_banner = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Video',
+    )
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('short_description'),
+                StreamFieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('credits'),
+                FieldPanel('credits_artwork'),
+            ],
+            heading='Credits',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_banner'),
+                ImageChooserPanel('image_banner_small'),
+                ImageChooserPanel('image_poster'),
+            ],
+            heading='Image',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                MediaChooserPanel('video_banner'),
+            ],
+            heading='Media',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+    ]
+
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
+    ]
+
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'articles/article_series_page.html'
+
+    class Meta:
+        verbose_name = 'Opinion Series'
+        verbose_name_plural = 'Opinion Series'
