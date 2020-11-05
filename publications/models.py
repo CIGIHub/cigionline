@@ -292,6 +292,7 @@ class PublicationPage(
             heading='Media',
             classname='collapsible collapsed',
         ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
