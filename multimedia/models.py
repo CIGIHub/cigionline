@@ -3,6 +3,7 @@ from core.models import (
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
@@ -299,6 +300,7 @@ class MultimediaPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     settings_panels = Page.settings_panels + [
@@ -420,6 +422,7 @@ class MultimediaSeriesPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     settings_panels = Page.settings_panels + [
