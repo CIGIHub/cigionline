@@ -8,9 +8,10 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -20,7 +21,7 @@ from wagtail.core.blocks import (
     PageChooserBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailmedia.edit_handlers import MediaChooserPanel
@@ -32,8 +33,45 @@ class ArticleLandingPage(Page):
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_articles',
+                    max_num=15,
+                    min_num=13,
+                    label='Article',
+                )
+            ],
+            heading='Featured Opinions',
+            classname='collapsible collapsed',
+        )
+    ]
+
     class Meta:
         verbose_name = 'Article Landing Page'
+
+
+class ArticleLandingPageFeaturedArticle(Orderable):
+    article_landing_page = ParentalKey(
+        'articles.ArticleLandingPage',
+        related_name='featured_articles',
+    )
+    article_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Article',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'article_page',
+            ['articles.ArticlePage'],
+        ),
+    ]
 
 
 class ArticleListPage(Page):
