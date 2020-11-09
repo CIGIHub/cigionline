@@ -7,12 +7,18 @@ from core.models import (
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import ParagraphBlock
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    InlinePanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+    StreamFieldPanel,
+)
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -180,6 +186,7 @@ class PersonPage(
     last_name = models.CharField(blank=True, max_length=255)
     linkedin_url = models.URLField(blank=True)
     person_types = ParentalManyToManyField('people.PersonType', blank=True)
+    person_weight = models.IntegerField(blank=False, null=False, default=0)
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
@@ -254,7 +261,8 @@ class PersonPage(
             [
                 FieldPanel('person_types'),
                 StreamFieldPanel('languages'),
-                DocumentChooserPanel('curriculum_vitae')
+                DocumentChooserPanel('curriculum_vitae'),
+                FieldPanel('person_weight'),
             ],
             heading='Additional Information',
             classname='collapsible collapsed'
@@ -291,6 +299,13 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
+                InlinePanel('recommended'),
+            ],
+            heading='Recommended',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
                 StreamFieldPanel('external_publications')
             ],
             heading='External Publications',
@@ -314,6 +329,28 @@ class PersonPage(
     class Meta:
         verbose_name = 'Person Page'
         verbose_name_plural = 'Person Pages'
+
+
+class PersonPageRecommendedContent(Orderable):
+    person_page = ParentalKey(
+        'people.PersonPage',
+        related_name='recommended',
+    )
+    recommended_content_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Recommended Content',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'recommended_content_page',
+            ['wagtailcore.Page'],
+        )
+    ]
 
 
 class PersonType(models.Model):
