@@ -1,4 +1,9 @@
-from core.models import ArchiveablePageAbstract, BasicPageAbstract, SearchablePageAbstract
+from core.models import (
+    ArchiveablePageAbstract,
+    BasicPageAbstract,
+    SearchablePageAbstract,
+    ThemeablePageAbstract,
+)
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
@@ -96,7 +101,12 @@ class PersonListPage(BasicPageAbstract, Page):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonPage(ArchiveablePageAbstract, Page, SearchablePageAbstract):
+class PersonPage(
+    ArchiveablePageAbstract,
+    Page,
+    SearchablePageAbstract,
+    ThemeablePageAbstract,
+):
     """View person page"""
 
     class ExternalPublicationTypes(models.TextChoices):
@@ -294,6 +304,7 @@ class PersonPage(ArchiveablePageAbstract, Page, SearchablePageAbstract):
 
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
+        ThemeablePageAbstract.theme_panel,
     ]
 
     parent_page_types = ['people.PeoplePage']
