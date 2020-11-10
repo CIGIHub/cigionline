@@ -83,6 +83,14 @@ class ArticlePage(
         BOTTOM = ('bottom', 'Bottom')
         TOP = ('top', 'Top')
 
+    article_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Opinion series',
+    )
     article_type = models.CharField(
         blank=False,
         max_length=32,
@@ -234,6 +242,10 @@ class ArticlePage(
                 FieldPanel('topics'),
                 FieldPanel('projects'),
                 PageChooserPanel(
+                    'article_series',
+                    ['articles.ArticleSeriesPage'],
+                ),
+                PageChooserPanel(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
@@ -304,6 +316,16 @@ class ArticleSeriesPage(
         verbose_name='Poster image',
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
+    series_items = StreamField(
+        [
+            ('series_item', PageChooserBlock(
+                required=True,
+                page_type=['articles.ArticlePage', 'multimedia.MultimediaPage'],
+            )),
+            ('category_title', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
     short_description = RichTextField(
         blank=True,
         null=False,
@@ -337,6 +359,13 @@ class ArticleSeriesPage(
             ],
             heading='General Information',
             classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('series_items'),
+            ],
+            heading='Series Items',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
