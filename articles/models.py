@@ -8,9 +8,10 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -20,7 +21,7 @@ from wagtail.core.blocks import (
     PageChooserBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailmedia.edit_handlers import MediaChooserPanel
@@ -32,8 +33,45 @@ class ArticleLandingPage(Page):
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_articles',
+                    max_num=15,
+                    min_num=13,
+                    label='Article',
+                )
+            ],
+            heading='Featured Opinions',
+            classname='collapsible collapsed',
+        )
+    ]
+
     class Meta:
         verbose_name = 'Article Landing Page'
+
+
+class ArticleLandingPageFeaturedArticle(Orderable):
+    article_landing_page = ParentalKey(
+        'articles.ArticleLandingPage',
+        related_name='featured_articles',
+    )
+    article_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Article',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'article_page',
+            ['articles.ArticlePage'],
+        ),
+    ]
 
 
 class ArticleListPage(Page):
@@ -83,6 +121,14 @@ class ArticlePage(
         BOTTOM = ('bottom', 'Bottom')
         TOP = ('top', 'Top')
 
+    article_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Opinion series',
+    )
     article_type = models.CharField(
         blank=False,
         max_length=32,
@@ -234,6 +280,10 @@ class ArticlePage(
                 FieldPanel('topics'),
                 FieldPanel('projects'),
                 PageChooserPanel(
+                    'article_series',
+                    ['articles.ArticleSeriesPage'],
+                ),
+                PageChooserPanel(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
@@ -304,6 +354,16 @@ class ArticleSeriesPage(
         verbose_name='Poster image',
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
+    series_items = StreamField(
+        [
+            ('series_item', PageChooserBlock(
+                required=True,
+                page_type=['articles.ArticlePage', 'multimedia.MultimediaPage'],
+            )),
+            ('category_title', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
     short_description = RichTextField(
         blank=True,
         null=False,
@@ -337,6 +397,13 @@ class ArticleSeriesPage(
             ],
             heading='General Information',
             classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('series_items'),
+            ],
+            heading='Series Items',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
