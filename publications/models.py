@@ -2,6 +2,7 @@ from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 )
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -309,6 +310,7 @@ class PublicationPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['publications.PublicationListPage']
@@ -371,6 +373,7 @@ class PublicationSeriesPage(
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['publications.PublicationSeriesListPage']

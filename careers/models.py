@@ -1,6 +1,7 @@
 from core.models import (
     BasicPageAbstract,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
@@ -32,6 +33,7 @@ class JobPostingListPage(BasicPageAbstract, Page):
 class JobPostingPage(
     FeatureablePageAbstract,
     Page,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 ):
     closing_date = models.DateField(blank=True, null=True)
@@ -84,6 +86,7 @@ class JobPostingPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['careers.JobPostingListPage']
