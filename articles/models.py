@@ -48,17 +48,24 @@ class ArticleLandingPage(Page):
         )
     ]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        context['featured_large'] = self.featured_articles.all()[0]
+
+        return context
+
     class Meta:
         verbose_name = 'Article Landing Page'
 
 
-class ArticleLandingPageFeaturedArticle(Orderable):
+class ArticleLandingPageFeaturedArticle(Orderable, models.Model):
     article_landing_page = ParentalKey(
         'articles.ArticleLandingPage',
         related_name='featured_articles',
     )
     article_page = models.ForeignKey(
-        'wagtailcore.Page',
+        'articles.ArticlePage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,

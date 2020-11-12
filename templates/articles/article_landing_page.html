@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+
+{% include "includes/featured_large.html" with content=featured_large.article_page %}
+
+{% endblock %}
