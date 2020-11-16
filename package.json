@@ -41,7 +41,7 @@
     "image-webpack-loader": "^7.0.1",
     "postcss-loader": "^3.0.0",
     "resolve-url-loader": "^3.1.1",
-    "sass": "^1.26.11",
+    "sass": "^1.29.0",
     "sass-loader": "^10.0.2",
     "source-map-loader": "^1.1.0",
     "style-loader": "^2.0.0",
