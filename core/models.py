@@ -7,6 +7,7 @@ from streams.blocks import (
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -238,6 +239,27 @@ class FeatureablePageAbstract(models.Model):
         abstract = True
 
 
+class SearchablePageAbstract(models.Model):
+    search_terms = StreamField(
+        [
+            ('search_term', blocks.CharBlock()),
+        ],
+        blank=True,
+        help_text='A list of search terms for which this page will be elevated in the search results.',
+    )
+
+    search_panel = MultiFieldPanel(
+        [
+            StreamFieldPanel('search_terms'),
+        ],
+        heading='Search Terms',
+        classname='collapsible collapsed',
+    )
+
+    class Meta:
+        abstract = True
+
+
 class ShareablePageAbstract(models.Model):
     social_title = models.CharField(blank=True, max_length=255)
     social_description = models.CharField(blank=True, max_length=255)
@@ -332,9 +354,17 @@ class ArchiveablePageAbstract(models.Model):
         abstract = True
 
 
-class ContentPage(Page):
+class ContentPage(Page, SearchablePageAbstract):
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
+
+    recommended_panel = MultiFieldPanel(
+        [
+            InlinePanel('recommended'),
+        ],
+        heading='Recommended',
+        classname='collapsible collapsed',
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel('publishing_date'),
@@ -369,7 +399,7 @@ class ContentPageRecommendedContent(Orderable):
     panels = [
         PageChooserPanel(
             'recommended_content_page',
-            ['core.ContentPage'],
+            ['wagtailcore.Page'],
         )
     ]
 
@@ -378,6 +408,7 @@ class BasicPage(
     Page,
     BasicPageAbstract,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 ):
     """Page with StreamField body"""
@@ -404,6 +435,7 @@ class BasicPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['core.BasicPage', 'core.HomePage']
@@ -464,7 +496,7 @@ class AnnualReportListPage(BasicPageAbstract, Page):
         verbose_name = 'Annual Report List Page'
 
 
-class AnnualReportPage(FeatureablePageAbstract, Page):
+class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     """View annual report page"""
 
     image_poster = models.ForeignKey(
@@ -532,6 +564,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page):
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
     ]
     parent_page_types = ['core.AnnualReportListPage']
     subpage_types = []

@@ -2,6 +2,7 @@ from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
@@ -99,6 +100,14 @@ class EventPage(
     location_name = models.CharField(blank=True, max_length=255)
     location_postal_code = models.CharField(blank=True, max_length=32, verbose_name='Postal Code')
     location_province = models.CharField(blank=True, max_length=255, verbose_name='Province/State')
+    multimedia_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Multimedia',
+    )
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     registration_url = models.URLField(blank=True, max_length=512)
     related_files = StreamField(
@@ -178,10 +187,15 @@ class EventPage(
             heading='Event Social Media',
             classname='collapsible collapsed',
         ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                PageChooserPanel(
+                    'multimedia_page',
+                    ['multimedia.MultimediaPage'],
+                ),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -190,6 +204,7 @@ class EventPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['events.EventListPage']
