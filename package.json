@@ -17,7 +17,7 @@
     "build:prod": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-pro": "5.14.0",
+    "@fortawesome/fontawesome-pro": "5.15.1",
     "@popperjs/core": "^2.5.1",
     "bootstrap": "^4.5.2",
     "jquery": "^3.5.1",
