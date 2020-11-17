@@ -17,15 +17,15 @@
     "build:prod": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-pro": "5.14.0",
-    "@popperjs/core": "^2.5.1",
+    "@fortawesome/fontawesome-pro": "5.15.1",
+    "@popperjs/core": "^2.5.4",
     "bootstrap": "^4.5.2",
     "jquery": "^3.5.1",
     "normalize.css": "^8.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
-    "autoprefixer": "^7.0.0",
+    "autoprefixer": "^9.8.6",
     "babel-eslint": "10.1.0",
     "babel-loader": "^8.1.0",
     "cross-env": "^7.0.2",
@@ -38,14 +38,14 @@
     "eslint-plugin-react": "7.21.3",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^3.0.1",
-    "image-webpack-loader": "^5.0.0",
+    "image-webpack-loader": "^7.0.1",
     "postcss-loader": "^3.0.0",
     "resolve-url-loader": "^3.1.1",
-    "sass": "^1.26.11",
-    "sass-loader": "^10.0.2",
+    "sass": "^1.29.0",
+    "sass-loader": "^10.1.0",
     "source-map-loader": "^1.1.0",
-    "style-loader": "^0.23.1",
-    "url-loader": "^0.5.8",
+    "style-loader": "^2.0.0",
+    "url-loader": "^4.1.1",
     "webpack": "^4.44.2",
     "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.12"
