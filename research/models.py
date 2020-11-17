@@ -3,6 +3,7 @@ from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
@@ -156,6 +157,7 @@ class ProjectPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     settings_panels = Page.settings_panels + [
