@@ -3,6 +3,7 @@ from core.models import (
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
@@ -109,6 +110,22 @@ class MultimediaPage(
         AUDIO = ('audio', 'Audio')
         VIDEO = ('video', 'Video')
 
+    article_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Opinion series',
+    )
+    companion_essay = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Companion essay',
+    )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -275,6 +292,14 @@ class MultimediaPage(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
+                PageChooserPanel(
+                    'article_series',
+                    ['articles.ArticleSeriesPage'],
+                ),
+                PageChooserPanel(
+                    'companion_essay',
+                    ['articles.ArticlePage'],
+                ),
                 FieldPanel('topics'),
                 FieldPanel('projects'),
             ],
@@ -287,6 +312,7 @@ class MultimediaPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     settings_panels = Page.settings_panels + [
@@ -408,6 +434,7 @@ class MultimediaSeriesPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     settings_panels = Page.settings_panels + [
