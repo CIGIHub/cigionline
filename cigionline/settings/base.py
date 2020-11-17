@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+    'articles',
     'careers',
     'compressor',
     'core',
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'wagtailmedia',
     'webpack_loader',
 
     'django.contrib.admin',
@@ -76,7 +78,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
