@@ -118,6 +118,14 @@ class MultimediaPage(
         related_name='+',
         verbose_name='Opinion series',
     )
+    companion_essay = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Companion essay',
+    )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -287,6 +295,10 @@ class MultimediaPage(
                 PageChooserPanel(
                     'article_series',
                     ['articles.ArticleSeriesPage'],
+                ),
+                PageChooserPanel(
+                    'companion_essay',
+                    ['articles.ArticlePage'],
                 ),
                 FieldPanel('topics'),
                 FieldPanel('projects'),
