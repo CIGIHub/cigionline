@@ -67,7 +67,7 @@ class BasicPageAbstract(models.Model):
         ('chart', blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('paragraph', ParagraphBlock()),
         ('image', blocks.StructBlock([

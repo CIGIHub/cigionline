@@ -39,6 +39,12 @@ hr {
   margin: 1em 0;
 }
 
+//IMAGES
+img {
+  height: auto;
+  max-width: 100%;
+}
+
 //LAYOUTS
 [class*='container-'] {
   margin-left: auto;
@@ -116,7 +122,7 @@ hr {
       font-size: 1em;
       height: 1.1em;
       justify-content: space-between;
-      padding-bottom: .25em;
+      padding-bottom: 0.25em;
       width: 100%;
 
       &::after {
@@ -186,7 +192,7 @@ hr {
           column-count: 3;
         }
 
-        @include media-breakpoint-down (sm) {
+        @include media-breakpoint-down(sm) {
           column-count: 2;
         }
         column-count: 4;
@@ -198,7 +204,7 @@ hr {
       }
 
       .dropdown-item {
-        padding: 0.25em .6875rem;
+        padding: 0.25em 0.6875rem;
         white-space: normal;
         word-break: break-word;
       }
@@ -206,3 +212,30 @@ hr {
   }
 }
 
+.topic-list {
+  font-size: 0.75em;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+.heading-wrapper {
+  h2 {
+    @include heading;
+  }
+}
+
+article {
+  .title {
+    color: $black;
+
+    a {
+      color: $black;
+
+      &:hover {
+        color: $cigi-dark-pink;
+      }
+    }
+  }
+}

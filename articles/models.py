@@ -50,16 +50,15 @@ class ArticleLandingPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-
-        context['featured_large'] = self.featured_articles.all()[0]
-
+        featured_articles = self.featured_articles.all()
+        context['featured_large'] = featured_articles[0]
         return context
 
     class Meta:
         verbose_name = 'Article Landing Page'
 
 
-class ArticleLandingPageFeaturedArticle(Orderable, models.Model):
+class ArticleLandingPageFeaturedArticle(Orderable):
     article_landing_page = ParentalKey(
         'articles.ArticleLandingPage',
         related_name='featured_articles',

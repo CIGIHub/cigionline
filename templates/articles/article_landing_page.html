@@ -1,8 +1,24 @@
 {% extends "base.html" %}
 
+{% block body_class %}article-landing-page{% endblock %}
 {% block content %}
 {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
-{% include "includes/featured_large.html" with content=featured_large.article_page %}
+<div class="container-lg">
+  <section class="featured">
+    <div class="heading-wrapper">
+      <h2>Featured</h2>
+    </div>
+    <div class="row featured-row-1">
+      <div class="col">
+        {% include "includes/featured_large.html" with content=featured_large.article_page %}
+      </div>
+    </div>
 
+    <div class="row featured-row-2"></div>
+    <div class="row featured-row-3"></div>
+    <div class="row featured-row-4"></div>
+</div>
+</section>
+</div>
 {% endblock %}

@@ -59,3 +59,13 @@
     top: 0;
   }
 }
+
+@mixin heading {
+  border-top: 3px solid $black;
+  color: $black;
+  display: inline-block;
+  font-size: 0.75em;
+  font-weight: 500;
+  line-height: 1.0625em;
+  text-transform: uppercase;
+}

@@ -1,41 +1,56 @@
-{% load wagtailcore_tags wagtailimages_tags %}
-{{content.image_hero}}
-<div class="card-wrapper">
-  <a href="{{content.url}}" class="card-image">
-    <div class="img-wrapper">
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+{% define content.get_verbose_name|slugify as content_type %}
+{% if content_type == 'multimedia' %}
+{% define content.speakers as people_blocks %}
+{% else %}
+{% define content.authors as people_blocks %}
+{% endif %}
+<article class="featured-large content-type-{{ content_type }}">
+  <div class="image-wrapper">
+    <a href="{{ content.url }}">
       {% image content.image_hero width-1920 %}
-    </div>
-    <div class="image-type">
-      <i class="fas fa-play"></i>
-    </div>
-  </a>
-
-  <ul class="custom-text-list card-topic-list">
-    {% for topic in content.topics.all %}
-      <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
-    {% endfor %}
-  </ul>
-
-  <p class="card-title">
-    <a href="{{content.url}}">
-      {{content.title}}
     </a>
-  </p>
+  </div>
 
-  <ul class="custom-text-list card-speakers-list">
-    {% with 3 as speaker_limit %}
-      {% with content.speakers as speaker_blocks %}
-        {% for speaker_block in speaker_blocks %}
-          {% if forloop.counter <= speaker_limit %}
-            <li><a href="{{ speaker_block.value.url }}">{{ speaker_block.value }}</a></li>
-          {% elif forloop.counter == speaker_limit|add:1 %}
-            <li>And more</li>
-          {% endif %}
-        {% endfor %}
+  <div class="content-wrapper">
+    <ul class="custom-text-list topic-list">
+      {% for topic in content.topics.all %}
+      <li>
+        <a href="{{ topic.url }}" class="table-content-link">{{ topic }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="title">
+      <a href="{{ content.url }}">
+        {% if content.feature_title %}
+        {{content.feature_title}}
+        {% else %}
+        {{content.title}}
+        {% endif %}
+      </a>
+    </div>
+    <div class="subtitle">
+      {% if content.feature_subtitle %}
+      {{content.feature_subtitle}}
+      {% else %}
+      {{content.subtitle|richtext}}
+      {% endif %}
+    </div>
+    <ul class="custom-text-list person-list">
+      {% with 3 as person_limit %}
+      {% for person_block in people_blocks %}
+      {% if forloop.counter <= person_limit %}
+      <li>
+        <a href="{{ person_block.value.url }}">{{ person_block.value }}</a>
+      </li>
+      {% elif forloop.counter == person_limit|add:1 %}
+      <li>And more</li>
+      {% endif %}
+      {% endfor %}
       {% endwith %}
-    {% endwith %}
-  </ul>
-
-  <p class="card-date">{{ content.publishing_date|date:"F n, Y" }}</p>
-
-</div>
+    </ul>
+    <div class="date">
+      {{ content.publishing_date|date:"F n, Y" }}
+    </div>
+  </div>
+</article>

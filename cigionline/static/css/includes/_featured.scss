@@ -1,0 +1,23 @@
+article {
+  &.featured-large {
+    .title {
+      font-size: 2em;
+      line-height: 1.25em;
+      margin-bottom: 0.5em;
+    }
+
+    .subtitle {
+      color: $cigi-text-grey;
+    }
+
+    .person-list {
+      a {
+        color: $cigi-text-grey;
+
+        &:hover {
+          color: $cigi-dark-pink;
+        }
+      }
+    }
+  }
+}
