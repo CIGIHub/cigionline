@@ -41,11 +41,11 @@ jobs:
       run: |
         coverage run --source='.' manage.py test
     - name: Send partial coverage report
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.github_token }}
-          flag-name: run-${{ matrix.os }}-${{ matrix.node-version }}
-          parallel: true
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        flag-name: run-${{ matrix.os }}-${{ matrix.node-version }}
+        parallel: true
 
   send_coverage_report:
     needs: test
