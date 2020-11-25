@@ -57,20 +57,20 @@ jobs:
       run: npm run build:prod
     - name: Run tests
       run: |
-        python manage.py test
-    # - name: Send partial coverage report
-    #   uses: coverallsapp/github-action@master
-    #   with:
-    #     github-token: ${{ secrets.github_token }}
-    #     flag-name: run-${{ matrix.os }}-${{ matrix.node-version }}
-    #     parallel: true
+        coverage run --source='.' manage.py test
+    - name: Send partial coverage report
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        flag-name: run-${{ matrix.os }}-${{ matrix.node-version }}
+        parallel: true
 
-  # send_coverage_report:
-  #   needs: test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Send final coverage report
-  #       uses: coverallsapp/github-action@master
-  #       with:
-  #         github-token: ${{ secrets.github_token }}
-  #         parallel-finished: true
+  send_coverage_report:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send final coverage report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
