@@ -53,6 +53,6 @@ jobs:
     steps:
       - name: Send final coverage report
         uses: coverallsapp/github-action@master
-          with:
-              github-token: ${{ secrets.github_token }}
-              parallel-finished: true
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
