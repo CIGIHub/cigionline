@@ -65,7 +65,7 @@ jobs:
     - name: Send partial coverage report
       env:
         COVERALLS_PARALLEL: true
-        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: coveralls
 
   send_coverage_report:
