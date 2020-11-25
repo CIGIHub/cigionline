@@ -48,7 +48,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Install Node.js dependencies
-      run: npm install
+      run: npm ci
+      env:
+        FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
     - name: Run migrations
       run: python manage.py migrate
     - name: Collect static files
