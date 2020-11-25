@@ -53,12 +53,12 @@ jobs:
         FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
     - name: Run migrations
       run: python manage.py migrate
-    - name: Collect static files
-      run: python manage.py collectstatic
     - name: Build webpack
       run: npm run build:prod
       env:
         FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
+    - name: Collect static files
+      run: python manage.py collectstatic
     - name: Run tests
       run: |
         coverage run --source='.' manage.py test
