@@ -63,11 +63,10 @@ jobs:
       run: |
         coverage run --source='.' manage.py test
     - name: Send partial coverage report
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
-        flag-name: run-${{ matrix.os }}-${{ matrix.node-version }}
-        parallel: true
+      env:
+        COVERALLS_PARALLEL: true
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      runs: coveralls
 
   send_coverage_report:
     needs: test
@@ -76,5 +75,5 @@ jobs:
       - name: Send final coverage report
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.github_token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
