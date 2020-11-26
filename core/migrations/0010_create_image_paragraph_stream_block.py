@@ -11,27 +11,22 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('publications', '0003_publicationlistpagefeaturedpublication'),
+        ('core', '0009_basicpage_search_terms'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='publicationlistpage',
+            model_name='annualreportlistpage',
             name='body',
             field=wagtail.core.fields.StreamField([('paragraph', streams.blocks.ParagraphBlock()), ('image', streams.blocks.ParagraphImageBlock()), ('block_quote', wagtail.core.blocks.StructBlock([('quote', wagtail.core.blocks.RichTextBlock(required=True)), ('quote_author', wagtail.core.blocks.CharBlock(required=False)), ('author_title', wagtail.core.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('link_url', wagtail.core.blocks.URLBlock(required=False)), ('link_text', wagtail.core.blocks.CharBlock(required=False))], template='streams/paragraph_type_blockquote.html')), ('table', wagtail.contrib.table_block.blocks.TableBlock()), ('text_border_block', wagtail.core.blocks.StructBlock([('text', wagtail.core.blocks.RichTextBlock(required=True)), ('border_colour', wagtail.core.blocks.CharBlock(required=True))]))], blank=True),
         ),
         migrations.AlterField(
-            model_name='publicationpage',
+            model_name='basicpage',
             name='body',
             field=wagtail.core.fields.StreamField([('paragraph', streams.blocks.ParagraphBlock()), ('image', streams.blocks.ParagraphImageBlock()), ('block_quote', wagtail.core.blocks.StructBlock([('quote', wagtail.core.blocks.RichTextBlock(required=True)), ('quote_author', wagtail.core.blocks.CharBlock(required=False)), ('author_title', wagtail.core.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('link_url', wagtail.core.blocks.URLBlock(required=False)), ('link_text', wagtail.core.blocks.CharBlock(required=False))], template='streams/paragraph_type_blockquote.html')), ('table', wagtail.contrib.table_block.blocks.TableBlock()), ('text_border_block', wagtail.core.blocks.StructBlock([('text', wagtail.core.blocks.RichTextBlock(required=True)), ('border_colour', wagtail.core.blocks.CharBlock(required=True))]))], blank=True),
         ),
         migrations.AlterField(
-            model_name='publicationserieslistpage',
-            name='body',
-            field=wagtail.core.fields.StreamField([('paragraph', streams.blocks.ParagraphBlock()), ('image', streams.blocks.ParagraphImageBlock()), ('block_quote', wagtail.core.blocks.StructBlock([('quote', wagtail.core.blocks.RichTextBlock(required=True)), ('quote_author', wagtail.core.blocks.CharBlock(required=False)), ('author_title', wagtail.core.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('link_url', wagtail.core.blocks.URLBlock(required=False)), ('link_text', wagtail.core.blocks.CharBlock(required=False))], template='streams/paragraph_type_blockquote.html')), ('table', wagtail.contrib.table_block.blocks.TableBlock()), ('text_border_block', wagtail.core.blocks.StructBlock([('text', wagtail.core.blocks.RichTextBlock(required=True)), ('border_colour', wagtail.core.blocks.CharBlock(required=True))]))], blank=True),
-        ),
-        migrations.AlterField(
-            model_name='publicationseriespage',
+            model_name='fundingpage',
             name='body',
             field=wagtail.core.fields.StreamField([('paragraph', streams.blocks.ParagraphBlock()), ('image', streams.blocks.ParagraphImageBlock()), ('block_quote', wagtail.core.blocks.StructBlock([('quote', wagtail.core.blocks.RichTextBlock(required=True)), ('quote_author', wagtail.core.blocks.CharBlock(required=False)), ('author_title', wagtail.core.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('link_url', wagtail.core.blocks.URLBlock(required=False)), ('link_text', wagtail.core.blocks.CharBlock(required=False))], template='streams/paragraph_type_blockquote.html')), ('table', wagtail.contrib.table_block.blocks.TableBlock()), ('text_border_block', wagtail.core.blocks.StructBlock([('text', wagtail.core.blocks.RichTextBlock(required=True)), ('border_colour', wagtail.core.blocks.CharBlock(required=True))]))], blank=True),
         ),

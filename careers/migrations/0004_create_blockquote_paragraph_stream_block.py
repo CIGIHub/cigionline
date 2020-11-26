@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('careers', '0002_create_image_paragraph_stream_block'),
+        ('careers', '0003_create_image_paragraph_stream_block'),
     ]
 
     operations = [
