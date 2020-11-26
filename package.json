@@ -24,7 +24,7 @@
     "normalize.css": "^8.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.6",
+    "@babel/core": "^7.12.9",
     "autoprefixer": "^9.8.6",
     "babel-eslint": "10.1.0",
     "babel-loader": "^8.1.0",
@@ -48,6 +48,6 @@
     "url-loader": "^4.1.1",
     "webpack": "^4.44.2",
     "webpack-bundle-tracker": "^0.4.3",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^4.2.0"
   }
 }
