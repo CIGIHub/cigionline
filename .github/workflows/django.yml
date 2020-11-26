@@ -22,7 +22,6 @@ jobs:
 
   test:
     strategy:
-      max-parallel: 4
       matrix:
         os: [ubuntu-18.04, ubuntu-20.04]
         node-version: [12.x, 14.x]
