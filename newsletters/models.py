@@ -40,6 +40,7 @@ class NewsletterListPage(BasicPageAbstract, Page):
 class NewsletterPage(Page):
     class CallToActionChoices(models.TextChoices):
         EXPLORE = ('explore', 'Explore')
+        FOLLOW = ('follow', 'Follow')
         LEARN_MORE = ('learn_more', 'Learn More')
         LISTEN = ('listen', 'Listen')
         NO_CTA = ('no_cta', 'No CTA')
