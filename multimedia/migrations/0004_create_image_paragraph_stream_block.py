@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('multimedia', '0003_multimedialistpagefeaturedmultimedia'),
+        ('multimedia', '0003_multimediapage_companion_essay'),
     ]
 
     operations = [

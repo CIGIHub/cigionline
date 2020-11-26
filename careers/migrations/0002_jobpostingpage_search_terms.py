@@ -8,7 +8,7 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('careers', '0002_jobpostingpage_search_terms'),
+        ('careers', '0001_initial'),
     ]
 
     operations = [

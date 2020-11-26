@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('careers', '0001_initial'),
+        ('careers', '0002_jobpostingpage_search_terms'),
     ]
 
     operations = [
