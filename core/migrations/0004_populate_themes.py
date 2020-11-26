@@ -8,6 +8,7 @@ def populate_themes(apps, schema_editor):
         (1073, 'After-COVID Series'),
         (1080, 'AI Series'),
         (1058, 'Big Tech'),
+        (1088, 'Big Tech S3'),
         (948, 'CIGI Campus'),
         (950, 'CIGI Trust'),
         (963, 'Cyber Series'),
