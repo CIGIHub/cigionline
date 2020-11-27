@@ -1,0 +1,92 @@
+name: Django CI
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run linter
+      run: flake8 . --count --statistics
+
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+        node-version: [12.x, 14.x]
+        python-version: [3.7, 3.8]
+
+    runs-on: ${{ matrix.os }}
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cigionline
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Install Node.js dependencies
+      run: npm ci
+      env:
+        FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
+    - name: Run migrations
+      run: python manage.py migrate
+    - name: Build webpack
+      run: npm run build:prod
+      env:
+        FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
+    - name: Collect static files
+      run: python manage.py collectstatic
+    - name: Run tests
+      run: |
+        coverage run --source='.' manage.py test
+    - name: Send partial coverage report
+      env:
+        COVERALLS_PARALLEL: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: coveralls
+
+  send_coverage_report:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send final coverage report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
