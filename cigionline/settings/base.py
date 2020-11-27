@@ -78,7 +78,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
@@ -125,6 +124,18 @@ DATABASES = {
         'CONN_MAX_AGE': 600,
     }
 }
+
+if os.environ.get('GITHUB_WORKFLOW'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': 'localhost',
+            'NAME': 'cigionline',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'CONN_MAX_AGE': 600,
+        }
+    }
 
 
 # Password validation

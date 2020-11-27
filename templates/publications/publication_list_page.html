@@ -26,7 +26,7 @@
               <span class="table-icon"><i class="fal fa-file-alt"></i></span>
               <div class="table-infos">
                 <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
-                <div class="table-infos-date">{{ publication.publishing_date|date:"F m, Y" }}</div>
+                <div class="table-infos-date">{{ publication.publishing_date|date:"F j, Y" }}</div>
               </div>
             </div>
           </td>
@@ -74,4 +74,3 @@
     </table>
   </div>
 {% endblock content %}
-
