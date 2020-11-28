@@ -3,8 +3,8 @@ from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
-    ParagraphBlockQuote,
-    ParagraphImageBlock,
+    BlockQuoteBlock,
+    ImageBlock,
     AutoPlayVideoBlock,
 )
 from wagtail.admin.edit_handlers import (
@@ -72,8 +72,8 @@ class BasicPageAbstract(models.Model):
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
         ])),
         ('paragraph', ParagraphBlock()),
-        ('image', ParagraphImageBlock()),
-        ('block_quote', ParagraphBlockQuote()),
+        ('image', ImageBlock()),
+        ('block_quote', BlockQuoteBlock()),
         ('image_full_bleed', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
             ('hide_image_caption', blocks.BooleanBlock(required=True)),

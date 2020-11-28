@@ -35,28 +35,7 @@ class AutoPlayVideoBlock(blocks.StructBlock):
         template = 'streams/autoplay_video_block.html'
 
 
-class ParagraphBlock(blocks.RichTextBlock):
-    """Standard text paragraph."""
-
-    class Meta:
-        icon = 'edit'
-        label = 'Paragraph'
-        template = 'streams/paragraph_block.html'
-
-
-class ParagraphImageBlock(blocks.StructBlock):
-    """Image paragraph"""
-
-    image = ImageChooserBlock(required=True)
-    hide_image_caption = blocks.BooleanBlock(required=False)
-
-    class Meta:
-        icon = 'image'
-        label = 'Image Paragraph'
-        template = 'streams/paragraph_type_image.html'
-
-
-class ParagraphBlockQuote(blocks.StructBlock):
+class BlockQuoteBlock(blocks.StructBlock):
     """Block quote paragraph with optional image and link"""
 
     quote = blocks.RichTextBlock(required=True)
@@ -69,4 +48,25 @@ class ParagraphBlockQuote(blocks.StructBlock):
     class Meta:
         icon = 'openquote'
         label = 'Blockquote Paragraph'
-        template = 'streams/paragraph_type_blockquote.html'
+        template = 'streams/block_quote_block.html'
+
+
+class ImageBlock(blocks.StructBlock):
+    """Image"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'Image Paragraph'
+        template = 'streams/image_block.html'
+
+
+class ParagraphBlock(blocks.RichTextBlock):
+    """Standard text paragraph."""
+
+    class Meta:
+        icon = 'edit'
+        label = 'Paragraph'
+        template = 'streams/paragraph_block.html'
