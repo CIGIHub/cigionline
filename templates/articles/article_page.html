@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% block content %}
+  {% include "includes/hero_standard.html" with title=self.title %}
+
+  {% if page.body %}
+    <section class="body">
+      <div class="container-sm">
+        {% for block in self.body %}
+          {% include_block block %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+{% endblock content %}
