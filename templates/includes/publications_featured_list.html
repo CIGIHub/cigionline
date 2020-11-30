@@ -17,32 +17,29 @@
               </div>
 
               <div class="publications-featured-list-content">
-                {% with publication_page.topics.all as all_topics %}
-                  {% if all_topics %}
-                    <ul class="publications-featured-list-topics custom-text-list">
-                      {% for topic in all_topics %}
-                        <li>{{ topic }}</li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                {% endwith %}
+                {% if publication_page.topics.all %}
+                  <ul class="publications-featured-list-topics custom-text-list">
+                    {% for topic in publication_page.topics.all %}
+                      <li>{{ topic }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
 
                 <p class="publications-featured-list-title">
                   {{ publication_page.title }}
                 </p>
 
                 <p class="publications-featured-list-date">
-                  {{ publication_page.publishing_date|date:"F m, Y" }}
+                  {{ publication_page.publishing_date|date:"F j, Y" }}
                 </p>
 
                 <ul class="publications-featured-list-authors custom-text-list">
-                  {% with publication_page.authors as author_blocks %}
-                    {% for author_block in author_blocks %}
-                      {% if author_block.block_type == 'author' %}
-                        <li>{{ author_block.value }}</li>
-                      {% endif %}
-                    {% endfor %}
-                  {% endwith %}
+                  {% for person in publication_page.featured_person_list %}
+                    <li>{{ person.value}}</li>
+                  {% endfor %}
+                  {% if publication_page.featured_person_list_has_more %}
+                    <li>and more</li>
+                  {% endif %}
                 </ul>
               </div>
             </div>
