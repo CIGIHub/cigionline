@@ -2,18 +2,18 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-{% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section>
-    {% for block in self.body %}
-    {% include_block block %}
-    {% endfor %}
-  </section>
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+    <section>
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
 
-{% if self.related_files %}
-  <section class="related-files">
-    <div class="container-sm">
-      {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
-    </div>
-  </section>
-{% endif %}
+  {% if self.related_files %}
+    <section class="related-files">
+      <div class="container-sm">
+        {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
