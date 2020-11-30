@@ -83,11 +83,8 @@ class PersonListPage(BasicPageAbstract, Page):
                 letter = letter[0:1]
                 personFilter['last_name__istartswith'] = letter
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
-            show = request.GET.get('show')
-            if show == 'senior-management':
-                personFilter['person_types__name'] = 'Management Team'
-            else:
-                personFilter['person_types__name'] = 'Board Member'
+            context['senior_management'] = PersonPage.objects.live().filter(person_types__name='Management Team').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            context['board_members'] = PersonPage.objects.live().filter(person_types__name='Board Member').order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
         return context
@@ -99,10 +96,7 @@ class PersonListPage(BasicPageAbstract, Page):
         elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return 'people/person_list_staff_page.html'
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
-            if request.is_ajax():
-                return 'includes/people_person_leadership_list.html'
-            else:
-                return 'people/person_list_leadership_page.html'
+            return 'people/person_list_leadership_page.html'
         return original_template
 
     class Meta:
