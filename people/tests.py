@@ -601,12 +601,12 @@ class PersonListPageRequestTests(WagtailPageTests):
     def test_leadership_page_board_members(self):
         response = self.client.get('/leadership/')
         board_member_live = PersonPage.objects.get(title='Board Member Live')
-        self.assertEqual(list(response.context['people']), [board_member_live])
+        self.assertEqual(list(response.context['board_members']), [board_member_live])
 
     def test_leadership_page_senior_management(self):
         response = self.client.get('/leadership/?show=senior-management')
         management_team_live = PersonPage.objects.get(title='Management Team Live')
-        self.assertEqual(list(response.context['people']), [management_team_live])
+        self.assertEqual(list(response.context['senior_management']), [management_team_live])
 
 
 class StaffPageRequestTests(WagtailPageTests):
