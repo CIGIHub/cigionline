@@ -19,15 +19,16 @@ $(document).ready(function() {
 
 $(document).ready(function() {
   const $openSearchBtn = $('#open-search-btn');
+  const openMenuClass = 'opened-popup';
 
   $openSearchBtn.click(function() {
     $(this).toggleClass('open');
-    $('#popup-search').toggleClass('opened-popup');
+    $('#popup-search').toggleClass(openMenuClass);
     $('body').toggleClass('disable-scroll');
   });
 
-  $(document).on('click', '.opened-popup', function() {
-    $(this).removeClass('opened-popup');
+  $(document).on('click', `.${openMenuClass}`, function() {
+    $(this).removeClass(openMenuClass);
     $openSearchBtn.removeClass('open');
     $('body').toggleClass('disable-scroll');
   });
