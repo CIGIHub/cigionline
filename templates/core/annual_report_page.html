@@ -3,88 +3,88 @@
 {% block body_class %}annual-report{% endblock %}
 
 {% block content %}
-{% include "includes/hero_annual_report.html" with title=self.title %}
+  {% include "includes/hero_annual_report.html" with title=self.title %}
 
-<section>
-  <div class="container-sm">
-    <table class="custom-theme-table">
-      <thead>
-        <tr>
-          <th>Year</th>
-          <th>Type</th>
-          <th>Format</th>
-          <th>Language</th>
-          <th></th>
-        </tr>
-      </thead>
-      {% for report_type, report in reports.items %}
-      {% if report %}
-      <tr>
-        <td>
-          <div class="table-mobile-text">Year</div>
-          <div class="table-infos-wrapper">
-            <div class="table-infos">
-              {{ page.year }}
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="table-mobile-text">Type</div>
-          <div class="table-infos-wrapper">
-            <div class="table-infos">
-              {% if report_type == 'report_french' %}
-              Rapport annuel
-              {% else %}
-              Annual Report
-              {% endif %}
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="table-mobile-text">Format</div>
-          <div class="table-infos-wrapper">
-            <div class="table-infos">
-              {% if report_type == 'report_interactive' %}
-              Digital Interactive
-              {% else %}
-              Print
-              {% endif %}
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="table-mobile-text">Language</div>
-          <div class="table-infos-wrapper">
-            <div class="table-infos">
-              {% if report_type == 'report_french' %}
-              en français
-              {% else %}
-              English
-              {% endif %}
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="table-mobile-text">Link</div>
-          <div class="table-infos-wrapper">
-            <div class="table-infos">
-              {% if report_type == 'report_interactive' %}
-              <a href="{{ report }}" class="btn-icon-text">
-                <i class="fas fa-mouse-pointer"></i>
-                Explore
-              </a>
-              {% else %}
-              <a href="{{ report.url }}" class="table-btn-icon">
-                <i class="fa fas fa-download"></i>
-              </a>
-              {% endif %}
-            </div>
-          </div>
-        </td>
-      </tr>
-      {% endif %}
-      {% endfor %}
-    </table>
-  </div>
-</section>
+  <section>
+    <div class="container-sm">
+      <table class="custom-theme-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Type</th>
+            <th>Format</th>
+            <th>Language</th>
+            <th></th>
+          </tr>
+        </thead>
+        {% for report_type, report in reports.items %}
+          {% if report %}
+            <tr>
+              <td>
+                <div class="table-mobile-text">Year</div>
+                <div class="table-infos-wrapper">
+                  <div class="table-infos">
+                    {{ page.year }}
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="table-mobile-text">Type</div>
+                <div class="table-infos-wrapper">
+                  <div class="table-infos">
+                    {% if report_type == 'report_french' %}
+                      Rapport annuel
+                    {% else %}
+                      Annual Report
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="table-mobile-text">Format</div>
+                <div class="table-infos-wrapper">
+                  <div class="table-infos">
+                    {% if report_type == 'report_interactive' %}
+                      Digital Interactive
+                    {% else %}
+                      Print
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="table-mobile-text">Language</div>
+                <div class="table-infos-wrapper">
+                  <div class="table-infos">
+                    {% if report_type == 'report_french' %}
+                      en français
+                    {% else %}
+                      English
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="table-mobile-text">Link</div>
+                <div class="table-infos-wrapper">
+                  <div class="table-infos">
+                    {% if report_type == 'report_interactive' %}
+                      <a href="{{ report }}" class="btn-icon-text">
+                        <i class="fas fa-mouse-pointer"></i>
+                        Explore
+                      </a>
+                    {% else %}
+                      <a href="{{ report.url }}" class="table-btn-icon">
+                        <i class="fa fas fa-download"></i>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </table>
+    </div>
+  </section>
 {% endblock content %}
