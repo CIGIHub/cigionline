@@ -64,12 +64,11 @@ class ImageBlock(blocks.StructBlock):
     """Image"""
 
     image = ImageChooserBlock(required=True)
-    block_size = ImageSizeChoiceBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
 
     class Meta:
         icon = 'image'
-        label = 'Image Paragraph'
+        label = 'Image'
         template = 'streams/image_block.html'
 
 

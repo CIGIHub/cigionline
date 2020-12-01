@@ -1,21 +1,40 @@
 .stream-block-blockquote {
-  margin-bottom: 1em;
-  padding: 1em 2em;
-  position: relative;
-
-  &::before {
-    border-bottom: 5px solid $cigi-pink;
-    content: '';
-    height: 5px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 5em;
-  }
+  margin: 1em 0;
 
   blockquote {
     color: $cigi-dark-grey;
     font-size: 1.5em;
     line-height: 130%;
+  }
+
+  img {
+    height: auto;
+    margin: 0.625em 0.625em 0 0;
+    width: 200px;
+  }
+
+  .stream-block-blockquote-content {
+    margin-left: 0;
+    padding: 1em 2em;
+
+    &.has-image {
+      margin-left: 1em;
+      padding: 1em 0;
+      position: relative;
+    }
+
+    &::before {
+      border-bottom: 5px solid $cigi-pink;
+      content: '';
+      height: 5px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 5em;
+    }
+
+    .stream-block-blockquote-author-title {
+      @include image-caption;
+    }
   }
 }

@@ -1,18 +1,13 @@
 .stream-block-image {
   margin-bottom: 2em;
   width: 100%;
-  
-  &.stream-block-image-fb {
-    left: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    position: relative;
-    right: 50%;
-    width: 100vw;
-  }
 
   img {
     width: 100%;
     height: auto;
+  }
+
+  .stream-block-image-caption {
+    @include image-caption;
   }
 }
