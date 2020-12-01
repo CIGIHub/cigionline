@@ -1,6 +1,4 @@
 .stream-block-blockquote {
-  margin: 1em 0;
-
   blockquote {
     color: $cigi-dark-grey;
     font-size: 1.5em;
@@ -11,16 +9,25 @@
     height: auto;
     margin: 0.625em 0.625em 0 0;
     width: 200px;
+
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
   }
 
   .stream-block-blockquote-content {
     margin-left: 0;
     padding: 1em 2em;
+    position: relative;
 
     &.has-image {
       margin-left: 1em;
       padding: 1em 0;
-      position: relative;
+
+      @include media-breakpoint-down(sm) {
+        margin-left: 0;
+        padding: 1em 2em;
+      }
     }
 
     &::before {
