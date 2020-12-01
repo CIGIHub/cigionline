@@ -5,15 +5,6 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 
 
-class ImageSizeChoiceBlock(blocks.ChoiceBlock):
-    choices = [
-      ('sm', 'Small'),
-      ('md', 'Medium'),
-      ('lg', 'Large'),
-      ('fb', 'Full Bleed'),
-    ]
-
-    class Meta: 'image'
 class VideoBlock(AbstractMediaChooserBlock):
     def render_basic(self, value, context=None):
         if not value:
