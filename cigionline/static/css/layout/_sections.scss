@@ -21,3 +21,17 @@ article {
     line-height: 1.5em;
   }
 }
+
+section {
+  &.featured-section {
+    .featured-section-title {
+      border-top: 3px solid $black;
+      color: $black;
+      display: inline-block;
+      font-size: 0.75em;
+      font-weight: 500;
+      margin-bottom: 1em;
+      text-transform: uppercase;
+    }
+  }
+}

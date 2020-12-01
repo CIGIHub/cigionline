@@ -196,12 +196,14 @@ header {
       max-width: 50em;
       width: 100%;
 
-      .input-group {
+      .input-group-search {
+        border-bottom: 3px solid $white;
+        height: calc(1.9em + 0.25em);
+
         .form-control {
-          border-bottom: 3px solid $white;
           color: $white;
           font-size: 1.8em;
-          height: 1.2em;
+          height: 100%;
 
           &::-webkit-input-placeholder,
           &::placeholder {
@@ -210,7 +212,6 @@ header {
         }
 
         .btn-search {
-          border-bottom: 3px solid $white;
           font-size: 1.0625em;
           height: 100%;
         }
