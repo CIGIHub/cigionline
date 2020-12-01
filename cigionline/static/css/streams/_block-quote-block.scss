@@ -1,0 +1,21 @@
+.stream-block-blockquote {
+  margin-bottom: 1em;
+  padding: 1em 2em;
+  position: relative;
+
+  &::before {
+    border-bottom: 5px solid $cigi-pink;
+    content: '';
+    height: 5px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 5em;
+  }
+
+  blockquote {
+    color: $cigi-dark-grey;
+    font-size: 1.5em;
+    line-height: 130%;
+  }
+}

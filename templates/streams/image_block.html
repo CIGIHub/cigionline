@@ -1,5 +1,8 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="paragraph-type-image">
-  {% image self width-1000 %}
+<div class="stream-block stream-block-image stream-block-image-{{self.block_size}}">
+  <div class="container-{{self.block_size}}">
+    <div class="img-wrapper">{% image self.image width-1000 %}</div>
+  </div>
+  <div class="stream-block-image-caption">{{self.image.title}}</div>
 </div>

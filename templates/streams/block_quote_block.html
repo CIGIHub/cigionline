@@ -9,22 +9,22 @@
     </blockquote>
 
     {% if self.author %}
-    <div class="paragraph-type-blockquote-author">
-      {{ self.author }}
-    </div>
+      <div class="paragraph-type-blockquote-author">
+        {{ self.author }}
+      </div>
     {% endif %}
 
     {% if self.author_title %}
-    <div class="paragraph-type-blockquote-author-title">
-      {{ self.author_title }}
-    </div>
+      <div class="paragraph-type-blockquote-author-title">
+        {{ self.author_title }}
+      </div>
     {% endif %}
 
     {% if self.link_url %}
-    <a href="{{ self.link_url }}" class="paragraph-type-blockquote-link">
-      {{ self.link_text }}
-      <i class="far fa-external-link"></i>
-    </a>
+      <a href="{{ self.link_url }}" class="paragraph-type-blockquote-link">
+        {{ self.link_text }}
+        <i class="far fa-external-link"></i>
+      </a>
     {% endif %}
   </div>
 </div>
