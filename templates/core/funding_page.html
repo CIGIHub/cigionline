@@ -4,326 +4,326 @@
 {% block body_class %}funding-page{% endblock %}
 
 {% block content %}
-<article>
-  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section class="body">
-    <div class="container-sm">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </div>
-  </section>
-  <section class="funding-container">
-    <div class="container-lg">
-      <h2>Fiscal 2019 Funding</h2>
-      <br>
-      <table class="funding">
-        <thead>
-          <tr>
-            <th width="190" class="no-right-border"></th>
-            <th></th>
-            <th colspan='2' class="center">2018-19</th>
-          </tr>
-          <tr>
-            <th width="190">Core Funding Sources</th>
-            <th>Fund Explanation</th>
-            <th>$ Income</th>
-            <th>%&nbsp;of&nbsp;Total&nbsp;Income</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Long‐term Endowment Fund</td>
-            <td>The Fund was created with initial private donations from CIGI founder Jim Balsillie (approximately $20 million) and other donors, matched in 2003 by the federal government of Canada ($30 million). Investment income from the Endowment Fund is recognized in the Operating Fund.
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>Campus Fund</td>
-            <td>
-              The Fund was created with $50 million from governments of Ontario and Canada to build the CIGI Campus and to house schools and research programs including the Balsillie School of International Affairs. Funding was matched with an additional $50 million from CIGI founder Jim Balsillie.
-              <br>
-              <br>
-              The fund earns investment income and rental income from the University of Waterloo, Wilfred Laurier University and other tenants.
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">
-              In
-              2018-2019
-              the fund earned:
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Investment Income</td>
-            <td align="right" class="text-right">$513,234</td>
-            <td align="right" class="text-right">5.02%</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Rental Income</td>
-            <td align="right" class="text-right">$941,800</td>
-            <td align="right" class="text-right">9.22%</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Total</td>
-            <td class="total text-right" align="right">$1,455,034</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>Africa Initiative Fund</td>
-            <td>The Fund was created with a $10 million anonymous private philanthropic donation in 2007 to focus on policy research and capacity building in Africa.</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">In 2018-2019 the fund earned:</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Investment Income</td>
-            <td align="right" class="text-right">$271,149</td>
-            <td align="right" class="text-right">2.65%</td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>John Holmes Library Fund</td>
-            <td>The Fund was created in 2007 with a donation from the Canadian Institute for International Affairs to maintain the John Homes Collection of the CIGI Campus Library.</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">In 2018-2019 the fund earned:</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Investment Income</td>
-            <td align="right" class="text-right">$4,133</td>
-            <td align="right" class="text-right">0.04%</td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>Balsillie Family Foundation Fund</td>
-            <td>The Fund was created in 2013 with a $30 million donation received from CIGI founder Jim Balsillie through the Balsillie Family Foundation and matched by $30 million from the government of Ontario to conduct research and teaching to contribute to advancements in international law. Government of Ontario Funding ceased in May 2019. The matching donation from the Balsillie Family Foundation will be used for matching future partnership agreements.</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">In 2018-2019 the fund earned:</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Investment Income</td>
-            <td align="right" class="text-right">$715,269</td>
-            <td align="right" class="text-right">7.00%</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Funding from the Province of Ontario</td>
-            <td align="right" class="text-right">$2,597,309</td>
-            <td align="right" class="text-right">25.43%</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Total</td>
-            <td class="total text-right" align="right">$3,312,578</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>Operating and Capital Fund</td>
-            <td>The fund manages investment income from the long-term endowment as well as other sources of revenue including small donations, book royalties, publication sales, and CIGI facility rentals.</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">In 2018-2019 the fund earned:</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Investment Income</td>
-            <td align="right" class="text-right">$4,002,042</td>
-            <td align="right" class="text-right">39.18%</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Donations and Grants</td>
-            <td align="right" class="text-right">$619,178</td>
-            <td align="right" class="text-right">6.06%</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Event Rentals/Book Royalties/Publication Sales</td>
-            <td align="right" class="text-right">$550,204</td>
-            <td align="right" class="text-right">5.39%</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td align="right">Total</td>
-            <td class="total text-right" align="right">$5,171,424</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding final-total">
-            <td>&nbsp;</td>
-            <td align="right"><strong>Total Revenue</strong></td>
-            <td class="total final-total text-right" align="right"><strong>$10,214,318</strong></td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="no-padding">
-            <td colspan="4"><span class="small-grey">All amounts in CDN dollars</span></td>
-          </tr>
-        </tbody>
-      </table>
+  <article>
+    {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+    <section class="body">
+      <div class="container-sm">
+        {% for block in self.body %}
+          {% include_block block %}
+        {% endfor %}
+      </div>
+    </section>
+    <section class="funding-container">
+      <div class="container-lg">
+        <h2>Fiscal 2019 Funding</h2>
+        <br>
+        <table class="funding">
+          <thead>
+            <tr>
+              <th width="190" class="no-right-border"></th>
+              <th></th>
+              <th colspan='2' class="center">2018-19</th>
+            </tr>
+            <tr>
+              <th width="190">Core Funding Sources</th>
+              <th>Fund Explanation</th>
+              <th>$ Income</th>
+              <th>%&nbsp;of&nbsp;Total&nbsp;Income</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Long‐term Endowment Fund</td>
+              <td>The Fund was created with initial private donations from CIGI founder Jim Balsillie (approximately $20 million) and other donors, matched in 2003 by the federal government of Canada ($30 million). Investment income from the Endowment Fund is recognized in the Operating Fund.
+              </td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>Campus Fund</td>
+              <td>
+                The Fund was created with $50 million from governments of Ontario and Canada to build the CIGI Campus and to house schools and research programs including the Balsillie School of International Affairs. Funding was matched with an additional $50 million from CIGI founder Jim Balsillie.
+                <br>
+                <br>
+                The fund earns investment income and rental income from the University of Waterloo, Wilfred Laurier University and other tenants.
+              </td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">
+                In
+                2018-2019
+                the fund earned:
+              </td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Investment Income</td>
+              <td align="right" class="text-right">$513,234</td>
+              <td align="right" class="text-right">5.02%</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Rental Income</td>
+              <td align="right" class="text-right">$941,800</td>
+              <td align="right" class="text-right">9.22%</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Total</td>
+              <td class="total text-right" align="right">$1,455,034</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>Africa Initiative Fund</td>
+              <td>The Fund was created with a $10 million anonymous private philanthropic donation in 2007 to focus on policy research and capacity building in Africa.</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">In 2018-2019 the fund earned:</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Investment Income</td>
+              <td align="right" class="text-right">$271,149</td>
+              <td align="right" class="text-right">2.65%</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>John Holmes Library Fund</td>
+              <td>The Fund was created in 2007 with a donation from the Canadian Institute for International Affairs to maintain the John Homes Collection of the CIGI Campus Library.</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">In 2018-2019 the fund earned:</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Investment Income</td>
+              <td align="right" class="text-right">$4,133</td>
+              <td align="right" class="text-right">0.04%</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>Balsillie Family Foundation Fund</td>
+              <td>The Fund was created in 2013 with a $30 million donation received from CIGI founder Jim Balsillie through the Balsillie Family Foundation and matched by $30 million from the government of Ontario to conduct research and teaching to contribute to advancements in international law. Government of Ontario Funding ceased in May 2019. The matching donation from the Balsillie Family Foundation will be used for matching future partnership agreements.</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">In 2018-2019 the fund earned:</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Investment Income</td>
+              <td align="right" class="text-right">$715,269</td>
+              <td align="right" class="text-right">7.00%</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Funding from the Province of Ontario</td>
+              <td align="right" class="text-right">$2,597,309</td>
+              <td align="right" class="text-right">25.43%</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Total</td>
+              <td class="total text-right" align="right">$3,312,578</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>Operating and Capital Fund</td>
+              <td>The fund manages investment income from the long-term endowment as well as other sources of revenue including small donations, book royalties, publication sales, and CIGI facility rentals.</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">In 2018-2019 the fund earned:</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Investment Income</td>
+              <td align="right" class="text-right">$4,002,042</td>
+              <td align="right" class="text-right">39.18%</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Donations and Grants</td>
+              <td align="right" class="text-right">$619,178</td>
+              <td align="right" class="text-right">6.06%</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Event Rentals/Book Royalties/Publication Sales</td>
+              <td align="right" class="text-right">$550,204</td>
+              <td align="right" class="text-right">5.39%</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td align="right">Total</td>
+              <td class="total text-right" align="right">$5,171,424</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding final-total">
+              <td>&nbsp;</td>
+              <td align="right"><strong>Total Revenue</strong></td>
+              <td class="total final-total text-right" align="right"><strong>$10,214,318</strong></td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="no-padding">
+              <td colspan="4"><span class="small-grey">All amounts in CDN dollars</span></td>
+            </tr>
+          </tbody>
+        </table>
 
-      <p>&nbsp;</p>
-      <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
 
-      <h2>Donations and Grants</h2>
-      <br>
-      <table class="donations">
-        <thead>
-          <tr>
-            <th width="40%" class="no-right-border">&nbsp;</th>
-            <th>&nbsp;</th>
-            <th class="center">%&nbsp;of&nbsp;Total&nbsp;Income</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="underline">
-            <td class="no-right-border"><strong>SUPPORTERS $50,000 to $200,000</strong></td>
-            <td>&nbsp;</td>
-            <td class="center">3.61%</td>
-          </tr>
-          <tr>
-            <td>Global Affairs Canada</td>
+        <h2>Donations and Grants</h2>
+        <br>
+        <table class="donations">
+          <thead>
+            <tr>
+              <th width="40%" class="no-right-border">&nbsp;</th>
+              <th>&nbsp;</th>
+              <th class="center">%&nbsp;of&nbsp;Total&nbsp;Income</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="underline">
+              <td class="no-right-border"><strong>SUPPORTERS $50,000 to $200,000</strong></td>
+              <td>&nbsp;</td>
+              <td class="center">3.61%</td>
+            </tr>
+            <tr>
+              <td>Global Affairs Canada</td>
+              <td>To help fund the World Refugee Council</td>
+              <td >&nbsp;</td>
+            </tr>
+            <tr>
+            <td>International Development Research Centre</td>
             <td>To help fund the World Refugee Council</td>
-            <td >&nbsp;</td>
-          </tr>
-          <tr>
-          <td>International Development Research Centre</td>
-          <td>To help fund the World Refugee Council</td>
-          <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td>MacArthur Foundation</td>
-            <td>To help fund the World Refugee Council</td>
-            <td >&nbsp;</td>
-          </tr>
-          <tr>
-            <td>Public Safety Canada</td>
-            <td>To help fund the Global Commission on Internet Governance Research Advisory Network</td>
-            <td >&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="3">&nbsp;</td>
-          </tr>
-          <tr class="underline">
-            <td class="no-right-border"><strong>SUPPORTERS under $50,000</strong></td>
             <td>&nbsp;</td>
-            <td class="center">2.45%</td>
-          </tr>
-          <tr>
-            <td colspan="2">Carnegie Foundation</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">Google (Alphabet)</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">Indigenous and Northern Affairs Canada</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">Innovation, Science and Economic Development Canada</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">Internet Society</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">Microsoft</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">Visa Foundation</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr class="overline">
-            <td colspan="2"><strong>Total Donations and Grants</strong></td>
-            <td class="center"><strong>6.06%</strong></td>
-          </tr>
-        </tbody>
-      </table>
+            </tr>
+            <tr>
+              <td>MacArthur Foundation</td>
+              <td>To help fund the World Refugee Council</td>
+              <td >&nbsp;</td>
+            </tr>
+            <tr>
+              <td>Public Safety Canada</td>
+              <td>To help fund the Global Commission on Internet Governance Research Advisory Network</td>
+              <td >&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr class="underline">
+              <td class="no-right-border"><strong>SUPPORTERS under $50,000</strong></td>
+              <td>&nbsp;</td>
+              <td class="center">2.45%</td>
+            </tr>
+            <tr>
+              <td colspan="2">Carnegie Foundation</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">Google (Alphabet)</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">Indigenous and Northern Affairs Canada</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">Innovation, Science and Economic Development Canada</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">Internet Society</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">Microsoft</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">Visa Foundation</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr class="overline">
+              <td colspan="2"><strong>Total Donations and Grants</strong></td>
+              <td class="center"><strong>6.06%</strong></td>
+            </tr>
+          </tbody>
+        </table>
 
-      <br>
-      <br>
-      <h2>In-kind contributions</h2>
+        <br>
+        <br>
+        <h2>In-kind contributions</h2>
 
-      <p>These contributions include sponsorships in kind from various partners, typically in the form of shared conference, research or travel expenses.</p>
-      <ul>
-        <li>American University</li>
-        <li>Balsillie School of International Affairs</li>
-        <li>Canadian Bar Association</li>
-        <li>Canadian High Commission</li>
-        <li>Euro 50 Group</li>
-        <li>Faculty of Law, University of Manitoba</li>
-        <li>Gateway House</li>
-        <li>Max Planck Institute for International, European Regulatory Procedural Law</li>
-        <li>The Inter-American Dialogue</li>
-        <li>University College, London</li>
-        <li>University of New South Wales</li>
-        <li>University of Pennsylvania</li>
-      </ul>
-    </div>
-  </section>
-</article>  
+        <p>These contributions include sponsorships in kind from various partners, typically in the form of shared conference, research or travel expenses.</p>
+        <ul>
+          <li>American University</li>
+          <li>Balsillie School of International Affairs</li>
+          <li>Canadian Bar Association</li>
+          <li>Canadian High Commission</li>
+          <li>Euro 50 Group</li>
+          <li>Faculty of Law, University of Manitoba</li>
+          <li>Gateway House</li>
+          <li>Max Planck Institute for International, European Regulatory Procedural Law</li>
+          <li>The Inter-American Dialogue</li>
+          <li>University College, London</li>
+          <li>University of New South Wales</li>
+          <li>University of Pennsylvania</li>
+        </ul>
+      </div>
+    </section>
+  </article>  
 {% endblock content %}
