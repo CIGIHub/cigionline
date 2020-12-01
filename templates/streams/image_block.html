@@ -2,7 +2,9 @@
 
 <div class="stream-block stream-block-image">
   <div class="container-sm">
-    <div class="img-wrapper">{% image self.image width-640 %}</div>
-    <div class="stream-block-image-caption">{{self.image.title}}</div>
+    {% image self.image width-640 %}
+    {% if not self.hide_image_caption %}
+      <div class="stream-block-image-caption">{{self.image.title}}</div>
+    {% endif %}
   </div>
 </div>
