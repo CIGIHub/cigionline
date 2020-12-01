@@ -231,6 +231,23 @@ class PublicationPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def featured_person_list(self):
+        """
+        For featured publications, only display the first 3 authors/editors.
+        """
+
+        person_list = list(self.authors) + list(self.editors)
+        del person_list[3:]
+        return person_list
+
+    def featured_person_list_has_more(self):
+        """
+        If there are more than 3 authors/editors for featured publications,
+        display "and more".
+        """
+
+        return len(list(self.authors) + list(self.editors)) > 3
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
