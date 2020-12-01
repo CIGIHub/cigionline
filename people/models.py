@@ -86,9 +86,9 @@ class PersonListPage(BasicPageAbstract, Page):
             context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
         elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             personFilter['person_types__name'] = 'Management Team'
-            context['senior_management'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            context['senior_management'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
             personFilter['person_types__name'] = 'Board Member'
-            context['board_members'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            context['board_members'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
         return context
 
