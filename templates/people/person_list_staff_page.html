@@ -8,40 +8,40 @@
 {% endblock %}
 
 {% block content %}
-{% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-{% if self.body %}
-<section>
-  <div class="container-sm">
-    {% for block in self.body %}
-    {% include_block block %}
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-<section>
-  <div class="container-sm">
-    <div class="pager-alphabet">
-      <ul>
-        {% for letter in letters %}
-        <li>
-          <a href="/about/staff?letter={{letter}}">{{letter}}</a>
-        </li>
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% if self.body %}
+    <section>
+      <div class="container-sm">
+        {% for block in self.body %}
+        {% include_block block %}
         {% endfor %}
-        <li>
-          <a href="/about/staff">Show All</a>
-        </li>
-      </ul>
-    </div>
+      </div>
+    </section>
+  {% endif %}
+  <section>
+    <div class="container-sm">
+      <div class="pager-alphabet">
+        <ul>
+          {% for letter in letters %}
+            <li>
+              <a href="/about/staff?letter={{letter}}">{{letter}}</a>
+            </li>
+          {% endfor %}
+          <li>
+            <a href="/about/staff">Show All</a>
+          </li>
+        </ul>
+      </div>
 
-    <div class="staff-directory">
-      <div class="staff-directory-heading">
-        <div class="staff-directory-name">NAME</div>
-        <div class="staff-directory-contact">CONTACT</div>
-      </div>
-      <div id="staff-directory-list">
-        {% include "includes/person_list_staff_page_staff_directory.html" %}
+      <div class="staff-directory">
+        <div class="staff-directory-heading">
+          <div class="staff-directory-name">NAME</div>
+          <div class="staff-directory-contact">CONTACT</div>
+        </div>
+        <div id="staff-directory-list">
+          {% include "includes/person_list_staff_page_staff_directory.html" %}
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 {% endblock %}
