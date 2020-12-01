@@ -6,12 +6,13 @@
   }
 
   img {
-    height: auto;
-    margin: 0.625em 0.625em 0 0;
-    width: 200px;
-
-    @include media-breakpoint-down(sm) {
-      display: none;
+    display: none;
+    
+    @include media-breakpoint-up(sm) {
+      display: block;
+      height: auto;
+      margin: 0.625em 0.625em 0 0;
+      width: 200px;
     }
   }
 
@@ -21,12 +22,12 @@
     position: relative;
 
     &.has-image {
-      margin-left: 1em;
-      padding: 1em 0;
-
-      @include media-breakpoint-down(sm) {
-        margin-left: 0;
-        padding: 1em 2em;
+      margin-left: 0;
+      padding: 1em 2em;
+      
+      @include media-breakpoint-up(sm) {
+        margin-left: 1em;
+        padding: 1em 0;
       }
     }
 
