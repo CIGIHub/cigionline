@@ -9,8 +9,11 @@ $(function() {
     
     if (scrollTop >= 66) {
       $('#global-nav').addClass('scrolled-nav');
-    } else if (scrollTop < 66) {
+      $('.desktop-menu').fadeOut();
+
+    } else {
       $('#global-nav').removeClass('scrolled-nav');
+      $('.desktop-menu').fadeIn();
     }
   });
 });
