@@ -4,18 +4,19 @@ import './css/cigionline.scss';
 // MAIN NAVIGATION SCROLL
 $(function() {
   let scrollTop = 0;
+
   $(window).on('scroll', function() {
     scrollTop = $(window).scrollTop();
     
     if (scrollTop >= 66) {
       $('#global-nav').addClass('scrolled-nav');
       $('.desktop-menu').fadeOut();
-
     } else {
       $('#global-nav').removeClass('scrolled-nav');
       $('.desktop-menu').fadeIn();
     }
   });
+
 });
 // SEARCH BAR OPEN
 
