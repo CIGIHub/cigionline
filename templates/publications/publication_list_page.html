@@ -5,8 +5,9 @@
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
   <div class="container-lg">
-    {% include "includes/publications_search_bar.html" %}
+    {% include 'includes/publications_featured_list.html' %}
 
+    {% include "includes/publications_search_bar.html" %}
     <table class="custom-theme-table table-publications">
       <thead>
       <tr>
@@ -25,7 +26,7 @@
               <span class="table-icon"><i class="fal fa-file-alt"></i></span>
               <div class="table-infos">
                 <a href="{{publication.url}}" class="table-title-link">{{publication.title}}</a>
-                <div class="table-infos-date">{{ publication.publishing_date|date:"F m, Y" }}</div>
+                <div class="table-infos-date">{{ publication.publishing_date|date:"F j, Y" }}</div>
               </div>
             </div>
           </td>
@@ -73,4 +74,3 @@
     </table>
   </div>
 {% endblock content %}
-

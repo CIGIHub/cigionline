@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+    'articles',
     'careers',
     'compressor',
     'core',
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'wagtailmedia',
     'webpack_loader',
 
     'django.contrib.admin',
@@ -76,7 +78,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
@@ -123,6 +124,18 @@ DATABASES = {
         'CONN_MAX_AGE': 600,
     }
 }
+
+if os.environ.get('GITHUB_WORKFLOW'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': 'localhost',
+            'NAME': 'cigionline',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'CONN_MAX_AGE': 600,
+        }
+    }
 
 
 # Password validation
