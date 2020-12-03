@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('newsletters', '0001_initial'),
+        ('newsletters', '0002_add_follow_cta'),
     ]
 
     operations = [
