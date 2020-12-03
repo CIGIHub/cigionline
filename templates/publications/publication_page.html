@@ -4,7 +4,7 @@
 {% block body_class %}publication-page{% endblock %}
 
 {% block content %}
-{% include "includes/hero_publication.html" with title=self.title  subtitle=self.subtitle authors=self.authors date=self.publishing_date download=self.pdf_downloads %}
+{% include "includes/hero_publication.html" with title=self.title  subtitle=self.subtitle authors=self.authors date=self.publishing_date download=self.pdf_downloads topics=self.topics%}
 {% endblock content %}
 
 {{ pdf_downloads}}

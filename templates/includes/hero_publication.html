@@ -2,7 +2,7 @@
 
 <section class="hero">
   <div class="container-sm hero-container">
-    
+    {{ topics }}
       <h1>{{title}}</h1>
       <h2>{{subtitle|safe}}</h2>
       {% include "includes/authors.html" with authors=self.authors %}
@@ -10,8 +10,12 @@
       {% include "includes/social_links.html" with title=self.title %}
 
       {% for document in download %}
-        <button class="publication-download"><a href="{{document.value.file.url}}"><i class="fa fas fa-download"></i> {{ document.value.button_text}}</a></button>
+        <button class="publication-download">
+            <a href="{{document.value.file.url}}">
+                <i class="fa fas fa-download"></i> 
+                {% if document.value.button_text == '' %}PDF Download {% else %} {{ document.value.button_text}} {% endif %}
+            </a>
+        </button>
       {% endfor %}
-
   </div>
 </section>
