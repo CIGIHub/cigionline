@@ -1,0 +1,38 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{{content.image_hero.image}}
+<div class="feature-content-wrapper">
+  <a href="{{content.url}}" class="feature-content-image">
+    {% image content.image_hero width-400 as content_image_hero %}
+    <div class="img-wrapper" style="background-image: url('{{ content_image_hero.url }}');"></div>
+    <div class="content-image-type">
+      <i class="fas fa-play"></i>
+    </div>
+  </a>
+
+  <ul class="custom-text-list feature-content-topic-list">
+    {% for topic in content.topics.all %}
+      <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <p class="feature-content-title">
+    <a href="{{content.url}}">
+      {{content.title}}
+    </a>
+  </p>
+
+  <ul class="custom-text-list feature-content-speakers-list">
+    {% with 3 as speaker_limit %}{% with content.speakers as speaker_blocks %}
+      {% for speaker_block in speaker_blocks %}
+        {% if forloop.counter <= speaker_limit %}
+          <li><a href="{{ speaker_block.value.url }}">{{ speaker_block.value }}</a></li>
+        {% elif forloop.counter == speaker_limit|add:1 %}
+          <li>And more</li>
+        {% endif %}
+      {% endfor %}
+    {% endwith %}{% endwith %}
+  </ul>
+
+  <p class="feature-content-date">{{ content.publishing_date|date:"F m, Y" }}</p>
+
+</div>
