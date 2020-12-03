@@ -1,0 +1,11 @@
+{% load menu_tags %}
+
+<section class="hero">
+  <div class="container-sm hero-container">
+    
+      <h1>{{title}}</h1>
+      <h2>{{subtitle|safe}}</h2>
+      {% include "includes/authors.html" with authors=self.authors %}
+      {% include "includes/date.html" with date=self.publishing_date %}
+  </div>
+</section>
