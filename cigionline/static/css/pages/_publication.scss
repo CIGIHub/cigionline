@@ -14,16 +14,51 @@
         }
 
         h1 {
-            font-size: 2.75rem;
+            font-size: 2.75em;
             line-height: 1.1em;
             font-weight: 400;;
         }
 
         h2 {
             color: $black;
-            font-size: 1.1rem;
+            font-size: 1.1em;
             font-weight: 400;
         }
+
+        .authors {
+            justify-content: center;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 0.95em;
+            line-height: 1.25em;
+            a {
+                color: $cigi-dark-grey;
+                &:hover {
+                    color: $cigi-pink;
+                }
+            }
+        }
         
+
+        .date {
+            color: $cigi-text-grey;
+        }
+    }
+}
+
+// BUTTONS
+
+button.publication-download {
+    border-radius: 2px;
+    background-color: $color--blue;
+    transition: background-color 0.25s ease;
+    font-size: 0.85em;
+    line-height: 1.1em;
+    padding: 7px 10px;
+    &:hover {
+        background-color: $color-dark-blue;
+    }
+    a {
+        color: $white;
     }
 }
