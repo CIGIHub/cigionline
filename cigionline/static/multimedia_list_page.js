@@ -1,12 +1,15 @@
 jQuery(function() {
   const multimediaList = $('#multimedia-list-section');
-  
+  const loaderSpinner = $('.loader-spinner');
+
   function paginate() {
     const pagination = $('.pagination-links-numbered');
     pagination.find('a').on('click', function(event) {
-      event.preventDefault();
       const page = $(this).attr('data-page');
-      console.log(page);
+
+      event.preventDefault();
+      loaderSpinner.addClass('show');
+
       $.ajax({
         url: '/multimedia/',
         method: 'get',
@@ -14,6 +17,7 @@ jQuery(function() {
         success(response) {
           multimediaList.empty().append(response);
           paginate();
+          loaderSpinner.removeClass('show');
         },
       });
     });

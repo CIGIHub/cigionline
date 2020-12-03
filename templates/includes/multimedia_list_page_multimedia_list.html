@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 multimedia-list-row" id="multimedia-list">
-  {% for page in content %}
+  {% for page in multimedia %}
     <div class="col multimedia-list-col">
       <div class="multimedia-card-wrapper">
         <a href="{{page.url}}" class="multimedia-card-image">
@@ -44,5 +44,5 @@
 </div>
 
 <div class="pagination">
-  {% include "includes/pagination_numbered.html" %}
+  {% include "includes/pagination_numbered.html" with content=multimedia %}
 </div>

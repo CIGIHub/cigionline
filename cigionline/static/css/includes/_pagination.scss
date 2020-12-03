@@ -8,7 +8,7 @@
     display: inline-block;
     padding: 0 0.5em;
     position: relative;
-    
+
     a {
       text-align: center;
     }
@@ -72,5 +72,33 @@
         width: 15px;
       }
     }
+  }
+}
+
+.loader-spinner {
+  background: rgba(255, 255, 255, 0.5);
+  display: none;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 1;
+
+  &.show {
+    display: block;
+
+    img {
+      display: block;
+    }
+  }
+
+  img {
+    display: none;
+    left: 50%;
+    height: 50px;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }

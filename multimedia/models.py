@@ -70,7 +70,7 @@ class MultimediaListPage(BasicPageAbstract, Page):
             multimedia = paginator.page(1)
         except EmptyPage:
             multimedia = paginator.page(paginator.num_pages)
-        context['content'] = multimedia
+        context['multimedia'] = multimedia
         return context
 
     class Meta:
