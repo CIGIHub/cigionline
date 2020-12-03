@@ -18,6 +18,9 @@ jQuery(function() {
           multimediaList.empty().append(response);
           paginate();
           loaderSpinner.removeClass('show');
+          document.querySelector('#multimedia-list-section').scrollIntoView({
+            behavior: 'smooth',
+          });
         },
       });
     });
