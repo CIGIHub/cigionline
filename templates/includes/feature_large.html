@@ -1,11 +1,9 @@
-{% load wagtailcore_tags wagtailimages_tags %}
-{{content.image_hero.image}}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
 <div class="feature-content-wrapper">
   <a href="{{content.url}}" class="feature-content-image">
-    {% image content.image_hero width-400 as content_image_hero %}
-    <div class="img-wrapper" style="background-image: url('{{ content_image_hero.url }}');"></div>
-    <div class="content-image-type">
-      <i class="fas fa-play"></i>
+    <div class="img-wrapper">
+      {% image content.image_hero width-400 %}
     </div>
   </a>
 
@@ -17,7 +15,7 @@
 
   <p class="feature-content-title">
     <a href="{{content.url}}">
-      {{content.title}}
+      {{content}}
     </a>
   </p>
 

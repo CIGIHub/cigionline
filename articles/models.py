@@ -58,7 +58,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
         related_name='featured_articles',
     )
     article_page = models.ForeignKey(
-        'wagtailcore.Page',
+        'articles.ArticlePage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
