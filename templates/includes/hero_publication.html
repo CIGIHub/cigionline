@@ -1,13 +1,6 @@
-
-{% load wagtailcore_tags %}
-
 <section class="hero">
   <div class="container-sm hero-container">
-    <ul class="topics custom-text-list">
-        {% for topic in topics.all %}
-          <li><a href="{% slugurl topic.slug %}">{{ topic }}</a></li>
-        {% endfor %}
-      </ul>
+      {% include "includes/topics.html" with topics=self.topics %}
       <h1>{{title}}</h1>
       <h2>{{subtitle|safe}}</h2>
       {% include "includes/authors.html" with authors=self.authors %}
