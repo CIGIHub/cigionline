@@ -438,7 +438,7 @@ class BasicPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    parent_page_types = ['core.BasicPage', 'core.HomePage']
+    parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'core.HomePage']
     subpage_types = [
         'core.AnnualReportListPage',
         'core.BasicPage',
