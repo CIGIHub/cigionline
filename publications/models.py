@@ -98,6 +98,7 @@ class PublicationListPageFeaturedPublication(Orderable):
         ),
     ]
 
+
 class PublicationPage(
     BasicPageAbstract,
     ContentPage,
