@@ -1,8 +1,13 @@
-{% load menu_tags static wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% load wagtailcore_tags %}
 
 <section class="hero">
   <div class="container-sm hero-container">
-    {{ topics }}
+    <ul class="custom-text-list">
+        {% for topic in topics.all %}
+          <li><a href="{% slugurl topic.slug %}">{{ topic }}</a></li>
+        {% endfor %}
+      </ul>
       <h1>{{title}}</h1>
       <h2>{{subtitle|safe}}</h2>
       {% include "includes/authors.html" with authors=self.authors %}
@@ -19,3 +24,4 @@
       {% endfor %}
   </div>
 </section>
+

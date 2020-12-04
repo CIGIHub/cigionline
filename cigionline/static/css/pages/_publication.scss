@@ -25,8 +25,11 @@
             font-weight: 400;
         }
 
-        .authors {
+        .custom-text-list {
             justify-content: center;
+        }
+
+        .authors {
             margin-top: 1.5em;
             margin-bottom: 0.5em;
             font-size: 0.95em;
@@ -37,6 +40,22 @@
                     color: $cigi-pink;
                 }
             }
+
+            .block-author {
+                &:not(:only-child) {
+                  &::after {
+                    content: ', ';
+                    margin-right: 2px;
+                  }
+                }
+            
+                &:last-child {
+                  &::after {
+                    display: none;
+                  }
+                }
+              }
+
         }
         
 
