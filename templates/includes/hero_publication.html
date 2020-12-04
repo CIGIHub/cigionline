@@ -3,7 +3,7 @@
 
 <section class="hero">
   <div class="container-sm hero-container">
-    <ul class="custom-text-list">
+    <ul class="topics custom-text-list">
         {% for topic in topics.all %}
           <li><a href="{% slugurl topic.slug %}">{{ topic }}</a></li>
         {% endfor %}

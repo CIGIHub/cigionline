@@ -29,6 +29,11 @@
             justify-content: center;
         }
 
+        .topics {
+            font-size: 0.8em;
+            margin: 1em 0;
+        }
+
         .authors {
             margin-top: 1.5em;
             margin-bottom: 0.5em;
@@ -55,9 +60,7 @@
                   }
                 }
               }
-
         }
-        
 
         .date {
             color: $cigi-text-grey;
@@ -74,6 +77,7 @@ button.publication-download {
     font-size: 0.85em;
     line-height: 1.1em;
     padding: 7px 10px;
+    margin: 1em 0;
     &:hover {
         background-color: $color-dark-blue;
     }
