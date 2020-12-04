@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+
+<section class="about-the-author">
+    <div class="container-sm">
+
+        <h3>About the author{% if authors|length > 1 %}s{% endif %}</h3>
+        {% for author in authors %}
+            {% if author.value.short_bio != '' %}
+                <div class="author-block">
+                    <div class="name">{{ author.value.first_name }}  {{ author.value.last_name }}</div>
+                    {{ author.value.short_bio|richtext }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+  </section>
+  

@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 {% include "includes/hero_standard.html" with title=self.title %}
+{% include "includes/about_the_author.html" with authors=self.authors %}
+
 {% endblock content %}
