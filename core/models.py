@@ -67,20 +67,20 @@ class BasicPageAbstract(models.Model):
         ('chart', blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('paragraph', ParagraphBlock()),
         ('image', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('image_full_bleed', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('image_scroll', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('block_quote', blocks.StructBlock([
             ('quote', blocks.RichTextBlock(required=True)),
