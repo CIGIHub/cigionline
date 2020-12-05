@@ -59,3 +59,11 @@
     top: 0;
   }
 }
+
+@mixin image-caption {
+  color: $cigi-text-grey;
+  font-size: 0.7em;
+  line-height: 1em;
+  padding: 0.25em 0;
+  text-align: left;
+}
