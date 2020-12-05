@@ -19,7 +19,7 @@
 
 @mixin display-grid {
   display: -ms-grid;
-  display: grid;
+  display: grid; // sass-lint:disable-line no-duplicate-properties
 }
 
 @mixin comma-separated {
