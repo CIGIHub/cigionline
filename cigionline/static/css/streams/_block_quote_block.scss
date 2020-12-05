@@ -6,14 +6,14 @@
   }
 
   img {
-    display: none;
-    
     @include media-breakpoint-up(sm) {
       display: block;
       height: auto;
       margin: 0.625em 0.625em 0 0;
       width: 200px;
     }
+
+    display: none;
   }
 
   .stream-block-blockquote-content {
@@ -22,13 +22,13 @@
     position: relative;
 
     &.has-image {
-      margin-left: 0;
-      padding: 1em 2em;
-      
       @include media-breakpoint-up(sm) {
         margin-left: 1em;
         padding: 1em 0;
       }
+
+      margin-left: 0;
+      padding: 1em 2em;
     }
 
     &::before {
