@@ -14,7 +14,7 @@ $(document).ready(function() {
       $('#global-nav').removeClass('scrolled-nav');
     }
   });
-})
+});
 // SEARCH BAR OPEN
 
 $(document).ready(function() {
