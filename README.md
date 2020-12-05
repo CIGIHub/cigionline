@@ -1,6 +1,7 @@
 # cigionline
 
 [![Django CI](https://github.com/CIGIHub/cigionline/workflows/Django%20CI/badge.svg)](https://github.com/CIGIHub/cigionline/actions?query=workflow%3A%22Django+CI%22)
+[![Node.js CI](https://github.com/CIGIHub/cigionline/workflows/Node.js%20CI/badge.svg)](https://github.com/CIGIHub/cigionline/actions?query=workflow%3A%22Node.js+CI%22)
 [![Coverage Status](https://coveralls.io/repos/github/CIGIHub/cigionline/badge.svg)](https://coveralls.io/github/CIGIHub/cigionline)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=CIGIHub/cigionline)](https://dependabot.com)
 
