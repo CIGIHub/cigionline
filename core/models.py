@@ -3,6 +3,8 @@ from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
+    BlockQuoteBlock,
+    ImageBlock,
     AutoPlayVideoBlock,
 )
 from wagtail.admin.edit_handlers import (
@@ -70,10 +72,8 @@ class BasicPageAbstract(models.Model):
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
         ])),
         ('paragraph', ParagraphBlock()),
-        ('image', blocks.StructBlock([
-            ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
-        ])),
+        ('image', ImageBlock()),
+        ('block_quote', BlockQuoteBlock()),
         ('image_full_bleed', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
@@ -81,14 +81,6 @@ class BasicPageAbstract(models.Model):
         ('image_scroll', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
-        ])),
-        ('block_quote', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-            ('image', ImageChooserBlock(required=False)),
-            ('link_url', blocks.URLBlock(required=False)),
-            ('link_text', blocks.CharBlock(required=False)),
         ])),
         ('embedded_multimedia', blocks.StructBlock([
             ('multimedia_url', blocks.URLBlock(required=True)),
