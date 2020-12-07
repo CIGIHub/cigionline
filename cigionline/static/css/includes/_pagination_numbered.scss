@@ -15,13 +15,13 @@
 
     &.pagination-link-first,
     &.pagination-link-last {
-      display: none;
-      padding: 0;
-      position: absolute;
-
       @include media-breakpoint-up(sm) {
         display: inline;
       }
+
+      display: none;
+      padding: 0;
+      position: absolute;
 
       &:hover {
         &::after {
@@ -53,16 +53,16 @@
     &.pagination-underline {
       &.pagination-underline-centred {
         &::after {
+          left: 0;
           margin-left: auto;
           margin-right: auto;
-          left: 0;
           right: 0;
           text-align: center;
         }
       }
 
       &::after {
-        background: #e6023b;
+        background: $cigi-pink;
         bottom: -0.25em;
         content: ' ';
         display: block;
@@ -76,7 +76,7 @@
 }
 
 .loader-spinner {
-  background: rgba(255, 255, 255, 0.5);
+  background: $white--half-opacity;
   display: none;
   height: 100vh;
   left: 0;
@@ -95,8 +95,8 @@
 
   img {
     display: none;
-    left: 50%;
     height: 50px;
+    left: 50%;
     position: fixed;
     top: 50%;
     transform: translate(-50%, -50%);
