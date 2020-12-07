@@ -45,15 +45,21 @@
       max-width: 580px;
 
       &.center-text {
-        text-align: center;
+        @include media-breakpoint-up(md) {
+          text-align: center;
 
-        ul {
-          justify-content: center;
+          ul {
+            justify-content: center;
+          }
         }
       }
 
       .feature-content-title {
-        font-size: 2em;
+        @include media-breakpoint-up(md) {
+          font-size: 2em;
+        }
+
+        font-size: 1.375em;
       }
     }
   }
