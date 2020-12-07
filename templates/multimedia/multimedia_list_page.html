@@ -6,9 +6,9 @@
   <div class="container-lg">
     <section class="multimedia-list-section">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 multimedia-list-row">
+
         {% for multimedia_page in multimedia %}
-        {% include 'includes/feature_large.html' with content=multimedia_page %}
-          <!-- <div class="col multimedia-list-col">
+          <div class="col multimedia-list-col">
             <div class="multimedia-card-wrapper">
               <a href="{{multimedia_page.url}}" class="multimedia-card-image">
                 {% image multimedia_page.image_hero width-400 as multimedia_image_hero %}
@@ -47,7 +47,7 @@
               <p class="multimedia-card-date">{{ multimedia_page.publishing_date|date:"F j, Y" }}</p>
 
             </div>
-          </div> -->
+          </div>
         {% endfor %}
       </div>
     </section>
