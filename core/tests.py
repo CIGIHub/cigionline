@@ -48,7 +48,7 @@ class BasicPageTests(WagtailPageTests):
         """
         self.assertAllowedParentPageTypes(
             BasicPage,
-            {BasicPage, HomePage}
+            {BasicPage, HomePage, JobPostingListPage}
         )
 
     def test_basicpage_child_page_types(self):
