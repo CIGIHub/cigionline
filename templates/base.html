@@ -24,6 +24,7 @@
 
     {% render_bundle 'cigionline' %}
     {% block extra_bundles %}
+      {# Override this in templates to add extra javascript or css #}
     {% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">
@@ -39,10 +40,6 @@
 
     {% block footer %}
       {% include "includes/footer.html" %}
-    {% endblock %}
-
-    {% block extra_js %}
-      {# Override this in templates to add extra javascript #}
     {% endblock %}
   </body>
 </html>
