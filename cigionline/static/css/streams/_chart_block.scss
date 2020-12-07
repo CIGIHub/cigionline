@@ -1,3 +1,14 @@
 .stream-block-chart {
+  .container-sm {
+    @include media-breakpoint-up(sm) {
+      padding: 0 5em;
+    }
+  }
 
+  .stream-block-chart-title {
+    border-top: 5px solid $cigi-pink;
+    color: $cigi-pink;
+    line-height: 1.25;
+    padding: 0.5em 0 1em 0;
+  }
 }

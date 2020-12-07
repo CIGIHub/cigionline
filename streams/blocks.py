@@ -54,9 +54,9 @@ class BlockQuoteBlock(blocks.StructBlock):
 class ChartBlock(blocks.StructBlock):
     """Chart image with title"""
 
+    title = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
-    title = blocks.CharBlock(required=False)
 
     class Meta:
         icon = 'image'

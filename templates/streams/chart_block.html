@@ -2,6 +2,9 @@
 
 <div class="stream-block stream-block-chart">
   <div class="container-sm">
+    {% if self.title %}
+      <div class="stream-block-chart-title">{{self.title}}</div>  
+    {% endif %}
     {% image self.image width-640 %}
     {% if not self.hide_image_caption %}
       <div class="stream-block-image-caption">{{self.image.title}}</div>
