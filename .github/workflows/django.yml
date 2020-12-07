@@ -3,7 +3,7 @@ name: Django CI
 on: [push]
 
 jobs:
-  lint:
+  lint-python:
     runs-on: ubuntu-latest
 
     steps:
