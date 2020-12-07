@@ -51,6 +51,19 @@ class BlockQuoteBlock(blocks.StructBlock):
         template = 'streams/block_quote_block.html'
 
 
+class ChartBlock(blocks.StructBlock):
+    """Chart image with title"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+    title = blocks.CharBlock(required=True)
+
+    class Meta:
+        icon = 'image'
+        label = 'Chart'
+        template = 'streams/chart_block.html'
+
+
 class ImageBlock(blocks.StructBlock):
     """Image"""
 
