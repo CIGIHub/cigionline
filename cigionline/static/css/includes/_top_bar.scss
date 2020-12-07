@@ -24,6 +24,11 @@ header {
     justify-content: space-between;
     transition: height .5s ease;
 
+    .desktop-menu {
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+}
+
     &.scrolled-nav {
       height: 36px;
 
@@ -36,6 +41,10 @@ header {
         .small-logo {
           opacity: 1;
         }
+      }
+
+      .desktop-menu {
+         opacity: 0;
       }
     }
 
@@ -73,8 +82,8 @@ header {
     }
 
     nav {
-        display: flex;
-        
+      display: flex;
+
       ul {
         display: flex;
         list-style: none;
