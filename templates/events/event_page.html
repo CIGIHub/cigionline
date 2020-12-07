@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags core_tags %}
 
 {% block content %}
 
     {% include "includes/hero_standard.html" with title=self.title %}
+
     {% if self.speakers|length > 0 %}
-        {% include "includes/about_the_author.html" with authors=self.speakers %}
+      {% with type="speaker" %}
+          {% include "includes/about_the_author.html" with authors=self.speakers type=type %}
+      {% endwith %}
     {% endif %}
 
 {% endblock content %}

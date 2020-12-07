@@ -1,8 +1,8 @@
-{% load wagtailcore_tags %}
+{% load static wagtailcore_tags %}
 
 <section class="about-the-author">
     <div class="container-sm">
-        <h3>About the author{% if authors|length > 1 %}s{% endif %}</h3>
+        <h3>About the {{type}}{{authors|length|pluralize}}</h3>
         {% for author in authors %}
             <div class="author-block">
                 {% if author.value.first_name|length > 1 %}

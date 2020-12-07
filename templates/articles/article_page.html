@@ -13,8 +13,10 @@
     </section>
   {% endif %}
 
-  {% if authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
+  {% if self.authors|length > 0 %}
+    {% with type="author" %}
+        {% include "includes/about_the_author.html" with authors=self.authors type=type %}
+    {% endwith %}
   {% endif %}
 
 {% endblock content %}

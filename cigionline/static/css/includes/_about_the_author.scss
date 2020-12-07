@@ -1,26 +1,26 @@
 .about-the-author {
+  h3 {
+    border-top: 3px solid $black;
+    display: inline-block;
+    font-size: 0.75em;
+    font-weight: 500;
+    line-height: 1.4em;
+    margin: 3em 0 0;
+    text-transform: uppercase;
+  }
 
-    h3 {
-        display: inline-block;
-        font-size: 0.75em;
-        text-transform: uppercase;
-        line-height: 1.4em;
-        border-top: 3px solid #000;
-        margin: 3em 0 0;
-        font-weight: 500;
-    }
+  .name {
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 0.25em;
+  }
 
-    .name {
-        font-size: 1.1em;
-        margin-bottom: 0.25em;
-        font-weight: 500;
-    }
+  .author-block {
+    border-bottom: solid 1px $cigi-light-grey;
+    padding: 1em 0;
 
-    .author-block {
-        border-bottom: solid 1px $cigi-light-grey;
-        padding: 1em 0;
-        &:last-child {
-            border-bottom: none;
-        }
+    &:last-child {
+      border-bottom: 0;
     }
+  }
 }
