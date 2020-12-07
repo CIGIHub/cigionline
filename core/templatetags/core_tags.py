@@ -10,5 +10,3 @@ def no_protocol(value):
 @register.filter
 def social_string(value):
     return value.replace(' ', '+')
-
-  
