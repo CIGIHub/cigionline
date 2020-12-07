@@ -14,7 +14,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 class JobPostingListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
-    subpage_types = ['careers.JobPostingPage']
+    subpage_types = ['careers.JobPostingPage', 'core.BasicPage']
     templates = 'careers/job_posting_list_page.html'
 
     content_panels = [
