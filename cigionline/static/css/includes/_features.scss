@@ -1,4 +1,20 @@
 .feature-content {
+  .feature-content-topic-list {
+    font-size: 0.75em;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+
+    li {
+      &::after {
+        color: $cigi-pink;
+      }
+
+      a {
+        text-transform: uppercase;
+      }
+    }
+  }
+
   .feature-content-people-list {
     @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
     font-size: 0.75em;
@@ -6,45 +22,39 @@
     text-transform: uppercase;
   }
 
+  .feature-content-title {
+    @include link($color: $black, $hover-color: $cigi-dark-pink);
+    margin-bottom: 0.5em;
+  }
+
+  .feature-content-subtitle {
+    color: $cigi-text-grey;
+    line-height: 1.5;
+    margin: 1em 0;
+  }
 
   &.feature-content-large {
     line-height: 1.25;
-    text-align: center;
-
-    ul {
-      justify-content: center;
-    }
+    margin: 0 auto;
 
     .img-wrapper {
       margin-bottom: 1em;
     }
 
-    .feature-content-topic-list {
-      font-size: 0.75em;
-      font-weight: 500;
-      margin-bottom: 0.5em;
-      
-      li {
-        &::after {
-          color: $cigi-pink;
-        }
-  
-        a {
-          text-transform: uppercase;
+    .feature-content-text {
+      max-width: 580px;
+
+      &.center-text {
+        text-align: center;
+
+        ul {
+          justify-content: center;
         }
       }
-    }
 
-    .feature-content-title {
-      @include link($color: $black, $hover-color: $cigi-dark-pink);
-      font-size: 2em;
-      margin-bottom: 0.5em;
-    }
-
-    .feature-content-subtitle {
-      color: $cigi-text-grey;
-      line-height: 1.5;
-      margin: 1em 0;
+      .feature-content-title {
+        font-size: 2em;
+      }
     }
   }
 }

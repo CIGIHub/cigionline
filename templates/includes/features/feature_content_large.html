@@ -17,43 +17,45 @@
     </div>
   </a>
 
-  <ul class="custom-text-list feature-content-topic-list">
-    {% for topic in content.topics.all %}
-      <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
-    {% endfor %}
-  </ul>
-
-  {% if content.feature_title %}
-    {% include 'includes/features/feature_content_title.html' with title=content.feature_title %}
-  {% else %}
-    {% include 'includes/features/feature_content_title.html' with title=content.title %}
-  {% endif %}
-
-  {% if content.feature_subtitle %}
-    {% include 'includes/features/feature_content_subtitle.html' with subtitle=content.feature_subtitle %}
-  {% else %}
-    {% include 'includes/features/feature_content_subtitle.html' with subtitle=content.subtitle %}
-  {% endif %}
-
-  {% if content|page_type|in_list:'opinion,publication' %}
-    {% define content.authors as people %}
-  {% elif content|page_type|in_list:'multimedia,event' %}
-    {% define content.speakers as people %}
-  {% endif %}
-
-  {% if people %}
-    <ul class="custom-text-list feature-content-people-list">
-      {% with 3 as people_limit %}
-        {% for person in people %}
-          {% if forloop.counter <= people_limit %}
-            <li><a href="{{ person.value.url }}">{{ person.value }}</a></li>
-          {% elif forloop.counter == people_limit|add:1 %}
-            <li>And more</li>
-          {% endif %}
-        {% endfor %}
-      {% endwith %}
+  <div class="feature-content-text center-text">
+    <ul class="custom-text-list feature-content-topic-list">
+      {% for topic in content.topics.all %}
+        <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
+      {% endfor %}
     </ul>
-  {% endif %}
-
-  <p class="feature-content-date meta">{{ content.publishing_date|date:"F m, Y" }}</p>
+  
+    {% if content.feature_title %}
+      {% include 'includes/features/feature_content_title.html' with title=content.feature_title %}
+    {% else %}
+      {% include 'includes/features/feature_content_title.html' with title=content.title %}
+    {% endif %}
+  
+    {% if content.feature_subtitle %}
+      {% include 'includes/features/feature_content_subtitle.html' with subtitle=content.feature_subtitle %}
+    {% else %}
+      {% include 'includes/features/feature_content_subtitle.html' with subtitle=content.subtitle %}
+    {% endif %}
+  
+    {% if content|page_type|in_list:'opinion,publication' %}
+      {% define content.authors as people %}
+    {% elif content|page_type|in_list:'multimedia,event' %}
+      {% define content.speakers as people %}
+    {% endif %}
+  
+    {% if people %}
+      <ul class="custom-text-list feature-content-people-list">
+        {% with 3 as people_limit %}
+          {% for person in people %}
+            {% if forloop.counter <= people_limit %}
+              <li><a href="{{ person.value.url }}">{{ person.value }}</a></li>
+            {% elif forloop.counter == people_limit|add:1 %}
+              <li>And more</li>
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+      </ul>
+    {% endif %}
+  
+    <p class="feature-content-date meta">{{ content.publishing_date|date:"F m, Y" }}</p>
+  </div>
 </article>
