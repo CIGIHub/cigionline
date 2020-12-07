@@ -25,10 +25,6 @@
     {% render_bundle 'cigionline' %}
     {% block extra_bundles %}
     {% endblock %}
-
-    {% block extra_css %}
-      {# Override this in templates to add extra stylesheets #}
-    {% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">
     {% wagtailuserbar %}
