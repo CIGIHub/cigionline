@@ -6,7 +6,6 @@ header {
   width: 100%;
   z-index: 3;
 
-
   .main-navigation-wrapper {
     background-color: $black;
     position: relative;
@@ -44,7 +43,7 @@ header {
       }
 
       .desktop-menu {
-         opacity: 0;
+        opacity: 0;
       }
     }
 
