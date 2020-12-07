@@ -15,8 +15,8 @@
     </div>
 
   The function takes two parameters:
-    url: the AJAX url, such as '/multimedia/'
-    LIST_ID: the id of the content list element, such as '#multimedia-list-section'
+    listId: the id of the content list element, EX: '#multimedia-list-section'
+    url: the AJAX url, EX: '/multimedia/'
 */
 
 export default function paginate(listId, url) {
