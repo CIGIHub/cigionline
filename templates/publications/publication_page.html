@@ -1,12 +1,14 @@
 {% extends "base.html" %}
-    
+{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+
 {% block content %}
-{% include "includes/hero_standard.html" with title=self.title %}
+  {% include "includes/hero_standard.html" with title=self.title %}
 
-{% with type="publication" %}
-    {% if self.authors|length > 0 %}
-        {% include "includes/about_the_author.html" with authors=self.authors type=type %}
-    {% endif %}
-{% endwith %}
-
+  {% if page.body %}
+    <section class="body">
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
 {% endblock content %}
