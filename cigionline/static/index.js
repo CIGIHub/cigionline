@@ -7,7 +7,6 @@ $(function() {
 
   $(window).on('scroll', function() {
     scrollTop = $(window).scrollTop();
-    
     if (scrollTop >= 66) {
       $('#global-nav').addClass('scrolled-nav');
     } else {
