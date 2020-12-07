@@ -1,0 +1,11 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "includes/hero_standard.html" with title=self.title %}
+{% if authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors %}
+{% endif %}
+
+{% endblock content %}

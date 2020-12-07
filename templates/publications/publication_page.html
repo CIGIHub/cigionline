@@ -1,8 +1,12 @@
 {% extends "base.html" %}
-
+    
 {% block content %}
-
 {% include "includes/hero_standard.html" with title=self.title %}
-{% include "includes/about_the_author.html" with authors=self.authors %}
+
+{% with type="publication" %}
+    {% if self.authors|length > 0 %}
+        {% include "includes/about_the_author.html" with authors=self.authors type=type %}
+    {% endif %}
+{% endwith %}
 
 {% endblock content %}
