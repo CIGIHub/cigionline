@@ -35,14 +35,14 @@
 
   &.feature-content-large {
     line-height: 1.25;
-    margin: 0 auto;
 
     .img-wrapper {
       margin-bottom: 1em;
     }
 
     .feature-content-text {
-      max-width: 580px;
+      margin: 0 auto;
+      max-width: 36em;
 
       &.center-text {
         @include media-breakpoint-up(md) {
