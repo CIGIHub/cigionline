@@ -18,11 +18,9 @@
   </a>
 
   <div class="feature-content-text center-text">
-    <ul class="custom-text-list feature-content-topic-list">
-      {% for topic in content.topics.all %}
-        <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
-      {% endfor %}
-    </ul>
+    {% if content.topics %}
+      {% include 'includes/topics.html' with topics=content.topics %}
+    {% endif %}
   
     {% if content.feature_title %}
       {% include 'includes/features/feature_content_title.html' with title=content.feature_title %}
