@@ -70,7 +70,7 @@ class ExternalQuoteBlock(blocks.StructBlock):
 		source = blocks.CharBlock(required=False)
 
 		class Meta:
-				icon = 'edit'
+        icon = 'edit'
 				label = 'External Quote'
 				template = 'streams/external_quote_block.html'
 
