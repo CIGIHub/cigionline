@@ -7,6 +7,7 @@ import '../../css/components/SearchTable.scss';
 class SearchTable extends React.Component {
   constructor(props) {
     super(props);
+    this.searchResultsRef = React.createRef();
     this.state = {
       currentPage: 1,
       loading: true,
@@ -28,6 +29,7 @@ class SearchTable extends React.Component {
     this.setState(() => ({
       loading: true,
     }));
+    this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
 
     fetch(`/api${endpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`)
       .then((res) => res.json())
@@ -58,7 +60,7 @@ class SearchTable extends React.Component {
 
     return (
       <div className="search-table">
-        <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+        <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
           {rows.map((row) => (
             <RowComponent key={row.id} row={row} />
           ))}

@@ -14,7 +14,7 @@
     height: 50px;
     left: 50%;
     position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    top: min(40vh, 50%);
+    transform: translateX(-50%);
   }
 }
