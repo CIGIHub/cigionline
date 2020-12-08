@@ -56,7 +56,11 @@ class SearchTable extends React.Component {
             <RowComponent key={row.id} row={row} />
           ))}
         </div>
-        <Paginator currentPage={currentPage} totalPages={this.totalPages} setPage={this.setPage} />
+        <Paginator
+          currentPage={currentPage}
+          totalPages={this.totalPages}
+          setPage={(page) => this.setPage(page)}
+        />
       </>
     );
   }
