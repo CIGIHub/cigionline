@@ -69,7 +69,7 @@ class ExternalQuoteBlock(blocks.StructBlock):
 
     quote = blocks.RichTextBlock(required=True)
     source = blocks.CharBlock(required=False)
-    
+
     class Meta:
         icon = 'edit'
         label = 'External Quote'
