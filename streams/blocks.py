@@ -63,16 +63,17 @@ class ChartBlock(blocks.StructBlock):
         label = 'Chart'
         template = 'streams/chart_block.html'
 
+
 class ExternalQuoteBlock(blocks.StructBlock):
-		"""External quote with optional source"""
+    """External quote with optional source"""
 
-		quote = blocks.RichTextBlock(required=True)
-		source = blocks.CharBlock(required=False)
-
-		class Meta:
+    quote = blocks.RichTextBlock(required=True)
+    source = blocks.CharBlock(required=False)
+    
+    class Meta:
         icon = 'edit'
-				label = 'External Quote'
-				template = 'streams/external_quote_block.html'
+        label = 'External Quote'
+        template = 'streams/external_quote_block.html'
 
 
 class ImageBlock(blocks.StructBlock):
