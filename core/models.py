@@ -96,10 +96,7 @@ class BasicPageAbstract(models.Model):
                 ('square', 'Square'),
             ])),
         ])),
-        ('external_quote', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('source', blocks.CharBlock(required=False)),
-        ])),
+        ('external_quote', ExternalQuoteBlock()),
         ('external_videos', blocks.ListBlock(blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('video_url', blocks.URLBlock(required=True)),
