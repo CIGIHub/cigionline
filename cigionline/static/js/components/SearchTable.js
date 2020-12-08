@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Paginator from './Paginator';
+import '../../css/components/SearchTable.scss';
 
 class SearchTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       currentPage: 1,
+      loading: true,
       rows: [],
       totalRows: 0,
     };
@@ -23,10 +25,15 @@ class SearchTable extends React.Component {
 
     const offset = (currentPage - 1) * limit;
 
+    this.setState(() => ({
+      loading: true,
+    }));
+
     fetch(`/api${endpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`)
       .then((res) => res.json())
       .then((data) => {
         this.setState(() => ({
+          loading: false,
           rows: data.items,
           totalRows: data.meta.total_count,
         }));
@@ -46,12 +53,12 @@ class SearchTable extends React.Component {
   }
 
   render() {
-    const { currentPage, rows } = this.state;
+    const { currentPage, loading, rows } = this.state;
     const { containerClass, RowComponent } = this.props;
 
     return (
-      <>
-        <div className={containerClass}>
+      <div className="search-table">
+        <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
           {rows.map((row) => (
             <RowComponent key={row.id} row={row} />
           ))}
@@ -61,13 +68,20 @@ class SearchTable extends React.Component {
           totalPages={this.totalPages}
           setPage={(page) => this.setPage(page)}
         />
-      </>
+        {loading && (
+          <img
+            src="/static/assets/loader_spinner.gif"
+            alt="Loading..."
+            className="loading-spinner"
+          />
+        )}
+      </div>
     );
   }
 }
 
 SearchTable.propTypes = {
-  containerClass: PropTypes.string.isRequired,
+  containerClass: PropTypes.arrayOf(PropTypes.string).isRequired,
   endpoint: PropTypes.string.isRequired,
   fields: PropTypes.string.isRequired,
   limit: PropTypes.number,
