@@ -83,3 +83,29 @@ class ParagraphBlock(blocks.RichTextBlock):
         icon = 'edit'
         label = 'Paragraph'
         template = 'streams/paragraph_block.html'
+
+
+class PullQuoteLeftBlock(blocks.StructBlock):
+    """Pull quote left side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+    
+    class Meta: 
+        icon = 'edit'
+        label = 'Pull Quote Left'
+        template = 'streams/pull_quote_left_block.html'
+
+
+class PullQuoteRightBlock(blocks.StructBlock):
+    """Pull quote right side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+    
+    class Meta: 
+        icon = 'edit'
+        label = 'Pull Quote Right'
+        template = 'streams/pull_quote_right_block.html'
