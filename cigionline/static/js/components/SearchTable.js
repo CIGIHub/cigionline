@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Paginator from './Paginator';
+import SearchTableSkeleton from './SearchTableSkeleton';
 import '../../css/components/SearchTable.scss';
 
 class SearchTable extends React.Component {
@@ -11,6 +12,7 @@ class SearchTable extends React.Component {
     this.state = {
       currentPage: 1,
       loading: true,
+      loadingInitial: true,
       rows: [],
       totalRows: 0,
     };
@@ -36,6 +38,7 @@ class SearchTable extends React.Component {
       .then((data) => {
         this.setState(() => ({
           loading: false,
+          loadingInitial: false,
           rows: data.items,
           totalRows: data.meta.total_count,
         }));
@@ -55,11 +58,17 @@ class SearchTable extends React.Component {
   }
 
   render() {
-    const { currentPage, loading, rows } = this.state;
+    const {
+      currentPage,
+      loading,
+      loadingInitial,
+      rows,
+    } = this.state;
     const { containerClass, RowComponent } = this.props;
 
     return (
       <div className="search-table">
+        {loadingInitial && <SearchTableSkeleton />}
         <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
           {rows.map((row) => (
             <RowComponent key={row.id} row={row} />
