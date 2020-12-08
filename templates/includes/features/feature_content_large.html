@@ -1,6 +1,6 @@
-{% load wagtailcore_tags wagtailimages_tags core_tags %}
+{% load wagtailimages_tags core_tags %}
 
-<article class="feature-content feature-content-large feature-content-{{content|page_type}}">
+<article class="feature-content feature-content-large">
   <a href="{{content.url}}" class="feature-content-image">
     <div class="img-wrapper">
       {% image content.image_hero fill-1440x990 %}
@@ -18,32 +18,10 @@
   </a>
 
   <div class="feature-content-text center-text">
-    {% if content.topics %}
-      {% include 'includes/topics.html' with topics=content.topics %}
-    {% endif %}
-  
-    {% if content.feature_title %}
-      {% include 'includes/features/feature_content_title.html' with title=content.feature_title %}
-    {% else %}
-      {% include 'includes/features/feature_content_title.html' with title=content.title %}
-    {% endif %}
-  
-    {% if content.feature_subtitle %}
-      {% include 'includes/features/feature_content_subtitle.html' with subtitle=content.feature_subtitle %}
-    {% else %}
-      {% include 'includes/features/feature_content_subtitle.html' with subtitle=content.subtitle %}
-    {% endif %}
-  
-    {% if content|page_type|in_list:'opinion,publication' %}
-      {% define content.authors as people %}
-    {% elif content|page_type|in_list:'multimedia,event' %}
-      {% define content.speakers as people %}
-    {% endif %}
-  
-    {% if people %}
-      {% include 'includes/features/feature_content_people.html' %}
-    {% endif %}
-  
+    {% include 'includes/topics.html' with topics=content.topics %}
+    {% include 'includes/features/feature_content_title.html' %}
+    {% include 'includes/features/feature_content_subtitle.html' %}
+    {% include 'includes/features/feature_content_people.html' %}
     <p class="feature-content-date meta">{{ content.publishing_date|date:"F m, Y" }}</p>
   </div>
 </article>

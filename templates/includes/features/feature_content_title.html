@@ -1,5 +1,9 @@
 <div class="feature-content-title">
   <a href="{{content.url}}">
-    {{title}}
+    {% if content.feature_title %}
+      {{ content.feature_title }}
+    {% else %}
+      {{ content.title }}
+    {% endif %}
   </a>
 </div>
