@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'wagtail.core',
 
     'modelcluster',
+    'rest_framework',
     'taggit',
     'wagtailmedia',
     'webpack_loader',
