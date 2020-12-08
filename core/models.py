@@ -6,6 +6,7 @@ from streams.blocks import (
     BlockQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
+    ImageFullBleedBlock
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -74,10 +75,7 @@ class BasicPageAbstract(models.Model):
         ('paragraph', ParagraphBlock()),
         ('image', ImageBlock()),
         ('block_quote', BlockQuoteBlock()),
-        ('image_full_bleed', blocks.StructBlock([
-            ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
-        ])),
+        ('image_full_bleed', ImageFullBleedBlock()),
         ('image_scroll', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
             ('hide_image_caption', blocks.BooleanBlock(required=True)),
