@@ -10,9 +10,9 @@ class MultimediaListing extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/multimedia')
+    fetch('/api/multimedia/?fields=title,url,publishing_date,topics(title,url),image_hero_url')
       .then((res) => res.json())
-      .then((data) => data.results)
+      .then((data) => data.items)
       .then((multimediaPages) => {
         this.setState(() => ({
           multimediaPages,

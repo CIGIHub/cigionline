@@ -1,9 +1,9 @@
-from rest_framework.mixins import ListModelMixin
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.viewsets import GenericViewSet
+from wagtail.api.v2.filters import OrderingFilter
+from wagtail.api.v2.serializers import PageSerializer
+from wagtail.api.v2.views import BaseAPIViewSet
 
 from .models import MultimediaPage
-from .serializers import MultimediaPageSerializer
 
 
 class MultimediaResultsSetPagination(PageNumberPagination):
@@ -11,7 +11,15 @@ class MultimediaResultsSetPagination(PageNumberPagination):
     max_page_size = 18
 
 
-class MultimediaPageViewSet(GenericViewSet, ListModelMixin):
-    queryset = MultimediaPage.objects.live().order_by('-publishing_date')
-    serializer_class = MultimediaPageSerializer
-    pagination_class = MultimediaResultsSetPagination
+class MultimediaPageViewSet(BaseAPIViewSet):
+    model = MultimediaPage
+    base_serializer_class = PageSerializer
+    filter_backends = [
+        OrderingFilter,
+    ]
+
+    def get_queryset(self):
+        return self.model.objects.all().public().live().order_by('-publishing_date')
+    # queryset = MultimediaPage.objects.live().order_by('-publishing_date')
+    # serializer_class = MultimediaPageSerializer
+    # pagination_class = MultimediaResultsSetPagination

@@ -10,6 +10,7 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import SpeakersBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -17,10 +18,10 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
-    PageChooserBlock,
     RichTextBlock,
     StructBlock,
     TextBlock,
@@ -178,7 +179,7 @@ class MultimediaPage(
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     speakers = StreamField(
         [
-            ('speaker', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('speaker', SpeakersBlock(required=True, page_type='people.PersonPage')),
             ('external_speaker', CharBlock(required=True)),
         ],
         blank=True,
@@ -313,15 +314,23 @@ class MultimediaPage(
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
-
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
+        APIField('publishing_date'),
+        APIField('multimedia_type'),
+        APIField('image_hero_url'),
+        APIField('topics'),
+        APIField('speakers'),
     ]
 
     parent_page_types = ['multimedia.MultimediaListPage']

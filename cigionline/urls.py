@@ -3,15 +3,16 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from multimedia.views import MultimediaPageViewSet
-from rest_framework import routers
 from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
-router = routers.DefaultRouter()
-router.register(r'multimedia', MultimediaPageViewSet)
+api_router = WagtailAPIRouter('wagtailapi')
+
+api_router.register_endpoint('multimedia', MultimediaPageViewSet)
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
@@ -21,7 +22,7 @@ urlpatterns = [
 
     url(r'^search/$', search_views.search, name='search'),
 
-    url(r'^api/', include(router.urls))
+    url(r'^api/', api_router.urls)
 ]
 
 
