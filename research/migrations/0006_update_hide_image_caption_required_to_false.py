@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('research', '0004_update_body_streamfield_blocks'),
+        ('research', '0005_create_chart_stream_block'),
     ]
 
     operations = [
