@@ -10,6 +10,7 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import SpeakersBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -17,10 +18,10 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
-    PageChooserBlock,
     RichTextBlock,
     StructBlock,
     TextBlock,
@@ -34,7 +35,8 @@ class MultimediaListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = []
-    templates = 'multimedia/multimedia_list_page.html'
+    template = 'multimedia/multimedia_list_page.html'
+    ajax_template = 'includes/multimedia_list_page_multimedia_list.html'
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -177,7 +179,7 @@ class MultimediaPage(
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     speakers = StreamField(
         [
-            ('speaker', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('speaker', SpeakersBlock(required=True, page_type='people.PersonPage')),
             ('external_speaker', CharBlock(required=True)),
         ],
         blank=True,
@@ -211,6 +213,10 @@ class MultimediaPage(
         verbose_name='YouTube ID',
         help_text='Enter just the YouTube ID for this video. This is the series of letters and numbers found either at www.youtube.com/embed/[here], or www.youtube.com/watch?v=[here]. This is used for the video chaptering below.',
     )
+
+    @property
+    def image_hero_url(self):
+        return self.image_hero.get_rendition('fill-520x390').url
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -308,15 +314,23 @@ class MultimediaPage(
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
-
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
+        APIField('publishing_date'),
+        APIField('multimedia_type'),
+        APIField('image_hero_url'),
+        APIField('topics'),
+        APIField('speakers'),
     ]
 
     parent_page_types = ['multimedia.MultimediaListPage']
