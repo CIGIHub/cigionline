@@ -74,6 +74,7 @@ class ExternalQuoteBlock(blocks.StructBlock):
 				label = 'External Quote'
 				template = 'streams/external_quote_block.html'
 
+
 class ImageBlock(blocks.StructBlock):
     """Image"""
 
