@@ -33,6 +33,15 @@ class MultimediaListing extends React.Component {
                   <i className="fas fa-play" />
                 </div>
               </a>
+              <ul className="custom-text-list multimedia-card-topic-list">
+                {multimediaPage.topics.map((topic) => (
+                  <li key={topic.id}>
+                    <a href={topic.url} className="table-content-link">
+                      {topic.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
               <p className="multimedia-card-title">
                 <a href={multimediaPage.url}>
                   {multimediaPage.title}
