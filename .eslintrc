@@ -24,6 +24,7 @@
     "prefer-destructuring": ["off"],
     "prefer-promise-reject-errors": ["off"],
     "quote-props": ["off"],
+    "react/forbid-prop-types": ["off"],
     "react/jsx-filename-extension": ["off"],
     "require-jsdoc": ["off"],
     "space-before-function-paren": ["error", "never"],
