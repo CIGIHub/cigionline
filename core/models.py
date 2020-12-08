@@ -4,6 +4,7 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
     BlockQuoteBlock,
+    ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
     ChartBlock,
