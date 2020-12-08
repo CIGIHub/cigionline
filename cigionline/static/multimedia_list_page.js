@@ -10,7 +10,7 @@ class MultimediaListing extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/multimedia/?fields=title,url,publishing_date,topics(title,url),image_hero_url')
+    fetch('/api/multimedia/?limit=18&fields=title,url,publishing_date,topics(title,url),image_hero_url,speakers')
       .then((res) => res.json())
       .then((data) => data.items)
       .then((multimediaPages) => {
@@ -47,6 +47,20 @@ class MultimediaListing extends React.Component {
                   {multimediaPage.title}
                 </a>
               </p>
+              <ul className="custom-text-list multimedia-card-speakers-list">
+                {multimediaPage.speakers.slice(0, 3).map((speaker) => (
+                  <li>
+                    {speaker.type === 'speaker' && (
+                      <a href={speaker.value.url}>
+                        {speaker.value.title}
+                      </a>
+                    )}
+                  </li>
+                ))}
+                {multimediaPage.speakers.length > 3 && (
+                  <li>And more</li>
+                )}
+              </ul>
             </div>
           </div>
         ))}

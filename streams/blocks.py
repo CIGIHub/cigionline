@@ -77,7 +77,8 @@ class SpeakersBlock(blocks.PageChooserBlock):
         if value:
             return {
                 'id': value.id,
-                'test': 'hello',
+                'title': value.title,
+                'url': value.url,
             }
 
     class Meta:
