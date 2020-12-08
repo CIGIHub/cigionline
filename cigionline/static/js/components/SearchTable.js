@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Paginator from './Paginator';
+
 class SearchTable extends React.Component {
   constructor(props) {
     super(props);
@@ -31,8 +33,20 @@ class SearchTable extends React.Component {
       });
   }
 
+  setPage(page) {
+    this.setState(() => ({
+      currentPage: page,
+    }), this.getRows);
+  }
+
+  get totalPages() {
+    const { limit } = this.props;
+    const { totalRows } = this.state;
+    return Math.ceil(totalRows / limit);
+  }
+
   render() {
-    const { rows } = this.state;
+    const { currentPage, rows } = this.state;
     const { containerClass, RowComponent } = this.props;
 
     return (
@@ -42,6 +56,7 @@ class SearchTable extends React.Component {
             <RowComponent key={row.id} row={row} />
           ))}
         </div>
+        <Paginator currentPage={currentPage} totalPages={this.totalPages} setPage={this.setPage} />
       </>
     );
   }
