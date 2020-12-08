@@ -27,8 +27,9 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'includes/date';
 
 @import 'streams/block';
-@import 'streams/image_block';
 @import 'streams/block_quote_block';
+@import 'streams/chart_block';
+@import 'streams/autoplay_video_block';
 
 @import 'pages/people';
 @import 'pages/publication';
