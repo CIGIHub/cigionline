@@ -5,9 +5,13 @@
     <div class="stream-block-external-quote-content">
       <blockquote>
         {{ self.quote }}
-        {{ self.source }}
       </blockquote>
 
+      {% if self.source %}
+        <div class="stream-block-external-quote-source">
+          {{ self.source }}
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
