@@ -1,3 +1,12 @@
 .stream-block {
   margin: 2em 0;
+
+  img {
+    height: auto;
+    width: 100%;
+  }
+
+  .stream-block-image-caption {
+    @include image-caption;
+  }
 }

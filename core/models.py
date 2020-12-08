@@ -6,6 +6,7 @@ from streams.blocks import (
     BlockQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
+    ChartBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -66,11 +67,7 @@ class BasicPageAbstract(models.Model):
             ])),
         ])),
         ('autoplay_video', AutoPlayVideoBlock()),
-        ('chart', blocks.StructBlock([
-            ('title', blocks.CharBlock(required=True)),
-            ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
-        ])),
+        ('chart', ChartBlock()),
         ('paragraph', ParagraphBlock()),
         ('image', ImageBlock()),
         ('block_quote', BlockQuoteBlock()),
