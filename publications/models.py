@@ -15,6 +15,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     PageChooserBlock,
@@ -328,6 +329,14 @@ class PublicationPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
+        APIField('publishing_date'),
+        APIField('image_hero_url'),
+        APIField('topics'),
     ]
 
     parent_page_types = ['publications.PublicationListPage']
