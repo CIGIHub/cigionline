@@ -8,6 +8,7 @@ ReactDOM.render(
     endpoint="/publications"
     fields={[
       'authors',
+      'pdf_downloads',
       'publishing_date',
       'title',
       'topics(title,url)',

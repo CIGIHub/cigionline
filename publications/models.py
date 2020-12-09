@@ -8,7 +8,7 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import AuthorBlock
+from streams.blocks import AuthorBlock, PDFDownloadBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -210,13 +210,7 @@ class PublicationPage(
     )
     pdf_downloads = StreamField(
         [
-            ('pdf_download', StructBlock([
-                ('file', DocumentChooserBlock(required=True)),
-                ('button_text', CharBlock(
-                    required=False,
-                    help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".',
-                )),
-            ], label='PDF Download'))
+            ('pdf_download', PDFDownloadBlock())
         ],
         blank=True,
         verbose_name='PDF Downloads',
@@ -334,6 +328,7 @@ class PublicationPage(
 
     api_fields = [
         APIField('authors'),
+        APIField('pdf_downloads'),
         APIField('publishing_date'),
         APIField('title'),
         APIField('topics'),

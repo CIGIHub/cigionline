@@ -75,32 +75,33 @@ class SearchTable extends React.Component {
 
     return (
       <div className="search-table">
-        {loadingInitial && <SearchTableSkeleton />}
-        {blockListing
-          ? (
-            <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-              {rows.map((row) => (
-                <RowComponent key={row.id} row={row} />
-              ))}
-            </div>
-          ) : (
-            <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-              <thead>
-                <tr>
-                  {tableColumns.map((tableColumn) => (
-                    <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
-                      {tableColumn.colTitle}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
+        {loadingInitial
+          ? <SearchTableSkeleton />
+          : blockListing
+            ? (
+              <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
                 {rows.map((row) => (
                   <RowComponent key={row.id} row={row} />
                 ))}
-              </tbody>
-            </table>
-          )}
+              </div>
+            ) : (
+              <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                <thead>
+                  <tr>
+                    {tableColumns.map((tableColumn) => (
+                      <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
+                        {tableColumn.colTitle}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <RowComponent key={row.id} row={row} />
+                  ))}
+                </tbody>
+              </table>
+            )}
         <Paginator
           currentPage={currentPage}
           totalPages={this.totalPages}
