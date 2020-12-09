@@ -1,0 +1,21 @@
+$skeleton-title-colour: rgba(0, 0, 0, 0.5);
+$skeleton-meta-colour: rgba(109, 109, 109, 0.5);
+$skeleton-topic-colour: rgba(230, 32, 59, 0.5);
+
+.search-table-skeleton {
+  .skeleton-blur {
+    color: transparent !important;
+
+    &.skeleton-title {
+      text-shadow: 0 0 8px $skeleton-title-colour !important;
+    }
+
+    &.skeleton-meta {
+      text-shadow: 0 0 8px $skeleton-meta-colour !important;
+    }
+
+    &.skeleton-topic {
+      text-shadow: 0 0 8px $skeleton-topic-colour !important;
+    }
+  }
+}

@@ -109,3 +109,15 @@ class PullQuoteRightBlock(blocks.StructBlock):
         icon = 'edit'
         label = 'Pull Quote Right'
         template = 'streams/pull_quote_right_block.html'
+class SpeakersBlock(blocks.PageChooserBlock):
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'id': value.id,
+                'title': value.title,
+                'url': value.url,
+            }
+
+    class Meta:
+        icon = 'edit'
+        label = 'Speakers'

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'search',
     'streams',
 
+    'wagtail.api.v2',
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.modeladmin',
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'wagtail.core',
 
     'modelcluster',
+    'rest_framework',
     'taggit',
     'wagtailmedia',
     'webpack_loader',
