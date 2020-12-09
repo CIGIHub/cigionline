@@ -187,3 +187,72 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'topics': ['Test Topic 2'],
             'url': '/multimedia/multimedia-13/',
         }])
+
+    def test_page_2_query_returns_200(self):
+        res = self.client.get(self.get_api_url(2))
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 30)
+        self.assertEqual(len(resJson['items']), 12)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-07-20T08:00:00-04:00',
+            'title': 'Test Multimedia 12',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-12/',
+        }, {
+            'publishing_date': '2020-07-06T08:00:00-04:00',
+            'title': 'Test Multimedia 11',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-11/',
+        }, {
+            'publishing_date': '2020-06-24T08:00:00-04:00',
+            'title': 'Test Multimedia 10',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-10/',
+        }, {
+            'publishing_date': '2020-06-19T08:00:00-04:00',
+            'title': 'Test Multimedia 9',
+            'topics': ['Test Topic 2'],
+            'url': '/multimedia/multimedia-9/',
+        }, {
+            'publishing_date': '2020-06-18T08:00:00-04:00',
+            'title': 'Test Multimedia 8',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-8/',
+        }, {
+            'publishing_date': '2020-06-16T08:00:00-04:00',
+            'title': 'Test Multimedia 7',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-7/',
+        }, {
+            'publishing_date': '2020-06-02T08:00:00-04:00',
+            'title': 'Test Multimedia 6',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-6/',
+        }, {
+            'publishing_date': '2020-05-07T08:00:00-04:00',
+            'title': 'Test Multimedia 5',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-5/',
+        }, {
+            'publishing_date': '2020-04-24T08:00:00-04:00',
+            'title': 'Test Multimedia 4',
+            'topics': ['Test Topic 2', 'Test Topic 3'],
+            'url': '/multimedia/multimedia-4/',
+        }, {
+            'publishing_date': '2020-04-22T08:00:00-04:00',
+            'title': 'Test Multimedia 3',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-3/',
+        }, {
+            'publishing_date': '2020-04-20T08:00:00-04:00',
+            'title': 'Test Multimedia 2',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-2/',
+        }, {
+            'publishing_date': '2020-02-04T08:00:00-05:00',
+            'title': 'Test Multimedia 1',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-1/',
+        }])
