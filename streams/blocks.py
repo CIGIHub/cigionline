@@ -136,12 +136,12 @@ class TweetBlock(blocks.StructBlock):
     """Tweet Block"""
 
     tweet_id = blocks.IntegerBlock(
-                required=True,
-                help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
-                verbose_name='Tweet ID',
-            )
+      required=True,
+      help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
+      verbose_name='Tweet ID',
+    )
+
     class Meta:
         icon = 'social'
         label = 'Tweet'
         template = 'streams/tweet_block.html'
-
