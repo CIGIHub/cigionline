@@ -1,6 +1,7 @@
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
 from wagtail.core import blocks
+from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 
@@ -23,6 +24,20 @@ class VideoBlock(AbstractMediaChooserBlock):
             '\n', "<source{0}",
             [[flatatt(s)] for s in value.sources]
         ))
+
+
+class AuthorBlock(blocks.PageChooserBlock):
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'id': value.id,
+                'title': value.title,
+                'url': value.url,
+            }
+
+    class Meta:
+        icon = 'user'
+        label = 'Author'
 
 
 class AutoPlayVideoBlock(blocks.StructBlock):
@@ -85,6 +100,25 @@ class ParagraphBlock(blocks.RichTextBlock):
         template = 'streams/paragraph_block.html'
 
 
+class PDFDownloadBlock(blocks.StructBlock):
+    file = DocumentChooserBlock(required=True)
+    button_text = blocks.CharBlock(
+        required=False,
+        help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".'
+    )
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'button_text': value.get('button_text'),
+                'url': value.get('file').file.url,
+            }
+
+    class Meta:
+        icon = 'download-alt'
+        label = 'PDF Download'
+
+
 class SpeakersBlock(blocks.PageChooserBlock):
     def get_api_representation(self, value, context=None):
         if value:
@@ -95,7 +129,7 @@ class SpeakersBlock(blocks.PageChooserBlock):
             }
 
     class Meta:
-        icon = 'edit'
+        icon = 'user'
         label = 'Speakers'
 
 
