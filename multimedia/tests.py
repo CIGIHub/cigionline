@@ -67,11 +67,16 @@ class MultimediaSeriesPageTests(WagtailPageTests):
 
 class MultimediaPageViewSetTests(WagtailPageTests):
     fixtures = ['multimedia_search_table.json']
+    limit = 18
 
     def setUp(self):
         home_page = HomePage.objects.get()
         home_page.numchild = 2
         home_page.save()
+
+    def get_api_url(self, page):
+        offset = (page - 1) * self.limit
+        return f'/api/multimedia/?limit={self.limit}&offset={offset}&fields=title,url,publishing_date,topics(title,url)'
 
     def verify_res_items(self, responseItems, expectedItems):
         for i in range(len(expectedItems)):
@@ -85,7 +90,7 @@ class MultimediaPageViewSetTests(WagtailPageTests):
                 self.assertTrue(any(topic['title'] == topicTitle for topic in responseItems[i]['topics']))
 
     def test_page_1_query_returns_200(self):
-        res = self.client.get('/api/multimedia/?limit=18&offset=0&fields=title,url,publishing_date,topics(title,url)')
+        res = self.client.get(self.get_api_url(1))
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 30)
