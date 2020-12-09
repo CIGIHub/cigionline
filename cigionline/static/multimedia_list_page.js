@@ -5,9 +5,17 @@ import SearchTable from './js/components/SearchTable';
 
 ReactDOM.render(
   <SearchTable
+    blockListing
     endpoint="/multimedia"
     limit={18}
-    fields="title,url,publishing_date,topics(title,url),image_hero_url,speakers"
+    fields={[
+      'image_hero_url',
+      'publishing_date',
+      'speakers',
+      'title',
+      'topics(title,url)',
+      'url',
+    ]}
     containerClass={[
       'row',
       'row-cols-1',
