@@ -3,6 +3,8 @@
 <div class="stream-block stream-block-image-full-bleed">
   <div class="container-fb">
     {% image self.image width-1920 %}
+  </div>
+  <div class="container-sm">
     {% if not self.hide_image_caption %}
       <div class="stream-block-image-caption">{{self.image.title}}</div>
     {% endif %}
