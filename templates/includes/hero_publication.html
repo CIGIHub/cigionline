@@ -9,10 +9,10 @@
 
     {% for document in download %}
       <button class="publication-download">
-          <a href="{{document.value.file.url}}">
-              <i class="fa fas fa-download"></i> 
-              {% if document.value.button_text == '' %}PDF Download {% else %} {{ document.value.button_text}} {% endif %}
-          </a>
+        <a href="{{document.value.file.url}}">
+            <i class="fa fas fa-download"></i>
+            {% if document.value.button_text == '' %}PDF Download {% else %} {{ document.value.button_text}} {% endif %}
+        </a>
       </button>
     {% endfor %}
   </div>
