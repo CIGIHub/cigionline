@@ -8,6 +8,7 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import AuthorBlock, PDFDownloadBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -15,6 +16,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     PageChooserBlock,
@@ -24,7 +26,6 @@ from wagtail.core.blocks import (
 )
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
-from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -114,7 +115,7 @@ class PublicationPage(
 
     authors = StreamField(
         [
-            ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
             ('external_author', CharBlock(required=True)),
         ],
         blank=True,
@@ -208,13 +209,7 @@ class PublicationPage(
     )
     pdf_downloads = StreamField(
         [
-            ('pdf_download', StructBlock([
-                ('file', DocumentChooserBlock(required=True)),
-                ('button_text', CharBlock(
-                    required=False,
-                    help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".',
-                )),
-            ], label='PDF Download'))
+            ('pdf_download', PDFDownloadBlock())
         ],
         blank=True,
         verbose_name='PDF Downloads',
@@ -328,6 +323,15 @@ class PublicationPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+
+    api_fields = [
+        APIField('authors'),
+        APIField('pdf_downloads'),
+        APIField('publishing_date'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
     ]
 
     parent_page_types = ['publications.PublicationListPage']
