@@ -11,7 +11,7 @@ def no_protocol(value):
 def page_type(page):
     return page._meta.verbose_name.lower().replace(' ', '-')
 
-  
+
 @register.filter
 def in_list(value, the_list):
     return value in the_list.split(',')
