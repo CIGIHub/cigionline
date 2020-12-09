@@ -73,6 +73,17 @@ class MultimediaPageViewSetTests(WagtailPageTests):
         home_page.numchild = 2
         home_page.save()
 
+    def verify_res_items(self, responseItems, expectedItems):
+        for i in range(len(expectedItems)):
+            self.assertEqual(responseItems[i]['publishing_date'], expectedItems[i]['publishing_date'])
+            self.assertEqual(responseItems[i]['title'], expectedItems[i]['title'])
+            self.assertEqual(responseItems[i]['url'], expectedItems[i]['url'])
+
+            self.assertEqual(len(responseItems[i]['topics']), len(expectedItems[i]['topics']))
+            # Verify that the expected topic titles were returned in the response
+            for topicTitle in expectedItems[i]['topics']:
+                self.assertTrue(any(topic['title'] == topicTitle for topic in responseItems[i]['topics']))
+
     def test_page_1_query_returns_200(self):
         res = self.client.get('/api/multimedia/?limit=18&offset=0&fields=title,url,publishing_date,topics(title,url)')
         self.assertEqual(res.status_code, 200)
@@ -80,7 +91,7 @@ class MultimediaPageViewSetTests(WagtailPageTests):
         self.assertEqual(resJson['meta']['total_count'], 30)
         self.assertEqual(len(resJson['items']), 18)
 
-        resExpected = [{
+        self.verify_res_items(resJson['items'], [{
             'publishing_date': '2020-12-25T08:00:00-05:00',
             'title': 'Test Multimedia 30',
             'topics': ['Test Topic 1'],
@@ -170,14 +181,4 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'title': 'Test Multimedia 13',
             'topics': ['Test Topic 2'],
             'url': '/multimedia/multimedia-13/',
-        }]
-
-        for i in range(18):
-            self.assertEqual(resJson['items'][i]['publishing_date'], resExpected[i]['publishing_date'])
-            self.assertEqual(resJson['items'][i]['title'], resExpected[i]['title'])
-            self.assertEqual(resJson['items'][i]['url'], resExpected[i]['url'])
-
-            self.assertEqual(len(resJson['items'][i]['topics']), len(resExpected[i]['topics']))
-            # Verify that the expected topic titles were returned in the response
-            for topicTitle in resExpected[i]['topics']:
-                self.assertTrue(any(topic['title'] == topicTitle for topic in resJson['items'][i]['topics']))
+        }])
