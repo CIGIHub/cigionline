@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('publications', '0003_create_chart_stream_block'),
+        ('publications', '0005_create_pdf_download_block'),
     ]
 
     operations = [
