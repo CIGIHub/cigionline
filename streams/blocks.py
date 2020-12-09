@@ -26,6 +26,20 @@ class VideoBlock(AbstractMediaChooserBlock):
         ))
 
 
+class AuthorBlock(blocks.PageChooserBlock):
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'id': value.id,
+                'title': value.title,
+                'url': value.url,
+            }
+
+    class Meta:
+        icon = 'user'
+        label = 'Author'
+
+
 class AutoPlayVideoBlock(blocks.StructBlock):
     video = VideoBlock(required=False)
     caption = blocks.CharBlock(required=False)
@@ -84,20 +98,6 @@ class ParagraphBlock(blocks.RichTextBlock):
         icon = 'edit'
         label = 'Paragraph'
         template = 'streams/paragraph_block.html'
-
-
-class AuthorBlock(blocks.PageChooserBlock):
-    def get_api_representation(self, value, context=None):
-        if value:
-            return {
-                'id': value.id,
-                'title': value.title,
-                'url': value.url,
-            }
-
-    class Meta:
-        icon = 'user'
-        label = 'Author'
 
 
 class PDFDownloadBlock(blocks.StructBlock):
