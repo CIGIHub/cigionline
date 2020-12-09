@@ -7,6 +7,7 @@ from streams.blocks import (
     ImageBlock,
     AutoPlayVideoBlock,
     ChartBlock,
+    RecommendedBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -116,7 +117,7 @@ class BasicPageAbstract(models.Model):
             ('quote_author', blocks.CharBlock(required=False)),
             ('author_title', blocks.CharBlock(required=False)),
         ])),
-        ('recommended', blocks.PageChooserBlock()),
+        ('recommended', RecommendedBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
         ('text_border_block', blocks.StructBlock([

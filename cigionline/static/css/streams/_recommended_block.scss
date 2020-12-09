@@ -1,0 +1,12 @@
+.stream-block-recommended {
+  .stream-block-recommended-content {
+    @include hover-darken;
+    border-bottom: 1px solid $cigi-light-grey;
+    border-top: 1px solid $cigi-light-grey;
+    padding: 1em 0;
+
+    .img-wrapper {
+      width: 250px;
+    }
+  }
+}

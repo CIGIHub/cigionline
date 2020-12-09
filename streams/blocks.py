@@ -85,6 +85,15 @@ class ParagraphBlock(blocks.RichTextBlock):
         template = 'streams/paragraph_block.html'
 
 
+class RecommendedBlock(blocks.PageChooserBlock):
+    """Recommended content block"""
+
+    class Meta:
+        icon = 'redirect'
+        label = 'Recommended'
+        template = 'streams/recommended_block.html'
+
+
 class SpeakersBlock(blocks.PageChooserBlock):
     def get_api_representation(self, value, context=None):
         if value:
