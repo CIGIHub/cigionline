@@ -34,7 +34,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 class MultimediaListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
-    subpage_types = []
+    subpage_types = ['multimedia.MultimediaPage']
     template = 'multimedia/multimedia_list_page.html'
     ajax_template = 'includes/multimedia_list_page_multimedia_list.html'
 
@@ -334,7 +334,7 @@ class MultimediaPage(
     ]
 
     parent_page_types = ['multimedia.MultimediaListPage']
-    subpage_typse = []
+    subpage_types = []
     templates = 'multimedia/multimedia_page.html'
 
     class Meta:
