@@ -1,0 +1,7 @@
+{% load wagtailcore_tags %}
+
+<ul class="topics custom-text-list">
+  {% for topic in topics.all %}
+    <li><a href="{% slugurl topic.slug %}">{{ topic }}</a></li>
+  {% endfor %}
+</ul>
