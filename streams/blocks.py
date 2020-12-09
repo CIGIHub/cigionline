@@ -118,6 +118,7 @@ class SpeakersBlock(blocks.PageChooserBlock):
                 'url': value.url,
             }
 
+
     class Meta:
         icon = 'edit'
         label = 'Speakers'
