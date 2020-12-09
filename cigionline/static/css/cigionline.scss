@@ -17,13 +17,15 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'layout/sections';
 @import 'layout/tables';
 
-@import 'includes/features';
 @import 'includes/footer';
 @import 'includes/top_bar';
 @import 'includes/search_bar';
 @import 'includes/people_person_leadership_list';
 @import 'includes/multimedia_list';
 @import 'includes/publications_featured_list';
+
+@import 'includes/features/feature_content';
+@import 'includes/features/feature_content_large';
 
 @import 'streams/block';
 @import 'streams/block_quote_block';
