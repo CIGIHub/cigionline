@@ -1,4 +1,5 @@
 from core.models import HomePage
+from research.models import TopicPage
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import (
@@ -286,4 +287,189 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'title': 'Test Multimedia 5 - Big Tech',
             'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-5/',
+        }])
+
+    def test_filter_topic_1_returns_200(self):
+        topic1 = TopicPage.objects.get(title='Test Topic 1')
+        res = self.client.get(f'{self.get_api_url(1)}&topics={topic1.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 13)
+        self.assertEqual(len(resJson['items']), 13)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-12-25T08:00:00-05:00',
+            'title': 'Test Multimedia 30',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-30/',
+        }, {
+            'publishing_date': '2020-12-07T08:00:00-05:00',
+            'title': 'Test Multimedia 26',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-26/',
+        }, {
+            'publishing_date': '2020-11-24T08:00:00-05:00',
+            'title': 'Test Multimedia 25',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-25/',
+        }, {
+            'publishing_date': '2020-10-21T08:00:00-04:00',
+            'title': 'Test Multimedia 21',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-21/',
+        }, {
+            'publishing_date': '2020-09-14T08:00:00-04:00',
+            'title': 'Test Multimedia 19',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-19/',
+        }, {
+            'publishing_date': '2020-08-14T08:00:00-04:00',
+            'title': 'Test Multimedia 17',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-17/',
+        }, {
+            'publishing_date': '2020-08-12T08:00:00-04:00',
+            'title': 'Test Multimedia 16',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-16/',
+        }, {
+            'publishing_date': '2020-07-20T08:00:00-04:00',
+            'title': 'Test Multimedia 12 - Big Tech',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-12/',
+        }, {
+            'publishing_date': '2020-06-18T08:00:00-04:00',
+            'title': 'Test Multimedia 8',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-8/',
+        }, {
+            'publishing_date': '2020-06-16T08:00:00-04:00',
+            'title': 'Test Multimedia 7',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-7/',
+        }, {
+            'publishing_date': '2020-06-02T08:00:00-04:00',
+            'title': 'Test Multimedia 6',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-6/',
+        }, {
+            'publishing_date': '2020-04-22T08:00:00-04:00',
+            'title': 'Test Multimedia 3',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-3/',
+        }, {
+            'publishing_date': '2020-02-04T08:00:00-05:00',
+            'title': 'Test Multimedia 1',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-1/',
+        }])
+
+    def test_filter_topic_2_returns_200(self):
+        topic2 = TopicPage.objects.get(title='Test Topic 2')
+        res = self.client.get(f'{self.get_api_url(1)}&topics={topic2.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 7)
+        self.assertEqual(len(resJson['items']), 7)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-12-16T08:00:00-05:00',
+            'title': 'Test Multimedia 29',
+            'topics': ['Test Topic 2'],
+            'url': '/multimedia/multimedia-29/',
+        }, {
+            'publishing_date': '2020-12-11T08:00:00-05:00',
+            'title': 'Test Multimedia 28',
+            'topics': ['Test Topic 2'],
+            'url': '/multimedia/multimedia-28/',
+        }, {
+            'publishing_date': '2020-10-27T08:00:00-04:00',
+            'title': 'Test Multimedia 22',
+            'topics': ['Test Topic 2'],
+            'url': '/multimedia/multimedia-22/',
+        }, {
+            'publishing_date': '2020-09-03T08:00:00-04:00',
+            'title': 'Test Multimedia 18',
+            'topics': ['Test Topic 2'],
+            'url': '/multimedia/multimedia-18/',
+        }, {
+            'publishing_date': '2020-07-27T08:00:00-04:00',
+            'title': 'Test Multimedia 13',
+            'topics': ['Test Topic 2'],
+            'url': '/multimedia/multimedia-13/',
+        }, {
+            'publishing_date': '2020-06-19T08:00:00-04:00',
+            'title': 'Test Multimedia 9',
+            'topics': ['Test Topic 2'],
+            'url': '/multimedia/multimedia-9/',
+        }, {
+            'publishing_date': '2020-04-24T08:00:00-04:00',
+            'title': 'Test Multimedia 4',
+            'topics': ['Test Topic 2', 'Test Topic 3'],
+            'url': '/multimedia/multimedia-4/',
+        }])
+
+    def test_filter_topic_3_returns_200(self):
+        topic3 = TopicPage.objects.get(title='Test Topic 3')
+        res = self.client.get(f'{self.get_api_url(1)}&topics={topic3.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 11)
+        self.assertEqual(len(resJson['items']), 11)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-12-10T08:00:00-05:00',
+            'title': 'Test Multimedia 27',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-27/',
+        }, {
+            'publishing_date': '2020-11-05T08:00:00-05:00',
+            'title': 'Test Multimedia 24',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-24/',
+        }, {
+            'publishing_date': '2020-10-28T08:00:00-04:00',
+            'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-23/',
+        }, {
+            'publishing_date': '2020-10-15T08:00:00-04:00',
+            'title': 'Test Multimedia 20',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-20/',
+        }, {
+            'publishing_date': '2020-08-11T08:00:00-04:00',
+            'title': 'Test Multimedia 15',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-15/',
+        }, {
+            'publishing_date': '2020-08-06T08:00:00-04:00',
+            'title': 'Test Multimedia 14',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-14/',
+        }, {
+            'publishing_date': '2020-07-06T08:00:00-04:00',
+            'title': 'Test Multimedia 11',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-11/',
+        }, {
+            'publishing_date': '2020-06-24T08:00:00-04:00',
+            'title': 'Test Multimedia 10',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-10/',
+        }, {
+            'publishing_date': '2020-05-07T08:00:00-04:00',
+            'title': 'Test Multimedia 5 - Big Tech',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-5/',
+        }, {
+            'publishing_date': '2020-04-24T08:00:00-04:00',
+            'title': 'Test Multimedia 4',
+            'topics': ['Test Topic 2', 'Test Topic 3'],
+            'url': '/multimedia/multimedia-4/',
+        }, {
+            'publishing_date': '2020-04-20T08:00:00-04:00',
+            'title': 'Test Multimedia 2',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-2/',
         }])
