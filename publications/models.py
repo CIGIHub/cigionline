@@ -26,7 +26,6 @@ from wagtail.core.blocks import (
 )
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
-from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
