@@ -63,3 +63,16 @@ class MultimediaSeriesPageTests(WagtailPageTests):
             MultimediaSeriesPage,
             {},
         )
+
+
+class MultimediaPageViewSetTests(WagtailPageTests):
+    fixtures = ['multimedia_search_table.json']
+
+    def setUp(self):
+        home_page = HomePage.objects.get()
+        home_page.numchild = 2
+        home_page.save()
+
+    def test_page_1_query_returns_200(self):
+        response = self.client.get('/api/multimedia/')
+        self.assertEqual(response.status_code, 200)
