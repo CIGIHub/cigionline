@@ -85,6 +85,20 @@ class ParagraphBlock(blocks.RichTextBlock):
         template = 'streams/paragraph_block.html'
 
 
+class AuthorBlock(blocks.PageChooserBlock):
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'id': value.id,
+                'title': value.title,
+                'url': value.url,
+            }
+
+    class Meta:
+        icon = 'user'
+        label = 'Author'
+
+
 class SpeakersBlock(blocks.PageChooserBlock):
     def get_api_representation(self, value, context=None):
         if value:
@@ -95,5 +109,5 @@ class SpeakersBlock(blocks.PageChooserBlock):
             }
 
     class Meta:
-        icon = 'edit'
+        icon = 'user'
         label = 'Speakers'

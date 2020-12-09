@@ -8,6 +8,7 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import AuthorBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -115,7 +116,7 @@ class PublicationPage(
 
     authors = StreamField(
         [
-            ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
             ('external_author', CharBlock(required=True)),
         ],
         blank=True,
@@ -332,11 +333,11 @@ class PublicationPage(
     ]
 
     api_fields = [
-        APIField('title'),
-        APIField('url'),
+        APIField('authors'),
         APIField('publishing_date'),
-        APIField('image_hero_url'),
+        APIField('title'),
         APIField('topics'),
+        APIField('url'),
     ]
 
     parent_page_types = ['publications.PublicationListPage']

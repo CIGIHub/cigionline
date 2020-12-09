@@ -122,7 +122,7 @@ SearchTable.propTypes = {
   blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string).isRequired,
   endpoint: PropTypes.string.isRequired,
-  fields: PropTypes.string.isRequired,
+  fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
   tableColumns: PropTypes.arrayOf(PropTypes.shape({

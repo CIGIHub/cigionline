@@ -45,6 +45,20 @@ function PublicationListing(props) {
         <div className="table-mobile-text">
           Expert
         </div>
+        <div className="table-content">
+          <ul className="custom-text-list">
+            {row.authors.map((author) => (
+              <li key={`${row.id}-${author.id}`}>
+                {author.type === 'author'
+                  ? (
+                    <a href={author.value.url} className="table-content-link table-content-link-black">
+                      {author.value.title}
+                    </a>
+                  ) : author.value}
+              </li>
+            ))}
+          </ul>
+        </div>
       </td>
       <td colSpan="0">
         <div className="table-mobile-text">
@@ -57,6 +71,12 @@ function PublicationListing(props) {
 
 PublicationListing.propTypes = {
   row: PropTypes.shape({
+    authors: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      type: PropTypes.string,
+      value: PropTypes.any,
+    })),
+    id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(PropTypes.shape({

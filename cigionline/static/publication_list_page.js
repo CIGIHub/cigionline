@@ -7,6 +7,7 @@ ReactDOM.render(
   <SearchTable
     endpoint="/publications"
     fields={[
+      'authors',
       'publishing_date',
       'title',
       'topics(title,url)',
