@@ -32,35 +32,4 @@
     line-height: 1.5;
     margin: 1em 0;
   }
-
-  &.feature-content-large {
-    line-height: 1.25;
-
-    .img-wrapper {
-      margin-bottom: 1em;
-    }
-
-    .feature-content-text {
-      margin: 0 auto;
-      max-width: 36em;
-
-      &.center-text {
-        @include media-breakpoint-up(md) {
-          text-align: center;
-
-          ul {
-            justify-content: center;
-          }
-        }
-      }
-
-      .feature-content-title {
-        @include media-breakpoint-up(md) {
-          font-size: 2em;
-        }
-
-        font-size: 1.375em;
-      }
-    }
-  }
 }
