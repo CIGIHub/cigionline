@@ -197,7 +197,7 @@ class MultimediaPageViewSetTests(WagtailPageTests):
 
         self.verify_res_items(resJson['items'], [{
             'publishing_date': '2020-07-20T08:00:00-04:00',
-            'title': 'Test Multimedia 12',
+            'title': 'Test Multimedia 12 - Big Tech',
             'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-12/',
         }, {
@@ -232,7 +232,7 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'url': '/multimedia/multimedia-6/',
         }, {
             'publishing_date': '2020-05-07T08:00:00-04:00',
-            'title': 'Test Multimedia 5',
+            'title': 'Test Multimedia 5 - Big Tech',
             'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-5/',
         }, {
@@ -255,4 +255,35 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'title': 'Test Multimedia 1',
             'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-1/',
+        }])
+
+    def test_page_3_query_returns_200(self):
+        res = self.client.get(self.get_api_url(3))
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 30)
+        self.assertEqual(len(resJson['items']), 0)
+
+    def test_search_query_returns_200(self):
+        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 3)
+        self.assertEqual(len(resJson['items']), 3)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-10-28T08:00:00-04:00',
+            'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-23/',
+        }, {
+            'publishing_date': '2020-07-20T08:00:00-04:00',
+            'title': 'Test Multimedia 12 - Big Tech',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-12/',
+        }, {
+            'publishing_date': '2020-05-07T08:00:00-04:00',
+            'title': 'Test Multimedia 5 - Big Tech',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-5/',
         }])

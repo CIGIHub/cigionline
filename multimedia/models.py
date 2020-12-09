@@ -323,6 +323,8 @@ class MultimediaPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     api_fields = [
         APIField('title'),
         APIField('url'),
