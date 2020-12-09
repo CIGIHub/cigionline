@@ -24,43 +24,6 @@ section {
     .custom-text-list {
       justify-content: center;
     }
-
-    .topics {
-      font-size: 0.75em;
-      font-weight: 500;
-      margin: 1em 0;
-      text-transform: uppercase;
-    }
-
-    .authors {
-      font-size: 0.95em;
-      line-height: 1.25em;
-      margin-bottom: 0.5em;
-      margin-top: 1.5em;
-
-      a {
-        color: $cigi-dark-grey;
-
-        &:hover {
-          color: $cigi-pink;
-        }
-      }
-
-      .block-author {
-        &:not(:only-child) {
-          &::after {
-            content: ', ';
-            margin-right: 2px;
-          }
-        }
-
-        &:last-child {
-          &::after {
-            display: none;
-          }
-        }
-      }
-    }
   }
 }
 
