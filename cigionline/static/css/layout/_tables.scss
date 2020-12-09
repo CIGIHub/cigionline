@@ -36,6 +36,8 @@ table {
     tr {
       th {
         border-right: 1px solid $cigi-light-grey;
+        font-size: 0.75em;
+        line-height: 1.25em;
 
         &:last-of-type {
           border-right: 0;
