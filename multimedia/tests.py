@@ -83,74 +83,92 @@ class MultimediaPageViewSetTests(WagtailPageTests):
         resExpected = [{
             'publishing_date': '2020-12-25T08:00:00-05:00',
             'title': 'Test Multimedia 30',
+            'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-30/',
         }, {
             'publishing_date': '2020-12-16T08:00:00-05:00',
             'title': 'Test Multimedia 29',
+            'topics': ['Test Topic 2'],
             'url': '/multimedia/multimedia-29/',
         }, {
             'publishing_date': '2020-12-11T08:00:00-05:00',
             'title': 'Test Multimedia 28',
+            'topics': ['Test Topic 2'],
             'url': '/multimedia/multimedia-28/',
         }, {
             'publishing_date': '2020-12-10T08:00:00-05:00',
             'title': 'Test Multimedia 27',
+            'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-27/',
         }, {
             'publishing_date': '2020-12-07T08:00:00-05:00',
             'title': 'Test Multimedia 26',
+            'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-26/',
         }, {
             'publishing_date': '2020-11-24T08:00:00-05:00',
             'title': 'Test Multimedia 25',
+            'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-25/',
         }, {
             'publishing_date': '2020-11-05T08:00:00-05:00',
             'title': 'Test Multimedia 24',
+            'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-24/',
         }, {
             'publishing_date': '2020-10-28T08:00:00-04:00',
             'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-23/',
         }, {
             'publishing_date': '2020-10-27T08:00:00-04:00',
             'title': 'Test Multimedia 22',
+            'topics': ['Test Topic 2'],
             'url': '/multimedia/multimedia-22/',
         }, {
             'publishing_date': '2020-10-21T08:00:00-04:00',
             'title': 'Test Multimedia 21',
+            'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-21/',
         }, {
             'publishing_date': '2020-10-15T08:00:00-04:00',
             'title': 'Test Multimedia 20',
+            'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-20/',
         }, {
             'publishing_date': '2020-09-14T08:00:00-04:00',
             'title': 'Test Multimedia 19',
+            'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-19/',
         }, {
             'publishing_date': '2020-09-03T08:00:00-04:00',
             'title': 'Test Multimedia 18',
+            'topics': ['Test Topic 2'],
             'url': '/multimedia/multimedia-18/',
         }, {
             'publishing_date': '2020-08-14T08:00:00-04:00',
             'title': 'Test Multimedia 17',
+            'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-17/',
         }, {
             'publishing_date': '2020-08-12T08:00:00-04:00',
             'title': 'Test Multimedia 16',
+            'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-16/',
         }, {
             'publishing_date': '2020-08-11T08:00:00-04:00',
             'title': 'Test Multimedia 15',
+            'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-15/',
         }, {
             'publishing_date': '2020-08-06T08:00:00-04:00',
             'title': 'Test Multimedia 14',
+            'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-14/',
         }, {
             'publishing_date': '2020-07-27T08:00:00-04:00',
             'title': 'Test Multimedia 13',
+            'topics': ['Test Topic 2'],
             'url': '/multimedia/multimedia-13/',
         }]
 
@@ -158,4 +176,8 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             self.assertEqual(resJson['items'][i]['publishing_date'], resExpected[i]['publishing_date'])
             self.assertEqual(resJson['items'][i]['title'], resExpected[i]['title'])
             self.assertEqual(resJson['items'][i]['url'], resExpected[i]['url'])
-        # print(response.json())
+
+            self.assertEqual(len(resJson['items'][i]['topics']), len(resExpected[i]['topics']))
+            # Verify that the expected topic titles were returned in the response
+            for topicTitle in resExpected[i]['topics']:
+                self.assertTrue(any(topic['title'] == topicTitle for topic in resJson['items'][i]['topics']))
