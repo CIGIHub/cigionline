@@ -7,7 +7,7 @@
 
     {% if self.speakers|length > 0 %}
       {% with type="speaker" %}
-          {% include "includes/about_the_author.html" with authors=self.speakers type=type %}
+        {% include "includes/about_the_author.html" with authors=self.speakers type=type %}
       {% endwith %}
     {% endif %}
 

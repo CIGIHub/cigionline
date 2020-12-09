@@ -1,19 +1,17 @@
 {% load static wagtailcore_tags %}
 
 <section class="about-the-author">
-    <div class="container-sm">
-        <h3>About the {{type}}{{authors|length|pluralize}}</h3>
-        {% for author in authors %}
-            <div class="author-block">
-                {% if author.value.first_name|length > 1 %}
-                    <div class="name">{{ author.value.first_name }}  {{ author.value.last_name }}</div>
-                    {{ author.value.short_bio|richtext }}
-                 {% else %}
-                    {{ author }} 
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
-    </div>
-  </section>
-  
+  <div class="container-sm">
+      <h3>About the {{type}}{{authors|length|pluralize}}</h3>
+      {% for author in authors %}
+          <div class="author-block">
+            <div class="name">{{ author }}</div>
+            {% if author.value.short_bio|length > 1 %}
+              {{ author.value.short_bio|richtext }}
+            {% endif %}
+          </div>
+      {% endfor %}
+  </div>
+  </div>
+</section>
+

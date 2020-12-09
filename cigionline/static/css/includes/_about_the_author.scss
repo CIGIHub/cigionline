@@ -10,9 +10,17 @@
   }
 
   .name {
-    font-size: 1.1em;
-    font-weight: 500;
+    font-size: 1.0625em;
+    font-weight: 400;
     margin-bottom: 0.25em;
+
+    a {
+      color: $black;
+
+      &:hover {
+        color: $cigi-pink;
+      }
+    }
   }
 
   .author-block {
