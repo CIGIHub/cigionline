@@ -21,12 +21,6 @@
     {% block extra_fonts %}
       {# Override this in templates to add extra fonts #}
     {% endblock %}
-
-    {% render_bundle 'cigionline' %}
-
-    {% block extra_css %}
-      {# Override this in templates to add extra stylesheets #}
-    {% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">
     {% wagtailuserbar %}
@@ -42,9 +36,10 @@
     {% block footer %}
       {% include "includes/footer.html" %}
     {% endblock %}
-
-    {% block extra_js %}
-      {# Override this in templates to add extra javascript #}
-    {% endblock %}
   </body>
+
+  {% render_bundle 'cigionline' %}
+  {% block extra_bundles %}
+    {# Override this in templates to add extra javascript or css #}
+  {% endblock %}
 </html>
