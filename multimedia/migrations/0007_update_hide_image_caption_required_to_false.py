@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('multimedia', '0005_create_chart_stream_block'),
+        ('multimedia', '0006_create_speakers_block'),
     ]
 
     operations = [
