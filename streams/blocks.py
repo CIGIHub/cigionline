@@ -91,7 +91,7 @@ class PullQuoteLeftBlock(blocks.StructBlock):
     quote = blocks.RichTextBlock(required=True)
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
-    
+
     class Meta: 
         icon = 'edit'
         label = 'Pull Quote Left'
@@ -104,7 +104,7 @@ class PullQuoteRightBlock(blocks.StructBlock):
     quote = blocks.RichTextBlock(required=True)
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
-    
+
     class Meta: 
         icon = 'edit'
         label = 'Pull Quote Right'
