@@ -650,3 +650,54 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'topics': ['Test Topic 1'],
             'url': '/multimedia/multimedia-1/',
         }])
+
+    def test_search_and_filter_topics_returns_200(self):
+        topic3 = TopicPage.objects.get(title='Test Topic 3')
+        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&topics={topic3.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 2)
+        self.assertEqual(len(resJson['items']), 2)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-10-28T08:00:00-04:00',
+            'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-23/',
+        }, {
+            'publishing_date': '2020-05-07T08:00:00-04:00',
+            'title': 'Test Multimedia 5 - Big Tech',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-5/',
+        }])
+
+    def test_search_and_filter_multimedia_type_video_returns_200(self):
+        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&multimedia_type=video')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 3)
+        self.assertEqual(len(resJson['items']), 3)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-10-28T08:00:00-04:00',
+            'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-23/',
+        }, {
+            'publishing_date': '2020-07-20T08:00:00-04:00',
+            'title': 'Test Multimedia 12 - Big Tech',
+            'topics': ['Test Topic 1'],
+            'url': '/multimedia/multimedia-12/',
+        }, {
+            'publishing_date': '2020-05-07T08:00:00-04:00',
+            'title': 'Test Multimedia 5 - Big Tech',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-5/',
+        }])
+
+    def test_search_and_filter_multimedia_type_audio_returns_200(self):
+        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&multimedia_type=audio')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 0)
+        self.assertEqual(len(resJson['items']), 0)

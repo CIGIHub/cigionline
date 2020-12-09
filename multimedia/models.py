@@ -29,6 +29,7 @@ from wagtail.core.blocks import (
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class MultimediaListPage(BasicPageAbstract, Page):
@@ -323,7 +324,10 @@ class MultimediaPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields \
+        + [index.FilterField('multimedia_type')]
 
     api_fields = [
         APIField('title'),

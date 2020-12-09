@@ -366,6 +366,10 @@ class ContentPage(Page, SearchablePageAbstract):
         FieldPanel('topics'),
     ]
 
+    search_fields = [
+        index.FilterField('topicpage_id'),
+    ]
+
     def on_form_bound(self):
         self.bound_field = self.form[self.field_name]
         heading = self.heading or self.bound_field.label
