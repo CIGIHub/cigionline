@@ -140,7 +140,7 @@ class TopicsTagTests(WagtailPageTests):
         test_topics = TopicPage.objects.all()
         rendered = self.TEMPLATE.render(Context({'test_topics': test_topics}))
 
-        self.assertEqual(' \n\n\n<ul class="topics">\n  \n</ul>\n', rendered)
+        self.assertEqual(' \n\n<ul class="topics">\n  \n</ul>\n', rendered)
 
     def test_correct_number_of_topics_render(self):
         for n in range(5):

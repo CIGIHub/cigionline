@@ -23,7 +23,7 @@ class SearchTable extends React.Component {
   }
 
   getRows() {
-    const { currentPage } = this.state;
+    const { currentPage, loadingInitial } = this.state;
     const { endpoint, fields, limit } = this.props;
 
     const offset = (currentPage - 1) * limit;
@@ -31,7 +31,9 @@ class SearchTable extends React.Component {
     this.setState(() => ({
       loading: true,
     }));
-    this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (!loadingInitial) {
+      this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
 
     fetch(`/api${endpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`)
       .then((res) => res.json())
@@ -64,16 +66,42 @@ class SearchTable extends React.Component {
       loadingInitial,
       rows,
     } = this.state;
-    const { containerClass, RowComponent } = this.props;
+    const {
+      blockListing,
+      containerClass,
+      RowComponent,
+      tableColumns,
+    } = this.props;
 
     return (
       <div className="search-table">
-        {loadingInitial && <SearchTableSkeleton />}
-        <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-          {rows.map((row) => (
-            <RowComponent key={row.id} row={row} />
-          ))}
-        </div>
+        {loadingInitial
+          ? <SearchTableSkeleton />
+          : blockListing
+            ? (
+              <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                {rows.map((row) => (
+                  <RowComponent key={row.id} row={row} />
+                ))}
+              </div>
+            ) : (
+              <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                <thead>
+                  <tr>
+                    {tableColumns.map((tableColumn) => (
+                      <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
+                        {tableColumn.colTitle}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <RowComponent key={row.id} row={row} />
+                  ))}
+                </tbody>
+              </table>
+            )}
         <Paginator
           currentPage={currentPage}
           totalPages={this.totalPages}
@@ -92,15 +120,22 @@ class SearchTable extends React.Component {
 }
 
 SearchTable.propTypes = {
+  blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string).isRequired,
   endpoint: PropTypes.string.isRequired,
-  fields: PropTypes.string.isRequired,
+  fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
+  tableColumns: PropTypes.arrayOf(PropTypes.shape({
+    colSpan: PropTypes.number,
+    colTitle: PropTypes.string,
+  })),
 };
 
 SearchTable.defaultProps = {
+  blockListing: false,
   limit: 24,
+  tableColumns: [],
 };
 
 export default SearchTable;

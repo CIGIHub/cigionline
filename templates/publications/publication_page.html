@@ -2,7 +2,7 @@
 {% load static wagtailcore_tags wagtailimages_tags core_tags %}
 
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title %}
+  {% include "includes/hero_publication.html" with title=self.title  subtitle=self.subtitle authors=self.authors date=self.publishing_date download=self.pdf_downloads topics=self.topics %}
 
   {% if page.body %}
     <section class="body">
@@ -12,3 +12,6 @@
     </section>
   {% endif %}
 {% endblock content %}
+
+{{ pdf_downloads }}
+

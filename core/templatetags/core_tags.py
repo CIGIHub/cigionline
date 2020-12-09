@@ -11,7 +11,7 @@ def no_protocol(value):
 def page_type(page):
     return page._meta.verbose_name.lower().replace(' ', '-')
 
-
+  
 @register.filter
 def in_list(value, the_list):
     return value in the_list.split(',')
@@ -20,3 +20,8 @@ def in_list(value, the_list):
 @register.simple_tag
 def define(value):
     return value
+
+
+@register.filter
+def social_string(value):
+    return value.replace(' ', '+')

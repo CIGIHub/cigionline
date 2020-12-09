@@ -2,11 +2,11 @@ from wagtail.api.v2.filters import OrderingFilter
 from wagtail.api.v2.serializers import PageSerializer
 from wagtail.api.v2.views import BaseAPIViewSet
 
-from .models import MultimediaPage
+from .models import PublicationPage
 
 
-class MultimediaPageViewSet(BaseAPIViewSet):
-    model = MultimediaPage
+class PublicationPageViewSet(BaseAPIViewSet):
+    model = PublicationPage
     base_serializer_class = PageSerializer
     filter_backends = [
         OrderingFilter,
