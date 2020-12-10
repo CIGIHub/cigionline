@@ -4,16 +4,16 @@
       {{ self.quote }}
 
       {% if self.quote_author %}
-          <div class="stream-block-pull-quote-author">
-            {{ self.quote_author }}
-          </div>
-        {% endif %}
+        <div class="stream-block-pull-quote-author">
+          {{ self.quote_author }}
+        </div>
+      {% endif %}
 
-        {% if self.author_title %}
-          <div class="stream-block-pull-quote-author-title">
-            {{ self.author_title }}
-          </div>
-        {% endif %}
-      </blockquote>
+      {% if self.author_title %}
+        <div class="stream-block-pull-quote-author-title">
+          {{ self.author_title }}
+        </div>
+      {% endif %}
+    </blockquote>
   </div>
 </div>
