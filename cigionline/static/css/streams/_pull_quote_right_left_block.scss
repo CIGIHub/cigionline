@@ -19,16 +19,17 @@
     background: $dark-box-grey;
     border-left: 2px solid $black;
     font-size: 1.25em;
-    line-height: 150%;
+    line-height: 1.5;
     padding: 1em 1.5em;
-  }
 
-  .stream-block-pull-quote-author,
-  .stream-block-pull-quote-author-title {
-    font-size: 0.8em;
-  }
+    .stream-block-pull-quote-author,
+    .stream-block-pull-quote-author-title {
+      font-size: 0.8em;
+    }
 
-  .stream-block-pull-quote-author {
-    font-weight: 600;
+    .stream-block-pull-quote-author {
+      font-weight: 600;
+      margin-top: 0.8em;
+    }
   }
 }

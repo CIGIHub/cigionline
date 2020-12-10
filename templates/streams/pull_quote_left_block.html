@@ -1,16 +1,16 @@
-<div class="container-sm">  
+<div class="container-sm">
   <div class="stream-block stream-block-pull-quote left">
     <blockquote>
       {{ self.quote }}
 
       {% if self.quote_author %}
-        <div class="stream-block-pull-quote author">
+        <div class="stream-block-pull-quote-author">
           {{ self.quote_author }}
         </div>
       {% endif %}
 
       {% if self.author_title %}
-        <div class="stream-block-pull-quote author-title">
+        <div class="stream-block-pull-quote-author-title">
           {{ self.author_title }}
         </div>
       {% endif %}
