@@ -186,8 +186,8 @@ class SpeakersBlock(blocks.PageChooserBlock):
 class TextBorderBlock(blocks.StructBlock):
     """Text box with border and optional colour for border """
 
-    text = blocks.CharBlock(required=True)
-    border_color = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(required=True)
+    border_colour = blocks.CharBlock(required=False)
 
     class Meta:
         icon = 'edit'
