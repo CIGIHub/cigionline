@@ -124,6 +124,15 @@ class ParagraphBlock(blocks.RichTextBlock):
         template = 'streams/paragraph_block.html'
 
 
+class RecommendedBlock(blocks.PageChooserBlock):
+    """Recommended content block"""
+
+    class Meta:
+        icon = 'redirect'
+        label = 'Recommended'
+        template = 'streams/recommended_block.html'
+
+
 class PDFDownloadBlock(blocks.StructBlock):
     file = DocumentChooserBlock(required=True)
     button_text = blocks.CharBlock(
