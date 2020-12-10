@@ -4,9 +4,16 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
     BlockQuoteBlock,
+    ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
+    ImageFullBleedBlock,
     ChartBlock,
+    PullQuoteLeftBlock,
+    PullQuoteRightBlock,
+    RecommendedBlock,
+    TextBorderBlock,
+    TweetBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -71,13 +78,10 @@ class BasicPageAbstract(models.Model):
         ('paragraph', ParagraphBlock()),
         ('image', ImageBlock()),
         ('block_quote', BlockQuoteBlock()),
-        ('image_full_bleed', blocks.StructBlock([
-            ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
-        ])),
+        ('image_full_bleed', ImageFullBleedBlock()),
         ('image_scroll', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('embedded_multimedia', blocks.StructBlock([
             ('multimedia_url', blocks.URLBlock(required=True)),
@@ -96,33 +100,19 @@ class BasicPageAbstract(models.Model):
                 ('square', 'Square'),
             ])),
         ])),
-        ('external_quote', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('source', blocks.CharBlock(required=False)),
-        ])),
+        ('external_quote', ExternalQuoteBlock()),
         ('external_videos', blocks.ListBlock(blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('video_url', blocks.URLBlock(required=True)),
         ]))),
         ('highlight_title', blocks.CharBlock(required=True)),
         ('inline_video', blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')),
-        ('pull_quote_left', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-        ])),
-        ('pull_quote_right', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-        ])),
-        ('recommended', blocks.PageChooserBlock()),
+        ('pull_quote_left', PullQuoteLeftBlock()),
+        ('pull_quote_right', PullQuoteRightBlock()),
+        ('recommended', RecommendedBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
-        ('text_border_block', blocks.StructBlock([
-            ('text', blocks.RichTextBlock(required=True)),
-            ('border_colour', blocks.CharBlock(required=False)),
-        ])),
+        ('text_border_block', TextBorderBlock()),
         ('tool_tip', blocks.StructBlock([
             ('anchor', blocks.CharBlock(required=True)),
             ('text', blocks.RichTextBlock(required=True)),
@@ -130,13 +120,7 @@ class BasicPageAbstract(models.Model):
             ('title', blocks.CharBlock(required=False)),
             ('image', ImageChooserBlock(required=False)),
         ])),
-        ('tweet', blocks.StructBlock([
-            ('tweet_id', blocks.IntegerBlock(
-                required=True,
-                help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
-                verbose_name='Tweet ID',
-            )),
-        ])),
+        ('tweet', TweetBlock()),
     ]
     body_poster_block = [
         ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')),

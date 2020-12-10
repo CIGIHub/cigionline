@@ -1,6 +1,7 @@
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
 from wagtail.core import blocks
+from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 
@@ -23,6 +24,20 @@ class VideoBlock(AbstractMediaChooserBlock):
             '\n', "<source{0}",
             [[flatatt(s)] for s in value.sources]
         ))
+
+
+class AuthorBlock(blocks.PageChooserBlock):
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'id': value.id,
+                'title': value.title,
+                'url': value.url,
+            }
+
+    class Meta:
+        icon = 'user'
+        label = 'Author'
 
 
 class AutoPlayVideoBlock(blocks.StructBlock):
@@ -64,6 +79,18 @@ class ChartBlock(blocks.StructBlock):
         template = 'streams/chart_block.html'
 
 
+class ExternalQuoteBlock(blocks.StructBlock):
+    """External quote with optional source"""
+
+    quote = blocks.RichTextBlock(required=True)
+    source = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'External Quote'
+        template = 'streams/external_quote_block.html'
+
+
 class ImageBlock(blocks.StructBlock):
     """Image"""
 
@@ -76,6 +103,18 @@ class ImageBlock(blocks.StructBlock):
         template = 'streams/image_block.html'
 
 
+class ImageFullBleedBlock(blocks.StructBlock):
+    """Full bleed image"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'Full Bleed Image'
+        template = 'streams/image_full_bleed_block.html'
+
+
 class ParagraphBlock(blocks.RichTextBlock):
     """Standard text paragraph."""
 
@@ -83,6 +122,60 @@ class ParagraphBlock(blocks.RichTextBlock):
         icon = 'edit'
         label = 'Paragraph'
         template = 'streams/paragraph_block.html'
+
+
+class RecommendedBlock(blocks.PageChooserBlock):
+    """Recommended content block"""
+
+    class Meta:
+        icon = 'redirect'
+        label = 'Recommended'
+        template = 'streams/recommended_block.html'
+
+
+class PDFDownloadBlock(blocks.StructBlock):
+    file = DocumentChooserBlock(required=True)
+    button_text = blocks.CharBlock(
+        required=False,
+        help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".'
+    )
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'button_text': value.get('button_text'),
+                'url': value.get('file').file.url,
+            }
+
+    class Meta:
+        icon = 'download-alt'
+        label = 'PDF Download'
+
+
+class PullQuoteLeftBlock(blocks.StructBlock):
+    """Pull quote left side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Pull Quote Left'
+        template = 'streams/pull_quote_left_block.html'
+
+
+class PullQuoteRightBlock(blocks.StructBlock):
+    """Pull quote right side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Pull Quote Right'
+        template = 'streams/pull_quote_right_block.html'
 
 
 class SpeakersBlock(blocks.PageChooserBlock):
@@ -95,5 +188,32 @@ class SpeakersBlock(blocks.PageChooserBlock):
             }
 
     class Meta:
-        icon = 'edit'
+        icon = 'user'
         label = 'Speakers'
+
+
+class TextBorderBlock(blocks.StructBlock):
+    """Text box with border and optional colour for border """
+
+    text = blocks.RichTextBlock(required=True)
+    border_colour = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Bordered Text Block'
+        template = 'streams/text_border_block.html'
+
+
+class TweetBlock(blocks.StructBlock):
+    """Tweet Block"""
+
+    tweet_id = blocks.IntegerBlock(
+        required=True,
+        help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
+        verbose_name='Tweet ID',
+    )
+
+    class Meta:
+        icon = 'social'
+        label = 'Tweet'
+        template = 'streams/tweet_block.html'

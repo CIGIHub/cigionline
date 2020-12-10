@@ -1,0 +1,24 @@
+.stream-block-external-quote-content {
+  color: $cigi-text-grey;
+  line-height: 1.25em;
+  padding: 0 3em;
+
+  blockquote {
+    border-left: 5px solid $cigi-pink;
+    color: $cigi-text-grey;
+    font-style: italic;
+    margin: 0;
+    padding: 0.2em 1em;
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .stream-block-external-quote-source {
+    display: flex;
+    justify-content: right;
+  }
+}
