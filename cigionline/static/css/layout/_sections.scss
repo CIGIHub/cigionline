@@ -1,9 +1,8 @@
 section {
-  margin: 1em 0;
-
   @include media-breakpoint-up(md) {
     margin: 3em 0;
   }
+  margin: 1em 0;
 
   &.hero {
     margin-top: 0;
