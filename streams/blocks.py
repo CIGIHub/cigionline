@@ -181,3 +181,15 @@ class SpeakersBlock(blocks.PageChooserBlock):
     class Meta:
         icon = 'user'
         label = 'Speakers'
+
+
+class TextBorderBlock(blocks.StructBlock):
+    """Text box with border and optional colour for border """
+
+    text = blocks.RichTextBlock(required=True)
+    border_colour = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Bordered Text Block'
+        template = 'streams/text_border_block.html'

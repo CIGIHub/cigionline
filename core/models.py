@@ -10,7 +10,8 @@ from streams.blocks import (
     ImageFullBleedBlock,
     ChartBlock,
     PullQuoteLeftBlock,
-    PullQuoteRightBlock
+    PullQuoteRightBlock,
+    TextBorderBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -109,10 +110,7 @@ class BasicPageAbstract(models.Model):
         ('recommended', blocks.PageChooserBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
-        ('text_border_block', blocks.StructBlock([
-            ('text', blocks.RichTextBlock(required=True)),
-            ('border_colour', blocks.CharBlock(required=False)),
-        ])),
+        ('text_border_block', TextBorderBlock()),
         ('tool_tip', blocks.StructBlock([
             ('anchor', blocks.CharBlock(required=True)),
             ('text', blocks.RichTextBlock(required=True)),
