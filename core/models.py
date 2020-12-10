@@ -74,11 +74,11 @@ class BasicPageAbstract(models.Model):
         ('block_quote', BlockQuoteBlock()),
         ('image_full_bleed', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('image_scroll', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('embedded_multimedia', blocks.StructBlock([
             ('multimedia_url', blocks.URLBlock(required=True)),
