@@ -1,0 +1,11 @@
+.opinion-disclaimer {
+  color: $cigi-text-grey;
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+.multimedia-disclaimer-section {
+  .opinion-disclaimer {
+    font-size: 1rem;
+  }
+}
