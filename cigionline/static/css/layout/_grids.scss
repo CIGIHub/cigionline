@@ -10,11 +10,6 @@
   max-width: 40rem;
 }
 
-.container-fb {
-  padding: 0;
-  width: 100vw;
-}
-
 .grid-container {
   @include display-grid;
 }
