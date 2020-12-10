@@ -8,6 +8,8 @@ from streams.blocks import (
     ImageBlock,
     AutoPlayVideoBlock,
     ChartBlock,
+    PullQuoteLeftBlock,
+    PullQuoteRightBlock
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -104,16 +106,8 @@ class BasicPageAbstract(models.Model):
         ]))),
         ('highlight_title', blocks.CharBlock(required=True)),
         ('inline_video', blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')),
-        ('pull_quote_left', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-        ])),
-        ('pull_quote_right', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-        ])),
+        ('pull_quote_left', PullQuoteLeftBlock()),
+        ('pull_quote_right', PullQuoteRightBlock()),
         ('recommended', blocks.PageChooserBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
