@@ -1,6 +1,8 @@
 .tweet-block {
-  display: flex;
-  margin: 0 auto 2em;
-  max-width: 550px;
-  width: 100%;
+  margin-bottom: 2em;
+  margin-top: 2em;
+
+  iframe {
+    margin: 0 auto;
+  }
 }
