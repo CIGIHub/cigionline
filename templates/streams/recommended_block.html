@@ -1,0 +1,18 @@
+{% load wagtailimages_tags %}
+
+<div class="stream-block stream-block-recommended">
+  <div class="container-sm">
+    <div class="stream-block-recommended-content flex-row">
+      <div class="img-wrapper">
+        <a href="{{ self.url }}">
+          {% image self.specific.image_hero fill-377x246 %}
+        </a>
+      </div>
+
+      <div class="stream-block-recommended-text flex-column">
+        <div class="stream-block-recommended-label meta">RECOMMENDED</div>
+        <a href="{{ self.url }}">{{self.title}}</a>
+      </div>
+    </div>
+  </div>
+</div>

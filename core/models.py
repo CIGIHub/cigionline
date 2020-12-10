@@ -4,9 +4,15 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
     BlockQuoteBlock,
+    ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
+    ImageFullBleedBlock,
     ChartBlock,
+    PullQuoteLeftBlock,
+    PullQuoteRightBlock,
+    RecommendedBlock,
+    TextBorderBlock,
     TweetBlock,
 )
 from wagtail.admin.edit_handlers import (
@@ -72,13 +78,10 @@ class BasicPageAbstract(models.Model):
         ('paragraph', ParagraphBlock()),
         ('image', ImageBlock()),
         ('block_quote', BlockQuoteBlock()),
-        ('image_full_bleed', blocks.StructBlock([
-            ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
-        ])),
+        ('image_full_bleed', ImageFullBleedBlock()),
         ('image_scroll', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('embedded_multimedia', blocks.StructBlock([
             ('multimedia_url', blocks.URLBlock(required=True)),
@@ -97,33 +100,19 @@ class BasicPageAbstract(models.Model):
                 ('square', 'Square'),
             ])),
         ])),
-        ('external_quote', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('source', blocks.CharBlock(required=False)),
-        ])),
+        ('external_quote', ExternalQuoteBlock()),
         ('external_videos', blocks.ListBlock(blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('video_url', blocks.URLBlock(required=True)),
         ]))),
         ('highlight_title', blocks.CharBlock(required=True)),
         ('inline_video', blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')),
-        ('pull_quote_left', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-        ])),
-        ('pull_quote_right', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('quote_author', blocks.CharBlock(required=False)),
-            ('author_title', blocks.CharBlock(required=False)),
-        ])),
-        ('recommended', blocks.PageChooserBlock()),
+        ('pull_quote_left', PullQuoteLeftBlock()),
+        ('pull_quote_right', PullQuoteRightBlock()),
+        ('recommended', RecommendedBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
-        ('text_border_block', blocks.StructBlock([
-            ('text', blocks.RichTextBlock(required=True)),
-            ('border_colour', blocks.CharBlock(required=False)),
-        ])),
+        ('text_border_block', TextBorderBlock()),
         ('tool_tip', blocks.StructBlock([
             ('anchor', blocks.CharBlock(required=True)),
             ('text', blocks.RichTextBlock(required=True)),

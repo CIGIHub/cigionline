@@ -1,0 +1,34 @@
+.stream-block-recommended {
+  .stream-block-recommended-content {
+    @include hover-darken;
+    border-bottom: 1px solid $cigi-light-grey;
+    border-top: 1px solid $cigi-light-grey;
+    padding: 1em 0;
+
+    .img-wrapper {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
+
+      display: none;
+      margin-right: 1em;
+      width: 250px;
+    }
+
+    .stream-block-recommended-text {
+      @include link($color: $black, $hover-color: $cigi-dark-pink);
+      justify-content: center;
+
+      .stream-block-recommended-label {
+        color: $black;
+        font-weight: 500;
+      }
+
+      a {
+        font-size: 1.3em;
+        font-weight: 500;
+        line-height: 1.2em;
+      }
+    }
+  }
+}

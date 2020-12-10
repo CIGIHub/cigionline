@@ -79,6 +79,18 @@ class ChartBlock(blocks.StructBlock):
         template = 'streams/chart_block.html'
 
 
+class ExternalQuoteBlock(blocks.StructBlock):
+    """External quote with optional source"""
+
+    quote = blocks.RichTextBlock(required=True)
+    source = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'External Quote'
+        template = 'streams/external_quote_block.html'
+
+
 class ImageBlock(blocks.StructBlock):
     """Image"""
 
@@ -91,6 +103,18 @@ class ImageBlock(blocks.StructBlock):
         template = 'streams/image_block.html'
 
 
+class ImageFullBleedBlock(blocks.StructBlock):
+    """Full bleed image"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'Full Bleed Image'
+        template = 'streams/image_full_bleed_block.html'
+
+
 class ParagraphBlock(blocks.RichTextBlock):
     """Standard text paragraph."""
 
@@ -98,6 +122,15 @@ class ParagraphBlock(blocks.RichTextBlock):
         icon = 'edit'
         label = 'Paragraph'
         template = 'streams/paragraph_block.html'
+
+
+class RecommendedBlock(blocks.PageChooserBlock):
+    """Recommended content block"""
+
+    class Meta:
+        icon = 'redirect'
+        label = 'Recommended'
+        template = 'streams/recommended_block.html'
 
 
 class PDFDownloadBlock(blocks.StructBlock):
@@ -119,6 +152,32 @@ class PDFDownloadBlock(blocks.StructBlock):
         label = 'PDF Download'
 
 
+class PullQuoteLeftBlock(blocks.StructBlock):
+    """Pull quote left side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Pull Quote Left'
+        template = 'streams/pull_quote_left_block.html'
+
+
+class PullQuoteRightBlock(blocks.StructBlock):
+    """Pull quote right side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Pull Quote Right'
+        template = 'streams/pull_quote_right_block.html'
+
+
 class SpeakersBlock(blocks.PageChooserBlock):
     def get_api_representation(self, value, context=None):
         if value:
@@ -133,12 +192,25 @@ class SpeakersBlock(blocks.PageChooserBlock):
         label = 'Speakers'
 
 
+class TextBorderBlock(blocks.StructBlock):
+    """Text box with border and optional colour for border """
+
+    text = blocks.RichTextBlock(required=True)
+    border_colour = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Bordered Text Block'
+        template = 'streams/text_border_block.html'
+
+
 class TweetBlock(blocks.StructBlock):
     """Tweet Block"""
 
-    tweet_id = blocks.IntegerBlock(required=True,
-                                  help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
-                                  verbose_name='Tweet ID',
+    tweet_id = blocks.IntegerBlock(
+        required=True,
+        help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
+        verbose_name='Tweet ID',
     )
 
     class Meta:
