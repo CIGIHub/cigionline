@@ -1,0 +1,15 @@
+.feature-content-small {
+  .feature-content-topic-list {
+    margin-top: 0;
+  }
+
+  .feature-content-title {
+    margin-bottom: 0.25em;
+  }
+}
+
+// Column on home page and article landing page
+// that contains small feature items
+.featured-small-column {
+  justify-content: space-between;
+}
