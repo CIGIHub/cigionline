@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  <div class="container-lg">
+    <div class="col-md-8">
+      {% for article in page.featured_articles.all %}
+      {% include 'includes/features/feature_content_large.html' with content=article.article_page %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}
