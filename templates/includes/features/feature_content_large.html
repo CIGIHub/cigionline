@@ -1,0 +1,27 @@
+{% load wagtailimages_tags core_tags %}
+
+<article class="feature-content feature-content-large">
+  <a href="{{content.url}}" class="feature-content-image">
+    <div class="img-wrapper">
+      {% image content.image_hero fill-1440x990 %}
+      {% if content|page_type == 'multimedia' %}
+        {% if content.multimedia_type == 'video' %}
+          {% define 'fa-play' as icon_class %}
+        {% elif content.multimedia_type == 'audio' %}
+          {% define 'fa-volume-up' as icon_class %}
+        {% endif %}
+        <div class="image-button feature-content-image-button">
+          <i class="fas {{icon_class}}"></i>
+        </div>
+      {% endif %}
+    </div>
+  </a>
+
+  <div class="feature-content-text center-text">
+    {% include 'includes/topics.html' with topics=content.topics %}
+    {% include 'includes/features/feature_content_title.html' %}
+    {% include 'includes/features/feature_content_subtitle.html' %}
+    {% include 'includes/features/feature_content_people.html' %}
+    <p class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</p>
+  </div>
+</article>

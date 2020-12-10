@@ -29,6 +29,9 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'includes/authors';
 @import 'includes/topics';
 
+@import 'includes/features/feature_content';
+@import 'includes/features/feature_content_large';
+
 @import 'streams/block';
 @import 'streams/block_quote_block';
 @import 'streams/chart_block';

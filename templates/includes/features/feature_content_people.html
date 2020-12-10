@@ -1,0 +1,19 @@
+{% load core_tags %}
+
+{% if content|page_type|in_list:'opinion,publication' %}
+  {% define content.authors as people %}
+{% elif content|page_type|in_list:'multimedia,event' %}
+  {% define content.speakers as people %}
+{% endif %}
+
+<ul class="custom-text-list feature-content-people-list">
+  {% with 3 as people_limit %}
+    {% for person in people %}
+      {% if forloop.counter <= people_limit %}
+        <li><a href="{{ person.value.url }}">{{ person.value }}</a></li>
+      {% elif forloop.counter == people_limit|add:1 %}
+        <li>And more</li>
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
+</ul>

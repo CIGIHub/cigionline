@@ -1,7 +1,7 @@
 {% load wagtailcore_tags %}
 
-<ul class="topics custom-text-list">
+<ul class="topics custom-text-list feature-content-topic-list">
   {% for topic in topics.all %}
-    <li><a href="{% slugurl topic.slug %}">{{ topic }}</a></li>
+    <li><a href="{% slugurl topic.slug %}" class="table-content-link">{{ topic }}</a></li>
   {% endfor %}
 </ul>
