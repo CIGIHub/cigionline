@@ -1,0 +1,19 @@
+{% load wagtailimages_tags wagtailembeds_tags %}
+<div class="stream-block stream-block-inline-video">
+  <div class="container-sm">
+    <div class="stream-block-inline-video-content flex-row">
+      <div class="img-wrapper">
+        {% image self.specific.image_hero fill-377x246 %}
+      </div>
+
+      <div class="stream-block-inline-video-text flex-column">
+        <div class="stream-block-inline-video-label meta">WATCH <i class=""></i></div>
+        <a href="{{ self.url }}">{{self.title}}</a>
+      </div>
+    </div>
+
+    <div class="video-wrapper">
+      {% embed self.specific.multimedia_url max_width=705 %}
+    </div>
+  </div>
+</div>
