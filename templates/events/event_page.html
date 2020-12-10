@@ -3,12 +3,12 @@
 
 {% block content %}
 
-    {% include "includes/hero_standard.html" with title=self.title %}
+  {% include "includes/hero_standard.html" with title=self.title %}
 
-    {% if self.speakers|length > 0 %}
-      {% with type="speaker" %}
-        {% include "includes/about_the_author.html" with authors=self.speakers type=type %}
-      {% endwith %}
-    {% endif %}
+  {% if self.speakers|length > 0 %}
+    {% with type="speaker" %}
+      {% include "includes/about_the_author.html" with authors=self.speakers type=type %}
+    {% endwith %}
+  {% endif %}
 
 {% endblock content %}

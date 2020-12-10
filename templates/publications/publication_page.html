@@ -5,11 +5,11 @@
   {% include "includes/hero_publication.html" with title=self.title  subtitle=self.subtitle authors=self.authors date=self.publishing_date download=self.pdf_downloads topics=self.topics %}
 
   {% if page.body %}
-      <section class="body">
-        {% for block in self.body %}
-          {% include_block block %}
-        {% endfor %}
-      </section>
+    <section class="body">
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
   {% endif %}
 
   {% if self.authors|length > 0 %}
@@ -21,4 +21,3 @@
 {% endblock content %}
 
 {{ pdf_downloads }}
-
