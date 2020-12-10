@@ -2,7 +2,7 @@
 
 <section class="about-the-author">
   <div class="container-sm">
-    <h3>About the {{type}}{{authors|length|pluralize}}</h3>
+    <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
     {% for author in authors %}
       <div class="author-block">
         <div class="name">{{ author }}</div>
