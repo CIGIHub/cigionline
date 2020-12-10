@@ -59,6 +59,11 @@
   display: flex;
 }
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 // BORDERS
 .border-round {
   border-radius: 50%;

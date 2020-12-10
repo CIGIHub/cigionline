@@ -11,6 +11,7 @@ from streams.blocks import (
     ChartBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
+    RecommendedBlock,
     TextBorderBlock,
 )
 from wagtail.admin.edit_handlers import (
@@ -107,7 +108,7 @@ class BasicPageAbstract(models.Model):
         ('inline_video', blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')),
         ('pull_quote_left', PullQuoteLeftBlock()),
         ('pull_quote_right', PullQuoteRightBlock()),
-        ('recommended', blocks.PageChooserBlock()),
+        ('recommended', RecommendedBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock()),
         ('text_border_block', TextBorderBlock()),

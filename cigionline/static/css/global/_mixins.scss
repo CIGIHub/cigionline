@@ -67,3 +67,19 @@
   padding: 0.25em 0;
   text-align: left;
 }
+
+@mixin hover-darken {
+  .img-wrapper {
+    background-color: $black;
+
+    &:hover {
+      img {
+        opacity: 0.8;
+      }
+    }
+
+    img {
+      transition: opacity .2s ease;
+    }
+  }
+}
