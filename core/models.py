@@ -13,6 +13,7 @@ from streams.blocks import (
     PullQuoteRightBlock,
     RecommendedBlock,
     TextBorderBlock,
+    TweetBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -119,13 +120,7 @@ class BasicPageAbstract(models.Model):
             ('title', blocks.CharBlock(required=False)),
             ('image', ImageChooserBlock(required=False)),
         ])),
-        ('tweet', blocks.StructBlock([
-            ('tweet_id', blocks.IntegerBlock(
-                required=True,
-                help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
-                verbose_name='Tweet ID',
-            )),
-        ])),
+        ('tweet', TweetBlock()),
     ]
     body_poster_block = [
         ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')),
