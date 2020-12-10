@@ -4,6 +4,7 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
     BlockQuoteBlock,
+    ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
     ChartBlock,
@@ -75,11 +76,11 @@ class BasicPageAbstract(models.Model):
         ('block_quote', BlockQuoteBlock()),
         ('image_full_bleed', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('image_scroll', blocks.StructBlock([
             ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=True)),
+            ('hide_image_caption', blocks.BooleanBlock(required=False)),
         ])),
         ('embedded_multimedia', blocks.StructBlock([
             ('multimedia_url', blocks.URLBlock(required=True)),
@@ -98,10 +99,7 @@ class BasicPageAbstract(models.Model):
                 ('square', 'Square'),
             ])),
         ])),
-        ('external_quote', blocks.StructBlock([
-            ('quote', blocks.RichTextBlock(required=True)),
-            ('source', blocks.CharBlock(required=False)),
-        ])),
+        ('external_quote', ExternalQuoteBlock()),
         ('external_videos', blocks.ListBlock(blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
             ('video_url', blocks.URLBlock(required=True)),
