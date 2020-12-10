@@ -103,6 +103,18 @@ class ImageBlock(blocks.StructBlock):
         template = 'streams/image_block.html'
 
 
+class ImageFullBleedBlock(blocks.StructBlock):
+    """Full bleed image"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'Full Bleed Image'
+        template = 'streams/image_full_bleed_block.html'
+
+
 class ParagraphBlock(blocks.RichTextBlock):
     """Standard text paragraph."""
 
