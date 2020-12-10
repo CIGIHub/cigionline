@@ -79,6 +79,18 @@ class ChartBlock(blocks.StructBlock):
         template = 'streams/chart_block.html'
 
 
+class ExternalQuoteBlock(blocks.StructBlock):
+    """External quote with optional source"""
+
+    quote = blocks.RichTextBlock(required=True)
+    source = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'External Quote'
+        template = 'streams/external_quote_block.html'
+
+
 class ImageBlock(blocks.StructBlock):
     """Image"""
 
@@ -89,6 +101,18 @@ class ImageBlock(blocks.StructBlock):
         icon = 'image'
         label = 'Image'
         template = 'streams/image_block.html'
+
+
+class ImageFullBleedBlock(blocks.StructBlock):
+    """Full bleed image"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'Full Bleed Image'
+        template = 'streams/image_full_bleed_block.html'
 
 
 class ParagraphBlock(blocks.RichTextBlock):
@@ -117,6 +141,32 @@ class PDFDownloadBlock(blocks.StructBlock):
     class Meta:
         icon = 'download-alt'
         label = 'PDF Download'
+
+
+class PullQuoteLeftBlock(blocks.StructBlock):
+    """Pull quote left side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Pull Quote Left'
+        template = 'streams/pull_quote_left_block.html'
+
+
+class PullQuoteRightBlock(blocks.StructBlock):
+    """Pull quote right side"""
+
+    quote = blocks.RichTextBlock(required=True)
+    quote_author = blocks.CharBlock(required=False)
+    author_title = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Pull Quote Right'
+        template = 'streams/pull_quote_right_block.html'
 
 
 class SpeakersBlock(blocks.PageChooserBlock):
