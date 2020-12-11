@@ -1,0 +1,18 @@
+<section class="hero event-hero">
+  <div class="container-lg hero-container">
+      <div class="row">
+        <div class="col-md-9">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1>{{ title }}</h1>
+          <div class="event-date">{{ date|date:"l, F j, Y g:i a" }} {% if end_date|length > 0 %} - {{ end_date|date:"g:i a" }} {% endif %}</div>
+          {{ access }}{% if type|length > 1 %}: {{ type }}{% endif %}
+          <div class="speakers">Speakers: <div class="custom-text-list">{{ speakers }}</div></div>
+        </div>
+        <div class="col-md-3">
+          DATE CIRCLE
+        </div>
+      </div>
+  </div>
+</section>
+
+

@@ -1,0 +1,37 @@
+section {
+  &.event-hero {
+    color: $white;
+
+    @include breakpoint($medium) {
+      padding-top: 9em;
+    }
+
+    h1 {
+      font-weight: 400;
+      line-height: 1.1em;
+    }
+
+    a {
+      color: $white;
+      &:hover {
+        color: $cigi-pink;
+      }
+    }
+
+    .block-speaker,
+    .block-external_speaker {
+      &:not(:only-child) {
+        &::after {
+          content: ', ';
+          margin-right: 2px;
+        }
+      }
+
+      &:last-child {
+        &::after {
+          display: none;
+        }
+      }
+    }
+  }
+}
