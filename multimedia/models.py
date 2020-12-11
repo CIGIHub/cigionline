@@ -29,12 +29,13 @@ from wagtail.core.blocks import (
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class MultimediaListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
-    subpage_types = []
+    subpage_types = ['multimedia.MultimediaPage']
     template = 'multimedia/multimedia_list_page.html'
     ajax_template = 'includes/multimedia_list_page_multimedia_list.html'
 
@@ -323,6 +324,11 @@ class MultimediaPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields \
+        + [index.FilterField('multimedia_type')]
+
     api_fields = [
         APIField('title'),
         APIField('url'),
@@ -334,7 +340,7 @@ class MultimediaPage(
     ]
 
     parent_page_types = ['multimedia.MultimediaListPage']
-    subpage_typse = []
+    subpage_types = []
     templates = 'multimedia/multimedia_page.html'
 
     class Meta:
