@@ -6,11 +6,10 @@
   }
 
   .feature-content-text {
-    margin: 0 auto;
-    max-width: 36em;
-
     &.center-text {
       @include media-breakpoint-up(md) {
+        margin: 0 auto;
+        max-width: 36em;
         text-align: center;
 
         ul {
