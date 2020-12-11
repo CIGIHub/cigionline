@@ -1,5 +1,19 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title %}
+
+  {% if page.body %}
+    <section class="body">
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <section class="multimedia-disclaimer-section">
+    {% include 'includes/multimedia_disclaimer.html' %}
+    {% include 'includes/opinion_disclaimer.html' %}
+  </section>
 {% endblock content %}
