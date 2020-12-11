@@ -211,7 +211,7 @@ class TopicPage(ArchiveablePageAbstract, Page):
     content_panels = Page.content_panels + [
         FieldPanel('description')
     ]
-    settings_panels = Page.content_panels + [
+    settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
     ]
 
