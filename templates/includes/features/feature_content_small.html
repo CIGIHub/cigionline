@@ -1,0 +1,10 @@
+{% load wagtailimages_tags core_tags %}
+
+<article class="feature-content feature-content-small">
+  <div class="feature-content-text center-text">
+    {% include 'includes/topics.html' with topics=content.topics %}
+    {% include 'includes/features/feature_content_title.html' %}
+    {% include 'includes/features/feature_content_people.html' %}
+    <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
+  </div>
+</article>

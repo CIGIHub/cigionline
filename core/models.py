@@ -30,6 +30,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class HomePage(Page):
@@ -180,6 +181,11 @@ class BasicPageAbstract(models.Model):
         heading='Submenu',
         classname='collapsible collapsed',
     )
+
+    search_fields = [
+        index.SearchField('body'),
+        index.SearchField('subtitle'),
+    ]
 
     class Meta:
         abstract = True
@@ -342,6 +348,10 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = Page.content_panels + [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
+    ]
+
+    search_fields = [
+        index.FilterField('topicpage_id'),
     ]
 
     def on_form_bound(self):
