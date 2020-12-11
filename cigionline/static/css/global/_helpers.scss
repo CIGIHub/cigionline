@@ -21,6 +21,8 @@
   }
 }
 
+
+
 // PARAGRAPHS
 .paragraph-heading {
   border-top: 0.25em solid $black;
@@ -39,18 +41,7 @@
   list-style: none;
 
   li {
-    &:not(:only-child) {
-      &::after {
-        content: ', ';
-        margin-right: 2px;
-      }
-    }
-
-    &:last-child {
-      &::after {
-        display: none;
-      }
-    }
+    @include comma-list;
   }
 }
 
@@ -67,4 +58,24 @@
 // BORDERS
 .border-round {
   border-radius: 50%;
+}
+
+// BUTTONS
+.button {
+  background-color: $color--blue;
+  border-radius: 2px;
+  color: $white;
+  font-size: 0.75em;
+  line-height: 1.1em;
+  margin: 1em 0;
+  padding: 7px 10px;
+  transition: background-color 0.25s ease;
+
+  &:hover {
+    background-color: $color-dark-blue;
+  }
+
+  a {
+    color: $white;
+  }
 }

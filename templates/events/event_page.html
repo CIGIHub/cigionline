@@ -3,7 +3,7 @@
 
 {% block content %}
 
-  {% include "includes/hero_event.html" with title=self.title date=self.publishing_date end_date=self.event_end speakers=self.speakers type=self.get_event_type_display access=self.get_event_access_display topics=self.topics %}
+  {% include "includes/hero_event.html" with topics=self.topics title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display speakers=self.speakers registration_url=self.registration_url %}
 
   {% if self.speakers|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.speakers title_override="Event Speaker"%}

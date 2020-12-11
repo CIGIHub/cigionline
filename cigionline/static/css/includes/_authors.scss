@@ -13,17 +13,6 @@
   }
 
   .block-author {
-    &:not(:only-child) {
-      &::after {
-        content: ', ';
-        margin-right: 2px;
-      }
-    }
-
-    &:last-child {
-      &::after {
-        display: none;
-      }
-    }
+    @include comma-list;
   }
 }
