@@ -691,3 +691,28 @@ class PublicationPageViewSetTests(WagtailPageTests):
             'topics': ['Test Topic 3'],
             'url': '/publications/publication-5/',
         }])
+
+    def test_search_and_filter_topics_returns_200(self):
+        topic1 = TopicPage.objects.get(title='Test Topic 1')
+        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&topics={topic1.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 3)
+        self.assertEqual(len(resJson['items']), 3)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-12-30T08:00:00-05:00',
+            'title': 'Test Publication 30',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-30/',
+        }, {
+            'publishing_date': '2020-07-27T08:00:00-04:00',
+            'title': 'Test Publication 17 - Big Tech',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-17/',
+        }, {
+            'publishing_date': '2020-01-16T08:00:00-05:00',
+            'title': 'Test Publication 2 - Big Tech',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-2/',
+        }])
