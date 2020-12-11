@@ -48,7 +48,7 @@ class PublicationListPage(BasicPageAbstract, Page):
                 InlinePanel(
                     'featured_publications',
                     max_num=4,
-                    min_num=4,
+                    min_num=0,
                     label='Publication',
                 ),
             ],
