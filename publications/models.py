@@ -368,6 +368,7 @@ class PublicationPage(
     api_fields = [
         APIField('authors'),
         APIField('pdf_downloads'),
+        APIField('publication_type'),
         APIField('publishing_date'),
         APIField('title'),
         APIField('topics'),
