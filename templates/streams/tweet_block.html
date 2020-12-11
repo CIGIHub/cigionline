@@ -1,0 +1,5 @@
+{% load wagtailembeds_tags %}
+
+<div class="container-sm tweet-block">
+  {% embed "https://twitter.com/CIGIOnline/status/"|add:self.tweet_id %}
+</div>

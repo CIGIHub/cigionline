@@ -1,0 +1,16 @@
+.text-border-block {
+  margin: 2em auto;
+
+  .block-contents {
+    border: solid 1px $cigi-primary-colour;
+    font-size: 1.0625em;
+    line-height: 1.5em;
+    padding: 1.5em 1.75em;
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
