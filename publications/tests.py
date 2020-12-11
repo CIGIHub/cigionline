@@ -1,4 +1,5 @@
 from core.models import HomePage
+from research.models import TopicPage
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import (
@@ -291,4 +292,199 @@ class PublicationPageViewSetTests(WagtailPageTests):
             'title': 'Test Publication 2 - Big Tech',
             'topics': ['Test Topic 1'],
             'url': '/publications/publication-2/',
+        }])
+
+    def test_filter_topic_1_returns_200(self):
+        topic1 = TopicPage.objects.get(title='Test Topic 1')
+        res = self.client.get(f'{self.get_api_url(1)}&topics={topic1.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 14)
+        self.assertEqual(len(resJson['items']), 14)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-12-30T08:00:00-05:00',
+            'title': 'Test Publication 30',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-30/',
+        }, {
+            'publishing_date': '2020-12-22T08:00:00-05:00',
+            'title': 'Test Publication 29',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-29/',
+        }, {
+            'publishing_date': '2020-12-11T08:00:00-05:00',
+            'title': 'Test Publication 28',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-28/',
+        }, {
+            'publishing_date': '2020-12-02T08:00:00-05:00',
+            'title': 'Test Publication 26',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-26/',
+        }, {
+            'publishing_date': '2020-11-30T08:00:00-05:00',
+            'title': 'Test Publication 25',
+            'topics': ['Test Topic 1', 'Test Topic 2'],
+            'url': '/publications/publication-25/',
+        }, {
+            'publishing_date': '2020-08-28T08:00:00-04:00',
+            'title': 'Test Publication 20',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-20/',
+        }, {
+            'publishing_date': '2020-07-31T08:00:00-04:00',
+            'title': 'Test Publication 19',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-19/',
+        }, {
+            'publishing_date': '2020-07-29T08:00:00-04:00',
+            'title': 'Test Publication 18',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-18/',
+        }, {
+            'publishing_date': '2020-07-27T08:00:00-04:00',
+            'title': 'Test Publication 17 - Big Tech',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-17/',
+        }, {
+            'publishing_date': '2020-06-19T08:00:00-04:00',
+            'title': 'Test Publication 15',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-15/',
+        }, {
+            'publishing_date': '2020-04-03T08:00:00-04:00',
+            'title': 'Test Publication 9',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-9/',
+        }, {
+            'publishing_date': '2020-01-29T08:00:00-05:00',
+            'title': 'Test Publication 4',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-4/',
+        }, {
+            'publishing_date': '2020-01-16T08:00:00-05:00',
+            'title': 'Test Publication 2 - Big Tech',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-2/',
+        }, {
+            'publishing_date': '2020-01-15T08:00:00-05:00',
+            'title': 'Test Publication 1',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-1/',
+        }])
+
+    def test_filter_topic_2_returns_200(self):
+        topic2 = TopicPage.objects.get(title='Test Topic 2')
+        res = self.client.get(f'{self.get_api_url(1)}&topics={topic2.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 10)
+        self.assertEqual(len(resJson['items']), 10)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-12-09T08:00:00-05:00',
+            'title': 'Test Publication 27',
+            'topics': ['Test Topic 2', 'Test Topic 3'],
+            'url': '/publications/publication-27/',
+        }, {
+            'publishing_date': '2020-11-30T08:00:00-05:00',
+            'title': 'Test Publication 25',
+            'topics': ['Test Topic 1', 'Test Topic 2'],
+            'url': '/publications/publication-25/',
+        }, {
+            'publishing_date': '2020-10-07T08:00:00-04:00',
+            'title': 'Test Publication 23',
+            'topics': ['Test Topic 2', 'Test Topic 3'],
+            'url': '/publications/publication-23/',
+        }, {
+            'publishing_date': '2020-09-23T08:00:00-04:00',
+            'title': 'Test Publication 22',
+            'topics': ['Test Topic 2'],
+            'url': '/publications/publication-22/',
+        }, {
+            'publishing_date': '2020-09-10T08:00:00-04:00',
+            'title': 'Test Publication 21',
+            'topics': ['Test Topic 2'],
+            'url': '/publications/publication-21/',
+        }, {
+            'publishing_date': '2020-06-23T08:00:00-04:00',
+            'title': 'Test Publication 16',
+            'topics': ['Test Topic 2'],
+            'url': '/publications/publication-16/',
+        }, {
+            'publishing_date': '2020-06-05T08:00:00-04:00',
+            'title': 'Test Publication 13',
+            'topics': ['Test Topic 2'],
+            'url': '/publications/publication-13/',
+        }, {
+            'publishing_date': '2020-05-12T08:00:00-04:00',
+            'title': 'Test Publication 12',
+            'topics': ['Test Topic 2'],
+            'url': '/publications/publication-12/',
+        }, {
+            'publishing_date': '2020-03-20T08:00:00-04:00',
+            'title': 'Test Publication 6',
+            'topics': ['Test Topic 2'],
+            'url': '/publications/publication-6/',
+        }, {
+            'publishing_date': '2020-01-22T08:00:00-05:00',
+            'title': 'Test Publication 3',
+            'topics': ['Test Topic 2'],
+            'url': '/publications/publication-3/',
+        }])
+
+    def test_filter_topic_3_returns_200(self):
+        topic3 = TopicPage.objects.get(title='Test Topic 3')
+        res = self.client.get(f'{self.get_api_url(1)}&topics={topic3.id}')
+        self.assertEqual(res.status_code, 200)
+        resJson = res.json()
+        self.assertEqual(resJson['meta']['total_count'], 9)
+        self.assertTrue(len(resJson['items']), 9)
+
+        self.verify_res_items(resJson['items'], [{
+            'publishing_date': '2020-12-09T08:00:00-05:00',
+            'title': 'Test Publication 27',
+            'topics': ['Test Topic 2', 'Test Topic 3'],
+            'url': '/publications/publication-27/',
+        }, {
+            'publishing_date': '2020-10-12T08:00:00-04:00',
+            'title': 'Test Publication 24 - Big Tech',
+            'topics': ['Test Topic 3'],
+            'url': '/publications/publication-24/',
+        }, {
+            'publishing_date': '2020-10-07T08:00:00-04:00',
+            'title': 'Test Publication 23',
+            'topics': ['Test Topic 2', 'Test Topic 3'],
+            'url': '/publications/publication-23/',
+        }, {
+            'publishing_date': '2020-06-18T08:00:00-04:00',
+            'title': 'Test Publication 14',
+            'topics': ['Test Topic 3'],
+            'url': '/publications/publication-14/',
+        }, {
+            'publishing_date': '2020-05-01T08:00:00-04:00',
+            'title': 'Test Publication 11',
+            'topics': ['Test Topic 3'],
+            'url': '/publications/publication-11/',
+        }, {
+            'publishing_date': '2020-04-17T08:00:00-04:00',
+            'title': 'Test Publication 10',
+            'topics': ['Test Topic 3'],
+            'url': '/publications/publication-10/',
+        }, {
+            'publishing_date': '2020-03-25T08:00:00-04:00',
+            'title': 'Test Publication 8',
+            'topics': ['Test Topic 3'],
+            'url': '/publications/publication-8/',
+        }, {
+            'publishing_date': '2020-03-24T08:00:00-04:00',
+            'title': 'Test Publication 7',
+            'topics': ['Test Topic 3'],
+            'url': '/publications/publication-7/',
+        }, {
+            'publishing_date': '2020-02-28T08:00:00-05:00',
+            'title': 'Test Publication 5',
+            'topics': ['Test Topic 3'],
+            'url': '/publications/publication-5/',
         }])
