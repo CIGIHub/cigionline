@@ -29,6 +29,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class PublicationListPage(BasicPageAbstract, Page):
@@ -358,6 +359,11 @@ class PublicationPage(
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
+
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields \
+        + [index.FilterField('publication_type')]
 
     api_fields = [
         APIField('authors'),
