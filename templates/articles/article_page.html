@@ -3,7 +3,7 @@
 
 {% block content %}
 
-  {% include "includes/hero_standard.html" with title=self.title %}
+  {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
 
   {% if page.body %}
     <section class="body">
