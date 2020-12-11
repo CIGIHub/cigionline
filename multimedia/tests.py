@@ -85,10 +85,10 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             self.assertEqual(responseItems[i]['url'], expectedItems[i]['url'])
             self.assertEqual(responseItems[i]['publishing_date'], expectedItems[i]['publishing_date'])
 
-            self.assertEqual(len(responseItems[i]['topics']), len(expectedItems[i]['topics']))
+            self.assertEqual(len(responseItems[i]['topics']), len(expectedItems[i]['topics']), f'Length of topics: {expectedItems[i]["title"]}')
             # Verify that the expected topic titles were returned in the response
             for topicTitle in expectedItems[i]['topics']:
-                self.assertTrue(any(topic['title'] == topicTitle for topic in responseItems[i]['topics']))
+                self.assertTrue(any(topic['title'] == topicTitle for topic in responseItems[i]['topics']), f'Could not find topic:{topicTitle} for multimedia:{expectedItems[i]["title"]}')
 
     def test_page_1_query_returns_200(self):
         res = self.client.get(self.get_api_url(1))
