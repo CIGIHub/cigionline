@@ -7,6 +7,7 @@ ReactDOM.render(
   <SearchTable
     blockListing
     endpoint="/multimedia"
+    showSearch
     limit={18}
     fields={[
       'image_hero_url',

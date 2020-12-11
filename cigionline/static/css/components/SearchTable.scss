@@ -1,5 +1,17 @@
+@import '../global/variables';
+
 .search-table {
   position: relative;
+
+  form {
+    margin-bottom: 0.3em;
+
+    input {
+      border-bottom: 2px solid $black;
+      color: $black;
+      font-weight: 400;
+    }
+  }
 
   .search-results {
     opacity: 1;

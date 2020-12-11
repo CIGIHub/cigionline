@@ -14,16 +14,31 @@ class SearchTable extends React.Component {
       loading: true,
       loadingInitial: true,
       rows: [],
+      searchValue: '',
       totalRows: 0,
     };
+
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+    this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
   }
 
   componentDidMount() {
     this.getRows();
   }
 
+  handleSearchSubmit(e) {
+    e.preventDefault();
+    this.getRows();
+  }
+
+  handleSearchValueChange(e) {
+    this.setState({
+      searchValue: e.target.value,
+    });
+  }
+
   getRows() {
-    const { currentPage, loadingInitial } = this.state;
+    const { currentPage, loadingInitial, searchValue } = this.state;
     const { endpoint, fields, limit } = this.props;
 
     const offset = (currentPage - 1) * limit;
@@ -35,7 +50,12 @@ class SearchTable extends React.Component {
       this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
-    fetch(`/api${endpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`)
+    let uri = `/api${endpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`;
+    if (searchValue) {
+      uri += `&search=${searchValue}`;
+    }
+
+    fetch(encodeURI(uri))
       .then((res) => res.json())
       .then((data) => {
         this.setState(() => ({
@@ -65,16 +85,38 @@ class SearchTable extends React.Component {
       loading,
       loadingInitial,
       rows,
+      searchValue,
     } = this.state;
     const {
       blockListing,
       containerClass,
       RowComponent,
+      showSearch,
       tableColumns,
     } = this.props;
 
     return (
       <div className="search-table">
+        {showSearch && (
+          <div className="search-bar">
+            <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
+              <div className="input-group input-group-search">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={searchValue}
+                  placeholder="Search all publications"
+                  onChange={this.handleSearchValueChange}
+                />
+                <div className="input-group-append">
+                  <button className="btn-search" type="submit">
+                    <i className="far fa-search" />
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        )}
         {loadingInitial
           ? <SearchTableSkeleton />
           : blockListing
@@ -126,6 +168,7 @@ SearchTable.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
+  showSearch: PropTypes.bool,
   tableColumns: PropTypes.arrayOf(PropTypes.shape({
     colSpan: PropTypes.number,
     colTitle: PropTypes.string,
@@ -135,6 +178,7 @@ SearchTable.propTypes = {
 SearchTable.defaultProps = {
   blockListing: false,
   limit: 24,
+  showSearch: false,
   tableColumns: [],
 };
 
