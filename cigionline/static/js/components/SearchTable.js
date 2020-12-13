@@ -15,6 +15,7 @@ class SearchTable extends React.Component {
       loadingInitial: true,
       rows: [],
       searchValue: '',
+      topicSelectValue: 'all',
       totalRows: 0,
     };
 
@@ -86,6 +87,7 @@ class SearchTable extends React.Component {
       loadingInitial,
       rows,
       searchValue,
+      topicSelectValue,
     } = this.state;
     const {
       blockListing,
@@ -100,18 +102,27 @@ class SearchTable extends React.Component {
         {showSearch && (
           <div className="search-bar">
             <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
-              <div className="input-group input-group-search">
-                <input
-                  type="text"
-                  className="form-control"
-                  value={searchValue}
-                  placeholder="Search all publications"
-                  onChange={this.handleSearchValueChange}
-                />
-                <div className="input-group-append">
-                  <button className="btn-search" type="submit">
-                    <i className="far fa-search" />
-                  </button>
+              <div className="form-row">
+                <div className="col">
+                  <div className="input-group input-group-search">
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={searchValue}
+                      placeholder="Search all publications"
+                      onChange={this.handleSearchValueChange}
+                    />
+                    <div className="input-group-append">
+                      <button className="btn-search" type="submit">
+                        <i className="far fa-search" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-3">
+                  <select value={topicSelectValue}>
+                    <option value="all">All Topics</option>
+                  </select>
                 </div>
               </div>
             </form>
