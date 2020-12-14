@@ -15,7 +15,14 @@
       display: none;
       flex-shrink: 0;
       margin-right: 1em;
+      transition-duration: 1s;
+      transition-property: width, height;
+      transition-timing-function: ease;
       width: 250px;
+
+      &.shrink {
+        width: 0;
+      }
     }
 
     .stream-block-inline-video-text {
@@ -36,6 +43,18 @@
         color: $black;
         font-weight: 500;
       }
+    }
+  }
+  .video-wrapper {
+    height: 100%;
+    transition-duration: 1s;
+    transition-property: width, height, padding;
+    transition-timing-function: ease;
+
+    &.shrink {
+      height: 0;
+      padding-top: 0;
+      width: 0;
     }
   }
 }
