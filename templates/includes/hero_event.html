@@ -9,21 +9,19 @@
           <div class="meta">{{ event_access }}{% if type|length > 1 %}: {{ event_type }}{% endif %}</div>
           <div class="meta speakers">Speakers: <div class="custom-text-list">{{ speakers }}</div></div>
 
-          <div class="event-registration button-list">
-            <ul>
-              {% if registration_url|length > 0 %}
-                <li><a class="button" href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">Register Now</a></li>
-              {% endif %}
-              <li class="button">
-                <button>Add to Calendar</button>
-                <!-- <ul class="dropdown-list">
-                  <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Everything Is Connected with Dr. Laura DeNardis&amp;dates=20210113T190000/20210113T200000&amp;ctz=America/Toronto&amp;details=More Event Information: https://www.cigionline.org/events/everything-connected-dr-laura-denardis&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" class="cal_google">Google</a></li>
-                  <li><a href="/calendar/ical/16255">Outlook</a></li>
-                  <li><a href="/calendar/ical/16255">iCal</a></li>
-                </ul> -->
-              </li>
-            </ul>
-          </div>
+          <ul class="event-registration inline-list">
+            {% if registration_url|length > 0 %}
+              <li><a class="button" href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">Register Now</a></li>
+            {% endif %}
+            <li class="dropdown-list">
+              <button class="button">Add to Calendar <i class="fas fa-chevron-down"></i></button>
+              <ul>
+                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Everything Is Connected with Dr. Laura DeNardis&amp;dates=20210113T190000/20210113T200000&amp;ctz=America/Toronto&amp;details=More Event Information: https://www.cigionline.org/events/everything-connected-dr-laura-denardis&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" class="cal_google">Google</a></li>
+                <li><a href="/calendar/ical/16255">Outlook</a></li>
+                <li><a href="/calendar/ical/16255">iCal</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
 
         <div class="col-md-3">
@@ -35,5 +33,3 @@
       </div>
   </div>
 </section>
-
-

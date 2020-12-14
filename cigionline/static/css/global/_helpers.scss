@@ -21,8 +21,6 @@
   }
 }
 
-
-
 // PARAGRAPHS
 .paragraph-heading {
   border-top: 0.25em solid $black;
@@ -43,6 +41,70 @@
   li {
     @include comma-list;
   }
+}
+
+.inline-list {
+  display: flex;
+  list-style: none;
+
+  li {
+    margin-right: 0.2em;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.dropdown-list {
+
+  .button {
+    background: $color--blue;
+    text-align: left;
+    width: 150px;
+
+    &:hover {
+      color: $white;
+    }
+
+    .fas {
+      float: right;
+    }
+  }
+
+  ul {
+    background: $color--blue;
+    display: none;
+    list-style: none;
+    margin-top: -0.8em;
+    text-align: left;
+    width: 150px;
+
+  }
+
+  li {
+    margin: 0;
+
+    a {
+      font-size: 0.75em;
+      padding: 7px 10px;
+      text-align: center;
+
+      &:hover {
+        background: $color-dark-blue;
+        color: $white;
+      }
+    }
+
+  }
+
+  &:hover {
+    ul {
+      display: block;
+      position: absolute;
+    }
+  }
+
 }
 
 // FLEX-BOX

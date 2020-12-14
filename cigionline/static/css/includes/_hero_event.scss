@@ -34,7 +34,7 @@ section {
       display: flex;
     }
 
-    .custom-text-list {
+    .feature-content-topic-list {
       margin-left: 0.2em;
     }
 
@@ -47,5 +47,14 @@ section {
       @include date-circle($border-color: $white, $circle-size: 195px, $font-size: 2.625em);
     }
 
+    .event-registration {
+      a {
+        display: block;
+
+        &:hover {
+          color: $white;
+        }
+      }
+    }
   }
 }
