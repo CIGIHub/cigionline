@@ -15,6 +15,8 @@ from os import path
 
 import os
 
+from wagtail.embeds.oembed_providers import issuu
+
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
@@ -85,6 +87,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'cigionline.urls'
 
+WAGTAILEMBEDS_FINDERS = [
+    {
+        'class': 'wagtail.embeds.finders.oembed',
+        'providers': [issuu],
+        'options': {'pageLayout': 'singlePage'}
+    },
+    {
+        'class': 'wagtail.embeds.finders.oembed',
+    }
+]
 
 WEBPACK_LOADER = {
     'DEFAULT': {

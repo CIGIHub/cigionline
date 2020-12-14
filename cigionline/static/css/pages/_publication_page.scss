@@ -1,0 +1,14 @@
+.issuu-wrapper {
+  height: 0;
+  margin-bottom: 1em;
+  padding-bottom: 137.1%;
+  position: relative;
+
+  iframe {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}

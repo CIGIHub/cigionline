@@ -1,5 +1,11 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags wagtailembeds_tags core_tags %}
+
+{% load static webpack_loader %}
+
+{% block extra_bundles %}
+  {% render_bundle 'publicationPage' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
@@ -15,7 +21,12 @@
   {% if self.authors|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
-
+  
+  <div class="container-sm">
+    <div class="issuu-wrapper">
+      {% embed page.embed_issuu %}
+    </div>
+  </div>
 {% endblock content %}
 
 {{ pdf_downloads }}

@@ -187,6 +187,11 @@ class PublicationPage(
         verbose_name='YouTube Embed',
         help_text='Enter the YouTube URL (https://www.youtube.com/watch?v=4-Xkn1U1DkA) or short URL (https://youtu.be/o5acQ2GxKbQ) to add an embedded video.',
     )
+    embed_issuu = models.URLField(
+        blank=True,
+        verbose_name='ISSUU Embed',
+        help_text='Enter the ISSUU document URL (https://www.issuu.com/cigi/docs/saferinternet_paper_no_1_dec4_abhi)',
+    )
     image_cover = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -335,6 +340,7 @@ class PublicationPage(
             [
                 StreamFieldPanel('pdf_downloads'),
                 FieldPanel('embed_youtube'),
+                FieldPanel('embed_issuu'),
             ],
             heading='Media',
             classname='collapsible collapsed',
