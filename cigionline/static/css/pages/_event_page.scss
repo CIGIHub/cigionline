@@ -1,0 +1,5 @@
+.event-image-hero {
+  figcaption {
+    @include image-caption;
+  }
+}
