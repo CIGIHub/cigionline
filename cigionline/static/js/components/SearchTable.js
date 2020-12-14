@@ -207,6 +207,16 @@ class SearchTable extends React.Component {
                 </div>
               </div>
             </form>
+            <div className="search-bar-sort-wrapper">
+              <span>Sort by:</span>
+              <ul className="search-bar-sort-list">
+                <li>
+                  <button type="button" className="search-bar-sort-link active">
+                    Date
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         )}
         {loadingInitial
