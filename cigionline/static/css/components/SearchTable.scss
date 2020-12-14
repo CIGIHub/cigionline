@@ -5,20 +5,6 @@
 
   form {
     margin-bottom: 0.3em;
-
-    input {
-      border-bottom: 2px solid $black;
-      color: $black;
-      font-weight: 400;
-    }
-
-    select {
-      border-bottom: 2px solid $black;
-      border-left: 0;
-      border-right: 0;
-      border-top: 0;
-      width: 100%;
-    }
   }
 
   .search-results {

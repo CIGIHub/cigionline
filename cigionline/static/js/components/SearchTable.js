@@ -13,18 +13,25 @@ class SearchTable extends React.Component {
       currentPage: 1,
       loading: true,
       loadingInitial: true,
+      loadingTopics: true,
       rows: [],
       searchValue: '',
-      topicSelectValue: 'all',
+      topics: [],
+      topicSelectValue: null,
       totalRows: 0,
     };
 
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
+    this.handleTopicSelect = this.handleTopicSelect.bind(this);
   }
 
   componentDidMount() {
+    const { showSearch } = this.props;
     this.getRows();
+    if (showSearch) {
+      this.getTopics();
+    }
   }
 
   handleSearchSubmit(e) {
@@ -38,8 +45,21 @@ class SearchTable extends React.Component {
     });
   }
 
+  handleTopicSelect(id) {
+    this.setState({
+      topicSelectValue: id,
+    }, () => {
+      this.getRows();
+    });
+  }
+
   getRows() {
-    const { currentPage, loadingInitial, searchValue } = this.state;
+    const {
+      currentPage,
+      loadingInitial,
+      searchValue,
+      topicSelectValue,
+    } = this.state;
     const { endpoint, fields, limit } = this.props;
 
     const offset = (currentPage - 1) * limit;
@@ -55,6 +75,9 @@ class SearchTable extends React.Component {
     if (searchValue) {
       uri += `&search=${searchValue}`;
     }
+    if (topicSelectValue) {
+      uri += `&topics=${topicSelectValue}`;
+    }
 
     fetch(encodeURI(uri))
       .then((res) => res.json())
@@ -68,10 +91,52 @@ class SearchTable extends React.Component {
       });
   }
 
+  getTopics() {
+    fetch(encodeURI('/api/topics/?limit=50&offset=0&fields=title'))
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState(() => ({
+          loadingTopics: false,
+          topics: data.items.map((topic) => ({
+            id: topic.id,
+            title: topic.title,
+          })),
+        }));
+      });
+  }
+
   setPage(page) {
     this.setState(() => ({
       currentPage: page,
     }), this.getRows);
+  }
+
+  get dropdownSelectedTopic() {
+    const { topics, topicSelectValue } = this.state;
+    let selectedTopic = 'All Topics';
+    topics.forEach((topic) => {
+      if (topic.id === topicSelectValue) {
+        selectedTopic = topic.title;
+      }
+    });
+    return selectedTopic;
+  }
+
+  get dropdownTopics() {
+    const { topics, topicSelectValue } = this.state;
+    const dropdownTopics = [];
+    topics.forEach((topic) => {
+      if (topic.id !== topicSelectValue) {
+        dropdownTopics.push(topic);
+      }
+    });
+    if (topics.length !== dropdownTopics.length) {
+      dropdownTopics.unshift({
+        id: null,
+        title: 'All Topics',
+      });
+    }
+    return dropdownTopics;
   }
 
   get totalPages() {
@@ -85,9 +150,9 @@ class SearchTable extends React.Component {
       currentPage,
       loading,
       loadingInitial,
+      loadingTopics,
       rows,
       searchValue,
-      topicSelectValue,
     } = this.state;
     const {
       blockListing,
@@ -102,14 +167,14 @@ class SearchTable extends React.Component {
         {showSearch && (
           <div className="search-bar">
             <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
-              <div className="form-row">
+              <div className="form-row position-relative">
                 <div className="col">
                   <div className="input-group input-group-search">
                     <input
                       type="text"
                       className="form-control"
                       value={searchValue}
-                      placeholder="Search all publications"
+                      placeholder="Search"
                       onChange={this.handleSearchValueChange}
                     />
                     <div className="input-group-append">
@@ -119,10 +184,26 @@ class SearchTable extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3">
-                  <select value={topicSelectValue}>
-                    <option value="all">All Topics</option>
-                  </select>
+                <div className="col-md-3 position-static">
+                  <div className="dropdown custom-dropdown dropdown-full-width">
+                    <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {this.dropdownSelectedTopic}
+                    </button>
+                    <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+                      {!loadingTopics && (
+                        this.dropdownTopics.map((topic) => (
+                          <button
+                            key={`topic-${topic.id}`}
+                            className="dropdown-item"
+                            type="button"
+                            onClick={() => this.handleTopicSelect(topic.id)}
+                          >
+                            {topic.title}
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </form>
