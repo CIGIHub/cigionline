@@ -17,6 +17,15 @@ ReactDOM.render(
       'topics(title,url)',
       'url',
     ]}
+    filterTypes={[{
+      name: 'Video',
+      param: 'multimedia_type',
+      value: 'video',
+    }, {
+      name: 'Audio',
+      param: 'multimedia_type',
+      value: 'audio',
+    }]}
     containerClass={[
       'row',
       'row-cols-1',

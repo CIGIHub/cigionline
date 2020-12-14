@@ -18,6 +18,7 @@ class SearchTable extends React.Component {
       searchValue: '',
       topics: [],
       topicSelectValue: null,
+      typeSelected: null,
       totalRows: 0,
     };
 
@@ -48,9 +49,19 @@ class SearchTable extends React.Component {
   handleTopicSelect(id) {
     this.setState({
       topicSelectValue: id,
-    }, () => {
-      this.getRows();
-    });
+    }, this.getRows);
+  }
+
+  handleTypeSelect(type) {
+    if (type.value) {
+      this.setState({
+        typeSelected: type,
+      }, this.getRows);
+    } else {
+      this.setState({
+        typeSelected: null,
+      }, this.getRows);
+    }
   }
 
   getRows() {
@@ -59,6 +70,7 @@ class SearchTable extends React.Component {
       loadingInitial,
       searchValue,
       topicSelectValue,
+      typeSelected,
     } = this.state;
     const { endpoint, fields, limit } = this.props;
 
@@ -71,12 +83,19 @@ class SearchTable extends React.Component {
       this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
-    let uri = `/api${endpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`;
+    let apiEndpoint = endpoint;
+    if (typeSelected && typeSelected.endpoint) {
+      apiEndpoint = typeSelected.endpoint;
+    }
+    let uri = `/api${apiEndpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`;
     if (searchValue) {
       uri += `&search=${searchValue}`;
     }
     if (topicSelectValue) {
       uri += `&topics=${topicSelectValue}`;
+    }
+    if (typeSelected && typeSelected.param) {
+      uri += `&${typeSelected.param}=${typeSelected.value}`;
     }
 
     fetch(encodeURI(uri))
@@ -139,6 +158,35 @@ class SearchTable extends React.Component {
     return dropdownTopics;
   }
 
+  get dropdownSelectedType() {
+    const { typeSelected } = this.state;
+    if (typeSelected && typeSelected.name) {
+      return typeSelected.name;
+    }
+    return 'All Types';
+  }
+
+  get dropdownTypes() {
+    const { typeSelected } = this.state;
+    const { filterTypes } = this.props;
+    const dropdownTypes = [];
+    filterTypes.forEach((filterType) => {
+      if (!typeSelected
+          || (typeSelected
+            && typeSelected.name !== filterType.name
+            && typeSelected.value !== filterType.value)) {
+        dropdownTypes.push(filterType);
+      }
+    });
+    if (filterTypes.length !== dropdownTypes.length) {
+      dropdownTypes.unshift({
+        name: 'All Types',
+        value: null,
+      });
+    }
+    return dropdownTypes;
+  }
+
   get totalPages() {
     const { limit } = this.props;
     const { totalRows } = this.state;
@@ -157,6 +205,7 @@ class SearchTable extends React.Component {
     const {
       blockListing,
       containerClass,
+      filterTypes,
       RowComponent,
       showSearch,
       tableColumns,
@@ -205,6 +254,27 @@ class SearchTable extends React.Component {
                     </div>
                   </div>
                 </div>
+                {filterTypes && (
+                  <div className="col-md-3 position-relative">
+                    <div className="dropdown custom-dropdown">
+                      <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {this.dropdownSelectedType}
+                      </button>
+                      <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
+                        {this.dropdownTypes.map((type) => (
+                          <button
+                            key={`type-${type.value}`}
+                            className="dropdown-item"
+                            type="button"
+                            onClick={() => this.handleTypeSelect(type)}
+                          >
+                            {type.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </form>
             <div className="search-bar-sort-wrapper">
@@ -268,6 +338,12 @@ SearchTable.propTypes = {
   containerClass: PropTypes.arrayOf(PropTypes.string).isRequired,
   endpoint: PropTypes.string.isRequired,
   fields: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filterTypes: PropTypes.arrayOf(PropTypes.shape({
+    endpoint: PropTypes.string,
+    name: PropTypes.string,
+    param: PropTypes.string,
+    value: PropTypes.string,
+  })),
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
   showSearch: PropTypes.bool,
@@ -279,6 +355,7 @@ SearchTable.propTypes = {
 
 SearchTable.defaultProps = {
   blockListing: false,
+  filterTypes: [],
   limit: 24,
   showSearch: false,
   tableColumns: [],
