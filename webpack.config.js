@@ -25,6 +25,7 @@ const config = {
   context: __dirname,
 
   entry: {
+    articlePage: './cigionline/static/pages/article_page/index.js',
     cigionline: './cigionline/static/index.js',
     multimediaListPage: './cigionline/static/multimedia_list_page.js',
     publicationListPage: './cigionline/static/publication_list_page.js',

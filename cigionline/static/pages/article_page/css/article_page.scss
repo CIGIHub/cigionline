@@ -1,3 +1,6 @@
+@import '../../../css/global/variables';
+@import '../../../css/global/mixins';
+
 .article-image-hero {
   figcaption {
     @include image-caption;
