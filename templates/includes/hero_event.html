@@ -7,10 +7,7 @@
           {% include "includes/topics.html" with topics=self.topics %}
           <h1>{{ title }}</h1>
 
-          <p>{{ date|date:"c" }}</p>
-          <p>{{ date|ical_date }}</p>
-
-          <div class="meta">{{ date|date:"l, F j, Y g:i A" }} {% if end_date|length > 0 %} - {{ end_date|date:"g:i A" }} {% endif %}</div>
+          <div class="meta">{{ date|date:"l, F j, Y g:i A" }} - {{ end_date|date:"g:i A" }}</div>
           <div class="meta">{{ event_access }}{% if type|length > 1 %}: {{ event_type }}{% endif %}</div>
           <div class="meta speakers">Speakers: <div class="custom-text-list">{{ speakers }}</div></div>
 
@@ -21,7 +18,7 @@
             <li class="dropdown-button-list">
               <button class="button">Add to Calendar <i class="fas fa-chevron-down"></i></button>
               <ul>
-                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ title }}&amp;dates={{date|date:'Ymd'}}T{{date|date:'c'}}/{{end_date|date:'c'}}&amp;ctz=America/Toronto&amp;details=More Event Information: {{ request.build_absolute_uri|slice:':-1' }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" class="cal_google">Google</a></li>
+                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ title }}&amp;dates={{date|date:'c'}}&amp;ctz=America/Toronto&amp;details=More Event Information: {{ request.build_absolute_uri|slice:':-1' }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" class="cal_google">Google</a></li>
                 <li><a href="/calendar/ical/16255">Outlook</a></li>
                 <li><a href="/calendar/ical/16255">iCal</a></li>
               </ul>
@@ -38,6 +35,3 @@
       </div>
   </div>
 </section>
-
-
-<a href="http://www.google.com/calendar/event?action=TEMPLATE&dates=20180821%2F20180822&text=Litmus%20Live%20London&location=etc.venues%20155%20Bishopsgate&details=Litmus%20Live%20helps%20you%20become%20a%20better%20email%20marketer%20with%20real-world%20advice%2C%20best%20practices%20%26%20practical%20takeaways." style="display: none;" class="cta gmail-show">Save the date</a>
