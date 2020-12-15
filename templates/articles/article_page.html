@@ -19,7 +19,11 @@
           <div class="container-sm text-center">
             <a class="button-action" href="{{self.website_url}}">
               <i class="fas fa-external-link-alt"></i>
-              View Full Article
+              {% if self.website_button_text %}
+                {{ self.website_button_text }}
+              {% else %}
+                View Full Article
+              {% endif %}
             </a>
           </div>
         {% endif %}
