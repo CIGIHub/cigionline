@@ -10,19 +10,23 @@
       {% for block in self.body %}
         {% include_block block %}
       {% endfor %}
+
+      {% if self.article_type == 'cigi_in_the_news' %}
+        <div class="container-sm">
+          <p class="text-center">* * *</p>
+        </div>
+        {% if self.website_url %}
+          <div class="container-sm text-center">
+            <a class="button-action" href="{{self.website_url}}">
+              <i class="fas fa-external-link-alt"></i>
+              View Full Article
+            </a>
+          </div>
+        {% endif %}
+      {% endif %}
     </section>
   {% endif %}
 
-  {% if self.website_url %}
-    <section>
-      <div class="container-sm text-center">
-        <a class="button-action" href="{{self.website_url}}">
-          <i class="fas fa-external-link-alt"></i>
-          View Full Article
-        </a>
-      </div>
-    </section>
-  {% endif %}
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
