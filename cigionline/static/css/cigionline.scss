@@ -24,14 +24,18 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'includes/multimedia_list';
 @import 'includes/publications_featured_list';
 @import 'includes/hero_publication';
+@import 'includes/hero_article';
 @import 'includes/social_links';
 @import 'includes/date';
 @import 'includes/authors';
 @import 'includes/topics';
 @import 'includes/about_the_author';
+@import 'includes/multimedia_disclaimer';
+@import 'includes/opinion_disclaimer';
 
 @import 'includes/features/feature_content';
 @import 'includes/features/feature_content_large';
+@import 'includes/features/feature_content_small';
 
 @import 'streams/autoplay_video_block';
 @import 'streams/block';

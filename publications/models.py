@@ -2,6 +2,7 @@ from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
 )
@@ -28,6 +29,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class PublicationListPage(BasicPageAbstract, Page):
@@ -47,7 +49,7 @@ class PublicationListPage(BasicPageAbstract, Page):
                 InlinePanel(
                     'featured_publications',
                     max_num=4,
-                    min_num=4,
+                    min_num=0,
                     label='Publication',
                 ),
             ],
@@ -104,6 +106,7 @@ class PublicationPage(
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
     ShareablePageAbstract,
 ):
     """View publication page"""
@@ -112,6 +115,19 @@ class PublicationPage(
         HARDCOVER = ('HC', 'Hardcover')
         PAPERBACK = ('PB', 'Paperback')
         TRADE_PB = ('TP', 'Trade PB')
+
+    class PublicationTypes(models.TextChoices):
+        BOOKS = ('books', 'Books')
+        CIGI_COMMENTARIES = ('cigi_commentaries', 'CIGI Commentaries')
+        CIGI_PAPERS = ('cigi_papers', 'CIGI Papers')
+        COLLECTED_SERIES = ('collected_series', 'Collected Series')
+        CONFERENCE_REPORTS = ('conference_reports', 'Conference Reports')
+        ESSAY_SERIES = ('essay_series', 'Essay Series')
+        POLICY_BRIEFS = ('policy_briefs', 'Policy Briefs')
+        POLICY_MEMOS = ('policy_memos', 'Policy Memos')
+        SPECIAL_REPORTS = ('special_reports', 'Special Reports')
+        SPEECHES = ('speeches', 'Speeches')
+        STUDENT_ESSAY = ('student_essay', 'Student Essay')
 
     authors = StreamField(
         [
@@ -222,6 +238,16 @@ class PublicationPage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
+    publication_type = models.CharField(
+        blank=False,
+        max_length=32,
+        choices=PublicationTypes.choices,
+    )
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic'],
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -245,9 +271,17 @@ class PublicationPage(
 
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
         MultiFieldPanel(
             [
+                FieldPanel('short_description'),
+                StreamFieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('publication_type'),
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
@@ -318,6 +352,7 @@ class PublicationPage(
             heading='Related',
             classname='collapsible collapsed',
         ),
+        FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -325,9 +360,15 @@ class PublicationPage(
         SearchablePageAbstract.search_panel,
     ]
 
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields \
+        + [index.FilterField('publication_type')]
+
     api_fields = [
         APIField('authors'),
         APIField('pdf_downloads'),
+        APIField('publication_type'),
         APIField('publishing_date'),
         APIField('title'),
         APIField('topics'),
