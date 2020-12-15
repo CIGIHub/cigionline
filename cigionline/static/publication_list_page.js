@@ -5,6 +5,7 @@ import SearchTable from './js/components/SearchTable';
 
 ReactDOM.render(
   <SearchTable
+    showSearch
     endpoint="/publications"
     fields={[
       'authors',
@@ -14,6 +15,35 @@ ReactDOM.render(
       'topics(title,url)',
       'url',
     ]}
+    filterTypes={[{
+      name: 'Books',
+      param: 'publication_type',
+      value: 'books',
+    }, {
+      name: 'CIGI Papers',
+      param: 'publication_type',
+      value: 'cigi_papers',
+    }, {
+      name: 'Conference Reports',
+      param: 'publication_type',
+      value: 'conference_reports',
+    }, {
+      name: 'Essay Series',
+      param: 'publication_type',
+      value: 'essay_series',
+    }, {
+      name: 'Policy Briefs',
+      param: 'publication_type',
+      value: 'policy_briefs',
+    }, {
+      name: 'Policy Memos',
+      param: 'publication_type',
+      value: 'policy_memos',
+    }, {
+      name: 'Special Reports',
+      param: 'publication_type',
+      value: 'special_reports',
+    }]}
     containerClass={[
       'custom-theme-table',
       'table-publications',
