@@ -291,30 +291,35 @@ class SearchTable extends React.Component {
         )}
         {loadingInitial
           ? <SearchTableSkeleton />
-          : blockListing
+          : rows.length
             ? (
-              <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                {rows.map((row) => (
-                  <RowComponent key={row.id} row={row} />
-                ))}
-              </div>
-            ) : (
-              <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                <thead>
-                  <tr>
-                    {tableColumns.map((tableColumn) => (
-                      <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
-                        {tableColumn.colTitle}
-                      </th>
+              blockListing
+                ? (
+                  <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                    {rows.map((row) => (
+                      <RowComponent key={row.id} row={row} />
                     ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row) => (
-                    <RowComponent key={row.id} row={row} />
-                  ))}
-                </tbody>
-              </table>
+                  </div>
+                ) : (
+                  <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                    <thead>
+                      <tr>
+                        {tableColumns.map((tableColumn) => (
+                          <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
+                            {tableColumn.colTitle}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rows.map((row) => (
+                        <RowComponent key={row.id} row={row} />
+                      ))}
+                    </tbody>
+                  </table>
+                )
+            ) : (
+              <p>Your query returned no results. Please check your spelling and try again.</p>
             )}
         <Paginator
           currentPage={currentPage}
