@@ -168,7 +168,7 @@ class TopicsTagTests(WagtailPageTests):
 
 class TopicPageViewSetTests(WagtailPageTests):
     fixtures = ['topics.json']
-    limit = 50
+    limit = 40
 
     def get_api_url(self):
         return f'/api/topics/?limit={self.limit}&offset=0&fields=title,url'
