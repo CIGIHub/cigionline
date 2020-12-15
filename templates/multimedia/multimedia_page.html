@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags webpack_loader %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title %}
@@ -31,3 +31,7 @@
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
 {% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'multimediaPage' %}
+{% endblock %}
