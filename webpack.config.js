@@ -12,7 +12,6 @@ const plugins = [
     $: 'jquery',
     jQuery: 'jquery',
     'window.jQuery': 'jquery',
-    Popper: ['popper.js', 'default'],
   }),
   new BundleTracker({ filename: './webpack-stats.json' }),
   new ExtractTextPlugin({
