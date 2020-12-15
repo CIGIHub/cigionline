@@ -43,5 +43,35 @@
     background-position: center;
     background-size: cover;
     min-height: 25em;
+    position: relative;
+
+    .hero-content {
+      position: absolute;
+      top: 20%;
+
+      h1 {
+        background-color: $cigi-primary-colour;
+        box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0 $cigi-primary-colour;
+        color: $white;
+        font-size: 2.75em;
+        font-weight: 400;
+        line-height: 1.25;
+        margin-bottom: 0.5em;
+      }
+
+      .subtitle {
+        background: $black;
+        box-shadow: 5px 0 0 $black, -5px 0 0 $black;
+        color: $white;
+        display: inline;
+        font-size: 1.5em;
+        font-weight: 400;
+        line-height: 1.25;
+      }
+
+      .topics {
+        margin: 0;
+      }
+    }
   }
 }

@@ -7,7 +7,13 @@
 {% block content %}
   {% image self.image_banner original as image_hero %}
   <section class="hero" style="background-image: url('{{ image_hero.url }}');">
-
+    <div class="container-sm">
+      <div class="hero-content">
+        {% include "includes/topics.html" with topics=self.topics %}
+        <h1>{{ self.title }}</h1>
+        <p class="subtitle">{{ self.subtitle }}</p>
+      </div>
+    </div>
   </section>
   <section class="body">
     {% for block in self.body %}
