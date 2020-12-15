@@ -1,0 +1,47 @@
+.longform-article {
+  background-color: $longform-background-color;
+
+  header {
+    background-color: $longform-background-color;
+    position: relative;
+
+    .main-navigation-wrapper {
+      background-color: $longform-background-color;
+
+      .cigi-top-bar {
+        &.scroll-nav {
+          height: 36px;
+
+          @media screen and (min-width: $large) {
+            height: 66px;
+          }
+        }
+
+        .cigi-logo {
+          svg {
+            fill: $black;
+          }
+        }
+
+        nav {
+          ul {
+            a,
+            button {
+              color: $black;
+
+              &:hover {
+                color: $black;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .hero {
+    background-position: center;
+    background-size: cover;
+    min-height: 25em;
+  }
+}

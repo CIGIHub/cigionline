@@ -227,6 +227,12 @@ class ArticlePage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
+        if self.theme and self.theme.name == 'Longform':
+            return 'themes/longform/article_page.html'
+        return standard_template
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(

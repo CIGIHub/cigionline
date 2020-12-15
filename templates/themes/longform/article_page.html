@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block body_class %}longform-article{% endblock %}
+
+{% block content %}
+  {% image self.image_banner original as image_hero %}
+  <section class="hero" style="background-image: url('{{ image_hero.url }}');">
+
+  </section>
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock %}
+
+{% block extra_bundles %}
+  {% render_bundle 'themeLongform' %}
+{% endblock %}
