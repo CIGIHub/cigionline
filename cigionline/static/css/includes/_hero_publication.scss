@@ -1,7 +1,7 @@
 section {
   &.publication-hero {
     @include breakpoint($medium) {
-      padding-top: 6em;
+      padding-top: 3em;
     }
 
     background-color: transparent;
