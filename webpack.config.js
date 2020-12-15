@@ -29,6 +29,7 @@ const config = {
     multimediaListPage: './cigionline/static/multimedia_list_page.js',
     multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
     publicationListPage: './cigionline/static/publication_list_page.js',
+    publicationPage: './cigionline/static/pages/publication_page/index.js',
   },
 
   devtool: 'source-map',
