@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block content %}
 
@@ -29,3 +29,7 @@
   {% endif %}
 
 {% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'eventPage' %}
+{% endblock extra_bundles %}
