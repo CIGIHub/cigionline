@@ -7,6 +7,7 @@ ReactDOM.render(
   <SearchTable
     blockListing
     endpoint="/multimedia"
+    showSearch
     limit={18}
     fields={[
       'image_hero_url',
@@ -16,6 +17,15 @@ ReactDOM.render(
       'topics(title,url)',
       'url',
     ]}
+    filterTypes={[{
+      name: 'Video',
+      param: 'multimedia_type',
+      value: 'video',
+    }, {
+      name: 'Audio',
+      param: 'multimedia_type',
+      value: 'audio',
+    }]}
     containerClass={[
       'row',
       'row-cols-1',
