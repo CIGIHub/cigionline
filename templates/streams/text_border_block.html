@@ -1,0 +1,5 @@
+<div class="container-sm text-border-block">
+  <div class="block-contents" {% if self.border_color|length %} style="border-color:{{ self.border_color}}" {% endif %}>
+    {{ self.text|safe }}
+  </div>
+</div>

@@ -77,6 +77,10 @@
     li {
       border-bottom: 1px solid $cigi-light-grey;
       padding: 1em 0;
+
+      &:last-of-type {
+        border-bottom: 0;
+      }
     }
 
     .people-person-leadership-list-info {

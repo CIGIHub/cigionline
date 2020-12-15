@@ -19,7 +19,7 @@
 
 @mixin display-grid {
   display: -ms-grid;
-  display: grid;
+  display: grid; // sass-lint:disable-line no-duplicate-properties
 }
 
 @mixin comma-separated {
@@ -57,5 +57,29 @@
     position: absolute;
     right: 0;
     top: 0;
+  }
+}
+
+@mixin image-caption {
+  color: $cigi-text-grey;
+  font-size: 0.7em;
+  line-height: 1rem;
+  padding: 0.25em 0;
+  text-align: left;
+}
+
+@mixin hover-darken {
+  .img-wrapper {
+    background-color: $black;
+
+    &:hover {
+      img {
+        opacity: 0.8;
+      }
+    }
+
+    img {
+      transition: opacity .2s ease;
+    }
   }
 }

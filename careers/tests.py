@@ -1,4 +1,4 @@
-from core.models import HomePage
+from core.models import BasicPage, HomePage
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import JobPostingListPage, JobPostingPage
@@ -14,7 +14,7 @@ class JobPostingListPageTests(WagtailPageTests):
     def test_jobpostinglistpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             JobPostingListPage,
-            {JobPostingPage},
+            {BasicPage, JobPostingPage},
         )
 
 

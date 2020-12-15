@@ -83,6 +83,21 @@ class EventPage(
         PRIVATE = (0, 'Private')
         PUBLIC = (1, 'Public')
 
+    class EventTypes(models.TextChoices):
+        CIGI_SPONSORED = ('cigi_sponsored', 'CIGI Sponsored')
+        CINEMA_SERIES = ('cinema_series', 'Cinema Series')
+        COMMUNITY_EVENT = ('community_event', 'Community Event')
+        CONFERENCE = ('conference', 'Conference')
+        GLOBAL_POLICY_FORUM = ('global_policy_forum', 'Global Policy Forum')
+        NOON_LECTURE_SERIES = ('noon_lecture_series', 'Noon Lecture Series')
+        PANEL_DISCUSSION = ('panel_discussion', 'Panel Discussion')
+        PUBLICATION_LAUNCH = ('publication_launch', 'Publication Launch')
+        ROUNDTABLE = ('roundtable', 'Roundtable')
+        SEMINAR = ('seminar', 'Seminar')
+        SIGNATURE_LECTURE = ('signature_lecture', 'Signature Lecture')
+        VIRTUAL_EVENT = ('virtual_event', 'Virtual Event')
+        WORKSHOP = ('workshop', 'Workshop')
+
     class InvitationTypes(models.IntegerChoices):
         RSVP_REQUIRED = (0, 'RSVP Required')
         INVITATION_ONLY = (1, 'Invitation Only')
@@ -91,6 +106,12 @@ class EventPage(
     embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
+    event_type = models.CharField(
+        blank=False,
+        max_length=32,
+        null=True,
+        choices=EventTypes.choices,
+    )
     flickr_album_url = models.URLField(blank=True)
     invitation_type = models.IntegerField(choices=InvitationTypes.choices, default=InvitationTypes.RSVP_REQUIRED)
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
@@ -104,7 +125,7 @@ class EventPage(
         'wagtailcore.Page',
         null=True,
         blank=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='+',
         verbose_name='Multimedia',
     )
@@ -142,6 +163,7 @@ class EventPage(
         FieldPanel('event_end'),
         MultiFieldPanel(
             [
+                FieldPanel('event_type'),
                 FieldPanel('event_access'),
                 FieldPanel('invitation_type'),
                 FieldPanel('website_url'),

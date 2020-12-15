@@ -1,9 +1,8 @@
 // Breakpoints
-$small: 25rem;
-$medium: 40rem; //640px
-$large: 64rem; //1024px
-$xlarge: 75rem; //1200px
-$xxlarge: 90rem; //1440px
+$small: 40rem;
+$medium: 55rem;
+$large: 67.5rem;
+$xlarge: 75rem;
 
 // Fonts
 $primary-font-family: futura-pt, sans-serif;
@@ -57,3 +56,4 @@ $whisper-grey: #eee;
 
 //addons
 $popup-overlay: rgba(255, 255, 255, 0.6);
+$extra-light-box-shadow: rgba(16, 16, 16, .15);

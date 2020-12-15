@@ -6,7 +6,6 @@ header {
   width: 100%;
   z-index: 3;
 
-
   .main-navigation-wrapper {
     background-color: $black;
     position: relative;
@@ -24,6 +23,11 @@ header {
     justify-content: space-between;
     transition: height .5s ease;
 
+    .desktop-menu {
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+}
+
     &.scrolled-nav {
       height: 36px;
 
@@ -35,6 +39,14 @@ header {
 
         .small-logo {
           opacity: 1;
+        }
+      }
+
+      .desktop-menu {
+        opacity: 0;
+
+        a {
+          pointer-events: none;
         }
       }
     }
@@ -73,6 +85,8 @@ header {
     }
 
     nav {
+      display: flex;
+
       ul {
         display: flex;
         list-style: none;
@@ -196,12 +210,14 @@ header {
       max-width: 50em;
       width: 100%;
 
-      .input-group {
+      .input-group-search {
+        border-bottom: 3px solid $white;
+        height: calc(1.9em + 0.25em);
+
         .form-control {
-          border-bottom: 3px solid $white;
           color: $white;
           font-size: 1.8em;
-          height: 1.2em;
+          height: 100%;
 
           &::-webkit-input-placeholder,
           &::placeholder {
@@ -210,7 +226,6 @@ header {
         }
 
         .btn-search {
-          border-bottom: 3px solid $white;
           font-size: 1.0625em;
           height: 100%;
         }

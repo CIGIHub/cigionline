@@ -1,0 +1,48 @@
+.stream-block-blockquote {
+  blockquote {
+    color: $cigi-dark-grey;
+    font-size: 1.5em;
+    line-height: 130%;
+  }
+
+  img {
+    @include media-breakpoint-up(sm) {
+      display: block;
+      height: auto;
+      margin: 0.625em 0.625em 0 0;
+      width: 200px;
+    }
+
+    display: none;
+  }
+
+  .stream-block-blockquote-content {
+    margin-left: 0;
+    padding: 1em 2em;
+    position: relative;
+
+    &.has-image {
+      @include media-breakpoint-up(sm) {
+        margin-left: 1em;
+        padding: 1em 0;
+      }
+
+      margin-left: 0;
+      padding: 1em 2em;
+    }
+
+    &::before {
+      border-bottom: 5px solid $cigi-pink;
+      content: '';
+      height: 5px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 5em;
+    }
+
+    .stream-block-blockquote-author-title {
+      @include image-caption;
+    }
+  }
+}
