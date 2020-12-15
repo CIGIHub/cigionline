@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block content %}
   {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
@@ -31,5 +31,9 @@
   {% endif %}
 
 {% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'publicationPage' %}
+{% endblock extra_bundles %}
 
 {{ pdf_downloads }}
