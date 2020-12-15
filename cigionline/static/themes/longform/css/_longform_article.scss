@@ -42,35 +42,65 @@
   .hero {
     background-position: center;
     background-size: cover;
+    margin: 0 0 1em;
     min-height: 25em;
     position: relative;
 
     .hero-content {
-      position: absolute;
       top: 20%;
 
       h1 {
-        background-color: $cigi-primary-colour;
-        box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0 $cigi-primary-colour;
         color: $white;
         font-size: 2.75em;
         font-weight: 400;
         line-height: 1.25;
         margin-bottom: 0.5em;
+
+        span {
+          background-color: $cigi-primary-colour;
+          box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0 $cigi-primary-colour;
+        }
       }
 
       .subtitle {
-        background: $black;
-        box-shadow: 5px 0 0 $black, -5px 0 0 $black;
         color: $white;
-        display: inline;
         font-size: 1.5em;
         font-weight: 400;
         line-height: 1.25;
+
+        span {
+          background: $black;
+          box-shadow: 5px 0 0 $black, -5px 0 0 $black;
+        }
       }
 
       .topics {
         margin: 0;
+      }
+    }
+  }
+
+  .meta-section {
+    margin: 0;
+
+    .meta {
+      border-bottom: 1px solid $divider-grey;
+      padding-bottom: 1em;
+
+      p {
+        margin: 0;
+
+        .author {
+          @include comma-separated;
+
+          a {
+            color: $cigi-text-grey;
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
+          }
+        }
       }
     }
   }

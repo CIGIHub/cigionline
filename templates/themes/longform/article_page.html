@@ -10,8 +10,22 @@
     <div class="container-sm">
       <div class="hero-content">
         {% include "includes/topics.html" with topics=self.topics %}
-        <h1>{{ self.title }}</h1>
-        <p class="subtitle">{{ self.subtitle }}</p>
+        <h1><span>{{ self.title }}</span></h1>
+        <p class="subtitle"><span>{{ self.subtitle }}</span></p>
+      </div>
+    </div>
+  </section>
+  <section class="meta-section">
+    <div class="container-sm">
+      <div class="meta">
+        <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
+        <p>
+          Author{{self.authors|length|pluralize}}:
+
+          {% for author in self.authors %}
+            <span class="author">{{author}}</span>
+          {% endfor %}
+        </p>
       </div>
     </div>
   </section>
