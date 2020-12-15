@@ -103,5 +103,31 @@
         }
       }
     }
+
+    .social {
+      ul {
+        display: flex;
+        list-style-type: none;
+
+        li {
+          &:first-child {
+            a {
+              padding-left: 0;
+            }
+          }
+
+          a {
+            color: $black;
+            cursor: pointer;
+            display: block;
+            padding: 1em 1.5em;
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
+          }
+        }
+      }
+    }
   }
 }
