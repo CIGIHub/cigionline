@@ -111,7 +111,7 @@ class SearchTable extends React.Component {
   }
 
   getTopics() {
-    fetch(encodeURI('/api/topics/?limit=50&offset=0&fields=title'))
+    fetch(encodeURI('/api/topics/?limit=40&offset=0&fields=title'))
       .then((res) => res.json())
       .then((data) => {
         this.setState(() => ({
