@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block content %}
 
@@ -12,7 +12,17 @@
       {% endfor %}
     </section>
   {% endif %}
-  
+
+  {% if self.website_url %}
+    <section>
+      <div class="container-sm text-center">
+        <a class="button-action" href="{{self.website_url}}">
+          <i class="fas fa-external-link-alt"></i>
+          View Full Article
+        </a>
+      </div>
+    </section>
+  {% endif %}
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
