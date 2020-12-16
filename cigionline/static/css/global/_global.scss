@@ -88,7 +88,7 @@ img {
 .input-group {
   &.input-group-search {
     border-bottom: 2px solid $black;
-    height: calc(1.1em + 0.25em);
+    height: 1.5em;
     line-height: 1;
     padding: 0 0 0.25em;
 
@@ -126,7 +126,7 @@ img {
       color: $black;
       display: flex;
       font-size: 1em;
-      height: calc(1.1em + 0.25em);
+      height: 1.5em;
       justify-content: space-between;
       padding-bottom: .25em;
       width: 100%;
@@ -222,4 +222,3 @@ img {
     }
   }
 }
-
