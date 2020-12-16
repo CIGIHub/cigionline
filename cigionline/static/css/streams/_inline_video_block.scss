@@ -15,12 +15,13 @@
       display: none;
       flex-shrink: 0;
       margin-right: 1em;
-      transition-duration: 1s;
-      transition-property: width, height;
+      transition-duration: 1.5s;
+      transition-property: width, height, margin-right;
       transition-timing-function: ease;
       width: 250px;
 
       &.shrink {
+        margin-right: 0;
         width: 0;
       }
     }
@@ -39,17 +40,41 @@
         color: $cigi-pink;
       }
 
-      .stream-block-inline-video-label {
-        color: $black;
+      .watch-video-label {
+        color: $cigi-pink;
+        cursor: pointer;
         font-weight: 500;
+        max-height: 2em;
+        overflow: hidden;
+        transition: max-height 1.5s ease;
+
+        &.shrink {
+          max-height: 0;
+        }
+      }
+    }
+
+    .close-video-icon {
+      cursor: pointer;
+      margin-left: auto;
+      transition: opacity 1.5s ease, color 0.2s ease;
+
+      &:hover {
+        color: $cigi-dark-pink;
+      }
+
+      &.hidden {
+        opacity: 0;
       }
     }
   }
+
   .video-wrapper {
     height: 100%;
-    transition-duration: 1s;
+    transition-duration: 1.5s;
     transition-property: width, height, padding;
     transition-timing-function: ease;
+    will-change: auto;
 
     &.shrink {
       height: 0;

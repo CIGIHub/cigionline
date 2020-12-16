@@ -1,26 +1,32 @@
 export default function addInlineVideoActions() {
-  const inlineVideoBlocks = document.getElementsByClassName('stream-block-inline-video');
+  $(function () {
+    $('.stream-block-inline-video').each(function () {
+      const watchLabel = $(this).find('.watch-video-label');
+      const imageWrapper = $(this).find('.img-wrapper');
+      const videoWrapper = $(this).find('.video-wrapper');
+      const closeVideo = $(this).find('.close-video-icon');
+      const iframe = videoWrapper.find('iframe');
 
-  for (const block of inlineVideoBlocks) {
-    const watchLabel = block.getElementsByClassName('stream-block-inline-video-label')[0];
-    const blockImage = block.getElementsByClassName('img-wrapper')[0];
-    const blockVideo = block.getElementsByClassName('video-wrapper')[0];
-    watchLabel.addEventListener('click', function () {
-      if (blockImage.classList.contains('shrink')) {
-        blockVideo.classList.add('shrink');
-        window.setTimeout(function() {
-          blockImage.classList.remove('shrink');
-        }, 1000)
-      } else {
-        blockImage.classList.add('shrink');
-        window.setTimeout(function() {
-          blockVideo.classList.remove('shrink');
-        }, 1000)
+      iframe[0].allow += 'autoplay';
+      iframe[0].src += '&enablejsapi=1';
+
+      
+      function toggleElements(elementOne, elementTwo) {
+        watchLabel.toggleClass('shrink');
+        closeVideo.toggleClass('hidden');
+        elementOne.toggleClass('shrink');
+        setTimeout(function() {
+          elementTwo.toggleClass('shrink');
+        }, 2000);
       }
+
+
+      watchLabel.on('click', function() {
+        toggleElements(imageWrapper, videoWrapper);
+      });
+      closeVideo.on('click', function() {
+        toggleElements(videoWrapper, imageWrapper);
+      });
     });
-
-  }
-
-
-  console.log(inlineVideoBlocks);
+  });
 }

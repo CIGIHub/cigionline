@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('publications', '0009_create_recommended_block'),
+        ('publications', '0010_add_more_publication_page_fields'),
     ]
 
     operations = [
