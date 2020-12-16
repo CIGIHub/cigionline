@@ -50,7 +50,7 @@ const config = {
         use: [
           { loader: MiniCssExtractPlugin.loader, options: { publicPath: '' } },
           { loader: 'css-loader', options: { sourceMap: true } },
-          { loader: 'postcss-loader', options: { sourceMap: 'inline' } },
+          { loader: 'postcss-loader', options: { sourceMap: true } },
           { loader: 'resolve-url-loader', options: { sourceMap: true } },
           { loader: 'sass-loader', options: { sourceMap: true } },
         ],
