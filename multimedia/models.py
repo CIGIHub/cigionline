@@ -1,47 +1,111 @@
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
-    PublishablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import SpeakersBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
-    PageChooserBlock,
     RichTextBlock,
     StructBlock,
     TextBlock,
 )
 from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
-class MultimediaListPage(BasicPageAbstract):
+class MultimediaListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
-    subpage_types = []
-    templates = 'multimedia/multimedia_list_page.html'
+    subpage_types = ['multimedia.MultimediaPage']
+    template = 'multimedia/multimedia_list_page.html'
+    ajax_template = 'includes/multimedia_list_page_multimedia_list.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_multimedia',
+                    max_num=5,
+                    min_num=5,
+                    label='Multimedia',
+                ),
+            ],
+            heading='Featured Multimedia',
+            classname='collapsible collapsed',
+        ),
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        all_multimedia = MultimediaPage.objects.live().public().order_by('-publishing_date')
+        paginator = Paginator(all_multimedia, 18)
+        page = request.GET.get('page')
+        try:
+            multimedia = paginator.page(page)
+        except PageNotAnInteger:
+            multimedia = paginator.page(1)
+        except EmptyPage:
+            multimedia = paginator.page(paginator.num_pages)
+        context['multimedia'] = multimedia
+        return context
 
     class Meta:
         verbose_name = 'Multimedia List Page'
 
 
+class MultimediaListPageFeaturedMultimedia(Orderable):
+    multimedia_list_page = ParentalKey(
+        'multimedia.MultimediaListPage',
+        related_name='featured_multimedia',
+    )
+    multimedia_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Multimedia',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'multimedia_page',
+            ['multimedia.MultimediaPage'],
+        )
+    ]
+
+
 class MultimediaPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
@@ -49,6 +113,22 @@ class MultimediaPage(
         AUDIO = ('audio', 'Audio')
         VIDEO = ('video', 'Video')
 
+    article_series = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Opinion series',
+    )
+    companion_essay = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Companion essay',
+    )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -97,14 +177,14 @@ class MultimediaPage(
     podcast_video_duration = models.CharField(blank=True, max_length=8)
     podcast_video_file_size = models.IntegerField(blank=True, null=True)
     podcast_video_url = models.URLField(blank=True)
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     speakers = StreamField(
         [
-            ('speaker', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('speaker', SpeakersBlock(required=True, page_type='people.PersonPage')),
             ('external_speaker', CharBlock(required=True)),
         ],
         blank=True,
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
     transcript = StreamField(
         [
             ('accordion', StructBlock([
@@ -134,6 +214,10 @@ class MultimediaPage(
         verbose_name='YouTube ID',
         help_text='Enter just the YouTube ID for this video. This is the series of letters and numbers found either at www.youtube.com/embed/[here], or www.youtube.com/watch?v=[here]. This is used for the video chaptering below.',
     )
+
+    @property
+    def image_hero_url(self):
+        return self.image_hero.get_rendition('fill-520x390').url
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -208,31 +292,55 @@ class MultimediaPage(
             heading='Images',
             classname='collapsible collapsed',
         ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 PageChooserPanel(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
+                PageChooserPanel(
+                    'article_series',
+                    ['articles.ArticleSeriesPage'],
+                ),
+                PageChooserPanel(
+                    'companion_essay',
+                    ['articles.ArticlePage'],
+                ),
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
-
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
-
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
 
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields \
+        + [index.FilterField('multimedia_type')]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
+        APIField('publishing_date'),
+        APIField('multimedia_type'),
+        APIField('image_hero_url'),
+        APIField('topics'),
+        APIField('speakers'),
+    ]
+
     parent_page_types = ['multimedia.MultimediaListPage']
-    subpage_typse = []
+    subpage_types = []
     templates = 'multimedia/multimedia_page.html'
 
     class Meta:
@@ -256,8 +364,8 @@ class MultimediaSeriesListPage(Page):
 
 class MultimediaSeriesPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
@@ -301,7 +409,6 @@ class MultimediaSeriesPage(
         verbose_name='Spotify Podcast URL',
         help_text='Enter the link to the Spotify Podcast landing page for the podcast.',
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -347,6 +454,7 @@ class MultimediaSeriesPage(
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     settings_panels = Page.settings_panels + [

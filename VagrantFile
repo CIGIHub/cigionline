@@ -1,0 +1,33 @@
+Vagrant.require_version ">= 1.7.0"
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "bento/ubuntu-16.04"
+  config.ssh.shell = "bash -c 'BASH=ENV=/etc/profile exec bash'"
+  config.vm.boot_timeout = 1200
+  config.vm.network "forwarded_port", guest: 8000, host: 9000
+  config.vm.synced_folder ".", "/vagrant/"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+  end
+  config.vm.provision "shell", inline: <<-SHELL
+        apt-get install software-properties-common
+        add-apt-repository ppa:deadsnakes/ppa -y
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+        apt-get install -y nodejs
+        RELEASE=$(lsb_release -cs)
+        echo "deb http://apt.postgresql.org/pub/repos/apt/ ${RELEASE}"-pgdg main | sudo tee  /etc/apt/sources.list.d/pgdg.list
+        apt-get update
+        apt-get install python3.7-dev build-essential python3.7 -y
+        apt-get install libpq-dev python-dev python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libffi-dev -y
+        apt-get remove postgresql\* -y
+        apt-get install postgresql-12 postgresql-client-12 -y
+        apt-get install python3-pip python3-dev python3-venv python-virtualenv -y
+        sudo -u postgres psql -c "CREATE DATABASE cigionline ;"
+        sudo -u postgres psql -c "CREATE ROLE cigi LOGIN PASSWORD 'cigi' superuser;"
+        sed -i  '/^local/ s/peer/md5/' /etc/postgresql/12/main/pg_hba.conf
+        service postgresql restart
+        sudo -u vagrant virtualenv --always-copy --python=python3.7 venv
+        sudo -u vagrant /home/vagrant/venv/bin/pip install -r /vagrant/requirements.txt
+   SHELL
+end

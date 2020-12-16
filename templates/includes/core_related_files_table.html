@@ -1,0 +1,22 @@
+{% load core_tags %}
+<table class="table-related-files">
+  <thead>
+    <tr>
+      <th class="table-wide-lg">Attachment</th>
+      <th>Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for file_block in file_blocks %}
+      <tr>
+        <td class="table-wide-lg">
+          <a href="{{file_block.value.url}}">
+            <i class="far fa-file-pdf"></i>
+            {{file_block.value.title}}
+          </a>
+        </td>
+        <td>{{file_block.value.file_size|filesizeformat}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

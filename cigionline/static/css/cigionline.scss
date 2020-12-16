@@ -1,17 +1,50 @@
-// Fontawesome
 $fa-font-path: '../fontawesome-pro/webfonts';
-@import 'fontawesome-pro/scss/fontawesome';
-@import 'fontawesome-pro/scss/regular';
-@import 'fontawesome-pro/scss/solid';
-@import 'fontawesome-pro/scss/light';
-@import 'fontawesome-pro/scss/brands';
+@import '~@fortawesome/fontawesome-pro/css/all.css';
 
-@import 'variables';
-@import 'mixins';
-@import 'grids';
-@import 'footer';
-@import 'global';
-@import 'hero';
-@import 'meta';
-@import 'people';
-@import 'top-bar';
+@import 'global/bootstrap_variables_overwrite';
+
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/bootstrap';
+
+@import 'global/resets';
+@import 'global/variables';
+@import 'global/mixins';
+@import 'global/global';
+@import 'global/helpers';
+
+@import 'layout/grids';
+@import 'layout/hero';
+@import 'layout/sections';
+@import 'layout/tables';
+
+@import 'includes/footer';
+@import 'includes/top_bar';
+@import 'includes/people_person_leadership_list';
+@import 'includes/multimedia_list';
+@import 'includes/publications_featured_list';
+@import 'includes/hero_publication';
+@import 'includes/hero_article';
+@import 'includes/social_links';
+@import 'includes/date';
+@import 'includes/authors';
+@import 'includes/topics';
+@import 'includes/about_the_author';
+@import 'includes/multimedia_disclaimer';
+@import 'includes/opinion_disclaimer';
+
+@import 'includes/features/feature_content';
+@import 'includes/features/feature_content_large';
+@import 'includes/features/feature_content_small';
+
+@import 'streams/autoplay_video_block';
+@import 'streams/block';
+@import 'streams/block_quote_block';
+@import 'streams/chart_block';
+@import 'streams/external_quote_block';
+@import 'streams/image_full_bleed_block';
+@import 'streams/pull_quote_right_left_block';
+@import 'streams/recommended_block';
+@import 'streams/text_border_block';
+@import 'streams/tweet_block';
+
+@import 'pages/people';

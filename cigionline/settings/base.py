@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from os import path
+
 import os
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,21 +26,26 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+    'articles',
     'careers',
     'compressor',
     'core',
     'events',
     'menus',
     'multimedia',
+    'newsletters',
     'people',
     'publications',
     'research',
     'search',
+    'streams',
 
+    'wagtail.api.v2',
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.table_block',
+    # 'wagtail.contrib.styleguide',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -50,7 +57,10 @@ INSTALLED_APPS = [
     'wagtail.core',
 
     'modelcluster',
+    'rest_framework',
     'taggit',
+    'wagtailmedia',
+    'webpack_loader',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -70,15 +80,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'cigionline.urls'
 
-COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'),
-)
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
 
 TEMPLATES = [
     {
@@ -113,6 +126,18 @@ DATABASES = {
         'CONN_MAX_AGE': 600,
     }
 }
+
+if os.environ.get('GITHUB_WORKFLOW'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': 'localhost',
+            'NAME': 'cigionline',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'CONN_MAX_AGE': 600,
+        }
+    }
 
 
 # Password validation
@@ -159,7 +184,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
-    'node_modules/@fortawesome',
+
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
@@ -177,6 +202,7 @@ MEDIA_URL = '/media/'
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "cigionline"
+WAGTAILAPI_LIMIT_MAX = 40
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash

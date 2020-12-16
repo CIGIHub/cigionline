@@ -1,19 +1,30 @@
 from core.models import (
     BasicPageAbstract,
     FeatureablePageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 )
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 
 
-class JobPostingListPage(BasicPageAbstract):
+class JobPostingListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
-    subpage_types = ['careers.JobPostingPage']
+    subpage_types = ['careers.JobPostingPage', 'core.BasicPage']
     templates = 'careers/job_posting_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     class Meta:
         verbose_name = 'Careers Page'
@@ -21,11 +32,13 @@ class JobPostingListPage(BasicPageAbstract):
 
 class JobPostingPage(
     FeatureablePageAbstract,
+    Page,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 ):
     closing_date = models.DateField(blank=True, null=True)
     description = StreamField(
-        BasicPageAbstract.body_streamfield_blocks,
+        BasicPageAbstract.body_default_blocks,
         blank=True,
     )
     related_files = StreamField(
@@ -69,6 +82,11 @@ class JobPostingPage(
             heading='Related Files',
             classname='collapsible collapsed',
         ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['careers.JobPostingListPage']

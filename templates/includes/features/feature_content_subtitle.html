@@ -1,0 +1,9 @@
+{% load wagtailcore_tags %}
+
+<div class="feature-content-subtitle">
+  {% if content.feature_subtitle %}
+    {{ content.feature_subtitle }}
+  {% else %}
+    {{ content.subtitle|richtext }}
+  {% endif %}
+</div>

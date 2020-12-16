@@ -1,0 +1,245 @@
+header {
+  background-color: $black;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+
+  .main-navigation-wrapper {
+    background-color: $black;
+    position: relative;
+    z-index: 4;
+  }
+
+  .cigi-top-bar {
+    @include media-breakpoint-up(lg) {
+      height: 66px;
+    }
+
+    align-items: center;
+    display: flex;
+    height: 36px;
+    justify-content: space-between;
+    transition: height .5s ease;
+
+    .desktop-menu {
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+}
+
+    &.scrolled-nav {
+      height: 36px;
+
+      .cigi-logo {
+
+        .large-logo {
+          opacity: 0;
+        }
+
+        .small-logo {
+          opacity: 1;
+        }
+      }
+
+      .desktop-menu {
+        opacity: 0;
+
+        a {
+          pointer-events: none;
+        }
+      }
+    }
+
+    .cigi-logo {
+      @include media-breakpoint-up(lg) {
+        padding: 0.7em 0;
+      }
+
+      align-items: center;
+      display: flex;
+
+      svg {
+        fill: $white;
+        transition: opacity 0.3s ease;
+      }
+
+      .small-logo {
+        @include media-breakpoint-up(lg) {
+          opacity: 0;
+        }
+
+        opacity: 1;
+        position: absolute;
+        width: 2em;
+      }
+
+      .large-logo {
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+
+        display: none;
+        width: 8.5em;
+      }
+    }
+
+    nav {
+      display: flex;
+
+      ul {
+        display: flex;
+        list-style: none;
+        margin: 0;
+
+        a,
+        button {
+          color: $white;
+          display: block;
+          font-size: 0.75rem;
+          padding: 1.9em 0.9em;
+
+          &:hover {
+            color: $cigi-primary-colour;
+          }
+        }
+
+        li {
+          @include media-breakpoint-up(lg) {
+            display: inline-block;
+          }
+
+          display: none;
+
+          a {
+            padding-left: 1em;
+            padding-right: 1em;
+          }
+        }
+
+        .overlay-controls {
+          display: inline-block;
+
+          &.menu-break {
+            margin-left: 1.5em;
+          }
+
+          .overlay-controls-button {
+            @include media-breakpoint-up(lg) {
+              padding: 2em 0.5em;
+            }
+            padding: 0.7em 0.5em;
+          }
+        }
+      }
+    }
+  }
+
+  // NAVIGATION SEARCH POPUP
+
+  .custom-nav-popup-btn {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    position: relative;
+    width: 22px;
+
+    span {
+      left: 0;
+      margin-left: auto;
+      margin-right: auto;
+      position: absolute;
+      right: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .icon-opened {
+      transform: scale(0, 0);
+    }
+
+    .icon-closed {
+      transform: scale(1, 1);
+    }
+
+    &.open {
+      .icon-closed {
+        transform: scale(0, 0);
+      }
+
+      .icon-opened {
+        transform: scale(1, 1);
+      }
+    }
+  }
+
+  .custom-popup-wrapper {
+    background: $popup-overlay;
+    height: 100vh;
+    opacity: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    transition: .3s ease-in-out;
+    visibility: hidden;
+    width: 100%;
+    z-index: 1;
+
+    .custom-popup-inner {
+      @include media-breakpoint-up(lg) {
+        align-items: center;
+        height: 26.875em;
+        padding-top: 0;
+      }
+      align-items: flex-start;
+      background: $black;
+      display: flex;
+      height: 100%;
+      left: 0;
+      opacity: 0.3;
+      padding-top: 86px;
+      position: absolute;
+      top: 0;
+      transform: translate(0, -100%);
+      transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+      width: 100%;
+    }
+
+    .custom-popup-content {
+      color: $white;
+      margin: 0 auto;
+      max-width: 50em;
+      width: 100%;
+
+      .input-group-search {
+        border-bottom: 3px solid $white;
+        height: calc(1.9em + 0.25em);
+
+        .form-control {
+          color: $white;
+          font-size: 1.8em;
+          height: 100%;
+
+          &::-webkit-input-placeholder,
+          &::placeholder {
+            color: $white;
+          }
+        }
+
+        .btn-search {
+          font-size: 1.0625em;
+          height: 100%;
+        }
+      }
+    }
+
+    &.opened-popup {
+      opacity: 1;
+      visibility: visible;
+
+      .custom-popup-inner {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+    }
+  }
+}

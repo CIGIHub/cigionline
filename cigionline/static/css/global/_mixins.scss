@@ -1,0 +1,85 @@
+@mixin link($color: $cigi-pink, $hover-color: $cigi-dark-pink) {
+  a {
+    color: $color;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $hover-color;
+      text-decoration: none;
+    }
+  }
+}
+
+@mixin breakpoint($size) {
+  @media screen and (min-width: $size) {
+    @content;
+  }
+}
+
+@mixin display-grid {
+  display: -ms-grid;
+  display: grid; // sass-lint:disable-line no-duplicate-properties
+}
+
+@mixin comma-separated {
+  &::after {
+    content: ', ';
+  }
+
+  &:last-child {
+    &::after {
+      content: '';
+    }
+  }
+}
+
+// IMAGES
+
+@mixin aspect-ratio($width, $height) {
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    padding-top: ($height / $width) * 100%;
+    width: 100%;
+  }
+
+  > .img-wrapper {
+    background: $cigi-medium-light-grey;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+@mixin image-caption {
+  color: $cigi-text-grey;
+  font-size: 0.7em;
+  line-height: 1rem;
+  padding: 0.25em 0;
+  text-align: left;
+}
+
+@mixin hover-darken {
+  .img-wrapper {
+    background-color: $black;
+
+    &:hover {
+      img {
+        opacity: 0.8;
+      }
+    }
+
+    img {
+      transition: opacity .2s ease;
+    }
+  }
+}

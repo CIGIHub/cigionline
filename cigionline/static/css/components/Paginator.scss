@@ -1,0 +1,79 @@
+@import '../global/variables';
+
+.pagination-links-numbered {
+  margin-top: 1em;
+  position: relative;
+  text-align: center;
+  width: 100%;
+
+  li {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 0.5em;
+    position: relative;
+
+    a {
+      text-align: center;
+    }
+
+    &.pagination-link-first,
+    &.pagination-link-last {
+      @media (min-width: $small) {
+        display: inline;
+      }
+
+      display: none;
+      padding: 0;
+      position: absolute;
+
+      &:hover {
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+
+    &.pagination-link-first {
+      left: 0;
+
+      &::after {
+        left: 0;
+      }
+    }
+
+    &.pagination-link-last {
+      right: 0;
+
+      &::after {
+        right: 0;
+      }
+    }
+
+    &.active {
+      color: $cigi-text-grey;
+    }
+
+    &.pagination-underline {
+      &.pagination-underline-centred {
+        &::after {
+          left: 0;
+          margin-left: auto;
+          margin-right: auto;
+          right: 0;
+          text-align: center;
+        }
+      }
+
+      &::after {
+        background: $cigi-pink;
+        bottom: -0.25em;
+        content: ' ';
+        display: block;
+        height: 2px;
+        position: absolute;
+        transition: width 0.25s ease;
+        width: 15px;
+      }
+    }
+  }
+}

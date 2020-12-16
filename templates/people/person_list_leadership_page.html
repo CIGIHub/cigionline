@@ -4,22 +4,13 @@
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <section>
-    <div class="container-lg">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
   </section>
   <section>
-    <div class="container-lg">
-      <h2>Board Members</h2>
-      {% for board_member in page.board_members %}
-        <p>{{ board_member.title }}</p>
-      {% endfor %}
-      <h2>Senior Management</h2>
-      {% for manager in page.senior_management %}
-        <p>{{ manager.title }}</p>
-      {% endfor %}
+    <div class="container-sm">
+      {% include 'includes/people_person_leadership_tabs.html' %}
     </div>
   </section>
 {% endblock %}

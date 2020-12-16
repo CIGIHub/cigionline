@@ -1,17 +1,23 @@
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
+    FromTheArchivesPageAbstract,
+    SearchablePageAbstract,
     ShareablePageAbstract,
 )
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import AuthorBlock, PDFDownloadBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     PageChooserBlock,
@@ -20,12 +26,13 @@ from wagtail.core.blocks import (
     URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
-class PublicationListPage(BasicPageAbstract):
+class PublicationListPage(BasicPageAbstract, Page):
     """Publication list page"""
 
     max_count = 1
@@ -33,14 +40,73 @@ class PublicationListPage(BasicPageAbstract):
     subpage_types = ['publications.PublicationPage']
     templates = 'publications/publication_list_page.html'
 
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_publications',
+                    max_num=4,
+                    min_num=0,
+                    label='Publication',
+                ),
+            ],
+            heading='Featured Publications',
+            classname='collapsible collapsed',
+        ),
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        all_publications = PublicationPage.objects.live().public().order_by('-publishing_date')
+        paginator = Paginator(all_publications, 24)
+        page = request.GET.get('page')
+        try:
+            publications = paginator.page(page)
+        except PageNotAnInteger:
+            publications = paginator.page(1)
+        except EmptyPage:
+            publications = paginator.page(paginator.num_pages)
+        context['publications'] = publications
+        return context
+
     class Meta:
         verbose_name = 'Publication List Page'
 
 
+class PublicationListPageFeaturedPublication(Orderable):
+    publication_list_page = ParentalKey(
+        'publications.PublicationListPage',
+        related_name='featured_publications',
+    )
+    publication_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Publication',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'publication_page',
+            ['publications.PublicationPage'],
+        ),
+    ]
+
+
 class PublicationPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
+    FromTheArchivesPageAbstract,
     ShareablePageAbstract,
 ):
     """View publication page"""
@@ -50,9 +116,22 @@ class PublicationPage(
         PAPERBACK = ('PB', 'Paperback')
         TRADE_PB = ('TP', 'Trade PB')
 
+    class PublicationTypes(models.TextChoices):
+        BOOKS = ('books', 'Books')
+        CIGI_COMMENTARIES = ('cigi_commentaries', 'CIGI Commentaries')
+        CIGI_PAPERS = ('cigi_papers', 'CIGI Papers')
+        COLLECTED_SERIES = ('collected_series', 'Collected Series')
+        CONFERENCE_REPORTS = ('conference_reports', 'Conference Reports')
+        ESSAY_SERIES = ('essay_series', 'Essay Series')
+        POLICY_BRIEFS = ('policy_briefs', 'Policy Briefs')
+        POLICY_MEMOS = ('policy_memos', 'Policy Memos')
+        SPECIAL_REPORTS = ('special_reports', 'Special Reports')
+        SPEECHES = ('speeches', 'Speeches')
+        STUDENT_ESSAY = ('student_essay', 'Student Essay')
+
     authors = StreamField(
         [
-            ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
             ('external_author', CharBlock(required=True)),
         ],
         blank=True,
@@ -146,17 +225,12 @@ class PublicationPage(
     )
     pdf_downloads = StreamField(
         [
-            ('pdf_download', StructBlock([
-                ('file', DocumentChooserBlock(required=True)),
-                ('button_text', CharBlock(
-                    required=False,
-                    help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".',
-                )),
-            ], label='PDF Download'))
+            ('pdf_download', PDFDownloadBlock())
         ],
         blank=True,
         verbose_name='PDF Downloads',
     )
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     publication_series = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
@@ -164,16 +238,50 @@ class PublicationPage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+    publication_type = models.CharField(
+        blank=False,
+        max_length=32,
+        choices=PublicationTypes.choices,
+    )
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic'],
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def featured_person_list(self):
+        """
+        For featured publications, only display the first 3 authors/editors.
+        """
+
+        person_list = list(self.authors) + list(self.editors)
+        del person_list[3:]
+        return person_list
+
+    def featured_person_list_has_more(self):
+        """
+        If there are more than 3 authors/editors for featured publications,
+        display "and more".
+        """
+
+        return len(list(self.authors) + list(self.editors)) > 3
+
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
         MultiFieldPanel(
             [
+                FieldPanel('short_description'),
+                StreamFieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('publication_type'),
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
@@ -231,6 +339,7 @@ class PublicationPage(
             heading='Media',
             classname='collapsible collapsed',
         ),
+        ContentPage.recommended_panel,
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
@@ -238,10 +347,32 @@ class PublicationPage(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
                 ),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
         ),
+        FromTheArchivesPageAbstract.from_the_archives_panel,
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields \
+        + [index.FilterField('publication_type')]
+
+    api_fields = [
+        APIField('authors'),
+        APIField('pdf_downloads'),
+        APIField('publication_type'),
+        APIField('publishing_date'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
     ]
 
     parent_page_types = ['publications.PublicationListPage']
@@ -253,11 +384,20 @@ class PublicationPage(
         verbose_name_plural = 'Publications'
 
 
-class PublicationSeriesListPage(BasicPageAbstract):
+class PublicationSeriesListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = ['publications.PublicationSeriesPage']
     templates = 'publications/publication_series_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
 
     class Meta:
         verbose_name = 'Publication Series List Page'
@@ -265,10 +405,10 @@ class PublicationSeriesListPage(BasicPageAbstract):
 
 class PublicationSeriesPage(
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
-    PublishablePageAbstract,
 ):
-    topics = ParentalManyToManyField('research.TopicPage', blank=True)
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
 
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -287,10 +427,15 @@ class PublicationSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
         ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     parent_page_types = ['publications.PublicationSeriesListPage']

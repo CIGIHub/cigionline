@@ -1,5 +1,17 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_bundles %}
+  {% render_bundle 'publicationListPage' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+
+  <div class="container-lg">
+    {% include 'includes/publications_featured_list.html' %}
+
+    <section class="publication-list-section" id="publications-search-table">
+    </section>
+  </div>
 {% endblock content %}
