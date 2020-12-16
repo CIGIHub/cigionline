@@ -90,13 +90,6 @@ const config = {
         ],
       },
       {
-        test: /\.svg$/,
-        issuer: {
-          test: /\.js?$/,
-        },
-        use: ['@svgr/webpack', 'url-loader'],
-      },
-      {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         use: [
           {
