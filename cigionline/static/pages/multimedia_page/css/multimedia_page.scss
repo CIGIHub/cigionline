@@ -1,0 +1,17 @@
+@import '../../../css/global/variables';
+
+.multimedia-series-block {
+  article {
+    border-top: 1px solid $cigi-dark-grey;
+    padding-top: 1em;
+
+    h2 {
+      font-size: 1em;
+      font-weight: 700;
+    }
+
+    p {
+      line-height: 1.25em;
+    }
+  }
+}
