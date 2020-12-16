@@ -49,7 +49,7 @@ http {
 				auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
 			<% end %>
 
-			location /api {
+			location /api/ {
 				auth_basic "off";
 			}
 		}
