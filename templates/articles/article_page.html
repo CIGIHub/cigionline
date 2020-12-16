@@ -1,18 +1,29 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block content %}
 
   {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
 
-  {% if page.body %}
+  {% if self.image_hero %}
+    <figure class="container-md article-image-hero">
+      {% image self.image_hero width-1760 %}
+      {% if self.image_hero.title %}
+        <figcaption>
+          {{ self.image_hero.title }}
+        </figcaption>
+      {% endif %}
+    </figure>
+  {% endif %}
+
+  {% if self.body %}
     <section class="body">
       {% for block in self.body %}
         {% include_block block %}
       {% endfor %}
     </section>
   {% endif %}
-  
+
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
@@ -22,3 +33,7 @@
   {% endif %}
 
 {% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'articlePage' %}
+{% endblock extra_bundles %}
