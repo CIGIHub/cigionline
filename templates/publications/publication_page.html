@@ -69,6 +69,9 @@
   {% if self.authors|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
+  {% if self.editors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.editors title_override="About the Editor" %}
+  {% endif %}
 
 {% endblock content %}
 
