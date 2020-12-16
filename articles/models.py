@@ -25,6 +25,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
 
 
@@ -308,7 +309,8 @@ class ArticlePage(
 
     search_fields = Page.search_fields \
         + BasicPageAbstract.search_fields \
-        + ContentPage.search_fields
+        + ContentPage.search_fields \
+        + [index.FilterField('article_type')]
 
     api_fields = [
         APIField('article_type'),
