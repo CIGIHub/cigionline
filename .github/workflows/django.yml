@@ -67,7 +67,7 @@ jobs:
     - name: Run migrations
       run: python manage.py migrate
     - name: Build webpack
-      run: npm run build:prod
+      run: npm build
       env:
         FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
     - name: Collect static files
