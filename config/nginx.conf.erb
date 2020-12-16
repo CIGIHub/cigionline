@@ -43,6 +43,15 @@ http {
 			proxy_set_header Host $http_host;
 			proxy_redirect off;
 			proxy_pass http://app_server;
+
+			<% if ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
+				auth_basic "Restricted";
+				auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
+			<% end %>
+
+			location /api {
+				auth_basic "off";
+			}
 		}
 
 		<% if ENV['STATIC_PROXY'] %>
