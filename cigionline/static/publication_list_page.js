@@ -49,6 +49,7 @@ ReactDOM.render(
       'table-publications',
     ]}
     RowComponent={PublicationListing}
+    searchPlaceholder="Search all publications"
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',

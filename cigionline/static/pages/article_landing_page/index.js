@@ -19,6 +19,7 @@ ReactDOM.render(
       'table-opinions',
     ]}
     RowComponent={OpinionListing}
+    searchPlaceholder="Search all opinions"
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',

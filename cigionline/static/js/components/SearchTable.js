@@ -207,6 +207,7 @@ class SearchTable extends React.Component {
       containerClass,
       filterTypes,
       RowComponent,
+      searchPlaceholder,
       showSearch,
       tableColumns,
     } = this.props;
@@ -223,7 +224,7 @@ class SearchTable extends React.Component {
                       type="text"
                       className="form-control"
                       value={searchValue}
-                      placeholder="Search"
+                      placeholder={searchPlaceholder}
                       onChange={this.handleSearchValueChange}
                     />
                     <div className="input-group-append">
@@ -351,6 +352,7 @@ SearchTable.propTypes = {
   })),
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
+  searchPlaceholder: PropTypes.string,
   showSearch: PropTypes.bool,
   tableColumns: PropTypes.arrayOf(PropTypes.shape({
     colSpan: PropTypes.number,
@@ -362,7 +364,8 @@ SearchTable.defaultProps = {
   blockListing: false,
   filterTypes: [],
   limit: 24,
-  showSearch: false,
+  searchPlaceholder: null,
+  showSearch: 'Search',
   tableColumns: [],
 };
 
