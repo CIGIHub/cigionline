@@ -364,8 +364,8 @@ SearchTable.defaultProps = {
   blockListing: false,
   filterTypes: [],
   limit: 24,
-  searchPlaceholder: null,
-  showSearch: 'Search',
+  searchPlaceholder: 'Search',
+  showSearch: false,
   tableColumns: [],
 };
 
