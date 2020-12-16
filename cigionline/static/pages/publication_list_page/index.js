@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PublicationListing from './js/components/PublicationListing';
-import SearchTable from './js/components/SearchTable';
+import PublicationListing from '../../js/components/PublicationListing';
+import SearchTable from '../../js/components/SearchTable';
 
 ReactDOM.render(
   <SearchTable
