@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags wagtailembeds_tags webpack_loader core_tags %}
 
 {% block content %}
   {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
@@ -49,6 +49,17 @@
           </li>
         {% endif %}
       </ul>
+    </div>
+  {% endif %}
+
+  {% if self.publication_type == "books" and self.embed_youtube %}
+    <div class="container-sm publication-book-trailer">
+      <h2 class="paragraph-heading">
+        Book Trailer
+      </h2>
+      <div class="publication-book-trailer-embed">
+        {% embed self.embed_youtube max_width=620 %}
+      </div>
     </div>
   {% endif %}
 

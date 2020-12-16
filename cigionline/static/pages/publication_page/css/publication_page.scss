@@ -15,6 +15,16 @@
   }
 }
 
+.publication-book-trailer {
+  .publication-book-trailer-embed {
+    margin-top: .5em;
+
+    iframe {
+      width: 100%;
+    }
+  }
+}
+
 .publication-part-of-series {
   article {
     h3 {
