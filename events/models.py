@@ -14,6 +14,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import CharBlock, PageChooserBlock
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
@@ -227,6 +228,17 @@ class EventPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields
+
+    api_fields = [
+        APIField('publishing_date'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
     ]
 
     parent_page_types = ['events.EventListPage']
