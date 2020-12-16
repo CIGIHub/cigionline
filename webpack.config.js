@@ -25,6 +25,7 @@ const config = {
   entry: {
     articlePage: './cigionline/static/pages/article_page/index.js',
     cigionline: './cigionline/static/index.js',
+    eventPage: './cigionline/static/pages/event_page/index.js',
     multimediaListPage: './cigionline/static/multimedia_list_page.js',
     multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
     publicationListPage: './cigionline/static/publication_list_page.js',

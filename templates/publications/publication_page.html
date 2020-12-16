@@ -4,7 +4,7 @@
 {% block content %}
   {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
 
-  {% if page.body %}
+  {% if self.body %}
     <section class="body">
       {% for block in self.body %}
         {% include_block block %}
