@@ -61,13 +61,13 @@ class Paginator extends React.Component {
         {this.pageNumbers.map((pageNumber) => (
           pageNumber.current
             ? (
-              <li key={`page-${pageNumber}`} className="active pagination-underline pagination-underline-centred">
+              <li key={`page-${pageNumber.page}`} className="active pagination-underline pagination-underline-centred">
                 <span>
                   {pageNumber.page}
                 </span>
               </li>
             ) : (
-              <li key={`page-${pageNumber}`}>
+              <li key={`page-${pageNumber.page}`}>
                 <button type="button" onClick={() => setPage(pageNumber.page)}>
                   {pageNumber.page}
                 </button>
