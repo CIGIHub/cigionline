@@ -51,7 +51,7 @@ http {
 		}
 
 		location /api/ {
-			auth_basic "off";
+			auth_basic off;
 		}
 
 		<% if ENV['STATIC_PROXY'] %>
