@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const BundleTracker = require('webpack-bundle-tracker');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const plugins = [
   new webpack.DefinePlugin({
@@ -14,9 +14,8 @@ const plugins = [
     'window.jQuery': 'jquery',
   }),
   new BundleTracker({ filename: './webpack-stats.json' }),
-  new ExtractTextPlugin({
+  new MiniCssExtractPlugin({
     filename: '[name].css',
-    allChunks: true,
   }),
 ];
 
@@ -34,6 +33,7 @@ const config = {
   devtool: 'source-map',
   output: {
     path: path.resolve('./cigionline/static/bundles/'),
+    publicPath: '/static/bundles/',
     filename: '[name].js',
   },
   plugins,
@@ -47,15 +47,13 @@ const config = {
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            { loader: 'css-loader', options: { sourceMap: true } },
-            { loader: 'postcss-loader', options: { sourceMap: 'inline' } },
-            { loader: 'resolve-url-loader', options: { sourceMap: true } },
-            { loader: 'sass-loader', options: { sourceMap: true } },
-          ],
-        }),
+        use: [
+          { loader: MiniCssExtractPlugin.loader, options: { publicPath: '' } },
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'postcss-loader', options: { sourceMap: 'inline' } },
+          { loader: 'resolve-url-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader', options: { sourceMap: true } },
+        ],
       },
       {
         test: /\.css$/,
