@@ -1,6 +1,6 @@
 export default function addInlineVideoActions() {
-  $(function () {
-    $('.stream-block-inline-video').each(function () {
+  $(function() {
+    $('.stream-block-inline-video').each(function() {
       const watchLabel = $(this).find('.watch-video-label');
       const imageWrapper = $(this).find('.img-wrapper');
       const videoWrapper = $(this).find('.video-wrapper');
