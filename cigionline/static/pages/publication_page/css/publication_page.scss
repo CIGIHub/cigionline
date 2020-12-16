@@ -1,5 +1,20 @@
 @import '../../../css/global/variables';
 
+.publication-book-metadata {
+  border-top: 1px solid $cigi-light-grey;
+  columns: 2;
+  list-style-type: none;
+  padding-top: 2em;
+
+  li {
+    font-size: 0.8em;
+
+    span {
+      color: $cigi-text-grey;
+    }
+  }
+}
+
 .publication-part-of-series {
   article {
     h3 {
