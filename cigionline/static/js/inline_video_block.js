@@ -7,25 +7,42 @@ export default function addInlineVideoActions() {
       const closeVideo = $(this).find('.close-video-icon');
       const iframe = videoWrapper.find('iframe');
 
-      iframe[0].allow += 'autoplay';
-      iframe[0].src += '&enablejsapi=1';
+      iframe[0].src += '&enablejsapi=1&autoplay=0';
 
-      
-      function toggleElements(elementOne, elementTwo) {
+      function toggleElements(action) {
+        let closingElement;
+        let openingElement;
+
+        if (action === 'stop') {
+          closingElement = videoWrapper;
+          openingElement = imageWrapper;
+          iframe[0].contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+        } else if (action === 'play') {
+          closingElement = imageWrapper;
+          openingElement = videoWrapper;
+        }
+
         watchLabel.toggleClass('shrink');
         closeVideo.toggleClass('hidden');
-        elementOne.toggleClass('shrink');
+        closingElement.toggleClass('shrink');
         setTimeout(function() {
-          elementTwo.toggleClass('shrink');
-        }, 2000);
+          openingElement.toggleClass('shrink');
+          if (action === 'play') {
+            setTimeout(function() {
+              iframe[0].src = iframe[0].src.replace('autoplay=0', 'autoplay=1');
+            }, 1500);
+          }
+        }, 1500);
       }
 
-
+      imageWrapper.on('click', function() {
+        toggleElements('play');
+      });
       watchLabel.on('click', function() {
-        toggleElements(imageWrapper, videoWrapper);
+        toggleElements('play');
       });
       closeVideo.on('click', function() {
-        toggleElements(videoWrapper, imageWrapper);
+        toggleElements('stop');
       });
     });
   });

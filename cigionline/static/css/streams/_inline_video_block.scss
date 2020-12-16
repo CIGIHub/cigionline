@@ -29,6 +29,7 @@
     .stream-block-inline-video-text {
       @include link($color: $black, $hover-color: $cigi-dark-pink);
       justify-content: center;
+      margin-bottom: 0.3em;
 
       a {
         font-size: 1.3em;
