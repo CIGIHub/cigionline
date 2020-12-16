@@ -7,11 +7,11 @@ from wagtail.api.v2.filters import (
 from wagtail.api.v2.serializers import PageSerializer
 from wagtail.api.v2.views import BaseAPIViewSet
 
-from .models import PublicationPage
+from .models import ArticlePage
 
 
-class PublicationPageViewSet(BaseAPIViewSet):
-    model = PublicationPage
+class ArticlePageViewSet(BaseAPIViewSet):
+    model = ArticlePage
     base_serializer_class = PageSerializer
     filter_backends = [
         FieldsFilter,

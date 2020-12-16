@@ -1,3 +1,4 @@
+from django.db.models import F
 from wagtail.api.v2.filters import (
     FieldsFilter,
     OrderingFilter,
@@ -19,4 +20,4 @@ class MultimediaPageViewSet(BaseAPIViewSet):
     ]
 
     def get_queryset(self):
-        return self.model.objects.public().live().order_by('-publishing_date')
+        return self.model.objects.public().live().order_by(F('publishing_date').desc(nulls_last=True))

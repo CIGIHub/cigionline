@@ -16,6 +16,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     PageChooserBlock,
@@ -296,15 +297,26 @@ class ArticlePage(
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
-
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields
+
+    api_fields = [
+        APIField('article_type'),
+        APIField('authors'),
+        APIField('publishing_date'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
     ]
 
     parent_page_types = ['articles.ArticleListPage']

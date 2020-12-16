@@ -1,3 +1,4 @@
+from articles.views import ArticlePageViewSet
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -14,6 +15,7 @@ from search import views as search_views
 
 api_router = WagtailAPIRouter('wagtailapi')
 
+api_router.register_endpoint('articles', ArticlePageViewSet)
 api_router.register_endpoint('multimedia', MultimediaPageViewSet)
 api_router.register_endpoint('publications', PublicationPageViewSet)
 api_router.register_endpoint('topics', TopicPageViewSet)
