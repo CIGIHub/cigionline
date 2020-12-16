@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import AuthorBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -138,7 +139,7 @@ class ArticlePage(
     )
     authors = StreamField(
         [
-            ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
             ('external_author', CharBlock(required=True)),
         ],
         blank=True,

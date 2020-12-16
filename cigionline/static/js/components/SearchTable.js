@@ -254,7 +254,7 @@ class SearchTable extends React.Component {
                     </div>
                   </div>
                 </div>
-                {filterTypes && (
+                {!!filterTypes.length && (
                   <div className="col-md-3 position-relative">
                     <div className="dropdown custom-dropdown">
                       <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
