@@ -236,8 +236,7 @@ class ArticlePage(
     def get_template(self, request, *args, **kwargs):
         standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
         if self.theme:
-            theme_dir = self.theme.name.lower().replace(' ', '_').replace("-", '_')
-            return f'themes/{theme_dir}/article_page.html'
+            return f'themes/{self.get_theme_dir()}/article_page.html'
         return standard_template
 
     content_panels = [
