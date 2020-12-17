@@ -207,10 +207,10 @@ class TextBorderBlock(blocks.StructBlock):
 class TweetBlock(blocks.StructBlock):
     """Tweet Block"""
 
-    tweet_id = blocks.IntegerBlock(
+    tweet_url = blocks.URLBlock(
         required=True,
-        help_text='Insert the ID of the tweet. It can be found in the browser URL at the end. Example: https://twitter.com/CIGIonline/status/1188821562440454144 -> The tweet id is 1188821562440454144',
-        verbose_name='Tweet ID',
+        help_text='The URL of the tweet. Example: https://twitter.com/CIGIonline/status/1188821562440454144',
+        verbose_name='Tweet URL',
     )
 
     class Meta:
