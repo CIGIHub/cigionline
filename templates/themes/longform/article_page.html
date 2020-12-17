@@ -11,7 +11,9 @@
       <div class="hero-content">
         {% include "includes/topics.html" with topics=self.topics %}
         <h1><span>{{ self.title }}</span></h1>
-        <p class="subtitle"><span>{{ self.subtitle }}</span></p>
+        <div class="subtitle">
+          {{ self.subtitle|richtext }}
+        </div>
       </div>
     </div>
   </section>
