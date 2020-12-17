@@ -227,6 +227,12 @@ class ArticlePage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def is_opinion(self):
+        return self.article_type in [
+            self.ArticleTypes.OP_ED,
+            self.ArticleTypes.OPINION,
+        ]
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
         if self.theme and self.theme.name == 'Longform':
