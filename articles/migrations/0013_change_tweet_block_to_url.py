@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles', '0011_create_inline_video_block'),
+        ('articles', '0012_create_inline_video_block'),
     ]
 
     operations = [
