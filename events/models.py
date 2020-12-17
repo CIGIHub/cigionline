@@ -36,7 +36,7 @@ class EventListPage(BasicPageAbstract, Page):
                 InlinePanel(
                     'featured_events',
                     max_num=6,
-                    min_num=6,
+                    min_num=0,
                     label='Event',
                 ),
             ],
