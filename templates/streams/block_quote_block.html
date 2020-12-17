@@ -1,34 +1,32 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="stream-block stream-block-blockquote">
-  <div class="container-sm flex-row">
-    {% if self.image %}
-      {% image self.image fill-300x300 class="border-round" %}
+<div class="{% if self.image %}container-md{% else %}container-sm{% endif %} stream-block-blockquote flex-row">
+  {% if self.image %}
+    {% image self.image fill-150x150 class="border-round" %}
+  {% endif %}
+
+  <div class="stream-block-blockquote-content{% if self.image %} has-image{% endif %}">
+    <blockquote>
+      {{ self.quote }}
+    </blockquote>
+
+    {% if self.quote_author %}
+      <div class="stream-block-blockquote-author">
+        {{ self.quote_author }}
+      </div>
     {% endif %}
-  
-    <div class="stream-block-blockquote-content{% if self.image %} has-image{% endif %}">
-      <blockquote>
-        {{ self.quote }}
-      </blockquote>
-  
-      {% if self.quote_author %}
-        <div class="stream-block-blockquote-author">
-          {{ self.quote_author }}
-        </div>
-      {% endif %}
-  
-      {% if self.author_title %}
-        <div class="stream-block-blockquote-author-title">
-          {{ self.author_title }}
-        </div>
-      {% endif %}
-  
-      {% if self.link_url %}
-        <a href="{{ self.link_url }}" class="stream-block-blockquote-link">
-          {{ self.link_text }}
-          <i class="far fa-external-link"></i>
-        </a>
-      {% endif %}
-    </div>
+
+    {% if self.author_title %}
+      <div class="stream-block-blockquote-author-title">
+        {{ self.author_title }}
+      </div>
+    {% endif %}
+
+    {% if self.link_url %}
+      <a href="{{ self.link_url }}" class="stream-block-blockquote-link">
+        {{ self.link_text }}
+        <i class="far fa-external-link"></i>
+      </a>
+    {% endif %}
   </div>
 </div>
