@@ -3,7 +3,7 @@
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section class="home-featured">
+  <section class="featured">
     <div class="container-lg">
       <div class="row">
         <div class="col-md-8">
@@ -14,7 +14,7 @@
           {% endfor %}
         </div>
         <hr>
-        <div class="featured-small col-md-4 flex-column">
+        <div class="col-md-4 flex-column featured-small">
           {% for article in page.featured_articles.all %}
             {% if forloop.counter < 6 %}
               {% if forloop.counter != 1 %}
