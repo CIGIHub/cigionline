@@ -58,7 +58,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
         related_name='featured_articles',
     )
     article_page = models.ForeignKey(
-        'articles.ArticlePage',
+        'wagtailcore.Page',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
@@ -69,7 +69,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     panels = [
         PageChooserPanel(
             'article_page',
-            ['articles.ArticlePage'],
+            ['wagtailcore.Page'],
         ),
     ]
 
