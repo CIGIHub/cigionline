@@ -1,0 +1,28 @@
+{% load wagtailimages_tags wagtailembeds_tags %}
+<div class="stream-block stream-block-inline-video">
+  <div class="container-sm">
+    <div class="stream-block-inline-video-content">
+      <div class="flex-row">
+        <div class="img-wrapper">
+          {% image self.specific.image_hero fill-377x246 %}
+          <div class="image-button">
+            <i class="fas fa-play"></i>
+          </div>
+        </div>
+  
+        <div class="stream-block-inline-video-text flex-column">
+          <div class="watch-video-label meta">WATCH <i class="fa fa-chevron-down"></i></div>
+          <a href="{{ self.url }}">{{self.title}}</a>
+        </div>
+
+        <div class="close-video-icon hidden">
+          <i class="fa fa-times-circle"></i>
+        </div>
+      </div>
+
+      <div class="video-wrapper shrink">
+        {% embed self.specific.multimedia_url max_width=705 %}
+      </div>
+    </div>
+  </div>
+</div>
