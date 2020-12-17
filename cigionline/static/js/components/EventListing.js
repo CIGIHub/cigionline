@@ -56,16 +56,46 @@ function EventListing(props) {
           </ul>
         </div>
       </td>
+      <td colSpan="1">
+        <div className="table-mobile-text" />
+        <div className="table-content">
+          {row.event_access === 0
+            ? (
+              <button type="button" className="button-action disabled" disabled>
+                Private
+              </button>
+            ) : (
+              row.multimedia_url ? (
+                <a href={row.multimedia_url} className="button-action">
+                  <i className="fas fa-play" />
+                  Watch
+                </a>
+              ) : (
+                !!row.registration_url
+                && DateTime.fromISO(row.publishing_date) > DateTime.local().startOf('day')
+                && (
+                  <a href={row.registration_url} className="button-action">
+                    <i className="fal fa-calendar-alt" />
+                    RSVP
+                  </a>
+                )
+              )
+            )}
+        </div>
+      </td>
     </tr>
   );
 }
 
 EventListing.propTypes = {
   row: PropTypes.shape({
+    event_access: PropTypes.number,
     id: PropTypes.number,
     location_city: PropTypes.string,
     location_country: PropTypes.string,
+    multimedia_url: PropTypes.string,
     publishing_date: PropTypes.string,
+    registration_url: PropTypes.string,
     title: PropTypes.string,
     topics: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,

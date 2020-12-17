@@ -5,6 +5,7 @@ from core.models import (
     SearchablePageAbstract,
     ShareablePageAbstract,
 )
+from datetime import datetime
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
@@ -156,6 +157,11 @@ class EventPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def multimedia_url(self):
+        if self.multimedia_page:
+            return self.multimedia_page.url
+        return ''
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
@@ -235,9 +241,12 @@ class EventPage(
         + ContentPage.search_fields
 
     api_fields = [
+        APIField('event_access'),
         APIField('location_city'),
         APIField('location_country'),
+        APIField('multimedia_url'),
         APIField('publishing_date'),
+        APIField('registration_url'),
         APIField('title'),
         APIField('topics'),
         APIField('url'),

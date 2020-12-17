@@ -8,9 +8,12 @@ ReactDOM.render(
     showSearch
     endpoint="/events"
     fields={[
+      'event_access',
       'location_city',
       'location_country',
+      'multimedia_url',
       'publishing_date',
+      'registration_url',
       'title',
       'topics(title,url)',
       'url',
@@ -29,6 +32,9 @@ ReactDOM.render(
     }, {
       colSpan: 2,
       colTitle: 'Location',
+    }, {
+      colSpan: 1,
+      colTitle: '',
     }]}
   />,
   document.getElementById('events-search-table'),
