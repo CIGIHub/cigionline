@@ -38,4 +38,4 @@ ReactDOM.render(
     }]}
   />,
   document.getElementById('events-search-table'),
-)
+);
