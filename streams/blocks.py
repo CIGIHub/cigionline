@@ -115,6 +115,15 @@ class ImageFullBleedBlock(blocks.StructBlock):
         template = 'streams/image_full_bleed_block.html'
 
 
+class InlineVideoBlock(blocks.PageChooserBlock):
+    """Inline video"""
+
+    class Meta:
+        icon = 'media'
+        label = 'Inline Video'
+        template = 'streams/inline_video_block.html'
+
+
 class ParagraphBlock(blocks.RichTextBlock):
     """Standard text paragraph."""
 

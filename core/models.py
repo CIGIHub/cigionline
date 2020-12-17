@@ -14,6 +14,7 @@ from streams.blocks import (
     RecommendedBlock,
     TextBorderBlock,
     TweetBlock,
+    InlineVideoBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -107,7 +108,7 @@ class BasicPageAbstract(models.Model):
             ('video_url', blocks.URLBlock(required=True)),
         ]))),
         ('highlight_title', blocks.CharBlock(required=True)),
-        ('inline_video', blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')),
+        ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
         ('pull_quote_left', PullQuoteLeftBlock()),
         ('pull_quote_right', PullQuoteRightBlock()),
         ('recommended', RecommendedBlock()),
