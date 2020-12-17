@@ -1,4 +1,6 @@
 .stream-block-blockquote {
+  padding: 1em 0;
+
   blockquote {
     color: $cigi-dark-grey;
     font-size: 1.5em;
@@ -18,7 +20,7 @@
 
   .stream-block-blockquote-content {
     margin-left: 0;
-    padding: 1em 2em;
+    padding: 1em 2em 0;
     position: relative;
 
     &.has-image {
