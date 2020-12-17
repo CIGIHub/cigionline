@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailcore', '0059_apply_collection_ordering'),
-        ('articles', '0010_create_recommended_block'),
+        ('articles', '0011_create_inline_video_block'),
     ]
 
     operations = [
