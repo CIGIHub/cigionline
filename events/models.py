@@ -235,6 +235,8 @@ class EventPage(
         + ContentPage.search_fields
 
     api_fields = [
+        APIField('location_city'),
+        APIField('location_country'),
         APIField('publishing_date'),
         APIField('title'),
         APIField('topics'),

@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function PublicationListing(props) {
+function EventListing(props) {
   const { row } = props;
 
   return (
@@ -12,8 +12,8 @@ function PublicationListing(props) {
           Title
         </div>
         <div className="table-infos-wrapper">
-          <span className="table-icon">
-            <i className="fal fa-file-alt" />
+          <span className="table-icon icon-event">
+            <i className="fal fa-calendar-alt" />
           </span>
           <div className="table-infos">
             <a href={row.url} className="table-title-link">
@@ -25,7 +25,7 @@ function PublicationListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="2">
+      <td colSpan="3">
         <div className="table-mobile-text">
           Topic
         </div>
@@ -41,66 +41,39 @@ function PublicationListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="3">
+      <td colSpan="2">
         <div className="table-mobile-text">
-          Expert
+          Location
         </div>
         <div className="table-content">
           <ul className="custom-text-list">
-            {row.authors.map((author) => (
-              <li key={`${row.id}-${author.id}`}>
-                {author.type === 'author'
-                  ? (
-                    <a href={author.value.url} className="table-content-link table-content-link-black">
-                      {author.value.title}
-                    </a>
-                  ) : author.value}
-              </li>
-            ))}
+            {!!row.location_city && (
+              <li className="table-infos-meta">{row.location_city}</li>
+            )}
+            {!!row.location_country && (
+              <li className="table-infos-meta">{row.location_country}</li>
+            )}
           </ul>
-        </div>
-      </td>
-      <td colSpan="0">
-        <div className="table-mobile-text">
-          PDF
-        </div>
-        <div className="table-content">
-          {!!row.pdf_downloads.length && (
-            <a href={row.pdf_downloads[0].value.url} className="table-btn-icon">
-              <i className="fa fas fa-download" />
-            </a>
-          )}
         </div>
       </td>
     </tr>
   );
 }
 
-PublicationListing.propTypes = {
+EventListing.propTypes = {
   row: PropTypes.shape({
-    authors: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      type: PropTypes.string,
-      value: PropTypes.any,
-    })),
     id: PropTypes.number,
-    pdf_downloads: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      type: PropTypes.string,
-      value: PropTypes.shape({
-        button_text: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    })),
+    location_city: PropTypes.string,
+    location_country: PropTypes.string,
     publishing_date: PropTypes.string,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     topics: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       title: PropTypes.string,
       url: PropTypes.string,
     })),
-    url: PropTypes.string.isRequired,
+    url: PropTypes.string,
   }).isRequired,
 };
 
-export default PublicationListing;
+export default EventListing;

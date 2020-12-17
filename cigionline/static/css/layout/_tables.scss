@@ -96,6 +96,12 @@ table {
           justify-content: center;
           width: 2em;
 
+          &.icon-event {
+            border-color: $color-event;
+            color: $color-event;
+            margin-right: 1em;
+          }
+
           &.icon-opinion {
             border-color: $color-opinion;
             color: $color-opinion;
@@ -115,7 +121,7 @@ table {
           }
         }
 
-        .table-infos-date {
+        .table-infos-meta {
           color: $cigi-text-grey;
           font-size: 0.75em;
           font-weight: 400;
