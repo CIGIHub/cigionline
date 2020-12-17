@@ -269,6 +269,10 @@ class PublicationPage(
 
         return len(list(self.authors) + list(self.editors)) > 3
 
+    def has_book_metadata(self):
+        return self.publication_type == self.PublicationTypes.BOOKS \
+            and (self.book_format or self.book_pages or self.book_publisher or self.isbn or self.isbn_ebook or self.isbn_hardcover)
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(

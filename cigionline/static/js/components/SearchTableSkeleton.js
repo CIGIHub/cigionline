@@ -24,8 +24,8 @@ function SearchTableSkeleton() {
         </tr>
       </thead>
       <tbody>
-        {Array(10).fill().map(() => (
-          <tr>
+        {Array(10).fill().map((val, ind) => (
+          <tr key={`search-table-skeleton-${ind}`}>
             <td colSpan="6">
               <div className="table-infos-wrapper">
                 <div className="table-infos">

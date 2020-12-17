@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags wagtailembeds_tags webpack_loader core_tags %}
 
 {% block content %}
   {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
 
-  {% if page.body %}
+  {% if self.body %}
     <section class="body">
       {% for block in self.body %}
         {% include_block block %}
@@ -12,10 +12,82 @@
     </section>
   {% endif %}
 
+  {% if self.has_book_metadata %}
+    <div class="container-sm">
+      <ul class="publication-book-metadata">
+        {% if self.isbn %}
+          <li>
+            <span>ISBN:</span> {{ self.isbn }}
+          </li>
+        {% endif %}
+        {% if self.isbn_ebook %}
+          <li>
+            <span>eBook ISBN:</span> {{ self.isbn_ebook }}
+          </li>
+        {% endif %}
+        {% if self.isbn_hardcover %}
+          <li>
+            <span>Hardcover ISBN:</span> {{ self.isbn_hardcover }}
+          </li>
+        {% endif %}
+        {% if self.book_publisher %}
+          <li>
+            <span>Publisher:</span> {{ self.book_publisher }}
+          </li>
+        {% endif %}
+        <li>
+          <span>Published:</span> {{ self.publishing_date|date:"F j, Y" }}
+        </li>
+        {% if self.book_pages %}
+          <li>
+            <span>Pages:</span> {{ self.book_pages }}
+          </li>
+        {% endif %}
+        {% if self.book_format %}
+          <li>
+            <span>Format:</span> {{ self.get_book_format_display }}
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if self.publication_type == "books" and self.embed_youtube %}
+    <div class="container-sm publication-book-trailer">
+      <h2 class="paragraph-heading">
+        Book Trailer
+      </h2>
+      <div class="publication-book-trailer-embed">
+        {% embed self.embed_youtube max_width=620 %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if self.publication_series %}
+    <div class="container-sm publication-part-of-series">
+      <h2>Part of Series</h2>
+      <article>
+        <h3>
+          <a href="{{self.publication_series.url}}">
+            {{ self.publication_series.title }}
+          </a>
+        </h3>
+        <p>{{ self.publication_series.specific.subtitle }}</p>
+      </article>
+    </div>
+  {% endif %}
+
   {% if self.authors|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
+  {% if self.editors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.editors title_override="About the Editor" %}
+  {% endif %}
 
 {% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'publicationPage' %}
+{% endblock extra_bundles %}
 
 {{ pdf_downloads }}

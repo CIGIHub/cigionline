@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const BundleTracker = require('webpack-bundle-tracker');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const plugins = [
   new webpack.DefinePlugin({
@@ -12,12 +12,10 @@ const plugins = [
     $: 'jquery',
     jQuery: 'jquery',
     'window.jQuery': 'jquery',
-    Popper: ['popper.js', 'default'],
   }),
   new BundleTracker({ filename: './webpack-stats.json' }),
-  new ExtractTextPlugin({
+  new MiniCssExtractPlugin({
     filename: '[name].css',
-    allChunks: true,
   }),
 ];
 
@@ -25,14 +23,19 @@ const config = {
   context: __dirname,
 
   entry: {
+    articlePage: './cigionline/static/pages/article_page/index.js',
     cigionline: './cigionline/static/index.js',
+    eventPage: './cigionline/static/pages/event_page/index.js',
     multimediaListPage: './cigionline/static/multimedia_list_page.js',
+    multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
     publicationListPage: './cigionline/static/publication_list_page.js',
+    publicationPage: './cigionline/static/pages/publication_page/index.js',
   },
 
   devtool: 'source-map',
   output: {
     path: path.resolve('./cigionline/static/bundles/'),
+    publicPath: '/static/bundles/',
     filename: '[name].js',
   },
   plugins,
@@ -46,15 +49,13 @@ const config = {
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            { loader: 'css-loader', options: { sourceMap: true } },
-            { loader: 'postcss-loader', options: { sourceMap: 'inline' } },
-            { loader: 'resolve-url-loader', options: { sourceMap: true } },
-            { loader: 'sass-loader', options: { sourceMap: true } },
-          ],
-        }),
+        use: [
+          { loader: MiniCssExtractPlugin.loader, options: { publicPath: '' } },
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'postcss-loader', options: { sourceMap: true } },
+          { loader: 'resolve-url-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader', options: { sourceMap: true } },
+        ],
       },
       {
         test: /\.css$/,
@@ -87,13 +88,6 @@ const config = {
             },
           },
         ],
-      },
-      {
-        test: /\.svg$/,
-        issuer: {
-          test: /\.js?$/,
-        },
-        use: ['@svgr/webpack', 'url-loader'],
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
