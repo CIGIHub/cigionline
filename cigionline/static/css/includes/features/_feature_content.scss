@@ -20,11 +20,15 @@
     font-size: 0.75em;
     margin-bottom: 0;
     text-transform: uppercase;
+
+    li {
+      color: $cigi-text-grey;
+    }
   }
 
   .feature-content-title {
     @include link($color: $black, $hover-color: $cigi-dark-pink);
-    margin-bottom: 0.5em;
+    margin-bottom: 0.25em;
   }
 
   .feature-content-subtitle {

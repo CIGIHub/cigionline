@@ -1,4 +1,5 @@
 .feature-content-large {
+  @include image-button($size: 10%);
   line-height: 1.25;
 
   .img-wrapper {
