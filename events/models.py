@@ -5,7 +5,6 @@ from core.models import (
     SearchablePageAbstract,
     ShareablePageAbstract,
 )
-from datetime import datetime
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
