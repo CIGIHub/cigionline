@@ -27,9 +27,11 @@ const config = {
     articlePage: './cigionline/static/pages/article_page/index.js',
     cigionline: './cigionline/static/index.js',
     multimediaListPage: './cigionline/static/pages/multimedia_list_page/index.js',
+    eventPage: './cigionline/static/pages/event_page/index.js',
     multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
     publicationListPage: './cigionline/static/pages/publication_list_page/index.js',
     publicationPage: './cigionline/static/pages/publication_page/index.js',
+    themeLongform: './cigionline/static/themes/longform/index.js',
   },
 
   devtool: 'source-map',

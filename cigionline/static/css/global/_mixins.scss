@@ -79,7 +79,28 @@
     }
 
     img {
-      transition: opacity .2s ease;
+      transition: opacity 0.2s ease;
+    }
+  }
+}
+
+// VIDEOS
+
+@mixin video-aspect-ratio($width, $height) {
+  .video-wrapper {
+    overflow: hidden;
+    padding-top: ($height / $width) * 100%;
+    position: relative;
+    width: 100%;
+
+    > iframe {
+      bottom: 0;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
     }
   }
 }

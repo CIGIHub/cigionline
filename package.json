@@ -13,7 +13,7 @@
     "node": "^12"
   },
   "scripts": {
-    "build:prod": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress",
+    "build": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress",
     "lint:js": "eslint . --ext .js",
     "lint:sass": "sass-lint -c .sass-lint.yml 'cigionline/static/css/**/*.scss' -v -q --max-warnings 0",
     "start": "cross-env NODE_ENV=development webpack --mode development --progress --watch"
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.12.10",
-    "@babel/preset-env": "7.12.10",
+    "@babel/preset-env": "7.12.11",
     "@babel/preset-react": "7.12.10",
     "autoprefixer": "9.8.6",
     "babel-eslint": "10.1.0",
