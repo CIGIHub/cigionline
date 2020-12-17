@@ -1,8 +1,4 @@
 .featured-medium {
-  @include media-breakpoint-up(md) {
-    flex-direction: row;
-  }
-  flex-direction: column;
   justify-content: space-between;
 
   hr {
@@ -13,5 +9,8 @@
 }
 
 .feature-content-medium {
-  @include image-button($size: 40px);
+  @include image-button($size: 15vw);
+  @include media-breakpoint-up(md) {
+    @include image-button($size: 3em);
+  }
 }

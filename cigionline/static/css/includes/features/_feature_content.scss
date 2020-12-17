@@ -37,3 +37,14 @@
     margin: 1em 0;
   }
 }
+
+section {
+  &.featured {
+    .row {
+      @include media-breakpoint-up(md) {
+        flex-direction: row;
+      }
+      flex-direction: column;
+    }
+  }
+}
