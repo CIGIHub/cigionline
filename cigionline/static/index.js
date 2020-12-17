@@ -1,6 +1,8 @@
 import 'bootstrap/dist/js/bootstrap.bundle';
 import './css/cigionline.scss';
 
+import addInlineVideoActions from './js/inline_video_block';
+
 // MAIN NAVIGATION SCROLL
 $(function() {
   let scrollTop = 0;
@@ -36,3 +38,5 @@ $(document).ready(function() {
     e.stopPropagation();
   });
 });
+
+addInlineVideoActions();

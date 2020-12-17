@@ -233,6 +233,12 @@ class ArticlePage(
             self.ArticleTypes.OPINION,
         ]
 
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/article_page.html'
+        return standard_template
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
