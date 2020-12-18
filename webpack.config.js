@@ -23,12 +23,13 @@ const config = {
   context: __dirname,
 
   entry: {
+    articleLandingPage: './cigionline/static/pages/article_landing_page/index.js',
     articlePage: './cigionline/static/pages/article_page/index.js',
     cigionline: './cigionline/static/index.js',
+    multimediaListPage: './cigionline/static/pages/multimedia_list_page/index.js',
     eventPage: './cigionline/static/pages/event_page/index.js',
-    multimediaListPage: './cigionline/static/multimedia_list_page.js',
     multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
-    publicationListPage: './cigionline/static/publication_list_page.js',
+    publicationListPage: './cigionline/static/pages/publication_list_page/index.js',
     publicationPage: './cigionline/static/pages/publication_page/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',
   },

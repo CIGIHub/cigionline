@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags webpack_loader %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -26,4 +26,14 @@
       </div>
     </div>
   </section>
+  <section>
+    <div class="container-lg">
+      <div id="opinions-search-table">
+      </div>
+    </div>
+  </section>
 {% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'articleLandingPage' %}
+{% endblock %}
