@@ -4,5 +4,41 @@
 {% block body_class %}template-homepage{% endblock %}
 
 {% block content %}
-  <p>hello world</p>
+  <section class="featured">
+    <div class="container-lg">
+      <div class="row">
+        <div class="col-md-8">
+          {% for content in page.featured_content.all %}
+          {% if forloop.counter == 1 %}
+          {% include 'includes/features/feature_content_large.html' with content=content.content_page.specific %}
+          {% endif %}
+          {% endfor %}
+        </div>
+        <hr>
+        <div class="col-md-4 flex-column featured-small">
+          {% for content in page.featured_content.all %}
+            {% if forloop.counter < 6 %}
+              {% if forloop.counter != 1 %}
+                <hr>
+              {% endif %}
+            {% include 'includes/features/feature_content_small.html' with content=content.content_page.specific %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <hr>
+      <div class="row featured-medium">
+        {% for content in page.featured_content.all %}
+          {% if forloop.counter < 4 %}
+            {% if forloop.counter != 1 %}
+              <hr>
+            {% endif %}
+            <div class="col-md">
+                {% include 'includes/features/feature_content_medium.html' with content=content.content_page.specific %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 {% endblock content %}
