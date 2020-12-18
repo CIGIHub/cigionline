@@ -201,6 +201,13 @@ class SpeakersBlock(blocks.PageChooserBlock):
         label = 'Speakers'
 
 
+class ExternalSpeakersBlock(blocks.CharBlock):
+       class Meta:
+        icon = 'edit'
+        label = 'External Speakers'
+        template = template = 'streams/external_speakers_block.html'
+
+
 class TextBorderBlock(blocks.StructBlock):
     """Text box with border and optional colour for border """
 
