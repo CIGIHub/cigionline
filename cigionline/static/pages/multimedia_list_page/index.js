@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MultimediaListing from './js/components/MultimediaListing';
-import SearchTable from './js/components/SearchTable';
+import MultimediaListing from '../../js/components/MultimediaListing';
+import SearchTable from '../../js/components/SearchTable';
 
 ReactDOM.render(
   <SearchTable

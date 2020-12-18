@@ -207,6 +207,7 @@ class SearchTable extends React.Component {
       containerClass,
       filterTypes,
       RowComponent,
+      searchPlaceholder,
       showSearch,
       tableColumns,
     } = this.props;
@@ -223,7 +224,7 @@ class SearchTable extends React.Component {
                       type="text"
                       className="form-control"
                       value={searchValue}
-                      placeholder="Search"
+                      placeholder={searchPlaceholder}
                       onChange={this.handleSearchValueChange}
                     />
                     <div className="input-group-append">
@@ -254,7 +255,7 @@ class SearchTable extends React.Component {
                     </div>
                   </div>
                 </div>
-                {filterTypes && (
+                {!!filterTypes.length && (
                   <div className="col-md-3 position-relative">
                     <div className="dropdown custom-dropdown">
                       <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -351,6 +352,7 @@ SearchTable.propTypes = {
   })),
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
+  searchPlaceholder: PropTypes.string,
   showSearch: PropTypes.bool,
   tableColumns: PropTypes.arrayOf(PropTypes.shape({
     colSpan: PropTypes.number,
@@ -362,6 +364,7 @@ SearchTable.defaultProps = {
   blockListing: false,
   filterTypes: [],
   limit: 24,
+  searchPlaceholder: 'Search',
   showSearch: false,
   tableColumns: [],
 };

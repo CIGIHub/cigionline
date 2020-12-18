@@ -284,6 +284,11 @@ class ThemeablePageAbstract(models.Model):
         classname='collapsible collapsed',
     )
 
+    def get_theme_dir(self):
+        if self.theme:
+            return self.theme.name.lower().replace(' ', '_').replace("-", '_')
+        return ''
+
     class Meta:
         abstract = True
 
