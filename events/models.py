@@ -141,7 +141,7 @@ class EventPage(
     speakers = StreamField(
         [
             ('speaker', SpeakersBlock(required=True, page_type='people.PersonPage')),
-            ('external_speaker', ExternalSpeakersBlock(required=False)),
+            ('external_speaker', ExternalSpeakersBlock()),
         ],
         blank=True,
     )
