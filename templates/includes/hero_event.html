@@ -7,9 +7,25 @@
           {% include "includes/topics.html" with topics=self.topics %}
           <h1>{{ title }}</h1>
 
-          <div class="meta">{{ date|date:"l, F j, Y g:i A" }} - {{ end_date|date:"g:i A" }}</div>
-          <div class="meta">{{ event_access }}{% if type|length > 1 %}: {{ event_type }}{% endif %}</div>
-          <div class="meta speakers">Speakers: <div class="custom-text-list">{{ speakers }}</div></div>
+          <div class="meta">{{ date|date:"l, F j, Y g:i A" }}
+            {% if end_date != None %} -
+              {% if date|date:"U" < end_date|date:"U" %}
+                {% if date|date:"l F j" == end_date|date:"l F j" %}
+                  {{ end_date|date:"g:i A" }}
+                {% else %}
+                  {{ end_date|date:"l, F j, Y g:i A" }}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </div>
+
+          {% if event_access|length > 1 or type|length > 1 %}
+            <div class="meta">{{ event_access }} Event{% if event_type|length > 1 %}: {{ event_type }}{% endif %}</div>
+          {% endif %}
+
+          {% if speakers|length > 1 %}
+            <div class="meta speakers">Speakers: <div class="custom-text-list">{{ speakers }}</div></div>
+          {% endif %}
 
           <ul class="event-registration inline-list">
             {% if registration_url|length > 0 %}
