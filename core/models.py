@@ -562,6 +562,9 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     )
     year = models.IntegerField(validators=[MinValueValidator(2005), MaxValueValidator(2050)])
 
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
