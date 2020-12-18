@@ -1,0 +1,49 @@
+@import '../../../css/global/variables';
+
+.publication-book-metadata {
+  border-top: 1px solid $cigi-light-grey;
+  columns: 2;
+  list-style-type: none;
+  padding-top: 2em;
+
+  li {
+    font-size: 0.8em;
+
+    span {
+      color: $cigi-text-grey;
+    }
+  }
+}
+
+.publication-book-trailer {
+  .publication-book-trailer-embed {
+    margin-top: .5em;
+
+    iframe {
+      width: 100%;
+    }
+  }
+}
+
+.publication-part-of-series {
+  article {
+    h3 {
+      font-size: 1.3em;
+      font-weight: 400;
+
+      a {
+        color: $black;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
+  h2 {
+    color: $cigi-text-grey;
+    font-size: 0.75em;
+    text-transform: uppercase;
+  }
+}

@@ -1,9 +1,11 @@
+from articles.views import OpinionPageViewSet
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from multimedia.views import MultimediaPageViewSet
 from publications.views import PublicationPageViewSet
+from research.views import TopicPageViewSet
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.core import urls as wagtail_urls
@@ -14,7 +16,9 @@ from search import views as search_views
 api_router = WagtailAPIRouter('wagtailapi')
 
 api_router.register_endpoint('multimedia', MultimediaPageViewSet)
+api_router.register_endpoint('opinions', OpinionPageViewSet)
 api_router.register_endpoint('publications', PublicationPageViewSet)
+api_router.register_endpoint('topics', TopicPageViewSet)
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),

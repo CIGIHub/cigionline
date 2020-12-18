@@ -1,12 +1,35 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags core_tags %}
+{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block content %}
 
   {% include "includes/hero_event.html" with topics=self.topics title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display speakers=self.speakers registration_url=self.registration_url %}
+
+  {% if self.image_hero %}
+    <figure class="container-sm event-image-hero">
+      {% image self.image_hero width-1280 %}
+      {% if self.image_hero.title %}
+        <figcaption>
+          {{ self.image_hero.title }}
+        </figcaption>
+      {% endif %}
+    </figure>
+  {% endif %}
+
+  {% if self.body %}
+    <section class="body">
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
 
   {% if self.speakers|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.speakers title_override="Event Speaker"%}
   {% endif %}
 
 {% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'eventPage' %}
+{% endblock extra_bundles %}

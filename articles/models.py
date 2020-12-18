@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import AuthorBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -16,6 +17,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     PageChooserBlock,
@@ -24,6 +26,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
 
 
@@ -136,7 +139,7 @@ class ArticlePage(
     )
     authors = StreamField(
         [
-            ('author', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
             ('external_author', CharBlock(required=True)),
         ],
         blank=True,
@@ -227,6 +230,18 @@ class ArticlePage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def is_opinion(self):
+        return self.article_type in [
+            self.ArticleTypes.OP_ED,
+            self.ArticleTypes.OPINION,
+        ]
+
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/article_page.html'
+        return standard_template
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -296,15 +311,27 @@ class ArticlePage(
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
     ]
-
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields \
+        + [index.FilterField('article_type')]
+
+    api_fields = [
+        APIField('article_type'),
+        APIField('authors'),
+        APIField('publishing_date'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
     ]
 
     parent_page_types = ['articles.ArticleListPage']
