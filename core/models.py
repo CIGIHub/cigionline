@@ -37,6 +37,21 @@ from wagtail.search import index
 class HomePage(Page):
     """Singleton model for the home page."""
 
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                )
+            ],
+            heading='Featured Content',
+            classname='collapsible collapsed',
+        )
+    ]
+
     max_count = 1
     subpage_types = [
         'articles.ArticleLandingPage',
@@ -59,6 +74,28 @@ class HomePage(Page):
 
     class Meta:
         verbose_name = 'Home Page'
+
+
+class HomePageFeaturedPage(Orderable):
+    home_page = ParentalKey(
+        'core.HomePage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            ['wagtailcore.Page'],
+        ),
+    ]
 
 
 class BasicPageAbstract(models.Model):
