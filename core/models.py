@@ -77,18 +77,6 @@ class HomePage(Page):
         MultiFieldPanel(
             [
                 InlinePanel(
-                    'featured_events',
-                    max_num=3,
-                    min_num=0,
-                    label='Event',
-                ),
-            ],
-            heading='Featured Events',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
                     'featured_experts',
                     max_num=3,
                     min_num=0,
