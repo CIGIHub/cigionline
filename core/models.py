@@ -73,6 +73,18 @@ class HomePage(Page):
             ],
             heading='Featured Multimedia',
             classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_events',
+                    max_num=3,
+                    min_num=0,
+                    label='Event',
+                )
+            ],
+            heading='Featured Events',
+            classname='collapsible collapsed',
         )
     ]
 
@@ -140,6 +152,28 @@ class HomePageHighlightPage(Orderable):
         PageChooserPanel(
             'highlight_page',
             ['articles.ArticleSeriesPage', 'publications.PublicationPage'],
+        ),
+    ]
+
+
+class HomePageFeaturedEvents(Orderable):
+    home_page = ParentalKey(
+        'core.HomePage',
+        related_name='featured_events',
+    )
+    featured_event = models.ForeignKey(
+        'events.EventPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Event',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_event',
+            ['events.EventPage'],
         ),
     ]
 
