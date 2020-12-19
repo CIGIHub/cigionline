@@ -49,6 +49,18 @@ class HomePage(Page):
             ],
             heading='Featured Content',
             classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'highlight_pages',
+                    max_num=12,
+                    min_num=0,
+                    label='Page',
+                )
+            ],
+            heading='Highlights',
+            classname='collapsible collapsed',
         )
     ]
 
@@ -94,6 +106,28 @@ class HomePageFeaturedPage(Orderable):
         PageChooserPanel(
             'featured_page',
             ['wagtailcore.Page'],
+        ),
+    ]
+
+
+class HomePageHighlightPage(Orderable):
+    home_page = ParentalKey(
+        'core.HomePage',
+        related_name='highlight_pages',
+    )
+    highlight_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Highlight',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'highlight_page',
+            ['articles.ArticleSeriesPage', 'publications.PublicationPage'],
         ),
     ]
 
