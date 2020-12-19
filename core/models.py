@@ -45,7 +45,7 @@ class HomePage(Page):
                     max_num=9,
                     min_num=0,
                     label='Page',
-                )
+                ),
             ],
             heading='Featured Content',
             classname='collapsible collapsed',
@@ -57,7 +57,7 @@ class HomePage(Page):
                     max_num=12,
                     min_num=0,
                     label='Page',
-                )
+                ),
             ],
             heading='Highlights',
             classname='collapsible collapsed',
@@ -69,7 +69,7 @@ class HomePage(Page):
                     max_num=12,
                     min_num=0,
                     label='Multimedia',
-                )
+                ),
             ],
             heading='Featured Multimedia',
             classname='collapsible collapsed',
@@ -81,11 +81,23 @@ class HomePage(Page):
                     max_num=3,
                     min_num=0,
                     label='Event',
-                )
+                ),
             ],
             heading='Featured Events',
             classname='collapsible collapsed',
-        )
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_experts',
+                    max_num=3,
+                    min_num=0,
+                    label='Expert',
+                ),
+            ],
+            heading='Featured Experts',
+            classname='collapsible collapsed',
+        ),
     ]
 
     max_count = 1
@@ -156,24 +168,24 @@ class HomePageHighlightPage(Orderable):
     ]
 
 
-class HomePageFeaturedEvents(Orderable):
+class HomePageFeaturedExperts(Orderable):
     home_page = ParentalKey(
         'core.HomePage',
-        related_name='featured_events',
+        related_name='featured_experts',
     )
-    featured_event = models.ForeignKey(
-        'events.EventPage',
+    featured_expert = models.ForeignKey(
+        'people.PersonPage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
         related_name='+',
-        verbose_name='Event',
+        verbose_name='Expert',
     )
 
     panels = [
         PageChooserPanel(
-            'featured_event',
-            ['events.EventPage'],
+            'featured_expert',
+            ['people.PersonPage'],
         ),
     ]
 
