@@ -1,0 +1,29 @@
+@import '../../../css/global/variables';
+@import '../../../css/global/mixins';
+@import './big_tech_s3_article';
+@import './big_tech_s3_multimedia';
+
+$bigtech-s3-red: #d9553e;
+
+.big-tech-s3-theme {
+  font-family: nunito-sans, sans-serif;
+
+  h2 {
+    color: $bigtech-s3-red;
+    font-size: 1em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+  }
+
+  a {
+    color: $bigtech-s3-red;
+
+    &:hover {
+      color: $cigi-dark-grey;
+    }
+  }
+
+  p {
+    font-size: 0.875em;
+  }
+}

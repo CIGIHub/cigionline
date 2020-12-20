@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
+{% endblock extra_fonts %}
+
+{% block body_class %}big-tech-s3-theme big-tech-s3-multimedia{% endblock %}
+
+{% block header %}
+
+{% endblock header %}
+
+{% block content %}
+  <section class="body">
+    <div class="container-sm">
+      <h2>Episode Description</h2>
+    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'themeBigTechS3' %}
+{% endblock extra_bundles %}
