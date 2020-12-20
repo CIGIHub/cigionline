@@ -17,7 +17,34 @@
     h1 {
       color: $white;
       font-weight: 400;
-      margin-bottom: 1em;
+    }
+
+    .date,
+    .multimedia-meta {
+      @include link($color: $white, $hover-color: $cigi-pink);
+
+      color: $white;
+      font-size: 1.125em;
+      margin-bottom: 0.25em;
+
+      span {
+        &:not(:only-child) {
+          &::after {
+            content: ', ';
+            margin-right: 2px;
+          }
+        }
+
+        &:last-child {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .social-share-list {
+      margin-top: 2em;
     }
 
     .topics {
