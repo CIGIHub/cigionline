@@ -2,7 +2,7 @@
 {% load wagtailcore_tags webpack_loader %}
 
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title %}
+  {% include "includes/hero_multimedia.html" with title=self.title topics=self.topics %}
 
   {% if page.body %}
     <section class="body">
