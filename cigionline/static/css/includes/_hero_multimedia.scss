@@ -3,6 +3,7 @@
     opacity: 0;
     transform: translateY(-100%);
   }
+
   100% {
     opacity: 0.9;
     transform: translateY(0);
@@ -61,8 +62,8 @@
     }
 
     .topics {
-      margin: 0;
       justify-content: center;
+      margin: 0;
 
       li {
         @include link($color: $white, $hover-color: $cigi-pink);
