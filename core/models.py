@@ -55,48 +55,10 @@ class HomePage(Page):
         'research.ProjectListPage',
         'research.TopicListPage'
     ]
-
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_content',
-                    max_num=15,
-                    min_num=13,
-                    label='Content',
-                )
-            ],
-            heading='Featured Content',
-            classname='collapsible collapsed',
-        )
-    ]
-
     templates = 'core/home_page.html'
 
     class Meta:
         verbose_name = 'Home Page'
-
-
-class HomePageFeaturedContent(Orderable):
-    home_page = ParentalKey(
-        'core.HomePage',
-        related_name='featured_content',
-    )
-    content_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Content',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'content_page',
-            ['wagtailcore.Page'],
-        ),
-    ]
 
 
 class BasicPageAbstract(models.Model):
