@@ -12,7 +12,7 @@ function PublicationListing(props) {
           Title
         </div>
         <div className="table-infos-wrapper">
-          <span className="table-icon">
+          <span className="table-icon icon-publication">
             <i className="fal fa-file-alt" />
           </span>
           <div className="table-infos">

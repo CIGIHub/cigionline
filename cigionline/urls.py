@@ -1,3 +1,4 @@
+from articles.views import OpinionPageViewSet
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -17,6 +18,7 @@ api_router = WagtailAPIRouter('wagtailapi')
 
 api_router.register_endpoint('events', EventPageViewSet)
 api_router.register_endpoint('multimedia', MultimediaPageViewSet)
+api_router.register_endpoint('opinions', OpinionPageViewSet)
 api_router.register_endpoint('publications', PublicationPageViewSet)
 api_router.register_endpoint('topics', TopicPageViewSet)
 

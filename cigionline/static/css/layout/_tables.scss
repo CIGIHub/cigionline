@@ -55,6 +55,10 @@ table {
       td {
         padding: 1em 0.625em;
 
+        &:first-child {
+          padding-left: 0;
+        }
+
         .table-mobile-text {
           display: none;
         }
@@ -87,6 +91,10 @@ table {
         }
 
         .table-icon {
+          @include media-breakpoint-down(sm) {
+            display: none;
+          }
+
           align-items: center;
           border: 1px solid;
           border-radius: 100%;
@@ -94,6 +102,7 @@ table {
           flex: 0 0 2em;
           height: 2em;
           justify-content: center;
+          margin-right: 0.625em;
           width: 2em;
 
           &.icon-event {
@@ -105,19 +114,16 @@ table {
           &.icon-opinion {
             border-color: $color-opinion;
             color: $color-opinion;
-            margin-right: 1em;
           }
 
           &.icon-publication {
             border-color: $color-publication;
             color: $color-publication;
-            margin-right: 1em;
           }
 
           &.icon-media {
             border-color: $color-media;
             color: $color-media;
-            margin-right: 1em;
           }
         }
 
@@ -247,18 +253,6 @@ table {
             }
           }
         }
-      }
-    }
-
-    .table-icon {
-      border-color: $cigi-pink;
-      color: $cigi-pink;
-      margin-right: 1.25em;
-    }
-
-    @include media-breakpoint-down(sm) {
-      .table-icon {
-        display: none;
       }
     }
   }

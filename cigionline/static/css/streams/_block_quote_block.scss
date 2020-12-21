@@ -1,4 +1,6 @@
 .stream-block-blockquote {
+  padding: 1em 0;
+
   blockquote {
     color: $cigi-dark-grey;
     font-size: 1.5em;
@@ -8,9 +10,9 @@
   img {
     @include media-breakpoint-up(sm) {
       display: block;
-      height: auto;
+      height: 150px;
       margin: 0.625em 0.625em 0 0;
-      width: 200px;
+      width: 150px;
     }
 
     display: none;
@@ -18,7 +20,7 @@
 
   .stream-block-blockquote-content {
     margin-left: 0;
-    padding: 1em 2em;
+    padding: 1em 2em 0;
     position: relative;
 
     &.has-image {
@@ -41,8 +43,14 @@
       width: 5em;
     }
 
+    .stream-block-blockquote-author {
+      font-size: 1em;
+      font-weight: 700;
+      line-height: 1;
+    }
+
     .stream-block-blockquote-author-title {
-      @include image-caption;
+      font-size: 1em;
     }
   }
 }
