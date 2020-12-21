@@ -3,6 +3,7 @@
 
   .stream-block-inline-video-content {
     @include hover-darken;
+    @include image-button($size: 40px);
     border-bottom: 1px solid $cigi-light-grey;
     border-top: 1px solid $cigi-light-grey;
     padding: 1em 0;
