@@ -37,6 +37,57 @@ from wagtail.search import index
 class HomePage(Page):
     """Singleton model for the home page."""
 
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featured Content',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'highlight_pages',
+                    max_num=12,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Highlights',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_multimedia',
+                    max_num=12,
+                    min_num=0,
+                    label='Multimedia',
+                ),
+            ],
+            heading='Featured Multimedia',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_experts',
+                    max_num=3,
+                    min_num=0,
+                    label='Expert',
+                ),
+            ],
+            heading='Featured Experts',
+            classname='collapsible collapsed',
+        ),
+    ]
+
     max_count = 1
     subpage_types = [
         'articles.ArticleLandingPage',
@@ -59,6 +110,94 @@ class HomePage(Page):
 
     class Meta:
         verbose_name = 'Home Page'
+
+
+class HomePageFeaturedPage(Orderable):
+    home_page = ParentalKey(
+        'core.HomePage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            ['wagtailcore.Page'],
+        ),
+    ]
+
+
+class HomePageHighlightPage(Orderable):
+    home_page = ParentalKey(
+        'core.HomePage',
+        related_name='highlight_pages',
+    )
+    highlight_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Highlight',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'highlight_page',
+            ['articles.ArticleSeriesPage', 'publications.PublicationPage'],
+        ),
+    ]
+
+
+class HomePageFeaturedExperts(Orderable):
+    home_page = ParentalKey(
+        'core.HomePage',
+        related_name='featured_experts',
+    )
+    featured_expert = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Expert',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_expert',
+            ['people.PersonPage'],
+        ),
+    ]
+
+
+class HomePageFeaturedMultimedia(Orderable):
+    home_page = ParentalKey(
+        'core.HomePage',
+        related_name='featured_multimedia',
+    )
+    featured_multimedia = models.ForeignKey(
+        'multimedia.MultimediaPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Multimedia',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_multimedia',
+            ['multimedia.MultimediaPage'],
+        ),
+    ]
 
 
 class BasicPageAbstract(models.Model):
@@ -524,6 +663,9 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         help_text='Internal path to the interactive report. Example: /interactives/2019annualreport',
     )
     year = models.IntegerField(validators=[MinValueValidator(2005), MaxValueValidator(2050)])
+
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
