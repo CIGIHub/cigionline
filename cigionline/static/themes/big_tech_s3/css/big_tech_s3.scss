@@ -115,4 +115,20 @@ $bigtech-s3-red: #d9553e;
       }
     }
   }
+
+  .big-tech-hero {
+    background-image: url('../../../assets/bigtech_s3_background.png');
+    background-position: top;
+
+    .big-tech-mm-hero {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      .big-tech-headshot {
+        padding-left: 2em;
+        width: 33%;
+      }
+    }
+  }
 }

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
@@ -9,7 +9,16 @@
 {% block body_class %}big-tech-s3-theme big-tech-s3-multimedia{% endblock %}
 
 {% block header %}
-  {% include "./includes/top_bar.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+  <div class="big-tech-hero">
+    {% include "./includes/top_bar.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+    <div class="container-lg big-tech-mm-hero">
+      <div>
+        {% include "includes/topics.html" with topics=self.topics %}
+        <h1>{{ self.title }}</h1>
+      </div>
+      {% image self.image_square width-600 class="big-tech-headshot" %}
+    </div>
+  </div>
 {% endblock header %}
 
 {% block content %}
