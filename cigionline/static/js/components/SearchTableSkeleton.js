@@ -32,7 +32,7 @@ function SearchTableSkeleton() {
                   <div className="table-title-link skeleton-blur skeleton-title">
                     {randomString(20, 50)}
                   </div>
-                  <div className="table-infos-date skeleton-blur skeleton-meta">
+                  <div className="table-infos-meta skeleton-blur skeleton-meta">
                     {randomString(12, 15)}
                   </div>
                 </div>
