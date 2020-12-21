@@ -1,4 +1,8 @@
 .feature-content-large {
+  @include image-button($size: 15vw);
+  @include media-breakpoint-up(md) {
+    @include image-button($size: 4em);
+  }
   line-height: 1.25;
 
   .img-wrapper {

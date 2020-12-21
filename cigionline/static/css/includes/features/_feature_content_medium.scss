@@ -1,0 +1,16 @@
+.featured-medium {
+  justify-content: space-between;
+
+  hr {
+    @include media-breakpoint-up(md) {
+      display: none;
+    }
+  }
+}
+
+.feature-content-medium {
+  @include image-button($size: 15vw);
+  @include media-breakpoint-up(md) {
+    @include image-button($size: 3em);
+  }
+}

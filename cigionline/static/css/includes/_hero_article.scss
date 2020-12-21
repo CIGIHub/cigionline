@@ -1,12 +1,13 @@
 section {
   &.article-hero {
     @include breakpoint($medium) {
-      padding-top: 3em;
+      padding-top: 6em;
     }
 
     background-color: transparent;
     color: $black;
     display: block;
+    padding-top: 3em;
     text-align: center;
 
     h1 {

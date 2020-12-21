@@ -3,26 +3,40 @@
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section class="home-featured">
+  <section class="featured">
     <div class="container-lg">
       <div class="row">
         <div class="col-md-8">
           {% for article in page.featured_articles.all %}
           {% if forloop.counter == 1 %}
-          {% include 'includes/features/feature_content_large.html' with content=article.article_page %}
+          {% include 'includes/features/feature_content_large.html' with content=article.article_page.specific %}
           {% endif %}
           {% endfor %}
         </div>
-        <div class="featured-small-column col-md-4 flex-column">
+        <hr>
+        <div class="col-md-4 flex-column featured-small">
           {% for article in page.featured_articles.all %}
             {% if forloop.counter < 6 %}
               {% if forloop.counter != 1 %}
-                <hr />
+                <hr>
               {% endif %}
-            {% include 'includes/features/feature_content_small.html' with content=article.article_page %}
+            {% include 'includes/features/feature_content_small.html' with content=article.article_page.specific %}
             {% endif %}
           {% endfor %}
         </div>
+      </div>
+      <hr>
+      <div class="row featured-medium">
+        {% for article in page.featured_articles.all %}
+          {% if forloop.counter < 4 %}
+            {% if forloop.counter != 1 %}
+              <hr>
+            {% endif %}
+            <div class="col-md">
+                {% include 'includes/features/feature_content_medium.html' with content=article.article_page.specific %}
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
   </section>
