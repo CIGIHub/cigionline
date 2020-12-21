@@ -19,7 +19,7 @@ function PublicationListing(props) {
             <a href={row.url} className="table-title-link">
               {row.title}
             </a>
-            <div className="table-infos-date">
+            <div className="table-infos-meta">
               {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
             </div>
           </div>
