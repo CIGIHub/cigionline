@@ -1,7 +1,7 @@
 @import '../../../css/global/variables';
 @import '../../../css/global/mixins';
 
-.multimedia-hero {
+.mm-hero {
   background-color: $black;
   padding-bottom: 1em;
   padding-top: 4em;
@@ -11,7 +11,7 @@
     padding-top: 6em;
   }
 
-  .multimedia-hero-content {
+  .mm-hero-content {
     text-align: center;
 
     h1 {
@@ -20,7 +20,7 @@
     }
 
     .date,
-    .multimedia-meta {
+    .mm-meta {
       @include link($color: $white, $hover-color: $cigi-pink);
 
       color: $white;
@@ -63,30 +63,89 @@
     }
   }
 
-  .multimedia-hero-video {
-    display: flex;
+  .mm-video-container {
+    &.sticky-video {
+      max-width: 100%;
+      padding: 0;
 
-    .multimedia-hero-video-embed {
-      position: relative;
-      width: 100%;
-
-      &::after {
-        content: '';
-        display: block;
-        padding-bottom: 56.25%;
-      }
-
-      iframe {
-        bottom: 0;
-        // display: block;
-        height: 100%;
+      .mm-video-header {
+        animation: slide-down 0.3s;
+        background-color: $black;
+        height: 200px;
         left: 0;
-        margin: 0;
-        max-width: 100%;
-        position: absolute;
-        right: 0;
+        position: fixed;
         top: 0;
         width: 100%;
+        z-index: 5;
+
+        .mm-hero-video {
+          height: 100%;
+
+          .mm-hero-video-embed {
+            height: 100%;
+            width: 300px;
+          }
+
+          .mm-hero-video-content {
+            display: flex;
+          }
+        }
+      }
+    }
+
+    .mm-video-header {
+      .mm-hero-video {
+        display: flex;
+
+        .mm-hero-video-embed {
+          position: relative;
+          width: 100%;
+
+          &::after {
+            content: '';
+            display: block;
+            padding-bottom: 56.25%;
+          }
+
+          iframe {
+            height: 100%;
+            left: 0;
+            margin: 0;
+            max-width: 100%;
+            position: absolute;
+            top: 0;
+            width: 100%;
+          }
+        }
+
+        .mm-hero-video-content {
+          align-items: flex-start;
+          display: none;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 1.5em 2em;
+          text-align: left;
+
+          h1 {
+            color: $white;
+            font-size: 2em;
+            font-weight: 400;
+          }
+
+          .social-share-list {
+            justify-content: flex-start;
+            margin: 0;
+          }
+
+          .topics {
+            margin-bottom: 0;
+
+            li {
+              @include link($color: $white, $hover-color: $cigi-pink);
+              color: $white;
+            }
+          }
+        }
       }
     }
   }
