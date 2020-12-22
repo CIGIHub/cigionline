@@ -10,7 +10,11 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import SpeakersBlock
+from streams.blocks import (
+    AccordionBlock,
+    ReadMoreBlock,
+    SpeakersBlock,
+)
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -187,14 +191,8 @@ class MultimediaPage(
     )
     transcript = StreamField(
         [
-            ('accordion', StructBlock([
-                ('title', CharBlock(required=True)),
-                ('text', RichTextBlock(required=True)),
-            ])),
-            ('read_more', StructBlock([
-                ('title', CharBlock(required=True)),
-                ('text', RichTextBlock(required=True)),
-            ])),
+            ('accordion', AccordionBlock()),
+            ('read_more', ReadMoreBlock()),
         ],
         blank=True,
     )
