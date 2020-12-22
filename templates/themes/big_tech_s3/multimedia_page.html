@@ -24,6 +24,31 @@
             {{ self.title }}
           {% endif %}
         </h1>
+        {% if self.multimedia_url and self.multimedia_type == 'audio' and 'player.simplecast.com' in self.multimedia_url %}
+          <div class="simplecast-container">
+            <div class="simplecast-header">
+              <div class="simplecast-header-content">
+                <div>
+                  <div class="simplecast-header-meta">
+                    {% if self.podcast_season %}
+                      <span class="season">Season {{ self.podcast_season }}</span>
+                    {% endif %}
+                    {% if self.podcast_episode %}
+                      <span class="episode">Episode {{ self.podcast_episode }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="simplecast-header-title">
+                    {{ self.title }}
+                  </div>
+                </div>
+                {% include "includes/social_links.html" with title=self.title no_circle=True %}
+              </div>
+              <div class="simplecast-embed">
+                {% include "includes/simplecast_embed.html" with simplecast_url=self.multimedia_url %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
         <div class="subtitle">
           {{ self.subtitle|richtext }}
         </div>
