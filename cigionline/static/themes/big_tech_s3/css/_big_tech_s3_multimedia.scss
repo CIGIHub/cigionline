@@ -22,8 +22,13 @@
     }
 
     .big-tech-headshot {
+      display: none;
       padding-left: 2em;
       width: 33%;
+
+      @media screen and (min-width: $medium) {
+        display: block;
+      }
     }
 
     .meta {
