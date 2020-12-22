@@ -21,6 +21,21 @@
       {% include_block block %}
     {% endfor %}
   </section>
+  {% if self.companion_essay %}
+    <section class="big-tech-s3-companion-essay">
+      <div class="container-sm companion-essay">
+        <div class="essay-details">
+          <h2>Opinion</h2>
+          <article>
+            <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
+          </article>
+        </div>
+        <a href="{{ self.companion_essay.url }}">
+          Read
+        </a>
+      </div>
+    </section>
+  {% endif %}
   <section class="multimedia-disclaimer-section">
     {% include 'includes/multimedia_disclaimer.html' %}
     {% include 'includes/opinion_disclaimer.html' %}

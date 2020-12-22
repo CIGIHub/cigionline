@@ -1,4 +1,30 @@
 .big-tech-s3-theme {
+  .big-tech-s3-companion-essay {
+    background-color: $bigtech-s3-red;
+    margin-bottom: 2em;
+
+    .companion-essay {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 2em;
+      padding-top: 2em;
+
+      .essay-details {
+        h2 {
+          color: $white;
+          font-size: 0.875em;
+          text-transform: uppercase;
+        }
+
+        h3 {
+          @include link($color: $white, $hover-color: $black);
+          color: $white;
+        }
+      }
+    }
+  }
+
   .multimedia-disclaimer-section {
     .opinion-disclaimer {
       font-size: 0.875em;
