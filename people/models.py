@@ -142,6 +142,7 @@ class PersonPage(
         blank=True,
         verbose_name='Full Biography'
     )
+    byline = RichTextField(blank=True, features=['bold', 'italic'],)
     curriculum_vitae = models.ForeignKey(
         'wagtaildocs.Document',
         null=True,
@@ -229,7 +230,8 @@ class PersonPage(
         MultiFieldPanel(
             [
                 FieldPanel('short_bio'),
-                StreamFieldPanel('body')
+                StreamFieldPanel('body'),
+                FieldPanel('byline'),
             ],
             heading='Biography',
             classname='collapsible collapsed'
