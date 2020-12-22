@@ -1,0 +1,14 @@
+<section class="recommended container-lg">
+  <div class="recommended-dot"></div>
+  <div class="recommended-vertical-line"></div>
+  <h2>Recommended</h2>
+  {% include "includes/footer_bracket.svg" %}
+
+  <div class="recommended-content-medium row">
+    {% for content in recommended %}
+      <div class="col-md">
+        {% include 'includes/features/feature_content_medium.html' with content=content.recommended_content_page.specific %}
+      </div>
+    {% endfor %}
+  </div>
+</section>

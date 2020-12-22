@@ -50,6 +50,8 @@
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
 
+  {% include 'includes/recommended.html' with recommended=self.recommended.all %}
+
 {% endblock content %}
 
 {% block extra_bundles %}
