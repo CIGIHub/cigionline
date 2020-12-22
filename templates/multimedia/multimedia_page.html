@@ -11,7 +11,13 @@
       {% endfor %}
     </section>
   {% endif %}
-
+  {% if self.transcript %}
+    <section>
+      {% for block in self.transcript %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
   {% if self.multimedia_series %}
     <div class="container-sm multimedia-series-block">
       <article>

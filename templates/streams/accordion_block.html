@@ -1,0 +1,14 @@
+{% load wagtailcore_tags %}
+
+<div class="container-sm">
+  <div class="stream-accordion-block">
+    <button type="button" data-toggle="collapse" data-target="#accordion-block-{{ self.id }}" aria-expanded="false" aria-controls="accordion-block-{{ self.id }}">
+      {{ self.title }}
+    </button>
+    <div class="collapse" id="accordion-block-{{ self.id }}">
+      <div class="card card-body">
+        {{ self.text|richtext }}
+      </div>
+    </div>
+  </div>
+</div>
