@@ -14,7 +14,7 @@
   {% if self.transcript %}
     <section>
       {% for block in self.transcript %}
-        {% include_block block %}
+        {% include_block block with id=block.id %}
       {% endfor %}
     </section>
   {% endif %}
