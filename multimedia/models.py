@@ -26,7 +26,6 @@ from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
-    RichTextBlock,
     StructBlock,
     TextBlock,
 )
