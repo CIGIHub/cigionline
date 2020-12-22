@@ -36,6 +36,7 @@ $bigtech-s3-red: #d9553e;
       align-items: center;
       display: flex;
       justify-content: space-between;
+      padding-bottom: 1.5em;
       padding-top: 1.5em;
 
       .big-tech-logo {
@@ -71,7 +72,6 @@ $bigtech-s3-red: #d9553e;
             content: '\f078';
             display: inline-flex;
             font-family: 'Font Awesome 5 Pro';
-            font-size: 0.75em;
             height: 100%;
             margin-left: 0;
             transform: rotate(0deg);
@@ -119,15 +119,64 @@ $bigtech-s3-red: #d9553e;
   .big-tech-hero {
     background-image: url('../../../assets/bigtech_s3_background.png');
     background-position: top;
+    margin-bottom: 3em;
 
     .big-tech-mm-hero {
       align-items: center;
       display: flex;
       justify-content: space-between;
+      padding-bottom: 3em;
+
+      h1 {
+        .podcast-guest {
+          font-size: 1.2em;
+          font-weight: 400;
+          text-transform: uppercase;
+        }
+
+        .podcast-subtitle {
+          color: $cigi-text-grey;
+          display: block;
+          font-size: 0.54em;
+          font-style: italic;
+          line-height: 1.35em;
+        }
+      }
 
       .big-tech-headshot {
         padding-left: 2em;
         width: 33%;
+      }
+
+      .meta {
+        font-size: 0.75em;
+      }
+
+      .social-share-list {
+        justify-content: flex-start;
+        margin: 0.5em 0;
+
+        a {
+          &:hover {
+            .fab {
+              color: $bigtech-teal;
+            }
+          }
+
+          .fab {
+            color: $cigi-dark-grey;
+          }
+        }
+      }
+
+      .subtitle {
+        font-size: 1.1em;
+        font-style: italic;
+      }
+
+      .topics {
+        @include link($color: $cigi-text-grey, $hover-color: $bigtech-teal);
+        margin: 0;
       }
     }
   }

@@ -9,6 +9,15 @@ ul {
       color: $cigi-light-grey;
       transition: color 0.5s ease;
 
+      &.no-stack {
+        margin-right: 1em;
+        padding: 0.2em 0.5em;
+
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+
       &:hover {
         color: $cigi-pink;
       }
