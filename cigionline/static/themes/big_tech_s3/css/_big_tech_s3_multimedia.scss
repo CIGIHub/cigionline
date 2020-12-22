@@ -21,6 +21,44 @@
           @include link($color: $white, $hover-color: $black);
           color: $white;
         }
+
+        .author {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+
+          &:hover {
+            .author-image-wrapper {
+              img {
+                opacity: 0.8;
+              }
+            }
+
+            p {
+              color: $black;
+            }
+          }
+
+          .author-image-wrapper {
+            background-color: $black;
+            border-radius: 50%;
+            height: 50px;
+            margin-right: 1em;
+            overflow: hidden;
+            width: 50px;
+
+            img {
+              opacity: 1;
+              transition: opacity 0.3s ease;
+            }
+          }
+
+          p {
+            color: $white;
+            margin: 0;
+            transition: color 0.3s ease;
+          }
+        }
       }
     }
   }

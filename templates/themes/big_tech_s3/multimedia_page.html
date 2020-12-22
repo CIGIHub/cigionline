@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
@@ -28,6 +28,18 @@
           <h2>Opinion</h2>
           <article>
             <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
+            {% for author in self.companion_essay.specific.authors %}
+              {% if author.block_type == 'author' %}
+                <a href="{{ author.value.url }}" class="author">
+                  <div class="author-image-wrapper">
+                    {% image author.value.image_square fill-100x100 %}
+                  </div>
+                  <div>
+                    {{ author.value.byline|richtext }}
+                  </div>
+                </a>
+              {% endif %}
+            {% endfor %}
           </article>
         </div>
         <a href="{{ self.companion_essay.url }}">
