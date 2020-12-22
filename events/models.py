@@ -14,6 +14,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core.blocks import CharBlock, PageChooserBlock
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
@@ -35,7 +36,7 @@ class EventListPage(BasicPageAbstract, Page):
                 InlinePanel(
                     'featured_events',
                     max_num=6,
-                    min_num=6,
+                    min_num=0,
                     label='Event',
                 ),
             ],
@@ -155,6 +156,11 @@ class EventPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def multimedia_url(self):
+        if self.multimedia_page:
+            return self.multimedia_page.url
+        return ''
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
@@ -227,6 +233,22 @@ class EventPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields
+
+    api_fields = [
+        APIField('event_access'),
+        APIField('location_city'),
+        APIField('location_country'),
+        APIField('multimedia_url'),
+        APIField('publishing_date'),
+        APIField('registration_url'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
     ]
 
     parent_page_types = ['events.EventListPage']
