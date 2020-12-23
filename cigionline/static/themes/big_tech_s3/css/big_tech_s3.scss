@@ -76,6 +76,7 @@ $bigtech-s3-red: #d9553e;
       a {
         background-color: $black;
         display: block;
+        position: relative;
 
         &:hover {
           img {
@@ -87,6 +88,19 @@ $bigtech-s3-red: #d9553e;
           filter: grayscale(100%);
           opacity: 1;
           transition: opacity 0.3s ease;
+        }
+
+        .play-icon {
+          align-items: center;
+          background-color: $bigtech-s3-red;
+          bottom: 0;
+          color: $white;
+          display: flex;
+          height: 40px;
+          justify-content: center;
+          position: absolute;
+          right: 0;
+          width: 40px;
         }
       }
     }

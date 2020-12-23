@@ -14,9 +14,14 @@
     {% endif %}
   </div>
   <div class="bt-recommended-image">
-    {% if article|page_type == 'opinion' and article.image_hero %}
+    {% if article|page_type|in_list:'multimedia,opinion' and article.image_hero %}
       <a href="{{ article.url }}">
         {% image article.image_hero width-300 %}
+        {% if article|page_type == 'multimedia' %}
+          <div class="play-icon">
+            <i class="fas fa-play"></i>
+          </div>
+        {% endif %}
       </a>
     {% endif %}
   </div>
