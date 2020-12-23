@@ -1,0 +1,15 @@
+.big-tech-s3-article {
+  .big-tech-recommended {
+    .bt-recommended-article {
+      border-bottom: 1px solid $cigi-light-grey;
+      margin-bottom: 2em;
+      padding-bottom: 2em;
+
+      &:last-child {
+        border-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+}
