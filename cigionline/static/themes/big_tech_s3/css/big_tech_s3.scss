@@ -5,6 +5,14 @@
 
 $bigtech-s3-red: #d9553e;
 
+@mixin slash($width: 5px, $height: 60px, $color: $black-alpha-40) {
+  border-right: 1px solid $color;
+  height: $height;
+  margin: 0 25px 0 28px;
+  transform: rotate(15deg);
+  width: $width;
+}
+
 .big-tech-s3-theme {
   font-family: nunito-sans, sans-serif;
 
@@ -29,5 +37,126 @@ $bigtech-s3-red: #d9553e;
 
   .body {
     margin-bottom: 2em;
+  }
+
+  .bt-footer {
+    background-color: $bigtech-s3-red;
+    padding: 4em 0;
+
+    .bt-footer-content {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      @media screen and (min-width: $medium) {
+        flex-direction: row;
+      }
+
+      p {
+        @include link($color: $white, $hover-color: $black);
+        font-size: 1em;
+        font-style: italic;
+        text-align: center;
+
+        @media screen and (min-width: $medium) {
+          text-align: left;
+        }
+
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      .about {
+        margin-top: 3em;
+
+        @media screen and (min-width: $medium) {
+          margin-top: 0;
+          max-width: 300px;
+        }
+      }
+
+      .cigi-logo {
+        svg {
+          fill: $white;
+          max-width: 120px;
+          width: 100%;
+
+          @media screen and (min-width: $medium) {
+            max-width: 200px;
+          }
+        }
+      }
+
+      .copyright {
+        margin: 0;
+        text-align: center;
+
+        span {
+          padding: 0 0.5em;
+        }
+      }
+
+      .spacer {
+        display: none;
+        margin: 0 2em;
+
+        @media screen and (min-width: $medium) {
+          display: block;
+        }
+
+        .slash {
+          @include slash($height: 150px, $color: $white);
+          margin: 0 55px;
+
+          @media screen and (max-width: $medium) {
+            height: 50px;
+          }
+
+          @media screen and (max-width: $large) {
+            margin: 0 2rem;
+          }
+        }
+      }
+
+      .subscribe {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1em;
+
+        @media screen and (min-width: $medium) {
+          justify-content: flex-start;
+        }
+
+        a {
+          display: block;
+          height: 25px;
+          margin-left: 2em;
+          width: 25px;
+
+          &:hover {
+            svg {
+              path {
+                fill: $black;
+              }
+            }
+          }
+
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+        }
+
+        p {
+          font-style: normal;
+          margin: 0;
+          text-transform: uppercase;
+        }
+      }
+    }
   }
 }

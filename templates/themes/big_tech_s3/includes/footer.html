@@ -1,0 +1,32 @@
+<footer class="bt-footer">
+  <div class="container-lg bt-footer-content">
+    <a href="/" class="cigi-logo">
+      {% include "includes/header_cigi_logo_large.svg" %}
+    </a>
+    <div class="spacer">
+      <div class="slash"></div>
+    </div>
+    <div class="about">
+      <div class="subscribe">
+        <p>Subscribe:</p>
+        <a href="{{ podcast_apple_url }}">
+          {% include "./apple_podcasts_sm.svg" %}
+        </a>
+        <a href="{{ podcast_spotify_url }}">
+          {% include "./spotify_podcasts_sm.svg" %}
+        </a>
+        <a href="{{ podcast_google_url }}">
+          {% include "./google_podcasts_sm.svg" %}
+        </a>
+      </div>
+      <p>
+        <em>Big Tech</em> is presented by the <a href="/">Centre for International Governance Innovation</a>.
+      </p>
+      <p class="copyright">
+        &copy; {% now "Y" %}
+        <span>/</span>
+        <a href="/privacy-policy">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+</footer>
