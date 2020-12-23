@@ -1,9 +1,19 @@
 @import '../../../css/global/variables';
 @import '../../../css/global/mixins';
+
+$bigtech-s3-red: #d9553e;
+
+@mixin slash($width: 5px, $height: 60px, $color: $black-alpha-40) {
+  border-right: 1px solid $color;
+  height: $height;
+  margin: 0 25px 0 28px;
+  transform: rotate(15deg);
+  width: $width;
+}
+
 @import './big_tech_s3_article';
 @import './big_tech_s3_multimedia';
 
-$bigtech-s3-red: #d9553e;
 
 .big-tech-s3-theme {
   font-family: nunito-sans, sans-serif;
