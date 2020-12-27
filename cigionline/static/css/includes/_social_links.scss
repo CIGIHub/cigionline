@@ -5,6 +5,28 @@ ul {
     list-style: none;
     margin-top: 1em;
 
+    &.no-stack {
+      li {
+        &:first-child {
+          a {
+            padding-left: 0;
+          }
+        }
+
+        &:last-child {
+          a {
+            margin-right: 0;
+            padding-right: 0;
+          }
+        }
+
+        a {
+          margin-right: 0.5em;
+          padding: 0.2em 0.5em;
+        }
+      }
+    }
+
     a {
       color: $cigi-light-grey;
       transition: color 0.5s ease;
