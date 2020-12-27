@@ -1,34 +1,427 @@
 @import '../../../css/global/variables';
 @import '../../../css/global/mixins';
+@import '../../../css/global/animations';
 
 $bigtech-s3-red: #d9553e;
+$bigtech-teal: #38bf8e;
+
+@mixin slash($width: 5px, $height: 60px, $color: $black-alpha-40) {
+  border-right: 1px solid $color;
+  height: $height;
+  margin: 0 25px 0 28px;
+  transform: rotate(15deg);
+  width: $width;
+}
 
 @import './big_tech_s3_article';
 @import './big_tech_s3_multimedia';
 
 .big-tech-s3-theme {
-  font-family: nunito-sans, sans-serif;
+  header,
+  main {
+    font-family: nunito-sans, sans-serif;
 
-  h2 {
-    color: $bigtech-s3-red;
-    font-size: 1em;
-    margin-bottom: 1em;
-    text-transform: uppercase;
-  }
+    h2 {
+      color: $bigtech-s3-red;
+      font-size: 1em;
+      margin-bottom: 1em;
+      text-transform: uppercase;
+    }
 
-  a {
-    color: $bigtech-s3-red;
+    a {
+      color: $bigtech-s3-red;
 
-    &:hover {
-      color: $cigi-dark-grey;
+      &:hover {
+        color: $cigi-dark-grey;
+      }
+    }
+
+    p {
+      font-size: 0.875em;
     }
   }
 
-  p {
-    font-size: 0.875em;
+  header {
+    background-color: transparent;
+    position: relative;
+
+    .big-tech-top-bar {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 1.5em;
+      padding-top: 1.5em;
+
+      .big-tech-logo {
+        svg {
+          height: 45px;
+          width: 45px;
+        }
+      }
+
+      .big-tech-subscribe {
+        button {
+          align-items: center;
+          background-color: $bigtech-teal;
+          border: 1px solid $bigtech-teal;
+          border-radius: 0;
+          color: $white;
+          display: flex;
+          font-family: $primary-font-family;
+          font-size: 0.825em;
+          justify-content: space-between;
+          padding: 0.35em 1em;
+          text-align: left;
+          text-transform: uppercase;
+          width: 127px;
+
+          &:hover {
+            color: $cigi-dark-grey;
+          }
+
+          &::after {
+            align-items: center;
+            border: 0;
+            content: '\f078';
+            display: inline-flex;
+            font-family: 'Font Awesome 5 Pro';
+            height: 100%;
+            margin-left: 0;
+            transform: rotate(0deg);
+            transition: transform 0.25s ease;
+            vertical-align: 0.255em;
+            width: 0.75em;
+          }
+
+          &[aria-expanded='true'] {
+            &::after {
+              transform: rotate(180deg);
+            }
+          }
+        }
+
+        .dropdown-menu {
+          border: 0;
+          border-radius: 0;
+          margin: 0;
+          min-width: 127px;
+          padding: 0;
+          width: 127px;
+
+          a {
+            background-color: $bigtech-teal;
+            border: 1px solid $bigtech-teal;
+            border-top-color: $white;
+            color: $white;
+            font-family: $primary-font-family;
+            font-size: 0.825em;
+            margin: 0;
+            padding: 0.5em 1em;
+            text-transform: uppercase;
+            width: 100%;
+
+            &:hover {
+              color: $cigi-dark-grey;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .big-tech-hero {
+    background-image: url('../../../assets/bigtech_s3_background.png');
+    background-position: top;
+    margin-bottom: 3em;
+  }
+
+  header {
+    background-color: transparent;
+    position: relative;
+
+    .big-tech-top-bar {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 1.5em;
+      padding-top: 1.5em;
+
+      .big-tech-logo {
+        svg {
+          height: 45px;
+          width: 45px;
+        }
+      }
+
+      .big-tech-subscribe {
+        button {
+          align-items: center;
+          background-color: $bigtech-teal;
+          border: 1px solid $bigtech-teal;
+          border-radius: 0;
+          color: $white;
+          display: flex;
+          font-family: $primary-font-family;
+          font-size: 0.825em;
+          justify-content: space-between;
+          padding: 0.35em 1em;
+          text-align: left;
+          text-transform: uppercase;
+          width: 127px;
+
+          &:hover {
+            color: $cigi-dark-grey;
+          }
+
+          &::after {
+            align-items: center;
+            border: 0;
+            content: '\f078';
+            display: inline-flex;
+            font-family: 'Font Awesome 5 Pro';
+            height: 100%;
+            margin-left: 0;
+            transform: rotate(0deg);
+            transition: transform 0.25s ease;
+            vertical-align: 0.255em;
+            width: 0.75em;
+          }
+
+          &[aria-expanded='true'] {
+            &::after {
+              transform: rotate(180deg);
+            }
+          }
+        }
+
+        .dropdown-menu {
+          border: 0;
+          border-radius: 0;
+          margin: 0;
+          min-width: 127px;
+          padding: 0;
+          width: 127px;
+
+          a {
+            background-color: $bigtech-teal;
+            border: 1px solid $bigtech-teal;
+            border-top-color: $white;
+            color: $white;
+            font-family: $primary-font-family;
+            font-size: 0.825em;
+            margin: 0;
+            padding: 0.5em 1em;
+            text-transform: uppercase;
+            width: 100%;
+
+            &:hover {
+              color: $cigi-dark-grey;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .big-tech-hero {
+    background-image: url('../../../assets/bigtech_s3_background.png');
+    background-position: top;
+    margin-bottom: 3em;
   }
 
   .body {
     margin-bottom: 2em;
+  }
+
+  .bt-footer {
+    background-color: $bigtech-s3-red;
+    padding: 4em 0;
+
+    .bt-footer-content {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      @media screen and (min-width: $medium) {
+        flex-direction: row;
+      }
+
+      p {
+        @include link($color: $white, $hover-color: $black);
+        font-size: 1em;
+        font-style: italic;
+        text-align: center;
+
+        @media screen and (min-width: $medium) {
+          text-align: left;
+        }
+
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      .about {
+        margin-top: 3em;
+
+        @media screen and (min-width: $medium) {
+          margin-top: 0;
+          max-width: 300px;
+        }
+      }
+
+      .cigi-logo {
+        svg {
+          fill: $white;
+          max-width: 120px;
+          width: 100%;
+
+          @media screen and (min-width: $medium) {
+            max-width: 200px;
+          }
+        }
+      }
+
+      .copyright {
+        margin: 0;
+        text-align: center;
+
+        span {
+          padding: 0 0.5em;
+        }
+      }
+
+      .spacer {
+        display: none;
+        margin: 0 2em;
+
+        @media screen and (min-width: $medium) {
+          display: block;
+        }
+
+        .slash {
+          @include slash($height: 150px, $color: $white);
+          margin: 0 55px;
+
+          @media screen and (max-width: $medium) {
+            height: 50px;
+          }
+
+          @media screen and (max-width: $large) {
+            margin: 0 2rem;
+          }
+        }
+      }
+
+      .subscribe {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1em;
+
+        @media screen and (min-width: $medium) {
+          justify-content: flex-start;
+        }
+
+        a {
+          display: block;
+          height: 25px;
+          margin-left: 2em;
+          width: 25px;
+
+          &:hover {
+            svg {
+              path {
+                fill: $black;
+              }
+            }
+          }
+
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+        }
+
+        p {
+          font-style: normal;
+          margin: 0;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .bt-recommended-article {
+    display: grid;
+    grid-template-columns: 65% 10% 25%;
+    margin-bottom: 2em;
+
+    .bt-recommended-content {
+      grid-column: 1;
+      grid-row: 1;
+
+      h3 {
+        @include link($color: $cigi-dark-grey, $hover-color: $bigtech-teal);
+        font-size: 1.0625em;
+      }
+
+      .authors {
+        @include link($color: $cigi-dark-grey, $hover-color: $bigtech-teal);
+        font-size: 0.75em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+
+      .date {
+        color: $cigi-text-grey;
+        font-size: 0.75em;
+        text-transform: uppercase;
+      }
+
+      .topics {
+        @include link($color: $cigi-dark-grey, $hover-color: $bigtech-teal);
+        margin-bottom: 0.5em;
+        margin-top: 0;
+      }
+    }
+
+    .bt-recommended-image {
+      grid-column: 3;
+      grid-row: 1;
+
+      a {
+        background-color: $black;
+        display: block;
+        position: relative;
+
+        &:hover {
+          img {
+            opacity: 0.8;
+          }
+        }
+
+        img {
+          filter: grayscale(100%);
+          opacity: 1;
+          transition: opacity 0.3s ease;
+        }
+
+        .play-icon {
+          align-items: center;
+          background-color: $bigtech-s3-red;
+          bottom: 0;
+          color: $white;
+          display: flex;
+          height: 40px;
+          justify-content: center;
+          position: absolute;
+          right: 0;
+          width: 40px;
+        }
+      }
+    }
   }
 }

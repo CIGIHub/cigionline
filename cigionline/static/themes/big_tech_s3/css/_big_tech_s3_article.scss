@@ -4,4 +4,151 @@
       @include link($color: $bigtech-s3-red, $hover-color: $cigi-dark-grey);
     }
   }
+
+  .big-tech-recommended {
+    .bt-recommended-article {
+      border-bottom: 1px solid $cigi-light-grey;
+      margin-bottom: 2em;
+      padding-bottom: 2em;
+
+      &:last-child {
+        border-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .big-tech-article-hero {
+    padding-bottom: 2em;
+
+    h1 {
+      margin-bottom: 0.4em;
+    }
+
+    .authors {
+      margin-bottom: 0.3em;
+      margin-top: 0;
+
+      .block-author {
+        @include link($color: $cigi-dark-grey, $hover-color: $bigtech-teal);
+        font-size: 1.3em;
+      }
+    }
+
+    .date {
+      color: $cigi-text-grey;
+      font-size: 0.75em;
+      text-transform: uppercase;
+    }
+
+    .social-share-list {
+      justify-content: flex-start;
+      margin: 0.5em 0 0;
+    }
+
+    .topics {
+      margin: 0;
+
+      li {
+        @include link($color: $cigi-text-grey, $hover-color: $bigtech-teal);
+      }
+    }
+  }
+
+  .about-the-podcast {
+    background-color: $cigi-light-grey-bg;
+    padding: 2em 0;
+
+    .about-the-podcast-content {
+      align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      @media screen and (min-width: $medium) {
+        flex-direction: row;
+      }
+
+      .about,
+      .subscribe {
+        padding: 1em 0;
+      }
+
+      .about {
+        h2 {
+          margin-bottom: 2em;
+        }
+      }
+
+      .subscribe {
+        .subscribe-links {
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+
+          @media screen and (min-width: $medium) {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          a {
+            margin-right: 2em;
+            margin-top: 0;
+            max-width: 150px;
+
+            @media screen and (min-width: $medium) {
+              margin-right: 0;
+              margin-top: 1em;
+            }
+
+            &.apple {
+              max-width: 150px;
+            }
+
+            &.google {
+              max-width: 180px;
+            }
+
+            &.spotify {
+              max-width: 100px;
+            }
+
+            svg {
+              max-height: 50px;
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      .spacer {
+        display: none;
+
+        @media screen and (min-width: $medium) {
+          display: block;
+        }
+
+        .slash {
+          @include slash($height: 210px);
+          margin: 0 80px;
+        }
+      }
+    }
+  }
+
+  .opinion-disclaimer {
+    padding-top: 25px;
+    position: relative;
+
+    &::before {
+      border-top: 6px solid $bigtech-s3-red;
+      content: '';
+      display: block;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 30px;
+    }
+  }
 }
