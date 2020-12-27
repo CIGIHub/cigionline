@@ -79,4 +79,19 @@
       }
     }
   }
+
+  .opinion-disclaimer {
+    padding-top: 25px;
+    position: relative;
+
+    &::before {
+      border-top: 6px solid $bigtech-s3-red;
+      content: '';
+      display: block;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 30px;
+    }
+  }
 }

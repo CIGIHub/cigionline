@@ -1,0 +1,64 @@
+.stream-read-more-block {
+  margin-bottom: 2em;
+  margin-top: 2em;
+
+  h2 {
+    font-size: 1em;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .card {
+    border: 0;
+    padding: 0;
+  }
+
+  .collapse {
+    position: relative;
+
+    &:not(.show) {
+      display: block;
+      height: 15em;
+      overflow: hidden;
+
+      &::after {
+        display: block;
+      }
+    }
+
+    &::after {
+      background: linear-gradient($white-opacity-0, 30%, $white);
+      content: '';
+      display: none;
+      height: 15em;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+
+  .collapsing {
+    height: 15em;
+  }
+
+  .read-more-btn {
+    &::after {
+      font-size: 0.625em;
+      text-transform: uppercase;
+    }
+
+    &.collapsed {
+      &::after {
+        content: '[+ More]';
+      }
+    }
+
+    &:not(collapsed) {
+      &::after {
+        content: '[- Less]';
+      }
+    }
+  }
+
+}
