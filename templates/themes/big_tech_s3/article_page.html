@@ -30,6 +30,9 @@
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
+  {% if self.authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors %}
+  {% endif %}
   {% if self.multimedia_series %}
     <section class="about-the-podcast">
       <div class="container-sm about-the-podcast-content">

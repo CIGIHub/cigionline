@@ -1,4 +1,10 @@
 .big-tech-s3-article {
+  .about-the-author {
+    .author-block {
+      @include link($color: $bigtech-s3-red, $hover-color: $cigi-dark-grey);
+    }
+  }
+
   .big-tech-recommended {
     .bt-recommended-article {
       border-bottom: 1px solid $cigi-light-grey;
