@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
+{% endblock extra_fonts %}
+
+{% block body_class %}big-tech-s3-theme big-tech-s3-article{% endblock %}
+
+{% block header %}
+
+{% endblock header %}
+
+{% block content %}
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+  <section>
+    {% include 'includes/opinion_disclaimer.html' %}
+  </section>
+{% endblock content %}
+
+{% block extra_bundles %}
+  {% render_bundle 'themeBigTechS3' %}
+{% endblock extra_bundles %}
