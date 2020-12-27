@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
@@ -21,6 +21,35 @@
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
+  {% if self.multimedia_series %}
+    <section class="about-the-podcast">
+      <div class="container-sm about-the-podcast-content">
+        <div class="about">
+          <h2>About the Podcast</h2>
+          <a href="{{ self.multimedia_series.url }}">
+            {% image self.multimedia_series.specific.image_logo width-500 %}
+          </a>
+        </div>
+        <div class="spacer">
+          <div class="slash"></div>
+        </div>
+        <div class="subscribe">
+          <h2>Subscribe</h2>
+          <div class="subscribe-links">
+            <a class="apple" href="{{ self.multimedia_series.specific.podcast_apple_url }}" target="_blank" rel="noopener noreferrer">
+              {% include "./includes/apple_podcasts_icon.svg" %}
+            </a>
+            <a class="spotify" href="{{ self.multimedia_series.specific.podcast_spotify_url }}" target="_blank" rel="noopener noreferrer">
+              {% include "./includes/spotify_podcasts_icon.svg" %}
+            </a>
+            <a class="google" href="{{ self.multimedia_series.specific.podcast_google_url }}" target="_blank" rel="noopener noreferrer">
+              {% include "./includes/google_podcasts_icon.svg" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
 
 {% block footer %}
