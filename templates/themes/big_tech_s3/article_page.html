@@ -59,6 +59,16 @@
       </div>
     </section>
   {% endif %}
+  {% if self.recommended.all %}
+    <section class="big-tech-recommended">
+      <div class="container-sm">
+        <h2>Recommended</h2>
+        {% for recommended_content in self.recommended.all %}
+          {% include "./includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
 
 {% block footer %}
