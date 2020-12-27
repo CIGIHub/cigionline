@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
@@ -9,7 +9,57 @@
 {% block body_class %}big-tech-s3-theme big-tech-s3-multimedia{% endblock %}
 
 {% block header %}
-
+  <div class="big-tech-hero">
+    {% include "./includes/top_bar.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+    <div class="container-lg big-tech-mm-hero">
+      <div>
+        {% include "includes/topics.html" with topics=self.topics %}
+        <h1>
+          {% if self.podcast_guests and self.podcast_subtitle %}
+            {% for guest in self.podcast_guests %}
+              <span class="podcast-guest">{{ guest }}</span>
+            {% endfor %}
+            <span class="podcast-subtitle">{{ self.podcast_subtitle }}</span>
+          {% else %}
+            {{ self.title }}
+          {% endif %}
+        </h1>
+        {% if self.multimedia_url and self.multimedia_type == 'audio' and 'player.simplecast.com' in self.multimedia_url %}
+          <div class="simplecast-container">
+            <div class="simplecast-header">
+              <div class="simplecast-header-content">
+                <div>
+                  <div class="simplecast-header-meta">
+                    {% if self.podcast_season %}
+                      <span class="season">Season {{ self.podcast_season }}</span>
+                    {% endif %}
+                    {% if self.podcast_episode %}
+                      <span class="episode">Episode {{ self.podcast_episode }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="simplecast-header-title">
+                    {{ self.title }}
+                  </div>
+                </div>
+                {% include "includes/social_links.html" with title=self.title no_circle=True %}
+              </div>
+              <div class="simplecast-embed">
+                {% include "includes/simplecast_embed.html" with simplecast_url=self.multimedia_url %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        <div class="subtitle">
+          {{ self.subtitle|richtext }}
+        </div>
+        <p class="meta">
+          {{ self.publishing_date|date:"F j, Y" }}
+        </p>
+        {% include "includes/social_links.html" with title=self.title no_circle=True %}
+      </div>
+      {% image self.image_square width-600 class="big-tech-headshot" %}
+    </div>
+  </div>
 {% endblock header %}
 
 {% block content %}
@@ -21,11 +71,53 @@
       {% include_block block %}
     {% endfor %}
   </section>
+  {% if self.companion_essay %}
+    <section class="big-tech-s3-companion-essay">
+      <div class="container-sm companion-essay">
+        <div class="essay-details">
+          <h2>Opinion</h2>
+          <article>
+            <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
+            {% for author in self.companion_essay.specific.authors %}
+              {% if author.block_type == 'author' %}
+                <a href="{{ author.value.url }}" class="author">
+                  <div class="author-image-wrapper">
+                    {% image author.value.image_square fill-100x100 %}
+                  </div>
+                  <div>
+                    {{ author.value.byline|richtext }}
+                  </div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </article>
+        </div>
+        <a class="read-btn" href="{{ self.companion_essay.url }}">
+          <i class="far fa-arrow-right"></i>
+          <span>Read</span>
+        </a>
+      </div>
+    </section>
+  {% endif %}
   <section class="multimedia-disclaimer-section">
     {% include 'includes/multimedia_disclaimer.html' %}
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
+  {% if self.recommended.all %}
+    <section class="big-tech-recommended">
+      <div class="container-sm">
+        <h2>Recommended</h2>
+        {% for recommended_content in self.recommended.all %}
+          {% include "./includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
+
+{% block footer %}
+  {% include "./includes/footer.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+{% endblock %}
 
 {% block extra_bundles %}
   {% render_bundle 'themeBigTechS3' %}
