@@ -94,6 +94,7 @@ class HomePage(Page):
         'articles.ArticleListPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
+        'core.PrivacyNoticePage',
         'events.EventListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
