@@ -98,6 +98,158 @@
     }
   }
 
+  .big-tech-mm-hero {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 3em;
+
+    h1 {
+      .podcast-guest {
+        font-size: 1.2em;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+
+      .podcast-subtitle {
+        color: $cigi-text-grey;
+        display: block;
+        font-size: 0.54em;
+        font-style: italic;
+        line-height: 1.35em;
+      }
+    }
+
+    .big-tech-headshot {
+      display: none;
+      padding-left: 2em;
+      width: 33%;
+
+      @media screen and (min-width: $medium) {
+        display: block;
+      }
+    }
+
+    .meta {
+      font-size: 0.75em;
+    }
+
+    .simplecast-container {
+      height: 52px;
+      margin-bottom: 1em;
+      position: relative;
+
+      &.sticky-video {
+        .simplecast-header {
+          animation: slide-down 0.3s;
+          background-color: $black;
+          height: auto;
+          left: 0;
+          padding-bottom: 1.5em;
+          padding-top: 1.5em;
+          position: fixed;
+          top: 0;
+          width: 100%;
+          z-index: 5;
+
+          .simplecast-header-content {
+            display: flex;
+            margin: 0 auto;
+            max-width: $large;
+          }
+
+          .simplecast-embed {
+            margin: 0 auto;
+            max-width: $large;
+          }
+        }
+      }
+
+      .simplecast-header {
+        height: 52px;
+        position: relative;
+
+        .simplecast-header-content {
+          align-items: flex-end;
+          display: none;
+          justify-content: space-between;
+          padding-bottom: 0.625em;
+
+          .simplecast-header-meta {
+            font-size: 0.75em;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 1;
+            padding-bottom: 0.35em;
+
+            .episode {
+              color: $white;
+            }
+
+            .season {
+              color: $bigtech-teal;
+              margin-right: 0.35em;
+            }
+          }
+
+          .simplecast-header-title {
+            color: $white;
+            font-size: 1.25em;
+            font-style: italic;
+            font-weight: 400;
+          }
+
+          .social-share-list {
+            margin: 0;
+
+            a {
+              .fab {
+                color: $white;
+              }
+
+              &:hover {
+                .fab {
+                  color: $bigtech-teal;
+                }
+              }
+            }
+          }
+        }
+
+        .simplecast-embed {
+          height: 52px;
+        }
+      }
+    }
+
+    .social-share-list {
+      justify-content: flex-start;
+      margin: 0.5em 0;
+
+      a {
+        &:hover {
+          .fab {
+            color: $bigtech-teal;
+          }
+        }
+
+        .fab {
+          color: $cigi-dark-grey;
+        }
+      }
+    }
+
+    .subtitle {
+      font-size: 1.1em;
+      font-style: italic;
+    }
+
+    .topics {
+      @include link($color: $cigi-text-grey, $hover-color: $bigtech-teal);
+      margin: 0;
+    }
+  }
+
   .multimedia-disclaimer-section {
     .opinion-disclaimer {
       font-size: 0.875em;
