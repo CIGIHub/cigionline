@@ -26,6 +26,16 @@ class VideoBlock(AbstractMediaChooserBlock):
         ))
 
 
+class AccordionBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    text = blocks.RichTextBlock(required=True)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Accordion'
+        template = 'streams/accordion_block.html'
+
+
 class AuthorBlock(blocks.PageChooserBlock):
     def get_api_representation(self, value, context=None):
         if value:
@@ -131,6 +141,16 @@ class ParagraphBlock(blocks.RichTextBlock):
         icon = 'edit'
         label = 'Paragraph'
         template = 'streams/paragraph_block.html'
+
+
+class ReadMoreBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    text = blocks.RichTextBlock(required=True)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Read More'
+        template = 'streams/read_more_block.html'
 
 
 class RecommendedBlock(blocks.PageChooserBlock):

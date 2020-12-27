@@ -1,22 +1,28 @@
 {% load static wagtailcore_tags core_tags %}
 
-<ul class="social-share-list">
+<ul class="social-share-list {% if no_circle %}no-stack{% endif %}">
   <li class="facebook">
-    <a class="facebook-share-link fa-stack" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-      <i class="fas fa-circle fa-stack-2x"></i>
-      <i class="fab fa-facebook-f fa-stack-1x icon"></i>
+    <a class="facebook-share-link {% if no_circle is not True %}fa-stack{% endif %}" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+      {% if no_circle is not True %}
+        <i class="fas fa-circle fa-stack-2x"></i>
+      {% endif %}
+      <i class="fab fa-facebook-f {% if no_circle %}fa-sm{% else %}fa-stack-1x{% endif %} icon"></i>
     </a>
   </li>
   <li class="twitter">
-    <a class="twitter-share-link fa-stack" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
-      <i class="fas fa-circle fa-stack-2x"></i>
-      <i class="fab fa-twitter fa-stack-1x icon"></i>
+    <a class="twitter-share-link {% if no_circle is not True %}fa-stack{% endif %}" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
+      {% if no_circle is not True %}
+        <i class="fas fa-circle fa-stack-2x"></i>
+      {% endif %}
+      <i class="fab fa-twitter {% if no_circle %}fa-sm{% else %}fa-stack-1x{% endif %} icon"></i>
     </a>
   </li>
   <li class="linkedin">
-    <a class="linkedin-share-link fa-stack" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}">
-      <i class="fas fa-circle fa-stack-2x"></i>
-      <i class="fab fa-linkedin-in fa-stack-1x icon"></i>
+    <a class="linkedin-share-link {% if no_circle is not True %}fa-stack{% endif %}" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}">
+      {% if no_circle is not True %}
+        <i class="fas fa-circle fa-stack-2x"></i>
+      {% endif %}
+      <i class="fab fa-linkedin-in {% if no_circle %}fa-sm{% else %}fa-stack-1x{% endif %} icon"></i>
     </a>
   </li>
 </ul>
