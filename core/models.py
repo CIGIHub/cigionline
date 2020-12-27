@@ -706,6 +706,24 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         verbose_name_plural = 'Annual Report Pages'
 
 
+class PrivacyNoticePage(
+    Page,
+    BasicPageAbstract,
+):
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    template = 'core/privacy_notice_page.html'
+
+    class Meta:
+        verbose_name = 'Privacy Notice'
+
+
 class Theme(models.Model):
     name = models.CharField(max_length=255)
 
