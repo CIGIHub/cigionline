@@ -71,6 +71,34 @@
       {% include_block block %}
     {% endfor %}
   </section>
+  {% if self.companion_essay %}
+    <section class="big-tech-s3-companion-essay">
+      <div class="container-sm companion-essay">
+        <div class="essay-details">
+          <h2>Opinion</h2>
+          <article>
+            <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
+            {% for author in self.companion_essay.specific.authors %}
+              {% if author.block_type == 'author' %}
+                <a href="{{ author.value.url }}" class="author">
+                  <div class="author-image-wrapper">
+                    {% image author.value.image_square fill-100x100 %}
+                  </div>
+                  <div>
+                    {{ author.value.byline|richtext }}
+                  </div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </article>
+        </div>
+        <a class="read-btn" href="{{ self.companion_essay.url }}">
+          <i class="far fa-arrow-right"></i>
+          <span>Read</span>
+        </a>
+      </div>
+    </section>
+  {% endif %}
   <section class="multimedia-disclaimer-section">
     {% include 'includes/multimedia_disclaimer.html' %}
     {% include 'includes/opinion_disclaimer.html' %}

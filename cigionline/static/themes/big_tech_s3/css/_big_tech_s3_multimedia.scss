@@ -1,4 +1,103 @@
 .big-tech-s3-theme {
+  .big-tech-s3-companion-essay {
+    background-color: $bigtech-s3-red;
+    margin-bottom: 2em;
+
+    .companion-essay {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 3em;
+      padding-top: 3em;
+
+      .essay-details {
+        h2 {
+          color: $white;
+          font-size: 0.875em;
+          text-transform: uppercase;
+        }
+
+        h3 {
+          @include link($color: $white, $hover-color: $black);
+          color: $white;
+          margin-bottom: 0.75em;
+        }
+
+        .author {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+
+          &:hover {
+            .author-image-wrapper {
+              img {
+                opacity: 0.8;
+              }
+            }
+
+            p {
+              color: $black;
+            }
+          }
+
+          .author-image-wrapper {
+            background-color: $black;
+            border-radius: 50%;
+            height: 50px;
+            margin-right: 1em;
+            overflow: hidden;
+            width: 50px;
+
+            img {
+              opacity: 1;
+              transition: opacity 0.3s ease;
+            }
+          }
+
+          p {
+            color: $white;
+            margin: 0;
+            transition: color 0.3s ease;
+          }
+        }
+      }
+
+      .read-btn {
+        align-items: center;
+        background-color: transparent;
+        border: 1.75px solid $white;
+        border-radius: 50%;
+        color: $white;
+        display: none;
+        flex-direction: column;
+        height: 125px;
+        justify-content: center;
+        margin-left: 3em;
+        min-width: 125px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        width: 125px;
+
+        @media screen and (min-width: $medium) {
+          display: flex;
+        }
+
+        &:hover {
+          background-color: $white;
+          color: $bigtech-s3-red;
+        }
+
+        i {
+          font-size: 2em;
+          margin-bottom: 0.2em;
+        }
+
+        span {
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
   .big-tech-mm-hero {
     align-items: center;
     display: flex;
