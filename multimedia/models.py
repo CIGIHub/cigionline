@@ -51,7 +51,7 @@ class MultimediaListPage(BasicPageAbstract, Page):
                 InlinePanel(
                     'featured_multimedia',
                     max_num=5,
-                    min_num=5,
+                    min_num=0,
                     label='Multimedia',
                 ),
             ],
