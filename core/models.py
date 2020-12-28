@@ -94,6 +94,7 @@ class HomePage(Page):
         'articles.ArticleListPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
+        'core.PrivacyNoticePage',
         'events.EventListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
@@ -704,6 +705,24 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     class Meta:
         verbose_name = 'Annual Report Page'
         verbose_name_plural = 'Annual Report Pages'
+
+
+class PrivacyNoticePage(
+    Page,
+    BasicPageAbstract,
+):
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    template = 'core/privacy_notice_page.html'
+
+    class Meta:
+        verbose_name = 'Privacy Notice'
 
 
 class Theme(models.Model):

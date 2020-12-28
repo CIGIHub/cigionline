@@ -10,7 +10,14 @@ from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
-from .models import AnnualReportListPage, AnnualReportPage, BasicPage, FundingPage, HomePage
+from .models import (
+    AnnualReportListPage,
+    AnnualReportPage,
+    BasicPage,
+    FundingPage,
+    HomePage,
+    PrivacyNoticePage,
+)
 
 
 class AnnualReportListPageTests(WagtailPageTests):
@@ -75,6 +82,20 @@ class FundingPageTests(WagtailPageTests):
         )
 
 
+class PrivacyNoticePageTests(WagtailPageTests):
+    def test_privacynoticepage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            PrivacyNoticePage,
+            {HomePage},
+        )
+
+    def test_privacynoticepage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            PrivacyNoticePage,
+            {},
+        )
+
+
 class HomePageTests(WagtailPageTests):
     def test_homepage_child_page_types(self):
         """
@@ -94,6 +115,7 @@ class HomePageTests(WagtailPageTests):
                 NewsletterListPage,
                 PeoplePage,
                 PersonListPage,
+                PrivacyNoticePage,
                 ProjectListPage,
                 PublicationListPage,
                 PublicationSeriesListPage,
