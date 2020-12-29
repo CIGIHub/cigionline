@@ -57,7 +57,10 @@ class NewsletterPage(Page):
         [
             ('advertisement_block', StructBlock([
                 ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(required=False)),
+                ('text', RichTextBlock(
+                    features=['bold', 'italic', 'link'],
+                    required=False,
+                )),
                 ('url', URLBlock(required=True)),
                 ('image', ImageChooserBlock(required=False)),
                 ('cta', ChoiceBlock(
@@ -70,7 +73,10 @@ class NewsletterPage(Page):
                 ('content', PageChooserBlock(required=False)),
                 ('url', URLBlock(required=False)),
                 ('title_override', CharBlock(required=False)),
-                ('text_override', RichTextBlock(required=False)),
+                ('text_override', RichTextBlock(
+                    features=['bold', 'italic', 'link'],
+                    required=False,
+                )),
                 ('cta', ChoiceBlock(
                     choices=CallToActionChoices.choices,
                     verbose_name='CTA',
@@ -84,7 +90,10 @@ class NewsletterPage(Page):
                 ('content', PageChooserBlock(required=False)),
                 ('url', URLBlock(required=False)),
                 ('title_override', CharBlock(required=False)),
-                ('text_override', RichTextBlock(required=False)),
+                ('text_override', RichTextBlock(
+                    features=['bold', 'italic', 'link'],
+                    required=False,
+                )),
                 ('image_override', ImageChooserBlock(required=False)),
                 ('cta', ChoiceBlock(
                     choices=CallToActionChoices.choices,
@@ -94,11 +103,17 @@ class NewsletterPage(Page):
             ])),
             ('social_block', StructBlock([
                 ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(required=False)),
+                ('text', RichTextBlock(
+                    features=['bold', 'italic', 'link'],
+                    required=False,
+                )),
             ])),
             ('text_block', StructBlock([
                 ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(required=False)),
+                ('text', RichTextBlock(
+                    features=['bold', 'italic', 'link'],
+                    required=False,
+                )),
             ])),
         ],
         blank=True,

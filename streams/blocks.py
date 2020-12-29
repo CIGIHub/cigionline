@@ -28,7 +28,18 @@ class VideoBlock(AbstractMediaChooserBlock):
 
 class AccordionBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=True)
-    text = blocks.RichTextBlock(required=True)
+    text = blocks.RichTextBlock(
+        features=[
+            'bold',
+            'h3',
+            'h4',
+            'italic',
+            'link',
+            'ol',
+            'ul',
+        ],
+        required=True,
+    )
 
     class Meta:
         icon = 'edit'
@@ -63,7 +74,10 @@ class AutoPlayVideoBlock(blocks.StructBlock):
 class BlockQuoteBlock(blocks.StructBlock):
     """Block quote paragraph with optional image and link"""
 
-    quote = blocks.RichTextBlock(required=True)
+    quote = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=True,
+    )
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=False)
@@ -92,7 +106,10 @@ class ChartBlock(blocks.StructBlock):
 class ExternalQuoteBlock(blocks.StructBlock):
     """External quote with optional source"""
 
-    quote = blocks.RichTextBlock(required=True)
+    quote = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=True,
+    )
     source = blocks.CharBlock(required=False)
 
     class Meta:
@@ -142,6 +159,24 @@ class ParagraphBlock(blocks.RichTextBlock):
         super().__init__(**kwargs)
         self.features = ['h2', 'h3', 'bold', 'italic', 'link', 'superscript']
 
+    def __init__(
+        self, required=True, help_text=None, editor="default", features=None, **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.features = [
+            'bold',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'italic',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+        ]
+
     class Meta:
         icon = 'edit'
         label = 'Paragraph'
@@ -150,7 +185,18 @@ class ParagraphBlock(blocks.RichTextBlock):
 
 class ReadMoreBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=True)
-    text = blocks.RichTextBlock(required=True)
+    text = blocks.RichTextBlock(
+        features=[
+            'bold',
+            'h3',
+            'h4',
+            'italic',
+            'link',
+            'ol',
+            'ul',
+        ],
+        required=True,
+    )
 
     class Meta:
         icon = 'edit'
@@ -189,7 +235,10 @@ class PDFDownloadBlock(blocks.StructBlock):
 class PullQuoteLeftBlock(blocks.StructBlock):
     """Pull quote left side"""
 
-    quote = blocks.RichTextBlock(required=True)
+    quote = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=True,
+    )
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
 
@@ -202,7 +251,10 @@ class PullQuoteLeftBlock(blocks.StructBlock):
 class PullQuoteRightBlock(blocks.StructBlock):
     """Pull quote right side"""
 
-    quote = blocks.RichTextBlock(required=True)
+    quote = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=True,
+    )
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
 
@@ -229,7 +281,10 @@ class SpeakersBlock(blocks.PageChooserBlock):
 class TextBorderBlock(blocks.StructBlock):
     """Text box with border and optional colour for border """
 
-    text = blocks.RichTextBlock(required=True)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=True,
+    )
     border_colour = blocks.CharBlock(required=False)
 
     class Meta:
