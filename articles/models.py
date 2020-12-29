@@ -160,7 +160,10 @@ class ArticlePage(
         blank=True,
         help_text='Add a label to appear below the embedded video.',
     )
-    footnotes = RichTextField(blank=True)
+    footnotes = RichTextField(
+        blank=True,
+        features=['h2', 'h3', 'bold', 'italic', 'link', 'superscript'],
+    )
     hero_title_placement = models.CharField(
         blank=True,
         max_length=16,

@@ -136,6 +136,11 @@ class InlineVideoBlock(blocks.PageChooserBlock):
 
 class ParagraphBlock(blocks.RichTextBlock):
     """Standard text paragraph."""
+    def __init__(
+        self, required=True, help_text=None, editor="default", features=None, **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.features = ['h2', 'h3', 'bold', 'italic', 'link', 'superscript']
 
     class Meta:
         icon = 'edit'
