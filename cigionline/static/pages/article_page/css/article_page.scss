@@ -9,3 +9,30 @@
     text-align: right;
   }
 }
+
+.article-works-cited {
+  margin-bottom: 2em;
+
+  h2 {
+    font-size: 1.3em;
+    font-weight: 400;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    position: relative;
+
+    &::after {
+      border-bottom: 2px solid $cigi-text-grey;
+      bottom: 0;
+      content: '';
+      display: block;
+      left: 0;
+      position: absolute;
+      width: 40%;
+    }
+  }
+
+  p {
+    font-size: 0.8125em;
+    padding: 0 1em;
+  }
+}
