@@ -208,7 +208,10 @@ class BasicPageAbstract(models.Model):
     body_default_blocks = [
         ('accordion', blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
-            ('text', blocks.RichTextBlock(required=True)),
+            ('text', blocks.RichTextBlock(
+                features=['bold', 'italic', 'link'],
+                required=True,
+            )),
             ('columns', blocks.ChoiceBlock(choices=[
                 ('one', 'One'),
                 ('two', 'Two'),
@@ -253,11 +256,16 @@ class BasicPageAbstract(models.Model):
         ('pull_quote_right', PullQuoteRightBlock()),
         ('recommended', RecommendedBlock()),
         ('table', TableBlock()),
-        ('text_background_block', blocks.RichTextBlock()),
+        ('text_background_block', blocks.RichTextBlock(
+            features=['bold', 'italic', 'link'],
+        )),
         ('text_border_block', TextBorderBlock()),
         ('tool_tip', blocks.StructBlock([
             ('anchor', blocks.CharBlock(required=True)),
-            ('text', blocks.RichTextBlock(required=True)),
+            ('text', blocks.RichTextBlock(
+                features=['bold', 'italic', 'link'],
+                required=True,
+            )),
             ('name', blocks.CharBlock(required=False)),
             ('title', blocks.CharBlock(required=False)),
             ('image', ImageChooserBlock(required=False)),

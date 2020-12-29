@@ -136,7 +136,11 @@ class PublicationPage(
         ],
         blank=True,
     )
-    book_excerpt = RichTextField(blank=True, verbose_name='Excerpt')
+    book_excerpt = RichTextField(
+        blank=True,
+        features=['bold', 'italic', 'link'],
+        verbose_name='Excerpt',
+    )
     book_excerpt_download = models.ForeignKey(
         'wagtaildocs.Document',
         null=True,
@@ -171,7 +175,9 @@ class PublicationPage(
     )
     editorial_reviews = StreamField(
         [
-            ('editorial_review', RichTextBlock()),
+            ('editorial_review', RichTextBlock(
+                features=['bold', 'italic', 'link'],
+            )),
         ],
         blank=True,
     )
@@ -246,7 +252,7 @@ class PublicationPage(
     short_description = RichTextField(
         blank=True,
         null=False,
-        features=['bold', 'italic'],
+        features=['bold', 'italic', 'link'],
     )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
