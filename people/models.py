@@ -142,7 +142,7 @@ class PersonPage(
         blank=True,
         verbose_name='Full Biography'
     )
-    byline = RichTextField(blank=True, features=['bold', 'italic'],)
+    byline = RichTextField(blank=True, features=['bold', 'italic', 'link'],)
     curriculum_vitae = models.ForeignKey(
         'wagtaildocs.Document',
         null=True,
@@ -191,7 +191,11 @@ class PersonPage(
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
-    short_bio = RichTextField(blank=True, verbose_name='Short Biography')
+    short_bio = RichTextField(
+        blank=True,
+        features=['bold', 'italic', 'link'],
+        verbose_name='Short Biography',
+    )
     external_publications = StreamField([
         ('external_publication', blocks.StructBlock([
             ('author', blocks.CharBlock(required=True)),
