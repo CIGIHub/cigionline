@@ -7,7 +7,7 @@ from wagtail.core import hooks
 
 
 @hooks.register('register_rich_text_features')
-def register_Strikethrough_feature(features):
+def register_strikethrough_feature(features):
     feature_name = 'strikethrough'
     type_ = 'STRIKETHROUGH'
     tag = 's'
