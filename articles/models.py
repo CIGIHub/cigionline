@@ -174,6 +174,8 @@ class ArticlePage(
             'superscript',
             'strikethrough',
             'blockquote',
+            # 'stock',
+            'anchor',
         ],
     )
     hero_title_placement = models.CharField(
