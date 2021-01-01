@@ -42,9 +42,11 @@
     </section>
   {% endif %}
   {% if self.footnotes %}
-    <section class="footnotes">
+    <section class="article-footnotes">
       <div class="container-sm">
-        {{ self.footnotes|richtext }}
+        <div class="footnotes">
+          {{ self.footnotes|richtext }}
+        </div>
       </div>
     </section>
   {% endif %}

@@ -1,6 +1,42 @@
 @import '../../../css/global/variables';
 @import '../../../css/global/mixins';
 
+.article-footnotes {
+  margin-bottom: 2em;
+
+  .footnotes {
+    padding-top: 1em;
+    position: relative;
+
+    &::before {
+      border-top: 2px solid $cigi-text-grey;
+      content: '';
+      display: block;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 40%;
+    }
+
+    p {
+      font-size: 0.8125em;
+      padding-left: 1em;
+
+      a {
+        &[name] {
+          color: $cigi-primary-colour;
+          display: inline-block;
+          font-size: 0.8em;
+          font-weight: 700;
+          line-height: 1em;
+          padding-right: 0.5em;
+          vertical-align: top;
+        }
+      }
+    }
+  }
+}
+
 .article-image-hero {
   figcaption {
     @include image-caption;
