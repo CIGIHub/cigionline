@@ -49,7 +49,7 @@ const Anchor = (props) => {
     'a',
     {
       role: 'button',
-      title: data.fragment,
+      name: data.fragment,
       onMouseUp: () => {
         window.alert(data.fragment);
       },

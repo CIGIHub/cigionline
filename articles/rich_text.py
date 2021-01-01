@@ -9,7 +9,7 @@ def anchor_entity_decorator(props):
     """
     return DOM.create_element('a', {
         'data-anchor': True,
-        'href': props['fragment'],
+        'name': props['fragment'],
     }, props['children'])
 
 
@@ -27,5 +27,5 @@ class AnchorEntityElementHandler(InlineEntityElementHandler):
         Take the ``fragment`` value from the ``href`` HTML attribute.
         """
         return {
-            'fragment': attrs['href'],
+            'fragment': attrs['name'],
         }

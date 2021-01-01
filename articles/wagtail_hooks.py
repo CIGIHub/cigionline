@@ -29,6 +29,6 @@ def register_rich_text_features(features):
 
     features.register_converter_rule('contentstate', feature_name, {
         # Note here that the conversion is more complicated than for blocks and inline styles.
-        'from_database_format': {'a[data-anchor]': AnchorEntityElementHandler(type_)},
+        'from_database_format': {'a[name]': AnchorEntityElementHandler(type_)},
         'to_database_format': {'entity_decorators': {type_: anchor_entity_decorator}},
     })

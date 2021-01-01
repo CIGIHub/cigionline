@@ -41,6 +41,13 @@
       {% endif %}
     </section>
   {% endif %}
+  {% if self.footnotes %}
+    <section class="footnotes">
+      <div class="container-sm">
+        {{ self.footnotes|richtext }}
+      </div>
+    </section>
+  {% endif %}
   {% if self.works_cited %}
     <section class="article-works-cited">
       <div class="container-sm">
