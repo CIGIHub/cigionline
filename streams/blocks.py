@@ -157,12 +157,6 @@ class ParagraphBlock(blocks.RichTextBlock):
         self, required=True, help_text=None, editor="default", features=None, **kwargs
     ):
         super().__init__(**kwargs)
-        self.features = ['h2', 'h3', 'bold', 'italic', 'link', 'superscript']
-
-    def __init__(
-        self, required=True, help_text=None, editor="default", features=None, **kwargs
-    ):
-        super().__init__(**kwargs)
         self.features = [
             'bold',
             'h2',
