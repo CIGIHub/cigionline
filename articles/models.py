@@ -172,9 +172,6 @@ class ArticlePage(
             'ul',
             'subscript',
             'superscript',
-            'strikethrough',
-            'blockquote',
-            # 'stock',
             'anchor',
         ],
     )

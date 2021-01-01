@@ -2,21 +2,6 @@ from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 
 
-def stock_entity_decorator(props):
-    return DOM.create_element('span', {
-        'data-stock': props['stock'],
-    }, props['children'])
-
-
-class StockEntityElementHandler(InlineEntityElementHandler):
-    mutability = 'IMMUTABLE'
-
-    def get_attribute_data(self, attrs):
-        return {
-            'stock': attrs['data-stock'],
-        }
-
-
 def anchor_entity_decorator(props):
     """
     Draft.js ContentState to database HTML.
