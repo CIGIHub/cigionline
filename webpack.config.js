@@ -33,6 +33,7 @@ const config = {
     publicationListPage: './cigionline/static/pages/publication_list_page/index.js',
     publicationPage: './cigionline/static/pages/publication_page/index.js',
     themeBigTechS3: './cigionline/static/themes/big_tech_s3/index.js',
+    themeInnovationSeries: './cigionline/static/themes/innovation_series/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',
   },
 
