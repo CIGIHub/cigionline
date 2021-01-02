@@ -163,6 +163,7 @@ class ParagraphBlock(blocks.RichTextBlock):
             'h3',
             'h4',
             'hr',
+            'image',
             'italic',
             'link',
             'ol',
