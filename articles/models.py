@@ -172,6 +172,7 @@ class ArticlePage(
             'ul',
             'subscript',
             'superscript',
+            'anchor',
         ],
     )
     hero_title_placement = models.CharField(

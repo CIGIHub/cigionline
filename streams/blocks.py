@@ -153,7 +153,6 @@ class InlineVideoBlock(blocks.PageChooserBlock):
 
 class ParagraphBlock(blocks.RichTextBlock):
     """Standard text paragraph."""
-
     def __init__(
         self, required=True, help_text=None, editor="default", features=None, **kwargs
     ):
