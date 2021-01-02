@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags webpack_loader %}
 
+{% block extra_css %}
+  {% render_bundle 'articleLandingPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'articleLandingPage' 'js' attrs='async' %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <section class="featured">
@@ -47,7 +54,3 @@
     </div>
   </section>
 {% endblock content %}
-
-{% block extra_bundles %}
-  {% render_bundle 'articleLandingPage' %}
-{% endblock %}

@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags webpack_loader %}
 
+{% block extra_css %}
+  {% render_bundle 'multimediaPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'multimediaPage' 'js' attrs='async' %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/hero_multimedia.html" %}
 
@@ -37,7 +44,3 @@
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
 {% endblock content %}
-
-{% block extra_bundles %}
-  {% render_bundle 'multimediaPage' %}
-{% endblock %}

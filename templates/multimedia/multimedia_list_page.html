@@ -2,8 +2,11 @@
 
 {% load static webpack_loader %}
 
-{% block extra_bundles %}
-  {% render_bundle 'multimediaListPage' %}
+{% block extra_css %}
+  {% render_bundle 'multimediaListPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'multimediaListPage' 'js' attrs='async' %}
 {% endblock %}
 
 {% block content %}
