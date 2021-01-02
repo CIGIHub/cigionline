@@ -4,7 +4,13 @@
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
-{% endblock extra_fonts %}
+{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'themeBigTechS3' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeBigTechS3' 'js' attrs='async' %}
+{% endblock %}
 
 {% block body_class %}big-tech-s3-theme big-tech-s3-multimedia{% endblock %}
 
@@ -118,7 +124,3 @@
 {% block footer %}
   {% include "./includes/footer.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
 {% endblock %}
-
-{% block extra_bundles %}
-  {% render_bundle 'themeBigTechS3' %}
-{% endblock extra_bundles %}
