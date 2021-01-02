@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
-{% block content %}
+{% block extra_css %}
+  {% render_bundle 'articlePage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'articlePage' 'js' attrs='async' %}
+{% endblock %}
 
+{% block content %}
   {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
 
   {% if self.image_hero %}
@@ -67,7 +73,3 @@
   {% endif %}
 
 {% endblock content %}
-
-{% block extra_bundles %}
-  {% render_bundle 'articlePage' %}
-{% endblock extra_bundles %}
