@@ -116,4 +116,28 @@
       }
     }
   }
+
+  .about-the-author {
+    h3 {
+      border-top: 0;
+      color: $cigi-dark-grey;
+      font-size: 1.5em;
+      padding-top: 0.25em;
+      position: relative;
+      text-transform: none;
+
+      &::before {
+        border-top: 5px solid $cigi-primary-colour;
+        content: '';
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 80px;
+      }
+    }
+
+    .name {
+      font-weight: 700;
+    }
+  }
 }
