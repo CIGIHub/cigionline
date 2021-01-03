@@ -48,14 +48,20 @@ class ProjectPage(
             ('igc_timeline', StructBlock([
                 ('date', CharBlock(required=True)),
                 ('title', CharBlock(required=False)),
-                ('body', RichTextBlock(required=False)),
+                ('body', RichTextBlock(
+                    features=['bold', 'italic', 'link'],
+                    required=False,
+                )),
                 ('location', CharBlock(required=False)),
                 ('countries_represented', ImageChooserBlock(required=False)),
                 ('outcomes', StreamBlock(
                     [
                         ('outcome', StructBlock([
                             ('date', DateBlock(required=False)),
-                            ('text', RichTextBlock(required=False)),
+                            ('text', RichTextBlock(
+                                features=['bold', 'italic', 'link'],
+                                required=False,
+                            )),
                         ])),
                     ],
                     required=False,

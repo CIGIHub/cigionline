@@ -1,0 +1,143 @@
+.innovation-series-article {
+  background-color: $innovation-series-background-color;
+
+  header {
+    background-color: $innovation-series-background-color;
+    position: relative;
+
+    .main-navigation-wrapper {
+      background-color: $innovation-series-background-color;
+
+      .cigi-top-bar {
+        &.scroll-nav {
+          height: 36px;
+
+          @media screen and (min-width: $large) {
+            height: 66px;
+          }
+        }
+
+        .cigi-logo {
+          svg {
+            fill: $black;
+          }
+        }
+
+        nav {
+          ul {
+            a,
+            button {
+              color: $black;
+
+              &:hover {
+                color: $black;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .hero {
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 0;
+    min-height: 25em;
+    position: relative;
+
+    &::after {
+      background-color: $innovation-series-background-color;
+      content: '';
+      height: 100%;
+      left: 0;
+      opacity: 0.8;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      @media screen and (min-width: $large) {
+        background-color: transparent;
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+
+      h1 {
+        font-size: 2.2em;
+        font-weight: 700;
+        margin-bottom: 0;
+      }
+
+      .meta {
+        p {
+          margin: 0;
+        }
+
+        .author {
+          @include link($color: $cigi-dark-grey, $hover-color: $cigi-primary-colour);
+        }
+      }
+
+      .subtitle {
+        color: $cigi-text-grey;
+      }
+
+      .topics {
+        margin: 0;
+      }
+    }
+  }
+
+  .social {
+    ul {
+      display: flex;
+      list-style-type: none;
+
+      li {
+        &:first-child {
+          a {
+            padding-left: 0;
+          }
+        }
+
+        a {
+          color: $black;
+          cursor: pointer;
+          display: block;
+          padding: 1em 1.5em;
+
+          &:hover {
+            color: $cigi-primary-colour;
+          }
+        }
+      }
+    }
+  }
+
+  .about-the-author {
+    h3 {
+      border-top: 0;
+      color: $cigi-dark-grey;
+      font-size: 1.5em;
+      padding-top: 0.25em;
+      position: relative;
+      text-transform: none;
+
+      &::before {
+        border-top: 5px solid $cigi-primary-colour;
+        content: '';
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 80px;
+      }
+    }
+
+    .name {
+      font-weight: 700;
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'themeInnovationSeries' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeInnovationSeries' 'js' attrs='async' %}
+{% endblock %}
+
+{% block body_class %}innovation-series-article{% endblock %}
+
+{% block content %}
+  {% image self.image_banner original as image_hero %}
+  <section class="hero" style="background-image: url('{{ image_hero.url }}');">
+    <div class="container-sm">
+      <div class="hero-content">
+        {% include "includes/topics.html" with topics=self.topics %}
+        <h1>{{ self.title }}</h1>
+        <div class="subtitle">
+          {{ self.subtitle|richtext }}
+        </div>
+        <div class="meta">
+          <p>Published: {{ self.publishing_date|date:"F j, Y" }}</p>
+          <p>
+            Author{{ self.authors|length|pluralize }}:
+            {% for author in self.authors %}
+              <span class="author">{{ author }}</span>
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container-sm">
+      <div class="social">
+        <ul>
+          <li>
+            <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+              <i class="fab fa-facebook-square icon"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a href="mailto:?subject={{self.title}}&body=From the Centre for International Governance Innovation: {{self.title}} ({{ request.build_absolute_uri|slice:':-1' }})">
+              <i class="fa fa-envelope"></i>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:window.print()">
+              <i class="fa fa-print"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+  <section>
+    {% include 'includes/opinion_disclaimer.html' %}
+  </section>
+  {% if self.is_opinion and self.authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors %}
+  {% endif %}
+{% endblock content %}

@@ -1,6 +1,12 @@
 {% extends "base.html" %}
-
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'themeLongform' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeLongform' 'js' attrs='async' %}
+{% endblock %}
 
 {% block body_class %}longform-article{% endblock %}
 
@@ -91,8 +97,4 @@
       </div>
     </section>
   {% endif %}
-{% endblock %}
-
-{% block extra_bundles %}
-  {% render_bundle 'themeLongform' %}
 {% endblock %}

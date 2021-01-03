@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
-{% block content %}
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'eventPage' 'js' attrs='async' %}
+{% endblock %}
 
+{% block content %}
   {% include "includes/hero_standard.html" with title=self.title %}
 
   {% if self.image_hero %}
@@ -27,9 +33,4 @@
   {% if self.speakers|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.speakers title_override="Event Speaker"%}
   {% endif %}
-
 {% endblock content %}
-
-{% block extra_bundles %}
-  {% render_bundle 'eventPage' %}
-{% endblock extra_bundles %}

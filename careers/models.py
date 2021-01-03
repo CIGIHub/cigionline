@@ -50,7 +50,7 @@ class JobPostingPage(
     short_description = RichTextField(
         blank=True,
         null=False,
-        features=['bold', 'italic'],
+        features=['bold', 'italic', 'link'],
     )
 
     content_panels = [

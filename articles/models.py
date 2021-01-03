@@ -160,7 +160,21 @@ class ArticlePage(
         blank=True,
         help_text='Add a label to appear below the embedded video.',
     )
-    footnotes = RichTextField(blank=True)
+    footnotes = RichTextField(
+        blank=True,
+        features=[
+            'bold',
+            'h3',
+            'h4',
+            'italic',
+            'link',
+            'ol',
+            'ul',
+            'subscript',
+            'superscript',
+            'anchor',
+        ],
+    )
     hero_title_placement = models.CharField(
         blank=True,
         max_length=16,
@@ -225,7 +239,20 @@ class ArticlePage(
         help_text='Override the button text for the article website. If empty, the button will read "View Full Article".'
     )
     website_url = models.URLField(blank=True, max_length=512)
-    works_cited = RichTextField(blank=True)
+    works_cited = RichTextField(
+        blank=True,
+        features=[
+            'bold',
+            'h3',
+            'h4',
+            'italic',
+            'link',
+            'ol',
+            'ul',
+            'subscript',
+            'superscript',
+        ],
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -351,7 +378,14 @@ class ArticleSeriesPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
-    credits = RichTextField(blank=True)
+    credits = RichTextField(
+        blank=True,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+    )
     credits_artwork = models.CharField(
         max_length=255,
         blank=True,
@@ -394,7 +428,7 @@ class ArticleSeriesPage(
     short_description = RichTextField(
         blank=True,
         null=False,
-        features=['bold', 'italic'],
+        features=['bold', 'italic', 'link'],
     )
     video_banner = models.ForeignKey(
         'wagtailmedia.Media',

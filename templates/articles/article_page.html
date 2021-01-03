@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
-{% block content %}
+{% block extra_css %}
+  {% render_bundle 'articlePage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'articlePage' 'js' attrs='async' %}
+{% endblock %}
 
+{% block content %}
   {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
 
   {% if self.image_hero %}
@@ -41,7 +47,23 @@
       {% endif %}
     </section>
   {% endif %}
-
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container-sm">
+        <div class="footnotes">
+          {{ self.footnotes|richtext }}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container-sm">
+        <h2>Works Cited</h2>
+        {{ self.works_cited|richtext }}
+      </div>
+    </section>
+  {% endif %}
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
@@ -53,7 +75,3 @@
   {% include 'includes/recommended.html' with recommended=self.recommended.all %}
 
 {% endblock content %}
-
-{% block extra_bundles %}
-  {% render_bundle 'articlePage' %}
-{% endblock extra_bundles %}

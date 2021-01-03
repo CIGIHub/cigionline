@@ -94,6 +94,7 @@ class HomePage(Page):
         'articles.ArticleListPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
+        'core.PrivacyNoticePage',
         'events.EventListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
@@ -207,7 +208,10 @@ class BasicPageAbstract(models.Model):
     body_default_blocks = [
         ('accordion', blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
-            ('text', blocks.RichTextBlock(required=True)),
+            ('text', blocks.RichTextBlock(
+                features=['bold', 'italic', 'link'],
+                required=True,
+            )),
             ('columns', blocks.ChoiceBlock(choices=[
                 ('one', 'One'),
                 ('two', 'Two'),
@@ -252,11 +256,16 @@ class BasicPageAbstract(models.Model):
         ('pull_quote_right', PullQuoteRightBlock()),
         ('recommended', RecommendedBlock()),
         ('table', TableBlock()),
-        ('text_background_block', blocks.RichTextBlock()),
+        ('text_background_block', blocks.RichTextBlock(
+            features=['bold', 'italic', 'link'],
+        )),
         ('text_border_block', TextBorderBlock()),
         ('tool_tip', blocks.StructBlock([
             ('anchor', blocks.CharBlock(required=True)),
-            ('text', blocks.RichTextBlock(required=True)),
+            ('text', blocks.RichTextBlock(
+                features=['bold', 'italic', 'link'],
+                required=True,
+            )),
             ('name', blocks.CharBlock(required=False)),
             ('title', blocks.CharBlock(required=False)),
             ('image', ImageChooserBlock(required=False)),
@@ -704,6 +713,24 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     class Meta:
         verbose_name = 'Annual Report Page'
         verbose_name_plural = 'Annual Report Pages'
+
+
+class PrivacyNoticePage(
+    Page,
+    BasicPageAbstract,
+):
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    template = 'core/privacy_notice_page.html'
+
+    class Meta:
+        verbose_name = 'Privacy Notice'
 
 
 class Theme(models.Model):
