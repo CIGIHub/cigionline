@@ -25,6 +25,9 @@
   {% if self.body %}
     <section class="body">
       {% if self.article_type == 'cigi_in_the_news' %}
+        <div class="container-sm">
+          <p><em>The following is an excerpt. To view the full article please visit the link below</em></p>
+        </div>
         {{ self.body|truncatewords_html:100 }}
         <div class="container-sm">
           <p class="text-center">* * *</p>
