@@ -5,7 +5,7 @@
   {% include "includes/footer_bracket.svg" %}
 
   <div class="recommended-content-medium row">
-    {% for content in recommended %}
+    {% for content in recommended|slice:":3" %}
       <div class="col-md">
         {% include 'includes/features/feature_content_medium.html' with content=content.recommended_content_page.specific %}
       </div>

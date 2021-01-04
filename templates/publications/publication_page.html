@@ -91,7 +91,7 @@
     {% include "includes/about_the_author.html" with authors=self.editors title_override="About the Editor" %}
   {% endif %}
 
-  {% if self.recommended|length > 0 %}
+  {% if self.recommended.all|length > 0 %}
     {% include 'includes/recommended.html' with recommended=self.recommended.all %}
   {% endif %}
 {% endblock content %}
