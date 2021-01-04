@@ -2,3 +2,10 @@
   fill: #fff;
   width: 100%;
 }
+
+.Draftail-block--ENDOFARTICLE {
+  background-color: black;
+  height: 25px;
+  margin: 10px auto;
+  width: 25px;
+}
