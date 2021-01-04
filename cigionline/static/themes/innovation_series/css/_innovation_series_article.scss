@@ -158,5 +158,9 @@
     height: 41px;
     margin: 3em auto;
     width: 41px;
+
+    &::after {
+      content: '';
+    }
   }
 }
