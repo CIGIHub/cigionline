@@ -65,6 +65,23 @@
       {% include_block block %}
     {% endfor %}
   </section>
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container-sm">
+        <div class="footnotes">
+          {{ self.footnotes|richtext }}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container-sm">
+        <h2>Works Cited</h2>
+        {{ self.works_cited|richtext }}
+      </div>
+    </section>
+  {% endif %}
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>

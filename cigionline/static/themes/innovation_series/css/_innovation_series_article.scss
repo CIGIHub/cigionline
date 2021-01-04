@@ -140,4 +140,12 @@
       font-weight: 700;
     }
   }
+
+  .end-of-article {
+    background-image: url('../assets/article_end_marker.png');
+    background-repeat: no-repeat;
+    height: 41px;
+    margin: 3em auto;
+    width: 41px;
+  }
 }
