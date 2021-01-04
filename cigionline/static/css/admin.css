@@ -4,8 +4,8 @@
 }
 
 .Draftail-block--ENDOFARTICLE {
-  background-color: black;
-  height: 25px;
-  margin: 10px auto;
-  width: 25px;
+  text-align: center;
+}
+.Draftail-block--ENDOFARTICLE::before {
+  content: '***';
 }
