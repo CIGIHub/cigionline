@@ -5,22 +5,6 @@
   text-transform: uppercase;
 }
 
-.topics {
-  list-style-type: none;
-  margin: 0;
-
-  .topic {
-    @include comma-separated;
-    display: inline;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-
-    &::after {
-      color: $black;
-    }
-  }
-}
-
 // PARAGRAPHS
 .paragraph-heading {
   border-top: 0.25em solid $black;
