@@ -2,9 +2,11 @@
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block extra_css %}
+  {% render_bundle 'articlePage' 'css' %}
   {% render_bundle 'themeInnovationSeries' 'css' %}
 {% endblock %}
 {% block extra_js %}
+  {% render_bundle 'articlePage' 'js' attrs='async' %}
   {% render_bundle 'themeInnovationSeries' 'js' attrs='async' %}
 {% endblock %}
 
