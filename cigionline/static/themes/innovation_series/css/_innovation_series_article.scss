@@ -141,11 +141,22 @@
     }
   }
 
-  .end-of-article {
-    background-image: url('../assets/article_end_marker.png');
-    background-repeat: no-repeat;
-    height: 41px;
-    margin: 3em auto;
-    width: 41px;
+  .body {
+    hr {
+      background-color: transparent;
+      background-image: url('../assets/article_divider.png');
+      background-repeat: no-repeat;
+      height: 37px;
+      margin: 2em auto 3em;
+      width: 134px;
+    }
+
+    .end-of-article {
+      background-image: url('../assets/article_end_marker.png');
+      background-repeat: no-repeat;
+      height: 41px;
+      margin: 3em auto;
+      width: 41px;
+    }
   }
 }
