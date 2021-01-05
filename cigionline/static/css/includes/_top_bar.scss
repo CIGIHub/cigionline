@@ -21,7 +21,7 @@ header {
     display: flex;
     height: 36px;
     justify-content: space-between;
-    transition: height .5s ease;
+    transition: height 0.5s ease;
 
     .desktop-menu {
       opacity: 1;
@@ -32,7 +32,6 @@ header {
       height: 36px;
 
       .cigi-logo {
-
         .large-logo {
           opacity: 0;
         }
@@ -179,7 +178,7 @@ header {
     overflow: hidden;
     position: fixed;
     top: 0;
-    transition: .3s ease-in-out;
+    transition: 0.3s ease-in-out;
     visibility: hidden;
     width: 100%;
     z-index: 1;
@@ -200,12 +199,25 @@ header {
       position: absolute;
       top: 0;
       transform: translate(0, -100%);
-      transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
       width: 100%;
 
       &.overlay-menu {
         height: auto;
+        list-style-type: none;
         padding-top: 66px;
+
+        .overlay-menu-content {
+          @include media-breakpoint-up(md) {
+            display: flex;
+            flex-wrap: wrap;
+          }
+
+          .overlay-menu-submenu {
+            border-right: solid 1px $cigi-darkest-grey;
+            flex: 0 0 25%;
+          }
+        }
       }
     }
 

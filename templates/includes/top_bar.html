@@ -56,12 +56,12 @@
   <div class="custom-popup-wrapper" id="popup-menu">
     <div class="custom-popup-inner overlay-menu">
       <div class="container-lg">
-        <div class="custom-popup-content">
-          {% for menu in dropdown_menus %}
+        <div class="overlay-menu-content">
+          {% for sub_menu in main_menu_items %}
             <div class="overlay-menu-submenu">
-              <a class="overlay-menu-submenu-link" href="{% slugurl menu.slug %}">{{menu.name}}</a>
+              <a class="overlay-menu-submenu-link" href="{{ sub_menu.link }}">{{sub_menu.title}}</a>
               <ul>
-                {% for menu_item in menu.menu_items.all %}
+                {% for menu_item in sub_menu.submenu.menu_items.all %}
                   <li>
                     <a class="overlay-menu-submenu-item-link" href="{{ menu_item.link }}">{{ menu_item.title }}</a>
                   </li>
