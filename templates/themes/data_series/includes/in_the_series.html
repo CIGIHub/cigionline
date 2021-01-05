@@ -1,0 +1,18 @@
+<section class="data-series-in-the-series">
+  <div class="container-sm">
+      <article class="article-series">
+        <h3><a href="{{ article_series.url }}">{{ article_series.title }}</a></h3>
+        <div class="series-items">
+          {% for block in article_series.series_items %}
+            {% if block.block_type == 'series_item' and block.value.id != article_id %}
+              <article>
+                <h5><a href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
+              </article>
+            {% elif block.block_type == 'category_title' %}
+              <h4>{{ block.value }}</h4>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </article>
+  </div>
+</section>
