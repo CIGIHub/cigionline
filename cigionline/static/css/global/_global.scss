@@ -222,3 +222,13 @@ img {
     }
   }
 }
+
+// End of Article
+.end-of-article {
+  margin: 2em auto;
+  text-align: center;
+
+  &::after {
+    content: '***';
+  }
+}
