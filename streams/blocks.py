@@ -175,6 +175,7 @@ class ParagraphBlock(blocks.RichTextBlock):
         super().__init__(**kwargs)
         self.features = [
             'bold',
+            'endofarticle',
             'h2',
             'h3',
             'h4',

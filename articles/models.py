@@ -164,6 +164,7 @@ class ArticlePage(
         blank=True,
         features=[
             'bold',
+            'endofarticle',
             'h3',
             'h4',
             'italic',
@@ -243,6 +244,7 @@ class ArticlePage(
         blank=True,
         features=[
             'bold',
+            'endofarticle',
             'h3',
             'h4',
             'italic',

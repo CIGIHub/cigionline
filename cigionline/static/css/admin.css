@@ -2,3 +2,10 @@
   fill: #fff;
   width: 100%;
 }
+
+.Draftail-block--ENDOFARTICLE {
+  text-align: center;
+}
+.Draftail-block--ENDOFARTICLE::before {
+  content: '***';
+}
