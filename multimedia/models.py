@@ -298,6 +298,7 @@ class MultimediaPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_banner'),
                 ImageChooserPanel('image_square'),
             ],
             heading='Images',
