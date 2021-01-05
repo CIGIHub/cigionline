@@ -24,11 +24,11 @@
 
   {% if self.body %}
     <section class="body">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-
       {% if self.article_type == 'cigi_in_the_news' %}
+        <div class="container-sm">
+          <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
+        </div>
+        {{ self.body|truncatewords_html:100 }}
         <div class="container-sm">
           <p class="text-center">* * *</p>
         </div>
@@ -44,9 +44,14 @@
             </a>
           </div>
         {% endif %}
+      {% else %}
+        {% for block in self.body %}
+          {% include_block block %}
+        {% endfor %}
       {% endif %}
     </section>
   {% endif %}
+
   {% if self.footnotes %}
     <section class="article-footnotes">
       <div class="container-sm">
@@ -56,6 +61,7 @@
       </div>
     </section>
   {% endif %}
+
   {% if self.works_cited %}
     <section class="article-works-cited">
       <div class="container-sm">
@@ -64,6 +70,7 @@
       </div>
     </section>
   {% endif %}
+
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
@@ -72,4 +79,7 @@
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
 
+  {% if self.recommended.all|length > 0 %}
+    {% include 'includes/recommended.html' with recommended=self.recommended.all %}
+  {% endif %}
 {% endblock content %}

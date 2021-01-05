@@ -13,4 +13,11 @@
   @include media-breakpoint-up(md) {
     @include image-button($size: 3em);
   }
+  @include hover-darken;
+
+  .feature-content-text {
+    @include media-breakpoint-up(md) {
+      margin-top: 0.75em;
+    }
+  }
 }

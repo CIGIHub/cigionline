@@ -1,0 +1,13 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% image article_series.image_banner original as image_banner %}
+<section class="ai-series-in-the-series" style="background-image: url('{{ image_banner.url }}')">
+  <div class="container-md">
+    <article>
+      <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
+      <div class="short-description">
+        {{ article_series.short_description|richtext }}
+      </div>
+    </article>
+  </div>
+</section>

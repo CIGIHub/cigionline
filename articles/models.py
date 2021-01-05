@@ -164,6 +164,7 @@ class ArticlePage(
         blank=True,
         features=[
             'bold',
+            'endofarticle',
             'h3',
             'h4',
             'italic',
@@ -243,6 +244,7 @@ class ArticlePage(
         blank=True,
         features=[
             'bold',
+            'endofarticle',
             'h3',
             'h4',
             'italic',
@@ -441,6 +443,12 @@ class ArticleSeriesPage(
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(ArticleSeriesPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/article_series_page.html'
+        return standard_template
 
     content_panels = [
         BasicPageAbstract.title_panel,
