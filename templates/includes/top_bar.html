@@ -1,6 +1,7 @@
 {% load wagtailcore_tags menu_tags %}
 
 {% get_menu_items 'main' as main_menu_items %}
+{% get_dropdown_menus as dropdown_menus %}
 
 <header>
   <div class="main-navigation-wrapper">
@@ -18,15 +19,16 @@
           {% endfor %}
         </ul>
         <ul>
-            <li class="overlay-controls menu-break">
+          <li class="overlay-controls menu-break">
             <button class="custom-nav-popup-btn overlay-controls-button" id="open-search-btn">
               <span class="icon-opened"><i class="far fa-times"></i></span>
               <span class="icon-closed"><i class="far fa-search"></i></span>
             </button>
           </li>
           <li class="overlay-controls">
-            <button class="overlay-controls-button">
-              <i class="far fa-bars"></i>
+            <button class="custom-nav-popup-btn overlay-controls-button" id="open-menu-btn">
+              <span class="icon-opened"><i class="far fa-times"></i></span>
+              <span class="icon-closed"><i class="far fa-bars"></i></span>
             </button>
           </li>
         </ul>
@@ -51,4 +53,27 @@
       </div>
     </div>
   </div>
+  <div class="custom-popup-wrapper" id="popup-menu">
+    <div class="custom-popup-inner overlay-menu">
+      <div class="container-lg">
+        <div class="custom-popup-content">
+          {% for menu in dropdown_menus %}
+            <div class="overlay-menu-submenu">
+              <a class="overlay-menu-submenu-link" href="{% slugurl menu.slug %}">{{menu.name}}</a>
+              <ul>
+                {% for menu_item in menu.menu_items.all %}
+                  <li>
+                    <a class="overlay-menu-submenu-item-link" href="{{ menu_item.link }}">{{ menu_item.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 </header>
+
+
+ 
