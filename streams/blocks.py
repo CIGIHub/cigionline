@@ -103,6 +103,22 @@ class ChartBlock(blocks.StructBlock):
         template = 'streams/chart_block.html'
 
 
+class EmbeddedVideoBlock(blocks.StructBlock):
+    video_url = blocks.URLBlock(required=True)
+    caption = blocks.CharBlock(required=False)
+    image = ImageChooserBlock(required=False)
+    aspect_ratio = blocks.ChoiceBlock(choices=[
+        ('none', 'None'),
+        ('landscape', 'Landscape'),
+        ('square', 'Square'),
+    ])
+
+    class Meta:
+        icon = 'media'
+        label = 'Embedded Video'
+        template = 'streams/embedded_video_block.html'
+
+
 class ExternalQuoteBlock(blocks.StructBlock):
     """External quote with optional source"""
 
