@@ -203,19 +203,58 @@ header {
       width: 100%;
 
       &.overlay-menu {
-        height: auto;
-        list-style-type: none;
+        @include media-breakpoint-up(md) {
+          height: auto;
+        }
+        height: 100%;
         padding-top: 66px;
 
         .overlay-menu-content {
-          @include media-breakpoint-up(md) {
-            display: flex;
-            flex-wrap: wrap;
-          }
-
           .overlay-menu-submenu {
-            border-right: solid 1px $cigi-darkest-grey;
-            flex: 0 0 25%;
+            @include link($color: $white, $hover-color: $cigi-dark-pink);
+            @include media-breakpoint-up(md) {
+              border-bottom: 0;
+              border-right: solid 1px $cigi-darkest-grey;
+              height: 250px;
+              margin-bottom: 2em;
+              padding: 0 1.5em;
+            }
+            border-bottom: 1px solid $divider-grey;
+            font-size: 1.3em;
+            padding: 1em 0.5em;
+            position: relative;
+
+            &:nth-child(4) {
+              border-right: 0;
+            }
+
+            .accordion {
+              @include media-breakpoint-up(md) {
+                display: none;
+              }
+              color: $white;
+              float: right;
+
+              i {
+                font-size: 0.8em;
+              }
+            }
+
+            ul {
+              @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+              @include media-breakpoint-up(md) {
+                max-height: 100%;
+              }
+              font-size: 0.75em;
+              margin: 0;
+              max-height: 0;
+              overflow: hidden;
+              transition: max-height 0.2s ease-out;
+
+              li {
+                list-style-type: none;
+              }
+            }
           }
         }
       }
