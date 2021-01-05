@@ -18,8 +18,9 @@ $(function() {
 });
 // SEARCH BAR OPEN
 
-$(document).ready(function() {
+$(function() {
   const $openSearchBtn = $('#open-search-btn');
+  const $openMenuBtn = $('#open-menu-btn');
   const openMenuClass = 'opened-popup';
 
   $openSearchBtn.on('click', function() {
@@ -28,7 +29,13 @@ $(document).ready(function() {
     $('body').toggleClass('disable-scroll');
   });
 
-  $(document).on('click', `.${openMenuClass}`, function() {
+  $openMenuBtn.on('click', function() {
+    $(this).toggleClass('open');
+    $('#popup-menu').toggleClass(openMenuClass);
+    $('body').toggleClass('disable-scroll');
+  });
+
+  $(document).on('click', `.${openMenuClass}`, function(e) {
     $(this).removeClass(openMenuClass);
     $openSearchBtn.removeClass('open');
     $('body').toggleClass('disable-scroll');

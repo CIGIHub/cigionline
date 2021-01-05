@@ -202,6 +202,11 @@ header {
       transform: translate(0, -100%);
       transition: opacity .5s ease-in-out, transform .5s ease-in-out;
       width: 100%;
+
+      &.overlay-menu {
+        height: auto;
+        padding-top: 66px;
+      }
     }
 
     .custom-popup-content {
