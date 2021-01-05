@@ -1,0 +1,41 @@
+.ai-series-article-series {
+  .ai-series-article-series-hero {
+    background-size: cover;
+
+    header {
+      background-color: transparent;
+      position: relative;
+
+      .main-navigation-wrapper {
+        background-color: transparent;
+      }
+    }
+
+    .hero-content {
+      padding-bottom: 4em;
+      padding-top: 4em;
+    }
+  }
+
+  .ai-series-article-series-in-the-series {
+    .authors {
+      list-style-type: none;
+
+      li {
+        display: inline;
+
+        &:not(:only-child) {
+          &::after {
+            content: ' and ';
+          }
+        }
+
+        &:last-child {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

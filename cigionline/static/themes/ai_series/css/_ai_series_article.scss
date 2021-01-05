@@ -1,0 +1,33 @@
+.ai-series-article {
+  .ai-series-article-hero {
+    background-size: cover;
+
+    header {
+      background-color: transparent;
+      position: relative;
+
+      .main-navigation-wrapper {
+        background-color: transparent;
+      }
+    }
+
+    .hero-content {
+      padding-bottom: 5em;
+      padding-top: 8em;
+    }
+  }
+
+  .article-footnotes,
+  .article-works-cited {
+    font-family: Helvetica, sans-serif;
+
+    h2 {
+      margin-bottom: 0.5em;
+      padding-bottom: 0;
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+}
