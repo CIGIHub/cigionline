@@ -132,6 +132,14 @@ class MultimediaPage(
         related_name='+',
         verbose_name='Companion essay',
     )
+    image_banner = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+    )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -290,6 +298,7 @@ class MultimediaPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_banner'),
                 ImageChooserPanel('image_square'),
             ],
             heading='Images',
