@@ -1,0 +1,9 @@
+@import '../../../css/global/variables';
+@import '../../../css/global/mixins';
+
+$data-series-background-color: #f2f0ea;
+$data-series-primary-color: #31c3ba;
+
+@import './article_series_page';
+@import './article_page';
+@import './multimedia_page';
