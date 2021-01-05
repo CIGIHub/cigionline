@@ -207,8 +207,8 @@ header {
           height: auto;
         }
         height: 100%;
-        overflow: scroll;
-        padding-top: 66px;
+        overflow-y: scroll;
+        padding-top: 90px;
 
         .overlay-menu-content {
           .overlay-menu-submenu {
@@ -216,12 +216,13 @@ header {
             @include media-breakpoint-up(md) {
               border-bottom: 0;
               border-right: solid 1px $cigi-darkest-grey;
+              font-size: 1.3em;
               height: 250px;
               margin-bottom: 2em;
-              padding: 0 1.5em;
+              padding: 0 0 0 1.3em;
             }
             border-bottom: 1px solid $divider-grey;
-            font-size: 1.3em;
+            font-size: 1.1em;
             padding: 1em;
             position: relative;
 
@@ -231,6 +232,14 @@ header {
 
             &:last-child {
               border-bottom: 0;
+              border-right: 0;
+            }
+
+            &:nth-child(1),
+            &:nth-child(5) {
+              @include media-breakpoint-up(md) {
+                padding-left: 0.8em;
+              }
             }
 
             .accordion {
@@ -268,10 +277,8 @@ header {
                 li {
                   @include media-breakpoint-up(md) {
                     display: block;
-                    font-size: 0.8em;
                   }
                   display: inline-block;
-                  font-size: 0.7em;
                   margin: 0 0.8em 0.5em 0;
                 }
               }
@@ -282,7 +289,7 @@ header {
 
                 li {
                   display: inline-block;
-                  margin-right: 0.5em;
+                  margin-right: 0.7em;
                 }
               }
             }
