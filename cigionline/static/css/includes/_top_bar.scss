@@ -207,6 +207,7 @@ header {
           height: auto;
         }
         height: 100%;
+        overflow: scroll;
         padding-top: 66px;
 
         .overlay-menu-content {
@@ -221,11 +222,15 @@ header {
             }
             border-bottom: 1px solid $divider-grey;
             font-size: 1.3em;
-            padding: 1em 0.5em;
+            padding: 1em;
             position: relative;
 
             &:nth-child(4) {
               border-right: 0;
+            }
+
+            &:last-child {
+              border-bottom: 0;
             }
 
             .accordion {
@@ -253,6 +258,32 @@ header {
 
               li {
                 list-style-type: none;
+              }
+
+              &.overlay-menu-footer-menu {
+                @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+                margin-bottom: 1em;
+                max-height: 100%;
+
+                li {
+                  @include media-breakpoint-up(md) {
+                    display: block;
+                    font-size: 0.8em;
+                  }
+                  display: inline-block;
+                  font-size: 0.7em;
+                  margin: 0 0.8em 0.5em 0;
+                }
+              }
+
+              &.overlay-menu-social-links {
+                @include link($color: $white, $hover-color: $cigi-dark-pink);
+                max-height: 100%;
+
+                li {
+                  display: inline-block;
+                  margin-right: 0.5em;
+                }
               }
             }
           }
