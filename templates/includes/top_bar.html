@@ -1,7 +1,7 @@
 {% load wagtailcore_tags menu_tags %}
 
 {% get_menu_items 'main' as main_menu_items %}
-{% get_dropdown_menus as dropdown_menus %}
+{% get_menu_items 'footer' as footer_menu_items %}
 
 <header>
   <div class="main-navigation-wrapper">
@@ -56,10 +56,13 @@
   <div class="custom-popup-wrapper" id="popup-menu">
     <div class="custom-popup-inner overlay-menu">
       <div class="container-lg">
-        <div class="overlay-menu-content">
+        <div class="overlay-menu-content row row-cols-1 row-cols-md-4 row-eq-height">
           {% for sub_menu in main_menu_items %}
-            <div class="overlay-menu-submenu">
+            <div class="overlay-menu-submenu col">
               <a class="overlay-menu-submenu-link" href="{{ sub_menu.link }}">{{sub_menu.title}}</a>
+              <div class="accordion">
+                <i class="fas fa-plus"></i>
+              </div>
               <ul>
                 {% for menu_item in sub_menu.submenu.menu_items.all %}
                   <li>
@@ -69,11 +72,17 @@
               </ul>
             </div>
           {% endfor %}
+          <div class="overlay-menu-submenu col">
+            <ul class="overlay-menu-footer-menu">
+              {% for menu_item in footer_menu_items %}
+                <li>
+                  <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </header>
-
-
- 
