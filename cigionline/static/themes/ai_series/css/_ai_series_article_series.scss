@@ -16,4 +16,26 @@
       padding-top: 4em;
     }
   }
+
+  .ai-series-article-series-in-the-series {
+    .authors {
+      list-style-type: none;
+
+      li {
+        display: inline;
+
+        &:not(:only-child) {
+          &::after {
+            content: ' and ';
+          }
+        }
+
+        &:last-child {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 }
