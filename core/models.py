@@ -4,6 +4,7 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
     BlockQuoteBlock,
+    EmbeddedVideoBlock,
     ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
@@ -236,15 +237,7 @@ class BasicPageAbstract(models.Model):
             help_text='Paste the link to the video here. It should look like this: https://www.tiktok.com/@who/video/6805515697175792901',
             required=True,
         )),
-        ('embedded_video', blocks.StructBlock([
-            ('video_url', blocks.URLBlock(required=True)),
-            ('caption', blocks.CharBlock(required=False)),
-            ('image', ImageChooserBlock(required=False)),
-            ('aspect_ratio', blocks.ChoiceBlock(choices=[
-                ('landscape', 'Landscape'),
-                ('square', 'Square'),
-            ])),
-        ])),
+        ('embedded_video', EmbeddedVideoBlock()),
         ('external_quote', ExternalQuoteBlock()),
         ('external_videos', blocks.ListBlock(blocks.StructBlock([
             ('title', blocks.CharBlock(required=True)),
