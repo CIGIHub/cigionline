@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mhy5jui.css">
+{% endblock%}
 {% block extra_css %}
   {% render_bundle 'articlePage' 'css' %}
   {% render_bundle 'themeAISeries' 'css' %}
@@ -11,7 +14,7 @@
 {% block header %}
   {% image self.image_banner original as image_hero %}
   <div class="ai-series-article-hero" style="background-image: url('{{ image_hero.url }}');">
-    {% include "includes/top-bar.html" %}
+    {% include "includes/top_bar.html" %}
     <div class="container-lg hero-content">
       {% include "includes/social_links.html" with title=self.title %}
       <h1>{{ self.title }}</h1>
