@@ -4,9 +4,19 @@
 <section class="ai-series-in-the-series" style="background-image: url('{{ image_banner.url }}')">
   <div class="container-md">
     <article>
-      <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
-      <div class="short-description">
-        {{ article_series.short_description|richtext }}
+      <div class="row">
+        <div class="col-md-8 col-lg-6">
+          <div class="essay-series-label">A CIGI Essay Series</div>
+          <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
+        </div>
+        <div class="col-md-4 col-lg-4 offset-lg-2">
+          <div class="contributors-label">Contributors</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col short-description">
+          {{ article_series.short_description|richtext }}
+        </div>
       </div>
     </article>
   </div>

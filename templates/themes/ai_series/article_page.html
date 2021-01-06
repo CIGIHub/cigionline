@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mhy5jui.css">
+{% endblock%}
 {% block extra_css %}
   {% render_bundle 'articlePage' 'css' %}
   {% render_bundle 'themeAISeries' 'css' %}
