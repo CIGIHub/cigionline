@@ -21,7 +21,7 @@ header {
     display: flex;
     height: 36px;
     justify-content: space-between;
-    transition: height .5s ease;
+    transition: height 0.5s ease;
 
     .desktop-menu {
       opacity: 1;
@@ -32,7 +32,6 @@ header {
       height: 36px;
 
       .cigi-logo {
-
         .large-logo {
           opacity: 0;
         }
@@ -179,7 +178,7 @@ header {
     overflow: hidden;
     position: fixed;
     top: 0;
-    transition: .3s ease-in-out;
+    transition: 0.3s ease-in-out;
     visibility: hidden;
     width: 100%;
     z-index: 1;
@@ -200,8 +199,103 @@ header {
       position: absolute;
       top: 0;
       transform: translate(0, -100%);
-      transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
       width: 100%;
+
+      &.overlay-menu {
+        @include media-breakpoint-up(md) {
+          height: auto;
+        }
+        height: 100%;
+        overflow-y: scroll;
+        padding-top: 90px;
+
+        .overlay-menu-content {
+          .overlay-menu-submenu {
+            @include link($color: $white, $hover-color: $cigi-dark-pink);
+            @include media-breakpoint-up(md) {
+              border-bottom: 0;
+              border-right: solid 1px $cigi-darkest-grey;
+              font-size: 1.3em;
+              height: 250px;
+              margin-bottom: 2em;
+              padding: 0 0 0 1.3em;
+            }
+            border-bottom: 1px solid $divider-grey;
+            font-size: 1.1em;
+            padding: 1em;
+            position: relative;
+
+            &:nth-child(4) {
+              border-right: 0;
+            }
+
+            &:last-child {
+              border-bottom: 0;
+              border-right: 0;
+            }
+
+            &:nth-child(1),
+            &:nth-child(5) {
+              @include media-breakpoint-up(md) {
+                padding-left: 0.8em;
+              }
+            }
+
+            .accordion {
+              @include media-breakpoint-up(md) {
+                display: none;
+              }
+              color: $white;
+              float: right;
+
+              i {
+                font-size: 0.8em;
+              }
+            }
+
+            ul {
+              @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+              @include media-breakpoint-up(md) {
+                max-height: 100%;
+              }
+              font-size: 0.75em;
+              margin: 0;
+              max-height: 0;
+              overflow: hidden;
+              transition: max-height 0.2s ease-out;
+
+              li {
+                list-style-type: none;
+              }
+
+              &.overlay-menu-footer-menu {
+                @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+                margin-bottom: 1em;
+                max-height: 100%;
+
+                li {
+                  @include media-breakpoint-up(md) {
+                    display: block;
+                  }
+                  display: inline-block;
+                  margin: 0 0.8em 0.5em 0;
+                }
+              }
+
+              &.overlay-menu-social-links {
+                @include link($color: $white, $hover-color: $cigi-dark-pink);
+                max-height: 100%;
+
+                li {
+                  display: inline-block;
+                  margin-right: 0.7em;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     .custom-popup-content {
