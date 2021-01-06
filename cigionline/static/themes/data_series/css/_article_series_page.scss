@@ -1,0 +1,62 @@
+.data-series-article-series {
+  background-color: $data-series-background-color;
+
+  header {
+    background-color: $data-series-background-color;
+    position: relative;
+
+    .main-navigation-wrapper {
+      background-color: $data-series-background-color;
+
+      .cigi-top-bar {
+        &.scroll-nav {
+          height: 36px;
+
+          @media screen and (min-width: $large) {
+            height: 66px;
+          }
+        }
+
+        .cigi-logo {
+          svg {
+            fill: $black;
+          }
+        }
+
+        nav {
+          ul {
+            a,
+            button {
+              color: $black;
+
+              &:hover {
+                color: $black;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .data-series-article-series-in-the-series {
+    article {
+      .authors {
+        span {
+          &:not(:only-child) {
+            &::after {
+              content: ', ';
+              margin-right: 2px;
+            }
+          }
+
+          &:last-child {
+            &::after {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
