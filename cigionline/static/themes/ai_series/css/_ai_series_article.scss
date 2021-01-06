@@ -1,6 +1,16 @@
 .ai-series-article {
   .ai-series-article-hero {
-    background-size: cover;
+    @media screen and (min-width: 768px) {
+      background-size: cover;
+      height: 30em;
+      text-align: left;
+    }
+    background-color: $ai-primary-color;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    background-size: auto 70vh;
+    height: 100vh;
+    text-align: center;
 
     header {
       background-color: transparent;
@@ -13,7 +23,53 @@
 
     .hero-content {
       padding-bottom: 5em;
-      padding-top: 8em;
+      padding-top: 3em;
+
+      @media screen and (min-width: 768px) {
+        padding-top: 8em;
+      }
+
+      h1,
+      a,
+      .authors,
+      .date {
+        color: $white;
+        font-family: $ai-garamond;
+      }
+
+      h1 {
+        font-size: 2em;
+        font-weight: 600;
+        margin: 0 0 0.5em;
+
+        @media screen and (min-width: 768px) {
+          font-size: 2.75em;
+          margin-bottom: 0.2em;
+        }
+      }
+
+      .authors {
+        @include link($color: $white, $hover-color: $cigi-dark-pink);
+        font-size: 1em;
+        justify-content: center;
+        margin: 0;
+
+        @media screen and (min-width: 768px) {
+          justify-content: left;
+        }
+
+        label {
+          display: none;
+        }
+      }
+
+      .social-links {
+        @include link($color: $white, $hover-color: $cigi-dark-pink);
+
+        a {
+          font-size: 1.3em;
+        }
+      }
     }
   }
 
