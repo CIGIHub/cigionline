@@ -4,9 +4,6 @@
 {% block extra_css %}
   {% render_bundle 'publicationPage' 'css' %}
 {% endblock %}
-{% block extra_js %}
-  {% render_bundle 'publicationPage' 'js' attrs='async' %}
-{% endblock %}
 
 {% block content %}
   {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
