@@ -6,6 +6,19 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 
 
+class ThemeableBlock:
+    implemented_themes = []
+
+    def get_theme_dir(self, theme_name):
+        return theme_name.lower().replace(' ', '_').replace("-", '_')
+
+    def get_theme_template(self, standard_template, context, template_name):
+        if context['page'] and hasattr(context['page'], 'theme') and \
+                context['page'].theme and self.get_theme_dir(context['page'].theme.name) in self.implemented_themes:
+            return f'themes/{self.get_theme_dir(context["page"].theme.name)}/streams/{template_name}.html'
+        return standard_template
+
+
 class VideoBlock(AbstractMediaChooserBlock):
     def render_basic(self, value, context=None):
         if not value:
@@ -26,7 +39,7 @@ class VideoBlock(AbstractMediaChooserBlock):
         ))
 
 
-class AccordionBlock(blocks.StructBlock):
+class AccordionBlock(blocks.StructBlock, ThemeableBlock):
     title = blocks.CharBlock(required=True)
     text = blocks.RichTextBlock(
         features=[
@@ -41,13 +54,22 @@ class AccordionBlock(blocks.StructBlock):
         required=True,
     )
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(AccordionBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'accordion_block')
+
     class Meta:
         icon = 'edit'
         label = 'Accordion'
         template = 'streams/accordion_block.html'
 
 
-class AuthorBlock(blocks.PageChooserBlock):
+class AuthorBlock(blocks.PageChooserBlock, ThemeableBlock):
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(AuthorBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'author_block')
+
     def get_api_representation(self, value, context=None):
         if value:
             return {
@@ -61,9 +83,13 @@ class AuthorBlock(blocks.PageChooserBlock):
         label = 'Author'
 
 
-class AutoPlayVideoBlock(blocks.StructBlock):
+class AutoPlayVideoBlock(blocks.StructBlock, ThemeableBlock):
     video = VideoBlock(required=False)
     caption = blocks.CharBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(AutoPlayVideoBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'autoplay_video_block')
 
     class Meta:
         icon = 'media'
@@ -71,7 +97,7 @@ class AutoPlayVideoBlock(blocks.StructBlock):
         template = 'streams/autoplay_video_block.html'
 
 
-class BlockQuoteBlock(blocks.StructBlock):
+class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
     """Block quote paragraph with optional image and link"""
 
     quote = blocks.RichTextBlock(
@@ -84,18 +110,26 @@ class BlockQuoteBlock(blocks.StructBlock):
     link_url = blocks.URLBlock(required=False)
     link_text = blocks.CharBlock(required=False)
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(BlockQuoteBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'block_quote_block')
+
     class Meta:
         icon = 'openquote'
         label = 'Blockquote Paragraph'
         template = 'streams/block_quote_block.html'
 
 
-class ChartBlock(blocks.StructBlock):
+class ChartBlock(blocks.StructBlock, ThemeableBlock):
     """Chart image with title"""
 
     title = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ChartBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'chart_block')
 
     class Meta:
         icon = 'image'
@@ -103,7 +137,7 @@ class ChartBlock(blocks.StructBlock):
         template = 'streams/chart_block.html'
 
 
-class EmbeddedVideoBlock(blocks.StructBlock):
+class EmbeddedVideoBlock(blocks.StructBlock, ThemeableBlock):
     video_url = blocks.URLBlock(required=True)
     caption = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=False)
@@ -113,13 +147,17 @@ class EmbeddedVideoBlock(blocks.StructBlock):
         ('square', 'Square'),
     ])
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EmbeddedVideoBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'embedded_video_block')
+
     class Meta:
         icon = 'media'
         label = 'Embedded Video'
         template = 'streams/embedded_video_block.html'
 
 
-class ExternalQuoteBlock(blocks.StructBlock):
+class ExternalQuoteBlock(blocks.StructBlock, ThemeableBlock):
     """External quote with optional source"""
 
     quote = blocks.RichTextBlock(
@@ -128,17 +166,25 @@ class ExternalQuoteBlock(blocks.StructBlock):
     )
     source = blocks.CharBlock(required=False)
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ExternalQuoteBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'external_quote_block')
+
     class Meta:
         icon = 'edit'
         label = 'External Quote'
         template = 'streams/external_quote_block.html'
 
 
-class ImageBlock(blocks.StructBlock):
+class ImageBlock(blocks.StructBlock, ThemeableBlock):
     """Image"""
 
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ImageBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'image_block')
 
     class Meta:
         icon = 'image'
@@ -146,11 +192,15 @@ class ImageBlock(blocks.StructBlock):
         template = 'streams/image_block.html'
 
 
-class ImageFullBleedBlock(blocks.StructBlock):
+class ImageFullBleedBlock(blocks.StructBlock, ThemeableBlock):
     """Full bleed image"""
 
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ImageFullBleedBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'image_full_bleed_block')
 
     class Meta:
         icon = 'image'
@@ -158,8 +208,12 @@ class ImageFullBleedBlock(blocks.StructBlock):
         template = 'streams/image_full_bleed_block.html'
 
 
-class InlineVideoBlock(blocks.PageChooserBlock):
+class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
     """Inline video"""
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(InlineVideoBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'inline_video_block')
 
     class Meta:
         icon = 'media'
@@ -167,7 +221,7 @@ class InlineVideoBlock(blocks.PageChooserBlock):
         template = 'streams/inline_video_block.html'
 
 
-class ParagraphBlock(blocks.RichTextBlock):
+class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
     """Standard text paragraph."""
     def __init__(
         self, required=True, help_text=None, editor="default", features=None, **kwargs
@@ -189,13 +243,17 @@ class ParagraphBlock(blocks.RichTextBlock):
             'ul',
         ]
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ParagraphBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'paragraph_block')
+
     class Meta:
         icon = 'edit'
         label = 'Paragraph'
         template = 'streams/paragraph_block.html'
 
 
-class ReadMoreBlock(blocks.StructBlock):
+class ReadMoreBlock(blocks.StructBlock, ThemeableBlock):
     title = blocks.CharBlock(required=True)
     text = blocks.RichTextBlock(
         features=[
@@ -210,14 +268,22 @@ class ReadMoreBlock(blocks.StructBlock):
         required=True,
     )
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ReadMoreBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'read_more_block')
+
     class Meta:
         icon = 'edit'
         label = 'Read More'
         template = 'streams/read_more_block.html'
 
 
-class RecommendedBlock(blocks.PageChooserBlock):
+class RecommendedBlock(blocks.PageChooserBlock, ThemeableBlock):
     """Recommended content block"""
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(RecommendedBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'recommended_block')
 
     class Meta:
         icon = 'redirect'
@@ -225,12 +291,16 @@ class RecommendedBlock(blocks.PageChooserBlock):
         template = 'streams/recommended_block.html'
 
 
-class PDFDownloadBlock(blocks.StructBlock):
+class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
     file = DocumentChooserBlock(required=True)
     button_text = blocks.CharBlock(
         required=False,
         help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".'
     )
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(PDFDownloadBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'pdf_download_block')
 
     def get_api_representation(self, value, context=None):
         if value:
@@ -244,7 +314,7 @@ class PDFDownloadBlock(blocks.StructBlock):
         label = 'PDF Download'
 
 
-class PullQuoteLeftBlock(blocks.StructBlock):
+class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
     """Pull quote left side"""
 
     quote = blocks.RichTextBlock(
@@ -254,13 +324,17 @@ class PullQuoteLeftBlock(blocks.StructBlock):
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(PullQuoteLeftBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'pull_quote_left_block')
+
     class Meta:
         icon = 'edit'
         label = 'Pull Quote Left'
         template = 'streams/pull_quote_left_block.html'
 
 
-class PullQuoteRightBlock(blocks.StructBlock):
+class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
     """Pull quote right side"""
 
     quote = blocks.RichTextBlock(
@@ -270,13 +344,22 @@ class PullQuoteRightBlock(blocks.StructBlock):
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(PullQuoteRightBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'pull_quote_right_block')
+
     class Meta:
         icon = 'edit'
         label = 'Pull Quote Right'
         template = 'streams/pull_quote_right_block.html'
 
 
-class SpeakersBlock(blocks.PageChooserBlock):
+class SpeakersBlock(blocks.PageChooserBlock, ThemeableBlock):
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(SpeakersBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'speakers_block')
+
     def get_api_representation(self, value, context=None):
         if value:
             return {
@@ -290,7 +373,7 @@ class SpeakersBlock(blocks.PageChooserBlock):
         label = 'Speakers'
 
 
-class TextBorderBlock(blocks.StructBlock):
+class TextBorderBlock(blocks.StructBlock, ThemeableBlock):
     """Text box with border and optional colour for border """
 
     text = blocks.RichTextBlock(
@@ -299,13 +382,17 @@ class TextBorderBlock(blocks.StructBlock):
     )
     border_colour = blocks.CharBlock(required=False)
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(TextBorderBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'text_border_block')
+
     class Meta:
         icon = 'edit'
         label = 'Bordered Text Block'
         template = 'streams/text_border_block.html'
 
 
-class TweetBlock(blocks.StructBlock):
+class TweetBlock(blocks.StructBlock, ThemeableBlock):
     """Tweet Block"""
 
     tweet_url = blocks.URLBlock(
@@ -313,6 +400,10 @@ class TweetBlock(blocks.StructBlock):
         help_text='The URL of the tweet. Example: https://twitter.com/CIGIonline/status/1188821562440454144',
         verbose_name='Tweet URL',
     )
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(TweetBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'tweet_block')
 
     class Meta:
         icon = 'social'
