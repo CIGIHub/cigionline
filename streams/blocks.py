@@ -183,7 +183,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
     hide_image_caption = blocks.BooleanBlock(required=False)
 
     def get_template(self, context, *args, **kwargs):
-        standard_template = super(ExternalQuoteBlock, self).get_template(context, *args, **kwargs)
+        standard_template = super(ImageBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'image_block')
 
     class Meta:
@@ -199,7 +199,7 @@ class ImageFullBleedBlock(blocks.StructBlock, ThemeableBlock):
     hide_image_caption = blocks.BooleanBlock(required=False)
 
     def get_template(self, context, *args, **kwargs):
-        standard_template = super(ExternalQuoteBlock, self).get_template(context, *args, **kwargs)
+        standard_template = super(ImageFullBleedBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'image_full_bleed_block')
 
     class Meta:
