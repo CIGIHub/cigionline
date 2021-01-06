@@ -29,6 +29,7 @@ $rss: #f99b3a;
 $unpublished: #ffe6e5;
 $color--blue: #2592ec;
 $color-dark-blue: #195c94;
+$color-event: #edba53;
 $color-publication: $cigi-pink;
 $color-opinion: #4caba5;
 $color-multimedia: #f47b27;
@@ -42,6 +43,7 @@ $cigi-medium-light-grey: #aaa;
 $cigi-medium-grey: #929292;
 $cigi-text-grey: #6d6d6d;
 $cigi-dark-grey: #2f2f2f;
+$cigi-darkest-grey: #373737;
 
 // Box Greys
 $hover-grey: $cigi-light-grey;
@@ -55,5 +57,8 @@ $border-grey: #4a4a4a;
 $whisper-grey: #eee;
 
 //addons
+$white-opacity-0: rgba(255, 255, 255, 0);
 $popup-overlay: rgba(255, 255, 255, 0.6);
 $extra-light-box-shadow: rgba(16, 16, 16, .15);
+
+$black-alpha-40: rgba(0, 0, 0, 0.4);

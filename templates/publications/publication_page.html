@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags wagtailimages_tags wagtailembeds_tags webpack_loader core_tags %}
 
+{% block extra_css %}
+  {% render_bundle 'publicationPage' 'css' %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
 
@@ -84,10 +88,9 @@
     {% include "includes/about_the_author.html" with authors=self.editors title_override="About the Editor" %}
   {% endif %}
 
+  {% if self.recommended.all|length > 0 %}
+    {% include 'includes/recommended.html' with recommended=self.recommended.all %}
+  {% endif %}
 {% endblock content %}
-
-{% block extra_bundles %}
-  {% render_bundle 'publicationPage' %}
-{% endblock extra_bundles %}
 
 {{ pdf_downloads }}

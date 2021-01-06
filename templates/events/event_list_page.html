@@ -1,5 +1,20 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'eventListPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'eventListPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+
+  <section>
+    <div class="container-lg">
+      <div id="events-search-table">
+      </div>
+    </div>
+  </section>
 {% endblock content %}

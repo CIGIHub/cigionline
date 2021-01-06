@@ -1,11 +1,10 @@
 section {
-  @include media-breakpoint-up(md) {
-    margin: 3em 0;
+  &.body {
+    margin-bottom: 2em;
   }
-  margin: 1em 0;
 
   &.hero {
-    margin-top: 0;
+    margin-bottom: 3em;
   }
 
   &.main {

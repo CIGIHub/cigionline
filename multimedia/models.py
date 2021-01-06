@@ -10,7 +10,11 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import SpeakersBlock
+from streams.blocks import (
+    AccordionBlock,
+    ReadMoreBlock,
+    SpeakersBlock,
+)
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -22,7 +26,6 @@ from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
-    RichTextBlock,
     StructBlock,
     TextBlock,
 )
@@ -48,7 +51,7 @@ class MultimediaListPage(BasicPageAbstract, Page):
                 InlinePanel(
                     'featured_multimedia',
                     max_num=5,
-                    min_num=5,
+                    min_num=0,
                     label='Multimedia',
                 ),
             ],
@@ -129,6 +132,14 @@ class MultimediaPage(
         related_name='+',
         verbose_name='Companion essay',
     )
+    image_banner = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+    )
     image_square = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -187,14 +198,8 @@ class MultimediaPage(
     )
     transcript = StreamField(
         [
-            ('accordion', StructBlock([
-                ('title', CharBlock(required=True)),
-                ('text', RichTextBlock(required=True)),
-            ])),
-            ('read_more', StructBlock([
-                ('title', CharBlock(required=True)),
-                ('text', RichTextBlock(required=True)),
-            ])),
+            ('accordion', AccordionBlock()),
+            ('read_more', ReadMoreBlock()),
         ],
         blank=True,
     )
@@ -221,6 +226,12 @@ class MultimediaPage(
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(MultimediaPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/multimedia_page.html'
+        return standard_template
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -287,6 +298,7 @@ class MultimediaPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_banner'),
                 ImageChooserPanel('image_square'),
             ],
             heading='Images',

@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags webpack_loader %}
 
+{% block extra_css %}
+  {% render_bundle 'multimediaPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title %}
+  {% include "includes/hero_multimedia.html" %}
 
   {% if page.body %}
     <section class="body">
@@ -11,7 +18,13 @@
       {% endfor %}
     </section>
   {% endif %}
-
+  {% if self.transcript %}
+    <section>
+      {% for block in self.transcript %}
+        {% include_block block with id=block.id %}
+      {% endfor %}
+    </section>
+  {% endif %}
   {% if self.multimedia_series %}
     <div class="container-sm multimedia-series-block">
       <article>
@@ -21,7 +34,7 @@
             {{ self.multimedia_series.title }}
           </a>
         </h2>
-        <p>{{ self.multimedia_series.specific.subtitle }}</p>
+        <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
       </article>
     </div>
   {% endif %}
@@ -31,7 +44,3 @@
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
 {% endblock content %}
-
-{% block extra_bundles %}
-  {% render_bundle 'multimediaPage' %}
-{% endblock %}

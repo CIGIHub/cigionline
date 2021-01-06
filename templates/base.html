@@ -5,9 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <title>
-      {% block title %}
-        {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-      {% endblock %}
+      {% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}
       {% block title_suffix %}
         {% with self.get_site.site_name as site_name %}
           {% if site_name %}- {{ site_name }}{% endif %}
@@ -21,12 +19,20 @@
     {% block extra_fonts %}
       {# Override this in templates to add extra fonts #}
     {% endblock %}
+    {% render_bundle 'cigionline' 'css' %}
+    {% block extra_css %}
+      {# Override this in templates to add extra CSS #}
+    {% endblock %}
+    {% render_bundle 'cigionline' 'js' attrs='defer' %}
+    {% block extra_js %}
+      {# Override this in templates to add extra JS #}
+    {% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">
     {% wagtailuserbar %}
 
     {% block header %}
-      {% include "includes/top-bar.html" %}
+      {% include "includes/top_bar.html" %}
     {% endblock %}
 
     <main>
@@ -37,9 +43,4 @@
       {% include "includes/footer.html" %}
     {% endblock %}
   </body>
-
-  {% render_bundle 'cigionline' %}
-  {% block extra_bundles %}
-    {# Override this in templates to add extra javascript or css #}
-  {% endblock %}
 </html>

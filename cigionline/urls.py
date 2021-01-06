@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from events.views import EventPageViewSet
 from multimedia.views import MultimediaPageViewSet
 from publications.views import PublicationPageViewSet
 from research.views import TopicPageViewSet
@@ -15,6 +16,7 @@ from search import views as search_views
 
 api_router = WagtailAPIRouter('wagtailapi')
 
+api_router.register_endpoint('events', EventPageViewSet)
 api_router.register_endpoint('multimedia', MultimediaPageViewSet)
 api_router.register_endpoint('opinions', OpinionPageViewSet)
 api_router.register_endpoint('publications', PublicationPageViewSet)

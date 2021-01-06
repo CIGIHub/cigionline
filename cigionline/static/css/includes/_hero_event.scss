@@ -28,16 +28,23 @@ section {
 
     .speakers {
       display: flex;
+
+      .custom-text-list > div {
+        &::after {
+          content: ', ';
+        }
+
+        &:last-child {
+          &::after {
+            content: '';
+          }
+        }
+      }
     }
 
     .feature-content-topic-list,
     .custom-text-list {
       margin-left: 0.2em;
-    }
-
-    .block-speaker,
-    .block-external-speaker {
-      @include comma-list;
     }
 
     .event-date-circle {

@@ -1,4 +1,9 @@
 .feature-content-large {
+  @include image-button($size: 15vw);
+  @include media-breakpoint-up(md) {
+    @include image-button($size: 4em);
+  }
+  @include hover-darken;
   line-height: 1.25;
 
   .img-wrapper {
@@ -6,6 +11,8 @@
   }
 
   .feature-content-text {
+    margin-top: 0.75em;
+
     &.center-text {
       @include media-breakpoint-up(md) {
         margin: 0 auto;

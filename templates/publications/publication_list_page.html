@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags webpack_loader %}
 
-{% block extra_bundles %}
-  {% render_bundle 'publicationListPage' %}
+{% block extra_css %}
+  {% render_bundle 'publicationListPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'publicationListPage' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block content %}

@@ -1,0 +1,258 @@
+.big-tech-s3-multimedia {
+  .big-tech-s3-companion-essay {
+    background-color: $bigtech-s3-red;
+    margin-bottom: 2em;
+
+    .companion-essay {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 3em;
+      padding-top: 3em;
+
+      .essay-details {
+        h2 {
+          color: $white;
+          font-size: 0.875em;
+          text-transform: uppercase;
+        }
+
+        h3 {
+          @include link($color: $white, $hover-color: $black);
+          color: $white;
+          margin-bottom: 0.75em;
+        }
+
+        .author {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+
+          &:hover {
+            .author-image-wrapper {
+              img {
+                opacity: 0.8;
+              }
+            }
+
+            p {
+              color: $black;
+            }
+          }
+
+          .author-image-wrapper {
+            background-color: $black;
+            border-radius: 50%;
+            height: 50px;
+            margin-right: 1em;
+            overflow: hidden;
+            width: 50px;
+
+            img {
+              opacity: 1;
+              transition: opacity 0.3s ease;
+            }
+          }
+
+          p {
+            color: $white;
+            margin: 0;
+            transition: color 0.3s ease;
+          }
+        }
+      }
+
+      .read-btn {
+        align-items: center;
+        background-color: transparent;
+        border: 1.75px solid $white;
+        border-radius: 50%;
+        color: $white;
+        display: none;
+        flex-direction: column;
+        height: 125px;
+        justify-content: center;
+        margin-left: 3em;
+        min-width: 125px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        width: 125px;
+
+        @media screen and (min-width: $medium) {
+          display: flex;
+        }
+
+        &:hover {
+          background-color: $white;
+          color: $bigtech-s3-red;
+        }
+
+        i {
+          font-size: 2em;
+          margin-bottom: 0.2em;
+        }
+
+        span {
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .big-tech-mm-hero {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 3em;
+
+    h1 {
+      .podcast-guest {
+        font-size: 1.2em;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+
+      .podcast-subtitle {
+        color: $cigi-text-grey;
+        display: block;
+        font-size: 0.54em;
+        font-style: italic;
+        line-height: 1.35em;
+      }
+    }
+
+    .big-tech-headshot {
+      display: none;
+      padding-left: 2em;
+      width: 33%;
+
+      @media screen and (min-width: $medium) {
+        display: block;
+      }
+    }
+
+    .meta {
+      font-size: 0.75em;
+    }
+
+    .simplecast-container {
+      height: 52px;
+      margin-bottom: 1em;
+      position: relative;
+
+      &.sticky-video {
+        .simplecast-header {
+          animation: slide-down 0.3s;
+          background-color: $black;
+          height: auto;
+          left: 0;
+          padding-bottom: 1.5em;
+          padding-top: 1.5em;
+          position: fixed;
+          top: 0;
+          width: 100%;
+          z-index: 5;
+
+          .simplecast-header-content {
+            display: flex;
+            margin: 0 auto;
+            max-width: $large;
+          }
+
+          .simplecast-embed {
+            margin: 0 auto;
+            max-width: $large;
+          }
+        }
+      }
+
+      .simplecast-header {
+        height: 52px;
+        position: relative;
+
+        .simplecast-header-content {
+          align-items: flex-end;
+          display: none;
+          justify-content: space-between;
+          padding-bottom: 0.625em;
+
+          .simplecast-header-meta {
+            font-size: 0.75em;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 1;
+            padding-bottom: 0.35em;
+
+            .episode {
+              color: $white;
+            }
+
+            .season {
+              color: $bigtech-teal;
+              margin-right: 0.35em;
+            }
+          }
+
+          .simplecast-header-title {
+            color: $white;
+            font-size: 1.25em;
+            font-style: italic;
+            font-weight: 400;
+          }
+
+          .social-share-list {
+            margin: 0;
+
+            a {
+              .fab {
+                color: $white;
+              }
+
+              &:hover {
+                .fab {
+                  color: $bigtech-teal;
+                }
+              }
+            }
+          }
+        }
+
+        .simplecast-embed {
+          height: 52px;
+        }
+      }
+    }
+
+    .social-share-list {
+      justify-content: flex-start;
+      margin: 0.5em 0;
+
+      a {
+        &:hover {
+          .fab {
+            color: $bigtech-teal;
+          }
+        }
+
+        .fab {
+          color: $cigi-dark-grey;
+        }
+      }
+    }
+
+    .subtitle {
+      font-size: 1.1em;
+      font-style: italic;
+    }
+
+    .topics {
+      @include link($color: $cigi-text-grey, $hover-color: $bigtech-teal);
+      margin: 0;
+    }
+  }
+
+  .multimedia-disclaimer-section {
+    .opinion-disclaimer {
+      font-size: 0.875em;
+    }
+  }
+}

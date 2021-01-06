@@ -34,6 +34,12 @@
   }
 }
 
+@mixin hide-breakpoint-down($breakpoint) {
+  @include media-breakpoint-down($breakpoint) {
+    display: none;
+  }
+}
+
 // IMAGES
 
 @mixin aspect-ratio($width, $height) {
@@ -80,6 +86,30 @@
 
     img {
       transition: opacity 0.2s ease;
+    }
+  }
+}
+
+@mixin image-button($size: 2em) {
+  .img-wrapper {
+    position: relative;
+
+    .image-button {
+      align-items: center;
+      background: $cigi-pink;
+      bottom: 0;
+      color: $white;
+      display: inline-flex;
+      height: $size;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      width: $size;
+      z-index: 1;
+
+      i {
+        font-size: ($size / 2);
+      }
     }
   }
 }
