@@ -1,0 +1,32 @@
+<section class="data-series-in-the-series">
+  <div class="data-series-in-the-series-title">
+    <div class="container-sm">
+      <h3><a href="{{ article_series.url }}">{{ article_series.title }}</a></h3>
+    </div>
+  </div>
+  <div class="container-sm">
+    <div class="series-items">
+      {% for block in article_series.series_items %}
+        {% if block.block_type == 'series_item' and block.value.id != article_id %}
+          <article>
+            <h5><a href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
+            <p class="authors">
+              {% if block.value.specific.authors %}
+                {% for author in block.value.specific.authors %}
+                  <span>{{ author }}</span>
+                {% endfor %}
+              {% endif %}
+              {% if block.value.specific.speakers %}
+                {% for speaker in block.value.specific.speakers %}
+                  <span>{{ speaker }}</span>
+                {% endfor %}
+              {% endif %}
+            </p>
+          </article>
+        {% elif block.block_type == 'category_title' %}
+          <h4>{{ block.value }}</h4>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>

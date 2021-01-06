@@ -6,8 +6,7 @@
   {% render_bundle 'themeInnovationSeries' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  {% render_bundle 'multimediaPage' 'js' attrs='async' %}
-  {% render_bundle 'themeInnovationSeries' 'js' attrs='async' %}
+  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block body_class %}innovation-series-multimedia{% endblock %}

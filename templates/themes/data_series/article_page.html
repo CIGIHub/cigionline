@@ -2,10 +2,11 @@
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block extra_css %}
-  {% render_bundle 'themeLongform' 'css' %}
+  {% render_bundle 'articlePage' 'css' %}
+  {% render_bundle 'themeDataSeries' 'css' %}
 {% endblock %}
 
-{% block body_class %}longform-article{% endblock %}
+{% block body_class %}data-series-article{% endblock %}
 
 {% block content %}
   {% image self.image_banner original as image_hero %}
@@ -14,24 +15,11 @@
       <div class="hero-content">
         {% include "includes/topics.html" with topics=self.topics %}
         <h1><span>{{ self.title }}</span></h1>
-        <div class="subtitle">
-          {{ self.subtitle|richtext }}
-        </div>
       </div>
     </div>
   </section>
   <section class="meta-section">
     <div class="container-sm">
-      <div class="meta">
-        <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
-        <p>
-          Author{{self.authors|length|pluralize}}:
-
-          {% for author in self.authors %}
-            <span class="author">{{author}}</span>
-          {% endfor %}
-        </p>
-      </div>
       <div class="social">
         <ul>
           <li>
@@ -56,6 +44,16 @@
           </li>
         </ul>
       </div>
+      <div class="meta">
+        <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
+        <p>
+          Author{{self.authors|length|pluralize}}:
+
+          {% for author in self.authors %}
+            <span class="author">{{author}}</span>
+          {% endfor %}
+        </p>
+      </div>
     </div>
   </section>
   <section class="body">
@@ -63,6 +61,23 @@
       {% include_block block %}
     {% endfor %}
   </section>
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container-sm">
+        <div class="footnotes">
+          {{ self.footnotes|richtext }}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container-sm">
+        <h2>Works Cited</h2>
+        {{ self.works_cited|richtext }}
+      </div>
+    </section>
+  {% endif %}
   <section>
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
@@ -70,28 +85,6 @@
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
   {% if self.article_series %}
-    <section class="in-the-series">
-      <div class="container-sm">
-        <article class="article-series">
-          <h3><a href="{{self.article_series.url}}">{{ self.article_series.title }}</a></h3>
-          <p class="in-the-series"><span>In The Series</span></p>
-          <div class="series-items">
-            {% for block in self.article_series.specific.series_items %}
-              {% if block.block_type == 'series_item' and block.value.id != self.id %}
-                <article>
-                  <h4><a href="{{ block.value.url }}">{{ block.value.title }}</a></h4>
-                  <p class="authors">
-                    Author{{ block.value.specific.authors|length|pluralize }}:
-                    {% for author in block.value.specific.authors %}
-                      <span>{{ author }}</span>
-                    {% endfor %}
-                  </p>
-                </article>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </article>
-      </div>
-    </section>
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
   {% endif %}
 {% endblock %}
