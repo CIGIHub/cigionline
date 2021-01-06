@@ -1,0 +1,12 @@
+.social-share-list-square {
+  display: flex;
+  list-style: none;
+
+  li {
+    margin-right: 0.3em;
+  }
+
+  .facebook-share-link {
+    cursor: pointer;
+  }
+}

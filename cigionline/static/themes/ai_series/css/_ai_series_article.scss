@@ -63,8 +63,9 @@
         }
       }
 
-      .social-links {
+      .social-share-list-square {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
+        margin-bottom: 0;
 
         a {
           font-size: 1.3em;
