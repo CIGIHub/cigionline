@@ -4,9 +4,6 @@
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
-{% block extra_js %}
-  {% render_bundle 'eventPage' 'js' attrs='async' %}
-{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title %}
