@@ -3,8 +3,8 @@ import './css/cigionline.scss';
 
 import addInlineVideoActions from './js/inline_video_block';
 
-// MAIN NAVIGATION SCROLL
 $(function() {
+  // MAIN NAVIGATION SCROLL
   let scrollTop = 0;
 
   $(window).on('scroll', function() {
@@ -15,11 +15,24 @@ $(function() {
       $('#global-nav').removeClass('scrolled-nav');
     }
   });
-});
-// SEARCH BAR OPEN
 
-$(document).ready(function() {
+  // MAIN DROPDOWN MENU ACCORDIONS
+  const accordions = document.getElementsByClassName('accordion');
+  for (let i = 0; i < accordions.length; i += 1) {
+    accordions[i].addEventListener('click', function() {
+      this.classList.toggle('active');
+      const panel = this.nextElementSibling;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = `${panel.scrollHeight}px`;
+      }
+    });
+  }
+
+  // SEARCH BAR AND MENU OPEN
   const $openSearchBtn = $('#open-search-btn');
+  const $openMenuBtn = $('#open-menu-btn');
   const openMenuClass = 'opened-popup';
 
   $openSearchBtn.on('click', function() {
@@ -28,9 +41,16 @@ $(document).ready(function() {
     $('body').toggleClass('disable-scroll');
   });
 
+  $openMenuBtn.on('click', function() {
+    $(this).toggleClass('open');
+    $('#popup-menu').toggleClass(openMenuClass);
+    $('body').toggleClass('disable-scroll');
+  });
+
   $(document).on('click', `.${openMenuClass}`, function() {
     $(this).removeClass(openMenuClass);
     $openSearchBtn.removeClass('open');
+    $openMenuBtn.removeClass('open');
     $('body').toggleClass('disable-scroll');
   });
 
