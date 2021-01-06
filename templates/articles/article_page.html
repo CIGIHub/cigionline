@@ -4,9 +4,6 @@
 {% block extra_css %}
   {% render_bundle 'articlePage' 'css' %}
 {% endblock %}
-{% block extra_js %}
-  {% render_bundle 'articlePage' 'js' attrs='async' %}
-{% endblock %}
 
 {% block content %}
   {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}

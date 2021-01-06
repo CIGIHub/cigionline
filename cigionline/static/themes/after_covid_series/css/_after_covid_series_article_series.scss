@@ -1,0 +1,42 @@
+.after-covid-series-article-series {
+  background-color: $black;
+
+  header {
+    background-color: transparent;
+
+    .main-navigation-wrapper {
+      background-color: transparent;
+    }
+  }
+
+  .after-covid-series-article-series-hero {
+    padding-top: 8em;
+  }
+
+  .after-covid-series-article-series-in-the-series {
+    article {
+      .authors {
+        span {
+          &:not(:only-child) {
+            &::after {
+              content: ', ';
+              margin-right: 2px;
+            }
+          }
+
+          &:nth-last-child(2) {
+            &::after {
+              content: ' and ';
+            }
+          }
+
+          &:last-child {
+            &::after {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}

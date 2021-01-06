@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'articlePage' 'css' %}
+  {% render_bundle 'themeAfterCovidSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}after-covid-series-article{% endblock %}
+
+{% block header %}
+  {% image self.image_banner original as image_hero %}
+  <div class="after-covid-series-article-hero" style="background-image: url('{{ image_hero.url }}');">
+    {% include "includes/top-bar.html" %}
+    <div class="container-lg hero-content">
+      <h1>{{ self.title }}</h1>
+      {% include "includes/date.html" with date=self.publishing_date %}
+      <div class="authors">
+        {% for author in self.authors %}
+          {% if author.block_type == 'author' %}
+            <div class="author">
+              <div class="author-title">
+                <a href="{{ author.value.url }}">{{ author.value.title }}</a>
+              </div>
+              <div class="author-short-bio">
+                {{ author.value.specific.short_bio|richtext }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% include "includes/social_links.html" with title=self.title %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container-sm">
+        <div class="footnotes">
+          {{ self.footnotes|richtext }}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container-sm">
+        <h2>Works Cited</h2>
+        {{ self.works_cited|richtext }}
+      </div>
+    </section>
+  {% endif %}
+  <section>
+    {% include 'includes/opinion_disclaimer.html' %}
+  </section>
+  {% if self.is_opinion and self.authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors %}
+  {% endif %}
+  {% if self.recommended.all|length > 0 %}
+    {% include 'includes/recommended.html' with recommended=self.recommended.all %}
+  {% endif %}
+{% endblock %}
