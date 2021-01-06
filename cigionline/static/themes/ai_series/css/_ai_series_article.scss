@@ -65,7 +65,12 @@
 
       .social-share-list-square {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
+        justify-content: center;
         margin-bottom: 0;
+
+        @media screen and (min-width: 768px) {
+          justify-content: left;
+        }
 
         a {
           font-size: 1.3em;
