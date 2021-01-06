@@ -15,7 +15,6 @@ from wagtail.admin.edit_handlers import (
     StreamFieldPanel,
 )
 from wagtail.api import APIField
-from wagtail.core.blocks import CharBlock, PageChooserBlock
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock

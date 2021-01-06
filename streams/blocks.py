@@ -291,7 +291,7 @@ class SpeakersBlock(blocks.PageChooserBlock):
 
 
 class ExternalSpeakersBlock(blocks.CharBlock):
-       class Meta:
+    class Meta:
         icon = 'edit'
         label = 'External Speakers'
 
