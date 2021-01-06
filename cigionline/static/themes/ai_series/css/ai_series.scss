@@ -1,6 +1,3 @@
-@import '../../../css/global/variables';
-@import '../../../css/global/mixins';
-
 $ai-primary-color: #30a48f;
 $ai-dark-grey: #4a4a4a;
 $ai-light-grey: #d8d8d8;
@@ -15,6 +12,9 @@ $ai-acumin: acumin-pro, sans-serif;
   font-style: italic;
   text-transform: capitalize;
 }
+
+@import '../../../css/global/variables';
+@import '../../../css/global/mixins';
 
 @import './ai_series_article_series';
 @import './ai_series_article';
