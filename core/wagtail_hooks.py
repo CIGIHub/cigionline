@@ -2,7 +2,7 @@ from django.utils.html import format_html
 from django.templatetags.static import static
 from wagtail.admin.rich_text.converters.html_to_contentstate import (
     BlockElementHandler,
-    InlineEntityElementHandler,
+    InlineStyleElementHandler,
 )
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail.core import hooks
@@ -56,6 +56,6 @@ def register_rich_text_name(features):
     )
 
     features.register_converter_rule('contentstate', feature_name, {
-        'from_database_format': {'span[class=name]': InlineEntityElementHandler(type_)},
+        'from_database_format': {'span[class=name]': InlineStyleElementHandler(type_)},
         'to_database_format': {'style_map': {type_: {'element': 'span', 'props': {'class': 'name'}}}},
     })
