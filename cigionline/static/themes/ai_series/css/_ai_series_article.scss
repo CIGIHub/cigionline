@@ -56,10 +56,21 @@
 
     .short-description {
       font-family: $ai-garamond;
+      line-height: 1.25;
       margin: 1em 0;
 
       @media screen and (min-width: 768px) {
         margin-top: 3em;
+      }
+    }
+
+    .series-contributors {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
+      font-family: $ai-garamond;
+      line-height: 1.25;
+
+      li {
+        list-style: none;
       }
     }
   }
