@@ -1,4 +1,7 @@
+{% load wagtailimages_tags %}
+
 <section class="container-sm hero-container publication-hero">
+
   {% include "includes/topics.html" with topics=self.topics %}
   <h1>{{title}}</h1>
   <h2>{{subtitle|safe}}</h2>
@@ -14,6 +17,6 @@
       </a>
     </button>
   {% endfor %}
-</section>
 
+</section>
 

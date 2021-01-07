@@ -30,7 +30,27 @@ section {
       margin: 1em 0;
     }
   }
+
+  &.publication-hero-books {
+    .hero-container {
+      @include breakpoint($medium) {
+        padding-top: 6em;
+      }
+    }
+  
+    color: $white;
+
+    a {
+      color: $white;
+
+      &:hover {
+        color: $cigi-pink;
+      }
+    }
+
+  }
 }
+
 
 // BUTTONS
 

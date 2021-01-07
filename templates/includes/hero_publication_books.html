@@ -1,0 +1,23 @@
+{% load static wagtailcore_tags core_tags wagtailimages_tags %}
+
+<section class="hero publication-hero-books">
+  <div class="container-lg hero-container">
+      <div class="row">
+        <div class="col-md-9">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1>{{ title }}</h1>
+          <h2>{{subtitle|safe}}</h2>
+          Published: {% include "includes/date.html" with date=self.publishing_date %}
+          Edited By: {% include "includes/authors.html" with authors=self.editors %}
+          {% include "includes/social_links.html" with title=self.title %}
+          Links{{ purchase_links.value.link_text }}
+        </div>
+
+        <div class="col-md-3">
+          {% image image_cover width-174 %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+

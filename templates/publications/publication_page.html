@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
+  {% if self.publication_type == 'books' %}
+    {% include "includes/hero_publication_books.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover %}
+  {% else %}
+    {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
+  {% endif %}
 
   {% if self.body %}
     <section class="body">
