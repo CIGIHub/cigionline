@@ -16,3 +16,7 @@
 .Draftail-block--ENDOFARTICLE::before {
   content: '***';
 }
+
+.Draftail-block--NAME {
+  font-weight: 600;
+}

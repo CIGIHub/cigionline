@@ -1,4 +1,6 @@
 .ai-series-article-series {
+  background-color: $ai-primary-color;
+
   .ai-series-article-series-hero {
     background-size: cover;
 
@@ -34,6 +36,46 @@
           &::after {
             display: none;
           }
+        }
+      }
+    }
+  }
+
+  .credits {
+    margin-bottom: 1.5em;
+
+    h2 {
+      @include ai-heading;
+
+      margin: 1em 0;
+    }
+
+    .credits-content {
+      display: -ms-grid;
+      display: grid;
+      -ms-grid-columns: 1fr 0.5em 1fr;
+      grid-column-gap: 0.5em;
+      grid-template-columns: 1fr 1fr;
+
+      @media screen and (min-width: 640px) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      @media screen and (min-width: 1080px) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+
+      p {
+        color: $cigi-darkest-grey;
+        font-family: $ai-acumin;
+        font-size: 0.75em;
+        margin-bottom: 2em;
+
+        .name {
+          color: $white;
+          text-transform: uppercase;
         }
       }
     }

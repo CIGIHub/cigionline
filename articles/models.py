@@ -393,6 +393,7 @@ class ArticleSeriesPage(
             'bold',
             'italic',
             'link',
+            'name',
         ],
     )
     credits_artwork = models.CharField(
