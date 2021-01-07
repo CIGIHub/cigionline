@@ -7,6 +7,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from multimedia.models import MultimediaPage
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import AuthorBlock
@@ -528,6 +529,36 @@ class ArticleSeriesPage(
     parent_page_types = ['core.HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
+
+    @property
+    def series_contributors_by_article(self):
+        series_contributors = []
+        item_people = set()
+
+        for item in self.series_items:
+            people = []
+            people_string = ''
+            if (isinstance(item.value.specific, ArticlePage)):
+                people = item.value.specific.authors
+            elif (isinstance(item.value.specific, MultimediaPage)):
+                people = item.value.specific.speakers
+
+            for person in people:
+                person_string = person.value.specific.first_name + person.value.specific.last_name
+                people_string += person_string
+
+                # Add each person as well so if there's an article with just
+                # a single author who's already been in another article in
+                # collaboration, then we won't add their name to the list
+                # again.
+                if len(people) > 1:
+                    item_people.add(person_string)
+
+            if people_string not in item_people:
+                series_contributors.append({'item': item.value.specific, 'contributors': people})
+                item_people.add(people_string)
+
+        return series_contributors
 
     class Meta:
         verbose_name = 'Opinion Series'
