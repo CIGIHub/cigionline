@@ -30,8 +30,6 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
 
-from collections import OrderedDict
-
 
 class ArticleLandingPage(Page):
     max_count = 1
