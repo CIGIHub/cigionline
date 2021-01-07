@@ -18,7 +18,7 @@ from wagtail.api import APIField
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from streams.blocks import ExternalSpeakersBlock, SpeakersBlock
+from streams.blocks import ExternalSpeakerBlock, SpeakersBlock
 
 
 class EventListPage(BasicPageAbstract, Page):
@@ -141,7 +141,7 @@ class EventPage(
     speakers = StreamField(
         [
             ('speaker', SpeakersBlock(required=True, page_type='people.PersonPage')),
-            ('external_speaker', ExternalSpeakersBlock()),
+            ('external_speaker', ExternalSpeakerBlock()),
         ],
         blank=True,
     )

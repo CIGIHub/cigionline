@@ -24,7 +24,7 @@
     {% include 'includes/multimedia_disclaimer.html' %}
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
-  {% if self.is_opinion and self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
+  {% if self.article_series %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
   {% endif %}
 {% endblock content %}

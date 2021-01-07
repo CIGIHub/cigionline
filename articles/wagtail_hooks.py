@@ -12,7 +12,7 @@ def register_rich_text_end_of_article(features):
 
     control = {
         'type': type_,
-        'label': 'EOA',
+        'icon': 'pick',
         'description': 'End of Article',
         'element': 'div',
         'style': {
