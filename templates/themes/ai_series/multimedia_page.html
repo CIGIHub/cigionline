@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_css %}
   {% render_bundle 'multimediaPage' 'css' %}
@@ -12,7 +12,8 @@
 {% block body_class %}ai-series-multimedia{% endblock %}
 
 {% block content %}
-  {% include "includes/hero_multimedia.html" %}
+  {% image self.image_banner original as image_hero %}
+  {% include "includes/hero_multimedia.html" with image_hero=image_hero %}
   {% if self.body %}
     <section class="body">
       {% for block in self.body %}
