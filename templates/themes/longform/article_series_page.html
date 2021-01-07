@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'themeLongform' 'css' %}
+{% endblock %}
+
+{% block body_class %}longform-article-series{% endblock %}
+
+{% block header %}
+  {% image self.image_banner original as image_hero %}
+  <div class="longform-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
+    {% include "includes/top_bar.html" %}
+    {% if self.video_banner %}
+      <video playsinline autoplay muted loop class="video-background">
+        <source src="{{ self.video_banner.url }}" type="video/mp4">
+      </video>
+    {% endif %}
+    <div class="hero-content">
+      <div class="container-lg">
+        <h1>{{ self.title }}</h1>
+        <p class="cigi-essay-series">A CIGI Essay Series</p>
+        <p class="series-contributors-title">
+          Series Contributors:
+        </p>
+        <p class="series-contributors">
+          {% for block in self.series_items %}
+            {% if block.block_type == 'series_item' %}
+              {% if block.value.specific.authors %}
+                {% for author in block.value.specific.authors %}
+                  {% if author.block_type == 'author' %}
+                    <span>{{ author.value.title }}</span>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <section class="body">
+    <div class="container-lg">
+      <h2>About the Series</h2>
+    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock %}
