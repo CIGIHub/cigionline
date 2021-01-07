@@ -528,17 +528,22 @@ class ArticleSeriesPage(
     @property
     def series_contributors(self):
         series_contributors = []
-        item_slugs = set()
+        item_people = set()
+
         for item in self.series_items:
             people = []
+            people_string = ''
             if (isinstance(item.value.specific, ArticlePage)):
                 people = item.value.specific.authors
             elif (isinstance(item.value.specific, MultimediaPage)):
                 people = item.value.specific.speakers
 
-            if item.value.specific.slug not in item_slugs:
+            for person in people:
+                people_string += person.value.specific.first_name + person.value.specific.last_name
+
+            if people_string not in item_people:
                 series_contributors.append({'item': item.value.specific, 'contributors': people})
-                item_slugs.add(item.value.specific.slug)
+                item_people.add(people_string)
 
         return series_contributors
 
