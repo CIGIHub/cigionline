@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mhy5jui.css">
+{% endblock %}
 {% block extra_css %}
   {% render_bundle 'themeAISeries' 'css' %}
 {% endblock %}
@@ -37,9 +40,12 @@
     </div>
   </section>
   {% if self.credits %}
-    <section>
+    <section class="credits">
       <div class="container-md">
-        {{ self.credits|richtext }}
+        <h2>Credits</h2>
+        <div class="credits-content">
+          {{ self.credits|richtext }}
+        </div>
       </div>
     </section>
   {% endif %}
