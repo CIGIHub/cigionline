@@ -223,6 +223,16 @@ img {
   }
 }
 
+// Drop cap
+.drop-caps {
+  border: 1px solid $cigi-primary-colour;
+  float: left;
+  font-size: 4.25em;
+  line-height: 0.75em;
+  margin-right: 0.1em;
+  padding: 0.1em;
+}
+
 // End of Article
 .end-of-article {
   margin: 2em auto;
