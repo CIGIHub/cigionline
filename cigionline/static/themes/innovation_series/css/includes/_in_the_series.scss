@@ -1,4 +1,47 @@
+.innovation-series-read-the-series {
+  @include link($color: $white, $hover-color: $cigi-primary-colour);
+  background-color: $cigi-darkest-grey;
+  background-image: url('../../assets/read_the_series_background.png');
+  background-position: right;
+  background-repeat: no-repeat;
+  margin-bottom: 2em;
+  padding: 2em 0;
+
+  a {
+    display: block;
+    max-width: 40%;
+  }
+
+  h2 {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 1em;
+  }
+
+  p {
+    margin: 0;
+    text-transform: uppercase;
+  }
+}
+
 .innovation-series-in-the-series {
+  h3 {
+    color: $cigi-darkest-grey;
+    font-size: 1.5em;
+    line-height: 2;
+    margin-bottom: 0;
+    position: relative;
+
+    &::before {
+      border-top: 5px solid $cigi-primary-colour;
+      content: '';
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 80px;
+    }
+  }
+
   article {
     border-bottom: 1px solid $divider-grey;
     display: flex;

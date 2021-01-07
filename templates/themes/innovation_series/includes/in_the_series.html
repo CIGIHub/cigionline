@@ -1,7 +1,16 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags %}
 
+<section class="innovation-series-read-the-series">
+  <div class="container-sm">
+    <a href="{{ article_series.url }}">
+      <h2>{{ article_series.title }}</h2>
+      <p>Read the Series</p>
+    </a>
+  </div>
+</section>
 <section class="innovation-series-in-the-series">
   <div class="container-sm">
+    <h3>In the Series</h3>
     {% for block in article_series.series_items %}
       {% if block.block_type == 'series_item' and block.value.id != article_id %}
         <article>
