@@ -13,7 +13,7 @@ class ThemeableBlock:
         return theme_name.lower().replace(' ', '_').replace("-", '_')
 
     def get_theme_template(self, standard_template, context, template_name):
-        if context['page'] and hasattr(context['page'], 'theme') and \
+        if context and context['page'] and hasattr(context['page'], 'theme') and \
                 context['page'].theme and self.get_theme_dir(context['page'].theme.name) in self.implemented_themes:
             return f'themes/{self.get_theme_dir(context["page"].theme.name)}/streams/{template_name}.html'
         return standard_template
