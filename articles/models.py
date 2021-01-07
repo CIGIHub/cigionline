@@ -7,6 +7,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from multimedia.models import MultimediaPage
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import AuthorBlock
@@ -28,6 +29,8 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
+
+from collections import OrderedDict
 
 
 class ArticleLandingPage(Page):
@@ -521,6 +524,23 @@ class ArticleSeriesPage(
     parent_page_types = ['core.HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
+
+    @property
+    def series_contributors(self):
+        series_contributors = []
+        item_slugs = set()
+        for item in self.series_items:
+            people = []
+            if (isinstance(item.value.specific, ArticlePage)):
+                people = item.value.specific.authors
+            elif (isinstance(item.value.specific, MultimediaPage)):
+                people = item.value.specific.speakers
+
+            if item.value.specific.slug not in item_slugs:
+                series_contributors.append({'item': item.value.specific, 'contributors': people})
+                item_slugs.add(item.value.specific.slug)
+
+        return series_contributors
 
     class Meta:
         verbose_name = 'Opinion Series'
