@@ -9,7 +9,10 @@
 
   a {
     display: block;
-    max-width: 40%;
+
+    @media screen and (min-width: $medium) {
+      max-width: 40%;
+    }
   }
 
   h2 {
