@@ -229,6 +229,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         super().__init__(**kwargs)
         self.features = [
             'bold',
+            'dropcap',
             'endofarticle',
             'h2',
             'h3',
