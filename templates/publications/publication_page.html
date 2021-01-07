@@ -76,7 +76,7 @@
             {{ self.publication_series.title }}
           </a>
         </h3>
-        <p>{{ self.publication_series.specific.subtitle }}</p>
+        <p>{{ self.publication_series.specific.subtitle|richtext }}</p>
       </article>
     </div>
   {% endif %}
