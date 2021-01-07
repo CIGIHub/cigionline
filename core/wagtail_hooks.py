@@ -38,7 +38,7 @@ def register_rich_text_drop_cap(features):
 
 
 @hooks.register('register_rich_text_features')
-def register_rich_text_drop_cap(features):
+def register_rich_text_name(features):
     feature_name = 'name'
     type_ = 'NAME'
 
