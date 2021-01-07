@@ -530,7 +530,7 @@ class ArticleSeriesPage(
     templates = 'articles/article_series_page.html'
 
     @property
-    def series_contributors(self):
+    def series_contributors_by_article(self):
         series_contributors = []
         item_people = set()
 
@@ -543,7 +543,15 @@ class ArticleSeriesPage(
                 people = item.value.specific.speakers
 
             for person in people:
-                people_string += person.value.specific.first_name + person.value.specific.last_name
+                person_string = person.value.specific.first_name + person.value.specific.last_name
+                people_string += person_string
+
+                # Add each person as well so if there's an article with just
+                # a single author who's already been in another article in
+                # collaboration, then we won't add their name to the list
+                # again.
+                if len(people) > 1:
+                    item_people.add(person_string)
 
             if people_string not in item_people:
                 series_contributors.append({'item': item.value.specific, 'contributors': people})

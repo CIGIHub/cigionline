@@ -12,7 +12,7 @@
         <div class="col-md-4 col-lg-4 offset-lg-2 series-contributors">
           <div class="contributors-label">Contributors</div>
           <ul>
-            {% for item in article_series.series_contributors %}
+            {% for item in article_series.series_contributors_by_article %}
               <li>
                 <a href="{{ item.item.url }}">
                   {% include "includes/contributors.html" with contributors=item.contributors %}
