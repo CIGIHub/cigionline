@@ -138,49 +138,4 @@
       }
     }
   }
-
-  .ai-series-in-the-series {
-    background-size: auto 100%;
-    color: $white;
-
-    h2 {
-      @include link($color: $white, $hover-color: $cigi-dark-pink);
-      font-family: $ai-acumin;
-      font-size: 2em;
-      font-weight: 800;
-      line-height: 1;
-      margin: 0 1em 0 0;
-      text-transform: uppercase;
-
-      @media screen and (min-width: 768px) {
-        font-size: 3.5em;
-      }
-    }
-
-    .essay-series-label,
-    .contributors-label {
-      @include ai-heading;
-      margin: 1em 0;
-    }
-
-    .short-description {
-      font-family: $ai-garamond;
-      line-height: 1.25;
-      margin: 1em 0;
-
-      @media screen and (min-width: 768px) {
-        margin-top: 3em;
-      }
-    }
-
-    .series-contributors {
-      @include link($color: $white, $hover-color: $cigi-dark-pink);
-      font-family: $ai-garamond;
-      line-height: 1.25;
-
-      li {
-        list-style: none;
-      }
-    }
-  }
 }
