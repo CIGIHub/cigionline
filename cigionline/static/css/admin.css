@@ -3,6 +3,13 @@
   width: 100%;
 }
 
+.Draftail-block--DROPCAP {
+  float: left;
+  font-size: 1.5em;
+  font-weight: 600;
+  padding: 0 0.5em 0.5em 0;
+}
+
 .Draftail-block--ENDOFARTICLE {
   text-align: center;
 }
