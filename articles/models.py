@@ -229,6 +229,11 @@ class ArticlePage(
         ],
         blank=True,
     )
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
     video_banner = models.ForeignKey(
         'wagtailmedia.Media',
         null=True,
@@ -278,6 +283,7 @@ class ArticlePage(
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
             [
+                FieldPanel('short_description'),
                 StreamFieldPanel('body'),
                 FieldPanel('footnotes'),
                 FieldPanel('works_cited'),

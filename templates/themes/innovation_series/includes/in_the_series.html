@@ -1,0 +1,66 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+<section class="innovation-series-read-the-series">
+  <div class="container-sm">
+    <a href="{{ article_series.url }}">
+      <h2>{{ article_series.title }}</h2>
+      <p>Read the Series</p>
+    </a>
+  </div>
+</section>
+<section class="innovation-series-in-the-series">
+  <div class="container-sm">
+    <h3>In the Series</h3>
+    {% for block in article_series.series_items %}
+      {% if block.block_type == 'series_item' and block.value.id != article_id %}
+        <article>
+          <div class="media">
+            {% if block.value.specific|page_type == 'multimedia' %}
+              <i class="fa fa-play"></i>
+            {% endif %}
+          </div>
+          {% if block.value.specific.image_banner_small %}
+            {% image block.value.specific.image_banner_small original as article_background %}
+          {% elif block.value.specific.image_square %}
+            {% image block.value.specific.image_square original as article_background %}
+          {% endif %}
+          <div class="article-data" {% if article_background %}style="background-image: url('{{ article_background.url }}');"{% endif %}>
+            <h5><a href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
+            {% if block.value.specific|page_type == 'opinion' %}
+              <div class="article-subtitle">
+                {{ block.value.specific.subtitle|richtext }}
+              </div>
+            {% endif %}
+            {% if block.value.specific.authors %}
+              <p class="authors">
+                Author{{ block.value.specific.authors|length|pluralize }}:
+                {% for author in block.value.specific.authors %}
+                  {% if author.block_type == 'author' %}
+                    <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                  {% elif author.block_type == 'external_author' %}
+                    <span>{{ author.value }}</span>
+                  {% endif %}
+                {% endfor %}
+              </p>
+            {% endif %}
+            {% if block.value.specific.speakers %}
+              <p class="authors">
+                Speaker{{ block.value.specific.speakers|length|pluralize }}:
+                {% for speaker in block.value.specific.speakers %}
+                  {% if speaker.block_type == 'speaker' %}
+                    <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
+                  {% elif speaker.block_type == 'external_speaker' %}
+                    <span>{{ speaker.value }}</span>
+                  {% endif %}
+                {% endfor %}
+              </p>
+            {% endif %}
+          </div>
+
+        </article>
+      {% elif block.block_type == 'category_title' %}
+        <h4>{{ block.value }}</h4>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>

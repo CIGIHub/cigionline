@@ -5,9 +5,15 @@
     <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
     {% for author in authors %}
       <div class="author-block">
-        <div class="name">{{ author }}</div>
-        {% if author.value.short_bio|length > 1 %}
-          {{ author.value.short_bio|richtext }}
+        {% if author.block_type == 'author' %}
+          <div class="name">
+            <a href="{{ author.value.url }}">{{ author.value.title }}</a>
+          </div>
+          {% if author.value.short_bio|length > 1 %}
+            {{ author.value.short_bio|richtext }}
+          {% endif %}
+        {% elif author.block_type == 'external_author' %}
+          <div class="name">{{ author.value }}</div>
         {% endif %}
       </div>
     {% endfor %}

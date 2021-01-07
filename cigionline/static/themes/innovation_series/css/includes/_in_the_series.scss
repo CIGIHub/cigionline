@@ -1,0 +1,115 @@
+.innovation-series-read-the-series {
+  @include link($color: $white, $hover-color: $cigi-primary-colour);
+  background-color: $cigi-darkest-grey;
+  background-image: url('../../assets/read_the_series_background.png');
+  background-position: right;
+  background-repeat: no-repeat;
+  margin-bottom: 2em;
+  padding: 2em 0;
+
+  a {
+    display: block;
+
+    @media screen and (min-width: $medium) {
+      max-width: 40%;
+    }
+  }
+
+  h2 {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 1em;
+  }
+
+  p {
+    margin: 0;
+    text-transform: uppercase;
+  }
+}
+
+.innovation-series-in-the-series {
+  h3 {
+    color: $cigi-darkest-grey;
+    font-size: 1.5em;
+    line-height: 2;
+    margin-bottom: 0;
+    position: relative;
+
+    &::before {
+      border-top: 5px solid $cigi-primary-colour;
+      content: '';
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 80px;
+    }
+  }
+
+  article {
+    border-bottom: 1px solid $divider-grey;
+    display: flex;
+
+    .article-data {
+      background-position: 100% 24px;
+      background-repeat: no-repeat;
+      background-size: 18%;
+      flex-grow: 1;
+      padding: 24px 0 24px 10px;
+
+      @media screen and (min-width: $large) {
+        padding-left: 20px;
+      }
+
+      h5,
+      p {
+        margin-bottom: 1em;
+        width: 75%;
+      }
+
+      h5 {
+        @include link($color: $cigi-darkest-grey, $hover-color: $cigi-medium-grey);
+        font-size: 1.375em;
+        font-weight: 500;
+        line-height: 1.2;
+        margin-bottom: 0.5em;
+
+        @media screen and (min-width: $large) {
+          margin-bottom: 0.8em;
+        }
+      }
+
+      p {
+        @include link($color: $cigi-medium-grey, $hover-color: $cigi-primary-colour);
+        color: $cigi-medium-grey;
+      }
+
+      .article-subtitle {
+        display: none;
+
+        @media screen and (min-width: $large) {
+          display: block;
+        }
+      }
+
+      .authors {
+        font-size: 0.75em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+    }
+
+    .media {
+      padding: 24px 0;
+      text-align: center;
+      width: 24px;
+
+      i {
+        border: 2px solid $cigi-darkest-grey;
+        border-radius: 2px;
+        color: $cigi-darkest-grey;
+        font-size: 12px;
+        padding: 3px 4px 3px 5px;
+      }
+    }
+  }
+}
