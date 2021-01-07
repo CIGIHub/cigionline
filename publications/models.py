@@ -166,7 +166,7 @@ class PublicationPage(
     book_publisher_url = models.URLField(blank=True)
     book_purchase_links = StreamField(
         [
-            ('book_purchase_links', BookPurchaseLinksBlock())
+            ('purchase_link', BookPurchaseLinksBlock())
         ],
         blank=True,
     )
