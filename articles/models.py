@@ -400,6 +400,15 @@ class ArticleSeriesPage(
         max_length=255,
         blank=True,
     )
+    featured_items = StreamField(
+        [
+            ('featured_item', PageChooserBlock(
+                required=True,
+                page_type=['articles.ArticlePage', 'multimedia.MultimediaPage'],
+            )),
+        ],
+        blank=True,
+    )
     image_banner = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -505,6 +514,13 @@ class ArticleSeriesPage(
                 MediaChooserPanel('video_banner'),
             ],
             heading='Media',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('featured_items'),
+            ],
+            heading='Featured Series Items',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
