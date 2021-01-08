@@ -32,7 +32,6 @@ section {
   }
 
   &.publication-hero-books {
-
     color: $white;
 
     .hero-container {
@@ -40,24 +39,65 @@ section {
         padding-top: 6em;
       }
     }
-  
-    .social-share-list {
-      justify-content: left;
+
+    .topics {
+      line-height: 1.666em;
+      margin-bottom: 0.75em;
     }
 
-    a {
+    h1 {
+      font-size: 2.75em;
+      font-weight: 400;
+      margin-bottom: 0.5em;
+    }
+
+    .meta {
       color: $white;
+      display: flex;
+      font-size: 1.125em;
+      text-transform: none;
+    }
 
-      &:hover {
-        color: $cigi-pink;
+    .label {
+      padding-right: 0.2em;
+    }
+
+    .authors {
+      font-size: 1.125em;
+      margin-bottom: 0;
+      margin-top: 0;
+
+      a {
+        color: $white;
       }
+    }
 
-      &.button {
+    .social-share-list {
+      justify-content: left;
+      margin: 1em 0 0;
+    }
+
+    .date {
+      color: $white;
+    }
+
+    .button-list {
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+      display: flex;
+      flex-direction: row;
+      list-style: none;
+      margin-top: 0.75em;
+
+      a {
         background-color: $color--blue;
         border-radius: 2px;
+        color: $white;
+        display: block;
         font-size: 0.75em;
         line-height: 1.333em;
-        margin: 1em 0;
+        margin: 1em 0.5em 0;
         padding: 7px 10px;
         transition: background-color 0.25s ease;
 
