@@ -25,7 +25,6 @@ from wagtail.admin.edit_handlers import (
 from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
-    PageChooserBlock,
     RichTextBlock,
     StructBlock,
     URLBlock,
