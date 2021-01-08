@@ -1,6 +1,22 @@
 @import '../../../css/global/animations/bounce';
 
 .longform-article-series {
+  .body {
+    background-color: $longform-series-body-color;
+    padding-bottom: 0.5em;
+    padding-top: 1.5em;
+
+    .about-series {
+      font-size: 1.5em;
+      font-weight: 500;
+      margin-bottom: 1em;
+
+      span {
+        border-bottom: 5px solid $black;
+      }
+    }
+  }
+
   .longform-article-series-hero {
     background-position-x: 50%;
     background-position-y: 50%;
