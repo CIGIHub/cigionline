@@ -26,8 +26,6 @@ from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     RichTextBlock,
-    StructBlock,
-    URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
