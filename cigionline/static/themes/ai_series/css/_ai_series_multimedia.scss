@@ -1,3 +1,25 @@
-// .ai-series-multimedia {
-//
-// }
+.ai-series-multimedia {
+  header,
+  .main-navigation-wrapper {
+    background: transparent;
+  }
+
+  .mm-hero {
+    position: relative;
+
+    & > * {
+      position: relative;
+    }
+
+    &::before {
+      background-color: $black;
+      content: '';
+      height: 100%;
+      left: 0;
+      opacity: 0.5;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+}

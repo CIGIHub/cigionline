@@ -10,7 +10,7 @@
   {% include "includes/social_links.html" with title=self.title %}
 
   {% for document in download %}
-    <button class="publication-download">
+    <button class="button">
       <a href="{{document.value.file.url}}">
           <i class="fa fas fa-download"></i>
           {% if document.value.button_text == '' %}Download PDF {% else %} {{ document.value.button_text}} {% endif %}
