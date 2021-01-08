@@ -35,25 +35,7 @@ section {
 // BUTTONS
 
 button {
-  &.publication-download {
-    background-color: $color--blue;
-    border-radius: 2px;
-    font-size: 0.75em;
-    line-height: 1.1em;
-    margin: 1em 0;
-    padding: 7px 10px;
-    transition: background-color 0.25s ease;
-
-    &:hover {
-      background-color: $color-dark-blue;
-    }
-
-    a {
-      color: $white;
-    }
-
-    .fa-download {
-      margin-right: 0.25em;
-    }
+  .fa-download {
+    margin-right: 0.25em;
   }
 }

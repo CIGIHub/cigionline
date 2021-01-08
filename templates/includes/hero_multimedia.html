@@ -1,6 +1,10 @@
 {% load wagtailembeds_tags %}
 
-<section class="mm-hero">
+<section class="mm-hero"
+  {% if image_hero %}
+    style="background-image: url('{{ image_hero.url }}');"
+  {% endif %}
+>
   <div class="container-md">
     <div class="mm-hero-content">
       {% include "includes/topics.html" with topics=self.topics %}

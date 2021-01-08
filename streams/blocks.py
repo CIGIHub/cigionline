@@ -176,6 +176,17 @@ class ExternalQuoteBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/external_quote_block.html'
 
 
+class ExternalSpeakerBlock(blocks.CharBlock, ThemeableBlock):
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ExternalSpeakerBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'external_speaker_block')
+
+    class Meta:
+        icon = 'edit'
+        label = 'External Speakers'
+
+
 class ImageBlock(blocks.StructBlock, ThemeableBlock):
     """Image"""
 
