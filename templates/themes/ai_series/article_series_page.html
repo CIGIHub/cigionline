@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/mhy5jui.css">
@@ -46,14 +46,30 @@
     <div class="container-md">
       <h2>In the Series</h2>
       {% for block in self.series_items %}
+        {% define block.value.specific|page_type as page_type %}
         {% if block.block_type == 'series_item' %}
           <article>
+            {% image block.value.specific.image_banner max-450x200 as image_banner %}
+            <div class="background-image" style="background-image: url('{{image_banner.url}}');"></div>
             <h3><a href="{{ block.value.url }}">{{ block.value.title }}</a></h3>
-            <ul class="authors">
-              {% for author in block.value.specific.authors %}
-                <li>{{ author }}</li>
-              {% endfor %}
-            </ul>
+            <div class="authors-container">
+              {% if page_type == 'multimedia' %}
+                <a class="video-button" href="{{ block.value.url  }}">
+                  <i class="fas fa-play-circle"></i>
+                </a>
+              {% endif %}
+              <ul class="authors">
+                {% if page_type == 'multimedia' %}
+                  {% define block.value.specific.speakers as authors %}
+                {% elif page_type == 'opinion' %}
+                  {% define block.value.specific.authors as authors %}
+                {% endif %}
+
+                {% for author in authors %}
+                  <li>{{ author }}</li>
+                {% endfor %}
+              </ul>
+            </div>
           </article>
         {% endif %}
       {% endfor %}
