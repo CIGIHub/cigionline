@@ -21,7 +21,6 @@
 
     header {
       background-color: transparent;
-      position: relative;
 
       .main-navigation-wrapper {
         background-color: transparent;
@@ -72,6 +71,26 @@
 
         li {
           list-style: none;
+        }
+
+        .authors {
+          margin: 0;
+
+          li {
+            display: inline;
+
+            &:not(:only-child) {
+              &::after {
+                content: ' and ';
+              }
+            }
+
+            &:last-child {
+              &::after {
+                display: none;
+              }
+            }
+          }
         }
       }
     }
