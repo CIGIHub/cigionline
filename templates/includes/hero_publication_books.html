@@ -8,9 +8,9 @@
           <h1>{{ title }}</h1>
           <h2>{{subtitle|safe}}</h2>
           Published: {% include "includes/date.html" with date=self.publishing_date %}
-          {% if editors != null %}
-            Edited By: {{ editors }}
-          {% elif authors != null %}
+          {% if editors %}
+            Edited By: {% include "includes/editors.html" with editors=self.editors %}
+          {% elif authors %}
             Author: {% include "includes/authors.html" with authors=self.authors %}
           {% endif %}
 

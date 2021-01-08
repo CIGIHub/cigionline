@@ -153,6 +153,25 @@ class ChartBlock(blocks.StructBlock):
         template = 'streams/chart_block.html'
 
 
+class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EditorBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'editor_block')
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'id': value.id,
+                'title': value.title,
+                'url': value.url,
+            }
+
+    class Meta:
+        icon = 'user'
+        label = 'Editor'
+
+
 class EmbeddedVideoBlock(blocks.StructBlock, ThemeableBlock):
     video_url = blocks.URLBlock(required=True)
     caption = blocks.CharBlock(required=False)
