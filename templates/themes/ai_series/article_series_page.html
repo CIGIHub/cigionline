@@ -15,9 +15,29 @@
   <div class="ai-series-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
     {% include "includes/top_bar.html" %}
     <div class="container-md hero-content">
-      {% include "includes/social_links.html" with title=self.title %}
-      <h1>{{ self.title }}</h1>
+      {% include "includes/social_links_square.html" with title=self.title %}
+      <div class="row">
+        <div class="col-md-8 col-lg-6">
+          <div class="essay-series-label">A CIGI Essay Series</div>
+          <h1>{{ self.title }}</h1>
+        </div>
+        <div class="col-md-4 col-lg-5 offset-lg-1 series-contributors">
+          <div class="contributors-label">Contributors</div>
+          <ul>
+            {% for item in self.series_contributors_by_article %}
+              <li>
+                <a href="{{ item.item.url }}">
+                  {% include "includes/contributors.html" with contributors=item.contributors %}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="container-md short-description">
+    {{ self.short_description|richtext }}
   </div>
 {% endblock %}
 
