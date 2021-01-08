@@ -129,4 +129,57 @@
       }
     }
   }
+
+  .stream-block-pull-quote {
+    font-weight: 500;
+    position: relative;
+
+    &::after {
+      bottom: 0;
+      content: '';
+      height: 50%;
+      position: absolute;
+    }
+
+    blockquote {
+      background: transparent;
+      border-bottom: 1px solid $data-series-primary-color;
+      margin-bottom: 1rem;
+    }
+
+    &.right {
+      float: right;
+      margin: 0 -156px 0 1rem;
+      padding-left: 1em;
+
+      blockquote {
+        border-left: 0.85rem solid $data-series-primary-color;
+        margin: 0;
+      }
+
+      &::after {
+        border-left: .85rem solid #31c3ba;
+        left: 0;
+      }
+    }
+
+    &.left {
+      float: left;
+      margin: 0 1rem 0 -156px;
+      padding-right: 1em;
+
+      blockquote {
+        border-left: none;
+        border-right: 0.85rem solid $data-series-primary-color;
+        margin: 0;
+        padding: 0 1em 0 0;
+        text-align: right;
+      }
+
+      &::after {
+        border-right: .85rem solid $data-series-primary-color;
+        right: 0;
+      }
+    }
+  }
 }
