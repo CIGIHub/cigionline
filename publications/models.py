@@ -9,7 +9,7 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import AuthorBlock, PDFDownloadBlock
+from streams.blocks import AuthorBlock, PDFDownloadBlock, BookPurchaseLinksBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -166,10 +166,7 @@ class PublicationPage(
     book_publisher_url = models.URLField(blank=True)
     book_purchase_links = StreamField(
         [
-            ('purchase_link', StructBlock([
-                ('link_text', CharBlock(required=True)),
-                ('url', URLBlock(required=True)),
-            ])),
+            ('purchase_link', BookPurchaseLinksBlock())
         ],
         blank=True,
     )

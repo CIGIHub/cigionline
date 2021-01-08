@@ -120,6 +120,22 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/block_quote_block.html'
 
 
+class BookPurchaseLinksBlock(blocks.StructBlock):
+    url = blocks.URLBlock(required=True)
+    link_text = blocks.CharBlock(required=True)
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'url': value.url,
+                'link_text': value.link_text,
+            }
+
+    class Meta:
+      icon = 'link'
+      label = 'Purchase Links'
+      
+
 class ChartBlock(blocks.StructBlock):
     """Chart image with title"""
 

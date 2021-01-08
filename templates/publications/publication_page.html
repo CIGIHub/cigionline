@@ -7,7 +7,7 @@
 
 {% block content %}
   {% if self.publication_type == 'books' %}
-    {% include "includes/hero_publication_books.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover %}
+    {% include "includes/hero_publication_books.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors editors=self.editors %}
   {% else %}
     {% include "includes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
   {% endif %}

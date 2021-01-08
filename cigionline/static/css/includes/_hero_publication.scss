@@ -32,13 +32,18 @@ section {
   }
 
   &.publication-hero-books {
+
+    color: $white;
+
     .hero-container {
       @include breakpoint($medium) {
         padding-top: 6em;
       }
     }
   
-    color: $white;
+    .social-share-list {
+      justify-content: left;
+    }
 
     a {
       color: $white;
@@ -46,8 +51,22 @@ section {
       &:hover {
         color: $cigi-pink;
       }
-    }
 
+      &.button {
+        background-color: $color--blue;
+        border-radius: 2px;
+        font-size: 0.75em;
+        line-height: 1.333em;
+        margin: 1em 0;
+        padding: 7px 10px;
+        transition: background-color 0.25s ease;
+
+        &:hover {
+          background-color: $color-dark-blue;
+          color: $white;
+        }
+      }
+    }
   }
 }
 
