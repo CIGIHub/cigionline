@@ -215,17 +215,10 @@
         }
 
         h4 {
+          @include link($color: $cigi-dark-grey, $hover-color: $cigi-medium-grey);
           font-size: 1.375em;
           font-weight: 500;
           margin-bottom: 0.4em;
-
-          a {
-            color: $cigi-dark-grey;
-
-            &:hover {
-              color: $cigi-medium-grey;
-            }
-          }
         }
 
         .authors {
@@ -235,18 +228,7 @@
           text-transform: uppercase;
 
           span {
-            &:not(:only-child) {
-              &::after {
-                content: ', ';
-                margin-right: 2px;
-              }
-            }
-
-            &:last-child {
-              &::after {
-                display: none;
-              }
-            }
+            @include comma-list;
 
             a {
               color: $cigi-text-grey;

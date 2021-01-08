@@ -12,10 +12,20 @@ class ThemeableBlock:
     def get_theme_dir(self, theme_name):
         return theme_name.lower().replace(' ', '_').replace("-", '_')
 
+    def get_page_type_dir(self, verbose_name):
+        return verbose_name.lower().replace(' ', '_')
+
     def get_theme_template(self, standard_template, context, template_name):
-        if context and context['page'] and hasattr(context['page'], 'theme') and \
-                context['page'].theme and self.get_theme_dir(context['page'].theme.name) in self.implemented_themes:
-            return f'themes/{self.get_theme_dir(context["page"].theme.name)}/streams/{template_name}.html'
+        if (
+            context and
+            context['page'] and
+            hasattr(context['page'], '_meta') and
+            hasattr(context['page']._meta, 'verbose_name') and
+            hasattr(context['page'], 'theme') and
+            context['page'].theme and
+            f'{self.get_theme_dir(context["page"].theme.name)}_{self.get_page_type_dir(context["page"]._meta.verbose_name)}' in self.implemented_themes
+        ):
+            return f'themes/{self.get_theme_dir(context["page"].theme.name)}/streams/{self.get_page_type_dir(context["page"]._meta.verbose_name)}_{template_name}.html'
         return standard_template
 
 
@@ -254,6 +264,10 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'superscript',
             'ul',
         ]
+
+    implemented_themes = [
+        'longform_opinion_series',
+    ]
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(ParagraphBlock, self).get_template(context, *args, **kwargs)
