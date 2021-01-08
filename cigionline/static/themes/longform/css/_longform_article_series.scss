@@ -167,6 +167,54 @@
     }
   }
 
+  .longform-article-series-featured {
+    margin: 2em 0;
+
+    .longform-article-series-featured-item {
+      background-position-x: 50%;
+      background-position-y: 50%;
+      background-size: cover;
+      height: 400px;
+      position: relative;
+      width: 100%;
+
+      .longform-article-series-featured-item-content {
+        bottom: 3em;
+        left: 0;
+        max-width: 600px;
+        padding: 0 1em;
+        position: absolute;
+
+        @media screen and (min-width: $medium) {
+          padding: 0 2em;
+        }
+
+        h3 {
+          font-size: 2em;
+          font-weight: 400;
+          margin-bottom: 0.6em;
+
+          a {
+            background-color: $cigi-primary-colour;
+            box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0 $cigi-primary-colour;
+            color: $white;
+          }
+        }
+
+        .featured-item-authors {
+          span {
+            @include comma-list;
+            @include link($color: $white, $hover-color: $white);
+            background-color: $black;
+            box-shadow: 5px 0 0 $black, -5px 0 0 $black;
+            color: $white;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
+
   .longform-article-series-in-the-series {
     margin-bottom: 2em;
 
