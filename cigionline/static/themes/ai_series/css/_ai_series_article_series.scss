@@ -74,23 +74,8 @@
         }
 
         .authors {
+          @include inline-person-list;
           margin: 0;
-
-          li {
-            display: inline;
-
-            &:not(:only-child) {
-              &::after {
-                content: ' and ';
-              }
-            }
-
-            &:last-child {
-              &::after {
-                display: none;
-              }
-            }
-          }
         }
       }
     }
@@ -177,26 +162,11 @@
         }
 
         .authors {
+          @include inline-person-list;
           font-size: 1.125em;
           font-style: italic;
           list-style-type: none;
           margin: 0;
-
-          li {
-            display: inline;
-
-            &:not(:only-child) {
-              &::after {
-                content: ' and ';
-              }
-            }
-
-            &:last-child {
-              &::after {
-                display: none;
-              }
-            }
-          }
         }
       }
     }

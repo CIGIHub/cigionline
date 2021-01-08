@@ -150,6 +150,24 @@
   }
 }
 
+@mixin inline-person-list {
+  li {
+    display: inline;
+
+    &:not(:only-child) {
+      &::after {
+        content: ' and ';
+      }
+    }
+
+    &:last-child {
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
 // Date Circles
 
 @mixin date-circle($border-color: $black, $circle-size: 70px, $font-size: 1em) {
