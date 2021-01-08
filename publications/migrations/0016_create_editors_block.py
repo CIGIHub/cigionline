@@ -9,7 +9,7 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('publications', '0015_update_book_purchase_links_block'),
+        ('publications', '0015_create_book_purchase_links_block'),
     ]
 
     operations = [

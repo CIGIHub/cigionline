@@ -132,8 +132,9 @@ class BookPurchaseLinksBlock(blocks.StructBlock):
             }
 
     class Meta:
-      icon = 'link'
-      label = 'Purchase Links'
+        icon = 'link'
+        label = 'Purchase Links'
+
 
 class ChartBlock(blocks.StructBlock):
     """Chart image with title"""
