@@ -55,4 +55,38 @@
       {% include_block block %}
     {% endfor %}
   </section>
+  <section class="longform-article-series-in-the-series">
+    <div class="container-lg">
+      <h2><span>In the Series</span></h2>
+      <div class="longform-article-series-in-the-series-items">
+        {% for block in self.series_items %}
+          {% if block.block_type == 'series_item' %}
+            <article>
+              <h4>
+                <a href="{{ block.value.url }}">
+                  {{ block.value.title }}
+                </a>
+              </h4>
+              <p class="authors">
+                Author{{ block.value.specific.authors|length|pluralize }}:
+                {% for author in block.value.specific.authors %}
+                  <span>
+                    {% if author.block_type == 'author' %}
+                      <a href="{{ author.value.url }}">
+                        {{ author.value.title }}
+                      </a>
+                    {% elif author.block_type == 'external_author' %}
+                      {{ author.value }}
+                    {% endif %}
+                  </span>
+                {% endfor %}
+              </p>
+            </article>
+          {% elif block.block_type == 'category_title' %}
+            <h3>{{ block.value }}</h3>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 {% endblock %}
