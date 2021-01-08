@@ -129,4 +129,16 @@
       }
     }
   }
+
+  .end-of-article {
+    background-image: url('../../../assets/data-series-end-of-article.png');
+    background-repeat: no-repeat;
+    height: 47px;
+    margin: 3em auto;
+    width: 47px;
+
+    &::after {
+      content: '';
+    }
+  }
 }
