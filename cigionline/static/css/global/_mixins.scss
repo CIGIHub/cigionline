@@ -134,3 +134,33 @@
     }
   }
 }
+
+@mixin comma-list {
+  &:not(:only-child) {
+    &::after {
+      content: ', ';
+      margin-right: 2px;
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+// Date Circles
+
+@mixin date-circle($border-color: $black, $circle-size: 70px, $font-size: 1em) {
+  align-items: center;
+  border: 1px solid $border-color;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  font-size: $font-size;
+  height: $circle-size;
+  justify-content: center;
+  line-height: 1.15em;
+  width: $circle-size;
+}
