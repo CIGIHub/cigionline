@@ -129,4 +129,22 @@
       }
     }
   }
+
+  .stream-block-image {
+    @include breakpoint($large) {
+      img {
+        margin-left: -33%;
+        margin-right: -33%;
+        width: 1024px;
+      }
+    }
+
+    .stream-block-image-caption {
+      border-left: solid 5px $data-series-primary-color;
+      color: $cigi-dark-grey;
+      font-size: .85rem;
+      margin: .5rem 0 2.5rem;
+      padding: .2rem 0 .2rem .5rem;
+    }
+  }
 }
