@@ -90,6 +90,7 @@
 
   .ai-series-article-series-in-the-series {
     @include link($color: $white, $hover-color: $cigi-dark-pink);
+    margin-bottom: 3em;
     margin-top: 3em;
 
     h2 {
