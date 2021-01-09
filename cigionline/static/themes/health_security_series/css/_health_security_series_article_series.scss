@@ -1,0 +1,36 @@
+.health-security-series-article-series {
+  background-color: $health-security-series-background-colour;
+
+  header {
+    background-color: transparent;
+  }
+
+  .health-security-series-article-series-hero {
+    padding-top: 8em;
+
+    h1 {
+      color: $white;
+    }
+
+    .short-description {
+      color: $white;
+      columns: 2;
+    }
+  }
+
+  .health-security-series-article-series-in-the-series {
+    article {
+      .authors {
+        span {
+          @include and-separated;
+        }
+      }
+    }
+  }
+
+  .health-security-series-article-series-credits {
+    .health-security-series-article-series-credits-content {
+      columns: 3;
+    }
+  }
+}

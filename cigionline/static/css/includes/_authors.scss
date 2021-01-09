@@ -13,6 +13,6 @@
   }
 
   .block-author {
-    @include comma-list;
+    @include comma-separated;
   }
 }
