@@ -23,7 +23,7 @@
   list-style: none;
 
   li {
-    @include comma-list;
+    @include comma-separated;
   }
 }
 

@@ -228,7 +228,7 @@
           text-transform: uppercase;
 
           span {
-            @include comma-list;
+            @include comma-separated;
 
             a {
               color: $cigi-text-grey;

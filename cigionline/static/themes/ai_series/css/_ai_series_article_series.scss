@@ -21,7 +21,6 @@
 
     header {
       background-color: transparent;
-      position: relative;
 
       .main-navigation-wrapper {
         background-color: transparent;
@@ -59,7 +58,7 @@
 
       .contributors-label {
         margin-top: 1.7em;
-        
+
         @media screen and (min-width: 768px) {
           margin-top: 1em;
         }
@@ -73,6 +72,11 @@
         li {
           list-style: none;
         }
+
+        .authors {
+          @include inline-person-list;
+          margin: 0;
+        }
       }
     }
   }
@@ -85,22 +89,85 @@
   }
 
   .ai-series-article-series-in-the-series {
+    @include link($color: $white, $hover-color: $cigi-dark-pink);
+    margin-bottom: 3em;
+    margin-top: 3em;
+
+    h2 {
+      @include ai-heading;
+      margin-bottom: 1em;
+    }
+
+    h3 {
+      font-size: 1.5em;
+      font-weight: 600;
+      line-height: 1.1em;
+      width: 90%;
+
+      @media screen and (min-width: 768px) {
+        font-size: 1.8em;
+        width: 60%;
+      }
+    }
+
+    h3,
     .authors {
-      list-style-type: none;
+      color: $white;
+      font-family: $ai-garamond;
+      z-index: 1;
+    }
 
-      li {
-        display: inline;
+    article {
+      border-top: 7px solid $black;
+      display: flex;
+      flex-direction: column;
+      height: 12.5em;
+      justify-content: flex-start;
+      padding: 2em 0 1.5em;
+      position: relative;
 
-        &:not(:only-child) {
-          &::after {
-            content: ' and ';
-          }
+      &:last-child {
+        border-bottom: 7px solid $black;
+      }
+
+      .background-image {
+        background-position: right bottom;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        bottom: 0;
+        left: 0;
+        opacity: 0.7;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        @media screen and (min-width: 768px) {
+          background-size: auto 100%;
+          opacity: 1;
+        }
+      }
+
+      .authors-container {
+        align-items: center;
+        display: flex;
+        width: 100%;
+        z-index: 1;
+
+        @media screen and (min-width: 768px) {
+          width: 70%;
         }
 
-        &:last-child {
-          &::after {
-            display: none;
-          }
+        i {
+          font-size: 2em;
+          margin-right: 0.3em;
+        }
+
+        .authors {
+          @include inline-person-list;
+          font-size: 1.125em;
+          font-style: italic;
+          list-style-type: none;
+          margin: 0;
         }
       }
     }
@@ -127,7 +194,7 @@
         grid-template-columns: 1fr 1fr 1fr;
       }
 
-      @media screen and (min-width: 1080px) {
+      @media screen and (min-width: 768px) {
         -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }
