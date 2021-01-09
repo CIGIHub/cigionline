@@ -36,6 +36,7 @@ const config = {
     themeAISeries: './cigionline/static/themes/ai_series/index.js',
     themeBigTechS3: './cigionline/static/themes/big_tech_s3/index.js',
     themeDataSeries: './cigionline/static/themes/data_series/index.js',
+    themeHealthySecuritySeries: './cigionline/static/themes/health_security_series/index.js',
     themeInnovationSeries: './cigionline/static/themes/innovation_series/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',
   },
