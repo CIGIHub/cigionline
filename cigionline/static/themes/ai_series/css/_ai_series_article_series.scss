@@ -59,7 +59,7 @@
 
       .contributors-label {
         margin-top: 1.7em;
-        
+
         @media screen and (min-width: 768px) {
           margin-top: 1em;
         }
@@ -89,19 +89,8 @@
       list-style-type: none;
 
       li {
+        @include and-separated;
         display: inline;
-
-        &:not(:only-child) {
-          &::after {
-            content: ' and ';
-          }
-        }
-
-        &:last-child {
-          &::after {
-            display: none;
-          }
-        }
       }
     }
   }

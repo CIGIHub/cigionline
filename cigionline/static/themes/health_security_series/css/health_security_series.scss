@@ -1,5 +1,8 @@
 @import '../../../css/global/variables';
 @import '../../../css/global/mixins';
 
+$health-security-series-background-colour: #0b506f;
+
+@import './health_security_series_article_series';
 @import './health_security_series_article';
 @import './health_security_series_multimedia';

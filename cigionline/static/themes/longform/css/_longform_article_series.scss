@@ -203,7 +203,7 @@
 
         .featured-item-authors {
           span {
-            @include comma-list;
+            @include comma-separated;
             @include link($color: $white, $hover-color: $white);
             background-color: $black;
             box-shadow: 5px 0 0 $black, -5px 0 0 $black;
@@ -252,7 +252,7 @@
           text-transform: uppercase;
 
           span {
-            @include comma-list;
+            @include comma-separated;
             @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
           }
         }
