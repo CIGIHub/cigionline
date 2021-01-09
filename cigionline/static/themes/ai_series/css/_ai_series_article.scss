@@ -16,8 +16,8 @@
     header {
       background-color: transparent;
 
-      .main-navigation-wrapper {
-        background-color: transparent;
+      &.scrolled {
+        background-color: $black;
       }
     }
 
