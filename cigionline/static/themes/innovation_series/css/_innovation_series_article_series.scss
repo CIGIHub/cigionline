@@ -1,0 +1,145 @@
+@import '../../../css/global/animations/bounce';
+
+.innovation-series-article-series {
+  h2 {
+    font-size: 1.5em;
+    font-weight: 500;
+    margin-bottom: 1em;
+
+    span {
+      border-top: 5px solid $cigi-primary-colour;
+    }
+  }
+
+  header {
+    background-color: transparent;
+    position: absolute;
+
+    .cigi-top-bar {
+      .cigi-logo {
+        svg {
+          fill: $black;
+        }
+      }
+
+      nav {
+        ul {
+          a,
+          button {
+            color: $black;
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .innovation-series-article-series-hero {
+    background-position-x: 50%;
+    background-position-y: 50%;
+    background-size: cover;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+      background-color: $innovation-series-background-color;
+      content: '';
+      height: 100%;
+      left: 0;
+      opacity: 0.8;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+
+      @media screen and (min-width: $medium) {
+        background-color: transparent;
+      }
+    }
+
+    .hero-content {
+      position: fixed;
+      top: 15%;
+      width: 100%;
+      z-index: 3;
+
+      @media screen and (min-width: $medium) {
+        top: 30%;
+      }
+
+      h1,
+      p {
+        color: $black;
+        max-width: 550px;
+      }
+
+      h1 {
+        font-size: 2.2em;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 0.25em;
+      }
+
+      .cigi-essay-series {
+        font-size: 2em;
+        margin-bottom: 1em;
+      }
+
+      .series-contributors-title {
+        font-size: 1.125em;
+        margin: 0;
+      }
+
+      .series-contributors {
+        color: $cigi-text-grey;
+        line-height: 1.25;
+        margin: 0;
+        text-transform: uppercase;
+
+        span {
+          @include comma-separated;
+          white-space: nowrap;
+        }
+      }
+
+      .scroll-anchor {
+        animation: 'bounce' 2s infinite;
+        font-size: 2.5em;
+
+        a {
+          color: $black;
+        }
+      }
+    }
+
+    .video-background {
+      display: none;
+      left: 0;
+      min-height: 100%;
+      min-width: 100%;
+      position: fixed;
+      top: 0;
+
+      @media screen and (min-width: $medium) {
+        display: block;
+      }
+    }
+  }
+
+  .innovation-series-article-series-body,
+  .innovation-series-article-series-featured,
+  .innovation-series-article-series-in-the-series {
+    background-color: $innovation-series-background-color;
+    padding: 2em 0 1em;
+    position: relative;
+    z-index: 4;
+  }
+
+  .innovation-series-article-series-body {
+    background-color: $innovation-series-body-background-colour;
+  }
+}

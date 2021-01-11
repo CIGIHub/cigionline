@@ -2,7 +2,9 @@
 @import '../../../css/global/mixins';
 
 $innovation-series-background-color: #f2f0ea;
+$innovation-series-body-background-colour: #ebe9e5;
 
+@import './innovation_series_article_series';
 @import './innovation_series_article';
 @import './innovation_series_multimedia';
 @import './includes/in_the_series';
