@@ -127,11 +127,6 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         standard_template = super(BlockQuoteBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'block_quote_block')
 
-    @property
-    def template_string(self, context, *args, **kwargs):
-        standard_template = super(BlockQuoteBlock, self).get_template(context, *args, **kwargs)
-        return self.get_theme_template(standard_template, context, 'block_quote_block')
-
     class Meta:
         icon = 'openquote'
         label = 'Blockquote Paragraph'
