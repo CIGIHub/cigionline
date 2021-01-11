@@ -132,62 +132,65 @@
 
   .stream-block-pull-quote {
     font-weight: 500;
+    margin-bottom: 1rem;
     position: relative;
+
+    &::before {
+      bottom: 0;
+      content: '';
+      height: 50%;
+      position: absolute;
+    }
 
     blockquote {
       background: transparent;
       border-bottom: 1px solid $data-series-primary-color;
-      margin-bottom: 1rem;
+      border-left: 0;
+      margin: 0;
     }
 
     &.right {
-      blockquote {
+      padding-left: 1rem;
+
+      &::before {
         border-left: 0.85rem solid $data-series-primary-color;
-        margin: 0;
-        padding: 0 0 0 1em;
+        left: 0;
       }
 
-      &::after {
-        border-left: .85rem solid $data-series-primary-color;
-        left: 0;
+      blockquote {
+        border-left: 0.85rem solid $data-series-primary-color;
+        padding: 0 0 0 1em;
       }
     }
 
     &.left {
+      padding-right: 1rem;
+
+      &::before {
+        border-right: 0.85rem solid $data-series-primary-color;
+        right: 0;
+      }
+
       blockquote {
         border-left: 0;
         border-right: 0.85rem solid $data-series-primary-color;
-        margin: 0;
         padding: 0 1em 0 0;
-        text-align: right;
-      }
-
-      &::after {
-        border-right: .85rem solid $data-series-primary-color;
-        right: 0;
       }
     }
 
-    @include breakpoint($large) {
-      &::after {
-        bottom: 0;
-        content: '';
-        height: 50%;
-        position: absolute;
-      }
+    @include breakpoint($medium) {
 
       &.right {
         float: right;
         margin: 0 -156px 0 1rem;
-        padding-left: 1em;
       }
 
       &.left {
         float: left;
-        margin: 0 1rem 0 -156px;
+        margin: 0 1rem 1rem -156px;
 
         blockquote {
-          text-align: left;
+          text-align: right;
         }
       }
     }
