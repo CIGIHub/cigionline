@@ -121,7 +121,8 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
     link_text = blocks.CharBlock(required=False)
 
     implemented_themes = [
-        'after_covid_series_opinion'
+        'after_covid_series_opinion',
+        'cyber_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -160,6 +161,10 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
     title = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+
+    implemented_themes = [
+        'cyber_series_opinion',
+    ]
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(ChartBlock, self).get_template(context, *args, **kwargs)
@@ -247,6 +252,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
     hide_image_caption = blocks.BooleanBlock(required=False)
 
     implemented_themes = [
+        'cyber_series_opinion',
         'data_series_opinion',
     ]
 
