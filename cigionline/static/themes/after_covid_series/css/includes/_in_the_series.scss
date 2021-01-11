@@ -1,0 +1,72 @@
+.after-covid-series-article,
+.after-covid-series-multimedia {
+  .after-covid-series-in-the-series {
+    @include link($color: $white, $hover-color: $cigi-pink);
+    background: $black;
+    padding: 4em 0;
+
+    .essay-series-label,
+    .contributors-label {
+      color: $landing-heading-blue;
+      font-size: 1em;
+      font-weight: 400;
+      margin-bottom: 1em;
+    }
+
+    .series-info {
+      h2 {
+        flex-shrink: 0;
+        font-family: $tisa-pro;
+        font-size: 2em;
+        font-weight: 900;
+        margin: 0 1em 1em 0;
+
+        @media screen and (min-width: 768px) {
+          flex-basis: 50%;
+        }
+      }
+
+      .short-description {
+        color: $landing-description-grey;
+        line-height: 1.25em;
+      }
+    }
+
+    .video-banner {
+      background-repeat: repeat-x;
+      background-size: auto 100%;
+      height: 125px;
+      left: 50%;
+      margin: 2em -50vw;
+      position: relative;
+      right: 50%;
+      width: 100vw;
+    }
+
+    .series-contributors {
+      .contributors {
+        columns: 2;
+
+        @media screen and (min-width: 480px) {
+          columns: 3;
+        }
+
+        @media screen and (min-width: 768px) {
+          columns: 4;
+        }
+
+        li {
+          list-style: none;
+          padding: 0;
+
+          a {
+            font-family: $tisa-pro;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
