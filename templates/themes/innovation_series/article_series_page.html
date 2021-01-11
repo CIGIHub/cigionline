@@ -43,6 +43,41 @@
       </div>
     </div>
   </section>
+  {% if self.featured_items %}
+    <section class="innovation-series-article-series-featured">
+      <div class="container-lg">
+        <h2><span>Features</span></h2>
+        <div id="innovation-series-featured-carousel" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            {% for featured_item in self.featured_items %}
+              <li data-target="#innovation-series-featured-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+            {% endfor %}
+          </ol>
+          <div class="carousel-inner">
+            {% for featured_item in self.featured_items %}
+              <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                {% image featured_item.value.specific.image_hero original as featured_item_banner %}
+                <div class="innovation-series-article-series-featured-item" style="background-image: url('{{ featured_item_banner.url }}');">
+                  <div class="innovation-series-article-series-featured-item-content">
+                    <p class="featured-item-authors">
+                      {% for author in featured_item.value.specific.authors %}
+                        {% if author.block_type == 'author' %}
+                          <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                        {% elif author.block_type == 'external_author' %}
+                          <span>{{ author.value }}</span>
+                        {% endif %}
+                      {% endfor %}
+                    </p>
+                    <h3><a href="{{ featured_item.value.url }}">{{ featured_item.value.title }}</a></h3>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
   {% if self.body %}
     <section class="innovation-series-article-series-body" id="article-body">
       <div class="container-lg">
