@@ -54,9 +54,13 @@
 
     .hero-content {
       position: absolute;
-      top: 30%;
+      top: 15%;
       width: 100%;
       z-index: 3;
+
+      @media screen and (min-width: $medium) {
+        top: 30%;
+      }
 
       h1,
       p {
