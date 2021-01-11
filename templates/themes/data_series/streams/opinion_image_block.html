@@ -1,12 +1,14 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="stream-block stream-block-image">
-  <div class="container-sm">
-    {% image self.image width-640 %}
-    {% if not self.hide_image_caption %}
+  <div class="container-lg">
+    {% image self.image width-1024 %}
+  </div>
+  {% if not self.hide_image_caption %}
+    <div class="container-sm">
       <div class="stream-block-image-caption">
         {{self.image.title}}
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 </div>

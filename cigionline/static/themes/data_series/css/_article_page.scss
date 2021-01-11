@@ -136,14 +136,14 @@
     font-weight: 400;
     margin-bottom: .625rem;
   }
-  
+
   hr {
     background-image: url('../../../assets/data-series-divider.png');
     height: 32px;
     margin: 3em auto;
     width: 32px;
   }
-  
+
   .end-of-article {
     background-image: url('../../../assets/data-series-end-of-article.png');
     background-repeat: no-repeat;
@@ -155,16 +155,8 @@
       content: '';
     }
   }
-  
-  .stream-block-image {
-    @include breakpoint($large) {
-      img {
-        margin-left: -33%;
-        margin-right: -33%;
-        width: 1024px;
-      }
-    }
 
+  .stream-block-image {
     .stream-block-image-caption {
       border-left: solid 5px $data-series-primary-color;
       color: $cigi-dark-grey;
