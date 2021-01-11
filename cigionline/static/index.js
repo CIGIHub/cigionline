@@ -10,8 +10,10 @@ $(function() {
   $(window).on('scroll', function() {
     scrollTop = $(window).scrollTop();
     if (scrollTop >= 66) {
+      $('header').addClass('scrolled');
       $('#global-nav').addClass('scrolled-nav');
     } else {
+      $('header').removeClass('scrolled');
       $('#global-nav').removeClass('scrolled-nav');
     }
   });

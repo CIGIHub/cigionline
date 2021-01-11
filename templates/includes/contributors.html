@@ -1,6 +1,0 @@
-{% for contributor in contributors %}
-  {{ contributor.value.specific.first_name }} {{ contributor.value.specific.last_name }} 
-  {% if contributors|length == 2 and forloop.counter == 1 %}
-    and
-  {% endif %}
-{% endfor %}
