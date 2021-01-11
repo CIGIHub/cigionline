@@ -1,0 +1,10 @@
+{% load wagtailimages_tags %}
+
+<div class="container-md">
+  <figure>
+    {% image self.image width-640 %}
+    {% if not self.hide_image_caption %}
+      <figcaption>{{self.image.title}}</figcaption>
+    {% endif %}
+  </figure>
+</div>

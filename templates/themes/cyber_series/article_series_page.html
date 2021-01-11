@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'themeCyberSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}cyber-series-article-series{% endblock %}
+
+{% block content %}
+  <section class="cyber-series-article-series-hero">
+    {% image self.image_hero original as image_hero %}
+    <div class="cyber-series-article-series-hero-image" style="background-image: url('{{ image_hero.url }}');">
+    </div>
+    <div class="cyber-series-article-series-hero-content">
+      <div class="container-md">
+        {% include "includes/topics.html" with topics=self.topics %}
+        <h1>{{ self.title }}</h1>
+        <div class="cyber-series-subtitle">
+          {{ self.subtitle|richtext }}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% if self.body %}
+    <section class="cyber-series-article-series-body">
+      <div class="container-md">
+        <h2>{{ self.title }}</h2>
+      </div>
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
+  <section class="cyber-series-article-series-in-the-series">
+    <div class="container-md">
+      <div class="cyber-series-article-series-series-items">
+        {% for block in self.series_items %}
+          {% if block.block_type == 'series_item' %}
+            <article>
+              <h3>
+                <a href="{{ block.value.url }}">
+                  {{ block.value.title }}
+                </a>
+              </h3>
+              <p class="authors">
+                {% for author in block.value.specific.authors %}
+                  {% if author.block_type == 'author' %}
+                    <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                  {% elif author.block_type == 'external_author' %}
+                    <span>{{ author.value }}</span>
+                  {% endif %}
+                {% endfor %}
+                {% for speaker in block.value.specific.speakers %}
+                  {% if speaker.block_type == 'speaker' %}
+                    <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
+                  {% elif speaker.block_type == 'external_speaker' %}
+                    <span>{{ speaker.value }}</span>
+                  {% endif %}
+                {% endfor %}
+              </p>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
