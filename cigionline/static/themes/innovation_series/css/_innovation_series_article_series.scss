@@ -1,6 +1,16 @@
 @import '../../../css/global/animations/bounce';
 
 .innovation-series-article-series {
+  h2 {
+    font-size: 1.5em;
+    font-weight: 500;
+    margin-bottom: 1em;
+
+    span {
+      border-top: 5px solid $cigi-primary-colour;
+    }
+  }
+
   header {
     background-color: transparent;
     position: absolute;
@@ -32,7 +42,6 @@
     background-position-y: 50%;
     background-size: cover;
     height: 100vh;
-    margin-bottom: 2em;
     overflow: hidden;
     position: relative;
 
@@ -53,7 +62,7 @@
     }
 
     .hero-content {
-      position: absolute;
+      position: fixed;
       top: 15%;
       width: 100%;
       z-index: 3;
@@ -112,12 +121,25 @@
       left: 0;
       min-height: 100%;
       min-width: 100%;
-      position: absolute;
+      position: fixed;
       top: 0;
 
       @media screen and (min-width: $medium) {
         display: block;
       }
     }
+  }
+
+  .innovation-series-article-series-body,
+  .innovation-series-article-series-featured,
+  .innovation-series-article-series-in-the-series {
+    background-color: $innovation-series-background-color;
+    padding: 2em 0 1em;
+    position: relative;
+    z-index: 4;
+  }
+
+  .innovation-series-article-series-body {
+    background-color: $innovation-series-body-background-colour;
   }
 }

@@ -43,12 +43,14 @@
       </div>
     </div>
   </section>
-  <section class="body" id="article-body">
-    <div class="container-lg">
-      <h2 class="about-series"><span>About the Series</span></h2>
-    </div>
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
+  {% if self.body %}
+    <section class="innovation-series-article-series-body" id="article-body">
+      <div class="container-lg">
+        <h2 class="about-series"><span>About the Series</span></h2>
+      </div>
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
 {% endblock %}

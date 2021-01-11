@@ -8,7 +8,7 @@ import os.path
 
 
 class ThemeableBlock:
-    implemented_themes = ['after_covid_series_opinion']
+    implemented_themes = []
 
     def get_theme_dir(self, theme_name):
         return theme_name.lower().replace(' ', '_').replace("-", '_')
@@ -17,7 +17,6 @@ class ThemeableBlock:
         return verbose_name.lower().replace(' ', '_')
 
     def get_theme_template(self, standard_template, context, template_name):
-        template_string = f'{self.get_theme_dir(context["page"].theme.name)}/streams/{self.get_page_type_dir(context["page"]._meta.verbose_name)}_{template_name}.html'
         if (
             context and
             context['page'] and
@@ -25,10 +24,9 @@ class ThemeableBlock:
             hasattr(context['page']._meta, 'verbose_name') and
             hasattr(context['page'], 'theme') and
             context['page'].theme and
-            f'{self.get_theme_dir(context["page"].theme.name)}_{self.get_page_type_dir(context["page"]._meta.verbose_name)}' in self.implemented_themes and
-            os.path.exists(f'templates/themes/{template_string}')
+            f'{self.get_theme_dir(context["page"].theme.name)}_{self.get_page_type_dir(context["page"]._meta.verbose_name)}' in self.implemented_themes
         ):
-            return f'themes/{template_string}'
+            return f'themes/{self.get_theme_dir(context["page"].theme.name)}/streams/{self.get_page_type_dir(context["page"]._meta.verbose_name)}_{template_name}.html'
         return standard_template
 
 
@@ -122,6 +120,10 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
     image = ImageChooserBlock(required=False)
     link_url = blocks.URLBlock(required=False)
     link_text = blocks.CharBlock(required=False)
+
+    implemented_themes = [
+        'after_covid_series_opinion'
+    ]
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(BlockQuoteBlock, self).get_template(context, *args, **kwargs)
@@ -308,6 +310,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         ]
 
     implemented_themes = [
+        'innovation_series_opinion_series',
         'longform_opinion_series',
     ]
 
