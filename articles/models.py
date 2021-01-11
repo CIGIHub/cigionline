@@ -552,6 +552,8 @@ class ArticleSeriesPage(
         item_people = set()
 
         for item in self.series_items:
+            if (isinstance(item.value, str)):
+                continue
             people = []
             people_string = ''
             if (isinstance(item.value.specific, ArticlePage)):
@@ -560,7 +562,7 @@ class ArticleSeriesPage(
                 people = item.value.specific.speakers
 
             for person in people:
-                person_string = person.value.specific.first_name + person.value.specific.last_name
+                person_string = person.value.specific.title
                 people_string += person_string
 
                 # Add each person as well so if there's an article with just
@@ -574,6 +576,32 @@ class ArticleSeriesPage(
                 series_contributors.append({'item': item.value.specific, 'contributors': people})
                 item_people.add(people_string)
 
+        return series_contributors
+
+    @property
+    def series_contributors_by_person(self):
+        series_contributors = []
+
+        for item in self.series_items:
+            if (isinstance(item.value, str)):
+                continue
+
+            people = []
+            if (isinstance(item.value.specific, ArticlePage)):
+                people = item.value.specific.authors
+            elif (isinstance(item.value.specific, MultimediaPage)):
+                people = item.value.specific.speakers
+
+            # Skip items that have more than 2 authors/speakers. For
+            # example, in the After COVID series, there is an introductory
+            # video with many authors.
+            if len(people) > 2:
+                continue
+            else:
+                for person in people:
+                    series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
+
+        series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
 
     class Meta:
