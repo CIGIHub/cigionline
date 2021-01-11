@@ -585,7 +585,6 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if (isinstance(item.value, str)):
                 continue
-
             people = []
             if (isinstance(item.value.specific, ArticlePage)):
                 people = item.value.specific.authors
