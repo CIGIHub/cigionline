@@ -14,18 +14,6 @@ body {
   }
 }
 
-//LINKS
-a {
-  color: $cigi-primary-colour;
-  text-decoration: none;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: $cigi-dark-pink;
-    text-decoration: none;
-  }
-}
-
 //BUTTONS
 button {
   background-color: transparent;
