@@ -27,21 +27,12 @@
       {% endfor %}
     </section>
   {% endif %}
-  {% if self.multimedia_series %}
-    <div class="container-sm multimedia-series-block">
-      <article>
-        <h2>
-          Series:
-          <a href="{{self.multimedia_series.url}}">
-            {{ self.multimedia_series.title }}
-          </a>
-        </h2>
-        <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
-      </article>
-    </div>
-  {% endif %}
   <section class="multimedia-disclaimer-section">
     {% include 'includes/multimedia_disclaimer.html' %}
     {% include 'includes/opinion_disclaimer.html' %}
   </section>
+
+  {% if self.article_series %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
+  {% endif %}
 {% endblock %}

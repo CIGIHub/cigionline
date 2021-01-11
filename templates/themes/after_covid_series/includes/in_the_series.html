@@ -5,7 +5,7 @@
   <div class="container-lg">
     <article>
       <div class="essay-series-label">Opinion Series</div>
-      <div class="row">
+      <div class="series-info row">
         <div class="col-md-6">
           <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
         </div>
@@ -13,20 +13,16 @@
           {{ article_series.short_description|richtext }}
         </div>
       </div>
-      <div class="video-banner"></div>
+      <div class="video-banner" style="background-image: url('{{image_banner.url}}');"></div>
       <div class="series-contributors">
         <div class="contributors-label">Contributors</div>
-        <ul>
+        <ul class="contributors">
           {% for item in article_series.series_contributors_by_person %}
             <li>
               <a href="{{ item.item.url }}">
-                <ul class="authors">
-                  {% for contributor in item.contributors %}
-                    <li>
-                      {{ contributor.value.title }}
-                    </li>
-                  {% endfor %}
-                </ul>
+                {% for contributor in item.contributors %}
+                  {{ contributor.value.title }}
+                {% endfor %}
               </a>
             </li>
           {% endfor %}
