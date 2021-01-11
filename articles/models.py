@@ -552,7 +552,7 @@ class ArticleSeriesPage(
         item_people = set()
 
         for item in self.series_items:
-            if (isinstance(item.value, str)):
+            if item.block_type == 'category_title':
                 continue
             people = []
             people_string = ''
@@ -583,7 +583,7 @@ class ArticleSeriesPage(
         series_contributors = []
 
         for item in self.series_items:
-            if (isinstance(item.value, str)):
+            if item.block_type == 'category_title':
                 continue
             people = []
             if (isinstance(item.value.specific, ArticlePage)):
