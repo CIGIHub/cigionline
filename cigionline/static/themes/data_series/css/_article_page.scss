@@ -129,4 +129,44 @@
       }
     }
   }
+
+  h3 {
+    font-family: 'din-condensed', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: .625rem;
+  }
+
+  .text-border-block {
+    .block-contents {
+      border: solid 1px $data-series-primary-color;
+      font-size: 1.0625em;
+      line-height: 1.5em;
+      padding: 1.5em 1.75em;
+
+      ul {
+        padding-left: 1.5em;
+      }
+
+      li {
+        line-height: 1.25em;
+        list-style: none;
+        margin-left: 1em;
+        padding-bottom: 0;
+        position: relative;
+
+        &::before {
+          background: $data-series-primary-color;
+          border-radius: .5em;
+          content: '';
+          display: block;
+          height: .5em;
+          left: -1.5em;
+          position: absolute;
+          top: .5em;
+          width: .5em;
+        }
+      }
+    }
+  }
 }
