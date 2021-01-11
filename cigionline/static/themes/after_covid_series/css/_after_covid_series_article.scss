@@ -149,4 +149,64 @@
       display: none;
     }
   }
+
+  .stream-block-blockquote {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1em;
+
+    blockquote {
+      color: $black;
+      font-family: $tisa-pro;
+      font-size: 1.2em;
+      font-weight: 600;
+      margin-bottom: 0;
+      padding: 1em 1em 1em 0;
+      position: relative;
+
+      @media screen and (min-width: 768px) {
+        font-size: 1.5em;
+        padding: 2em 1em 2em 0;
+      }
+
+      &::before {
+        border-bottom: 5px solid $black;
+        content: '';
+        height: 5px;
+        left: 0;
+        position: absolute;
+        top: 0.5em;
+        width: 60px;
+
+        @media screen and (min-width: 768px) {
+          top: 1em;
+        }
+      }
+    }
+
+    a {
+      flex-shrink: 0;
+      font-size: 1.2em;
+
+      &:hover {
+        .fa-circle {
+          color: $twitter-blue;
+        }
+
+        .fa-twitter {
+          color: $white;
+        }
+      }
+
+      .fa-circle {
+        color: $cigi-light-grey;
+        transition: color 0.2s ease;
+      }
+
+      .fa-twitter {
+        color: $twitter-blue;
+        transition: color 0.2s ease;
+      }
+    }
+  }
 }

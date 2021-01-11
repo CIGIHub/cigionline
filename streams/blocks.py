@@ -4,10 +4,11 @@ from wagtail.core import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
+import os.path
 
 
 class ThemeableBlock:
-    implemented_themes = []
+    implemented_themes = ['after_covid_series_opinion']
 
     def get_theme_dir(self, theme_name):
         return theme_name.lower().replace(' ', '_').replace("-", '_')
@@ -16,6 +17,7 @@ class ThemeableBlock:
         return verbose_name.lower().replace(' ', '_')
 
     def get_theme_template(self, standard_template, context, template_name):
+        template_string = f'{self.get_theme_dir(context["page"].theme.name)}/streams/{self.get_page_type_dir(context["page"]._meta.verbose_name)}_{template_name}.html'
         if (
             context and
             context['page'] and
@@ -23,9 +25,10 @@ class ThemeableBlock:
             hasattr(context['page']._meta, 'verbose_name') and
             hasattr(context['page'], 'theme') and
             context['page'].theme and
-            f'{self.get_theme_dir(context["page"].theme.name)}_{self.get_page_type_dir(context["page"]._meta.verbose_name)}' in self.implemented_themes
+            f'{self.get_theme_dir(context["page"].theme.name)}_{self.get_page_type_dir(context["page"]._meta.verbose_name)}' in self.implemented_themes and
+            os.path.exists(f'templates/themes/{template_string}')
         ):
-            return f'themes/{self.get_theme_dir(context["page"].theme.name)}/streams/{self.get_page_type_dir(context["page"]._meta.verbose_name)}_{template_name}.html'
+            return f'themes/{template_string}'
         return standard_template
 
 
