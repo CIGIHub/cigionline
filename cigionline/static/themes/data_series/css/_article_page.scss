@@ -136,6 +136,13 @@
     font-weight: 400;
     margin-bottom: .625rem;
   }
+  
+  hr {
+    background-image: url('../../../assets/data-series-divider.png');
+    height: 32px;
+    margin: 3em auto;
+    width: 32px;
+  }
 
   .text-border-block {
     .block-contents {
