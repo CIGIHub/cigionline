@@ -51,6 +51,20 @@
   }
 }
 
+@mixin slash-separated {
+  &:not(:only-child) {
+    &::after {
+      content: ' / ';
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
+}
+
 @mixin hide-breakpoint-down($breakpoint) {
   @include media-breakpoint-down($breakpoint) {
     display: none;
