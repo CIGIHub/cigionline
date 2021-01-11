@@ -28,16 +28,9 @@
 .publication-part-of-series {
   article {
     h3 {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
       font-size: 1.3em;
       font-weight: 400;
-
-      a {
-        color: $black;
-
-        &:hover {
-          color: $cigi-primary-colour;
-        }
-      }
     }
   }
 

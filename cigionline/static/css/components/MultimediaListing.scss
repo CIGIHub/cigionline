@@ -64,16 +64,12 @@
   }
 
   .multimedia-card-title {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
     margin-bottom: 0.2em;
 
     a {
-      color: $black;
       font-size: 1.0625em;
       font-weight: 400;
-
-      &:hover {
-        color: $cigi-primary-colour;
-      }
     }
   }
 

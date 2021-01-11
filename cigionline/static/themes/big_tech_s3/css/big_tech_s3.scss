@@ -19,6 +19,7 @@ $bigtech-teal: #38bf8e;
 .big-tech-s3-theme {
   header,
   main {
+    @include link($color: $bigtech-s3-right, $hover-color: $cigi-dark-grey);
     font-family: nunito-sans, sans-serif;
 
     h2 {
@@ -26,14 +27,6 @@ $bigtech-teal: #38bf8e;
       font-size: 1em;
       margin-bottom: 1em;
       text-transform: uppercase;
-    }
-
-    a {
-      color: $bigtech-s3-red;
-
-      &:hover {
-        color: $cigi-dark-grey;
-      }
     }
 
     p {
@@ -101,6 +94,7 @@ $bigtech-teal: #38bf8e;
         }
 
         .dropdown-menu {
+          @include link($color: $white, $hover-color: $cigi-dark-grey);
           border: 0;
           border-radius: 0;
           margin: 0;
@@ -112,111 +106,12 @@ $bigtech-teal: #38bf8e;
             background-color: $bigtech-teal;
             border: 1px solid $bigtech-teal;
             border-top-color: $white;
-            color: $white;
             font-family: $primary-font-family;
             font-size: 0.825em;
             margin: 0;
             padding: 0.5em 1em;
             text-transform: uppercase;
             width: 100%;
-
-            &:hover {
-              color: $cigi-dark-grey;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .big-tech-hero {
-    background-image: url('../../../assets/bigtech_s3_background.png');
-    background-position: top;
-    margin-bottom: 3em;
-  }
-
-  header {
-    background-color: transparent;
-    position: relative;
-
-    .big-tech-top-bar {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      padding-bottom: 1.5em;
-      padding-top: 1.5em;
-
-      .big-tech-logo {
-        svg {
-          height: 45px;
-          width: 45px;
-        }
-      }
-
-      .big-tech-subscribe {
-        button {
-          align-items: center;
-          background-color: $bigtech-teal;
-          border: 1px solid $bigtech-teal;
-          border-radius: 0;
-          color: $white;
-          display: flex;
-          font-family: $primary-font-family;
-          font-size: 0.825em;
-          justify-content: space-between;
-          padding: 0.35em 1em;
-          text-align: left;
-          text-transform: uppercase;
-          width: 127px;
-
-          &:hover {
-            color: $cigi-dark-grey;
-          }
-
-          &::after {
-            align-items: center;
-            border: 0;
-            content: '\f078';
-            display: inline-flex;
-            font-family: 'Font Awesome 5 Pro';
-            height: 100%;
-            margin-left: 0;
-            transform: rotate(0deg);
-            transition: transform 0.25s ease;
-            vertical-align: 0.255em;
-            width: 0.75em;
-          }
-
-          &[aria-expanded='true'] {
-            &::after {
-              transform: rotate(180deg);
-            }
-          }
-        }
-
-        .dropdown-menu {
-          border: 0;
-          border-radius: 0;
-          margin: 0;
-          min-width: 127px;
-          padding: 0;
-          width: 127px;
-
-          a {
-            background-color: $bigtech-teal;
-            border: 1px solid $bigtech-teal;
-            border-top-color: $white;
-            color: $white;
-            font-family: $primary-font-family;
-            font-size: 0.825em;
-            margin: 0;
-            padding: 0.5em 1em;
-            text-transform: uppercase;
-            width: 100%;
-
-            &:hover {
-              color: $cigi-dark-grey;
-            }
           }
         }
       }

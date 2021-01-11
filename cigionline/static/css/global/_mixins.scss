@@ -1,12 +1,9 @@
 @mixin link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink) {
   a {
     color: $color;
-    text-decoration: none;
-    transition: color 0.2s ease;
 
     &:hover {
       color: $hover-color;
-      text-decoration: none;
     }
   }
 }
