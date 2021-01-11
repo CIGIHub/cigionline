@@ -3,11 +3,11 @@ header {
   left: 0;
   position: fixed;
   top: 0;
+  transition: background-color 0.3s ease;
   width: 100%;
   z-index: 3;
 
   .main-navigation-wrapper {
-    background-color: $black;
     position: relative;
     z-index: 4;
   }
