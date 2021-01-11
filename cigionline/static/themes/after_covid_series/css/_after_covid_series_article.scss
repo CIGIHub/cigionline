@@ -1,14 +1,152 @@
 .after-covid-series-article {
   .after-covid-series-article-hero {
+    @include link($color: $black, $hover-color: $cigi-dark-pink);
     background-size: cover;
+    color: $black;
+    position: relative;
+
+    @media screen and (min-width: 768px) {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
+      color: $white;
+      min-height: 40em;
+    }
+
+    & > * {
+      position: relative;
+    }
+
+    &::before {
+      background: linear-gradient(to right, #011321, transparent);
+      bottom: 0;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    &::after {
+      bottom: 0;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: 0;
+
+      @media screen and (min-width: 768px) {
+        background: linear-gradient(to bottom, rgba(74, 107, 136, 0.8), transparent);
+        height: 70%;
+      }
+    }
 
     header {
-      background-color: transparent;
-      position: relative;
+      background-color: $black;
+      position: fixed;
+
+      @media screen and (min-width: 768px) {
+        background-color: transparent;
+      }
 
       .main-navigation-wrapper {
         background-color: transparent;
       }
+    }
+
+    .hero-content {
+      background-color: $white;
+      padding-bottom: 1em;
+      padding-top: 3em;
+      z-index: 1;
+
+      @media screen and (min-width: 768px) {
+        background-color: transparent;
+        padding-top: 6em;
+      }
+    }
+
+    h1 {
+      font-family: $tisa-pro;
+      font-size: 1.8em;
+      font-weight: 900;
+      margin-bottom: 0.22em;
+      margin-top: 0;
+
+      @media screen and (min-width: 768px) {
+        font-size: 2.3em;
+      }
+    }
+
+    .opinion-label {
+      font-family: $tisa-pro;
+      font-weight: 400;
+      margin-bottom: 0.5em;
+    }
+
+    .date {
+      color: $black;
+      font-family: $primary-font-family;
+      font-size: 0.75em;
+      text-transform: uppercase;
+    }
+
+    .opinion-label,
+    .date,
+    .author-short-bio {
+      @media screen and (min-width: 768px) {
+        color: $meta-grey;
+      }
+    }
+
+    .authors {
+      font-size: 1em;
+      margin: 1em 0;
+
+      @media screen and (min-width: 768px) {
+        margin: 2em 0 6em;
+      }
+
+      .author {
+        align-items: center;
+        display: flex;
+
+        img {
+          border-radius: 50%;
+          height: 4em;
+          margin: 0 1em 1em 0;
+          width: 4em;
+        }
+
+        .author-title {
+          font-family: $tisa-pro;
+          font-size: 0.8em;
+          font-weight: 600;
+        }
+
+        .author-short-bio {
+          font-size: 0.9em;
+        }
+      }
+    }
+
+    .social-share-list {
+      @include link($color: $cigi-light-grey, $hover-color: $cigi-dark-pink);
+      justify-content: left;
+
+      @media screen and (min-width: 768px) {
+        @include link($color: $white, $hover-color: $cigi-dark-pink);
+      }
+    }
+  }
+
+  .article-image-hero {
+    @media screen and (min-width: 768px) {
+      display: none;
     }
   }
 
