@@ -11,7 +11,7 @@ from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     AuthorBlock,
-    BookPurchaseLinksBlock,
+    BookPurchaseLinkBlock,
     EditorBlock,
     PDFDownloadBlock,
 )
@@ -168,7 +168,7 @@ class PublicationPage(
     book_publisher_url = models.URLField(blank=True)
     book_purchase_links = StreamField(
         [
-            ('purchase_link', BookPurchaseLinksBlock())
+            ('purchase_link', BookPurchaseLinkBlock())
         ],
         blank=True,
     )

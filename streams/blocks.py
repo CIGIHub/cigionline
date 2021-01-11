@@ -130,7 +130,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/block_quote_block.html'
 
 
-class BookPurchaseLinksBlock(blocks.StructBlock):
+class BookPurchaseLinkBlock(blocks.StructBlock):
     url = blocks.URLBlock(required=True)
     link_text = blocks.CharBlock(required=True)
 
