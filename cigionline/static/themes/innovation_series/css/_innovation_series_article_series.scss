@@ -142,4 +142,53 @@
   .innovation-series-article-series-body {
     background-color: $innovation-series-body-background-colour;
   }
+
+  .innovation-series-article-series-featured {
+    background-color: $cigi-darkest-grey;
+
+    h2 {
+      color: $white;
+      margin-bottom: 0.5em;
+    }
+
+    .innovation-series-article-series-featured-item {
+      background-position-x: 50%;
+      background-position-y: 50%;
+      background-size: cover;
+      height: 400px;
+      position: relative;
+      width: 100%;
+
+      .innovation-series-article-series-featured-item-content {
+        left: 0;
+        max-width: 600px;
+        padding: 0 1em;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+
+        @media screen and (min-width: $medium) {
+          padding: 0 6em;
+        }
+
+        h3 {
+          @include link($color: $cigi-darkest-grey, $hover-color: $cigi-text-grey);
+          color: $cigi-darkest-grey;
+          font-size: 2em;
+          font-weight: 500;
+          margin: 0;
+        }
+
+        .featured-item-authors {
+          span {
+            @include comma-separated;
+            @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+            color: $cigi-text-grey;
+            font-size: 0.75em;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
 }
