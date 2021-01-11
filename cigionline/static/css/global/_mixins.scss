@@ -23,13 +23,30 @@
 }
 
 @mixin comma-separated {
-  &::after {
-    content: ', ';
+  &:not(:only-child) {
+    &::after {
+      content: ', ';
+      margin-right: 2px;
+    }
   }
 
   &:last-child {
     &::after {
-      content: '';
+      display: none;
+    }
+  }
+}
+
+@mixin and-separated {
+  &:not(:only-child) {
+    &::after {
+      content: ' and ';
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
     }
   }
 }
@@ -135,17 +152,20 @@
   }
 }
 
-@mixin comma-list {
-  &:not(:only-child) {
-    &::after {
-      content: ', ';
-      margin-right: 2px;
-    }
-  }
+@mixin inline-person-list {
+  li {
+    display: inline;
 
-  &:last-child {
-    &::after {
-      display: none;
+    &:not(:only-child) {
+      &::after {
+        content: ' and ';
+      }
+    }
+
+    &:last-child {
+      &::after {
+        display: none;
+      }
     }
   }
 }

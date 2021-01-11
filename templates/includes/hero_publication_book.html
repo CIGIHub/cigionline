@@ -1,0 +1,34 @@
+{% load static wagtailcore_tags core_tags wagtailimages_tags %}
+
+<section class="hero publication-hero-book">
+  <div class="container-lg hero-container">
+      <div class="row">
+        <div class="col-md-9">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1>{{ title }}</h1>
+          <h2>{{subtitle|safe}}</h2>
+          <div class="meta"><span class="label">Published:</span> {% include "includes/date.html" with date=self.publishing_date %}</div>
+
+          {% if editors %}
+          <div class="meta"><span class="label">Edited By:</span>  {% include "includes/editors.html" with editors=self.editors %}</div>
+          {% elif authors %}
+          <div class="meta"><span class="label">Author:</span>  {% include "includes/authors.html" with authors=self.authors %}</div>
+          {% endif %}
+
+          {% include "includes/social_links.html" with title=self.title %}
+
+          {% if purchase_links %}
+            <ul class="button-list">
+            {% for link in purchase_links %}
+              <li><a href="{{ link.value.url }}">{{ link.value.link_text }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+
+        <div class="col-md-3">
+          {% image image_cover width-174 %}
+        </div>
+      </div>
+    </div>
+  </section>

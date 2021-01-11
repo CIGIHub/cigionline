@@ -1,0 +1,21 @@
+.health-security-series-article {
+  header {
+    background-color: transparent;
+
+    &.scrolled {
+      background-color: $black;
+    }
+  }
+
+  .health-security-series-article-hero {
+    background-position: center;
+    background-size: cover;
+    height: 95vh;
+    margin-bottom: 2em;
+    width: 100%;
+
+    .health-security-series-article-hero-content {
+      padding-top: 6em;
+    }
+  }
+}
