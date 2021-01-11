@@ -1,5 +1,6 @@
 ul {
   &.social-share-list {
+    @include link($color: $cigi-light-grey, $hover-color: $cigi-primary-colour);
     display: flex;
     justify-content: center;
     list-style: none;
@@ -24,15 +25,6 @@ ul {
           margin-right: 0.5em;
           padding: 0.2em 0.5em;
         }
-      }
-    }
-
-    a {
-      color: $cigi-light-grey;
-      transition: color 0.5s ease;
-
-      &:hover {
-        color: $cigi-pink;
       }
     }
 

@@ -1,16 +1,9 @@
 .authors {
+  @include link($color: $cigi-dark-grey, $hover-color: $cigi-primary-colour);
   font-size: 0.95em;
   line-height: 1.25em;
   margin-bottom: 0.5em;
   margin-top: 1.5em;
-
-  a {
-    color: $cigi-dark-grey;
-
-    &:hover {
-      color: $cigi-pink;
-    }
-  }
 
   .block-author {
     @include comma-separated;
