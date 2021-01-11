@@ -134,13 +134,14 @@
   .innovation-series-article-series-featured,
   .innovation-series-article-series-in-the-series {
     background-color: $innovation-series-background-color;
-    padding: 2em 0 1em;
+    padding: 3em 0;
     position: relative;
     z-index: 4;
   }
 
   .innovation-series-article-series-body {
     background-color: $innovation-series-body-background-colour;
+    padding-bottom: 2em;
   }
 
   .innovation-series-article-series-featured {
@@ -187,6 +188,76 @@
             font-size: 0.75em;
             text-transform: uppercase;
           }
+        }
+      }
+    }
+  }
+
+  .innovation-series-article-series-in-the-series {
+    article {
+      border-bottom: 1px solid $divider-grey;
+      display: flex;
+
+      .article-data {
+        background-position: 100% 24px;
+        background-repeat: no-repeat;
+        background-size: 18%;
+        flex-grow: 1;
+        padding: 24px 0 24px 10px;
+
+        @media screen and (min-width: $large) {
+          padding-left: 20px;
+        }
+
+        h5,
+        p {
+          margin-bottom: 1em;
+          width: 75%;
+        }
+
+        h5 {
+          @include link($color: $cigi-darkest-grey, $hover-color: $cigi-medium-grey);
+          font-size: 1.375em;
+          font-weight: 500;
+          line-height: 1.2;
+          margin-bottom: 0.5em;
+
+          @media screen and (min-width: $large) {
+            margin-bottom: 0.8em;
+          }
+        }
+
+        p {
+          @include link($color: $cigi-medium-grey, $hover-color: $cigi-primary-colour);
+          color: $cigi-medium-grey;
+        }
+
+        .article-subtitle {
+          display: none;
+
+          @media screen and (min-width: $large) {
+            display: block;
+          }
+        }
+
+        .authors {
+          font-size: 0.75em;
+          margin: 0;
+          text-transform: uppercase;
+        }
+      }
+
+      .media {
+        padding: 24px 0;
+        text-align: center;
+        width: 24px;
+
+        i {
+          border: 2px solid $cigi-darkest-grey;
+          border-radius: 2px;
+          color: $cigi-darkest-grey;
+          font-size: 12px;
+          padding: 3px 4px 3px 5px;
         }
       }
     }
