@@ -1,12 +1,9 @@
-@mixin link($color: $cigi-pink, $hover-color: $cigi-dark-pink) {
+@mixin link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink) {
   a {
     color: $color;
-    text-decoration: none;
-    transition: color 0.2s ease;
 
     &:hover {
       color: $hover-color;
-      text-decoration: none;
     }
   }
 }
@@ -127,7 +124,7 @@
 
     .image-button {
       align-items: center;
-      background: $cigi-pink;
+      background: $cigi-primary-colour;
       bottom: 0;
       color: $white;
       display: inline-flex;

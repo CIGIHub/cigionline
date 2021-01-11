@@ -11,17 +11,10 @@
   }
 
   .name {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
     font-size: 1.0625em;
     font-weight: 400;
     margin-bottom: 0.25em;
-
-    a {
-      color: $black;
-
-      &:hover {
-        color: $cigi-pink;
-      }
-    }
   }
 
   .author-block {
