@@ -313,6 +313,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         ]
 
     implemented_themes = [
+        'cyber_series_opinion_series',
         'innovation_series_opinion_series',
         'longform_opinion_series',
     ]
