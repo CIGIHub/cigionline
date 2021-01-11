@@ -238,6 +238,10 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
 
+    implemented_themes = [
+        'data_series_opinion',
+    ]
+
     def get_template(self, context, *args, **kwargs):
         standard_template = super(ImageBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'image_block')

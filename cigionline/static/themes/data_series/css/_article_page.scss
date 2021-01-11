@@ -136,14 +136,14 @@
     font-weight: 400;
     margin-bottom: .625rem;
   }
-  
+
   hr {
     background-image: url('../../../assets/data-series-divider.png');
     height: 32px;
     margin: 3em auto;
     width: 32px;
   }
-  
+
   .end-of-article {
     background-image: url('../../../assets/data-series-end-of-article.png');
     background-repeat: no-repeat;
@@ -153,6 +153,16 @@
 
     &::after {
       content: '';
+    }
+  }
+
+  .stream-block-image {
+    .stream-block-image-caption {
+      border-left: solid 5px $data-series-primary-color;
+      color: $cigi-dark-grey;
+      font-size: .85rem;
+      margin: .5rem 0 2.5rem;
+      padding: .2rem 0 .2rem .5rem;
     }
   }
 
