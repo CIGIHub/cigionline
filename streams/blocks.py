@@ -133,7 +133,23 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/block_quote_block.html'
 
 
-class ChartBlock(blocks.StructBlock, ThemeableBlock):
+class BookPurchaseLinkBlock(blocks.StructBlock):
+    url = blocks.URLBlock(required=True)
+    link_text = blocks.CharBlock(required=True)
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'url': value.url,
+                'link_text': value.link_text,
+            }
+
+    class Meta:
+        icon = 'link'
+        label = 'Purchase Links'
+
+
+class ChartBlock(blocks.StructBlock):
     """Chart image with title"""
 
     title = blocks.CharBlock(required=False)
@@ -148,6 +164,25 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'image'
         label = 'Chart'
         template = 'streams/chart_block.html'
+
+
+class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EditorBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'editor_block')
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'id': value.id,
+                'title': value.title,
+                'url': value.url,
+            }
+
+    class Meta:
+        icon = 'user'
+        label = 'Editor'
 
 
 class EmbeddedVideoBlock(blocks.StructBlock, ThemeableBlock):
@@ -205,6 +240,10 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
 
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+
+    implemented_themes = [
+        'data_series_opinion',
+    ]
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(ImageBlock, self).get_template(context, *args, **kwargs)
