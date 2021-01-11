@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/zzr4vtn.css">
+{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'multimediaPage' 'css' %}
+  {% render_bundle 'themeHealthSecuritySeries' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}health-security-series-multimedia{% endblock %}
+
+{% block content %}
+  {% include "includes/hero_multimedia.html" %}
+  {% if self.body %}
+    <section class="body">
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
+  {% if self.transcript %}
+    <section>
+      {% for block in self.transcript %}
+        {% include_block block with id=block.id %}
+      {% endfor %}
+    </section>
+  {% endif %}
+  {% if self.multimedia_series %}
+    <div class="container-sm multimedia-series-block">
+      <article>
+        <h2>
+          Series:
+          <a href="{{self.multimedia_series.url}}">
+            {{ self.multimedia_series.title }}
+          </a>
+        </h2>
+        <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
+      </article>
+    </div>
+  {% endif %}
+  <section class="multimedia-disclaimer-section">
+    {% include 'includes/multimedia_disclaimer.html' %}
+    {% include 'includes/opinion_disclaimer.html' %}
+  </section>
+{% endblock %}

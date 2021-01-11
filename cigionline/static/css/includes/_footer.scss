@@ -3,6 +3,8 @@ footer {
   color: $white;
   font-size: 0.75rem;
   padding-top: 5em;
+  position: relative;
+  z-index: 10;
 
   .logo-container {
     margin: 0 auto 0.7em;
