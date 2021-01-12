@@ -4,9 +4,11 @@
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
       <div class="stream-block-chart">
-        <h3 class="stream-block-chart-title">
-          {{ self.title }}
-        </h3>
+        {% if self.title %}
+          <h3 class="stream-block-chart-title">
+            {{ self.title }}
+          </h3>
+        {% endif %}
         <figure>
           {% image self.image width-640 %}
           {% if not self.hide_image_caption %}
