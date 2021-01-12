@@ -80,21 +80,16 @@
   {% endif %}
 
   {% if self.publication_series %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8 publication-part-of-series">
-          <h2>Part of Series</h2>
-          <article>
-            <h3>
-              <a href="{{self.publication_series.url}}">
-                {{ self.publication_series.title }}
-              </a>
-            </h3>
-            <p>{{ self.publication_series.specific.subtitle|richtext }}</p>
-          </article>
+    <section class="publication-part-of-series">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Part of Series</h2>
+            {{ self.publication_series.specific.subtitle|richtext }}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   {% endif %}
 
   {% if self.authors|length > 0 %}

@@ -26,17 +26,17 @@
 }
 
 .publication-part-of-series {
-  article {
-    h3 {
-      @include link($color: $black, $hover-color: $cigi-primary-colour);
-      font-size: 1.3em;
-      font-weight: 400;
-    }
-  }
+  margin-bottom: 3em;
 
   h2 {
     color: $cigi-text-grey;
     font-size: 0.75em;
+    margin-bottom: 0.25em;
     text-transform: uppercase;
+  }
+
+  p {
+    color: $cigi-text-grey;
+    margin: 0;
   }
 }
