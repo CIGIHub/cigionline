@@ -1,43 +1,10 @@
 .longform-article {
+  @include top-bar(
+    $background-color: $longform-background-color,
+    $color: $black,
+    $position: relative,
+  );
   background-color: $longform-background-color;
-
-  header {
-    background-color: $longform-background-color;
-    position: relative;
-
-    .main-navigation-wrapper {
-      background-color: $longform-background-color;
-
-      .cigi-top-bar {
-        &.scroll-nav {
-          height: 36px;
-
-          @media screen and (min-width: $large) {
-            height: 66px;
-          }
-        }
-
-        .cigi-logo {
-          svg {
-            fill: $black;
-          }
-        }
-
-        nav {
-          ul {
-            a,
-            button {
-              color: $black;
-
-              &:hover {
-                color: $black;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 
   .hero {
     background-position: center;
@@ -117,14 +84,7 @@
 
         .author {
           @include comma-separated;
-
-          a {
-            color: $cigi-text-grey;
-
-            &:hover {
-              color: $cigi-primary-colour;
-            }
-          }
+          @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
         }
       }
     }
@@ -135,6 +95,8 @@
         list-style-type: none;
 
         li {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+
           &:first-child {
             a {
               padding-left: 0;
@@ -142,14 +104,9 @@
           }
 
           a {
-            color: $black;
             cursor: pointer;
             display: block;
             padding: 1em 1.5em;
-
-            &:hover {
-              color: $cigi-primary-colour;
-            }
           }
         }
       }
@@ -172,19 +129,12 @@
 
   .in-the-series {
     h3 {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
       border-top: 1px solid $divider-grey;
       font-size: 2em;
       font-weight: 700;
       margin-bottom: 1em;
       padding-top: 1em;
-
-      a {
-        color: $black;
-
-        &:hover {
-          color: $cigi-primary-colour;
-        }
-      }
     }
 
     .in-the-series {
@@ -229,14 +179,7 @@
 
           span {
             @include comma-separated;
-
-            a {
-              color: $cigi-text-grey;
-
-              &:hover {
-                color: $cigi-primary-colour;
-              }
-            }
+            @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
           }
         }
       }

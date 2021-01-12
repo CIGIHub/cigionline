@@ -121,7 +121,8 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
     link_text = blocks.CharBlock(required=False)
 
     implemented_themes = [
-        'after_covid_series_opinion'
+        'after_covid_series_opinion',
+        'cyber_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -134,7 +135,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/block_quote_block.html'
 
 
-class BookPurchaseLinkBlock(blocks.StructBlock):
+class BookPurchaseLinkBlock(blocks.StructBlock, ThemeableBlock):
     url = blocks.URLBlock(required=True)
     link_text = blocks.CharBlock(required=True)
 
@@ -145,20 +146,28 @@ class BookPurchaseLinkBlock(blocks.StructBlock):
                 'link_text': value.link_text,
             }
 
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(BookPurchaseLinkBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'book_purchase_link_block')
+
     class Meta:
         icon = 'link'
-        label = 'Purchase Links'
+        label = 'Purchase Link'
 
 
-class ChartBlock(blocks.StructBlock):
+class ChartBlock(blocks.StructBlock, ThemeableBlock):
     """Chart image with title"""
 
     title = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
 
+    implemented_themes = [
+        'cyber_series_opinion',
+    ]
+
     def get_template(self, context, *args, **kwargs):
-        standard_template = super(ChartBlock, self).get_template(context, *args, **kwargs)
+        standard_template = 'streams/chart_block.html'
         return self.get_theme_template(standard_template, context, 'chart_block')
 
     class Meta:
@@ -243,6 +252,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
     hide_image_caption = blocks.BooleanBlock(required=False)
 
     implemented_themes = [
+        'cyber_series_opinion',
         'data_series_opinion',
     ]
 
@@ -309,6 +319,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         ]
 
     implemented_themes = [
+        'cyber_series_opinion_series',
         'innovation_series_opinion_series',
         'longform_opinion_series',
     ]

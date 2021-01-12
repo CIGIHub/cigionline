@@ -37,7 +37,7 @@ footer {
     padding: 1.25em 0;
 
     .topic {
-      @include link($color: $white, $hover-color: $cigi-pink);
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
       padding: 0.2em;
 
       a {
