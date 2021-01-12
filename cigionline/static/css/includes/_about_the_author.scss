@@ -7,6 +7,7 @@
     font-size: 0.75em;
     font-weight: 500;
     line-height: 1.4em;
+    margin: 0;
     text-transform: uppercase;
   }
 
@@ -19,9 +20,14 @@
 
   .author-block {
     border-bottom: solid 1px $cigi-light-grey;
+    padding: 1em 0;
 
     &:last-child {
       border-bottom: 0;
+    }
+
+    p {
+      margin-bottom: 0;
     }
   }
 }

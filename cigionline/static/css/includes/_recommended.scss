@@ -1,66 +1,72 @@
-.recommended {
-  @include media-breakpoint-up(md) {
-    margin-top: 4em;
-  }
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  margin-top: 2em;
-
-  h2 {
-    font-size: 1.25em;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin-bottom: 0.8em;
-    margin-top: 0.8em;
-  }
-
-  .recommended-dot {
-    @include media-breakpoint-up(sm) {
-      display: block;
+section {
+  &.recommended-section {
+    @include media-breakpoint-up(md) {
+      margin-top: 4em;
     }
-    background-color: $black;
-    border-radius: 50%;
-    display: none;
-    height: 0.4rem;
-    width: 0.4rem;
-  }
+    margin-bottom: 2em;
+    margin-top: 3em;
 
-  .recommended-vertical-line {
-    @include media-breakpoint-up(sm) {
-      display: block;
-    }
-    @include list;
-    border-left: 1px solid $cigi-medium-light-grey;
-    display: none;
-    height: 100px;
-    left: 50%;
-  }
+    .recommended {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
 
-  .footer-bracket {
-    @include media-breakpoint-up(sm) {
-      display: block;
-    }
-    display: none;
-    margin-bottom: 1em;
-    width: 100%;
-  }
-
-  .recommended-content-medium {
-    article {
-      @include media-breakpoint-up(md) {
-        border-bottom: 0;
+      h2 {
+        font-size: 1.25em;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: 0.8em;
+        margin-top: 0.8em;
       }
-      border-bottom: 1px $cigi-light-grey solid;
-      padding-bottom: 1em;
-      padding-top: 1em;
+
+      .recommended-dot {
+        @include media-breakpoint-up(sm) {
+          display: block;
+        }
+        background-color: $black;
+        border-radius: 50%;
+        display: none;
+        height: 0.4rem;
+        width: 0.4rem;
+      }
+
+      .recommended-vertical-line {
+        @include media-breakpoint-up(sm) {
+          display: block;
+        }
+        border-left: 1px solid $cigi-medium-light-grey;
+        display: none;
+        height: 100px;
+        left: 50%;
+      }
+
+      .footer-bracket {
+        @include media-breakpoint-up(sm) {
+          display: block;
+        }
+        display: none;
+        margin-bottom: 1em;
+        width: 100%;
+      }
+
+      .recommended-content-medium {
+        article {
+          @include media-breakpoint-up(md) {
+            border-bottom: 0;
+          }
+          border-bottom: 1px $cigi-light-grey solid;
+          padding-bottom: 1em;
+          padding-top: 1em;
+        }
+
+        .img-wrapper {
+          @include media-breakpoint-up(sm) {
+            display: block;
+          }
+          display: none;
+        }
+      }
     }
 
-    .img-wrapper {
-      @include media-breakpoint-up(sm) {
-        display: block;
-      }
-      display: none;
-    }
   }
 }

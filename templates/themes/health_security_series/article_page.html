@@ -53,9 +53,7 @@
       </div>
     </section>
   {% endif %}
-  <section>
-    {% include 'includes/opinion_disclaimer.html' %}
-  </section>
+  {% include 'includes/disclaimer.html' %}
   {% if self.is_opinion and self.authors|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
