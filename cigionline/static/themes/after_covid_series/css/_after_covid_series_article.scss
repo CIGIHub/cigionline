@@ -1,4 +1,13 @@
 .after-covid-series-article {
+  header {
+    @include media-breakpoint-up(md) {
+      background-color: transparent;
+      position: absolute;
+    }
+    background-color: $black;
+    position: fixed;
+  }
+
   .after-covid-series-article-hero {
     @include link(
       $color: $black,
@@ -44,15 +53,6 @@
       top: 0;
       width: 100%;
       z-index: 0;
-    }
-
-    header {
-      @include media-breakpoint-up(md) {
-        background-color: transparent;
-        position: absolute;
-      }
-      background-color: $black;
-      position: fixed;
     }
 
     .hero-content {
