@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/xfi6rry.css">
@@ -18,25 +18,41 @@
     </div>
   </section>
   <section class="after-covid-series-article-series-in-the-series">
-    <div class="container-md">
+    <div class="container-sm">
       {% for block in self.series_items %}
         {% if block.block_type == 'series_item' %}
           <article>
-            <h3>
-              <a href="{{ block.value.url }}">{{ block.value.title }}</a>
-            </h3>
-            <p class="authors">
-              {% if block.value.specific.authors %}
+            <div class="author-images">
+              {% define block.value.specific|page_type as page_type %}
+              {% if page_type == 'opinion' %}
                 {% for author in block.value.specific.authors %}
-                  <span>{{ author }}</span>
+                <a href="{{ author.value.url }}">
+                  {% image author.value.specific.image_square fill-100x100 %}
+                </a>
                 {% endfor %}
+              {% elif page_type == 'multimedia' %}
+                <a href="{{ block.value.url }}">
+                  <i class="fa fa-play-circle"></i>
+                </a>
               {% endif %}
-              {% if block.value.specific.speakers %}
-                {% for speaker in block.value.specific.speakers %}
-                  <span>{{ speaker }}</span>
-                {% endfor %}
-              {% endif %}
-            </p>
+            </div>
+            <div>
+              <h3>
+                <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+              </h3>
+              <p class="authors">
+                {% if block.value.specific.authors %}
+                  {% for author in block.value.specific.authors %}
+                    <span>{{ author }}</span>
+                  {% endfor %}
+                {% endif %}
+                {% if block.value.specific.speakers %}
+                  {% for speaker in block.value.specific.speakers %}
+                    <span>{{ speaker }}</span>
+                  {% endfor %}
+                {% endif %}
+              </p>
+            </div>
           </article>
         {% elif block.block_type == 'category_title' %}
           <h2>{{ block.value }}</h2>
