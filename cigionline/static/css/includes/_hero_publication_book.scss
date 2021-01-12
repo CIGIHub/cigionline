@@ -3,7 +3,7 @@ section {
     color: $white;
 
     .hero-container {
-      @include breakpoint($medium) {
+      @include media-breakpoint-up(md) {
         padding-top: 6em;
       }
     }

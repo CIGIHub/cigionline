@@ -16,22 +16,32 @@
   }
 
   .recommended-dot {
-    @include hide-breakpoint-down(sm);
+    @include media-breakpoint-up(sm) {
+      display: block;
+    }
     background-color: $black;
     border-radius: 50%;
+    display: none;
     height: 0.4rem;
     width: 0.4rem;
   }
 
   .recommended-vertical-line {
-    @include hide-breakpoint-down(sm);
+    @include media-breakpoint-up(sm) {
+      display: block;
+    }
+    @include list;
     border-left: 1px solid $cigi-medium-light-grey;
+    display: none;
     height: 100px;
     left: 50%;
   }
 
   .footer-bracket {
-    @include hide-breakpoint-down(sm);
+    @include media-breakpoint-up(sm) {
+      display: block;
+    }
+    display: none;
     margin-bottom: 1em;
     width: 100%;
   }

@@ -1,3 +1,8 @@
+@import './bootstrap_variables_overwrite';
+
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/bootstrap';
+
 @mixin top-bar(
   $background-color: $black,
   $background-color-medium: $background-color,
@@ -9,12 +14,11 @@
   $position: fixed,
 ) {
   header {
-    background-color: $background-color;
-    position: $position;
-
-    @media screen and (min-width: $medium) {
+    @include media-breakpoint-up(md) {
       background-color: $background-color-medium;
     }
+    background-color: $background-color;
+    position: $position;
 
     &.scrolled {
       background-color: $background-color-scrolled;
@@ -23,11 +27,10 @@
     .cigi-top-bar {
       .cigi-logo {
         svg {
-          fill: $color;
-
-          @media screen and (min-width: $medium) {
+          @include media-breakpoint-up(md) {
             fill: $color-medium;
           }
+          fill: $color;
         }
       }
 
@@ -35,18 +38,16 @@
         ul {
           a,
           button {
-            color: $color;
-
-            @media screen and (min-width: $medium) {
+            @include media-breakpoint-up(md) {
               color: $color-medium;
             }
+            color: $color;
 
             &:hover {
-              color: $hover-color;
-
-              @media screen and (min-width: $medium) {
+              @include media-breakpoint-up(md) {
                 color: $hover-color-medium;
               }
+              color: $hover-color;
             }
           }
         }
@@ -65,15 +66,23 @@
   }
 }
 
-@mixin breakpoint($size) {
-  @media screen and (min-width: $size) {
-    @content;
-  }
-}
-
 @mixin display-grid {
   display: -ms-grid;
   display: grid; // sass-lint:disable-line no-duplicate-properties
+}
+
+@mixin list($separator: ', ') {
+  &:not(:only-child) {
+    &::after {
+      content: $separator;
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
 }
 
 @mixin comma-separated {
@@ -116,12 +125,6 @@
     &::after {
       display: none;
     }
-  }
-}
-
-@mixin hide-breakpoint-down($breakpoint) {
-  @include media-breakpoint-down($breakpoint) {
-    display: none;
   }
 }
 

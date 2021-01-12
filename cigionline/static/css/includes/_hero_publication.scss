@@ -1,6 +1,6 @@
 section {
   &.publication-hero {
-    @include breakpoint($medium) {
+    @include media-breakpoint-up(md) {
       padding-top: 6em;
     }
 

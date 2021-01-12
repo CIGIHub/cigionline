@@ -63,6 +63,9 @@
       }
 
       .read-btn {
+        @include media-breakpoint-up(md) {
+          display: flex;
+        }
         align-items: center;
         background-color: transparent;
         border: 1.75px solid $white;
@@ -76,10 +79,6 @@
         min-width: 125px;
         transition: background-color 0.3s ease, color 0.3s ease;
         width: 125px;
-
-        @media screen and (min-width: $medium) {
-          display: flex;
-        }
 
         &:hover {
           background-color: $white;
@@ -121,13 +120,12 @@
     }
 
     .big-tech-headshot {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
       display: none;
       padding-left: 2em;
       width: 33%;
-
-      @media screen and (min-width: $medium) {
-        display: block;
-      }
     }
 
     .meta {
