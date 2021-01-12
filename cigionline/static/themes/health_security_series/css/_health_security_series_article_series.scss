@@ -1,9 +1,6 @@
 .health-security-series-article-series {
+  @include top-bar($background-color: transparent);
   background-color: $health-security-series-background-colour;
-
-  header {
-    background-color: transparent;
-  }
 
   .health-security-series-article-series-hero {
     padding-top: 8em;

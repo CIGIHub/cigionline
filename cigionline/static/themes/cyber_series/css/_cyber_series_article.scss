@@ -1,31 +1,10 @@
 .cyber-series-article {
+  @include top-bar(
+    $background-color: $cyber-series-background-colour,
+    $color: $black,
+    $position: relative,
+  );
   background-color: $cyber-series-background-colour;
-
-  header {
-    background-color: $cyber-series-background-colour;
-    position: relative;
-
-    .cigi-top-bar {
-      .cigi-logo {
-        svg {
-          fill: $black;
-        }
-      }
-
-      nav {
-        ul {
-          a,
-          button {
-            color: $black;
-
-            &:hover {
-              color: $cigi-primary-colour;
-            }
-          }
-        }
-      }
-    }
-  }
 
   .cyber-series-article-hero {
     background-color: $cyber-series-primary-colour;

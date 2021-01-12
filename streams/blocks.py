@@ -167,7 +167,7 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
     ]
 
     def get_template(self, context, *args, **kwargs):
-        standard_template = super(ChartBlock, self).get_template(context, *args, **kwargs)
+        standard_template = 'streams/chart_block.html'
         return self.get_theme_template(standard_template, context, 'chart_block')
 
     class Meta:
