@@ -2,7 +2,7 @@ footer {
   background: $black;
   color: $white;
   font-size: 0.75rem;
-  padding-top: 5em;
+  padding: 5em 0 4em;
   position: relative;
   z-index: 10;
 
@@ -53,7 +53,6 @@ footer {
 
   .footer-content {
     font-size: 1rem;
-    margin-bottom: 4em;
     text-align: center;
 
     form {
@@ -101,6 +100,10 @@ footer {
     li {
       display: inline-block;
       list-style: none;
+    }
+
+    ul {
+      padding-left: 0;
     }
 
     .footer-menu {
