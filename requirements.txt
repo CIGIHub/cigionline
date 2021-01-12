@@ -46,7 +46,7 @@ pytz==2020.5
 rcssmin==1.0.6
 requests==2.25.1
 rjsmin==1.1.0
-s3transfer==0.3.3
+s3transfer==0.3.4
 six==1.15.0
 soupsieve==2.1
 sqlparse==0.4.1
