@@ -7,6 +7,9 @@
 {% block extra_css %}
   {% render_bundle 'themeAfterCovidSeries' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeAfterCovidSeries' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block body_class %}after-covid-series-article-series{% endblock %}
 
