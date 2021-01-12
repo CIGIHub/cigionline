@@ -20,6 +20,23 @@
       {% endfor %}
     </section>
   {% endif %}
+  {% if self.multimedia_series %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 multimedia-series-block">
+          <article>
+            <h2>
+              Series:
+              <a href="{{self.multimedia_series.url}}">
+                {{ self.multimedia_series.title }}
+              </a>
+            </h2>
+            <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  {% endif %}
   <section class="multimedia-disclaimer-section">
     {% include 'includes/multimedia_disclaimer.html' %}
     {% include 'includes/opinion_disclaimer.html' %}
