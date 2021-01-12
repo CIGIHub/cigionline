@@ -10,10 +10,9 @@
 
 {% block body_class %}ai-series-article-series{% endblock %}
 
-{% block header %}
+{% block content %}
   {% image self.image_banner original as image_hero %}
-  <div class="ai-series-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
-    {% include "includes/top_bar.html" %}
+  <section class="ai-series-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
     <div class="container-md hero-content">
       {% include "includes/social_links_square.html" with title=self.title %}
       <div class="row">
@@ -37,13 +36,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
   <div class="container-md short-description">
     {{ self.short_description|richtext }}
   </div>
-{% endblock %}
-
-{% block content %}
   <section class="ai-series-article-series-in-the-series">
     <div class="container-md">
       <h2>In the Series</h2>

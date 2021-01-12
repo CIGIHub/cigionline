@@ -1,0 +1,52 @@
+.cyber-series-article {
+  @include top-bar(
+    $background-color: $cyber-series-background-colour,
+    $color: $black,
+    $position: relative,
+  );
+  background-color: $cyber-series-background-colour;
+
+  .cyber-series-article-hero {
+    background-color: $cyber-series-primary-colour;
+    position: relative;
+
+    @media screen and (min-width: $medium) {
+      height: 400px;
+    }
+
+    @media screen and (min-width: $large) {
+      height: 500px;
+    }
+
+    .cyber-series-article-hero-content-container {
+      left: 0;
+      position: relative;
+      top: 0;
+      width: 100%;
+
+      @media scren and (min-width: $medium) {
+        position: absolute;
+      }
+
+      .cyber-series-article-hero-content {
+        padding-right: 0.5em;
+        width: 50%;
+      }
+    }
+
+    .cyber-series-article-hero-image {
+      background-position: center;
+      background-size: cover;
+      display: none;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 50%;
+
+      @media screen and (min-width: $medium) {
+        display: block;
+      }
+    }
+  }
+}

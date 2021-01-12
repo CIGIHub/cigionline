@@ -85,7 +85,7 @@ table {
           font-weight: 500;
 
           &:hover {
-            color: $cigi-pink;
+            color: $cigi-primary-colour;
             text-decoration: none;
           }
         }
@@ -155,14 +155,14 @@ table {
             color: $cigi-text-grey;
 
             &:hover {
-              color: $cigi-pink;
+              color: $cigi-primary-colour;
             }
           }
         }
 
         .table-btn-icon {
           align-items: center;
-          border: 1px solid $cigi-pink;
+          border: 1px solid $cigi-primary-colour;
           display: inline-flex;
           font-size: 0.75em;
           height: 2.1em;
@@ -171,7 +171,7 @@ table {
           width: 2.1em;
 
           &:hover {
-            background: $cigi-pink;
+            background: $cigi-primary-colour;
             color: $white;
             text-decoration: none;
           }

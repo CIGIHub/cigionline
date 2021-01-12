@@ -1,13 +1,6 @@
 .after-covid-series-article-series {
+  @include top-bar($background-color: transparent);
   background-color: $black;
-
-  header {
-    background-color: transparent;
-
-    .main-navigation-wrapper {
-      background-color: transparent;
-    }
-  }
 
   .after-covid-series-article-series-hero {
     margin-bottom: 2em;

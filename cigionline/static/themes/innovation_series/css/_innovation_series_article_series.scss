@@ -1,6 +1,12 @@
 @import '../../../css/global/animations/bounce';
 
 .innovation-series-article-series {
+  @include top-bar(
+    $background-color: transparent,
+    $color: $black,
+    $position: absolute,
+  );
+
   h2 {
     font-size: 1.5em;
     font-weight: 500;
@@ -8,32 +14,6 @@
 
     span {
       border-top: 5px solid $cigi-primary-colour;
-    }
-  }
-
-  header {
-    background-color: transparent;
-    position: absolute;
-
-    .cigi-top-bar {
-      .cigi-logo {
-        svg {
-          fill: $black;
-        }
-      }
-
-      nav {
-        ul {
-          a,
-          button {
-            color: $black;
-
-            &:hover {
-              color: $cigi-primary-colour;
-            }
-          }
-        }
-      }
     }
   }
 

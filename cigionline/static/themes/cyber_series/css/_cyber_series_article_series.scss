@@ -1,0 +1,78 @@
+.cyber-series-article-series {
+  @include top-bar(
+    $background-color: transparent,
+    $position: absolute,
+  );
+
+  .cyber-series-article-series-hero {
+    height: 100vh;
+    position: relative;
+
+    .cyber-series-article-series-hero-content {
+      left: 0;
+      position: fixed;
+      top: 8em;
+      width: 100%;
+
+      h1 {
+        color: $cyber-series-primary-colour;
+      }
+
+      .cyber-series-subtitle {
+        color: $white;
+      }
+    }
+
+    .cyber-series-article-series-hero-image {
+      background-position: center;
+      background-size: cover;
+      height: 100%;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+    }
+  }
+
+  .cyber-series-article-series-body,
+  .cyber-series-article-series-in-the-series {
+    background-color: $black-alpha-80;
+    position: relative;
+    z-index: 4;
+  }
+
+  .cyber-series-article-series-body {
+    padding: 2em 0;
+
+    h2 {
+      color: $cyber-series-primary-colour;
+    }
+
+    p {
+      color: $white;
+    }
+  }
+
+  .cyber-series-article-series-in-the-series {
+    padding: 3em 0;
+
+    .cyber-series-article-series-series-items {
+      columns: 2;
+
+      article {
+        h3 {
+          a {
+            color: $white;
+          }
+        }
+
+        .authors {
+          span {
+            @include link($color: $cyber-series-primary-colour);
+            @include slash-separated;
+          }
+        }
+      }
+    }
+  }
+}
