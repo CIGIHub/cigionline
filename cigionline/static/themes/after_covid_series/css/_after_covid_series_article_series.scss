@@ -1,5 +1,6 @@
 .after-covid-series-article-series {
   @include top-bar($background-color: transparent);
+  @include light-footer;
   background-color: $black;
 
   .after-covid-series-article-series-hero {

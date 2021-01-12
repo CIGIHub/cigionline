@@ -6,7 +6,7 @@
   $color-medium: $color,
   $hover-color: $cigi-primary-colour,
   $hover-color-medium: $hover-color,
-  $position: fixed,
+  $position: fixed
 ) {
   header {
     background-color: $background-color;
@@ -251,4 +251,69 @@
   justify-content: center;
   line-height: 1.15em;
   width: $circle-size;
+}
+
+@mixin light-footer {
+  footer {
+    background: $white;
+    color: $black;
+
+    .logo-container,
+    .footer-bracket,
+    .highlighted-topics {
+      display: none;
+    }
+
+    .footer-content {
+      form {
+        position: relative;
+
+        input {
+          border-bottom: 2px solid $black;
+
+          &[type='email'] {
+            background: $white;
+            color: $black;
+            width: 100%;
+          }
+
+          &::placeholder {
+            color: $black;
+          }
+        }
+
+        button {
+          background: none;
+          border: 0;
+          bottom: 8px;
+          color: $black;
+          font-size: 0;
+          position: absolute;
+          right: 0;
+          transition: color 0.2s ease;
+          width: auto;
+
+          i {
+            font-size: 1.2rem;
+          }
+
+          &:hover {
+            color: $cigi-dark-pink;
+          }
+        }
+      }
+
+      .footer-menu {
+        @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      }
+
+      .copyright {
+        color: $cigi-text-grey;
+      }
+
+      .social-links {
+        @include link($color: $black, $hover-color: $cigi-dark-pink);
+      }
+    }
+  }
 }
