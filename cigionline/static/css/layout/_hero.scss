@@ -1,7 +1,7 @@
 section {
   &.hero {
     @include media-breakpoint-up(md) {
-      padding-top: 6em;
+      padding-top: 10em;
     }
     background-color: $black;
     font-size: 1rem;

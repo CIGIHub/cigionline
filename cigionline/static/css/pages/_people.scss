@@ -43,6 +43,8 @@
 
   section {
     &.expertise {
+      margin-bottom: 2em;
+
       .expertise-container {
         border: 1px solid $cigi-light-grey;
         padding: 1em;
@@ -83,6 +85,8 @@
     }
 
     &.external-publications {
+      margin-bottom: 3em;
+
       article {
         border-bottom: 1px solid $cigi-light-grey;
         display: flex;
