@@ -9,38 +9,50 @@
   {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
 
   {% if self.image_hero %}
-    <figure class="container-md article-image-hero">
-      {% image self.image_hero width-1760 %}
-      {% if self.image_hero.title %}
-        <figcaption>
-          {{ self.image_hero.title }}
-        </figcaption>
-      {% endif %}
-    </figure>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-lg-10">
+          <figure class="article-image-hero">
+            {% image self.image_hero width-1760 %}
+            {% if self.image_hero.title %}
+              <figcaption>
+                {{ self.image_hero.title }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
   {% endif %}
 
   {% if self.body %}
     <section class="body">
       {% if self.article_type == 'cigi_in_the_news' %}
-        <div class="container-sm">
-          <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
-        </div>
-        {{ self.body|truncatewords_html:100 }}
-        <div class="container-sm">
-          <p class="text-center">* * *</p>
-        </div>
-        {% if self.website_url %}
-          <div class="container-sm text-center">
-            <a class="button-action" href="{{self.website_url}}">
-              <i class="fas fa-external-link-alt"></i>
-              {% if self.website_button_text %}
-                {{ self.website_button_text }}
-              {% else %}
-                View Full Article
-              {% endif %}
-            </a>
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
+            </div>
           </div>
-        {% endif %}
+          {{ self.body|truncatewords_html:100 }}
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <p class="text-center">* * *</p>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8 text-center">
+              <a class="button-action" href="{{self.website_url}}">
+                <i class="fas fa-external-link-alt"></i>
+                {% if self.website_button_text %}
+                  {{ self.website_button_text }}
+                {% else %}
+                  View Full Article
+                {% endif %}
+              </a>
+            </div>
+          </div>
+        </div>
       {% else %}
         {% for block in self.body %}
           {% include_block block %}
@@ -51,9 +63,13 @@
 
   {% if self.footnotes %}
     <section class="article-footnotes">
-      <div class="container-sm">
-        <div class="footnotes">
-          {{ self.footnotes|richtext }}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -61,9 +77,13 @@
 
   {% if self.works_cited %}
     <section class="article-works-cited">
-      <div class="container-sm">
-        <h2>Works Cited</h2>
-        {{ self.works_cited|richtext }}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Works Cited</h2>
+            {{ self.works_cited|richtext }}
+          </div>
+        </div>
       </div>
     </section>
   {% endif %}
