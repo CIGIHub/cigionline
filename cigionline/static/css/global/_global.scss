@@ -14,18 +14,6 @@ body {
   }
 }
 
-//LINKS
-a {
-  color: $cigi-pink;
-  text-decoration: none;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: $cigi-dark-pink;
-    text-decoration: none;
-  }
-}
-
 //BUTTONS
 button {
   background-color: transparent;
@@ -110,7 +98,7 @@ img {
         align-items: center;
         background-color: transparent;
         border: 0;
-        color: $cigi-pink;
+        color: $cigi-primary-colour;
         display: flex;
         font-weight: 400;
         height: 100%;
@@ -142,7 +130,7 @@ img {
       &::after {
         align-items: center;
         border: 0;
-        color: $cigi-pink;
+        color: $cigi-primary-colour;
         content: '\f078';
         display: inline-flex;
         font-family: 'Font Awesome 5 Pro';
@@ -196,7 +184,7 @@ img {
 
       &:hover {
         background-color: unset;
-        color: $cigi-pink;
+        color: $cigi-primary-colour;
       }
     }
   }

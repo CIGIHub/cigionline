@@ -10,18 +10,12 @@ section {
       display: flex;
 
       .event-hero-content {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+
         h1 {
           font-weight: 400;
           line-height: 1.1em;
           margin-bottom: 0.5em;
-        }
-
-        a {
-          color: $white;
-
-          &:hover {
-            color: $cigi-pink;
-          }
         }
 
         .meta {

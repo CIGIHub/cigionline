@@ -1,12 +1,66 @@
-@mixin link($color: $cigi-pink, $hover-color: $cigi-dark-pink) {
+@mixin top-bar(
+  $background-color: $black,
+  $background-color-medium: $background-color,
+  $background-color-scrolled: $background-color,
+  $color: $white,
+  $color-medium: $color,
+  $hover-color: $cigi-primary-colour,
+  $hover-color-medium: $hover-color,
+  $position: fixed,
+) {
+  header {
+    background-color: $background-color;
+    position: $position;
+
+    @media screen and (min-width: $medium) {
+      background-color: $background-color-medium;
+    }
+
+    &.scrolled {
+      background-color: $background-color-scrolled;
+    }
+
+    .cigi-top-bar {
+      .cigi-logo {
+        svg {
+          fill: $color;
+
+          @media screen and (min-width: $medium) {
+            fill: $color-medium;
+          }
+        }
+      }
+
+      nav {
+        ul {
+          a,
+          button {
+            color: $color;
+
+            @media screen and (min-width: $medium) {
+              color: $color-medium;
+            }
+
+            &:hover {
+              color: $hover-color;
+
+              @media screen and (min-width: $medium) {
+                color: $hover-color-medium;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink) {
   a {
     color: $color;
-    text-decoration: none;
-    transition: color 0.2s ease;
 
     &:hover {
       color: $hover-color;
-      text-decoration: none;
     }
   }
 }
@@ -127,7 +181,7 @@
 
     .image-button {
       align-items: center;
-      background: $cigi-pink;
+      background: $cigi-primary-colour;
       bottom: 0;
       color: $white;
       display: inline-flex;

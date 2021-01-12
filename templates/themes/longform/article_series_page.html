@@ -7,10 +7,9 @@
 
 {% block body_class %}longform-article-series{% endblock %}
 
-{% block header %}
+{% block content %}
   {% image self.image_banner original as image_hero %}
-  <div class="longform-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
-    {% include "includes/top_bar.html" %}
+  <section class="longform-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
     {% if self.video_banner %}
       <video playsinline autoplay muted loop class="video-background">
         <source src="{{ self.video_banner.url }}" type="video/mp4">
@@ -43,10 +42,7 @@
         </div>
       </div>
     </div>
-  </div>
-{% endblock %}
-
-{% block content %}
+  </section>
   {% if self.featured_items %}
     <section class="longform-article-series-featured">
       <div class="container-lg">

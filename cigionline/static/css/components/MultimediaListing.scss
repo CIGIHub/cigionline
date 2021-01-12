@@ -16,7 +16,7 @@
 
     .multimedia-image-type {
       align-items: center;
-      background: $cigi-pink;
+      background: $cigi-primary-colour;
       bottom: 0;
       color: $white;
       display: inline-flex;
@@ -49,7 +49,7 @@
 
     li,
     a {
-      color: $cigi-pink;
+      color: $cigi-primary-colour;
       font-size: 12px;
       font-weight: 500;
       line-height: 1.25em;
@@ -64,16 +64,12 @@
   }
 
   .multimedia-card-title {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
     margin-bottom: 0.2em;
 
     a {
-      color: $black;
       font-size: 1.0625em;
       font-weight: 400;
-
-      &:hover {
-        color: $cigi-pink;
-      }
     }
   }
 
@@ -91,7 +87,7 @@
 
     a {
       &:hover {
-        color: $cigi-pink;
+        color: $cigi-primary-colour;
       }
     }
   }

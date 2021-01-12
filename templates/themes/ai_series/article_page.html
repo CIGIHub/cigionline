@@ -11,10 +11,9 @@
 
 {% block body_class %}ai-series-article{% endblock %}
 
-{% block header %}
+{% block content %}
   {% image self.image_banner original as image_hero %}
-  <div class="ai-series-article-hero" style="background-image: url('{{ image_hero.url }}');">
-    {% include "includes/top_bar.html" %}
+  <section class="ai-series-article-hero" style="background-image: url('{{ image_hero.url }}');">
     <div class="container-lg hero-content">
       <div class="row">
         <div class="col col-md-6">
@@ -25,10 +24,7 @@
         </div>
       </div>
     </div>
-  </div>
-{% endblock %}
-
-{% block content %}
+  </section>
   <section class="body">
     {% for block in self.body %}
       {% include_block block %}

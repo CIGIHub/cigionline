@@ -1,4 +1,5 @@
 .ai-series-article-series {
+  @include top-bar($background-color: transparent);
   background-color: $ai-primary-color;
 
   .ai-series-article-series-hero {
@@ -16,14 +17,6 @@
 
       @media screen and (min-width: 768px) {
         font-size: 3.5em;
-      }
-    }
-
-    header {
-      background-color: transparent;
-
-      .main-navigation-wrapper {
-        background-color: transparent;
       }
     }
 

@@ -1,4 +1,9 @@
 .ai-series-article {
+  @include top-bar(
+    $background-color: transparent,
+    $background-color-scrolled: $black,
+  );
+
   .ai-series-article-hero {
     @media screen and (min-width: 768px) {
       background-size: cover;
@@ -12,14 +17,6 @@
     height: 100vh;
     margin-bottom: 2em;
     text-align: center;
-
-    header {
-      background-color: transparent;
-
-      &.scrolled {
-        background-color: $black;
-      }
-    }
 
     .hero-content {
       padding-bottom: 5em;
