@@ -1,8 +1,8 @@
 .cyber-series-article-series {
-  header {
-    background-color: transparent;
-    position: absolute;
-  }
+  @include top-bar(
+    $background-color: transparent,
+    $position: absolute,
+  );
 
   .cyber-series-article-series-hero {
     height: 100vh;

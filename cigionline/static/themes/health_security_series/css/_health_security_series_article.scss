@@ -1,11 +1,8 @@
 .health-security-series-article {
-  header {
-    background-color: transparent;
-
-    &.scrolled {
-      background-color: $black;
-    }
-  }
+  @include top-bar(
+    $background-color: transparent,
+    $background-color-scrolled: $black,
+  );
 
   .health-security-series-article-hero {
     background-position: center;
