@@ -16,6 +16,16 @@ h4 {
   text-transform: uppercase;
 }
 
-ul {
-  padding-left: 1.75em;
+figcaption {
+  color: $cigi-text-grey;
+  font-size: 0.7em;
+  line-height: 1rem;
+  padding: 0.25em 0;
+  text-align: left;
+}
+
+.body {
+  ul {
+    padding-left: 1.75em;
+  }
 }

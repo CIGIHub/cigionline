@@ -119,8 +119,8 @@
     }
   }
 
-  .stream-block-image {
-    .stream-block-image-caption {
+  .stream-image-block {
+    figcaption {
       border-left: solid 5px $data-series-primary-color;
       color: $cigi-dark-grey;
       font-size: .85rem;

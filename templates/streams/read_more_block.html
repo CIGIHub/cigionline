@@ -1,13 +1,15 @@
 {% load wagtailcore_tags %}
 
-<div class="container-sm">
-  <div class="stream-read-more-block">
-    <h2>{{ self.title }}</h2>
-    <div class="collapse" id="read-more-block-{{ id }}">
-      <div class="card card-body">
-        {{ self.text|richtext }}
+<div class="container">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2 stream-read-more-block">
+      <h2>{{ self.title }}</h2>
+      <div class="collapse" id="read-more-block-{{ id }}">
+        <div class="card card-body">
+          {{ self.text|richtext }}
+        </div>
       </div>
+      <button type="button" class="read-more-btn collapsed" data-toggle="collapse" data-target="#read-more-block-{{ id }}" aria-expanded="false" aria-controls="read-more-block-{{ id }}"></button>
     </div>
-    <button type="button" class="read-more-btn collapsed" data-toggle="collapse" data-target="#read-more-block-{{ id }}" aria-expanded="false" aria-controls="read-more-block-{{ id }}"></button>
   </div>
 </div>
