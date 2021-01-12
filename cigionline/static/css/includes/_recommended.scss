@@ -57,7 +57,10 @@
     }
 
     .img-wrapper {
-      @include hide-breakpoint-down(sm);
+      @include media-breakpoint-up(sm) {
+        display: block;
+      }
+      display: none;
     }
   }
 }
