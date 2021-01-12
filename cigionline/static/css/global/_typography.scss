@@ -1,34 +1,17 @@
 a {
-  color: $cigi-primary-colour;
-  text-decoration: none;
   transition: color 0.2s ease;
-
-  &:hover {
-    color: $cigi-dark-pink;
-    text-decoration: none;
-  }
 }
 
 h2,
 h3,
 h4 {
+  font-weight: 400;
   margin-bottom: 0.5em;
   margin-top: 1.5em;
 }
 
-h2 {
-  font-size: 1.3125em;
-  font-weight: 400;
-}
-
-h3 {
-  font-size: 1.125em;
-  font-weight: 400;
-}
-
 h4 {
   color: $cigi-dark-grey;
-  font-size: 0.75em;
   font-weight: 500;
   text-transform: uppercase;
 }
