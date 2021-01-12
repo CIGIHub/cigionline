@@ -1,6 +1,16 @@
 @import '../../../css/global/animations/bounce';
 
 .longform-article-series {
+  @include top-bar(
+    $background-color: $longform-background-color,
+    $background-color-medium: transparent,
+    $color: $black,
+    $color-medium: $white,
+    $hover-color: $black,
+    $hover-color-medium: $white,
+    $position: absolute,
+  );
+
   h2 {
     font-size: 1.5em;
     font-weight: 500;
@@ -38,56 +48,6 @@
 
       @media screen and (min-width: $medium) {
         background-color: transparent;
-      }
-    }
-
-    header {
-      background-color: $longform-background-color;
-      position: relative;
-
-      @media screen and (min-width: $medium) {
-        background-color: transparent;
-      }
-
-      .main-navigation-wrapper {
-        background-color: $longform-background-color;
-
-        @media screen and (min-width: $medium) {
-          background-color: transparent;
-        }
-      }
-
-      .cigi-top-bar {
-        .cigi-logo {
-          svg {
-            fill: $black;
-
-            @media screen and (min-width: $medium) {
-              fill: $white;
-            }
-          }
-        }
-
-        nav {
-          ul {
-            a,
-            button {
-              color: $black;
-
-              @media screen and (min-width: $medium) {
-                color: $white;
-              }
-
-              &:hover {
-                color: $black;
-
-                @media screen and (min-width: $medium) {
-                  color: $white;
-                }
-              }
-            }
-          }
-        }
       }
     }
 

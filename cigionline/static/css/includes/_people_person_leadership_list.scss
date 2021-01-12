@@ -46,7 +46,7 @@
         padding: 0;
 
         &.active {
-          border-bottom-color: $cigi-pink;
+          border-bottom-color: $cigi-primary-colour;
         }
       }
     }
@@ -104,7 +104,7 @@
       font-size: 1.0625em;
 
       &:hover {
-        color: $cigi-pink;
+        color: $cigi-primary-colour;
       }
     }
 

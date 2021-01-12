@@ -22,7 +22,7 @@
 
     .date,
     .mm-meta {
-      @include link($color: $white, $hover-color: $cigi-pink);
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
 
       color: $white;
       font-size: 1em;
@@ -63,7 +63,7 @@
       margin: 0;
 
       li {
-        @include link($color: $white, $hover-color: $cigi-pink);
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
         color: $white;
       }
     }
@@ -147,7 +147,7 @@
             margin-bottom: 0;
 
             li {
-              @include link($color: $white, $hover-color: $cigi-pink);
+              @include link($color: $white, $hover-color: $cigi-primary-colour);
               color: $white;
             }
           }

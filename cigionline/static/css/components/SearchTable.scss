@@ -67,12 +67,12 @@
           margin-right: 1em;
 
           &:hover {
-            border-bottom: 3px solid $cigi-pink;
+            border-bottom: 3px solid $cigi-primary-colour;
             text-decoration: none;
           }
 
           &.active {
-            border-bottom: 3px solid $cigi-pink;
+            border-bottom: 3px solid $cigi-primary-colour;
             color: $black;
           }
         }

@@ -55,7 +55,7 @@ section {
             padding: 0;
 
             li {
-              @include link($color: $white, $hover-color: $cigi-pink);
+              @include link($color: $white, $hover-color: $cigi-primary-colour);
 
               border-bottom: 1px solid $border-grey;
               break-inside: avoid-column;
