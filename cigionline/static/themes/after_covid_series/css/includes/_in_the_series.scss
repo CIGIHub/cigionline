@@ -1,7 +1,7 @@
 .after-covid-series-article,
 .after-covid-series-multimedia {
   .after-covid-series-in-the-series {
-    @include link($color: $white, $hover-color: $cigi-pink);
+    @include link($color: $white, $hover-color: $cigi-dark-pink);
     background: $black;
     padding: 4em 0;
 
