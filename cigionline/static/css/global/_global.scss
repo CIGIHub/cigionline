@@ -89,7 +89,9 @@ img {
     padding: 0 0 0.25em;
 
     .form-control {
+      background-color: transparent;
       border: 0;
+      height: 100%;
       padding: 0;
     }
 

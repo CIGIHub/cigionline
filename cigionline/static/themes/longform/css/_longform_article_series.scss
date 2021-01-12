@@ -36,6 +36,9 @@
     position: relative;
 
     &::after {
+      @include media-breakpoint-up(md) {
+        background-color: transparent;
+      }
       background-color: $longform-hero-background-color;
       content: '';
       height: 100%;
@@ -45,10 +48,6 @@
       top: 0;
       width: 100%;
       z-index: 1;
-
-      @media screen and (min-width: $medium) {
-        background-color: transparent;
-      }
     }
 
     .hero-content {
@@ -59,23 +58,21 @@
 
       h1,
       p {
-        color: $black;
-        max-width: 550px;
-
-        @media screen and (min-width: $medium) {
+        @include media-breakpoint-up(md) {
           color: $white;
         }
+        color: $black;
+        max-width: 550px;
       }
 
       h1 {
+        @include media-breakpoint-up(md) {
+          font-size: 3.5em;
+        }
         font-size: 2.75em;
         font-weight: 700;
         line-height: 1;
         margin-bottom: 0.5em;
-
-        @media screen and (min-width: $medium) {
-          font-size: 3.5em;
-        }
       }
 
       .cigi-essay-series {
@@ -105,26 +102,24 @@
         font-size: 2.5em;
 
         a {
-          color: $black;
-
-          @media screen and (min-width: $medium) {
+          @include media-breakpoint-up(md) {
             color: $white;
           }
+          color: $black;
         }
       }
     }
 
     .video-background {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
       display: none;
       left: 0;
       min-height: 100%;
       min-width: 100%;
       position: absolute;
       top: 0;
-
-      @media screen and (min-width: $medium) {
-        display: block;
-      }
     }
   }
 
@@ -140,15 +135,14 @@
       width: 100%;
 
       .longform-article-series-featured-item-content {
+        @include media-breakpoint-up(md) {
+          padding: 0 2em;
+        }
         bottom: 3em;
         left: 0;
         max-width: 600px;
         padding: 0 1em;
         position: absolute;
-
-        @media screen and (min-width: $medium) {
-          padding: 0 2em;
-        }
 
         h3 {
           font-size: 2em;
@@ -180,24 +174,22 @@
     margin-bottom: 2em;
 
     .longform-article-series-in-the-series-items {
-      columns: 1;
-
-      @media screen and (min-width: $medium) {
+      @include media-breakpoint-up(md) {
         columns: 2;
       }
+      columns: 1;
 
       article {
+        @include media-breakpoint-up(md) {
+          padding-bottom: 1.25em;
+          padding-left: 0;
+          padding-right: 2em;
+        }
         break-inside: avoid;
         padding-bottom: 0;
         padding-left: 1.875em;
         padding-right: 0;
         padding-top: 1.25em;
-
-        @media screen and (min-width: $medium) {
-          padding-bottom: 1.25em;
-          padding-left: 0;
-          padding-right: 2em;
-        }
 
         h4 {
           @include link($color: $cigi-dark-grey, $hover-color: $cigi-medium-grey);

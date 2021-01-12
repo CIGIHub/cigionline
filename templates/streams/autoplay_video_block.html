@@ -1,12 +1,18 @@
-<div class="stream-block stream-block-autoplay-video">
-  <div class="container-lg">
-    <video playsinline autoplay muted controls>
-      <source src="{{ self.video.url }}" type="video/mp4">
-    </video>
-  </div>
-  <div class="container-sm">
-    <div class="caption">
-      {{ self.caption }}
+<div class="stream-block-autoplay-video">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <video playsinline autoplay muted controls>
+          <source src="{{ self.video.url }}" type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <div class="caption">
+          {{ self.caption }}
+        </div>
+      </div>
     </div>
   </div>
 </div>

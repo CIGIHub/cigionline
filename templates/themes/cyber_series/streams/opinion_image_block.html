@@ -1,10 +1,14 @@
 {% load wagtailimages_tags %}
 
-<div class="container-md">
-  <figure>
-    {% image self.image width-640 %}
-    {% if not self.hide_image_caption %}
-      <figcaption>{{self.image.title}}</figcaption>
-    {% endif %}
-  </figure>
+<div class="container">
+  <div class="row d-block">
+    <div class="col col-lg-10 offset-lg-1">
+      <figure class="stream-image-block">
+        {% image self.image width-640 %}
+        {% if not self.hide_image_caption %}
+          <figcaption>{{self.image.title}}</figcaption>
+        {% endif %}
+      </figure>
+    </div>
+  </div>
 </div>
