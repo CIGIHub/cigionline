@@ -1,21 +1,25 @@
 {% load static wagtailcore_tags %}
 
 <section class="about-the-author">
-  <div class="container-sm">
-    <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
-    {% for author in authors %}
-      <div class="author-block">
-        {% if author.block_type == 'author' %}
-          <div class="name">
-            <a href="{{ author.value.url }}">{{ author.value.title }}</a>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
+        {% for author in authors %}
+          <div class="author-block">
+            {% if author.block_type == 'author' %}
+              <div class="name">
+                <a href="{{ author.value.url }}">{{ author.value.title }}</a>
+              </div>
+              {% if author.value.short_bio|length > 1 %}
+                {{ author.value.short_bio|richtext }}
+              {% endif %}
+            {% elif author.block_type == 'external_author' %}
+              <div class="name">{{ author.value }}</div>
+            {% endif %}
           </div>
-          {% if author.value.short_bio|length > 1 %}
-            {{ author.value.short_bio|richtext }}
-          {% endif %}
-        {% elif author.block_type == 'external_author' %}
-          <div class="name">{{ author.value }}</div>
-        {% endif %}
+        {% endfor %}
       </div>
-    {% endfor %}
+    </div>
   </div>
 </section>
