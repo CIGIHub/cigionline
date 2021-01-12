@@ -7,7 +7,7 @@
         <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
         {% for author in authors %}
           <div class="author-block">
-            {% if author.block_type == 'author' %}
+            {% if author.block_type == 'author' or author.block_type == 'speaker' %}
               <div class="name">
                 <a href="{{ author.value.url }}">{{ author.value.title }}</a>
               </div>
