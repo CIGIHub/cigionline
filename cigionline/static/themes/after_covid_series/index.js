@@ -8,7 +8,7 @@ $(function() {
   let nextImage;
 
   authorImages.each(function() {
-    $(this).children(":not(:first)").addClass('inactive');
+    $(this).children(':not(:first)').addClass('inactive');
     activeImage = $(this).children().first();
     nextImage = activeImage.next();
   });
