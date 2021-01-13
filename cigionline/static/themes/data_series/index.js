@@ -20,5 +20,4 @@ window.addEventListener('scroll', function() {
     stickyHeader.classList.add('scrolled'); }
   else {
     stickyHeader.classList.remove('scrolled'); }
-
 });
