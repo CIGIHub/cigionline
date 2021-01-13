@@ -1,21 +1,25 @@
 import './css/data_series.scss';
-//import createStickyHeaderScrollListener from '../../js/create_sticky_header_scroll_listener';
 
 const headerEl = document.querySelector('header');
 const stickyHeader = document.querySelector('.article-header-sticky');
-var headerHeight = null;
+var headerHeight, docHeight = null;
 
 window.addEventListener('load', function() {
-  headerHeight = headerEl.offsetHeight
-  
+  headerHeight = headerEl.offsetHeight;
+  docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 });
 
 window.addEventListener('scroll', function(){
   var scrollTop = document.querySelector('html').scrollTop;
+
+  var scrolled = (scrollTop/docHeight) * 100;
+  document.querySelector('progress').style.width = scrolled + "%";
+
   if (scrollTop > headerHeight){
     stickyHeader.classList.add('scrolled');
   }
   else {
     stickyHeader.classList.remove('scrolled');
   }
+
 });
