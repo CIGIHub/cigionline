@@ -11,6 +11,7 @@
     background-size: cover;
     margin: 0 0 1em;
     min-height: 25em;
+    padding-top: 6em;
     position: relative;
 
     &::after {
@@ -149,9 +150,10 @@
 
   h3 {
     font-family: 'din-condensed', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.225em;
     font-weight: 400;
-    margin-bottom: .625rem;
+    margin-bottom: .4285em;
+    margin-top: 1em;
   }
 
   hr {
@@ -184,35 +186,70 @@
   }
 
   .text-border-block {
+    h3 {
+      margin-bottom: .5em;
+      margin-top: 1em;
+    }
+
     .block-contents {
       border: solid 1px $data-series-primary-color;
       font-size: 1.0625em;
       line-height: 1.5em;
       padding: 1.5em 1.75em;
+    }
+  }
 
-      ul {
-        padding-left: 1.5em;
+  .body {
+    ul {
+      padding-left: 1.5em;
+    }
+
+    li {
+      line-height: 1.25em;
+      list-style: none;
+      margin-left: 1em;
+      padding-bottom: 0;
+      position: relative;
+
+      &::before {
+        background: $data-series-primary-color;
+        border-radius: .5em;
+        content: '';
+        display: block;
+        height: .5em;
+        left: -1.5em;
+        position: absolute;
+        top: .5em;
+        width: .5em;
       }
+    }
+  }
 
-      li {
-        line-height: 1.25em;
-        list-style: none;
-        margin-left: 1em;
-        padding-bottom: 0;
-        position: relative;
+  .about-the-author {
+    margin: 3em 0;
 
-        &::before {
-          background: $data-series-primary-color;
-          border-radius: .5em;
-          content: '';
-          display: block;
-          height: .5em;
-          left: -1.5em;
-          position: absolute;
-          top: .5em;
-          width: .5em;
-        }
-      }
+    h3 {
+      border: 0;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  .drop-caps {
+    border: 0;
+    font-family: 'din-condensed', sans-serif;
+    position: relative;
+
+    &::after {
+      background: $data-series-primary-color;
+      bottom: 10%;
+      content: '';
+      height: 8px;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      z-index: -1;
     }
   }
 }
