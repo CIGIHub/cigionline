@@ -1,57 +1,48 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/zzr4vtn.css">
+{% endblock %}
 {% block theme_css %}
-  {% render_bundle 'themeCyberSeries' 'css' %}
+  {% render_bundle 'themeWTOSeries' 'css' %}
 {% endblock %}
 
-{% block body_class %}cyber-series-article-series{% endblock %}
+{% block body_class %}wto-series-article-series{% endblock %}
 
 {% block content %}
-  <section class="cyber-series-article-series-hero">
-    {% image self.image_hero original as image_hero %}
-    <div class="cyber-series-article-series-hero-image" style="background-image: url('{{ image_hero.url }}');">
-    </div>
-    <div class="cyber-series-article-series-hero-content">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-lg-10">
-            {% include "includes/topics.html" with topics=self.topics %}
-            <h1>{{ self.title }}</h1>
-            <div class="cyber-series-subtitle">
-              {{ self.subtitle|richtext }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  {% if self.body %}
-    <section class="cyber-series-article-series-body">
-      <div class="container">
-        <div class="row d-block">
-          <div class="col col-lg-10 offset-lg-1">
-            <h2>{{ self.title }}</h2>
-          </div>
-        </div>
-      </div>
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
-  {% endif %}
-  <section class="cyber-series-article-series-in-the-series">
+  <section class="wto-series-article-series-hero">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col col-lg-10 cyber-series-article-series-series-items">
+        <div class="col col-md-10 col-lg-8">
+          <h1>{{ self.title }}</h1>
+        </div>
+      </div>
+    </div>
+    {% image self.image_banner original %}
+  </section>
+  <section class="body">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2>{{ self.title }}</h2>
+        </div>
+      </div>
+    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+  <section class="wto-series-in-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
           {% for block in self.series_items %}
             {% if block.block_type == 'series_item' %}
               <article>
-                <h3>
-                  <a href="{{ block.value.url }}">
-                    {{ block.value.title }}
-                  </a>
-                </h3>
+                <h4>
+                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                </h4>
                 <p class="authors">
                   {% for author in block.value.specific.authors %}
                     {% if author.block_type == 'author' %}
@@ -69,6 +60,8 @@
                   {% endfor %}
                 </p>
               </article>
+            {% elif block.block_type == 'category_title' %}
+              <h3>{{ block.value }}</h3>
             {% endif %}
           {% endfor %}
         </div>

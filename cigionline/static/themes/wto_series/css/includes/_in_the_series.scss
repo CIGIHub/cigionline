@@ -1,0 +1,9 @@
+.wto-series-in-the-series {
+  margin-bottom: 3em;
+
+  .authors {
+    span {
+      @include comma-separated;
+    }
+  }
+}
