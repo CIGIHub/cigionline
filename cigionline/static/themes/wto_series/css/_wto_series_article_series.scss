@@ -1,3 +1,8 @@
-// .wto-series-article-series {
-//
-// }
+.wto-series-article-series {
+  @include top-bar(
+    $background-color: $wto-series-background-colour,
+    $color: $black,
+    $position: relative,
+  );
+  background-color: $wto-series-background-colour;
+}
