@@ -3,23 +3,220 @@
   background-color: $health-security-series-background-colour;
 
   .health-security-series-article-series-hero {
+    color: $white;
     padding-top: 8em;
 
-    h1 {
-      color: $white;
-    }
-
     .short-description {
-      color: $white;
       columns: 2;
     }
   }
 
   .health-security-series-article-series-in-the-series {
+    color: $white;
+    margin: 3em 0;
+
+    h2 {
+      font-size: 1em;
+      font-weight: 400;
+      margin: 2em 0;
+      text-transform: none;
+      width: 100%;
+    }
+
     article {
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        50% {
+          transform: rotate(180deg);
+        }
+
+        100% {
+          transform: rotate(0deg);
+        }
+      }
+      align-items: center;
+      display: flex;
+      padding: 1.2em 0;
+
+      &:hover {
+        .author-images {
+          .inner-ring {
+            animation-play-state: running;
+          }
+
+          .outer-ring {
+            animation-play-state: running;
+          }
+        }
+      }
+
+      &:nth-child(1) {
+        .inner-ring,
+        .outer-ring {
+          animation-delay: -(7s);
+        }
+      }
+
+      &:nth-child(2n + 1) {
+        .inner-ring,
+        .outer-ring {
+          animation-delay: -(11s);
+        }
+      }
+
+      &:nth-child(2n) {
+        .inner-ring,
+        .outer-ring {
+          animation-delay: -(1s);
+        }
+      }
+
+      &:nth-child(3n) {
+        .inner-ring,
+        .outer-ring {
+          animation-delay: -(4s);
+        }
+      }
+
+      &:nth-child(4n) {
+        .inner-ring,
+        .outer-ring {
+          animation-delay: -(9s);
+        }
+      }
+
+      &:nth-child(5n) {
+        .inner-ring,
+        .outer-ring {
+          animation-delay: -(6s);
+        }
+      }
+
+      &:nth-child(6n) {
+        .inner-ring,
+        .outer-ring {
+          animation-delay: -(3s);
+        }
+      }
+
+      .inner-ring {
+        animation: rotation 15s infinite ease-in-out;
+        animation-play-state: paused;
+        height: 70px;
+        margin: -35px 0 0 -35px;
+        width: 70px;
+      }
+
+      .outer-ring {
+        animation: rotation 12s infinite ease-in-out;
+        animation-play-state: paused;
+        height: 80px;
+        margin: -40px 0 0 -40px;
+        width: 80px;
+      }
+
+      .author-images {
+        flex-shrink: 0;
+        height: 80px;
+        margin-right: 1em;
+        position: relative;
+        width: 80px;
+
+        &.block-opinion {
+          &:hover {
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+          }
+        }
+
+        & > img {
+          left: 50%;
+          position: absolute;
+          top: 50%;
+        }
+
+        a {
+          left: 50%;
+          margin: -30px 0 0 -30px;
+          position: absolute;
+          top: 50%;
+
+          &:not(:first-of-type) {
+            img {
+              position: absolute;
+            }
+          }
+
+          &.inactive {
+            img {
+              opacity: 0;
+            }
+          }
+
+          img {
+            border-radius: 50%;
+            cursor: pointer;
+            height: auto;
+            transition: opacity 1s ease-in-out;
+            width: 60px;
+          }
+        }
+
+        i {
+          color: $white;
+          cursor: pointer;
+          font-size: 60px;
+          transition: color 0.2s ease, background-color 0.2s ease;
+
+          &:hover {
+            &::before {
+              background-color: $white;
+              border-radius: 50%;
+              color: $health-security-series-background-colour;
+              transition: color 0.2s ease, background-color 0.2s ease;
+            }
+          }
+        }
+      }
+
+      h3 {
+        @include link($color: $white, $hover-color: $cigi-dark-pink);
+        color: $white;
+        font-family: $health-security-font;
+        font-size: 1.2em;
+        line-height: 1.1em;
+        margin: 0 0 0.2em;
+      }
+
       .authors {
+        @include link($color: $meta-grey, $hover-color: $cigi-dark-pink);
+        color: $meta-grey;
+        font-size: 0.75em;
+        margin: 0.5em 0 0;
+        text-transform: uppercase;
+
         span {
-          @include and-separated;
+          &:not(:only-child) {
+            &::after {
+              content: ', ';
+              margin-right: 2px;
+            }
+          }
+
+          &:nth-last-child(2) {
+            &::after {
+              content: ' and ';
+            }
+          }
+
+          &:last-child {
+            &::after {
+              display: none;
+            }
+          }
         }
       }
     }
