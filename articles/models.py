@@ -562,7 +562,7 @@ class ArticleSeriesPage(
                 people = item.value.specific.speakers
 
             for person in people:
-                person_string = person.value.specific.title
+                person_string = person.value.title
                 people_string += person_string
 
                 # Add each person as well so if there's an article with just
