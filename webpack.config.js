@@ -40,6 +40,7 @@ const config = {
     themeHealthSecuritySeries: './cigionline/static/themes/health_security_series/index.js',
     themeInnovationSeries: './cigionline/static/themes/innovation_series/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',
+    themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
   },
 
   devtool: 'source-map',
