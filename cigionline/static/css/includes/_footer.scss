@@ -2,7 +2,7 @@ footer {
   background: $black;
   color: $white;
   font-size: 0.75rem;
-  padding-top: 5em;
+  padding: 5em 0 4em;
   position: relative;
   z-index: 10;
 
@@ -33,7 +33,6 @@ footer {
     }
     columns: 2;
     list-style-type: none;
-    margin: 0;
     padding: 1.25em 0;
 
     .topic {
@@ -49,6 +48,89 @@ footer {
 
     .topic-count {
       color: $cigi-medium-grey;
+    }
+  }
+
+  .footer-content {
+    font-size: 1rem;
+    text-align: center;
+
+    form {
+      display: flex;
+      height: 2em;
+      margin-bottom: 3em;
+    }
+
+    input {
+      &[type='email'] {
+        background: $black;
+        border-bottom: 2px solid $cigi-primary-colour;
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        color: $white;
+        font-size: 1rem;
+        margin: 0;
+        margin-right: 5px;
+        width: calc(100% - 95px);
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      &::placeholder {
+        color: $white;
+      }
+    }
+
+    button {
+      background: $cigi-primary-colour;
+      border-radius: 2px;
+      color: $white;
+      font-size: 14px;
+      text-transform: uppercase;
+      width: 90px;
+
+      i {
+        margin-right: 0.3em;
+      }
+    }
+
+    li {
+      display: inline-block;
+      list-style: none;
+    }
+
+    ul {
+      padding-left: 0;
+    }
+
+    .footer-menu {
+      @include link($color: $cigi-medium-light-grey, $hover-color: $white);
+
+      li {
+        padding: 0 1em;
+      }
+    }
+
+    .social-links {
+      li {
+        padding: 0 0.5em;
+
+        a {
+          color: $white;
+        }
+      }
+    }
+
+    .copyright {
+      color: $cigi-medium-light-grey;
+    }
+
+    .footer-menu,
+    .copyright {
+      font-size: 0.875em;
     }
   }
 }
