@@ -14,11 +14,13 @@
     <div class="cyber-series-article-hero-image" style="background-image: url('{{ image_banner.url }}');">
     </div>
     <div class="cyber-series-article-hero-content-container">
-      <div class="container-lg">
-        <div class="cyber-series-article-hero-content">
-          {% include "includes/topics.html" with topics=self.topics %}
-          <h1>{{ self.title }}</h1>
-          {% include "includes/authors.html" with authors=self.authors %}
+      <div class="container">
+        <div class="row">
+          <div class="col cyber-series-article-hero-content">
+            {% include "includes/topics.html" with topics=self.topics %}
+            <h1>{{ self.title }}</h1>
+            {% include "includes/authors.html" with authors=self.authors %}
+          </div>
         </div>
       </div>
     </div>
@@ -30,24 +32,30 @@
   </section>
   {% if self.footnotes %}
     <section class="article-footnotes">
-      <div class="container-sm">
-        <div class="footnotes">
-          {{ self.footnotes|richtext }}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
         </div>
       </div>
     </section>
   {% endif %}
   {% if self.works_cited %}
     <section class="article-works-cited">
-      <div class="container-sm">
-        <h2>Works Cited</h2>
-        {{ self.works_cited|richtext }}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Works Cited</h2>
+            {{ self.works_cited|richtext }}
+          </div>
+        </div>
       </div>
     </section>
   {% endif %}
-  <section>
-    {% include 'includes/opinion_disclaimer.html' %}
-  </section>
+  {% include 'includes/disclaimer.html' %}
   {% if self.is_opinion and self.authors|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}

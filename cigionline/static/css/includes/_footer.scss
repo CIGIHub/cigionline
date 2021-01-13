@@ -16,7 +16,7 @@ footer {
   }
 
   .footer-bracket {
-    @include breakpoint($medium) {
+    @include media-breakpoint-up(md) {
       display: block;
     }
 
@@ -25,10 +25,10 @@ footer {
   }
 
   .highlighted-topics {
-    @include breakpoint($medium) {
+    @include media-breakpoint-up(md) {
       columns: 3;
     }
-    @include breakpoint($large) {
+    @include media-breakpoint-up(lg) {
       columns: 4;
     }
     columns: 2;
