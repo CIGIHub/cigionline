@@ -1,13 +1,13 @@
-{% extends "base.html" %}
+{% extends "articles/article_page.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
-{% block extra_css %}
+{% block theme_css %}
   {% render_bundle 'themeLongform' 'css' %}
 {% endblock %}
 
 {% block body_class %}longform-article{% endblock %}
 
-{% block content %}
+{% block hero %}
   {% image self.image_banner original as image_hero %}
   <section class="hero" style="background-image: url('{{ image_hero.url }}');">
     <div class="container">
@@ -64,15 +64,9 @@
       </div>
     </div>
   </section>
-  <section class="body">
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
-  {% include 'includes/disclaimer.html' %}
-  {% if self.is_opinion and self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
-  {% endif %}
+{% endblock %}
+
+{% block in_the_series %}
   {% if self.article_series %}
     <section class="in-the-series">
       <div class="container">
@@ -102,4 +96,8 @@
       </div>
     </section>
   {% endif %}
+{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Longform articles #}
 {% endblock %}

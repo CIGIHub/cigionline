@@ -6,6 +6,9 @@
   }
 
   .big-tech-recommended {
+    margin-bottom: 3em;
+    margin-top: 3em;
+
     .bt-recommended-article {
       border-bottom: 1px solid $cigi-light-grey;
       margin-bottom: 2em;
@@ -23,6 +26,7 @@
     padding-bottom: 2em;
 
     h1 {
+      font-weight: 400;
       margin-bottom: 0.4em;
     }
 

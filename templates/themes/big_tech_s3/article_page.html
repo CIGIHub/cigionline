@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{% extends "articles/article_page.html" %}
 
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
 {% endblock extra_fonts %}
-{% block extra_css %}
+{% block theme_css %}
   {% render_bundle 'themeBigTechS3' 'css' %}
 {% endblock %}
-{% block extra_js %}
+{% block theme_js %}
   {% render_bundle 'themeBigTechS3' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -31,16 +31,11 @@
   </div>
 {% endblock header %}
 
-{% block content %}
-  <section class="body">
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
-  {% include 'includes/disclaimer.html' %}
-  {% if self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
-  {% endif %}
+{% block hero %}
+  {# Remove hero section #}
+{% endblock %}
+
+{% block in_the_series %}
   {% if self.multimedia_series %}
     <section class="about-the-podcast">
       <div class="container">
@@ -74,6 +69,9 @@
       </div>
     </section>
   {% endif %}
+{% endblock %}
+
+{% block recommended %}
   {% if self.recommended.all %}
     <section class="big-tech-recommended">
       <div class="container">
@@ -88,7 +86,7 @@
       </div>
     </section>
   {% endif %}
-{% endblock content %}
+{% endblock %}
 
 {% block footer %}
   {% include "./includes/footer.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}

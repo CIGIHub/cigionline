@@ -6,24 +6,26 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
+  {% block hero %}
+    {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
 
-  {% if self.image_hero %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-lg-10">
-          <figure class="article-image-hero">
-            {% image self.image_hero width-1760 %}
-            {% if self.image_hero.title %}
-              <figcaption>
-                {{ self.image_hero.title }}
-              </figcaption>
-            {% endif %}
-          </figure>
+    {% if self.image_hero %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-lg-10">
+            <figure class="article-image-hero">
+              {% image self.image_hero width-1760 %}
+              {% if self.image_hero.title %}
+                <figcaption>
+                  {{ self.image_hero.title }}
+                </figcaption>
+              {% endif %}
+            </figure>
+          </div>
         </div>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  {% endblock %}
 
   {% if self.body %}
     <section class="body">
@@ -94,7 +96,13 @@
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
 
-  {% if self.recommended.all|length > 0 %}
-    {% include 'includes/recommended.html' with recommended=self.recommended.all %}
-  {% endif %}
+  {% block in_the_series %}
+    {# Override this in templates to add series listing #}
+  {% endblock %}
+
+  {% block recommended %}
+    {% if self.recommended.all|length > 0 %}
+      {% include 'includes/recommended.html' with recommended=self.recommended.all %}
+    {% endif %}
+  {% endblock %}
 {% endblock content %}
