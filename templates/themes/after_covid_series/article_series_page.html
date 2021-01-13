@@ -12,10 +12,14 @@
 
 {% block content %}
   <section class="after-covid-series-article-series-hero">
-    <div class="container-sm">
-      <div class="opinion-series-label">Opinion Series</div>
-      <h1>{{ self.title }}</h1>
-      <p>{{ self.short_description|richtext }}</p>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-lg-8">
+          <div class="opinion-series-label">Opinion Series</div>
+          <h1>{{ self.title }}</h1>
+          <p>{{ self.short_description|richtext }}</p>
+        </div>
+      </div>
     </div>
   </section>
   {% image self.image_banner original as image_hero %}
