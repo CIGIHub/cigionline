@@ -13,9 +13,11 @@
   <section class="hero" style="background-image: url('{{ image_hero.url }}');">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8 hero-content">
-          {% include "includes/topics.html" with topics=self.topics %}
-          <h1><span>{{ self.title }}</span></h1>
+        <div class="col col-md-10 col-lg-8">
+          <div class="hero-content">
+            {% include "includes/topics.html" with topics=self.topics %}
+            <h1><span>{{ self.title }}</span></h1>
+          </div>
         </div>
       </div>
     </div>
