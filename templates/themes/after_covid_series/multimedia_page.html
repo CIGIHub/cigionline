@@ -1,34 +1,13 @@
-{% extends "base.html" %}
+{% extends "multimedia/multimedia_page.html" %}
 {% load wagtailcore_tags webpack_loader %}
 
-{% block extra_css %}
-  {% render_bundle 'multimediaPage' 'css' %}
+{% block theme_css %}
   {% render_bundle 'themeAfterCovidSeries' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block body_class %}after-covid-series-multimedia{% endblock %}
 
-{% block content %}
-  {% include "includes/hero_multimedia.html" %}
-  {% if self.body %}
-    <section class="body">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
-  {% endif %}
-  {% if self.transcript %}
-    <section>
-      {% for block in self.transcript %}
-        {% include_block block with id=block.id %}
-      {% endfor %}
-    </section>
-  {% endif %}
-  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
-
+{% block in_the_series %}
   {% if self.article_series %}
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
   {% endif %}
