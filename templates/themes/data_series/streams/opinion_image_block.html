@@ -1,14 +1,20 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="stream-block stream-block-image">
-  <div class="container-lg">
-    {% image self.image width-1024 %}
-  </div>
-  {% if not self.hide_image_caption %}
-    <div class="container-sm">
-      <div class="stream-block-image-caption">
-        {{self.image.title}}
+<div class="container">
+  <figure class="stream-image-block">
+    <div class="row d-block">
+      <div class="col">
+        {% image self.image width-1024 %}
       </div>
     </div>
-  {% endif %}
+    {% if not self.hide_image_caption %}
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <figcaption>
+            {{ self.image.title }}
+          </figcaption>
+        </div>
+      </div>
+    {% endif %}
+  </figure>
 </div>

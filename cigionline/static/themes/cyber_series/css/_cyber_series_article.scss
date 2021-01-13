@@ -7,26 +7,23 @@
   background-color: $cyber-series-background-colour;
 
   .cyber-series-article-hero {
+    @include media-breakpoint-up(md) {
+      height: 400px;
+    }
+    @include media-breakpoint-up(lg) {
+      height: 500px;
+    }
     background-color: $cyber-series-primary-colour;
     position: relative;
 
-    @media screen and (min-width: $medium) {
-      height: 400px;
-    }
-
-    @media screen and (min-width: $large) {
-      height: 500px;
-    }
-
     .cyber-series-article-hero-content-container {
+      @include media-breakpoint-up(md) {
+        position: absolute;
+      }
       left: 0;
       position: relative;
       top: 0;
       width: 100%;
-
-      @media scren and (min-width: $medium) {
-        position: absolute;
-      }
 
       .cyber-series-article-hero-content {
         padding-right: 0.5em;
@@ -35,6 +32,9 @@
     }
 
     .cyber-series-article-hero-image {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
       background-position: center;
       background-size: cover;
       display: none;
@@ -43,10 +43,6 @@
       right: 0;
       top: 0;
       width: 50%;
-
-      @media screen and (min-width: $medium) {
-        display: block;
-      }
     }
   }
 }

@@ -5,7 +5,7 @@
   );
 
   .ai-series-article-hero {
-    @media screen and (min-width: 768px) {
+    @include media-breakpoint-up(md) {
       background-size: cover;
       height: 30em;
       text-align: left;
@@ -19,12 +19,11 @@
     text-align: center;
 
     .hero-content {
-      padding-bottom: 5em;
-      padding-top: 3em;
-
-      @media screen and (min-width: 768px) {
+      @include media-breakpoint-up(md) {
         padding-top: 8em;
       }
+      padding-bottom: 5em;
+      padding-top: 3em;
 
       h1,
       a,
@@ -35,25 +34,23 @@
       }
 
       h1 {
-        font-size: 2em;
-        font-weight: 600;
-        margin: 0 0 0.5em;
-
-        @media screen and (min-width: 768px) {
+        @include media-breakpoint-up(md) {
           font-size: 2.75em;
           margin-bottom: 0.2em;
         }
+        font-size: 2em;
+        font-weight: 600;
+        margin: 0 0 0.5em;
       }
 
       .authors {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
+        @include media-breakpoint-up(md) {
+          justify-content: left;
+        }
         font-size: 1em;
         justify-content: center;
         margin: 0;
-
-        @media screen and (min-width: 768px) {
-          justify-content: left;
-        }
 
         label {
           display: none;
@@ -62,12 +59,11 @@
 
       .social-share-list-square {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
-        justify-content: center;
-        margin-bottom: 0;
-
-        @media screen and (min-width: 768px) {
+        @include media-breakpoint-up(md) {
           justify-content: left;
         }
+        justify-content: center;
+        margin-bottom: 0;
 
         a {
           font-size: 1.3em;
@@ -91,25 +87,23 @@
   }
 
   .stream-block-blockquote {
-    overflow: visible;
-
-    @media screen and (min-width: 768px) {
+    @include media-breakpoint-up(md) {
       max-width: 50rem;
     }
+    overflow: visible;
 
     .stream-block-blockquote-content {
       padding: 0.3em 0.6em;
 
       blockquote {
+        @include media-breakpoint-up(md) {
+          font-size: 3.125em;
+        }
         font-family: $ai-garamond;
         font-size: 2.25em;
         font-weight: 700;
         line-height: 1;
         margin-bottom: 0;
-
-        @media screen and (min-width: 768px) {
-          font-size: 3.125em;
-        }
       }
 
       &::after {

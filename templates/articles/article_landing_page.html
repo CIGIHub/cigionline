@@ -11,9 +11,9 @@
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <section class="featured">
-    <div class="container-lg">
+    <div class="container">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col col-md-8">
           {% for article in page.featured_articles.all %}
           {% if forloop.counter == 1 %}
           {% include 'includes/features/feature_content_large.html' with content=article.article_page.specific %}
@@ -21,7 +21,7 @@
           {% endfor %}
         </div>
         <hr>
-        <div class="col-md-4 flex-column featured-small">
+        <div class="col col-md-4 flex-column featured-small">
           {% for article in page.featured_articles.all %}
             {% if forloop.counter < 6 %}
               {% if forloop.counter != 1 %}
@@ -39,7 +39,7 @@
             {% if forloop.counter != 1 %}
               <hr>
             {% endif %}
-            <div class="col-md">
+            <div class="col">
               {% include 'includes/features/feature_content_medium.html' with content=article.article_page.specific %}
             </div>
           {% endif %}
@@ -48,8 +48,12 @@
     </div>
   </section>
   <section>
-    <div class="container-lg">
-      <div id="opinions-search-table">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div id="opinions-search-table">
+          </div>
+        </div>
       </div>
     </div>
   </section>
