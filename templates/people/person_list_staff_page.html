@@ -9,10 +9,14 @@
     {% endfor %}
   </section>
   <section>
-    <div class="container-lg">
-      {% for person in people %}
-        <p>{{ person.title }}</p>
-      {% endfor %}
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          {% for person in people %}
+            <p>{{ person.title }}</p>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </section>
 {% endblock %}

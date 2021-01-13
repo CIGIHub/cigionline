@@ -61,14 +61,13 @@
     padding: 2em 0;
 
     .about-the-podcast-content {
+      @include media-breakpoint-up(md) {
+        flex-direction: row;
+      }
       align-items: flex-start;
       display: flex;
       flex-direction: column;
       justify-content: center;
-
-      @media screen and (min-width: $medium) {
-        flex-direction: row;
-      }
 
       .about,
       .subscribe {
@@ -83,24 +82,22 @@
 
       .subscribe {
         .subscribe-links {
+          @include media-breakpoint-up(md) {
+            align-items: flex-start;
+            flex-direction: column;
+          }
           align-items: center;
           display: flex;
           flex-direction: row;
 
-          @media screen and (min-width: $medium) {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-
           a {
-            margin-right: 2em;
-            margin-top: 0;
-            max-width: 150px;
-
-            @media screen and (min-width: $medium) {
+            @include media-breakpoint-up(md) {
               margin-right: 0;
               margin-top: 1em;
             }
+            margin-right: 2em;
+            margin-top: 0;
+            max-width: 150px;
 
             &.apple {
               max-width: 150px;
@@ -123,11 +120,10 @@
       }
 
       .spacer {
-        display: none;
-
-        @media screen and (min-width: $medium) {
+        @include media-breakpoint-up(md) {
           display: block;
         }
+        display: none;
 
         .slash {
           @include slash($height: 210px);

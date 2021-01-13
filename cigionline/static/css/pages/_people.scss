@@ -1,7 +1,7 @@
 .person-page {
   .hero {
     .hero-container {
-      @include breakpoint($medium) {
+      @include media-breakpoint-up(md) {
         align-items: flex-end;
         flex-direction: row;
       }
@@ -43,6 +43,8 @@
 
   section {
     &.expertise {
+      margin-bottom: 2em;
+
       .expertise-container {
         border: 1px solid $cigi-light-grey;
         padding: 1em;
@@ -52,13 +54,10 @@
         }
 
         .contact {
-          @include breakpoint($small) {
-            columns: 2;
-          }
-
-          @include breakpoint($medium) {
+          @include media-breakpoint-up(md) {
             columns: 3;
           }
+          columns: 2;
 
           .contact-item {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
@@ -86,6 +85,8 @@
     }
 
     &.external-publications {
+      margin-bottom: 3em;
+
       article {
         border-bottom: 1px solid $cigi-light-grey;
         display: flex;

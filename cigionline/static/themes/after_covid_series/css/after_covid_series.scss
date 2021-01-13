@@ -2,9 +2,9 @@ $landing-heading-blue: #82baf8;
 $landing-description-grey: #cecccc;
 $meta-grey: #c7c7c5;
 
-@import '../../../css/global/variables';
 @import '../../../css/global/mixins';
 
 @import './after_covid_series_article_series';
 @import './after_covid_series_article';
 @import './after_covid_series_multimedia';
+@import './includes/in_the_series';

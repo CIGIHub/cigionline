@@ -1,22 +1,33 @@
 .after-covid-series-article {
+  header {
+    @include media-breakpoint-up(md) {
+      background-color: transparent;
+      position: absolute;
+    }
+    background-color: $black;
+    position: fixed;
+  }
+
   .after-covid-series-article-hero {
     @include link($color: $black, $hover-color: $cigi-dark-pink);
-    background-size: cover;
-    color: $black;
-    position: relative;
-
-    @media screen and (min-width: 768px) {
+    @include media-breakpoint-up(md) {
       @include link($color: $white, $hover-color: $cigi-dark-pink);
+      background-size: cover;
       color: $white;
       min-height: 40em;
     }
+    background-size: 0;
+    color: $black;
+    position: relative;
 
     & > * {
       position: relative;
     }
 
     &::before {
-      background: linear-gradient(to right, #011321, transparent);
+      @include media-breakpoint-up(md) {
+        background: linear-gradient(to right, #011321, transparent);
+      }
       bottom: 0;
       content: '';
       height: 100%;
@@ -29,6 +40,10 @@
     }
 
     &::after {
+      @include media-breakpoint-up(md) {
+        background: linear-gradient(to bottom, rgba(74, 107, 136, 0.8), transparent);
+        height: 70%;
+      }
       bottom: 0;
       content: '';
       height: 100%;
@@ -38,45 +53,28 @@
       top: 0;
       width: 100%;
       z-index: 0;
-
-      @media screen and (min-width: 768px) {
-        background: linear-gradient(to bottom, rgba(74, 107, 136, 0.8), transparent);
-        height: 70%;
-      }
-    }
-
-    header {
-      background-color: $black;
-      position: fixed;
-
-      @media screen and (min-width: 768px) {
-        background-color: transparent;
-        position: absolute;
-      }
     }
 
     .hero-content {
+      @include media-breakpoint-up(md) {
+        background-color: transparent;
+        padding-top: 6em;
+      }
       background-color: $white;
       padding-bottom: 1em;
       padding-top: 3em;
       z-index: 1;
-
-      @media screen and (min-width: 768px) {
-        background-color: transparent;
-        padding-top: 6em;
-      }
     }
 
     h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2.3em;
+      }
       font-family: $tisa-pro;
       font-size: 1.8em;
       font-weight: 900;
       margin-bottom: 0.22em;
       margin-top: 0;
-
-      @media screen and (min-width: 768px) {
-        font-size: 2.3em;
-      }
     }
 
     .opinion-label {
@@ -95,18 +93,17 @@
     .opinion-label,
     .date,
     .author-short-bio {
-      @media screen and (min-width: 768px) {
+      @include media-breakpoint-up(md) {
         color: $meta-grey;
       }
     }
 
     .authors {
-      font-size: 1em;
-      margin: 1em 0;
-
-      @media screen and (min-width: 768px) {
+      @include media-breakpoint-up(md) {
         margin: 2em 0 6em;
       }
+      font-size: 1em;
+      margin: 1em 0;
 
       .author {
         align-items: center;
@@ -133,17 +130,18 @@
 
     .social-share-list {
       @include link($color: $cigi-light-grey, $hover-color: $cigi-dark-pink);
-      justify-content: left;
-
-      @media screen and (min-width: 768px) {
+      @include media-breakpoint-up(md) {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
       }
+      justify-content: left;
     }
   }
 
   .article-image-hero {
-    @media screen and (min-width: 768px) {
-      display: none;
+    img {
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
     }
   }
 
@@ -153,6 +151,10 @@
     margin-bottom: 1em;
 
     blockquote {
+      @include media-breakpoint-up(md) {
+        font-size: 1.5em;
+        padding: 2em 1em 2em 0;
+      }
       color: $black;
       font-family: $tisa-pro;
       font-size: 1.2em;
@@ -161,12 +163,10 @@
       padding: 1em 1em 1em 0;
       position: relative;
 
-      @media screen and (min-width: 768px) {
-        font-size: 1.5em;
-        padding: 2em 1em 2em 0;
-      }
-
       &::before {
+        @include media-breakpoint-up(md) {
+          top: 1em;
+        }
         border-bottom: 5px solid $black;
         content: '';
         height: 5px;
@@ -174,10 +174,6 @@
         position: absolute;
         top: 0.5em;
         width: 60px;
-
-        @media screen and (min-width: 768px) {
-          top: 1em;
-        }
       }
     }
 
