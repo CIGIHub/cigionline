@@ -9,16 +9,14 @@
   }
 
   .after-covid-series-article-hero {
-    @include link(
-      $color: $black,
-      $hover-color: $cigi-dark-pink,
-    );
+    @include link($color: $black, $hover-color: $cigi-dark-pink);
     @include media-breakpoint-up(md) {
       @include link($color: $white, $hover-color: $cigi-dark-pink);
+      background-size: cover;
       color: $white;
       min-height: 40em;
     }
-    background-size: cover;
+    background-size: 0;
     color: $black;
     position: relative;
 
@@ -27,7 +25,9 @@
     }
 
     &::before {
-      background: linear-gradient(to right, #011321, transparent);
+      @include media-breakpoint-up(md) {
+        background: linear-gradient(to right, #011321, transparent);
+      }
       bottom: 0;
       content: '';
       height: 100%;
@@ -138,8 +138,10 @@
   }
 
   .article-image-hero {
-    @include media-breakpoint-up(md) {
-      display: none;
+    img {
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
     }
   }
 
