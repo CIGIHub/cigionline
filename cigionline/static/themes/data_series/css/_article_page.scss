@@ -216,4 +216,21 @@
       }
     }
   }
+
+  .drop-caps {
+    border: 0;
+    font-family: 'din-condensed', sans-serif;
+    position: relative;
+
+    &::after {
+      background: $data-series-primary-color;
+      bottom: 10%;
+      content: '';
+      height: 8px;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      z-index: -1;
+    }
+  }
 }
