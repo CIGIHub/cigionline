@@ -1,15 +1,3 @@
-.container-lg {
-  max-width: 67.5rem;
-}
-
-.container-md {
-  max-width: 55rem;
-}
-
-.container-sm {
-  max-width: 40rem;
-}
-
 .grid-container {
   @include display-grid;
 }

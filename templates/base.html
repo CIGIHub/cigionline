@@ -21,11 +21,17 @@
     {% endblock %}
     {% render_bundle 'cigionline' 'css' %}
     {% block extra_css %}
-      {# Override this in templates to add extra CSS #}
+      {# Override this in templates to add page-specific CSS #}
+    {% endblock %}
+    {% block theme_css %}
+      {# Override this in templates to add theme CSS #}
     {% endblock %}
     {% render_bundle 'cigionline' 'js' attrs='defer' %}
     {% block extra_js %}
-      {# Override this in templates to add extra JS #}
+      {# Override this in templates to add page-specific JS #}
+    {% endblock %}
+    {% block theme_js %}
+      {# Override this in templates to add theme JS #}
     {% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">

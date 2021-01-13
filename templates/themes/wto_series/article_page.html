@@ -1,0 +1,37 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/lll7tqi.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeWTOSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}wto-series-article{% endblock %}
+
+{% block hero %}
+  <section class="wto-series-article-hero">
+    {% image self.image_banner original %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1>{{ self.title }}</h1>
+          {% include "includes/authors.html" with authors=self.authors %}
+          {% include "includes/date.html" with date=self.publishing_date %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block in_the_series %}
+  {% if self.article_series %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
+  {% endif %}
+{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for WTO series articles #}
+{% endblock %}

@@ -1,38 +1,38 @@
-a {
-  color: $cigi-primary-colour;
-  text-decoration: none;
-  transition: color 0.2s ease;
+body {
+  a {
+    transition: color 0.2s ease;
+  }
 
-  &:hover {
-    color: $cigi-dark-pink;
-    text-decoration: none;
+  h2,
+  h3,
+  h4 {
+    font-weight: 400;
+    margin-bottom: 0.5em;
+  }
+
+  figcaption {
+    color: $cigi-text-grey;
+    font-size: 0.7em;
+    line-height: 1rem;
+    padding: 0.25em 0;
+    text-align: left;
   }
 }
 
-h2,
-h3,
-h4 {
-  margin-bottom: 0.5em;
-  margin-top: 1.5em;
-}
+.body {
+  h2,
+  h3,
+  h4 {
+    margin-top: 1.5em;
+  }
 
-h2 {
-  font-size: 1.3125em;
-  font-weight: 400;
-}
+  h4 {
+    color: $cigi-dark-grey;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
 
-h3 {
-  font-size: 1.125em;
-  font-weight: 400;
-}
-
-h4 {
-  color: $cigi-dark-grey;
-  font-size: 0.75em;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-ul {
-  padding-left: 1.75em;
+  ul {
+    padding-left: 1.75em;
+  }
 }

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
-{% block extra_css %}
+{% block theme_css %}
   {% render_bundle 'themeLongform' 'css' %}
 {% endblock %}
 
@@ -16,107 +16,125 @@
       </video>
     {% endif %}
     <div class="hero-content">
-      <div class="container-lg">
-        <h1>{{ self.title }}</h1>
-        <p class="cigi-essay-series">A CIGI Essay Series</p>
-        <p class="series-contributors-title">
-          Series Contributors:
-        </p>
-        <p class="series-contributors">
-          {% for block in self.series_items %}
-            {% if block.block_type == 'series_item' %}
-              {% if block.value.specific.authors %}
-                {% for author in block.value.specific.authors %}
-                  {% if author.block_type == 'author' %}
-                    <span>{{ author.value.title }}</span>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h1>{{ self.title }}</h1>
+            <p class="cigi-essay-series">A CIGI Essay Series</p>
+            <p class="series-contributors-title">
+              Series Contributors:
+            </p>
+            <p class="series-contributors">
+              {% for block in self.series_items %}
+                {% if block.block_type == 'series_item' %}
+                  {% if block.value.specific.authors %}
+                    {% for author in block.value.specific.authors %}
+                      {% if author.block_type == 'author' %}
+                        <span>{{ author.value.title }}</span>
+                      {% endif %}
+                    {% endfor %}
                   {% endif %}
-                {% endfor %}
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-        </p>
-        <div class="scroll-anchor">
-          <a href="#article-body">
-            <i class="far fa-angle-down"></i>
-          </a>
+                {% endif %}
+              {% endfor %}
+            </p>
+            <div class="scroll-anchor">
+              <a href="#article-body">
+                <i class="far fa-angle-down"></i>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
   {% if self.featured_items %}
     <section class="longform-article-series-featured">
-      <div class="container-lg">
-        <h2><span>Features</span></h2>
-        <div id="longform-featured-carousel" class="carousel slide" data-ride="carousel">
-          <ol class="carousel-indicators">
-            {% for featured_item in self.featured_items %}
-              <li data-target="#longform-featured-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
-            {% endfor %}
-          </ol>
-          <div class="carousel-inner">
-            {% for featured_item in self.featured_items %}
-              <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                {% image featured_item.value.specific.image_hero original as featured_item_banner %}
-                <div class="longform-article-series-featured-item" style="background-image: url('{{ featured_item_banner.url }}')">
-                  <div class="longform-article-series-featured-item-content">
-                    <h3><a href="{{ featured_item.value.url }}">{{ featured_item.value.title }}</a></h3>
-                    <p class="featured-item-authors">
-                      {% for author in featured_item.value.specific.authors %}
-                        {% if author.block_type == 'author' %}
-                          <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
-                        {% elif author.block_type == 'external_author' %}
-                          <span>{{ author.value }}</span>
-                        {% endif %}
-                      {% endfor %}
-                    </p>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h2><span>Features</span></h2>
+            <div id="longform-featured-carousel" class="carousel slide" data-ride="carousel">
+              <ol class="carousel-indicators">
+                {% for featured_item in self.featured_items %}
+                  <li data-target="#longform-featured-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                {% endfor %}
+              </ol>
+              <div class="carousel-inner">
+                {% for featured_item in self.featured_items %}
+                  <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                    {% image featured_item.value.specific.image_hero original as featured_item_banner %}
+                    <div class="longform-article-series-featured-item" style="background-image: url('{{ featured_item_banner.url }}')">
+                      <div class="longform-article-series-featured-item-content">
+                        <h3><a href="{{ featured_item.value.url }}">{{ featured_item.value.title }}</a></h3>
+                        <p class="featured-item-authors">
+                          {% for author in featured_item.value.specific.authors %}
+                            {% if author.block_type == 'author' %}
+                              <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                            {% elif author.block_type == 'external_author' %}
+                              <span>{{ author.value }}</span>
+                            {% endif %}
+                          {% endfor %}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                {% endfor %}
               </div>
-            {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </section>
   {% endif %}
   <section class="body" id="article-body">
-    <div class="container-lg">
-      <h2 class="about-series"><span>About the Series</span></h2>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h2 class="about-series">
+            <span>About the Series</span>
+          </h2>
+        </div>
+      </div>
     </div>
     {% for block in self.body %}
       {% include_block block %}
     {% endfor %}
   </section>
   <section class="longform-article-series-in-the-series">
-    <div class="container-lg">
-      <h2><span>In the Series</span></h2>
-      <div class="longform-article-series-in-the-series-items">
-        {% for block in self.series_items %}
-          {% if block.block_type == 'series_item' %}
-            <article>
-              <h4>
-                <a href="{{ block.value.url }}">
-                  {{ block.value.title }}
-                </a>
-              </h4>
-              <p class="authors">
-                Author{{ block.value.specific.authors|length|pluralize }}:
-                {% for author in block.value.specific.authors %}
-                  <span>
-                    {% if author.block_type == 'author' %}
-                      <a href="{{ author.value.url }}">
-                        {{ author.value.title }}
-                      </a>
-                    {% elif author.block_type == 'external_author' %}
-                      {{ author.value }}
-                    {% endif %}
-                  </span>
-                {% endfor %}
-              </p>
-            </article>
-          {% elif block.block_type == 'category_title' %}
-            <h3>{{ block.value }}</h3>
-          {% endif %}
-        {% endfor %}
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h2><span>In the Series</span></h2>
+          <div class="longform-article-series-in-the-series-items">
+            {% for block in self.series_items %}
+              {% if block.block_type == 'series_item' %}
+                <article>
+                  <h4>
+                    <a href="{{ block.value.url }}">
+                      {{ block.value.title }}
+                    </a>
+                  </h4>
+                  <p class="authors">
+                    Author{{ block.value.specific.authors|length|pluralize }}:
+                    {% for author in block.value.specific.authors %}
+                      <span>
+                        {% if author.block_type == 'author' %}
+                          <a href="{{ author.value.url }}">
+                            {{ author.value.title }}
+                          </a>
+                        {% elif author.block_type == 'external_author' %}
+                          {{ author.value }}
+                        {% endif %}
+                      </span>
+                    {% endfor %}
+                  </p>
+                </article>
+              {% elif block.block_type == 'category_title' %}
+                <h3>{{ block.value }}</h3>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
       </div>
     </div>
   </section>

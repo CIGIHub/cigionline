@@ -1,5 +1,11 @@
 {% load wagtailembeds_tags %}
 
-<div class="container-sm tweet-block">
-  {% embed self.tweet_url %}
+<div class="container">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <div class="tweet-block">
+        {% embed self.tweet_url %}
+      </div>
+    </div>
+  </div>
 </div>

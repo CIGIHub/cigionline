@@ -8,11 +8,10 @@
   padding: 2em 0;
 
   a {
-    display: block;
-
-    @media screen and (min-width: $medium) {
+    @include media-breakpoint-up(md) {
       max-width: 40%;
     }
+    display: block;
   }
 
   h2 {
@@ -28,6 +27,8 @@
 }
 
 .innovation-series-in-the-series {
+  margin-bottom: 3em;
+
   h3 {
     color: $cigi-darkest-grey;
     font-size: 1.5em;
@@ -50,15 +51,14 @@
     display: flex;
 
     .article-data {
+      @include media-breakpoint-up(lg) {
+        padding-left: 20px;
+      }
       background-position: 100% 24px;
       background-repeat: no-repeat;
       background-size: 18%;
       flex-grow: 1;
       padding: 24px 0 24px 10px;
-
-      @media screen and (min-width: $large) {
-        padding-left: 20px;
-      }
 
       h5,
       p {
@@ -68,14 +68,13 @@
 
       h5 {
         @include link($color: $cigi-darkest-grey, $hover-color: $cigi-medium-grey);
+        @include media-breakpoint-up(lg) {
+          margin-bottom: 0.8em;
+        }
         font-size: 1.375em;
         font-weight: 500;
         line-height: 1.2;
         margin-bottom: 0.5em;
-
-        @media screen and (min-width: $large) {
-          margin-bottom: 0.8em;
-        }
       }
 
       p {
@@ -84,11 +83,10 @@
       }
 
       .article-subtitle {
-        display: none;
-
-        @media screen and (min-width: $large) {
+        @include media-breakpoint-up(lg) {
           display: block;
         }
+        display: none;
       }
 
       .authors {

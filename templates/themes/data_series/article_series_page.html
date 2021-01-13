@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
-{% block extra_css %}
+{% block theme_css %}
   {% render_bundle 'themeDataSeries' 'css' %}
 {% endblock %}
 
@@ -17,28 +17,32 @@
   {% endfor %}
 </section>
 <section class="data-series-article-series-in-the-series">
-  <div class="container-lg">
-    {% for block in self.series_items %}
-      {% if block.block_type == 'series_item' %}
-        <article>
-          <h4><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
-          <p class="authors">
-            {% if block.value.specific.authors %}
-              {% for author in block.value.specific.authors %}
-                <span>{{ author }}</span>
-              {% endfor %}
-            {% endif %}
-            {% if block.value.specific.speakers %}
-              {% for speaker in block.value.specific.speakers %}
-                <span>{{ speaker }}</span>
-              {% endfor %}
-            {% endif %}
-          </p>
-        </article>
-      {% elif block.block_type == 'category_title' %}
-        <h3>{{ block.value }}</h3>
-      {% endif %}
-    {% endfor %}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% for block in self.series_items %}
+          {% if block.block_type == 'series_item' %}
+            <article>
+              <h4><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
+              <p class="authors">
+                {% if block.value.specific.authors %}
+                  {% for author in block.value.specific.authors %}
+                    <span>{{ author }}</span>
+                  {% endfor %}
+                {% endif %}
+                {% if block.value.specific.speakers %}
+                  {% for speaker in block.value.specific.speakers %}
+                    <span>{{ speaker }}</span>
+                  {% endfor %}
+                {% endif %}
+              </p>
+            </article>
+          {% elif block.block_type == 'category_title' %}
+            <h3>{{ block.value }}</h3>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </section>
 {% endblock %}

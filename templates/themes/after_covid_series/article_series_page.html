@@ -1,47 +1,77 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/xfi6rry.css">
 {% endblock %}
-{% block extra_css %}
+{% block theme_css %}
   {% render_bundle 'themeAfterCovidSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeAfterCovidSeries' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block body_class %}after-covid-series-article-series{% endblock %}
 
 {% block content %}
   <section class="after-covid-series-article-series-hero">
-    <div class="container-md">
-      <h1>{{ self.title }}</h1>
-      <p>{{ self.short_description|richtext }}</p>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <div class="opinion-series-label">Opinion Series</div>
+          <h1>{{ self.title }}</h1>
+          <p>{{ self.short_description|richtext }}</p>
+        </div>
+      </div>
     </div>
   </section>
+  {% image self.image_banner original as image_hero %}
+  <div class="video-banner" style="background-image: url('{{ image_hero.url }}');"></div>
   <section class="after-covid-series-article-series-in-the-series">
-    <div class="container-md">
-      {% for block in self.series_items %}
-        {% if block.block_type == 'series_item' %}
-          <article>
-            <h3>
-              <a href="{{ block.value.url }}">{{ block.value.title }}</a>
-            </h3>
-            <p class="authors">
-              {% if block.value.specific.authors %}
-                {% for author in block.value.specific.authors %}
-                  <span>{{ author }}</span>
-                {% endfor %}
-              {% endif %}
-              {% if block.value.specific.speakers %}
-                {% for speaker in block.value.specific.speakers %}
-                  <span>{{ speaker }}</span>
-                {% endfor %}
-              {% endif %}
-            </p>
-          </article>
-        {% elif block.block_type == 'category_title' %}
-          <h2>{{ block.value }}</h2>
-        {% endif %}
-      {% endfor %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          {% for block in self.series_items %}
+            {% if block.block_type == 'series_item' %}
+              {% define block.value.specific|page_type as page_type %}
+              <article>
+                <div class="author-images block-{{page_type}}">
+                  {% if page_type == 'opinion' %}
+                    {% for author in block.value.specific.authors %}
+                    <a href="{{ author.value.url }}">
+                      {% image author.value.specific.image_square fill-100x100 %}
+                    </a>
+                    {% endfor %}
+                  {% elif page_type == 'multimedia' %}
+                    <a href="{{ block.value.url }}">
+                      <i class="fa fa-play-circle"></i>
+                    </a>
+                  {% endif %}
+                </div>
+                <div>
+                  <h3>
+                    <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                  </h3>
+                  <p class="authors">
+                    {% if block.value.specific.authors %}
+                      {% for author in block.value.specific.authors %}
+                        <span>{{ author }}</span>
+                      {% endfor %}
+                    {% endif %}
+                    {% if block.value.specific.speakers %}
+                      {% for speaker in block.value.specific.speakers %}
+                        <span>{{ speaker }}</span>
+                      {% endfor %}
+                    {% endif %}
+                  </p>
+                </div>
+              </article>
+            {% elif block.block_type == 'category_title' %}
+              <h2>{{ block.value }}</h2>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </section>
 {% endblock %}

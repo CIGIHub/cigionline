@@ -1,30 +1,14 @@
-{% extends "base.html" %}
+{% extends "multimedia/multimedia_page.html" %}
 {% load wagtailcore_tags webpack_loader %}
 
-{% block extra_css %}
-  {% render_bundle 'multimediaPage' 'css' %}
+{% block theme_css %}
   {% render_bundle 'themeInnovationSeries' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block body_class %}innovation-series-multimedia{% endblock %}
 
-{% block content %}
-  {% include "includes/hero_multimedia.html" %}
-  {% if self.body %}
-    <section class="body">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
-  {% endif %}
-  <section class="multimedia-disclaimer-section">
-    {% include 'includes/multimedia_disclaimer.html' %}
-    {% include 'includes/opinion_disclaimer.html' %}
-  </section>
+{% block in_the_series %}
   {% if self.article_series %}
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
   {% endif %}
-{% endblock content %}
+{% endblock %}
