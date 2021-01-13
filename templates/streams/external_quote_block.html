@@ -1,15 +1,17 @@
-<div class="stream-block stream-block-external-quote">
-  <div class="container-sm flex-row">
-    <div class="stream-block-external-quote-content">
-      <blockquote>
-        {{ self.quote }}
-      </blockquote>
+<div class="container">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <div class="stream-block-external-quote">
+        <blockquote>
+          {{ self.quote }}
+        </blockquote>
 
-      {% if self.source %}
-        <div class="stream-block-external-quote-source">
-          {{ self.source }}
-        </div>
-      {% endif %}
+        {% if self.source %}
+          <div class="stream-block-external-quote-source">
+            {{ self.source }}
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,20 @@
+section {
+  &.disclaimer {
+    margin-bottom: 2em;
+
+    .multimedia-disclaimer {
+      margin-bottom: 0.25em;
+    }
+
+    .opinion-disclaimer {
+      color: $cigi-text-grey;
+      font-size: 0.85em;
+      font-style: italic;
+      margin-bottom: 0;
+
+      &.with-multimedia {
+        font-size: 1em;
+      }
+    }
+  }
+}

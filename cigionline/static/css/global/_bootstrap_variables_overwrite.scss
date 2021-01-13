@@ -1,8 +1,13 @@
 //BOOTSTRAP OVERWRITE
 
-$container-max-widths: (
-  sm: 40rem,
-  md: 55rem,
-  lg: 67.5rem,
-  xl: 75rem
-);
+$font-family-base: 'futura-pt', sans-serif;
+$font-size-base: 1rem;
+$h1-font-size: $font-size-base * 2.5;
+$h2-font-size: $font-size-base * 1.3125;
+$h3-font-size: $font-size-base * 1.125;
+$h4-font-size: $font-size-base * 0.75;
+
+$link-color: #e6023b;
+$link-decoration: none;
+$link-hover-color: #bf0332;
+$link-hover-decoration: none;

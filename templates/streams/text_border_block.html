@@ -1,5 +1,11 @@
-<div class="container-sm text-border-block">
-  <div class="block-contents" {% if self.border_color|length %} style="border-color:{{ self.border_color}}" {% endif %}>
-    {{ self.text|safe }}
+<div class="container">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <div class="text-border-block">
+        <div class="block-contents" {% if self.border_color|length %} style="border-color:{{ self.border_color}}" {% endif %}>
+          {{ self.text|safe }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
