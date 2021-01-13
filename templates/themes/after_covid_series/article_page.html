@@ -50,9 +50,11 @@
     <figure class="article-image-hero">
       {% image self.image_hero width-768 %}
       {% if self.image_hero.title %}
+      <div class="container">
         <figcaption>
           {{ self.image_hero.title }}
         </figcaption>
+      </div>
       {% endif %}
     </figure>
   {% endif %}
