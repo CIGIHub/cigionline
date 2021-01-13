@@ -1,8 +1,5 @@
 .ai-series-article {
-  @include top-bar(
-    $background-color: transparent,
-    $background-color-scrolled: $black,
-  );
+  @include top-bar($background-color: transparent, $background-color-scrolled: $black);
 
   .ai-series-article-hero {
     @include media-breakpoint-up(md) {
@@ -83,6 +80,16 @@
       &::after {
         content: none;
       }
+    }
+  }
+
+  .series-blurb {
+    color: $cigi-text-grey;
+    margin-bottom: 2em;
+
+    a {
+      color: $color--blue;
+      text-decoration: underline;
     }
   }
 
