@@ -26,6 +26,9 @@
     position: relative;
 
     &::after {
+      @include media-breakpoint-up(md) {
+        background-color: transparent;
+      }
       background-color: $innovation-series-background-color;
       content: '';
       height: 100%;
@@ -35,21 +38,16 @@
       top: 0;
       width: 100%;
       z-index: 1;
-
-      @media screen and (min-width: $medium) {
-        background-color: transparent;
-      }
     }
 
     .hero-content {
+      @include media-breakpoint-up(md) {
+        top: 30%;
+      }
       position: fixed;
       top: 15%;
       width: 100%;
       z-index: 3;
-
-      @media screen and (min-width: $medium) {
-        top: 30%;
-      }
 
       h1,
       p {
@@ -97,16 +95,15 @@
     }
 
     .video-background {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
       display: none;
       left: 0;
       min-height: 100%;
       min-width: 100%;
       position: fixed;
       top: 0;
-
-      @media screen and (min-width: $medium) {
-        display: block;
-      }
     }
   }
 
@@ -141,16 +138,15 @@
       width: 100%;
 
       .innovation-series-article-series-featured-item-content {
+        @include media-breakpoint-up(md) {
+          padding: 0 6em;
+        }
         left: 0;
         max-width: 600px;
         padding: 0 1em;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-
-        @media screen and (min-width: $medium) {
-          padding: 0 6em;
-        }
 
         h3 {
           @include link($color: $cigi-darkest-grey, $hover-color: $cigi-text-grey);
@@ -179,15 +175,14 @@
       display: flex;
 
       .article-data {
+        @include media-breakpoint-up(lg) {
+          padding-left: 20px;
+        }
         background-position: 100% 24px;
         background-repeat: no-repeat;
         background-size: 18%;
         flex-grow: 1;
         padding: 24px 0 24px 10px;
-
-        @media screen and (min-width: $large) {
-          padding-left: 20px;
-        }
 
         h5,
         p {
@@ -197,14 +192,13 @@
 
         h5 {
           @include link($color: $cigi-darkest-grey, $hover-color: $cigi-medium-grey);
+          @include media-breakpoint-up(lg) {
+            margin-bottom: 0.8em;
+          }
           font-size: 1.375em;
           font-weight: 500;
           line-height: 1.2;
           margin-bottom: 0.5em;
-
-          @media screen and (min-width: $large) {
-            margin-bottom: 0.8em;
-          }
         }
 
         p {
@@ -213,11 +207,10 @@
         }
 
         .article-subtitle {
-          display: none;
-
-          @media screen and (min-width: $large) {
+          @include media-breakpoint-up(lg) {
             display: block;
           }
+          display: none;
         }
 
         .authors {

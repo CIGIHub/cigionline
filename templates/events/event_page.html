@@ -9,14 +9,20 @@
   {% include "includes/hero_event.html" with topics=self.topics title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display speakers=self.speakers registration_url=self.registration_url %}
 
   {% if self.image_hero %}
-    <figure class="container-sm event-image-hero">
-      {% image self.image_hero width-1280 %}
-      {% if self.image_hero.title %}
-        <figcaption>
-          {{ self.image_hero.title }}
-        </figcaption>
-      {% endif %}
-    </figure>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <figure class="event-image-hero">
+            {% image self.image_hero width-1280 %}
+            {% if self.image_hero.title %}
+              <figcaption>
+                {{ self.image_hero.title }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
   {% endif %}
 
   {% if self.body %}
