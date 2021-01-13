@@ -47,20 +47,14 @@
     </div>
   </section>
   {% if self.image_hero %}
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <figure class="article-image-hero">
-            {% image self.image_hero width-768 %}
-            {% if self.image_hero.title %}
-              <figcaption>
-                {{ self.image_hero.title }}
-              </figcaption>
-            {% endif %}
-          </figure>
-        </div>
-      </div>
-    </div>
+    <figure class="article-image-hero">
+      {% image self.image_hero width-768 %}
+      {% if self.image_hero.title %}
+        <figcaption>
+          {{ self.image_hero.title }}
+        </figcaption>
+      {% endif %}
+    </figure>
   {% endif %}
   <section class="body">
     {% for block in self.body %}
