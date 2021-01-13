@@ -162,4 +162,48 @@
       }
     }
   }
+
+  .article-header-sticky {
+    background: $divider-grey;
+    height: 0;
+    opacity: 0;
+    transition: height 0.5s ease, opacity 0.5s ease;
+
+    &.scrolled {
+      height: auto;
+      opacity: 1;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
+
+    .container-lg {
+      align-items: center;
+      display: flex;
+      padding: 0.5em;
+    }
+
+    .cigi-logo {
+      flex: 0 0 135px;
+    }
+
+    .series-title {
+      display: flex;
+      flex: 1;
+      font-size: .8em;
+      justify-content: center;
+      line-height: 1.5em;
+      margin-left: -135px;
+
+      span {
+        font-weight: 600;
+        padding-right: 0.3em;
+      }
+    }
+
+    .progress-bar {
+      background: $data-series-primary-color;
+    }
+  }
 }
