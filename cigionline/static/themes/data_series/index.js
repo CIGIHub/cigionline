@@ -13,9 +13,8 @@ window.addEventListener('load', function() {
 window.addEventListener('scroll', function() {
   const scrollTop = document.querySelector('html').scrollTop;
 
-  const scrolled = (scrollTop / docHeight) * 100;
+  const scrolled = (scrollTop / docHeight) * 100 + '%';
   document.querySelector('progress').style.width = scrolled;
-  scrolled = scrolled + '%';
 
   if (scrollTop > headerHeight) {
     stickyHeader.classList.add('scrolled');
