@@ -2,37 +2,41 @@
 
 {% image article_series.image_banner original as image_banner %}
 <section class="ai-series-in-the-series" style="background-image: url('{{ image_banner.url }}')">
-  <div class="container-md">
-    <article>
-      <div class="row">
-        <div class="col-md-8 col-lg-6">
-          <div class="essay-series-label">A CIGI Essay Series</div>
-          <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
-        </div>
-        <div class="col-md-4 col-lg-5 offset-lg-1 series-contributors">
-          <div class="contributors-label">Contributors</div>
-          <ul>
-            {% for item in article_series.series_contributors_by_article %}
-              <li>
-                <a href="{{ item.item.url }}">
-                  <ul class="authors">
-                    {% for contributor in item.contributors %}
-                      <li>
-                        {{ contributor.value.title }}
-                      </li>
-                    {% endfor %}
-                  </ul>
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-lg-10">
+        <article>
+          <div class="row">
+            <div class="col-md-8 col-lg-6">
+              <div class="essay-series-label">A CIGI Essay Series</div>
+              <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
+            </div>
+            <div class="col-md-4 col-lg-5 offset-lg-1 series-contributors">
+              <div class="contributors-label">Contributors</div>
+              <ul>
+                {% for item in article_series.series_contributors_by_article %}
+                  <li>
+                    <a href="{{ item.item.url }}">
+                      <ul class="authors">
+                        {% for contributor in item.contributors %}
+                          <li>
+                            {{ contributor.value.title }}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col short-description">
+              {{ article_series.short_description|richtext }}
+            </div>
+          </div>
+        </article>
       </div>
-      <div class="row">
-        <div class="col short-description">
-          {{ article_series.short_description|richtext }}
-        </div>
-      </div>
-    </article>
+    </div>
   </div>
 </section>

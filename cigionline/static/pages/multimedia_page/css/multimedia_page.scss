@@ -1,9 +1,10 @@
-@import '../../../css/global/variables';
 @import '../../../css/global/mixins';
 @import '../../../css/global/animations/slide_down';
 @import '../../../css/includes/hero_multimedia';
 
 .multimedia-series-block {
+  margin: 3em 0;
+
   article {
     border-top: 1px solid $cigi-dark-grey;
     padding-top: 1em;
@@ -11,10 +12,12 @@
     h2 {
       font-size: 1em;
       font-weight: 700;
+      margin-top: 0;
     }
 
     p {
       line-height: 1.25em;
+      margin-bottom: 0;
     }
   }
 }

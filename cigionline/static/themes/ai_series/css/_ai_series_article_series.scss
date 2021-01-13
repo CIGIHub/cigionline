@@ -8,35 +8,32 @@
 
     h1 {
       @include link($color: $white, $hover-color: $cigi-dark-pink);
+      @include media-breakpoint-up(md) {
+        font-size: 3.5em;
+      }
       font-family: $ai-acumin;
       font-size: 2em;
       font-weight: 800;
       line-height: 1;
       margin: 0 1em 0 0;
       text-transform: uppercase;
-
-      @media screen and (min-width: 768px) {
-        font-size: 3.5em;
-      }
     }
 
     .hero-content {
-      padding-bottom: 1em;
-      padding-top: 3em;
-
-      @media screen and (min-width: 768px) {
+      @include media-breakpoint-up(md) {
         padding-bottom: 4em;
         padding-top: 4em;
       }
+      padding-bottom: 1em;
+      padding-top: 3em;
 
       .social-share-list-square {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
-        justify-content: left;
-        margin-bottom: 1em;
-
-        @media screen and (min-width: 768px) {
+        @include media-breakpoint-up(md) {
           margin-bottom: 0;
         }
+        justify-content: left;
+        margin-bottom: 1em;
 
         a {
           font-size: 1.3em;
@@ -50,11 +47,10 @@
       }
 
       .contributors-label {
-        margin-top: 1.7em;
-
-        @media screen and (min-width: 768px) {
+        @include media-breakpoint-up(md) {
           margin-top: 1em;
         }
+        margin-top: 1.7em;
       }
 
       .series-contributors {
@@ -92,15 +88,14 @@
     }
 
     h3 {
+      @include media-breakpoint-up(md) {
+        font-size: 1.8em;
+        width: 60%;
+      }
       font-size: 1.5em;
       font-weight: 600;
       line-height: 1.1em;
       width: 90%;
-
-      @media screen and (min-width: 768px) {
-        font-size: 1.8em;
-        width: 60%;
-      }
     }
 
     h3,
@@ -124,6 +119,10 @@
       }
 
       .background-image {
+        @include media-breakpoint-up(md) {
+          background-size: auto 100%;
+          opacity: 1;
+        }
         background-position: right bottom;
         background-repeat: no-repeat;
         background-size: auto 100%;
@@ -133,22 +132,16 @@
         position: absolute;
         right: 0;
         top: 0;
-
-        @media screen and (min-width: 768px) {
-          background-size: auto 100%;
-          opacity: 1;
-        }
       }
 
       .authors-container {
+        @include media-breakpoint-up(md) {
+          width: 70%;
+        }
         align-items: center;
         display: flex;
         width: 100%;
         z-index: 1;
-
-        @media screen and (min-width: 768px) {
-          width: 70%;
-        }
 
         i {
           font-size: 2em;
