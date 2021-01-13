@@ -49,12 +49,12 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "resolve-url-loader": "3.1.2",
-    "sass": "1.32.0",
+    "sass": "1.32.4",
     "sass-lint": "1.13.1",
-    "sass-loader": "10.1.0",
+    "sass-loader": "10.1.1",
     "source-map-loader": "2.0.0",
     "style-loader": "2.0.0",
-    "webpack": "5.11.1",
+    "webpack": "5.13.0",
     "webpack-bundle-tracker": "0.4.3",
     "webpack-cli": "4.3.1"
   }

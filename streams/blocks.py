@@ -405,6 +405,10 @@ class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
 
+    implemented_themes = [
+        'data_series_opinion',
+    ]
+
     def get_template(self, context, *args, **kwargs):
         standard_template = super(PullQuoteLeftBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'pull_quote_left_block')
@@ -424,6 +428,10 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
     )
     quote_author = blocks.CharBlock(required=False)
     author_title = blocks.CharBlock(required=False)
+
+    implemented_themes = [
+        'data_series_opinion',
+    ]
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(PullQuoteRightBlock, self).get_template(context, *args, **kwargs)

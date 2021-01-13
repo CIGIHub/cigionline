@@ -1,12 +1,9 @@
 section {
   &.publication-hero-book {
-    color: $white;
-
-    .hero-container {
-      @include breakpoint($medium) {
-        padding-top: 6em;
-      }
+    @include media-breakpoint-up(md) {
+      padding-top: 6em;
     }
+    color: $white;
 
     .topics {
       @include link($color: $white, $hover-color: $cigi-primary-colour);

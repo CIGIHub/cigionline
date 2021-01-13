@@ -11,48 +11,56 @@
 {% block content %}
   {% image self.image_banner original as image_hero %}
   <section class="hero" style="background-image: url('{{ image_hero.url }}');">
-    <div class="container-sm">
-      <div class="hero-content">
-        {% include "includes/topics.html" with topics=self.topics %}
-        <h1><span>{{ self.title }}</span></h1>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="hero-content">
+            {% include "includes/topics.html" with topics=self.topics %}
+            <h1><span>{{ self.title }}</span></h1>
+          </div>
+        </div>
       </div>
     </div>
   </section>
   <section class="meta-section">
-    <div class="container-sm">
-      <div class="social">
-        <ul>
-          <li>
-            <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-              <i class="fab fa-facebook-square icon"></i>
-            </a>
-          </li>
-          <li>
-            <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </li>
-          <li>
-            <a href="mailto:?subject={{self.title}}&body=From the Centre for International Governance Innovation: {{self.title}} ({{ request.build_absolute_uri|slice:':-1' }})">
-              <i class="fa fa-envelope"></i>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:window.print()">
-              <i class="fa fa-print"></i>
-            </a>
-          </li>
-        </ul>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 social">
+          <ul>
+            <li>
+              <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+                <i class="fab fa-facebook-square icon"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </li>
+            <li>
+              <a href="mailto:?subject={{self.title}}&body=From the Centre for International Governance Innovation: {{self.title}} ({{ request.build_absolute_uri|slice:':-1' }})">
+                <i class="fa fa-envelope"></i>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:window.print()">
+                <i class="fa fa-print"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="meta">
-        <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
-        <p>
-          Author{{self.authors|length|pluralize}}:
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 meta">
+          <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
+          <p>
+            Author{{self.authors|length|pluralize}}:
 
-          {% for author in self.authors %}
-            <span class="author">{{author}}</span>
-          {% endfor %}
-        </p>
+            {% for author in self.authors %}
+              <span class="author">{{author}}</span>
+            {% endfor %}
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -63,24 +71,30 @@
   </section>
   {% if self.footnotes %}
     <section class="article-footnotes">
-      <div class="container-sm">
-        <div class="footnotes">
-          {{ self.footnotes|richtext }}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
         </div>
       </div>
     </section>
   {% endif %}
   {% if self.works_cited %}
     <section class="article-works-cited">
-      <div class="container-sm">
-        <h2>Works Cited</h2>
-        {{ self.works_cited|richtext }}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Works Cited</h2>
+            {{ self.works_cited|richtext }}
+          </div>
+        </div>
       </div>
     </section>
   {% endif %}
-  <section>
-    {% include 'includes/opinion_disclaimer.html' %}
-  </section>
+  {% include 'includes/disclaimer.html' %}
   {% if self.is_opinion and self.authors|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
