@@ -13,9 +13,9 @@
 {% block content %}
   {% image self.image_banner original as image_hero %}
   <section class="health-security-series-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
-    <div class="container-sm">
+    <div class="container">
       <div class="row justify-content-md-center">
-        <div class="col">
+        <div class="col col-md-10 col-lg-8">
           {% include "includes/social_links.html" with title=self.title %}
           <h1>{{ self.title }}</h1>
           <div class="short-description">
@@ -26,45 +26,53 @@
     </div>
   </section>
   <section class="health-security-series-article-series-in-the-series">
-    <div class="container-md">
-      {% for block in self.series_items %}
-        {% if block.block_type == 'series_item' %}
-          <article>
-            <h3>
-              <a href="{{ block.value.url }}">{{ block.value.title }}</a>
-            </h3>
-            <p class="authors">
-              {% if block.value.specific.authors %}
-                {% for author in block.value.specific.authors %}
-                  {% if author.block_type == 'author' %}
-                    <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
-                  {% elif author.block_type == 'external_author' %}
-                    <span>{{ author.value }}</span>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-lg-10">
+          {% for block in self.series_items %}
+            {% if block.block_type == 'series_item' %}
+              <article>
+                <h3>
+                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                </h3>
+                <p class="authors">
+                  {% if block.value.specific.authors %}
+                    {% for author in block.value.specific.authors %}
+                      {% if author.block_type == 'author' %}
+                        <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                      {% elif author.block_type == 'external_author' %}
+                        <span>{{ author.value }}</span>
+                      {% endif %}
+                    {% endfor %}
                   {% endif %}
-                {% endfor %}
-              {% endif %}
-              {% if block.value.specific.speakers %}
-                {% for speaker in block.value.specific.speakers %}
-                  {% if speaker.block_type == 'speaker' %}
-                    <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
-                  {% elif speaker.block_type == 'external_speaker' %}
-                    <span>{{ speaker.value }}</span>
+                  {% if block.value.specific.speakers %}
+                    {% for speaker in block.value.specific.speakers %}
+                      {% if speaker.block_type == 'speaker' %}
+                        <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
+                      {% elif speaker.block_type == 'external_speaker' %}
+                        <span>{{ speaker.value }}</span>
+                      {% endif %}
+                    {% endfor %}
                   {% endif %}
-                {% endfor %}
-              {% endif %}
-            </p>
-          </article>
-        {% elif block.block_type == 'category_title' %}
-          <h2>{{ block.value }}</h2>
-        {% endif %}
-      {% endfor %}
+                </p>
+              </article>
+            {% elif block.block_type == 'category_title' %}
+              <h2>{{ block.value }}</h2>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </section>
   <section class="health-security-series-article-series-credits">
-    <div class="container-md">
-      <h2>Credits</h2>
-      <div class="health-security-series-article-series-credits-content">
-        {{ self.credits|richtext }}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-lg-10">
+          <h2>Credits</h2>
+          <div class="health-security-series-article-series-credits-content">
+            {{ self.credits|richtext }}
+          </div>
+        </div>
       </div>
     </div>
   </section>

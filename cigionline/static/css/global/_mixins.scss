@@ -1,3 +1,10 @@
+@import './bootstrap_variables_overwrite';
+
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/bootstrap';
+
+@import './variables';
+
 @mixin top-bar(
   $background-color: $black,
   $background-color-medium: $background-color,
@@ -6,15 +13,14 @@
   $color-medium: $color,
   $hover-color: $cigi-primary-colour,
   $hover-color-medium: $hover-color,
-  $position: fixed,
+  $position: fixed
 ) {
   header {
-    background-color: $background-color;
-    position: $position;
-
-    @media screen and (min-width: $medium) {
+    @include media-breakpoint-up(md) {
       background-color: $background-color-medium;
     }
+    background-color: $background-color;
+    position: $position;
 
     &.scrolled {
       background-color: $background-color-scrolled;
@@ -23,11 +29,10 @@
     .cigi-top-bar {
       .cigi-logo {
         svg {
-          fill: $color;
-
-          @media screen and (min-width: $medium) {
+          @include media-breakpoint-up(md) {
             fill: $color-medium;
           }
+          fill: $color;
         }
       }
 
@@ -35,18 +40,16 @@
         ul {
           a,
           button {
-            color: $color;
-
-            @media screen and (min-width: $medium) {
+            @include media-breakpoint-up(md) {
               color: $color-medium;
             }
+            color: $color;
 
             &:hover {
-              color: $hover-color;
-
-              @media screen and (min-width: $medium) {
+              @include media-breakpoint-up(md) {
                 color: $hover-color-medium;
               }
+              color: $hover-color;
             }
           }
         }
@@ -65,15 +68,23 @@
   }
 }
 
-@mixin breakpoint($size) {
-  @media screen and (min-width: $size) {
-    @content;
-  }
-}
-
 @mixin display-grid {
   display: -ms-grid;
   display: grid; // sass-lint:disable-line no-duplicate-properties
+}
+
+@mixin list($separator: ', ') {
+  &:not(:only-child) {
+    &::after {
+      content: $separator;
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
 }
 
 @mixin comma-separated {
@@ -119,12 +130,6 @@
   }
 }
 
-@mixin hide-breakpoint-down($breakpoint) {
-  @include media-breakpoint-down($breakpoint) {
-    display: none;
-  }
-}
-
 // IMAGES
 
 @mixin aspect-ratio($width, $height) {
@@ -149,14 +154,6 @@
     right: 0;
     top: 0;
   }
-}
-
-@mixin image-caption {
-  color: $cigi-text-grey;
-  font-size: 0.7em;
-  line-height: 1rem;
-  padding: 0.25em 0;
-  text-align: left;
 }
 
 @mixin hover-darken {
@@ -251,4 +248,69 @@
   justify-content: center;
   line-height: 1.15em;
   width: $circle-size;
+}
+
+@mixin light-footer {
+  footer {
+    background: $white;
+    color: $black;
+
+    .logo-container,
+    .footer-bracket,
+    .highlighted-topics {
+      display: none;
+    }
+
+    .footer-content {
+      form {
+        position: relative;
+
+        input {
+          border-bottom: 2px solid $black;
+
+          &[type='email'] {
+            background: $white;
+            color: $black;
+            width: 100%;
+          }
+
+          &::placeholder {
+            color: $black;
+          }
+        }
+
+        button {
+          background: none;
+          border: 0;
+          bottom: 8px;
+          color: $black;
+          font-size: 0;
+          position: absolute;
+          right: 0;
+          transition: color 0.2s ease;
+          width: auto;
+
+          i {
+            font-size: 1.2rem;
+          }
+
+          &:hover {
+            color: $cigi-dark-pink;
+          }
+        }
+      }
+
+      .footer-menu {
+        @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      }
+
+      .copyright {
+        color: $cigi-text-grey;
+      }
+
+      .social-links {
+        @include link($color: $black, $hover-color: $cigi-dark-pink);
+      }
+    }
+  }
 }

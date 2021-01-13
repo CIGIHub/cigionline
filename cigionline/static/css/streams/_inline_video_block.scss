@@ -1,5 +1,6 @@
 .stream-block-inline-video {
   @include video-aspect-ratio(4, 3);
+  margin: 2em 0;
 
   .stream-block-inline-video-content {
     @include hover-darken;

@@ -9,11 +9,15 @@
   .hero {
     background-position: center;
     background-size: cover;
-    margin: 0 0 1em;
+    margin: 0;
     min-height: 25em;
+    padding-top: 6em;
     position: relative;
 
     &::after {
+      @include media-breakpoint-up(lg) {
+        background-color: transparent;
+      }
       background-color: $data-series-background-color;
       content: '';
       height: 100%;
@@ -22,10 +26,6 @@
       position: absolute;
       top: 0;
       width: 100%;
-
-      @media screen and (min-width: $large) {
-        background-color: transparent;
-      }
     }
 
     .hero-content {
@@ -94,11 +94,66 @@
     }
   }
 
+  .stream-block-pull-quote {
+    @include media-breakpoint-up(md) {
+      width: 30%;
+    }
+    font-weight: 500;
+    margin-bottom: 1em;
+    position: relative;
+
+    &::before {
+      bottom: 0;
+      content: '';
+      height: 50%;
+      position: absolute;
+    }
+
+    blockquote {
+      background: transparent;
+      border-bottom: 1px solid $data-series-primary-color;
+      border-left: 0;
+      margin: 0;
+    }
+
+    &.right {
+      margin-left: 1em;
+      padding-left: 1em;
+
+      &::before {
+        border-left: 0.85em solid $data-series-primary-color;
+        left: 0;
+      }
+
+      blockquote {
+        border-left: 0.85em solid $data-series-primary-color;
+        padding: 0 0 0 0.5em;
+      }
+    }
+
+    &.left {
+      margin-right: 1em;
+      padding-right: 1em;
+
+      &::before {
+        border-right: 0.85em solid $data-series-primary-color;
+        right: 0;
+      }
+
+      blockquote {
+        border-left: 0;
+        border-right: 0.85em solid $data-series-primary-color;
+        padding: 0 0.5em 0 0;
+      }
+    }
+  }
+
   h3 {
     font-family: 'din-condensed', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.225em;
     font-weight: 400;
-    margin-bottom: .625rem;
+    margin-bottom: .4285em;
+    margin-top: 1em;
   }
 
   hr {
@@ -120,8 +175,8 @@
     }
   }
 
-  .stream-block-image {
-    .stream-block-image-caption {
+  .stream-image-block {
+    figcaption {
       border-left: solid 5px $data-series-primary-color;
       color: $cigi-dark-grey;
       font-size: .85rem;
@@ -131,35 +186,70 @@
   }
 
   .text-border-block {
+    h3 {
+      margin-bottom: .5em;
+      margin-top: 1em;
+    }
+
     .block-contents {
       border: solid 1px $data-series-primary-color;
       font-size: 1.0625em;
       line-height: 1.5em;
       padding: 1.5em 1.75em;
+    }
+  }
 
-      ul {
-        padding-left: 1.5em;
+  .body {
+    ul {
+      padding-left: 1.5em;
+    }
+
+    li {
+      line-height: 1.25em;
+      list-style: none;
+      margin-left: 1em;
+      padding-bottom: 0;
+      position: relative;
+
+      &::before {
+        background: $data-series-primary-color;
+        border-radius: .5em;
+        content: '';
+        display: block;
+        height: .5em;
+        left: -1.5em;
+        position: absolute;
+        top: .5em;
+        width: .5em;
       }
+    }
+  }
 
-      li {
-        line-height: 1.25em;
-        list-style: none;
-        margin-left: 1em;
-        padding-bottom: 0;
-        position: relative;
+  .about-the-author {
+    margin: 3em 0;
 
-        &::before {
-          background: $data-series-primary-color;
-          border-radius: .5em;
-          content: '';
-          display: block;
-          height: .5em;
-          left: -1.5em;
-          position: absolute;
-          top: .5em;
-          width: .5em;
-        }
-      }
+    h3 {
+      border: 0;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  .drop-caps {
+    border: 0;
+    font-family: 'din-condensed', sans-serif;
+    position: relative;
+
+    &::after {
+      background: $data-series-primary-color;
+      bottom: 10%;
+      content: '';
+      height: 8px;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      z-index: -1;
     }
   }
 }

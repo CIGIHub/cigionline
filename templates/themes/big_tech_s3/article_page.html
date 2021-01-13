@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{% extends "articles/article_page.html" %}
 
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
 {% endblock extra_fonts %}
-{% block extra_css %}
+{% block theme_css %}
   {% render_bundle 'themeBigTechS3' 'css' %}
 {% endblock %}
-{% block extra_js %}
+{% block theme_js %}
   {% render_bundle 'themeBigTechS3' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -17,68 +17,76 @@
 {% block header %}
   <div class="big-tech-hero">
     {% include "./includes/top_bar.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
-    <div class="container-sm big-tech-article-hero">
-      {% include "includes/topics.html" with topics=self.topics %}
-      <h1>{{ self.title }}</h1>
-      {% include "includes/authors.html" with authors=self.authors %}
-      {% include "includes/date.html" with date=self.publishing_date %}
-      {% include "includes/social_links.html" with title=self.title no_circle=True %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 big-tech-article-hero">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1>{{ self.title }}</h1>
+          {% include "includes/authors.html" with authors=self.authors %}
+          {% include "includes/date.html" with date=self.publishing_date %}
+          {% include "includes/social_links.html" with title=self.title no_circle=True %}
+        </div>
+      </div>
     </div>
   </div>
 {% endblock header %}
 
-{% block content %}
-  <section class="body">
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
-  <section>
-    {% include 'includes/opinion_disclaimer.html' %}
-  </section>
-  {% if self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
-  {% endif %}
+{% block hero %}
+  {# Remove hero section #}
+{% endblock %}
+
+{% block in_the_series %}
   {% if self.multimedia_series %}
     <section class="about-the-podcast">
-      <div class="container-sm about-the-podcast-content">
-        <div class="about">
-          <h2>About the Podcast</h2>
-          <a href="{{ self.multimedia_series.url }}">
-            {% image self.multimedia_series.specific.image_logo width-500 %}
-          </a>
-        </div>
-        <div class="spacer">
-          <div class="slash"></div>
-        </div>
-        <div class="subscribe">
-          <h2>Subscribe</h2>
-          <div class="subscribe-links">
-            <a class="apple" href="{{ self.multimedia_series.specific.podcast_apple_url }}" target="_blank" rel="noopener noreferrer">
-              {% include "./includes/apple_podcasts_icon.svg" %}
-            </a>
-            <a class="spotify" href="{{ self.multimedia_series.specific.podcast_spotify_url }}" target="_blank" rel="noopener noreferrer">
-              {% include "./includes/spotify_podcasts_icon.svg" %}
-            </a>
-            <a class="google" href="{{ self.multimedia_series.specific.podcast_google_url }}" target="_blank" rel="noopener noreferrer">
-              {% include "./includes/google_podcasts_icon.svg" %}
-            </a>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8 about-the-podcast-content">
+            <div class="about">
+              <h2>About the Podcast</h2>
+              <a href="{{ self.multimedia_series.url }}">
+                {% image self.multimedia_series.specific.image_logo width-500 %}
+              </a>
+            </div>
+            <div class="spacer">
+              <div class="slash"></div>
+            </div>
+            <div class="subscribe">
+              <h2>Subscribe</h2>
+              <div class="subscribe-links">
+                <a class="apple" href="{{ self.multimedia_series.specific.podcast_apple_url }}" target="_blank" rel="noopener noreferrer">
+                  {% include "./includes/apple_podcasts_icon.svg" %}
+                </a>
+                <a class="spotify" href="{{ self.multimedia_series.specific.podcast_spotify_url }}" target="_blank" rel="noopener noreferrer">
+                  {% include "./includes/spotify_podcasts_icon.svg" %}
+                </a>
+                <a class="google" href="{{ self.multimedia_series.specific.podcast_google_url }}" target="_blank" rel="noopener noreferrer">
+                  {% include "./includes/google_podcasts_icon.svg" %}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   {% endif %}
+{% endblock %}
+
+{% block recommended %}
   {% if self.recommended.all %}
     <section class="big-tech-recommended">
-      <div class="container-sm">
-        <h2>Recommended</h2>
-        {% for recommended_content in self.recommended.all %}
-          {% include "./includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
-        {% endfor %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Recommended</h2>
+            {% for recommended_content in self.recommended.all %}
+              {% include "./includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
+            {% endfor %}
+          </div>
+        </div>
       </div>
     </section>
   {% endif %}
-{% endblock content %}
+{% endblock %}
 
 {% block footer %}
   {% include "./includes/footer.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}

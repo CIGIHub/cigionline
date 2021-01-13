@@ -1,97 +1,103 @@
-{% extends "base.html" %}
+{% extends "articles/article_page.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
-{% block extra_css %}
+{% block theme_css %}
   {% render_bundle 'themeLongform' 'css' %}
 {% endblock %}
 
 {% block body_class %}longform-article{% endblock %}
 
-{% block content %}
+{% block hero %}
   {% image self.image_banner original as image_hero %}
   <section class="hero" style="background-image: url('{{ image_hero.url }}');">
-    <div class="container-sm">
-      <div class="hero-content">
-        {% include "includes/topics.html" with topics=self.topics %}
-        <h1><span>{{ self.title }}</span></h1>
-        <div class="subtitle">
-          {{ self.subtitle|richtext }}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 hero-content">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1><span>{{ self.title }}</span></h1>
+          <div class="subtitle">
+            {{ self.subtitle|richtext }}
+          </div>
         </div>
       </div>
     </div>
   </section>
   <section class="meta-section">
-    <div class="container-sm">
-      <div class="meta">
-        <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
-        <p>
-          Author{{self.authors|length|pluralize}}:
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 meta">
+          <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
+          <p>
+            Author{{self.authors|length|pluralize}}:
 
-          {% for author in self.authors %}
-            <span class="author">{{author}}</span>
-          {% endfor %}
-        </p>
+            {% for author in self.authors %}
+              <span class="author">{{author}}</span>
+            {% endfor %}
+          </p>
+        </div>
       </div>
-      <div class="social">
-        <ul>
-          <li>
-            <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-              <i class="fab fa-facebook-square icon"></i>
-            </a>
-          </li>
-          <li>
-            <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </li>
-          <li>
-            <a href="mailto:?subject={{self.title}}&body=From the Centre for International Governance Innovation: {{self.title}} ({{ request.build_absolute_uri|slice:':-1' }})">
-              <i class="fa fa-envelope"></i>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:window.print()">
-              <i class="fa fa-print"></i>
-            </a>
-          </li>
-        </ul>
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 social">
+          <ul>
+            <li>
+              <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+                <i class="fab fa-facebook-square icon"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </li>
+            <li>
+              <a href="mailto:?subject={{self.title}}&body=From the Centre for International Governance Innovation: {{self.title}} ({{ request.build_absolute_uri|slice:':-1' }})">
+                <i class="fa fa-envelope"></i>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:window.print()">
+                <i class="fa fa-print"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
-  <section class="body">
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
-  <section>
-    {% include 'includes/opinion_disclaimer.html' %}
-  </section>
-  {% if self.is_opinion and self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
-  {% endif %}
+{% endblock %}
+
+{% block in_the_series %}
   {% if self.article_series %}
     <section class="in-the-series">
-      <div class="container-sm">
-        <article class="article-series">
-          <h3><a href="{{self.article_series.url}}">{{ self.article_series.title }}</a></h3>
-          <p class="in-the-series"><span>In The Series</span></p>
-          <div class="series-items">
-            {% for block in self.article_series.specific.series_items %}
-              {% if block.block_type == 'series_item' and block.value.id != self.id %}
-                <article>
-                  <h4><a href="{{ block.value.url }}">{{ block.value.title }}</a></h4>
-                  <p class="authors">
-                    Author{{ block.value.specific.authors|length|pluralize }}:
-                    {% for author in block.value.specific.authors %}
-                      <span>{{ author }}</span>
-                    {% endfor %}
-                  </p>
-                </article>
-              {% endif %}
-            {% endfor %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <article class="article-series">
+              <h3><a href="{{self.article_series.url}}">{{ self.article_series.title }}</a></h3>
+              <p class="in-the-series"><span>In The Series</span></p>
+              <div class="series-items">
+                {% for block in self.article_series.specific.series_items %}
+                  {% if block.block_type == 'series_item' and block.value.id != self.id %}
+                    <article>
+                      <h4><a href="{{ block.value.url }}">{{ block.value.title }}</a></h4>
+                      <p class="authors">
+                        Author{{ block.value.specific.authors|length|pluralize }}:
+                        {% for author in block.value.specific.authors %}
+                          <span>{{ author }}</span>
+                        {% endfor %}
+                      </p>
+                    </article>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </article>
           </div>
-        </article>
+        </div>
       </div>
     </section>
   {% endif %}
+{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Longform articles #}
 {% endblock %}

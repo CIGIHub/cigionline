@@ -1,7 +1,7 @@
 section {
   &.hero {
-    @include breakpoint($medium) {
-      padding-top: 6em;
+    @include media-breakpoint-up(md) {
+      padding-top: 10em;
     }
     background-color: $black;
     font-size: 1rem;
@@ -13,19 +13,18 @@ section {
       justify-content: space-between;
 
       .hero-main {
-        @include breakpoint($medium) {
+        @include media-breakpoint-up(md) {
           max-width: 60%;
         }
 
         h1 {
+          @include media-breakpoint-up(md) {
+            font-size: 2.5em;
+          }
           color: $white;
           font-size: 1.75em;
           font-weight: $sans-regular;
           margin-bottom: 0;
-
-          @media screen and (min-width: 40em) {
-            font-size: 2.5rem;
-          }
         }
 
         h2 {

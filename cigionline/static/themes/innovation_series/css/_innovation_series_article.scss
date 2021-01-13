@@ -11,9 +11,13 @@
     background-size: cover;
     margin-bottom: 0;
     min-height: 25em;
+    padding-top: 6em;
     position: relative;
 
     &::after {
+      @include media-breakpoint-up(lg) {
+        background-color: transparent;
+      }
       background-color: $innovation-series-background-color;
       content: '';
       height: 100%;
@@ -22,10 +26,6 @@
       position: absolute;
       top: 0;
       width: 100%;
-
-      @media screen and (min-width: $large) {
-        background-color: transparent;
-      }
     }
 
     .hero-content {
@@ -62,6 +62,7 @@
     ul {
       display: flex;
       list-style-type: none;
+      margin-bottom: 0;
 
       li {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
