@@ -1,14 +1,13 @@
-{% extends "base.html" %}
+{% extends "articles/article_page.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
-{% block extra_css %}
-  {% render_bundle 'articlePage' 'css' %}
+{% block theme_css %}
   {% render_bundle 'themeInnovationSeries' 'css' %}
 {% endblock %}
 
 {% block body_class %}innovation-series-article{% endblock %}
 
-{% block content %}
+{% block hero %}
   {% image self.image_banner original as image_hero %}
   <section class="hero" style="background-image: url('{{ image_hero.url }}');">
     <div class="container">
@@ -62,41 +61,14 @@
       </div>
     </div>
   </section>
-  <section class="body">
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
-  {% if self.footnotes %}
-    <section class="article-footnotes">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <div class="footnotes">
-              {{ self.footnotes|richtext }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-  {% if self.works_cited %}
-    <section class="article-works-cited">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <h2>Works Cited</h2>
-            {{ self.works_cited|richtext }}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-  {% include 'includes/disclaimer.html' %}
-  {% if self.is_opinion and self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
-  {% endif %}
+{% endblock %}
+
+{% block in_the_series %}
   {% if self.article_series %}
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
   {% endif %}
-{% endblock content %}
+{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Innovation series articles #}
+{% endblock %}

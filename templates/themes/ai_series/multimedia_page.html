@@ -1,37 +1,21 @@
-{% extends "base.html" %}
+{% extends "multimedia/multimedia_page.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/mhy5jui.css">
 {% endblock%}
-{% block extra_css %}
-  {% render_bundle 'multimediaPage' 'css' %}
+{% block theme_css %}
   {% render_bundle 'themeAISeries' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block body_class %}ai-series-multimedia{% endblock %}
 
-{% block content %}
+{% block hero %}
   {% image self.image_banner original as image_hero %}
   {% include "includes/hero_multimedia.html" with image_hero=image_hero %}
-  {% if self.body %}
-    <section class="body">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
-  {% endif %}
-  {% if self.transcript %}
-    <section>
-      {% for block in self.transcript %}
-        {% include_block block with id=block.id %}
-      {% endfor %}
-    </section>
-  {% endif %}
-  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
+{% endblock %}
+
+{% block in_the_series %}
   {% if self.article_series %}
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
   {% endif %}

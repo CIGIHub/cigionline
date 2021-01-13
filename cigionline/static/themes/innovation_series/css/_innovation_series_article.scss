@@ -11,6 +11,7 @@
     background-size: cover;
     margin-bottom: 0;
     min-height: 25em;
+    padding-top: 6em;
     position: relative;
 
     &::after {
@@ -61,6 +62,7 @@
     ul {
       display: flex;
       list-style-type: none;
+      margin-bottom: 0;
 
       li {
         @include link($color: $black, $hover-color: $cigi-primary-colour);

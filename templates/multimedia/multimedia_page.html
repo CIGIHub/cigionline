@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/hero_multimedia.html" %}
+  {% block hero %}
+    {% include "includes/hero_multimedia.html" %}
+  {% endblock %}
 
   {% if page.body %}
     <section class="body">
@@ -18,6 +20,7 @@
       {% endfor %}
     </section>
   {% endif %}
+
   {% if self.transcript %}
     <section>
       {% for block in self.transcript %}
@@ -25,6 +28,7 @@
       {% endfor %}
     </section>
   {% endif %}
+
   {% if self.multimedia_series %}
     <section class="multimedia-series-block">
       <div class="container">
@@ -44,5 +48,10 @@
       </div>
     </section>
   {% endif %}
+
   {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
+
+  {% block in_the_series %}
+    {# Override this in templates to add series listing #}
+  {% endblock %}
 {% endblock content %}
