@@ -247,4 +247,134 @@
       }
     }
   }
+
+  .platform-governance-series-in-the-series {
+    background-image: linear-gradient($platform-governance-series-gradient-light-colour, $platform-governance-series-gradient-dark-colour);
+    padding: 3em 0;
+
+    h2 {
+      @include link($color: $white, $hover-color: $platform-governance-series-accent-colour);
+      @include media-breakpoint-up(md) {
+        font-size: 3em;
+      }
+      font-family: 'big-caslon-fb', serif;
+      font-size: 1.5em;
+      font-style: normal;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 50px;
+      position: relative;
+      text-transform: none;
+
+      &::after {
+        @include media-breakpoint-up(md) {
+          border-bottom: 6px solid $platform-governance-series-accent-colour;
+          bottom: -6px;
+          width: 40px;
+        }
+        border-bottom: 4px solid $platform-governance-series-accent-colour;
+        bottom: -4px;
+        content: '';
+        left: 0;
+        position: absolute;
+        width: 30px;
+      }
+    }
+
+    .platform-governance-series-in-the-series-items {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      article {
+        @include media-breakpoint-up(md) {
+          margin-right: 2.6%;
+          width: 23%;
+        }
+        margin-right: 4%;
+        padding-bottom: 1em;
+        padding-top: 0;
+        width: 48%;
+
+        &:nth-child(4n+2) {
+          @include media-breakpoint-up(md) {
+            margin-right: 2.6%;
+          }
+          margin-right: 0;
+        }
+
+        &:nth-child(4n+4) {
+          margin-right: 0;
+        }
+
+        &.current {
+          .series-article-image {
+            position: relative;
+
+            &::after {
+              background-color: $black-alpha-65;
+              content: '';
+              height: 100%;
+              left: 0;
+              position: absolute;
+              top: 0;
+              width: 100%;
+            }
+          }
+
+          .series-article-title {
+            color: $platform-governance-series-grey;
+          }
+        }
+
+        .authors {
+          @include link($color: $platform-governance-series-grey, $hover-color: $platform-governance-series-accent-colour);
+          color: $platform-governance-series-grey;
+          font-size: 0.7em;
+          margin: 0;
+          text-transform: uppercase;
+        }
+
+        .series-article-title {
+          @include link($color: $white, $hover-color: $platform-governance-series-accent-colour);
+          color: $white;
+          font-size: 0.875em;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 1.4;
+          margin-top: 9px;
+        }
+      }
+    }
+
+    .series-subheading {
+      color: $white;
+      font-size: 0.75em;
+      font-weight: 400;
+      margin-bottom: 1.16em;
+      position: relative;
+      text-transform: uppercase;
+
+      &::after {
+        border-bottom: 4px solid $platform-governance-series-accent-colour;
+        bottom: -4px;
+        content: '';
+        left: 0;
+        position: absolute;
+        width: 26px;
+      }
+    }
+
+    .series-subtitle {
+      @include media-breakpoint-up(md) {
+        font-size: 1em;
+      }
+      color: $white;
+      font-size: 0.875em;
+      font-style: italic;
+      font-weight: 400;
+      margin-bottom: 0.7em;
+      text-transform: none;
+    }
+  }
 }
