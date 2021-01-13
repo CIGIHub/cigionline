@@ -20,5 +20,6 @@ window.addEventListener('scroll', function() {
   if (scrollTop > headerHeight) {
     stickyHeader.classList.add('scrolled');
   } else {
-    stickyHeader.classList.remove('scrolled'); }
+    stickyHeader.classList.remove('scrolled');
+  }
 });
