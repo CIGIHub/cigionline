@@ -1,19 +1,23 @@
 .stream-block-pull-quote {
+  @include media-breakpoint-up(md) {
+    width: 40%;
+  }
+
   &.stream-block {
     margin: 1em 0;
   }
 
-  @include breakpoint($medium) {
-    width: 40%;
-
-    &.right {
-      float: right;
-      padding-left: 1.5em;
-    }
-
-    &.left {
+  &.left {
+    @include media-breakpoint-up(md) {
       float: left;
       padding-right: 1.5em;
+    }
+  }
+
+  &.right {
+    @include media-breakpoint-up(md) {
+      float: right;
+      padding-left: 1.5em;
     }
   }
 

@@ -94,8 +94,11 @@
   }
 
   .stream-block-pull-quote {
+    @include media-breakpoint-up(md) {
+      width: 30%;
+    }
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: 1em;
     position: relative;
 
     &::before {
@@ -113,48 +116,33 @@
     }
 
     &.right {
-      padding-left: 1rem;
+      margin-left: 1em;
+      padding-left: 1em;
 
       &::before {
-        border-left: 0.85rem solid $data-series-primary-color;
+        border-left: 0.85em solid $data-series-primary-color;
         left: 0;
       }
 
       blockquote {
-        border-left: 0.85rem solid $data-series-primary-color;
-        padding: 0 0 0 1em;
+        border-left: 0.85em solid $data-series-primary-color;
+        padding: 0 0 0 0.5em;
       }
     }
 
     &.left {
-      padding-right: 1rem;
+      margin-right: 1em;
+      padding-right: 1em;
 
       &::before {
-        border-right: 0.85rem solid $data-series-primary-color;
+        border-right: 0.85em solid $data-series-primary-color;
         right: 0;
       }
 
       blockquote {
         border-left: 0;
-        border-right: 0.85rem solid $data-series-primary-color;
-        padding: 0 1em 0 0;
-      }
-    }
-
-    @include breakpoint($medium) {
-
-      &.right {
-        float: right;
-        margin: 0 -156px 0 1rem;
-      }
-
-      &.left {
-        float: left;
-        margin: 0 1rem 1rem -156px;
-
-        blockquote {
-          text-align: right;
-        }
+        border-right: 0.85em solid $data-series-primary-color;
+        padding: 0 0.5em 0 0;
       }
     }
   }
