@@ -36,8 +36,8 @@
               {% define block.value.specific|page_type as page_type %}
               <article>
                 <div class="author-images block-{{page_type}}">
-                  <img class='outer-ring' src='{% static "assets/health-security-portrait-ring-outer.svg" %}' alt='ring graphic'>
-		              <img class='inner-ring' src='{% static "assets/health-security-portrait-ring-inner.svg" %}' alt='ring graphic'>
+                  <img class='outer-ring' src='{% static "assets/health-security-portrait-ring-outer.svg" %}' alt='ring graphic' />
+		              <img class='inner-ring' src='{% static "assets/health-security-portrait-ring-inner.svg" %}' alt='ring graphic' />
                   {% if page_type == 'opinion' %}
                     {% for author in block.value.specific.authors %}
                     <a href="{{ author.value.url }}">
