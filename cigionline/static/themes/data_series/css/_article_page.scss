@@ -150,9 +150,10 @@
 
   h3 {
     font-family: 'din-condensed', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.225em;
     font-weight: 400;
-    margin-bottom: .625rem;
+    margin-bottom: .4285em;
+    margin-top: 1em;
   }
 
   hr {
@@ -185,6 +186,11 @@
   }
 
   .text-border-block {
+    h3 {
+      margin-bottom: .5em;
+      margin-top: 1em;
+    }
+
     .block-contents {
       border: solid 1px $data-series-primary-color;
       font-size: 1.0625em;
@@ -214,6 +220,17 @@
           width: .5em;
         }
       }
+    }
+  }
+
+  .about-the-author {
+    margin: 3em 0;
+
+    h3 {
+      border: 0;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0;
     }
   }
 
