@@ -27,10 +27,7 @@
       {% endfor %}
     </section>
   {% endif %}
-  <section class="multimedia-disclaimer-section">
-    {% include 'includes/multimedia_disclaimer.html' %}
-    {% include 'includes/opinion_disclaimer.html' %}
-  </section>
+  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
 
   {% if self.article_series %}
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}

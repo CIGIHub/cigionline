@@ -5,16 +5,15 @@
 
   h2 {
     @include link($color: $white, $hover-color: $cigi-dark-pink);
+    @include media-breakpoint-up(md) {
+      font-size: 3.5em;
+    }
     font-family: $ai-acumin;
     font-size: 2em;
     font-weight: 800;
     line-height: 1;
     margin: 0 1em 0 0;
     text-transform: uppercase;
-
-    @media screen and (min-width: 768px) {
-      font-size: 3.5em;
-    }
   }
 
   .essay-series-label,
@@ -24,13 +23,12 @@
   }
 
   .short-description {
+    @include media-breakpoint-up(md) {
+      margin-top: 3em;
+    }
     font-family: $ai-garamond;
     line-height: 1.25;
     margin: 1em 0;
-
-    @media screen and (min-width: 768px) {
-      margin-top: 3em;
-    }
   }
 
   .series-contributors {

@@ -1,4 +1,4 @@
-@import '../global/variables';
+@import '../global/mixins';
 
 .pagination-links-numbered {
   margin-top: 1em;
@@ -18,7 +18,7 @@
 
     &.pagination-link-first,
     &.pagination-link-last {
-      @media (min-width: $small) {
+      @include media-breakpoint-up(sm) {
         display: inline;
       }
 

@@ -10,11 +10,17 @@
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-
-  <div class="container-lg">
-    {% include 'includes/publications_featured_list.html' %}
-
-    <section class="publication-list-section" id="publications-search-table">
-    </section>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% include 'includes/publications_featured_list.html' %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="publication-list-section" id="publications-search-table">
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock content %}
