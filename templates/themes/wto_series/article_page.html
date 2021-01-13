@@ -26,6 +26,12 @@
   </section>
 {% endblock %}
 
+{% block in_the_series %}
+  {% if self.article_series %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
+  {% endif %}
+{% endblock %}
+
 {% block recommended %}
   {# Remove recommended section for WTO series articles #}
 {% endblock %}
