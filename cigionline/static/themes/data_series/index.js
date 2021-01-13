@@ -2,7 +2,7 @@ import './css/data_series.scss';
 
 const headerEl = document.querySelector('header');
 const stickyHeader = document.querySelector('.article-header-sticky');
-let headerHeight =  null;
+let headerHeight = null;
 let docHeight = null;
 
 window.addEventListener('load', function() {
@@ -11,13 +11,15 @@ window.addEventListener('load', function() {
 });
 
 window.addEventListener('scroll', function() {
-  let scrollTop = document.querySelector('html').scrollTop;
+  const scrollTop = document.querySelector('html').scrollTop;
 
-  let scrolled = (scrollTop / docHeight) * 100;
-  document.querySelector('progress').style.width = scrolled + '%';
+  const scrolled = (scrollTop / docHeight) * 100;
+  document.querySelector('progress').style.width = scrolled;
+  scrolled = scrolled + '%';
 
   if (scrollTop > headerHeight) {
-    stickyHeader.classList.add('scrolled'); }
-  else {
-    stickyHeader.classList.remove('scrolled'); }
+    stickyHeader.classList.add('scrolled');
+  } else {
+    stickyHeader.classList.remove('scrolled');
+  }
 });
