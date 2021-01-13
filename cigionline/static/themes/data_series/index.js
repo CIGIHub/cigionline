@@ -7,7 +7,6 @@ let docHeight = null;
 let scrolled = null;
 
 window.addEventListener('load', function() {
-  console.log('here');
   headerHeight = headerEl.offsetHeight;
   docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 });
