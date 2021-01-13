@@ -18,7 +18,7 @@
     h2 {
       font-size: 1em;
       font-weight: 400;
-      margin: 2em 0;
+      margin-top: 3em;
       text-transform: none;
       width: 100%;
     }
@@ -199,25 +199,24 @@
         text-transform: uppercase;
 
         span {
-          &:not(:only-child) {
-            &::after {
-              content: ', ';
-              margin-right: 2px;
-            }
-          }
-
-          &:nth-last-child(2) {
-            &::after {
-              content: ' and ';
-            }
-          }
-
-          &:last-child {
-            &::after {
-              display: none;
-            }
-          }
+          @include and-separated;
         }
+      }
+    }
+
+    .dots-divider {
+      text-align: center;
+
+      span {
+        @include media-breakpoint-up(md) {
+          margin: 2em 0.2em 1em;
+        }
+        background-color: $white;
+        border-radius: 50%;
+        display: inline-block;
+        height: 0.5em;
+        margin: 1em 0.2em 0;
+        width: 0.5em;
       }
     }
   }

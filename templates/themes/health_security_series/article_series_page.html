@@ -30,6 +30,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
+          <div class="dots-divider"><span></span><span></span><span></span></div>
           {% for block in self.series_items %}
             {% if block.block_type == 'series_item' %}
               {% define block.value.specific|page_type as page_type %}
