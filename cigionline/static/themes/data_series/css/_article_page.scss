@@ -245,15 +245,23 @@
     }
 
     progress {
+      background-color: $black;
       border: 0;
       color: $data-series-primary-color;
       height: 5px;
-      width: 0;
+      width: 100%;
 
-      &::-moz-progress-bar,
-      &::-webkit-progress-bar,
+      &::-moz-progress-bar {
+        background-color: $data-series-primary-color !important;
+      }
+
+      &::-webkit-progress-bar {
+        background-color: $black;
+        width: 100%;
+      }
+
       &::-webkit-progress-value {
-        background: $data-series-primary-color;
+        background-color: $data-series-primary-color !important;
       }
     }
 

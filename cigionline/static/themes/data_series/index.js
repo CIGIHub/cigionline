@@ -15,7 +15,7 @@ window.addEventListener('scroll', function() {
   const scrollTop = document.querySelector('html').scrollTop;
 
   scrolled = (scrollTop / docHeight) * 100;
-  document.querySelector('progress').style.width = `${scrolled}%`;
+  document.querySelector('progress').setAttribute('value', scrolled);
 
   if (scrollTop > headerHeight) {
     stickyHeader.classList.add('scrolled');
