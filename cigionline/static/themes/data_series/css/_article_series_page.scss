@@ -7,13 +7,14 @@
   background-color: $data-series-background-color;
 
   .data-series-article-series-in-the-series {
+    padding-bottom: 2em;
 
     h3 {
       border-bottom: solid 1px $data-series-secondary-color;
       color: $data-series-secondary-color;
       font-size: 0.9em;
       font-weight: 600;
-      margin: 1em 0 0;
+      margin: 2em 0 0;
       text-transform: uppercase;
     }
 
