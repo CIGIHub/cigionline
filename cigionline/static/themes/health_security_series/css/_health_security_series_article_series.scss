@@ -3,11 +3,36 @@
   background-color: $health-security-series-background-colour;
 
   .health-security-series-article-series-hero {
+    @include media-breakpoint-up(md) {
+      background-size: 800px;
+      padding-top: 500px;
+    }
+    background-position-x: center;
+    background-repeat: no-repeat;
+    background-size: 600px;
     color: $white;
-    padding-top: 8em;
+    padding-top: 350px;
+
+    h1 {
+      @include health-security-title;
+      @include media-breakpoint-up(md) {
+        font-size: 4em;
+      }
+      font-size: 2.3em;
+    }
+
+    .social-share-list {
+      @include health-security-social-links;
+    }
 
     .short-description {
-      columns: 2;
+      @include media-breakpoint-up(sm) {
+        columns: 2;
+      }
+      @include media-breakpoint-up(md) {
+        margin: 3em 0;
+      }
+      margin: 2em 0;
     }
   }
 
@@ -185,7 +210,7 @@
       h3 {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
         color: $white;
-        font-family: $health-security-font;
+        font-family: $health-security-series-font;
         font-size: 1.2em;
         line-height: 1.1em;
         margin: 0 0 0.2em;
@@ -222,6 +247,8 @@
   }
 
   .health-security-series-article-series-credits {
+    color: $white;
+
     .health-security-series-article-series-credits-content {
       columns: 3;
     }

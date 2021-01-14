@@ -15,15 +15,14 @@
 
     .series-info {
       h2 {
+        @include media-breakpoint-up(md) {
+          flex-basis: 50%;
+        }
         flex-shrink: 0;
         font-family: $tisa-pro;
         font-size: 2em;
         font-weight: 900;
         margin: 0 1em 1em 0;
-
-        @media screen and (min-width: 768px) {
-          flex-basis: 50%;
-        }
       }
 
       .short-description {
@@ -45,14 +44,13 @@
 
     .series-contributors {
       .contributors {
+        @include media-breakpoint-up(lg) {
+          columns: 4;
+        }
         columns: 2;
 
         @media screen and (min-width: 480px) {
           columns: 3;
-        }
-
-        @media screen and (min-width: 768px) {
-          columns: 4;
         }
 
         li {
