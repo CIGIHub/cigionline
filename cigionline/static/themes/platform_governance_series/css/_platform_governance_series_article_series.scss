@@ -1,0 +1,346 @@
+@import '../../../css/global/animations/bounce';
+
+.platform-governance-series-article-series {
+  @include top-bar(
+    $background-color: transparent,
+    $position: absolute,
+  );
+
+  .platform-governance-series-article-series-hero {
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+    width: 100%;
+
+    .platform-governance-series-article-series-hero-image {
+      background-position: center;
+      background-size: cover;
+      height: 100vh;
+      position: fixed;
+      width: 100%;
+
+      &::after {
+        @include media-breakpoint-up(md) {
+          background-color: transparent;
+        }
+        background-color: $black-alpha-65;
+        content: '';
+        height: 100vh;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+      }
+
+      .hero-content-container {
+        position: relative;
+        top: 13%;
+        width: 100%;
+        z-index: 2;
+
+        .hero-content {
+          @include media-breakpoint-up(md) {
+            max-width: 500px;
+          }
+
+          h1 {
+            @include media-breakpoint-up(md) {
+              font-size: 3.5em;
+            }
+            @include media-breakpoint-up(lg) {
+              font-size: 4.5em;
+            }
+            color: $white;
+            font-family: 'big-caslon-fb', serif;
+            font-size: 1.875em;
+            font-style: normal;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 25px;
+            margin-top: 10px;
+            position: relative;
+
+            &::after {
+              @include media-breakpoint-up(md) {
+                border-bottom: 8px solid $platform-governance-series-accent-colour;
+                bottom: -8px;
+              }
+              border-bottom: 4px solid $platform-governance-series-accent-colour;
+              bottom: -4px;
+              content: '';
+              left: 0;
+              position: absolute;
+              width: 46px;
+            }
+          }
+
+          .platform-governance-series-article-series-social {
+            @include link($color: $white, $hover-color: $platform-governance-series-accent-colour);
+            margin-bottom: 0.5em;
+
+            a {
+              margin-right: 0.75em;
+
+              &:last-child {
+                margin-right: 0;
+              }
+            }
+          }
+
+          .scrollanchor-container {
+            @include link($color: $platform-governance-series-accent-colour, $hover-color: $platform-governance-series-accent-hover-colour);
+            animation: 'bounce' 2s infinite;
+          }
+
+          .series-body {
+            @include link($color: $platform-governance-series-accent-colour, $hover-color: $platform-governance-series-accent-hover-colour);
+            color: $white;
+            display: none;
+            font-size: 0.875em;
+
+            @media screen and (min-width: 375px) {
+              display: block;
+            }
+          }
+
+          .series-subtitle {
+            color: $white;
+            font-style: italic;
+            margin-bottom: 1.25em;
+          }
+
+          .topics {
+            @include link($color: $white, $hover-color: $platform-governance-series-accent-colour);
+            margin-bottom: 0.5em;
+          }
+        }
+      }
+    }
+  }
+
+  .platform-governance-series-credits {
+    background-image: linear-gradient($platform-governance-series-gradient-light-colour, $platform-governance-series-gradient-dark-colour);
+    padding: 2em 0;
+    position: relative;
+    z-index: 4;
+
+    h2 {
+      color: $white;
+      font-size: 0.875em;
+      line-height: 1;
+      margin-bottom: 20px;
+      padding-bottom: 4px;
+      position: relative;
+      text-transform: uppercase;
+
+      &::after {
+        border-bottom: 4px solid $platform-governance-series-accent-colour;
+        bottom: -4px;
+        content: '';
+        left: 0;
+        position: absolute;
+        width: 30px;
+      }
+    }
+
+    .credits-content {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .credits-list {
+        @include media-breakpoint-up(md) {
+          width: 77%;
+        }
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+
+        p {
+          @include media-breakpoint-up(md) {
+            margin-right: 3.3%;
+            width: 30%;
+          }
+          color: $white;
+          font-size: 0.875em;
+          line-height: 1;
+          margin-right: 4%;
+          width: 46%;
+
+          span {
+            color: $platform-governance-series-credits-grey;
+          }
+        }
+      }
+
+      .illustration-credits {
+        @include media-breakpoint-up(md) {
+          width: 23%;
+        }
+        color: $white;
+        font-size: 0.875em;
+        font-style: italic;
+        width: 100%;
+      }
+    }
+  }
+
+  .platform-governance-series-items {
+    background-color: $white;
+    padding: 2em 0;
+    position: relative;
+    z-index: 4;
+
+    .heading-wrapper {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 1em;
+
+      h2 {
+        font-size: 0.75em;
+        font-weight: 500;
+        line-height: 1;
+        margin-bottom: 0.4em;
+        position: relative;
+        text-transform: uppercase;
+
+        &::after {
+          border-bottom: 4px solid $platform-governance-series-accent-colour;
+          bottom: -4px;
+          content: '';
+          left: 0;
+          position: absolute;
+          width: 26px;
+        }
+      }
+
+      .platform-governance-listing-display-options {
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+        display: none;
+
+        .platform-governance-listing-display-option {
+          border: 0;
+          color: $black;
+          margin-left: 12px;
+
+          &:active,
+          &:focus {
+            box-shadow: none;
+            outline: none;
+          }
+
+          &.active {
+            color: $cigi-medium-light-grey;
+            cursor: default;
+          }
+        }
+      }
+    }
+
+    .platform-governance-listing {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      &.display-list {
+        article {
+          padding-bottom: 40px;
+
+          &::after {
+            opacity: 1;
+          }
+
+          .series-article-image {
+            &::after {
+              padding-bottom: 0;
+            }
+          }
+        }
+      }
+
+      article {
+        @include media-breakpoint-up(md) {
+          margin-right: 2.6%;
+          width: 23%;
+        }
+        border-bottom: 0;
+        margin-bottom: 40px;
+        margin-right: 4%;
+        padding-bottom: 0;
+        padding-top: 0;
+        position: relative;
+        transition: padding-bottom 1000ms ease-in-out;
+        width: 48%;
+
+        &::after {
+          border-bottom: 1px solid $divider-grey;
+          bottom: 0;
+          content: '';
+          opacity: 0;
+          position: absolute;
+          transition: opacity 1000ms ease-in-out;
+          width: 100%;
+        }
+
+        &:nth-child(4n+2) {
+          @include media-breakpoint-up(md) {
+            margin-right: 2.6%;
+          }
+          margin-right: 0;
+        }
+
+        &:nth-child(4n+4) {
+          margin-right: 0;
+        }
+
+        .authors {
+          @include link($color: $platform-governance-series-authors-grey, $hover-color: $cigi-dark-grey);
+          color: $platform-governance-series-grey;
+          font-size: 0.7em;
+          margin: 0;
+          text-transform: uppercase;
+        }
+
+        .series-article-image {
+          margin-bottom: 10px;
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+
+          &::after {
+            content: '';
+            display: block;
+            padding-bottom: 130%;
+            transition: padding-bottom 1000ms ease-in-out;
+          }
+
+          a {
+            background-position: center center;
+            background-size: cover;
+            display: block;
+            height: 100%;
+            position: absolute;
+            width: 100%;
+          }
+        }
+
+        .series-article-title {
+          @include link($color: $black, $hover-color: $cigi-text-grey);
+          color: $white;
+          font-size: 0.875em;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 1.4;
+          margin-top: 9px;
+        }
+      }
+    }
+  }
+}
