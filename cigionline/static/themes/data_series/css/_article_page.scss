@@ -149,7 +149,6 @@
   }
 
   h3 {
-    font-family: 'din-condensed', sans-serif;
     font-size: 1.3em;
     font-weight: 400;
     line-height: 1.45em;
@@ -174,8 +173,13 @@
 
   .article-works-cited {
     h2 {
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0;
+      text-transform: uppercase;
+
       &::after {
-        display: none;
+        border-bottom: 0;
       }
     }
 
@@ -282,7 +286,7 @@
       }
     }
 
-    .container-lg {
+    .article-header-sticky-content {
       align-items: center;
       display: flex;
       padding: 0.5em;
