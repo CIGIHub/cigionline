@@ -21,6 +21,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class PeoplePage(Page):
@@ -359,7 +360,7 @@ class PersonPageRecommendedContent(Orderable):
     ]
 
 
-class PersonType(models.Model):
+class PersonType(index.Indexed, models.Model):
     """
     A Django model that stores the person types. This isn't allowed to be
     edited in the admin interface. To insert/remove data - a migration needs to

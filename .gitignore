@@ -57,6 +57,7 @@ coverage.xml
 media/
 static
 !*/static/
+staticmedia/
 
 # Sphinx documentation
 docs/_build/
