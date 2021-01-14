@@ -9,11 +9,15 @@
 
 {% block content %}
 <section class="body">
-  <div class="container-lg">
-    <h2>About the Series</h2>
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h2>About the Series</h2>
+        {% for block in self.body %}
+          {% include_block block %}
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </section>
 <div class="footer-image"></div>
