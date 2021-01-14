@@ -162,7 +162,6 @@
     font-size: 1.5em;
     font-weight: 600;
     margin: 0;
-    padding: 1em 0;
     text-transform: uppercase;
   }
 
@@ -174,6 +173,12 @@
   }
 
   .article-works-cited {
+    h2 {
+      &::after {
+        display: none;
+      }
+    }
+
     p {
       padding: 0;
     }
