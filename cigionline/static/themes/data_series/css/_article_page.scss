@@ -275,9 +275,14 @@
       line-height: 1.5em;
       margin-left: -135px;
 
-      span {
+      a {
+        color: $black;
         font-weight: 500;
         padding-right: 0.3em;
+
+        &:hover {
+          color: $cigi-medium-grey;
+        }
       }
     }
   }

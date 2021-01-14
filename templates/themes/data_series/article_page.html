@@ -16,7 +16,7 @@
     <div class="container-lg">
       <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
       <div class="series-title">
-        <span>{{ self.article_series }}</span> |
+        <span><a href="{{ self.article_series.url }}">{{ self.article_series.title }}</a></span> |
         {{ self.title }}
       </div>
     </div>
