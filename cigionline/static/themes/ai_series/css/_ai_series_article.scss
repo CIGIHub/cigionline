@@ -83,6 +83,16 @@
     }
   }
 
+  .series-blurb {
+    color: $cigi-text-grey;
+    margin-bottom: 2em;
+
+    a {
+      color: $color--blue;
+      text-decoration: underline;
+    }
+  }
+
   .drop-caps {
     border: 0;
     font-family: $ai-acumin;
