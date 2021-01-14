@@ -7,7 +7,28 @@
   background-color: $data-series-background-color;
 
   .body {
-    background: linear-gradient($data-series-background-gradient, $white);
+    background: linear-gradient(#e0ded9, $white);
+    margin: 0;
+    padding-bottom: 2em;
+
+    h2 {
+      font-size: 1.3em;
+      font-weight: 500;
+      margin: 0;
+      padding: 0.77em 0 0.5em;
+      text-transform: uppercase;
+    }
+
+    p {
+      color: $cigi-medium-grey;
+      font-size: 1.0625em;
+    }
+  }
+
+  .footer-image {
+    background-image: url('../../../assets/data-series-landing-bg.gif');
+    height: 80px;
+    width: 100%;
   }
 
   .data-series-article-series-in-the-series {
