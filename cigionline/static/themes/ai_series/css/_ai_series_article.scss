@@ -1,8 +1,5 @@
 .ai-series-article {
-  @include top-bar(
-    $background-color: transparent,
-    $background-color-scrolled: $black,
-  );
+  @include top-bar($background-color: transparent, $background-color-scrolled: $black);
 
   .ai-series-article-hero {
     @include media-breakpoint-up(md) {
@@ -84,6 +81,24 @@
         content: none;
       }
     }
+  }
+
+  .series-blurb {
+    color: $cigi-text-grey;
+    margin-bottom: 2em;
+
+    a {
+      color: $color--blue;
+      text-decoration: underline;
+    }
+  }
+
+  .drop-caps {
+    border: 0;
+    font-family: $ai-acumin;
+    font-size: 4.7em;
+    font-weight: 700;
+    padding: 0 0.1em 0 0;
   }
 
   .stream-block-blockquote {
