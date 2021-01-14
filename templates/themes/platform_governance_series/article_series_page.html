@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/kcw4emq.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themePlatformGovernanceSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themePlatformGovernanceSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}platform-governance-series-article-series{% endblock %}
+
+{% block content %}
+  {% image self.image_banner width-1440 as image_banner %}
+  {% image self.image_banner_small width-100 as image_banner_small %}
+  <section class="platform-governance-series-article-series-hero">
+    <div class="platform-governance-series-article-series-hero-image" style="background-image: url('{{ image_banner.url }}'), url('{{ image_banner_small.url }}');">
+      <div class="hero-content-container">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="hero-content">
+                {% include "includes/topics.html" with topics=self.topics %}
+                <div class="platform-governance-series-article-series-social">
+                  <a href="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+                    <i class="fab fa-facebook-square fa-lg"></i>
+                  </a>
+                  <a href="twitter-share-link" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
+                    <i class="fab fa-twitter fa-lg"></i>
+                  </a>
+                </div>
+                <h1>{{ self.title }}</h1>
+                <p class="series-subtitle">
+                  A CIGI essay series
+                </p>
+                <div class="series-body">
+                  {% for block in self.body %}
+                    {% include_block block %}
+                  {% endfor %}
+                </div>
+                <div class="scrollanchor-container">
+                  <a href="#article-series-items">
+                    <i class="far fa-arrow-down fa-2x"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="platform-governance-series-items" id="article-series-items">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col">
+          <div class="heading-wrapper">
+            <h2>In the Series</h2>
+            <div class="platform-governance-listing-display-options">
+              <button class="platform-governance-listing-display-option platform-governance-display-grid active">
+                <i class="fa fa-th"></i>
+              </button>
+              <button class="platform-governance-listing-display-option platform-governance-display-list">
+                <i class="fa fa-list"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-block">
+        <div class="col">
+          <div class="platform-governance-listing">
+            {% for block in self.series_items %}
+              {% if block.block_type == 'series_item' %}
+                <article>
+                  <div class="series-article-image">
+                    {% image block.value.specific.image_banner fill-672x895 as article_image %}
+                    <a href="{{ block.value.url }}" style="background-image: url('{{ article_image.url }}');">
+                    </a>
+                  </div>
+                  <h3 class="series-article-title">
+                    <a href="{{ block.value.url }}">
+                      {{ block.value.title }}
+                    </a>
+                  </h3>
+                  <p class="authors">
+                    {% for author in block.value.specific.authors %}
+                      {% if author.block_type == 'author' %}
+                        <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                      {% elif author.block_type == 'external_author' %}
+                        <span>{{ author.value }}</span>
+                      {% endif %}
+                    {% endfor %}
+                  </p>
+                </article>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="platform-governance-series-credits">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col">
+          <h2>Credits</h2>
+        </div>
+      </div>
+      <div class="row d-block">
+        <div class="col">
+          <div class="credits-content">
+            <div class="credits-list">
+              {{ self.credits|richtext }}
+            </div>
+            <p class="illustration-credits">
+              {{ self.credits_artwork }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
