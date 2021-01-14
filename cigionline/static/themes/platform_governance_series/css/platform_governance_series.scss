@@ -1,0 +1,13 @@
+$platform-governance-series-accent-colour: #f5d75c;
+$platform-governance-series-accent-hover-colour: #cdb552;
+$platform-governance-series-gradient-dark-colour: #0d423e;
+$platform-governance-series-gradient-light-colour: #0d6559;
+$platform-governance-series-grey: #dad7d7;
+$platform-governance-series-authors-grey: #636161;
+$platform-governance-series-credits-grey: #c4c4c4;
+$platform-governance-series-quote-colour: #062f3f;
+
+@import '../../../css/global/mixins';
+
+@import './platform_governance_series_article_series';
+@import './platform_governance_series_article';

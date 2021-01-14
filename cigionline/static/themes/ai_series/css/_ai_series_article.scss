@@ -93,6 +93,14 @@
     }
   }
 
+  .drop-caps {
+    border: 0;
+    font-family: $ai-acumin;
+    font-size: 4.7em;
+    font-weight: 700;
+    padding: 0 0.1em 0 0;
+  }
+
   .stream-block-blockquote {
     @include media-breakpoint-up(md) {
       max-width: 50rem;
