@@ -1,6 +1,8 @@
 from articles.models import (
     ArticleLandingPage,
     ArticleListPage,
+    ArticleSeriesListPage,
+    ArticleSeriesPage,
     MediaLandingPage,
 )
 from careers.models import JobPostingListPage
@@ -110,6 +112,8 @@ class HomePageTests(WagtailPageTests):
             {
                 ArticleLandingPage,
                 ArticleListPage,
+                ArticleSeriesListPage,
+                ArticleSeriesPage,
                 BasicPage,
                 EventListPage,
                 JobPostingListPage,

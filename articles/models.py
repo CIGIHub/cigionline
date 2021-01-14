@@ -397,6 +397,16 @@ class ArticlePage(
         verbose_name_plural = 'Opinions'
 
 
+class ArticleSeriesListPage(Page):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'articles/article_series_list_page.html'
+
+    class Meta:
+        verbose_name = 'Article Series List Page'
+
+
 class ArticleSeriesPage(
     BasicPageAbstract,
     ContentPage,
