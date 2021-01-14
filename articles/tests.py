@@ -6,6 +6,7 @@ from .models import (
     ArticleLandingPage,
     ArticleListPage,
     ArticlePage,
+    MediaLandingPage,
 )
 
 
@@ -47,6 +48,20 @@ class ArticlePageTests(WagtailPageTests):
     def test_articlepage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             ArticlePage,
+            {},
+        )
+
+
+class MediaLandingPageTests(WagtailPageTests):
+    def test_articlelandingpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            MediaLandingPage,
+            {HomePage},
+        )
+
+    def test_articlelandingpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            MediaLandingPage,
             {},
         )
 

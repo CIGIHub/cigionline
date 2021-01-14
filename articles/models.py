@@ -78,6 +78,24 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     ]
 
 
+class MediaLandingPage(BasicPageAbstract, Page):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'articles/media_landing_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    class Meta:
+        verbose_name = 'Media Page'
+
+
 class ArticleListPage(Page):
     max_count = 1
     parent_page_types = ['core.HomePage']

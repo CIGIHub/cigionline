@@ -93,6 +93,7 @@ class HomePage(Page):
     subpage_types = [
         'articles.ArticleLandingPage',
         'articles.ArticleListPage',
+        'articles.MediaLandingPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
         'core.PrivacyNoticePage',
