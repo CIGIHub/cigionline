@@ -5,9 +5,27 @@
   {% render_bundle 'themeDataSeries' 'css' %}
 {% endblock %}
 
+{% block extra_js %}
+  {% render_bundle 'themeDataSeries' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block body_class %}data-series-article{% endblock %}
 
 {% block hero %}
+  <section class="article-header-sticky">
+    <div class="container-lg">
+      <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
+      <div class="series-title">
+        <span><a href="{{ self.article_series.url }}">{{ self.article_series.title }}</a></span> |
+        {{ self.title }}
+      </div>
+    </div>
+    <div class="progress-bar">
+      <progress value="0" max="100"></progress>
+    </div>
+  </section>
+
+
   {% image self.image_banner original as image_hero %}
   <section class="hero" style="background-image: url('{{ image_hero.url }}');">
     <div class="container">
