@@ -5,7 +5,7 @@
   {% render_bundle 'themeDataSeries' 'css' %}
 {% endblock %}
 
-{% block body_class %}data-series-article-series{% endblock %}
+{% block body_class %}data-series-theme data-series-article-series{% endblock %}
 
 {% block content %}
 <section class="body">
@@ -16,14 +16,14 @@
     {% include_block block %}
   {% endfor %}
 </section>
-<section class="data-series-article-series-in-the-series">
+<section class="data-series-in-the-series">
   <div class="container">
     <div class="row">
       <div class="col">
         {% for block in self.series_items %}
           {% if block.block_type == 'series_item' %}
             <article>
-              <h4><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
+              <h4 class="article-title"><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
               <p class="authors">
                 {% if block.value.specific.authors %}
                   {% for author in block.value.specific.authors %}
@@ -38,7 +38,7 @@
               </p>
             </article>
           {% elif block.block_type == 'category_title' %}
-            <h3>{{ block.value }}</h3>
+            <h3 class="section-title">{{ block.value }}</h3>
           {% endif %}
         {% endfor %}
       </div>

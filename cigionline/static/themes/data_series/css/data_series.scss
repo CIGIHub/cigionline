@@ -9,10 +9,12 @@ $data-series-secondary-color: #17928a;
 @import './multimedia_page';
 @import './includes/in_the_series';
 
-.data-series-article,
-.data-series-article-series {
+.data-series-theme {
 
-  h4 {
+  h2,
+  h3,
+  h4,
+  h5 {
     font-family: 'din-condensed', sans-serif;
   }
 }
