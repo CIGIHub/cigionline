@@ -20,10 +20,25 @@
       position: fixed;
       width: 100%;
 
+      &::after {
+        @include media-breakpoint-up(md) {
+          background-color: transparent;
+        }
+        background-color: $black-alpha-65;
+        content: '';
+        height: 100vh;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+      }
+
       .hero-content-container {
         position: relative;
         top: 13%;
         width: 100%;
+        z-index: 2;
 
         .hero-content {
           @include media-breakpoint-up(md) {
@@ -81,12 +96,13 @@
 
           .series-body {
             @include link($color: $platform-governance-series-accent-colour, $hover-color: $platform-governance-series-accent-hover-colour);
-            @include media-breakpoint-up(sm) {
-              display: block;
-            }
             color: $white;
             display: none;
             font-size: 0.875em;
+
+            @media screen and (min-width: 375px) {
+              display: block;
+            }
           }
 
           .series-subtitle {
