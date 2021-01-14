@@ -13,13 +13,12 @@
 
 {% block hero %}
   <section class="article-header-sticky">
-      <div class="container-lg">
-        <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
-        <div class="series-title">
-          <span>{{ self.article_series }}</span> |
-          {{ self.title }}
-        </div>
-        </div>
+    <div class="container-lg">
+      <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
+      <div class="series-title">
+        <span>{{ self.article_series }}</span> |
+        {{ self.title }}
+      </div>
     </div>
     <div class="progress-bar">
       <progress></progress>

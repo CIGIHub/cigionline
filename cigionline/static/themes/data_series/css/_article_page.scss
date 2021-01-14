@@ -251,6 +251,7 @@
       width: 0;
 
       &::-moz-progress-bar,
+      &::-webkit-progress-bar,
       &::-webkit-progress-value {
         background: $data-series-primary-color;
       }
