@@ -6,6 +6,10 @@
   );
   background-color: $data-series-background-color;
 
+  .body {
+    background: linear-gradient($data-series-background-gradient, $white);
+  }
+
   .data-series-article-series-in-the-series {
     article {
       .authors {

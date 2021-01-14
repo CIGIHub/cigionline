@@ -1,5 +1,6 @@
 $data-series-background-color: #f2f0ea;
 $data-series-primary-color: #31c3ba;
+$data-series-background-gradient: #e0ded9;
 
 @import '../../../css/global/mixins';
 
@@ -7,3 +8,21 @@ $data-series-primary-color: #31c3ba;
 @import './article_page';
 @import './multimedia_page';
 @import './includes/in_the_series';
+
+
+h2 {
+  font-family: 'din-condensed', sans-serif;
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0;
+  padding: 1em 0;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-family: 'din-condensed', sans-serif;
+  font-size: 1.225em;
+  font-weight: 400;
+  margin-bottom: .4285em;
+  margin-top: 1em;
+}

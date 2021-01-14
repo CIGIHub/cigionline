@@ -11,10 +11,10 @@
 <section class="body">
   <div class="container-lg">
     <h2>About the Series</h2>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
   </div>
-  {% for block in self.body %}
-    {% include_block block %}
-  {% endfor %}
 </section>
 <section class="data-series-article-series-in-the-series">
   <div class="container">
