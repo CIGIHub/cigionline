@@ -1,11 +1,14 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags static %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/zzr4vtn.css">
 {% endblock %}
 {% block theme_css %}
   {% render_bundle 'themeHealthSecuritySeries' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeHealthSecuritySeries' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block body_class %}health-security-series-article-series{% endblock %}
@@ -28,33 +31,44 @@
   <section class="health-security-series-article-series-in-the-series">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col col-lg-10">
+        <div class="col-md-10 col-lg-8">
+          <div class="dots-divider"><span></span><span></span><span></span></div>
           {% for block in self.series_items %}
             {% if block.block_type == 'series_item' %}
+              {% define block.value.specific|page_type as page_type %}
               <article>
-                <h3>
-                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
-                </h3>
-                <p class="authors">
-                  {% if block.value.specific.authors %}
+                <div class="author-images block-{{page_type}}">
+                  <img class='outer-ring' src='{% static "assets/health-security-portrait-ring-outer.svg" %}' alt='ring graphic' />
+		              <img class='inner-ring' src='{% static "assets/health-security-portrait-ring-inner.svg" %}' alt='ring graphic' />
+                  {% if page_type == 'opinion' %}
                     {% for author in block.value.specific.authors %}
-                      {% if author.block_type == 'author' %}
-                        <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
-                      {% elif author.block_type == 'external_author' %}
-                        <span>{{ author.value }}</span>
-                      {% endif %}
+                    <a href="{{ author.value.url }}">
+                      {% image author.value.specific.image_square fill-100x100 %}
+                    </a>
                     {% endfor %}
+                  {% elif page_type == 'multimedia' %}
+                    <a href="{{ block.value.url }}">
+                      <i class="fa fa-play-circle"></i>
+                    </a>
                   {% endif %}
-                  {% if block.value.specific.speakers %}
-                    {% for speaker in block.value.specific.speakers %}
-                      {% if speaker.block_type == 'speaker' %}
-                        <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
-                      {% elif speaker.block_type == 'external_speaker' %}
-                        <span>{{ speaker.value }}</span>
-                      {% endif %}
-                    {% endfor %}
-                  {% endif %}
-                </p>
+                </div>
+                <div>
+                  <h3>
+                    <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                  </h3>
+                  <p class="authors">
+                    {% if block.value.specific.authors %}
+                      {% for author in block.value.specific.authors %}
+                        <span>{{ author }}</span>
+                      {% endfor %}
+                    {% endif %}
+                    {% if block.value.specific.speakers %}
+                      {% for speaker in block.value.specific.speakers %}
+                        <span>{{ speaker }}</span>
+                      {% endfor %}
+                    {% endif %}
+                  </p>
+                </div>
               </article>
             {% elif block.block_type == 'category_title' %}
               <h2>{{ block.value }}</h2>
