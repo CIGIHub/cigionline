@@ -150,9 +150,10 @@
 
   h3 {
     font-family: 'din-condensed', sans-serif;
-    font-size: 1.225em;
+    font-size: 1.3em;
     font-weight: 400;
-    margin-bottom: .4285em;
+    line-height: 1.45em;
+    margin-bottom: .485em;
     margin-top: 1em;
   }
 
@@ -186,10 +187,6 @@
   }
 
   .text-border-block {
-    h3 {
-      margin-bottom: .5em;
-      margin-top: 1em;
-    }
 
     .block-contents {
       border: solid 1px $data-series-primary-color;
@@ -221,6 +218,76 @@
         position: absolute;
         top: .5em;
         width: .5em;
+      }
+    }
+  }
+
+  .article-header-sticky {
+    background: $divider-grey;
+    height: 0;
+    opacity: 0;
+    transition: height 0.5s ease, opacity 0.5s ease;
+
+    &.scrolled {
+      height: auto;
+      opacity: 1;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
+
+    .progress-bar {
+      background-color: transparent;
+    }
+
+    progress {
+      background-color: transparent;
+      border: 0;
+      color: $data-series-primary-color;
+      height: 5px;
+      width: 100%;
+
+      &::-moz-progress-bar {
+        background-color: $data-series-primary-color !important;
+      }
+
+      &::-webkit-progress-bar {
+        background-color: transparent;
+        width: 100%;
+      }
+
+      &::-webkit-progress-value {
+        background-color: $data-series-primary-color !important;
+      }
+    }
+
+    .container-lg {
+      align-items: center;
+      display: flex;
+      padding: 0.5em;
+    }
+
+    .cigi-logo {
+      flex: 0 0 135px;
+    }
+
+    .series-title {
+      display: flex;
+      flex: 1;
+      font-size: .8em;
+      justify-content: center;
+      line-height: 1.5em;
+      margin-left: -135px;
+
+      a {
+        color: $black;
+        font-weight: 500;
+        padding-right: 0.3em;
+
+        &:hover {
+          color: $cigi-medium-grey;
+        }
       }
     }
   }
