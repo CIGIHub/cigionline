@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+{% endblock %}
