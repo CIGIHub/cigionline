@@ -25,8 +25,13 @@
       </div>
     </div>
   </section>
-  {% image self.image_banner original as image_hero %}
-  <div class="video-banner" style="background-image: url('{{ image_hero.url }}');"></div>
+  {% if self.image_banner.filename|file_extension == '.gif' %}
+    {% define "/media/original_images/"|add:self.image_banner.filename as image_banner_url %}
+  {% else %}
+    {% image self.image_banner original as image_banner %}
+    {% define image_banner.url as image_banner_url %}
+  {% endif %}
+  <div class="video-banner" style="background-image: url('{{ image_banner_url }}');"></div>
   <section class="after-covid-series-article-series-in-the-series">
     <div class="container">
       <div class="row justify-content-center">

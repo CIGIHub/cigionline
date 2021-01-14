@@ -1,7 +1,14 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
 
-{% image article_series.image_banner original as image_banner %}
-<section class="ai-series-in-the-series" style="background-image: url('{{ image_banner.url }}')">
+
+{% if article_series.image_banner.filename|file_extension == '.gif' %}
+  {% define "/media/original_images/"|add:article_series.image_banner.filename as image_banner_url %}
+{% else %}
+  {% image article_series.image_banner original as image_banner %}
+  {% define image_banner.url as image_banner_url %}
+{% endif %}
+
+<section class="ai-series-in-the-series" style="background-image: url('{{ image_banner_url }}')">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-lg-10">
