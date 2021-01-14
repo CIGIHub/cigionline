@@ -1,0 +1,106 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/kcw4emq.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themePlatformGovernanceSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}platform-governance-series-article{% endblock %}
+
+{% block hero %}
+  {% image self.image_banner width-1440 as image_banner %}
+  {% image self.image_banner_small width-100 as image_banner_small %}
+  <section class="platform-governance-series-article-hero" style="background-image: url('{{ image_banner.url }}'), url('{{ image_banner_small.url }}');">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="hero-content">
+            {% include "includes/topics.html" with topics=self.topics %}
+            <div class="platform-governance-series-article-social">
+              <a href="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+                <i class="fab fa-facebook-square fa-lg"></i>
+              </a>
+              <a href="twitter-share-link" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
+                <i class="fab fa-twitter fa-lg"></i>
+              </a>
+            </div>
+            <h1>{{ self.title }}</h1>
+            {% include "includes/authors.html" with authors=self.authors %}
+            {% include "includes/date.html" with date=self.publishing_date %}
+            <div class="scrollanchor-container">
+              <a href="#article-body">
+                <i class="far fa-arrow-down fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block in_the_series %}
+  {% if self.article_series %}
+    <section class="platform-governance-series-in-the-series">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <p class="series-subtitle">A CIGI Essay Series</p>
+            <h2>
+              <a href="{{ self.article_series.url }}">
+                {{ self.article_series.title }}
+              </a>
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p class="series-subheading">In the Series</p>
+            <div class="platform-governance-series-in-the-series-items">
+              {% for block in self.article_series.specific.series_items %}
+                {% if block.block_type == 'series_item' %}
+                  <article{% if block.value.id == self.id %} class="current"{% endif %}>
+                    <div class="series-article-image">
+                      {% if block.value.id == self.id %}
+                        {% image block.value.specific.image_banner fill-672x895 %}
+                      {% else %}
+                        <a href="{{ block.value.url }}">
+                          {% image block.value.specific.image_banner fill-672x895 %}
+                        </a>
+                      {% endif %}
+                    </div>
+                    <h3 class="series-article-title">
+                      {% if block.value.id == self.id %}
+                        {{ block.value.title }}
+                      {% else %}
+                        <a href="{{ block.value.url }}">
+                          {{ block.value.title }}
+                        </a>
+                      {% endif %}
+                    </h3>
+                    <p class="authors">
+                      {% for author in block.value.specific.authors %}
+                        {% if author.block_type == 'author' %}
+                          <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                        {% elif author.block_type == 'external_author' %}
+                          <span>{{ author.value }}</span>
+                        {% endif %}
+                      {% endfor %}
+                    </p>
+                  </article>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Platform Governance series articles #}
+{% endblock %}
