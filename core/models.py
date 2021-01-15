@@ -109,6 +109,7 @@ class HomePage(Page):
         'publications.PublicationListPage',
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
+        'research.ResearchLandingPage',
         'research.TopicListPage'
     ]
     templates = 'core/home_page.html'

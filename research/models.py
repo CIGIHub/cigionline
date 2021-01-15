@@ -196,6 +196,24 @@ class ProjectType(index.Indexed, models.Model):
         return self.name
 
 
+class ResearchLandingPage(BasicPageAbstract, Page):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'research/research_landing_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    class Meta:
+        verbose_name = 'Research Landing Page'
+
+
 class TopicListPage(Page):
     """Topic list page"""
 
