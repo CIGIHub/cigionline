@@ -14,14 +14,11 @@
     text-align: center;
 
     span {
-      @include media-breakpoint-up(md) {
-        margin: 1em 0.2em;
-      }
       background-color: $white;
       border-radius: 50%;
       display: inline-block;
       height: 0.5em;
-      margin: 2em 0.2em 1em;
+      margin: 1em 0.2em;
       width: 0.5em;
     }
   }
@@ -62,7 +59,7 @@
 
   .health-security-series-article-series-in-the-series {
     color: $white;
-    margin: 3em 0 0;
+    margin: 2em 0;
 
     article {
       @keyframes rotation {
