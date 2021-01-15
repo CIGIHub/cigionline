@@ -78,6 +78,24 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     ]
 
 
+class MediaLandingPage(BasicPageAbstract, Page):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'articles/media_landing_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    class Meta:
+        verbose_name = 'Media Page'
+
+
 class ArticleListPage(Page):
     max_count = 1
     parent_page_types = ['core.HomePage']
@@ -377,6 +395,16 @@ class ArticlePage(
     class Meta:
         verbose_name = 'Opinion'
         verbose_name_plural = 'Opinions'
+
+
+class ArticleSeriesListPage(Page):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'articles/article_series_list_page.html'
+
+    class Meta:
+        verbose_name = 'Article Series List Page'
 
 
 class ArticleSeriesPage(

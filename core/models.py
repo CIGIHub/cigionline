@@ -93,6 +93,9 @@ class HomePage(Page):
     subpage_types = [
         'articles.ArticleLandingPage',
         'articles.ArticleListPage',
+        'articles.ArticleSeriesListPage',
+        'articles.ArticleSeriesPage',
+        'articles.MediaLandingPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
         'core.PrivacyNoticePage',
@@ -106,6 +109,7 @@ class HomePage(Page):
         'publications.PublicationListPage',
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
+        'research.ResearchLandingPage',
         'research.TopicListPage'
     ]
     templates = 'core/home_page.html'

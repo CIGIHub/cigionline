@@ -8,9 +8,10 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
 )
 from wagtail.core.models import Orderable
+from wagtail.search import index
 
 
-class Menu(ClusterableModel):
+class Menu(index.Indexed, ClusterableModel):
     name = models.CharField(max_length=32)
     slug = models.CharField(max_length=32)
 

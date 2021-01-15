@@ -149,11 +149,19 @@
   }
 
   h3 {
-    font-family: 'din-condensed', sans-serif;
-    font-size: 1.225em;
+    font-size: 1.3em;
     font-weight: 400;
-    margin-bottom: .4285em;
+    line-height: 1.45em;
+    margin-bottom: .485em;
     margin-top: 1em;
+  }
+
+  h2 {
+    font-family: 'din-condensed', sans-serif;
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
   }
 
   hr {
@@ -161,6 +169,23 @@
     height: 32px;
     margin: 3em auto;
     width: 32px;
+  }
+
+  .article-works-cited {
+    h2 {
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0;
+      text-transform: uppercase;
+
+      &::after {
+        border-bottom: 0;
+      }
+    }
+
+    p {
+      padding: 0;
+    }
   }
 
   .end-of-article {
@@ -186,10 +211,6 @@
   }
 
   .text-border-block {
-    h3 {
-      margin-bottom: .5em;
-      margin-top: 1em;
-    }
 
     .block-contents {
       border: solid 1px $data-series-primary-color;
@@ -265,7 +286,7 @@
       }
     }
 
-    .container-lg {
+    .article-header-sticky-content {
       align-items: center;
       display: flex;
       padding: 0.5em;

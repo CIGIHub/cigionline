@@ -24,6 +24,7 @@ from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class ProjectListPage(Page):
@@ -180,7 +181,7 @@ class ProjectPage(
         verbose_name_plural = 'Projects'
 
 
-class ProjectType(models.Model):
+class ProjectType(index.Indexed, models.Model):
     """
     A Django model that stores the project types. This isn't allowed to be
     edited in the admin interface. To insert/remove data - a migration needs to
@@ -193,6 +194,24 @@ class ProjectType(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ResearchLandingPage(BasicPageAbstract, Page):
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    templates = 'research/research_landing_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    class Meta:
+        verbose_name = 'Research Landing Page'
 
 
 class TopicListPage(Page):

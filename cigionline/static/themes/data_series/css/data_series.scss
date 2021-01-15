@@ -1,5 +1,6 @@
 $data-series-background-color: #f2f0ea;
 $data-series-primary-color: #31c3ba;
+$data-series-background-gradient: #e0ded9;
 
 @import '../../../css/global/mixins';
 
@@ -7,3 +8,8 @@ $data-series-primary-color: #31c3ba;
 @import './article_page';
 @import './multimedia_page';
 @import './includes/in_the_series';
+
+h2,
+h3 {
+  font-family: 'din-condensed', sans-serif;
+}
