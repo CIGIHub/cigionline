@@ -1,10 +1,4 @@
 .stream-block-chart {
-  .container-sm {
-    @include media-breakpoint-up(sm) {
-      padding: 0 5em;
-    }
-  }
-
   .stream-block-chart-title {
     border-top: 5px solid $cigi-primary-colour;
     color: $cigi-primary-colour;
