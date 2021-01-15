@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block content %}
+  {% include "includes/hero_plain.html" with title=self.title %}
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock %}
