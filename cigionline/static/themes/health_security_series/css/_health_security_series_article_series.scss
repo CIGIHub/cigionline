@@ -25,7 +25,8 @@
 
   .health-security-series-article-series-hero {
     @include media-breakpoint-up(md) {
-      background-size: 800px;
+      background-position-y: -120px;
+      background-size: 1250px;
       padding-top: 500px;
     }
     background-position-x: center;
