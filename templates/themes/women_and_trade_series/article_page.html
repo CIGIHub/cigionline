@@ -1,0 +1,12 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeWomenAndTradeSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}women-and-trade-series-article{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Women and Trade series articles #}
+{% endblock %}
