@@ -1,4 +1,4 @@
-{% load wagtailcore_tags menu_tags %}
+{% load wagtailcore_tags menu_tags static %}
 
 {% get_menu_items 'main' as main_menu_items %}
 {% get_menu_items 'footer' as footer_menu_items %}
@@ -9,8 +9,8 @@
       <div class="row">
         <div class="col cigi-top-bar" id="global-nav">
           <a class="cigi-logo" href="/">
-            {% include "./header_cigi_logo_large.svg" %}
-            {% include "./header_cigi_logo_small.svg" %}
+            {% include './CIGI20th_logo_reverse_RGBsmall.svg' %}
+            {% include './CIGI20th_logo_acronym_reverse_RGBsmall.svg' %}
           </a>
           <nav aria-label="primary">
             <ul class="menu desktop-menu">
