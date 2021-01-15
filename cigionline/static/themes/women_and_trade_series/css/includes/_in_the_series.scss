@@ -1,0 +1,10 @@
+.women-and-trade-series-in-the-series {
+  @include media-breakpoint-up(md) {
+    columns: 2;
+  }
+  columns: 1;
+
+  article {
+    break-inside: avoid;
+  }
+}
