@@ -90,17 +90,6 @@
 {% endblock %}
 
 {% block in_the_series %}
-  <section class="data-series-in-the-series-title">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8 ">
-          <h3>
-            <a href="{{ self.article_series.url }}"><span>{{ self.article_series.title }}</span></a>
-          </h3>
-        </div>
-      </div>
-    </div>
-  </section>
   {% if self.article_series %}
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
   {% endif %}
