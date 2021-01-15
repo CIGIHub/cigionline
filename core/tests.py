@@ -11,7 +11,12 @@ from multimedia.models import MultimediaListPage, MultimediaSeriesListPage, Mult
 from newsletters.models import NewsletterListPage
 from people.models import PeoplePage, PersonListPage
 from publications.models import PublicationListPage, PublicationSeriesListPage
-from research.models import ProjectListPage, ProjectPage, TopicListPage
+from research.models import (
+    ProjectListPage,
+    ProjectPage,
+    ResearchLandingPage,
+    TopicListPage,
+)
 from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
@@ -128,6 +133,7 @@ class HomePageTests(WagtailPageTests):
                 ProjectListPage,
                 PublicationListPage,
                 PublicationSeriesListPage,
+                ResearchLandingPage,
                 TopicListPage,
             }
         )
