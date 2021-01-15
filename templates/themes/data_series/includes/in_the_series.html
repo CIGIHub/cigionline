@@ -1,15 +1,6 @@
 <section class="data-series-in-the-series">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col col-md-10 col-lg-8 data-series-in-the-series-title">
-        <h3>
-          <a href="{{ article_series.url }}">
-            {{ article_series.title }}
-          </a>
-        </h3>
-      </div>
-    </div>
-    <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8 series-items">
         {% for block in article_series.series_items %}
           {% if block.block_type == 'series_item' and block.value.id != article_id %}
