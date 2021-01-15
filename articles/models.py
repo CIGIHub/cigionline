@@ -609,6 +609,7 @@ class ArticleSeriesPage(
     @property
     def series_contributors_by_person(self):
         series_contributors = []
+        item_people = set()
 
         for item in self.series_items:
             if item.block_type == 'category_title':
@@ -626,7 +627,9 @@ class ArticleSeriesPage(
                 continue
             else:
                 for person in people:
-                    series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
+                    if person.value.title not in item_people:
+                        series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
+                        item_people.add(person.value.title)
 
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
