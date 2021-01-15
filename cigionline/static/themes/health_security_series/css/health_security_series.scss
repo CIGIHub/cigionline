@@ -1,7 +1,41 @@
 $health-security-series-background-colour: #0b506f;
+$health-security-series-light-grey: #d8d8d8;
+$health-security-series-font: 'Masqualero', sans-serif;
+$meta-grey: #c7c7c5;
+
+@mixin health-security-social-links {
+  margin: 0;
+
+  a {
+    width: 1.5em;
+  }
+
+  i {
+    color: $white;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $cigi-primary-colour;
+    }
+  }
+
+  .fa-circle {
+    display: none;
+  }
+}
+
+@mixin health-security-title {
+  color: $white;
+  font-family: $health-security-series-font;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0.2em 0;
+  text-align: center;
+}
 
 @import '../../../css/global/mixins';
 
 @import './health_security_series_article_series';
 @import './health_security_series_article';
 @import './health_security_series_multimedia';
+@import './includes/health_security_series_rings';

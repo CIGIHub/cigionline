@@ -1,0 +1,16 @@
+.women-and-trade-series-article-series {
+  @include top-bar(
+    $background-color: $women-and-trade-series-background-colour,
+    $color: $black,
+    $position: relative,
+  );
+  background-color: $women-and-trade-series-background-colour;
+
+  .women-and-trade-series-article-series-hero {
+    .hero-content {
+      h1 {
+        text-align: center;
+      }
+    }
+  }
+}

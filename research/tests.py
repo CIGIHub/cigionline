@@ -3,7 +3,13 @@ from django.template import Context, Template
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
 
-from .models import ProjectListPage, ProjectPage, TopicListPage, TopicPage
+from .models import (
+    ProjectListPage,
+    ProjectPage,
+    ResearchLandingPage,
+    TopicListPage,
+    TopicPage,
+)
 
 
 class ProjectListPageTests(WagtailPageTests):
@@ -30,6 +36,20 @@ class ProjectPageTests(WagtailPageTests):
     def test_projectpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             ProjectPage,
+            {},
+        )
+
+
+class ResearchLandingPageTests(WagtailPageTests):
+    def test_researchlandingpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            ResearchLandingPage,
+            {HomePage},
+        )
+
+    def test_researchlandingpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            ResearchLandingPage,
             {},
         )
 

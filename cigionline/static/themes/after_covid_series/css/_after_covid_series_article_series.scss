@@ -16,15 +16,14 @@
     }
 
     h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2.75em;
+      }
       color: $white;
       font-family: $tisa-pro;
       font-size: 2em;
       font-weight: 900;
       margin: 0 0 1em;
-
-      @media screen and (min-width: 768px) {
-        font-size: 2.75em;
-      }
     }
 
     p {
@@ -35,16 +34,15 @@
   }
 
   .video-banner {
+    @include media-breakpoint-up(md) {
+      background-position-x: left;
+      height: 200px;
+    }
     background-position-x: center;
     background-repeat: repeat-x;
     background-size: auto 100%;
     height: 150px;
     margin: 3em 0;
-
-    @media screen and (min-width: 768px) {
-      background-position-x: left;
-      height: 200px;
-    }
   }
 
   .after-covid-series-article-series-in-the-series {
