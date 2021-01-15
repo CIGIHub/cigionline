@@ -2,23 +2,30 @@
   position: relative;
 
   .video-bg {
-
     video {
-      display: block;
-      height: auto;
-      left: 50%;
-      position: fixed;
-      top: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      width: auto;
-      z-index: -100;
+      display: none;
+    }
+    @include media-breakpoint-up(md) {
+      video {
+        display: block;
+        height: auto;
+        left: 50%;
+        position: fixed;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: auto;
+        z-index: -100;
+      }
     }
   }
 
   .container {
+    @include media-breakpoint-up(md) {
+      padding-top: 160px;
+    }
     left: 50%;
     max-width: 507px;
-    padding-top: 160px;
+    padding-top: 60px;
     position: absolute;
     right: 50%;
     transform: translate(-50%);
@@ -57,17 +64,23 @@
   }
 
   .subtitle {
+    @include media-breakpoint-up(md) {
+      left: 340px;
+    }
+
     font-size: 1em;
     font-weight: 500;
-    left: 340px;
     margin: 0;
     position: relative;
     text-transform: uppercase;
+
   }
 
   .contributors {
+    @include media-breakpoint-up(md) {
+      left: 355px;
+    }
     columns: 2;
-    left: 355px;
     list-style: none;
     position: absolute;
 
@@ -83,12 +96,15 @@
   }
 
   .scroll-arrow {
+    @include media-breakpoint-up(md) {
+      left: 50%;
+    }
     background-color: $cigi-primary-colour;
     border-radius: 50%;
     bottom: -150px;
     color: $white;
     height: 32px;
-    left: 50%;
+    left: 80%;
     margin-left: -15px;
     position: absolute;
     width: 32px;
