@@ -29,18 +29,16 @@
 
   ul {
     @include link($color: $health-security-series-light-grey, $hover-color: $cigi-primary-colour);
+    @include media-breakpoint-up(md) {
+      columns: 3;
+    }
     columns: 2;
     font-family: $health-security-series-font;
     line-height: 2;
     text-align: left;
 
-    @include media-breakpoint-up(md) {
-      columns: 3;
-    }
-
     li {
       list-style: none;
-      margin-bottom: 0.5em;
     }
   }
 }
