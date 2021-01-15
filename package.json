@@ -19,7 +19,7 @@
     "start": "cross-env NODE_ENV=development webpack --mode development --progress --watch"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-pro": "5.15.1",
+    "@fortawesome/fontawesome-pro": "5.15.2",
     "bootstrap": "4.5.2",
     "jquery": "3.5.1",
     "normalize.css": "8.0.1"
