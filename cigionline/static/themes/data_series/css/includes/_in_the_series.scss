@@ -1,7 +1,14 @@
 .data-series-in-the-series {
+
+  animation: horizontal_scroll 100s;
+  background-color: transparent;
+  background-image: url('../../../../assets/data-series-banner-bg.png');
+  background-repeat: repeat-x;
   padding-bottom: 2em;
+  padding-top: 44px;
 
   .data-series-in-the-series-title {
+
     h3 {
       @include link($color: $black, $hover-color: $cigi-primary-colour);
       align-items: center;
@@ -43,6 +50,7 @@
     font-weight: 600;
     margin: 2em 0 0;
     padding-bottom: 0.25em;
+    text-transform: uppercase;
   }
 
   article {

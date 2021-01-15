@@ -3,6 +3,7 @@ $data-series-primary-color: #31c3ba;
 $data-series-secondary-color: #17928a;
 
 @import '../../../css/global/mixins';
+@import '../../../css/global/animations/horizontal_scroll';
 
 @import './article_series_page';
 @import './article_page';
