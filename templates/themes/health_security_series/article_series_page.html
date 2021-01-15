@@ -11,7 +11,7 @@
   {% render_bundle 'themeHealthSecuritySeries' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}health-security-series-article-series{% endblock %}
+{% block body_class %}health-security-series health-security-series-article-series{% endblock %}
 
 {% block content %}
   {% if self.image_banner.filename|file_extension == '.gif' %}

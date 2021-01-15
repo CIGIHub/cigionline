@@ -123,6 +123,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
     implemented_themes = [
         'after_covid_series_opinion',
         'cyber_series_opinion',
+        'health_security_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
