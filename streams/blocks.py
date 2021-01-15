@@ -324,6 +324,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         'innovation_series_opinion_series',
         'longform_opinion_series',
         'platform_governance_series_opinion_series',
+        'women_and_trade_series_opinion_series',
     ]
 
     def get_template(self, context, *args, **kwargs):
