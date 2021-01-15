@@ -4,7 +4,7 @@
   <a href="{{content.url}}" class="feature-content-image">
     <div class="img-wrapper">
       {% if content.image_hero.filename|file_extension == '.gif' %}
-        <img src="/media/original_images/{{content.image_hero.filename}}" alt="{{content.image_hero.title}}">
+        <img src="/staticmedia/original_images/{{content.image_hero.filename}}" alt="{{content.image_hero.title}}">
       {% else %}
         {% image content.image_hero fill-520x390 %}
       {% endif %}

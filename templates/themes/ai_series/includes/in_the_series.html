@@ -2,7 +2,7 @@
 
 
 {% if article_series.image_banner.filename|file_extension == '.gif' %}
-  {% define "/media/original_images/"|add:article_series.image_banner.filename as image_banner_url %}
+  {% define "/staticmedia/original_images/"|add:article_series.image_banner.filename as image_banner_url %}
 {% else %}
   {% image article_series.image_banner original as image_banner %}
   {% define image_banner.url as image_banner_url %}
