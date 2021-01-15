@@ -1,4 +1,5 @@
 from django import template
+from pathlib import Path
 register = template.Library()
 
 
@@ -25,3 +26,8 @@ def define(value):
 @register.filter
 def social_string(value):
     return value.replace(' ', '+')
+
+
+@register.filter
+def file_extension(value):
+    return Path(value).suffix
