@@ -1,10 +1,9 @@
 .data-series-in-the-series-title {
-  // animation: horizontal_scroll 100s;
-  // background-color: transparent;
-  // background-image: url('../../../../assets/data-series-banner-bg.png');
-  // background-repeat: repeat-x;
-  // padding-bottom: 2em;
-  // padding-top: 44px;
+  animation: bg_scroll_left 50s linear infinite;
+  background-color: transparent;
+  background-image: url('../../../../assets/data-series-banner-bg.png');
+  background-repeat: repeat-x;
+  padding-top: 44px;
 
   h3 {
     @include link($color: $black, $hover-color: $cigi-primary-colour);
