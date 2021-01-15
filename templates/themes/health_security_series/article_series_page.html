@@ -14,8 +14,13 @@
 {% block body_class %}health-security-series-article-series{% endblock %}
 
 {% block content %}
-  {% image self.image_banner original as image_hero %}
-  <section class="health-security-series-article-series-hero" style="background-image: url('{{ image_hero.url }}');">
+  {% if self.image_banner.filename|file_extension == '.gif' %}
+    {% define "/staticmedia/original_images/"|add:self.image_banner.filename as image_banner_url %}
+  {% else %}
+    {% image self.image_banner original as image_banner %}
+    {% define image_banner.url as image_banner_url %}
+  {% endif %}
+  <section class="health-security-series-article-series-hero" style="background-image: url('{{ image_banner_url }}');">
     <div class="container">
       <div class="row justify-content-md-center">
         <div class="col col-md-10 col-lg-8">
@@ -38,8 +43,7 @@
               {% define block.value.specific|page_type as page_type %}
               <article>
                 <div class="author-images block-{{page_type}}">
-                  <img class='outer-ring' src='{% static "assets/health-security-portrait-ring-outer.svg" %}' alt='ring graphic' />
-		              <img class='inner-ring' src='{% static "assets/health-security-portrait-ring-inner.svg" %}' alt='ring graphic' />
+                  {% include './includes/health_security_series_rings.html' %}
                   {% if page_type == 'opinion' %}
                     {% for author in block.value.specific.authors %}
                     <a href="{{ author.value.url }}">
@@ -81,7 +85,8 @@
   <section class="health-security-series-article-series-credits">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col col-lg-10">
+        <div class="col-md-10 col-lg-8">
+          <div class="dots-divider"><span></span><span></span><span></span></div>
           <h2>Credits</h2>
           <div class="health-security-series-article-series-credits-content">
             {{ self.credits|richtext }}
