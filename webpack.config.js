@@ -41,6 +41,7 @@ const config = {
     themeInnovationSeries: './cigionline/static/themes/innovation_series/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',
     themePlatformGovernanceSeries: './cigionline/static/themes/platform_governance_series/index.js',
+    themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
   },
 
