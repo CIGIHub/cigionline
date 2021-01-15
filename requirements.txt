@@ -2,8 +2,8 @@ anyascii==0.1.7
 asgiref==3.3.1
 astroid==2.4.2
 beautifulsoup4==4.8.2
-boto3==1.16.53
-botocore==1.19.53
+boto3==1.16.56
+botocore==1.19.56
 certifi==2020.12.5
 chardet==3.0.4
 coverage==5.3.1
@@ -36,7 +36,7 @@ l18n==2020.6.1
 lazy-object-proxy==1.4.3
 libsass==0.20.1
 mccabe==0.6.1
-openpyxl==3.0.5
+openpyxl==3.0.6
 Pillow==8.1.0
 psycopg2==2.8.6
 pycodestyle==2.6.0
