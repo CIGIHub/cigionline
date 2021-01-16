@@ -24,6 +24,10 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.contrib.forms.models import (
+    AbstractEmailForm,
+    AbstractFormField,
+)
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
@@ -98,6 +102,7 @@ class HomePage(Page):
         'articles.MediaLandingPage',
         'careers.JobPostingListPage',
         'core.BasicPage',
+        'core.ContactPage',
         'core.PrivacyNoticePage',
         'events.EventListPage',
         'multimedia.MultimediaListPage',
@@ -738,3 +743,35 @@ class Theme(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ContactFormField(AbstractFormField):
+    page = ParentalKey(
+        'core.ContactPage',
+        on_delete=models.CASCADE,
+        related_name='form_fields',
+    )
+
+
+class ContactPage(AbstractEmailForm):
+    template = 'core/contact_page.html'
+    landing_page_template = 'core/contact_page_landing.html'
+
+    thank_you_message = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
+
+    content_panels = AbstractEmailForm.content_panels + [
+        InlinePanel('form_fields', label='Form Fields'),
+        FieldPanel('thank_you_message'),
+        MultiFieldPanel(
+            [
+                FieldPanel('from_address'),
+                FieldPanel('to_address'),
+                FieldPanel('subject'),
+            ],
+            heading='Email Settings',
+        )
+    ]
