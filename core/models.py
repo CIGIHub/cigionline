@@ -754,9 +754,6 @@ class ContactFormField(AbstractFormField):
 
 
 class ContactPage(AbstractEmailForm):
-    template = 'core/contact_page.html'
-    landing_page_template = 'core/contact_page_landing.html'
-
     thank_you_message = RichTextField(
         blank=True,
         null=False,
@@ -775,3 +772,12 @@ class ContactPage(AbstractEmailForm):
             heading='Email Settings',
         )
     ]
+
+    max_count = 1
+    parent_page_types = ['core.HomePage']
+    subpage_types = []
+    template = 'core/contact_page.html'
+    landing_page_template = 'core/contact_page_landing.html'
+
+    class Meta:
+        verbose_name = 'Contact Page'
