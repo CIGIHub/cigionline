@@ -820,6 +820,15 @@ class ContactPage(AbstractEmailForm):
         ),
     ]
 
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        for name, field in form.fields.items():
+            placeholder = field.help_text
+            if field.required:
+                placeholder = placeholder + '*'
+            field.widget.attrs.update({'placeholder': placeholder})
+        return form
+
     max_count = 1
     parent_page_types = ['core.HomePage']
     subpage_types = []
