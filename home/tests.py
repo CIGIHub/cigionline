@@ -6,9 +6,9 @@ from articles.models import (
     MediaLandingPage,
 )
 from careers.models import JobPostingListPage
+from contact.models import ContactPage
 from core.models import (
     BasicPage,
-    ContactPage,
     PrivacyNoticePage,
 )
 from events.models import EventListPage

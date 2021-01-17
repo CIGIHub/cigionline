@@ -1,4 +1,3 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
@@ -6,8 +5,6 @@ from streams.blocks import (
     ParagraphBlock,
     ReadMoreBlock,
     BlockQuoteBlock,
-    ContactEmailBlock,
-    ContactPersonBlock,
     EmbeddedVideoBlock,
     ExternalQuoteBlock,
     ImageBlock,
@@ -28,16 +25,11 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.contrib.forms.models import (
-    AbstractEmailForm,
-    AbstractFormField,
-)
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
@@ -400,7 +392,7 @@ class BasicPage(
 
     parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'home.HomePage']
     subpage_types = [
-        'core.AnnualReportListPage',
+        'annual_reports.AnnualReportListPage',
         'core.BasicPage',
         'core.FundingPage',
         'people.PersonListPage',
@@ -437,107 +429,6 @@ class FundingPage(BasicPageAbstract, Page):
         verbose_name = 'Funding Page'
 
 
-class AnnualReportListPage(BasicPageAbstract, Page):
-    max_count = 1
-    parent_page_types = ['core.BasicPage']
-    subpage_types = ['core.AnnualReportPage']
-    templates = 'core/annual_report_list_page.html'
-
-    content_panels = [
-        BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
-        BasicPageAbstract.images_panel,
-    ]
-    settings_panels = Page.settings_panels + [
-        BasicPageAbstract.submenu_panel,
-    ]
-
-    class Meta:
-        verbose_name = 'Annual Report List Page'
-
-
-class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
-    """View annual report page"""
-
-    image_poster = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Cover image',
-        help_text='Poster sized image that is displayed in the featured section on the Annual Reports page.',
-    )
-    report_english = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    report_financial = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    report_french = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    report_interactive = models.CharField(
-        blank=True,
-        max_length=255,
-        help_text='Internal path to the interactive report. Example: /interactives/2019annualreport',
-    )
-    year = models.IntegerField(validators=[MinValueValidator(2005), MaxValueValidator(2050)])
-
-    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
-    drupal_node_id = models.IntegerField(blank=True, null=True)
-
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('year'),
-            ],
-            heading='General Information',
-            classname='collapsible',
-        ),
-        MultiFieldPanel(
-            [
-                DocumentChooserPanel('report_english'),
-                DocumentChooserPanel('report_french'),
-                DocumentChooserPanel('report_financial'),
-                FieldPanel('report_interactive'),
-            ],
-            heading='Reports',
-            classname='collapsible',
-        ),
-        MultiFieldPanel(
-            [
-                ImageChooserPanel('image_poster'),
-            ],
-            heading='Images',
-            classname='collapsible collapsed',
-        )
-    ]
-    promote_panels = Page.promote_panels + [
-        FeatureablePageAbstract.feature_panel,
-        SearchablePageAbstract.search_panel,
-    ]
-    parent_page_types = ['core.AnnualReportListPage']
-    subpage_types = []
-    templates = 'core/annual_report_page.html'
-
-    class Meta:
-        verbose_name = 'Annual Report Page'
-        verbose_name_plural = 'Annual Report Pages'
-
-
 class PrivacyNoticePage(
     Page,
     BasicPageAbstract,
@@ -564,95 +455,3 @@ class Theme(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class ContactFormField(AbstractFormField):
-    page = ParentalKey(
-        'core.ContactPage',
-        on_delete=models.CASCADE,
-        related_name='form_fields',
-    )
-
-
-class ContactPage(AbstractEmailForm):
-    events_contact = StreamField(
-        [
-            ('contact_email', ContactEmailBlock()),
-            ('contact_person', ContactPersonBlock(
-                page_type='people.PersonPage',
-            )),
-        ],
-        blank=True,
-    )
-    human_resources_contact = StreamField(
-        [
-            ('contact_email', ContactEmailBlock()),
-            ('contact_person', ContactPersonBlock(
-                page_type='people.PersonPage',
-            )),
-        ],
-        blank=True,
-    )
-    media_contact = StreamField(
-        [
-            ('contact_email', ContactEmailBlock()),
-            ('contact_person', ContactPersonBlock(
-                page_type='people.PersonPage',
-            )),
-        ],
-        blank=True,
-    )
-    thank_you_message = RichTextField(
-        blank=True,
-        null=False,
-        features=['bold', 'italic', 'link'],
-    )
-
-    content_panels = AbstractEmailForm.content_panels + [
-        InlinePanel('form_fields', label='Form Fields'),
-        FieldPanel('thank_you_message'),
-        MultiFieldPanel(
-            [
-                FieldPanel('from_address'),
-                FieldPanel('to_address'),
-                FieldPanel('subject'),
-            ],
-            heading='Email Settings',
-        ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('human_resources_contact'),
-            ],
-            heading='Human Resources',
-        ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('events_contact'),
-            ],
-            heading='Events',
-        ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('media_contact'),
-            ],
-            heading='Media',
-        ),
-    ]
-
-    def get_form(self, *args, **kwargs):
-        form = super().get_form(*args, **kwargs)
-        for name, field in form.fields.items():
-            placeholder = field.help_text
-            if field.required:
-                placeholder = placeholder + '*'
-            field.widget.attrs.update({'placeholder': placeholder})
-        return form
-
-    max_count = 1
-    parent_page_types = ['home.HomePage']
-    subpage_types = []
-    template = 'core/contact_page.html'
-    landing_page_template = 'core/contact_page_landing.html'
-
-    class Meta:
-        verbose_name = 'Contact Page'

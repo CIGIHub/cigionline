@@ -1,3 +1,4 @@
+from annual_reports.models import AnnualReportListPage
 from careers.models import JobPostingListPage
 from home.models import HomePage
 from people.models import PersonListPage
@@ -7,41 +8,10 @@ from research.models import (
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import (
-    AnnualReportListPage,
-    AnnualReportPage,
     BasicPage,
-    ContactPage,
     FundingPage,
     PrivacyNoticePage,
 )
-
-
-class AnnualReportListPageTests(WagtailPageTests):
-    def test_annualreportlistpage_parent_page_types(self):
-        self.assertAllowedParentPageTypes(
-            AnnualReportListPage,
-            {BasicPage},
-        )
-
-    def test_annualreportlistpage_child_page_types(self):
-        self.assertAllowedSubpageTypes(
-            AnnualReportListPage,
-            {AnnualReportPage},
-        )
-
-
-class AnnualReportPageTests(WagtailPageTests):
-    def test_annualreportpage_parent_page_types(self):
-        self.assertAllowedParentPageTypes(
-            AnnualReportPage,
-            {AnnualReportListPage},
-        )
-
-    def test_annualreportpage_child_page_types(self):
-        self.assertAllowedSubpageTypes(
-            AnnualReportPage,
-            {},
-        )
 
 
 class BasicPageTests(WagtailPageTests):
@@ -61,20 +31,6 @@ class BasicPageTests(WagtailPageTests):
         self.assertAllowedSubpageTypes(
             BasicPage,
             {AnnualReportListPage, BasicPage, FundingPage, PersonListPage, ProjectPage}
-        )
-
-
-class ContactPageTests(WagtailPageTests):
-    def test_contactpage_parent_page_types(self):
-        self.assertAllowedParentPageTypes(
-            ContactPage,
-            {HomePage},
-        )
-
-    def test_contactpage_child_page_types(self):
-        self.assertAllowedSubpageTypes(
-            ContactPage,
-            {},
         )
 
 
