@@ -11,9 +11,8 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
-    AccordionBlock,
-    ReadMoreBlock,
-    SpeakersBlock,
+    ExternalSpeakerBlock,
+    SpeakerBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -37,7 +36,7 @@ from wagtail.search import index
 
 class MultimediaListPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['multimedia.MultimediaPage']
     template = 'multimedia/multimedia_list_page.html'
     ajax_template = 'includes/multimedia_list_page_multimedia_list.html'
@@ -191,15 +190,15 @@ class MultimediaPage(
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     speakers = StreamField(
         [
-            ('speaker', SpeakersBlock(required=True, page_type='people.PersonPage')),
-            ('external_speaker', CharBlock(required=True)),
+            ('speaker', SpeakerBlock(required=True, page_type='people.PersonPage')),
+            ('external_speaker', ExternalSpeakerBlock()),
         ],
         blank=True,
     )
     transcript = StreamField(
         [
-            ('accordion', AccordionBlock()),
-            ('read_more', ReadMoreBlock()),
+            BasicPageAbstract.body_accordion_block,
+            BasicPageAbstract.body_read_more_block,
         ],
         blank=True,
     )
@@ -366,7 +365,7 @@ class MultimediaSeriesListPage(Page):
     multimedia series pages at the path /multimedia-series.
     """
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['multimedia.MultimediaSeriesPage']
     templates = 'multimedia/multimedia_series_list_page.html'
 
@@ -473,7 +472,7 @@ class MultimediaSeriesPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    parent_page_types = ['core.HomePage', 'multimedia.MultimediaSeriesListPage']
+    parent_page_types = ['home.HomePage', 'multimedia.MultimediaSeriesListPage']
     subpage_types = []
     templates = 'multimedia/multimedia_series_page.html'
 

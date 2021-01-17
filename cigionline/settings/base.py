@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'compressor',
     'core',
     'events',
+    'home',
     'menus',
     'multimedia',
     'newsletters',
