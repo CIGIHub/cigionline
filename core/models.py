@@ -95,6 +95,26 @@ class HomePage(Page):
         ),
     ]
 
+    def featured_large(self):
+        first_featured = self.featured_pages.first()
+        if first_featured:
+            return first_featured.featured_page.specific
+        return False
+
+    def featured_medium(self):
+        featured_medium = []
+        featured_medium_query = self.featured_pages.all()[1:4]
+        for item in featured_medium_query:
+            featured_medium.append(item.featured_page.specific)
+        return featured_medium
+
+    def featured_small(self):
+        featured_small = []
+        featured_small_query = self.featured_pages.all()[4:]
+        for item in featured_small_query:
+            featured_small.append(item.featured_page.specific)
+        return featured_small
+
     max_count = 1
     subpage_types = [
         'articles.ArticleLandingPage',
