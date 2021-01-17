@@ -1,0 +1,23 @@
+.contact-person-block {
+  .contact-person-email,
+  .contact-person-phone-number {
+    @include link-underline;
+    color: $black;
+
+    i {
+      color: $cigi-primary-colour;
+      padding-right: 5px;
+    }
+  }
+
+  .contact-person-position {
+    color: $cigi-medium-grey;
+    font-size: 0.875em;
+    line-height: 1.2;
+  }
+
+  .contact-person-title {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
+    font-size: 1.0625em;
+  }
+}

@@ -36,3 +36,7 @@ AWS_DEFAULT_ACL = None
 AWS_LOCATION = 'static'
 if 'STATIC_URL' in os.environ:
     STATIC_URL = os.environ['STATIC_URL']
+
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+if 'SENDGRID_API_KEY' in os.environ:
+    SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']

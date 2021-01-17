@@ -25,6 +25,7 @@ from .models import (
     AnnualReportListPage,
     AnnualReportPage,
     BasicPage,
+    ContactPage,
     FundingPage,
     HomePage,
     PrivacyNoticePage,
@@ -79,6 +80,20 @@ class BasicPageTests(WagtailPageTests):
         )
 
 
+class ContactPageTests(WagtailPageTests):
+    def test_contactpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            ContactPage,
+            {HomePage},
+        )
+
+    def test_contactpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            ContactPage,
+            {},
+        )
+
+
 class FundingPageTests(WagtailPageTests):
     def test_fundingpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
@@ -120,6 +135,7 @@ class HomePageTests(WagtailPageTests):
                 ArticleSeriesListPage,
                 ArticleSeriesPage,
                 BasicPage,
+                ContactPage,
                 EventListPage,
                 JobPostingListPage,
                 MediaLandingPage,

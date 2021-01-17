@@ -1,0 +1,77 @@
+{% load wagtailcore_tags %}
+
+<section class="contact-info-section">
+  <div class="container">
+    {% if human_resources_contact %}
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2>Human Resources</h2>
+          <div class="contact-info">
+            {% for block in human_resources_contact %}
+              {% include_block block %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% if events_contact %}
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2>Events</h2>
+          <div class="contact-info">
+            {% for block in events_contact %}
+              {% include_block block %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% if media_contact %}
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2>Media</h2>
+          <div class="contact-info">
+            {% for block in media_contact %}
+              {% include_block block %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        <h2>General Inquiries</h2>
+        <div class="contact-general-inquiries">
+          <div class="row">
+            <div class="col-6 col-lg-4">
+              <div>
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:reception@cigionline.org">reception@cigionline.org</a>
+              </div>
+              <div class="contact-address">
+                <i class="fas fa-map-marker"></i>
+                <p>
+                  67 Erb Street West,
+                  <br />Waterloo, ON Canada
+                  <br />N2L 6C2
+                </p>
+              </div>
+            </div>
+            <div class="col-6 col-lg-8">
+              <div class="row">
+                <div class="col-12 col-lg-6">
+                  <i class="fas fa-phone"></i>
+                  +1 519 885 2444
+                </div>
+                <div class="col-12 col-lg-6">
+                  <i class="fas fa-fax"></i>
+                  +1 519 885 5450
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

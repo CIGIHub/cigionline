@@ -11,6 +11,7 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'layout/hero';
 @import 'layout/sections';
 @import 'layout/tables';
+@import 'layout/forms';
 
 @import 'includes/footer';
 @import 'includes/top_bar';
@@ -30,6 +31,7 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'includes/about_the_author';
 @import 'includes/disclaimer';
 @import 'includes/recommended';
+@import 'includes/contact_info';
 
 @import 'includes/features/feature_content';
 @import 'includes/features/feature_content_large';
@@ -41,6 +43,8 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'streams/block';
 @import 'streams/block_quote_block';
 @import 'streams/chart_block';
+@import 'streams/contact_email_block';
+@import 'streams/contact_person_block';
 @import 'streams/external_quote_block';
 @import 'streams/image_full_bleed_block';
 @import 'streams/inline_video_block';
