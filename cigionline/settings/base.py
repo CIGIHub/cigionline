@@ -26,11 +26,14 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+    'annual_reports',
     'articles',
     'careers',
     'compressor',
+    'contact',
     'core',
     'events',
+    'home',
     'menus',
     'multimedia',
     'newsletters',

@@ -1,4 +1,5 @@
-from core.models import BasicPage, HomePage
+from core.models import BasicPage
+from home.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import JobPostingListPage, JobPostingPage

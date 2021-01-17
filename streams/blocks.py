@@ -461,11 +461,11 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/pull_quote_right_block.html'
 
 
-class SpeakersBlock(blocks.PageChooserBlock, ThemeableBlock):
+class SpeakerBlock(blocks.PageChooserBlock, ThemeableBlock):
 
     def get_template(self, context, *args, **kwargs):
-        standard_template = super(SpeakersBlock, self).get_template(context, *args, **kwargs)
-        return self.get_theme_template(standard_template, context, 'speakers_block')
+        standard_template = super(SpeakerBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'speaker_block')
 
     def get_api_representation(self, value, context=None):
         if value:
