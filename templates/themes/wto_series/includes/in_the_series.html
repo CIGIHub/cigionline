@@ -2,25 +2,17 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8">
-        <article>
-          <h2>{{ article_series.title }}</h2>
-          <p>A CIGI Essay Series</p>
-        </article>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col col-md-10 col-lg-8">
-        {% for block in article_series.series_items %}
-          {% if block.block_type == 'series_item' %}
+        {% for block in series_items %}
+          {% if block.block_type == 'category_title' %}
+            {% if not forloop.first %}
+              </div>
+            {% endif %}
+            <h3 class="{{ block.value|slugify }}">{{ block.value }}</h3>
+            <div>
+          {% elif block.block_type == 'series_item' %}
             <article>
               <h4>
-                {% if article_id == block.value.id %}
-                  <span>{{ block.value.title }}</span>
-                {% else %}
-                  <a href="{{ block.value.url }}">
-                    {{ block.value.title }}
-                  </a>
-                {% endif %}
+                <a href="{{ block.value.url }}">{{ block.value.title }}</a>
               </h4>
               <p class="authors">
                 {% for author in block.value.specific.authors %}
@@ -39,8 +31,9 @@
                 {% endfor %}
               </p>
             </article>
-          {% elif block.block_type == 'category_title' %}
-            <h3>{{ block.value }}</h3>
+            {% if forloop.last %}
+              </div>
+            {% endif %}
           {% endif %}
         {% endfor %}
       </div>
