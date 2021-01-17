@@ -1,0 +1,7 @@
+.homepage-featured {
+  @include media-breakpoint-up(lg) {
+    padding-top: 7em;
+  }
+  margin-bottom: 3em;
+  padding-top: 5em;
+}

@@ -1,8 +1,42 @@
 {% extends "base.html" %}
-{% load static %}
+{% load wagtailcore_tags static %}
 
 {% block body_class %}template-homepage{% endblock %}
 
 {% block content %}
-  <p>hello world</p>
+  <section class="featured homepage-featured">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          {% if self.featured_large %}
+            {% include "includes/features/feature_content_large.html" with content=self.featured_large %}
+          {% endif %}
+        </div>
+        <hr>
+        <div class="col-12 col-md-4 featured-small">
+          {% for item in self.featured_small %}
+            {% if forloop.counter > 1 %}
+              <hr>
+            {% endif %}
+            {% include "includes/features/feature_content_small.html" with content=item %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <hr>
+        </div>
+      </div>
+      <div class="row featured-medium">
+        {% for item in self.featured_medium %}
+          <div class="col-12 col-md-4">
+            {% if forloop.counter > 1 %}
+              <hr>
+            {% endif %}
+            {% include "includes/features/feature_content_medium.html" with content=item %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 {% endblock content %}
