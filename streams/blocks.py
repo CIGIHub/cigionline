@@ -177,6 +177,20 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/chart_block.html'
 
 
+class ContactEmailBlock(blocks.EmailBlock):
+    class Meta:
+        icon = 'mail'
+        label = 'Contact Email'
+        template = 'streams/contact_email_block.html'
+
+
+class ContactPersonBlock(blocks.PageChooserBlock):
+    class Meta:
+        icon = 'user'
+        label = 'Contact Person'
+        template = 'streams/contact_person_block.html'
+
+
 class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
 
     def get_template(self, context, *args, **kwargs):

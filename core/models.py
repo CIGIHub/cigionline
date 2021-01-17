@@ -4,6 +4,8 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
     ParagraphBlock,
     BlockQuoteBlock,
+    ContactEmailBlock,
+    ContactPersonBlock,
     EmbeddedVideoBlock,
     ExternalQuoteBlock,
     ImageBlock,
@@ -754,6 +756,33 @@ class ContactFormField(AbstractFormField):
 
 
 class ContactPage(AbstractEmailForm):
+    events_contact = StreamField(
+        [
+            ('contact_email', ContactEmailBlock()),
+            ('contact_person', ContactPersonBlock(
+                page_type='people.PersonPage',
+            )),
+        ],
+        blank=True,
+    )
+    human_resources_contact = StreamField(
+        [
+            ('contact_email', ContactEmailBlock()),
+            ('contact_person', ContactPersonBlock(
+                page_type='people.PersonPage',
+            )),
+        ],
+        blank=True,
+    )
+    media_contact = StreamField(
+        [
+            ('contact_email', ContactEmailBlock()),
+            ('contact_person', ContactPersonBlock(
+                page_type='people.PersonPage',
+            )),
+        ],
+        blank=True,
+    )
     thank_you_message = RichTextField(
         blank=True,
         null=False,
@@ -770,7 +799,25 @@ class ContactPage(AbstractEmailForm):
                 FieldPanel('subject'),
             ],
             heading='Email Settings',
-        )
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('human_resources_contact'),
+            ],
+            heading='Human Resources',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('events_contact'),
+            ],
+            heading='Events',
+        ),
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('media_contact'),
+            ],
+            heading='Media',
+        ),
     ]
 
     max_count = 1
