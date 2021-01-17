@@ -2,6 +2,15 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-  <h1>{{ self.title }}</h1>
-  {{ self.thank_you_message|richtext }}
+  {% include "includes/hero_plain.html" with title=self.title %}
+  <section class="mb-4">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          {{ self.thank_you_message|richtext }}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% include "includes/contact_info.html" with events_contact=self.events_contact human_resources_contact=self.human_resources_contact media_contact=self.media_contact %}
 {% endblock %}
