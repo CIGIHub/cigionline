@@ -1,0 +1,32 @@
+<div class="contact-person-block">
+  <div class="row">
+    <div class="col-6 col-lg-4">
+      <div class="contact-person-title">
+        {{ self.title }}
+      </div>
+      <div class="contact-person-position">
+        {{ self.specific.position }}
+      </div>
+    </div>
+    <div class="col-6 col-lg-8">
+      <div class="row">
+        {% if self.specific.email %}
+          <div class="col-12 col-lg-6">
+            <div class="contact-person-email">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:{{ self.specific.email }}">{{ self.specific.email }}</a>
+            </div>
+          </div>
+        {% endif %}
+        {% if self.specific.phone_number %}
+          <div class="col-12 col-lg-6">
+            <div class="contact-person-phone-number">
+              <i class="fas fa-phone"></i>
+              {{ self.specific.phone_number }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -30,7 +30,7 @@ class PeoplePage(Page):
     person pages at the path /people.
     """
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['people.PersonPage']
     templates = 'people/person_list_page.html'
 
@@ -55,7 +55,7 @@ class PersonListPage(BasicPageAbstract, Page):
     person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
     max_count = 3
-    parent_page_types = ['core.BasicPage', 'core.HomePage']
+    parent_page_types = ['core.BasicPage', 'home.HomePage']
     subpage_types = []
     templates = 'people/person_list_page.html'
 

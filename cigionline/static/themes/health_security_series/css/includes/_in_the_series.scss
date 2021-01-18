@@ -1,0 +1,44 @@
+.health-security-series-in-the-series {
+  background-color: $health-security-series-background-colour;
+  padding: 4em 0;
+  text-align: center;
+
+  h2 {
+    @include link($color: $white, $hover-color: $cigi-primary-colour);
+    font-family: $health-security-series-font;
+    font-size: 2.5em;
+    font-weight: 900;
+    line-height: 1.2em;
+    margin: 0.3em 0 1em;
+    padding: 0 1.5em;
+  }
+
+  .essay-series-label {
+    color: $health-security-series-light-grey;
+    display: block;
+    font-weight: 400;
+    margin-bottom: 1.5em;
+  }
+
+  .video-banner {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 19em;
+    height: 7em;
+  }
+
+  ul {
+    @include link($color: $health-security-series-light-grey, $hover-color: $cigi-primary-colour);
+    @include media-breakpoint-up(md) {
+      columns: 3;
+    }
+    columns: 2;
+    font-family: $health-security-series-font;
+    line-height: 2;
+    text-align: left;
+
+    li {
+      list-style: none;
+    }
+  }
+}

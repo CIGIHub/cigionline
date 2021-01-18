@@ -1,5 +1,5 @@
 [{
-  "model": "core.homepage",
+  "model": "home.homepage",
   "pk": 3,
   "fields": {}
 }, {

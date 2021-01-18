@@ -123,6 +123,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
     implemented_themes = [
         'after_covid_series_opinion',
         'cyber_series_opinion',
+        'health_security_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -174,6 +175,20 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'image'
         label = 'Chart'
         template = 'streams/chart_block.html'
+
+
+class ContactEmailBlock(blocks.EmailBlock):
+    class Meta:
+        icon = 'mail'
+        label = 'Contact Email'
+        template = 'streams/contact_email_block.html'
+
+
+class ContactPersonBlock(blocks.PageChooserBlock):
+    class Meta:
+        icon = 'user'
+        label = 'Contact Person'
+        template = 'streams/contact_person_block.html'
 
 
 class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
@@ -446,11 +461,11 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/pull_quote_right_block.html'
 
 
-class SpeakersBlock(blocks.PageChooserBlock, ThemeableBlock):
+class SpeakerBlock(blocks.PageChooserBlock, ThemeableBlock):
 
     def get_template(self, context, *args, **kwargs):
-        standard_template = super(SpeakersBlock, self).get_template(context, *args, **kwargs)
-        return self.get_theme_template(standard_template, context, 'speakers_block')
+        standard_template = super(SpeakerBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'speaker_block')
 
     def get_api_representation(self, value, context=None):
         if value:

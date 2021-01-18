@@ -20,7 +20,7 @@ from wagtail.images.blocks import ImageChooserBlock
 
 class NewsletterListPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['core.Homepage']
+    parent_page_types = ['home.Homepage']
     subpage_types = ['newsletters.NewsletterPage']
     templates = 'newsletters/newsletter_list_page.html'
 

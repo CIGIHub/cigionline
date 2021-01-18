@@ -1,0 +1,33 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+{% if article_series.image_hero.filename|file_extension == '.gif' %}
+  {% define "/staticmedia/original_images/"|add:article_series.image_hero.filename as image_hero_url %}
+{% else %}
+  {% image article_series.image_hero original as image_hero %}
+  {% define image_hero.url as image_hero_url %}
+{% endif %}
+
+<section class="health-security-series-in-the-series">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <article>
+          <div class="essay-series-label">A CIGI Essay Series</div>
+          <div class="video-banner" style="background-image: url('{{image_hero_url}}');"></div>
+          <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
+          <ul class="series-contributors">
+            {% for item in article_series.series_contributors_by_person %}
+              <li>
+                <a href="{{ item.item.url }}">
+                  {% for contributor in item.contributors %}
+                    {{ contributor.value.title }}
+                  {% endfor %}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
