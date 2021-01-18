@@ -56,4 +56,41 @@
       text-transform: none;
     }
   }
+
+  .credits {
+    margin-bottom: 3em;
+
+    .credits-content {
+      display: flex;
+      flex-wrap: wrap;
+
+      p {
+        @include media-breakpoint-up(md) {
+          margin-right: 3.3%;
+          width: 30%;
+        }
+        color: $wto-grey;
+        font-size: 0.8rem;
+        margin-right: 4%;
+        width: 46%;
+
+        .name {
+          color: $black;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    h2 {
+      border-bottom: 1px solid $wto-light-grey;
+      border-top: 0;
+      color: $wto-grey;
+      font-family: $wto-font;
+      font-size: 1.1em;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.2rem;
+      text-transform: uppercase;
+    }
+  }
 }
