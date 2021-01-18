@@ -11,9 +11,9 @@
         {% include "includes/topics.html" with topics=self.topics %}
         <h1>{{ self.title }}</h1>
         <p class="mm-meta">
-          Speaker{{ self.speakers|length|pluralize }}:
-          {% for speaker in self.speakers %}
-            <span>{{ speaker }}</span>
+          Speaker{{ self.authors|length|pluralize }}:
+          {% for author in self.authors %}
+            <span>{{ author }}</span>
           {% endfor %}
         </p>
         {% if self.multimedia_series %}

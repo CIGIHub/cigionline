@@ -6,6 +6,7 @@ from streams.blocks import (
     ReadMoreBlock,
     BlockQuoteBlock,
     EmbeddedVideoBlock,
+    ExternalPersonBlock,
     ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
@@ -303,12 +304,24 @@ class ArchiveablePageAbstract(models.Model):
 
 
 class ContentPage(Page, SearchablePageAbstract):
+    external_authors = StreamField(
+        [
+            ('external_person', ExternalPersonBlock()),
+        ],
+        blank=True,
+    )
+    external_editors = StreamField(
+        [
+            ('external_person', ExternalPersonBlock()),
+        ]
+    )
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     authors_panel = MultiFieldPanel(
         [
             InlinePanel('authors'),
+            StreamFieldPanel('external_authors'),
         ],
         heading='Authors',
         classname='collapsible collapsed',
@@ -316,6 +329,7 @@ class ContentPage(Page, SearchablePageAbstract):
     editors_panel = MultiFieldPanel(
         [
             InlinePanel('editors'),
+            StreamFieldPanel('external_editors'),
         ],
         heading='Editors',
         classname='collapsible collapsed',

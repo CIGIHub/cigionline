@@ -30,7 +30,7 @@ function MultimediaListing(props) {
         </a>
       </p>
       <ul className="custom-text-list multimedia-card-speakers-list">
-        {row.speakers.slice(0, 3).map((speaker) => (
+        {row.authors.slice(0, 3).map((speaker) => (
           <li key={speaker.id}>
             {speaker.type === 'speaker'
               ? (
@@ -41,7 +41,7 @@ function MultimediaListing(props) {
               : speaker.value}
           </li>
         ))}
-        {row.speakers.length > 3 && (
+        {row.authors.length > 3 && (
           <li key="more">And more</li>
         )}
       </ul>
@@ -54,13 +54,13 @@ function MultimediaListing(props) {
 
 MultimediaListing.propTypes = {
   row: PropTypes.shape({
-    image_hero_url: PropTypes.string,
-    publishing_date: PropTypes.string,
-    speakers: PropTypes.arrayOf(PropTypes.shape({
+    authors: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
       type: PropTypes.string,
       value: PropTypes.any,
     })),
+    image_hero_url: PropTypes.string,
+    publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,

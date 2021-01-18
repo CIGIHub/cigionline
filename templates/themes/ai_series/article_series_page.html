@@ -74,12 +74,7 @@
                     </a>
                   {% endif %}
                   <ul class="authors">
-                    {% if page_type == 'multimedia' %}
-                      {% define block.value.specific.speakers as authors %}
-                    {% elif page_type == 'opinion' %}
-                      {% define block.value.specific.authors as authors %}
-                    {% endif %}
-
+                    {% define block.value.specific.authors as authors %}
                     {% for author in authors %}
                       <li>{{ author }}</li>
                     {% endfor %}

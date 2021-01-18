@@ -1,10 +1,6 @@
 {% load core_tags %}
 
-{% if content|page_type|in_list:'opinion,publication' %}
-  {% define content.authors as people %}
-{% elif content|page_type|in_list:'multimedia,event' %}
-  {% define content.speakers as people %}
-{% endif %}
+{% define content.authors as people %}
 
 <ul class="custom-text-list feature-content-people-list">
 

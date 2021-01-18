@@ -60,13 +60,6 @@
                       <span>{{ author.value }}</span>
                     {% endif %}
                   {% endfor %}
-                  {% for speaker in block.value.specific.speakers %}
-                    {% if speaker.block_type == 'speaker' %}
-                      <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
-                    {% elif speaker.block_type == 'external_speaker' %}
-                      <span>{{ speaker.value }}</span>
-                    {% endif %}
-                  {% endfor %}
                 </p>
               </article>
             {% endif %}

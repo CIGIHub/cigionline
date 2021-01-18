@@ -590,12 +590,8 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
+            people = item.value.specific.authors
             people_string = ''
-            if (isinstance(item.value.specific, ArticlePage)):
-                people = item.value.specific.authors
-            elif (isinstance(item.value.specific, MultimediaPage)):
-                people = item.value.specific.speakers
 
             for person in people:
                 person_string = person.value.title
@@ -622,11 +618,7 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
-            if (isinstance(item.value.specific, ArticlePage)):
-                people = item.value.specific.authors
-            elif (isinstance(item.value.specific, MultimediaPage)):
-                people = item.value.specific.speakers
+            people = item.value.specific.authors
 
             # Skip items that have more than 2 authors/speakers. For
             # example, in the After COVID series, there is an introductory
