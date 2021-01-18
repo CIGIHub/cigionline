@@ -1,35 +1,43 @@
+{% load core_tags %}
+
 <section class="wto-series-in-the-series">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8">
         {% for block in series_items %}
           {% if block.block_type == 'category_title' %}
+            {% define block.value|slugify as category_class %}
             {% if not forloop.first %}
               </div>
             {% endif %}
-            <h3 class="{{ block.value|slugify }}">{{ block.value }}</h3>
-            <div>
+            <h3>{{ block.value }}</h3>
+            <div class="series-category">
           {% elif block.block_type == 'series_item' %}
-            <article>
+            <article class="{{ category_class }}">
+              <span>
+                {% if block.value.specific|page_type == 'multimedia' %}
+                  <i class="fa fa-play"></i>
+                {% endif %}
+              </span>
               <h4>
                 <a href="{{ block.value.url }}">{{ block.value.title }}</a>
               </h4>
-              <p class="authors">
+              <ul class="authors">
                 {% for author in block.value.specific.authors %}
                   {% if author.block_type == 'author' %}
-                    <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
+                    <li><a href="{{ author.value.url }}">{{ author.value.title }}</a></li>
                   {% elif author.block_type == 'external_author' %}
-                    <span>{{ author.value }}</span>
+                    <li>{{ author.value }}</li>
                   {% endif %}
                 {% endfor %}
                 {% for speaker in block.value.specific.speakers %}
                   {% if speaker.block_type == 'speaker' %}
-                    <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
+                    <li><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></li>
                   {% elif speaker.block_type == 'external_speaker' %}
-                    <span>{{ speaker.value }}</span>
+                    <li>{{ speaker.value }}</li>
                   {% endif %}
                 {% endfor %}
-              </p>
+              </ul>
             </article>
             {% if forloop.last %}
               </div>
