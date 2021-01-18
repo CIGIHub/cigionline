@@ -98,6 +98,12 @@ class HomePage(Page):
             featured_multimedia_small.append(item.featured_multimedia)
         return featured_multimedia_small
 
+    def featured_experts_list(self):
+        featured_experts = []
+        for item in self.featured_experts.all()[:3]:
+            featured_experts.append(item.featured_expert)
+        return featured_experts
+
     max_count = 1
     subpage_types = [
         'articles.ArticleLandingPage',

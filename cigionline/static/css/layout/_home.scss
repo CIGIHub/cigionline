@@ -7,16 +7,45 @@
     padding-top: 5em;
   }
 
+  .homepage-featured-experts,
+  .homepage-featured-multimedia,
+  .homepage-featured-publications {
+    margin-bottom: 4em;
+  }
+
+  .homepage-featured-experts {
+    .homepage-featured-expert-row {
+      &:last-child {
+        article {
+          border-bottom: 0;
+          border-right: 0;
+        }
+      }
+
+      article {
+        @include media-breakpoint-up(md) {
+          border-bottom: 0;
+          border-right: 1px solid $cigi-light-grey;
+          margin-bottom: 0;
+          padding-bottom: 0;
+          padding-right: 1em;
+        }
+        border-bottom: 1px solid $cigi-light-grey;
+        border-right: 0;
+        margin-bottom: 1.5em;
+        padding-bottom: 1.5em;
+        padding-right: 0;
+      }
+    }
+  }
+
   .homepage-featured-multimedia {
     background-color: $black;
-    margin-bottom: 4em;
     padding-bottom: 4em;
     padding-top: 4em;
   }
 
   .homepage-featured-publications {
-    margin-bottom: 4em;
-
     .homepage-featured-publication-row {
       &:last-child {
         article {
