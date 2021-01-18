@@ -1,0 +1,25 @@
+{% load wagtailcore_tags %}
+
+<article class="feature-publication-teaser">
+  <div class="feature-publication-teaser-content">
+    <div class="feature-publication-teaser-title">
+      {% include "includes/topics.html" with topics=publication.topics %}
+      <h3>
+        <a href="{{ publication.url }}">
+          {{ publication.title }}
+        </a>
+      </h3>
+    </div>
+    <div class="feature-publication-teaser-meta">
+      {% include "includes/authors.html" with authors=publication.authors %}
+      {% include "includes/date.html" with date=publication.publishing_date %}
+      {% if publication.pdf_downloads %}
+        <button class="button-action">
+          <a href="{{ publication.pdf_downloads.0.value.file.url }}">
+            <i class="fa fas fa-download"></i>
+          </a>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</article>

@@ -11,6 +11,8 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'layout/hero';
 @import 'layout/sections';
 @import 'layout/tables';
+@import 'layout/forms';
+@import 'layout/home';
 
 @import 'includes/footer';
 @import 'includes/top_bar';
@@ -30,17 +32,23 @@ $fa-font-path: '../fontawesome-pro/webfonts';
 @import 'includes/about_the_author';
 @import 'includes/disclaimer';
 @import 'includes/recommended';
+@import 'includes/contact_info';
 
 @import 'includes/features/feature_content';
 @import 'includes/features/feature_content_large';
 @import 'includes/features/feature_content_medium';
 @import 'includes/features/feature_content_small';
+@import 'includes/features/feature_publication_teaser';
+@import 'includes/features/feature_expert_short';
 
 @import 'streams/accordion_block';
 @import 'streams/autoplay_video_block';
 @import 'streams/block';
 @import 'streams/block_quote_block';
 @import 'streams/chart_block';
+@import 'streams/contact_email_block';
+@import 'streams/contact_person_block';
+@import 'streams/embedded_video_block';
 @import 'streams/external_quote_block';
 @import 'streams/image_full_bleed_block';
 @import 'streams/inline_video_block';

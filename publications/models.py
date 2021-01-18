@@ -38,7 +38,7 @@ class PublicationListPage(BasicPageAbstract, Page):
     """Publication list page"""
 
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['publications.PublicationPage']
     templates = 'publications/publication_list_page.html'
 
@@ -395,7 +395,7 @@ class PublicationPage(
 
 class PublicationSeriesListPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['publications.PublicationSeriesPage']
     templates = 'publications/publication_series_list_page.html'
 

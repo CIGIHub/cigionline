@@ -72,6 +72,22 @@
   }
 }
 
+@mixin link-underline($color: $black, $underline-color: $cigi-primary-colour) {
+  a {
+    background-image: linear-gradient(transparent calc(100% - 4px), $underline-color 10px);
+    background-repeat: no-repeat;
+    background-size: 0 100%;
+    color: $color;
+    transition: background-size 500ms;
+    width: calc(100%);
+
+    &:hover {
+      background-size: 100% 100%;
+      color: $color;
+    }
+  }
+}
+
 @mixin display-grid {
   display: -ms-grid;
   display: grid; // sass-lint:disable-line no-duplicate-properties
