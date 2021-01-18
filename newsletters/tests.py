@@ -1,4 +1,4 @@
-from core.models import HomePage
+from home.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import NewsletterListPage, NewsletterPage

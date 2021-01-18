@@ -33,7 +33,7 @@ from wagtailmedia.edit_handlers import MediaChooserPanel
 
 class ArticleLandingPage(Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
@@ -80,7 +80,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
 
 class MediaLandingPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/media_landing_page.html'
 
@@ -98,7 +98,7 @@ class MediaLandingPage(BasicPageAbstract, Page):
 
 class ArticleListPage(Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['articles.ArticlePage']
     templates = 'articles/article_list_page.html'
 
@@ -160,6 +160,27 @@ class ArticlePage(
         [
             ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
             ('external_author', CharBlock(required=True)),
+        ],
+        blank=True,
+    )
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_accordion_block,
+            BasicPageAbstract.body_autoplay_video_block,
+            BasicPageAbstract.body_chart_block,
+            BasicPageAbstract.body_embedded_tiktok_block,
+            BasicPageAbstract.body_external_quote_block,
+            BasicPageAbstract.body_external_video_block,
+            BasicPageAbstract.body_highlight_title_block,
+            BasicPageAbstract.body_image_full_bleed_block,
+            BasicPageAbstract.body_image_scroll_block,
+            BasicPageAbstract.body_poster_block,
+            BasicPageAbstract.body_pull_quote_left_block,
+            BasicPageAbstract.body_pull_quote_right_block,
+            BasicPageAbstract.body_recommended_block,
+            BasicPageAbstract.body_text_border_block,
+            BasicPageAbstract.body_tool_tip_block,
+            BasicPageAbstract.body_tweet_block,
         ],
         blank=True,
     )
@@ -399,7 +420,7 @@ class ArticlePage(
 
 class ArticleSeriesListPage(Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_series_list_page.html'
 
@@ -570,7 +591,7 @@ class ArticleSeriesPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
 
@@ -609,6 +630,7 @@ class ArticleSeriesPage(
     @property
     def series_contributors_by_person(self):
         series_contributors = []
+        item_people = set()
 
         for item in self.series_items:
             if item.block_type == 'category_title':
@@ -626,7 +648,9 @@ class ArticleSeriesPage(
                 continue
             else:
                 for person in people:
-                    series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
+                    if person.value.title not in item_people:
+                        series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
+                        item_people.add(person.value.title)
 
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors

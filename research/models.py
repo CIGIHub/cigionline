@@ -29,7 +29,7 @@ from wagtail.search import index
 
 class ProjectListPage(Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['research.ProjectPage']
     templates = 'research/project_list_page.html'
 
@@ -45,7 +45,10 @@ class ProjectPage(
     ShareablePageAbstract,
 ):
     body = StreamField(
-        BasicPageAbstract.body_default_blocks + BasicPageAbstract.body_poster_block + [
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_poster_block,
+            BasicPageAbstract.body_recommended_block,
+            BasicPageAbstract.body_text_border_block,
             ('igc_timeline', StructBlock([
                 ('date', CharBlock(required=True)),
                 ('title', CharBlock(required=False)),
@@ -198,7 +201,7 @@ class ProjectType(index.Indexed, models.Model):
 
 class ResearchLandingPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'research/research_landing_page.html'
 
@@ -218,7 +221,7 @@ class TopicListPage(Page):
     """Topic list page"""
 
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['research.TopicPage']
     templates = 'research/topic_list_page.html'
 
