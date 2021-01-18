@@ -7,8 +7,15 @@
     padding-top: 5em;
   }
 
+  .homepage-featured-multimedia {
+    background-color: $black;
+    margin-bottom: 4em;
+    padding-bottom: 4em;
+    padding-top: 4em;
+  }
+
   .homepage-featured-publications {
-    margin-bottom: 3em;
+    margin-bottom: 4em;
 
     .homepage-featured-publication-row {
       &:last-child {
@@ -28,11 +35,22 @@
     margin-bottom: 1.5em;
     text-transform: uppercase;
 
+    &.dark-mode {
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
+      color: $white;
+
+      a,
+      span {
+        border-top-color: $white;
+      }
+    }
+
     a,
     span {
       border-top-color: $black;
       border-top-style: solid;
       border-top-width: 3px;
+      transition: border-top-color 0.2s ease;
     }
 
     a {
