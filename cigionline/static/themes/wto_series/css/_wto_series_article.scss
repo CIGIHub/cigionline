@@ -1,8 +1,51 @@
 .wto-series-article {
-  @include top-bar(
-    $background-color: $wto-series-background-colour,
-    $color: $black,
-    $position: relative,
-  );
+  @include top-bar($background-color: $wto-series-background-colour, $color: $black, $position: relative);
   background-color: $wto-series-background-colour;
+
+  .wto-series-article-hero {
+    margin-bottom: 3em;
+    text-align: center;
+
+    h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2.75rem;
+      }
+      font-family: $wto-font;
+      font-size: 2rem;
+      font-weight: $sans-bold;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .social-share-list {
+      @include media-breakpoint-up(md) {
+        margin-top: 3em;
+      }
+      margin-top: 1em;
+    }
+
+    .topics,
+    .authors {
+      justify-content: center;
+    }
+
+    .series-category {
+      @include media-breakpoint-up(md) {
+        margin: 2em 0 1em;
+      }
+      color: $wto-grey;
+      font-family: $wto-font;
+      font-weight: 700;
+      margin: 0.5em 0;
+    }
+
+    .authors {
+      font-size: 1em;
+      margin: 0 0 0.3em;
+    }
+
+    .date {
+      color: $cigi-text-grey;
+      line-height: 1;
+    }
+  }
 }

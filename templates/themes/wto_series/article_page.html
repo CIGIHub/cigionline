@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader article_tags %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader article_tags core_tags %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/lll7tqi.css">
@@ -12,10 +12,10 @@
 
 {% block hero %}
   <section class="wto-series-article-hero">
-    {% if content.image_banner.filename|file_extension == '.gif' %}
-      <img src="/staticmedia/original_images/{{content.image_banner.filename}}" alt="{{content.image_banner.title}}">
+    {% if self.image_banner.filename|file_extension == '.gif' %}
+      <img src="/staticmedia/original_images/images/banner/{{self.image_banner.filename}}" alt="{{self.image_banner.title}}">
     {% else %}
-      {% image content.image_banner original %}
+      {% image self.image_banner original %}
     {% endif %}
     <div class="container">
       <div class="row justify-content-center">
