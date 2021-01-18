@@ -2,6 +2,54 @@
   @include top-bar($background-color: $wto-series-background-colour, $color: $black, $position: relative);
   background-color: $wto-series-background-colour;
 
+  &.conclusion {
+    .drop-caps {
+      background-image: url('../assets/conclusion.svg');
+    }
+  }
+
+  &.introduction {
+    .drop-caps {
+      background-image: url('../assets/introduction.svg');
+    }
+  }
+
+  &.development-and-trade {
+    .drop-caps {
+      background-image: url('../assets/development-and-trade.svg');
+    }
+  }
+
+  &.digital-trade {
+    .drop-caps {
+      background-image: url('../assets/digital-trade.svg');
+    }
+  }
+
+  &.dispute-settlement {
+    .drop-caps {
+      background-image: url('../assets/dispute-settlement.svg');
+    }
+  }
+
+  &.inclusive-trade {
+    .drop-caps {
+      background-image: url('../assets/inclusive-trade.svg');
+    }
+  }
+
+  &.negotiating-strategies {
+    .drop-caps {
+      background-image: url('../assets/negotiating-strategies.svg');
+    }
+  }
+
+  &.trades-intersections {
+    .drop-caps {
+      background-image: url('../assets/trades-intersections.svg');
+    }
+  }
+
   .wto-series-article-hero {
     margin-bottom: 3em;
     text-align: center;
@@ -46,6 +94,23 @@
     .date {
       color: $cigi-text-grey;
       line-height: 1;
+    }
+  }
+
+  .body {
+    .drop-caps {
+      background-position: center center;
+      background-repeat: no-repeat;
+      border: 0;
+      color: $white;
+      font-size: 3.75rem;
+      height: 65px;
+      line-height: 65px;
+      margin-right: 0.7rem;
+      padding: 0;
+      text-align: center;
+      vertical-align: middle;
+      width: 65px;
     }
   }
 }
