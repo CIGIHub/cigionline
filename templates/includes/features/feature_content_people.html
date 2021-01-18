@@ -7,13 +7,5 @@
 {% endif %}
 
 <ul class="custom-text-list feature-content-people-list">
-  {% with 3 as people_limit %}
-    {% for person in people %}
-      {% if forloop.counter <= people_limit %}
-        <li><a href="{{ person.value.url }}">{{ person.value }}</a></li>
-      {% elif forloop.counter == people_limit|add:1 %}
-        <li>And more</li>
-      {% endif %}
-    {% endfor %}
-  {% endwith %}
+
 </ul>

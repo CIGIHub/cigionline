@@ -1,9 +1,1 @@
-<div class="custom-text-list authors">
-  {% for block in authors %}
-    {% if block.block_type == 'author' %}
-      <a class="block-author" href="{{ block.value.url }}">{{ block.value.title }}</a>
-    {% elif block.block_type == 'external_author' %}
-      <span class="block-author">{{ block.value }}</span>
-    {% endif %}
-  {% endfor %}
-</div>
+
