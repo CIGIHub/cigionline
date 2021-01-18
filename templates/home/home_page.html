@@ -65,15 +65,16 @@
       <div class="row">
         <div class="col-12 col-md-8">
           {% if self.featured_multimedia_large %}
-            {% include "includes/features/feature_content_large.html" with content=self.featured_multimedia_large %}
+            {% include "includes/features/feature_content_large.html" with content=self.featured_multimedia_large dark_mode=True %}
           {% endif %}
         </div>
+        <hr>
         <div class="col-12 col-md-4 featured-small">
           {% for item in self.featured_small %}
             {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
-            {% include "includes/features/feature_content_small.html" with content=item %}
+            {% include "includes/features/feature_content_small.html" with content=item dark_mode=True %}
           {% endfor %}
         </div>
       </div>
