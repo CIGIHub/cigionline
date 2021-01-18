@@ -131,13 +131,6 @@ class PublicationPage(
         SPEECHES = ('speeches', 'Speeches')
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
 
-    authors = StreamField(
-        [
-            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
-            ('external_author', CharBlock(required=True)),
-        ],
-        blank=True,
-    )
     book_excerpt = RichTextField(
         blank=True,
         features=['bold', 'italic', 'link'],
@@ -296,13 +289,7 @@ class PublicationPage(
             heading='General Information',
             classname='collapsible',
         ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('authors'),
-            ],
-            heading='Authors',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.authors_panel,
         MultiFieldPanel(
             [
                 StreamFieldPanel('editors'),

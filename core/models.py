@@ -306,6 +306,13 @@ class ContentPage(Page, SearchablePageAbstract):
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
+    authors_panel = MultiFieldPanel(
+        [
+            InlinePanel('authors'),
+        ],
+        heading='Authors',
+        classname='collapsible collapsed',
+    )
     recommended_panel = MultiFieldPanel(
         [
             InlinePanel('recommended'),
@@ -332,6 +339,28 @@ class ContentPage(Page, SearchablePageAbstract):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
+
+
+class ContentPageAuthor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='authors',
+    )
+    author = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages',
+        verbose_name='Author',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'author',
+            ['people.PersonPage'],
+        ),
+    ]
 
 
 class ContentPageRecommendedContent(Orderable):
