@@ -1,5 +1,6 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
+from publications.models import PublicationPage
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
@@ -81,6 +82,9 @@ class HomePage(Page):
         for item in featured_small_query:
             featured_small.append(item.featured_page.specific)
         return featured_small
+
+    def featured_publications(self):
+        return PublicationPage.objects.live().public().order_by('-publishing_date')[:4]
 
     def featured_multimedia_large(self):
         first_featured_multimedia = self.featured_multimedia.first()
