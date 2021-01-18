@@ -1,0 +1,22 @@
+.embedded-video-block {
+  margin-bottom: 2em;
+  margin-top: 2em;
+  position: relative;
+  width: 100%;
+
+  &::after {
+    content: '';
+    display: block;
+    padding-bottom: 56.25%;
+  }
+
+  iframe {
+    height: 100%;
+    left: 0;
+    margin: 0;
+    max-width: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
