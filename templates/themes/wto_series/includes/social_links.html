@@ -1,0 +1,14 @@
+{% load static wagtailcore_tags core_tags %}
+
+<ul class="social-share-list">
+  <li class="twitter">
+    <a class="twitter-share-link {% if no_circle is not True %}fa-stack{% endif %}" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
+      <i class='fab fa-twitter fa-lg icon'></i>
+    </a>
+  </li>
+  <li class="facebook">
+    <a class="facebook-share-link {% if no_circle is not True %}fa-stack{% endif %}" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+      <i class='fab fa-facebook-square fa-lg icon'></i>
+    </a>
+  </li>
+</ul>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/zzr4vtn.css">
@@ -11,15 +11,24 @@
 {% block body_class %}wto-series-article-series{% endblock %}
 
 {% block content %}
+  {% if self.image_banner.filename|file_extension == '.gif' %}
+    {% define '/staticmedia/original_images/'|add:self.image_banner.filename as image_banner_url %}
+  {% else %}
+    {% image self.image_banner original as image_banner %}
+    {% define image_banner.url as image_banner_url %}
+  {% endif %}
   <section class="wto-series-article-series-hero">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
+          {% include "./includes/social_links.html" with title=self.title %}
+          {% include "includes/topics.html" with topics=self.topics %}
           <h1>{{ self.title }}</h1>
+          <div class="essay-series-label">A CIGI Essay Series</div>
         </div>
       </div>
     </div>
-    {% image self.image_banner original %}
+    <img src="{{ image_banner_url }}" alt="WTO series banner image">
   </section>
   <section class="body">
     <div class="container">
