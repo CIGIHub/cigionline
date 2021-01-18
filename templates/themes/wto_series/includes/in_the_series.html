@@ -20,7 +20,11 @@
                 {% endif %}
               </span>
               <h4>
-                <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                {% if block.value.id == article_id %}
+                  {{ block.value.title }}
+                {% else %}
+                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                {% endif %}
               </h4>
               <ul class="authors">
                 {% for author in block.value.specific.authors %}
