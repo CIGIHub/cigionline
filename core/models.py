@@ -313,6 +313,13 @@ class ContentPage(Page, SearchablePageAbstract):
         heading='Authors',
         classname='collapsible collapsed',
     )
+    editors_panel = MultiFieldPanel(
+        [
+            InlinePanel('editors'),
+        ],
+        heading='Editors',
+        classname='collapsible collapsed',
+    )
     recommended_panel = MultiFieldPanel(
         [
             InlinePanel('recommended'),
@@ -351,13 +358,35 @@ class ContentPageAuthor(Orderable):
         null=False,
         blank=False,
         on_delete=models.CASCADE,
-        related_name='content_pages',
+        related_name='content_pages_as_author',
         verbose_name='Author',
     )
 
     panels = [
         PageChooserPanel(
             'author',
+            ['people.PersonPage'],
+        ),
+    ]
+
+
+class ContentPageEditor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='editors',
+    )
+    editor = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_editor',
+        verbose_name='Editor',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'editor',
             ['people.PersonPage'],
         ),
     ]

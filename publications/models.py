@@ -10,9 +10,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
-    AuthorBlock,
     BookPurchaseLinkBlock,
-    EditorBlock,
     PDFDownloadBlock,
 )
 from wagtail.admin.edit_handlers import (
@@ -24,7 +22,6 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.api import APIField
 from wagtail.core.blocks import (
-    CharBlock,
     RichTextBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
@@ -173,13 +170,6 @@ class PublicationPage(
         ],
         blank=True,
     )
-    editors = StreamField(
-        [
-            ('editor', EditorBlock(required=True, page_type='people.PersonPage')),
-            ('external_editor', CharBlock(required=True)),
-        ],
-        blank=True,
-    )
     embed_youtube = models.URLField(
         blank=True,
         verbose_name='YouTube Embed',
@@ -290,13 +280,7 @@ class PublicationPage(
             classname='collapsible',
         ),
         ContentPage.authors_panel,
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('editors'),
-            ],
-            heading='Editors',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.editors_panel,
         MultiFieldPanel(
             [
                 FieldPanel('book_publisher'),
