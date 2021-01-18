@@ -86,6 +86,18 @@ class HomePage(Page):
     def featured_publications(self):
         return PublicationPage.objects.live().public().order_by('-publishing_date')[:4]
 
+    def featured_multimedia_large(self):
+        first_featured_multimedia = self.featured_multimedia.first()
+        if first_featured_multimedia:
+            return first_featured_multimedia.featured_multimedia
+        return False
+
+    def featured_multimedia_small(self):
+        featured_multimedia_small = []
+        for item in self.featured_multimedia.all()[1:]:
+            featured_multimedia_small.append(item.featured_multimedia)
+        return featured_multimedia_small
+
     max_count = 1
     subpage_types = [
         'articles.ArticleLandingPage',
