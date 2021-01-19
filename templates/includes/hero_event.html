@@ -25,7 +25,14 @@
           {% endif %}
 
           {% if authors|length > 0 %}
-            <div class="meta speakers">Speaker{{ authors|length|pluralize }}: <div class="custom-text-list">{{ authors }}</div></div>
+            <div class="meta speakers">
+              Speaker{{ authors|length|pluralize }}:
+              <div class="custom-text-list">
+                {% for item in authors %}
+                  <div class="block-speaker"><a href="{{ item.author.url }}">{{ item.author.title }}</a></div>
+                {% endfor %}
+              </div>
+            </div>
           {% endif %}
 
           <ul class="event-registration inline-list">
