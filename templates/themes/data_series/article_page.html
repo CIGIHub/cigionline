@@ -77,10 +77,10 @@
         <div class="col col-md-10 col-lg-8 meta">
           <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
           <p>
-            Author{{self.authors|length|pluralize}}:
+            Author{{self.author_count|pluralize}}:
 
-            {% for author in self.authors %}
-              <span class="author">{{author}}</span>
+            {% for item in self.authors.all %}
+              <span class="author"><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
             {% endfor %}
           </p>
         </div>

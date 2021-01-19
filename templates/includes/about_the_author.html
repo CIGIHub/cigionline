@@ -1,21 +1,24 @@
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags core_tags %}
 
 <section class="about-the-author">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8">
         <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
-        {% for author in authors %}
+        {% for item in authors %}
+          {% if item.author %}
+            {% define item.author as person %}
+          {% elif item.editor %}
+            {% define item.editor as person %}
+          {% endif %}
           <div class="author-block">
-            {% if author.block_type == 'author' or author.block_type == 'speaker' %}
-              <div class="name">
-                <a href="{{ author.value.url }}">{{ author.value.title }}</a>
-              </div>
-              {% if author.value.short_bio|length > 1 %}
-                {{ author.value.short_bio|richtext }}
-              {% endif %}
-            {% elif author.block_type == 'external_author' %}
-              <div class="name">{{ author.value }}</div>
+            <div class="name">
+              <a href="{{ person.url }}">
+                {{ person.title }}
+              </a>
+            </div>
+            {% if person.short_bio|length > 1 %}
+              {{ person.short_bio|richtext }}
             {% endif %}
           </div>
         {% endfor %}

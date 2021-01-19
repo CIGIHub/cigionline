@@ -92,11 +92,11 @@
     </section>
   {% endif %}
 
-  {% if self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
+  {% if self.authors.all|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors.all %}
   {% endif %}
-  {% if self.editors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.editors title_override="About the Editor" %}
+  {% if self.editors.all|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.editors.all title_override="About the Editor" %}
   {% endif %}
 
   {% if self.recommended.all|length > 0 %}

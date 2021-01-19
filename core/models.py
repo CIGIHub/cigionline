@@ -6,6 +6,7 @@ from streams.blocks import (
     ReadMoreBlock,
     BlockQuoteBlock,
     EmbeddedVideoBlock,
+    ExternalPersonBlock,
     ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
@@ -25,6 +26,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
@@ -303,9 +305,37 @@ class ArchiveablePageAbstract(models.Model):
 
 
 class ContentPage(Page, SearchablePageAbstract):
+    external_authors = StreamField(
+        [
+            ('external_person', ExternalPersonBlock()),
+        ],
+        blank=True,
+    )
+    external_editors = StreamField(
+        [
+            ('external_person', ExternalPersonBlock()),
+        ],
+        blank=True,
+    )
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
+    authors_panel = MultiFieldPanel(
+        [
+            InlinePanel('authors'),
+            StreamFieldPanel('external_authors'),
+        ],
+        heading='Authors',
+        classname='collapsible collapsed',
+    )
+    editors_panel = MultiFieldPanel(
+        [
+            InlinePanel('editors'),
+            StreamFieldPanel('external_editors'),
+        ],
+        heading='Editors',
+        classname='collapsible collapsed',
+    )
     recommended_panel = MultiFieldPanel(
         [
             InlinePanel('recommended'),
@@ -323,6 +353,10 @@ class ContentPage(Page, SearchablePageAbstract):
         index.FilterField('topicpage_id'),
     ]
 
+    def author_count(self):
+        # @todo test this
+        return self.authors.count() + len(self.external_authors)
+
     def on_form_bound(self):
         self.bound_field = self.form[self.field_name]
         heading = self.heading or self.bound_field.label
@@ -332,6 +366,54 @@ class ContentPage(Page, SearchablePageAbstract):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
+
+
+class ContentPageAuthor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='authors',
+    )
+    author = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_author',
+        verbose_name='Author',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'author',
+            ['people.PersonPage'],
+        ),
+    ]
+
+    api_fields = [
+        APIField('author'),
+    ]
+
+
+class ContentPageEditor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='editors',
+    )
+    editor = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_editor',
+        verbose_name='Editor',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'editor',
+            ['people.PersonPage'],
+        ),
+    ]
 
 
 class ContentPageRecommendedContent(Orderable):
