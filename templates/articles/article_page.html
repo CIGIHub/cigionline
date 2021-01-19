@@ -32,8 +32,8 @@
   {% endblock %}
 
   {% if self.body %}
-    <section class="body" id="article-body">
-      {% if self.article_type == 'cigi_in_the_news' %}
+    {% if self.article_type == 'cigi_in_the_news' %}
+      <section class="body" id="article-body">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
@@ -59,12 +59,10 @@
             </div>
           </div>
         </div>
-      {% else %}
-        {% for block in self.body %}
-          {% include_block block %}
-        {% endfor %}
-      {% endif %}
-    </section>
+      </section>
+    {% else %}
+      {% include "includes/body.html" with body=self.body %}
+    {% endif %}
   {% endif %}
 
   {% if self.footnotes %}
