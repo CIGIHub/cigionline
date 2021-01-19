@@ -11,3 +11,12 @@ if (simplecastContainer && simplecastHeader) {
     stickyHeaderEl: simplecastHeader,
   });
 }
+
+const dropdown = $('#season-select');
+const seasonContainers = $('.season-episodes');
+
+dropdown.find('li').on('click', function(e) {
+  seasonContainers.removeClass('active');
+  $(`#${e.currentTarget.dataset.season}`).addClass('active');
+  dropdown.find('span').text(e.currentTarget.textContent);
+});

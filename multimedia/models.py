@@ -413,7 +413,7 @@ class MultimediaSeriesPage(
     
     @property
     def series_seasons(self):
-        series_episodes = MultimediaPage.objects.filter(multimedia_series=self)
+        series_episodes = MultimediaPage.objects.filter(multimedia_series=self).live()
         series_seasons = {}
         for episode in series_episodes:
             episode_season = episode.specific.podcast_season
