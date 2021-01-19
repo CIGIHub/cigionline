@@ -1,6 +1,44 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'mediaLandingPage' 'css' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% include "includes/body.html" with body=self.body %}
+  <section class="media-latest-news">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="paragraph-heading">Latest</h2>
+        </div>
+      </div>
+      <div class="row">
+        {% for article in self.latest_cigi_in_the_news %}
+          {% if forloop.counter == 4 %}
+            <div class="col-12 media-latest-news-hr">
+              <hr>
+            </div>
+          {% endif %}
+          <div class="col-12 col-md-6 col-lg-4 media-latest-news-article">
+            <article>
+              {% include "includes/topics.html" with topics=article.topics %}
+              <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+              <p class="meta">{{ article.get_article_type_display }}</p>
+              <p class="cigi-people-mentioned">
+                {% for person in article.cigi_people_mentioned %}
+                  {% if person.block_type == 'cigi_person' %}
+                    <a href="{{ person.value.url }}">{{ person.value.title }}</a>
+                  {% endif %}
+                {% endfor %}
+              </p>
+              {% include "includes/date.html" with date=article.publishing_date %}
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 {% endblock %}
