@@ -410,6 +410,19 @@ class MultimediaSeriesPage(
         verbose_name='Spotify Podcast URL',
         help_text='Enter the link to the Spotify Podcast landing page for the podcast.',
     )
+    
+    @property
+    def series_seasons(self):
+        series_episodes = MultimediaPage.objects.filter(multimedia_series=self)
+        series_seasons = {}
+        for episode in series_episodes:
+            episode_season = episode.specific.podcast_season
+            if episode_season not in series_seasons:
+                series_seasons.update({episode_season: []})
+            series_seasons[episode_season].append(episode)
+        
+        return series_seasons
+
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)

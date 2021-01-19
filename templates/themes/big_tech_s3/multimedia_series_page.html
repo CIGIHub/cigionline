@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
@@ -42,6 +42,38 @@
 {% endblock header %}
 
 {% block content %}
+  <section class="episode-listing">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          {% for season, episodes in self.series_seasons.items %}
+            <h3>season {{ season }}</h3>
+            <div class="season-episodes" id="season-{{ season }}">
+              {% for episode in episodes %}
+                <article>
+                  <div>
+                    <h3>
+                      <a href="{{ episode.url }}">
+                        <div class="name">{{ episode.specific.podcast_guests }}</div>
+                        <div>{{ episode.specific.podcast_subtitle }}</div>
+                      </a>
+                    </h3>
+                    <div>{{ episode.specific.subtitle|richtext }}</div>
+                    {% include "includes/date.html" with date=self.publishing_date %}
+                  </div>
+                  <div class="circle">
+                    <a href="{{ episode.url }}">
+                      <span><i class="fa fa-headphones" aria-hidden="true"></i></span>
+                    </a>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="body">
     <div class="container">
       <div class="row d-block">
