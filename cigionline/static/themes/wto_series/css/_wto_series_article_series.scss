@@ -93,4 +93,12 @@
       text-transform: uppercase;
     }
   }
+
+  .wto-series-in-the-series {
+    article {
+      h4 {
+        @include link($color: $black, $hover-color: $cigi-medium-grey);
+      }
+    }
+  }
 }
