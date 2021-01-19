@@ -36,4 +36,16 @@
   {% if self.authors.all|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all title_override="Event Speaker"%}
   {% endif %}
+
+  {% if self.related_files %}
+    <section class="related-files">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
