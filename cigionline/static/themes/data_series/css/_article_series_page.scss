@@ -171,25 +171,4 @@
     height: 80px;
     width: 100%;
   }
-
-  .data-series-article-series-in-the-series {
-    article {
-      .authors {
-        span {
-          &:not(:only-child) {
-            &::after {
-              content: ', ';
-              margin-right: 2px;
-            }
-          }
-
-          &:last-child {
-            &::after {
-              display: none;
-            }
-          }
-        }
-      }
-    }
-  }
 }
