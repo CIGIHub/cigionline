@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/hero_event.html" with topics=self.topics title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display speakers=self.speakers registration_url=self.registration_url %}
+  {% include "includes/hero_event.html" with topics=self.topics title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all registration_url=self.registration_url %}
 
   {% if self.image_hero %}
     <div class="container">
@@ -33,7 +33,7 @@
     </section>
   {% endif %}
 
-  {% if self.speakers|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.speakers title_override="Event Speaker"%}
+  {% if self.authors.all|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors.all title_override="Event Speaker"%}
   {% endif %}
 {% endblock content %}
