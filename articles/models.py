@@ -77,10 +77,9 @@ class ArticleLandingPageFeaturedArticle(Orderable):
 
 
 class MediaLandingPage(BasicPageAbstract, Page):
-    max_count = 1
-    parent_page_types = ['home.HomePage']
-    subpage_types = []
-    templates = 'articles/media_landing_page.html'
+
+    def latest_cigi_in_the_news(self):
+        return ArticlePage.objects.live().public().filter(article_type=ArticlePage.ArticleTypes.CIGI_IN_THE_NEWS).order_by('-publishing_date')[:6]
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -89,6 +88,11 @@ class MediaLandingPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = []
+    templates = 'articles/media_landing_page.html'
 
     class Meta:
         verbose_name = 'Media Page'
