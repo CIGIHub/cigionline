@@ -314,7 +314,8 @@ class ContentPage(Page, SearchablePageAbstract):
     external_editors = StreamField(
         [
             ('external_person', ExternalPersonBlock()),
-        ]
+        ],
+        blank=True,
     )
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)

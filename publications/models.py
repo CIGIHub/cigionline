@@ -245,9 +245,16 @@ class PublicationPage(
         For featured publications, only display the first 3 authors/editors.
         """
 
-        person_list = list(self.authors) + list(self.editors)
+        # @todo test
+        person_list = list(self.authors.all()) + list(self.editors.all())
         del person_list[3:]
-        return person_list
+        result = []
+        for person in person_list:
+            if person.author:
+                result.append(person.author)
+            elif person.editor:
+                result.append(person.editor)
+        return result
 
     def featured_person_list_has_more(self):
         """
@@ -255,7 +262,8 @@ class PublicationPage(
         display "and more".
         """
 
-        return len(list(self.authors) + list(self.editors)) > 3
+        # @todo test
+        return (self.authors.count() + self.editors.count()) > 3
 
     def has_book_metadata(self):
         return self.publication_type == self.PublicationTypes.BOOKS \

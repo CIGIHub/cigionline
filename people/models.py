@@ -224,6 +224,7 @@ class PersonPage(
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
     def latest_activity(self):
+        # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
         content_pages_as_editor = self.content_pages_as_editor.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
         latest_activity = content_pages_as_author.union(content_pages_as_editor).order_by('-content_page__publishing_date').first()
