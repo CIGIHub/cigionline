@@ -1,6 +1,6 @@
 <ul class="custom-text-list feature-content-people-list">
   {% with 3 as people_limit %}
-    {% for item in content.authors.all %}
+    {% for item in authors %}
       {% if forloop.counter <= people_limit %}
         <li>
           <a href="{{ item.author.url }}">
