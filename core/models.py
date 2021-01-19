@@ -352,6 +352,10 @@ class ContentPage(Page, SearchablePageAbstract):
         index.FilterField('topicpage_id'),
     ]
 
+    def author_count(self):
+        # @todo test this
+        return self.authors.count() + len(self.external_authors)
+
     def on_form_bound(self):
         self.bound_field = self.form[self.field_name]
         heading = self.heading or self.bound_field.label
