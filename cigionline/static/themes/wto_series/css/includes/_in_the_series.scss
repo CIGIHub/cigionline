@@ -54,6 +54,37 @@
     }
   }
 
+  .banner {
+    margin-bottom: 4em;
+
+    a {
+      align-items: flex-start;
+      color: $black;
+      display: flex;
+    }
+
+    h1 {
+      font-family: $wto-font;
+      font-size: 2.4em;
+      font-weight: 700;
+      line-height: 1em;
+      margin-bottom: 1rem;
+    }
+
+    img {
+      @include media-breakpoint-up(sm) {
+        display: block;
+      }
+      display: none;
+      flex-shrink: 0;
+      width: 180px;
+    }
+
+    .essay-series-label {
+      font-size: 1.3em;
+    }
+  }
+
   .series-category {
     @include media-breakpoint-up(md) {
       margin-bottom: 2em;
