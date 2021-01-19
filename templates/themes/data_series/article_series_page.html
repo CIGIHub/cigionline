@@ -30,11 +30,14 @@
             <article>
               <h4><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
               <p class="authors">
-                {% if block.value.specific.authors %}
-                  {% for author in block.value.specific.authors %}
-                    <span>{{ author }}</span>
-                  {% endfor %}
-                {% endif %}
+                {% for item in block.value.specific.authors.all %}
+                  <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
+                {% endfor %}
+                {% for item in block.value.specific.external_authors %}
+                  {% if item.block_type == 'external_person' %}
+                    <span>{{ item.value }}</span>
+                  {% endif %}
+                {% endfor %}
               </p>
             </article>
           {% elif block.block_type == 'category_title' %}
