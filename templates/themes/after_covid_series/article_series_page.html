@@ -42,10 +42,10 @@
               <article>
                 <div class="author-images block-{{page_type}}">
                   {% if page_type == 'opinion' %}
-                    {% for author in block.value.specific.authors %}
-                    <a href="{{ author.value.url }}">
-                      {% image author.value.specific.image_square fill-100x100 %}
-                    </a>
+                    {% for item in block.value.specific.authors.all %}
+                      <a href="{{ item.author.url }}">
+                        {% image item.author.image_square fill-100x100 %}
+                      </a>
                     {% endfor %}
                   {% elif page_type == 'multimedia' %}
                     <a href="{{ block.value.url }}">
@@ -58,16 +58,9 @@
                     <a href="{{ block.value.url }}">{{ block.value.title }}</a>
                   </h3>
                   <p class="authors">
-                    {% if block.value.specific.authors %}
-                      {% for author in block.value.specific.authors %}
-                        <span>{{ author }}</span>
-                      {% endfor %}
-                    {% endif %}
-                    {% if block.value.specific.speakers %}
-                      {% for speaker in block.value.specific.speakers %}
-                        <span>{{ speaker }}</span>
-                      {% endfor %}
-                    {% endif %}
+                    {% for item in block.value.specific.authors.all %}
+                      <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
+                    {% endfor %}
                   </p>
                 </div>
               </article>

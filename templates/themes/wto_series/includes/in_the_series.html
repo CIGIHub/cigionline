@@ -27,18 +27,12 @@
                 {% endif %}
               </h4>
               <ul class="authors">
-                {% for author in block.value.specific.authors %}
-                  {% if author.block_type == 'author' %}
-                    <li><a href="{{ author.value.url }}">{{ author.value.title }}</a></li>
-                  {% elif author.block_type == 'external_author' %}
-                    <li>{{ author.value }}</li>
-                  {% endif %}
+                {% for item in block.value.specific.authors.all %}
+                  <li><a href="{{ item.author.url }}">{{ item.author.title }}></a></li>
                 {% endfor %}
-                {% for speaker in block.value.specific.speakers %}
-                  {% if speaker.block_type == 'speaker' %}
-                    <li><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></li>
-                  {% elif speaker.block_type == 'external_speaker' %}
-                    <li>{{ speaker.value }}</li>
+                {% for item in block.value.specific.external_authors %}
+                  {% if item.block_type == 'external_person' %}
+                    <li>{{ item.value }}</li>
                   {% endif %}
                 {% endfor %}
               </ul>
