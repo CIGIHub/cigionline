@@ -1,6 +1,6 @@
 {% load wagtailimages_tags core_tags %}
 
-<article class="feature-content feature-content-small">
+<article class="feature-content feature-content-small{% if dark_mode %} dark-mode{% endif %}">
   <div class="feature-content-text center-text">
     {% include 'includes/topics.html' with topics=content.topics %}
     {% include 'includes/features/feature_content_title.html' %}

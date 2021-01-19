@@ -1,0 +1,35 @@
+@keyframes health-security-rings-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.inner-ring {
+  animation: health-security-rings-rotation 15s infinite ease-in-out;
+  animation-play-state: paused;
+  height: 70px;
+  left: 50%;
+  margin: -35px 0 0 -35px;
+  position: absolute;
+  top: 50%;
+  width: 70px;
+}
+
+.outer-ring {
+  animation: health-security-rings-rotation 12s infinite ease-in-out;
+  animation-play-state: paused;
+  height: 80px;
+  left: 50%;
+  margin: -40px 0 0 -40px;
+  position: absolute;
+  top: 50%;
+  width: 80px;
+}

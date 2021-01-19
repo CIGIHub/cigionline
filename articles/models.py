@@ -7,10 +7,8 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
-from multimedia.models import MultimediaPage
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import AuthorBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -33,7 +31,7 @@ from wagtailmedia.edit_handlers import MediaChooserPanel
 
 class ArticleLandingPage(Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
@@ -80,7 +78,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
 
 class MediaLandingPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/media_landing_page.html'
 
@@ -98,7 +96,7 @@ class MediaLandingPage(BasicPageAbstract, Page):
 
 class ArticleListPage(Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['articles.ArticlePage']
     templates = 'articles/article_list_page.html'
 
@@ -156,10 +154,24 @@ class ArticlePage(
         max_length=32,
         choices=ArticleTypes.choices,
     )
-    authors = StreamField(
-        [
-            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
-            ('external_author', CharBlock(required=True)),
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_accordion_block,
+            BasicPageAbstract.body_autoplay_video_block,
+            BasicPageAbstract.body_chart_block,
+            BasicPageAbstract.body_embedded_tiktok_block,
+            BasicPageAbstract.body_external_quote_block,
+            BasicPageAbstract.body_external_video_block,
+            BasicPageAbstract.body_highlight_title_block,
+            BasicPageAbstract.body_image_full_bleed_block,
+            BasicPageAbstract.body_image_scroll_block,
+            BasicPageAbstract.body_poster_block,
+            BasicPageAbstract.body_pull_quote_left_block,
+            BasicPageAbstract.body_pull_quote_right_block,
+            BasicPageAbstract.body_recommended_block,
+            BasicPageAbstract.body_text_border_block,
+            BasicPageAbstract.body_tool_tip_block,
+            BasicPageAbstract.body_tweet_block,
         ],
         blank=True,
     )
@@ -318,13 +330,7 @@ class ArticlePage(
             heading='General Information',
             classname='collapsible',
         ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('authors'),
-            ],
-            heading='Authors',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.authors_panel,
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
@@ -399,7 +405,7 @@ class ArticlePage(
 
 class ArticleSeriesListPage(Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_series_list_page.html'
 
@@ -570,7 +576,7 @@ class ArticleSeriesPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
 
@@ -582,15 +588,11 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
+            people = item.value.specific.authors.all()
             people_string = ''
-            if (isinstance(item.value.specific, ArticlePage)):
-                people = item.value.specific.authors
-            elif (isinstance(item.value.specific, MultimediaPage)):
-                people = item.value.specific.speakers
 
             for person in people:
-                person_string = person.value.title
+                person_string = person.author.title
                 people_string += person_string
 
                 # Add each person as well so if there's an article with just
@@ -609,15 +611,12 @@ class ArticleSeriesPage(
     @property
     def series_contributors_by_person(self):
         series_contributors = []
+        item_people = set()
 
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
-            if (isinstance(item.value.specific, ArticlePage)):
-                people = item.value.specific.authors
-            elif (isinstance(item.value.specific, MultimediaPage)):
-                people = item.value.specific.speakers
+            people = item.value.specific.authors.all()
 
             # Skip items that have more than 2 authors/speakers. For
             # example, in the After COVID series, there is an introductory
@@ -626,7 +625,9 @@ class ArticleSeriesPage(
                 continue
             else:
                 for person in people:
-                    series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
+                    if person.author.title not in item_people:
+                        series_contributors.append({'item': item.value.specific, 'contributors': [person.author], 'last_name': person.author.last_name})
+                        item_people.add(person.author.title)
 
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors

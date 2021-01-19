@@ -123,6 +123,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
     implemented_themes = [
         'after_covid_series_opinion',
         'cyber_series_opinion',
+        'health_security_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -176,6 +177,20 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/chart_block.html'
 
 
+class ContactEmailBlock(blocks.EmailBlock):
+    class Meta:
+        icon = 'mail'
+        label = 'Contact Email'
+        template = 'streams/contact_email_block.html'
+
+
+class ContactPersonBlock(blocks.PageChooserBlock):
+    class Meta:
+        icon = 'user'
+        label = 'Contact Person'
+        template = 'streams/contact_person_block.html'
+
+
 class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
 
     def get_template(self, context, *args, **kwargs):
@@ -215,6 +230,12 @@ class EmbeddedVideoBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/embedded_video_block.html'
 
 
+class ExternalPersonBlock(blocks.CharBlock):
+    class Meta:
+        icon = 'user'
+        label = 'External Person'
+
+
 class ExternalQuoteBlock(blocks.StructBlock, ThemeableBlock):
     """External quote with optional source"""
 
@@ -232,17 +253,6 @@ class ExternalQuoteBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'edit'
         label = 'External Quote'
         template = 'streams/external_quote_block.html'
-
-
-class ExternalSpeakerBlock(blocks.CharBlock, ThemeableBlock):
-
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ExternalSpeakerBlock, self).get_template(context, *args, **kwargs)
-        return self.get_theme_template(standard_template, context, 'external_speaker_block')
-
-    class Meta:
-        icon = 'edit'
-        label = 'External Speakers'
 
 
 class ImageBlock(blocks.StructBlock, ThemeableBlock):
@@ -444,25 +454,6 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'edit'
         label = 'Pull Quote Right'
         template = 'streams/pull_quote_right_block.html'
-
-
-class SpeakersBlock(blocks.PageChooserBlock, ThemeableBlock):
-
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(SpeakersBlock, self).get_template(context, *args, **kwargs)
-        return self.get_theme_template(standard_template, context, 'speakers_block')
-
-    def get_api_representation(self, value, context=None):
-        if value:
-            return {
-                'id': value.id,
-                'title': value.title,
-                'url': value.url,
-            }
-
-    class Meta:
-        icon = 'user'
-        label = 'Speakers'
 
 
 class TextBorderBlock(blocks.StructBlock, ThemeableBlock):

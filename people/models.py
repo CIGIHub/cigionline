@@ -1,6 +1,7 @@
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
+    ContentPage,
     SearchablePageAbstract,
     ThemeablePageAbstract,
 )
@@ -16,6 +17,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
@@ -30,7 +32,7 @@ class PeoplePage(Page):
     person pages at the path /people.
     """
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['people.PersonPage']
     templates = 'people/person_list_page.html'
 
@@ -55,7 +57,7 @@ class PersonListPage(BasicPageAbstract, Page):
     person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
     max_count = 3
-    parent_page_types = ['core.BasicPage', 'core.HomePage']
+    parent_page_types = ['core.BasicPage', 'home.HomePage']
     subpage_types = []
     templates = 'people/person_list_page.html'
 
@@ -221,6 +223,17 @@ class PersonPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def latest_activity(self):
+        # @todo test
+        content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
+        content_pages_as_editor = self.content_pages_as_editor.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
+        latest_activity = content_pages_as_author.union(content_pages_as_editor).order_by('-content_page__publishing_date').first()
+        if latest_activity:
+            content_page = ContentPage.objects.get(pk=latest_activity.get('content_page_id'))
+            if content_page:
+                return content_page.specific
+        return False
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -327,6 +340,11 @@ class PersonPage(
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
         ThemeablePageAbstract.theme_panel,
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
     ]
 
     parent_page_types = ['people.PeoplePage']

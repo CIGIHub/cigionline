@@ -1,10 +1,12 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
+    AccordionBlock,
     ParagraphBlock,
+    ReadMoreBlock,
     BlockQuoteBlock,
     EmbeddedVideoBlock,
+    ExternalPersonBlock,
     ExternalQuoteBlock,
     ImageBlock,
     AutoPlayVideoBlock,
@@ -24,186 +26,15 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
-
-
-class HomePage(Page):
-    """Singleton model for the home page."""
-
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_pages',
-                    max_num=9,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Featured Content',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'highlight_pages',
-                    max_num=12,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Highlights',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_multimedia',
-                    max_num=12,
-                    min_num=0,
-                    label='Multimedia',
-                ),
-            ],
-            heading='Featured Multimedia',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_experts',
-                    max_num=3,
-                    min_num=0,
-                    label='Expert',
-                ),
-            ],
-            heading='Featured Experts',
-            classname='collapsible collapsed',
-        ),
-    ]
-
-    max_count = 1
-    subpage_types = [
-        'articles.ArticleLandingPage',
-        'articles.ArticleListPage',
-        'articles.ArticleSeriesListPage',
-        'articles.ArticleSeriesPage',
-        'articles.MediaLandingPage',
-        'careers.JobPostingListPage',
-        'core.BasicPage',
-        'core.PrivacyNoticePage',
-        'events.EventListPage',
-        'multimedia.MultimediaListPage',
-        'multimedia.MultimediaSeriesListPage',
-        'multimedia.MultimediaSeriesPage',
-        'newsletters.NewsletterListPage',
-        'people.PeoplePage',
-        'people.PersonListPage',
-        'publications.PublicationListPage',
-        'publications.PublicationSeriesListPage',
-        'research.ProjectListPage',
-        'research.ResearchLandingPage',
-        'research.TopicListPage'
-    ]
-    templates = 'core/home_page.html'
-
-    class Meta:
-        verbose_name = 'Home Page'
-
-
-class HomePageFeaturedPage(Orderable):
-    home_page = ParentalKey(
-        'core.HomePage',
-        related_name='featured_pages',
-    )
-    featured_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Page',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'featured_page',
-            ['wagtailcore.Page'],
-        ),
-    ]
-
-
-class HomePageHighlightPage(Orderable):
-    home_page = ParentalKey(
-        'core.HomePage',
-        related_name='highlight_pages',
-    )
-    highlight_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Highlight',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'highlight_page',
-            ['articles.ArticleSeriesPage', 'publications.PublicationPage'],
-        ),
-    ]
-
-
-class HomePageFeaturedExperts(Orderable):
-    home_page = ParentalKey(
-        'core.HomePage',
-        related_name='featured_experts',
-    )
-    featured_expert = models.ForeignKey(
-        'people.PersonPage',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Expert',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'featured_expert',
-            ['people.PersonPage'],
-        ),
-    ]
-
-
-class HomePageFeaturedMultimedia(Orderable):
-    home_page = ParentalKey(
-        'core.HomePage',
-        related_name='featured_multimedia',
-    )
-    featured_multimedia = models.ForeignKey(
-        'multimedia.MultimediaPage',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Multimedia',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'featured_multimedia',
-            ['multimedia.MultimediaPage'],
-        ),
-    ]
 
 
 class BasicPageAbstract(models.Model):
@@ -211,67 +42,56 @@ class BasicPageAbstract(models.Model):
 
     # Body StreamField blocks
     body_default_blocks = [
-        ('accordion', blocks.StructBlock([
-            ('title', blocks.CharBlock(required=True)),
-            ('text', blocks.RichTextBlock(
-                features=['bold', 'italic', 'link'],
-                required=True,
-            )),
-            ('columns', blocks.ChoiceBlock(choices=[
-                ('one', 'One'),
-                ('two', 'Two'),
-                ('three', 'Three'),
-            ])),
-        ])),
-        ('autoplay_video', AutoPlayVideoBlock()),
-        ('chart', ChartBlock()),
-        ('paragraph', ParagraphBlock()),
-        ('image', ImageBlock()),
         ('block_quote', BlockQuoteBlock()),
-        ('image_full_bleed', ImageFullBleedBlock()),
-        ('image_scroll', blocks.StructBlock([
-            ('image', ImageChooserBlock(required=True)),
-            ('hide_image_caption', blocks.BooleanBlock(required=False)),
-        ])),
         ('embedded_multimedia', blocks.StructBlock([
             ('multimedia_url', blocks.URLBlock(required=True)),
             ('title', blocks.CharBlock(required=False)),
         ])),
-        ('embedded_tiktok', blocks.URLBlock(
-            help_text='Paste the link to the video here. It should look like this: https://www.tiktok.com/@who/video/6805515697175792901',
-            required=True,
-        )),
         ('embedded_video', EmbeddedVideoBlock()),
-        ('external_quote', ExternalQuoteBlock()),
-        ('external_videos', blocks.ListBlock(blocks.StructBlock([
-            ('title', blocks.CharBlock(required=True)),
-            ('video_url', blocks.URLBlock(required=True)),
-        ]))),
-        ('highlight_title', blocks.CharBlock(required=True)),
+        ('image', ImageBlock()),
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
-        ('pull_quote_left', PullQuoteLeftBlock()),
-        ('pull_quote_right', PullQuoteRightBlock()),
-        ('recommended', RecommendedBlock()),
+        ('paragraph', ParagraphBlock()),
         ('table', TableBlock()),
         ('text_background_block', blocks.RichTextBlock(
             features=['bold', 'italic', 'link'],
         )),
-        ('text_border_block', TextBorderBlock()),
-        ('tool_tip', blocks.StructBlock([
-            ('anchor', blocks.CharBlock(required=True)),
-            ('text', blocks.RichTextBlock(
-                features=['bold', 'italic', 'link'],
-                required=True,
-            )),
-            ('name', blocks.CharBlock(required=False)),
-            ('title', blocks.CharBlock(required=False)),
-            ('image', ImageChooserBlock(required=False)),
-        ])),
-        ('tweet', TweetBlock()),
     ]
-    body_poster_block = [
-        ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')),
-    ]
+
+    body_accordion_block = ('accordion', AccordionBlock())
+    body_autoplay_video_block = ('autoplay_video', AutoPlayVideoBlock())
+    body_chart_block = ('chart', ChartBlock())
+    body_embedded_tiktok_block = ('embedded_tiktok', blocks.URLBlock(
+        help_text='Paste the link to the video here. It should look like this: https://www.tiktok.com/@who/video/6805515697175792901',
+        required=True,
+    ))
+    body_external_quote_block = ('external_quote', ExternalQuoteBlock())
+    body_external_video_block = ('external_video', blocks.ListBlock(blocks.StructBlock([
+        ('title', blocks.CharBlock(required=True)),
+        ('video_url', blocks.URLBlock(required=True)),
+    ])))
+    body_highlight_title_block = ('highlight_title', blocks.CharBlock(required=True))
+    body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
+    body_image_scroll_block = ('image_scroll', blocks.StructBlock([
+        ('image', ImageChooserBlock(required=True)),
+        ('hide_image_caption', blocks.BooleanBlock(required=False)),
+    ]))
+    body_poster_block = ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage'))
+    body_pull_quote_left_block = ('pull_quote_left', PullQuoteLeftBlock())
+    body_pull_quote_right_block = ('pull_quote_right', PullQuoteRightBlock())
+    body_read_more_block = ('read_more', ReadMoreBlock())
+    body_recommended_block = ('recommended', RecommendedBlock())
+    body_text_border_block = ('text_border_block', TextBorderBlock())
+    body_tool_tip_block = ('tool_tip', blocks.StructBlock([
+        ('anchor', blocks.CharBlock(required=True)),
+        ('text', blocks.RichTextBlock(
+            features=['bold', 'italic', 'link'],
+            required=True,
+        )),
+        ('name', blocks.CharBlock(required=False)),
+        ('title', blocks.CharBlock(required=False)),
+        ('image', ImageChooserBlock(required=False)),
+    ]))
+    body_tweet_block = ('tweet', TweetBlock())
 
     body = StreamField(
         body_default_blocks,
@@ -485,9 +305,37 @@ class ArchiveablePageAbstract(models.Model):
 
 
 class ContentPage(Page, SearchablePageAbstract):
+    external_authors = StreamField(
+        [
+            ('external_person', ExternalPersonBlock()),
+        ],
+        blank=True,
+    )
+    external_editors = StreamField(
+        [
+            ('external_person', ExternalPersonBlock()),
+        ],
+        blank=True,
+    )
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
+    authors_panel = MultiFieldPanel(
+        [
+            InlinePanel('authors'),
+            StreamFieldPanel('external_authors'),
+        ],
+        heading='Authors',
+        classname='collapsible collapsed',
+    )
+    editors_panel = MultiFieldPanel(
+        [
+            InlinePanel('editors'),
+            StreamFieldPanel('external_editors'),
+        ],
+        heading='Editors',
+        classname='collapsible collapsed',
+    )
     recommended_panel = MultiFieldPanel(
         [
             InlinePanel('recommended'),
@@ -505,6 +353,10 @@ class ContentPage(Page, SearchablePageAbstract):
         index.FilterField('topicpage_id'),
     ]
 
+    def author_count(self):
+        # @todo test this
+        return self.authors.count() + len(self.external_authors)
+
     def on_form_bound(self):
         self.bound_field = self.form[self.field_name]
         heading = self.heading or self.bound_field.label
@@ -514,6 +366,54 @@ class ContentPage(Page, SearchablePageAbstract):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
+
+
+class ContentPageAuthor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='authors',
+    )
+    author = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_author',
+        verbose_name='Author',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'author',
+            ['people.PersonPage'],
+        ),
+    ]
+
+    api_fields = [
+        APIField('author'),
+    ]
+
+
+class ContentPageEditor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='editors',
+    )
+    editor = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_editor',
+        verbose_name='Editor',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'editor',
+            ['people.PersonPage'],
+        ),
+    ]
 
 
 class ContentPageRecommendedContent(Orderable):
@@ -572,9 +472,9 @@ class BasicPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'core.HomePage']
+    parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'home.HomePage']
     subpage_types = [
-        'core.AnnualReportListPage',
+        'annual_reports.AnnualReportListPage',
         'core.BasicPage',
         'core.FundingPage',
         'people.PersonListPage',
@@ -611,107 +511,6 @@ class FundingPage(BasicPageAbstract, Page):
         verbose_name = 'Funding Page'
 
 
-class AnnualReportListPage(BasicPageAbstract, Page):
-    max_count = 1
-    parent_page_types = ['core.BasicPage']
-    subpage_types = ['core.AnnualReportPage']
-    templates = 'core/annual_report_list_page.html'
-
-    content_panels = [
-        BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
-        BasicPageAbstract.images_panel,
-    ]
-    settings_panels = Page.settings_panels + [
-        BasicPageAbstract.submenu_panel,
-    ]
-
-    class Meta:
-        verbose_name = 'Annual Report List Page'
-
-
-class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
-    """View annual report page"""
-
-    image_poster = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Cover image',
-        help_text='Poster sized image that is displayed in the featured section on the Annual Reports page.',
-    )
-    report_english = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    report_financial = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    report_french = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    report_interactive = models.CharField(
-        blank=True,
-        max_length=255,
-        help_text='Internal path to the interactive report. Example: /interactives/2019annualreport',
-    )
-    year = models.IntegerField(validators=[MinValueValidator(2005), MaxValueValidator(2050)])
-
-    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
-    drupal_node_id = models.IntegerField(blank=True, null=True)
-
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('year'),
-            ],
-            heading='General Information',
-            classname='collapsible',
-        ),
-        MultiFieldPanel(
-            [
-                DocumentChooserPanel('report_english'),
-                DocumentChooserPanel('report_french'),
-                DocumentChooserPanel('report_financial'),
-                FieldPanel('report_interactive'),
-            ],
-            heading='Reports',
-            classname='collapsible',
-        ),
-        MultiFieldPanel(
-            [
-                ImageChooserPanel('image_poster'),
-            ],
-            heading='Images',
-            classname='collapsible collapsed',
-        )
-    ]
-    promote_panels = Page.promote_panels + [
-        FeatureablePageAbstract.feature_panel,
-        SearchablePageAbstract.search_panel,
-    ]
-    parent_page_types = ['core.AnnualReportListPage']
-    subpage_types = []
-    templates = 'core/annual_report_page.html'
-
-    class Meta:
-        verbose_name = 'Annual Report Page'
-        verbose_name_plural = 'Annual Report Pages'
-
-
 class PrivacyNoticePage(
     Page,
     BasicPageAbstract,
@@ -722,7 +521,7 @@ class PrivacyNoticePage(
     ]
 
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     template = 'core/privacy_notice_page.html'
 

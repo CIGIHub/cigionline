@@ -37,26 +37,15 @@
                     {{ block.value.specific.subtitle|richtext }}
                   </div>
                 {% endif %}
-                {% if block.value.specific.authors %}
+                {% if block.value.specific.author_count %}
                   <p class="authors">
-                    Author{{ block.value.specific.authors|length|pluralize }}:
-                    {% for author in block.value.specific.authors %}
-                      {% if author.block_type == 'author' %}
-                        <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
-                      {% elif author.block_type == 'external_author' %}
-                        <span>{{ author.value }}</span>
-                      {% endif %}
+                    {% if block.value.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ block.value.specific.author_count|pluralize }}:
+                    {% for item in block.value.specific.authors.all %}
+                      <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
                     {% endfor %}
-                  </p>
-                {% endif %}
-                {% if block.value.specific.speakers %}
-                  <p class="authors">
-                    Speaker{{ block.value.specific.speakers|length|pluralize }}:
-                    {% for speaker in block.value.specific.speakers %}
-                      {% if speaker.block_type == 'speaker' %}
-                        <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
-                      {% elif speaker.block_type == 'external_speaker' %}
-                        <span>{{ speaker.value }}</span>
+                    {% for item in block.value.specific.external_authors %}
+                      {% if item.block_type == 'external_person' %}
+                        <span>{{ item.value }}</span>
                       {% endif %}
                     {% endfor %}
                   </p>

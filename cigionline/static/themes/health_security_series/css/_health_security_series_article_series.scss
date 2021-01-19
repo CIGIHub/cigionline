@@ -2,6 +2,27 @@
   @include top-bar($background-color: transparent);
   background-color: $health-security-series-background-colour;
 
+  h2 {
+    font-size: 1em;
+    font-weight: 400;
+    margin-top: 3em;
+    text-transform: none;
+    width: 100%;
+  }
+
+  .dots-divider {
+    text-align: center;
+
+    span {
+      background-color: $white;
+      border-radius: 50%;
+      display: inline-block;
+      height: 0.5em;
+      margin: 1em 0.2em;
+      width: 0.5em;
+    }
+  }
+
   .health-security-series-article-series-hero {
     @include media-breakpoint-up(md) {
       background-position-y: -120px;
@@ -39,30 +60,9 @@
 
   .health-security-series-article-series-in-the-series {
     color: $white;
-    margin: 3em 0;
-
-    h2 {
-      font-size: 1em;
-      font-weight: 400;
-      margin-top: 3em;
-      text-transform: none;
-      width: 100%;
-    }
+    margin: 2em 0;
 
     article {
-      @keyframes rotation {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        50% {
-          transform: rotate(180deg);
-        }
-
-        100% {
-          transform: rotate(0deg);
-        }
-      }
       align-items: center;
       display: flex;
       padding: 1.2em 0;
@@ -128,22 +128,6 @@
         }
       }
 
-      .inner-ring {
-        animation: rotation 15s infinite ease-in-out;
-        animation-play-state: paused;
-        height: 70px;
-        margin: -35px 0 0 -35px;
-        width: 70px;
-      }
-
-      .outer-ring {
-        animation: rotation 12s infinite ease-in-out;
-        animation-play-state: paused;
-        height: 80px;
-        margin: -40px 0 0 -40px;
-        width: 80px;
-      }
-
       .author-images {
         flex-shrink: 0;
         height: 80px;
@@ -156,12 +140,6 @@
             opacity: 0.7;
             transition: opacity 0.2s ease;
           }
-        }
-
-        & > img {
-          left: 50%;
-          position: absolute;
-          top: 50%;
         }
 
         a {
@@ -229,29 +207,30 @@
         }
       }
     }
-
-    .dots-divider {
-      text-align: center;
-
-      span {
-        @include media-breakpoint-up(md) {
-          margin: 2em 0.2em 1em;
-        }
-        background-color: $white;
-        border-radius: 50%;
-        display: inline-block;
-        height: 0.5em;
-        margin: 1em 0.2em 0;
-        width: 0.5em;
-      }
-    }
   }
 
   .health-security-series-article-series-credits {
-    color: $white;
+    color: $health-security-series-light-grey;
+    margin-bottom: 3em;
+
+    h2 {
+      margin: 2em 0 1em;
+    }
 
     .health-security-series-article-series-credits-content {
-      columns: 3;
+      @include media-breakpoint-up(md) {
+        columns: 3;
+      }
+      columns: 2;
+    }
+
+    p {
+      break-inside: avoid;
+      font-size: 0.75em;
+    }
+
+    .name {
+      color: $white;
     }
   }
 }

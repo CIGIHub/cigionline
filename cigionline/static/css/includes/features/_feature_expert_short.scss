@@ -1,0 +1,29 @@
+article {
+  &.feature-expert-short {
+    .feature-expert-person-details {
+      align-items: center;
+      display: flex;
+
+      img {
+        border-radius: 50%;
+        height: 70px;
+        margin-right: 10px;
+        width: 70px;
+      }
+
+      .feature-expert-person-title {
+        h3 {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+          font-size: 1.0625em;
+          margin-bottom: 0;
+        }
+
+        p {
+          color: $cigi-text-grey;
+          font-size: 0.9em;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

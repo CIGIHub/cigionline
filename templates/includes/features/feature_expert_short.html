@@ -1,0 +1,22 @@
+{% load wagtailimages_tags %}
+<article class="feature-expert-short">
+
+  <div class="feature-expert-person-details">
+    <a href="{{ expert.url }}">
+      {% image expert.image_square fill-140x140 %}
+    </a>
+    <div class="feature-expert-person-title">
+      <h3>
+        <a href="{{ expert.url }}">
+          {{ expert.title }}
+        </a>
+      </h3>
+      <p>
+        {{ expert.position }}
+      </p>
+    </div>
+  </div>
+  {% if expert.latest_activity %}
+    <h4>{{ expert.latest_activity.title }}
+  {% endif %}
+</article>

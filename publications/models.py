@@ -10,9 +10,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
-    AuthorBlock,
     BookPurchaseLinkBlock,
-    EditorBlock,
     PDFDownloadBlock,
 )
 from wagtail.admin.edit_handlers import (
@@ -24,7 +22,6 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.api import APIField
 from wagtail.core.blocks import (
-    CharBlock,
     RichTextBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
@@ -38,7 +35,7 @@ class PublicationListPage(BasicPageAbstract, Page):
     """Publication list page"""
 
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['publications.PublicationPage']
     templates = 'publications/publication_list_page.html'
 
@@ -131,13 +128,6 @@ class PublicationPage(
         SPEECHES = ('speeches', 'Speeches')
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
 
-    authors = StreamField(
-        [
-            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
-            ('external_author', CharBlock(required=True)),
-        ],
-        blank=True,
-    )
     book_excerpt = RichTextField(
         blank=True,
         features=['bold', 'italic', 'link'],
@@ -177,13 +167,6 @@ class PublicationPage(
             ('editorial_review', RichTextBlock(
                 features=['bold', 'italic', 'link'],
             )),
-        ],
-        blank=True,
-    )
-    editors = StreamField(
-        [
-            ('editor', EditorBlock(required=True, page_type='people.PersonPage')),
-            ('external_editor', CharBlock(required=True)),
         ],
         blank=True,
     )
@@ -262,9 +245,16 @@ class PublicationPage(
         For featured publications, only display the first 3 authors/editors.
         """
 
-        person_list = list(self.authors) + list(self.editors)
+        # @todo test
+        person_list = list(self.authors.all()) + list(self.editors.all())
         del person_list[3:]
-        return person_list
+        result = []
+        for person in person_list:
+            if person.author:
+                result.append(person.author)
+            elif person.editor:
+                result.append(person.editor)
+        return result
 
     def featured_person_list_has_more(self):
         """
@@ -272,7 +262,8 @@ class PublicationPage(
         display "and more".
         """
 
-        return len(list(self.authors) + list(self.editors)) > 3
+        # @todo test
+        return (self.authors.count() + self.editors.count()) > 3
 
     def has_book_metadata(self):
         return self.publication_type == self.PublicationTypes.BOOKS \
@@ -296,20 +287,8 @@ class PublicationPage(
             heading='General Information',
             classname='collapsible',
         ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('authors'),
-            ],
-            heading='Authors',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('editors'),
-            ],
-            heading='Editors',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.authors_panel,
+        ContentPage.editors_panel,
         MultiFieldPanel(
             [
                 FieldPanel('book_publisher'),
@@ -395,7 +374,7 @@ class PublicationPage(
 
 class PublicationSeriesListPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['core.HomePage']
+    parent_page_types = ['home.HomePage']
     subpage_types = ['publications.PublicationSeriesPage']
     templates = 'publications/publication_series_list_page.html'
 

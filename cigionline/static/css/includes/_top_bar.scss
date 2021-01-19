@@ -14,12 +14,12 @@ header {
 
   .cigi-top-bar {
     @include media-breakpoint-up(lg) {
-      height: 66px;
+      height: 70px;
     }
 
     align-items: center;
     display: flex;
-    height: 36px;
+    height: 50px;
     justify-content: space-between;
     transition: height 0.5s ease;
 
@@ -29,7 +29,7 @@ header {
     }
 
     &.scrolled-nav {
-      height: 36px;
+      height: 50px;
 
       .cigi-logo {
         .large-logo {
@@ -68,9 +68,9 @@ header {
           opacity: 0;
         }
 
+        height: 80%;
         opacity: 1;
         position: absolute;
-        width: 2em;
       }
 
       .large-logo {
@@ -79,7 +79,7 @@ header {
         }
 
         display: none;
-        width: 8.5em;
+        width: 8em;
       }
     }
 
