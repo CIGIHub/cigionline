@@ -5,4 +5,12 @@
     $position: relative,
   );
   background-color: $wto-series-background-colour;
+
+  .wto-series-in-the-series {
+    article {
+      h4 {
+        @include link($color: $black, $hover-color: $cigi-medium-grey);
+      }
+    }
+  }
 }

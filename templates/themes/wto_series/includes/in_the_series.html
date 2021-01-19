@@ -28,7 +28,7 @@
               </h4>
               <ul class="authors">
                 {% for item in block.value.specific.authors.all %}
-                  <li><a href="{{ item.author.url }}">{{ item.author.title }}></a></li>
+                  <li><a href="{{ item.author.url }}">{{ item.author.title }}</a></li>
                 {% endfor %}
                 {% for item in block.value.specific.external_authors %}
                   {% if item.block_type == 'external_person' %}
