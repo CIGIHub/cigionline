@@ -8,7 +8,7 @@ ReactDOM.render(
     showSearch
     endpoint="/publications"
     fields={[
-      'authors',
+      'authors(author(title,url))',
       'pdf_downloads',
       'publishing_date',
       'title',

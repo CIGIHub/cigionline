@@ -1,5 +1,5 @@
 {% load wagtailimages_tags %}
-<article class="feature-expert-short">
+<article class="feature-content feature-expert-short">
 
   <div class="feature-expert-person-details">
     <a href="{{ expert.url }}">
@@ -16,4 +16,12 @@
       </p>
     </div>
   </div>
+  {% if expert.latest_activity %}
+    <div class="feature-expert-latest-activity">
+      <h4>Latest Activity</h4>
+      {% include "includes/topics.html" with topics=expert.latest_activity.topics %}
+      <h5><a href="{{ expert.latest_activity.url }}">{{ expert.latest_activity.title }}</a></h5>
+      {% include "includes/features/feature_content_people.html" with authors=expert.latest_activity.authors.all %}
+    </div>
+  {% endif %}
 </article>

@@ -7,10 +7,8 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
-from multimedia.models import MultimediaPage
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import AuthorBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -155,13 +153,6 @@ class ArticlePage(
         blank=False,
         max_length=32,
         choices=ArticleTypes.choices,
-    )
-    authors = StreamField(
-        [
-            ('author', AuthorBlock(required=True, page_type='people.PersonPage')),
-            ('external_author', CharBlock(required=True)),
-        ],
-        blank=True,
     )
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
@@ -339,13 +330,7 @@ class ArticlePage(
             heading='General Information',
             classname='collapsible',
         ),
-        MultiFieldPanel(
-            [
-                StreamFieldPanel('authors'),
-            ],
-            heading='Authors',
-            classname='collapsible collapsed',
-        ),
+        ContentPage.authors_panel,
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
@@ -603,15 +588,11 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
+            people = item.value.specific.authors.all()
             people_string = ''
-            if (isinstance(item.value.specific, ArticlePage)):
-                people = item.value.specific.authors
-            elif (isinstance(item.value.specific, MultimediaPage)):
-                people = item.value.specific.speakers
 
             for person in people:
-                person_string = person.value.title
+                person_string = person.author.title
                 people_string += person_string
 
                 # Add each person as well so if there's an article with just
@@ -635,11 +616,7 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
-            if (isinstance(item.value.specific, ArticlePage)):
-                people = item.value.specific.authors
-            elif (isinstance(item.value.specific, MultimediaPage)):
-                people = item.value.specific.speakers
+            people = item.value.specific.authors.all()
 
             # Skip items that have more than 2 authors/speakers. For
             # example, in the After COVID series, there is an introductory
@@ -648,9 +625,9 @@ class ArticleSeriesPage(
                 continue
             else:
                 for person in people:
-                    if person.value.title not in item_people:
-                        series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
-                        item_people.add(person.value.title)
+                    if person.author.title not in item_people:
+                        series_contributors.append({'item': item.value.specific, 'contributors': [person.author], 'last_name': person.author.last_name})
+                        item_people.add(person.author.title)
 
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors

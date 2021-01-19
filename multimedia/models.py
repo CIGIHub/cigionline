@@ -10,10 +10,6 @@ from core.models import (
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import (
-    ExternalSpeakerBlock,
-    SpeakerBlock,
-)
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -188,13 +184,6 @@ class MultimediaPage(
     podcast_video_file_size = models.IntegerField(blank=True, null=True)
     podcast_video_url = models.URLField(blank=True)
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
-    speakers = StreamField(
-        [
-            ('speaker', SpeakerBlock(required=True, page_type='people.PersonPage')),
-            ('external_speaker', ExternalSpeakerBlock()),
-        ],
-        blank=True,
-    )
     transcript = StreamField(
         [
             BasicPageAbstract.body_accordion_block,
@@ -246,7 +235,8 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('speakers'),
+                InlinePanel('authors'),
+                StreamFieldPanel('external_authors'),
             ],
             heading='Speakers',
             classname='collapsible collapsed',
@@ -341,13 +331,13 @@ class MultimediaPage(
         + [index.FilterField('multimedia_type')]
 
     api_fields = [
+        APIField('authors'),
         APIField('title'),
         APIField('url'),
         APIField('publishing_date'),
         APIField('multimedia_type'),
         APIField('image_hero_url'),
         APIField('topics'),
-        APIField('speakers'),
     ]
 
     parent_page_types = ['multimedia.MultimediaListPage']
