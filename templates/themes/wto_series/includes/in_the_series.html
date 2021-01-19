@@ -1,40 +1,45 @@
+{% load core_tags %}
+
 <section class="wto-series-in-the-series">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8">
-        <article>
-          <h2>{{ article_series.title }}</h2>
-          <p>A CIGI Essay Series</p>
-        </article>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col col-md-10 col-lg-8">
-        {% for block in article_series.series_items %}
-          {% if block.block_type == 'series_item' %}
-            <article>
+        {% for block in series_items %}
+          {% if block.block_type == 'category_title' %}
+            {% define block.value|slugify as category_class %}
+            {% if not forloop.first %}
+              </div>
+            {% endif %}
+            <h3>{{ block.value }}</h3>
+            <div class="series-category">
+          {% elif block.block_type == 'series_item' %}
+            <article class="{{ category_class }}">
+              <span>
+                {% if block.value.specific|page_type == 'multimedia' %}
+                  <i class="fa fa-play"></i>
+                {% endif %}
+              </span>
               <h4>
-                {% if article_id == block.value.id %}
-                  <span>{{ block.value.title }}</span>
+                {% if block.value.id == article_id %}
+                  {{ block.value.title }}
                 {% else %}
-                  <a href="{{ block.value.url }}">
-                    {{ block.value.title }}
-                  </a>
+                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
                 {% endif %}
               </h4>
-              <p class="authors">
+              <ul class="authors">
                 {% for item in block.value.specific.authors.all %}
-                  <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
+                  <li><a href="{{ item.author.url }}">{{ item.author.title }}</a></li>
                 {% endfor %}
                 {% for item in block.value.specific.external_authors %}
                   {% if item.block_type == 'external_person' %}
-                    <span>{{ item.value }}</span>
+                    <li>{{ item.value }}</li>
                   {% endif %}
                 {% endfor %}
-              </p>
+              </ul>
             </article>
-          {% elif block.block_type == 'category_title' %}
-            <h3>{{ block.value }}</h3>
+            {% if forloop.last %}
+              </div>
+            {% endif %}
           {% endif %}
         {% endfor %}
       </div>

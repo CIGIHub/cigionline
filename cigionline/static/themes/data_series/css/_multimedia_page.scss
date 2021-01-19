@@ -1,3 +1,13 @@
 .data-series-multimedia {
   background-color: $data-series-background-color;
+
+  .card {
+    background-color: $data-series-background-color;
+  }
+
+  .multimedia-series-block {
+    h2 {
+      font-family: 'futura-pt', sans-serif;
+    }
+  }
 }

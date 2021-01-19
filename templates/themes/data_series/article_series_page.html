@@ -5,9 +5,39 @@
   {% render_bundle 'themeDataSeries' 'css' %}
 {% endblock %}
 
-{% block body_class %}data-series-article-series{% endblock %}
+{% block body_class %}data-series-theme data-series-article-series{% endblock %}
 
 {% block content %}
+<div class="page-header">
+  <div class="data-series-hero">
+    <div class="video-bg">
+      {% if self.video_banner %}
+      <video playsinline autoplay muted loop class="video-background">
+        <source src="{{ self.video_banner.url }}" type="video/mp4">
+      </video>
+    {% endif %}
+    </div>
+
+    <div class="container">
+      {% include "./includes/social_links.html" with title=self.title no_circle=True %}
+      <h1><span>{{ self.title }}</span></h1>
+      <div class="subtitle">{{ self.subtitle|richtext }}</div>
+      <ul class="contributors">
+        {% for item in self.series_contributors_by_article %}
+          {% for contributor in item.contributors %}
+            <li>{{ contributor.author.title }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+    <a href="#content" class="scroll-arrow">
+      <i class="far fa-angle-down" aria-hidden="true"></i>
+    </a>
+  </div>
+</div>
+
+<div id="content" class="page-content">
+
 <section class="body">
   <div class="container">
     <div class="row">
@@ -21,14 +51,14 @@
   </div>
 </section>
 <div class="footer-image"></div>
-<section class="data-series-article-series-in-the-series">
+<section class="data-series-in-the-series">
   <div class="container">
     <div class="row">
       <div class="col">
         {% for block in self.series_items %}
           {% if block.block_type == 'series_item' %}
             <article>
-              <h4><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
+              <h4 class="article-title"><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
               <p class="authors">
                 {% for item in block.value.specific.authors.all %}
                   <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
@@ -41,7 +71,7 @@
               </p>
             </article>
           {% elif block.block_type == 'category_title' %}
-            <h3>{{ block.value }}</h3>
+            <h3 class="section-title">{{ block.value }}</h3>
           {% endif %}
         {% endfor %}
       </div>
@@ -49,3 +79,5 @@
   </div>
 </section>
 {% endblock %}
+
+</div>
