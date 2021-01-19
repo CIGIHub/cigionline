@@ -7,7 +7,7 @@
   background-color: $data-series-background-color;
 
   .body {
-    background: linear-gradient(#e0ded9, $white);
+    background: linear-gradient($data-series-background-gradient, $white);
     margin: 0;
     padding-bottom: 2em;
 
@@ -29,26 +29,5 @@
     background-image: url('../../../assets/data-series-landing-bg.gif');
     height: 80px;
     width: 100%;
-  }
-
-  .data-series-article-series-in-the-series {
-    article {
-      .authors {
-        span {
-          &:not(:only-child) {
-            &::after {
-              content: ', ';
-              margin-right: 2px;
-            }
-          }
-
-          &:last-child {
-            &::after {
-              display: none;
-            }
-          }
-        }
-      }
-    }
   }
 }
