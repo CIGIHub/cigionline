@@ -112,5 +112,28 @@
       vertical-align: middle;
       width: 65px;
     }
+
+    .stream-block-blockquote-content {
+      @include media-breakpoint-up(sm) {
+        padding: 2em;
+      }
+      padding: 2em 1em;
+
+      &::before {
+        @include media-breakpoint-up(sm) {
+          left: 2em;
+        }
+        background-image: url('../assets/wto_pull_quote_graphic.svg');
+        border-bottom: 0;
+        left: 1em;
+        top: 1.25em;
+        width: 115px;
+      }
+
+      blockquote {
+        font-family: $wto-font;
+        font-weight: 700;
+      }
+    }
   }
 }
