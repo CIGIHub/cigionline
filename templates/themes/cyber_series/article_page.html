@@ -19,7 +19,7 @@
             <div class="cyber-series-article-hero-content">
               {% include "includes/topics.html" with topics=self.topics %}
               <h1>{{ self.title }}</h1>
-              {% include "includes/authors.html" with authors=self.authors external_authors=self.external_authors %}
+              {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
             </div>
           </div>
         </div>
