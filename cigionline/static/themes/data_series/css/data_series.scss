@@ -1,15 +1,22 @@
 $data-series-background-color: #f2f0ea;
 $data-series-primary-color: #31c3ba;
+$data-series-secondary-color: #17928a;
 $data-series-background-gradient: #e0ded9;
 
 @import '../../../css/global/mixins';
+@import '../../../css/global/animations/bg_scroll_left';
 
 @import './article_series_page';
 @import './article_page';
 @import './multimedia_page';
 @import './includes/in_the_series';
 
-h2,
-h3 {
-  font-family: 'din-condensed', sans-serif;
+.data-series-theme {
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: 'din-condensed', sans-serif;
+  }
 }
