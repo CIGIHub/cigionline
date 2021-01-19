@@ -136,4 +136,31 @@
       }
     }
   }
+
+  .footnotes {
+    &::before {
+      content: none;
+    }
+
+    p {
+      padding-left: 0;
+    }
+  }
+
+  .about-the-author {
+    h3 {
+      border-top: 0;
+      font-family: $wto-font;
+      font-size: 1.1em;
+      text-transform: none;
+    }
+
+    p {
+      padding: 0 1em;
+    }
+
+    .name {
+      display: none;
+    }
+  }
 }
