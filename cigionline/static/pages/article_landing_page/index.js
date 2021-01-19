@@ -8,7 +8,7 @@ ReactDOM.render(
     showSearch
     endpoint="/opinions"
     fields={[
-      'authors',
+      'authors(author(title,url))',
       'publishing_date',
       'title',
       'topics(title,url)',

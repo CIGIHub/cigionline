@@ -44,18 +44,12 @@
                   <a href="{{ block.value.url }}">{{ block.value.title }}</a>
                 </h4>
                 <p class="authors">
-                  {% for author in block.value.specific.authors %}
-                    {% if author.block_type == 'author' %}
-                      <span><a href="{{ author.value.url }}">{{ author.value.title }}</a></span>
-                    {% elif author.block_type == 'external_author' %}
-                      <span>{{ author.value }}</span>
-                    {% endif %}
+                  {% for item in block.value.specific.authors.all %}
+                    <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
                   {% endfor %}
-                  {% for speaker in block.value.specific.speakers %}
-                    {% if speaker.block_type == 'speaker' %}
-                      <span><a href="{{ speaker.value.url }}">{{ speaker.value.title }}</a></span>
-                    {% elif speaker.block_type == 'external_speaker' %}
-                      <span>{{ speaker.value }}</span>
+                  {% for item in block.value.specific.external_authors %}
+                    {% if item.block_type == 'external_person' %}
+                      <span>{{ item.value }}</span>
                     {% endif %}
                   {% endfor %}
                 </p>

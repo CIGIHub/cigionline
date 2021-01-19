@@ -1,13 +1,29 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-    <section>
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
+  {% if self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <figure>
+            {% image self.image_hero width-1280 %}
+            {% if self.image_hero.title %}
+              <figcaption>
+                {{ self.image_hero.title }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <section>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
 
   {% if self.related_files %}
     <section class="related-files">

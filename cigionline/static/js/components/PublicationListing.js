@@ -48,13 +48,10 @@ function PublicationListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.authors.map((author) => (
-              <li key={`${row.id}-${author.id}`}>
-                {author.type === 'author'
-                  ? (
-                    <a href={author.value.url} className="table-content-link table-content-link-black">
-                      {author.value.title}
-                    </a>
-                  ) : author.value}
+              <li key={`${row.id}-${author.author.id}`}>
+                <a href={author.author.url} className="table-content-link table-content-link-black">
+                  {author.author.title}
+                </a>
               </li>
             ))}
           </ul>
