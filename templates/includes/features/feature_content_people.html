@@ -1,7 +1,3 @@
-{% load core_tags %}
-
-{% define content.authors as people %}
-
 <ul class="custom-text-list feature-content-people-list">
   {% with 3 as people_limit %}
     {% for item in content.authors.all %}
