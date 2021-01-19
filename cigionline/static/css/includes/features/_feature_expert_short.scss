@@ -1,5 +1,25 @@
 article {
   &.feature-expert-short {
+    .feature-expert-latest-activity {
+      h4 {
+        color: $cigi-text-grey;
+        font-family: 0.75em;
+        margin-top: 1.3em;
+        text-transform: uppercase;
+      }
+
+      h5 {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        font-size: 1.0625em;
+        font-weight: 400;
+        line-height: 1.4;
+      }
+
+      .authors {
+        margin: 0;
+      }
+    }
+
     .feature-expert-person-details {
       align-items: center;
       display: flex;
