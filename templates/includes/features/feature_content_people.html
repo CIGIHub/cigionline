@@ -3,5 +3,17 @@
 {% define content.authors as people %}
 
 <ul class="custom-text-list feature-content-people-list">
-
+  {% with 3 as people_limit %}
+    {% for item in content.authors.all %}
+      {% if forloop.counter <= people_limit %}
+        <li>
+          <a href="{{ item.author.url }}">
+            {{ item.author.title }}
+          </a>
+        </li>
+      {% elif forloop.counter == people_limit|add:1 %}
+        <li>And more</li>
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
 </ul>
