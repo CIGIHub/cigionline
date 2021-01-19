@@ -10,9 +10,9 @@ ReactDOM.render(
     showSearch
     limit={18}
     fields={[
+      'authors(author(title,url))',
       'image_hero_url',
       'publishing_date',
-      'speakers',
       'title',
       'topics(title,url)',
       'url',

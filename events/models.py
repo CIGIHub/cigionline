@@ -18,7 +18,6 @@ from wagtail.api import APIField
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from streams.blocks import ExternalSpeakerBlock, SpeakerBlock
 
 
 class EventListPage(BasicPageAbstract, Page):
@@ -138,13 +137,6 @@ class EventPage(
         ],
         blank=True,
     )
-    speakers = StreamField(
-        [
-            ('speaker', SpeakerBlock(required=True, page_type='people.PersonPage')),
-            ('external_speaker', ExternalSpeakerBlock()),
-        ],
-        blank=True,
-    )
     twitter_hashtag = models.CharField(blank=True, max_length=64)
     website_button_text = models.CharField(
         blank=True,
@@ -181,7 +173,8 @@ class EventPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('speakers'),
+                InlinePanel('authors'),
+                StreamFieldPanel('external_authors'),
             ],
             heading='Speakers',
             classname='collapsible collapsed',
