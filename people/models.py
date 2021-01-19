@@ -17,6 +17,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
@@ -338,6 +339,11 @@ class PersonPage(
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
         ThemeablePageAbstract.theme_panel,
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
     ]
 
     parent_page_types = ['people.PeoplePage']

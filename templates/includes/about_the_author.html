@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags core_tags %}
 
 <section class="about-the-author">
   <div class="container">
@@ -6,14 +6,19 @@
       <div class="col col-md-10 col-lg-8">
         <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
         {% for item in authors %}
+          {% if item.author %}
+            {% define item.author as person %}
+          {% elif item.editor %}
+            {% define item.editor as person %}
+          {% endif %}
           <div class="author-block">
             <div class="name">
-              <a href="{{ item.author.url }}">
-                {{ item.author.title }}
+              <a href="{{ person.url }}">
+                {{ person.title }}
               </a>
             </div>
-            {% if item.author.short_bio|length > 1 %}
-              {{ item.author.short_bio|richtext }}
+            {% if person.short_bio|length > 1 %}
+              {{ person.short_bio|richtext }}
             {% endif %}
           </div>
         {% endfor %}

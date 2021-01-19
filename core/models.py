@@ -26,6 +26,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
@@ -381,6 +382,10 @@ class ContentPageAuthor(Orderable):
             'author',
             ['people.PersonPage'],
         ),
+    ]
+
+    api_fields = [
+        APIField('author'),
     ]
 
 

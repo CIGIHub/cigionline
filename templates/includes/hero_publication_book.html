@@ -9,7 +9,7 @@
         <h2>{{subtitle|safe}}</h2>
         <div class="meta"><span class="label">Published:</span> {% include "includes/date.html" with date=self.publishing_date %}</div>
         {% if editors %}
-        <div class="meta"><span class="label">Edited By:</span>  {% include "includes/editors.html" with editors=self.editors %}</div>
+        <div class="meta"><span class="label">Edited By:</span>  {% include "includes/editors.html" with editors=self.editors.all external_editors=self.external_editors %}</div>
         {% elif authors %}
         <div class="meta"><span class="label">Author:</span>  {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}</div>
         {% endif %}
