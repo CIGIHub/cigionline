@@ -8,6 +8,36 @@
 {% block body_class %}data-series-theme data-series-article-series{% endblock %}
 
 {% block content %}
+<div class="page-header">
+  <div class="data-series-hero">
+    <div class="video-bg">
+      {% if self.video_banner %}
+      <video playsinline autoplay muted loop class="video-background">
+        <source src="{{ self.video_banner.url }}" type="video/mp4">
+      </video>
+    {% endif %}
+    </div>
+
+    <div class="container">
+      {% include "./includes/social_links.html" with title=self.title no_circle=True %}
+      <h1><span>{{ self.title }}</span></h1>
+      <div class="subtitle">{{ self.subtitle|richtext }}</div>
+      <ul class="contributors">
+        {% for item in self.series_contributors_by_article %}
+          {% for contributor in item.contributors %}
+            <li>{{ contributor.author.title }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+    <a href="#content" class="scroll-arrow">
+      <i class="far fa-angle-down" aria-hidden="true"></i>
+    </a>
+  </div>
+</div>
+
+<div id="content" class="page-content">
+
 <section class="body">
   <div class="container">
     <div class="row">
@@ -49,3 +79,5 @@
   </div>
 </section>
 {% endblock %}
+
+</div>
