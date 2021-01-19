@@ -34,7 +34,7 @@
                   <ul class="authors">
                     {% for contributor in item.contributors %}
                       <li>
-                        {{ contributor.value.title }}
+                        {{ contributor.author.title }}
                       </li>
                     {% endfor %}
                   </ul>
@@ -74,9 +74,8 @@
                     </a>
                   {% endif %}
                   <ul class="authors">
-                    {% define block.value.specific.authors as authors %}
-                    {% for author in authors %}
-                      <li>{{ author }}</li>
+                    {% for item in block.value.specific.authors.all %}
+                      <li><a href="{{ item.author.url }}">{{ item.author.title }}</a></li>
                     {% endfor %}
                   </ul>
                 </div>

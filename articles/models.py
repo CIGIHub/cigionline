@@ -590,11 +590,11 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = item.value.specific.authors
+            people = item.value.specific.authors.all()
             people_string = ''
 
             for person in people:
-                person_string = person.value.title
+                person_string = person.author.title
                 people_string += person_string
 
                 # Add each person as well so if there's an article with just
@@ -618,7 +618,7 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = item.value.specific.authors
+            people = item.value.specific.authors.all()
 
             # Skip items that have more than 2 authors/speakers. For
             # example, in the After COVID series, there is an introductory
@@ -627,9 +627,9 @@ class ArticleSeriesPage(
                 continue
             else:
                 for person in people:
-                    if person.value.title not in item_people:
-                        series_contributors.append({'item': item.value.specific, 'contributors': [person], 'last_name': person.value.specific.last_name})
-                        item_people.add(person.value.title)
+                    if person.author.title not in item_people:
+                        series_contributors.append({'item': item.value.specific, 'contributors': [person.author], 'last_name': person.author.last_name})
+                        item_people.add(person.author.title)
 
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
