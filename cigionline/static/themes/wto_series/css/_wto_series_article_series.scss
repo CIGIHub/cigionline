@@ -1,10 +1,98 @@
 .wto-series-article-series {
-  @include top-bar(
-    $background-color: $wto-series-background-colour,
-    $color: $black,
-    $position: relative,
-  );
+  @include top-bar($background-color: $wto-series-background-colour, $color: $black, $position: relative);
   background-color: $wto-series-background-colour;
+
+  header {
+    border-bottom: 1px solid $cigi-light-grey;
+  }
+
+  .wto-series-article-series-hero {
+    @include media-breakpoint-up(md) {
+      padding-top: 2em;
+    }
+    text-align: center;
+
+    h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2.75em;
+      }
+      font-family: $wto-font;
+      font-size: 1.5em;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-top: 1rem;
+    }
+
+    .essay-series-label {
+      @include media-breakpoint-up(md) {
+        font-size: 1.2em;
+        margin: 1rem 0 2rem;
+      }
+      border-top: 0;
+      font-weight: $sans-regular;
+      line-height: 1;
+      margin: 1rem 0;
+      text-transform: none;
+    }
+
+    .topics {
+      justify-content: center;
+    }
+  }
+
+  .body {
+    @include media-breakpoint-up(md) {
+      margin: 2em 0 4em;
+    }
+    margin: 1em 0 2em;
+
+    h2 {
+      @include media-breakpoint-up(md) {
+        font-size: 1.5em;
+      }
+      font-family: $wto-font;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      text-transform: none;
+    }
+  }
+
+  .credits {
+    margin-bottom: 3em;
+
+    .credits-content {
+      display: flex;
+      flex-wrap: wrap;
+
+      p {
+        @include media-breakpoint-up(md) {
+          margin-right: 3.3%;
+          width: 30%;
+        }
+        color: $wto-grey;
+        font-size: 0.8rem;
+        margin-right: 4%;
+        width: 46%;
+
+        .name {
+          color: $black;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    h2 {
+      border-bottom: 1px solid $wto-light-grey;
+      border-top: 0;
+      color: $wto-grey;
+      font-family: $wto-font;
+      font-size: 1.1em;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.2rem;
+      text-transform: uppercase;
+    }
+  }
 
   .wto-series-in-the-series {
     article {
