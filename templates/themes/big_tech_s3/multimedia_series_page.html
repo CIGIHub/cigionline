@@ -12,15 +12,29 @@
   {% render_bundle 'themeBigTechS3' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}big-tech-s3-theme big-tech-s3-multimedia{% endblock %}
+{% block body_class %}big-tech-s3-theme big-tech-s3-multimedia-series{% endblock %}
 
 {% block header %}
   <div class="big-tech-hero">
     {% include "./includes/top_bar.html" with podcast_apple_url=self.podcast_apple_url podcast_spotify_url=self.podcast_spotify_url podcast_google_url=self.podcast_google_url %}
     <div class="container">
-      <div class="row">
-        <div class="col big-tech-mm-hero">
-          Big Tech
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8 big-tech-mm-series-hero">
+          {% image self.image_hero width-600 %}
+          <div class="description">
+            {{ self.subtitle|richtext }}
+          </div>
+          {% include "includes/social_links.html" with title=self.title no_circle=True %}
+          <div class="subscribe-label">
+            SUBSCRIBE:
+          </div>
+          <div class="subscribe-links">
+            <a class="apple" href="{{ self.podcast_apple_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/apple_podcasts_icon.svg' %}</a>
+            <span class="slash"></span>
+            <a class="spotify" href="{{ self.podcast_spotify_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/spotify_podcasts_icon.svg' %}</a>
+            <span class="slash"></span>
+            <a class="google" href="{{ self.podcast_google_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/google_podcasts_icon.svg' %}</a>
+          </div>
         </div>
       </div>
     </div>

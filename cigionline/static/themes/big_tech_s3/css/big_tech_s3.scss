@@ -1,5 +1,6 @@
 $bigtech-s3-red: #d9553e;
 $bigtech-teal: #38bf8e;
+$bigtech-light-grey: #b1b1b1;
 
 @mixin slash($width: 5px, $height: 60px, $color: $black-alpha-40) {
   border-right: 1px solid $color;
@@ -14,6 +15,7 @@ $bigtech-teal: #38bf8e;
 
 @import './big_tech_s3_article';
 @import './big_tech_s3_multimedia';
+@import './big_tech_s3_multimedia_series';
 
 .big-tech-s3-theme {
   font-family: 'nunito-sans', sans-serif;
@@ -39,11 +41,14 @@ $bigtech-teal: #38bf8e;
     position: relative;
 
     .big-tech-top-bar {
+      @include media-breakpoint-up(sm) {
+        padding-top: 1.5em;
+      }
       align-items: center;
       display: flex;
       justify-content: space-between;
       padding-bottom: 1.5em;
-      padding-top: 1.5em;
+      padding-top: 1em;
 
       .big-tech-logo {
         svg {
