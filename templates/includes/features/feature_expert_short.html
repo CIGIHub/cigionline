@@ -16,4 +16,7 @@
       </p>
     </div>
   </div>
+  {% if expert.latest_activity %}
+    <h4>{{ expert.latest_activity.title }}
+  {% endif %}
 </article>
