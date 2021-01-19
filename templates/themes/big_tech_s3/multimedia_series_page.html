@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
+{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'themeBigTechS3' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeBigTechS3' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}big-tech-s3-theme big-tech-s3-multimedia{% endblock %}
+
+{% block header %}
+  <div class="big-tech-hero">
+    {% include "./includes/top_bar.html" with podcast_apple_url=self.podcast_apple_url podcast_spotify_url=self.podcast_spotify_url podcast_google_url=self.podcast_google_url %}
+    <div class="container">
+      <div class="row">
+        <div class="col big-tech-mm-hero">
+          Big Tech
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock header %}
+
+{% block content %}
+  <section class="body">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2>About the Podcast</h2>
+        </div>
+      </div>
+    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock content %}
+
+{% block footer %}
+  {% include "./includes/footer.html" with podcast_apple_url=self.podcast_apple_url podcast_spotify_url=self.podcast_spotify_url podcast_google_url=self.podcast_google_url %}
+{% endblock %}

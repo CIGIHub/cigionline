@@ -43,6 +43,7 @@
           .author-image-wrapper {
             background-color: $black;
             border-radius: 50%;
+            flex-shrink: 0;
             height: 50px;
             margin-right: 1em;
             overflow: hidden;
