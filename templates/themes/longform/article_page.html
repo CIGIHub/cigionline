@@ -28,10 +28,14 @@
         <div class="col col-md-10 col-lg-8 meta">
           <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
           <p>
-            Author{{self.authors|length|pluralize}}:
-
-            {% for author in self.authors %}
-              <span class="author">{{author}}</span>
+            Author{{self.author_count|pluralize}}:
+            {% for item in self.authors.all %}
+              <span class="author"><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
+            {% endfor %}
+            {% for item in self.external_authors %}
+              {% if item.block_type == 'external_person' %}
+                <span class="author">{{ item.value }}</span>
+              {% endif %}
             {% endfor %}
           </p>
         </div>
@@ -81,9 +85,14 @@
                     <article>
                       <h4><a href="{{ block.value.url }}">{{ block.value.title }}</a></h4>
                       <p class="authors">
-                        Author{{ block.value.specific.authors|length|pluralize }}:
-                        {% for author in block.value.specific.authors %}
-                          <span>{{ author }}</span>
+                        Author{{ block.value.specific.author_count|pluralize }}:
+                        {% for item in block.value.specific.authors.all %}
+                          <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
+                        {% endfor %}
+                        {% for item in block.value.specific.external_authors %}
+                          {% if item.block_type == 'external_person' %}
+                            <span>{{ item.value }}</span>
+                          {% endif %}
                         {% endfor %}
                       </p>
                     </article>
