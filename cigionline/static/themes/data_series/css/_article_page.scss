@@ -238,13 +238,15 @@
     opacity: 0;
     transition: height 0.5s ease, opacity 0.5s ease;
 
-    &.scrolled {
-      height: auto;
-      opacity: 1;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 100;
+    @include media-breakpoint-up(lg) {
+      &.scrolled {
+        height: auto;
+        opacity: 1;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+      }
     }
 
     .progress-bar {

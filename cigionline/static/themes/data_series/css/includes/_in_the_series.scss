@@ -69,6 +69,7 @@
     .article-title {
       color: $cigi-darkest-grey;
       font-size: 1.6em;
+      line-height: 1.45em;
       margin-bottom: 0.1565em;
 
       a {
@@ -94,7 +95,9 @@
     }
 
     .authors {
+      font-size: 0.75em;
       margin: 0;
+      text-transform: uppercase;
 
       span {
         &:not(:only-child) {
