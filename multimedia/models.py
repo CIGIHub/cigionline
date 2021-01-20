@@ -58,20 +58,11 @@ class MultimediaListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
+    def featured_large(self):
+        return self.featured_multimedia.all()[0:1]
 
-        all_multimedia = MultimediaPage.objects.live().public().order_by('-publishing_date')
-        paginator = Paginator(all_multimedia, 18)
-        page = request.GET.get('page')
-        try:
-            multimedia = paginator.page(page)
-        except PageNotAnInteger:
-            multimedia = paginator.page(1)
-        except EmptyPage:
-            multimedia = paginator.page(paginator.num_pages)
-        context['multimedia'] = multimedia
-        return context
+    def featured_small(self):
+        return self.featured_multimedia.all()[1:]
 
     class Meta:
         verbose_name = 'Multimedia List Page'
