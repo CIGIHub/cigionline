@@ -1,6 +1,23 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'articleSeriesListPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'articleSeriesListPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="article-series-list-section" id="article-series-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
