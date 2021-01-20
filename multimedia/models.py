@@ -466,6 +466,12 @@ class MultimediaSeriesPage(
     subpage_types = []
     templates = 'multimedia/multimedia_series_page.html'
 
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(MultimediaSeriesPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/multimedia_series_page.html'
+        return standard_template
+
     class Meta:
         verbose_name = 'Multimedia Series'
         verbose_name_plural = 'Multimedia Series'

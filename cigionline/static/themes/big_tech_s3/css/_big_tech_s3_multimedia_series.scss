@@ -1,0 +1,76 @@
+.big-tech-s3-multimedia-series {
+  .big-tech-mm-series-hero {
+    @include media-breakpoint-up(md) {
+      padding-bottom: 4em;
+    }
+    font-size: 0.875em;
+    padding-bottom: 2em;
+    text-align: center;
+
+    img {
+      max-width: 600px;
+    }
+
+    .description {
+      font-style: italic;
+      margin-top: 2rem;
+    }
+
+    .social-share-list {
+      i {
+        font-size: 1em;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: $bigtech-teal;
+        }
+      }
+    }
+
+    .subscribe-label {
+      color: $bigtech-light-grey;
+    }
+
+    .subscribe-links {
+      align-items: center;
+      display: flex;
+      height: 50px;
+      justify-content: center;
+      margin-top: 1rem;
+
+      .slash {
+        @include media-breakpoint-up(md) {
+          height: 50px;
+          margin: 0 25px 0 28px;
+        }
+        border-right: 1px solid rgba(0, 0, 0, 0.4);
+        height: 35px;
+        margin: 0 10px;
+        transform: rotate(15deg);
+        width: 5px;
+      }
+
+      .apple {
+        width: 150px;
+      }
+
+      .spotify {
+        width: 100px;
+      }
+
+      .google {
+        width: 180px;
+      }
+    }
+  }
+
+  .body {
+    h2 {
+      color: $bigtech-teal;
+    }
+
+    p {
+      @include link($color: $black, $hover-color: $bigtech-teal);
+    }
+  }
+}
