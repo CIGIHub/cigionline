@@ -13,16 +13,16 @@
     <div class="cyber-series-article-hero-image" style="background-image: url('{{ image_banner.url }}');">
     </div>
     <div class="cyber-series-article-hero-content-container">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <div class="cyber-series-article-hero-content">
-              {% include "includes/topics.html" with topics=self.topics %}
-              <h1>{{ self.title }}</h1>
-              {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
-            </div>
+      <div class="cyber-series-article-hero-content">
+       
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1><span>{{ self.title }}</span></h1>
+          {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+          <div class="arrow-animate">
+            <div class="arrow point1"></div>
+            <div class="arrow point2"></div>
           </div>
-        </div>
+        
       </div>
     </div>
   </section>

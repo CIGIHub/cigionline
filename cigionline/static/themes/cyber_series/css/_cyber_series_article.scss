@@ -21,21 +21,69 @@
     @include media-breakpoint-up(lg) {
       height: 500px;
     }
+
     background-color: $cyber-series-primary-colour;
+    display: flex;
     position: relative;
 
     .cyber-series-article-hero-content-container {
       @include media-breakpoint-up(md) {
-        position: absolute;
-      }
-      left: 0;
-      position: relative;
-      top: 0;
-      width: 100%;
-
-      .cyber-series-article-hero-content {
-        padding-right: 0.5em;
         width: 50%;
+      }
+      align-items: center;
+      display: flex;
+      justify-content: right;
+      padding: 1em 2.5em 2em;
+      width: 100%;
+    }
+
+    .cyber-series-article-hero-content {
+      width: 515px;
+    }
+
+    h1 {
+      font-family: 'interstate-mono', sans-serif;
+      font-size: 1.5em;
+      line-height: 1.325em;
+      margin: .5em 0;
+
+      span {
+        animation: blink-caret-black .75s step-end infinite;
+        border-right: 1px solid $black;
+      }
+    }
+
+    .authors {
+      font-size: 0.875em;
+      margin-top: 1em;
+      text-transform: uppercase;
+    }
+
+    .arrow-animate {
+      margin-top: 3em;
+
+      .arrow {
+        animation: draw-arrow 3s infinite;
+        left: -6px;
+        position: relative;
+
+        &::before {
+          content: '\f078';
+          font-family: 'font awesome 5 pro';
+          position: absolute;
+        }
+      }
+
+      .point1 {
+        animation-delay: -0.35s;
+      }
+
+      .point2 {
+
+        &::before {
+          position: absolute;
+          top: -15px;
+        }
       }
     }
 

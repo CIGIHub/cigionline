@@ -5,3 +5,321 @@ $cyber-series-primary-colour: #f5dd07;
 
 @import './cyber_series_article_series';
 @import './cyber_series_article';
+
+@keyframes blink-caret-black {
+  50% { border-color: transparent; }
+}
+
+
+// Animations
+
+// Double arrow animation
+@keyframes draw-arrow {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+
+  50% {
+    transform: translateY(0) scaleY(1);
+  }
+
+  75% {
+    transform: translateY(50px) scaleY(0);
+  }
+
+  76% {
+    transform: translateY(-50px) scaleY(0);
+  }
+
+  93% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+
+// Image glitch effect
+@keyframes glitch-anim-1 {
+  0% {
+    height: 3%;
+    opacity: 1;
+    top: 2%;
+  }
+
+  2% {
+    background-position: 0 -75%;
+    height: 1%;
+    top: 15%;
+  }
+
+  4% {
+    background-position: 0 -80%;
+    height: 10%;
+    top: 20%;
+  }
+
+  6% {
+    background-position: 0 -2%;
+    height: 1%;
+    top: 1%;
+  }
+
+  8% {
+    background-position: 0 -66%;
+    height: 1%;
+    top: 33%;
+  }
+
+  10% {
+    background-position: 0 -56%;
+    height: 1%;
+    top: 44%;
+  }
+
+  12% {
+    background-position: 0 -20%;
+    height: 30%;
+    top: 50%;
+  }
+
+  14% {
+    background-position: 0 -30%;
+    height: 1%;
+    top: 70%;
+  }
+
+  16% {
+    background-position: 0 -20%;
+    height: 1%;
+    top: 80%;
+  }
+
+  18% {
+    background-position: 0 -45%;
+    height: 5%;
+    top: 50%;
+  }
+
+  20% {
+    background-position: 0 -20%;
+    height: 10%;
+    top: 70%;
+  }
+
+  22% {
+    background-position: 0 0;
+    height: 3%;
+    top: 2%;
+  }
+
+  22.1%,
+  100% {
+    background-position: 0 0;
+    height: 0;
+    opacity: 1;
+    top: 0;
+  }
+}
+
+// background position using percentages and changing heights doesnt allow to keep the image at the correct spot,
+// so instead, we use pixels. Max height of images are 500px
+@keyframes glitch-anim-2 {
+  0% {
+    background-position: 10px -125px;
+    height: 50%;
+    opacity: 1;
+    top: 125px;
+  }
+
+  2% {
+    background-position: 10px -15px;
+    height: 1%;
+    top: 15px;
+  }
+
+  4% {
+    background-position: 10px -25px;
+    height: 15%;
+    top: 25px;
+  }
+
+  6% {
+    background-position: 10px -100px;
+    height: 1%;
+    top: 100px;
+  }
+
+  8% {
+    background-position: 10px -200px;
+    height: 1%;
+    top: 200px;
+  }
+
+  10% {
+    background-position: 10px -260px;
+    height: 7%;
+    top: 260px;
+  }
+
+  12% {
+    background-position: 10px -300px;
+    height: 1%;
+    top: 300px;
+  }
+
+  14% {
+    background-position: 10px -375px;
+    height: 1%;
+    top: 375px;
+  }
+
+  16% {
+    background-position: 10px -325px;
+    height: 15%;
+    top: 325px;
+  }
+
+  18% {
+    background-position: 10px -225px;
+    height: 5%;
+    top: 225px;
+  }
+
+  20% {
+    background-position: 10px -70px;
+    height: 19%;
+    top: 70px;
+  }
+
+  22.1%,
+  100% {
+    background-position: 0 0;
+    height: 0;
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes glitch-anim-3 {
+  0% {
+    background-position: -10px -15px;
+    height: 2%;
+    opacity: 1;
+    top: 15px;
+  }
+
+  1.5% {
+    background-position: -10px -45px;
+    height: 2%;
+    top: 45px;
+  }
+
+  2% {
+    background-position: -10px -25px;
+    height: 2%;
+    top: 25px;
+  }
+
+  2.5% {
+    background-position: -10px -100px;
+    height: 1%;
+    top: 100px;
+  }
+
+  3% {
+    background-position: -10px -50px;
+    height: 1%;
+    top: 50px;
+  }
+
+  5% {
+    background-position: -10px -125px;
+    height: 5%;
+    top: 125px;
+  }
+
+  5.5% {
+    background-position: -10px -75px;
+    height: 2%;
+    top: 75px;
+  }
+
+  7% {
+    background-position: -10px -195px;
+    height: 2%;
+    top: 195px;
+  }
+
+  8% {
+    background-position: -10px -100px;
+    height: 2%;
+    top: 100px;
+  }
+
+  9% {
+    background-position: -10px -275px;
+    height: 5%;
+    top: 375px;
+  }
+
+  10.5% {
+    background-position: -10px -150px;
+    height: 2%;
+    top: 150px;
+  }
+
+  11% {
+    background-position: -10px -345px;
+    height: 2%;
+    top: 345px;
+  }
+
+  13% {
+    background-position: -10px -200px;
+    height: 2%;
+    top: 200px;
+  }
+
+  14% {
+    background-position: -10px -375px;
+    height: 5%;
+    top: 375px;
+  }
+
+  14.5% {
+    background-position: -10px -250px;
+    height: 2%;
+    top: 250px;
+  }
+
+  15% {
+    background-position: -10px -450px;
+    height: 1%;
+    top: 450px;
+  }
+
+  16% {
+    background-position: -10px -300px;
+    height: 1%;
+    top: 300px;
+  }
+
+  18% {
+    background-position: -10px -495px;
+    height: 1%;
+    top: 495px;
+  }
+
+  20% {
+    background-position: -10px -350px;
+    height: 2%;
+    top: 350px;
+  }
+
+  22.1%,
+  100% {
+    background-position: 0 0;
+    height: 0;
+    opacity: 1;
+    top: 0;
+  }
+}
