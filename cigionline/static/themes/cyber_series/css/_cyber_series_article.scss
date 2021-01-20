@@ -45,4 +45,43 @@
       width: 50%;
     }
   }
+
+  .drop-caps {
+    background-image: linear-gradient(to right, $cyber-series-primary-colour 0%, $cyber-series-primary-colour 100%);
+    background-position: 0 150%;
+    background-repeat: repeat-x;
+    background-size: 100% 3rem;
+    border: 0;
+    float: left;
+    font-size: 4.25em;
+    font-weight: 500;
+    line-height: .95em;
+    margin-right: .1em;
+    padding: 0 .1em .1em;
+    text-decoration: underline;
+  }
+
+  .stream-block-blockquote {
+    position: relative;
+
+    blockquote {
+      &::before {
+        background-color: $cyber-series-primary-colour;
+        content: '';
+        height: 5px;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 80px;
+      }
+    }
+  }
+
+  .stream-block-external-quote {
+    blockquote {
+      border-color: $cyber-series-primary-colour;
+      font-size: 1.065em;
+      line-height: 1.4em;
+    }
+  }
 }
