@@ -45,4 +45,29 @@
       width: 50%;
     }
   }
+
+  .article-footnotes {
+    .footnotes {
+      &::before {
+        border-top: 5px solid $black;
+        margin-left: -75px;
+      }
+
+      ol {
+        counter-reset: list-counter;
+        font-size: 12px;
+        list-style: none;
+        margin: 0;
+        padding-top: 1em;
+
+        li {
+          &::before {
+            content: counter(list-counter);
+            font-weight: 600;
+            padding-right: .25em;
+          }
+        }
+      }
+    }
+  }
 }
