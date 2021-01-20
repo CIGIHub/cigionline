@@ -11,12 +11,39 @@
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <div class="multimedia-list-section" id="multimedia-search-table">
+  <section class="featured">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 mb-3">
+          <h2 class="paragraph-heading">Featured</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-8">
+          {% for item in self.featured_large %}
+            {% include "includes/features/feature_content_large.html" with content=item.multimedia_page.specific %}
+          {% endfor %}
+        </div>
+        <hr>
+        <div class="col-12 col-md-4 featured-small">
+          {% for item in self.featured_small %}
+            {% if forloop.counter > 1 %}
+              <hr>
+            {% endif %}
+            {% include "includes/features/feature_content_small.html" with content=item.multimedia_page.specific %}
+          {% endfor %}
         </div>
       </div>
     </div>
-  </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="multimedia-list-section" id="multimedia-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
