@@ -73,21 +73,10 @@
       background: $cigi-light-grey-bg;
       padding: 3em 0 2em;
 
-      .season-select {
-        width: 127px;
-
-        li {
-          color: $white;
-          cursor: pointer;
-          font-size: 0.825rem;
-          padding: 0.5rem 1rem;
-          text-align: left;
-          width: auto;
-
-          &:hover {
-            background: $bigtech-teal;
-            color: $cigi-darkest-grey;
-          }
+      .dropdown-menu {
+        button {
+          border-top-color: $white;
+          padding: 0.5em 1em;
         }
       }
 
