@@ -7,7 +7,6 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
