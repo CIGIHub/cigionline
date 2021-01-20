@@ -71,7 +71,7 @@
 
     .episode-listing {
       background: $cigi-light-grey-bg;
-      padding: 2em 0;
+      padding: 3em 0 2em;
 
       .season-select {
         width: 127px;
@@ -101,49 +101,61 @@
         article {
           @include link($color: $cigi-darkest-grey, $hover-color: $bigtech-teal);
           border-bottom: solid 1px $cigi-medium-light-grey;
+          display: flex;
           padding: 0.875em 0;
 
           &:last-of-type {
             border-bottom: 0;
           }
 
-          h3 {
-            font-size: 1.125em;
-            font-style: italic;
-            line-height: 1;
-            margin-bottom: 0.5rem;
+          .episode-info {
+            @include media-breakpoint-up(md) {
+              width: 70%;
+            }
 
-            div {
-              &:not(.block-guest) {
-                color: $cigi-text-grey;
+            h3 {
+              font-size: 1.125em;
+              font-style: italic;
+              line-height: 1;
+              margin-bottom: 0.5rem;
+
+              div {
+                &:not(.block-guest) {
+                  color: $cigi-text-grey;
+                }
+              }
+
+              .block-guest {
+                font-size: 1.625rem;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 1.35;
+                text-transform: uppercase;
               }
             }
 
-            .block-guest {
-              font-size: 1.625rem;
-              font-style: normal;
-              font-weight: 600;
-              line-height: 1.35;
+            p {
+              color: $cigi-text-grey;
+              font-style: italic;
+              margin: 0.5em 0;
+            }
+
+            .date {
+              color: $cigi-medium-light-grey;
+              font-size: 0.75em;
+              margin: 0.5rem 0;
               text-transform: uppercase;
             }
           }
 
-          p {
-            color: $cigi-text-grey;
-            font-style: italic;
-            margin: 0.5em 0;
-          }
-
-          .date {
-            color: $cigi-medium-light-grey;
-            font-size: 0.75em;
-            margin: 0.5rem 0;
-            text-transform: uppercase;
-          }
-
           .circle {
+            @include media-breakpoint-up(md) {
+              display: flex;
+            }
             align-items: center;
+            display: none;
             justify-content: center;
+            width: 30%;
 
             a {
               color: $bigtech-teal;
@@ -170,6 +182,8 @@
     }
 
     .body {
+      margin-top: 1.5em;
+
       h2 {
         color: $bigtech-teal;
       }
