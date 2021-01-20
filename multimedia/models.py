@@ -408,7 +408,7 @@ class MultimediaSeriesPage(
         for episode in series_episodes:
             episode_season = episode.specific.podcast_season
             if episode_season not in series_seasons:
-                series_seasons.update({episode_season: {'published':[], 'unpublished': []}})
+                series_seasons.update({episode_season: {'published': [], 'unpublished': []}})
             if episode.live:
                 series_seasons[episode_season]['published'].append(episode)
             else:
