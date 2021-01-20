@@ -169,6 +169,42 @@
           display: flex;
           padding: 0.875em 0;
 
+          &.unpublished {
+            .episode-info {
+              h3 {
+                color: $cigi-medium-light-grey;
+
+                div {
+                  &:not(.block-guest) {
+                    color: $cigi-medium-light-grey;
+                  }
+                }
+              }
+
+              p {
+                color: $cigi-medium-light-grey;
+              }
+
+              .date {
+                color: $black;
+                margin-bottom: 0.2em;
+              }
+            }
+
+            .circle {
+              span {
+                border: solid 1.75px $cigi-medium-light-grey;
+                color: $cigi-medium-light-grey;
+
+                &:hover {
+                  background-color: transparent;
+                  border: solid 1.75px $cigi-medium-light-grey;
+                  color: $cigi-medium-light-grey;
+                }
+              }
+            }
+          }
+
           &:last-of-type {
             border-bottom: 0;
           }

@@ -90,7 +90,6 @@
                   <article class="flex-row unpublished">
                     <div class="episode-info">
                       <div class="date">Available on {{unpublushed_episode.specific.publishing_date|date:"F j, Y"}}</div>
-                      {% include "includes/topics.html" with topics=unpublushed_episode.topics %}
                       <h3>
                         {{ unpublushed_episode.specific.podcast_guests }}
                         <div>{{ unpublushed_episode.specific.podcast_subtitle }}</div>
