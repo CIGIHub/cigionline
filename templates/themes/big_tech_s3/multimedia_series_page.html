@@ -59,18 +59,19 @@
           {% for season, episodes in self.series_seasons.items %}
             <div class="season-episodes {% if season == 3 %}active{% endif %}" id="season-{{ season }}">
               {% for episode in episodes %}
-                <article {% if season == 3 and forloop.counter == 1 %}class="d-none"{% endif %}>
-                  <div>
+                <article class="row {% if season == 3 and forloop.counter == 1 %}d-none{% endif %}">
+                  <div class="col-md-8">
+                    {% include "includes/topics.html" with topics=episode.topics %}
                     <h3>
                       <a href="{{ episode.url }}">
                         {{ episode.specific.podcast_guests }}
                         <div>{{ episode.specific.podcast_subtitle }}</div>
                       </a>
                     </h3>
-                    <div>{{ episode.specific.subtitle|richtext }}</div>
-                    {% include "includes/date.html" with date=episode.specific.publishing_date %}
+                    {{ episode.specific.subtitle|richtext }}
+                    <div class="date">S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / {{episode.specific.publishing_date|date:"F j, Y"}}</div>
                   </div>
-                  <div class="circle">
+                  <div class="d-none d-md-flex col-md-4 circle">
                     <a href="{{ episode.url }}">
                       <span><i class="fa fa-headphones" aria-hidden="true"></i></span>
                     </a>
