@@ -1,5 +1,11 @@
 .big-tech-s3-multimedia-series {
   &.big-tech-s3-theme {
+    @include link($color: $cigi-darkest-grey, $hover-color: $bigtech-teal);
+
+    .topics {
+      @include link($color: $cigi-text-grey, $hover-color: $bigtech-teal);
+    }
+
     .big-tech-hero {
       margin-bottom: 0;
     }
@@ -69,6 +75,73 @@
       }
     }
 
+    .latest-episode {
+      padding: 3em 0;
+
+      h2 {
+        color: $bigtech-teal;
+      }
+
+      h3 {
+        font-size: 1.125em;
+        font-style: italic;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+
+        div {
+          &:not(.block-guest) {
+            color: $cigi-text-grey;
+          }
+        }
+
+        .block-guest {
+          font-size: 1.625rem;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 1.35;
+          text-transform: uppercase;
+        }
+      }
+
+      button {
+        align-items: center;
+        background-color: $bigtech-teal;
+        color: $white;
+        display: flex;
+        font-size: 0.825em;
+        justify-content: space-between;
+        padding: 0.35rem 1rem;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: $black;
+
+          a {
+            color: $bigtech-teal;
+          }
+        }
+
+        a {
+          color: $white;
+        }
+
+        i {
+          margin-right: 0.2em;
+        }
+      }
+
+      .simplecast-embed {
+        margin: 1em 0 0.5em;
+      }
+
+      .date {
+        color: $cigi-text-grey;
+        font-size: 0.75em;
+        margin: 0.5rem 0 1rem;
+        text-transform: uppercase;
+      }
+    }
+
     .episode-listing {
       background: $cigi-light-grey-bg;
       padding: 3em 0 2em;
@@ -92,7 +165,6 @@
         }
 
         article {
-          @include link($color: $cigi-darkest-grey, $hover-color: $bigtech-teal);
           border-bottom: solid 1px $cigi-medium-light-grey;
           display: flex;
           padding: 0.875em 0;
