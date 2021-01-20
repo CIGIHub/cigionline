@@ -36,6 +36,24 @@ class ArticleLandingPage(Page):
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
+    def featured_xlarge(self):
+        return self.featured_articles.all()[0:1]
+
+    def featured_large_1(self):
+        return self.featured_articles.all()[1:2]
+
+    def featured_small_1(self):
+        return self.featured_articles.all()[2:7]
+
+    def featured_medium_1(self):
+        return self.featured_articles.all()[7:9]
+
+    def featured_small_2(self):
+        return self.featured_articles.all()[10:15]
+
+    def featured_large_2(self):
+        return self.featured_articles.all()[9:10]
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [

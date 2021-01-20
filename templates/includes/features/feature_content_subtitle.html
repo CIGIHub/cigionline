@@ -3,6 +3,8 @@
 <div class="feature-content-subtitle">
   {% if content.feature_subtitle %}
     {{ content.feature_subtitle }}
+  {% elif content.short_description %}
+    {{ content.short_description|richtext }}
   {% else %}
     {{ content.subtitle|richtext }}
   {% endif %}
