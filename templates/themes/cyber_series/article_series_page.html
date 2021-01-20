@@ -26,20 +26,7 @@
       </div>
     </div>
   </section>
-  {% if self.body %}
-    <section class="cyber-series-article-series-body">
-      <div class="container">
-        <div class="row d-block">
-          <div class="col col-lg-10 offset-lg-1">
-            <h2>{{ self.title }}</h2>
-          </div>
-        </div>
-      </div>
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
-  {% endif %}
+  {% include "includes/body.html" with body=self.body heading=self.title %}
   <section class="cyber-series-article-series-in-the-series">
     <div class="container">
       <div class="row justify-content-center">
