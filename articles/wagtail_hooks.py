@@ -1,6 +1,8 @@
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail.core import hooks
+from articles.models import ArticlePage
+from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
 
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
