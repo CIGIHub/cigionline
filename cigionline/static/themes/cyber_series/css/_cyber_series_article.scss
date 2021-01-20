@@ -84,4 +84,19 @@
       line-height: 1.4em;
     }
   }
+
+  .end-of-article {
+    text-align: left;
+
+    &::after {
+      animation: blink 1.5s step-end infinite;
+      background: $cyber-series-primary-colour;
+      content: '';
+      height: 18px;
+      margin-left: 5px;
+      margin-top: 3px;
+      position: absolute;
+      width: 8px;
+    }
+  }
 }
