@@ -1,9 +1,142 @@
 .wto-series-in-the-series {
   margin-bottom: 3em;
 
-  .authors {
+  h3 {
+    border-bottom: 1px solid $wto-light-grey;
+    border-top: 0;
+    color: $wto-grey;
+    font-family: $wto-font;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    padding-bottom: 0.2rem;
+  }
+
+  article {
+    padding: 0.75em 0 0.75em 1.6em;
+    position: relative;
+
     span {
-      @include comma-separated;
+      height: 18px;
+      left: 0;
+      position: absolute;
+      text-align: center;
+      width: 18px;
+
+      i {
+        color: $white;
+        font-size: 9px;
+        position: relative;
+        top: -4px;
+      }
+    }
+
+    h4 {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      color: $cigi-primary-colour;
+      font-family: $wto-font;
+      font-size: 1rem;
+      font-weight: $sans-medium;
+      line-height: 1.2rem;
+      margin: 0 0 0.25rem;
+    }
+
+    .authors {
+      @include link($color: $black, $hover-color: $black);
+      font-size: 0.8em;
+      margin: 0;
+      text-transform: uppercase;
+
+      li {
+        @include comma-separated;
+        display: inline;
+      }
+    }
+  }
+
+  .banner {
+    margin-bottom: 4em;
+
+    a {
+      align-items: flex-start;
+      color: $black;
+      display: flex;
+    }
+
+    h1 {
+      font-family: $wto-font;
+      font-size: 2.4em;
+      font-weight: 700;
+      line-height: 1em;
+      margin-bottom: 1rem;
+    }
+
+    img {
+      @include media-breakpoint-up(sm) {
+        display: block;
+      }
+      display: none;
+      flex-shrink: 0;
+      width: 180px;
+    }
+
+    .essay-series-label {
+      font-size: 1.3em;
+    }
+  }
+
+  .series-category {
+    @include media-breakpoint-up(md) {
+      margin-bottom: 2em;
+    }
+    margin-bottom: 1em;
+  }
+
+  .introduction {
+    span {
+      background-color: $wto-light-pink;
+    }
+  }
+
+  .dispute-settlement {
+    span {
+      background-color: $wto-yellow;
+    }
+  }
+
+  .inclusive-trade {
+    span {
+      background-color: $wto-purple;
+    }
+  }
+
+  .trades-intersections {
+    span {
+      background-color: $wto-blue;
+    }
+  }
+
+  .digital-trade {
+    span {
+      background-color: $wto-pink;
+    }
+  }
+
+  .development-and-trade {
+    span {
+      background-color: $wto-orange;
+    }
+  }
+
+  .negotiating-strategies {
+    span {
+      background-color: $wto-dark-purple;
+    }
+  }
+
+  .conclusion {
+    span {
+      background-color: $wto-light-pink;
     }
   }
 }

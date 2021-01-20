@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
 
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
@@ -8,30 +8,38 @@
 {% block content %}
   {% include "includes/hero_event.html" with topics=self.topics title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all registration_url=self.registration_url %}
 
-  {% if self.image_hero %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <figure class="event-image-hero">
-            {% image self.image_hero width-1280 %}
-            {% if self.image_hero.title %}
-              <figcaption>
-                {{ self.image_hero.title }}
-              </figcaption>
-            {% endif %}
-          </figure>
+  {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
+    <section class="event-multimedia-embed-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="event-multimedia-embed">
+              {% embed self.multimedia_page.specific.multimedia_url max_width="1080" %}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  {% endif %}
-
-  {% if self.body %}
-    <section class="body">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
+    </section>
+  {% elif self.image_hero %}
+    <section>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <figure class="event-image-hero">
+              {% image self.image_hero width-1280 %}
+              {% if self.image_hero.title %}
+                <figcaption>
+                  {{ self.image_hero.title }}
+                </figcaption>
+              {% endif %}
+            </figure>
+          </div>
+        </div>
+      </div>
     </section>
   {% endif %}
+
+  {% include "includes/body.html" with body=self.body %}
 
   {% if self.authors.all|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all title_override="Event Speaker"%}

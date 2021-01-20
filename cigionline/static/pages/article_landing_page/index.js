@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import OpinionListing from '../../js/components/OpinionListing';
 import SearchTable from '../../js/components/SearchTable';
+import './css/article_landing_page.scss';
 
 ReactDOM.render(
   <SearchTable

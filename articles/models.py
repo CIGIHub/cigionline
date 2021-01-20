@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import PersonBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -34,6 +35,24 @@ class ArticleLandingPage(Page):
     parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_landing_page.html'
+
+    def featured_xlarge(self):
+        return self.featured_articles.all()[0:1]
+
+    def featured_large_1(self):
+        return self.featured_articles.all()[1:2]
+
+    def featured_small_1(self):
+        return self.featured_articles.all()[2:7]
+
+    def featured_medium_1(self):
+        return self.featured_articles.all()[7:9]
+
+    def featured_small_2(self):
+        return self.featured_articles.all()[10:15]
+
+    def featured_large_2(self):
+        return self.featured_articles.all()[9:10]
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -77,10 +96,9 @@ class ArticleLandingPageFeaturedArticle(Orderable):
 
 
 class MediaLandingPage(BasicPageAbstract, Page):
-    max_count = 1
-    parent_page_types = ['home.HomePage']
-    subpage_types = []
-    templates = 'articles/media_landing_page.html'
+
+    def latest_cigi_in_the_news(self):
+        return ArticlePage.objects.live().public().filter(article_type=ArticlePage.ArticleTypes.CIGI_IN_THE_NEWS).order_by('-publishing_date')[:6]
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -89,6 +107,11 @@ class MediaLandingPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = []
+    templates = 'articles/media_landing_page.html'
 
     class Meta:
         verbose_name = 'Media Page'
@@ -177,7 +200,7 @@ class ArticlePage(
     )
     cigi_people_mentioned = StreamField(
         [
-            ('cigi_person', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('cigi_person', PersonBlock(required=True, page_type='people.PersonPage')),
         ],
         blank=True,
     )
@@ -388,6 +411,8 @@ class ArticlePage(
     api_fields = [
         APIField('article_type'),
         APIField('authors'),
+        APIField('cigi_people_mentioned'),
+        APIField('get_article_type_display'),
         APIField('publishing_date'),
         APIField('title'),
         APIField('topics'),
@@ -397,6 +422,16 @@ class ArticlePage(
     parent_page_types = ['articles.ArticleListPage']
     subpage_types = []
     templates = 'articles/article_page.html'
+
+    @property
+    def article_series_category(self):
+        category = ''
+        for item in self.article_series.specific.series_items:
+            if item.block_type == 'category_title':
+                category = item.value
+            else:
+                if item.value.specific.id == self.id:
+                    return category
 
     class Meta:
         verbose_name = 'Opinion'

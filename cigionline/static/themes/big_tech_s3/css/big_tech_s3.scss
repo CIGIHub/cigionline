@@ -25,6 +25,7 @@ $bigtech-light-grey: #b1b1b1;
     @include link($color: $bigtech-s3-red, $hover-color: $cigi-dark-grey);
 
     h2 {
+      border-top: 0;
       color: $bigtech-s3-red;
       font-size: 1em;
       margin-bottom: 1em;

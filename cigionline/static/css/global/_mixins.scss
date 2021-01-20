@@ -33,6 +33,10 @@
             fill: $color-medium;
           }
           fill: $color;
+
+          * {
+            fill: $color;
+          }
         }
       }
 

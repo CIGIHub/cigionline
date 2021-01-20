@@ -6,7 +6,6 @@ from core.models import (
     SearchablePageAbstract,
     ShareablePageAbstract,
 )
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import (
@@ -59,21 +58,6 @@ class PublicationListPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
-
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-
-        all_publications = PublicationPage.objects.live().public().order_by('-publishing_date')
-        paginator = Paginator(all_publications, 24)
-        page = request.GET.get('page')
-        try:
-            publications = paginator.page(page)
-        except PageNotAnInteger:
-            publications = paginator.page(1)
-        except EmptyPage:
-            publications = paginator.page(paginator.num_pages)
-        context['publications'] = publications
-        return context
 
     class Meta:
         verbose_name = 'Publication List Page'

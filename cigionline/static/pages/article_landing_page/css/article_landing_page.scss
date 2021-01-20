@@ -1,0 +1,36 @@
+@import '../../../css/global/mixins';
+
+article {
+  &.feature-content {
+    .feature-content-date {
+      display: none;
+    }
+
+    .feature-content-title {
+      font-family: 'ff-tisa-web-pro', serif;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+  }
+
+  &.feature-content-medium {
+    .feature-content-text {
+      .feature-content-subtitle,
+      .feature-content-title {
+        text-align: center;
+      }
+
+      .feature-content-title {
+        @include media-breakpoint-up(md) {
+          font-size: 2em;
+        }
+        font-size: 1.375em;
+      }
+
+      .feature-content-people-list,
+      .feature-content-topic-list {
+        justify-content: center;
+      }
+    }
+  }
+}

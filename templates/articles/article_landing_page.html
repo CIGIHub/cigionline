@@ -13,44 +13,68 @@
   <section class="featured">
     <div class="container">
       <div class="row">
-        <div class="col col-md-8">
-          {% for article in page.featured_articles.all %}
-          {% if forloop.counter == 1 %}
-          {% include 'includes/features/feature_content_large.html' with content=article.article_page.specific %}
-          {% endif %}
-          {% endfor %}
+        <div class="col-12 mb-3">
+          <h2 class="paragraph-heading">Featured</h2>
         </div>
-        <hr>
-        <div class="col col-md-4 flex-column featured-small">
-          {% for article in page.featured_articles.all %}
-            {% if forloop.counter < 6 %}
-              {% if forloop.counter != 1 %}
-                <hr>
-              {% endif %}
-            {% include 'includes/features/feature_content_small.html' with content=article.article_page.specific %}
-            {% endif %}
+      </div>
+      <div class="row">
+        <div class="col-12">
+          {% for item in self.featured_xlarge %}
+            {% include "includes/features/feature_content_xlarge.html" with content=item.article_page %}
           {% endfor %}
         </div>
       </div>
       <hr>
-      <div class="row featured-medium">
-        {% for article in page.featured_articles.all %}
-          {% if forloop.counter < 4 %}
-            {% if forloop.counter != 1 %}
+      <div class="row">
+        <div class="col-12 col-md-8">
+          {% for item in self.featured_large_1 %}
+            {% include "includes/features/feature_content_large.html" with content=item.article_page %}
+          {% endfor %}
+        </div>
+        <hr>
+        <div class="col-12 col-md-4 featured-small">
+          {% for item in self.featured_small_1 %}
+            {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
-            <div class="col">
-              {% include 'includes/features/feature_content_medium.html' with content=article.article_page.specific %}
-            </div>
+            {% include "includes/features/feature_content_small.html" with content=item.article_page %}
+          {% endfor %}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        {% for item in self.featured_medium_1 %}
+          {% if forloop.counter > 1 %}
+            <hr>
           {% endif %}
+          <div class="col-12 col-md-6">
+            {% include "includes/features/feature_content_medium.html" with content=item.article_page with_subtitle=True %}
+          </div>
         {% endfor %}
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-12 col-md-4 featured-small">
+          {% for item in self.featured_small_2 %}
+            {% if forloop.counter > 1 %}
+              <hr>
+            {% endif %}
+            {% include "includes/features/feature_content_small.html" with content=item.article_page %}
+          {% endfor %}
+        </div>
+        <hr>
+        <div class="col-12 col-md-8">
+          {% for item in self.featured_large_2 %}
+            {% include "includes/features/feature_content_large.html" with content=item.article_page %}
+          {% endfor %}
+        </div>
       </div>
     </div>
   </section>
   <section>
     <div class="container">
       <div class="row">
-        <div class="col">
+        <div class="col-12">
           <div id="opinions-search-table">
           </div>
         </div>

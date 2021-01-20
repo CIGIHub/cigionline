@@ -1,6 +1,7 @@
 @import '../../../css/global/mixins';
 
 .article-footnotes {
+  line-height: 1.25;
   margin-bottom: 2em;
 
   .footnotes {
@@ -22,6 +23,8 @@
       padding-left: 1em;
 
       a {
+        word-wrap: break-word;
+
         &[name] {
           color: $cigi-primary-colour;
           display: inline-block;

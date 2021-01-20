@@ -73,18 +73,7 @@
 {% endblock header %}
 
 {% block content %}
-  <section class="body">
-    <div class="container">
-      <div class="row d-block">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <h2>Episode Description</h2>
-        </div>
-      </div>
-    </div>
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
+  {% include "includes/body.html" with body=self.body heading="Episode Description" %}
   {% if self.companion_essay %}
     <section class="big-tech-s3-companion-essay">
       <div class="container">
