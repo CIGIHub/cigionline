@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load wagtailimages_tags webpack_loader %}
 
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
@@ -25,13 +25,7 @@
     </div>
   {% endif %}
 
-  {% if self.body %}
-    <section class="body">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
-  {% endif %}
+  {% include "includes/body.html" with body=self.body %}
 
   {% if self.authors.all|length > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all title_override="Event Speaker"%}

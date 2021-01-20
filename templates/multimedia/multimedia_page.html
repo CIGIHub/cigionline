@@ -13,13 +13,7 @@
     {% include "includes/hero_multimedia.html" %}
   {% endblock %}
 
-  {% if page.body %}
-    <section class="body">
-      {% for block in self.body %}
-        {% include_block block %}
-      {% endfor %}
-    </section>
-  {% endif %}
+  {% include "includes/body.html" with body=self.body %}
 
   {% if self.transcript %}
     <section>

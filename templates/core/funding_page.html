@@ -1,13 +1,8 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section>
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
+  {% include "includes/body.html" with body=self.body %}
   <section>
     <div class="container">
       <div class="row">
