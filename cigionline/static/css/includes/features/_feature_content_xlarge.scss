@@ -1,0 +1,38 @@
+.feature-content-xlarge {
+  @include hover-darken;
+  @include media-breakpoint-up(md) {
+    flex-direction: row-reverse;
+  }
+  display: flex;
+  flex-direction: column;
+
+  .feature-content-text {
+    @include media-breakpoint-up(md) {
+      margin-top: 0;
+      max-width: 35%;
+      padding-right: 1em;
+    }
+    margin-top: 0.75em;
+    padding-right: 0;
+
+    &.center-text {
+      @include media-breakpoint-up(md) {
+        margin: 0 auto;
+        max-width: 36em;
+        text-align: center;
+
+        ul {
+          justify-content: center;
+        }
+      }
+    }
+
+    .feature-content-title {
+      @include media-breakpoint-up(md) {
+        font-size: 2em;
+      }
+
+      font-size: 1.375em;
+    }
+  }
+}
