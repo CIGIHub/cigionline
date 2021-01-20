@@ -55,17 +55,23 @@
 
       ol {
         counter-reset: list-counter;
-        font-size: 12px;
+        font-size: 0.75em;
         list-style: none;
         margin: 0;
         padding-top: 1em;
 
         li {
+          counter-increment: list-counter;
+
           &::before {
             content: counter(list-counter);
-            font-weight: 600;
-            padding-right: .25em;
+            font-weight: $sans-demi;
+            padding-right: 0.25em;
           }
+        }
+
+        li + li {
+          padding-top: 1em;
         }
       }
     }
