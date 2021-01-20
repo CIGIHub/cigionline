@@ -26,7 +26,10 @@
       </div>
     </div>
   </section>
+  {% image self.image_banner original as image_banner %}
+  <div class="cyber-series-article-bg-image" style="background-image: linear-gradient(#f2f0ea 0%, transparent 200%), url('{{ image_banner.url }}');"></div>
 {% endblock %}
+
 
 {% block recommended %}
   {# Remove recommended section for Cyber series articles #}

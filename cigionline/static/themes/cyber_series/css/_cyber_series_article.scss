@@ -6,6 +6,14 @@
   );
   background-color: $cyber-series-background-colour;
 
+  main {
+    position: relative;
+  }
+
+  .body {
+    padding-top: 2em;
+  }
+
   .cyber-series-article-hero {
     @include media-breakpoint-up(md) {
       height: 400px;
@@ -44,5 +52,18 @@
       top: 0;
       width: 50%;
     }
+  }
+
+  .cyber-series-article-bg-image {
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top: 3px solid $cyber-series-background-colour;
+    bottom: -3em;
+    display: block;
+    height: 900px;
+    opacity: .5;
+    position: absolute;
+    width: 100%;
+    z-index: -100;
   }
 }
