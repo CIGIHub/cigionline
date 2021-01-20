@@ -4,6 +4,9 @@
 {% block extra_css %}
   {% render_bundle 'mediaLandingPage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'mediaLandingPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -38,6 +41,16 @@
             </article>
           </div>
         {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="media-search-table">
+          </div>
+        </div>
       </div>
     </div>
   </section>
