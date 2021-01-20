@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import PersonBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -181,7 +182,7 @@ class ArticlePage(
     )
     cigi_people_mentioned = StreamField(
         [
-            ('cigi_person', PageChooserBlock(required=True, page_type='people.PersonPage')),
+            ('cigi_person', PersonBlock(required=True, page_type='people.PersonPage')),
         ],
         blank=True,
     )
@@ -392,6 +393,8 @@ class ArticlePage(
     api_fields = [
         APIField('article_type'),
         APIField('authors'),
+        APIField('cigi_people_mentioned'),
+        APIField('get_article_type_display'),
         APIField('publishing_date'),
         APIField('title'),
         APIField('topics'),

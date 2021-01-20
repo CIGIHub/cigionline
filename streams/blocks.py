@@ -74,11 +74,11 @@ class AccordionBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/accordion_block.html'
 
 
-class AuthorBlock(blocks.PageChooserBlock, ThemeableBlock):
+class PersonBlock(blocks.PageChooserBlock, ThemeableBlock):
 
     def get_template(self, context, *args, **kwargs):
-        standard_template = super(AuthorBlock, self).get_template(context, *args, **kwargs)
-        return self.get_theme_template(standard_template, context, 'author_block')
+        standard_template = super(PersonBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'person_block')
 
     def get_api_representation(self, value, context=None):
         if value:
@@ -90,7 +90,7 @@ class AuthorBlock(blocks.PageChooserBlock, ThemeableBlock):
 
     class Meta:
         icon = 'user'
-        label = 'Author'
+        label = 'Person'
 
 
 class AutoPlayVideoBlock(blocks.StructBlock, ThemeableBlock):
