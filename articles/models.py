@@ -405,6 +405,16 @@ class ArticlePage(
     subpage_types = []
     templates = 'articles/article_page.html'
 
+    @property
+    def article_series_category(self):
+        category = ''
+        for item in self.article_series.specific.series_items:
+            if item.block_type == 'category_title':
+                category = item.value
+            else:
+                if item.value.specific.id == self.id:
+                    return category
+
     class Meta:
         verbose_name = 'Opinion'
         verbose_name_plural = 'Opinions'

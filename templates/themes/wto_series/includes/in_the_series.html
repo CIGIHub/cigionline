@@ -1,9 +1,20 @@
-{% load core_tags %}
+{% load core_tags static %}
 
 <section class="wto-series-in-the-series">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8">
+        {% if banner == True %}
+          <div class="banner">
+            <a href="{{ article_series.url }}">
+              <div>
+                <h1>{{ article_series.title }}</h1>
+                <div class="essay-series-label">A CIGI Essay Series</div>
+              </div>
+              <img src="{% static 'themes/wto_series/assets/wto_in_the_series_banner.svg' %}" alt="WTO series banner graphic">
+            </a>
+          </div>
+        {% endif %}
         {% for block in series_items %}
           {% if block.block_type == 'category_title' %}
             {% define block.value|slugify as category_class %}
