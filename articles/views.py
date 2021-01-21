@@ -7,7 +7,18 @@ from wagtail.api.v2.filters import (
 from wagtail.api.v2.serializers import PageSerializer
 from wagtail.api.v2.views import BaseAPIViewSet
 
-from .models import ArticlePage
+from .models import (
+    ArticlePage,
+    ArticleSeriesPage,
+)
+
+
+class ArticleSeriesPageViewSet(BaseAPIViewSet):
+    model = ArticleSeriesPage
+    base_serializer_class = PageSerializer
+
+    def get_queryset(self):
+        return self.model.objects.public().live().order_by(F('publishing_date').desc(nulls_last=True))
 
 
 class MediaPageViewSet(BaseAPIViewSet):
