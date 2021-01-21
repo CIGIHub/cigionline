@@ -1,4 +1,3 @@
-from wagtail.core import hooks
 from .models import MultimediaPage
 from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
 
