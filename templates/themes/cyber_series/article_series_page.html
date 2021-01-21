@@ -5,6 +5,10 @@
   {% render_bundle 'themeCyberSeries' 'css' %}
 {% endblock %}
 
+{% block extra_js %}
+  {% render_bundle 'themeCyberSeries' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block body_class %}cyber-series-article-series{% endblock %}
 
 {% block content %}
@@ -26,7 +30,16 @@
       </div>
     </div>
   </section>
-  {% include "includes/body.html" with body=self.body heading=self.title %}
+  <section class="cyber-series-article-series-body">
+    <div class="container">
+      <div class="row">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2>{{ self.title }}</h2>{{ self.title }}
+        </div>
+      </div>
+    </div>
+    {{ self.body }}
+  </section>
   <section class="cyber-series-article-series-in-the-series">
     <div class="container">
       <div class="row justify-content-center">
