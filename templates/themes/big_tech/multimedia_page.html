@@ -6,13 +6,13 @@
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
 {% endblock %}
 {% block extra_css %}
-  {% render_bundle 'themeBigTechS3' 'css' %}
+  {% render_bundle 'themeBigTech' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  {% render_bundle 'themeBigTechS3' 'js' attrs='defer' %}
+  {% render_bundle 'themeBigTech' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}big-tech-s3-theme big-tech-s3-multimedia{% endblock %}
+{% block body_class %}big-tech-theme big-tech-multimedia{% endblock %}
 
 {% block header %}
   <div class="big-tech-hero">
@@ -57,10 +57,10 @@
                 </div>
               </div>
             {% endif %}
-            <div class="subtitle">
-              {{ self.subtitle|richtext }}
-            </div>
             <p class="meta">
+              {% if self.podcast_season and self.podcast_episode %}
+                S{{ self.podcast_season }}E{{ self.podcast_episode }} / 
+              {% endif %}
               {{ self.publishing_date|date:"F j, Y" }}
             </p>
             {% include "includes/social_links.html" with title=self.title no_circle=True %}
@@ -73,9 +73,17 @@
 {% endblock header %}
 
 {% block content %}
-  {% include "includes/body.html" with body=self.body heading="Episode Description" %}
+  {% include "includes/body.html" with body=self.body %}
+  {% if self.transcript %}
+    <section>
+      {% for block in self.transcript %}
+        {% include_block block with id=block.id %}
+      {% endfor %}
+    </section>
+  {% endif %}
+  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
   {% if self.companion_essay %}
-    <section class="big-tech-s3-companion-essay">
+    <section class="big-tech-companion-essay">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8 companion-essay">
@@ -83,15 +91,10 @@
               <h2>Opinion</h2>
               <article>
                 <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
+                {{ self.companion_essay.specific.short_description|richtext }}
+                <div class="meta">{{ self.publishing_date|date:"F j, Y" }}</div>
                 {% for item in self.companion_essay.specific.authors.all %}
-                  <a href="{{ item.author.url }}" class="author">
-                    <div class="author-image-wrapper">
-                      {% image item.author.image_square fill-100x100 %}
-                    </div>
-                    <div>
-                      {{ item.author.byline|richtext }}
-                    </div>
-                  </a>
+                  <a href="{{ item.author.url }}" class="author meta">{{ item.author.title }}</a>
                 {% endfor %}
               </article>
             </div>
@@ -104,7 +107,6 @@
       </div>
     </section>
   {% endif %}
-  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
   {% if self.recommended.all %}
     <section class="big-tech-recommended">
       <div class="container">

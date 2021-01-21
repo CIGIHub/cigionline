@@ -1,43 +1,40 @@
-.big-tech-s3-multimedia {
-  .big-tech-s3-companion-essay {
-    background-color: $bigtech-s3-red;
+.big-tech-multimedia {
+  .big-tech-companion-essay {
+    background-color: $cigi-light-grey-bg;
     margin-bottom: 2em;
+    padding: 2em 0;
 
     .companion-essay {
       align-items: center;
       display: flex;
       justify-content: space-between;
-      padding-bottom: 3em;
-      padding-top: 3em;
 
       .essay-details {
         h2 {
-          color: $white;
-          font-size: 0.875em;
+          color: $bigtech-teal;
           text-transform: uppercase;
         }
 
         h3 {
-          @include link($color: $white, $hover-color: $black);
+          @include link($color: $black, $hover-color: $bigtech-teal);
           color: $white;
+          font-size: 1.25em;
           margin-bottom: 0.75em;
+        }
+
+        p {
+          color: $cigi-darkest-grey;
+          line-height: 1.5rem;
         }
 
         .author {
           align-items: center;
+          color: $cigi-darkest-grey;
           display: flex;
           justify-content: space-between;
 
           &:hover {
-            .author-image-wrapper {
-              img {
-                opacity: 0.8;
-              }
-            }
-
-            p {
-              color: $black;
-            }
+            color: $bigtech-teal;
           }
 
           .author-image-wrapper {
@@ -69,25 +66,24 @@
         }
         align-items: center;
         background-color: transparent;
-        border: 1.75px solid $white;
+        border: 1.75px solid $bigtech-teal;
         border-radius: 50%;
-        color: $white;
+        color: $bigtech-teal;
         display: none;
         flex-direction: column;
-        height: 125px;
+        height: 75px;
         justify-content: center;
         margin-left: 3em;
-        min-width: 125px;
+        min-width: 75px;
         transition: background-color 0.3s ease, color 0.3s ease;
-        width: 125px;
+        width: 75px;
 
         &:hover {
-          background-color: $white;
-          color: $bigtech-s3-red;
+          background-color: $bigtech-teal;
+          color: $white;
         }
 
         i {
-          font-size: 2em;
           margin-bottom: 0.2em;
         }
 
@@ -100,6 +96,7 @@
 
   .big-tech-mm-hero {
     align-items: center;
+    border-bottom: 1px solid $divider-grey;
     display: flex;
     justify-content: space-between;
     padding-bottom: 3em;
@@ -108,15 +105,19 @@
       .podcast-guest {
         font-size: 1.2em;
         font-weight: 400;
+        margin-bottom: 1rem;
         text-transform: uppercase;
       }
 
       .podcast-subtitle {
-        color: $cigi-text-grey;
+        @include media-breakpoint-up(md) {
+          font-size: 1.35rem;
+        }
         display: block;
-        font-size: 0.54em;
+        font-size: 1rem;
         font-style: italic;
-        line-height: 1.35em;
+        line-height: 1.35rem;
+        margin-left: 0.2rem;
       }
     }
 

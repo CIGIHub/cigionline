@@ -1,7 +1,7 @@
 .big-tech-s3-article {
   .about-the-author {
     .author-block {
-      @include link($color: $bigtech-s3-red, $hover-color: $cigi-dark-grey);
+      @include link($color: $bigtech-teal, $hover-color: $cigi-dark-grey);
     }
   }
 
@@ -142,7 +142,7 @@
     position: relative;
 
     &::before {
-      border-top: 6px solid $bigtech-s3-red;
+      border-top: 6px solid $bigtech-teal;
       content: '';
       display: block;
       left: 0;
