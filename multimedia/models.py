@@ -404,11 +404,11 @@ class MultimediaSeriesPage(
     @property
     def series_seasons(self):
         episode_filter = {
-          'multimedia_series': self,
-          'theme__name__in': [
-            'Big Tech S3',
-            'Big Tech',
-          ]
+            'multimedia_series': self,
+            'theme__name__in': [
+                'Big Tech S3',
+                'Big Tech',
+            ]
         }
         series_episodes = MultimediaPage.objects.filter(**episode_filter).order_by('-publishing_date')
         series_seasons = {}
