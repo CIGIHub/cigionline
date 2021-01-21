@@ -64,3 +64,22 @@ def register_rich_text_anchor(features):
         'from_database_format': {'a[name]': AnchorEntityElementHandler(type_)},
         'to_database_format': {'entity_decorators': {type_: anchor_entity_decorator}},
     })
+
+
+class ArticlePageModelAdmin(ModelAdmin):
+    # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
+    model = ArticlePage
+    menu_label = 'Articles'
+    menu_icon = 'doc-empty-inverse'
+    menu_order = 200
+    list_display = ('title', 'publishing_date', 'article_type', 'theme', 'live')
+    list_filter = ('publishing_date', 'article_type', 'theme', 'live')
+    search_fields = ('title')
+    ordering = ['-publishing_date']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(publishing_date__isnull=False)
+
+
+modeladmin_register(ArticlePageModelAdmin)
