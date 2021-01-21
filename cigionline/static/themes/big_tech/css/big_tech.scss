@@ -1,0 +1,318 @@
+$bigtech-teal: #38bf8e;
+$bigtech-light-grey: #b1b1b1;
+
+@mixin slash($width: 5px, $height: 60px, $color: $black-alpha-40) {
+  border-right: 1px solid $color;
+  height: $height;
+  margin: 0 25px 0 28px;
+  transform: rotate(15deg);
+  width: $width;
+}
+
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/slide_down';
+
+@import './big_tech_article';
+@import './big_tech_multimedia';
+
+.big-tech-theme {
+  font-family: 'nunito-sans', sans-serif;
+
+  header,
+  main {
+    @include link($color: $bigtech-teal, $hover-color: $cigi-dark-grey);
+
+    h2 {
+      border-top: 0;
+      color: $bigtech-teal;
+      font-size: 1em;
+      margin-bottom: 1em;
+      text-transform: uppercase;
+    }
+
+    p {
+      font-size: 0.875em;
+    }
+  }
+
+  header {
+    background-color: transparent;
+    position: relative;
+
+    .big-tech-top-bar {
+      @include media-breakpoint-up(sm) {
+        padding-top: 1.5em;
+      }
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 1.5em;
+      padding-top: 1em;
+
+      .big-tech-logo {
+        svg {
+          height: 45px;
+          width: 45px;
+        }
+      }
+    }
+  }
+
+  .big-tech-hero {
+    background-image: url('../../../assets/bigtech_s3_background.png');
+    background-position: top;
+    margin-bottom: 3em;
+  }
+
+  .body {
+    margin-bottom: 2em;
+  }
+
+  .bt-footer {
+    background-color: $bigtech-teal;
+    padding: 4em 0;
+
+    .bt-footer-content {
+      @include media-breakpoint-up(md) {
+        flex-direction: row;
+      }
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      p {
+        @include link($color: $white, $hover-color: $black);
+        @include media-breakpoint-up(md) {
+          text-align: left;
+        }
+        font-size: 1em;
+        font-style: italic;
+        text-align: center;
+
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      .about {
+        @include media-breakpoint-up(md) {
+          margin-top: 0;
+          max-width: 300px;
+        }
+        margin-top: 3em;
+      }
+
+      .cigi-logo {
+        svg {
+          @include media-breakpoint-up(md) {
+            max-width: 200px;
+          }
+          fill: $white;
+          max-width: 120px;
+          width: 100%;
+        }
+      }
+
+      .copyright {
+        margin: 0;
+        text-align: center;
+
+        span {
+          padding: 0 0.5em;
+        }
+      }
+
+      .spacer {
+        @include media-breakpoint-up(md) {
+          display: block;
+        }
+        display: none;
+        margin: 0 2em;
+
+        .slash {
+          @include slash($height: 150px, $color: $white);
+          @include media-breakpoint-down(md) {
+            height: 50px;
+          }
+          @include media-breakpoint-down(lg) {
+            margin: 0 2rem;
+          }
+          margin: 0 55px;
+        }
+      }
+
+      .subscribe {
+        @include media-breakpoint-up(md) {
+          justify-content: flex-start;
+        }
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1em;
+
+        a {
+          display: block;
+          height: 25px;
+          margin-left: 2em;
+          width: 25px;
+
+          &:hover {
+            svg {
+              path {
+                fill: $black;
+              }
+            }
+          }
+
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+        }
+
+        p {
+          font-style: normal;
+          margin: 0;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .bt-recommended-article {
+    display: grid;
+    grid-template-columns: 65% 10% 25%;
+    margin-bottom: 2em;
+
+    .bt-recommended-content {
+      grid-column: 1;
+      grid-row: 1;
+
+      h3 {
+        @include link($color: $cigi-dark-grey, $hover-color: $bigtech-teal);
+        font-size: 1.0625em;
+      }
+
+      .authors {
+        @include link($color: $cigi-dark-grey, $hover-color: $bigtech-teal);
+        font-size: 0.75em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+
+      .date {
+        color: $cigi-text-grey;
+        font-size: 0.75em;
+        text-transform: uppercase;
+      }
+
+      .topics {
+        @include link($color: $cigi-dark-grey, $hover-color: $bigtech-teal);
+        margin-bottom: 0.5em;
+        margin-top: 0;
+      }
+    }
+
+    .bt-recommended-image {
+      grid-column: 3;
+      grid-row: 1;
+
+      a {
+        background-color: $black;
+        display: block;
+        position: relative;
+
+        &:hover {
+          img {
+            opacity: 0.8;
+          }
+        }
+
+        img {
+          filter: grayscale(100%);
+          opacity: 1;
+          transition: opacity 0.3s ease;
+        }
+
+        .play-icon {
+          align-items: center;
+          background-color: $bigtech-teal;
+          bottom: 0;
+          color: $white;
+          display: flex;
+          height: 40px;
+          justify-content: center;
+          position: absolute;
+          right: 0;
+          width: 40px;
+        }
+      }
+    }
+  }
+
+  .big-tech-dropdown {
+    button {
+      align-items: center;
+      background-color: $bigtech-teal;
+      border: 1px solid $bigtech-teal;
+      border-radius: 0;
+      color: $white;
+      display: flex;
+      font-family: $primary-font-family;
+      font-size: 0.825em;
+      justify-content: space-between;
+      padding: 0.35em 1em;
+      text-align: left;
+      text-transform: uppercase;
+      width: 127px;
+
+      &:hover {
+        color: $cigi-dark-grey;
+      }
+
+      &::after {
+        align-items: center;
+        border: 0;
+        content: '\f078';
+        display: inline-flex;
+        font-family: 'Font Awesome 5 Pro';
+        height: 100%;
+        margin-left: 0;
+        transform: rotate(0deg);
+        transition: transform 0.25s ease;
+        vertical-align: 0.255em;
+        width: 0.75em;
+      }
+
+      &[aria-expanded='true'] {
+        &::after {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .dropdown-menu {
+      @include link($color: $white, $hover-color: $cigi-dark-grey);
+      border: 0;
+      border-radius: 0;
+      margin: 0;
+      min-width: 127px;
+      padding: 0;
+      width: 127px;
+
+      a {
+        background-color: $bigtech-teal;
+        border: 1px solid $bigtech-teal;
+        border-top-color: $white;
+        font-family: $primary-font-family;
+        font-size: 0.825em;
+        margin: 0;
+        padding: 0.5em 1em;
+        text-transform: uppercase;
+        width: 100%;
+      }
+    }
+  }
+}
