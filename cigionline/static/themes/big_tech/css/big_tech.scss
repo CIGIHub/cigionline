@@ -67,8 +67,11 @@ $bigtech-light-grey: #b1b1b1;
   }
 
   .bt-footer {
-    background-color: $bigtech-teal;
-    padding: 4em 0;
+    @include media-breakpoint-up(md) {
+      padding: 4rem 0;
+    }
+    background-color: $black;
+    padding: 2rem 0;
 
     .bt-footer-content {
       @include media-breakpoint-up(md) {
@@ -101,7 +104,18 @@ $bigtech-light-grey: #b1b1b1;
         margin-top: 3em;
       }
 
-      .cigi-logo {
+      .logos {
+        @include media-breakpoint-up(md) {
+          max-width: 100%;
+        }
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        max-width: 300px;
+      }
+
+      .cigi-logo,
+      .logic-logo {
         svg {
           @include media-breakpoint-up(md) {
             max-width: 200px;
@@ -126,17 +140,22 @@ $bigtech-light-grey: #b1b1b1;
           display: block;
         }
         display: none;
-        margin: 0 2em;
+        margin: 0 1em;
+
+        &:first-of-type {
+          display: block;
+        }
 
         .slash {
-          @include slash($height: 150px, $color: $white);
-          @include media-breakpoint-down(md) {
-            height: 50px;
+          @include slash($height: 50px, $color: $white);
+          @include media-breakpoint-up(md) {
+            height: 150px;
+            margin: 0 1rem;
           }
-          @include media-breakpoint-down(lg) {
+          @include media-breakpoint-up(lg) {
             margin: 0 2rem;
           }
-          margin: 0 55px;
+          margin: 0 1rem;
         }
       }
 
@@ -180,8 +199,10 @@ $bigtech-light-grey: #b1b1b1;
   }
 
   .bt-recommended-article {
-    display: grid;
-    grid-template-columns: 65% 10% 25%;
+    @include media-breakpoint-up(sm) {
+      display: grid;
+      grid-template-columns: 65% 10% 25%;
+    }
     margin-bottom: 2em;
 
     .bt-recommended-content {
@@ -214,6 +235,10 @@ $bigtech-light-grey: #b1b1b1;
     }
 
     .bt-recommended-image {
+      @include media-breakpoint-up(sm) {
+        display: block;
+      }
+      display: none;
       grid-column: 3;
       grid-row: 1;
 
