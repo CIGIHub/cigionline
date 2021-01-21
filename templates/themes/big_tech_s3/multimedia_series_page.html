@@ -59,7 +59,12 @@
             {% include "includes/simplecast_embed.html" with simplecast_url=latest_episode.multimedia_url %}
           </div>
           {{ latest_episode.specific.subtitle|richtext }}
-          <div class="date">S{{ latest_episode.specific.podcast_season }}E{{ latest_episode.specific.podcast_episode }} / {{latest_episode.specific.publishing_date|date:"F j, Y"}}</div>
+          <div class="date">
+            {% if episode.specific.podcast_season and episode.specific.podcast_episode %}
+              S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / 
+            {% endif %}
+            {{latest_episode.specific.publishing_date|date:"F j, Y"}}
+          </div>
           <button><a href="{{ latest_episode.url }}"><i class="fa fa-headphones" aria-hidden="true"></i>Listen</a></button>
         </div>
         <div class="d-none d-md-flex col-md-4 align-items-center">
@@ -102,6 +107,7 @@
                   </article>
                 {% endfor %}
               {% endif %}
+
               {% for episode in episodes.published %}
                 <article class="flex-row {% if season == 3 and forloop.counter == 1 %}d-none{% endif %}">
                   <div class="episode-info">
@@ -113,7 +119,12 @@
                       </a>
                     </h3>
                     {{ episode.specific.subtitle|richtext }}
-                    <div class="date">S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / {{episode.specific.publishing_date|date:"F j, Y"}}</div>
+                    <div class="date">
+                      {% if episode.specific.podcast_season and episode.specific.podcast_episode %}
+                        S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / 
+                      {% endif %}
+                      {{episode.specific.publishing_date|date:"F j, Y"}}
+                    </div>
                   </div>
                   <div class="circle">
                     <a href="{{ episode.url }}">
