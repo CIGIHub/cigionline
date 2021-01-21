@@ -154,6 +154,11 @@ class PublicationPage(
         ],
         blank=True,
     )
+    embed_issuu = models.URLField(
+        blank=True,
+        verbose_name='Issuu Embed',
+        help_text='Enter the Issuu URL (https://issuu.com/cigi/docs/modern_conflict_and_ai_web) to add an embedded Issuu document.',
+    )
     embed_youtube = models.URLField(
         blank=True,
         verbose_name='YouTube Embed',
@@ -305,6 +310,7 @@ class PublicationPage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('embed_issuu'),
                 StreamFieldPanel('pdf_downloads'),
                 FieldPanel('embed_youtube'),
             ],
