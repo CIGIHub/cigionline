@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_css %}
   {% render_bundle 'multimediaPage' 'css' %}
@@ -44,6 +44,29 @@
   {% endif %}
 
   {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
+
+  {% if self.recommended.all %}
+    <section>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            {% for item in self.recommended.all %}
+              <article>
+                <div>
+                  {% include "includes/topics.html" with topics=item.recommended_content_page.specific.topics %}
+                  <h3><a href="{{ item.recommended_content_page.title }}">{{ item.recommended_content_page.title }}</a></h3>
+                  {% include "includes/authors.html" with authors=item.recommended_content_page.specific.authors.all %}
+                  {% include "includes/authors.html" with authors=item.recommended_content_page.specific.speakers.all %}
+                  {% include "includes/date.html" with date=item.recommended_content_page.specific.publishing_date %}
+                </div>
+                {% image item.recommended_content_page.specific.image_hero width-400 %}
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 
   {% block in_the_series %}
     {# Override this in templates to add series listing #}
