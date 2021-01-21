@@ -527,6 +527,14 @@ class ArticleSeriesPage(
         verbose_name='Banner Video',
     )
 
+    @property
+    def image_poster_title(self):
+        return self.image_poster.title
+
+    @property
+    def image_poster_url(self):
+        return self.image_poster.get_rendition('fill-672x895').url
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -611,6 +619,16 @@ class ArticleSeriesPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
+    api_fields = [
+        APIField('image_poster_title'),
+        APIField('image_poster_url'),
+        APIField('series_contributors'),
+        APIField('short_description'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
+    ]
+
     parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
@@ -644,7 +662,26 @@ class ArticleSeriesPage(
         return series_contributors
 
     @property
+    def series_contributors(self):
+        series_contributors = []
+        item_people = set()
+
+        for item in self.series_items:
+            if item.block_type == 'series_item':
+                people = item.value.specific.authors.all()
+                for person in people:
+                    if person.author.title not in item_people:
+                        series_contributors.append({
+                            'id': person.author.id,
+                            'title': person.author.title,
+                            'url': person.author.url,
+                        })
+                        item_people.add(person.author.title)
+        return series_contributors
+
+    @property
     def series_contributors_by_person(self):
+        # Series contributors ordered by last name
         series_contributors = []
         item_people = set()
 
