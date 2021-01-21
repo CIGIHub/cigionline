@@ -63,9 +63,11 @@ section {
     }
 
     .recommended-article {
-      display: grid;
-      grid-template-columns: 65% 10% 25%;
-      margin-bottom: 2em;
+      @include media-breakpoint-up(sm) {
+        display: grid;
+        grid-template-columns: 65% 10% 25%;
+      }
+      margin: 1em 0 2em;
 
       .recommended-content {
         grid-column: 1;
@@ -96,6 +98,10 @@ section {
       }
 
       .recommended-image {
+        @include media-breakpoint-up(sm) {
+          display: block;
+        }
+        display: none;
         grid-column: 3;
         grid-row: 1;
 
@@ -111,7 +117,6 @@ section {
           }
 
           img {
-            filter: grayscale(100%);
             opacity: 1;
             transition: opacity 0.3s ease;
           }
