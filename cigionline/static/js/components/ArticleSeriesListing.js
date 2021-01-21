@@ -6,6 +6,7 @@ import '../../css/components/ArticleSeriesListing.scss';
 function ArticleSeriesListing(props) {
   const { row } = props;
 
+  /* eslint-disable react/no-danger */
   return (
     <article className="article-series-row">
       <div className="article-series-content">
