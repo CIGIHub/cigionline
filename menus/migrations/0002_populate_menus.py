@@ -6,6 +6,7 @@ from django.db import migrations
 def populate_menus(apps, schema_editor):
     INITIAL_MENUS = [
         ('about', 'About'),
+        ('careers', 'Careers'),
         ('footer', 'Footer'),
         ('events', 'Events'),
         ('experts', 'Experts'),
