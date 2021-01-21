@@ -28,6 +28,7 @@
 
     background-color: $cyber-series-primary-colour;
     display: flex;
+    height: 300px;
     position: relative;
 
     .cyber-series-article-hero-content-container {
@@ -42,7 +43,9 @@
     }
 
     .cyber-series-article-hero-content {
-      width: 515px;
+      @include media-breakpoint-up(md) {
+        width: 515px;
+      }
     }
 
     h1 {
@@ -107,6 +110,9 @@
   }
 
   .glitch {
+    @include media-breakpoint-up(md) {
+      display: block;
+    }
     background-position: top center;
     background-size: cover;
     display: none;
@@ -118,11 +124,10 @@
   .glitch-image {
     animation-duration: 4s;
     animation-iteration-count: infinite;
-    animation-timing-function: steps(11,start);
+    animation-timing-function: steps(11, start);
     background-color: transparent;
     background-size: cover;
     height: calc(100% + 10px);
-    left: -10px;
     opacity: 0;
     position: absolute;
     top: -5px;
