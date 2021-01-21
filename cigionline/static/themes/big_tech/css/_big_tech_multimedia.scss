@@ -37,21 +37,6 @@
             color: $bigtech-teal;
           }
 
-          .author-image-wrapper {
-            background-color: $black;
-            border-radius: 50%;
-            flex-shrink: 0;
-            height: 50px;
-            margin-right: 1em;
-            overflow: hidden;
-            width: 50px;
-
-            img {
-              opacity: 1;
-              transition: opacity 0.3s ease;
-            }
-          }
-
           p {
             color: $white;
             margin: 0;
