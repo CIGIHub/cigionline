@@ -158,18 +158,3 @@
     margin-right: 0.4em;
   }
 }
-
-.grey-image-link {
-  display: block;
-
-  &:hover {
-    img {
-      filter: grayscale(0);
-    }
-  }
-
-  img {
-    filter: grayscale(100%);
-    transition: filter 0.25s ease;
-  }
-}

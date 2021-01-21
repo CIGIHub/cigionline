@@ -1,0 +1,72 @@
+@import '../../../css/global/mixins';
+
+.careers-awards-section {
+  margin-bottom: 3em;
+
+  a {
+    display: block;
+
+    &:hover {
+      img {
+        filter: grayscale(0);
+      }
+    }
+
+    img {
+      filter: grayscale(100%);
+      transition: filter 0.25s ease;
+    }
+  }
+}
+
+.careers-current-openings-section {
+  margin-bottom: 3em;
+
+  h2 {
+    margin-bottom: 2em;
+  }
+
+  .job-posting-row {
+    &:last-child {
+      article {
+        border-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+    }
+
+    article {
+      border-bottom: 1px solid $cigi-light-grey;
+      margin-bottom: 1.5em;
+      padding-bottom: 1.5em;
+
+      h3 {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        font-size: 1.0625em;
+        margin-bottom: 0;
+      }
+
+      .closing-date {
+        color: $cigi-text-grey;
+        font-size: 0.75em;
+        margin-bottom: 0;
+        margin-top: 0.5em;
+        text-transform: uppercase;
+      }
+
+      .job-posting-description {
+        margin-top: 1em;
+
+        p {
+          color: $cigi-text-grey;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .no-openings {
+    color: $cigi-text-grey;
+    margin-bottom: 0;
+  }
+}
