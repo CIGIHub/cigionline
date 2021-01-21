@@ -11,10 +11,16 @@
   <section class="cyber-series-article-hero">
     {% image self.image_banner original as image_banner %}
     <div class="cyber-series-article-hero-image" style="background-image: url('{{ image_banner.url }}');">
+      <div class="glitch">
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+      </div>
+
     </div>
     <div class="cyber-series-article-hero-content-container">
       <div class="cyber-series-article-hero-content">
-       
           {% include "includes/topics.html" with topics=self.topics %}
           <h1><span>{{ self.title }}</span></h1>
           {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
@@ -22,7 +28,6 @@
             <div class="arrow point1"></div>
             <div class="arrow point2"></div>
           </div>
-        
       </div>
     </div>
   </section>

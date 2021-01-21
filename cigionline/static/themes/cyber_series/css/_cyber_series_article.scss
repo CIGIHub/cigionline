@@ -102,9 +102,46 @@
     }
   }
 
+  .glitch {
+    background-position: top center;
+    background-size: cover;
+    display: none;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+  }
+
+  .glitch-image {
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(11,start);
+    background-color: transparent;
+    background-size: cover;
+    height: calc(100% + 10px);
+    left: -10px;
+    opacity: 0;
+    position: absolute;
+    top: -5px;
+    transform: translate3d(0, 0, 0);
+    width: calc(100% + 20px);
+
+    &:nth-child(2) {
+      animation-name: glitch-anim-1;
+    }
+
+    &:nth-child(3) {
+      animation-delay: -0.2s;
+      animation-name: glitch-anim-2;
+    }
+
+    &:nth-child(4) {
+      animation-delay: -0.1s;
+      animation-name: glitch-anim-3;
+    }
+  }
+
   .cyber-series-article-bg-image {
     background-repeat: no-repeat;
-    background-size: cover;
     border-top: 3px solid $cyber-series-background-colour;
     bottom: -3em;
     display: block;
@@ -114,4 +151,5 @@
     width: 100%;
     z-index: -100;
   }
+  
 }
