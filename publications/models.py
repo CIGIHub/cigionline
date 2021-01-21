@@ -310,6 +310,7 @@ class PublicationPage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('embed_issuu'),
                 StreamFieldPanel('pdf_downloads'),
                 FieldPanel('embed_youtube'),
             ],
