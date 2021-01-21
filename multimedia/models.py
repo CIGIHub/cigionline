@@ -401,6 +401,32 @@ class MultimediaSeriesPage(
         help_text='Enter the link to the Spotify Podcast landing page for the podcast.',
     )
 
+    @property
+    def series_seasons(self):
+        episode_filter = {
+            'multimedia_series': self,
+            'theme__name__in': [
+                'Big Tech S3',
+                'Big Tech',
+            ]
+        }
+        series_episodes = MultimediaPage.objects.filter(**episode_filter).order_by('-publishing_date')
+        series_seasons = {}
+        for episode in series_episodes:
+            episode_season = episode.specific.podcast_season
+            if episode_season not in series_seasons:
+                series_seasons.update({episode_season: {'published': [], 'unpublished': []}})
+            if episode.live:
+                series_seasons[episode_season]['published'].append(episode)
+            else:
+                series_seasons[episode_season]['unpublished'].append(episode)
+
+        return series_seasons
+
+    @property
+    def latest_episode(self):
+        return MultimediaPage.objects.filter(multimedia_series=self).live().latest('publishing_date')
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
