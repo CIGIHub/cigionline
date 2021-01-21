@@ -105,20 +105,22 @@
     </section>
   {% endif %}
   {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
-  {% if self.recommended.all %}
-    <section class="big-tech-recommended">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <h2>Recommended</h2>
-            {% for recommended_content in self.recommended.all %}
-              {% include "./includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
-            {% endfor %}
+  {% block recommended %}
+    {% if self.recommended.all %}
+      <section class="big-tech-recommended">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <h2>Recommended</h2>
+              {% for recommended_content in self.recommended.all %}
+                {% include "./includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
+              {% endfor %}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  {% endif %}
+      </section>
+    {% endif %}
+  {% endblock recommended %}
 {% endblock content %}
 
 {% block footer %}
