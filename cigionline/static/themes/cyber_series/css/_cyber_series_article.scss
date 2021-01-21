@@ -6,6 +6,10 @@
   );
   background-color: $cyber-series-background-colour;
 
+  p {
+    font-size: 1.065em;
+  }
+
   .cyber-series-article-hero {
     @include media-breakpoint-up(md) {
       height: 400px;
@@ -43,6 +47,77 @@
       right: 0;
       top: 0;
       width: 50%;
+    }
+  }
+
+  .article-footnotes {
+    .footnotes {
+      &::before {
+        border-top: 5px solid $black;
+        margin-left: -75px;
+      }
+
+      ol {
+        counter-reset: list-counter;
+        font-size: 0.75em;
+        list-style: none;
+        margin: 0;
+        padding-top: 1em;
+
+        li {
+          counter-increment: list-counter;
+
+          &::before {
+            content: counter(list-counter);
+            font-weight: $sans-demi;
+            padding-right: 0.25em;
+          }
+        }
+
+        li + li {
+          padding-top: 1em;
+        }
+      }
+    }
+  }
+
+  .article-works-cited {
+    h2 {
+      background-image: linear-gradient(to right, $cyber-series-highlight 0%, $cyber-series-highlight 100%);
+      background-position: 0 30%;
+      background-repeat: repeat-x;
+      background-size: 100% .75rem;
+      color: $black;
+      display: inline-block;
+      font-family: 'interstate-mono', sans-serif;
+      font-size: 1.1em;
+      font-weight: 600;
+
+      &::after {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  .about-the-author {
+    h3 {
+      background-image: linear-gradient(to right, $cyber-series-highlight 0%, $cyber-series-highlight 100%);
+      background-position: 0 70%;
+      background-repeat: repeat-x;
+      background-size: 100%;
+      border-top: 0;
+      color: $black;
+      display: inline-block;
+      font-family: 'interstate-mono', sans-serif;
+      font-size: 1.1em;
+      font-weight: 600;
+      line-height: 0.8em;
+    }
+  }
+
+  .author-block {
+    .name {
+      font-weight: 700;
     }
   }
 }
