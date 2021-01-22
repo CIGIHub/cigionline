@@ -42,14 +42,30 @@
   }
 
   .cyber-series-article-series-body {
-    padding: 2em 0;
+    padding: 0.5em 0 2em;
 
     h2 {
+      border-bottom: solid 1px $cyber-series-primary-colour;
       color: $cyber-series-primary-colour;
+      font-family: 'interstate-mono', sans-serif;
+      font-size: 1.5em;
+      font-weight: 400;
+      line-height: 2em;
+      margin-bottom: 0;
     }
 
     p {
       color: $white;
+      font-size: 0.85em;
+      line-height: 1.765em;
+    }
+
+    .block-paragraph {
+      .read-more {
+        color: $cyber-series-primary-colour;
+        cursor: pointer;
+        margin-left: 0.5em;
+      }
     }
   }
 
