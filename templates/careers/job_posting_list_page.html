@@ -1,5 +1,65 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'jobPostingListPage' 'css' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/body.html" with body=self.body %}
+  <section class="careers-awards-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-6 col-lg-2">
+          <a href="http://www.eluta.ca/jobs-at-centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer">
+            <img src="/static/assets/careers_waterloo_top_employer_2019.svg" />
+          </a>
+        </div>
+        <div class="col-6 col-lg-2 offset-lg-1">
+          <a href="http://content.eluta.ca/top-employer-centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer">
+            <img src="/static/assets/careers_young_people_top_employer_2019.svg" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="careers-current-openings-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">
+            Current Openings
+          </h2>
+        </div>
+      </div>
+      {% if job_postings %}
+        {% for job_posting in job_postings %}
+          <div class="row justify-content-center job-posting-row">
+            <div class="col-12 col-md-10 col-lg-8">
+              <article>
+                <h3>
+                  <a href="{{ job_posting.url }}">{{ job_posting.title }}</a>
+                </h3>
+                {% if job_posting.closing_date %}
+                  <p class="closing-date">
+                    Closing Date: {{ job_posting.closing_date|date:"F j, Y" }}
+                  </p>
+                {% endif %}
+                <div class="job-posting-description">
+                  {{ job_posting.short_description|richtext }}
+                </div>
+              </article>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <p class="no-openings">Sorry, there are currently no openings.</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
 {% endblock content %}
