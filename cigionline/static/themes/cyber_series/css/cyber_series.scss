@@ -2,15 +2,17 @@ $cyber-series-background-colour: #f2f0ea;
 $cyber-series-primary-colour: #f5dd07;
 $cyber-series-highlight: #d2caca;
 
+$cyber-font: 'interstate mono', sans-serif;
+
 @import '../../../css/global/mixins';
 
 @import './cyber_series_article_series';
 @import './cyber_series_article';
+@import './includes/in_the_series';
 
 @keyframes blink-caret-black {
   50% { border-color: transparent; }
 }
-
 
 // Animations
 
