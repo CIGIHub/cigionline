@@ -20,3 +20,7 @@
 .Draftail-block--NAME {
   font-weight: 600;
 }
+
+.draftail_rich_text_area a {
+  word-break: break-all;
+}
