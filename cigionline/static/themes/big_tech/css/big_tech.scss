@@ -82,7 +82,7 @@ $bigtech-light-grey: #b1b1b1;
       justify-content: center;
 
       p {
-        @include link($color: $white, $hover-color: $black);
+        @include link($color: $white, $hover-color: $bigtech-teal);
         @include media-breakpoint-up(md) {
           text-align: left;
         }
@@ -176,7 +176,7 @@ $bigtech-light-grey: #b1b1b1;
           &:hover {
             svg {
               path {
-                fill: $black;
+                fill: $bigtech-teal;
               }
             }
           }
@@ -184,6 +184,7 @@ $bigtech-light-grey: #b1b1b1;
           svg {
             path {
               fill: $white;
+              transition: fill 0.2s ease;
             }
           }
         }
