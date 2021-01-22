@@ -37,7 +37,7 @@
       }
       align-items: center;
       display: flex;
-      justify-content: right;
+      justify-content: flex-end;
       padding: 1em 2.5em 2em;
       width: 100%;
     }
@@ -158,7 +158,7 @@
   }
 
   .social-share-list {
-    justify-content: left;
+    justify-content: flex-start;
     margin: 0;
 
     .fab {
