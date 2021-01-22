@@ -1,6 +1,9 @@
+
 {% extends "base.html" %}
+{% load topic_tags %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% highlighted_topics %}
   {% include "includes/body.html" with body=self.body %}
 {% endblock %}
