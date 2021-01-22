@@ -24,7 +24,8 @@
     "bootstrap": "4.6.0",
     "jquery": "3.5.1",
     "normalize.css": "8.0.1",
-    "rimraf": "3.0.2"
+    "rimraf": "3.0.2",
+    "swiper": "^6.4.8"
   },
   "devDependencies": {
     "@babel/core": "7.12.10",
