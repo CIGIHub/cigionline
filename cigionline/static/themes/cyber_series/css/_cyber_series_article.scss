@@ -1,9 +1,5 @@
 .cyber-series-article {
-  @include top-bar(
-    $background-color: $cyber-series-background-colour,
-    $color: $black,
-    $position: relative,
-  );
+  @include top-bar($background-color: $cyber-series-background-colour, $color: $black, $position: relative);
   background-color: $cyber-series-background-colour;
 
   main {
@@ -226,7 +222,7 @@
       background-image: linear-gradient(to right, $cyber-series-highlight 0%, $cyber-series-highlight 100%);
       background-position: 0 30%;
       background-repeat: repeat-x;
-      background-size: 100% .75rem;
+      background-size: 100% 0.75rem;
       color: $black;
       display: inline-block;
       font-family: 'interstate-mono', sans-serif;
@@ -258,6 +254,24 @@
   .author-block {
     .name {
       font-weight: 700;
+    }
+  }
+
+  .highlight-title-block {
+    span {
+      background-image: linear-gradient(to right, #f5dd07 0%, #f5dd07 100%);
+      background-position: 0 20%;
+      background-repeat: repeat-x;
+      background-size: 100% 0.75rem;
+      font-family: 'interstate-mono', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 500;
+      line-height: 1.7rem;
+      padding-bottom: 2em;
+    }
+
+    h2 {
+      margin: 2em 0 1em;
     }
   }
 }
