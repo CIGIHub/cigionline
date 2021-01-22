@@ -1,0 +1,46 @@
+.swiper-container {
+  margin-top: -2em;
+  padding-top: 2em !important;
+
+  .swiper-controls {
+    display: block;
+    font-size: 24px;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      background-image: none;
+      color: $black;
+      display: inline-block;
+      left: auto;
+      outline: none;
+      position: relative;
+      right: auto;
+      top: 3px;
+      width: auto;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    .swiper-pagination {
+      display: inline-block;
+      padding: 0 7px;
+      position: relative;
+
+      .swiper-pagination-bullet {
+        height: 12px;
+        margin: 0 3px;
+        width: 12px;
+      }
+
+      .swiper-pagination-bullet-active {
+        background-color: $black;
+      }
+    }
+  }
+}

@@ -1,3 +1,5 @@
+@import '../../../css/global/mixins';
+
 .homepage {
   .homepage-featured {
     @include media-breakpoint-up(lg) {
@@ -9,7 +11,8 @@
 
   .homepage-featured-experts,
   .homepage-featured-multimedia,
-  .homepage-featured-publications {
+  .homepage-featured-publications,
+  .homepage-featured-highlights {
     margin-bottom: 4em;
   }
 

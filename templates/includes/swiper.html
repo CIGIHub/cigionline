@@ -1,0 +1,16 @@
+<div class="swiper-container">
+  <div class="swiper-wrapper">
+    {% for item in swiper_content %}
+      <div class="swiper-slide">
+        {% if type == "homepage-highlight" %}
+          {% include "includes/features/feature_poster_teaser.html" with content=item.highlight_page.specific %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="swiper-controls">
+    <div class="swiper-button-prev"><i class="fal fa-long-arrow-left"></i></div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next"><i class="fal fa-long-arrow-right"></i></div>
+  </div>
+</div>

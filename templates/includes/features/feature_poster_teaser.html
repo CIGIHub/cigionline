@@ -1,0 +1,12 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<article class="feature-poster-teaser">
+  {% image content.image_poster width-700 %}
+  {% include 'includes/topics.html' with topics=content.topics %}
+  <h3>
+    <a href="{{ content.url }}">
+      {{ content.title }}
+    </a>
+  </h3>
+  {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+</article>
