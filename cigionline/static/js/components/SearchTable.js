@@ -85,7 +85,12 @@ class SearchTable extends React.Component {
       topicSelectValue,
       typeSelected,
     } = this.state;
-    const { endpoint, fields, limit } = this.props;
+    const {
+      endpoint,
+      endpointParams,
+      fields,
+      limit,
+    } = this.props;
 
     const offset = (currentPage - 1) * limit;
 
@@ -101,6 +106,9 @@ class SearchTable extends React.Component {
       apiEndpoint = typeSelected.endpoint;
     }
     let uri = `/api${apiEndpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`;
+    for (const endpointParam of endpointParams) {
+      uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
+    }
     if (searchValue) {
       uri += `&search=${searchValue}`;
     }
@@ -382,8 +390,12 @@ class SearchTable extends React.Component {
 
 SearchTable.propTypes = {
   blockListing: PropTypes.bool,
-  containerClass: PropTypes.arrayOf(PropTypes.string).isRequired,
+  containerClass: PropTypes.arrayOf(PropTypes.string),
   endpoint: PropTypes.string.isRequired,
+  endpointParams: PropTypes.arrayOf(PropTypes.shape({
+    paramName: PropTypes.string,
+    paramValue: PropTypes.any,
+  })),
   fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   filterTypes: PropTypes.arrayOf(PropTypes.shape({
     endpoint: PropTypes.string,
@@ -403,6 +415,8 @@ SearchTable.propTypes = {
 
 SearchTable.defaultProps = {
   blockListing: false,
+  containerClass: [],
+  endpointParams: [],
   filterTypes: [],
   limit: 24,
   searchPlaceholder: 'Search',
