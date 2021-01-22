@@ -319,6 +319,17 @@ class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
         template = 'streams/inline_video_block.html'
 
 
+class HighlightTitleBlock(blocks.CharBlock, ThemeableBlock):
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(HighlightTitleBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'highlight_title_block')
+
+    class Meta:
+        icon = 'title'
+        label = 'Highlight Title'
+        template = 'streams/highlight_title_block.html'
+
+
 class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
     """Standard text paragraph."""
 

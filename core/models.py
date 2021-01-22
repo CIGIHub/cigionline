@@ -19,6 +19,7 @@ from streams.blocks import (
     TextBorderBlock,
     TweetBlock,
     InlineVideoBlock,
+    HighlightTitleBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -67,7 +68,7 @@ class BasicPageAbstract(models.Model):
         ('title', blocks.CharBlock(required=True)),
         ('video_url', blocks.URLBlock(required=True)),
     ])))
-    body_highlight_title_block = ('highlight_title', blocks.CharBlock(required=True))
+    body_highlight_title_block = ('highlight_title', HighlightTitleBlock())
     body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
     body_image_scroll_block = ('image_scroll', blocks.StructBlock([
         ('image', ImageChooserBlock(required=True)),
