@@ -9,8 +9,10 @@ class SearchTable extends React.Component {
   constructor(props) {
     super(props);
     this.searchResultsRef = React.createRef();
+    const { filterTypes } = props;
     this.state = {
       currentPage: 1,
+      filterTypes,
       loading: true,
       loadingInitial: true,
       loadingTopics: true,
@@ -29,9 +31,20 @@ class SearchTable extends React.Component {
 
   componentDidMount() {
     const { showSearch } = this.props;
+    const { filterTypes } = this.state;
     this.getRows();
     if (showSearch) {
       this.getTopics();
+      const filterTypeEndpoints = [];
+      for (const filterType of filterTypes) {
+        if (filterType.typeEndpoint
+            && filterTypeEndpoints.indexOf(filterType.typeEndpoint) < 0) {
+          filterTypeEndpoints.push(filterType.typeEndpoint);
+        }
+      }
+      for (const filterTypeEndpoint of filterTypeEndpoints) {
+        this.getTypes(filterTypeEndpoint);
+      }
     }
   }
 
@@ -53,7 +66,7 @@ class SearchTable extends React.Component {
   }
 
   handleTypeSelect(type) {
-    if (type.value) {
+    if (type.id || type.value) {
       this.setState({
         typeSelected: type,
       }, this.getRows);
@@ -95,7 +108,7 @@ class SearchTable extends React.Component {
       uri += `&topics=${topicSelectValue}`;
     }
     if (typeSelected && typeSelected.param) {
-      uri += `&${typeSelected.param}=${typeSelected.value}`;
+      uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
     }
 
     fetch(encodeURI(uri))
@@ -107,6 +120,34 @@ class SearchTable extends React.Component {
           rows: data.items,
           totalRows: data.meta.total_count,
         }));
+      });
+  }
+
+  getTypes(typeEndpoint) {
+    fetch(encodeURI(`/api${typeEndpoint}/?limit=40&offset=0&fields=title`))
+      .then((res) => res.json())
+      .then((data) => {
+        for (const item of data.items) {
+          const { filterTypes: existingFilterTypes } = this.state;
+          const itemIndex = existingFilterTypes.findIndex(
+            (filterType) => (
+              filterType.typeEndpoint === typeEndpoint
+                && filterType.typeValue === item.title
+            ),
+          );
+          if (itemIndex >= 0) {
+            this.setState(({ filterTypes }) => ({
+              filterTypes: [
+                ...filterTypes.slice(0, itemIndex),
+                {
+                  ...filterTypes[itemIndex],
+                  id: item.id,
+                },
+                ...filterTypes.slice(itemIndex + 1),
+              ],
+            }));
+          }
+        }
       });
   }
 
@@ -168,13 +209,13 @@ class SearchTable extends React.Component {
 
   get dropdownTypes() {
     const { typeSelected } = this.state;
-    const { filterTypes } = this.props;
+    const { filterTypes } = this.state;
     const dropdownTypes = [];
     filterTypes.forEach((filterType) => {
-      if (!typeSelected
-          || (typeSelected
-            && typeSelected.name !== filterType.name
-            && typeSelected.value !== filterType.value)) {
+      if ((!filterType.typeEndpoint || filterType.id)
+          && (!typeSelected
+            || (typeSelected
+              && typeSelected.name !== filterType.name))) {
         dropdownTypes.push(filterType);
       }
     });
@@ -264,7 +305,7 @@ class SearchTable extends React.Component {
                       <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
                         {this.dropdownTypes.map((type) => (
                           <button
-                            key={`type-${type.value}`}
+                            key={`type-${type.id || type.value}`}
                             className="dropdown-item"
                             type="button"
                             onClick={() => this.handleTypeSelect(type)}
