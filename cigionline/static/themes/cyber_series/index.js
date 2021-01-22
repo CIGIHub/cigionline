@@ -5,15 +5,15 @@ const lastBlock = $('.cyber-series-article-series-body .block-paragraph').last()
 
 lastBlock.hide();
 
-const readMore = firstBlock.find('p').last().append('<span class="read-more"><i class="fa fa-chevron-down"></i></span>');
-const readLess = lastBlock.find('p').last().append('<span class="read-more"><i class="fa fa-chevron-up"></i></span>');
+firstBlock.find('p').last().append('<span class="read-more"><i class="fa fa-chevron-down"></i></span>');
+lastBlock.find('p').last().append('<span class="read-more"><i class="fa fa-chevron-up"></i></span>');
 
-readMore.on('click', function() {
+firstBlock.find('.read-more').on('click', function() {
   firstBlock.find('.read-more').hide();
   lastBlock.show();
 });
 
-readLess.on('click', function() {
+lastBlock.find('.read-more').on('click', function() {
   firstBlock.find('.read-more').show();
   lastBlock.hide();
 });
