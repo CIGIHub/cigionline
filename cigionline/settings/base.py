@@ -144,6 +144,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cigionline.wsgi.application'
 
+simplecast_provider = {
+    'endpoint': 'https://api.simplecast.com/oembed',
+    'urls': [
+        r'^https://(?:[-\w]+\.)?simplecast\.com/episodes/.+$',
+    ]
+}
+
+WAGTAILEMBEDS_FINDERS = [
+    {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider], },
+    {'class': 'wagtail.embeds.finders.oembed', },
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

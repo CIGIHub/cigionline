@@ -210,6 +210,20 @@ class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
         label = 'Editor'
 
 
+class EmbeddedMultimediaBlock(blocks.StructBlock, ThemeableBlock):
+    multimedia_url = blocks.URLBlock(required=True)
+    title = blocks.CharBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EmbeddedMultimediaBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'embedded_multimedia_block')
+
+    class Meta:
+        icon = 'media'
+        label = 'Embedded Multimedia'
+        template = 'streams/embedded_multimedia_block.html'
+
+
 class EmbeddedVideoBlock(blocks.StructBlock, ThemeableBlock):
     video_url = blocks.URLBlock(required=True)
     caption = blocks.CharBlock(required=False)
