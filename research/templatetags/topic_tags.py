@@ -1,4 +1,4 @@
-from ..models import TopicPage, ContentPage
+from ..models import TopicPage
 from django import template
 from django.db.models import Count
 
