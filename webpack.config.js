@@ -35,6 +35,7 @@ const config = {
     multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
     publicationListPage: './cigionline/static/pages/publication_list_page/index.js',
     publicationPage: './cigionline/static/pages/publication_page/index.js',
+    publicationTypePage: './cigionline/static/pages/publication_type_page/index.js',
     themeAfterCovidSeries: './cigionline/static/themes/after_covid_series/index.js',
     themeAISeries: './cigionline/static/themes/ai_series/index.js',
     themeBigTech: './cigionline/static/themes/big_tech/index.js',
