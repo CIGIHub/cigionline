@@ -5,7 +5,7 @@
   {% for topic in annotated_topics %}
     <li class="topic">
       <a href="{% pageurl topic %}">{{ topic }}</a>
-      <span>{{topic.count}}</span>
+      <span>({{topic.count}})</span>
     </li>
   {% endfor %}
 </ul>
