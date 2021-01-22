@@ -5,6 +5,7 @@ from streams.blocks import (
     ParagraphBlock,
     ReadMoreBlock,
     BlockQuoteBlock,
+    EmbeddedMultimediaBlock,
     EmbeddedVideoBlock,
     ExternalPersonBlock,
     ExternalQuoteBlock,
@@ -43,10 +44,7 @@ class BasicPageAbstract(models.Model):
     # Body StreamField blocks
     body_default_blocks = [
         ('block_quote', BlockQuoteBlock()),
-        ('embedded_multimedia', blocks.StructBlock([
-            ('multimedia_url', blocks.URLBlock(required=True)),
-            ('title', blocks.CharBlock(required=False)),
-        ])),
+        ('embedded_multimedia', EmbeddedMultimediaBlock()),
         ('embedded_video', EmbeddedVideoBlock()),
         ('image', ImageBlock()),
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
