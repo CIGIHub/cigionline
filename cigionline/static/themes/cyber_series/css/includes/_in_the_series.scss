@@ -13,13 +13,15 @@
   }
 
   .cyber-series-article-series-series-items {
-    column-gap: 3em;
+    column-gap: 4em;
     columns: 2;
 
     article {
+      margin-bottom: 2em;
+
       .article-title {
         font-family: $cyber-font;
-        font-size: 1em;
+        font-size: 0.875em;
 
         a {
           background-image: linear-gradient(transparent calc(100% - 2px),$cyber-series-primary-colour 5px);
@@ -36,7 +38,9 @@
         }
 
         [href^='/multimedia'] {
-          margin-left: -30px;
+          margin-left: -25px;
+          padding-left: 25px;
+          position: relative;
 
           &::before {
             background-color: $cyber-series-primary-colour;
@@ -45,7 +49,10 @@
             content: '\f054';
             font-family: 'font awesome 5 pro';
             font-weight: 600;
+            left: 0;
             padding: 0.1em 0.25em;
+            position: absolute;
+
           }
         }
 
@@ -54,6 +61,8 @@
       .authors {
         text-transform: uppercase;
         font-size: 0.875rem;
+        margin: 0;
+        font-size: 0.75em;
 
         span {
           @include link($color: $cyber-series-primary-colour);

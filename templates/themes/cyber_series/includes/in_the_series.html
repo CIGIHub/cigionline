@@ -3,7 +3,7 @@
 
   <div class="container cyber-series-in-the-series-title">
     <div class="row justify-content-center">
-      <div class="col col-md-10 col-lg-8 ">
+      <div class="col col-lg-10 offset-lg-1">
         <h3>
           <a href="{{ article_series.url }}"><span>{{ article_series.title }}</span></a>
         </h3>
@@ -14,7 +14,7 @@
 
   <div class="container cyber-series-article-series-series-items">
     <div class="row">
-      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2 ">
+      <div class="col col-lg-10 offset-lg-1">
         {% for block in article_series.series_items %}
           {% if block.block_type == 'series_item' and block.value.id != article_id %}
             <article>
