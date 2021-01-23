@@ -46,6 +46,7 @@ const config = {
     themeIndigenousLandsSeries: './cigionline/static/themes/indigenous_lands_series/index.js',
     themeInnovationSeries: './cigionline/static/themes/innovation_series/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',
+    themeLongform2: './cigionline/static/themes/longform_2/index.js',
     themePlatformGovernanceSeries: './cigionline/static/themes/platform_governance_series/index.js',
     themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
