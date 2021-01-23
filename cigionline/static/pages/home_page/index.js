@@ -28,13 +28,15 @@ if (swiperContainer) {
     },
 
     breakpoints: {
-      // When window width is <= 480px.
       480: {
         slidesPerView: 2,
         slidesPerGroup: 2,
       },
-      // When window width is <= 768px.
       768: {
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+      },
+      992: {
         slidesPerView: 4,
         slidesPerGroup: 4,
       },

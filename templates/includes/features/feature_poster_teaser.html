@@ -1,7 +1,9 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<article class="feature-poster-teaser">
-  {% image content.image_poster width-700 %}
+<article class="feature-content feature-poster-teaser">
+  <a class="img-wrapper" href="{{ content.url }}">
+    {% image content.image_poster width-700 %}
+  </a>
   {% include 'includes/topics.html' with topics=content.topics %}
   <h3>
     <a href="{{ content.url }}">
