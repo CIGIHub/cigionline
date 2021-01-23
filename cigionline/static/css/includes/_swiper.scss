@@ -1,5 +1,8 @@
 .swiper-container {
-  margin-top: -2em;
+  @include media-breakpoint-up(sm) {
+    margin-top: -2em;
+  }
+  margin-top: 0;
   padding-top: 2em !important;
 
   .swiper-controls {
@@ -33,9 +36,14 @@
       position: relative;
 
       .swiper-pagination-bullet {
-        height: 12px;
-        margin: 0 3px;
-        width: 12px;
+        @include media-breakpoint-up(sm) {
+          height: 12px;
+          margin: 0 3px;
+          width: 12px;
+        }
+        height: 10px;
+        margin: 0 2px;
+        width: 10px;
       }
 
       .swiper-pagination-bullet-active {
