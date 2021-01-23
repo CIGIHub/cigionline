@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeIndigenousLandsSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}indigenous-lands-series-article-series{% endblock %}
+
+{% block content %}
+  {% image self.image_hero original as image_hero %}
+  <section class="indigenous-lands-series-article-series-hero">
+    <div class="indigenous-lands-series-article-series-hero-image" style="background-image: url('{{ image_hero.url }}');">
+    </div>
+    <div class="hero-content">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            {% include "includes/topics.html" with topics=self.topics %}
+            <h1>{{ self.title }}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="indigenous-lands-series-article-series-in-the-series">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          {% include "./includes/in_the_series.html" with series_items=self.series_items %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
