@@ -40,14 +40,15 @@
     </div>
     {{ self.body }}
   </section>
-  <section class="cyber-series-article-series-in-the-series">
+  <section class="cyber-series-in-the-series">
+    <div class="cyber-overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2 cyber-series-article-series-series-items">
           {% for block in self.series_items %}
             {% if block.block_type == 'series_item' %}
               <article>
-                <h3>
+                <h3 class="article-title">
                   <a href="{{ block.value.url }}">
                     {{ block.value.title }}
                   </a>
