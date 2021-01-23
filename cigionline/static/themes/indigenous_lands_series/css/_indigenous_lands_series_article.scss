@@ -6,4 +6,15 @@
     margin-bottom: 3em;
     padding-top: 4em;
   }
+
+  .indigenous-lands-series-article-in-the-series {
+    h2 {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      border-top: 1px solid $divider-grey;
+      font-size: 2em;
+      font-weight: 700;
+      margin-bottom: 1.5em;
+      padding-top: 1em;
+    }
+  }
 }

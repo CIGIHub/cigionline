@@ -41,3 +41,26 @@
     </div>
   </section>
 {% endblock %}
+
+{% block in_the_series %}
+  {% if self.article_series %}
+    <section class="indigenous-lands-series-article-in-the-series">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <h2>
+              <a href="{{ self.article_series.url }}">
+                {{ self.article_series.title }}
+              </a>
+            </h2>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            {% include "./includes/in_the_series.html" with series_items=self.article_series.specific.series_items article_id=self.id %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}
