@@ -52,8 +52,10 @@
     .homepage-featured-publication-row {
       &:last-child {
         article {
-          @include media-breakpoint-down(md) {
+          @include media-breakpoint-down(sm) {
             border-bottom: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
           }
         }
       }
