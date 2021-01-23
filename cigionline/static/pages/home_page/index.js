@@ -1,3 +1,5 @@
+/* eslin-disable no-unused-vars */
+
 import 'swiper/swiper-bundle.css';
 import './css/_home_page.scss';
 
