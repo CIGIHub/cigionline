@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags%}
 
 <article class="feature-content feature-poster-teaser">
   <a class="img-wrapper" href="{{ content.url }}">
@@ -10,5 +10,9 @@
       {{ content.title }}
     </a>
   </h3>
-  {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+  {% if content|page_type == 'opinion-series' %}
+    {% include 'includes/features/feature_content_people.html' with authors=content.series_authors %}
+  {% else %}
+    {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+  {% endif %}
 </article>

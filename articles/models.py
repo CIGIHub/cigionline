@@ -704,6 +704,21 @@ class ArticleSeriesPage(
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
 
+    @property
+    def series_authors(self):
+        series_authors = []
+        series_people = set()
+        for item in self.series_items:
+            if item.block_type == 'category_title':
+                continue
+            people = item.value.specific.authors.all()
+            for person in people:
+                if person.author.title not in series_people:
+                    series_authors.append(person)
+                    series_people.add(person.author.title)
+
+        return series_authors
+
     class Meta:
         verbose_name = 'Opinion Series'
         verbose_name_plural = 'Opinion Series'
