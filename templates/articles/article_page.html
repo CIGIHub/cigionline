@@ -31,72 +31,75 @@
     {% endif %}
   {% endblock %}
 
-  {% if self.body %}
-    {% if self.article_type == 'cigi_in_the_news' %}
-      <section class="body" id="article-body">
+  {% block article_content %}
+    {% if self.body %}
+      {% if self.article_type == 'cigi_in_the_news' %}
+        <section class="body" id="article-body">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col col-md-10 col-lg-8">
+                <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
+              </div>
+            </div>
+            {{ self.body|truncatewords_html:100 }}
+            <div class="row justify-content-center">
+              <div class="col col-md-10 col-lg-8">
+                <p class="text-center">* * *</p>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col col-md-10 col-lg-8 text-center">
+                <a class="button-action" href="{{self.website_url}}">
+                  <i class="fas fa-external-link-alt"></i>
+                  {% if self.website_button_text %}
+                    {{ self.website_button_text }}
+                  {% else %}
+                    View Full Article
+                  {% endif %}
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% else %}
+        {% include "includes/body.html" with body=self.body %}
+      {% endif %}
+    {% endif %}
+
+    {% if self.footnotes %}
+      <section class="article-footnotes">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
-              <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
-            </div>
-          </div>
-          {{ self.body|truncatewords_html:100 }}
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <p class="text-center">* * *</p>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8 text-center">
-              <a class="button-action" href="{{self.website_url}}">
-                <i class="fas fa-external-link-alt"></i>
-                {% if self.website_button_text %}
-                  {{ self.website_button_text }}
-                {% else %}
-                  View Full Article
-                {% endif %}
-              </a>
+              <div class="footnotes">
+                {{ self.footnotes|richtext }}
+              </div>
             </div>
           </div>
         </div>
       </section>
-    {% else %}
-      {% include "includes/body.html" with body=self.body %}
     {% endif %}
-  {% endif %}
 
-  {% if self.footnotes %}
-    <section class="article-footnotes">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <div class="footnotes">
-              {{ self.footnotes|richtext }}
+    {% if self.works_cited %}
+      <section class="article-works-cited">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <h2>Works Cited</h2>
+              {{ self.works_cited|richtext }}
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  {% endif %}
+      </section>
+    {% endif %}
 
-  {% if self.works_cited %}
-    <section class="article-works-cited">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <h2>Works Cited</h2>
-            {{ self.works_cited|richtext }}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
+    {% include 'includes/disclaimer.html' %}
 
-  {% include 'includes/disclaimer.html' %}
+    {% if self.is_opinion and self.authors.all|length > 0 %}
+      {% include "includes/about_the_author.html" with authors=self.authors.all %}
+    {% endif %}
 
-  {% if self.is_opinion and self.authors.all|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors.all %}
-  {% endif %}
+  {% endblock %}
 
   {% block in_the_series %}
     {# Override this in templates to add series listing #}

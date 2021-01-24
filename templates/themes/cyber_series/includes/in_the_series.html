@@ -1,4 +1,7 @@
-<section class="cyber-series-in-the-series" style="background-image: url('');">
+{% load wagtailimages_tags %}
+
+{% image article_series.image_hero original as image_hero %}
+<section class="cyber-series-in-the-series" style="background-image: url('{{ image_hero.url }}');">
   <div class="cyber-overlay"></div>
 
   <div class="container cyber-series-in-the-series-title">
