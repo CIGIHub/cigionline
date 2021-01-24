@@ -12,6 +12,45 @@
     width: 100%;
   }
 
+  .cyber-series-in-the-series-title {
+    h3 {
+      @include link($color: $cyber-series-primary-colour, $hover-color: $cyber-series-primary-colour);
+      border-top: 0;
+      font-family: $cyber-font;
+      font-size: 1.5em;
+      line-height: 1em;
+      margin: 3em 0 2em;
+      width: 60%;
+
+      span {
+        background-image: linear-gradient(to right,#272727 0%,#272727 100%);
+        background-position: 0 260%;
+        background-repeat: repeat-x;
+        background-size: 100% 1em;
+      }
+    }
+
+    .sub-heading {
+      border-bottom: solid 1px $cyber-series-primary-colour;
+      color: $cyber-series-primary-colour;
+      font-family: $cyber-font;
+      font-size: 1.125em;
+      margin: 0.5em 0 1.5em;
+      position: relative;
+
+      &::before {
+        animation: bounce 2s infinite alternate;
+        color: $cyber-series-primary-colour;
+        content: '\f078';
+        font-family: 'font awesome 5 pro';
+        font-size: 12px;
+        left: -20px;
+        position: absolute;
+        top: 7px;
+      }
+    }
+  }
+
   .cyber-series-article-series-series-items {
     column-gap: 4em;
     columns: 2;
@@ -35,6 +74,11 @@
             background-size: 100% 100%;
             color: $white;
           }
+
+          &.active {
+            background: none;
+            color: $cyber-series-grext-grey;
+          }
         }
 
         [href^='/multimedia'] {
@@ -52,14 +96,12 @@
             left: 0;
             padding: 0.1em 0.25em;
             position: absolute;
-
           }
         }
-
       }
 
       .authors {
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         margin: 0;
         text-transform: uppercase;
 

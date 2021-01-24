@@ -2,7 +2,7 @@
   <div class="cyber-overlay"></div>
 
   <div class="container cyber-series-in-the-series-title">
-    <div class="row justify-content-center">
+    <div class="row">
       <div class="col col-lg-10 offset-lg-1">
         <h3>
           <a href="{{ article_series.url }}"><span>{{ article_series.title }}</span></a>
@@ -12,13 +12,13 @@
     </div>
   </div>
 
-  <div class="container cyber-series-article-series-series-items">
+  <div class="container">
     <div class="row">
-      <div class="col col-lg-10 offset-lg-1">
+      <div class="col col-lg-10 offset-lg-1 cyber-series-article-series-series-items">
         {% for block in article_series.series_items %}
-          {% if block.block_type == 'series_item' and block.value.id != article_id %}
+          {% if block.block_type == 'series_item' %}
             <article>
-              <h5 class="article-title"><a href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
+              <h5 class="article-title"><a {% if block.value.id == article_id %}class="active"{% endif %} href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
               <p class="authors">
                 {% for item in block.value.specific.authors.all %}
                   <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
