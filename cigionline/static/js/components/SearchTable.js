@@ -369,7 +369,9 @@ class SearchTable extends React.Component {
                   </table>
                 )
             ) : (
-              <p>Your query returned no results. Please check your spelling and try again.</p>
+              <p ref={this.searchResultsRef}>
+                Your query returned no results. Please check your spelling and try again.
+              </p>
             )}
         <Paginator
           currentPage={currentPage}
