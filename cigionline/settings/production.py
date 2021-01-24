@@ -20,12 +20,11 @@ if 'DATABASE_URL' in os.environ:
         'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
     }
 
-if 'FOUNDELASTICSEARCH_URL' in os.environ:
+if 'BONSAI_URL' in os.environ:
     WAGTAILSEARCH_BACKENDS = {
         'default': {
             'BACKEND': 'wagtail.search.backends.elasticsearch7',
-            'URLS': [os.environ['FOUNDELASTICSEARCH_URL']],
-            'PORT': 9243,
+            'URLS': [os.environ['BONSAI_URL']],
             'INDEX': 'wagtail',
             'TIMEOUT': 60,
             'OPTIONS': {},
