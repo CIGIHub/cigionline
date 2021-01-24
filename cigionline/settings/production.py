@@ -25,6 +25,7 @@ if 'FOUNDELASTICSEARCH_URL' in os.environ:
         'default': {
             'BACKEND': 'wagtail.search.backends.elasticsearch7',
             'URLS': [os.environ['FOUNDELASTICSEARCH_URL']],
+            'PORT': 9243,
             'INDEX': 'wagtail',
             'TIMEOUT': 60,
             'OPTIONS': {},
