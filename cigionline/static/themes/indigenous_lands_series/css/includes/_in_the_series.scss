@@ -1,0 +1,28 @@
+.indigenous-lands-series-in-the-series {
+  margin-bottom: 3em;
+
+  h3 {
+    font-size: 1.5em;
+    font-weight: 500;
+    margin-bottom: 1em;
+
+    span {
+      border-top: 5px solid $black;
+    }
+  }
+
+  .indigenous-lands-series-in-the-series-items {
+    @include media-breakpoint-up(md) {
+      columns: 2;
+    }
+    columns: 1;
+
+    article {
+      .authors {
+        span {
+          @include comma-separated;
+        }
+      }
+    }
+  }
+}
