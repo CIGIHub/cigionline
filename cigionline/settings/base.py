@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'wagtail.api.v2',
     'wagtail.contrib.forms',
     'wagtail.contrib.modeladmin',
+    'wagtail.contrib.postgres_search',
     'wagtail.contrib.redirects',
     'wagtail.contrib.table_block',
     # 'wagtail.contrib.styleguide',
@@ -184,7 +185,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
 
 WAGTAILSEARCH_BACKENDS = {
     'default': {
-        'BACKEND': 'wagtail.search.backends.db',
+        'BACKEND': 'wagtail.contrib.postgres_search',
     }
 }
 
