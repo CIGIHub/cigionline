@@ -185,7 +185,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
 
 WAGTAILSEARCH_BACKENDS = {
     'default': {
-        'BACKEND': 'wagtail.contrib.postgres_search',
+        'BACKEND': 'wagtail.contrib.postgres_search.backend',
     }
 }
 
