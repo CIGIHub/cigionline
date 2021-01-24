@@ -45,8 +45,8 @@ INSTALLED_APPS = [
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
     'wagtail.contrib.modeladmin',
+    'wagtail.contrib.redirects',
     'wagtail.contrib.table_block',
     # 'wagtail.contrib.styleguide',
     'wagtail.embeds',
@@ -181,6 +181,12 @@ if os.environ.get('GITHUB_WORKFLOW'):
             'CONN_MAX_AGE': 600,
         }
     }
+
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.search.backends.db',
+    }
+}
 
 
 # Password validation
