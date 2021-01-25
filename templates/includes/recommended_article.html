@@ -1,0 +1,35 @@
+{% load wagtailimages_tags core_tags %}
+
+<article class="recommended-article">
+  <div class="recommended-content">
+    {% if article.topics %}
+      {% include "includes/topics.html" with topics=article.topics %}
+    {% endif %}
+    <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+    {% if article.authors %}
+      {% include "includes/authors.html" with authors=article.authors.all external_authors=article.external_authors %}
+    {% endif %}
+    {% if article.editors %}
+      {% include "includes/authors.html" with authors=article.editors.all external_authors=article.external_editors %}
+    {% endif %}
+    {% if article.publishing_date %}
+      {% include "includes/date.html" with date=article.publishing_date %}
+    {% endif %}
+  </div>
+  <div class="recommended-image">
+    {% if article|page_type|in_list:'multimedia,opinion,publication' and article.image_hero or article.image_feature %}
+      <a href="{{ article.url }}">
+        {% if article.image_feature %}
+          {% image article.image_feature width-300 %}
+        {% else %}
+          {% image article.image_hero width-300 %}
+        {% endif %}
+        {% if article|page_type == 'multimedia' %}
+          <div class="play-icon">
+            <i class="fas fa-play"></i>
+          </div>
+        {% endif %}
+      </a>
+    {% endif %}
+  </div>
+</article>
