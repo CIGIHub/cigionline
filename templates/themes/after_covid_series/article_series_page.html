@@ -25,8 +25,8 @@
       </div>
     </div>
   </section>
-  {% if self.image_banner.filename|file_extension == '.gif' %}
-    {% define "/staticmedia/original_images/"|add:self.image_banner.filename as image_banner_url %}
+  {% if self.image_banner.file.url|file_extension == '.gif' %}
+    {% define self.image_banner.file.url as image_banner_url %}
   {% else %}
     {% image self.image_banner original as image_banner %}
     {% define image_banner.url as image_banner_url %}

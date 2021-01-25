@@ -3,8 +3,8 @@
 <article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %}">
   <a href="{{content.url}}" class="feature-content-image">
     <div class="img-wrapper">
-      {% if content.image_hero.filename|file_extension == '.gif' %}
-        <img src="/staticmedia/original_images/{{content.image_hero.filename}}" alt="{{content.image_hero.title}}">
+      {% if content.image_hero.file.url|file_extension == '.gif' %}
+        <img src="{{content.image_hero.file.url}}" alt="{{content.image_hero.title}}">
       {% else %}
         {% image content.image_hero fill-1440x990 %}
       {% endif %}
@@ -25,7 +25,11 @@
     {% include 'includes/topics.html' with topics=content.topics %}
     {% include 'includes/features/feature_content_title.html' %}
     {% include 'includes/features/feature_content_subtitle.html' %}
-    {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+    {% if content|page_type == 'opinion-series' %}
+      {% include 'includes/features/feature_content_people.html' with authors=content.series_authors %}
+    {% else %}
+      {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+    {% endif %}
     <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
   </div>
 </article>
