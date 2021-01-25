@@ -10,7 +10,9 @@ def no_protocol(value):
 
 @register.filter
 def page_type(page):
-    return page._meta.verbose_name.lower().replace(' ', '-')
+    if page and hasattr(page, ['_meta']):
+        return page._meta.verbose_name.lower().replace(' ', '-')
+    return ''
 
 
 @register.filter
