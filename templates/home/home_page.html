@@ -1,5 +1,12 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags static %}
+{% load wagtailcore_tags static webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'homePage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'homePage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block body_class %}homepage{% endblock %}
 
@@ -56,6 +63,16 @@
             {% include "includes/features/feature_publication_teaser.html" with publication=publication %}
           </div>
         {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section class="homepage-featured-highlights">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="homepage-subheading"><span>Highlights</span></h2>
+          {% include "includes/swiper.html" with swiper_content=self.highlight_pages.all type="homepage-highlight" %}
+        </div>
       </div>
     </div>
   </section>

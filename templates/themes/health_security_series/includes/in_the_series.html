@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags %}
 
-{% if article_series.image_hero.filename|file_extension == '.gif' %}
-  {% define "/staticmedia/original_images/"|add:article_series.image_hero.filename as image_hero_url %}
+{% if article_series.image_hero.file.url|file_extension == '.gif' %}
+  {% define article_series.image_hero.file.url as image_hero_url %}
 {% else %}
   {% image article_series.image_hero original as image_hero %}
   {% define image_hero.url as image_hero_url %}

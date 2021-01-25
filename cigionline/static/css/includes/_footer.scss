@@ -24,7 +24,7 @@ footer {
     width: 100%;
   }
 
-  .highlighted-topics {
+  .highlighted-topics-list {
     @include media-breakpoint-up(md) {
       columns: 3;
     }
@@ -46,7 +46,7 @@ footer {
       }
     }
 
-    .topic-count {
+    span {
       color: $cigi-medium-grey;
     }
   }
