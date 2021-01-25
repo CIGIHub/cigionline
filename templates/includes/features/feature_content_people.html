@@ -2,13 +2,9 @@
   {% with 3 as people_limit %}
     {% for item in authors %}
       {% if forloop.counter <= people_limit %}
-        <li>
-          <a href="{{ item.author.url }}">
-            {{ item.author.title }}
-          </a>
-        </li>
+        <li><a href="{{ item.author.url }}">{{ item.author.title }}</a></li>
       {% elif forloop.counter == people_limit|add:1 %}
-        <li>And more</li>
+        <li>and more</li>
       {% endif %}
     {% endfor %}
   {% endwith %}
