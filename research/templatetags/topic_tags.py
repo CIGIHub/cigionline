@@ -1,12 +1,13 @@
 from ..models import TopicPage
 from django import template
+from django.db.models import Count
 
 register = template.Library()
 
 
 @register.inclusion_tag('research/highlighted_topics.html')
 def highlighted_topics():
-    highlighted_topics = TopicPage.objects.live().filter(archive=0).order_by('title')
+    highlighted_topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('contentpage'))
     return {'highlighted_topics': highlighted_topics}
 
 

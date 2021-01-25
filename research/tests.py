@@ -131,7 +131,7 @@ class HighlightedTopicsTests(WagtailPageTests):
     def test_if_no_topics_template_should_be_empty(self):
         rendered = self.TEMPLATE.render(Context({}))
 
-        self.assertEqual(' \n\n\n<ul class="highlighted-topics">\n  \n</ul>\n', rendered)
+        self.assertEqual(' \n\n\n<ul class="highlighted-topics-list">\n  \n</ul>\n', rendered)
 
     def test_correct_number_of_topics_render(self):
         for n in range(5):
