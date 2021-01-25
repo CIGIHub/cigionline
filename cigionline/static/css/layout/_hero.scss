@@ -9,9 +9,6 @@ section {
     padding-top: 4em;
 
     .hero-container {
-      display: flex;
-      justify-content: space-between;
-
       .hero-main {
         h1 {
           @include media-breakpoint-up(md) {
