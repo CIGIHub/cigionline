@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_css %}
   {% render_bundle 'multimediaPage' 'css' %}
@@ -44,6 +44,28 @@
   {% endif %}
 
   {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
+
+  {% block recommended %}
+    {% if self.recommended.all %}
+      <section class="recommended">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <div class="flex-column align-items-center">
+                <div class="recommended-dot"></div>
+                <div class="recommended-vertical-line"></div>
+                <h2>Recommended</h2>
+                {% include "includes/footer_bracket.svg" %}
+              </div>
+              {% for recommended_content in self.recommended.all %}
+                {% include "includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endblock recommended %}
 
   {% block in_the_series %}
     {# Override this in templates to add series listing #}
