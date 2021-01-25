@@ -1,0 +1,44 @@
+<footer class="bt-footer">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col bt-footer-content">
+        <div class="logos">
+          <a href="/" class="cigi-logo">
+            {% include "includes/header_cigi_logo_20th_large.svg" %}
+          </a>
+          <div class="spacer">
+            <div class="slash"></div>
+          </div>
+          <a class="logic-logo" href="https://thelogic.co" target="_blank" rel="noopener noreferrer" >
+            {% include "./TheLogic_logo_colour.svg" %}
+          </a>
+          <div class="spacer">
+            <div class="slash"></div>
+          </div>
+        </div>
+        <div class="about">
+          <div class="subscribe">
+            <p>Subscribe:</p>
+            <a href="{{ podcast_apple_url }}" target="_blank" rel="noopener noreferrer">
+              {% include "./apple_podcasts_sm.svg" %}
+            </a>
+            <a href="{{ podcast_spotify_url }}" target="_blank" rel="noopener noreferrer">
+              {% include "./spotify_podcasts_sm.svg" %}
+            </a>
+            <a href="{{ podcast_google_url }}" target="_blank" rel="noopener noreferrer">
+              {% include "./google_podcasts_sm.svg" %}
+            </a>
+          </div>
+          <p>
+            <em>Big Tech</em> is a co-production between <a href="/">The Centre for International Governance Innovation</a> and <a href="https://thelogic.co" title="The Logic website" target="_blank" rel="noopener noreferrer" >The Logic</a>.
+          </p>
+          <p class="copyright">
+            &copy; {% now "Y" %}
+            <span>/</span>
+            <a href="/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -10,6 +10,7 @@ ReactDOM.render(
     fields={[
       'authors(author(title,url))',
       'pdf_downloads',
+      'publication_type(title,url)',
       'publishing_date',
       'title',
       'topics(title,url)',
@@ -18,31 +19,38 @@ ReactDOM.render(
     filterTypes={[{
       name: 'Books',
       param: 'publication_type',
-      value: 'books',
+      typeEndpoint: '/publication_types',
+      typeValue: 'Books',
     }, {
       name: 'CIGI Papers',
       param: 'publication_type',
-      value: 'cigi_papers',
+      typeEndpoint: '/publication_types',
+      typeValue: 'CIGI Papers',
     }, {
       name: 'Conference Reports',
       param: 'publication_type',
-      value: 'conference_reports',
+      typeEndpoint: '/publication_types',
+      typeValue: 'Conference Reports',
     }, {
       name: 'Essay Series',
       param: 'publication_type',
-      value: 'essay_series',
+      typeEndpoint: '/publication_types',
+      typeValue: 'Essay Series',
     }, {
       name: 'Policy Briefs',
       param: 'publication_type',
-      value: 'policy_briefs',
+      typeEndpoint: '/publication_types',
+      typeValue: 'Policy Briefs',
     }, {
       name: 'Policy Memos',
       param: 'publication_type',
-      value: 'policy_memos',
+      typeEndpoint: '/publication_types',
+      typeValue: 'Policy Memos',
     }, {
       name: 'Special Reports',
       param: 'publication_type',
-      value: 'special_reports',
+      typeEndpoint: '/publication_types',
+      typeValue: 'Special Reports',
     }]}
     containerClass={[
       'custom-theme-table',

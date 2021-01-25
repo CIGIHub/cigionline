@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeCyberSeries' 'css' %}
@@ -15,22 +15,54 @@
   <section class="cyber-series-article-hero">
     {% image self.image_banner original as image_banner %}
     <div class="cyber-series-article-hero-image" style="background-image: url('{{ image_banner.url }}');">
+      <div class="glitch">
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+        <div class="glitch-image" style="background-image: url('{{ image_banner.url }}');"></div>
+      </div>
+
     </div>
     <div class="cyber-series-article-hero-content-container">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <div class="cyber-series-article-hero-content">
-              {% include "includes/topics.html" with topics=self.topics %}
-              <h1>{{ self.title }}</h1>
-              {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
-            </div>
+      <div class="cyber-series-article-hero-content">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1><span>{{ self.title }}</span></h1>
+          {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+          <div class="arrow-animate">
+            <div class="arrow point1"></div>
+            <div class="arrow point2"></div>
           </div>
-        </div>
       </div>
     </div>
   </section>
+
+  <section class="share-links">
+    <ul class="social-share-list">
+      <li>
+        <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
+          rel="noopener noreferrer">
+          <i class="fab fa-facebook-square"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter-share-link"
+          href="https://twitter.com/share?text={{ self.title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
+          target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="mail-link" href="mailto:?subject={{ self.title }} &amp;body=From the Centre for International Governance Innovation: {{ self.title }} ({{ request.build_absolute_uri|slice:':-1' }})"><i class="fa fa-envelope"></i>
+        </a>
+      </li>
+      <li><a class="print-link" href="javascript:window.print()"><i class="fa fa-print"></i></a></li>
+    </ul>
+  </section>
+
+  {% image self.image_banner original as image_banner %}
+  <div class="cyber-series-article-bg-image" style="background-image: linear-gradient(#f2f0ea 0%, transparent 200%), url('{{ image_banner.url }}');"></div>
 {% endblock %}
+
 
 {% block recommended %}
   {# Remove recommended section for Cyber series articles #}

@@ -210,6 +210,20 @@ class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
         label = 'Editor'
 
 
+class EmbeddedMultimediaBlock(blocks.StructBlock, ThemeableBlock):
+    multimedia_url = blocks.URLBlock(required=True)
+    title = blocks.CharBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EmbeddedMultimediaBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'embedded_multimedia_block')
+
+    class Meta:
+        icon = 'media'
+        label = 'Embedded Multimedia'
+        template = 'streams/embedded_multimedia_block.html'
+
+
 class EmbeddedVideoBlock(blocks.StructBlock, ThemeableBlock):
     video_url = blocks.URLBlock(required=True)
     caption = blocks.CharBlock(required=False)
@@ -305,8 +319,20 @@ class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
         template = 'streams/inline_video_block.html'
 
 
+class HighlightTitleBlock(blocks.CharBlock, ThemeableBlock):
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(HighlightTitleBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'highlight_title_block')
+
+    class Meta:
+        icon = 'title'
+        label = 'Highlight Title'
+        template = 'streams/highlight_title_block.html'
+
+
 class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
     """Standard text paragraph."""
+
     def __init__(
         self, required=True, help_text=None, editor="default", features=None, **kwargs
     ):

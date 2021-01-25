@@ -9,7 +9,10 @@ from django.contrib import admin
 from django.urls import path
 from events.views import EventPageViewSet
 from multimedia.views import MultimediaPageViewSet
-from publications.views import PublicationPageViewSet
+from publications.views import (
+    PublicationPageViewSet,
+    PublicationTypePageViewSet,
+)
 from research.views import TopicPageViewSet
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.api.v2.router import WagtailAPIRouter
@@ -25,6 +28,7 @@ api_router.register_endpoint('events', EventPageViewSet)
 api_router.register_endpoint('media_articles', MediaPageViewSet)
 api_router.register_endpoint('multimedia', MultimediaPageViewSet)
 api_router.register_endpoint('opinions', OpinionPageViewSet)
+api_router.register_endpoint('publication_types', PublicationTypePageViewSet)
 api_router.register_endpoint('publications', PublicationPageViewSet)
 api_router.register_endpoint('topics', TopicPageViewSet)
 

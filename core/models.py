@@ -5,6 +5,7 @@ from streams.blocks import (
     ParagraphBlock,
     ReadMoreBlock,
     BlockQuoteBlock,
+    EmbeddedMultimediaBlock,
     EmbeddedVideoBlock,
     ExternalPersonBlock,
     ExternalQuoteBlock,
@@ -18,6 +19,7 @@ from streams.blocks import (
     TextBorderBlock,
     TweetBlock,
     InlineVideoBlock,
+    HighlightTitleBlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -43,10 +45,7 @@ class BasicPageAbstract(models.Model):
     # Body StreamField blocks
     body_default_blocks = [
         ('block_quote', BlockQuoteBlock()),
-        ('embedded_multimedia', blocks.StructBlock([
-            ('multimedia_url', blocks.URLBlock(required=True)),
-            ('title', blocks.CharBlock(required=False)),
-        ])),
+        ('embedded_multimedia', EmbeddedMultimediaBlock()),
         ('embedded_video', EmbeddedVideoBlock()),
         ('image', ImageBlock()),
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
@@ -69,7 +68,7 @@ class BasicPageAbstract(models.Model):
         ('title', blocks.CharBlock(required=True)),
         ('video_url', blocks.URLBlock(required=True)),
     ])))
-    body_highlight_title_block = ('highlight_title', blocks.CharBlock(required=True))
+    body_highlight_title_block = ('highlight_title', HighlightTitleBlock())
     body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
     body_image_scroll_block = ('image_scroll', blocks.StructBlock([
         ('image', ImageChooserBlock(required=True)),

@@ -35,7 +35,7 @@ class PublicationListPage(BasicPageAbstract, Page):
 
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = ['publications.PublicationPage']
+    subpage_types = ['publications.PublicationPage', 'publications.PublicationTypePage']
     templates = 'publications/publication_list_page.html'
 
     content_panels = [
@@ -215,10 +215,12 @@ class PublicationPage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
-    publication_type = models.CharField(
+    publication_type = models.ForeignKey(
+        'publications.PublicationTypePage',
+        null=True,
         blank=False,
-        max_length=32,
-        choices=PublicationTypes.choices,
+        on_delete=models.SET_NULL,
+        related_name='publications',
     )
     short_description = RichTextField(
         blank=True,
@@ -255,8 +257,11 @@ class PublicationPage(
         return (self.authors.count() + self.editors.count()) > 3
 
     def has_book_metadata(self):
-        return self.publication_type == self.PublicationTypes.BOOKS \
-            and (self.book_format or self.book_pages or self.book_publisher or self.isbn or self.isbn_ebook or self.isbn_hardcover)
+        return (
+            self.publication_type and
+            self.publication_type.title == 'Books' and
+            (self.book_format or self.book_pages or self.book_publisher or self.isbn or self.isbn_ebook or self.isbn_hardcover)
+        )
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -270,7 +275,10 @@ class PublicationPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('publication_type'),
+                PageChooserPanel(
+                    'publication_type',
+                    ['publications.PublicationTypePage'],
+                ),
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
@@ -360,6 +368,32 @@ class PublicationPage(
     class Meta:
         verbose_name = 'Publication'
         verbose_name_plural = 'Publications'
+
+
+class PublicationTypePage(BasicPageAbstract, Page):
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
+    ]
+
+    parent_page_types = ['publications.PublicationListPage']
+    subpage_types = []
+    templates = 'publications/publication_type_page.html'
+
+    class Meta:
+        verbose_name = 'Publication Type'
+        verbose_name_plural = 'Publication Types'
 
 
 class PublicationSeriesListPage(BasicPageAbstract, Page):
