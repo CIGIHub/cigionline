@@ -28,7 +28,7 @@ class MultimediaPageTests(WagtailPageTests):
     def test_multimediapage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             MultimediaPage,
-            {MultimediaListPage},
+            {MultimediaListPage, MultimediaSeriesPage},
         )
 
     def test_multimediapage_child_page_types(self):
@@ -62,7 +62,7 @@ class MultimediaSeriesPageTests(WagtailPageTests):
     def test_multimediaseriespage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             MultimediaSeriesPage,
-            {},
+            {MultimediaPage},
         )
 
 
