@@ -303,15 +303,15 @@ class OpinionPageViewSetTests(WagtailPageTests):
             'topics': ['Test Topic 1'],
             'url': '/articles/article-28/',
         }, {
-            'publishing_date': '2020-07-09T08:00:00-04:00',
-            'title': 'Test Article 12',
-            'topics': ['Test Topic 1'],
-            'url': '/articles/article-12/',
-        }, {
             'publishing_date': '2020-01-09T08:00:00-05:00',
             'title': 'Test Article 2 - Big Tech',
             'topics': ['Test Topic 2'],
             'url': '/articles/article-2/',
+        }, {
+            'publishing_date': '2020-07-09T08:00:00-04:00',
+            'title': 'Test Article 12',
+            'topics': ['Test Topic 1'],
+            'url': '/articles/article-12/',
         }])
 
     def test_filter_topic_1_returns_200(self):
