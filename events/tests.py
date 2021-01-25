@@ -240,15 +240,15 @@ class EventPageViewSetTests(WagtailPageTests):
             'topics': ['Test Topic 3'],
             'url': '/events/event-22/',
         }, {
-            'publishing_date': '2020-06-15T08:00:00-04:00',
-            'title': 'Test Event 14',
-            'topics': ['Test Topic 1'],
-            'url': '/events/event-14/',
-        }, {
             'publishing_date': '2020-01-30T08:00:00-05:00',
             'title': 'Test Event 3 - Big Tech',
             'topics': ['Test Topic 1'],
             'url': '/events/event-3/',
+        }, {
+            'publishing_date': '2020-06-15T08:00:00-04:00',
+            'title': 'Test Event 14',
+            'topics': ['Test Topic 1'],
+            'url': '/events/event-14/',
         }])
 
     def test_filter_topic_1_returns_200(self):
@@ -450,13 +450,13 @@ class EventPageViewSetTests(WagtailPageTests):
         self.assertEqual(len(resJson['items']), 2)
 
         self.verify_res_items(resJson['items'], [{
-            'publishing_date': '2020-06-15T08:00:00-04:00',
-            'title': 'Test Event 14',
-            'topics': ['Test Topic 1'],
-            'url': '/events/event-14/',
-        }, {
             'publishing_date': '2020-01-30T08:00:00-05:00',
             'title': 'Test Event 3 - Big Tech',
             'topics': ['Test Topic 1'],
             'url': '/events/event-3/',
+        }, {
+            'publishing_date': '2020-06-15T08:00:00-04:00',
+            'title': 'Test Event 14',
+            'topics': ['Test Topic 1'],
+            'url': '/events/event-14/',
         }])

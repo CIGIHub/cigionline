@@ -273,11 +273,6 @@ class MultimediaPageViewSetTests(WagtailPageTests):
         self.assertEqual(len(resJson['items']), 3)
 
         self.verify_res_items(resJson['items'], [{
-            'publishing_date': '2020-10-28T08:00:00-04:00',
-            'title': 'Test Multimedia 23',
-            'topics': ['Test Topic 3'],
-            'url': '/multimedia/multimedia-23/',
-        }, {
             'publishing_date': '2020-07-20T08:00:00-04:00',
             'title': 'Test Multimedia 12 - Big Tech',
             'topics': ['Test Topic 1'],
@@ -287,6 +282,11 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'title': 'Test Multimedia 5 - Big Tech',
             'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-5/',
+        }, {
+            'publishing_date': '2020-10-28T08:00:00-04:00',
+            'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-23/',
         }])
 
     def test_filter_topic_1_returns_200(self):
@@ -660,15 +660,15 @@ class MultimediaPageViewSetTests(WagtailPageTests):
         self.assertEqual(len(resJson['items']), 2)
 
         self.verify_res_items(resJson['items'], [{
-            'publishing_date': '2020-10-28T08:00:00-04:00',
-            'title': 'Test Multimedia 23',
-            'topics': ['Test Topic 3'],
-            'url': '/multimedia/multimedia-23/',
-        }, {
             'publishing_date': '2020-05-07T08:00:00-04:00',
             'title': 'Test Multimedia 5 - Big Tech',
             'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-5/',
+        }, {
+            'publishing_date': '2020-10-28T08:00:00-04:00',
+            'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-23/',
         }])
 
     def test_search_and_filter_multimedia_type_video_returns_200(self):
@@ -679,11 +679,6 @@ class MultimediaPageViewSetTests(WagtailPageTests):
         self.assertEqual(len(resJson['items']), 3)
 
         self.verify_res_items(resJson['items'], [{
-            'publishing_date': '2020-10-28T08:00:00-04:00',
-            'title': 'Test Multimedia 23',
-            'topics': ['Test Topic 3'],
-            'url': '/multimedia/multimedia-23/',
-        }, {
             'publishing_date': '2020-07-20T08:00:00-04:00',
             'title': 'Test Multimedia 12 - Big Tech',
             'topics': ['Test Topic 1'],
@@ -693,6 +688,11 @@ class MultimediaPageViewSetTests(WagtailPageTests):
             'title': 'Test Multimedia 5 - Big Tech',
             'topics': ['Test Topic 3'],
             'url': '/multimedia/multimedia-5/',
+        }, {
+            'publishing_date': '2020-10-28T08:00:00-04:00',
+            'title': 'Test Multimedia 23',
+            'topics': ['Test Topic 3'],
+            'url': '/multimedia/multimedia-23/',
         }])
 
     def test_search_and_filter_multimedia_type_audio_returns_200(self):
