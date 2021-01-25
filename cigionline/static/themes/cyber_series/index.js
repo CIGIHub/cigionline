@@ -21,6 +21,8 @@ lastBlock.find('.read-more').on('click', function() {
 
 window.sr = ScrollReveal();
 
+let sr = null;
+
 sr.reveal('.stream-block-blockquote', {
   delay: 100,
   distance: '50px',
