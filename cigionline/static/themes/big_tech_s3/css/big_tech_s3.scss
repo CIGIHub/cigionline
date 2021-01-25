@@ -184,8 +184,10 @@ $bigtech-light-grey: #b1b1b1;
   }
 
   .bt-recommended-article {
-    display: grid;
-    grid-template-columns: 65% 10% 25%;
+    @include media-breakpoint-up(sm) {
+      display: grid;
+      grid-template-columns: 65% 10% 25%;
+    }
     margin-bottom: 2em;
 
     .bt-recommended-content {
@@ -218,6 +220,10 @@ $bigtech-light-grey: #b1b1b1;
     }
 
     .bt-recommended-image {
+      @include media-breakpoint-up(sm) {
+        display: block;
+      }
+      display: none;
       grid-column: 3;
       grid-row: 1;
 

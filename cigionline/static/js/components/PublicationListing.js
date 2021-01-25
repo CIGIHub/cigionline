@@ -76,7 +76,7 @@ function PublicationListing(props) {
 PublicationListing.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
+      id: PropTypes.number,
       type: PropTypes.string,
       value: PropTypes.any,
     })),

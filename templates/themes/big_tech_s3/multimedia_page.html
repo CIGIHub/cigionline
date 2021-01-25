@@ -104,6 +104,13 @@
       </div>
     </section>
   {% endif %}
+  {% if self.transcript %}
+    <section>
+      {% for block in self.transcript %}
+        {% include_block block with id=block.id %}
+      {% endfor %}
+    </section>
+  {% endif %}
   {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
   {% block recommended %}
     {% if self.recommended.all %}
