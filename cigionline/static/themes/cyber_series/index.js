@@ -19,7 +19,7 @@ lastBlock.find('.read-more').on('click', function() {
   lastBlock.hide();
 });
 
-let sr = ScrollReveal();
+const sr = ScrollReveal();
 
 sr.reveal('.stream-block-blockquote', {
   delay: 100,
@@ -35,4 +35,3 @@ sr.reveal('.stream-image-block img', {
   duration: 750,
   scale: 1,
 });
-
