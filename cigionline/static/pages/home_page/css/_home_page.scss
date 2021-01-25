@@ -62,6 +62,12 @@
     }
   }
 
+  .homepage-featured-highlights {
+    h2 {
+      margin-bottom: 1em;
+    }
+  }
+
   .homepage-subheading {
     @include link($color: $black, $hover-color: $cigi-primary-colour);
     color: $black;
