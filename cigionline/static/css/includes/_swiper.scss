@@ -1,0 +1,51 @@
+.swiper-container {
+  @include media-breakpoint-up(sm) {
+    margin-top: -2em;
+  }
+  margin-top: 0;
+  padding-top: 2em !important;
+
+  .swiper-controls {
+    font-size: 24px;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: $black;
+      display: inline-block;
+      left: auto;
+      position: relative;
+      right: auto;
+      top: 3px;
+      width: auto;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    .swiper-pagination {
+      display: inline-block;
+      padding: 0 7px;
+      position: relative;
+
+      .swiper-pagination-bullet {
+        @include media-breakpoint-up(sm) {
+          height: 12px;
+          margin: 0 3px;
+          width: 12px;
+        }
+        height: 10px;
+        margin: 0 2px;
+        width: 10px;
+      }
+
+      .swiper-pagination-bullet-active {
+        background-color: $black;
+      }
+    }
+  }
+}
