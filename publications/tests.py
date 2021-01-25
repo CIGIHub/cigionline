@@ -7,6 +7,7 @@ from .models import (
     PublicationPage,
     PublicationSeriesListPage,
     PublicationSeriesPage,
+    PublicationTypePage,
 )
 
 
@@ -20,7 +21,7 @@ class PublicationListPageTests(WagtailPageTests):
     def test_publicationlistpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             PublicationListPage,
-            {PublicationPage},
+            {PublicationPage, PublicationTypePage},
         )
 
 
@@ -62,6 +63,20 @@ class PublicationSeriesPageTests(WagtailPageTests):
     def test_publicationseriespage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             PublicationSeriesPage,
+            {},
+        )
+
+
+class PublicationTypePageTests(WagtailPageTests):
+    def test_publicationtypepage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            PublicationTypePage,
+            {PublicationListPage},
+        )
+
+    def test_publicationtypepage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            PublicationTypePage,
             {},
         )
 
@@ -273,11 +288,6 @@ class PublicationPageViewSetTests(WagtailPageTests):
         self.assertEqual(len(resJson['items']), 4)
 
         self.verify_res_items(resJson['items'], [{
-            'publishing_date': '2020-12-30T08:00:00-05:00',
-            'title': 'Test Publication 30',
-            'topics': ['Test Topic 1'],
-            'url': '/publications/publication-30/',
-        }, {
             'publishing_date': '2020-10-12T08:00:00-04:00',
             'title': 'Test Publication 24 - Big Tech',
             'topics': ['Test Topic 3'],
@@ -292,6 +302,11 @@ class PublicationPageViewSetTests(WagtailPageTests):
             'title': 'Test Publication 2 - Big Tech',
             'topics': ['Test Topic 1'],
             'url': '/publications/publication-2/',
+        }, {
+            'publishing_date': '2020-12-30T08:00:00-05:00',
+            'title': 'Test Publication 30',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-30/',
         }])
 
     def test_filter_topic_1_returns_200(self):
@@ -490,7 +505,7 @@ class PublicationPageViewSetTests(WagtailPageTests):
         }])
 
     def test_filter_publication_type_books_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&publication_type=books')
+        res = self.client.get(f'{self.get_api_url(1)}&publication_type=42')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 4)
@@ -519,7 +534,7 @@ class PublicationPageViewSetTests(WagtailPageTests):
         }])
 
     def test_filter_publication_type_cigi_papers_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&publication_type=cigi_papers')
+        res = self.client.get(f'{self.get_api_url(1)}&publication_type=41')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 13)
@@ -593,7 +608,7 @@ class PublicationPageViewSetTests(WagtailPageTests):
         }])
 
     def test_filter_publication_type_conference_reports_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&publication_type=conference_reports')
+        res = self.client.get(f'{self.get_api_url(1)}&publication_type=43')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 1)
@@ -607,7 +622,7 @@ class PublicationPageViewSetTests(WagtailPageTests):
         }])
 
     def test_filter_publication_type_essay_series_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&publication_type=essay_series')
+        res = self.client.get(f'{self.get_api_url(1)}&publication_type=47')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 2)
@@ -626,7 +641,7 @@ class PublicationPageViewSetTests(WagtailPageTests):
         }])
 
     def test_filter_publication_type_policy_briefs_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&publication_type=policy_briefs')
+        res = self.client.get(f'{self.get_api_url(1)}&publication_type=48')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 2)
@@ -645,7 +660,7 @@ class PublicationPageViewSetTests(WagtailPageTests):
         }])
 
     def test_filter_publication_type_policy_memos_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&publication_type=policy_memos')
+        res = self.client.get(f'{self.get_api_url(1)}&publication_type=46')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 2)
@@ -664,7 +679,7 @@ class PublicationPageViewSetTests(WagtailPageTests):
         }])
 
     def test_filter_publication_type_special_reports_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&publication_type=special_reports')
+        res = self.client.get(f'{self.get_api_url(1)}&publication_type=44')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 4)
@@ -701,11 +716,6 @@ class PublicationPageViewSetTests(WagtailPageTests):
         self.assertEqual(len(resJson['items']), 3)
 
         self.verify_res_items(resJson['items'], [{
-            'publishing_date': '2020-12-30T08:00:00-05:00',
-            'title': 'Test Publication 30',
-            'topics': ['Test Topic 1'],
-            'url': '/publications/publication-30/',
-        }, {
             'publishing_date': '2020-07-27T08:00:00-04:00',
             'title': 'Test Publication 17 - Big Tech',
             'topics': ['Test Topic 1'],
@@ -715,21 +725,21 @@ class PublicationPageViewSetTests(WagtailPageTests):
             'title': 'Test Publication 2 - Big Tech',
             'topics': ['Test Topic 1'],
             'url': '/publications/publication-2/',
+        }, {
+            'publishing_date': '2020-12-30T08:00:00-05:00',
+            'title': 'Test Publication 30',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-30/',
         }])
 
     def test_search_and_filter_publication_type_cigi_papers_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&publication_type=cigi_papers')
+        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&publication_type=41')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 4)
         self.assertEqual(len(resJson['items']), 4)
 
         self.verify_res_items(resJson['items'], [{
-            'publishing_date': '2020-12-30T08:00:00-05:00',
-            'title': 'Test Publication 30',
-            'topics': ['Test Topic 1'],
-            'url': '/publications/publication-30/',
-        }, {
             'publishing_date': '2020-10-12T08:00:00-04:00',
             'title': 'Test Publication 24 - Big Tech',
             'topics': ['Test Topic 3'],
@@ -744,10 +754,15 @@ class PublicationPageViewSetTests(WagtailPageTests):
             'title': 'Test Publication 2 - Big Tech',
             'topics': ['Test Topic 1'],
             'url': '/publications/publication-2/',
+        }, {
+            'publishing_date': '2020-12-30T08:00:00-05:00',
+            'title': 'Test Publication 30',
+            'topics': ['Test Topic 1'],
+            'url': '/publications/publication-30/',
         }])
 
     def test_search_and_filter_publication_type_essay_series_returns_200(self):
-        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&publication_type=essay_series')
+        res = self.client.get(f'{self.get_api_url(1)}&search=big+tech&publication_type=47')
         self.assertEqual(res.status_code, 200)
         resJson = res.json()
         self.assertEqual(resJson['meta']['total_count'], 0)
