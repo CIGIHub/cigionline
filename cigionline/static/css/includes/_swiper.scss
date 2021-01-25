@@ -6,7 +6,6 @@
   padding-top: 2em !important;
 
   .swiper-controls {
-    display: block;
     font-size: 24px;
     line-height: 1;
     position: absolute;
@@ -15,11 +14,9 @@
 
     .swiper-button-next,
     .swiper-button-prev {
-      background-image: none;
       color: $black;
       display: inline-block;
       left: auto;
-      outline: none;
       position: relative;
       right: auto;
       top: 3px;
