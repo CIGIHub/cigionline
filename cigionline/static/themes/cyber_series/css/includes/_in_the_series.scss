@@ -61,6 +61,7 @@
       .article-title {
         font-family: $cyber-font;
         font-size: 0.875em;
+        color: $cyber-series-text-grey;
 
         a {
           background-image: linear-gradient(transparent calc(100% - 2px),$cyber-series-primary-colour 5px);
@@ -73,11 +74,6 @@
           &:hover {
             background-size: 100% 100%;
             color: $white;
-          }
-
-          &.active {
-            background: none;
-            color: $cyber-series-grext-grey;
           }
         }
 

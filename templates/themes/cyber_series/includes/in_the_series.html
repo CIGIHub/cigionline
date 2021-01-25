@@ -21,7 +21,13 @@
         {% for block in article_series.series_items %}
           {% if block.block_type == 'series_item' %}
             <article>
-              <h5 class="article-title"><a {% if block.value.id == article_id %}class="active"{% endif %} href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
+              <h5 class="article-title">
+                {% if block.value.id == article_id %}
+                  {{ block.value.title }}
+                {% else %}
+                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                {% endif %}
+              </h5>
               <p class="authors">
                 {% for item in block.value.specific.authors.all %}
                   <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
