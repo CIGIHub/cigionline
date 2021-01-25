@@ -45,8 +45,9 @@ INSTALLED_APPS = [
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
     'wagtail.contrib.modeladmin',
+    'wagtail.contrib.postgres_search',
+    'wagtail.contrib.redirects',
     'wagtail.contrib.table_block',
     # 'wagtail.contrib.styleguide',
     'wagtail.embeds',
@@ -144,6 +145,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cigionline.wsgi.application'
 
+simplecast_provider = {
+    'endpoint': 'https://api.simplecast.com/oembed',
+    'urls': [
+        r'^https://(?:[-\w]+\.)?simplecast\.com/episodes/.+$',
+    ]
+}
+
+WAGTAILEMBEDS_FINDERS = [
+    {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider], },
+    {'class': 'wagtail.embeds.finders.oembed', },
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -169,6 +182,12 @@ if os.environ.get('GITHUB_WORKFLOW'):
             'CONN_MAX_AGE': 600,
         }
     }
+
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.contrib.postgres_search.backend',
+    }
+}
 
 
 # Password validation

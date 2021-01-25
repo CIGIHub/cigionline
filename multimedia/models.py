@@ -330,7 +330,7 @@ class MultimediaPage(
         APIField('topics'),
     ]
 
-    parent_page_types = ['multimedia.MultimediaListPage']
+    parent_page_types = ['multimedia.MultimediaListPage', 'multimedia.MultimediaSeriesPage']
     subpage_types = []
     templates = 'multimedia/multimedia_page.html'
 
@@ -479,7 +479,7 @@ class MultimediaSeriesPage(
     ]
 
     parent_page_types = ['home.HomePage', 'multimedia.MultimediaSeriesListPage']
-    subpage_types = []
+    subpage_types = ['multimedia.MultimediaPage']
     templates = 'multimedia/multimedia_series_page.html'
 
     def get_template(self, request, *args, **kwargs):
