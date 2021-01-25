@@ -29,6 +29,7 @@ const config = {
     cigionline: './cigionline/static/index.js',
     eventListPage: './cigionline/static/pages/event_list_page/index.js',
     eventPage: './cigionline/static/pages/event_page/index.js',
+    homePage: './cigionline/static/pages/home_page/index.js',
     jobPostingListPage: './cigionline/static/pages/job_posting_list_page/index.js',
     mediaLandingPage: './cigionline/static/pages/media_landing_page/index.js',
     multimediaListPage: './cigionline/static/pages/multimedia_list_page/index.js',

@@ -14,8 +14,8 @@
         <div class="row justify-content-center">
           <div class="col col-lg-10">
             <figure class="article-image-hero">
-              {% if self.image_hero.filename|file_extension == '.gif' %}
-                <img src="/staticmedia/original_images/{{self.image_hero.filename}}" alt="{{self.image_hero.title}}">
+              {% if self.image_hero.file.url|file_extension == '.gif' %}
+                <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.title}}">
               {% else %}
                 {% image self.image_hero width-1760 %}
               {% endif %}

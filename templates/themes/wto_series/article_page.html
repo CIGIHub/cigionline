@@ -12,8 +12,8 @@
 
 {% block hero %}
   <section class="wto-series-article-hero">
-    {% if self.image_banner.filename|file_extension == '.gif' %}
-      <img src="/staticmedia/original_images/images/banner/{{self.image_banner.filename}}" alt="{{self.image_banner.title}}">
+    {% if self.image_banner.file.url|file_extension == '.gif' %}
+      <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.title}}">
     {% else %}
       {% image self.image_banner original %}
     {% endif %}
