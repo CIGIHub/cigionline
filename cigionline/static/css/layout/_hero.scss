@@ -48,10 +48,13 @@ section {
           }
 
           ul {
-            columns: 2;
             list-style: none;
             margin: 0;
             padding: 0;
+
+            &.multicol-2 {
+              columns: 2;
+            }
 
             li {
               @include link($color: $white, $hover-color: $cigi-primary-colour);
