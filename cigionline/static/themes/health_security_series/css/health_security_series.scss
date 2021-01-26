@@ -1,6 +1,9 @@
 $health-security-series-background-colour: #0b506f;
 $health-security-series-light-grey: #d8d8d8;
 $health-security-series-font: 'Masqualero', sans-serif;
+$health-security-series-gradient-top: rgba(11, 80, 111, 1);
+$health-security-series-gradient-bottom: rgba(11, 80, 111, 0.7);
+$health-security-series-hero-background-colour: rgba(11, 80, 111, 0.8);
 $meta-grey: #c7c7c5;
 
 @mixin health-security-social-links {
