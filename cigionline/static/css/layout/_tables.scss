@@ -108,7 +108,11 @@ table {
           &.icon-event {
             border-color: $color-event;
             color: $color-event;
-            margin-right: 1em;
+          }
+
+          &.icon-multimedia {
+            border-color: $color-multimedia;
+            color: $color-multimedia;
           }
 
           &.icon-opinion {

@@ -318,10 +318,16 @@ class MultimediaPage(
     search_fields = Page.search_fields \
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
-        + [index.FilterField('multimedia_type')]
+        + [
+            index.FilterField('multimedia_type'),
+            index.FilterField('publishing_date'),
+        ]
 
     api_fields = [
         APIField('authors'),
+        APIField('contentsubtype'),
+        APIField('contenttype'),
+        APIField('pdf_download'),
         APIField('title'),
         APIField('url'),
         APIField('publishing_date'),

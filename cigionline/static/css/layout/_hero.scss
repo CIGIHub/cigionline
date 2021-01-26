@@ -9,14 +9,7 @@ section {
     padding-top: 4em;
 
     .hero-container {
-      display: flex;
-      justify-content: space-between;
-
       .hero-main {
-        @include media-breakpoint-up(md) {
-          max-width: 60%;
-        }
-
         h1 {
           @include media-breakpoint-up(md) {
             font-size: 2.5em;
@@ -35,6 +28,11 @@ section {
       }
 
       aside {
+        @include media-breakpoint-up(md) {
+          margin-top: 0;
+        }
+        margin-top: 2em;
+
         nav {
           h2 {
             color: $white;
@@ -48,18 +46,21 @@ section {
           }
 
           ul {
-            columns: 2;
             list-style: none;
             margin: 0;
             padding: 0;
+
+            &.multicol-2 {
+              columns: 2;
+            }
 
             li {
               @include link($color: $white, $hover-color: $cigi-primary-colour);
 
               border-bottom: 1px solid $border-grey;
               break-inside: avoid-column;
-              padding-bottom: .2em;
-              padding-top: .2em;
+              padding-bottom: 0.2em;
+              padding-top: 0.2em;
             }
           }
         }
