@@ -59,10 +59,54 @@
     </ul>
   </section>
 
-  {% image self.image_banner original as image_banner %}
-  <div class="cyber-series-article-bg-image" style="background-image: linear-gradient(#f2f0ea 0%, transparent 200%), url('{{ image_banner.url }}');"></div>
 {% endblock %}
 
+{% block article_content %}
+  <section class="article-wrapper">
+  {% image self.image_banner original as image_banner %}
+  <div class="cyber-series-article-bg-image" style="background-image: linear-gradient(#f2f0ea 0%, transparent 200%), url('{{ image_banner.url }}');"></div>
+    {{ self.body }}
+
+    {% if self.footnotes %}
+        <div class="article-footnotes">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col col-md-10 col-lg-8">
+                <div class="footnotes">
+                  {{ self.footnotes|richtext }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if self.works_cited %}
+        <div class="article-works-cited">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col col-md-10 col-lg-8">
+                <h2>Works Cited</h2>
+                {{ self.works_cited|richtext }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% include 'includes/disclaimer.html' %}
+
+      {% if self.is_opinion and self.authors.all|length > 0 %}
+        {% include "includes/about_the_author.html" with authors=self.authors.all %}
+      {% endif %}
+  </section>
+{% endblock %}
+
+{% block in_the_series %}
+  {% if self.article_series %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
+  {% endif %}
+{% endblock %}
 
 {% block recommended %}
   {# Remove recommended section for Cyber series articles #}

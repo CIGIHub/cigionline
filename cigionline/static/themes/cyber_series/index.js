@@ -1,8 +1,8 @@
 import ScrollReveal from 'scrollreveal';
 import './css/cyber_series.scss';
 
-const firstBlock = $('.cyber-series-article-series-body .block-paragraph').first();
-const lastBlock = $('.cyber-series-article-series-body .block-paragraph').last();
+const firstBlock = $('.cyber-series-article-series-body .body .container').first();
+const lastBlock = $('.cyber-series-article-series-body .body .container').last();
 
 lastBlock.hide();
 

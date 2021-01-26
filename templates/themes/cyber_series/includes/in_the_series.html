@@ -1,0 +1,47 @@
+{% load wagtailimages_tags %}
+
+{% image article_series.image_hero original as image_hero %}
+<section class="cyber-series-in-the-series" style="background-image: url('{{ image_hero.url }}');">
+  <div class="cyber-overlay"></div>
+
+  <div class="container cyber-series-in-the-series-title">
+    <div class="row">
+      <div class="col col-lg-10 offset-lg-1">
+        <h3>
+          <a href="{{ article_series.url }}"><span>{{ article_series.title }}</span></a>
+        </h3>
+        <div class="sub-heading">In the Series</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col col-lg-10 offset-lg-1 cyber-series-article-series-series-items">
+        {% for block in article_series.series_items %}
+          {% if block.block_type == 'series_item' %}
+            <article>
+              <h5 class="article-title">
+                {% if block.value.id == article_id %}
+                  {{ block.value.title }}
+                {% else %}
+                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                {% endif %}
+              </h5>
+              <p class="authors">
+                {% for item in block.value.specific.authors.all %}
+                  <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
+                {% endfor %}
+                {% for item in block.value.specific.external_authors %}
+                  {% if item.block_type == 'external_person' %}
+                    <span>{{ item.value }}</span>
+                  {% endif %}
+                {% endfor %}
+              </p>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

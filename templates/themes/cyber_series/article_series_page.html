@@ -33,24 +33,23 @@
   <section class="cyber-series-article-series-body">
     <div class="container">
       <div class="row">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <h2>{{ self.title }}</h2>{{ self.title }}
+        <div class="col col-lg-10 offset-lg-1">
+          <h2>{{ self.title }}</h2>
         </div>
       </div>
     </div>
-    {{ self.body }}
+    {% include "includes/body.html" with body=self.body %}
   </section>
-  <section class="cyber-series-article-series-in-the-series">
+  <section class="cyber-series-in-the-series">
+    <div class="cyber-overlay"></div>
     <div class="container">
       <div class="row">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2 cyber-series-article-series-series-items">
+        <div class="col col-lg-10 offset-lg-1 cyber-series-article-series-series-items">
           {% for block in self.series_items %}
             {% if block.block_type == 'series_item' %}
               <article>
-                <h3>
-                  <a href="{{ block.value.url }}">
-                    {{ block.value.title }}
-                  </a>
+                <h3 class="article-title">
+                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
                 </h3>
                 <p class="authors">
                   {% for item in block.value.specific.authors.all %}

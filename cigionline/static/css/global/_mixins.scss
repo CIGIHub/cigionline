@@ -136,9 +136,10 @@
   }
 }
 
-@mixin slash-separated {
+@mixin slash-separated($color: inherit) {
   &:not(:only-child) {
     &::after {
+      color: $color;
       content: ' / ';
     }
   }
