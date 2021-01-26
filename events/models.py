@@ -233,10 +233,14 @@ class EventPage(
         + ContentPage.search_fields
 
     api_fields = [
+        APIField('authors'),
+        APIField('contentsubtype'),
+        APIField('contenttype'),
         APIField('event_access'),
         APIField('location_city'),
         APIField('location_country'),
         APIField('multimedia_url'),
+        APIField('pdf_download'),
         APIField('publishing_date'),
         APIField('registration_url'),
         APIField('title'),

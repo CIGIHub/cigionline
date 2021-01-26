@@ -322,6 +322,9 @@ class MultimediaPage(
 
     api_fields = [
         APIField('authors'),
+        APIField('contentsubtype'),
+        APIField('contenttype'),
+        APIField('pdf_download'),
         APIField('title'),
         APIField('url'),
         APIField('publishing_date'),

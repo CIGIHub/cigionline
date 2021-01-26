@@ -411,8 +411,11 @@ class ArticlePage(
     api_fields = [
         APIField('article_type'),
         APIField('authors'),
+        APIField('contentsubtype'),
+        APIField('contenttype'),
         APIField('cigi_people_mentioned'),
         APIField('get_article_type_display'),
+        APIField('pdf_download'),
         APIField('publishing_date'),
         APIField('title'),
         APIField('topics'),
