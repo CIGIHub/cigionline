@@ -1,10 +1,11 @@
 {% load wagtailcore_tags %}
 
 
-<ul class="highlighted-topics">
+<ul class="highlighted-topics-list">
   {% for topic in highlighted_topics %}
     <li class="topic">
       <a href="{% pageurl topic %}">{{ topic }}</a>
+      <span>({{topic.count}})</span>
     </li>
   {% endfor %}
 </ul>

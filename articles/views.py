@@ -18,7 +18,7 @@ class ArticleSeriesPageViewSet(BaseAPIViewSet):
     base_serializer_class = PageSerializer
 
     def get_queryset(self):
-        return self.model.objects.public().live().order_by(F('publishing_date').desc(nulls_last=True))
+        return self.model.objects.public().live().filter(publishing_date__isnull=False).order_by(F('publishing_date').desc(nulls_last=True))
 
 
 class MediaPageViewSet(BaseAPIViewSet):
@@ -36,7 +36,8 @@ class MediaPageViewSet(BaseAPIViewSet):
                 ArticlePage.ArticleTypes.CIGI_IN_THE_NEWS,
                 ArticlePage.ArticleTypes.NEWS_RELEASE,
                 ArticlePage.ArticleTypes.OP_ED,
-            ]
+            ],
+            publishing_date__isnull=False
         ).order_by(F('publishing_date').desc(nulls_last=True))
 
 
@@ -55,5 +56,6 @@ class OpinionPageViewSet(BaseAPIViewSet):
                 ArticlePage.ArticleTypes.INTERVIEW,
                 ArticlePage.ArticleTypes.OP_ED,
                 ArticlePage.ArticleTypes.OPINION,
-            ]
+            ],
+            publishing_date__isnull=False
         ).order_by(F('publishing_date').desc(nulls_last=True))

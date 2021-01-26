@@ -1,6 +1,36 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader topic_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'researchLandingPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'researchLandingPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  <section class="highlighted-topics">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="highlighted-topics-container">
+            <h2>RESEARCH TOPICS</h2>
+            {% highlighted_topics %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   {% include "includes/body.html" with body=self.body %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="research-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}

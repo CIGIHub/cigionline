@@ -349,10 +349,16 @@ class PublicationPage(
     search_fields = Page.search_fields \
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
-        + [index.FilterField('publication_type')]
+        + [
+            index.FilterField('publication_type'),
+            index.FilterField('publishing_date'),
+        ]
 
     api_fields = [
         APIField('authors'),
+        APIField('contentsubtype'),
+        APIField('contenttype'),
+        APIField('pdf_download'),
         APIField('pdf_downloads'),
         APIField('publication_type'),
         APIField('publishing_date'),
