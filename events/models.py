@@ -18,6 +18,7 @@ from wagtail.api import APIField
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.search import index
 
 
 class EventListPage(BasicPageAbstract, Page):
@@ -230,7 +231,10 @@ class EventPage(
 
     search_fields = Page.search_fields \
         + BasicPageAbstract.search_fields \
-        + ContentPage.search_fields
+        + ContentPage.search_fields \
+        + [
+            index.FilterField('publishing_date'),
+        ]
 
     api_fields = [
         APIField('authors'),
