@@ -1,12 +1,14 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
+from events.models import EventPage
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
 )
 from wagtail.core.models import Orderable, Page
+from datetime import date
 
 
 class HomePage(Page):
@@ -103,6 +105,14 @@ class HomePage(Page):
         for item in self.featured_experts.all()[:3]:
             featured_experts.append(item.featured_expert)
         return featured_experts
+
+    def featured_events(self):
+        today = date.today()
+        future_events = EventPage.objects.live().public().filter(publishing_date__gt=today).order_by('publishing_date')[:3]
+        past_events = EventPage.objects.live().public().filter(publishing_date__lt=today).order_by('-publishing_date')[:3]
+        featured_events = list(future_events) + list(past_events)
+        return featured_events
+
 
     max_count = 1
     subpage_types = [

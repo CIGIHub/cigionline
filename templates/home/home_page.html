@@ -95,7 +95,7 @@
         </div>
         <hr>
         <div class="col-12 col-md-4 featured-small">
-          {% for item in self.featured_small %}
+          {% for item in self.featured_multimedia_small %}
             {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
@@ -112,6 +112,12 @@
           <h2 class="homepage-subheading">
             Events
           </h2>
+          {% for event in self.featured_events %}
+            <div>
+              {{event}}
+              {{event.publishing_date}}
+            </div>
+          {% endfor %}
         </div>
       </div>
     </div>
