@@ -23,7 +23,7 @@
       width: 60%;
 
       span {
-        background-image: linear-gradient(to right,#272727 0%,#272727 100%);
+        background-image: linear-gradient(to right, $cyber-series-in-the-series-title-background 0%, $cyber-series-in-the-series-title-background 100%);
         background-position: 0 260%;
         background-repeat: repeat-x;
         background-size: 100% 1em;
@@ -60,12 +60,12 @@
       margin-bottom: 2em;
 
       .article-title {
+        color: $cyber-series-text-grey;
         font-family: $cyber-font;
         font-size: 0.875em;
-        color: $cyber-series-text-grey;
 
         a {
-          background-image: linear-gradient(transparent calc(100% - 2px),$cyber-series-primary-colour 5px);
+          background-image: linear-gradient(transparent calc(100% - 2px), $cyber-series-primary-colour 5px);
           background-repeat: no-repeat;
           background-size: 0% 100%;
           color: $white;
