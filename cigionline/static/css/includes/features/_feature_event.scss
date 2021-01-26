@@ -1,0 +1,18 @@
+.feature-content {
+  &.feature-event {
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+      font-size: 1.0625em;
+      line-height: 1.4;
+    }
+
+    .event-date-circle {
+      @include date-circle($border-color: $black, $circle-size: 68px, $font-size: 1em);
+      flex-shrink: 0;
+      font-weight: 500;
+      margin-left: 1em;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<article class="feature-content feature-event">
+  <div class="event-content">
+    {% include "includes/topics.html" with topics=event.topics %}
+    {% include "includes/features/feature_content_title.html" with content=event %}
+    <div class="meta">{{ event.publishing_date|date:"M j, Y - g:i A" }}</div>
+  </div>
+  <div class="event-date-circle">
+    <div>{{ event.publishing_date|date:"M" }}</div>
+    <div>{{ event.publishing_date|date:"j" }}</div>
+  </div>
+</article>

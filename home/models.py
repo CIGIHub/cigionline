@@ -110,7 +110,7 @@ class HomePage(Page):
         today = date.today()
         future_events = EventPage.objects.live().public().filter(publishing_date__gt=today).order_by('publishing_date')[:3]
         past_events = EventPage.objects.live().public().filter(publishing_date__lt=today).order_by('-publishing_date')[:3]
-        featured_events = list(future_events) + list(past_events)
+        featured_events = (list(future_events) + list(past_events))[:3]
         return featured_events
 
 

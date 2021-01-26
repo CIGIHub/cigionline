@@ -15,12 +15,25 @@
   .homepage-featured-publications,
   .homepage-featured-highlights,
   .homepage-featured-events {
-    margin-bottom: 4em;
+    @include media-breakpoint-up(md) {
+      margin-bottom: 4em;
+    }
+    margin-bottom: 2em;
   }
 
   .homepage-featured-experts {
     .homepage-featured-expert-row {
+      @include media-breakpoint-up(md) {
+        border-right: 1px solid $cigi-light-grey;
+        padding-right: 0;
+      }
+
       &:last-child {
+        @include media-breakpoint-up(md) {
+          border-right: 0;
+          padding-right: 15px;
+        }
+
         article {
           border-bottom: 0;
           border-right: 0;
@@ -30,16 +43,13 @@
       article {
         @include media-breakpoint-up(md) {
           border-bottom: 0;
-          border-right: 1px solid $cigi-light-grey;
           margin-bottom: 0;
           padding-bottom: 0;
           padding-right: 1em;
         }
         border-bottom: 1px solid $cigi-light-grey;
-        border-right: 0;
         margin-bottom: 1.5em;
         padding-bottom: 1.5em;
-        padding-right: 0;
       }
     }
   }
@@ -67,6 +77,39 @@
   .homepage-featured-highlights {
     h2 {
       margin-bottom: 1em;
+    }
+  }
+
+  .homepage-featured-events {
+    .homepage-featured-event-row {
+      @include media-breakpoint-up(md) {
+        border-right: 1px solid $cigi-light-grey;
+        padding-right: 0;
+      }
+
+      &:last-child {
+        @include media-breakpoint-up(md) {
+          border-right: 0;
+          padding-right: 15px;
+        }
+
+        article {
+          border-bottom: 0;
+          border-right: 0;
+        }
+      }
+
+      article {
+        @include media-breakpoint-up(md) {
+          border-bottom: 0;
+          margin-bottom: 0;
+          padding-bottom: 0;
+          padding-right: 1em;
+        }
+        border-bottom: 1px solid $cigi-light-grey;
+        margin-bottom: 1.5em;
+        padding-bottom: 1.5em;
+      }
     }
   }
 
