@@ -154,8 +154,8 @@ class EventPage(
         if self.multimedia_page:
             return self.multimedia_page.url
         return ''
-    
-    def is_past(self): 
+
+    def is_past(self):
         return self.event_end < timezone.now()
 
     content_panels = [
