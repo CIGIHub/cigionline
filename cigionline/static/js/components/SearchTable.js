@@ -66,7 +66,7 @@ class SearchTable extends React.Component {
   }
 
   handleTypeSelect(type) {
-    if (type.id || type.value) {
+    if (type.id || type.value || type.endpoint) {
       this.setState({
         typeSelected: type,
       }, this.getRows);
@@ -313,7 +313,7 @@ class SearchTable extends React.Component {
                       <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
                         {this.dropdownTypes.map((type) => (
                           <button
-                            key={`type-${type.id || type.value}`}
+                            key={`type-${type.name.replace(' ', '_')}`}
                             className="dropdown-item"
                             type="button"
                             onClick={() => this.handleTypeSelect(type)}

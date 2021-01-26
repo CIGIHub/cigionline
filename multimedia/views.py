@@ -20,4 +20,4 @@ class MultimediaPageViewSet(BaseAPIViewSet):
     ]
 
     def get_queryset(self):
-        return self.model.objects.public().live().order_by(F('publishing_date').desc(nulls_last=True))
+        return self.model.objects.public().live().filter(publishing_date__isnull=False).order_by(F('publishing_date').desc(nulls_last=True))

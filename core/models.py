@@ -319,6 +319,36 @@ class ContentPage(Page, SearchablePageAbstract):
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
+    @property
+    def contenttype(self):
+        if self.specific and hasattr(self.specific, '_meta') and hasattr(self.specific._meta, 'verbose_name'):
+            contenttype = self.specific._meta.verbose_name
+            if contenttype == 'Opinion':
+                return self.specific.get_article_type_display()
+            return contenttype
+        return ''
+
+    @property
+    def contentsubtype(self):
+        if self.specific and hasattr(self.specific, '_meta') and hasattr(self.specific._meta, 'verbose_name'):
+            contenttype = self.specific._meta.verbose_name
+            if contenttype == 'Opinion':
+                return self.specific.get_article_type_display()
+            if contenttype == 'Multimedia':
+                return self.specific.get_multimedia_type_display()
+            return contenttype
+        return ''
+
+    @property
+    def pdf_download(self):
+        if self.specific and hasattr(self.specific, '_meta') and self.specific._meta.verbose_name == 'Publication' and len(self.specific.pdf_downloads) > 0:
+            return self.specific.pdf_downloads[0].value['file'].url
+        return ''
+
+    def author_count(self):
+        # @todo test this
+        return self.authors.count() + len(self.external_authors)
+
     authors_panel = MultiFieldPanel(
         [
             InlinePanel('authors'),
@@ -352,9 +382,16 @@ class ContentPage(Page, SearchablePageAbstract):
         index.FilterField('topicpage_id'),
     ]
 
-    def author_count(self):
-        # @todo test this
-        return self.authors.count() + len(self.external_authors)
+    api_fields = [
+        APIField('authors'),
+        APIField('contenttype'),
+        APIField('contentsubtype'),
+        APIField('pdf_download'),
+        APIField('publishing_date'),
+        APIField('title'),
+        APIField('topics'),
+        APIField('url'),
+    ]
 
     def on_form_bound(self):
         self.bound_field = self.form[self.field_name]
