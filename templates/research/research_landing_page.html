@@ -5,7 +5,7 @@
   {% render_bundle 'researchLandingPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  {% render_bundle 'researchLandingPage' 'js' %}
+  {% render_bundle 'researchLandingPage' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block content %}
@@ -13,7 +13,7 @@
   <section class="highlighted-topics">
     <div class="container">
       <div class="row">
-        <div class="col">
+        <div class="col-12">
           <div class="highlighted-topics-container">
             <h2>RESEARCH TOPICS</h2>
             {% highlighted_topics %}
@@ -23,4 +23,14 @@
     </div>
   </section>
   {% include "includes/body.html" with body=self.body %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="research-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
