@@ -12,6 +12,16 @@ $cyber-font: 'interstate-mono', sans-serif;
 @import './cyber_series_article';
 @import './includes/in_the_series';
 
+@keyframes blink {
+  from,
+  to {
+    background: $cyber-series-primary-colour;
+  }
+
+  50% {
+    background: transparent;
+  }
+}
 @keyframes blink-caret-black {
   50% { border-color: transparent; }
 }
