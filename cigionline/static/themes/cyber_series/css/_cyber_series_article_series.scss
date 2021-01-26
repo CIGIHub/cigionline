@@ -9,17 +9,41 @@
     position: relative;
 
     .cyber-series-article-series-hero-content {
-      left: 0;
-      position: fixed;
-      top: 8em;
-      width: 100%;
+      left: 50%;
+      margin-right: -50%;
+      max-width: 600px;
+      position: absolute;
+      top: calc(12vh + 220px);
+      transform: translate(-50%, -50%);
 
       h1 {
         color: $cyber-series-primary-colour;
+        font-family: $cyber-font;
+        font-size: 2.65em;
+        font-weight: 400;
+        line-height: 50px;
+        margin: .2em 0 .5em;
+
+        span {
+          animation: blink-border .75s step-end infinite;
+          background-image: linear-gradient(to right, $black 0%, $black 100%);
+          background-position: 0 260%;
+          background-repeat: repeat-x;
+          background-size: 100% 1em;
+          border-right: .05em solid $cyber-series-primary-colour;
+        }
+      }
+
+      .arrow-animate {
+        color: $cyber-series-primary-colour;
+        margin-top: 2em;
       }
 
       .cyber-series-subtitle {
         color: $white;
+        font-size: 1.2em;
+        line-height: 1.3em;
+        font-family: $cyber-font;
       }
     }
 
