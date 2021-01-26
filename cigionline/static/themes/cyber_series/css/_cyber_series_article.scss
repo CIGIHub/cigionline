@@ -174,6 +174,10 @@
     }
   }
 
+  .article-wrapper {
+    position: relative;
+  }
+
   .cyber-series-article-bg-image {
     background-repeat: no-repeat;
     border-top: 3px solid $cyber-series-background-colour;

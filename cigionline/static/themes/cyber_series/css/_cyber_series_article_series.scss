@@ -60,34 +60,12 @@
       line-height: 1.765em;
     }
 
-    .block-paragraph {
+    .body {
+      margin: 1em 0;
       .read-more {
         color: $cyber-series-primary-colour;
         cursor: pointer;
         margin-left: 0.5em;
-      }
-    }
-  }
-
-  .cyber-series-article-series-in-the-series {
-    padding: 3em 0;
-
-    .cyber-series-article-series-series-items {
-      columns: 2;
-
-      article {
-        h3 {
-          a {
-            color: $white;
-          }
-        }
-
-        .authors {
-          span {
-            @include link($color: $cyber-series-primary-colour);
-            @include slash-separated;
-          }
-        }
       }
     }
   }
