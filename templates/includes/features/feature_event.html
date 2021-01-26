@@ -5,7 +5,7 @@
     <div class="meta">{{ event.publishing_date|date:"M j, Y - g:i A" }}</div>
     {% if event.multimedia_url and event.is_past %}
       <a href="{{ event.multimedia_url }}" class="button-action">
-        <i class="fas fa-play"></i>  WATCH
+        <i class="fas fa-play"></i>&nbsp;&nbsp;WATCH
       </a>
     {% elif not event.event_access %}
       <div class="button-action button-private-event">

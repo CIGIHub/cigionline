@@ -3,6 +3,13 @@
     display: flex;
     justify-content: space-between;
 
+    &.past-event {
+      .event-date-circle {
+        border-color: $cigi-medium-grey;
+        color: $cigi-medium-grey;
+      }
+    }
+
     h3 {
       font-size: 1.0625em;
       line-height: 1.4;
@@ -14,9 +21,11 @@
       margin-left: 1em;
     }
 
-    &.past-event {
-      .event-date-circle {
-        border-color: $cigi-medium-grey;
+    .button-action {
+      margin-top: 1em;
+
+      &.button-private-event {
+        border: 1px solid $cigi-medium-grey;
         color: $cigi-medium-grey;
       }
     }
