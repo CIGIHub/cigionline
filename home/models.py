@@ -8,7 +8,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
 )
 from wagtail.core.models import Orderable, Page
-from datetime import date
+from django.utils import timezone
 
 
 class HomePage(Page):
@@ -107,12 +107,15 @@ class HomePage(Page):
         return featured_experts
 
     def featured_events(self):
-        today = date.today()
-        future_events = EventPage.objects.live().public().filter(publishing_date__gt=today).order_by('publishing_date')[:3]
-        past_events = EventPage.objects.live().public().filter(publishing_date__lt=today).order_by('-publishing_date')[:3]
-        featured_events = (list(future_events) + list(past_events))[:3]
+        featured_events = []
+        now = timezone.now()
+        future_events = EventPage.objects.live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+        if len(future_events) < 3:
+            past_events = EventPage.objects.live().public().filter(event_end__lt=now).order_by('-publishing_date')[:3]
+            featured_events = (list(future_events) + list(past_events))[:3]
+        else:
+            featured_events = future_events
         return featured_events
-
 
     max_count = 1
     subpage_types = [

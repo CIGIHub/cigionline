@@ -10,9 +10,15 @@
 
     .event-date-circle {
       @include date-circle($border-color: $black, $circle-size: 68px, $font-size: 1em);
-      flex-shrink: 0;
       font-weight: 500;
       margin-left: 1em;
+    }
+
+    &.past-event {
+      .event-date-circle {
+        border-color: $cigi-medium-grey;
+        color: $cigi-medium-grey;
+      }
     }
   }
 }
