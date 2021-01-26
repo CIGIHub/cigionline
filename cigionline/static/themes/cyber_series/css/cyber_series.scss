@@ -7,6 +7,16 @@ $cyber-series-highlight: #d2caca;
 @import './cyber_series_article_series';
 @import './cyber_series_article';
 
+@keyframes blink {
+  from,
+  to {
+    background: $cyber-series-primary-colour;
+  }
+
+  50% {
+    background: transparent;
+  }
+}
 @keyframes blink-caret-black {
   50% { border-color: transparent; }
 }
