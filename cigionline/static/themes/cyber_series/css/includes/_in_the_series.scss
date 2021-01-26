@@ -56,6 +56,7 @@
     columns: 2;
 
     article {
+      break-inside: avoid;
       margin-bottom: 2em;
 
       .article-title {
