@@ -12,11 +12,10 @@
       left: 50%;
       margin-right: -50%;
       max-width: 600px;
-      width: 90vw;
       position: fixed;
       top: calc(12vh + 120px);
       transform: translate(-50%, -50%);
-
+      width: 90vw;
 
       h1 {
         color: $cyber-series-primary-colour;
