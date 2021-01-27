@@ -240,7 +240,7 @@ class HomePagePromotionBlocks(Orderable):
         related_name='promotion_blocks',
     )
     promotion_block = models.ForeignKey(
-        'core.PromotionBlock',
+        'promotions.PromotionBlockPage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
@@ -251,6 +251,6 @@ class HomePagePromotionBlocks(Orderable):
     panels = [
         PageChooserPanel(
             'promotion_block',
-            ['promotions.PromotionBlock'],
+            ['promotions.PromotionBlockPage'],
         ),
     ]

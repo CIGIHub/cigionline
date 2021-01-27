@@ -9,13 +9,13 @@ class PromotionBlockListPage(Page):
 
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = ['promotions.PromotionBlock']
+    subpage_types = ['promotions.PromotionBlockPage']
 
     class Meta:
-        verbose_name = 'Publication List Page'
+        verbose_name = 'Promotion List Page'
 
 
-class PromotionBlock(Page):
+class PromotionBlockPage(Page):
     panels = [
         FieldPanel('link_url'),
         ImageChooserPanel('image_promotion'),
