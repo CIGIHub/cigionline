@@ -122,7 +122,7 @@
       }
 
       &::after {
-        background-image: linear-gradient(to bottom, #666 75%, transparent);
+        background-image: linear-gradient(to bottom, $ai-block-quote-border-colour 75%, transparent);
         content: '';
         height: calc(100% + 5px);
         left: 0;
@@ -133,7 +133,7 @@
       }
 
       &::before {
-        background-image: linear-gradient(to right, #666 75%, transparent);
+        background-image: linear-gradient(to right, $ai-block-quote-border-colour 75%, transparent);
         border: 0;
         content: '';
         height: 1px;
