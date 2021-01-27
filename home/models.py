@@ -61,6 +61,18 @@ class HomePage(Page):
             heading='Featured Experts',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'promotion_blocks',
+                    max_num=2,
+                    min_num=0,
+                    label='Promotion Block',
+                ),
+            ],
+            heading='Promotion Blocks',
+            classname='collapsible collapsed',
+        ),
     ]
 
     def featured_large(self):
@@ -218,5 +230,27 @@ class HomePageFeaturedMultimedia(Orderable):
         PageChooserPanel(
             'featured_multimedia',
             ['multimedia.MultimediaPage'],
+        ),
+    ]
+
+
+class HomePagePromotionBlocks(Orderable):
+    home_page = ParentalKey(
+        'home.HomePage',
+        related_name='promotion_blocks',
+    )
+    promotion_block = models.ForeignKey(
+        'core.PromotionBlock',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Promotion Block',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'promotion_block',
+            ['promotions.PromotionBlock'],
         ),
     ]
