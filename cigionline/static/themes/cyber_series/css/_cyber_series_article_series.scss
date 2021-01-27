@@ -12,16 +12,17 @@
       left: 50%;
       margin-right: -50%;
       max-width: 600px;
-      position: absolute;
-      top: calc(12vh + 220px);
+      width: 90vw;
+      position: fixed;
+      top: calc(12vh + 120px);
       transform: translate(-50%, -50%);
+
 
       h1 {
         color: $cyber-series-primary-colour;
         font-family: $cyber-font;
-        font-size: 2.65em;
+        font-size: 1.825em;
         font-weight: 400;
-        line-height: 50px;
         margin: .2em 0 .5em;
 
         span {
@@ -41,9 +42,28 @@
 
       .cyber-series-subtitle {
         color: $white;
-        font-size: 1.2em;
-        line-height: 1.3em;
         font-family: $cyber-font;
+        font-size: 0.875em;
+        line-height: 1.3em;
+      }
+
+      @include media-breakpoint-up(sm) {
+        h1 {
+          font-size: 2.25em;
+          line-height: 1.115em;
+        }
+
+        .cyber-series-subtitle {
+          font-size: 1.1em;
+          line-height: 1.42em;
+        }
+      }
+      @include media-breakpoint-up(md) {
+        h1 {
+          font-size: 2.65em;
+        }
+
+        
       }
     }
 

@@ -78,12 +78,9 @@ $cyber-font: 'interstate-mono', sans-serif;
 }
 
 .glitch {
-  @include media-breakpoint-up(md) {
-    display: block;
-  }
   background-position: top center;
   background-size: cover;
-  display: none;
+  display: block;
   height: 100%;
   overflow: hidden;
   position: absolute;
