@@ -2,17 +2,19 @@ import ScrollReveal from 'scrollreveal';
 import './css/cyber_series.scss';
 
 //window hide title after scrolling 25%
+
 $(window).on('scroll', function () {
-  var documentPercent = $(document).height() * 0.25;
+  const documentPercent = $(document).height() * 0.25;
   if ($(window).scrollTop() >= documentPercent) {
-      $('.cyber-series-article-series-hero-content').fadeOut('slow');
+    $('.cyber-series-article-series-hero-content').fadeOut('slow');
   }
   if ($(window).scrollTop() < documentPercent) {
-      $('.cyber-series-article-series-hero-content').fadeIn('slow');
+    $('.cyber-series-article-series-hero-content').fadeIn('slow');
   }
 });
 
 //add icon to exand/collapse about the series description
+
 const firstBlock = $('.cyber-series-article-series-body .body .container').first();
 const lastBlock = $('.cyber-series-article-series-body .body .container').last();
 
@@ -32,6 +34,7 @@ lastBlock.find('.read-more').on('click', function() {
 });
 
 // fade in article elements
+
 const sr = ScrollReveal();
 
 sr.reveal('.stream-block-blockquote', {
