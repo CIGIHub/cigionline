@@ -159,7 +159,7 @@ class EventPage(
         now = timezone.now()
         if self.event_end:
             return self.event_end < now
-        else: 
+        else:
             return self.publishing_date < now
 
     content_panels = [
