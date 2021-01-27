@@ -255,6 +255,7 @@ class SearchTable extends React.Component {
       blockListing,
       containerClass,
       filterTypes,
+      hideTopicDropdown,
       RowComponent,
       searchPlaceholder,
       showSearch,
@@ -283,27 +284,29 @@ class SearchTable extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3 position-static">
-                  <div className="dropdown custom-dropdown dropdown-full-width">
-                    <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      {this.dropdownSelectedTopic}
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="search-bar-topics">
-                      {!loadingTopics && (
-                        this.dropdownTopics.map((topic) => (
-                          <button
-                            key={`topic-${topic.id}`}
-                            className="dropdown-item"
-                            type="button"
-                            onClick={() => this.handleTopicSelect(topic.id)}
-                          >
-                            {topic.title}
-                          </button>
-                        ))
-                      )}
+                {!hideTopicDropdown && (
+                  <div className="col-md-3 position-static">
+                    <div className="dropdown custom-dropdown dropdown-full-width">
+                      <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {this.dropdownSelectedTopic}
+                      </button>
+                      <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+                        {!loadingTopics && (
+                          this.dropdownTopics.map((topic) => (
+                            <button
+                              key={`topic-${topic.id}`}
+                              className="dropdown-item"
+                              type="button"
+                              onClick={() => this.handleTopicSelect(topic.id)}
+                            >
+                              {topic.title}
+                            </button>
+                          ))
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
                 {!!filterTypes.length && (
                   <div className="col-md-3 position-relative">
                     <div className="dropdown custom-dropdown">
@@ -405,6 +408,7 @@ SearchTable.propTypes = {
     param: PropTypes.string,
     value: PropTypes.string,
   })),
+  hideTopicDropdown: PropTypes.bool,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
   searchPlaceholder: PropTypes.string,
@@ -420,6 +424,7 @@ SearchTable.defaultProps = {
   containerClass: [],
   endpointParams: [],
   filterTypes: [],
+  hideTopicDropdown: false,
   limit: 24,
   searchPlaceholder: 'Search',
   showSearch: false,
