@@ -134,6 +134,7 @@ class HomePage(Page):
         'newsletters.NewsletterListPage',
         'people.PeoplePage',
         'people.PersonListPage',
+        'promotions.PromotionBlockListPage',
         'publications.PublicationListPage',
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
