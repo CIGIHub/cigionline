@@ -116,6 +116,12 @@ class HomePage(Page):
             featured_experts.append(item.featured_expert)
         return featured_experts
 
+    def promotion_blocks_list(self):
+        promotion_blocks_list = []
+        for item in self.promotion_blocks.all()[:2]:
+            promotion_blocks_list.append(item.promotion_block)
+        return promotion_blocks_list
+
     max_count = 1
     subpage_types = [
         'articles.ArticleLandingPage',
