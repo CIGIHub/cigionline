@@ -53,6 +53,7 @@ class PromotionBlockPage(Page):
     )
 
     content_panels = [
+        FieldPanel('title'),
         FieldPanel('block_type'),
         FieldPanel('link_url'),
         ImageChooserPanel('image_promotion'),
