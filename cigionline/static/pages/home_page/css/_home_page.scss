@@ -101,4 +101,12 @@
       }
     }
   }
+
+  .homepage-promotion-blocks {
+    .col-md-6 {
+      &:first-child {
+        margin-bottom: 1em;
+      }
+    }
+  }
 }
