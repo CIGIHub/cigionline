@@ -156,7 +156,11 @@ class EventPage(
         return ''
 
     def is_past(self):
-        return self.event_end < timezone.now()
+        now = timezone.now()
+        if self.event_end:
+            return self.event_end < now
+        else: 
+            return self.publishing_date < now
 
     content_panels = [
         BasicPageAbstract.title_panel,

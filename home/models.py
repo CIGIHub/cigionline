@@ -111,8 +111,9 @@ class HomePage(Page):
         now = timezone.now()
         future_events = EventPage.objects.live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
         if len(future_events) < 3:
-            past_events = EventPage.objects.live().public().filter(event_end__lt=now).order_by('-publishing_date')[:3]
-            featured_events = (list(future_events) + list(past_events))[:3]
+            past_events = EventPage.objects.live().public().filter(event_end__isnull=True, publishing_date__lt=now) | EventPage.objects.live().public().filter(event_end__lt=now)
+            past_events_ordered = past_events.order_by('-publishing_date')[:3]
+            featured_events = (list(future_events) + list(past_events_ordered))[:3]
         else:
             featured_events = future_events
         return featured_events
