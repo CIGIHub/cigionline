@@ -1,7 +1,7 @@
 import ScrollReveal from 'scrollreveal';
 import './css/cyber_series.scss';
 
-//window hide title after scrolling 25%
+// window hide title after scrolling 25%
 
 $(window).on('scroll', function () {
   const documentPercent = $(document).height() * 0.25;
@@ -13,7 +13,7 @@ $(window).on('scroll', function () {
   }
 });
 
-//add icon to exand/collapse about the series description
+// add icon to exand/collapse about the series description
 
 const firstBlock = $('.cyber-series-article-series-body .body .container').first();
 const lastBlock = $('.cyber-series-article-series-body .body .container').last();
