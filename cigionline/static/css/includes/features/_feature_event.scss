@@ -27,6 +27,10 @@
       &.button-private-event {
         border: 1px solid $cigi-medium-grey;
         color: $cigi-medium-grey;
+
+        &:hover {
+          background-color: transparent;
+        }
       }
     }
   }
