@@ -3,7 +3,7 @@ import './css/cyber_series.scss';
 
 // window hide title after scrolling 25%
 
-$(window).on('scroll', function () {
+$(window).on('scroll', function (){
   const documentPercent = $(document).height() * 0.25;
   if ($(window).scrollTop() >= documentPercent) {
     $('.cyber-series-article-series-hero-content').fadeOut('slow');
