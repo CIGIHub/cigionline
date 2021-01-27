@@ -103,8 +103,11 @@
   }
 
   .homepage-promotion-blocks {
-    .col-md-6 {
+    .homepage-promotion-block {
       &:first-child {
+        @include media-breakpoint-up(md) {
+          margin-bottom: 0;
+        }
         margin-bottom: 1em;
       }
     }
