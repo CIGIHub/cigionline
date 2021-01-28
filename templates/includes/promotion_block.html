@@ -7,7 +7,9 @@
   {% define image_promotion.url as image_promotion_url %}
 {% endif %}
 <div class="promotion-block promotion-block-{{ promotion_block.block_type|slugify }}">
-  <a href="{{ promotion_block.link_url }}">
+  {% if promotion_block.link_url %}
+    <a href="{{ promotion_block.link_url }}">
+  {% endif %}
     <div class="promotion-block-background" style="background-image: url('{{ image_promotion_url }}');">
       {% if promotion_block.block_type == "social" %}
         <div class='social-content'>
@@ -26,5 +28,7 @@
         </div>
       {% endif %}
     </div>
-  </a>
+  {% if promotion_block.link_url %}
+    </a>
+  {% endif %}
 </div>

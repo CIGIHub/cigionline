@@ -1,7 +1,18 @@
 .promotion-block {
+  background-color: $black;
+
+  & > a {
+    &:hover {
+      .promotion-block-background {
+        opacity: 0.8;
+      }
+    }
+  }
+
   .promotion-block-background {
     background-size: cover;
     padding-bottom: 50%;
+    transition: opacity 0.2s ease;
   }
 
   &.promotion-block-social {
