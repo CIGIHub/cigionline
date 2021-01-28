@@ -7,8 +7,58 @@
   background-color: $women-and-trade-series-background-colour;
 
   .article-hero {
-    .custom-text-list {
+    border-top: solid 1px $divider-grey;
+    padding-top: 2em;
+    text-align: left;
+
+    h1 {
+      font-family: 'futura-pt', sans-serif;
+      font-size: 2em;
+      font-weight: 400;
+    }
+
+    .meta {
+      & > div {
+        display: flex;
+      }
+
+      label {
+        margin-bottom: 0;
+        margin-right: 0.2em;
+      }
+    }
+
+    .authors {
+      margin-top: 0;
+    }
+
+    .custom-text-list,
+    .social-share-list  {
       justify-content: left;
+    }
+
+    .social-share-list {
+      border-top: solid 1px $black;
+
+      li {
+        margin-left: -1em;
+        padding: 1em 2em 2em 0;
+      }
+
+      .fa {
+        color: $black;
+      }
+
+      a {
+        padding: 1em;
+
+        &:hover {
+          .fa,
+          .fab {
+            color: $cigi-primary-colour;
+          }
+        }
+      }
     }
   }
 }
