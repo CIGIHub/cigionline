@@ -18,6 +18,7 @@ from wagtail.api import APIField
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
+from django.utils import timezone
 from wagtail.search import index
 
 
@@ -153,6 +154,13 @@ class EventPage(
         if self.multimedia_page:
             return self.multimedia_page.url
         return ''
+
+    def is_past(self):
+        now = timezone.now()
+        if self.event_end:
+            return self.event_end < now
+        else:
+            return self.publishing_date < now
 
     content_panels = [
         BasicPageAbstract.title_panel,
