@@ -60,5 +60,8 @@ class PromotionBlockPage(Page):
         ImageChooserPanel('image_promotion_small'),
     ]
 
+    parent_page_types = ['promotions.PromotionBlockListPage']
+    subpage_types = []
+
     class Meta:
         verbose_name = 'Promotion Block'
