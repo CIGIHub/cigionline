@@ -23,6 +23,20 @@
     <div class="container">
       <div class="row">
         <div class="col">
+          <h2>Series Contributors</h2>
+          <div class="contributors">
+            {% for item in self.series_contributors_by_article %}
+              {% for contributor in item.contributors %}
+                <span>{{ contributor.author.title }}</span>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col">
           <h2>About the Series</h2>
         </div>
       </div>
