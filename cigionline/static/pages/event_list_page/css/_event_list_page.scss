@@ -5,7 +5,6 @@
     border-top-color: $black;
     border-top-style: solid;
     border-top-width: 3px;
-    color: $black;
     display: inline-block;
     font-size: 0.75em;
     margin-bottom: 1.5em;
@@ -13,10 +12,20 @@
   }
 
   .featured-event-row {
-    &:first-child {
+    &:first-of-type {
       @include media-breakpoint-up(md) {
         border-bottom: 1px solid $cigi-light-grey;
         padding-bottom: 1em;
+      }
+
+      .featured-event-col {
+        &:first-child {
+          article {
+            @include media-breakpoint-down(sm) {
+              padding-top: 0;
+            }
+          }
+        }
       }
     }
 
