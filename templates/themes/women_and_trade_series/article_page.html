@@ -9,11 +9,12 @@
 
 {% block in_the_series %}
   {% if self.article_series %}
-    <section>
+    <section class="in-the-series">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
-            <h2>In the Series</h2>
+            <h2><a href="{{ self.article_series.url }}">{{ self.article_series.title }}</a></h2>
+            <h3>In the Series</h3>
           </div>
         </div>
         <div class="row justify-content-center">

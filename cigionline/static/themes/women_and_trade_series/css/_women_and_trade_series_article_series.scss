@@ -13,4 +13,11 @@
       }
     }
   }
+
+  h2 {
+    border-bottom: 5px solid $cigi-darkest-grey;
+    display: inline-block;
+    font-size: 24px;
+    line-height: 2.125rem;
+  }
 }
