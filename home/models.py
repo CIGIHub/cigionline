@@ -1,12 +1,14 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
+from events.models import EventPage
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
 )
 from wagtail.core.models import Orderable, Page
+from django.utils import timezone
 
 
 class HomePage(Page):
@@ -121,6 +123,18 @@ class HomePage(Page):
         for item in self.promotion_blocks.all()[:2]:
             promotion_blocks_list.append(item.promotion_block)
         return promotion_blocks_list
+
+    def featured_events(self):
+        featured_events = []
+        now = timezone.now()
+        future_events = EventPage.objects.live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+        if len(future_events) < 3:
+            Q = models.Q
+            past_events = EventPage.objects.live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+            featured_events = (list(future_events) + list(past_events))[:3]
+        else:
+            featured_events = future_events
+        return featured_events
 
     max_count = 1
     subpage_types = [
