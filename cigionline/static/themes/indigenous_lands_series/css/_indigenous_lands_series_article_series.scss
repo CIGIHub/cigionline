@@ -31,9 +31,14 @@
   }
 
   .indigenous-lands-series-article-series-in-the-series {
-    background-color: $white;
+    background-color: $previous-body-bg;
     padding-top: 2em;
     position: relative;
     z-index: 4;
+
+    h3 {
+      border-bottom: 5px solid $black;
+      border-top: 0;
+    }
   }
 }

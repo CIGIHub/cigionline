@@ -2,25 +2,37 @@
   margin-bottom: 3em;
 
   h3 {
+    border-top: 5px solid $black;
+    display: inline-block;
     font-size: 1.5em;
     font-weight: 500;
-    margin-bottom: 1em;
-
-    span {
-      border-top: 5px solid $black;
-    }
+    margin-bottom: 1.5em;
   }
 
   .indigenous-lands-series-in-the-series-items {
     @include media-breakpoint-up(md) {
+      column-gap: 3em;
       columns: 2;
     }
     columns: 1;
 
     article {
+      break-inside: avoid;
+      margin-bottom: 2.5em;
+
+      h4 {
+        @include link($color: $cigi-darkest-grey, $hover-color: $cigi-medium-grey);
+        font-size: 1.4em;
+        font-weight: 500;
+      }
+
       .authors {
+        font-size: 0.75em;
+        margin-top: 0;
+
         span {
           @include comma-separated;
+          @include link($color: $cigi-medium-grey, $hover-color: $cigi-primary-colour);
         }
       }
     }

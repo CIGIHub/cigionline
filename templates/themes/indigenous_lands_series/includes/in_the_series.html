@@ -1,5 +1,5 @@
 <div class="indigenous-lands-series-in-the-series">
-  <h3><span>In the Series</span></h3>
+  <h3>In the Series</h3>
   <div class="indigenous-lands-series-in-the-series-items">
     {% for block in series_items %}
       {% if block.block_type == 'series_item' and block.value.id != article_id %}
@@ -9,7 +9,7 @@
               {{ block.value.title }}
             </a>
           </h4>
-          <p class="authors">
+          <p class="authors meta">
             Author{{ block.value.specific.author_count|pluralize }}:
             {% for item in block.value.specific.authors.all %}
               <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
