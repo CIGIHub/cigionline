@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeIndigenousLandsSeries' 'css' %}
@@ -23,7 +23,7 @@
       </div>
     </div>
   </section>
-  
+
   {% include "includes/body.html" with body=self.body heading="About the Series" full_heading=True %}
 
   <section class="indigenous-lands-series-article-series-in-the-series">
