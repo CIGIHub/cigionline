@@ -71,6 +71,12 @@
 
       a {
         padding-right: 1em;
+
+        &:hover {
+          .icon {
+            color: $cigi-primary-colour;
+          }
+        }
       }
 
       .icon {
