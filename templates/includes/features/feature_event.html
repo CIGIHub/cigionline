@@ -1,0 +1,24 @@
+<article class="feature-content feature-event {% if event.is_past %}past-event{% endif %}">
+  <div class="event-content">
+    {% include "includes/topics.html" with topics=event.topics %}
+    {% include "includes/features/feature_content_title.html" with content=event %}
+    <div class="meta">{{ event.publishing_date|date:"M j, Y - g:i A" }}</div>
+    {% if event.multimedia_url and event.is_past %}
+      <a href="{{ event.multimedia_url }}" class="button-action">
+        <i class="fas fa-play"></i>&nbsp;&nbsp;WATCH
+      </a>
+    {% elif not event.event_access %}
+      <div class="button-action button-private-event">
+        PRIVATE
+      </div>
+    {% elif not event.is_past and event.registration_url %}
+      <a href="{{ event.registration_url }}" class="button-action">
+        <i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;RSVP
+      </a>
+    {% endif %}
+  </div>
+  <div class="event-date-circle">
+    <div>{{ event.publishing_date|date:"M" }}</div>
+    <div>{{ event.publishing_date|date:"j" }}</div>
+  </div>
+</article>
