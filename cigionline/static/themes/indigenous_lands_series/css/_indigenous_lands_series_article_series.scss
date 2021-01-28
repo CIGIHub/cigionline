@@ -18,15 +18,70 @@
     }
 
     .hero-content {
+      color: $white;
       height: 100%;
       position: fixed;
-      top: 15%;
+      text-align: center;
+      top: 25%;
       width: 100%;
       z-index: 3;
 
       h1 {
         color: $white;
+        display: flex;
+        font-size: 3em;
+        font-weight: 600;
+        justify-content: center;
+
+        span {
+          max-width: 485px;
+        }
       }
+
+      a {
+        color: $white;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+
+      .social-share-list-square,
+      .custom-text-list {
+        justify-content: center;
+      }
+
+      .social-share-list-square {
+
+        a {
+          font-size: 1.5em;
+          padding: 0.5em;
+        }
+      }
+    }
+  }
+
+  .scroll-arrow {
+    animation: bounce 2s infinite;
+    background-color: $white;
+    border-radius: 50%;
+    bottom: 30%;
+    color: $black;
+    height: 32px;
+    left: 50%;
+    margin-left: -15px;
+    position: absolute;
+    width: 32px;
+    z-index: 120;
+
+    &:hover {
+      background-color: $cigi-dark-pink;
+    }
+
+    i {
+      color: $black;
+      font-size: 32px;
+      padding-top: 2px;
     }
   }
 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeIndigenousLandsSeries' 'css' %}
@@ -16,11 +16,30 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-12 col-md-10 col-lg-8">
+            <ul class="social-share-list-square">
+              <li class="facebook">
+                <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
+                  rel="noopener noreferrer">
+                  <i class="fab fa-facebook-square"></i>
+                </a>
+              </li>
+              <li class="twitter">
+                <a class="twitter-share-link"
+                  href="https://twitter.com/share?text={{ self.title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
+                  target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              </li>
+            </ul>
             {% include "includes/topics.html" with topics=self.topics %}
-            <h1>{{ self.title }}</h1>
+            <h1><span>{{ self.title }}</span></h1>
+            <h2>{{ self.subtitle|richtext }}</h2>
           </div>
         </div>
       </div>
+      <a href="#article-body" class="scroll-arrow">
+        <i class="far fa-angle-down" aria-hidden="true"></i>
+      </a>
     </div>
   </section>
   <section class="indigenous-lands-series-article-series-in-the-series">
