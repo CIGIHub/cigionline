@@ -17,25 +17,17 @@
   h2 {
     border-bottom: 5px solid $cigi-darkest-grey;
     display: inline-block;
-    font-size: 24px;
-    line-height: 2.125rem;
+    font-size: 1.475em;
+    font-weight: 500;
+    line-height: 1.42em;
+    margin-bottom: 0;
   }
-  
+
   .body {
     background-color: $white;
     font-size: 1.06em;
     line-height: 1.42em;
     padding-bottom: 3em;
-  }
-
-  h2 {
-    border-bottom: 5px solid $women-and-trade-series-dark-gray;
-    border-top: 0;
-    display: inline-block;
-    font-size: 1.5em;
-    font-weight: 500;
-    line-height: 1.42em;
-    margin-bottom: 0;
   }
 
   .contributors {
