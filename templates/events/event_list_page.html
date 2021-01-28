@@ -14,17 +14,13 @@
   <section class="events-page-featured-events">
     <div class="container">
       <h2>Featured</h2>
-      {% for event in self.featured_events_list %}
-        {% if forloop.counter == 1 or forloop.counter == 4 %}
-          <div class="row featured-event-row">
-        {% endif %}
-        <div class="col-md-4 featured-event-col">
-          {% include "includes/features/feature_event.html" with event=event %}
-        </div>
-        {% if forloop.counter == 3 or forloop.counter == 6 %}
+      <div class="row featured-event-row">
+        {% for event in self.featured_events_list %}
+          <div class="col-md-4 featured-event-col">
+            {% include "includes/features/feature_event.html" with event=event %}
           </div>
-        {% endif %}
-      {% endfor %}
+        {% endfor %}
+      </div>
     </div>
   </section>
   <section>
