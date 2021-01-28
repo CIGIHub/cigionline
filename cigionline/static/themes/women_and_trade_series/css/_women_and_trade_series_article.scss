@@ -5,4 +5,10 @@
     $position: relative,
   );
   background-color: $women-and-trade-series-background-colour;
+
+  .article-hero {
+    .custom-text-list {
+      justify-content: left;
+    }
+  }
 }
