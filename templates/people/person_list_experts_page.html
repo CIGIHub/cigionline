@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags %}
 
+{% block extra_css %}
+  {% render_bundle 'personListExpertsPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'personListExpertsPage' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% include "includes/body.html" with body=self.body %}
