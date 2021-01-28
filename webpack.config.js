@@ -53,6 +53,7 @@ const config = {
     themePlatformGovernanceSeries: './cigionline/static/themes/platform_governance_series/index.js',
     themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
+    topicPage: './cigionline/static/pages/topic_page/index.js',
   },
 
   devtool: 'source-map',
