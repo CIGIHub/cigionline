@@ -96,6 +96,21 @@ class BasicPageAbstract(models.Model):
         body_default_blocks,
         blank=True,
     )
+    hero_link_text = models.CharField(
+        blank=False,
+        max_length=32,
+        null=True,
+    )
+    hero_link_url = models.CharField(
+        blank=False,
+        max_length=32,
+        null=True,
+    )
+    hero_link_icon = models.CharField(
+        blank=False,
+        max_length=32,
+        null=True,
+    )
     image_hero = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -120,7 +135,10 @@ class BasicPageAbstract(models.Model):
     title_panel = MultiFieldPanel(
         [
             FieldPanel('title'),
-            FieldPanel('subtitle')
+            FieldPanel('subtitle'),
+            FieldPanel('hero_link_text'),
+            FieldPanel('hero_link_url'),
+            FieldPanel('hero_link_icon'),
         ],
         heading='Title',
         classname='collapsible'
