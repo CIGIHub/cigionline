@@ -59,7 +59,7 @@
     "scrollreveal": "4.0.7",
     "source-map-loader": "2.0.0",
     "style-loader": "2.0.0",
-    "webpack": "5.17.0",
+    "webpack": "5.18.0",
     "webpack-bundle-tracker": "0.4.3",
     "webpack-cli": "4.4.0"
   }
