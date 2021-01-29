@@ -24,6 +24,9 @@
 
   h3 {
     @include link($color: $black, $hover-color: $cigi-primary-colour);
+    @include media-breakpoint-down(sm) {
+      font-size: 1.25em;
+    }
     font-size: 1.5em;
     margin: 0 0 0.25em;
   }
