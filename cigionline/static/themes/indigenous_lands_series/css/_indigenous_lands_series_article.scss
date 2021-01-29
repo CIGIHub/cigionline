@@ -8,6 +8,7 @@
   }
 
   .indigenous-lands-series-article-in-the-series {
+
     h2 {
       @include link($color: $black, $hover-color: $cigi-primary-colour);
       border-top: 1px solid $divider-grey;
@@ -15,6 +16,12 @@
       font-weight: 700;
       margin-bottom: 1em;
       padding-top: 1em;
+    }
+  }
+
+  .indigenous-lands-series-in-the-series {
+    .indigenous-lands-series-in-the-series-items {
+      margin: 0 0 0 2em;
     }
   }
 }
