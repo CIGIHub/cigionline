@@ -1,32 +1,11 @@
 from home.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 
-from .models import PromotionBlockListPage, PromotionBlockPage
-
-
-class PromotionBlockListPageTests(WagtailPageTests):
-    def test_promotionblocklistpage_parent_page_types(self):
-        self.assertAllowedParentPageTypes(
-            PromotionBlockListPage,
-            {HomePage},
-        )
-
-    def test_PromotionBlocklistpage_child_page_types(self):
-        self.assertAllowedSubpageTypes(
-            PromotionBlockListPage,
-            {PromotionBlockPage},
-        )
+from .models import PromotionBlock
 
 
 class PromotionBlockPageTests(WagtailPageTests):
-    def test_promotionblockpage_parent_page_types(self):
-        self.assertAllowedParentPageTypes(
-            PromotionBlockPage,
-            {PromotionBlockListPage},
-        )
-
-    def test_promotionblockpage_child_page_types(self):
-        self.assertAllowedSubpageTypes(
-            PromotionBlockPage,
-            {},
-        )
+    def test_create_promotion_block(self):
+        test_block = PromotionBlock.objects.create(name="test1", block_type=PromotionBlock.PromotionBlockTypes.STANDARD, link_url="https://test.test")
+        self.assertTrue(isinstance(test_block, PromotionBlock))
+        self.assertEqual(str(test_block), test_block.name)

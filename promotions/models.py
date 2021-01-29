@@ -10,7 +10,7 @@ class PromotionBlock(models.Model):
         SOCIAL = ('social', 'Social')
         WIDE = ('wide', 'Wide')
 
-    title = models.CharField(
+    name = models.CharField(
         blank=False,
         max_length=32
     )
@@ -45,11 +45,14 @@ class PromotionBlock(models.Model):
     )
 
     panels = [
-        FieldPanel('title'),
+        FieldPanel('name'),
         FieldPanel('block_type'),
         FieldPanel('link_url'),
         ImageChooserPanel('image_promotion'),
     ]
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Promotion Block'
