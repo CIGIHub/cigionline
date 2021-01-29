@@ -1,16 +1,172 @@
 .women-and-trade-series-article-series {
   @include top-bar(
-    $background-color: $women-and-trade-series-background-colour,
+    $background-color: transparent,
     $color: $black,
     $position: relative,
   );
   background-color: $women-and-trade-series-background-colour;
 
   .women-and-trade-series-article-series-hero {
-    .hero-content {
-      h1 {
-        text-align: center;
+    height: 100vh;
+    position: relative;
+
+    .video-bg {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100%;
+      margin-top: 0;
+      position: fixed;
+      width: 100%;
+      z-index: -50;
+
+      video {
+        display: none;
       }
+
+      @include media-breakpoint-up(md) {
+        background-size: 0;
+        margin-top: 5em;
+
+        video {
+          display: block;
+          height: auto;
+          left: 50%;
+          position: fixed;
+          top: 50%;
+          transform: translateX(-50%) translateY(-50%);
+          width: auto;
+          z-index: -100;
+        }
+      }
+    }
+
+    .container {
+      @include media-breakpoint-up(md) {
+        margin-top: -250px;
+        padding-top: 60px;
+        top: 50%;
+      }
+      left: 50%;
+      max-width: 507px;
+      padding-top: 30px;
+      position: absolute;
+      right: 50%;
+      transform: translate(-50%);
+    }
+
+    .social-share-list {
+      @include media-breakpoint-up(md) {
+        justify-content: center;
+
+        a {
+          padding: 1em;
+        }
+
+        .icon {
+          color: $white;
+        }
+      }
+      justify-content: left;
+
+      a {
+        padding-right: 1em;
+
+        &:hover {
+          .icon {
+            color: $cigi-primary-colour;
+          }
+        }
+      }
+
+      .icon {
+        font-size: 1.5em;
+      }
+    }
+
+    .hero-content {
+      color: $black;
+      max-width: 485px;
+
+      h1 {
+        font-size: 2.3em;
+        font-weight: 700;
+        letter-spacing: -1px;
+        line-height: 100%;
+      }
+
+      .subtitle {
+        font-size: 1.5em;
+        padding-top: 0.85em;
+      }
+
+      @include media-breakpoint-up(md) {
+        color: $white;
+        text-align: center;
+
+        h1 {
+          font-size: 3em;
+          position: relative;
+
+          &::after {
+            background: $cigi-primary-colour;
+            bottom: 0;
+            content: '';
+            height: 20px;
+            left: calc(50% - 150px);
+            position: absolute;
+            width: 300px;
+            z-index: -1;
+          }
+        }
+      }
+    }
+
+    .scroll-arrow {
+      animation: bounce 2s infinite;
+      background-color: $cigi-primary-colour;
+      border-radius: 50%;
+      bottom: 20%;
+      color: $white;
+      height: 32px;
+      left: 50%;
+      margin-left: -15px;
+      position: absolute;
+      width: 32px;
+      z-index: 120;
+
+      &:hover {
+        background-color: $cigi-dark-pink;
+      }
+
+      i {
+        font-size: 32px;
+        padding-left: 6px;
+        padding-top: 2px;
+      }
+    }
+  }
+
+  .body {
+    background-color: $white;
+    font-size: 1.06em;
+    line-height: 1.42em;
+    padding-bottom: 3em;
+  }
+
+  h2 {
+    border-bottom: 5px solid $women-and-trade-series-dark-gray;
+    border-top: 0;
+    display: inline-block;
+    font-size: 1.5em;
+    font-weight: 500;
+    line-height: 1.42em;
+    margin-bottom: 0;
+  }
+
+  .contributors {
+    span {
+      @include comma-separated;
     }
   }
 }
