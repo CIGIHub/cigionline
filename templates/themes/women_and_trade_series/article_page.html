@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeWomenAndTradeSeries' 'css' %}
@@ -7,13 +7,86 @@
 
 {% block body_class %}women-and-trade-series-article{% endblock %}
 
+{% block hero %}
+<section class="hero-container article-hero">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        {% include "includes/topics.html" with topics=self.topics %}
+        <h1>{{ self.title}}</h1>
+        <h2>{{ self.subtitle|safe}}</h2>
+        <div class="meta">
+          <div><label>Series:</label> {{ self.article_series.title }}</div>
+          <div><label>Published:</label> {% include "includes/date.html" with date=self.publishing_date %}</div>
+          <div class="authors"><label>Author{{ authors|length|pluralize }}:</label>
+            <div class="custom-text-list">
+              {% for item in self.authors.all %}
+                {% if item.author %}
+                  <a class="block-author" href="{{ item.author.url }}">{{ item.author.title }}</a>
+                {% endif %}
+                {% if item.editor %}
+                  <a class="block-author" href="{{ item.editor.url }}">{{ item.editor.title }}</a>
+                {% endif %}
+              {% endfor %}
+              {% for item in self.external_authors %}
+                {% if item.block_type == 'external_person' %}
+                  <span class="block-author">{{ item.value }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <ul class="social-share-list">
+          <li>
+            <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+              <i class="fab fa-facebook-square icon"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a href="mailto:?subject={{self.title}}&body=From the Centre for International Governance Innovation: {{self.title}} ({{ request.build_absolute_uri|slice:':-1' }})">
+              <i class="fa fa-envelope"></i>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:window.print()">
+              <i class="fa fa-print"></i>
+            </a>
+          </li>
+        </ul>
+
+        {% if self.image_hero %}
+          <figure class="article-image-hero">
+            {% if self.image_hero.file.url|file_extension == '.gif' %}
+              <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.title}}">
+            {% else %}
+              {% image self.image_hero width-1760 %}
+            {% endif %}
+            {% if self.image_hero.title %}
+              <figcaption>
+                {{ self.image_hero.title }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
 {% block in_the_series %}
   {% if self.article_series %}
-    <section>
+    <section class="in-the-series">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
-            <h2>In the Series</h2>
+            <h2><a href="{{ self.article_series.url }}">{{ self.article_series.title }}</a></h2>
+            <h3>In the Series</h3>
           </div>
         </div>
         <div class="row justify-content-center">

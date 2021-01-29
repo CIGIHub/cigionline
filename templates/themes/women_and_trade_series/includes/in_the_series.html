@@ -7,8 +7,8 @@
         <h4>
           <a href="{{ block.value.url }}">{{ block.value.title }}</a>
         </h4>
-        <p class="authors">
-          Author{{ block.value.specific.author_count|pluralize }}:
+        <div class="authors">
+          <label>Author{{ block.value.specific.author_count|pluralize }}:</label>
           {% for item in block.value.specific.authors.all %}
             <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
           {% endfor %}
@@ -17,7 +17,7 @@
               <span>{{ item.value }}</span>
             {% endif %}
           {% endfor %}
-        </p>
+        </div>
       </article>
     {% elif block.block_type == 'category_title' %}
       <h3>{{ block.value }}</h3>

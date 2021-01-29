@@ -1,8 +1,11 @@
 $women-and-trade-series-background-colour: #f2f0ea;
+$women-and-trade-series-dark-gray: #373737;
 
 @import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
 
 @import './women_and_trade_series_article_series';
 @import './women_and_trade_series_article';
 @import './women_and_trade_series_multimedia';
 @import './includes/in_the_series';
+
