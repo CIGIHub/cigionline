@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import EventListing from '../../js/components/EventListing';
 import SearchTable from '../../js/components/SearchTable';
+import './css/_event_list_page.scss';
 
 ReactDOM.render(
   <SearchTable
