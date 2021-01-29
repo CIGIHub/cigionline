@@ -28,6 +28,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
+from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.api import APIField
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
@@ -111,6 +112,13 @@ class BasicPageAbstract(models.Model):
         max_length=32,
         null=True,
     )
+    hero_link_document = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     image_hero = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -136,12 +144,19 @@ class BasicPageAbstract(models.Model):
         [
             FieldPanel('title'),
             FieldPanel('subtitle'),
-            FieldPanel('hero_link_text'),
-            FieldPanel('hero_link_url'),
-            FieldPanel('hero_link_icon'),
         ],
         heading='Title',
         classname='collapsible'
+    )
+    hero_panel = MultiFieldPanel(
+        [
+            FieldPanel('hero_link_text'),
+            FieldPanel('hero_link_url'),
+            FieldPanel('hero_link_icon'),
+            DocumentChooserPanel('hero_link_document'),
+        ],
+        heading='Hero Link',
+        classname='collapsible collapsed'
     )
     body_panel = MultiFieldPanel(
         [

@@ -1,4 +1,4 @@
-{% load menu_tags %}
+{% load menu_tags core_tags %}
 
 <section class="hero">
   <div class="container">
@@ -6,9 +6,14 @@
       <div class="hero-main col-md-7">
         <h1>{{title}}</h1>
         <h2>{{subtitle|safe}}</h2>
-        {% if self.hero_link_text and self.hero_link_url %}
+        {% if self.hero_link_text %}
           <div class="hero-link">
-            <a href="{{ self.hero_link_url }}">
+            {% if self.hero_link_url %}
+              {% define self.hero_link_url as hero_link_url %}
+            {% elif self.hero_link_document %}
+              {% define self.hero_link_document.file.url as hero_link_url %}
+            {% endif %}
+            <a href="{{ hero_link_url }}">
               {% if self.hero_link_icon %}
                 <i class="fas {{ self.hero_link_icon }}"></i>
               {% endif %}

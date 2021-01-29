@@ -22,6 +22,7 @@ class AnnualReportListPage(BasicPageAbstract, Page):
 
     content_panels = [
         BasicPageAbstract.title_panel,
+        BasicPageAbstract.hero_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
     ]
