@@ -8,7 +8,7 @@ class PromotionBlock(models.Model):
     class PromotionBlockTypes(models.TextChoices):
         STANDARD = ('standard', 'Standard')
         SOCIAL = ('social', 'Social')
-        WIDE = ('wide', 'wide')
+        WIDE = ('wide', 'Wide')
 
     title = models.CharField(
         blank=False,
