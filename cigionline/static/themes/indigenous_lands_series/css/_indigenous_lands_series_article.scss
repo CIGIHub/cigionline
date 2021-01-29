@@ -4,7 +4,7 @@
     @include media-breakpoint-up(md) {
       padding-top: 8em;
     }
-    margin-bottom: 3em;
+    margin-bottom: 2em;
     padding-top: 4em;
 
     h1 {
@@ -62,10 +62,41 @@
         }
       }
     }
+
+    figcaption {
+      border-left: solid $cigi-primary-colour 5px;
+      font-size: 0.85em;
+      text-align: right;
+    }
   }
 
   .body {
     font-family: Helvetica, sans-serif;
+
+    ol {
+      padding-left: 1em;
+
+      li {
+        padding-bottom: 1em;
+      }
+    }
+
+    ul {
+      li {
+        padding-bottom: 1em;
+      }
+    }
+  }
+
+  .stream-block-recommended {
+    .stream-block-recommended-label {
+      color: $cigi-primary-colour;
+      font-weight: 600;
+    }
+
+    a {
+      font-family: 'futura-pt', san-serif;
+    }
   }
 
   .about-the-author {
