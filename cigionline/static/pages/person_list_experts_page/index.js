@@ -19,6 +19,14 @@ ReactDOM.render(
     containerClass={[
       'custom-theme-table',
     ]}
+    orderTypes={[{
+      default: true,
+      name: 'Last Name',
+      value: 'last_name',
+    }, {
+      name: 'First Name',
+      value: 'first_name',
+    }]}
     RowComponent={ExpertListing}
     searchPlaceholder="Search experts"
     tableColumns={[{

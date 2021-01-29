@@ -16,6 +16,7 @@ class SearchTable extends React.Component {
       loading: true,
       loadingInitial: true,
       loadingTopics: true,
+      order: null,
       rows: [],
       searchValue: '',
       topics: [],
@@ -65,6 +66,12 @@ class SearchTable extends React.Component {
     }, this.getRows);
   }
 
+  handleOrderSelect(orderType) {
+    this.setState({
+      order: orderType.value,
+    }, this.getRows);
+  }
+
   handleTypeSelect(type) {
     if (type.id || type.value || type.endpoint) {
       this.setState({
@@ -81,6 +88,7 @@ class SearchTable extends React.Component {
     const {
       currentPage,
       loadingInitial,
+      order,
       searchValue,
       topicSelectValue,
       typeSelected,
@@ -117,6 +125,9 @@ class SearchTable extends React.Component {
     }
     if (typeSelected && typeSelected.param) {
       uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
+    }
+    if (order) {
+      uri += `&order=${order}`;
     }
 
     fetch(encodeURI(uri))
@@ -248,6 +259,7 @@ class SearchTable extends React.Component {
       loading,
       loadingInitial,
       loadingTopics,
+      order,
       rows,
       searchValue,
     } = this.state;
@@ -256,11 +268,25 @@ class SearchTable extends React.Component {
       containerClass,
       filterTypes,
       hideTopicDropdown,
+      orderTypes,
       RowComponent,
       searchPlaceholder,
       showSearch,
       tableColumns,
     } = this.props;
+
+    const displayOrderTypes = orderTypes.map((orderType) => {
+      let className = 'search-bar-sort-link';
+      if (orderType.value === order
+          || (!order && orderType.default)) {
+        className += ' active';
+      }
+      return {
+        className,
+        name: orderType.name,
+        value: orderType.value,
+      };
+    });
 
     return (
       <div className="search-table">
@@ -333,11 +359,27 @@ class SearchTable extends React.Component {
             <div className="search-bar-sort-wrapper">
               <span>Sort by:</span>
               <ul className="search-bar-sort-list">
-                <li>
-                  <button type="button" className="search-bar-sort-link active">
-                    Date
-                  </button>
-                </li>
+                {orderTypes.length
+                  ? (
+                    displayOrderTypes.map((orderType) => (
+                      <li key={orderType.value}>
+                        <button
+                          type="button"
+                          className={orderType.className}
+                          onClick={() => this.handleOrderSelect(orderType)}
+                        >
+                          {orderType.name}
+                        </button>
+                      </li>
+                    ))
+                  )
+                  : (
+                    <li>
+                      <button type="button" className="search-bar-sort-link active">
+                        Date
+                      </button>
+                    </li>
+                  )}
               </ul>
             </div>
           </div>
@@ -410,6 +452,10 @@ SearchTable.propTypes = {
   })),
   hideTopicDropdown: PropTypes.bool,
   limit: PropTypes.number,
+  orderTypes: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string,
+  })),
   RowComponent: PropTypes.func.isRequired,
   searchPlaceholder: PropTypes.string,
   showSearch: PropTypes.bool,
@@ -426,6 +472,7 @@ SearchTable.defaultProps = {
   filterTypes: [],
   hideTopicDropdown: false,
   limit: 24,
+  orderTypes: [],
   searchPlaceholder: 'Search',
   showSearch: false,
   tableColumns: [],

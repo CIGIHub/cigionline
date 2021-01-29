@@ -374,7 +374,9 @@ class PersonPage(
 
     api_fields = [
         APIField('expertise_list'),
+        APIField('first_name'),
         APIField('image_square_url'),
+        APIField('last_name'),
         APIField('latest_activity_json'),
         APIField('position'),
         APIField('title'),
