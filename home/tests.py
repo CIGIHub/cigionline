@@ -15,7 +15,6 @@ from events.models import EventListPage
 from multimedia.models import MultimediaListPage, MultimediaSeriesListPage, MultimediaSeriesPage
 from newsletters.models import NewsletterListPage
 from people.models import PeoplePage, PersonListPage
-from promotions.models import PromotionBlockListPage
 from publications.models import PublicationListPage, PublicationSeriesListPage
 from research.models import (
     ProjectListPage,
@@ -53,7 +52,6 @@ class HomePageTests(WagtailPageTests):
                 PeoplePage,
                 PersonListPage,
                 PrivacyNoticePage,
-                PromotionBlockListPage,
                 ProjectListPage,
                 PublicationListPage,
                 PublicationSeriesListPage,
