@@ -30,8 +30,27 @@
     }
   }
 
-  .indigenous-lands-series-article-series-in-the-series {
+  .body {
     background-color: $white;
+    font-size: 1.03em;
+    margin-bottom: 0;
+    padding: 2em 0;
+    position: relative;
+    z-index: 4;
+  }
+
+  h3,
+  .paragraph-heading {
+    border-bottom: .25em solid $cigi-darkest-grey;
+    border-top: 0;
+    display: inline-block;
+    font-size: 1.5em;
+    font-weight: 500;
+    text-transform: none;
+  }
+
+  .indigenous-lands-series-article-series-in-the-series {
+    background-color: $previous-body-bg;
     padding-top: 2em;
     position: relative;
     z-index: 4;
