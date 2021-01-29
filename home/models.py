@@ -6,6 +6,7 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
+    FieldPanel
 )
 from wagtail.core.models import Orderable, Page
 from django.utils import timezone
@@ -154,7 +155,6 @@ class HomePage(Page):
         'newsletters.NewsletterListPage',
         'people.PeoplePage',
         'people.PersonListPage',
-        'promotions.PromotionBlockListPage',
         'publications.PublicationListPage',
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
@@ -261,7 +261,7 @@ class HomePagePromotionBlocks(Orderable):
         related_name='promotion_blocks',
     )
     promotion_block = models.ForeignKey(
-        'promotions.PromotionBlockPage',
+        'promotions.PromotionBlock',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
@@ -270,8 +270,8 @@ class HomePagePromotionBlocks(Orderable):
     )
 
     panels = [
-        PageChooserPanel(
+        FieldPanel(
             'promotion_block',
-            ['promotions.PromotionBlockPage'],
+            ['promotions.PromotionBlock'],
         ),
     ]

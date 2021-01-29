@@ -1,32 +1,24 @@
 from django.db import models
-from wagtail.core.models import Page
 
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
-class PromotionBlockListPage(Page):
-    """Promotion Block list page"""
-
-    max_count = 1
-    parent_page_types = ['home.HomePage']
-    subpage_types = ['promotions.PromotionBlockPage']
-
-    class Meta:
-        verbose_name = 'Promotion List Page'
-
-
-class PromotionBlockPage(Page):
+class PromotionBlock(models.Model):
     class PromotionBlockTypes(models.TextChoices):
-        NORMAL = ('normal', 'Normal')
+        STANDARD = ('standard', 'Standard')
         SOCIAL = ('social', 'Social')
         WIDE = ('wide', 'wide')
 
+    title = models.CharField(
+        blank=False,
+        max_length=32
+    )
     block_type = models.CharField(
         blank=False,
         max_length=32,
         choices=PromotionBlockTypes.choices,
-        default=PromotionBlockTypes.NORMAL
+        default=PromotionBlockTypes.STANDARD
     )
     link_url = models.CharField(
         blank=True,
@@ -52,16 +44,12 @@ class PromotionBlockPage(Page):
         help_text='The background image of the promotion block. Only used for wide promotion blocks as a replacement when screen width is small. Ex. Multimedia landing page wide promotion block.',
     )
 
-    content_panels = [
+    panels = [
         FieldPanel('title'),
         FieldPanel('block_type'),
         FieldPanel('link_url'),
         ImageChooserPanel('image_promotion'),
-        ImageChooserPanel('image_promotion_small'),
     ]
-
-    parent_page_types = ['promotions.PromotionBlockListPage']
-    subpage_types = []
 
     class Meta:
         verbose_name = 'Promotion Block'
