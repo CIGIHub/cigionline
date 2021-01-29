@@ -6,12 +6,16 @@
       <div class="hero-main col-md-7">
         <h1>{{title}}</h1>
         <h2>{{subtitle|safe}}</h2>
-        <div class="hero-link">
-          <a href="{{ self.hero_link_url }}">
-            <i class="fas {{ self.hero_link_icon }}"></i>
-            {{ self.hero_link_text }}
-          </a>
-        </div>
+        {% if self.hero_link_text and self.hero_link_url %}
+          <div class="hero-link">
+            <a href="{{ self.hero_link_url }}">
+              {% if self.hero_link_icon %}
+                <i class="fas {{ self.hero_link_icon }}"></i>
+              {% endif %}
+              {{ self.hero_link_text }}
+            </a>
+          </div>
+        {% endif %}
       </div>
       <aside class="col-md-4 offset-md-1">
         {% if submenu %}
