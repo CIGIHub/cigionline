@@ -73,6 +73,10 @@
   .body {
     font-family: Helvetica, sans-serif;
 
+    h2 {
+      font-weight: 600;
+    }
+
     ol {
       padding-left: 1em;
 
@@ -96,6 +100,25 @@
 
     a {
       font-family: 'futura-pt', san-serif;
+    }
+  }
+
+  .stream-block-inline-video-content {
+    .stream-block-inline-video-text {
+      .watch-video-label {
+        font-weight: 600;
+      }
+    }
+
+    a {
+      font-family: 'futura-pt', san-serif;
+    }
+  }
+
+  .stream-block-blockquote {
+    .stream-block-blockquote-author {
+      font-weight: 400;
+      margin-bottom: 1em;
     }
   }
 
