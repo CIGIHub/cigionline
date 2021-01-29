@@ -19,6 +19,8 @@
 
     article {
       .authors {
+        font-family: Helvetica, sans-serif;
+
         span {
           @include comma-separated;
         }

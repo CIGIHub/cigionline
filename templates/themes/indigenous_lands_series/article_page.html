@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load wagtailimages_tags webpack_loader %}
+{% load wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeIndigenousLandsSeries' 'css' %}
@@ -14,16 +14,51 @@
         <div class="col-12 col-md-10 col-lg-8">
           {% include "includes/topics.html" with topics=self.topics %}
           <h1>{{ self.title }}</h1>
-          {% if self.article_series %}
-            <p>
-              Series:
-              <a href="{{ self.article_series.url }}">
-                {{ self.article_series.title }}
+          <div class="meta">
+            {% if self.article_series %}
+              <div class="series"><label>Series:</label><a href="{{ self.article_series.url }}">{{ self.article_series.title }}</a></div>
+            {% endif %}
+            <div><label>Published:</label>{% include "includes/date.html" with date=self.publishing_date %}</div>
+            <div class="authors"><label>Author{{ authors|length|pluralize }}:</label>
+              <div class="custom-text-list">
+                {% for item in self.authors.all %}
+                  {% if item.author %}
+                    <a class="block-author" href="{{ item.author.url }}">{{ item.author.title }}</a>
+                  {% endif %}
+                  {% if item.editor %}
+                    <a class="block-author" href="{{ item.editor.url }}">{{ item.editor.title }}</a>
+                  {% endif %}
+                {% endfor %}
+                {% for item in self.external_authors %}
+                  {% if item.block_type == 'external_person' %}
+                    <span class="block-author">{{ item.value }}</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <ul class="social-share-list">
+            <li>
+              <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+                <i class="fab fa-facebook-square icon"></i>
               </a>
-            </p>
-          {% endif %}
-          {% include "includes/date.html" with date=self.publishing_date %}
-          {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+            </li>
+            <li>
+              <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </li>
+            <li>
+              <a href="mailto:?subject={{self.title}}&body=From the Centre for International Governance Innovation: {{self.title}} ({{ request.build_absolute_uri|slice:':-1' }})">
+                <i class="fa fa-envelope"></i>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:window.print()">
+                <i class="fa fa-print"></i>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
       <div class="row justify-content-center">
