@@ -11,6 +11,7 @@ ReactDOM.render(
     fields={[
       'expertise_list',
       'image_square_url',
+      'latest_activity_json',
       'position',
       'title',
       'url',

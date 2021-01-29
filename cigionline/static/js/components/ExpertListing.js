@@ -12,7 +12,7 @@ function ExpertListing(props) {
         </div>
         <div className="table-infos-wrapper">
           <a href={row.url} className="table-thumbnail-photo">
-            <div className="img-wrapper" style={{ 'background-image': `url('${row.image_square_url}')` }} />
+            <div className="img-wrapper" style={{ backgroundImage: `url('${row.image_square_url}')` }} />
           </a>
           <div className="table-infos">
             <a href={row.url} className="table-title-link">
@@ -43,14 +43,43 @@ function ExpertListing(props) {
           Recent Activity
         </div>
         <div className="table-content">
-          <div className="table-recent-activity">
-            <span className="table-icon icon-opinion">
-              <i className="fal fa-comment-dots" />
-            </span>
-            <a href="#" className="table-title-link">
-              Can the Digital Economy Survive in a Splinternet?
-            </a>
-          </div>
+          {row.latest_activity_json && (
+            <div className="table-recent-activity">
+              {['Opinion', 'Op-Ed', 'Interview'].includes(row.latest_activity_json.contenttype) && (
+                <span className="table-icon icon-opinion">
+                  <i className="fal fa-comment-dots" />
+                </span>
+              )}
+              {['News Release', 'CIGI in the News'].includes(row.latest_activity_json.contenttype) && (
+                <span className="table-icon icon-media">
+                  <i className="fal fa-bullhorn" />
+                </span>
+              )}
+              {row.latest_activity_json.contenttype === 'Publication' && (
+                <span className="table-icon icon-publication">
+                  <i className="fal fa-file-alt" />
+                </span>
+              )}
+              {row.latest_activity_json.contenttype === 'Multimedia' && (
+                <span className="table-icon icon-multimedia">
+                  {row.latest_activity_json.contentsubtype === 'Video' && (
+                    <i className="fal fa-play" />
+                  )}
+                  {row.latest_activity_json.contentsubtype === 'Audio' && (
+                    <i className="fal fa-headphones" />
+                  )}
+                </span>
+              )}
+              {row.latest_activity_json.contenttype === 'Event' && (
+                <span className="table-icon icon-event">
+                  <i className="fal fa-calendar-alt" />
+                </span>
+              )}
+              <a href={row.latest_activity_json.url} className="table-title-link">
+                {row.latest_activity_json.title}
+              </a>
+            </div>
+          )}
         </div>
       </td>
     </tr>
@@ -62,6 +91,12 @@ ExpertListing.propTypes = {
     expertise_list: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     image_square_url: PropTypes.string,
+    latest_activity_json: PropTypes.shape({
+      contentsubtype: PropTypes.string,
+      contenttype: PropTypes.string,
+      title: PropTypes.string,
+      url: PropTypes.string,
+    }),
     position: PropTypes.string,
     title: PropTypes.string,
     url: PropTypes.string,

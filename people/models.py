@@ -246,6 +246,17 @@ class PersonPage(
                 return content_page.specific
         return False
 
+    def latest_activity_json(self):
+        latest_activity = self.latest_activity()
+        if latest_activity:
+            return {
+                'contenttype': latest_activity.contenttype,
+                'contentsubtype': latest_activity.contentsubtype,
+                'title': latest_activity.title,
+                'url': latest_activity.url
+            }
+        return False
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -354,11 +365,20 @@ class PersonPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
+    search_fields = [
+        index.FilterField('archive'),
+        index.FilterField('live'),
+        index.FilterField('person_types'),
+        index.FilterField('topicpage_id'),
+    ]
+
     api_fields = [
         APIField('expertise_list'),
         APIField('image_square_url'),
+        APIField('latest_activity_json'),
         APIField('position'),
         APIField('title'),
+        APIField('topics'),
         APIField('url'),
     ]
 
@@ -421,6 +441,10 @@ class PersonType(index.Indexed, models.Model):
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
+
+    search_fields = [
+        index.FilterField('name'),
+    ]
 
     def __str__(self):
         return self.name
