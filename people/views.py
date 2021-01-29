@@ -1,3 +1,4 @@
+from core.models import ArchiveablePageAbstract
 from django.contrib.postgres.lookups import Unaccent
 from django.db.models.functions import Lower
 from wagtail.api.v2.filters import (
@@ -24,5 +25,6 @@ class ExpertPageViewSet(BaseAPIViewSet):
 
     def get_queryset(self):
         return self.model.objects.public().live().filter(
+            archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
             person_types__name__in=['CIGI Chair', 'Expert']
         ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))

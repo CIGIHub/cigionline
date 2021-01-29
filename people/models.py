@@ -223,6 +223,18 @@ class PersonPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def expertise_list(self):
+        expertise_list = []
+        for block in self.expertise:
+            if block.block_type == 'expertise':
+                expertise_list.append(block.value)
+        return expertise_list
+
+    @property
+    def image_square_url(self):
+        return self.image_square.get_rendition('fill-300x300').url
+
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
@@ -343,6 +355,9 @@ class PersonPage(
     ]
 
     api_fields = [
+        APIField('expertise_list'),
+        APIField('image_square_url'),
+        APIField('position'),
         APIField('title'),
         APIField('url'),
     ]
