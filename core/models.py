@@ -97,17 +97,17 @@ class BasicPageAbstract(models.Model):
         blank=True,
     )
     hero_link_text = models.CharField(
-        blank=False,
-        max_length=32,
+        blank=True,
+        max_length=255,
         null=True,
     )
     hero_link_url = models.CharField(
-        blank=False,
-        max_length=32,
+        blank=True,
+        max_length=255,
         null=True,
     )
     hero_link_icon = models.CharField(
-        blank=False,
+        blank=True,
         max_length=32,
         null=True,
     )
