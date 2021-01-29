@@ -1,4 +1,3 @@
-from home.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import PromotionBlock
