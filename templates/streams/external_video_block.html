@@ -6,7 +6,7 @@
       <ol class="external-video-block">
         {% for external_video in self %}
           <li>
-            <a class="button" href="{{ external_video.video_url }}">Watch <i class="fas fa-video"></i></a>
+            <a class="button" href="{{ external_video.video_url }}" target="_blank" rel="noopener noreferrer">Watch <i class="fas fa-video"></i></a>
             <div>{{ external_video.title }}</div>
           </li>
         {% endfor %}
