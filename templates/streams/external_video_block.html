@@ -1,0 +1,16 @@
+{% load wagtailcore_tags core_tags %}
+
+<div class="container">
+  <div class="row d-block">
+    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <ol class="external-video-block">
+        {% for external_video in self %}
+          <li>
+            <a class="button" href="{{ external_video.video_url }}">Watch <i class="fas fa-video"></i></a>
+            <div>{{ external_video.title }}</div>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</div>

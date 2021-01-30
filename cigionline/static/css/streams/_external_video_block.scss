@@ -1,0 +1,44 @@
+.external-video-block {
+  @include media-breakpoint-up(md) {
+    column-count: 2;
+  }
+  counter-reset: item;
+  margin: 2em 0 0 1.5em;
+
+  li {
+    align-items: flex-start;
+    display: flex;
+    line-height: 1;
+    margin-bottom: 1em;
+    margin-right: 2em;
+    position: relative;
+
+    &::before {
+      content: counter(item) '. ';
+      counter-increment: item;
+      left: -1.5em;
+      position: absolute;
+      top: 0;
+    }
+
+    .button {
+      align-items: center;
+      background-color: $cigi-primary-colour;
+      border-radius: 0;
+      color: $white;
+      display: flex;
+      flex-shrink: 0;
+      font-size: 1em;
+      height: 2.5em;
+      margin: 0 1em 0 0;
+
+      &:hover {
+        background-color: $cigi-dark-pink;
+      }
+
+      i {
+        margin-left: 0.3em;
+      }
+    }
+  }
+}
