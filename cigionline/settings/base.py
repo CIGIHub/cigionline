@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'multimedia',
     'newsletters',
     'people',
+    'promotions',
     'publications',
     'research',
     'search',
