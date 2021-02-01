@@ -11,7 +11,7 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles', '0006_highlight_title_block'),
+        ('articles', '0007_add_poster_block'),
     ]
 
     operations = [
