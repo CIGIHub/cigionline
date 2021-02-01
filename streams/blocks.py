@@ -269,6 +269,29 @@ class ExternalQuoteBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/external_quote_block.html'
 
 
+class ExternalVideoStructBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    video_url = blocks.URLBlock(required=True)
+
+    class Meta:
+        icon = 'media'
+        label = 'External Video'
+
+
+class ExternalVideoBlock(blocks.ListBlock, ThemeableBlock):
+    def __init__(self, *args, **kwargs):
+        super(ExternalVideoBlock, self).__init__(ExternalVideoStructBlock, *args, **kwargs)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ExternalVideoBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'external_video_block')
+
+    class Meta:
+        icon = 'media'
+        label = 'External Video Block'
+        template = 'streams/external_video_block.html'
+
+
 class ImageBlock(blocks.StructBlock, ThemeableBlock):
     """Image"""
 
@@ -373,6 +396,17 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         icon = 'edit'
         label = 'Paragraph'
         template = 'streams/paragraph_block.html'
+
+
+class PosterBlock(blocks.PageChooserBlock, ThemeableBlock):
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(PosterBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'poster_block')
+
+    class Meta:
+        icon = 'form'
+        label = 'Poster Teaser'
+        template = 'streams/poster_block.html'
 
 
 class ReadMoreBlock(blocks.StructBlock, ThemeableBlock):
