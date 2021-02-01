@@ -1,4 +1,9 @@
 .indigenous-lands-series-article {
+  @include top-bar(
+    $background-color: transparent,
+    $color: $black,
+    $position: relative,
+  );
 
   .indigenous-lands-series-article-hero {
     @include media-breakpoint-up(md) {
@@ -120,6 +125,10 @@
       font-weight: 400;
       margin-bottom: 1em;
     }
+  }
+
+  .article-footnotes {
+    font-family: Helvetica, sans-serif;
   }
 
   .about-the-author {
