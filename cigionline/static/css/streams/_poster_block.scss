@@ -1,0 +1,48 @@
+.poster-block {
+  @include hover-darken;
+  align-items: flex-start;
+  border-bottom: 1px solid $cigi-light-grey;
+  border-top: 1px solid $cigi-light-grey;
+  display: flex;
+  margin-bottom: 1em;
+  padding: 1em 0;
+
+  .img-wrapper {
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-right: 1em;
+    width: 160px;
+
+    img {
+      border: 1px solid $cigi-light-grey;
+      box-shadow: -5px 5px 5px $cigi-medium-light-grey;
+    }
+  }
+
+  h3 {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
+    @include media-breakpoint-down(sm) {
+      font-size: 1.25em;
+    }
+    font-size: 1.5em;
+    margin: 0 0 0.25em;
+  }
+
+  .meta {
+    &:first-child {
+      letter-spacing: 1px;
+      margin-bottom: 1em;
+    }
+  }
+
+  .date {
+    margin-bottom: 0.5em;
+  }
+
+  .short-description {
+    color: $cigi-text-grey;
+  }
+}

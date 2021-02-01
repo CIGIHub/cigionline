@@ -13,6 +13,7 @@ from streams.blocks import (
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
     ChartBlock,
+    PosterBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
@@ -74,7 +75,7 @@ class BasicPageAbstract(models.Model):
         ('image', ImageChooserBlock(required=True)),
         ('hide_image_caption', blocks.BooleanBlock(required=False)),
     ]))
-    body_poster_block = ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage'))
+    body_poster_block = ('poster_block', PosterBlock(required=True, page_type='publications.PublicationPage'))
     body_pull_quote_left_block = ('pull_quote_left', PullQuoteLeftBlock())
     body_pull_quote_right_block = ('pull_quote_right', PullQuoteRightBlock())
     body_read_more_block = ('read_more', ReadMoreBlock())

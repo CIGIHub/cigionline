@@ -375,6 +375,17 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         template = 'streams/paragraph_block.html'
 
 
+class PosterBlock(blocks.PageChooserBlock, ThemeableBlock):
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(PosterBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'poster_block')
+
+    class Meta:
+        icon = 'form'
+        label = 'Poster Teaser'
+        template = 'streams/poster_block.html'
+
+
 class ReadMoreBlock(blocks.StructBlock, ThemeableBlock):
     title = blocks.CharBlock(required=True)
     text = blocks.RichTextBlock(
