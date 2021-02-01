@@ -6,6 +6,7 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
+    FieldPanel
 )
 from wagtail.core.models import Orderable, Page
 from django.utils import timezone
@@ -63,6 +64,18 @@ class HomePage(Page):
             heading='Featured Experts',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'promotion_blocks',
+                    max_num=2,
+                    min_num=0,
+                    label='Promotion Block',
+                ),
+            ],
+            heading='Promotion Blocks',
+            classname='collapsible collapsed',
+        ),
     ]
 
     def featured_large(self):
@@ -105,6 +118,12 @@ class HomePage(Page):
         for item in self.featured_experts.all()[:3]:
             featured_experts.append(item.featured_expert)
         return featured_experts
+
+    def promotion_blocks_list(self):
+        promotion_blocks_list = []
+        for item in self.promotion_blocks.all()[:2]:
+            promotion_blocks_list.append(item.promotion_block)
+        return promotion_blocks_list
 
     def featured_events(self):
         featured_events = []
@@ -232,5 +251,27 @@ class HomePageFeaturedMultimedia(Orderable):
         PageChooserPanel(
             'featured_multimedia',
             ['multimedia.MultimediaPage'],
+        ),
+    ]
+
+
+class HomePagePromotionBlocks(Orderable):
+    home_page = ParentalKey(
+        'home.HomePage',
+        related_name='promotion_blocks',
+    )
+    promotion_block = models.ForeignKey(
+        'promotions.PromotionBlock',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Promotion Block',
+    )
+
+    panels = [
+        FieldPanel(
+            'promotion_block',
+            ['promotions.PromotionBlock'],
         ),
     ]
