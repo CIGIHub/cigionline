@@ -49,6 +49,7 @@ class PromotionBlock(models.Model):
         FieldPanel('block_type'),
         FieldPanel('link_url'),
         ImageChooserPanel('image_promotion'),
+        ImageChooserPanel('image_promotion_small'),
     ]
 
     def __str__(self):
