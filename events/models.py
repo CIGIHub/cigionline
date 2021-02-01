@@ -50,6 +50,12 @@ class EventListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
+    def featured_events_list(self):
+        featured_events = []
+        for item in self.featured_events.all()[:6]:
+            featured_events.append(item.event_page.specific)
+        return featured_events
+
     class Meta:
         verbose_name = 'Event List Page'
 

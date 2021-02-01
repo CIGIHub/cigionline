@@ -11,6 +11,18 @@
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
+  <section class="events-page-featured-events">
+    <div class="container">
+      <h2>Featured</h2>
+      <div class="row featured-event-row">
+        {% for event in self.featured_events_list %}
+          <div class="col-md-4 featured-event-col">
+            {% include "includes/features/feature_event.html" with event=event %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
   <section>
     <div class="container">
       <div class="row">

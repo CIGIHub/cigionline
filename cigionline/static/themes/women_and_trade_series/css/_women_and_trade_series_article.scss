@@ -6,6 +6,32 @@
   );
   background-color: $women-and-trade-series-background-colour;
 
+  h3 {
+    border-top: 5px solid $cigi-darkest-grey;
+    display: inline-block;
+    font-size: 24px;
+    line-height: 2.125rem;
+    text-transform: none;
+  }
+
+  .in-the-series {
+    h2 {
+      border-top: solid 1px $divider-grey;
+      font-size: 2em;
+      font-weight: 600;
+      margin: 0;
+      padding: 1em 0;
+
+      a {
+        color: $black;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
   .article-hero {
     border-top: solid 1px $divider-grey;
     padding-top: 2em;
@@ -59,6 +85,12 @@
           }
         }
       }
+    }
+  }
+
+  .about-the-author {
+    .name {
+      font-weight: 600;
     }
   }
 }
