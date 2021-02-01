@@ -14,6 +14,7 @@
   .homepage-featured-multimedia,
   .homepage-featured-publications,
   .homepage-featured-highlights,
+  .homepage-promotion-blocks,
   .homepage-featured-events {
     @include media-breakpoint-up(md) {
       margin-bottom: 4em;
@@ -141,6 +142,17 @@
     a {
       &:hover {
         border-top-color: $cigi-primary-colour;
+      }
+    }
+  }
+
+  .homepage-promotion-blocks {
+    .homepage-promotion-block {
+      &:first-child {
+        @include media-breakpoint-up(md) {
+          margin-bottom: 0;
+        }
+        margin-bottom: 1em;
       }
     }
   }
