@@ -9,6 +9,7 @@ from streams.blocks import (
     EmbeddedVideoBlock,
     ExternalPersonBlock,
     ExternalQuoteBlock,
+    ExternalVideoBlock,
     ImageBlock,
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
@@ -65,10 +66,7 @@ class BasicPageAbstract(models.Model):
         required=True,
     ))
     body_external_quote_block = ('external_quote', ExternalQuoteBlock())
-    body_external_video_block = ('external_video', blocks.ListBlock(blocks.StructBlock([
-        ('title', blocks.CharBlock(required=True)),
-        ('video_url', blocks.URLBlock(required=True)),
-    ])))
+    body_external_video_block = ('external_video', ExternalVideoBlock())
     body_highlight_title_block = ('highlight_title', HighlightTitleBlock())
     body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
     body_image_scroll_block = ('image_scroll', blocks.StructBlock([
