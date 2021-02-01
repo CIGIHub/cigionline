@@ -10,6 +10,7 @@ from streams.blocks import (
     ExternalPersonBlock,
     ExternalQuoteBlock,
     ImageBlock,
+    ImageScrollBlock,
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
     ChartBlock,
@@ -70,10 +71,7 @@ class BasicPageAbstract(models.Model):
     ])))
     body_highlight_title_block = ('highlight_title', HighlightTitleBlock())
     body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
-    body_image_scroll_block = ('image_scroll', blocks.StructBlock([
-        ('image', ImageChooserBlock(required=True)),
-        ('hide_image_caption', blocks.BooleanBlock(required=False)),
-    ]))
+    body_image_scroll_block = ('image_scroll', ImageScrollBlock())
     body_poster_block = ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage'))
     body_pull_quote_left_block = ('pull_quote_left', PullQuoteLeftBlock())
     body_pull_quote_right_block = ('pull_quote_right', PullQuoteRightBlock())
