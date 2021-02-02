@@ -9,7 +9,7 @@
               {{ block.value.title }}
             </a>
           </h4>
-          <p class="authors">
+          <p class="authors meta">
             Author{{ block.value.specific.author_count|pluralize }}:
             {% for item in block.value.specific.authors.all %}
               <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>

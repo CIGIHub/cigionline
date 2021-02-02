@@ -18,11 +18,16 @@
 
   .stream-block-recommended-text {
     @include link($color: $black, $hover-color: $cigi-dark-pink);
+    flex: 1;
     justify-content: center;
 
     .stream-block-recommended-label {
       color: $black;
       font-weight: 500;
+    }
+
+    .stream-block-recommended-type {
+      padding: 0.35em 0;
     }
 
     a {
