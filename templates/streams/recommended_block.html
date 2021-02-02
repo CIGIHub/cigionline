@@ -4,15 +4,23 @@
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
       <div class="stream-block-recommended">
+        {% if self.specific.image_hero or self.specific.image_feature %}
         <div class="img-wrapper">
           <a href="{{ self.url }}">
-            {% image self.specific.image_hero fill-377x246 %}
+            {% if self.specific.image_hero %}
+              {% image self.specific.image_hero fill-377x246 %}
+            {% else %}
+              {% image self.specific.image_feature fill-377x246 %}
+            {% endif %}
           </a>
         </div>
-
+        {% endif %}
         <div class="stream-block-recommended-text flex-column">
           <div class="stream-block-recommended-label meta">RECOMMENDED</div>
           <a href="{{ self.url }}">{{self.title}}</a>
+          {% if self.specific.publication_type %}
+            <div class="stream-block-recommended-type meta">{{ self.specific.publication_type }}</div>
+          {% endif %}
         </div>
       </div>
     </div>
