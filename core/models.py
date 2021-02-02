@@ -32,7 +32,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.api import APIField
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
