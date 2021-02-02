@@ -10,15 +10,11 @@
   }
 
   .indigenous-lands-series-in-the-series-items {
-    @include media-breakpoint-up(md) {
-      column-gap: 3em;
-      columns: 2;
-    }
     columns: 1;
+    margin: 0 5em 0 2em;
 
     article {
-      break-inside: avoid;
-      margin-bottom: 2.5em;
+      margin-bottom: 1.5em;
 
       h4 {
         @include link($color: $cigi-darkest-grey, $hover-color: $cigi-medium-grey);
@@ -34,6 +30,16 @@
           @include comma-separated;
           @include link($color: $cigi-medium-grey, $hover-color: $cigi-primary-colour);
         }
+      }
+    }
+    @include media-breakpoint-up(md) {
+      column-gap: 3em;
+      columns: 2;
+      margin: 0;
+
+      article {
+        break-inside: avoid;
+        margin-bottom: 2.5em;
       }
     }
   }
