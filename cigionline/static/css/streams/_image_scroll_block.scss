@@ -1,0 +1,57 @@
+$body-background-alpha-0: rgba($body-background, 0);
+$panzoom-scrollbar-grey: #949390;
+
+.stream-image-scroll-block {
+  margin-bottom: 2em;
+  margin-top: 2em;
+
+  .image-wrapper {
+    &::before {
+      background: linear-gradient(to right, $previous-body-bg 0%, $body-background-alpha-0 100%);
+      content: '';
+      display: block;
+      height: 100%;
+      left: 0;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      width: 5%;
+      z-index: 2;
+    }
+
+    &::after {
+      background: linear-gradient(to left, $previous-body-bg 0%, $body-background-alpha-0 100%);
+      content: '';
+      display: block;
+      height: 100%;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 5%;
+      z-index: 2;
+    }
+
+    img {
+      height: 406px;
+      width: 1581px;
+    }
+  }
+
+  .panzoom-scrollbar-outer {
+    background: $panzoom-scrollbar-grey;
+    height: 6px;
+    margin: 1em 30% 0;
+
+    .panzoom-scrollbar-inner {
+      background: $black;
+      height: 6px;
+    }
+  }
+
+  .panzoom-arrow {
+    color: $cigi-dark-grey;
+    margin-top: 0.5em;
+    text-align: center;
+  }
+}
