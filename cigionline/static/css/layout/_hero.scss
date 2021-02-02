@@ -17,13 +17,37 @@ section {
           color: $white;
           font-size: 1.75em;
           font-weight: $sans-regular;
-          margin-bottom: 0;
+          margin-bottom: 0.5em;
         }
 
         h2 {
           color: $cigi-medium-light-grey;
           font-size: 1em;
           font-weight: $sans-regular;
+        }
+
+        .hero-link {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          margin-top: 1.5em;
+
+          i {
+            border: 2px solid $white;
+            border-radius: 50%;
+            color: $white;
+            font-size: 12px;
+            margin-right: 6px;
+            padding: 10px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+          }
+
+          a {
+            &:hover {
+              i {
+                border-color: $cigi-primary-colour;
+                color: $cigi-primary-colour;
+              }
+            }
+          }
         }
       }
 
