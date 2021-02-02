@@ -28,7 +28,7 @@ section {
 
         .hero-link {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
-          margin: 1.5em 0;
+          margin-top: 1.5em;
 
           i {
             border: 2px solid $white;
