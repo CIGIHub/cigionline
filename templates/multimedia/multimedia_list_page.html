@@ -36,6 +36,17 @@
       </div>
     </div>
   </section>
+  <section class="multimedia-promotion-blocks">
+    <div class="container">
+      <div class="row">
+        {% for promotion_block in self.promotion_blocks_list %}
+          <div class="col">
+            {% include "includes/promotion_block.html" with promotion_block=promotion_block.promotion_block %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
   <section>
     <div class="container">
       <div class="row">

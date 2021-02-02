@@ -75,6 +75,9 @@ class MultimediaListPage(BasicPageAbstract, Page):
     def featured_small(self):
         return self.featured_multimedia.all()[1:]
 
+    def promotion_blocks_list(self):
+        return self.promotion_blocks.all()[:1]
+
     class Meta:
         verbose_name = 'Multimedia List Page'
 
