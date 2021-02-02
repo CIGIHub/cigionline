@@ -10,11 +10,23 @@
 
   .person-info {
     display: flex;
+    line-height: 1.25;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
     img {
       border-radius: 50%;
       height: 40px;
+      margin-right: 1.5em;
       width: 40px;
+    }
+
+    .person-name {
+      font-weight: 500;
     }
   }
 
