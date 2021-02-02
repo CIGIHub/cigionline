@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 
 import Panzoom from '@panzoom/panzoom';
-import 'bootstrap/dist/js/bootstrap.bundle';
 import './css/longform_2.scss';
 
 // Image Scroll stream block
