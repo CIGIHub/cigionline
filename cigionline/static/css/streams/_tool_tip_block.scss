@@ -1,0 +1,15 @@
+.tool-tip-block {
+  
+}
+
+.text-bubble-link {
+  cursor: pointer;
+
+  a {
+    &::after {
+      content: '\f24d';
+      font-family: 'Font Awesome 5 Pro';
+      padding-left: 0.25em;
+    }
+  }
+}

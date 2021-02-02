@@ -1,0 +1,6 @@
+{% load wagtailimages_tags %}
+<div class="tool-tip-block tooltip-{{ self.anchor }}">
+  {{ self.title }}
+  {{ self.text }}
+  {% image self.image width-100 %}
+</div>
