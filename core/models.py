@@ -317,6 +317,17 @@ class ArchiveablePageAbstract(models.Model):
         abstract = True
 
 
+class TopicFilterField(index.FilterField):
+    def get_attname(self, cls):
+        return self.field_name
+
+    def get_type(self, cls):
+        return 'IntegerField'
+
+    def get_value(self, obj):
+        return list(getattr(obj, self.field_name).all().values_list('id', flat=True))
+
+
 class ContentPage(Page, SearchablePageAbstract):
     external_authors = StreamField(
         [
@@ -394,6 +405,7 @@ class ContentPage(Page, SearchablePageAbstract):
 
     search_fields = [
         index.FilterField('topicpage_id'),
+        TopicFilterField('topics'),
     ]
 
     api_fields = [
