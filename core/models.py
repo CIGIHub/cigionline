@@ -98,12 +98,13 @@ class BasicPageAbstract(models.Model):
         body_default_blocks,
         blank=True,
     )
-    hero = StreamField(
-      [
-        ('hero_link', HeroLinkBlock()),
-        ('hero_document', HeroDocumentBlock()),
-      ],
-      blank=True,
+    hero_link = StreamField(
+        [
+            ('hero_link', HeroLinkBlock()),
+            ('hero_document', HeroDocumentBlock()),
+        ],
+        blank=True,
+        help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.',
     )
     image_hero = models.ForeignKey(
         'wagtailimages.Image',
@@ -134,9 +135,9 @@ class BasicPageAbstract(models.Model):
         heading='Title',
         classname='collapsible'
     )
-    hero_panel = MultiFieldPanel(
+    hero_link_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('hero'),
+            StreamFieldPanel('hero_link'),
         ],
         heading='Hero Link',
         classname='collapsible collapsed'

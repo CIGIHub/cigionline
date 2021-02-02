@@ -345,7 +345,7 @@ class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
 class HeroLinkBlock(blocks.StructBlock):
     hero_link_text = blocks.CharBlock(required=True)
     hero_link_url = blocks.CharBlock(required=True)
-    hero_link_icon = blocks.CharBlock(required=False)
+    hero_link_icon = blocks.CharBlock(required=False, help_text='Use a font-awesome icon name such as fa-envelope')
 
     class Meta:
         icon = 'link'
@@ -356,7 +356,7 @@ class HeroLinkBlock(blocks.StructBlock):
 class HeroDocumentBlock(blocks.StructBlock):
     hero_link_text = blocks.CharBlock(required=True)
     hero_link_document = DocumentChooserBlock(required=True)
-    hero_link_icon = blocks.CharBlock(required=False)
+    hero_link_icon = blocks.CharBlock(required=False, help_text='Use a font-awesome icon name such as fa-envelope')
 
     class Meta:
         icon = 'doc-full'

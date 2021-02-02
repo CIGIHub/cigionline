@@ -6,19 +6,11 @@
       <div class="hero-main col-md-7">
         <h1>{{title}}</h1>
         <h2>{{subtitle|safe}}</h2>
-        {% if self.hero_link_text %}
+        {% if self.hero_link %}
           <div class="hero-link">
-            {% if self.hero_link_url %}
-              {% define self.hero_link_url as hero_link_url %}
-            {% elif self.hero_link_document %}
-              {% define self.hero_link_document.file.url as hero_link_url %}
-            {% endif %}
-            <a href="{{ hero_link_url }}">
-              {% if self.hero_link_icon %}
-                <i class="fas {{ self.hero_link_icon }}"></i>
-              {% endif %}
-              {{ self.hero_link_text }}
-            </a>
+            {% for block in self.hero_link %}
+              {{ block }}
+            {% endfor %}
           </div>
         {% endif %}
       </div>
