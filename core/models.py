@@ -10,6 +10,8 @@ from streams.blocks import (
     ExternalPersonBlock,
     ExternalQuoteBlock,
     ExternalVideoBlock,
+    HeroLinkBlock,
+    HeroDocumentBlock,
     ImageBlock,
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
@@ -96,27 +98,12 @@ class BasicPageAbstract(models.Model):
         body_default_blocks,
         blank=True,
     )
-    hero_link_text = models.CharField(
-        blank=True,
-        max_length=255,
-        null=True,
-    )
-    hero_link_url = models.CharField(
-        blank=True,
-        max_length=255,
-        null=True,
-    )
-    hero_link_icon = models.CharField(
-        blank=True,
-        max_length=32,
-        null=True,
-    )
-    hero_link_document = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
+    hero = StreamField(
+      [
+        ('hero_link', HeroLinkBlock()),
+        ('hero_document', HeroDocumentBlock()),
+      ],
+      blank=True,
     )
     image_hero = models.ForeignKey(
         'wagtailimages.Image',
@@ -149,10 +136,7 @@ class BasicPageAbstract(models.Model):
     )
     hero_panel = MultiFieldPanel(
         [
-            FieldPanel('hero_link_text'),
-            FieldPanel('hero_link_url'),
-            FieldPanel('hero_link_icon'),
-            DocumentChooserPanel('hero_link_document'),
+            StreamFieldPanel('hero'),
         ],
         heading='Hero Link',
         classname='collapsible collapsed'

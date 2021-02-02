@@ -342,6 +342,28 @@ class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
         template = 'streams/inline_video_block.html'
 
 
+class HeroLinkBlock(blocks.StructBlock):
+    hero_link_text = blocks.CharBlock(required=True)
+    hero_link_url = blocks.CharBlock(required=True)
+    hero_link_icon = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'link'
+        label = 'Hero Link'
+        template = 'streams/hero_link_block.html'
+
+
+class HeroDocumentBlock(blocks.StructBlock):
+    hero_link_text = blocks.CharBlock(required=True)
+    hero_link_document = DocumentChooserBlock(required=True)
+    hero_link_icon = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Hero Document'
+        template = 'streams/hero_document_block.html'
+
+
 class HighlightTitleBlock(blocks.CharBlock, ThemeableBlock):
     def get_template(self, context, *args, **kwargs):
         standard_template = super(HighlightTitleBlock, self).get_template(context, *args, **kwargs)
