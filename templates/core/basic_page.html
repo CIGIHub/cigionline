@@ -2,7 +2,7 @@
 {% load wagtailimages_tags %}
 
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% if self.image_hero %}
     <div class="container">
       <div class="row justify-content-center">

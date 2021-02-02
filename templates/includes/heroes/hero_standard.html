@@ -1,4 +1,4 @@
-{% load menu_tags %}
+{% load menu_tags core_tags %}
 
 <section class="hero">
   <div class="container">
@@ -6,6 +6,13 @@
       <div class="hero-main col-md-7">
         <h1>{{title}}</h1>
         <h2>{{subtitle|safe}}</h2>
+        {% if self.hero_link %}
+          <div class="hero-link">
+            {% for block in self.hero_link %}
+              {{ block }}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
       <aside class="col-md-4 offset-md-1">
         {% if submenu %}

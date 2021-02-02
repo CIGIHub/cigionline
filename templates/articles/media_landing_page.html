@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% include "includes/body.html" with body=self.body %}
   <section class="media-latest-news">
     <div class="container">
