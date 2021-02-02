@@ -4,5 +4,8 @@
 {% block theme_css %}
   {% render_bundle 'themeLongform2' 'css' %}
 {% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeLongform2' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block body_class %}longform-2-article{% endblock %}

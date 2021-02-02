@@ -313,6 +313,22 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/image_block.html'
 
 
+class ImageScrollBlock(blocks.StructBlock, ThemeableBlock):
+    """Image Scroll"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ImageScrollBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'image_scroll_block')
+
+    class Meta:
+        icon = 'image'
+        label = 'Image'
+        template = 'streams/image_scroll_block.html'
+
+
 class ImageFullBleedBlock(blocks.StructBlock, ThemeableBlock):
     """Full bleed image"""
 
