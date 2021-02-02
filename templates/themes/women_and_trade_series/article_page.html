@@ -18,7 +18,7 @@
         <div class="meta">
           <div><label>Series:</label> {{ self.article_series.title }}</div>
           <div><label>Published:</label> {% include "includes/date.html" with date=self.publishing_date %}</div>
-          <div class="authors"><label>Author{{ authors|length|pluralize }}:</label>
+          <div class="authors"><label>Author{{ self.author_count|pluralize }}:</label>
             <div class="custom-text-list">
               {% for item in self.authors.all %}
                 {% if item.author %}

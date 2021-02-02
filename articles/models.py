@@ -102,6 +102,7 @@ class MediaLandingPage(BasicPageAbstract, Page):
 
     content_panels = [
         BasicPageAbstract.title_panel,
+        BasicPageAbstract.hero_link_panel,
         BasicPageAbstract.body_panel,
     ]
     settings_panels = Page.settings_panels + [
