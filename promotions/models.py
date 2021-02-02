@@ -44,6 +44,9 @@ class PromotionBlock(models.Model):
         help_text='The background image of the promotion block. Only used for wide promotion blocks as a replacement when screen width is small. Ex. Multimedia landing page wide promotion block.',
     )
 
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_node_id = models.IntegerField(blank=True, null=True)
+
     panels = [
         FieldPanel('name'),
         FieldPanel('block_type'),
