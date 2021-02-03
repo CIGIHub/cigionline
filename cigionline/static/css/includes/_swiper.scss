@@ -2,7 +2,7 @@
   @include media-breakpoint-up(sm) {
     margin-top: -2em;
   }
-  margin-top: 0;
+  margin-top: -1em;
   padding-top: 2em !important;
 
   .swiper-controls {
@@ -46,6 +46,12 @@
       .swiper-pagination-bullet-active {
         background-color: $black;
       }
+    }
+  }
+
+  &.article-landing-series {
+    article {
+      display: flex;
     }
   }
 }

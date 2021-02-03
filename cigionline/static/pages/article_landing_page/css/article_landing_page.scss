@@ -1,4 +1,5 @@
 @import '../../../css/global/mixins';
+@import '../../../css/includes/swiper';
 
 article {
   &.feature-content {
@@ -30,6 +31,51 @@ article {
       .feature-content-people-list,
       .feature-content-topic-list {
         justify-content: center;
+      }
+    }
+  }
+}
+
+section {
+  &.series {
+    background-color: $cigi-light-grey-bg;
+    margin: 2em 0;
+    padding: 2em 0;
+
+    h3 {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      margin-bottom: 1em;
+    }
+
+    p,
+    h4 {
+      color: $cigi-text-grey;
+    }
+
+    h4 {
+      margin-bottom: 1em;
+    }
+
+    .paragraph-heading {
+      margin-bottom: 2.67em;
+    }
+
+    .topics {
+      margin-bottom: 0.75em;
+    }
+
+    .contributors {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      column-count: 4;
+
+      li {
+        list-style: none;
+      }
+    }
+
+    .img-wrapper {
+      @include media-breakpoint-down(sm) {
+        margin-bottom: 1em;
       }
     }
   }

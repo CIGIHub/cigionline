@@ -1,8 +1,40 @@
+import Swiper, { Navigation, Pagination } from 'swiper';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import OpinionListing from '../../js/components/OpinionListing';
 import SearchTable from '../../js/components/SearchTable';
+
+import 'swiper/swiper-bundle.css';
 import './css/article_landing_page.scss';
+
+Swiper.use([Navigation, Pagination]);
+const swiperContainer = document.querySelector('.swiper-container');
+
+if (swiperContainer) {
+  const swiperControls = swiperContainer.querySelector('.swiper-controls');
+  const articleLandingSwiper = new Swiper('.swiper-container', {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+    spaceBetween: 20,
+    speed: 800,
+    autoHeight: true,
+    grabCursor: true,
+
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+
+  if (swiperContainer.querySelectorAll('.swiper-slide').length <= 4) {
+    swiperControls.style.display = 'none';
+  }
+}
 
 ReactDOM.render(
   <SearchTable
