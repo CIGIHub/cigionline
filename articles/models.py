@@ -54,6 +54,12 @@ class ArticleLandingPage(Page):
     def featured_large_2(self):
         return self.featured_articles.all()[9:10]
 
+    def all_article_series(self):
+        article_series = []
+        for series in ArticleSeriesPage.objects.live().public().order_by('-publishing_date'):
+            article_series.append(series.specific)
+        return article_series
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
