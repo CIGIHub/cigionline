@@ -9,10 +9,15 @@ from streams.blocks import (
     EmbeddedVideoBlock,
     ExternalPersonBlock,
     ExternalQuoteBlock,
+    ExternalVideoBlock,
+    HeroLinkBlock,
+    HeroDocumentBlock,
     ImageBlock,
+    ImageScrollBlock,
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
     ChartBlock,
+    PosterBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
@@ -64,17 +69,11 @@ class BasicPageAbstract(models.Model):
         required=True,
     ))
     body_external_quote_block = ('external_quote', ExternalQuoteBlock())
-    body_external_video_block = ('external_video', blocks.ListBlock(blocks.StructBlock([
-        ('title', blocks.CharBlock(required=True)),
-        ('video_url', blocks.URLBlock(required=True)),
-    ])))
+    body_external_video_block = ('external_video', ExternalVideoBlock())
     body_highlight_title_block = ('highlight_title', HighlightTitleBlock())
     body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
-    body_image_scroll_block = ('image_scroll', blocks.StructBlock([
-        ('image', ImageChooserBlock(required=True)),
-        ('hide_image_caption', blocks.BooleanBlock(required=False)),
-    ]))
-    body_poster_block = ('poster_block', blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage'))
+    body_image_scroll_block = ('image_scroll', ImageScrollBlock())
+    body_poster_block = ('poster_block', PosterBlock(required=True, page_type='publications.PublicationPage'))
     body_pull_quote_left_block = ('pull_quote_left', PullQuoteLeftBlock())
     body_pull_quote_right_block = ('pull_quote_right', PullQuoteRightBlock())
     body_read_more_block = ('read_more', ReadMoreBlock())
@@ -95,6 +94,14 @@ class BasicPageAbstract(models.Model):
     body = StreamField(
         body_default_blocks,
         blank=True,
+    )
+    hero_link = StreamField(
+        [
+            ('hero_link', HeroLinkBlock()),
+            ('hero_document', HeroDocumentBlock()),
+        ],
+        blank=True,
+        help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.',
     )
     image_hero = models.ForeignKey(
         'wagtailimages.Image',
@@ -120,10 +127,17 @@ class BasicPageAbstract(models.Model):
     title_panel = MultiFieldPanel(
         [
             FieldPanel('title'),
-            FieldPanel('subtitle')
+            FieldPanel('subtitle'),
         ],
         heading='Title',
         classname='collapsible'
+    )
+    hero_link_panel = MultiFieldPanel(
+        [
+            StreamFieldPanel('hero_link'),
+        ],
+        heading='Hero Link',
+        classname='collapsible collapsed'
     )
     body_panel = MultiFieldPanel(
         [

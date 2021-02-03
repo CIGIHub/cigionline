@@ -133,5 +133,10 @@
     padding-top: 2em;
     position: relative;
     z-index: 4;
+
+    h3 {
+      border-bottom: 5px solid $black;
+      border-top: 0;
+    }
   }
 }

@@ -7,7 +7,7 @@
 
 {% block content %}
   {% block hero %}
-    {% include "includes/hero_article.html" with title=self.title subtitle=self.subtitle %}
+    {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
 
     {% if self.image_hero %}
       <div class="container">

@@ -1,5 +1,14 @@
 $longform-2-background-color: #f2f0ea;
 
+@import '../../../css/global/mixins';
+@import './longform_2_article';
+
 .longform-2-article {
+  @include top-bar(
+    $background-color: $longform-2-background-color,
+    $color: $black,
+    $position: relative,
+  );
+
   background-color: $longform-2-background-color;
 }

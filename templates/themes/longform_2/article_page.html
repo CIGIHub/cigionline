@@ -5,4 +5,34 @@
   {% render_bundle 'themeLongform2' 'css' %}
 {% endblock %}
 
+{% block theme_js %}
+  {% render_bundle 'themeLongform2' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block body_class %}longform-2-article{% endblock %}
+
+{% block hero %}
+  <section class="hero-container article-hero">
+    <div class="video-bg">
+      {% if self.video_banner %}
+      <video playsinline autoplay muted loop class="video-background">
+        <source src="{{ self.video_banner.url }}" type="video/mp4">
+      </video>
+      {% endif %}
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          {% include "includes/topics.html" with topics=self.topics %}
+          <h1>{{ self.title }}</h1>
+          <h2>{{ self.subtitle|safe }}</h2>
+          {% include "includes/date.html" with date=self.publishing_date %}
+          {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  {% endblock %}
