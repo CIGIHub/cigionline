@@ -5,12 +5,15 @@
   {% render_bundle 'publicationPage' 'css' %}
 {% endblock %}
 
+
 {% block content %}
-  {% if self.publication_type == 'books' %}
-    {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors editors=self.editors %}
-  {% else %}
-    {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
-  {% endif %}
+  {% block hero %}
+    {% if self.publication_type.title == 'Books' %}
+      {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors editors=self.editors %}
+    {% else %}
+      {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
+    {% endif %}
+  {% endblock %}
 
   {% include "includes/body.html" with body=self.body %}
 
