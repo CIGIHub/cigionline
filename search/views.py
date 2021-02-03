@@ -1,4 +1,5 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from wagtail.core.models import Page
@@ -32,3 +33,12 @@ def search(request):  # pragma: no cover
         'search_query': search_query,
         'search_results': search_results,
     })
+
+
+def search_api(request):
+    return JsonResponse(
+        {
+            'hello': 'world',
+        },
+        safe=False
+    )

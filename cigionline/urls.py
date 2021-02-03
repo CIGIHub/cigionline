@@ -32,6 +32,7 @@ api_router.register_endpoint('multimedia', MultimediaPageViewSet)
 api_router.register_endpoint('opinions', OpinionPageViewSet)
 api_router.register_endpoint('publication_types', PublicationTypePageViewSet)
 api_router.register_endpoint('publications', PublicationPageViewSet)
+# api_router.register_endpoint('search', search_views.search_api)
 api_router.register_endpoint('topics', TopicPageViewSet)
 
 urlpatterns = [
@@ -42,7 +43,8 @@ urlpatterns = [
 
     url(r'^search/$', search_views.search, name='search'),
 
-    url(r'^api/', api_router.urls)
+    url(r'^api/', api_router.urls),
+    url(r'^search_api/$', search_views.search_api),
 ]
 
 
