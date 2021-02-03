@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import Swiper, { Navigation, Pagination } from 'swiper';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -11,11 +13,9 @@ Swiper.use([Navigation, Pagination]);
 const swiperContainer = document.querySelector('.swiper-container');
 
 if (swiperContainer) {
-  const swiperControls = swiperContainer.querySelector('.swiper-controls');
   const articleLandingSwiper = new Swiper('.swiper-container', {
     slidesPerView: 1,
     slidesPerGroup: 1,
-    spaceBetween: 20,
     speed: 800,
     autoHeight: true,
     grabCursor: true,
@@ -30,10 +30,6 @@ if (swiperContainer) {
       clickable: true,
     },
   });
-
-  if (swiperContainer.querySelectorAll('.swiper-slide').length <= 4) {
-    swiperControls.style.display = 'none';
-  }
 }
 
 ReactDOM.render(
