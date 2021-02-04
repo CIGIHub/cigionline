@@ -51,7 +51,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
-          <div class="content-wrapper{% if self.slug|hero_title_position %} bottom-align{% endif %}">
+          <div class="content-wrapper{% if self.is_title_bottom %} bottom-align{% endif %}">
             {% include "includes/topics.html" with topics=self.topics %}
             <h1>{{ self.title }}</h1>
             <div class="subtitle">{{ self.subtitle|safe }}</div>

@@ -431,6 +431,14 @@ class ArticlePage(
     templates = 'articles/article_page.html'
 
     @property
+    def is_title_bottom(self):
+        article_list = [
+          'Can the G20 Save Globalization\'s Waning Reputation?',
+          'Shoshana Zuboff on the Undetectable, Indecipherable World of Surveillance Capitalism',
+        ]
+        return self.title in article_list
+
+    @property
     def article_series_category(self):
         category = ''
         for item in self.article_series.specific.series_items:
