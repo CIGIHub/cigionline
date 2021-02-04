@@ -10,6 +10,7 @@ from wagtail.api.v2.views import BaseAPIViewSet
 from .models import (
     ArticlePage,
     ArticleSeriesPage,
+    ArticleTypePage,
 )
 
 
@@ -59,3 +60,12 @@ class OpinionPageViewSet(BaseAPIViewSet):
             ],
             publishing_date__isnull=False
         ).order_by(F('publishing_date').desc(nulls_last=True))
+
+
+class ArticleTypePageViewSet(BaseAPIViewSet):
+    model = ArticleTypePage
+    base_serializer_class = PageSerializer
+    filter_backends = [OrderingFilter]
+
+    def get_queryset(self):
+        return self.model.objects.public().live()

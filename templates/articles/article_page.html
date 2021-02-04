@@ -33,7 +33,7 @@
 
   {% block article_content %}
     {% if self.body %}
-      {% if self.article_type == 'cigi_in_the_news' %}
+      {% if self.article_type.title == 'cigi_in_the_news' %}
         <section class="body" id="article-body">
           <div class="container">
             <div class="row justify-content-center">
