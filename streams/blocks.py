@@ -301,6 +301,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
     implemented_themes = [
         'cyber_series_opinion',
         'data_series_opinion',
+        'longform_2_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -474,6 +475,10 @@ class ReadMoreBlock(blocks.StructBlock, ThemeableBlock):
 
 class RecommendedBlock(blocks.PageChooserBlock, ThemeableBlock):
     """Recommended content block"""
+
+    implemented_themes = [
+        'longform_2_opinion',
+    ]
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(RecommendedBlock, self).get_template(context, *args, **kwargs)

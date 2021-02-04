@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 
+import ScrollReveal from 'scrollreveal';
 import Panzoom from '@panzoom/panzoom';
 import './css/longform_2.scss';
 
@@ -88,3 +89,21 @@ window.addEventListener('scroll', function() {
   }
 });
 
+// fade in article elements
+
+const sr = ScrollReveal();
+
+sr.reveal('.stream-block-blockquote', {
+  delay: 100,
+  distance: '50px',
+  duration: 750,
+  origin: 'left',
+  scale: 1,
+});
+
+sr.reveal('.stream-image-block img', {
+  delay: 100,
+  distance: '0',
+  duration: 750,
+  scale: 1,
+});

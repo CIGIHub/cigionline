@@ -119,10 +119,38 @@
     }
   }
 
-  .body {
+  .body,
+  .disclaimer,
+  .about-the-author,
+  .recommended-section {
     background: $longform-2-background-color;
-    padding-top: 3em;
+    margin: 0;
     position: relative;
     z-index: 10;
+  }
+
+  .body {
+    padding: 2em 0 1em;
+
+    h2 {
+      &.no-border {
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .about-the-author {
+    padding: 3em 0;
+
+    h3 {
+      border-top: 5px solid $black;
+      font-size: 1.25em;
+      text-transform: capitalize;
+    }
+
+    .name {
+      font-weight: 600;
+    }
   }
 }
