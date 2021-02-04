@@ -33,23 +33,23 @@ ReactDOM.render(
     }, {
       endpoint: '/opinions',
       name: 'Opinion',
-      param: 'article_type',
-      value: 'opinion',
+      typeEndpoint: '/article_types',
+      typeValue: 'Opinion',
     }, {
       endpoint: '/opinions',
       name: 'Op-Ed',
-      param: 'article_type',
-      value: 'op_ed',
+      typeEndpoint: '/article_types',
+      typeValue: 'Op-Ed',
     }, {
       endpoint: '/media_articles',
       name: 'CIGI in the News',
-      param: 'article_type',
-      value: 'cigi_in_the_news',
+      typeEndpoint: '/article_types',
+      typeValue: 'CIGI in the News',
     }, {
       endpoint: '/media_articles',
       name: 'News Release',
-      param: 'article_type',
-      value: 'news_release',
+      typeEndpoint: '/article_types',
+      typeValue: 'News Release',
     }]}
     RowComponent={ResearchContentListing}
     tableColumns={[{

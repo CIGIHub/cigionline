@@ -22,16 +22,16 @@ ReactDOM.render(
     ]}
     filterTypes={[{
       name: 'News Releases',
-      param: 'article_type',
-      value: 'news_release',
+      typeEndpoint: '/article_types',
+      typeValue: 'News Release',
     }, {
       name: 'CIGI in the News',
-      param: 'article_type',
-      value: 'cigi_in_the_news',
+      typeEndpoint: '/article_types',
+      typeValue: 'CIGI in the News',
     }, {
       name: 'Op-Eds',
-      param: 'article_type',
-      value: 'op_ed',
+      typeEndpoint: '/article_types',
+      typeValue: 'Op-Ed',
     }]}
     RowComponent={MediaListing}
     tableColumns={[{
