@@ -1,8 +1,5 @@
 section {
   &.publication-hero-book {
-    @include media-breakpoint-up(md) {
-      padding-top: 6em;
-    }
     color: $white;
 
     .topics {
@@ -10,7 +7,10 @@ section {
     }
 
     h1 {
-      font-size: 2.75em;
+      @include media-breakpoint-up(md) {
+        font-size: 2.75em;
+      }
+      font-size: 2em;
       font-weight: 400;
       margin-bottom: 0.5em;
     }
@@ -27,13 +27,10 @@ section {
     }
 
     .authors {
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
       font-size: 1.125em;
       margin-bottom: 0;
       margin-top: 0;
-
-      a {
-        color: $white;
-      }
     }
 
     .social-share-list {
@@ -55,13 +52,16 @@ section {
       margin-top: 0.75em;
 
       a {
+        @include media-breakpoint-up(md) {
+          margin: 1em 0.5em 0;
+        }
         background-color: $color--blue;
         border-radius: 2px;
         color: $white;
         display: block;
         font-size: 0.75em;
         line-height: 1.333em;
-        margin: 1em 0.5em 0;
+        margin: 1em 0 0;
         padding: 7px 10px;
         transition: background-color 0.25s ease;
 
