@@ -1,61 +1,54 @@
 .longform-2-article {
 
+  .article-hero {
+    height: 100vh;
+    padding-top: 0;
+    text-align: left;
+
+    .video-bg {
+      video {
+        display: block;
+        height: auto;
+        left: 50%;
+        position: fixed;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: auto;
+        z-index: -100;
+      }
+    }
+
+    .container {
+      left: 50%;
+      padding-top: 60px;
+      position: absolute;
+      right: 50%;
+      transform: translate(-50%);
+    }
+
+    .custom-text-list {
+      justify-content: left;
+    }
+
+    .topics {
+      margin: 0.25em 0;
+    }
+
+    h1 {
+      background: $cigi-primary-colour;
+      box-decoration-break: clone;
+      box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0$cigi-primary-colour;
+      color: $white;
+      display: inline;
+      font-family: 'futura-pt', sans-serif;
+      font-size: 2.75em;
+      font-weight: normal;
+      line-height: 125%;
+
+      &::after {
+        content: '';
+        display: block;
+      }
+    }
+  }
 }
-//   .article-hero {
-//     height: 100vh;
-//     padding-top: 0;
-//     text-align: left;
-
-//     .video-bg {
-//       video {
-//         display: none;
-//       }
-//       @include media-breakpoint-up(md) {
-
-//         video {
-//           display: block;
-//           height: auto;
-//           left: 50%;
-//           position: fixed;
-//           top: 50%;
-//           transform: translateX(-50%) translateY(-50%);
-//           width: auto;
-//           z-index: -100;
-//         }
-//       }
-//     }
-
-//     .container {
-//       left: 50%;
-//       padding-top: 60px;
-//       position: absolute;
-//       right: 50%;
-//       transform: translate(-50%);
-//     }
-
-//     .custom-text-list {
-//       justify-content: left;
-//     }
-
-//     .topics {
-//       margin: 0.25em 0;
-//     }
-
-//     h1 {
-//       background: $cigi-primary-colour;
-//       box-decoration-break: clone;
-//       box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0$cigi-primary-colour;
-//       color: $white;
-//       display: inline;
-//       font-family: 'futura-pt', sans-serif;
-//       font-size: 2.75em;
-//       font-weight: normal;
-//       line-height: 125%;
-
-//       &::after {
-//         content: '';
-//         display: block;
-//       }
-//     }
-//   }
-// }
