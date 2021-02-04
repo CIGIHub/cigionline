@@ -36,7 +36,10 @@
     </div>
   </section>
 
-  <section class="hero-container article-hero">
+  {% if not self.video_banner %}
+    {% image self.image_hero original as image_hero %}
+  {% endif %}
+  <section class="hero-container article-hero" style="background-image: url('{{ image_hero.url }}');">
     <div class="video-bg">
       {% if self.video_banner %}
       <video playsinline autoplay muted loop class="video-background">
