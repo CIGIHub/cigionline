@@ -17,8 +17,11 @@
     }
 
     .content-wrapper {
-      max-width: 650px;
-      padding-top: 8em;
+      @include media-breakpoint-up(md) {
+        padding: 8em 0 0;
+      }
+      max-width: 600px;
+      padding: 10em 3em 0;
       position: fixed;
     }
 
@@ -36,41 +39,69 @@
       padding-top: 3em;
 
       .date {
-        background-color: $black;
-        color: $white;
-        display: inline-block;
-        line-height: 125%;
-        padding: 0 0.3em;
+        @include inline-highlight($color: $white, $background: $black);
       }
 
       .authors {
         margin-top: 0.75em;
 
         a {
-          background-color: $black;
-          color: $white;
-          display: inline-block;
-          line-height: 125%;
-          padding: 0 0.3em;
+          @include inline-highlight($color: $white, $background: $black);
+
+          &:hover {
+            color: $cigi-primary-colour;
+          }
         }
       }
     }
 
-    h1 {
-      background: $cigi-primary-colour;
-      box-decoration-break: clone;
-      box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0$cigi-primary-colour;
-      color: $white;
-      display: inline;
-      font-family: 'futura-pt', sans-serif;
-      font-size: 2.75em;
-      font-weight: normal;
-      line-height: 125%;
+    .subtitle {
+      margin-top: 2em;
 
-      &::after {
-        content: '';
-        display: block;
+      p {
+        @include media-breakpoint-up(md) {
+          font-size: 1.5em;
+        }
+        @include inline-highlight($color: $white, $background: $black);
+        font-family: 'futura-pt', sans-serif;
+        font-size: 1.25em;
+        font-weight: normal;
+        margin-bottom: 0;
       }
+    }
+
+    h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2.75em;
+      }
+      @include inline-highlight($color: $white, $background: $cigi-primary-colour);
+      font-family: 'futura-pt', sans-serif;
+      font-size: 2em;
+      font-weight: normal;
+    }
+  }
+
+  .scroll-arrow {
+    animation: bounce 2s infinite;
+    background-color: $cigi-primary-colour;
+    border-radius: 50%;
+    bottom: 10%;
+    color: $white;
+    height: 32px;
+    left: 50%;
+    margin-left: -15px;
+    position: absolute;
+    width: 32px;
+    z-index: 120;
+
+    &:hover {
+      background-color: $cigi-dark-pink;
+    }
+
+    i {
+      font-size: 32px;
+      padding-left: 6px;
+      padding-top: 2px;
     }
   }
 }

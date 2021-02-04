@@ -51,7 +51,7 @@
           <div class="content-wrapper">
             {% include "includes/topics.html" with topics=self.topics %}
             <h1>{{ self.title }}</h1>
-            <h2>{{ self.subtitle|safe }}</h2>
+            <div class="subtitle">{{ self.subtitle|safe }}</div>
             <div class="meta">
               {% include "includes/date.html" with date=self.publishing_date %}
               {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
@@ -60,6 +60,9 @@
         </div>
       </div>
     </div>
+    <a href="#article-body" class="scroll-arrow">
+      <i class="far fa-angle-down" aria-hidden="true"></i>
+    </a>
 
   </section>
 
