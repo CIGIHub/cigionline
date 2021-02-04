@@ -33,3 +33,10 @@ def social_string(value):
 @register.filter
 def file_extension(value):
     return Path(value).suffix
+
+@register.filter
+def hero_title_position(value):
+  bottom_articles = ["can-g20-save-globalizations-waning-reputation", "shoshana-zuboff-undetectable-indecipherable-world-surveillance-capitalism"]
+  if value in bottom_articles:
+      return True
+

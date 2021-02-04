@@ -4,10 +4,17 @@
     height: 100vh;
     padding-top: 0;
     text-align: left;
-    background-position: center;
-    background-size: cover;
 
     .video-bg {
+      background-position: center;
+      background-size: cover;
+      height: 100%;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: -1;
+
       video {
         height: auto;
         min-height: 100%;
@@ -21,10 +28,15 @@
     .content-wrapper {
       @include media-breakpoint-up(md) {
         padding: 8em 0 0;
+
+        &.bottom-align {
+          bottom: 3em;
+        }
       }
       max-width: 600px;
-      padding: 10em 3em 0;
+      padding: 2em 3em 0;
       position: fixed;
+      z-index: 10;
     }
 
     .custom-text-list {
