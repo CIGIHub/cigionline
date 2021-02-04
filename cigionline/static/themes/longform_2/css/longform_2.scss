@@ -11,4 +11,78 @@ $longform-2-background-color: #f2f0ea;
   );
   background-color: $longform-2-background-color;
 
+  .article-header-sticky {
+    @include media-breakpoint-up(lg) {
+      &.scrolled {
+        height: auto;
+        opacity: 1;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+      }
+    }
+    background: $divider-grey;
+    height: 0;
+    opacity: 0;
+    transition: height 0.5s ease, opacity 0.5s ease;
+
+    .progress-bar {
+      background-color: transparent;
+    }
+
+    progress {
+      background-color: transparent;
+      border: 0;
+      color: $cigi-primary-colour;
+      height: 5px;
+      width: 100%;
+
+      &::-moz-progress-bar {
+        background-color: $cigi-primary-colour !important;
+      }
+
+      &::-webkit-progress-bar {
+        background-color: transparent;
+        width: 100%;
+      }
+
+      &::-webkit-progress-value {
+        background-color: $cigi-primary-colour !important;
+      }
+    }
+
+    .article-header-sticky-content {
+      align-items: center;
+      display: flex;
+      padding: 0.5em;
+    }
+
+    .cigi-logo {
+      flex: 0 0 135px;
+    }
+
+    .series-title {
+      display: flex;
+      flex: 1;
+      font-size: .8em;
+      font-weight: 500;
+      justify-content: center;
+      line-height: 1.5em;
+      margin-left: -135px;
+    }
+
+    .social-links {
+      a {
+        color: $cigi-medium-grey;
+        cursor: pointer;
+        font-size: 1.25em;
+        padding-left: 1em;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
 }

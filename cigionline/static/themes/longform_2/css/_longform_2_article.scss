@@ -7,23 +7,19 @@
 
     .video-bg {
       video {
-        display: block;
         height: auto;
-        left: 50%;
-        position: fixed;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        width: auto;
-        z-index: -100;
+        min-height: 100%;
+        min-width: 100%;
+        object-fit: cover;
+        position: absolute;
+        width: 100%;
       }
     }
 
-    .container {
-      left: 50%;
-      padding-top: 60px;
-      position: absolute;
-      right: 50%;
-      transform: translate(-50%);
+    .content-wrapper {
+      max-width: 650px;
+      padding-top: 8em;
+      position: fixed;
     }
 
     .custom-text-list {
@@ -32,6 +28,32 @@
 
     .topics {
       margin: 0.25em 0;
+    }
+
+    .meta {
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
+      font-size: 1em;
+      padding-top: 3em;
+
+      .date {
+        background-color: $black;
+        color: $white;
+        display: inline-block;
+        line-height: 125%;
+        padding: 0 0.3em;
+      }
+
+      .authors {
+        margin-top: 0.75em;
+
+        a {
+          background-color: $black;
+          color: $white;
+          display: inline-block;
+          line-height: 125%;
+          padding: 0 0.3em;
+        }
+      }
     }
 
     h1 {

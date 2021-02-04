@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeLongform2' 'css' %}
@@ -12,6 +12,30 @@
 {% block body_class %}longform-2-article{% endblock %}
 
 {% block hero %}
+  <section class="article-header-sticky">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="article-header-sticky-content">
+            <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
+            <div class="series-title">{{ self.title }}</div>
+            <div class="social-links">
+              <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+                <i class="fab fa-facebook-square icon"></i>
+              </a>
+              <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <progress value="0" max="100"></progress>
+    </div>
+  </section>
+
   <section class="hero-container article-hero">
     <div class="video-bg">
       {% if self.video_banner %}
@@ -22,13 +46,17 @@
     </div>
 
     <div class="container">
-      <div class="row">
-        <div class="col">
-          {% include "includes/topics.html" with topics=self.topics %}
-          <h1>{{ self.title }}</h1>
-          <h2>{{ self.subtitle|safe }}</h2>
-          {% include "includes/date.html" with date=self.publishing_date %}
-          {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="content-wrapper">
+            {% include "includes/topics.html" with topics=self.topics %}
+            <h1>{{ self.title }}</h1>
+            <h2>{{ self.subtitle|safe }}</h2>
+            <div class="meta">
+              {% include "includes/date.html" with date=self.publishing_date %}
+              {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
