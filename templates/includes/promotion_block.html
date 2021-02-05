@@ -27,6 +27,15 @@
           </div>
         </div>
       {% endif %}
+      {% if promotion_block.block_type == "wide" and promotion_block.image_promotion_small %}
+        {% if promotion_block.image_promotion_small.file.url|file_extension == '.gif' %}
+          {% define promotion_block.image_promotion_small.file.url as image_promotion_small_url %}
+        {% else %}
+          {% image promotion_block.image_promotion_small original as image_promotion_small %}
+          {% define image_promotion_small.url as image_promotion_small_url %}
+        {% endif %}
+        <div class="promotion-block-background promotion-block-background-small" style="background-image: url('{{ image_promotion_small_url }}');"></div>
+      {% endif %}
     </div>
   {% if promotion_block.link_url %}
     </a>
