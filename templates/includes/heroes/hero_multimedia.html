@@ -33,12 +33,12 @@
         {% include "includes/social_links.html" with title=self.title %}
       </div>
     </div>
-    {% if self.multimedia_type == 'video' and self.multimedia_url %}
+    {% if self.multimedia_url %}
       <div class="row">
         <div class="col mm-video-container">
           <div class="mm-video-header">
             <div class="mm-hero-video">
-              <div class="mm-hero-video-embed">
+              <div class="mm-hero-video-embed {% if self.multimedia_type == 'audio' %}mm-hero-audio-embed{% endif %}">
                 {% embed self.multimedia_url max_width="1080" %}
               </div>
               <div class="mm-hero-video-content">

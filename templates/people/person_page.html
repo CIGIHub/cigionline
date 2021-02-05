@@ -7,26 +7,24 @@
   <article>
     <section class="hero{% if page.archive %} archived{% endif %}">
       <div class="container">
-        <div class="row">
-          <div class="col hero-container">
-            <div class="hero-main">
-              <h1>{{page.title}}</h1>
-              {% if page.position and page.archive %}
-                <div class="position">
-                  {% if not 'Former' in page.position %}Former {% endif %}{{ page.position }}
-                </div>
-              {% else %}
-                <div class="short-bio">
-                  {{page.short_bio|richtext}}
-                </div>
-              {% endif %}
-            </div>
-            {% if page.image_square and not page.archive %}
-              <div class="portrait-circle">
-                {% image page.image_square fill-140x140 %}
+        <div class="row hero-container">
+          <div class="col-md-8 col-lg-6 hero-main">
+            <h1>{{page.title}}</h1>
+            {% if page.position and page.archive %}
+              <div class="position">
+                {% if not 'Former' in page.position %}Former {% endif %}{{ page.position }}
+              </div>
+            {% else %}
+              <div class="short-bio">
+                {{page.short_bio|richtext}}
               </div>
             {% endif %}
           </div>
+          {% if page.image_square and not page.archive %}
+            <div class="col-md-3 col-lg-2 offset-lg-3 portrait-circle">
+              {% image page.image_square fill-200x200 %}
+            </div>
+          {% endif %}
         </div>
       </div>
     </section>
