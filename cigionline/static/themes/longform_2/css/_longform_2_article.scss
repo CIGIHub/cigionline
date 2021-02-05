@@ -185,6 +185,14 @@
       margin-left: 1.5em;
       padding-left: 0;
     }
+  }
 
+  .stream-image-block {
+    figcaption {
+      border-left: solid 5px $cigi-primary-colour;
+      font-size: 0.85rem;
+      margin: 0.5rem 0;
+      padding-left: 0.5rem;
+    }
   }
 }
