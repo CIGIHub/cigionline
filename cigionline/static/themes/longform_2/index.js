@@ -62,7 +62,6 @@ panzoomContainers.forEach(function(panzoomContainer, index) {
 
 window.addEventListener('resize', resizeUpdate);
 
-
 /* sticky header */
 
 const headerEl = document.querySelector('header');

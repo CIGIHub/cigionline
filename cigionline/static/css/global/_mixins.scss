@@ -151,7 +151,7 @@
   }
 }
 
-@mixin inline-highlight($color: $white, $background: $cigi-primary-colour){
+@mixin inline-highlight($color: $white, $background: $cigi-primary-colour) {
   background: $background;
   box-decoration-break: clone;
   box-shadow: 5px 0 0 $background, -5px 0 0 $background;
