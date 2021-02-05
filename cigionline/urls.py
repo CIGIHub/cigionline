@@ -3,6 +3,7 @@ from articles.views import (
     MediaPageViewSet,
     OpinionPageViewSet,
     ArticleTypePageViewSet,
+    ArticlePageViewSet,
 )
 from core.views import ContentPageViewSet
 from django.conf import settings
@@ -25,6 +26,7 @@ from search import views as search_views
 
 api_router = WagtailAPIRouter('wagtailapi')
 
+api_router.register_endpoint('articles', ArticlePageViewSet)
 api_router.register_endpoint('article_series', ArticleSeriesPageViewSet)
 api_router.register_endpoint('article_types', ArticleTypePageViewSet)
 api_router.register_endpoint('content', ContentPageViewSet)

@@ -62,6 +62,19 @@ class OpinionPageViewSet(BaseAPIViewSet):
         ).order_by(F('publishing_date').desc(nulls_last=True))
 
 
+class ArticlePageViewSet(BaseAPIViewSet):
+    model = ArticlePage
+    base_serializer_class = PageSerializer
+    filter_backends = [
+        FieldsFilter,
+        OrderingFilter,
+        SearchFilter,
+    ]
+
+    def get_queryset(self):
+        return self.model.objects.public().live().filter(publishing_date__isnull=False).order_by(F('publishing_date').desc(nulls_last=True))
+
+
 class ArticleTypePageViewSet(BaseAPIViewSet):
     model = ArticleTypePage
     base_serializer_class = PageSerializer
