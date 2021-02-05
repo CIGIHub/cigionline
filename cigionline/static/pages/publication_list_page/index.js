@@ -6,7 +6,7 @@ import SearchTable from '../../js/components/SearchTable';
 ReactDOM.render(
   <SearchTable
     showSearch
-    endpoint="/publications"
+    endpoint="/api/search/"
     fields={[
       'authors(author(title,url))',
       'pdf_downloads',

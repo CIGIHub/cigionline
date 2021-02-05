@@ -1,8 +1,11 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from wagtail.core.models import Page
 from wagtail.search.models import Query
+
+from .search import cigi_search
 
 
 def search(request):  # pragma: no cover
@@ -32,3 +35,35 @@ def search(request):  # pragma: no cover
         'search_query': search_query,
         'search_results': search_results,
     })
+
+
+def search_api(request):
+    pages = cigi_search(
+        contenttypes=request.GET.getlist('contenttype', None),
+    )
+    default_limit = 24
+    default_offset = 0
+    limit = request.GET.get('limit', default_limit)
+    if limit is not None and limit.isnumeric():
+        limit = int(limit)
+    else:
+        limit = default_limit
+    offset = request.GET.get('offset', default_offset)
+    if offset is not None and offset.isnumeric():
+        offset = int(offset)
+    else:
+        offset = default_offset
+
+    offsetLimit = limit + offset
+    return JsonResponse({
+        'count': pages.count(),
+        'results': [
+            {
+                'contenttype': item.specific.contenttype,
+                'contentsubtype': item.specific.contentsubtype,
+                'publishing_date': item.specific.publishing_date,
+                'title': item.title,
+                'url': item.url,
+            } for item in pages[offset:offsetLimit]
+        ]
+    }, safe=False)

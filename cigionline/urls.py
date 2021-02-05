@@ -1,38 +1,24 @@
-from articles.views import (
-    ArticleSeriesPageViewSet,
-    MediaPageViewSet,
-    OpinionPageViewSet,
-)
-from core.views import ContentPageViewSet
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
-from events.views import EventPageViewSet
-from multimedia.views import MultimediaPageViewSet
-from publications.views import (
-    PublicationPageViewSet,
-    PublicationTypePageViewSet,
-)
-from research.views import TopicPageViewSet
 from wagtail.admin import urls as wagtailadmin_urls
-from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
-api_router = WagtailAPIRouter('wagtailapi')
-
-api_router.register_endpoint('article_series', ArticleSeriesPageViewSet)
-api_router.register_endpoint('content', ContentPageViewSet)
-api_router.register_endpoint('events', EventPageViewSet)
-api_router.register_endpoint('media_articles', MediaPageViewSet)
-api_router.register_endpoint('multimedia', MultimediaPageViewSet)
-api_router.register_endpoint('opinions', OpinionPageViewSet)
-api_router.register_endpoint('publication_types', PublicationTypePageViewSet)
-api_router.register_endpoint('publications', PublicationPageViewSet)
-api_router.register_endpoint('topics', TopicPageViewSet)
+# api_router = WagtailAPIRouter('wagtailapi')
+#
+# api_router.register_endpoint('article_series', ArticleSeriesPageViewSet)
+# api_router.register_endpoint('content', ContentPageViewSet)
+# api_router.register_endpoint('events', EventPageViewSet)
+# api_router.register_endpoint('media_articles', MediaPageViewSet)
+# api_router.register_endpoint('multimedia', MultimediaPageViewSet)
+# api_router.register_endpoint('opinions', OpinionPageViewSet)
+# api_router.register_endpoint('publication_types', PublicationTypePageViewSet)
+# api_router.register_endpoint('publications', PublicationPageViewSet)
+# api_router.register_endpoint('topics', TopicPageViewSet)
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
@@ -41,8 +27,7 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
-
-    url(r'^api/', api_router.urls)
+    url(r'^api/search/$', search_views.search_api),
 ]
 
 

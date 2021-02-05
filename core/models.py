@@ -359,6 +359,8 @@ class ContentPage(Page, SearchablePageAbstract):
             contenttype = self.specific._meta.verbose_name
             if contenttype == 'Opinion':
                 return self.specific.get_article_type_display()
+            if contenttype == 'Publication':
+                return self.specific.publication_type.title
             if contenttype == 'Multimedia':
                 return self.specific.get_multimedia_type_display()
             return contenttype
@@ -405,6 +407,8 @@ class ContentPage(Page, SearchablePageAbstract):
 
     search_fields = [
         # index.FilterField('topicpage_id'),
+        index.FilterField('contenttype'),
+        index.FilterField('contentsubtype'),
         index.FilterField('publishing_date'),
         TopicFilterField('topics'),
     ]
