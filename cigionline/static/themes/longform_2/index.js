@@ -107,3 +107,19 @@ sr.reveal('.stream-image-block img', {
   duration: 750,
   scale: 1,
 });
+
+sr.reveal('.stream-block-pull-quote.right', {
+  delay: 100,
+  distance: '50px',
+  duration: 750,
+  origin: 'right',
+  scale: 1,
+});
+
+sr.reveal('.stream-block-pull-quote.left', {
+  delay: 100,
+  distance: '50px',
+  duration: 750,
+  origin: 'left',
+  scale: 1,
+});

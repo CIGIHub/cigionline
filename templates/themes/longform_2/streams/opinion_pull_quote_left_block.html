@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="row d-block">
+    <div class="col">
+      <div class="stream-block-pull-quote left">
+        <blockquote>
+          {{ self.quote }}
+
+          {% if self.quote_author %}
+            <div class="stream-block-pull-quote-author">
+              {{ self.quote_author }}
+            </div>
+          {% endif %}
+
+          {% if self.author_title %}
+            <div class="stream-block-pull-quote-author-title">
+              {{ self.author_title }}
+            </div>
+          {% endif %}
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</div>

@@ -525,6 +525,7 @@ class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
 
     implemented_themes = [
         'data_series_opinion',
+        'longform_2_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -549,6 +550,7 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
 
     implemented_themes = [
         'data_series_opinion',
+        'longform_2_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):

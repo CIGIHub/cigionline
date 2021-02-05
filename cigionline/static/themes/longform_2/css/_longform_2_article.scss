@@ -33,7 +33,7 @@
           bottom: 3em;
         }
       }
-      max-width: 600px;
+      max-width: 575px;
       padding: 2em 3em 0;
       position: fixed;
       z-index: 1;
@@ -138,6 +138,10 @@
         text-transform: uppercase;
       }
     }
+
+    .drop-caps {
+      border: 0;
+    }
   }
 
   .about-the-author {
@@ -152,5 +156,35 @@
     .name {
       font-weight: 600;
     }
+  }
+
+  .stream-block-pull-quote {
+
+    &::before {
+      border-bottom: 5px solid $cigi-primary-colour;
+      content: '';
+      height: 5px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 80px;
+    }
+
+    blockquote {
+      background: transparent;
+      border-left: 0;
+      padding: 1em 0;
+    }
+
+    &.left {
+      margin-right: 1.5em;
+      padding-right: 0;
+    }
+
+    &.right {
+      margin-left: 1.5em;
+      padding-left: 0;
+    }
+
   }
 }
