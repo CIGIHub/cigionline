@@ -52,6 +52,18 @@ class MultimediaListPage(BasicPageAbstract, Page):
             heading='Featured Multimedia',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'promotion_blocks',
+                    max_num=2,
+                    min_num=0,
+                    label='Promotion Block',
+                ),
+            ],
+            heading='Promotion Blocks',
+            classname='collapsible collapsed',
+        ),
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
@@ -62,6 +74,9 @@ class MultimediaListPage(BasicPageAbstract, Page):
 
     def featured_small(self):
         return self.featured_multimedia.all()[1:]
+
+    def promotion_blocks_list(self):
+        return self.promotion_blocks.all()[:1]
 
     class Meta:
         verbose_name = 'Multimedia List Page'
@@ -497,3 +512,25 @@ class MultimediaSeriesPage(
     class Meta:
         verbose_name = 'Multimedia Series'
         verbose_name_plural = 'Multimedia Series'
+
+
+class MultimediaListPagePromotionBlocks(Orderable):
+    multimedia_list_page = ParentalKey(
+        'multimedia.MultimediaListPage',
+        related_name='promotion_blocks',
+    )
+    promotion_block = models.ForeignKey(
+        'promotions.PromotionBlock',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Promotion Block',
+    )
+
+    panels = [
+        FieldPanel(
+            'promotion_block',
+            ['promotions.PromotionBlock'],
+        ),
+    ]
