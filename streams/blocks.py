@@ -414,6 +414,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'subscript',
             'superscript',
             'ul',
+            'anchor',
         ]
 
     implemented_themes = [

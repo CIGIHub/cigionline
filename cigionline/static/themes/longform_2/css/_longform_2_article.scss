@@ -119,6 +119,13 @@
     }
   }
 
+  h2 {
+    &.no-border {
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+
   .body,
   .disclaimer,
   .about-the-author,
@@ -131,13 +138,6 @@
 
   .body {
     padding: 2em 0 1em;
-
-    h2 {
-      &.no-border {
-        font-weight: 600;
-        text-transform: uppercase;
-      }
-    }
 
     .drop-caps {
       border: 0;
@@ -197,6 +197,49 @@
   }
 
   .stream-accordion-block {
-    
+    border: 0;
+
+    button,
+    .card {
+      background: $cigi-light-grey;
+    }
+
+    button {
+      padding: 1em;
+
+      &:hover {
+        background: $divider-grey;
+      }
+
+      &.collapsed {
+        &::after {
+          content: '\f078';
+        }
+      }
+
+      &::after {
+        content: '\f00d';
+      }
+    }
+
+    .card {
+      border-top: solid 1px $divider-grey;
+    }
+  }
+
+  .embedded-multimedia-block {
+    height: 0;
+    margin: 0;
+    padding-bottom: 56.25%;
+    position: relative;
+    width: 100%;
+
+    iframe {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
   }
 }

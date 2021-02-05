@@ -28,33 +28,6 @@ $longform-2-background-color: #f2f0ea;
     opacity: 0;
     transition: height 0.5s ease, opacity 0.5s ease;
 
-    .progress-bar {
-      background-color: transparent;
-    }
-
-    progress {
-      background-color: transparent;
-      border: 0;
-      color: $cigi-primary-colour;
-      height: 5px;
-      width: 100%;
-
-      &::-moz-progress-bar {
-        background-color: $cigi-primary-colour !important;
-      }
-
-      &::-webkit-progress-bar {
-        background-color: transparent;
-        width: 100%;
-      }
-
-      &::-webkit-progress-value {
-        background-color: $cigi-primary-colour !important;
-      }
-    }
-
-    
-
     .article-header-sticky-content {
       align-items: center;
       display: flex;
@@ -85,6 +58,74 @@ $longform-2-background-color: #f2f0ea;
         &:hover {
           color: $cigi-primary-colour;
         }
+      }
+    }
+  }
+
+  .progress-bar {
+    background-color: transparent;
+  }
+
+  progress {
+    background-color: transparent;
+    border: 0;
+    color: $cigi-primary-colour;
+    height: 5px;
+    width: 100%;
+
+    &::-moz-progress-bar {
+      background-color: $cigi-primary-colour !important;
+    }
+
+    &::-webkit-progress-bar {
+      background-color: transparent;
+      width: 100%;
+    }
+
+    &::-webkit-progress-value {
+      background-color: $cigi-primary-colour !important;
+    }
+  }
+
+  .chapter-anchor {
+    background-color: $cigi-medium-grey;
+    height: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+
+    &:hover {
+      .chapter-anchor-tooltip {
+        visibility: visible;
+      }
+    }
+hr
+    .chapter-anchor-tooltip {
+      background-color: $cigi-medium-grey;
+      color: $white;
+      font-size: 14px;
+      height: auto;
+      left: 50%;
+      line-height: 1;
+      padding: 5px 8px;
+      position: absolute;
+      top: 170%;
+      transform: translateX(-50%);
+      visibility: hidden;
+      white-space: nowrap;
+
+      &::after {
+        border: solid transparent;
+        border-bottom-color: $cigi-medium-grey;
+        border-width: 8px;
+        bottom: 100%;
+        content: '';
+        height: 0;
+        left: 50%;
+        position: absolute;
+        transform: translateX(-50%);
+        width: 0;
       }
     }
   }
