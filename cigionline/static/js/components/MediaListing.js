@@ -48,7 +48,7 @@ function MediaListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             <li className="table-infos-meta">
-              {row.get_article_type_display}
+              {row.article_type.title}
             </li>
           </ul>
         </div>
@@ -80,7 +80,9 @@ MediaListing.propTypes = {
       type: PropTypes.string,
       value: PropTypes.value,
     })),
-    get_article_type_display: PropTypes.string,
+    article_type: PropTypes.shape({
+      title: PropTypes.string,
+    }),
     id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string,
