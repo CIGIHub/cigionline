@@ -323,7 +323,7 @@ class ArticlePage(
 
     def is_opinion(self):
         return self.article_type.title in [
-            'Op-Ed',
+            'Op-Eds',
             'Opinion',
         ]
 
