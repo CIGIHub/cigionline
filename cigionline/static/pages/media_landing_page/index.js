@@ -9,8 +9,7 @@ ReactDOM.render(
     showSearch
     endpoint="/media_articles"
     fields={[
-      'article_type',
-      'get_article_type_display',
+      'article_type(title,url)',
       'cigi_people_mentioned',
       'publishing_date',
       'title',
@@ -22,16 +21,19 @@ ReactDOM.render(
     ]}
     filterTypes={[{
       name: 'News Releases',
+      param: 'article_type',
       typeEndpoint: '/article_types',
-      typeValue: 'News Release',
+      typeValue: 'News Releases',
     }, {
       name: 'CIGI in the News',
+      param: 'article_type',
       typeEndpoint: '/article_types',
       typeValue: 'CIGI in the News',
     }, {
       name: 'Op-Eds',
+      param: 'article_type',
       typeEndpoint: '/article_types',
-      typeValue: 'Op-Ed',
+      typeValue: 'Op-Eds',
     }]}
     RowComponent={MediaListing}
     tableColumns={[{

@@ -46,9 +46,9 @@ ReactDOM.render(
       typeValue: 'Opinion',
     }, {
       endpoint: '/opinions',
-      name: 'Op-Ed',
+      name: 'Op-Eds',
       typeEndpoint: '/article_types',
-      typeValue: 'Op-Ed',
+      typeValue: 'Op-Eds',
     }, {
       endpoint: '/media_articles',
       name: 'CIGI in the News',
@@ -56,9 +56,9 @@ ReactDOM.render(
       typeValue: 'CIGI in the News',
     }, {
       endpoint: '/media_articles',
-      name: 'News Release',
+      name: 'News Releases',
       typeEndpoint: '/article_types',
-      typeValue: 'News Release',
+      typeValue: 'News Releases',
     }]}
     RowComponent={TopicContentListing}
     tableColumns={[{

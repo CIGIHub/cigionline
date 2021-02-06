@@ -81,6 +81,7 @@ MediaListing.propTypes = {
       value: PropTypes.value,
     })),
     article_type: PropTypes.shape({
+      id: PropTypes.number,
       title: PropTypes.string,
     }),
     id: PropTypes.number,
