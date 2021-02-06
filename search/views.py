@@ -56,13 +56,26 @@ def search_api(request):
 
     offsetLimit = limit + offset
     return JsonResponse({
-        'count': pages.count(),
-        'results': [
+        'meta': {
+            'total_count': pages.count(),
+        },
+        'items': [
             {
+                'authors': [{
+                    'id': author.author.id,
+                    'title': author.author.title,
+                    'url': author.author.url,
+                } for author in item.specific.authors.all()],
                 'contenttype': item.specific.contenttype,
                 'contentsubtype': item.specific.contentsubtype,
+                'pdf_download': item.specific.pdf_download,
                 'publishing_date': item.specific.publishing_date,
                 'title': item.title,
+                'topics': [{
+                    'id': topic.id,
+                    'title': topic.title,
+                    'url': topic.url,
+                } for topic in item.specific.topics.all()],
                 'url': item.url,
             } for item in pages[offset:offsetLimit]
         ]

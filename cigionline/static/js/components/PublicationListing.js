@@ -48,9 +48,9 @@ function PublicationListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.authors.map((author) => (
-              <li key={`${row.id}-${author.author.id}`}>
-                <a href={author.author.url} className="table-content-link table-content-link-black">
-                  {author.author.title}
+              <li key={`${row.id}-${author.id}`}>
+                <a href={author.url} className="table-content-link table-content-link-black">
+                  {author.title}
                 </a>
               </li>
             ))}
@@ -61,13 +61,7 @@ function PublicationListing(props) {
         <div className="table-mobile-text">
           PDF
         </div>
-        <div className="table-content">
-          {!!row.pdf_downloads.length && (
-            <a href={row.pdf_downloads[0].value.url} className="table-btn-icon">
-              <i className="fa fas fa-download" />
-            </a>
-          )}
-        </div>
+        <div className="table-content" />
       </td>
     </tr>
   );

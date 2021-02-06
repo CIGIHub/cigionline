@@ -86,6 +86,7 @@ class SearchTable extends React.Component {
       typeSelected,
     } = this.state;
     const {
+      contenttypes,
       endpoint,
       endpointParams,
       fields,
@@ -105,19 +106,22 @@ class SearchTable extends React.Component {
     if (typeSelected && typeSelected.endpoint) {
       apiEndpoint = typeSelected.endpoint;
     }
-    let uri = `/api${apiEndpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`;
-    for (const endpointParam of endpointParams) {
-      uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
+    let uri = `/api/search/?limit=${limit}&offset=${offset}&fields=${fields}`;
+    for (const contenttype of contenttypes) {
+      uri += `&contenttype=${contenttype}`;
     }
-    if (searchValue) {
-      uri += `&search=${searchValue}`;
-    }
-    if (topicSelectValue) {
-      uri += `&topics=${topicSelectValue}`;
-    }
-    if (typeSelected && typeSelected.param) {
-      uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
-    }
+    // for (const endpointParam of endpointParams) {
+    //   uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
+    // }
+    // if (searchValue) {
+    //   uri += `&search=${searchValue}`;
+    // }
+    // if (topicSelectValue) {
+    //   uri += `&topics=${topicSelectValue}`;
+    // }
+    // if (typeSelected && typeSelected.param) {
+    //   uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
+    // }
 
     fetch(encodeURI(uri))
       .then((res) => res.json())
@@ -396,6 +400,7 @@ class SearchTable extends React.Component {
 SearchTable.propTypes = {
   blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string),
+  contenttypes: PropTypes.arrayOf(PropTypes.string),
   endpoint: PropTypes.string.isRequired,
   endpointParams: PropTypes.arrayOf(PropTypes.shape({
     paramName: PropTypes.string,
@@ -422,6 +427,7 @@ SearchTable.propTypes = {
 SearchTable.defaultProps = {
   blockListing: false,
   containerClass: [],
+  contenttypes: [],
   endpointParams: [],
   filterTypes: [],
   hideTopicDropdown: false,
