@@ -423,7 +423,6 @@ class ArticlePage(
         APIField('contentsubtype'),
         APIField('contenttype'),
         APIField('cigi_people_mentioned'),
-        APIField('get_article_type_display'),
         APIField('pdf_download'),
         APIField('publishing_date'),
         APIField('title'),
