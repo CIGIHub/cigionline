@@ -1,11 +1,16 @@
 .tool-tip-block {
+  @include media-breakpoint-up(lg) {
+    max-width: 1100px;
+  }
   background: $light-box-grey;
   box-shadow: 0 2px 6px $cigi-dark-grey;
   display: none;
   font-size: 0.9em;
-  margin: 0 1em;
+  margin: 0 auto;
+  max-width: 95%;
   padding: 2em;
   position: absolute;
+  right: 0;
   z-index: 5;
 
   .person-info {

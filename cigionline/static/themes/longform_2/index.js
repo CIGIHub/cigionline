@@ -64,6 +64,7 @@ window.addEventListener('resize', resizeUpdate);
 
 // Hover tooltips
 $(function() {
+  const body = $('.body');
   $('.text-bubble-link').on('mouseenter touchstart', function() {
     const textLinkPos = $(this).position();
     const toolTipID = $(this).find('a').attr('name');
@@ -90,7 +91,7 @@ $(function() {
       triangle.addClass('triangle-top');
     }
 
-    const position = textLinkPos.left + $(this).width() - 30;
+    const position = textLinkPos.left + $(this).width() + 15 - (body.width() - toolTip.width()) / 2;
     triangle.css({ left: position });
   });
 
