@@ -10,7 +10,7 @@ class MultimediaPageModelAdmin(ModelAdmin):
     menu_order = 300
     list_display = ('title', 'publishing_date', 'multimedia_type', 'theme', 'live')
     list_filter = ('publishing_date', 'multimedia_type', 'theme', 'live')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ['-publishing_date']
 
     def get_queryset(self, request):

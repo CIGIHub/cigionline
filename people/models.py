@@ -5,9 +5,12 @@ from core.models import (
     SearchablePageAbstract,
     ThemeablePageAbstract,
 )
+from publications.models import PublicationPage
+from articles.models import ArticlePage
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
+from itertools import chain
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import (
@@ -24,6 +27,7 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
+import random
 
 
 class PeoplePage(Page):
@@ -70,6 +74,22 @@ class PersonListPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    def featured_experts_random(self):
+        filters = {
+            'authors__author__person_types': 4,
+            'authors__author__archive': 0,
+            'publishing_date__isnull': False,
+        }
+        Q = models.Q
+        publications_ids = PublicationPage.objects.live().public().filter(**filters).distinct().values_list('id', flat=True)
+        articles_ids = ArticlePage.objects.live().public().filter(**filters, article_type__in=['cigi_in_the_news', 'op_ed', 'opinion']).distinct().values_list('id', flat=True)
+        all_ids = list(chain(publications_ids, articles_ids))
+        random_ids = random.sample(all_ids, min(len(all_ids), 6))
+
+        random_content = ContentPage.objects.filter(id__in=random_ids)
+
+        return random_content
 
     def get_context(self, request):
         context = super().get_context(request)
