@@ -48,4 +48,10 @@
       }
     }
   }
+
+  &.article-landing-series {
+    article {
+      display: flex;
+    }
+  }
 }
