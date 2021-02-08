@@ -20,42 +20,35 @@ ReactDOM.render(
       'topics',
       // 'url',
     ]}
-    // filterTypes={[{
-    //   name: 'Books',
-    //   param: 'publication_type',
-    //   typeEndpoint: '/publication_types',
-    //   typeValue: 'Books',
-    // }, {
-    //   name: 'CIGI Papers',
-    //   param: 'publication_type',
-    //   typeEndpoint: '/publication_types',
-    //   typeValue: 'CIGI Papers',
-    // }, {
-    //   name: 'Conference Reports',
-    //   param: 'publication_type',
-    //   typeEndpoint: '/publication_types',
-    //   typeValue: 'Conference Reports',
-    // }, {
-    //   name: 'Essay Series',
-    //   param: 'publication_type',
-    //   typeEndpoint: '/publication_types',
-    //   typeValue: 'Essay Series',
-    // }, {
-    //   name: 'Policy Briefs',
-    //   param: 'publication_type',
-    //   typeEndpoint: '/publication_types',
-    //   typeValue: 'Policy Briefs',
-    // }, {
-    //   name: 'Policy Memos',
-    //   param: 'publication_type',
-    //   typeEndpoint: '/publication_types',
-    //   typeValue: 'Policy Memos',
-    // }, {
-    //   name: 'Special Reports',
-    //   param: 'publication_type',
-    //   typeEndpoint: '/publication_types',
-    //   typeValue: 'Special Reports',
-    // }]}
+    filterTypes={[{
+      name: 'Books',
+      param: 'contentsubtype',
+      value: 'Books',
+    }, {
+      name: 'CIGI Papers',
+      param: 'contentsubtype',
+      value: 'CIGI Papers',
+    }, {
+      name: 'Conference Reports',
+      param: 'contentsubtype',
+      value: 'Conference Reports',
+    }, {
+      name: 'Essay Series',
+      param: 'contentsubtype',
+      value: 'Essay Series',
+    }, {
+      name: 'Policy Briefs',
+      param: 'contentsubtype',
+      value: 'Policy Briefs',
+    }, {
+      name: 'Policy Memos',
+      param: 'contentsubtype',
+      value: 'Policy Memos',
+    }, {
+      name: 'Special Reports',
+      param: 'contentsubtype',
+      value: 'Special Reports',
+    }]}
     containerClass={[
       'custom-theme-table',
       'table-publications',

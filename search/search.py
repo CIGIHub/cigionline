@@ -57,6 +57,12 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__contenttype_filter": self.contenttypes,
                 },
             })
+        if self.contentsubtypes:
+            filters.append({
+                "terms": {
+                    "core_contentpage__contentsubtype_filter": self.contentsubtypes,
+                },
+            })
         if self.topics:
             filters.append({
                 "terms": {

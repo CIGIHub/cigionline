@@ -122,6 +122,9 @@ class SearchTable extends React.Component {
     if (topicSelectValue) {
       uri += `&topic=${topicSelectValue}`;
     }
+    if (typeSelected && typeSelected.param) {
+      uri += `&${typeSelected.param}=${typeSelected.value}`;
+    }
     // if (typeSelected && typeSelected.param) {
     //   uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
     // }
