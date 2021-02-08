@@ -116,9 +116,9 @@ class SearchTable extends React.Component {
     // for (const endpointParam of endpointParams) {
     //   uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
     // }
-    // if (searchValue) {
-    //   uri += `&search=${searchValue}`;
-    // }
+    if (searchValue) {
+      uri += `&searchtext=${searchValue}`;
+    }
     if (topicSelectValue) {
       uri += `&topic=${topicSelectValue}`;
     }

@@ -7,7 +7,7 @@ from wagtail.search.backends.elasticsearch7 import (
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type=None, contenttypes=None, contentsubtypes=None, topics=None
+        self, content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -15,6 +15,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.contenttypes = None
         self.contentsubtypes = None
         self.topics = None
+        self.searchtext = searchtext
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -28,6 +29,19 @@ class CIGIOnlineSearchQueryCompiler:
         return Page.objects.live()
 
     def get_query(self):
+        if self.searchtext:
+            must = {
+                "multi_match": {
+                    "fields": ["*"],
+                    "operator": "and",
+                    "query": self.searchtext,
+                },
+            }
+        else:
+            must = {
+                "match_all": {},
+            }
+
         filters = [{
             "term": {
                 "live_filter": True,
@@ -49,8 +63,10 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__topics_filter": self.topics,
                 },
             })
+        print(must)
         return {
             "bool": {
+                "must": must,
                 "filter": filters,
             },
         }
@@ -63,8 +79,8 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, topics=None):
+def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None):
     return Elasticsearch7SearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, topics)
+        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, topics, searchtext)
     )
