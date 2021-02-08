@@ -22,6 +22,7 @@ from streams.blocks import (
     PullQuoteRightBlock,
     RecommendedBlock,
     TextBorderBlock,
+    TooltipBlock,
     TweetBlock,
     InlineVideoBlock,
     HighlightTitleBlock,
@@ -39,7 +40,6 @@ from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
@@ -79,16 +79,7 @@ class BasicPageAbstract(models.Model):
     body_read_more_block = ('read_more', ReadMoreBlock())
     body_recommended_block = ('recommended', RecommendedBlock())
     body_text_border_block = ('text_border_block', TextBorderBlock())
-    body_tool_tip_block = ('tool_tip', blocks.StructBlock([
-        ('anchor', blocks.CharBlock(required=True)),
-        ('text', blocks.RichTextBlock(
-            features=['bold', 'italic', 'link'],
-            required=True,
-        )),
-        ('name', blocks.CharBlock(required=False)),
-        ('title', blocks.CharBlock(required=False)),
-        ('image', ImageChooserBlock(required=False)),
-    ]))
+    body_tool_tip_block = ('tool_tip', TooltipBlock())
     body_tweet_block = ('tweet', TweetBlock())
 
     body = StreamField(

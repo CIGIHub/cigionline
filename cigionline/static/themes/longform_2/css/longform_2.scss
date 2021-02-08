@@ -3,3 +3,13 @@ $longform-2-background-color: #f2f0ea;
 .longform-2-article {
   background-color: $longform-2-background-color;
 }
+
+section {
+  &.body {
+    position: relative;
+
+    .col {
+      position: static;
+    }
+  }
+}
