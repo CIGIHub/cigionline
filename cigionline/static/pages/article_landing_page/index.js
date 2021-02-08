@@ -35,13 +35,13 @@ if (swiperContainer) {
 ReactDOM.render(
   <SearchTable
     showSearch
-    endpoint="/opinions"
+    contenttypes={[
+      'Opinion',
+    ]}
     fields={[
-      'authors(author(title,url))',
+      'authors',
       'publishing_date',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     containerClass={[
       'custom-theme-table',
