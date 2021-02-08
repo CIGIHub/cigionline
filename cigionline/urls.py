@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+# from rest_framework.routers import DefaultRouter
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -20,10 +21,14 @@ from search import views as search_views
 # api_router.register_endpoint('publications', PublicationPageViewSet)
 # api_router.register_endpoint('topics', TopicPageViewSet)
 
+# api_router = DefaultRouter()
+# api_router.register(r'search', search_views.search_api)
+
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
 
     url(r'^admin/', include(wagtailadmin_urls)),
+    # url(r'^api/', include(api_router.urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),

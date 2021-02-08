@@ -106,9 +106,12 @@ class SearchTable extends React.Component {
     if (typeSelected && typeSelected.endpoint) {
       apiEndpoint = typeSelected.endpoint;
     }
-    let uri = `/api/search/?limit=${limit}&offset=${offset}&fields=${fields}`;
+    let uri = `/api/search/?limit=${limit}&offset=${offset}`;
     for (const contenttype of contenttypes) {
       uri += `&contenttype=${contenttype}`;
+    }
+    for (const field of fields) {
+      uri += `&field=${field}`;
     }
     // for (const endpointParam of endpointParams) {
     //   uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;

@@ -53,30 +53,41 @@ def search_api(request):
         offset = int(offset)
     else:
         offset = default_offset
-
     offsetLimit = limit + offset
+
+    fields = request.GET.getlist('field', [])
+
+    items = []
+    for page in pages[offset:offsetLimit]:
+        item = {
+            'title': page.title,
+            'url': page.url,
+        }
+        if 'authors' in fields:
+            item['authors'] = [{
+                'id': author.author.id,
+                'title': author.author.title,
+                'url': author.author.url,
+            } for author in page.specific.authors.all()]
+        if 'contenttype' in fields:
+            item['contenttype'] = page.specific.contenttype
+        if 'contentsubtype' in fields:
+            item['contentsubtype'] = page.specific.contentsubtype
+        if 'pdf_download' in fields:
+            item['pdf_download'] = page.specific.pdf_download
+        if 'publishing_date' in fields:
+            item['publishing_date'] = page.specific.publishing_date
+        if 'topics' in fields:
+            item['topics'] = [{
+                'id': topic.id,
+                'title': topic.title,
+                'url': topic.url,
+            } for topic in page.specific.topics.all()]
+        items.append(item)
+
     return JsonResponse({
         'meta': {
             'total_count': pages.count(),
         },
-        'items': [
-            {
-                'authors': [{
-                    'id': author.author.id,
-                    'title': author.author.title,
-                    'url': author.author.url,
-                } for author in item.specific.authors.all()],
-                'contenttype': item.specific.contenttype,
-                'contentsubtype': item.specific.contentsubtype,
-                'pdf_download': item.specific.pdf_download,
-                'publishing_date': item.specific.publishing_date,
-                'title': item.title,
-                'topics': [{
-                    'id': topic.id,
-                    'title': topic.title,
-                    'url': topic.url,
-                } for topic in item.specific.topics.all()],
-                'url': item.url,
-            } for item in pages[offset:offsetLimit]
-        ]
+        'items': items,
     }, safe=False)

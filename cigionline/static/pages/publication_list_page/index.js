@@ -10,13 +10,15 @@ ReactDOM.render(
       'Publication',
     ]}
     fields={[
-      'authors(author(title,url))',
-      'pdf_downloads',
-      'publication_type(title,url)',
+      'authors',
+      // 'contenttype',
+      // 'contentsubtype',
+      'pdf_download',
+      // 'publication_type(title,url)',
       'publishing_date',
-      'title',
-      'topics(title,url)',
-      'url',
+      // 'title',
+      'topics',
+      // 'url',
     ]}
     // filterTypes={[{
     //   name: 'Books',

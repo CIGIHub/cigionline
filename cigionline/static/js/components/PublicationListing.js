@@ -61,7 +61,13 @@ function PublicationListing(props) {
         <div className="table-mobile-text">
           PDF
         </div>
-        <div className="table-content" />
+        <div className="table-content">
+          {row.pdf_download && (
+            <a href={row.pdf_download} className="table-btn-icon">
+              <i className="fa fas fa-download" />
+            </a>
+          )}
+        </div>
       </td>
     </tr>
   );
@@ -71,18 +77,11 @@ PublicationListing.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
-      type: PropTypes.string,
-      value: PropTypes.any,
+      title: PropTypes.string,
+      url: PropTypes.string,
     })),
     id: PropTypes.number,
-    pdf_downloads: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      type: PropTypes.string,
-      value: PropTypes.shape({
-        button_text: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    })),
+    pdf_download: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(PropTypes.shape({
