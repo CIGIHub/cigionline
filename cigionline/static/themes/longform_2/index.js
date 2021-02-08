@@ -3,6 +3,7 @@
 import Panzoom from '@panzoom/panzoom';
 import './css/longform_2.scss';
 
+// Image Scroll stream block
 const panzoomContainers = Array.from(document.getElementsByClassName('stream-image-scroll-block'));
 const panzoomImg = [];
 const panzoomScrollbar = [];
@@ -60,3 +61,46 @@ panzoomContainers.forEach(function(panzoomContainer, index) {
 });
 
 window.addEventListener('resize', resizeUpdate);
+
+// Hover tooltips
+$(function() {
+  const body = $('.body');
+  $('.text-bubble-link').on('mouseenter touchstart', function() {
+    const textLinkPos = $(this).position();
+    const toolTipID = $(this).find('a').attr('name');
+    const toolTip = $(`.${toolTipID}`);
+    const triangle = toolTip.find('.triangle');
+
+    function canShowAbove(position, element) {
+      const newTop = position - element.height();
+      const scrollTop = $(window).scrollTop();
+      return (newTop - scrollTop > 150); // Extra 80 for padding, and 70 for sticky headers.
+    }
+
+    if (canShowAbove($(this).offset().top, toolTip)) {
+      toolTip.css({
+        top: textLinkPos.top - 78 - toolTip.height(),
+        left: 0,
+      }).fadeIn(250);
+      triangle.removeClass('triangle-top');
+    } else {
+      toolTip.css({
+        top: textLinkPos.top + 40,
+        left: 0,
+      }).fadeIn(250);
+      triangle.addClass('triangle-top');
+    }
+
+    const position = textLinkPos.left + $(this).width() + 15 - (body.width() - toolTip.width()) / 2;
+    triangle.css({ left: position });
+  });
+
+  $('.tool-tip-block').on('mouseleave', function() {
+    $(this).fadeOut(250);
+  });
+
+  $('.tooltip-close').on('click', function() {
+    const toolTip = $(this).parent();
+    toolTip.hide();
+  });
+});

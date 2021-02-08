@@ -575,6 +575,24 @@ class TextBorderBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/text_border_block.html'
 
 
+class TooltipBlock(blocks.StructBlock):
+    """Tooltip block"""
+
+    anchor = blocks.CharBlock(required=True)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=True,
+    )
+    name = blocks.CharBlock(required=False)
+    title = blocks.CharBlock(required=False)
+    image = ImageChooserBlock(required=False)
+
+    class Meta:
+        icon = 'warning'
+        label = 'Tooltip Block'
+        template = 'streams/tool_tip_block.html'
+
+
 class TweetBlock(blocks.StructBlock, ThemeableBlock):
     """Tweet Block"""
 
