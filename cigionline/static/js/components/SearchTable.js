@@ -87,8 +87,8 @@ class SearchTable extends React.Component {
     } = this.state;
     const {
       contenttypes,
-      endpoint,
-      endpointParams,
+      // endpoint,
+      // endpointParams,
       fields,
       limit,
     } = this.props;
@@ -102,10 +102,10 @@ class SearchTable extends React.Component {
       this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
-    let apiEndpoint = endpoint;
-    if (typeSelected && typeSelected.endpoint) {
-      apiEndpoint = typeSelected.endpoint;
-    }
+    // let apiEndpoint = endpoint;
+    // if (typeSelected && typeSelected.endpoint) {
+    //   apiEndpoint = typeSelected.endpoint;
+    // }
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
     for (const contenttype of contenttypes) {
       uri += `&contenttype=${contenttype}`;
@@ -119,9 +119,9 @@ class SearchTable extends React.Component {
     // if (searchValue) {
     //   uri += `&search=${searchValue}`;
     // }
-    // if (topicSelectValue) {
-    //   uri += `&topics=${topicSelectValue}`;
-    // }
+    if (topicSelectValue) {
+      uri += `&topic=${topicSelectValue}`;
+    }
     // if (typeSelected && typeSelected.param) {
     //   uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
     // }
@@ -167,7 +167,7 @@ class SearchTable extends React.Component {
   }
 
   getTopics() {
-    fetch(encodeURI('/api/topics/?limit=40&offset=0&fields=title'))
+    fetch(encodeURI('/api/topics/'))
       .then((res) => res.json())
       .then((data) => {
         this.setState(() => ({
@@ -404,7 +404,7 @@ SearchTable.propTypes = {
   blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string),
   contenttypes: PropTypes.arrayOf(PropTypes.string),
-  endpoint: PropTypes.string.isRequired,
+  // endpoint: PropTypes.string.isRequired,
   endpointParams: PropTypes.arrayOf(PropTypes.shape({
     paramName: PropTypes.string,
     paramValue: PropTypes.any,

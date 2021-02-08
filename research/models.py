@@ -243,6 +243,10 @@ class TopicPage(ArchiveablePageAbstract, Page):
         ArchiveablePageAbstract.archive_panel,
     ]
 
+    search_fields = Page.search_fields + [
+        index.FilterField('archive'),
+    ]
+
     api_fields = [
         APIField('title'),
         APIField('url'),

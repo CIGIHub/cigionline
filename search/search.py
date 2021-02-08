@@ -7,19 +7,21 @@ from wagtail.search.backends.elasticsearch7 import (
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type=None, contenttypes=None, contentsubtypes=None
+        self, content_type=None, contenttypes=None, contentsubtypes=None, topics=None
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
         self.content_type = content_type
         self.contenttypes = None
         self.contentsubtypes = None
+        self.topics = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
-        print(self.contenttypes)
         if contentsubtypes and len(contentsubtypes) > 0:
             self.contentsubtypes = contentsubtypes
+        if topics and len(topics) > 0:
+            self.topics = topics
 
     @property
     def queryset(self):
@@ -41,6 +43,12 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__contenttype_filter": self.contenttypes,
                 },
             })
+        if self.topics:
+            filters.append({
+                "terms": {
+                    "core_contentpage__topics_filter": self.topics,
+                },
+            })
         return {
             "bool": {
                 "filter": filters,
@@ -55,8 +63,8 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None):
+def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, topics=None):
     return Elasticsearch7SearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes)
+        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, topics)
     )
