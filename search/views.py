@@ -76,6 +76,8 @@ def search_api(request):
             item['contenttype'] = page.specific.contenttype
         if 'contentsubtype' in fields:
             item['contentsubtype'] = page.specific.contentsubtype
+        if 'image_hero_url' in fields:
+            item['image_hero_url'] = page.specific.image_hero_url
         if 'pdf_download' in fields:
             item['pdf_download'] = page.specific.pdf_download
         if 'publishing_date' in fields:

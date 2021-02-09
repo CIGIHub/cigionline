@@ -114,6 +114,10 @@ class BasicPageAbstract(models.Model):
     )
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
 
+    @property
+    def image_hero_url(self):
+        return self.image_hero.get_rendition('fill-520x390').url
+
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
         [
