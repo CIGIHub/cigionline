@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'wagtail.api.v2',
     'wagtail.contrib.forms',
     'wagtail.contrib.modeladmin',
-    'wagtail.contrib.postgres_search',
     'wagtail.contrib.redirects',
     'wagtail.contrib.table_block',
     # 'wagtail.contrib.styleguide',

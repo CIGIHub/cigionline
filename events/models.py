@@ -14,7 +14,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.api import APIField
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -251,22 +250,6 @@ class EventPage(
         + [
             index.FilterField('publishing_date'),
         ]
-
-    api_fields = [
-        APIField('authors'),
-        APIField('contentsubtype'),
-        APIField('contenttype'),
-        APIField('event_access'),
-        APIField('location_city'),
-        APIField('location_country'),
-        APIField('multimedia_url'),
-        APIField('pdf_download'),
-        APIField('publishing_date'),
-        APIField('registration_url'),
-        APIField('title'),
-        APIField('topics'),
-        APIField('url'),
-    ]
 
     parent_page_types = ['events.EventListPage']
     subpage_types = []

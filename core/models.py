@@ -34,7 +34,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.api import APIField
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
@@ -401,22 +400,10 @@ class ContentPage(Page, SearchablePageAbstract):
     ]
 
     search_fields = [
-        # index.FilterField('topicpage_id'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         index.FilterField('publishing_date'),
         TopicFilterField('topics'),
-    ]
-
-    api_fields = [
-        APIField('authors'),
-        APIField('contenttype'),
-        APIField('contentsubtype'),
-        APIField('pdf_download'),
-        APIField('publishing_date'),
-        APIField('title'),
-        APIField('topics'),
-        APIField('url'),
     ]
 
     def on_form_bound(self):
@@ -449,10 +436,6 @@ class ContentPageAuthor(Orderable):
             'author',
             ['people.PersonPage'],
         ),
-    ]
-
-    api_fields = [
-        APIField('author'),
     ]
 
 
