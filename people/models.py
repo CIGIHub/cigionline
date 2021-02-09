@@ -5,12 +5,9 @@ from core.models import (
     SearchablePageAbstract,
     ThemeablePageAbstract,
 )
-from publications.models import PublicationPage
-from articles.models import ArticlePage
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
-from itertools import chain
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import ParagraphBlock
 from wagtail.admin.edit_handlers import (
