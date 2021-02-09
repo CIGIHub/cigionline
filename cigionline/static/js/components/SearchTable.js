@@ -103,10 +103,6 @@ class SearchTable extends React.Component {
       this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // let apiEndpoint = endpoint;
-    // if (typeSelected && typeSelected.endpoint) {
-    //   apiEndpoint = typeSelected.endpoint;
-    // }
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
     for (const contenttype of contenttypes) {
       uri += `&contenttype=${contenttype}`;
@@ -129,9 +125,6 @@ class SearchTable extends React.Component {
     if (typeSelected && typeSelected.param) {
       uri += `&${typeSelected.param}=${typeSelected.value}`;
     }
-    // if (typeSelected && typeSelected.param) {
-    //   uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
-    // }
 
     fetch(encodeURI(uri))
       .then((res) => res.json())
@@ -412,7 +405,6 @@ SearchTable.propTypes = {
   containerClass: PropTypes.arrayOf(PropTypes.string),
   contentsubtypes: PropTypes.arrayOf(PropTypes.string),
   contenttypes: PropTypes.arrayOf(PropTypes.string),
-  // endpoint: PropTypes.string.isRequired,
   endpointParams: PropTypes.arrayOf(PropTypes.shape({
     paramName: PropTypes.string,
     paramValue: PropTypes.any,
