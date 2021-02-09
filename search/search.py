@@ -7,7 +7,7 @@ from wagtail.search.backends.elasticsearch7 import (
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None, publicationtypeid=None
+        self, content_type, contenttypes, contentsubtypes, topics, searchtext, articletypeid, publicationtypeid
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -16,6 +16,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.contentsubtypes = None
         self.topics = None
         self.searchtext = searchtext
+        self.articletypeid = None
         self.publicationtypeid = None
 
         if contenttypes and len(contenttypes) > 0:
@@ -24,6 +25,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.contentsubtypes = contentsubtypes
         if topics and len(topics) > 0:
             self.topics = topics
+        if articletypeid is not None:
+            self.articletypeid = articletypeid
         if publicationtypeid is not None:
             self.publicationtypeid = publicationtypeid
 
@@ -72,6 +75,12 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__topics_filter": self.topics,
                 },
             })
+        if self.articletypeid:
+            filters.append({
+                "term": {
+                    "articles_articlepage__article_type_id_filter": self.articletypeid,
+                },
+            })
         if self.publicationtypeid:
             filters.append({
                 "term": {
@@ -95,8 +104,8 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None, publicationtypeid=None):
+def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None):
     return Elasticsearch7SearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, topics, searchtext, publicationtypeid)
+        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, topics, searchtext, articletypeid, publicationtypeid)
     )

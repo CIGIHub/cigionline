@@ -39,6 +39,7 @@ def search(request):  # pragma: no cover
 
 def search_api(request):
     pages = cigi_search(
+        articletypeid=request.GET.get('articletypeid', None),
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
