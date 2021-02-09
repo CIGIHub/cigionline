@@ -416,12 +416,12 @@ class ArticlePage(
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
-            index.FilterField('article_type'),
+            # index.FilterField('article_type'),
             index.FilterField('publishing_date'),
         ]
 
     api_fields = [
-        APIField('article_type'),
+        # APIField('article_type'),
         APIField('authors'),
         APIField('contentsubtype'),
         APIField('contenttype'),

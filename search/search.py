@@ -69,7 +69,7 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__topics_filter": self.topics,
                 },
             })
-        print(must)
+
         return {
             "bool": {
                 "must": must,
