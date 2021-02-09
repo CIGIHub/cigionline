@@ -1,10 +1,26 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'personListExpertsPage' 'css' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% include "includes/body.html" with body=self.body %}
-  <section>
+  <section class="experts-page-featured-experts">
+    <div class="container">
+      <h2>Featured</h2>
+      <div class="row featured-expert-row">
+        {% for expert in self.featured_experts_random %}
+          <div class="col-md-4 featured-expert-col">
+            {% include "includes/features/feature_expert_short.html" with expert=expert %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <!-- <section>
     <div class="container">
       <div class="row">
         <div class="col">
@@ -75,5 +91,5 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 {% endblock %}
