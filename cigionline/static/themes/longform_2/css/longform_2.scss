@@ -130,3 +130,13 @@ hr
     }
   }
 }
+
+section {
+  &.body {
+    position: relative;
+
+    .col {
+      position: static;
+    }
+  }
+}

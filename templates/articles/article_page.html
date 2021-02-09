@@ -33,7 +33,7 @@
 
   {% block article_content %}
     {% if self.body %}
-      {% if self.article_type == 'cigi_in_the_news' %}
+      {% if self.article_type.title == 'CIGI in the News' %}
         <section class="body" id="article-body">
           <div class="container">
             <div class="row justify-content-center">
@@ -41,7 +41,9 @@
                 <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
               </div>
             </div>
-            {{ self.body|truncatewords_html:100 }}
+          </div>
+          {{ self.body|truncatewords_html:100 }}
+          <div class="container">
             <div class="row justify-content-center">
               <div class="col col-md-10 col-lg-8">
                 <p class="text-center">* * *</p>
