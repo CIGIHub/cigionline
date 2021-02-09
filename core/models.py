@@ -342,8 +342,6 @@ class ContentPage(Page, SearchablePageAbstract):
     def contenttype(self):
         if self.specific and hasattr(self.specific, '_meta') and hasattr(self.specific._meta, 'verbose_name'):
             contenttype = self.specific._meta.verbose_name
-            if contenttype == 'Opinion':
-                return self.specific.article_type.title
             return contenttype
         return ''
 

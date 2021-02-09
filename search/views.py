@@ -75,6 +75,12 @@ def search_api(request):
                     'title': author.author.title,
                     'url': author.author.url,
                 } for author in page.specific.authors.all()]
+            elif field == 'cigi_people_mentioned':
+                item['cigi_people_mentioned'] = [{
+                    'id': person.value.id,
+                    'title': person.value.title,
+                    'url': person.value.url,
+                } for person in page.specific.cigi_people_mentioned]
             elif field == 'topics':
                 item['topics'] = [{
                     'id': topic.id,

@@ -7,6 +7,14 @@ import './css/media_landing_page.scss';
 ReactDOM.render(
   <SearchTable
     showSearch
+    contenttypes={[
+      'Opinion',
+    ]}
+    contentsubtypes={[
+      'CIGI in the News',
+      'News Releases',
+      'Op-Eds',
+    ]}
     fields={[
       'cigi_people_mentioned',
       'contentsubtype',
@@ -18,19 +26,16 @@ ReactDOM.render(
     ]}
     filterTypes={[{
       name: 'News Releases',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'News Releases',
+      param: 'contentsubtype',
+      value: 'News Releases',
     }, {
       name: 'CIGI in the News',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'CIGI in the News',
+      param: 'contentsubtype',
+      value: 'CIGI in the News',
     }, {
       name: 'Op-Eds',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'Op-Eds',
+      param: 'contentsubtype',
+      value: 'Op-Eds',
     }]}
     RowComponent={MediaListing}
     tableColumns={[{
