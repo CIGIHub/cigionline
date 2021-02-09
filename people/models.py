@@ -24,6 +24,7 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
+import random
 
 
 class PeoplePage(Page):
@@ -70,6 +71,13 @@ class PersonListPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    def featured_experts_random(self):
+        expert_id_list = list(PersonPage.objects.live().public().filter(person_types=4, archive=0).values_list('id', flat=True))
+        random_expert_id_list = random.sample(expert_id_list, min(len(expert_id_list), 6))
+        random_experts = PersonPage.objects.filter(id__in=random_expert_id_list)
+
+        return random_experts
 
     def get_context(self, request):
         context = super().get_context(request)
