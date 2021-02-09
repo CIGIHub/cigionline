@@ -265,6 +265,8 @@ sr.reveal('.stream-block-pull-quote.left', {
   origin: 'left',
   scale: 1,
 // Hover tooltips
+});
+
 $(function() {
   const body = $('.body');
   $('.text-bubble-link').on('mouseenter touchstart', function() {
