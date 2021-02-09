@@ -88,7 +88,6 @@ class SearchTable extends React.Component {
     const {
       contentsubtypes,
       contenttypes,
-      // endpoint,
       endpointParams,
       fields,
       limit,

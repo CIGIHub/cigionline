@@ -7,14 +7,11 @@ import './css/media_landing_page.scss';
 ReactDOM.render(
   <SearchTable
     showSearch
-    endpoint="/media_articles"
     fields={[
-      'article_type(title,url)',
       'cigi_people_mentioned',
+      'contentsubtype',
       'publishing_date',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     containerClass={[
       'custom-theme-table',

@@ -87,7 +87,6 @@ class CIGIOnlineSearchQueryCompiler:
                     "publications_publicationpage__publication_type_id_filter": self.publicationtypeid,
                 },
             })
-        print(filters)
 
         return {
             "bool": {
