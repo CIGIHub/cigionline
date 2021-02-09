@@ -157,6 +157,7 @@ class EventPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    @property
     def multimedia_url(self):
         if self.multimedia_page:
             return self.multimedia_page.url

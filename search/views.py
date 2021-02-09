@@ -66,28 +66,21 @@ def search_api(request):
             'title': page.title,
             'url': page.url,
         }
-        if 'authors' in fields:
-            item['authors'] = [{
-                'id': author.author.id,
-                'title': author.author.title,
-                'url': author.author.url,
-            } for author in page.specific.authors.all()]
-        if 'contenttype' in fields:
-            item['contenttype'] = page.specific.contenttype
-        if 'contentsubtype' in fields:
-            item['contentsubtype'] = page.specific.contentsubtype
-        if 'image_hero_url' in fields:
-            item['image_hero_url'] = page.specific.image_hero_url
-        if 'pdf_download' in fields:
-            item['pdf_download'] = page.specific.pdf_download
-        if 'publishing_date' in fields:
-            item['publishing_date'] = page.specific.publishing_date
-        if 'topics' in fields:
-            item['topics'] = [{
-                'id': topic.id,
-                'title': topic.title,
-                'url': topic.url,
-            } for topic in page.specific.topics.all()]
+        for field in fields:
+            if field == 'authors':
+                item['authors'] = [{
+                    'id': author.author.id,
+                    'title': author.author.title,
+                    'url': author.author.url,
+                } for author in page.specific.authors.all()]
+            elif field == 'topics':
+                item['topics'] = [{
+                    'id': topic.id,
+                    'title': topic.title,
+                    'url': topic.url,
+                } for topic in page.specific.topics.all()]
+            else:
+                item[field] = getattr(page.specific, field)
         items.append(item)
 
     return JsonResponse({

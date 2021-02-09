@@ -15,9 +15,7 @@ ReactDOM.render(
       'authors',
       'image_hero_url',
       'publishing_date',
-      'title',
       'topics',
-      'url',
     ]}
     filterTypes={[{
       name: 'Video',
