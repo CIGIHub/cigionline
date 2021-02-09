@@ -86,6 +86,7 @@ class SearchTable extends React.Component {
       typeSelected,
     } = this.state;
     const {
+      contentsubtypes,
       contenttypes,
       // endpoint,
       // endpointParams,
@@ -109,6 +110,9 @@ class SearchTable extends React.Component {
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
     for (const contenttype of contenttypes) {
       uri += `&contenttype=${contenttype}`;
+    }
+    for (const contentsubtype of contentsubtypes) {
+      uri += `&contentsubtype=${contentsubtype}`;
     }
     for (const field of fields) {
       uri += `&field=${field}`;
@@ -406,6 +410,7 @@ class SearchTable extends React.Component {
 SearchTable.propTypes = {
   blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string),
+  contentsubtypes: PropTypes.arrayOf(PropTypes.string),
   contenttypes: PropTypes.arrayOf(PropTypes.string),
   // endpoint: PropTypes.string.isRequired,
   endpointParams: PropTypes.arrayOf(PropTypes.shape({
@@ -433,6 +438,7 @@ SearchTable.propTypes = {
 SearchTable.defaultProps = {
   blockListing: false,
   containerClass: [],
+  contentsubtypes: [],
   contenttypes: [],
   endpointParams: [],
   filterTypes: [],

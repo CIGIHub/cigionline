@@ -38,6 +38,11 @@ ReactDOM.render(
     contenttypes={[
       'Opinion',
     ]}
+    contentsubtypes={[
+      'Interviews',
+      'Op-Eds',
+      'Opinion',
+    ]}
     fields={[
       'authors',
       'publishing_date',
