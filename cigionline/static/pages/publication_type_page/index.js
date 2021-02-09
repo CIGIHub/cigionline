@@ -7,7 +7,7 @@ import SearchTable from '../../js/components/SearchTable';
 const endpointParams = [];
 if (publicationTypeId) {
   endpointParams.push({
-    paramName: 'publication_type',
+    paramName: 'publicationtypeid',
     paramValue: publicationTypeId,
   });
 }
@@ -15,15 +15,12 @@ if (publicationTypeId) {
 ReactDOM.render(
   <SearchTable
     blockListing
-    endpoint="/publications"
     endpointParams={endpointParams}
     limit={10}
     fields={[
-      'authors(author(title,url))',
-      'publication_type(title)',
+      'authors',
+      'contentsubtype',
       'publishing_date',
-      'title',
-      'url',
     ]}
     RowComponent={PublicationListingSimple}
   />,

@@ -7,7 +7,7 @@ from wagtail.search.backends.elasticsearch7 import (
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None
+        self, content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None, publicationtypeid=None
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -16,6 +16,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.contentsubtypes = None
         self.topics = None
         self.searchtext = searchtext
+        self.publicationtypeid = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -23,6 +24,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.contentsubtypes = contentsubtypes
         if topics and len(topics) > 0:
             self.topics = topics
+        if publicationtypeid is not None:
+            self.publicationtypeid = publicationtypeid
 
     @property
     def queryset(self):
@@ -69,6 +72,13 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__topics_filter": self.topics,
                 },
             })
+        if self.publicationtypeid:
+            filters.append({
+                "term": {
+                    "publications_publicationpage__publication_type_id_filter": self.publicationtypeid,
+                },
+            })
+        print(filters)
 
         return {
             "bool": {
@@ -85,8 +95,8 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None):
+def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, topics=None, searchtext=None, publicationtypeid=None):
     return Elasticsearch7SearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, topics, searchtext)
+        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, topics, searchtext, publicationtypeid)
     )
