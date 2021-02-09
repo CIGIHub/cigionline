@@ -54,6 +54,9 @@ class ArticleLandingPage(Page):
     def featured_large_2(self):
         return self.featured_articles.all()[9:10]
 
+    def all_article_series(self):
+        return ArticleSeriesPage.objects.live().public().order_by('-publishing_date')
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -98,7 +101,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
 class MediaLandingPage(BasicPageAbstract, Page):
 
     def latest_cigi_in_the_news(self):
-        return ArticlePage.objects.live().public().filter(article_type=ArticlePage.ArticleTypes.CIGI_IN_THE_NEWS).order_by('-publishing_date')[:6]
+        return ArticlePage.objects.live().public().filter(article_type__title='CIGI in the News').order_by('-publishing_date')[:6]
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -121,7 +124,7 @@ class MediaLandingPage(BasicPageAbstract, Page):
 class ArticleListPage(Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = ['articles.ArticlePage']
+    subpage_types = ['articles.ArticlePage', 'articles.ArticleTypePage']
     templates = 'articles/article_list_page.html'
 
     class Meta:
@@ -173,10 +176,12 @@ class ArticlePage(
         related_name='+',
         verbose_name='Opinion series',
     )
-    article_type = models.CharField(
+    article_type = models.ForeignKey(
+        'articles.ArticleTypePage',
+        null=True,
         blank=False,
-        max_length=32,
-        choices=ArticleTypes.choices,
+        on_delete=models.SET_NULL,
+        related_name='articles',
     )
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
@@ -320,9 +325,9 @@ class ArticlePage(
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
     def is_opinion(self):
-        return self.article_type in [
-            self.ArticleTypes.OP_ED,
-            self.ArticleTypes.OPINION,
+        return self.article_type.title in [
+            'Op-Eds',
+            'Opinion',
         ]
 
     def get_template(self, request, *args, **kwargs):
@@ -345,7 +350,10 @@ class ArticlePage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('article_type'),
+                PageChooserPanel(
+                    'article_type',
+                    ['articles.ArticleTypePage'],
+                ),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
@@ -418,7 +426,6 @@ class ArticlePage(
         APIField('contentsubtype'),
         APIField('contenttype'),
         APIField('cigi_people_mentioned'),
-        APIField('get_article_type_display'),
         APIField('pdf_download'),
         APIField('publishing_date'),
         APIField('title'),
@@ -443,6 +450,32 @@ class ArticlePage(
     class Meta:
         verbose_name = 'Opinion'
         verbose_name_plural = 'Opinions'
+
+
+class ArticleTypePage(BasicPageAbstract, Page):
+    # Reference field for the Drupal-Wagtail migrator. Can be removed after.
+    drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    api_fields = [
+        APIField('title'),
+        APIField('url'),
+    ]
+
+    parent_page_types = ['articles.ArticleListPage']
+    subpage_types = []
+    templates = 'articles/article_type_page.html'
+
+    class Meta:
+        verbose_name = 'Article Type'
+        verbose_name_plural = 'Article Types'
 
 
 class ArticleSeriesListPage(Page):

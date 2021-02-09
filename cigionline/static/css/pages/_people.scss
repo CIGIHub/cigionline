@@ -1,14 +1,5 @@
 .person-page {
   .hero {
-    .hero-container {
-      @include media-breakpoint-up(md) {
-        align-items: flex-end;
-        flex-direction: row;
-      }
-
-      flex-direction: column;
-    }
-
     .hero-main {
       .short-bio {
         color: $cigi-medium-light-grey;
@@ -16,11 +7,11 @@
     }
 
     .portrait-circle {
-      margin-right: 5em;
-      padding-top: 1em;
+      padding-top: 0.5em;
 
       img {
         border-radius: 50%;
+        max-width: 150px;
       }
     }
 

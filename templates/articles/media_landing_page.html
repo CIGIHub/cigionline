@@ -29,7 +29,7 @@
             <article>
               {% include "includes/topics.html" with topics=article.topics %}
               <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
-              <p class="meta">{{ article.get_article_type_display }}</p>
+              <p class="meta">{{ article.article_type.title }}</p>
               <p class="cigi-people-mentioned">
                 {% for person in article.cigi_people_mentioned %}
                   {% if person.block_type == 'cigi_person' %}

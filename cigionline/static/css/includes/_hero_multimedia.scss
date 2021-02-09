@@ -88,6 +88,12 @@
           .mm-hero-video-embed {
             height: 100%;
             width: 360px;
+
+            &.mm-hero-audio-embed {
+              iframe {
+                height: 100%;
+              }
+            }
           }
 
           .mm-hero-video-content {
@@ -104,6 +110,16 @@
         .mm-hero-video-embed {
           position: relative;
           width: 100%;
+
+          &.mm-hero-audio-embed {
+            iframe {
+              height: 175px;
+            }
+
+            &::after {
+              padding-bottom: 175px;
+            }
+          }
 
           &::after {
             content: '';
