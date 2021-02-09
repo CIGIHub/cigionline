@@ -13,9 +13,7 @@ ReactDOM.render(
       'contenttype',
       'pdf_download',
       'publishing_date',
-      'title',
       'topics',
-      'url',
     ]}
     containerClass={[
       'custom-theme-table',

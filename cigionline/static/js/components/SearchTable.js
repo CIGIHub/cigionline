@@ -89,7 +89,7 @@ class SearchTable extends React.Component {
       contentsubtypes,
       contenttypes,
       // endpoint,
-      // endpointParams,
+      endpointParams,
       fields,
       limit,
     } = this.props;
@@ -117,9 +117,9 @@ class SearchTable extends React.Component {
     for (const field of fields) {
       uri += `&field=${field}`;
     }
-    // for (const endpointParam of endpointParams) {
-    //   uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
-    // }
+    for (const endpointParam of endpointParams) {
+      uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
+    }
     if (searchValue) {
       uri += `&searchtext=${searchValue}`;
     }
