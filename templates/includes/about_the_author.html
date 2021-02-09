@@ -17,7 +17,7 @@
                 {{ person.title }}
               </a>
             </div>
-            {% if person.short_bio|length > 1 %}
+            {% if person.short_bio|length > 1 and not person.archive %}
               {{ person.short_bio|richtext }}
             {% endif %}
           </div>

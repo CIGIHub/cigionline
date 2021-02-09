@@ -340,7 +340,7 @@ class ContentPage(Page, SearchablePageAbstract):
         if self.specific and hasattr(self.specific, '_meta') and hasattr(self.specific._meta, 'verbose_name'):
             contenttype = self.specific._meta.verbose_name
             if contenttype == 'Opinion':
-                return self.specific.get_article_type_display()
+                return self.specific.article_type.title
             return contenttype
         return ''
 
@@ -349,7 +349,7 @@ class ContentPage(Page, SearchablePageAbstract):
         if self.specific and hasattr(self.specific, '_meta') and hasattr(self.specific._meta, 'verbose_name'):
             contenttype = self.specific._meta.verbose_name
             if contenttype == 'Opinion':
-                return self.specific.get_article_type_display()
+                return self.specific.article_type.title
             if contenttype == 'Publication':
                 return self.specific.publication_type.title
             if contenttype == 'Multimedia':

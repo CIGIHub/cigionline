@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'articleTypePage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var articleTypeId = {{ self.id }};
+  </script>
+  {% render_bundle 'articleTypePage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/body.html" with body=self.body %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div id="articles-list">
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

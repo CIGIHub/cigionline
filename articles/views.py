@@ -10,6 +10,7 @@ from wagtail.api.v2.views import BaseAPIViewSet
 from .models import (
     ArticlePage,
     ArticleSeriesPage,
+    ArticleTypePage,
 )
 
 
@@ -32,10 +33,10 @@ class MediaPageViewSet(BaseAPIViewSet):
 
     def get_queryset(self):
         return self.model.objects.public().live().filter(
-            article_type__in=[
-                ArticlePage.ArticleTypes.CIGI_IN_THE_NEWS,
-                ArticlePage.ArticleTypes.NEWS_RELEASE,
-                ArticlePage.ArticleTypes.OP_ED,
+            article_type__title__in=[
+                'CIGI in the News',
+                'News Releases',
+                'Op-Eds',
             ],
             publishing_date__isnull=False
         ).order_by(F('publishing_date').desc(nulls_last=True))
@@ -52,10 +53,32 @@ class OpinionPageViewSet(BaseAPIViewSet):
 
     def get_queryset(self):
         return self.model.objects.public().live().filter(
-            article_type__in=[
-                ArticlePage.ArticleTypes.INTERVIEW,
-                ArticlePage.ArticleTypes.OP_ED,
-                ArticlePage.ArticleTypes.OPINION,
+            article_type__title__in=[
+                'Interviews',
+                'Op-Eds',
+                'Opinion',
             ],
             publishing_date__isnull=False
         ).order_by(F('publishing_date').desc(nulls_last=True))
+
+
+class ArticlePageViewSet(BaseAPIViewSet):
+    model = ArticlePage
+    base_serializer_class = PageSerializer
+    filter_backends = [
+        FieldsFilter,
+        OrderingFilter,
+        SearchFilter,
+    ]
+
+    def get_queryset(self):
+        return self.model.objects.public().live().filter(publishing_date__isnull=False).order_by(F('publishing_date').desc(nulls_last=True))
+
+
+class ArticleTypePageViewSet(BaseAPIViewSet):
+    model = ArticleTypePage
+    base_serializer_class = PageSerializer
+    filter_backends = [OrderingFilter]
+
+    def get_queryset(self):
+        return self.model.objects.public().live()

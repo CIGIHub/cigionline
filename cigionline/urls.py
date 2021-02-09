@@ -12,7 +12,9 @@ from search import views as search_views
 
 # api_router = WagtailAPIRouter('wagtailapi')
 #
+# api_router.register_endpoint('articles', ArticlePageViewSet)
 # api_router.register_endpoint('article_series', ArticleSeriesPageViewSet)
+# api_router.register_endpoint('article_types', ArticleTypePageViewSet)
 # api_router.register_endpoint('content', ContentPageViewSet)
 # api_router.register_endpoint('events', EventPageViewSet)
 # api_router.register_endpoint('media_articles', MediaPageViewSet)
@@ -21,9 +23,6 @@ from search import views as search_views
 # api_router.register_endpoint('publication_types', PublicationTypePageViewSet)
 # api_router.register_endpoint('publications', PublicationPageViewSet)
 # api_router.register_endpoint('topics', TopicPageViewSet)
-
-# api_router = DefaultRouter()
-# api_router.register(r'search', search_views.search_api)
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
