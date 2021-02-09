@@ -32,7 +32,7 @@ function ResearchContentListing(props) {
               <i className="fal fa-file-alt" />
             </span>
           )}
-          {['Opinion', 'CIGI in the News', 'Op-Ed', 'News Release'].includes(row.contenttype) && (
+          {['Opinion', 'CIGI in the News', 'Op-Eds', 'News Releases'].includes(row.contenttype) && (
             <span className="table-icon icon-opinion">
               <i className="fal fa-comment-dots" />
             </span>
