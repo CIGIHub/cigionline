@@ -76,20 +76,11 @@ class PersonListPage(BasicPageAbstract, Page):
     ]
 
     def featured_experts_random(self):
-        filters = {
-            'authors__author__person_types': 4,
-            'authors__author__archive': 0,
-            'publishing_date__isnull': False,
-        }
-        Q = models.Q
-        publications_ids = PublicationPage.objects.live().public().filter(**filters).distinct().values_list('id', flat=True)
-        articles_ids = ArticlePage.objects.live().public().filter(**filters, article_type__in=['cigi_in_the_news', 'op_ed', 'opinion']).distinct().values_list('id', flat=True)
-        all_ids = list(chain(publications_ids, articles_ids))
-        random_ids = random.sample(all_ids, min(len(all_ids), 6))
+        expert_id_list = list(PersonPage.objects.live().public().filter(person_types=4, archive=0).values_list('id', flat=True))
+        random_expert_id_list = random.sample(expert_id_list, min(len(expert_id_list), 10))
+        random_experts = PersonPage.objects.filter(id__in=random_expert_id_list)
 
-        random_content = ContentPage.objects.filter(id__in=random_ids)
-
-        return random_content
+        return random_experts[:6]
 
     def get_context(self, request):
         context = super().get_context(request)
