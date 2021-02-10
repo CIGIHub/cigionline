@@ -26,7 +26,7 @@ if 'BONSAI_URL' in os.environ:
             'BACKEND': 'wagtail.search.backends.elasticsearch7',
             'URLS': [os.environ['BONSAI_URL']],
             'INDEX': 'wagtail',
-            'TIMEOUT': 5,
+            'TIMEOUT': 30,
             'OPTIONS': {},
             'INDEX_SETTINGS': {},
         }
