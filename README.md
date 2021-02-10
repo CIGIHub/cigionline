@@ -66,6 +66,11 @@ Then start the Django backend using the following command.
 $ python manage.py runserver
 ```
 
+To reindex the search backend, Elasticsearch needs to be running. Once it is, update the search index from Django.
+``` shell
+$ python manage.py update_index
+```
+
 Next, run webpack to watch for changes in the frontend assets.
 ``` shell
 $ npm start
