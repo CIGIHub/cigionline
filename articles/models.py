@@ -17,7 +17,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     PageChooserBlock,
@@ -420,19 +419,6 @@ class ArticlePage(
             index.FilterField('publishing_date'),
         ]
 
-    api_fields = [
-        APIField('article_type'),
-        APIField('authors'),
-        APIField('contentsubtype'),
-        APIField('contenttype'),
-        APIField('cigi_people_mentioned'),
-        APIField('pdf_download'),
-        APIField('publishing_date'),
-        APIField('title'),
-        APIField('topics'),
-        APIField('url'),
-    ]
-
     parent_page_types = ['articles.ArticleListPage']
     subpage_types = []
     templates = 'articles/article_page.html'
@@ -462,11 +448,6 @@ class ArticleTypePage(BasicPageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
-    ]
-
-    api_fields = [
-        APIField('title'),
-        APIField('url'),
     ]
 
     parent_page_types = ['articles.ArticleListPage']
@@ -657,16 +638,6 @@ class ArticleSeriesPage(
 
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
-    ]
-
-    api_fields = [
-        APIField('image_poster_title'),
-        APIField('image_poster_url'),
-        APIField('series_contributors'),
-        APIField('short_description'),
-        APIField('title'),
-        APIField('topics'),
-        APIField('url'),
     ]
 
     parent_page_types = ['home.HomePage']

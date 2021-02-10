@@ -48,9 +48,9 @@ function PublicationListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.authors.map((author) => (
-              <li key={`${row.id}-${author.author.id}`}>
-                <a href={author.author.url} className="table-content-link table-content-link-black">
-                  {author.author.title}
+              <li key={`${row.id}-${author.id}`}>
+                <a href={author.url} className="table-content-link table-content-link-black">
+                  {author.title}
                 </a>
               </li>
             ))}
@@ -62,8 +62,8 @@ function PublicationListing(props) {
           PDF
         </div>
         <div className="table-content">
-          {!!row.pdf_downloads.length && (
-            <a href={row.pdf_downloads[0].value.url} className="table-btn-icon">
+          {row.pdf_download && (
+            <a href={row.pdf_download} className="table-btn-icon">
               <i className="fa fas fa-download" />
             </a>
           )}
@@ -77,18 +77,11 @@ PublicationListing.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
-      type: PropTypes.string,
-      value: PropTypes.any,
+      title: PropTypes.string,
+      url: PropTypes.string,
     })),
     id: PropTypes.number,
-    pdf_downloads: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      type: PropTypes.string,
-      value: PropTypes.shape({
-        button_text: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    })),
+    pdf_download: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(PropTypes.shape({

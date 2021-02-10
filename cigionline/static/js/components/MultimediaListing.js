@@ -31,9 +31,9 @@ function MultimediaListing(props) {
       </p>
       <ul className="custom-text-list multimedia-card-speakers-list">
         {row.authors.slice(0, 3).map((author) => (
-          <li key={`${row.id}-${author.author.id}`}>
-            <a href={author.author.url}>
-              {author.author.title}
+          <li key={`${row.id}-${author.id}`}>
+            <a href={author.url}>
+              {author.title}
             </a>
           </li>
         ))}

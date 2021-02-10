@@ -6,25 +6,25 @@ import SearchTable from '../../js/components/SearchTable';
 ReactDOM.render(
   <SearchTable
     blockListing
-    endpoint="/multimedia"
+    contenttypes={[
+      'Multimedia',
+    ]}
     showSearch
     limit={18}
     fields={[
-      'authors(author(title,url))',
+      'authors',
       'image_hero_url',
       'publishing_date',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     filterTypes={[{
       name: 'Video',
-      param: 'multimedia_type',
-      value: 'video',
+      param: 'contentsubtype',
+      value: 'Video',
     }, {
       name: 'Audio',
-      param: 'multimedia_type',
-      value: 'audio',
+      param: 'contentsubtype',
+      value: 'Audio',
     }]}
     containerClass={[
       'row',

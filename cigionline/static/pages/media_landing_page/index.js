@@ -7,33 +7,35 @@ import './css/media_landing_page.scss';
 ReactDOM.render(
   <SearchTable
     showSearch
-    endpoint="/media_articles"
+    contenttypes={[
+      'Opinion',
+    ]}
+    contentsubtypes={[
+      'CIGI in the News',
+      'News Releases',
+      'Op-Eds',
+    ]}
     fields={[
-      'article_type(title,url)',
       'cigi_people_mentioned',
+      'contentsubtype',
       'publishing_date',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     containerClass={[
       'custom-theme-table',
     ]}
     filterTypes={[{
       name: 'News Releases',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'News Releases',
+      param: 'contentsubtype',
+      value: 'News Releases',
     }, {
       name: 'CIGI in the News',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'CIGI in the News',
+      param: 'contentsubtype',
+      value: 'CIGI in the News',
     }, {
       name: 'Op-Eds',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'Op-Eds',
+      param: 'contentsubtype',
+      value: 'Op-Eds',
     }]}
     RowComponent={MediaListing}
     tableColumns={[{

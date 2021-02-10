@@ -32,9 +32,9 @@ function MediaListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.cigi_people_mentioned.map((person) => (
-              <li key={`${row.id}-${person.value.id}`}>
-                <a href={person.value.url} className="table-content-link table-content-link-black">
-                  {person.value.title}
+              <li key={`${row.id}-${person.id}`}>
+                <a href={person.url} className="table-content-link table-content-link-black">
+                  {person.title}
                 </a>
               </li>
             ))}
@@ -48,7 +48,7 @@ function MediaListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             <li className="table-infos-meta">
-              {row.article_type.title}
+              {row.contentsubtype}
             </li>
           </ul>
         </div>
@@ -77,13 +77,10 @@ MediaListing.propTypes = {
   row: PropTypes.shape({
     cigi_people_mentioned: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
-      type: PropTypes.string,
-      value: PropTypes.value,
-    })),
-    article_type: PropTypes.shape({
-      id: PropTypes.number,
       title: PropTypes.string,
-    }),
+      url: PropTypes.string,
+    })),
+    contentsubtype: PropTypes.string,
     id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string,
