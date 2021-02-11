@@ -368,6 +368,22 @@ class ContentPage(Page, SearchablePageAbstract):
         # @todo test this
         return self.authors.count() + len(self.external_authors)
 
+    def recommended_content(self):
+        recommended_content = []
+        topic_content = []
+        for item in self.recommended.all()[:3]:
+            recommended_content.append(item.recommended_content_page.specific)
+        for topic in self.topics.all():
+            topic_content.append(list(ContentPage.objects.live().public().filter(topics=topic, publishing_date__isnull=False).order_by('-publishing_date')))
+        for i in range(10):
+            for topic in topic_content:
+                if topic[i] in recommended_content:
+                    continue
+                recommended_content.append(topic[i])
+                if len(recommended_content) == 12:
+                    return recommended_content
+        return recommended_content
+
     authors_panel = MultiFieldPanel(
         [
             InlinePanel('authors'),
