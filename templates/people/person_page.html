@@ -1,5 +1,15 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags core_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'personPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var personId = {{ self.id }};
+  </script>
+  {% render_bundle 'personPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify}}{% endfor %}{% endblock %}
 
@@ -181,6 +191,19 @@
         </section>
       {% endwith %}
       {% endif %}
+      <section>
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="paragraph-heading">
+                From This Expert
+              </h2>
+              <div id="expert-search-table" class="expert-search-table">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     {% endif %}
   </article>
 {% endblock content %}
