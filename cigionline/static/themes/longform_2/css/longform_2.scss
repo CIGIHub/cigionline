@@ -11,19 +11,10 @@ $longform-2-background-color: #f2f0ea;
     $color: $black,
     $position: relative,
   );
+
   background-color: $longform-2-background-color;
 
   .article-header-sticky {
-    @include media-breakpoint-up(lg) {
-      &.scrolled {
-        height: auto;
-        opacity: 1;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 100;
-      }
-    }
     background: $divider-grey;
     height: 0;
     opacity: 0;
@@ -129,6 +120,84 @@ $longform-2-background-color: #f2f0ea;
         position: absolute;
         transform: translateX(-50%);
         width: 0;
+      }
+    }
+  }
+
+  .mobile-menu-container {
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+    background-color: $divider-grey;
+    bottom: -100%;
+    margin: 0 auto;
+    padding: 0 1em;
+    position: fixed;
+    width: 100%;
+    z-index: 102;
+
+    .mobile-menu-title {
+      font-weight: 500;
+      padding: 15px 0 0;
+
+      &::after {
+        border-bottom: 4px solid $cigi-primary-colour;
+        content: '';
+        display: block;
+        padding-top: 15px;
+        width: 50px;
+      }
+    }
+
+    .mobile-menu-list {
+      list-style: none;
+      margin-bottom: 1em;
+
+      li {
+        font-size: 0.85em;
+        font-weight: 600;
+        margin: 1em 0;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .mobile-menu-button {
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+    background-color: $cigi-primary-colour;
+    border-radius: 50%;
+    bottom: 20px;
+    color: $white;
+    cursor: pointer;
+    display: none;
+    font-size: 18px;
+    height: 50px;
+    line-height: 50px;
+    position: fixed;
+    right: 20px;
+    text-align: center;
+    width: 50px;
+    z-index: 103;
+  }
+
+  &.scrolled {
+    .mobile-menu-button {
+      @include media-breakpoint-up(lg) {
+        display: none;
+      }
+      display: block;
+    }
+
+    @include media-breakpoint-up(lg) {
+      .article-header-sticky {
+        height: auto;
+        opacity: 1;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
       }
     }
   }

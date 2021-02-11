@@ -148,6 +148,9 @@ let stickyHeader = $('.article-header-sticky');
 let headerHeight = null;
 let maxHeight = null;
 let scrollTop = 0;
+let mobileMenuList = $('.mobile-menu-list');;
+let mobileMenuButton = $('.mobile-menu-button');
+let mobileMenuContainer = $('.mobile-menu-container');;
 
 function setScrollPosition(){
   scrollTop = $(window).scrollTop();
@@ -155,11 +158,47 @@ function setScrollPosition(){
   $('progress').attr('value', scrolled);
 
   if (scrollTop > headerHeight) {
-    stickyHeader.addClass('scrolled');
+    $('body').addClass('scrolled');
   } else {
-    stickyHeader.removeClass('scrolled');
+    $('body').removeClass('scrolled');
   }
+}
 
+function createMobileMenu() {
+  //create mobile menu
+
+  mobileMenuContainer = $(document.createElement('div')).addClass('mobile-menu-container');
+  let mobileMenu = $(document.createElement('div')).addClass('mobile-menu');
+
+  let mobileMenuTitle = $(document.createElement('div')).addClass('mobile-menu-title');
+  mobileMenuTitle.html($('.series-title').html());
+  mobileMenu.append(mobileMenuTitle);
+
+  mobileMenuList = $(document.createElement('ul')).addClass('mobile-menu-list');
+  mobileMenu.append(mobileMenuList);
+
+  mobileMenuContainer.append(mobileMenu);
+  $('.longform-2-article').append(mobileMenuContainer);
+
+  // The button to display the mobile chapter menu
+  mobileMenuButton = $(document.createElement('div')).addClass('mobile-menu-button');
+  mobileMenuButton.html('<i class="fa fa-list-ul fa-2"></i>');
+
+  mobileMenuButton.on('click', function () {
+    if ($('.mobile-menu-container').css('bottom') == '0px') {
+      $(this).html('<i class="fa fa-list-ul fa-2"></i>');
+      $('.mobile-menu-container').animate({
+        'bottom': '-100%',
+      }, 500);
+    } else {
+      $(this).html('<i class="fa fa-times fa-2"></i>');
+      $('.mobile-menu-container').animate({
+        'bottom': '0',
+      }, 500);
+    }
+    return false;
+  });
+  $('.longform-2-article').append(mobileMenuButton);
 }
 
 $(window).on('load', function () {
@@ -169,7 +208,15 @@ $(window).on('load', function () {
 
   maxHeight = docHeight - winHeight;
 
+  createMobileMenu();
+  if($(window).width() < 768 && scrollTop ) {
+    setScrollPosition();
+  }
+  else {
+
+  }
   setScrollPosition();
+
 
   $('.no-border a[name]').each(function (index) {
     //set anchors and add to progress bar
@@ -189,20 +236,52 @@ $(window).on('load', function () {
     $('.progress-bar').append(chapterAnchor);
 
     //create tooltips for each anchor title
-    let tooltip = $(document.createElement('div'));
-    tooltip.addClass('chapter-anchor-tooltip');
+    let tooltip = $(document.createElement('div')).addClass('chapter-anchor-tooltip');
     tooltip.html(label);
     chapterAnchor.append(tooltip);
     $('.progress-bar').append(chapterAnchor);
 
-    //create mobile menu
+    chapterAnchor.on('click', function () {
+      $('html,body').animate({
+        scrollTop: $('a[name='+chapterName+']').offset().top - headerHeight - 20,
+      }, 1000);
+      return false;
+    });
 
+    //populate menu with chapter content
+    let mobileMenuItem = $(document.createElement('li'));
+    let mobileMenuItemLink = $(document.createElement('a'));
+    mobileMenuItemLink.html(label);
+    mobileMenuItemLink.attr('href', '#' + chapterName);
+
+    mobileMenuItemLink.on('click', function () {
+      $('html,body').animate({
+        scrollTop: $('a[name='+chapterName+']').offset().top,
+      }, 1000);
+      $('.mobile-menu-button').html('<i class="fa fa-list-ul fa-2"></i>');
+      $('.mobile-menu-container').animate({
+        'bottom': '-100%',
+      }, 500);
+      return false;
+    });
+
+    mobileMenuItem.append(mobileMenuItemLink);
+    mobileMenuList.append(mobileMenuItem);
   });
+
 });
+
 
 $(window).on('scroll', function () {
 
     setScrollPosition();
+
+    if($(window).width() < 768) {
+      setScrollPosition();
+    }
+    else {
+
+    }
 });
 
 
