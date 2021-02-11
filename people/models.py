@@ -231,6 +231,10 @@ class PersonPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def has_authored_content(self):
+        return self.content_pages_as_author.count() > 0
+
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
