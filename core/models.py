@@ -311,6 +311,17 @@ class ArchiveablePageAbstract(models.Model):
         abstract = True
 
 
+class AuthorFilterField(index.FilterField):
+    def get_attname(self, cls):
+        return self.field_name
+
+    def get_type(self, cls):
+        return 'IntegerField'
+
+    def get_value(self, obj):
+        return list(getattr(obj, self.field_name).all().values_list('author__id', flat=True))
+
+
 class TopicFilterField(index.FilterField):
     def get_attname(self, cls):
         return self.field_name
@@ -398,6 +409,7 @@ class ContentPage(Page, SearchablePageAbstract):
     ]
 
     search_fields = [
+        AuthorFilterField('authors'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         index.FilterField('publishing_date'),
