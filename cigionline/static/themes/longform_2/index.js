@@ -148,9 +148,11 @@ const stickyHeader = $('.article-header-sticky');
 let headerHeight = null;
 let maxHeight = null;
 let scrollTop = 0;
-const mobileMenuList = $('.mobile-menu-list');
-const mobileMenuButton = $('.mobile-menu-button');
-const mobileMenuContainer = $('.mobile-menu-container');
+const mobileMenuList = $(document.createElement('ul')).addClass('mobile-menu-list');
+const mobileMenuButton = $(document.createElement('div')).addClass('mobile-menu-button');
+const mobileMenu = $(document.createElement('div')).addClass('mobile-menu');
+const mobileMenuContainer = $(document.createElement('div')).addClass('mobile-menu-container');
+const mobileMenuTitle = $(document.createElement('div')).addClass('mobile-menu-title');
 
 function setScrollPosition() {
   scrollTop = $(window).scrollTop();
@@ -166,23 +168,14 @@ function setScrollPosition() {
 
 function createMobileMenu() {
   //create mobile menu
-  mobileMenuContainer = $(document.createElement('div')).addClass('mobile-menu-container');
-  let mobileMenu = $(document.createElement('div')).addClass('mobile-menu');
-
-  let mobileMenuTitle = $(document.createElement('div')).addClass('mobile-menu-title');
   mobileMenuTitle.html($('.series-title').html());
   mobileMenu.append(mobileMenuTitle);
-
-  mobileMenuList = $(document.createElement('ul')).addClass('mobile-menu-list');
   mobileMenu.append(mobileMenuList);
-
   mobileMenuContainer.append(mobileMenu);
   $('.longform-2-article').append(mobileMenuContainer);
 
-  // The button to display the mobile chapter menu
-  mobileMenuButton = $(document.createElement('div')).addClass('mobile-menu-button');
+  //mobile menut button
   mobileMenuButton.html('<i class="fa fa-list-ul fa-2"></i>');
-
   mobileMenuButton.on('click', function () {
     if($('.mobile-menu-container').css('bottom') == '0px') {
       $(this).html('<i class="fa fa-list-ul fa-2"></i>');
