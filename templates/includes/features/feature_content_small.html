@@ -1,6 +1,29 @@
 {% load wagtailimages_tags core_tags %}
 
 <article class="feature-content feature-content-small{% if dark_mode %} dark-mode{% endif %}">
+  {% if icon %}
+    {% if content.contenttype == "Event" %}
+      <div class="table-icon icon-event">
+        <i class="fal fa-calendar-alt"></i>
+      </div>
+    {% elif content.contenttype == 'Multimedia' %}
+      <div class="table-icon icon-multimedia">
+        {% if content.contenttype == 'Audio' %}
+          <i class="fal fa-headphones"></i>
+        {% else %}
+          <i class="fal fa-play"></i>
+        {% endif %}
+      </div>
+    {% elif content.contenttype == 'Publication' %}
+      <div class="table-icon icon-publication">
+        <i class="fal fa-file-alt"></i>
+      </div>
+    {% elif content.contenttype|in_list:'Opinion,CIGI in the News,Op-Eds,News Releases' %}
+      <div class="table-icon icon-opinion">
+        <i class="fal fa-comment-dots"></i>
+      </div>
+    {% endif %}
+  {% endif %}
   <div class="feature-content-text center-text">
     {% include 'includes/topics.html' with topics=content.topics %}
     {% include 'includes/features/feature_content_title.html' %}
