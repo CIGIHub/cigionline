@@ -209,14 +209,7 @@ $(window).on('load', function () {
   maxHeight = docHeight - winHeight;
 
   createMobileMenu();
-  if($(window).width() < 768 && scrollTop ) {
-    setScrollPosition();
-  }
-  else {
-
-  }
   setScrollPosition();
-
 
   $('.no-border a[name]').each(function (index) {
     //set anchors and add to progress bar
@@ -268,20 +261,8 @@ $(window).on('load', function () {
     mobileMenuItem.append(mobileMenuItemLink);
     mobileMenuList.append(mobileMenuItem);
   });
-
 });
-
 
 $(window).on('scroll', function () {
-
-    setScrollPosition();
-
-    if($(window).width() < 768) {
-      setScrollPosition();
-    }
-    else {
-
-    }
+  setScrollPosition();
 });
-
-
