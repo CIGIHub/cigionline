@@ -144,15 +144,15 @@ $(function() {
 // Sticky header, chapter markers and tooltips for progress bar
 
 let scrolled = null;
-let stickyHeader = $('.article-header-sticky');
+const stickyHeader = $('.article-header-sticky');
 let headerHeight = null;
 let maxHeight = null;
 let scrollTop = 0;
-let mobileMenuList = $('.mobile-menu-list');;
-let mobileMenuButton = $('.mobile-menu-button');
-let mobileMenuContainer = $('.mobile-menu-container');;
+const mobileMenuList = $('.mobile-menu-list');
+const mobileMenuButton = $('.mobile-menu-button');
+const mobileMenuContainer = $('.mobile-menu-container');
 
-function setScrollPosition(){
+function setScrollPosition() {
   scrollTop = $(window).scrollTop();
   scrolled = (scrollTop / maxHeight) * 100;
   $('progress').attr('value', scrolled);
@@ -166,7 +166,6 @@ function setScrollPosition(){
 
 function createMobileMenu() {
   //create mobile menu
-
   mobileMenuContainer = $(document.createElement('div')).addClass('mobile-menu-container');
   let mobileMenu = $(document.createElement('div')).addClass('mobile-menu');
 
@@ -185,7 +184,7 @@ function createMobileMenu() {
   mobileMenuButton.html('<i class="fa fa-list-ul fa-2"></i>');
 
   mobileMenuButton.on('click', function () {
-    if ($('.mobile-menu-container').css('bottom') == '0px') {
+    if($('.mobile-menu-container').css('bottom') == '0px') {
       $(this).html('<i class="fa fa-list-ul fa-2"></i>');
       $('.mobile-menu-container').animate({
         'bottom': '-100%',
