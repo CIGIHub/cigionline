@@ -385,7 +385,16 @@ class ContentPage(Page, SearchablePageAbstract):
         for item in self.recommended.all()[:3]:
             recommended_content.append(item.recommended_content_page.specific)
         for topic in self.topics.all():
-            topic_content.append(ContentPage.objects.live().public().filter(topics=topic, publishing_date__isnull=False).exclude(id=self.id).order_by('-publishing_date'))
+            topic_content.append(
+                ContentPage
+                .objects
+                .live()
+                .public()
+                .filter(topics=topic, publishing_date__isnull=False, eventpage__isnull=True)
+                .exclude(id=self.id)
+                .exclude(articlepage__article_type__title='CIGI in the News')
+                .order_by('-publishing_date')
+            )
         for i in range(10):
             for topic in topic_content:
                 if topic[i] in recommended_content:

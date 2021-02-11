@@ -8,7 +8,7 @@
       </div>
     {% elif content.contenttype == 'Multimedia' %}
       <div class="table-icon icon-multimedia">
-        {% if content.contenttype == 'Audio' %}
+        {% if content.contentsubtype == 'Audio' %}
           <i class="fal fa-headphones"></i>
         {% else %}
           <i class="fal fa-play"></i>
