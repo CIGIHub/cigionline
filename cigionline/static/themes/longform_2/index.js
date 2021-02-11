@@ -210,35 +210,34 @@ $(window).on('load', function() {
     const horizontalPosition = (chapterPosition / docHeight) * 100;
 
     const chapterAnchor = $(document.createElement('a'));
-    index = index + 1;
-    const label = `${index}|. ` + $(this).html();
+    const label = `${index + 1}. ` + $(this).html();
 
     chapterAnchor.addClass('chapter-anchor');
-    chapterAnchor.attr('href', `#|${chapterName}`);
+    chapterAnchor.attr('href', `#${chapterName}`);
     chapterAnchor.css({
-      'left': `${horizontalPosition}|%`,
+      'left': `${horizontalPosition}%`,
     });
 
     $('.progress-bar').append(chapterAnchor);
 
     // create tooltips for each anchor title
-    let tooltip = $(document.createElement('div')).addClass('chapter-anchor-tooltip');
+    const tooltip = $(document.createElement('div')).addClass('chapter-anchor-tooltip');
     tooltip.html(label);
     chapterAnchor.append(tooltip);
     $('.progress-bar').append(chapterAnchor);
 
-    chapterAnchor.on('click', function () {
+    chapterAnchor.on('click', function() {
       $('html,body').animate({
-        scrollTop: $('a[name='+chapterName+']').offset().top - headerHeight - 20,
+        scrollTop: $('`a[name="${chapterName}"]`').offset().top - headerHeight - 20,
       }, 1000);
       return false;
     });
 
     // populate menu with chapter content
-    let mobileMenuItem = $(document.createElement('li'));
-    let mobileMenuItemLink = $(document.createElement('a'));
+    const mobileMenuItem = $(document.createElement('li'));
+    const mobileMenuItemLink = $(document.createElement('a'));
     mobileMenuItemLink.html(label);
-    mobileMenuItemLink.attr('href', '#' + chapterName);
+    mobileMenuItemLink.attr('href', `#${chapterName}`);
 
     mobileMenuItemLink.on('click', function() {
       $('html,body').animate({
