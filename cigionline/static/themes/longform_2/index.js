@@ -205,17 +205,18 @@ $(window).on('load', function() {
 
   $('.no-border a[name]').each(function(index) {
     // set anchors and add to progress bar
-    let chapterName = $(this).attr('name');
-    let chapterPosition = $(this).offset().top;
-    let horizontalPosition = (chapterPosition/docHeight)*100;
+    const chapterName = $(this).attr('name');
+    const chapterPosition = $(this).offset().top;
+    const horizontalPosition = (chapterPosition / docHeight) * 100;
 
-    let chapterAnchor = $(document.createElement('a'));
-    let label = (index + 1) + '. ' + $(this).html();
+    const chapterAnchor = $(document.createElement('a'));
+    index = index + 1;
+    const label = `${index}|. ` + $(this).html();
 
     chapterAnchor.addClass('chapter-anchor');
-    chapterAnchor.attr('href', '#' + chapterName);
+    chapterAnchor.attr('href', `#|${chapterName}`);
     chapterAnchor.css({
-      'left': horizontalPosition + '%',
+      'left': `${horizontalPosition}|%`,
     });
 
     $('.progress-bar').append(chapterAnchor);
