@@ -56,7 +56,6 @@ $longform-2-background-color: #f2f0ea;
 
   .progress-bar {
     background-color: transparent;
-    overflow: visible;
     position: relative;
   }
 
@@ -198,6 +197,10 @@ $longform-2-background-color: #f2f0ea;
         top: 0;
         width: 100%;
         z-index: 100;
+      }
+
+      .progress-bar {
+        overflow: visible;
       }
     }
   }

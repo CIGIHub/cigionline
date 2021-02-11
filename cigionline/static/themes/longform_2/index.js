@@ -51,7 +51,7 @@ panzoomContainers.forEach(function(panzoomContainer, index) {
       (panzoomScrollbar[index].offsetWidth / panzoomContainers[index].offsetWidth) * event.detail.x,
     );
     moveScrollBar(x, index);
-  });
+  });//
 
   panzoomScrollbar[index].addEventListener('panzoompan', function(event) {
     const x = Math.abs(
@@ -167,17 +167,17 @@ function setScrollPosition() {
 }
 
 function createMobileMenu() {
-  //create mobile menu
+  // create mobile menu
   mobileMenuTitle.html($('.series-title').html());
   mobileMenu.append(mobileMenuTitle);
   mobileMenu.append(mobileMenuList);
   mobileMenuContainer.append(mobileMenu);
   $('.longform-2-article').append(mobileMenuContainer);
 
-  //mobile menut button
+  // mobile menut button
   mobileMenuButton.html('<i class="fa fa-list-ul fa-2"></i>');
-  mobileMenuButton.on('click', function () {
-    if($('.mobile-menu-container').css('bottom') == '0px') {
+  mobileMenuButton.on('click', function() {
+    if ($('.mobile-menu-container').css('bottom') === '0px') {
       $(this).html('<i class="fa fa-list-ul fa-2"></i>');
       $('.mobile-menu-container').animate({
         'bottom': '-100%',
@@ -193,9 +193,9 @@ function createMobileMenu() {
   $('.longform-2-article').append(mobileMenuButton);
 }
 
-$(window).on('load', function () {
-  let docHeight = $(document).height();
-  let winHeight = $(window).height()
+$(window).on('load', function() {
+  const docHeight = $(document).height();
+  const winHeight = $(window).height();
   headerHeight = $('header').height();
 
   maxHeight = docHeight - winHeight;
@@ -203,8 +203,8 @@ $(window).on('load', function () {
   createMobileMenu();
   setScrollPosition();
 
-  $('.no-border a[name]').each(function (index) {
-    //set anchors and add to progress bar
+  $('.no-border a[name]').each(function(index) {
+    // set anchors and add to progress bar
     let chapterName = $(this).attr('name');
     let chapterPosition = $(this).offset().top;
     let horizontalPosition = (chapterPosition/docHeight)*100;
@@ -220,7 +220,7 @@ $(window).on('load', function () {
 
     $('.progress-bar').append(chapterAnchor);
 
-    //create tooltips for each anchor title
+    // create tooltips for each anchor title
     let tooltip = $(document.createElement('div')).addClass('chapter-anchor-tooltip');
     tooltip.html(label);
     chapterAnchor.append(tooltip);
@@ -233,13 +233,13 @@ $(window).on('load', function () {
       return false;
     });
 
-    //populate menu with chapter content
+    // populate menu with chapter content
     let mobileMenuItem = $(document.createElement('li'));
     let mobileMenuItemLink = $(document.createElement('a'));
     mobileMenuItemLink.html(label);
     mobileMenuItemLink.attr('href', '#' + chapterName);
 
-    mobileMenuItemLink.on('click', function () {
+    mobileMenuItemLink.on('click', function() {
       $('html,body').animate({
         scrollTop: $('a[name='+chapterName+']').offset().top,
       }, 1000);
