@@ -73,7 +73,7 @@ section {
         }
 
         .img-wrapper {
-          @include media-breakpoint-up(sm) {
+          @include media-breakpoint-up(md) {
             display: block;
           }
           display: none;
