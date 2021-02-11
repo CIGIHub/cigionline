@@ -63,174 +63,6 @@ panzoomContainers.forEach(function(panzoomContainer, index) {
 
 window.addEventListener('resize', resizeUpdate);
 
-/* sticky header */
-
-const headerEl = document.querySelector('header');
-const stickyHeader = document.querySelector('.article-header-sticky');
-let headerHeight = null;
-let docHeight = null;
-let scrolled = null;
-
-window.addEventListener('load', function() {
-  headerHeight = headerEl.offsetHeight;
-  docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-});
-
-window.addEventListener('scroll', function() {
-  const scrollTop = document.querySelector('html').scrollTop;
-
-  scrolled = (scrollTop / docHeight) * 100;
-  document.querySelector('progress').setAttribute('value', scrolled);
-
-  if (scrollTop > headerHeight) {
-    stickyHeader.classList.add('scrolled');
-  } else {
-    stickyHeader.classList.remove('scrolled');
-  }
-});
-
-/* progress bar chapter markers */
-$(window).on("load", function () {
-  setTimeout(function () {
-    var winHeight = $(window).height(),
-      docHeight = $(document).height(),
-      progressBarContainer = $('.progress-bar'),
-      progressBar = $('progress'),
-      max, value;
-
-    max = docHeight - winHeight;
-    progressBar.attr('max', max);
-
-    if ($('.no-border a').length) {
-      // Add the mobile chapter menu
-      var mobileMenuContainer = $(document.createElement('div'))
-      mobileMenuContainer.addClass('mobile-menu-container');
-      var mobileMenu = $(document.createElement('div'));
-      mobileMenu.addClass('mobile-menu');
-      var mobileMenuTitle = $(document.createElement('div'));
-      mobileMenuTitle.addClass('mobile-menu-title');
-      mobileMenuTitle.html($('.series-title').html());
-      mobileMenu.append(mobileMenuTitle);
-      var mobileMenuList = $(document.createElement('ul'));
-      mobileMenuList.addClass('mobile-menu-list');
-      mobileMenu.append(mobileMenuList);
-      mobileMenuContainer.append(mobileMenu);
-      $('.longform-2').append(mobileMenuContainer);
-
-      // The button to display the mobile chapter menu
-      var mobileMenuButton = $(document.createElement('div'));
-      mobileMenuButton.addClass('mobile-menu-button');
-      mobileMenuButton.html('<i class="fa fa-list-ul fa-2"></i>');
-      mobileMenuButton.click(function () {
-        if ($('.mobile-menu-container').css('bottom') === '0px') {
-          $(this).html('<i class="fa fa-list-ul fa-2"></i>');
-          $('.mobile-menu-container').animate({
-            'bottom': '-100%',
-          }, 500);
-        } else {
-          $(this).html('<i class="fa fa-times fa-2"></i>');
-          $('.mobile-menu-container').animate({
-            'bottom': '0',
-          }, 500);
-        }
-        return false;
-      });
-      $('.longform-2').append(mobileMenuButton);
-
-      // Loop through all anchors, adding both the tooltips to the
-      // progress bar and the mobile chapter menu items.
-      $('.no-border a').each(function (ind) {
-        var chapterId = $(this).attr('id');
-        if (chapterId && max > 0) {
-          var label = (ind + 1) + '. ' + $(this).html();
-
-          // Progress bar anchor
-          var top = parseInt($(this).offset().top, 10) - 80;
-          var percent = ((top / max) * 100).toFixed(4);
-          var chapterAnchor = $(document.createElement('a'));
-          chapterAnchor.addClass('chapter-anchor');
-          chapterAnchor.attr('href', '#' + chapterId);
-          chapterAnchor.attr('id', chapterId + '-chapter-anchor');
-          chapterAnchor.css({
-            'left': percent + '%',
-          });
-          chapterAnchor.click(function () {
-            $('html,body').animate({
-              scrollTop: $('#' + chapterId).offset().top - 80,
-            }, 1000);
-            return false;
-          });
-
-          var tooltip = $(document.createElement('div'));
-          tooltip.addClass('chapter-anchor-tooltip');
-          tooltip.html(label);
-          chapterAnchor.append(tooltip);
-          progressBarContainer.append(chapterAnchor);
-
-          // Mobile chapter menu link
-          var mobileMenuItem = $(document.createElement('li'));
-          var mobileMenuItemLink = $(document.createElement('a'));
-          mobileMenuItemLink.html(label);
-          mobileMenuItemLink.click(function () {
-            $('html,body').animate({
-              scrollTop: $('#' + chapterId).offset().top,
-            }, 1000);
-            $('.mobile-menu-button').html('<i class="fa fa-list-ul fa-2"></i>');
-            $('.mobile-menu-container').animate({
-              'bottom': '-100%',
-            }, 500);
-            return false;
-          });
-          mobileMenuItem.append(mobileMenuItemLink);
-          mobileMenuList.append(mobileMenuItem);
-        }
-      });
-    }
-  }, 250);
-
-  $(window).on('scroll', function () {
-    let scrolled = $(window).scrollTop();
-    $('progress').attr('value', scrolled);
-    if (scrolled >= 65 && $(window).width() >= 768) {
-      $('.article-sticky-header').fadeIn();
-      $('.progress-bar').addClass('scrolled');
-    } else if (scrolled >= 65) {
-      $('.mobile-menu-container,.mobile-menu-button').addClass('scrolled');
-    } else {
-      $('.progress-bar,.mobile-menu-container,.mobile-menu-button').removeClass('scrolled');
-      $('.article-sticky-header').fadeOut();
-    }
-
-    if ($('body').hasClass('sticky-header') && scrolled >= 70 && $(window).width() >= 768) {
-      $('header').addClass('scrolled');
-    } else {
-      $('header').removeClass('scrolled');
-    }
-
-  });
-});
-
-$(window).resize(function () {
-  // When resizing the window, recalculating the progress bar and
-  // chapter anchor values.
-  var winHeight = $(window).height(),
-    docHeight = $(document).height();
-
-  var max = docHeight - winHeight;
-  $('progress').attr('max', max);
-
-  $('.no-border a').each(function () {
-    var chapterId = $(this).attr('id');
-    if (chapterId && max > 0) {
-      var top = parseInt($(this).offset().top, 10) - 80;
-      var percent = ((top / max) * 100).toFixed(4);
-      $('#' + chapterId + '-chapter-anchor').css({
-        'left': percent + '%',
-      });
-    }
-  });
-});
-
 // fade in article elements
 
 const sr = ScrollReveal();
@@ -264,9 +96,9 @@ sr.reveal('.stream-block-pull-quote.left', {
   duration: 750,
   origin: 'left',
   scale: 1,
-// Hover tooltips
 });
 
+// Hover tooltips
 $(function() {
   const body = $('.body');
   $('.text-bubble-link').on('mouseenter touchstart', function() {
@@ -308,3 +140,57 @@ $(function() {
     toolTip.hide();
   });
 });
+
+// Sticky header, chapter markers and tooltips for progress bar
+
+let scrolled = null;
+let stickyHeader = $('.article-header-sticky');
+let headerHeight = null;
+let maxHeight = null;
+let scrollTop = 0;
+
+function setScrollPosition(){
+  scrollTop = $(window).scrollTop();
+  scrolled = (scrollTop / maxHeight) * 100;
+  $('progress').attr('value', scrolled);
+
+  if (scrollTop > headerHeight) {
+    stickyHeader.addClass('scrolled');
+  } else {
+    stickyHeader.removeClass('scrolled');
+  }
+
+}
+
+$(window).on('load', function () {
+  let docHeight = $(document).height();
+  let winHeight = $(window).height()
+  headerHeight = $('header').height();
+
+  maxHeight = docHeight - winHeight;
+
+  setScrollPosition();
+
+  $('.no-border a[name]').each(function (index) {
+    let chapterName = $(this).attr('name');
+    let chapterPosition = $(this).offset().top;
+    let horizontalPosition = (chapterPosition/docHeight)*100;
+
+    let chapterAnchor = $(document.createElement('a'));
+    chapterAnchor.addClass('chapter-anchor');
+    chapterAnchor.attr('href', '#' + chapterName);
+    chapterAnchor.css({
+      'left': horizontalPosition + '%',
+    });
+
+    $('.progress-bar').append(chapterAnchor);
+
+  });
+});
+
+$(window).on('scroll', function () {
+
+    setScrollPosition();
+});
+
+

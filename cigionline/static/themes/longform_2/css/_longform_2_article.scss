@@ -211,18 +211,22 @@
         background: $divider-grey;
       }
 
-      &.collapsed {
+      &[aria-expanded='true'] {
+        &::after {
+          content: '\f00d';
+          transform: none;
+        }
+      }
+
+      &[aria-expanded='false'] {
         &::after {
           content: '\f078';
         }
       }
-
-      &::after {
-        content: '\f00d';
-      }
     }
 
     .card {
+      border-radius: 0;
       border-top: solid 1px $divider-grey;
     }
   }

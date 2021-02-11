@@ -5,6 +5,7 @@ $longform-2-background-color: #f2f0ea;
 @import './longform_2_article';
 
 .longform-2-article {
+
   @include top-bar(
     $background-color: $longform-2-background-color,
     $color: $black,
@@ -64,6 +65,8 @@ $longform-2-background-color: #f2f0ea;
 
   .progress-bar {
     background-color: transparent;
+    overflow: visible;
+    position: relative;
   }
 
   progress {
@@ -100,7 +103,7 @@ $longform-2-background-color: #f2f0ea;
         visibility: visible;
       }
     }
-hr
+
     .chapter-anchor-tooltip {
       background-color: $cigi-medium-grey;
       color: $white;
