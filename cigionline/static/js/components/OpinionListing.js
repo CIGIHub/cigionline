@@ -32,9 +32,9 @@ function OpinionListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.authors.map((author) => (
-              <li key={`${row.id}-${author.author.id}`}>
-                <a href={author.author.url} className="table-content-link table-content-link-black">
-                  {author.author.title}
+              <li key={`${row.id}-${author.id}`}>
+                <a href={author.url} className="table-content-link table-content-link-black">
+                  {author.title}
                 </a>
               </li>
             ))}

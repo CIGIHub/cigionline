@@ -19,7 +19,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.api import APIField
 from wagtail.core.blocks import (
     RichTextBlock,
 )
@@ -355,19 +354,6 @@ class PublicationPage(
             index.FilterField('publishing_date'),
         ]
 
-    api_fields = [
-        APIField('authors'),
-        APIField('contentsubtype'),
-        APIField('contenttype'),
-        APIField('pdf_download'),
-        APIField('pdf_downloads'),
-        APIField('publication_type'),
-        APIField('publishing_date'),
-        APIField('title'),
-        APIField('topics'),
-        APIField('url'),
-    ]
-
     parent_page_types = ['publications.PublicationListPage']
     subpage_types = []
     templates = 'publications/publication_page.html'
@@ -387,11 +373,6 @@ class PublicationTypePage(BasicPageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
-    ]
-
-    api_fields = [
-        APIField('title'),
-        APIField('url'),
     ]
 
     parent_page_types = ['publications.PublicationListPage']

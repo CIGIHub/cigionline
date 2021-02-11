@@ -2,12 +2,12 @@ import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function ResearchContentListing(props) {
+function ExpertContentListing(props) {
   const { row } = props;
 
   return (
     <tr>
-      <td colSpan="4">
+      <td colSpan="6">
         <div className="table-mobile-text">
           Title
         </div>
@@ -48,22 +48,6 @@ function ResearchContentListing(props) {
         </div>
       </td>
       <td colSpan="3">
-        <div className="table-mobile-text">
-          Expert
-        </div>
-        <div className="table-content">
-          <ul className="custom-text-list">
-            {row.authors.map((author) => (
-              <li key={`${row.id}-${author.id}`}>
-                <a href={author.url} className="table-content-link table-content-link-black">
-                  {author.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </td>
-      <td colSpan="2">
         <div className="table-mobile-text">
           Topic
         </div>
@@ -107,13 +91,8 @@ function ResearchContentListing(props) {
   );
 }
 
-ResearchContentListing.propTypes = {
+ExpertContentListing.propTypes = {
   row: PropTypes.shape({
-    authors: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      type: PropTypes.string,
-      value: PropTypes.any,
-    })),
     contentsubtype: PropTypes.string,
     contenttype: PropTypes.string,
     id: PropTypes.number,
@@ -129,4 +108,4 @@ ResearchContentListing.propTypes = {
   }).isRequired,
 };
 
-export default ResearchContentListing;
+export default ExpertContentListing;

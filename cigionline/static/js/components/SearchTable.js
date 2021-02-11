@@ -86,7 +86,8 @@ class SearchTable extends React.Component {
       typeSelected,
     } = this.state;
     const {
-      endpoint,
+      contentsubtypes,
+      contenttypes,
       endpointParams,
       fields,
       limit,
@@ -101,22 +102,27 @@ class SearchTable extends React.Component {
       this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
-    let apiEndpoint = endpoint;
-    if (typeSelected && typeSelected.endpoint) {
-      apiEndpoint = typeSelected.endpoint;
+    let uri = `/api/search/?limit=${limit}&offset=${offset}`;
+    for (const contenttype of contenttypes) {
+      uri += `&contenttype=${contenttype}`;
     }
-    let uri = `/api${apiEndpoint}/?limit=${limit}&offset=${offset}&fields=${fields}`;
+    for (const contentsubtype of contentsubtypes) {
+      uri += `&contentsubtype=${contentsubtype}`;
+    }
+    for (const field of fields) {
+      uri += `&field=${field}`;
+    }
     for (const endpointParam of endpointParams) {
       uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
     }
     if (searchValue) {
-      uri += `&search=${searchValue}`;
+      uri += `&searchtext=${searchValue}`;
     }
     if (topicSelectValue) {
-      uri += `&topics=${topicSelectValue}`;
+      uri += `&topic=${topicSelectValue}`;
     }
     if (typeSelected && typeSelected.param) {
-      uri += `&${typeSelected.param}=${typeSelected.id || typeSelected.value}`;
+      uri += `&${typeSelected.param}=${typeSelected.value}`;
     }
 
     fetch(encodeURI(uri))
@@ -160,7 +166,7 @@ class SearchTable extends React.Component {
   }
 
   getTopics() {
-    fetch(encodeURI('/api/topics/?limit=40&offset=0&fields=title'))
+    fetch(encodeURI('/api/topics/'))
       .then((res) => res.json())
       .then((data) => {
         this.setState(() => ({
@@ -396,7 +402,8 @@ class SearchTable extends React.Component {
 SearchTable.propTypes = {
   blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string),
-  endpoint: PropTypes.string.isRequired,
+  contentsubtypes: PropTypes.arrayOf(PropTypes.string),
+  contenttypes: PropTypes.arrayOf(PropTypes.string),
   endpointParams: PropTypes.arrayOf(PropTypes.shape({
     paramName: PropTypes.string,
     paramValue: PropTypes.any,
@@ -422,6 +429,8 @@ SearchTable.propTypes = {
 SearchTable.defaultProps = {
   blockListing: false,
   containerClass: [],
+  contentsubtypes: [],
+  contenttypes: [],
   endpointParams: [],
   filterTypes: [],
   hideTopicDropdown: false,

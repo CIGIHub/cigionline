@@ -16,7 +16,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     IntegerBlock,
@@ -213,10 +212,6 @@ class MultimediaPage(
         help_text='Enter just the YouTube ID for this video. This is the series of letters and numbers found either at www.youtube.com/embed/[here], or www.youtube.com/watch?v=[here]. This is used for the video chaptering below.',
     )
 
-    @property
-    def image_hero_url(self):
-        return self.image_hero.get_rendition('fill-520x390').url
-
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -337,19 +332,6 @@ class MultimediaPage(
             index.FilterField('multimedia_type'),
             index.FilterField('publishing_date'),
         ]
-
-    api_fields = [
-        APIField('authors'),
-        APIField('contentsubtype'),
-        APIField('contenttype'),
-        APIField('pdf_download'),
-        APIField('title'),
-        APIField('url'),
-        APIField('publishing_date'),
-        APIField('multimedia_type'),
-        APIField('image_hero_url'),
-        APIField('topics'),
-    ]
 
     parent_page_types = ['multimedia.MultimediaListPage', 'multimedia.MultimediaSeriesPage']
     subpage_types = []

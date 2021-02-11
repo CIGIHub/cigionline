@@ -7,7 +7,9 @@ import './css/_event_list_page.scss';
 ReactDOM.render(
   <SearchTable
     showSearch
-    endpoint="/events"
+    contenttypes={[
+      'Event',
+    ]}
     fields={[
       'event_access',
       'location_city',
@@ -15,9 +17,7 @@ ReactDOM.render(
       'multimedia_url',
       'publishing_date',
       'registration_url',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     containerClass={[
       'custom-theme-table',

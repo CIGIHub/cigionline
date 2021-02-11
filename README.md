@@ -18,6 +18,7 @@ $ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
+### PostgreSQL
 We use PostgreSQL for our database. Once you have PostgreSQL [installed](https://postgresapp.com), run the following commands to set up your local database.
 ``` shell
 $ create user cigi password 'cigi' superuser
@@ -29,7 +30,27 @@ If you have a copy of the database file, it can be imported with the following c
 $ pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cigionline <name of file>
 ```
 
-Finally, install the packages for the frontend.
+### Elasticsearch
+We use Elasticsearch for our search backend, which can be installed with the following command.
+``` shell
+$ brew tap elastic/tap
+$ brew install elastic/tap/elasticsearch-full
+```
+
+Elasticsearch can then be started using the command `elasticsearch`. Alternatively, use this to launch Elasticsearch in the background:
+``` shell
+$ brew services start elastic/tap/elasticsearch-full
+```
+
+### Node.js
+We use webpack, which is built on Node.js, to bundle our frontend assets. [Instructions to install nvm, a Node.js version manager.](https://github.com/nvm-sh/nvm)
+
+Once you have nvm installed, you can install a version of Node.js with the command `nvm install` followed by the Node.js version number. Here is an example:
+``` shell
+$ nvm install 14.15.4
+```
+
+Finally, install the Node.js packages.
 ``` shell
 $ npm install
 ```
@@ -43,6 +64,11 @@ $ python manage.py migrate
 Then start the Django backend using the following command.
 ``` shell
 $ python manage.py runserver
+```
+
+To reindex the search backend, Elasticsearch needs to be running. Once it is, update the search index from Django.
+``` shell
+$ python manage.py update_index
 ```
 
 Next, run webpack to watch for changes in the frontend assets.

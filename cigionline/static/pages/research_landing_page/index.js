@@ -7,53 +7,45 @@ import './css/research_landing_page.scss';
 ReactDOM.render(
   <SearchTable
     showSearch
-    endpoint="/content"
     fields={[
-      'authors(author(title,url))',
+      'authors',
       'contentsubtype',
       'contenttype',
       'pdf_download',
       'publishing_date',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     containerClass={[
       'custom-theme-table',
     ]}
     filterTypes={[{
-      endpoint: '/events',
       name: 'Event',
+      param: 'contenttype',
+      value: 'Event',
     }, {
-      endpoint: '/publications',
       name: 'Publication',
+      param: 'contenttype',
+      value: 'Publication',
     }, {
-      endpoint: '/multimedia',
       name: 'Multimedia',
+      param: 'contenttype',
+      value: 'Multimedia',
     }, {
-      endpoint: '/opinions',
       name: 'Opinion',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'Opinion',
+      param: 'contentsubtype',
+      value: 'Opinion',
     }, {
-      endpoint: '/opinions',
       name: 'Op-Eds',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'Op-Eds',
+      param: 'contentsubtype',
+      value: 'Op-Eds',
     }, {
-      endpoint: '/media_articles',
       name: 'CIGI in the News',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'CIGI in the News',
+      param: 'contentsubtype',
+      value: 'CIGI in the News',
     }, {
-      endpoint: '/media_articles',
       name: 'News Releases',
-      param: 'article_type',
-      typeEndpoint: '/article_types',
-      typeValue: 'News Releases',
+      param: 'contentsubtype',
+      value: 'News Releases',
     }]}
     RowComponent={ResearchContentListing}
     tableColumns={[{

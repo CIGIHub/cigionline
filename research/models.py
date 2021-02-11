@@ -9,7 +9,6 @@ from core.models import (
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
-from wagtail.api import APIField
 from wagtail.core.blocks import (
     CharBlock,
     DateBlock,
@@ -243,9 +242,8 @@ class TopicPage(ArchiveablePageAbstract, Page):
         ArchiveablePageAbstract.archive_panel,
     ]
 
-    api_fields = [
-        APIField('title'),
-        APIField('url'),
+    search_fields = Page.search_fields + [
+        index.FilterField('archive'),
     ]
 
     parent_page_types = ['research.TopicListPage']

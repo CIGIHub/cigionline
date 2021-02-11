@@ -6,51 +6,43 @@ import SearchTable from '../../js/components/SearchTable';
 ReactDOM.render(
   <SearchTable
     showSearch
-    endpoint="/publications"
+    contenttypes={[
+      'Publication',
+    ]}
     fields={[
-      'authors(author(title,url))',
-      'pdf_downloads',
-      'publication_type(title,url)',
+      'authors',
+      'pdf_download',
       'publishing_date',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     filterTypes={[{
       name: 'Books',
-      param: 'publication_type',
-      typeEndpoint: '/publication_types',
-      typeValue: 'Books',
+      param: 'contentsubtype',
+      value: 'Books',
     }, {
       name: 'CIGI Papers',
-      param: 'publication_type',
-      typeEndpoint: '/publication_types',
-      typeValue: 'CIGI Papers',
+      param: 'contentsubtype',
+      value: 'CIGI Papers',
     }, {
       name: 'Conference Reports',
-      param: 'publication_type',
-      typeEndpoint: '/publication_types',
-      typeValue: 'Conference Reports',
+      param: 'contentsubtype',
+      value: 'Conference Reports',
     }, {
       name: 'Essay Series',
-      param: 'publication_type',
-      typeEndpoint: '/publication_types',
-      typeValue: 'Essay Series',
+      param: 'contentsubtype',
+      value: 'Essay Series',
     }, {
       name: 'Policy Briefs',
-      param: 'publication_type',
-      typeEndpoint: '/publication_types',
-      typeValue: 'Policy Briefs',
+      param: 'contentsubtype',
+      value: 'Policy Briefs',
     }, {
       name: 'Policy Memos',
-      param: 'publication_type',
-      typeEndpoint: '/publication_types',
-      typeValue: 'Policy Memos',
+      param: 'contentsubtype',
+      value: 'Policy Memos',
     }, {
       name: 'Special Reports',
-      param: 'publication_type',
-      typeEndpoint: '/publication_types',
-      typeValue: 'Special Reports',
+      param: 'contentsubtype',
+      value: 'Special Reports',
     }]}
     containerClass={[
       'custom-theme-table',

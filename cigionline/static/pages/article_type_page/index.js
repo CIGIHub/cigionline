@@ -7,7 +7,7 @@ import SearchTable from '../../js/components/SearchTable';
 const endpointParams = [];
 if (articleTypeId) {
   endpointParams.push({
-    paramName: 'article_type',
+    paramName: 'articletypeid',
     paramValue: articleTypeId,
   });
 }
@@ -19,11 +19,9 @@ ReactDOM.render(
     endpointParams={endpointParams}
     limit={10}
     fields={[
-      'authors(author(title,url))',
-      'article_type(title)',
+      'authors',
+      'contentsubtype',
       'publishing_date',
-      'title',
-      'url',
     ]}
     RowComponent={ArticleListingSimple}
   />,

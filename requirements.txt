@@ -2,8 +2,8 @@ anyascii==0.1.7
 asgiref==3.3.1
 astroid==2.4.2
 beautifulsoup4==4.8.2
-boto3==1.16.63
-botocore==1.19.63
+boto3==1.17.6
+botocore==1.20.6
 certifi==2020.12.5
 chardet==3.0.4
 coverage==5.4
@@ -25,6 +25,7 @@ djangorestframework==3.12.2
 docopt==0.6.2
 docutils==0.16
 draftjs-exporter==2.1.7
+elasticsearch==7.10.1
 et-xmlfile==1.0.1
 flake8==3.8.4
 future==0.18.2
@@ -57,7 +58,7 @@ sqlparse==0.4.1
 starkbank-ecdsa==1.1.0
 tablib==3.0.0
 typed-ast==1.4.2
-Unidecode==1.1.2
+Unidecode==1.2.0
 urllib3==1.26.3
 wagtail==2.12
 wagtailmedia==0.7.0
