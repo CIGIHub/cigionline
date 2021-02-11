@@ -172,11 +172,14 @@ $(window).on('load', function () {
   setScrollPosition();
 
   $('.no-border a[name]').each(function (index) {
+    //set anchors and add to progress bar
     let chapterName = $(this).attr('name');
     let chapterPosition = $(this).offset().top;
     let horizontalPosition = (chapterPosition/docHeight)*100;
 
     let chapterAnchor = $(document.createElement('a'));
+    let label = (index + 1) + '. ' + $(this).html();
+
     chapterAnchor.addClass('chapter-anchor');
     chapterAnchor.attr('href', '#' + chapterName);
     chapterAnchor.css({
@@ -184,6 +187,15 @@ $(window).on('load', function () {
     });
 
     $('.progress-bar').append(chapterAnchor);
+
+    //create tooltips for each anchor title
+    let tooltip = $(document.createElement('div'));
+    tooltip.addClass('chapter-anchor-tooltip');
+    tooltip.html(label);
+    chapterAnchor.append(tooltip);
+    $('.progress-bar').append(chapterAnchor);
+
+    //create mobile menu
 
   });
 });
