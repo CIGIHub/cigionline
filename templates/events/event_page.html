@@ -56,4 +56,7 @@
       </div>
     </section>
   {% endif %}
+  {% if self.recommended_content %}
+    {% include 'includes/recommended.html' with recommended=self.recommended_content %}
+  {% endif %}
 {% endblock content %}

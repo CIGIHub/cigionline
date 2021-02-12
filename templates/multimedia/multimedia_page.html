@@ -46,7 +46,7 @@
   {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
 
   {% block recommended %}
-    {% if self.recommended.all %}
+    {% if self.recommended_content %}
       <section class="recommended">
         <div class="container">
           <div class="row justify-content-center">
@@ -57,8 +57,8 @@
                 <h2>Recommended</h2>
                 {% include "includes/footer_bracket.svg" %}
               </div>
-              {% for recommended_content in self.recommended.all %}
-                {% include "includes/recommended_article.html" with article=recommended_content.recommended_content_page.specific %}
+              {% for recommended_content in self.recommended_content|slice:":3" %}
+                {% include "./includes/recommended_article.html" with article=recommended_content.specific %}
               {% endfor %}
             </div>
           </div>

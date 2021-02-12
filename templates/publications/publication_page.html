@@ -108,8 +108,8 @@
     {% include "includes/about_the_author.html" with authors=self.editors.all title_override="About the Editor" %}
   {% endif %}
 
-  {% if self.recommended.all|length > 0 %}
-    {% include 'includes/recommended.html' with recommended=self.recommended.all %}
+  {% if self.recommended_content %}
+    {% include 'includes/recommended.html' with recommended=self.recommended_content %}
   {% endif %}
 {% endblock content %}
 
