@@ -1,17 +1,13 @@
 import './css/longform_2_dark_mode.scss';
 
-$(window).on('load', function() {
-  const headerHeight = $('header').height();
-  const scrollTop = $(window).scrollTop();
-  const docHeight = $(document).height();
-  const winHeight = $(window).height();
+let scrolled = null;
+let headerHeight = null;
+let maxHeight = null;
+let scrollTop = 0;
 
-  const maxHeight = docHeight - winHeight;
-  const scrolled = (scrollTop / maxHeight) * 100;
-
-  console.log('here');
-  console.log(headerHeight);
-
+function setScrollPosition() {
+  scrollTop = $(window).scrollTop();
+  scrolled = (scrollTop / maxHeight) * 100;
   $('progress').attr('value', scrolled);
 
   if (scrollTop > headerHeight) {
@@ -19,4 +15,30 @@ $(window).on('load', function() {
   } else {
     $('body').removeClass('scrolled');
   }
+}
+
+$(window).on('load', function() {
+  const docHeight = $(document).height();
+  const winHeight = $(window).height();
+  headerHeight = $('header').height();
+
+  maxHeight = docHeight - winHeight;
+  setScrollPosition();
+});
+
+$(window).on('scroll', function() {
+  setScrollPosition();
+});
+
+
+window.addEventListener('resize', resizeUpdate);
+
+const sr = ScrollReveal();
+
+sr.reveal('.stream-block-blockquote', {
+  delay: 100,
+  distance: '50px',
+  duration: 750,
+  origin: 'left',
+  scale: 1,
 });
