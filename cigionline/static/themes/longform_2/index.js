@@ -51,7 +51,7 @@ panzoomContainers.forEach(function(panzoomContainer, index) {
       (panzoomScrollbar[index].offsetWidth / panzoomContainers[index].offsetWidth) * event.detail.x,
     );
     moveScrollBar(x, index);
-  });//
+  });
 
   panzoomScrollbar[index].addEventListener('panzoompan', function(event) {
     const x = Math.abs(
