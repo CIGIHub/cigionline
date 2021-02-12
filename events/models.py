@@ -6,7 +6,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -137,7 +137,6 @@ class EventPage(
         related_name='+',
         verbose_name='Multimedia',
     )
-    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     registration_url = models.URLField(blank=True, max_length=512)
     related_files = StreamField(
         [
@@ -228,7 +227,7 @@ class EventPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
-                FieldPanel('projects'),
+                # FieldPanel('projects'),
                 PageChooserPanel(
                     'multimedia_page',
                     ['multimedia.MultimediaPage'],

@@ -1,5 +1,6 @@
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from search.filters import AuthorFilterField, ParentalManyToManyFilterField
 from streams.blocks import (
     AccordionBlock,
     ParagraphBlock,
@@ -311,28 +312,6 @@ class ArchiveablePageAbstract(models.Model):
         abstract = True
 
 
-class AuthorFilterField(index.FilterField):
-    def get_attname(self, cls):
-        return self.field_name
-
-    def get_type(self, cls):
-        return 'IntegerField'
-
-    def get_value(self, obj):
-        return list(getattr(obj, self.field_name).all().values_list('author__id', flat=True))
-
-
-class TopicFilterField(index.FilterField):
-    def get_attname(self, cls):
-        return self.field_name
-
-    def get_type(self, cls):
-        return 'IntegerField'
-
-    def get_value(self, obj):
-        return list(getattr(obj, self.field_name).all().values_list('id', flat=True))
-
-
 class ContentPage(Page, SearchablePageAbstract):
     external_authors = StreamField(
         [
@@ -346,6 +325,7 @@ class ContentPage(Page, SearchablePageAbstract):
         ],
         blank=True,
     )
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
@@ -412,8 +392,9 @@ class ContentPage(Page, SearchablePageAbstract):
         AuthorFilterField('authors'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
+        ParentalManyToManyFilterField('projects'),
         index.FilterField('publishing_date'),
-        TopicFilterField('topics'),
+        ParentalManyToManyFilterField('topics'),
     ]
 
     def on_form_bound(self):
