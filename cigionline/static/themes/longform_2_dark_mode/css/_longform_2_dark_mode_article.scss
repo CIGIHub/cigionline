@@ -159,6 +159,13 @@
       color: $black;
       font-weight: 600;
     }
+
+    p {
+      a {
+        color: $black;
+        text-decoration: underline;
+      }
+    }
   }
 
   .about-the-author {
