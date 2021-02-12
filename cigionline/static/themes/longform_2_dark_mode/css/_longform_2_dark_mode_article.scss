@@ -47,22 +47,6 @@
       margin: 0.25em 0;
     }
 
-    .social-links {
-      a {
-        color: $white;
-        cursor: pointer;
-        font-size: 1.25em;
-
-        &:hover {
-          color: $cigi-darkest-grey;
-        }
-      }
-    }
-
-    .date {
-      color: $white;
-    }
-
     .meta {
       @include link($color: $white, $hover-color: $cigi-primary-colour);
       font-size: 1em;
@@ -81,7 +65,6 @@
     }
 
     .subtitle {
-      color: $white;
       margin-top: 2em;
 
       p {
@@ -99,7 +82,6 @@
       @include media-breakpoint-up(md) {
         font-size: 2.75em;
       }
-      color: $white;
       font-family: 'futura-pt', sans-serif;
       font-size: 2em;
       font-weight: normal;
@@ -108,7 +90,7 @@
 
   .scroll-arrow {
     animation: bounce 2s infinite;
-    background-color: $black;
+    background-color: $cigi-primary-colour;
     border-radius: 50%;
     bottom: 10%;
     color: $white;
@@ -120,7 +102,7 @@
     z-index: 3;
 
     &:hover {
-      background-color: $cigi-darkest-grey;
+      background-color: $cigi-dark-pink;
     }
 
     i {
