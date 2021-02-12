@@ -6,7 +6,15 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
-    <h1>Search</h1>
+    <section class="hero-plain">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Search</h1>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <form action="{% url 'search' %}" method="get">
         <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>

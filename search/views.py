@@ -14,7 +14,9 @@ def search(request):  # pragma: no cover
 
     # Search
     if search_query:
-        search_results = Page.objects.live().search(search_query)
+        search_results = cigi_search(
+            searchtext=search_query,
+        )
         query = Query.get(search_query)
 
         # Record hit
