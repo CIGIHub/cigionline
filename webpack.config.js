@@ -58,7 +58,7 @@ const config = {
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',
   },
-
+ 
   devtool: 'source-map',
   output: {
     path: path.resolve('./cigionline/static/bundles/'),

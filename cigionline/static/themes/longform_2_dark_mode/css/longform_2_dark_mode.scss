@@ -1,3 +1,9 @@
-// .longform-2-dark-mode-article {
-//
-// }
+@import '../../../css/global/mixins';
+
+.longform-2-dark-mode-article {
+  @include top-bar(
+    $background-color: transparent,
+    $color: $black,
+    $position: relative,
+  );
+}
