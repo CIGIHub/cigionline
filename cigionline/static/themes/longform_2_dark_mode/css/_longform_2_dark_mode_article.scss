@@ -148,10 +148,16 @@
   }
 
   .body {
+    color: $black;
     padding: 2em 0 1em;
 
     .drop-caps {
       border: 0;
+    }
+
+    h2 {
+      color: $black;
+      font-weight: 600;
     }
   }
 
@@ -163,9 +169,13 @@
       font-size: 1.25em;
       text-transform: capitalize;
     }
+  }
 
-    .name {
-      font-weight: 600;
+  .stream-block-blockquote {
+    .stream-block-blockquote-content {
+      &::before {
+        border-bottom: 5px solid $black;
+      }
     }
   }
 
@@ -204,6 +214,23 @@
       font-size: 0.85rem;
       margin: 0.5rem 0;
       padding-left: 0.5rem;
+    }
+  }
+
+  .stream-block-autoplay-video {
+    .caption {
+      padding: .1rem 0 .1rem .5rem;
+    }
+  }
+
+  .stream-block-inline-video {
+    .stream-block-inline-video-content {
+      .stream-block-inline-video-text {
+        .watch-video-label {
+          color: $black;
+          text-decoration: underline;
+        }
+      }
     }
   }
 
