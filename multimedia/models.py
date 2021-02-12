@@ -8,7 +8,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -43,7 +43,7 @@ class MultimediaListPage(BasicPageAbstract, Page):
             [
                 InlinePanel(
                     'featured_multimedia',
-                    max_num=5,
+                    max_num=6,
                     min_num=0,
                     label='Multimedia',
                 ),
@@ -187,7 +187,6 @@ class MultimediaPage(
     podcast_video_duration = models.CharField(blank=True, max_length=8)
     podcast_video_file_size = models.IntegerField(blank=True, null=True)
     podcast_video_url = models.URLField(blank=True)
-    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     transcript = StreamField(
         [
             BasicPageAbstract.body_accordion_block,

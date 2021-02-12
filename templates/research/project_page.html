@@ -1,6 +1,27 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'projectPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+  </script>
+  {% render_bundle 'projectPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle %}
   {% include "includes/body.html" with body=self.body %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="project-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
