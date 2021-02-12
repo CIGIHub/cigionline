@@ -1,8 +1,73 @@
 {% extends "articles/article_page.html" %}
-{% load webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeLongform2DarkMode' 'css' %}
 {% endblock %}
 
+{% block theme_js %}
+  {% render_bundle 'themeLongform2DarkMode' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block body_class %}longform-2-dark-mode-article{% endblock %}
+
+{% block hero %}
+  <section class="article-header-sticky">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="article-header-sticky-content">
+            <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
+            <div class="series-title">{{ self.title }}</div>
+            <div class="social-links">
+              <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+                <i class="fab fa-facebook-square icon"></i>
+              </a>
+              <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <progress value="0" max="100"></progress>
+    </div>
+  </section>
+
+  {% if not self.video_banner %}
+    {% image self.image_hero original as image_hero %}
+  {% endif %}
+  <section class="hero-container article-hero">
+    <div class="video-bg" style="background-image: url('{{ image_hero.url }}');">
+      {% if self.video_banner %}
+      <video playsinline autoplay muted loop class="video-background">
+        <source src="{{ self.video_banner.url }}" type="video/mp4">
+      </video>
+      {% endif %}
+    </div>
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="content-wrapper{% if self.is_title_bottom %} bottom-align{% endif %}">
+            {% include "includes/topics.html" with topics=self.topics %}
+            <h1>{{ self.title }}</h1>
+            <div class="subtitle">{{ self.subtitle|safe }}</div>
+            <div class="meta">
+              {% include "includes/date.html" with date=self.publishing_date %}
+              {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#article-body" class="scroll-arrow">
+      <i class="far fa-angle-down" aria-hidden="true"></i>
+    </a>
+
+  </section>
+
+  {% endblock %}
+
