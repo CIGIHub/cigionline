@@ -308,7 +308,7 @@ class MultimediaPage(
                     ['articles.ArticlePage'],
                 ),
                 FieldPanel('topics'),
-                # FieldPanel('projects'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',

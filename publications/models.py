@@ -332,7 +332,7 @@ class PublicationPage(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
                 ),
-                # FieldPanel('projects'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -424,7 +424,7 @@ class PublicationSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
-                # FieldPanel('projects'),
+                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',

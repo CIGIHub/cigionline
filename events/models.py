@@ -227,7 +227,7 @@ class EventPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
-                # FieldPanel('projects'),
+                FieldPanel('projects'),
                 PageChooserPanel(
                     'multimedia_page',
                     ['multimedia.MultimediaPage'],

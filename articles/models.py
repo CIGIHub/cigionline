@@ -383,7 +383,7 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
-                # FieldPanel('projects'),
+                FieldPanel('projects'),
                 PageChooserPanel(
                     'article_series',
                     ['articles.ArticleSeriesPage'],
