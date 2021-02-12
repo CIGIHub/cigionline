@@ -35,8 +35,10 @@ class SearchTable extends React.Component {
     const { filterTypes } = this.state;
     if (isSearchPage) {
       const parsed = queryString.parse(window.location.search);
+      const params = (new URL(window.location)).searchParams;
+      const query = params.get('query');
       const initialState = {};
-      if (parsed.query) {
+      if (query) {
         initialState.searchValue = parsed.query;
       }
       this.setState(initialState, this.getRows);
@@ -100,8 +102,13 @@ class SearchTable extends React.Component {
       contenttypes,
       endpointParams,
       fields,
+      isSearchPage,
       limit,
     } = this.props;
+
+    if (isSearchPage) {
+      this.updateQueryParams();
+    }
 
     const offset = (currentPage - 1) * limit;
 
@@ -256,6 +263,16 @@ class SearchTable extends React.Component {
     const { limit } = this.props;
     const { totalRows } = this.state;
     return Math.ceil(totalRows / limit);
+  }
+
+  updateQueryParams() {
+    const { searchValue, topicSelectValue } = this.state;
+    const url = new URL(window.location);
+    url.searchParams.set('query', searchValue);
+    if (topicSelectValue) {
+      url.searchParams.set('topic', topicSelectValue);
+    }
+    window.history.pushState({}, '', url);
   }
 
   render() {
