@@ -210,7 +210,7 @@ $(window).on('load', function() {
     const horizontalPosition = (chapterPosition / docHeight) * 100;
 
     const chapterAnchor = $(document.createElement('a'));
-    const label = `${index + 1}. ` + $(this).html();
+    const label = `${index + 1}. ${$(this).html()}`;
 
     chapterAnchor.addClass('chapter-anchor');
     chapterAnchor.attr('href', `#${chapterName}`);
@@ -228,7 +228,7 @@ $(window).on('load', function() {
 
     chapterAnchor.on('click', function() {
       $('html,body').animate({
-        scrollTop: $('`a[name="${chapterName}"]`').offset().top - headerHeight - 20,
+        scrollTop: $(`a[name="${chapterName}"]`).offset().top - headerHeight - 20,
       }, 1000);
       return false;
     });
@@ -241,7 +241,7 @@ $(window).on('load', function() {
 
     mobileMenuItemLink.on('click', function() {
       $('html,body').animate({
-        scrollTop: $('a[name='+chapterName+']').offset().top,
+        scrollTop: $(`a[name="${chapterName}"]`).offset().top,
       }, 1000);
       $('.mobile-menu-button').html('<i class="fa fa-list-ul fa-2"></i>');
       $('.mobile-menu-container').animate({
@@ -255,6 +255,6 @@ $(window).on('load', function() {
   });
 });
 
-$(window).on('scroll', function () {
+$(window).on('scroll', function() {
   setScrollPosition();
 });
