@@ -43,6 +43,7 @@ def search_api(request):
         authors=request.GET.getlist('author', None),
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
+        projects=request.GET.getlist('project', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
         searchtext=request.GET.get('searchtext', None),
         topics=request.GET.getlist('topic', None),
