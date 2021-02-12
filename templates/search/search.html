@@ -1,5 +1,12 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'searchPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'searchPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block body_class %}template-searchresults{% endblock %}
 
@@ -16,31 +23,14 @@
       </div>
     </section>
 
-    <form action="{% url 'search' %}" method="get">
-        <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
-        <input type="submit" value="Search" class="button">
-    </form>
-
-    {% if search_results %}
-        <ul>
-            {% for result in search_results %}
-                <li>
-                    <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-                    {% if result.search_description %}
-                        {{ result.search_description }}
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-
-        {% if search_results.has_previous %}
-            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
-        {% endif %}
-
-        {% if search_results.has_next %}
-            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
-        {% endif %}
-    {% elif search_query %}
-        No results found
-    {% endif %}
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div id="search-table">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 {% endblock %}
