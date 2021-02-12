@@ -21,6 +21,7 @@ from streams.blocks import (
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
+    TextBackgroundBlock,
     TextBorderBlock,
     TooltipBlock,
     TweetBlock,
@@ -55,7 +56,7 @@ class BasicPageAbstract(models.Model):
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
         ('paragraph', ParagraphBlock()),
         ('table', TableBlock()),
-        ('text_background_block', blocks.RichTextBlock(
+        ('text_background_block', TextBackgroundBlock(
             features=['bold', 'italic', 'link'],
         )),
     ]
