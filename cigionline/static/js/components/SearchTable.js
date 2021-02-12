@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 import React from 'react';
 
 import Paginator from './Paginator';
@@ -30,9 +31,18 @@ class SearchTable extends React.Component {
   }
 
   componentDidMount() {
-    const { showSearch } = this.props;
+    const { isSearchPage, showSearch } = this.props;
     const { filterTypes } = this.state;
-    this.getRows();
+    if (isSearchPage) {
+      const parsed = queryString.parse(window.location.search);
+      const initialState = {};
+      if (parsed.query) {
+        initialState.searchValue = parsed.query;
+      }
+      this.setState(initialState, this.getRows);
+    } else {
+      this.getRows();
+    }
     if (showSearch) {
       this.getTopics();
       const filterTypeEndpoints = [];
@@ -416,6 +426,7 @@ SearchTable.propTypes = {
     value: PropTypes.string,
   })),
   hideTopicDropdown: PropTypes.bool,
+  isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
   searchPlaceholder: PropTypes.string,
@@ -434,6 +445,7 @@ SearchTable.defaultProps = {
   endpointParams: [],
   filterTypes: [],
   hideTopicDropdown: false,
+  isSearchPage: false,
   limit: 24,
   searchPlaceholder: 'Search',
   showSearch: false,

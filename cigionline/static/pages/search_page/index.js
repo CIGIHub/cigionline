@@ -6,6 +6,7 @@ import SearchTable from '../../js/components/SearchTable';
 ReactDOM.render(
   <SearchTable
     blockListing
+    isSearchPage
     showSearch
     fields={[]}
     containerClass={[
