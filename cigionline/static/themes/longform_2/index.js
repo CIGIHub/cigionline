@@ -144,7 +144,6 @@ $(function() {
 // Sticky header, chapter markers and tooltips for progress bar
 
 let scrolled = null;
-const stickyHeader = $('.article-header-sticky');
 let headerHeight = null;
 let maxHeight = null;
 let scrollTop = 0;
