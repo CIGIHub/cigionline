@@ -120,9 +120,12 @@
   }
 
   h2 {
-    &.no-border {
-      font-weight: 700;
-      text-transform: uppercase;
+    a {
+
+      &[name='*'] {
+        font-weight: 700;
+        text-transform: uppercase;
+      }
     }
   }
 

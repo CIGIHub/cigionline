@@ -202,7 +202,7 @@ $(window).on('load', function() {
   createMobileMenu();
   setScrollPosition();
 
-  $('.no-border a[name]').each(function(index) {
+  $('h2 a[name]').each(function(index) {
     // set anchors and add to progress bar
     const chapterName = $(this).attr('name');
     const chapterPosition = $(this).offset().top;
