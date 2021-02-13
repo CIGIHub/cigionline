@@ -1,5 +1,6 @@
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from search.filters import AuthorFilterField, ParentalManyToManyFilterField
 from streams.blocks import (
     AccordionBlock,
     ParagraphBlock,
@@ -312,28 +313,6 @@ class ArchiveablePageAbstract(models.Model):
         abstract = True
 
 
-class AuthorFilterField(index.FilterField):
-    def get_attname(self, cls):
-        return self.field_name
-
-    def get_type(self, cls):
-        return 'IntegerField'
-
-    def get_value(self, obj):
-        return list(getattr(obj, self.field_name).all().values_list('author__id', flat=True))
-
-
-class TopicFilterField(index.FilterField):
-    def get_attname(self, cls):
-        return self.field_name
-
-    def get_type(self, cls):
-        return 'IntegerField'
-
-    def get_value(self, obj):
-        return list(getattr(obj, self.field_name).all().values_list('id', flat=True))
-
-
 class ContentPage(Page, SearchablePageAbstract):
     external_authors = StreamField(
         [
@@ -347,6 +326,7 @@ class ContentPage(Page, SearchablePageAbstract):
         ],
         blank=True,
     )
+    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
@@ -379,6 +359,31 @@ class ContentPage(Page, SearchablePageAbstract):
     def author_count(self):
         # @todo test this
         return self.authors.count() + len(self.external_authors)
+
+    def recommended_content(self):
+        recommended_content = []
+        topic_content = []
+        for item in self.recommended.all()[:3]:
+            recommended_content.append(item.recommended_content_page.specific)
+        for topic in self.topics.all():
+            topic_content.append(
+                ContentPage
+                .objects
+                .live()
+                .public()
+                .filter(topics=topic, publishing_date__isnull=False, eventpage__isnull=True)
+                .exclude(id=self.id)
+                .exclude(articlepage__article_type__title='CIGI in the News')
+                .order_by('-publishing_date')
+            )
+        for i in range(10):
+            for topic in topic_content:
+                if topic[i] in recommended_content:
+                    continue
+                recommended_content.append(topic[i])
+                if len(recommended_content) == 12:
+                    return recommended_content
+        return recommended_content
 
     authors_panel = MultiFieldPanel(
         [
@@ -413,8 +418,9 @@ class ContentPage(Page, SearchablePageAbstract):
         AuthorFilterField('authors'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
+        ParentalManyToManyFilterField('projects'),
         index.FilterField('publishing_date'),
-        TopicFilterField('topics'),
+        ParentalManyToManyFilterField('topics'),
     ]
 
     def on_form_bound(self):
