@@ -1,4 +1,5 @@
 import './css/longform_2_dark_mode.scss';
+import ScrollReveal from 'scrollreveal';
 
 let scrolled = null;
 let headerHeight = null;
@@ -29,9 +30,6 @@ $(window).on('load', function() {
 $(window).on('scroll', function() {
   setScrollPosition();
 });
-
-
-window.addEventListener('resize', resizeUpdate);
 
 const sr = ScrollReveal();
 

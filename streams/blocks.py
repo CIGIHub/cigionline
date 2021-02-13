@@ -561,7 +561,7 @@ class TextBackgroundBlock(blocks.RichTextBlock, ThemeableBlock):
     def get_template(self, context, *args, **kwargs):
         standard_template = super(TextBackgroundBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'text_background_block')
-        
+
     class Meta:
         icon = 'edit'
         label = 'Text Background Block'
