@@ -37,6 +37,7 @@ const config = {
     multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
     personListExpertsPage: './cigionline/static/pages/person_list_experts_page/index.js',
     personPage: './cigionline/static/pages/person_page/index.js',
+    projectPage: './cigionline/static/pages/project_page/index.js',
     publicationListPage: './cigionline/static/pages/publication_list_page/index.js',
     publicationPage: './cigionline/static/pages/publication_page/index.js',
     publicationTypePage: './cigionline/static/pages/publication_type_page/index.js',

@@ -7,7 +7,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
     PDFDownloadBlock,
@@ -207,7 +207,6 @@ class PublicationPage(
         blank=True,
         verbose_name='PDF Downloads',
     )
-    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     publication_series = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
@@ -408,8 +407,6 @@ class PublicationSeriesPage(
     ContentPage,
     FeatureablePageAbstract,
 ):
-    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
-
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 

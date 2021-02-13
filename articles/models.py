@@ -8,7 +8,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from modelcluster.fields import ParentalKey
 from streams.blocks import PersonBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -278,7 +278,6 @@ class ArticlePage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
-    projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),

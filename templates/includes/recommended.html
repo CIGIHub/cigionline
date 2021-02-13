@@ -9,8 +9,13 @@
 
         <div class="recommended-content-medium row">
           {% for content in recommended|slice:":3" %}
-            <div class="col-md">
-              {% include 'includes/features/feature_content_medium.html' with content=content.recommended_content_page.specific %}
+            <div class="col-md-4">
+              {% include 'includes/features/feature_content_medium.html' with content=content.specific %}
+            </div>
+          {% endfor %}
+          {% for content in recommended|slice:"3:" %}
+            <div class="col-md-4">
+              {% include 'includes/features/feature_content_small.html' with content=content.specific icon=True %}
             </div>
           {% endfor %}
         </div>
