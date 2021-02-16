@@ -86,8 +86,10 @@ class SearchTable extends React.Component {
       typeSelected,
     } = this.state;
     const {
+      contentType,
       contentsubtypes,
       contenttypes,
+      persontypes,
       endpointParams,
       fields,
       limit,
@@ -103,17 +105,23 @@ class SearchTable extends React.Component {
     }
 
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
-    for (const contenttype of contenttypes) {
-      uri += `&contenttype=${contenttype}`;
+    for (const type of contenttypes) {
+      uri += `&contenttype=${type}`;
     }
     for (const contentsubtype of contentsubtypes) {
       uri += `&contentsubtype=${contentsubtype}`;
+    }
+    for (const persontype of persontypes) {
+      uri += `&persontype=${persontype}`;
     }
     for (const field of fields) {
       uri += `&field=${field}`;
     }
     for (const endpointParam of endpointParams) {
       uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
+    }
+    if (contentType) {
+      uri += `&content_type=${contentType}`;
     }
     if (searchValue) {
       uri += `&searchtext=${searchValue}`;
@@ -402,8 +410,10 @@ class SearchTable extends React.Component {
 SearchTable.propTypes = {
   blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string),
+  contentType: PropTypes.string,
   contentsubtypes: PropTypes.arrayOf(PropTypes.string),
   contenttypes: PropTypes.arrayOf(PropTypes.string),
+  persontypes: PropTypes.arrayOf(PropTypes.string),
   endpointParams: PropTypes.arrayOf(PropTypes.shape({
     paramName: PropTypes.string,
     paramValue: PropTypes.any,
@@ -429,8 +439,10 @@ SearchTable.propTypes = {
 SearchTable.defaultProps = {
   blockListing: false,
   containerClass: [],
+  contentType: '',
   contentsubtypes: [],
   contenttypes: [],
+  persontypes: [],
   endpointParams: [],
   filterTypes: [],
   hideTopicDropdown: false,

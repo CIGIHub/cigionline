@@ -41,8 +41,10 @@ def search_api(request):
     pages = cigi_search(
         articletypeid=request.GET.get('articletypeid', None),
         authors=request.GET.getlist('author', None),
+        content_type=request.GET.get('content_type', None),
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
+        persontypes=request.GET.getlist('persontype', None),
         projects=request.GET.getlist('project', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
         searchtext=request.GET.get('searchtext', None),

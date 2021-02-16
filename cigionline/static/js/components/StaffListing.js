@@ -6,22 +6,24 @@ function StaffListing(props) {
 
   return (
     <article className="staff-listing">
-      <div class="name-container">
-        <a class="name" href="{ row.url }">{ row.title }</a>
-        <div class="position">{ row.position }</div>
+      <div className="name-container">
+        <a className="name" href={row.url}>{row.title}</a>
+        <div className="position">{row.position}</div>
       </div>
-      <p className="article-type">{row.contentsubtype}</p>
-      <h2 className="article-title"><a href={row.url}>{row.title}</a></h2>
-      <p className="article-date">
-        {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
-      </p>
-      <p className="article-authors">
-        {row.authors.map((author) => (
-          <a key={`${row.id}-${author.id}`} href={author.url}>
-            {author.title}
-          </a>
-        ))}
-      </p>
+      <div className="contact-container">
+        {row.phone_number && (
+          <div>
+            <i className="fas fa-phone" />
+            <span>{row.phone_number}</span>
+          </div>
+        )}
+        {row.email && (
+          <div>
+            <i className="fas fa-envelope" />
+            <span><a href="mailto:{ row.email }">{row.email}</a></span>
+          </div>
+        )}
+      </div>
     </article>
   );
 }

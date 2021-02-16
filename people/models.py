@@ -235,6 +235,13 @@ class PersonPage(
     def has_authored_content(self):
         return self.content_pages_as_author.count() > 0
 
+    @property
+    def persontypes(self):
+        persontypes = []
+        for persontype in self.person_types.all():
+            persontypes.append(persontype.name)
+        return persontypes
+
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
@@ -353,6 +360,16 @@ class PersonPage(
         ArchiveablePageAbstract.archive_panel,
         ThemeablePageAbstract.theme_panel,
     ]
+
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + [
+            index.FilterField('persontypes'),
+            index.FilterField('email'),
+            index.FilterField('phone_number'),
+            index.FilterField('position'),
+            index.FilterField('last_name'),
+        ]
 
     parent_page_types = ['people.PeoplePage']
     subpage_types = []

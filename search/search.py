@@ -7,7 +7,7 @@ from wagtail.search.backends.elasticsearch7 import (
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid
+        self, content_type, contenttypes, contentsubtypes, authors, persontypes, projects, topics, searchtext, articletypeid, publicationtypeid
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -15,6 +15,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.contenttypes = None
         self.contentsubtypes = None
         self.authors = None
+        self.persontypes = None
         self.projects = None
         self.topics = None
         self.searchtext = searchtext
@@ -27,6 +28,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.contentsubtypes = contentsubtypes
         if authors and len(authors) > 0:
             self.authors = authors
+        if persontypes and len(persontypes) > 0:
+            self.persontypes = persontypes
         if projects and len(projects) > 0:
             self.projects = projects
         if topics and len(topics) > 0:
@@ -81,6 +84,19 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__authors_filter": self.authors,
                 },
             })
+        if self.persontypes:
+            filters.extend([
+                {
+                    "terms": {
+                        "people_personpage__persontypes_filter": self.persontypes,
+                    },
+                },
+                {
+                    "terms": {
+                        "people_personpage__archive_filter": [0],
+                    },
+                },
+            ])
         if self.projects:
             filters.append({
                 "terms": {
@@ -114,15 +130,22 @@ class CIGIOnlineSearchQueryCompiler:
         }
 
     def get_sort(self):
-        return [{
-            "core_contentpage__publishing_date_filter": {
-                "order": "desc",
-            },
-        }]
+        if self.content_type == 'people.PersonPage' and 'Staff' in self.persontypes:
+            return [{
+                "people_personpage__last_name_filter": {
+                    "order": "asc",
+                },
+            }]
+        else:
+            return [{
+                "core_contentpage__publishing_date_filter": {
+                    "order": "desc",
+                },
+            }]
 
 
-def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None):
+def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, authors=None, persontypes=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None):
     return Elasticsearch7SearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid)
+        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, authors, persontypes, projects, topics, searchtext, articletypeid, publicationtypeid)
     )
