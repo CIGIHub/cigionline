@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import React from 'react';
 
 import Paginator from './Paginator';
@@ -34,12 +33,15 @@ class SearchTable extends React.Component {
     const { isSearchPage, showSearch } = this.props;
     const { filterTypes } = this.state;
     if (isSearchPage) {
-      const parsed = queryString.parse(window.location.search);
       const params = (new URL(window.location)).searchParams;
       const query = params.get('query');
+      const topic = params.get('topic');
       const initialState = {};
       if (query) {
-        initialState.searchValue = parsed.query;
+        initialState.searchValue = query;
+      }
+      if (topic) {
+        initialState.topicSelectValue = topic;
       }
       this.setState(initialState, this.getRows);
     } else {
