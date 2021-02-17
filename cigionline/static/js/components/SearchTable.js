@@ -146,7 +146,9 @@ class SearchTable extends React.Component {
           rows: data.items,
           totalRows: data.meta.total_count,
         }), () => {
-          this.setLetters(paginateAlphabetically);
+          if (paginateAlphabetically) {
+            this.setLetters();
+          }
         });
       });
   }
@@ -199,25 +201,23 @@ class SearchTable extends React.Component {
     }), this.getRows);
   }
 
-  setLetters(paginateAlphabetically) {
-    if (paginateAlphabetically) {
-      const { rows } = this.state;
-      const letters = {
-        all: rows,
-      };
-      rows.forEach((row) => {
-        const letter = row.last_name[0];
-        if (!(letter in letters)) {
-          letters[letter] = [];
-        }
+  setLetters() {
+    const { rows } = this.state;
+    const letters = {
+      all: rows,
+    };
+    rows.forEach((row) => {
+      const letter = row.last_name[0];
+      if (!(letter in letters)) {
+        letters[letter] = [];
+      }
 
-        letters[letter].push(row);
-      });
+      letters[letter].push(row);
+    });
 
-      this.setState(() => ({
-        letters,
-      }));
-    }
+    this.setState(() => ({
+      letters,
+    }));
   }
 
   setLetter(letter) {
