@@ -241,7 +241,7 @@ class PersonPage(
         for persontype in self.person_types.all():
             persontypes.append(persontype.name)
         return persontypes
-    
+
     @property
     def phone_number_clean(self):
         return self.phone_number.replace('.', ' ').lower()
