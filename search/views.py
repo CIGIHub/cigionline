@@ -73,26 +73,29 @@ def search_api(request):
             'url': page.url,
         }
         for field in fields:
-            if field == 'authors':
-                item['authors'] = [{
-                    'id': author.author.id,
-                    'title': author.author.title,
-                    'url': author.author.url,
-                } for author in page.specific.authors.all()]
-            elif field == 'cigi_people_mentioned':
-                item['cigi_people_mentioned'] = [{
-                    'id': person.value.id,
-                    'title': person.value.title,
-                    'url': person.value.url,
-                } for person in page.specific.cigi_people_mentioned]
-            elif field == 'topics':
-                item['topics'] = [{
-                    'id': topic.id,
-                    'title': topic.title,
-                    'url': topic.url,
-                } for topic in page.specific.topics.all()]
-            else:
-                item[field] = getattr(page.specific, field)
+            try:
+                if field == 'authors':
+                    item['authors'] = [{
+                        'id': author.author.id,
+                        'title': author.author.title,
+                        'url': author.author.url,
+                    } for author in page.specific.authors.all()]
+                elif field == 'cigi_people_mentioned':
+                    item['cigi_people_mentioned'] = [{
+                        'id': person.value.id,
+                        'title': person.value.title,
+                        'url': person.value.url,
+                    } for person in page.specific.cigi_people_mentioned]
+                elif field == 'topics':
+                    item['topics'] = [{
+                        'id': topic.id,
+                        'title': topic.title,
+                        'url': topic.url,
+                    } for topic in page.specific.topics.all()]
+                else:
+                    item[field] = getattr(page.specific, field)
+            except AttributeError:
+                pass
         items.append(item)
 
     return JsonResponse({
