@@ -3,10 +3,14 @@
 .pagination-links-alphabetical {
   @include media-breakpoint-up(md) {
     justify-content: space-between;
+    margin-bottom: 4em;
+  }
+  @include media-breakpoint-up(sm) {
+    margin-bottom: 2em;
   }
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 4em;
+  margin-bottom: 1em;
 
   li {
     border-left: 1px solid $cigi-light-grey;
@@ -21,12 +25,18 @@
     &:first-child {
       border-left: 0;
       padding-left: 0;
+      text-align: left;
       width: 60px;
+
+      button {
+        text-align: left;
+      }
     }
 
     &:hover {
-      color: $cigi-primary-colour;
-      transition: color 0.2s ease;
+      button {
+        color: $cigi-primary-colour;
+      }
     }
 
     &.pagination-inactive {
@@ -35,6 +45,8 @@
 
     button {
       font-weight: 600;
+      transition: color 0.2s ease;
+      width: 100%;
     }
   }
 }
