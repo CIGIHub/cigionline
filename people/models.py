@@ -241,6 +241,10 @@ class PersonPage(
         for persontype in self.person_types.all():
             persontypes.append(persontype.name)
         return persontypes
+    
+    @property
+    def phone_number_clean(self):
+        return self.phone_number.replace('.', ' ').lower()
 
     def latest_activity(self):
         # @todo test
@@ -366,7 +370,7 @@ class PersonPage(
         + [
             index.FilterField('persontypes'),
             index.FilterField('email'),
-            index.FilterField('phone_number'),
+            index.FilterField('phone_number_clean'),
             index.FilterField('position'),
             index.FilterField('last_name'),
         ]

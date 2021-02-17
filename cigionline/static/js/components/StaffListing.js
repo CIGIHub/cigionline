@@ -12,16 +12,16 @@ function StaffListing(props) {
         <div className="position">{row.position}</div>
       </div>
       <div className="contact-container">
-        {row.phone_number && (
+        {row.phone_number_clean && (
           <div>
             <i className="fas fa-phone" />
-            <span>{row.phone_number}</span>
+            <span>{row.phone_number_clean}</span>
           </div>
         )}
         {row.email && (
           <div>
             <i className="fas fa-envelope" />
-            <span><a href="mailto:{ row.email }">{row.email}</a></span>
+            <span><a href={`mailto:${row.email}`}>{row.email}</a></span>
           </div>
         )}
       </div>
@@ -32,7 +32,7 @@ function StaffListing(props) {
 StaffListing.propTypes = {
   row: PropTypes.shape({
     email: PropTypes.string,
-    phone_number: PropTypes.string,
+    phone_number_clean: PropTypes.string,
     position: PropTypes.string,
     title: PropTypes.string.isRequired,
     url: PropTypes.string,

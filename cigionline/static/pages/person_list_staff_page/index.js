@@ -14,7 +14,7 @@ ReactDOM.render(
     fields={[
       'email',
       'last_name',
-      'phone_number',
+      'phone_number_clean',
       'position',
       'title',
       'url',
