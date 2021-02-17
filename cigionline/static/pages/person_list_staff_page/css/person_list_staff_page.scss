@@ -1,5 +1,9 @@
 @import '../../../css/global/mixins';
 
+.search-table {
+  margin-top: 0;
+}
+
 .staff-listing-heading {
   @include media-breakpoint-up(sm) {
     display: flex;
