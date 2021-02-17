@@ -140,12 +140,12 @@ class SearchTable extends React.Component {
     fetch(encodeURI(uri))
       .then((res) => res.json())
       .then((data) => {
-        this.setState({
+        this.setState(() => ({
           loading: false,
           loadingInitial: false,
           rows: data.items,
           totalRows: data.meta.total_count,
-        }, () => {
+        }), () => {
           this.setLetters(paginateAlphabetically);
         });
       });
