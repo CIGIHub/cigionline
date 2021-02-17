@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import '../../css/components/StaffListing.scss';
 
 function StaffListing(props) {
   const { row } = props;

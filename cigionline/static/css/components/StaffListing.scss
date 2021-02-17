@@ -1,0 +1,21 @@
+@import '../global/mixins';
+
+article {
+  &.staff-listing {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
+    @include media-breakpoint-up(sm) {
+      flex-direction: row;
+    }
+    border-bottom: 1px solid $cigi-light-grey;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.875em;
+    justify-content: space-between;
+    padding: 1.25em 0;
+
+    i {
+      color: $cigi-primary-colour;
+      padding-right: 0.5em;
+    }
+  }
+}

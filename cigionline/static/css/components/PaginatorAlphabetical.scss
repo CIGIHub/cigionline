@@ -1,0 +1,40 @@
+@import '../global/mixins';
+
+.pagination-links-alphabetical {
+  @include media-breakpoint-up(md) {
+    justify-content: space-between;
+  }
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 4em;
+
+  li {
+    border-left: 1px solid $cigi-light-grey;
+    font-size: 0.75em;
+    font-weight: 600;
+    list-style: none;
+    margin-bottom: 0.1em;
+    padding: 0 0.5em;
+    text-align: center;
+    width: 30px;
+
+    &:first-child {
+      border-left: 0;
+      padding-left: 0;
+      width: 60px;
+    }
+
+    &:hover {
+      color: $cigi-primary-colour;
+      transition: color 0.2s ease;
+    }
+
+    &.pagination-inactive {
+      color: $cigi-medium-grey;
+    }
+
+    button {
+      font-weight: 600;
+    }
+  }
+}
