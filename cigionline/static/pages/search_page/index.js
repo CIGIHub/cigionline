@@ -9,8 +9,10 @@ ReactDOM.render(
     isSearchPage
     showSearch
     fields={[
+      'authors',
       'contenttype',
       'contentsubtype',
+      'publishing_date',
       'topics',
     ]}
     containerClass={[
