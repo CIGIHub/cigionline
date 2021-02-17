@@ -1,0 +1,23 @@
+@import '../global/mixins';
+
+article {
+  &.search-result-listing {
+    align-items: flex-start;
+    border-bottom: 1px solid $cigi-light-grey;
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 1em;
+    padding-top: 1em;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    .search-result-content {
+      .search-result-title {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        font-size: 1.0625em;
+      }
+    }
+  }
+}

@@ -8,7 +8,11 @@ ReactDOM.render(
     blockListing
     isSearchPage
     showSearch
-    fields={[]}
+    fields={[
+      'contenttype',
+      'contentsubtype',
+      'topics',
+    ]}
     containerClass={[
       'search-result-row',
     ]}
