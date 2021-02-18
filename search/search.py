@@ -31,7 +31,9 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
         for hit in hits:
             highlight = hit.get('highlight', None)
             if highlight is not None:
-                highlights[str(hit['fields']['pk'][0])] = list(highlight.values())[0][0]
+                highlights[str(hit['fields']['pk'][0])] = [item for field in list(highlight.values()) for item in field]
+            else:
+                highlights[str(hit['fields']['pk'][0])] = []
 
         # Initialise results dictionary
         results = {str(pk): None for pk in pks}
@@ -43,7 +45,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
             if self._score_field:
                 setattr(obj, self._score_field, scores.get(str(obj.pk)))
 
-            setattr(obj, '_highlight', highlights.get(str(obj.pk)))
+            setattr(obj, '_highlights', highlights.get(str(obj.pk)))
 
         # Yield results in order given by Elasticsearch
         for pk in pks:

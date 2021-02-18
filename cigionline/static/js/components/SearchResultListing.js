@@ -64,9 +64,11 @@ function SearchResultListing(props) {
             ))}
           </ul>
         )}
-        {row.highlight && (
+        {row.highlights && (
           <p className="search-result-highlight">
-            <span dangerouslySetInnerHTML={{ __html: row.highlight }} />
+            {row.highlights.map((highlight) => (
+              <span dangerouslySetInnerHTML={{ __html: highlight }} />
+            ))}
           </p>
         )}
       </div>
@@ -83,7 +85,7 @@ SearchResultListing.propTypes = {
     })),
     contentsubtype: PropTypes.string,
     contenttype: PropTypes.string,
-    highlight: PropTypes.string,
+    highlights: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string,

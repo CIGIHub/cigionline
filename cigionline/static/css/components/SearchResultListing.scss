@@ -20,14 +20,17 @@ article {
         margin-top: 1em;
 
         span {
-          &::before {
-            content: '...';
-            margin-right: 0.5em;
+          &:first-child {
+            &::before {
+              content: '...';
+              margin-right: 0.5em;
+            }
           }
 
           &::after {
             content: '...';
             margin-left: 0.5em;
+            margin-right: 0.5em;
           }
 
           em {
