@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'research',
     'search',
     'streams',
+    'subscribe',
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',

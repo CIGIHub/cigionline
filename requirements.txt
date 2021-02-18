@@ -38,6 +38,7 @@ jmespath==0.10.0
 l18n==2020.6.1
 lazy-object-proxy==1.4.3
 libsass==0.20.1
+mailchimp-marketing==3.0.29
 mccabe==0.6.1
 openpyxl==3.0.6
 Pillow==8.1.0
@@ -45,6 +46,7 @@ psycopg2==2.8.6
 pycodestyle==2.6.0
 pyflakes==2.2.0
 python-dateutil==2.8.1
+python-dotenv==0.15.0
 python-http-client==3.3.2
 pytz==2021.1
 rcssmin==1.0.6

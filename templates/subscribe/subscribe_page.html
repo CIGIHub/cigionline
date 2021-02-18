@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% include "includes/heroes/hero_plain.html" with title=self.title %}
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <p>
+          CIGI’s newsletter delivers the latest news, policy research, commentary and events to your inbox every Tuesday
+          morning. The weekly round-up of CIGI’s best content spans our core research themes: the data-driven economy, global
+          institutions and technology’s impact on democracy.
+        </p>
+        <p>
+          To subscribe: enter your name and email address, along with other optional information, and click Sign Up. You will
+          receive an email asking you to confirm your subscriptions.
+        </p>
+        <hr>
+        <form class="cigi-subscribe-form" action="{% url 'subscription' %}" method="post" id="subscribe-form" accept-charset="UTF-8">
+          {% csrf_token %}
+          <div>
+            <input checked="checked" type="checkbox" id="edit-worldwide" name="worldwide" value="1"
+              class="form-checkbox required" required="required" aria-required="true">
+            <label for="edit-worldwide">CIGI Newsletter - A weekly newsletter featuring highlights of major CIGI announcements,
+              publications, events, videos and other news.</label>
+          </div>
+          <div>
+            <label for="edit-first-name" class="js-form-required form-required">First Name</label>
+            <input data-drupal-selector="edit-first-name" type="text" id="edit-first-name" name="first_name" value="" size="60"
+              maxlength="128" placeholder="First Name*" class="form-text required" required="required" aria-required="true">
+          </div>
+          <div>
+            <label for="edit-last-name" class="js-form-required form-required">Last Name</label>
+            <input data-drupal-selector="edit-last-name" type="text" id="edit-last-name" name="last_name" value="" size="60"
+              maxlength="128" placeholder="Last Name*" class="form-text required" required="required" aria-required="true">
+          </div>
+          <div>
+            <label for="edit-email" class="js-form-required form-required">Email</label>
+            <input data-drupal-selector="edit-email" type="email" id="edit-email" name="email" value="pumber1kin@gmail.com"
+              size="60" maxlength="128" placeholder="Email Address*" class="form-email required" required="required"
+              aria-required="true">
+          </div>
+          <div>
+            <label for="edit-organization">Organization</label>
+            <input data-drupal-selector="edit-organization" type="text" id="edit-organization" name="organization" value=""
+              size="60" maxlength="128" placeholder="Organization" class="form-text">
+          </div>
+          <div>
+            <label for="edit-country">Country</label>
+            <input data-drupal-selector="edit-country" type="text" id="edit-country" name="country" value="" size="60"
+              maxlength="128" placeholder="Country" class="form-text">
+          </div>
+          <div>
+            <input autocomplete="off" data-drupal-selector="form-wu8fbyyzp5y01etawma45cbqwwvjqwj-des2sll3u7u" type="hidden"
+              name="form_build_id" value="form-Wu8FbYYZp5y01EtAWMA45cbqWwvJqWj_dEs2slL3u7U">
+            <input data-drupal-selector="edit-cigi-subscribe-form" type="hidden" name="form_id" value="cigi_subscribe_form">
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

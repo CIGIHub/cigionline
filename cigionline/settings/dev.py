@@ -1,4 +1,5 @@
 from .base import *
+from dotenv import load_dotenv
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -25,3 +26,9 @@ try:
     from .local import *
 except ImportError:
     pass
+
+load_dotenv()
+
+MAILCHIMP_API_KEY = os.getenv("MAILCHIMP_API_KEY")
+MAILCHIMP_DATA_CENTER = os.getenv("MAILCHIMP_DATA_CENTER")
+MAILCHIMP_NEWSLETTER_LIST_ID = os.getenv("MAILCHIMP_NEWSLETTER_LIST_ID")

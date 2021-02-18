@@ -148,7 +148,6 @@ class HomePage(Page):
         'contact.ContactPage',
         'core.BasicPage',
         'core.PrivacyNoticePage',
-        'core.SubscribePage',
         'events.EventListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
@@ -160,7 +159,8 @@ class HomePage(Page):
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
         'research.ResearchLandingPage',
-        'research.TopicListPage'
+        'research.TopicListPage',
+        'subscribe.SubscribePage',
     ]
     templates = 'core/home_page.html'
 
