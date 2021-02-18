@@ -1,0 +1,37 @@
+@import '../../../css/global/mixins';
+
+.cigi-subscribe-form {
+  .edit-newsletter-wrapper {
+    display: flex;
+  }
+
+  hr {
+    margin: 2em 0;
+  }
+
+  label {
+    display: none;
+
+    &.edit-newsletter-label {
+      display: block;
+      margin-left: 0.5em;
+    }
+  }
+
+  input {
+    &[type='text'],
+    &[type='email'] {
+      background: $white;
+      border: 1px solid $cigi-text-grey;
+      color: $cigi-text-grey;
+      margin-bottom: 1em;
+      outline: none;
+      padding: 0.5rem 1rem;
+      width: 100%;
+    }
+
+    &[type='checkbox'] {
+      margin-top: 0.3em;
+    }
+  }
+}
