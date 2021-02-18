@@ -7,6 +7,7 @@ ReactDOM.render(
   <SearchTable
     blockListing
     isSearchPage
+    showCount
     showSearch
     fields={[
       'authors',

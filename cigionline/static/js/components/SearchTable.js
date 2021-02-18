@@ -285,6 +285,7 @@ class SearchTable extends React.Component {
       loadingTopics,
       rows,
       searchValue,
+      totalRows,
     } = this.state;
     const {
       blockListing,
@@ -293,6 +294,7 @@ class SearchTable extends React.Component {
       hideTopicDropdown,
       RowComponent,
       searchPlaceholder,
+      showCount,
       showSearch,
       tableColumns,
     } = this.props;
@@ -381,31 +383,38 @@ class SearchTable extends React.Component {
           ? <SearchTableSkeleton />
           : rows.length
             ? (
-              blockListing
-                ? (
-                  <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                    {rows.map((row) => (
-                      <RowComponent key={row.id} row={row} />
-                    ))}
+              <>
+                {showCount && totalRows && (
+                  <div className="search-table-count">
+                    {`${totalRows} results found.`}
                   </div>
-                ) : (
-                  <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                    <thead>
-                      <tr>
-                        {tableColumns.map((tableColumn) => (
-                          <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
-                            {tableColumn.colTitle}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
+                )}
+                {blockListing
+                  ? (
+                    <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
                       {rows.map((row) => (
                         <RowComponent key={row.id} row={row} />
                       ))}
-                    </tbody>
-                  </table>
-                )
+                    </div>
+                  ) : (
+                    <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                      <thead>
+                        <tr>
+                          {tableColumns.map((tableColumn) => (
+                            <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
+                              {tableColumn.colTitle}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.map((row) => (
+                          <RowComponent key={row.id} row={row} />
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+              </>
             ) : (
               <p ref={this.searchResultsRef}>
                 Your query returned no results. Please check your spelling and try again.
@@ -449,6 +458,7 @@ SearchTable.propTypes = {
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
   searchPlaceholder: PropTypes.string,
+  showCount: PropTypes.bool,
   showSearch: PropTypes.bool,
   tableColumns: PropTypes.arrayOf(PropTypes.shape({
     colSpan: PropTypes.number,
@@ -467,6 +477,7 @@ SearchTable.defaultProps = {
   isSearchPage: false,
   limit: 24,
   searchPlaceholder: 'Search',
+  showCount: false,
   showSearch: false,
   tableColumns: [],
 };
