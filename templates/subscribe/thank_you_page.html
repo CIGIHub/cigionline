@@ -1,9 +1,14 @@
-{% if messages %}
-{% for message in messages %}
-  <div class="my-5 alert alert-success">
-    <h5 class="m-0">
-      {{ message }}
-    </h5>
-  </div>
-{% endfor %}
-{% endif %}
+{% extends "base.html" %}
+
+{% block content %}
+  {% include "includes/heroes/hero_plain.html" with title=self.title %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="my-5 alert alert-success">
+        <h5 class="m-0">
+          {{ message }}
+        </h5>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endblock %}

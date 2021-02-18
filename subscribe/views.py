@@ -21,7 +21,7 @@ def subscribe(member_info):
             'server': server,
         })
 
-        member_info['status'] = 'subscribed'
+        member_info['status'] = 'pending'
 
         response = client.lists.add_list_member(list_id, member_info)
         print('response: {}'.format(response))
@@ -32,11 +32,13 @@ def subscribe(member_info):
 def subscription(request):
     if request.method == 'POST':
         member_info = {
-            'email': request.POST['email'],
-            'first_name': request.POST['first_name'],
-            'last_name': request.POST['last_name'],
-            'country': request.POST['country'],
-            'organization': request.POST['organization'],
+            'email_address': request.POST['email'],
+            'merge_fields': {
+                'FNAME': request.POST['first_name'],
+                'LNAME': request.POST['last_name'],
+                'ORG': request.POST['organization'],
+                'COUNTRY': request.POST['country'],
+            }
         }
 
         subscribe(member_info)
