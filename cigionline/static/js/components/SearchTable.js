@@ -40,8 +40,8 @@ class SearchTable extends React.Component {
       if (query) {
         initialState.searchValue = query;
       }
-      if (topic) {
-        initialState.topicSelectValue = topic;
+      if (topic && !isNaN(topic)) {
+        initialState.topicSelectValue = parseInt(topic, 10);
       }
       this.setState(initialState, this.getRows);
     } else {
