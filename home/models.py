@@ -148,6 +148,7 @@ class HomePage(Page):
         'contact.ContactPage',
         'core.BasicPage',
         'core.PrivacyNoticePage',
+        'core.SubscribePage',
         'events.EventListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
