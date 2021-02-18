@@ -7,6 +7,7 @@ import '../../css/components/SearchResultListing.scss';
 function SearchResultListing(props) {
   const { row } = props;
 
+  /* eslint-disable react/no-danger */
   return (
     <article className="search-result-listing">
       {row.contenttype === 'Event' && (
@@ -63,6 +64,11 @@ function SearchResultListing(props) {
             ))}
           </ul>
         )}
+        {row.highlight && (
+          <p className="search-result-highlight">
+            <span dangerouslySetInnerHTML={{ __html: row.highlight }} />
+          </p>
+        )}
       </div>
     </article>
   );
@@ -77,6 +83,7 @@ SearchResultListing.propTypes = {
     })),
     contentsubtype: PropTypes.string,
     contenttype: PropTypes.string,
+    highlight: PropTypes.string,
     id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string,

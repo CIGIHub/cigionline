@@ -14,6 +14,29 @@ article {
     }
 
     .search-result-content {
+      .search-result-highlight {
+        color: $cigi-text-grey;
+        margin-bottom: 0;
+        margin-top: 1em;
+
+        span {
+          &::before {
+            content: '...';
+            margin-right: 0.5em;
+          }
+
+          &::after {
+            content: '...';
+            margin-left: 0.5em;
+          }
+
+          em {
+            background-color: $cigi-light-pink;
+            font-style: normal;
+          }
+        }
+      }
+
       .search-result-meta {
         @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
         color: $cigi-text-grey;
