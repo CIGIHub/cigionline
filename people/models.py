@@ -368,6 +368,7 @@ class PersonPage(
     search_fields = Page.search_fields \
         + ArchiveablePageAbstract.search_fields \
         + [
+            index.SearchField('body'),
             index.FilterField('persontypes'),
             index.FilterField('email'),
             index.FilterField('phone_number_clean'),

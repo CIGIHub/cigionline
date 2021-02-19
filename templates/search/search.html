@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'searchPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'searchPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}template-searchresults{% endblock %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <section class="hero-plain">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Search</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div id="search-table">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}

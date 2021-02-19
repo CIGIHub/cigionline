@@ -5,6 +5,10 @@
   margin-top: 3em;
   position: relative;
 
+  .search-table-count {
+    font-size: 0.9em;
+  }
+
   .search-results {
     opacity: 1;
     transition: opacity 1s;

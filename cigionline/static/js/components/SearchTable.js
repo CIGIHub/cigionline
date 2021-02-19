@@ -21,6 +21,7 @@ class SearchTable extends React.Component {
       loadingTopics: true,
       rows: [],
       searchValue: '',
+      sortSelected: null,
       topics: [],
       topicSelectValue: null,
       typeSelected: null,
@@ -29,13 +30,40 @@ class SearchTable extends React.Component {
 
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
+    this.handleSortSelect = this.handleSortSelect.bind(this);
     this.handleTopicSelect = this.handleTopicSelect.bind(this);
   }
 
   componentDidMount() {
-    const { showSearch } = this.props;
+    const { filterTypes: propsFilterTypes, isSearchPage, showSearch } = this.props;
     const { filterTypes } = this.state;
-    this.getRows();
+    if (isSearchPage) {
+      const params = (new URL(window.location)).searchParams;
+      const query = params.get('query');
+      const sort = params.get('sort');
+      const topic = params.get('topic');
+      const type = params.get('type');
+      const initialState = {};
+      if (query) {
+        initialState.searchValue = query;
+      }
+      if (sort) {
+        initialState.sortSelected = sort;
+      }
+      if (topic && !isNaN(topic)) {
+        initialState.topicSelectValue = parseInt(topic, 10);
+      }
+      if (type) {
+        for (const filterType of propsFilterTypes) {
+          if (type === filterType.name) {
+            initialState.typeSelected = filterType;
+          }
+        }
+      }
+      this.setState(initialState, this.getRows);
+    } else {
+      this.getRows();
+    }
     if (showSearch) {
       this.getTopics();
       const filterTypeEndpoints = [];
@@ -62,6 +90,12 @@ class SearchTable extends React.Component {
     });
   }
 
+  handleSortSelect(sortValue) {
+    this.setState({
+      sortSelected: sortValue,
+    }, this.getRows);
+  }
+
   handleTopicSelect(id) {
     this.setState({
       topicSelectValue: id,
@@ -85,6 +119,7 @@ class SearchTable extends React.Component {
       currentPage,
       loadingInitial,
       searchValue,
+      sortSelected,
       topicSelectValue,
       typeSelected,
     } = this.state;
@@ -96,8 +131,13 @@ class SearchTable extends React.Component {
       persontypes,
       endpointParams,
       fields,
+      isSearchPage,
       limit,
     } = this.props;
+
+    if (isSearchPage) {
+      this.updateQueryParams();
+    }
 
     const offset = (currentPage - 1) * limit;
 
@@ -109,6 +149,9 @@ class SearchTable extends React.Component {
     }
 
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
+    if (sortSelected) {
+      uri += `&sort=${sortSelected}`;
+    }
     for (const type of contenttypes) {
       uri += `&contenttype=${type}`;
     }
@@ -291,6 +334,33 @@ class SearchTable extends React.Component {
     return Math.ceil(totalRows / limit);
   }
 
+  updateQueryParams() {
+    const {
+      searchValue,
+      sortSelected,
+      topicSelectValue,
+      typeSelected,
+    } = this.state;
+    const url = new URL(window.location);
+    url.searchParams.set('query', searchValue);
+    if (sortSelected) {
+      url.searchParams.set('sort', sortSelected);
+    } else {
+      url.searchParams.delete('sort');
+    }
+    if (topicSelectValue) {
+      url.searchParams.set('topic', topicSelectValue);
+    } else {
+      url.searchParams.delete('topic');
+    }
+    if (typeSelected) {
+      url.searchParams.set('type', typeSelected.name);
+    } else {
+      url.searchParams.delete('type');
+    }
+    window.history.pushState({}, '', url);
+  }
+
   render() {
     const {
       currentLetter,
@@ -301,6 +371,8 @@ class SearchTable extends React.Component {
       loadingTopics,
       rows,
       searchValue,
+      sortSelected,
+      totalRows,
     } = this.state;
     const {
       blockListing,
@@ -311,7 +383,9 @@ class SearchTable extends React.Component {
       paginateAlphabetically,
       RowComponent,
       searchPlaceholder,
+      showCount,
       showSearch,
+      sortOptions,
       tableColumns,
     } = this.props;
 
@@ -393,11 +467,17 @@ class SearchTable extends React.Component {
             <div className="search-bar-sort-wrapper">
               <span>Sort by:</span>
               <ul className="search-bar-sort-list">
-                <li>
-                  <button type="button" className="search-bar-sort-link active">
-                    Date
-                  </button>
-                </li>
+                {sortOptions.map((sortOption) => (
+                  <li key={`sort-${sortOption.value}`}>
+                    <button
+                      type="button"
+                      className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
+                      onClick={() => this.handleSortSelect(sortOption.value)}
+                    >
+                      {sortOption.name}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -406,32 +486,39 @@ class SearchTable extends React.Component {
           ? <SearchTableSkeleton />
           : rows.length
             ? (
-              blockListing
-                ? (
-                  <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                    {BlockListingHeading && <BlockListingHeading />}
-                    {rows.map((row) => (
-                      <RowComponent key={row.id} row={row} />
-                    ))}
+              <>
+                {showCount && totalRows && (
+                  <div className="search-table-count">
+                    {`${totalRows} results found.`}
                   </div>
-                ) : (
-                  <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                    <thead>
-                      <tr>
-                        {tableColumns.map((tableColumn) => (
-                          <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
-                            {tableColumn.colTitle}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
+                )}
+                {blockListing
+                  ? (
+                    <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                      {BlockListingHeading && <BlockListingHeading />}
                       {rows.map((row) => (
                         <RowComponent key={row.id} row={row} />
                       ))}
-                    </tbody>
-                  </table>
-                )
+                    </div>
+                  ) : (
+                    <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                      <thead>
+                        <tr>
+                          {tableColumns.map((tableColumn) => (
+                            <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
+                              {tableColumn.colTitle}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.map((row) => (
+                          <RowComponent key={row.id} row={row} />
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+              </>
             ) : (
               <p ref={this.searchResultsRef}>
                 Your query returned no results. Please check your spelling and try again.
@@ -476,11 +563,17 @@ SearchTable.propTypes = {
     value: PropTypes.string,
   })),
   hideTopicDropdown: PropTypes.bool,
+  isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
   paginateAlphabetically: PropTypes.bool,
   RowComponent: PropTypes.func.isRequired,
   searchPlaceholder: PropTypes.string,
+  showCount: PropTypes.bool,
   showSearch: PropTypes.bool,
+  sortOptions: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string,
+  })),
   tableColumns: PropTypes.arrayOf(PropTypes.shape({
     colSpan: PropTypes.number,
     colTitle: PropTypes.string,
@@ -498,10 +591,17 @@ SearchTable.defaultProps = {
   endpointParams: [],
   filterTypes: [],
   hideTopicDropdown: false,
+  isSearchPage: false,
   limit: 24,
   paginateAlphabetically: false,
   searchPlaceholder: 'Search',
+  showCount: false,
   showSearch: false,
+  sortOptions: [{
+    default: true,
+    name: 'Date',
+    value: 'date',
+  }],
   tableColumns: [],
 };
 
