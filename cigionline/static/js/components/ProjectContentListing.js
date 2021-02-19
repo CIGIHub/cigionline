@@ -54,7 +54,7 @@ function ProjectContentListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.authors.map((author) => (
-              <li key={`${row.id}-${author.id}`}>
+              <li key={`${row.id}-author-${author.id}`}>
                 <a href={author.url} className="table-content-link table-content-link-black">
                   {author.title}
                 </a>
@@ -70,7 +70,7 @@ function ProjectContentListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.topics.map((topic) => (
-              <li key={topic.id}>
+              <li key={`${row.id}-topic-${topic.id}`}>
                 <a href={topic.url} className="table-content-link">
                   {topic.title}
                 </a>
@@ -85,7 +85,7 @@ function ProjectContentListing(props) {
         </div>
         <div className="table-content">
           <ul className="custom-text-list">
-            <li className="table-infos-meta">
+            <li key={`${row.id}-contenttype`} className="table-infos-meta">
               {row.contenttype}
             </li>
           </ul>

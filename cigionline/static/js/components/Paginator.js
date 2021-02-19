@@ -46,12 +46,12 @@ class Paginator extends React.Component {
       <div className="pagination-links-numbered">
         {this.hasPrevPage && (
           <>
-            <li className="pagination-link-first pagination-underline">
+            <li key="first" className="pagination-link-first pagination-underline">
               <button type="button" onClick={() => setPage(1)}>
                 first page
               </button>
             </li>
-            <li className="pagination-underline pagination-underline-centred">
+            <li key="previous" className="pagination-underline pagination-underline-centred">
               <button type="button" onClick={() => setPage(currentPage - 1)}>
                 <i className="fa fa-chevron-left" />
               </button>
@@ -76,12 +76,12 @@ class Paginator extends React.Component {
         ))}
         {this.hasNextPage && (
           <>
-            <li className="pagination-underline pagination-underline-centred">
+            <li key="next" className="pagination-underline pagination-underline-centred">
               <button type="button" onClick={() => setPage(currentPage + 1)}>
                 <i className="fa fa-chevron-right" />
               </button>
             </li>
-            <li className="pagination-link-last pagination-underline">
+            <li key="last" className="pagination-link-last pagination-underline">
               <button type="button" onClick={() => setPage(totalPages)}>
                 last page
               </button>
