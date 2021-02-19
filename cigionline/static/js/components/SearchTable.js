@@ -273,6 +273,8 @@ class SearchTable extends React.Component {
     url.searchParams.set('query', searchValue);
     if (topicSelectValue) {
       url.searchParams.set('topic', topicSelectValue);
+    } else {
+      url.searchParams.delete('topic');
     }
     window.history.pushState({}, '', url);
   }
