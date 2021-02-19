@@ -53,6 +53,11 @@ function SearchResultListing(props) {
             {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
           </div>
         )}
+        {row.contentsubtype && (
+          <div className="search-result-meta">
+            {row.contentsubtype}
+          </div>
+        )}
         {row.authors && (
           <ul className="custom-text-list search-result-meta">
             {row.authors.map((author) => (
