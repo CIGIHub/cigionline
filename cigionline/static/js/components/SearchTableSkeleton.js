@@ -41,7 +41,7 @@ function SearchTableSkeleton() {
             <td colSpan="3">
               <div className="table-content">
                 <ul className="custom-text-list">
-                  <li>
+                  <li key={`skeleton-${ind}-1`}>
                     <div className="table-content-link table-content-link-black skeleton-blur skeleton-meta">
                       {randomString(15, 20)}
                     </div>
@@ -52,7 +52,7 @@ function SearchTableSkeleton() {
             <td colSpan="2">
               <div className="table-content">
                 <ul className="custom-text-list">
-                  <li>
+                  <li key={`skeleton-${ind}-2`}>
                     <div className="table-content-link search-table-skeleton-topic skeleton-blur skeleton-topic">
                       {randomString(10, 15)}
                     </div>
@@ -63,7 +63,7 @@ function SearchTableSkeleton() {
             <td colSpan="2">
               <div className="table-content">
                 <ul className="custom-text-list">
-                  <li>
+                  <li key={`skeleton-${ind}-3`}>
                     <div className="table-content-link skeleton-blur skeleton-meta">
                       {randomString(5, 10)}
                     </div>

@@ -32,7 +32,7 @@ function MediaListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.cigi_people_mentioned.map((person) => (
-              <li key={`${row.id}-${person.id}`}>
+              <li key={`${row.id}-person-${person.id}`}>
                 <a href={person.url} className="table-content-link table-content-link-black">
                   {person.title}
                 </a>
@@ -47,7 +47,7 @@ function MediaListing(props) {
         </div>
         <div className="table-content">
           <ul className="custom-text-list">
-            <li className="table-infos-meta">
+            <li key={`${row.id}-contentsubtype`} className="table-infos-meta">
               {row.contentsubtype}
             </li>
           </ul>
@@ -60,7 +60,7 @@ function MediaListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.topics.map((topic) => (
-              <li key={topic.id}>
+              <li key={`${row.id}-topic-${topic.id}`}>
                 <a href={topic.url} className="table-content-link">
                   {topic.title}
                 </a>

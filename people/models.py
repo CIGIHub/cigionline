@@ -354,6 +354,10 @@ class PersonPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+    ]
+
     parent_page_types = ['people.PeoplePage']
     subpage_types = []
     templates = 'people/person_page.html'
