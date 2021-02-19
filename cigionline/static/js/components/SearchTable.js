@@ -414,9 +414,8 @@ class SearchTable extends React.Component {
               <span>Sort by:</span>
               <ul className="search-bar-sort-list">
                 {sortOptions.map((sortOption) => (
-                  <li>
+                  <li key={`sort-${sortOption.value}`}>
                     <button
-                      key={`sort-${sortOption.value}`}
                       type="button"
                       className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
                       onClick={() => this.handleSortSelect(sortOption.value)}

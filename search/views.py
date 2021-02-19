@@ -49,6 +49,7 @@ def search_api(request):
     for page in pages[offset:offsetLimit]:
         item = {
             'highlights': page._highlights,
+            'id': page.id,
             'title': page.title,
             'url': page.url,
         }
