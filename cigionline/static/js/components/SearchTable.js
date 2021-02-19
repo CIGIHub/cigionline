@@ -37,11 +37,15 @@ class SearchTable extends React.Component {
     if (isSearchPage) {
       const params = (new URL(window.location)).searchParams;
       const query = params.get('query');
+      const sort = params.get('sort');
       const topic = params.get('topic');
       const type = params.get('type');
       const initialState = {};
       if (query) {
         initialState.searchValue = query;
+      }
+      if (sort) {
+        initialState.sortSelected = sort;
       }
       if (topic && !isNaN(topic)) {
         initialState.topicSelectValue = parseInt(topic, 10);
@@ -288,9 +292,19 @@ class SearchTable extends React.Component {
   }
 
   updateQueryParams() {
-    const { searchValue, topicSelectValue, typeSelected } = this.state;
+    const {
+      searchValue,
+      sortSelected,
+      topicSelectValue,
+      typeSelected,
+    } = this.state;
     const url = new URL(window.location);
     url.searchParams.set('query', searchValue);
+    if (sortSelected) {
+      url.searchParams.set('sort', sortSelected);
+    } else {
+      url.searchParams.delete('sort');
+    }
     if (topicSelectValue) {
       url.searchParams.set('topic', topicSelectValue);
     } else {
