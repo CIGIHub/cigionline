@@ -14,7 +14,7 @@ function PublicationListingSimple(props) {
       </p>
       <p className="article-authors">
         {row.authors.map((author) => (
-          <a key={`${row.id}-${author.id}`} href={author.url}>
+          <a key={`${row.id}-author-${author.id}`} href={author.url}>
             {author.title}
           </a>
         ))}

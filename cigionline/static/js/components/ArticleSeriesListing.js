@@ -12,7 +12,7 @@ function ArticleSeriesListing(props) {
       <div className="article-series-content">
         <ul className="custom-text-list article-series-topic-list">
           {row.topics.map((topic) => (
-            <li key={topic.id}>
+            <li key={`${row.id}-topic-${topic.id}`}>
               <a href={topic.url} className="table-content-link">
                 {topic.title}
               </a>
@@ -27,7 +27,7 @@ function ArticleSeriesListing(props) {
           <h3>Contributors</h3>
           <ul>
             {row.series_contributors.map((person) => (
-              <li key={person.id}>
+              <li key={`${row.id}-contributor-${person.id}`}>
                 <a href={person.url}>
                   {person.title}
                 </a>
@@ -45,6 +45,7 @@ function ArticleSeriesListing(props) {
 
 ArticleSeriesListing.propTypes = {
   row: PropTypes.shape({
+    id: PropTypes.number,
     image_poster_title: PropTypes.string,
     image_poster_url: PropTypes.string,
     series_contributors: PropTypes.arrayOf(PropTypes.shape({
