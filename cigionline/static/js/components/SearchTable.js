@@ -30,18 +30,26 @@ class SearchTable extends React.Component {
   }
 
   componentDidMount() {
-    const { isSearchPage, showSearch } = this.props;
+    const { filterTypes: propsFilterTypes, isSearchPage, showSearch } = this.props;
     const { filterTypes } = this.state;
     if (isSearchPage) {
       const params = (new URL(window.location)).searchParams;
       const query = params.get('query');
       const topic = params.get('topic');
+      const type = params.get('type');
       const initialState = {};
       if (query) {
         initialState.searchValue = query;
       }
       if (topic && !isNaN(topic)) {
         initialState.topicSelectValue = parseInt(topic, 10);
+      }
+      if (type) {
+        for (const filterType of propsFilterTypes) {
+          if (type === filterType.name) {
+            initialState.typeSelected = filterType;
+          }
+        }
       }
       this.setState(initialState, this.getRows);
     } else {
@@ -268,13 +276,18 @@ class SearchTable extends React.Component {
   }
 
   updateQueryParams() {
-    const { searchValue, topicSelectValue } = this.state;
+    const { searchValue, topicSelectValue, typeSelected } = this.state;
     const url = new URL(window.location);
     url.searchParams.set('query', searchValue);
     if (topicSelectValue) {
       url.searchParams.set('topic', topicSelectValue);
     } else {
       url.searchParams.delete('topic');
+    }
+    if (typeSelected) {
+      url.searchParams.set('type', typeSelected.name);
+    } else {
+      url.searchParams.delete('type');
     }
     window.history.pushState({}, '', url);
   }
