@@ -1,12 +1,12 @@
 @import '../../../css/global/mixins';
 
+hr {
+  margin: 2em 0;
+}
+
 .cigi-subscribe-form {
   .edit-newsletter-wrapper {
     display: flex;
-  }
-
-  hr {
-    margin: 2em 0;
   }
 
   label {
@@ -14,7 +14,12 @@
 
     &.edit-newsletter-label {
       display: block;
-      margin-left: 0.5em;
+      margin: 0 0 2em 0.5em;
+
+      &::after {
+        color: $cigi-primary-colour;
+        content: '*';
+      }
     }
   }
 
@@ -34,4 +39,13 @@
       margin-top: 0.3em;
     }
   }
+
+  button {
+    margin-top: 2em;
+  }
+}
+
+.privacy-blurb {
+  color: $cigi-text-grey;
+  margin: 2em 0;
 }

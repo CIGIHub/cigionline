@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
 
@@ -13,6 +13,10 @@ list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID
 logger = logging.getLogger('subscribe.views')
 
 
+def redirect_subscribe(request):
+    return render(request, 'subscribe/subscribe_page.html', {'email': request.GET['email']})
+
+
 def subscribe(member_info):
     try:
         client = MailchimpMarketing.Client()
@@ -25,8 +29,13 @@ def subscribe(member_info):
 
         response = client.lists.add_list_member(list_id, member_info)
         print('response: {}'.format(response))
+
+        return True
+
     except ApiClientError as error:
-        logger.error('An exception occurred: {}'.format(error.text))
+        logger.error('An error occurred with Mailchimp: {}'.format(error.text))
+
+        return False
 
 
 def subscription(request):
@@ -41,7 +50,7 @@ def subscription(request):
             }
         }
 
-        subscribe(member_info)
-        messages.success(request, 'Email received. thank You!')
-
-    return render(request, 'subscribe/thank_you_page.html')
+        if subscribe(member_info):
+            return render(request, 'subscribe/thank_you_page.html', {'success': True})
+        else:
+            return render(request, 'subscribe/thank_you_page.html', {'success': False})

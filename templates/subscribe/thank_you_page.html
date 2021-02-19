@@ -2,13 +2,19 @@
 
 {% block content %}
   {% include "includes/heroes/hero_plain.html" with title=self.title %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="my-5 alert alert-success">
-        <h5 class="m-0">
-          {{ message }}
-        </h5>
-      </div>
-    {% endfor %}
-  {% endif %}
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <p>
+          In order to complete your subscription, please check your inbox for a confirmation email. If it does not
+          appear in your inbox, please check your spam or junk folder. If you did not receive a confirmation email
+          please <a href="/contact">contact us</a>.
+        </p>
+        <h3>Follow us:</h3>
+        <p>Stay connected with us on Facebook and Twitter for daily news, events and updates.</p>
+        <a href="https://www.facebook.com/cigionline"><i class="fab fa-facebook-square fa-2x" aria-hidden="true"></i></a>
+        <a href="https://twitter.com/cigionline"><i class="fab fa-twitter-square fa-2x" aria-hidden="true"></i></a>
+      </div> 
+    </div>
+  </div>
 {% endblock %}
