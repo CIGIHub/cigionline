@@ -18,6 +18,7 @@ class SearchTable extends React.Component {
       loadingTopics: true,
       rows: [],
       searchValue: '',
+      sortSelected: null,
       topics: [],
       topicSelectValue: null,
       typeSelected: null,
@@ -26,6 +27,7 @@ class SearchTable extends React.Component {
 
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
+    this.handleSortSelect = this.handleSortSelect.bind(this);
     this.handleTopicSelect = this.handleTopicSelect.bind(this);
   }
 
@@ -81,6 +83,12 @@ class SearchTable extends React.Component {
     });
   }
 
+  handleSortSelect(sortValue) {
+    this.setState({
+      sortSelected: sortValue,
+    }, this.getRows);
+  }
+
   handleTopicSelect(id) {
     this.setState({
       topicSelectValue: id,
@@ -104,6 +112,7 @@ class SearchTable extends React.Component {
       currentPage,
       loadingInitial,
       searchValue,
+      sortSelected,
       topicSelectValue,
       typeSelected,
     } = this.state;
@@ -130,6 +139,9 @@ class SearchTable extends React.Component {
     }
 
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
+    if (sortSelected) {
+      uri += `&sort=${sortSelected}`;
+    }
     for (const contenttype of contenttypes) {
       uri += `&contenttype=${contenttype}`;
     }
@@ -300,6 +312,7 @@ class SearchTable extends React.Component {
       loadingTopics,
       rows,
       searchValue,
+      sortSelected,
       totalRows,
     } = this.state;
     const {
@@ -311,6 +324,7 @@ class SearchTable extends React.Component {
       searchPlaceholder,
       showCount,
       showSearch,
+      sortOptions,
       tableColumns,
     } = this.props;
 
@@ -385,11 +399,18 @@ class SearchTable extends React.Component {
             <div className="search-bar-sort-wrapper">
               <span>Sort by:</span>
               <ul className="search-bar-sort-list">
-                <li>
-                  <button type="button" className="search-bar-sort-link active">
-                    Date
-                  </button>
-                </li>
+                {sortOptions.map((sortOption) => (
+                  <li>
+                    <button
+                      key={`sort-${sortOption.value}`}
+                      type="button"
+                      className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
+                      onClick={() => this.handleSortSelect(sortOption.value)}
+                    >
+                      {sortOption.name}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -475,6 +496,10 @@ SearchTable.propTypes = {
   searchPlaceholder: PropTypes.string,
   showCount: PropTypes.bool,
   showSearch: PropTypes.bool,
+  sortOptions: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string,
+  })),
   tableColumns: PropTypes.arrayOf(PropTypes.shape({
     colSpan: PropTypes.number,
     colTitle: PropTypes.string,
@@ -494,6 +519,11 @@ SearchTable.defaultProps = {
   searchPlaceholder: 'Search',
   showCount: false,
   showSearch: false,
+  sortOptions: [{
+    default: true,
+    name: 'Date',
+    value: 'date',
+  }],
   tableColumns: [],
 };
 

@@ -37,7 +37,7 @@ function SearchResultListing(props) {
       )}
       <div className="search-result-content">
         <ul className="topics custom-text-list feature-content-topic-list">
-          {row.topics.map((topic) => (
+          {row.topics && row.topics.map((topic) => (
             <li key={topic.id}>
               <a href={topic.url} className="table-content-link">
                 {topic.title}

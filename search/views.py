@@ -26,6 +26,7 @@ def search_api(request):
         projects=request.GET.getlist('project', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
         searchtext=searchtext,
+        sort=request.GET.get('sort', None),
         topics=request.GET.getlist('topic', None),
     )
     default_limit = 24

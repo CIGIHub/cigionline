@@ -9,6 +9,14 @@ ReactDOM.render(
     isSearchPage
     showCount
     showSearch
+    sortOptions={[{
+      default: true,
+      name: 'Date',
+      value: 'date',
+    }, {
+      name: 'Relevance',
+      value: 'relevance',
+    }]}
     fields={[
       'authors',
       'contenttype',

@@ -56,11 +56,12 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid
+        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
         self.content_type = content_type
+        self.sort = sort
         self.contenttypes = None
         self.contentsubtypes = None
         self.authors = None
@@ -163,6 +164,8 @@ class CIGIOnlineSearchQueryCompiler:
         }
 
     def get_sort(self):
+        if self.sort == 'relevance':
+            return []
         return [{
             "core_contentpage__publishing_date_filter": {
                 "order": "desc",
@@ -170,8 +173,8 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None):
+def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid)
+        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid)
     )
