@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 
+import ScrollReveal from 'scrollreveal';
 import Panzoom from '@panzoom/panzoom';
 import './css/longform_2.scss';
 
@@ -62,6 +63,41 @@ panzoomContainers.forEach(function(panzoomContainer, index) {
 
 window.addEventListener('resize', resizeUpdate);
 
+// fade in article elements
+
+const sr = ScrollReveal();
+
+sr.reveal('.stream-block-blockquote', {
+  delay: 100,
+  distance: '50px',
+  duration: 750,
+  origin: 'left',
+  scale: 1,
+});
+
+sr.reveal('.stream-image-block img', {
+  delay: 100,
+  distance: '0',
+  duration: 750,
+  scale: 1,
+});
+
+sr.reveal('.stream-block-pull-quote.right', {
+  delay: 100,
+  distance: '50px',
+  duration: 750,
+  origin: 'right',
+  scale: 1,
+});
+
+sr.reveal('.stream-block-pull-quote.left', {
+  delay: 100,
+  distance: '50px',
+  duration: 750,
+  origin: 'left',
+  scale: 1,
+});
+
 // Hover tooltips
 $(function() {
   const body = $('.body');
@@ -103,4 +139,121 @@ $(function() {
     const toolTip = $(this).parent();
     toolTip.hide();
   });
+});
+
+// Sticky header, chapter markers and tooltips for progress bar
+
+let scrolled = null;
+let headerHeight = null;
+let maxHeight = null;
+let scrollTop = 0;
+const mobileMenuList = $(document.createElement('ul')).addClass('mobile-menu-list');
+const mobileMenuButton = $(document.createElement('div')).addClass('mobile-menu-button');
+const mobileMenu = $(document.createElement('div')).addClass('mobile-menu');
+const mobileMenuContainer = $(document.createElement('div')).addClass('mobile-menu-container');
+const mobileMenuTitle = $(document.createElement('div')).addClass('mobile-menu-title');
+
+function setScrollPosition() {
+  scrollTop = $(window).scrollTop();
+  scrolled = (scrollTop / maxHeight) * 100;
+  $('progress').attr('value', scrolled);
+
+  if (scrollTop > headerHeight) {
+    $('body').addClass('scrolled');
+  } else {
+    $('body').removeClass('scrolled');
+  }
+}
+
+function createMobileMenu() {
+  // create mobile menu
+  mobileMenuTitle.html($('.series-title').html());
+  mobileMenu.append(mobileMenuTitle);
+  mobileMenu.append(mobileMenuList);
+  mobileMenuContainer.append(mobileMenu);
+  $('.longform-2-article').append(mobileMenuContainer);
+
+  // mobile menut button
+  mobileMenuButton.html('<i class="fa fa-list-ul fa-2"></i>');
+  mobileMenuButton.on('click', function() {
+    if ($('.mobile-menu-container').css('bottom') === '0px') {
+      $(this).html('<i class="fa fa-list-ul fa-2"></i>');
+      $('.mobile-menu-container').animate({
+        'bottom': '-100%',
+      }, 500);
+    } else {
+      $(this).html('<i class="fa fa-times fa-2"></i>');
+      $('.mobile-menu-container').animate({
+        'bottom': '0',
+      }, 500);
+    }
+    return false;
+  });
+  $('.longform-2-article').append(mobileMenuButton);
+}
+
+$(window).on('load', function() {
+  const docHeight = $(document).height();
+  const winHeight = $(window).height();
+  headerHeight = $('header').height();
+
+  maxHeight = docHeight - winHeight;
+
+  createMobileMenu();
+  setScrollPosition();
+
+  $('h2 a[name]').each(function(index) {
+    // set anchors and add to progress bar
+    const chapterName = $(this).attr('name');
+    const chapterPosition = $(this).offset().top;
+    const horizontalPosition = (chapterPosition / docHeight) * 100;
+
+    const chapterAnchor = $(document.createElement('a'));
+    const label = `${index + 1}. ${$(this).html()}`;
+
+    chapterAnchor.addClass('chapter-anchor');
+    chapterAnchor.attr('href', `#${chapterName}`);
+    chapterAnchor.css({
+      'left': `${horizontalPosition}%`,
+    });
+
+    $('.progress-bar').append(chapterAnchor);
+
+    // create tooltips for each anchor title
+    const tooltip = $(document.createElement('div')).addClass('chapter-anchor-tooltip');
+    tooltip.html(label);
+    chapterAnchor.append(tooltip);
+    $('.progress-bar').append(chapterAnchor);
+
+    chapterAnchor.on('click', function() {
+      $('html,body').animate({
+        scrollTop: $(`a[name="${chapterName}"]`).offset().top - headerHeight - 20,
+      }, 1000);
+      return false;
+    });
+
+    // populate menu with chapter content
+    const mobileMenuItem = $(document.createElement('li'));
+    const mobileMenuItemLink = $(document.createElement('a'));
+    mobileMenuItemLink.html(label);
+    mobileMenuItemLink.attr('href', `#${chapterName}`);
+
+    mobileMenuItemLink.on('click', function() {
+      $('html,body').animate({
+        scrollTop: $(`a[name="${chapterName}"]`).offset().top,
+      }, 1000);
+      $('.mobile-menu-button').html('<i class="fa fa-list-ul fa-2"></i>');
+      $('.mobile-menu-container').animate({
+        'bottom': '-100%',
+      }, 500);
+      return false;
+    });
+
+    mobileMenuItem.append(mobileMenuItemLink);
+    mobileMenuList.append(mobileMenuItem);
+  });
+});
+
+$(window).on('scroll', function() {
+  setScrollPosition();
 });
