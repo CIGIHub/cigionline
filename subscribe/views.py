@@ -51,6 +51,6 @@ def subscription(request):
         }
 
         if subscribe(member_info):
-            return render(request, 'subscribe/thank_you_page.html', {'success': True})
+            return render(request, 'subscribe/subscribe_page_landing.html', {'success': True})
         else:
-            return render(request, 'subscribe/thank_you_page.html', {'success': False})
+            return render(request, 'subscribe/subscribe_page_landing.html', {'success': False})

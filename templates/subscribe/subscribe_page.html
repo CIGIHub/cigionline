@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load webpack_loader %}
+{% load webpack_loader wagtailcore_tags %}
 
 {% block extra_css %}
 {% render_bundle 'subscribePage' 'css' %}
@@ -11,22 +11,13 @@
 <div class="container">
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      <p>
-        CIGI’s newsletter delivers the latest news, policy research, commentary and events to your inbox every Tuesday
-        morning. The weekly round-up of CIGI’s best content spans our core research themes: the data-driven economy,
-        global
-        institutions and technology’s impact on democracy.
-      </p>
-      <p>
-        To subscribe: enter your name and email address, along with other optional information, and click Sign Up. You
-        will
-        receive an email asking you to confirm your subscriptions.
-      </p>
+      <section class="body">
+        {{self.body|richtext}}
+      </section>
       <hr>
       <form class="cigi-subscribe-form" action="{% url 'subscription' %}" method="post" id="subscribe-form"
         accept-charset="UTF-8">
         {% csrf_token %}
-
         <div class="edit-newsletter-wrapper">
           <input checked="checked" type="checkbox" id="edit-newsletter" name="newsletter" value="1"
             class="form-checkbox required" required="required" aria-required="true">
@@ -54,16 +45,11 @@
         <input type="text" id="edit-country" name="country" size="60" maxlength="128" placeholder="Country"
           class="form-text">
 
-        <button class="button-action" type="submit">Sign Up</button>
+        <button type="submit">Sign Up</button>
       </form>
-
-      <p class="privacy-blurb">
-        <em>
-          Note: You can change your subscriptions or unsubscribe at any time through the link provided with each email.
-          To learn more about CIGI’s information collection and use, view our <a href="/privacy-policy">Privacy
-            Policy</a>.
-        </em>
-      </p>
+      <section class="privacy-note">
+        {{self.privacy_note|richtext}}
+      </section>
     </div>
   </div>
 </div>
