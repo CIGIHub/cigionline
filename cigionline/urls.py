@@ -3,7 +3,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from research import views as research_views
-from subscribe import urls as subscribe_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -15,7 +14,6 @@ urlpatterns = [
 
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
-    url(r'^subscribe/', include(subscribe_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
     url(r'^api/search/$', search_views.search_api),

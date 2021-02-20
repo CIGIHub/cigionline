@@ -1,18 +1,24 @@
 @import '../../../css/global/mixins';
 
+.hero-plain {
+  @include media-breakpoint-up(md) {
+    padding-top: 10em;
+  }
+}
+
 hr {
   margin: 2em 0;
 }
 
 .cigi-subscribe-form {
-  .edit-newsletter-wrapper {
+  .newsletter-wrapper {
     display: flex;
   }
 
   label {
     display: none;
 
-    &.edit-newsletter-label {
+    &.newsletter-label {
       display: block;
       margin: 0 0 2em 0.5em;
 
@@ -29,9 +35,9 @@ hr {
       background: $white;
       border: 1px solid $cigi-text-grey;
       color: $cigi-text-grey;
-      margin-bottom: 1em;
+      margin-bottom: 0.7em;
       outline: none;
-      padding: 0.5rem 1rem;
+      padding: 0.5em 1em;
       width: 100%;
     }
 
@@ -41,11 +47,21 @@ hr {
   }
 
   button {
-    margin-top: 2em;
+    margin-top: 1em;
   }
 }
 
-.privacy-blurb {
+.privacy-note {
   color: $cigi-text-grey;
-  margin: 2em 0;
+  margin: 2em 0 3em;
+}
+
+.social-links {
+  @include link($color: $black, $hover-color: $cigi-primary-colour);
+  margin-bottom: 6em;
+}
+
+h2 {
+  font-weight: 500;
+  margin-top: 2em;
 }

@@ -1,25 +1,24 @@
 {% extends "base.html" %}
 
+{% load webpack_loader wagtailcore_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'subscribePage' 'css' %}
+{% endblock %}
+
 {% block content %}
-  <div class="container">
-    <div class="row d-block">
-      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-        {% if success %}
-          <h1>Thank you for signing up! <i class="far fa-check-circle"></i></h1>
-          <p>
-            In order to complete your subscription, please check your inbox for a confirmation email. If it does not
-            appear in your inbox, please check your spam or junk folder. If you did not receive a confirmation email
-            please <a href="/contact">contact us</a>.
-          </p>
-          <h3>Follow us:</h3>
+  {% include "includes/heroes/hero_plain.html" with title="Thank you for signing up!" %}
+  {{ self.landing_page_body }}
+  <section class="social-links">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2>Follow Us:</h2>
           <p>Stay connected with us on Facebook and Twitter for daily news, events and updates.</p>
-          <a href="https://www.facebook.com/cigionline"><i class="fab fa-facebook-square fa-2x" aria-hidden="true"></i></a>
-          <a href="https://twitter.com/cigionline"><i class="fab fa-twitter-square fa-2x" aria-hidden="true"></i></a>
-        {% else %}
-          <h1>An error has occured</h1>
-          <p>Please try to sign up again, or use the <a href="/contact">contact</a> form to let us know about the issue</p>
-        {% endif %}
-      </div> 
+          <a href="https://www.facebook.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-square fa-2x" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter-square fa-2x" aria-hidden="true"></i></a>
+        </div> 
+      </div>
     </div>
-  </div>
+  </section>
 {% endblock %}
