@@ -1,28 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import StaffListing from '../../js/components/StaffListing';
-import StaffListingHeading from '../../js/components/StaffListingHeading';
-import SearchTable from '../../js/components/SearchTable';
+import StaffList from '../../js/components/StaffList';
 import './css/person_list_staff_page.scss';
 
 ReactDOM.render(
-  <SearchTable
-    blockListing
-    contentType="people.PersonPage"
-    persontypes={['Staff']}
-    limit={50}
-    fields={[
-      'email',
-      'last_name',
-      'phone_number_clean',
-      'position',
-      'title',
-      'url',
-      'id',
-    ]}
-    RowComponent={StaffListing}
-    paginateAlphabetically
-    BlockListingHeading={StaffListingHeading}
-  />,
+  <StaffList />,
+  // <SearchTable
+  //   blockListing
+  //   contentType="people.PersonPage"
+  //   persontypes={['Staff']}
+  //   limit={50}
+  //   fields={[
+  //     'email',
+  //     'last_name',
+  //     'phone_number_clean',
+  //     'position',
+  //     'title',
+  //     'url',
+  //     'id',
+  //   ]}
+  //   RowComponent={StaffListing}
+  //   paginateAlphabetically
+  //   BlockListingHeading={StaffListingHeading}
+  // />,
   document.getElementById('staff-list'),
 );

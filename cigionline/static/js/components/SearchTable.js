@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Paginator from './Paginator';
-import PaginatorAlphabetical from './PaginatorAlphabetical';
 import SearchTableSkeleton from './SearchTableSkeleton';
 import '../../css/components/SearchTable.scss';
 
@@ -13,9 +12,7 @@ class SearchTable extends React.Component {
     const { filterTypes } = props;
     this.state = {
       currentPage: 1,
-      currentLetter: 'all',
       filterTypes,
-      letters: {},
       loading: true,
       loadingInitial: true,
       loadingTopics: true,
@@ -124,11 +121,8 @@ class SearchTable extends React.Component {
       typeSelected,
     } = this.state;
     const {
-      contentType,
       contentsubtypes,
       contenttypes,
-      paginateAlphabetically,
-      persontypes,
       endpointParams,
       fields,
       isSearchPage,
@@ -152,23 +146,17 @@ class SearchTable extends React.Component {
     if (sortSelected) {
       uri += `&sort=${sortSelected}`;
     }
-    for (const type of contenttypes) {
-      uri += `&contenttype=${type}`;
+    for (const contenttype of contenttypes) {
+      uri += `&contenttype=${contenttype}`;
     }
     for (const contentsubtype of contentsubtypes) {
       uri += `&contentsubtype=${contentsubtype}`;
-    }
-    for (const persontype of persontypes) {
-      uri += `&persontype=${persontype}`;
     }
     for (const field of fields) {
       uri += `&field=${field}`;
     }
     for (const endpointParam of endpointParams) {
       uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
-    }
-    if (contentType) {
-      uri += `&content_type=${contentType}`;
     }
     if (searchValue) {
       uri += `&searchtext=${searchValue}`;
@@ -188,11 +176,7 @@ class SearchTable extends React.Component {
           loadingInitial: false,
           rows: data.items,
           totalRows: data.meta.total_count,
-        }), () => {
-          if (paginateAlphabetically) {
-            this.setLetters();
-          }
-        });
+        }));
       });
   }
 
@@ -242,33 +226,6 @@ class SearchTable extends React.Component {
     this.setState(() => ({
       currentPage: page,
     }), this.getRows);
-  }
-
-  setLetters() {
-    const { rows } = this.state;
-    const letters = {
-      all: rows,
-    };
-    rows.forEach((row) => {
-      const letter = row.last_name[0];
-      if (!(letter in letters)) {
-        letters[letter] = [];
-      }
-
-      letters[letter].push(row);
-    });
-
-    this.setState(() => ({
-      letters,
-    }));
-  }
-
-  setLetter(letter) {
-    const { letters } = this.state;
-    this.setState(() => ({
-      currentLetter: letter,
-      rows: letters[letter],
-    }));
   }
 
   get dropdownSelectedTopic() {
@@ -363,9 +320,7 @@ class SearchTable extends React.Component {
 
   render() {
     const {
-      currentLetter,
       currentPage,
-      letters,
       loading,
       loadingInitial,
       loadingTopics,
@@ -376,11 +331,9 @@ class SearchTable extends React.Component {
     } = this.state;
     const {
       blockListing,
-      BlockListingHeading,
       containerClass,
       filterTypes,
       hideTopicDropdown,
-      paginateAlphabetically,
       RowComponent,
       searchPlaceholder,
       showCount,
@@ -391,13 +344,6 @@ class SearchTable extends React.Component {
 
     return (
       <div className="search-table">
-        {paginateAlphabetically && (
-          <PaginatorAlphabetical
-            currentLetter={currentLetter}
-            setLetter={(letter) => this.setLetter(letter)}
-            letters={Object.keys(letters)}
-          />
-        )}
         {showSearch && (
           <div className="search-bar">
             <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
@@ -495,7 +441,6 @@ class SearchTable extends React.Component {
                 {blockListing
                   ? (
                     <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                      {BlockListingHeading && <BlockListingHeading />}
                       {rows.map((row) => (
                         <RowComponent key={row.id} row={row} />
                       ))}
@@ -524,13 +469,11 @@ class SearchTable extends React.Component {
                 Your query returned no results. Please check your spelling and try again.
               </p>
             )}
-        {!paginateAlphabetically && (
-          <Paginator
-            currentPage={currentPage}
-            totalPages={this.totalPages}
-            setPage={(page) => this.setPage(page)}
-          />
-        )}
+        <Paginator
+          currentPage={currentPage}
+          totalPages={this.totalPages}
+          setPage={(page) => this.setPage(page)}
+        />
         {loading && (
           <img
             src="/static/assets/loader_spinner.gif"
@@ -545,12 +488,9 @@ class SearchTable extends React.Component {
 
 SearchTable.propTypes = {
   blockListing: PropTypes.bool,
-  BlockListingHeading: PropTypes.func,
   containerClass: PropTypes.arrayOf(PropTypes.string),
-  contentType: PropTypes.string,
   contentsubtypes: PropTypes.arrayOf(PropTypes.string),
   contenttypes: PropTypes.arrayOf(PropTypes.string),
-  persontypes: PropTypes.arrayOf(PropTypes.string),
   endpointParams: PropTypes.arrayOf(PropTypes.shape({
     paramName: PropTypes.string,
     paramValue: PropTypes.any,
@@ -565,7 +505,6 @@ SearchTable.propTypes = {
   hideTopicDropdown: PropTypes.bool,
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
-  paginateAlphabetically: PropTypes.bool,
   RowComponent: PropTypes.func.isRequired,
   searchPlaceholder: PropTypes.string,
   showCount: PropTypes.bool,
@@ -582,18 +521,14 @@ SearchTable.propTypes = {
 
 SearchTable.defaultProps = {
   blockListing: false,
-  BlockListingHeading: null,
   containerClass: [],
-  contentType: '',
   contentsubtypes: [],
   contenttypes: [],
-  persontypes: [],
   endpointParams: [],
   filterTypes: [],
   hideTopicDropdown: false,
   isSearchPage: false,
   limit: 24,
-  paginateAlphabetically: false,
   searchPlaceholder: 'Search',
   showCount: false,
   showSearch: false,
