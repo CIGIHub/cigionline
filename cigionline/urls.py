@@ -2,12 +2,13 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from people import views as people_views
 from research import views as research_views
+from search import views as search_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
-from search import views as search_views
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
@@ -16,6 +17,7 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
+    url(r'^api/experts/$', people_views.all_experts),
     url(r'^api/search/$', search_views.search_api),
     url(r'^api/topics/$', research_views.all_topics),
 ]
