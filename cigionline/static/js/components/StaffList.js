@@ -22,7 +22,17 @@ class StaffList extends React.Component {
   }
 
   getRows() {
-    const uri = '/api/search/?content_type=people.PersonPage&persontype=Staff&field=email&field=last_name&field=phone_number_clean&field=position&field=title&field=url&field=id&limit=50&offset=0';
+    const uri = '/api/search/'
+      + '?content_type=people.PersonPage'
+      + '&persontype=Staff'
+      + '&field=email'
+      + '&field=last_name'
+      + '&field=url'
+      + '&field=phone_number_clean'
+      + '&field=position'
+      + '&field=title'
+      + '&limit=50'
+      + '&offset=0';
 
     fetch(encodeURI(uri))
       .then((res) => res.json())
