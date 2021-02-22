@@ -21,6 +21,7 @@ from research.models import (
     ResearchLandingPage,
     TopicListPage,
 )
+from subscribe.models import SubscribePage
 from wagtail.core.models import Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import nested_form_data
@@ -56,6 +57,7 @@ class HomePageTests(WagtailPageTests):
                 PublicationListPage,
                 PublicationSeriesListPage,
                 ResearchLandingPage,
+                SubscribePage,
                 TopicListPage,
             }
         )
