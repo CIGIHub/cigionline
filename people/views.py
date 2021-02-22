@@ -6,6 +6,7 @@ from .search import experts_search
 def all_experts(request):
     experts = experts_search(
         searchtext=request.GET.get('search', None),
+        topics=request.GET.getlist('topic', None),
     )
 
     return JsonResponse({

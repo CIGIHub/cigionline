@@ -9,7 +9,10 @@ from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from search.filters import ParentalManyToManyFilterFieldName
+from search.filters import (
+    ParentalManyToManyFilterField,
+    ParentalManyToManyFilterFieldName,
+)
 from streams.blocks import ParagraphBlock
 from unidecode import unidecode
 from wagtail.admin.edit_handlers import (
@@ -370,6 +373,7 @@ class PersonPage(
             index.FilterField('first_name_lowercase'),
             index.FilterField('last_name_lowercase'),
             ParentalManyToManyFilterFieldName('person_types'),
+            ParentalManyToManyFilterField('topics'),
         ]
 
     parent_page_types = ['people.PeoplePage']

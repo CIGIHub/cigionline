@@ -7,8 +7,9 @@ from .models import PersonPage
 
 
 class CIGIOnlineExpertsSearchQueryCompiler:
-    def __init__(self, searchtext):
+    def __init__(self, searchtext, topics):
         self.searchtext = searchtext
+        self.topics = topics
 
     @property
     def queryset(self):
@@ -45,6 +46,12 @@ class CIGIOnlineExpertsSearchQueryCompiler:
                 "people_personpage__person_types_filter": ["CIGI Chair", "Expert"],
             },
         }]
+        if self.topics:
+            filters.append({
+                "terms": {
+                    "people_personpage__topics_filter": self.topics,
+                },
+            })
 
         return {
             "bool": {
@@ -65,8 +72,8 @@ class CIGIOnlineExpertsSearchQueryCompiler:
         }]
 
 
-def experts_search(searchtext=None):
+def experts_search(searchtext=None, topics=None):
     return Elasticsearch7SearchResults(
         get_search_backend(),
-        CIGIOnlineExpertsSearchQueryCompiler(searchtext),
+        CIGIOnlineExpertsSearchQueryCompiler(searchtext, topics),
     )
