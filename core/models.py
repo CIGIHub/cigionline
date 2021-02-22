@@ -308,6 +308,10 @@ class ArchiveablePageAbstract(models.Model):
         classname='collapsible collapsed',
     )
 
+    search_fields = [
+        index.SearchField('archive'),
+    ]
+
     class Meta:
         abstract = True
 

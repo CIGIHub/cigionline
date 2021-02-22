@@ -9,7 +9,9 @@ from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from search.filters import ParentalManyToManyFilterFieldName
 from streams.blocks import ParagraphBlock
+from unidecode import unidecode
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -235,6 +237,14 @@ class PersonPage(
     def has_authored_content(self):
         return self.content_pages_as_author.count() > 0
 
+    @property
+    def first_name_lowercase(self):
+        return unidecode(self.first_name.lower())
+
+    @property
+    def last_name_lowercase(self):
+        return unidecode(self.last_name.lower())
+
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
@@ -354,9 +364,13 @@ class PersonPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    search_fields = Page.search_fields + [
-        index.SearchField('body'),
-    ]
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields + [
+            index.SearchField('body'),
+            index.FilterField('first_name_lowercase'),
+            index.FilterField('last_name_lowercase'),
+            ParentalManyToManyFilterFieldName('person_types'),
+        ]
 
     parent_page_types = ['people.PeoplePage']
     subpage_types = []

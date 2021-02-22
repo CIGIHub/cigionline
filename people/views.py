@@ -1,19 +1,13 @@
-from core.models import ArchiveablePageAbstract
-from django.contrib.postgres.lookups import Unaccent
-from django.db.models.functions import Lower
 from django.http import JsonResponse
 
-from .models import PersonPage
+from .search import experts_search
 
 
 def all_experts(request):
-    experts = PersonPage.objects.public().live().filter(
-        archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
-        person_types__name__in=['CIGI Chair', 'Expert'],
-    ).order_by(
-        Unaccent(Lower('last_name')),
-        Unaccent(Lower('first_name')),
+    experts = experts_search(
+        searchtext=request.GET.get('search', None),
     )
+
     return JsonResponse({
         'meta': {
             'total_count': experts.count(),
