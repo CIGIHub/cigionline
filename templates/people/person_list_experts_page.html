@@ -4,6 +4,9 @@
 {% block extra_css %}
   {% render_bundle 'personListExpertsPage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'personListExpertsPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -17,6 +20,16 @@
             {% include "includes/features/feature_expert_short.html" with expert=expert %}
           </div>
         {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="experts-search-table">
+          </div>
+        </div>
       </div>
     </div>
   </section>
