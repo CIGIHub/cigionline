@@ -16,32 +16,9 @@
       <div class="row d-block">
         <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
           <hr>
-          <form class="cigi-subscribe-form" action="/subscribe/" method="post" id="subscribe-form" accept-charset="UTF-8">
+          <form class="cigi-subscribe-form" action="/subscribe/" method="POST" id="subscribe-form" accept-charset="UTF-8">
             {% csrf_token %}
-            <div class="newsletter-wrapper">
-              <input checked type="checkbox" id="newsletter" name="newsletter" required aria-required>
-              <label class="newsletter-label" for="newsletter">CIGI Newsletter - A weekly newsletter featuring
-                highlights of major CIGI announcements, publications, events, videos and other news.</label>
-            </div>
-
-            <label for="first-name">First Name</label>
-            <input type="text" id="first-name" name="first_name" size="60" maxlength="128" placeholder="First Name*"
-              class="form-text required" required aria-required>
-
-            <label for="last-name">Last Name</label>
-            <input type="text" id="last-name" name="last_name" size="60" maxlength="128" placeholder="Last Name*"
-              class="form-text required" required aria-required>
-
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" size="60" maxlength="128" placeholder="Email Address*"
-              class="form-email" required aria-required value="{{ email }}">
-
-            <label for="organization">Organization</label>
-            <input type="text" id="organization" name="organization" size="60" maxlength="128"
-              placeholder="Organization">
-
-            <label for="country">Country</label>
-            <input type="text" id="country" name="country" size="60" maxlength="128" placeholder="Country">
+            {{form.as_p}}
 
             <button class="button-action" type="submit">Sign Up</button>
           </form>

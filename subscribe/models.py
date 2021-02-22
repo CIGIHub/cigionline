@@ -1,18 +1,16 @@
-from django.db import models
+from django import forms
+from django.conf import settings
 from django.shortcuts import render
-from wagtail.core.models import Page
 from core.models import BasicPageAbstract
-from wagtail.core.fields import RichTextField, StreamField
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
-from wagtail.core.url_routing import RouteResult
+from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.models import Page
 from streams.blocks import ParagraphBlock
-from django.http.response import Http404
 
+from mailchimp_marketing.api_client import ApiClientError
+import mailchimp_marketing as MailchimpMarketing
 import logging
 
-from django.conf import settings
-import mailchimp_marketing as MailchimpMarketing
-from mailchimp_marketing.api_client import ApiClientError
 
 api_key = settings.MAILCHIMP_API_KEY
 server = settings.MAILCHIMP_DATA_CENTER
@@ -58,23 +56,26 @@ class SubscribePage(
     landing_page_template = 'subscribe/subscribe_page_landing.html'
 
     def serve(self, request):
+        form = SubscribeForm()
         context = {
             'self': self,
         }
+        member_info = {}
 
         if request.GET:
-            context['email'] = request.GET['email']
+            form = SubscribeForm(initial={'email': request.GET['email']})
 
         if request.method == 'POST':
-            member_info = {
-                'email_address': request.POST['email'],
-                'merge_fields': {
-                    'FNAME': request.POST['first_name'],
-                    'LNAME': request.POST['last_name'],
-                    'ORG': request.POST['organization'],
-                    'COUNTRY': request.POST['country'],
+            form = SubscribeForm(request.POST)
+            if form.is_valid():
+                member_info['email_address'] = form.cleaned_data['email']
+                member_info['merge_fields'] = {
+                    'FNAME': form.cleaned_data['first_name'],
+                    'LNAME': form.cleaned_data['last_name'],
+                    'ORG': form.cleaned_data['organization'],
+                    'COUNTRY': form.cleaned_data['country'],
                 }
-            }
+
             try:
                 client = MailchimpMarketing.Client()
                 client.set_config({
@@ -92,7 +93,17 @@ class SubscribePage(
 
             return render(request, self.landing_page_template, context)
 
+        context['form'] = form
         return render(request, self.template, context)
 
     class Meta:
         verbose_name = 'Subscribe Page'
+
+
+class SubscribeForm(forms.Form):
+    confirmation = forms.BooleanField(label='CIGI Newsletter - A weekly newsletter featuring highlights of major CIGI announcements, publications, events, videos and other news.', initial=True)
+    first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'First Name*'}))
+    last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name*'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email Address*'}))
+    organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization'}))
+    country = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Country'}))

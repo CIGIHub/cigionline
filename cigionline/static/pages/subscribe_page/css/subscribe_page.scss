@@ -11,14 +11,23 @@ hr {
 }
 
 .cigi-subscribe-form {
-  .newsletter-wrapper {
-    display: flex;
+  p {
+    margin-bottom: 0;
+
+    &:first-of-type {
+      display: flex;
+      flex-direction: row-reverse;
+
+      label {
+        display: block;
+      }
+    }
   }
 
   label {
     display: none;
 
-    &.newsletter-label {
+    &[for='id_confirmation'] {
       display: block;
       margin: 0 0 2em 0.5em;
 
