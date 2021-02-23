@@ -14,6 +14,7 @@ django-appconf==1.0.4
 django-compressor==2.4
 django-debug-toolbar==3.2
 django-filter==2.4.0
+django-ical==1.7.1
 django-libsass==0.8
 django-modelcluster==5.1
 django-sendgrid-v5==0.9.0
@@ -31,6 +32,7 @@ flake8==3.8.4
 future==0.18.2
 gunicorn==20.0.4
 html5lib==1.1
+icalendar==4.0.7
 idna==2.10
 isort==5.7.0
 jdcal==1.4.1

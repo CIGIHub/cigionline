@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from events.feeds import EventFeed
 from django.urls import path
 from research import views as research_views
 from wagtail.admin import urls as wagtailadmin_urls
@@ -18,6 +19,8 @@ urlpatterns = [
     url(r'^search/$', search_views.search, name='search'),
     url(r'^api/search/$', search_views.search_api),
     url(r'^api/topics/$', research_views.all_topics),
+
+    url(r'^events/feed.ics$', EventFeed()),
 ]
 
 
