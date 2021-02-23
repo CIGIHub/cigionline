@@ -116,7 +116,9 @@ class BasicPageAbstract(models.Model):
 
     @property
     def image_hero_url(self):
-        return self.image_hero.get_rendition('fill-520x390').url
+        if self.image_hero:
+            return self.image_hero.get_rendition('fill-520x390').url
+        return ''
 
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(

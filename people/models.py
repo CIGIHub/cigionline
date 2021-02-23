@@ -250,7 +250,9 @@ class PersonPage(
 
     @property
     def image_square_url(self):
-        return self.image_square.get_rendition('fill-300x300').url
+        if self.image_square:
+            return self.image_square.get_rendition('fill-300x300').url
+        return ''
 
     def latest_activity(self):
         # @todo test
