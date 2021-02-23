@@ -49,6 +49,11 @@ class SearchTableExperts extends React.Component {
       searchValue,
       topicSelectValue,
     } = this.state;
+
+    this.setState(() => ({
+      loading: true,
+    }));
+
     let uri = '/api/experts/?limit=150';
     if (searchValue) {
       uri += `&search=${searchValue}`;
@@ -122,7 +127,7 @@ class SearchTableExperts extends React.Component {
     return (
       <div className="search-table">
         <div className="search-bar">
-          <form className="search-bar-form">
+          <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
             <div className="form-row position-relative">
               <div className="col">
                 <div className="input-group input-group-search">
@@ -168,7 +173,7 @@ class SearchTableExperts extends React.Component {
           ? <SearchTableSkeleton />
           : rows.length
             ? (
-              <table className={['custom-theme-table', 'table-experts', loading && 'loading'].join(' ')}>
+              <table className={['custom-theme-table', 'table-experts', 'search-results', loading && 'loading'].join(' ')}>
                 <thead>
                   <tr>
                     <th colSpan="3">Name</th>
