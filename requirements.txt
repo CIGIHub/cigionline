@@ -32,7 +32,6 @@ flake8==3.8.4
 future==0.18.2
 gunicorn==20.0.4
 html5lib==1.1
-icalendar==4.0.7
 idna==2.10
 isort==5.7.0
 jdcal==1.4.1
