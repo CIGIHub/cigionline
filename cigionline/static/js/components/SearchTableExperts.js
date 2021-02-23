@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ExpertListing from './ExpertListing';
 import SearchTableSkeleton from './SearchTableSkeleton';
 import '../../css/components/SearchTable.scss';
 
@@ -177,9 +178,7 @@ class SearchTableExperts extends React.Component {
                 </thead>
                 <tbody>
                   {rows.map((row) => (
-                    <tr>
-                      <td>{row.title}</td>
-                    </tr>
+                    <ExpertListing key={row.id} row={row} />
                   ))}
                 </tbody>
               </table>

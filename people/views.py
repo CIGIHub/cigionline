@@ -15,6 +15,8 @@ def all_experts(request):
         },
         'items': [{
             'id': expert.id,
+            'image_square_url': expert.image_square_url,
+            'position': expert.position,
             'title': expert.title,
             'url': expert.url,
         } for expert in experts[:150]],

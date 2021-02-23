@@ -248,6 +248,10 @@ class PersonPage(
     def last_name_lowercase(self):
         return unidecode(self.last_name.lower())
 
+    @property
+    def image_square_url(self):
+        return self.image_square.get_rendition('fill-300x300').url
+
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
