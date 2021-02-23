@@ -12,10 +12,10 @@ function StaffListing(props) {
         <div className="position">{row.position}</div>
       </div>
       <div className="contact-container">
-        {row.phone_number_clean && (
+        {row.phone_number && (
           <div>
             <i className="fas fa-phone" />
-            <span>{row.phone_number_clean}</span>
+            <span>{row.phone_number}</span>
           </div>
         )}
         {row.email && (
@@ -32,7 +32,7 @@ function StaffListing(props) {
 StaffListing.propTypes = {
   row: PropTypes.shape({
     email: PropTypes.string,
-    phone_number_clean: PropTypes.string,
+    phone_number: PropTypes.string,
     position: PropTypes.string,
     title: PropTypes.string.isRequired,
     url: PropTypes.string,

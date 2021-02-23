@@ -23,7 +23,6 @@ def search_api(request):
         content_type=request.GET.get('content_type', None),
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
-        persontypes=request.GET.getlist('persontype', None),
         projects=request.GET.getlist('project', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
         searchtext=searchtext,
