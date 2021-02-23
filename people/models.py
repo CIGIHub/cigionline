@@ -9,7 +9,12 @@ from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from search.filters import (
+    ParentalManyToManyFilterField,
+    ParentalManyToManyFilterFieldName,
+)
 from streams.blocks import ParagraphBlock
+from unidecode import unidecode
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -236,16 +241,32 @@ class PersonPage(
         return self.content_pages_as_author.count() > 0
 
     @property
-    def persontypes(self):
-        persontypes = []
-        for persontype in self.person_types.all():
-            persontypes.append(persontype.name)
-        return persontypes
+    def first_name_lowercase(self):
+        return unidecode(self.first_name.lower())
+
+    @property
+    def last_name_lowercase(self):
+        return unidecode(self.last_name.lower())
+
+    @property
+    def image_square_url(self):
+        if self.image_square:
+            return self.image_square.get_rendition('fill-300x300').url
+        return ''
+
+    @property
+    def expertise_list(self):
+        expertise_list = []
+        for block in self.expertise:
+            if block.block_type == 'expertise':
+                expertise_list.append(block.value)
+        return expertise_list
 
     @property
     def phone_number_clean(self):
         return self.phone_number.replace('.', ' ').lower()
 
+    @property
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
@@ -366,14 +387,12 @@ class PersonPage(
     ]
 
     search_fields = Page.search_fields \
-        + ArchiveablePageAbstract.search_fields \
-        + [
+        + ArchiveablePageAbstract.search_fields + [
             index.SearchField('body'),
-            index.FilterField('persontypes'),
-            index.FilterField('email'),
-            index.FilterField('phone_number_clean'),
-            index.FilterField('position'),
-            index.FilterField('last_name'),
+            index.FilterField('first_name_lowercase'),
+            index.FilterField('last_name_lowercase'),
+            ParentalManyToManyFilterFieldName('person_types'),
+            ParentalManyToManyFilterField('topics'),
         ]
 
     parent_page_types = ['people.PeoplePage']
