@@ -336,6 +336,19 @@ class ContentPage(Page, SearchablePageAbstract):
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     @property
+    def related_people_ids(self):
+        people_ids = []
+        for author in self.authors.all():
+            people_ids.append(author.author.id)
+        for editor in self.editors.all():
+            people_ids.append(editor.editor.id)
+        if hasattr(self.specific, 'cigi_people_mentioned'):
+            for block in self.specific.cigi_people_mentioned:
+                if block.block_type == 'cigi_person':
+                    people_ids.append(block.value)
+        return people_ids
+
+    @property
     def contenttype(self):
         if self.specific and hasattr(self.specific, '_meta') and hasattr(self.specific._meta, 'verbose_name'):
             contenttype = self.specific._meta.verbose_name
@@ -425,6 +438,7 @@ class ContentPage(Page, SearchablePageAbstract):
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),
         index.FilterField('publishing_date'),
+        index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
     ]
 

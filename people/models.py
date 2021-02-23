@@ -262,6 +262,7 @@ class PersonPage(
                 expertise_list.append(block.value)
         return expertise_list
 
+    @property
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
