@@ -21,7 +21,7 @@ class EventFeed(ICalFeed):
 
     def item_start_datetime(self, item):
         return item.publishing_date
-    
+
     def item_end_datetime(self, item):
         return item.event_end
 
