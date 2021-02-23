@@ -6,6 +6,7 @@ from .search import expert_latest_activity_search, experts_search
 def all_experts(request):
     experts = experts_search(
         searchtext=request.GET.get('search', None),
+        sort=request.GET.get('sort', None),
         topics=request.GET.getlist('topic', None),
     )
 

@@ -50,8 +50,9 @@ def expert_latest_activity_search(expert_id):
 
 
 class CIGIOnlineExpertsSearchQueryCompiler:
-    def __init__(self, searchtext, topics):
+    def __init__(self, searchtext, sort, topics):
         self.searchtext = searchtext
+        self.sort = sort
         self.topics = topics
 
     @property
@@ -104,7 +105,7 @@ class CIGIOnlineExpertsSearchQueryCompiler:
         }
 
     def get_sort(self):
-        return [{
+        sort = [{
             "people_personpage__last_name_lowercase_filter": {
                 "order": "asc",
             },
@@ -113,10 +114,13 @@ class CIGIOnlineExpertsSearchQueryCompiler:
                 "order": "asc",
             },
         }]
+        if self.sort == 'first_name':
+            sort.reverse()
+        return sort
 
 
-def experts_search(searchtext=None, topics=None):
+def experts_search(searchtext=None, sort=None, topics=None):
     return Elasticsearch7SearchResults(
         get_search_backend(),
-        CIGIOnlineExpertsSearchQueryCompiler(searchtext, topics),
+        CIGIOnlineExpertsSearchQueryCompiler(searchtext, sort, topics),
     )

@@ -13,12 +13,14 @@ class SearchTableExperts extends React.Component {
       loadingTopics: true,
       rows: [],
       searchValue: '',
+      sortSelected: null,
       topics: [],
       topicSelectValue: null,
     };
 
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
+    this.handleSortSelect = this.handleSortSelect.bind(this);
     this.handleTopicSelect = this.handleTopicSelect.bind(this);
   }
 
@@ -38,6 +40,12 @@ class SearchTableExperts extends React.Component {
     });
   }
 
+  handleSortSelect(sortValue) {
+    this.setState({
+      sortSelected: sortValue,
+    }, this.getRows);
+  }
+
   handleTopicSelect(id) {
     this.setState({
       topicSelectValue: id,
@@ -47,6 +55,7 @@ class SearchTableExperts extends React.Component {
   getRows() {
     const {
       searchValue,
+      sortSelected,
       topicSelectValue,
     } = this.state;
 
@@ -55,6 +64,9 @@ class SearchTableExperts extends React.Component {
     }));
 
     let uri = '/api/experts/?limit=150';
+    if (sortSelected) {
+      uri += `&sort=${sortSelected}`;
+    }
     if (searchValue) {
       uri += `&search=${searchValue}`;
     }
@@ -122,7 +134,17 @@ class SearchTableExperts extends React.Component {
       loadingTopics,
       rows,
       searchValue,
+      sortSelected,
     } = this.state;
+
+    const sortOptions = [{
+      default: true,
+      name: 'Last Name',
+      value: 'last_name',
+    }, {
+      name: 'First Name',
+      value: 'first_name',
+    }];
 
     return (
       <div className="search-table">
@@ -168,6 +190,22 @@ class SearchTableExperts extends React.Component {
               </div>
             </div>
           </form>
+          <div className="search-bar-sort-wrapper">
+            <span>Sort by:</span>
+            <ul className="search-bar-sort-list">
+              {sortOptions.map((sortOption) => (
+                <li key={`sort-${sortOption.value}`}>
+                  <button
+                    type="button"
+                    className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
+                    onClick={() => this.handleSortSelect(sortOption.value)}
+                  >
+                    {sortOption.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
         {loadingInitial
           ? <SearchTableSkeleton />
