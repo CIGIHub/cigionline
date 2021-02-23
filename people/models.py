@@ -254,6 +254,14 @@ class PersonPage(
             return self.image_square.get_rendition('fill-300x300').url
         return ''
 
+    @property
+    def expertise_list(self):
+        expertise_list = []
+        for block in self.expertise:
+            if block.block_type == 'expertise':
+                expertise_list.append(block.value)
+        return expertise_list
+
     def latest_activity(self):
         # @todo test
         content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')

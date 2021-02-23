@@ -24,7 +24,20 @@ function ExpertListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="4" />
+      <td colSpan="4">
+        <div className="table-mobile-text">
+          Expertise
+        </div>
+        <div className="table-content">
+          <ul className="custom-text-list">
+            {row.expertise.map((expertiseItem) => (
+              <li key={`${row.id}-${expertiseItem}`} className="table-list-item">
+                {expertiseItem}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </td>
       <td colSpan="4" />
     </tr>
   );
@@ -32,6 +45,7 @@ function ExpertListing(props) {
 
 ExpertListing.propTypes = {
   row: PropTypes.shape({
+    expertise: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     image_square_url: PropTypes.string,
     position: PropTypes.string,

@@ -14,6 +14,7 @@ def all_experts(request):
             'total_count': experts.count(),
         },
         'items': [{
+            'expertise': expert.expertise_list,
             'id': expert.id,
             'image_square_url': expert.image_square_url,
             'position': expert.position,
