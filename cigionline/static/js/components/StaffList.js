@@ -32,7 +32,7 @@ class StaffList extends React.Component {
           all: rows,
         };
         rows.forEach((row) => {
-          const letter = row.last_name[0];
+          const letter = row.last_name[0].toUpperCase();
           if (!(letter in letters)) {
             letters[letter] = [];
           }
