@@ -58,7 +58,7 @@
                 {% include "includes/footer_bracket.svg" %}
               </div>
               {% for recommended_content in self.recommended_content|slice:":3" %}
-                {% include "./includes/recommended_article.html" with article=recommended_content.specific %}
+                {% include "includes/recommended_article.html" with article=recommended_content.specific %}
               {% endfor %}
             </div>
           </div>
