@@ -1,4 +1,4 @@
-{% load topic_tags menu_tags %}
+{% load wagtailcore_tags topic_tags menu_tags %}
 
 <footer>
   <div class="container">
@@ -22,9 +22,19 @@
         {% get_menu_items 'footer' as footer_menu_items %}
         <ul class="footer-menu">
           {% for menu_item in footer_menu_items %}
-            <li>
-              <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
-            </li>
+            {% if menu_item.link_page %}
+              <li>
+                <a href="{% pageurl menu_item.link_page %}">
+                  {{ menu_item.title }}
+                </a>
+              </li>
+            {% elif menu_item.link_url %}
+              <li>
+                <a href="{{ menu_item.link_url }}">
+                  {{ menu_item.title }}
+                </a>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
         <ul class="social-links">

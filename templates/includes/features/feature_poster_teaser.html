@@ -3,7 +3,7 @@
 <article class="feature-content feature-poster-teaser">
   <a class="img-wrapper" href="{{ content.url }}">
     {% if content.image_poster.file.url|file_extension == '.gif' %}
-      <img src="{{content.image_poster.file.url}}" alt="{{content.image_poster.title}}">
+      <img src="{{content.image_poster.file.url}}" alt="{{content.image_poster.title}}" />
     {% else %}
       {% image content.image_poster width-700 %}
     {% endif %}

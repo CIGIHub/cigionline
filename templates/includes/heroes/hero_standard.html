@@ -1,4 +1,4 @@
-{% load menu_tags core_tags %}
+{% load wagtailcore_tags menu_tags core_tags %}
 
 <section class="hero">
   <div class="container">
@@ -21,9 +21,19 @@
             <h2><span>More</span></h2>
             <ul {% if submenu_items|length > 5 %}class="multicol-2"{% endif %}>
               {% for submenu_item in submenu_items %}
-                <li>
-                  <a href="{{ submenu_item.link }}">{{ submenu_item.title }}</a>
-                </li>
+                {% if submenu_item.link_page %}
+                  <li>
+                    <a href="{% pageurl submenu_item.link_page %}">
+                      {{ submenu_item.title }}
+                    </a>
+                  </li>
+                {% elif submenu_item.link_url %}
+                  <li>
+                    <a href="{{ submenu_item.link_url }}">
+                      {{ submenu_item.title }}
+                    </a>
+                  </li>
+                {% endif %}
               {% endfor %}
             </ul>
           </nav>
