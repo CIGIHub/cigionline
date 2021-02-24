@@ -18,11 +18,11 @@
             </div>
           </div>
         {% endif %}
-        {% if self.specific.phone_number %}
+        {% if self.specific.phone_number_clean %}
           <div class="col-12 col-lg-6">
             <div class="contact-person-phone-number">
               <i class="fas fa-phone"></i>
-              {{ self.specific.phone_number }}
+              {{ self.specific.phone_number_clean }}
             </div>
           </div>
         {% endif %}

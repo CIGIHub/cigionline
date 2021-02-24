@@ -166,6 +166,7 @@ class CIGIOnlineSearchQueryCompiler:
     def get_sort(self):
         if self.sort == 'relevance':
             return []
+
         return [{
             "core_contentpage__publishing_date_filter": {
                 "order": "desc",

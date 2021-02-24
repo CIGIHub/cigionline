@@ -1,0 +1,52 @@
+@import '../global/mixins';
+
+.pagination-links-alphabetical {
+  @include media-breakpoint-up(md) {
+    justify-content: space-between;
+    margin-bottom: 4em;
+  }
+  @include media-breakpoint-up(sm) {
+    margin-bottom: 2em;
+  }
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1em;
+
+  li {
+    border-left: 1px solid $cigi-light-grey;
+    font-size: 0.75em;
+    font-weight: 600;
+    list-style: none;
+    margin-bottom: 0.1em;
+    padding: 0 0.5em;
+    text-align: center;
+    width: 30px;
+
+    &:first-child {
+      border-left: 0;
+      padding-left: 0;
+      text-align: left;
+      width: 60px;
+
+      button {
+        text-align: left;
+      }
+    }
+
+    &:hover {
+      button {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    &.pagination-inactive {
+      color: $cigi-medium-grey;
+    }
+
+    button {
+      font-weight: 600;
+      transition: color 0.2s ease;
+      width: 100%;
+    }
+  }
+}
