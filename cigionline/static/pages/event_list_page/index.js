@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import EventListing from '../../js/components/EventListing';
 import SearchTable from '../../js/components/SearchTable';
+import EventsCalendar from '../../js/components/EventsCalendar';
 import './css/_event_list_page.scss';
 
 ReactDOM.render(
@@ -39,4 +40,9 @@ ReactDOM.render(
     }]}
   />,
   document.getElementById('events-search-table'),
+);
+
+ReactDOM.render(
+  <EventsCalendar />,
+  document.getElementById('events-calendar'),
 );

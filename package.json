@@ -23,6 +23,7 @@
     "@fortawesome/fontawesome-pro": "5.15.2",
     "@panzoom/panzoom": "4.3.2",
     "bootstrap": "4.6.0",
+    "date-fns": "^2.17.0",
     "jquery": "3.5.1",
     "normalize.css": "8.0.1",
     "rimraf": "3.0.2",
