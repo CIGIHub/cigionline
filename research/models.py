@@ -251,5 +251,8 @@ class TopicPage(ArchiveablePageAbstract, Page):
     templates = 'research/topic_page.html'
 
     class Meta:
+        indexes = [
+            models.Index(fields=['archive'])
+        ]
         verbose_name = 'Topic Page'
         verbose_name_plural = 'Topic Pages'
