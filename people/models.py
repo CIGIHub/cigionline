@@ -90,17 +90,7 @@ class PersonListPage(BasicPageAbstract, Page):
             'archive': ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
         }
 
-        if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
-            personFilter['person_types__name__in'] = ['CIGI Chair', 'Expert']
-            context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
-            personFilter['person_types__name'] = 'Staff'
-            letter = request.GET.get('letter')
-            if letter:
-                letter = letter[0:1]
-                personFilter['last_name__istartswith'] = letter
-            context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             personFilter['person_types__name'] = 'Management Team'
             context['senior_management'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
             personFilter['person_types__name'] = 'Board Member'

@@ -9,7 +9,7 @@
       {% with featured_publication.publication_page.contentpage.publicationpage as publication_page %}
         <div class="col publications-featured-list-col">
 
-          <a href="{{ publication_page.url }}" class="publications-featured-list">
+          <a href="{% pageurl publication_page %}" class="publications-featured-list">
             <div class="publications-featured-list-inner">
               <div class="publications-featured-list-image-wrapper">
                 {% image publication_page.image_cover width-200 as image_rect %}
@@ -20,7 +20,9 @@
                 {% if publication_page.topics.all %}
                   <ul class="publications-featured-list-topics custom-text-list">
                     {% for topic in publication_page.topics.all %}
-                      <li>{{ topic }}</li>
+                      <li>
+                        {{ topic.title }}
+                      </li>
                     {% endfor %}
                   </ul>
                 {% endif %}
