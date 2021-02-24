@@ -1,0 +1,40 @@
+@import '../../../css/global/mixins';
+
+.staff-list {
+  margin-bottom: 3em;
+}
+
+.staff-listing-heading {
+  @include media-breakpoint-up(sm) {
+    display: flex;
+  }
+  color: $cigi-text-grey;
+  display: none;
+  font-size: 0.67em;
+  font-weight: 500;
+  justify-content: space-between;
+  letter-spacing: 2.09px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.name-container {
+  @include media-breakpoint-up(sm) {
+    padding: 0 1em 0 0;
+  }
+  padding: 0 1em 0.5em 0;
+
+  .name {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.contact-container {
+  flex-shrink: 0;
+  width: 200px;
+
+  .position {
+    color: $cigi-text-grey;
+  }
+}
