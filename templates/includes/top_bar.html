@@ -112,13 +112,17 @@
               <ul class="overlay-menu-footer-menu">
                 {% for menu_item in footer_menu_items %}
                   {% if menu_item.link_page %}
-                    <a href="{% pageurl menu_item.link_page %}">
-                      {{ menu_item.title }}
-                    </a>
+                    <li>
+                      <a href="{% pageurl menu_item.link_page %}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
                   {% elif menu_item.link_url %}
-                    <a href="{{ menu_item.link_url }}">
-                      {{ menu_item.title }}
-                    </a>
+                    <li>
+                      <a href="{{ menu_item.link_url }}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
                   {% endif %}
                 {% endfor %}
               </ul>
