@@ -17,12 +17,12 @@
             </div>
             <div class="col-md-9">
               {% include "includes/topics.html" with topics=item.topics %}
-              <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+              <h3><a href="{% pageurl item %}">{{ item.title }}</a></h3>
               {{ item.short_description|richtext }}
               <h4>CONTRIBUTORS</h4>
               <ul class="contributors">
                 {% for contributor in item.series_authors %}
-                  <li><a href="{{ contributor.author.url }}">{{ contributor.author.title }}</a></li>
+                  <li><a href="{% pageurl contributor.author %}">{{ contributor.author.title }}</a></li>
                 {% endfor %}
               </ul>
             </div>
