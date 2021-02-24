@@ -40,7 +40,7 @@
     </section>
 
     {% if not page.archive %}
-      {% if page.expertise or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number or page.curriculum_vitae %}
+      {% if page.expertise or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
         <section class="expertise">
           <div class="container">
             <div class="row justify-content-center">
@@ -53,16 +53,16 @@
                         <span class="expertise-item">{{ expertise }}</span>
                       {% endfor %}
                     </div>
-                    {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number or page.curriculum_vitae %}
+                    {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
                       <hr>
                     {% endif %}
                   {% endif %}
 
                   <div class="contact">
-                    {% if page.phone_number %}
+                    {% if page.phone_number_clean %}
                       <div class="contact-item">
                         <i class="fa fa-phone" aria-hidden="true"></i>
-                        {{ page.phone_number }}
+                        {{ page.phone_number_clean }}
                       </div>
                     {% endif %}
 

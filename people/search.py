@@ -83,7 +83,7 @@ class CIGIOnlineExpertsSearchQueryCompiler:
             },
         }, {
             "term": {
-                "people_personpage__archive": 0,
+                "people_personpage__archive_filter": 0,
             },
         }, {
             "terms": {

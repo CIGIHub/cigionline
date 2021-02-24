@@ -1,5 +1,9 @@
+from core.models import ArchiveablePageAbstract
+from django.contrib.postgres.lookups import Unaccent
+from django.db.models.functions import Lower
 from django.http import JsonResponse
 
+from .models import PersonPage
 from .search import expert_latest_activity_search, experts_search
 
 
@@ -37,3 +41,25 @@ def all_experts(request):
         },
         'items': items,
     }, safe=False)
+
+
+def all_staff(request):
+    staff = PersonPage.objects.live().filter(
+        archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+        person_types__name='Staff'
+    ).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+
+    return JsonResponse({
+        'meta': {
+            'total_count': staff.count(),
+        },
+        'items': [{
+            'email': person.email,
+            'id': person.id,
+            'last_name': person.last_name,
+            'phone_number': person.phone_number_clean,
+            'position': person.position,
+            'title': person.title,
+            'url': person.url,
+        } for person in staff[:50]]
+    })

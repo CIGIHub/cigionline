@@ -311,7 +311,7 @@ class ArchiveablePageAbstract(models.Model):
     )
 
     search_fields = [
-        index.SearchField('archive'),
+        index.FilterField('archive'),
     ]
 
     class Meta:

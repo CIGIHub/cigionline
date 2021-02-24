@@ -33,6 +33,7 @@ ReactDOM.render(
       'row-cols-md-3',
       'multimedia-list-row',
     ]}
+    paginatorAlphabetical
     RowComponent={MultimediaListing}
   />,
   document.getElementById('multimedia-search-table'),
