@@ -1,7 +1,7 @@
 {% load wagtailcore_tags menu_tags %}
 
 {% get_menu_items 'main' as main_menu_items %}
-{% get_menu_items 'footer' as footer_menu_items %}
+{% get_menu_items 'footer' as main_menu_items %}
 
 <header>
   <div class="main-navigation-wrapper">
@@ -15,9 +15,19 @@
           <nav aria-label="primary">
             <ul class="menu desktop-menu">
               {% for menu_item in main_menu_items %}
-                <li>
-                  <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
-                </li>
+                {% if menu_item.link_page %}
+                  <li>
+                    <a href="{% pageurl menu_item.link_page %}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% elif menu_item.link_url %}
+                  <li>
+                    <a href="{{ menu_item.link_url }}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% endif %}
               {% endfor %}
             </ul>
             <ul>
@@ -67,15 +77,33 @@
           <div class="col overlay-menu-content row row-cols-1 row-cols-md-4 row-eq-height">
             {% for sub_menu in main_menu_items %}
               <div class="overlay-menu-submenu col">
-                <a class="overlay-menu-submenu-link" href="{{ sub_menu.link }}">{{sub_menu.title}}</a>
+                {% if sub_menu.link_page %}
+                  <a href="{% pageurl sub_menu.link_page %}" class="overlay-menu-submenu-link">
+                    {{ sub_menu.title }}
+                  </a>
+                {% elif sub_menu.link_url %}
+                  <a href="{{ sub_menu.link_url }}" class="overlay-menu-submenu-link">
+                    {{ sub_menu.title }}
+                  </a>
+                {% endif %}
                 <div class="accordion">
                   <i class="fas fa-plus"></i>
                 </div>
                 <ul>
                   {% for menu_item in sub_menu.submenu.menu_items.all %}
-                    <li>
-                      <a class="overlay-menu-submenu-item-link" href="{{ menu_item.link }}">{{ menu_item.title }}</a>
-                    </li>
+                    {% if menu_item.link_page %}
+                      <li>
+                        <a href="{% pageurl menu_item.link_page %}" class="overlay-menu-submenu-item-link">
+                          {{ menu_item.title }}
+                        </a>
+                      </li>
+                    {% elif menu_item.link_url %}
+                      <li>
+                        <a href="{{ menu_item.link_url }}" class="overlay-menu-submenu-item-link">
+                          {{ menu_item.title }}
+                        </a>
+                      </li>
+                    {% endif %}
                   {% endfor %}
                 </ul>
               </div>
@@ -83,9 +111,15 @@
             <div class="overlay-menu-submenu col">
               <ul class="overlay-menu-footer-menu">
                 {% for menu_item in footer_menu_items %}
-                  <li>
-                    <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
-                  </li>
+                  {% if menu_item.link_page %}
+                    <a href="{% pageurl menu_item.link_page %}">
+                      {{ menu_item.title }}
+                    </a>
+                  {% elif menu_item.link_url %}
+                    <a href="{{ menu_item.link_url }}">
+                      {{ menu_item.title }}
+                    </a>
+                  {% endif %}
                 {% endfor %}
               </ul>
               <ul class="overlay-menu-social-links">
