@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from events.feeds import EventFeed
 from people import views as people_views
 from research import views as research_views
 from search import views as search_views
@@ -21,6 +22,8 @@ urlpatterns = [
     url(r'^api/search/$', search_views.search_api),
     url(r'^api/staff/$', people_views.all_staff),
     url(r'^api/topics/$', research_views.all_topics),
+
+    url(r'^events/feed.ics$', EventFeed()),
 ]
 
 
