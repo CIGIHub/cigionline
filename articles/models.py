@@ -36,25 +36,51 @@ class ArticleLandingPage(Page):
     templates = 'articles/article_landing_page.html'
 
     def featured_xlarge(self):
-        return self.featured_articles.all()[0:1]
+        return self.featured_articles.prefetch_related(
+            'article_page',
+            'article_page__authors__author',
+            'article_page__topics',
+        ).all()[0:1]
 
     def featured_large_1(self):
-        return self.featured_articles.all()[1:2]
+        return self.featured_articles.prefetch_related(
+            'article_page',
+            'article_page__authors__author',
+            'article_page__topics',
+        ).all()[1:2]
 
     def featured_small_1(self):
-        return self.featured_articles.all()[2:7]
+        return self.featured_articles.prefetch_related(
+            'article_page',
+            'article_page__authors__author',
+            'article_page__topics',
+        ).all()[2:7]
 
     def featured_medium_1(self):
-        return self.featured_articles.all()[7:9]
+        return self.featured_articles.prefetch_related(
+            'article_page',
+            'article_page__authors__author',
+            'article_page__topics',
+        ).all()[7:9]
 
     def featured_small_2(self):
-        return self.featured_articles.all()[10:15]
+        return self.featured_articles.prefetch_related(
+            'article_page',
+            'article_page__authors__author',
+            'article_page__topics',
+        ).all()[10:15]
 
     def featured_large_2(self):
-        return self.featured_articles.all()[9:10]
+        return self.featured_articles.prefetch_related(
+            'article_page',
+            'article_page__authors__author',
+            'article_page__topics',
+        ).all()[9:10]
 
     def all_article_series(self):
-        return ArticleSeriesPage.objects.live().public().order_by('-publishing_date')
+        return ArticleSeriesPage.objects.prefetch_related(
+            'topics',
+        ).live().public().order_by('-publishing_date')
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
