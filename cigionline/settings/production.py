@@ -29,7 +29,7 @@ if 'BONSAI_URL' in os.environ:
             'TIMEOUT': 30,
             'OPTIONS': {},
             'INDEX_SETTINGS': {},
-        }
+        },
     }
 
 # Cache everything for 10 minutes
@@ -58,6 +58,18 @@ if 'REDIS_URL' in os.environ:
                     'ssl_cert_reqs': False,
                 },
             },
+        },
+    }
+
+if 'CLOUDFLARE_EMAIL' in os.environ \
+        and 'CLOUDFLARE_API_KEY' in os.environ \
+        and 'CLOUDFLARE_ZONEID' in os.environ:
+    WAGTAILFRONTENDCACHE = {
+        'cloudflare': {
+            'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
+            'EMAIL': os.environ['CLOUDFLARE_EMAIL'],
+            'API_KEY': os.environ['CLOUDFLARE_API_KEY'],
+            'ZONEID': os.environ['CLOUDFLARE_ZONEID'],
         },
     }
 
