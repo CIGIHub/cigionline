@@ -29,7 +29,7 @@ if 'BONSAI_URL' in os.environ:
             'TIMEOUT': 30,
             'OPTIONS': {},
             'INDEX_SETTINGS': {},
-        }
+        },
     }
 
 if 'REDIS_URL' in os.environ:
@@ -43,7 +43,7 @@ if 'REDIS_URL' in os.environ:
                     'ssl_cert_reqs': False,
                 },
             },
-        }
+        },
     }
 
 if 'CLOUDFLARE_EMAIL' in os.environ \
@@ -55,7 +55,7 @@ if 'CLOUDFLARE_EMAIL' in os.environ \
             'EMAIL': os.environ['CLOUDFLARE_EMAIL'],
             'API_KEY': os.environ['CLOUDFLARE_API_KEY'],
             'ZONEID': os.environ['CLOUDFLARE_ZONEID'],
-        }
+        },
     }
 
 # Use AWS S3 for file storage
