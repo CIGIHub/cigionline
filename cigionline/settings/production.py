@@ -43,7 +43,17 @@ if 'REDIS_URL' in os.environ:
                     'ssl_cert_reqs': False,
                 },
             },
-        }
+        },
+        'renditions': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.environ['REDIS_URL'],
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'CONNECTION_POOL_KWARGS': {
+                    'ssl_cert_reqs': False,
+                },
+            },
+        },
     }
 
 # Use AWS S3 for file storage
