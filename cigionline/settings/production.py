@@ -46,6 +46,18 @@ if 'REDIS_URL' in os.environ:
         }
     }
 
+if 'CLOUDFLARE_EMAIL' in os.environ \
+        and 'CLOUDFLARE_API_KEY' in os.environ \
+        and 'CLOUDFLARE_ZONEID' in os.environ:
+    WAGTAILFRONTENDCACHE = {
+        'cloudflare': {
+            'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
+            'EMAIL': os.environ['CLOUDFLARE_EMAIL'],
+            'API_KEY': os.environ['CLOUDFLARE_API_KEY'],
+            'ZONEID': os.environ['CLOUDFLARE_ZONEID'],
+        }
+    }
+
 # Use AWS S3 for file storage
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
