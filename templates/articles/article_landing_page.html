@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags webpack_loader cache %}
 
 {% block extra_css %}
   {% render_bundle 'articleLandingPage' 'css' %}
@@ -71,16 +71,18 @@
       </div>
     </div>
   </section>
-  <section class="series">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="paragraph-heading">Series</h2>
-          {% include "includes/swiper.html" with swiper_content=self.all_article_series type="article-landing-series" %}
+  {% cache 86400 article_series_swiper %}
+    <section class="series">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="paragraph-heading">Series</h2>
+            {% include "includes/swiper.html" with swiper_content=self.all_article_series type="article-landing-series" %}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endcache %}
   <section>
     <div class="container">
       <div class="row">
