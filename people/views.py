@@ -4,7 +4,8 @@ from django.db.models.functions import Lower
 from django.http import JsonResponse
 
 from .models import PersonPage
-from .search import expert_latest_activity_search, experts_search
+from .search import experts_search
+from .search_expert import expert_latest_activity_search
 
 
 def all_experts(request):
