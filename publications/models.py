@@ -32,6 +32,17 @@ from wagtail.search import index
 class PublicationListPage(BasicPageAbstract, Page):
     """Publication list page"""
 
+    def featured_publications_list(self):
+        featured_publications = []
+        print('featured_publications')
+        for item in self.featured_publications.prefetch_related(
+            'publication_page',
+            'publication_page__authors__author',
+            'publication_page__topics',
+        ).all()[:4]:
+            featured_publications.append(item.publication_page)
+        return featured_publications
+
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['publications.PublicationPage', 'publications.PublicationTypePage']
@@ -69,7 +80,7 @@ class PublicationListPageFeaturedPublication(Orderable):
         related_name='featured_publications',
     )
     publication_page = models.ForeignKey(
-        'wagtailcore.Page',
+        'publications.PublicationPage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,

@@ -4,7 +4,8 @@ from django.db.models.functions import Lower
 from django.http import JsonResponse
 
 from .models import PersonPage
-from .search import expert_latest_activity_search, experts_search
+from .search import experts_search
+from .search_expert import expert_latest_activity_search
 
 
 def all_experts(request):
@@ -23,7 +24,7 @@ def all_experts(request):
             'latest_activity': None,
             'position': expert.position,
             'title': expert.title,
-            'url': expert.url,
+            'url': expert.get_url(request),
         }
         latest_activity = expert_latest_activity_search(expert_id=expert.id)
         for activity in latest_activity[:1]:
@@ -32,7 +33,7 @@ def all_experts(request):
                 'contenttype': activity.contenttype,
                 'id': activity.id,
                 'title': activity.title,
-                'url': activity.url,
+                'url': activity.get_url(request),
             }
         items.append(item)
     return JsonResponse({
@@ -60,6 +61,6 @@ def all_staff(request):
             'phone_number': person.phone_number_clean,
             'position': person.position,
             'title': person.title,
-            'url': person.url,
+            'url': person.get_url(request),
         } for person in staff[:50]]
     })
