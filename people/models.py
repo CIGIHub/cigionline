@@ -30,6 +30,8 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 import random
 
+from .search_expert import expert_latest_in_the_news_search
+
 
 class PeoplePage(Page):
     """
@@ -267,6 +269,11 @@ class PersonPage(
             if content_page:
                 return content_page.specific
         return False
+
+    @property
+    def latest_cigi_in_the_news(self):
+        articles = expert_latest_in_the_news_search(expert_id=self.id)
+        return articles[:3]
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(

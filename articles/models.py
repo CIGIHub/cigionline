@@ -348,6 +348,14 @@ class ArticlePage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def cigi_people_mentioned_ids(self):
+        people_ids = []
+        for block in self.specific.cigi_people_mentioned:
+            if block.block_type == 'cigi_person':
+                people_ids.append(block.value)
+        return people_ids
+
     def is_opinion(self):
         return self.article_type.title in [
             'Op-Eds',
@@ -441,6 +449,7 @@ class ArticlePage(
         + ContentPage.search_fields \
         + [
             index.FilterField('article_type'),
+            index.FilterField('cigi_people_mentioned_ids'),
             index.FilterField('publishing_date'),
         ]
 

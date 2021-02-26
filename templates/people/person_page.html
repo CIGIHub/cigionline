@@ -118,6 +118,36 @@
 
       {% include "includes/body.html" with body=self.body heading="Bio" %}
 
+      {% if self.latest_cigi_in_the_news %}
+        <section>
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-10 col-lg-8">
+                <h2 class="paragraph-heading">
+                  In the News
+                </h2>
+                <div class="person-in-the-news">
+                  {% for article in self.latest_cigi_in_the_news %}
+                    <article>
+                      <p class="meta">{{ article.contentsubtype }}</p>
+                      <h3>
+                        <a href="{% pageurl article %}">
+                          {{ article.title }}
+                        </a>
+                      </h3>
+                      <p class="meta">
+                        {{ article.publishing_date|date:"F j, Y" }}
+                      </p>
+                      {% include "includes/authors.html" with authors=article.authors.all external_authors=article.external_authors %}
+                    </article>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
       {% if page.external_publications %}
       {% with publication.value.publication_type|lower as type %}
         <section class="external-publications">
