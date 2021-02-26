@@ -678,6 +678,10 @@ class ArticleSeriesPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields
+
     parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
