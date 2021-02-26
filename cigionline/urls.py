@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from django.views.decorators.cache import cache_control
 from events.feeds import EventFeed
 from people import views as people_views
 from research import views as research_views
@@ -9,6 +10,7 @@ from search import views as search_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
+from wagtail.utils.urlpatterns import decorate_urlpatterns
 
 
 urlpatterns = [
@@ -50,3 +52,10 @@ urlpatterns = urlpatterns + [
     # of your site, rather than the site root:
     #    url(r"^pages/", include(wagtail_urls)),
 ]
+
+cache_max_age = getattr(settings, 'CACHE_CONTROL_MAX_AGE', None)
+if cache_max_age:
+    urlpatterns = decorate_urlpatterns(
+        urlpatterns,
+        cache_control(max_age=cache_max_age)
+    )

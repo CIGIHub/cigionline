@@ -32,6 +32,11 @@ if 'BONSAI_URL' in os.environ:
         },
     }
 
+# Cache everything for 10 minutes
+# This only applies to pages that do not have a more specific cache-control
+# setting. See urls.py
+CACHE_CONTROL_MAX_AGE = 600
+
 if 'REDIS_URL' in os.environ:
     CACHES = {
         'default': {
