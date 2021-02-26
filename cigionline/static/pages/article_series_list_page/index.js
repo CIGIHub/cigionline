@@ -6,16 +6,16 @@ import SearchTable from '../../js/components/SearchTable';
 ReactDOM.render(
   <SearchTable
     blockListing
-    endpoint="/article_series"
+    contenttypes={[
+      'Opinion Series',
+    ]}
     limit={5}
     fields={[
       'image_poster_title',
       'image_poster_url',
       'series_contributors',
       'short_description',
-      'title',
-      'topics(title,url)',
-      'url',
+      'topics',
     ]}
     containerClass={[
       'articles-series-row',
