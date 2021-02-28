@@ -255,4 +255,14 @@
       font-size: 0.875em;
     }
   }
+
+  .stream-read-more-block {
+    .read-more-btn {
+      color: $bigtech-s3-red;
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
 }
