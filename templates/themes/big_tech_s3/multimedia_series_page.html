@@ -60,8 +60,8 @@
           </div>
           {{ latest_episode.specific.subtitle|richtext }}
           <div class="date">
-            {% if episode.specific.podcast_season and episode.specific.podcast_episode %}
-              S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / 
+            {% if latest_episode.specific.podcast_season and latest_episode.specific.podcast_episode %}
+              S{{ latest_episode.specific.podcast_season }}E{{ latest_episode.specific.podcast_episode }} / 
             {% endif %}
             {{latest_episode.specific.publishing_date|date:"F j, Y"}}
           </div>
@@ -121,7 +121,7 @@
                     {{ episode.specific.subtitle|richtext }}
                     <div class="date">
                       {% if episode.specific.podcast_season and episode.specific.podcast_episode %}
-                        S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / 
+                        S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} /
                       {% endif %}
                       {{episode.specific.publishing_date|date:"F j, Y"}}
                     </div>

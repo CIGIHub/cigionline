@@ -61,6 +61,9 @@
               {{ self.subtitle|richtext }}
             </div>
             <p class="meta">
+              {% if self.podcast_season and self.podcast_episode %}
+                S{{ self.podcast_season }}E{{ self.podcast_episode }} /
+              {% endif %}
               {{ self.publishing_date|date:"F j, Y" }}
             </p>
             {% include "includes/social_links.html" with title=self.title no_circle=True %}
