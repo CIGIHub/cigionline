@@ -8,7 +8,7 @@
       {% image content.image_poster width-700 %}
     {% endif %}
   </a>
-  {% include 'includes/topics.html' with topics=content.topics %}
+  {% include 'includes/topics.html' with topics=content.topics_sorted %}
   <h3>
     <a href="{{ content.url }}">
       {{ content.title }}
