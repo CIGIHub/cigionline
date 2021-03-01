@@ -1,10 +1,12 @@
+{% load wagtailcore_tags %}
+
 <div class="custom-text-list authors">
   {% for item in authors %}
     {% if item.author %}
-      <a class="block-author" href="{{ item.author.url }}">{{ item.author.title }}</a>
+      <a class="block-author" href="{% pageurl item.author %}">{{ item.author.title }}</a>
     {% endif %}
     {% if item.editor %}
-      <a class="block-author" href="{{ item.editor.url }}">{{ item.editor.title }}</a>
+      <a class="block-author" href="{% pageurl item.editor %}">{{ item.editor.title }}</a>
     {% endif %}
   {% endfor %}
   {% for item in external_authors %}

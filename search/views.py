@@ -51,7 +51,7 @@ def search_api(request):
             'highlights': page._highlights,
             'id': page.id,
             'title': page.title,
-            'url': page.url,
+            'url': page.get_url(request),
         }
         for field in fields:
             try:

@@ -13,7 +13,7 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        {% include 'includes/publications_featured_list.html' %}
+        {% include "includes/publications_featured_list.html" with publications=self.featured_publications_list %}
       </div>
     </div>
     <div class="row">

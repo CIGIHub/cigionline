@@ -1,45 +1,57 @@
-{% load topic_tags menu_tags %}
+{% load wagtailcore_tags topic_tags menu_tags cache %}
 
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <div class="logo-container">
-          {% include './header_cigi_logo_20th_small.svg' %}
+{% cache 86400 footer %}
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="logo-container">
+            {% include './header_cigi_logo_20th_small.svg' %}
+          </div>
+          {% include "./footer_bracket.svg" %}
+          {% highlighted_topics %}
         </div>
-        {% include "./footer_bracket.svg" %}
-        {% highlighted_topics %}
       </div>
-    </div>
-    <div class="row justify-content-center footer-content">
-      <div class="col-md-6">
-        <p>Get regular updates on our research and events in your inbox.</p>
-        <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
-          <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
-            class="form-email required" required="required" aria-required="true">
-          <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
-        </form>
-        {% get_menu_items 'footer' as footer_menu_items %}
-        <ul class="footer-menu">
-          {% for menu_item in footer_menu_items %}
+      <div class="row justify-content-center footer-content">
+        <div class="col-md-6">
+          <p>Get regular updates on our research and events in your inbox.</p>
+          <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
+            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
+              class="form-email required" required="required" aria-required="true">
+            <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
+          </form>
+          {% get_menu_items 'footer' as footer_menu_items %}
+          <ul class="footer-menu">
+            {% for menu_item in footer_menu_items %}
+              {% if menu_item.link_page %}
+                <li>
+                  <a href="{% pageurl menu_item.link_page %}">
+                    {{ menu_item.title }}
+                  </a>
+                </li>
+              {% elif menu_item.link_url %}
+                <li>
+                  <a href="{{ menu_item.link_url }}">
+                    {{ menu_item.title }}
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <ul class="social-links">
             <li>
-              <a href="{{ menu_item.link }}">{{ menu_item.title }}</a>
+              <a href="https://www.facebook.com/cigionline/" target="_blank"><i class="fab fa-facebook-square"></i></a>
             </li>
-          {% endfor %}
-        </ul>
-        <ul class="social-links">
-          <li>
-            <a href="https://www.facebook.com/cigionline/" target="_blank"><i class="fab fa-facebook-square"></i></a>
-          </li>
-          <li>
-            <a href="https://twitter.com/cigionline" target="_blank"><i class="fab fa-twitter"></i></a>
-          </li>
-          <li>
-            <a href="https://www.linkedin.com/company/cigionline/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-          </li>
-        </ul>
-        <div class="copyright">&copy; {% now "Y" %} Centre for International Governance Innovation</div>
+            <li>
+              <a href="https://twitter.com/cigionline" target="_blank"><i class="fab fa-twitter"></i></a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/company/cigionline/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            </li>
+          </ul>
+          <div class="copyright">&copy; {% now "Y" %} Centre for International Governance Innovation</div>
+        </div>
       </div>
     </div>
-  </div>
-</footer>
+  </footer>
+{% endcache %}

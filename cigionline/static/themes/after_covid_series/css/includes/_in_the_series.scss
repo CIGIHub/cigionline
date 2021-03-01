@@ -44,14 +44,13 @@
 
     .series-contributors {
       .contributors {
+        @include media-breakpoint-up(md) {
+          columns: 3;
+        }
         @include media-breakpoint-up(lg) {
           columns: 4;
         }
         columns: 2;
-
-        @media screen and (min-width: 480px) {
-          columns: 3;
-        }
 
         li {
           list-style: none;

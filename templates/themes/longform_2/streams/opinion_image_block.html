@@ -3,7 +3,7 @@
 <div class="container">
   <figure class="stream-image-block">
     {% if self.image.file.url|file_extension == '.gif' %}
-      <img src="{{self.image.file.url}}" alt="{{self.image.title}}">
+      <img src="{{self.image.file.url}}" alt="{{self.image.title}}" />
     {% else %}
       {% image self.image width-640 %}
     {% endif %}

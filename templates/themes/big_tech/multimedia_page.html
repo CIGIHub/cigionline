@@ -21,7 +21,7 @@
       <div class="row">
         <div class="col big-tech-mm-hero">
           <div>
-            {% include "includes/topics.html" with topics=self.topics %}
+            {% include "includes/topics.html" with topics=self.topics_sorted %}
             <h1>
               {% if self.podcast_guests and self.podcast_subtitle %}
                 {% for guest in self.podcast_guests %}
@@ -59,7 +59,7 @@
             {% endif %}
             <p class="meta">
               {% if self.podcast_season and self.podcast_episode %}
-                S{{ self.podcast_season }}E{{ self.podcast_episode }} / 
+                S{{ self.podcast_season }}E{{ self.podcast_episode }} /
               {% endif %}
               {{ self.publishing_date|date:"F j, Y" }}
             </p>

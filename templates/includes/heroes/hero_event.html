@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col hero-container">
         <div class="event-hero-content">
-          {% include "includes/topics.html" with topics=self.topics %}
+          {% include "includes/topics.html" with topics=topics %}
           <h1>{{ title }}</h1>
 
           <div class="meta">{{ date|date:"l, F j, Y g:i A" }}

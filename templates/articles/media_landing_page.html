@@ -27,7 +27,7 @@
           {% endif %}
           <div class="col-12 col-md-6 col-lg-4 media-latest-news-article">
             <article>
-              {% include "includes/topics.html" with topics=article.topics %}
+              {% include "includes/topics.html" with topics=article.topics_sorted %}
               <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
               <p class="meta">{{ article.article_type.title }}</p>
               <p class="cigi-people-mentioned">

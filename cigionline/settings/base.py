@@ -181,7 +181,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
             'USER': 'postgres',
             'PASSWORD': 'postgres',
             'CONN_MAX_AGE': 600,
-        }
+        },
     }
 
 WAGTAILSEARCH_BACKENDS = {
@@ -192,7 +192,7 @@ WAGTAILSEARCH_BACKENDS = {
         'TIMEOUT': 30,
         'OPTIONS': {},
         'INDEX_SETTINGS': {},
-    }
+    },
 }
 
 

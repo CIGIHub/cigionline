@@ -4,7 +4,7 @@
 <ul class="highlighted-topics-list">
   {% for topic in highlighted_topics %}
     <li class="topic">
-      <a href="{% pageurl topic %}">{{ topic }}</a>
+      <a href="{% pageurl topic %}">{{ topic.title }}</a>
       <span>({{topic.count}})</span>
     </li>
   {% endfor %}
