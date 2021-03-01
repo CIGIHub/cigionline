@@ -19,7 +19,8 @@ class EventsCalendar extends React.Component {
     super(props);
     this.state = {
       currentMonth: new Date(),
-      selectedDate: new Date(),
+      today: new Date(),
+      stateDays: [],
     };
   }
 
@@ -37,9 +38,38 @@ class EventsCalendar extends React.Component {
     });
   }
 
+  initDays() {
+    const { currentMonth, today, stateDays } = this.state;
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(monthStart);
+    const startDate = startOfWeek(monthStart);
+    const endDate = endOfWeek(monthEnd);
+    const dateFormat = 'd';
+    const weeks = [];
+    let days = [];
+    let day = startDate;
+    let formattedDate = '';
+    while (day <= endDate) {
+      for (let i = 0; i < 7; i += 1) {
+        formattedDate = format(day, dateFormat);
+        days.push({
+          day,
+          formattedDate,
+        });
+        day = addDays(day, 1);
+      }
+      weeks.push(
+        <div className="row week" key={day}>
+          {days}
+        </div>,
+      );
+      days = [];
+    }
+  }
+
   renderDays() {
     const { currentMonth } = this.state;
-    const dateFormat = 'EEEE';
+    const dateFormat = 'EEEEE';
     const days = [];
     const startDate = startOfWeek(currentMonth);
 
@@ -55,7 +85,7 @@ class EventsCalendar extends React.Component {
   }
 
   renderCells() {
-    const { currentMonth, selectedDate } = this.state;
+    const { currentMonth, today, stateDays } = this.state;
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
@@ -68,23 +98,23 @@ class EventsCalendar extends React.Component {
     while (day <= endDate) {
       for (let i = 0; i < 7; i += 1) {
         formattedDate = format(day, dateFormat);
-        const cloneDay = day;
         days.push(
           <div
             className={`col cell ${!isSameMonth(day, monthStart)
               ? 'disabled'
-              : isSameDay(day, selectedDate) ? 'selected' : ''
+              : isSameDay(day, today)
+                ? 'selected'
+                : ''
             }`}
             key={day}
           >
             <span className="number">{formattedDate}</span>
-            <span className="bg">{formattedDate}</span>
           </div>,
         );
         day = addDays(day, 1);
       }
       rows.push(
-        <div className="row" key={day}>
+        <div className="row week" key={day}>
           {days}
         </div>,
       );
@@ -101,19 +131,21 @@ class EventsCalendar extends React.Component {
     return (
       <div>
         <div className="row">
-          <div className="col">
-            <button className="icon" type="button" onClick={this.prevMonth}>
+          <div className="col-1">
+            <button type="button" onClick={this.prevMonth}>
               <i className="fa fa-chevron-left" />
             </button>
           </div>
           <div className="col">
-            <span>
+            <span className="month-year">
               {format(currentMonth, dateFormat)}
             </span>
           </div>
-          <button className="col" type="button" onClick={this.nextMonth}>
-            <i className="fa fa-chevron-right" />
-          </button>
+          <div className="col-1">
+            <button type="button" onClick={this.nextMonth}>
+              <i className="fa fa-chevron-right" />
+            </button>
+          </div>
         </div>
         {this.renderDays()}
         {this.renderCells()}

@@ -6,4 +6,16 @@
   i {
     color: $white;
   }
+
+  .month-year {
+    text-align: center;
+  }
+
+  .row {
+    flex-wrap: nowrap;
+  }
+
+  .disabled {
+    color: $cigi-text-grey;
+  }
 }
