@@ -17,7 +17,7 @@
 
 .publication-book-trailer {
   .publication-book-trailer-embed {
-    margin-top: .5em;
+    margin-top: 0.5em;
 
     iframe {
       width: 100%;
@@ -38,5 +38,17 @@
   p {
     color: $cigi-text-grey;
     margin: 0;
+  }
+}
+
+.embed-issuu {
+  @include media-breakpoint-up(sm) {
+    display: block;
+  }
+  display: none;
+
+  .col {
+    display: flex;
+    justify-content: center;
   }
 }
