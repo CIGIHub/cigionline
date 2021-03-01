@@ -31,7 +31,7 @@
                 </a>
               </li>
             </ul>
-            {% include "includes/topics.html" with topics=self.topics %}
+            {% include "includes/topics.html" with topics=self.topics_sorted %}
             <h1><span>{{ self.title }}</span></h1>
             <h2>{{ self.subtitle|richtext }}</h2>
           </div>

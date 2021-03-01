@@ -23,7 +23,7 @@
           <div class="row">
             <div class="col">
               <div class="hero-content">
-                {% include "includes/topics.html" with topics=self.topics %}
+                {% include "includes/topics.html" with topics=self.topics_sorted %}
                 <div class="platform-governance-series-article-series-social">
                   <a href="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
                     <i class="fab fa-facebook-square fa-lg"></i>
