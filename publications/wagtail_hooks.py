@@ -1,4 +1,3 @@
-from wagtail.core import hooks
 from publications.models import PublicationPage
 from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
 
