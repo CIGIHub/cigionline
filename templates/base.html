@@ -28,6 +28,8 @@
     {% block og_image %}
       <meta name="og:image" content="{{ self.get_site.root_url }}{% static 'assets/CIGI-default-share-image.jpg' %}" />
     {% endblock %}
+    {% block extra_og_meta %}
+    {% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {# Fonts #}
     <link rel="stylesheet" href="https://use.typekit.net/two4qwo.css">
