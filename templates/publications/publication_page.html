@@ -17,12 +17,16 @@
 
   {% include "includes/body.html" with body=self.body %}
 
-  {% if self.embed_issuu %}
-    <section>
+  {% if self.book_excerpt_download %}
+    <section class="book-excerpt-download">
       <div class="container">
         <div class="row">
-          <div class="col-12">
-            {% embed self.embed_issuu max_width=1110 %}
+          <div class="col">
+            <button class="button-action">
+              <a href="{{self.book_excerpt_download.file.url}}">
+                Download Excerpt
+              </a>
+            </button>
           </div>
         </div>
       </div>
@@ -72,6 +76,18 @@
       </div>
     </div>
   {% endif %}
+
+  {% if self.embed_issuu %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          {% embed self.embed_issuu max_width=1110 %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
 
   {% if self.publication_type == "books" and self.embed_youtube %}
     <div class="container">
