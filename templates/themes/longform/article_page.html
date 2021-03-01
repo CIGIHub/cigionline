@@ -13,7 +13,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8 hero-content">
-          {% include "includes/topics.html" with topics=self.topics %}
+          {% include "includes/topics.html" with topics=self.topics_sorted %}
           <h1><span>{{ self.title }}</span></h1>
           <div class="subtitle">
             {{ self.subtitle|richtext }}

@@ -25,7 +25,7 @@
     </div>
     <div class="cyber-series-article-hero-content-container">
       <div class="cyber-series-article-hero-content">
-          {% include "includes/topics.html" with topics=self.topics %}
+          {% include "includes/topics.html" with topics=self.topics_sorted %}
           <h1><span>{{ self.title }}</span></h1>
           {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
           <div class="arrow-animate">

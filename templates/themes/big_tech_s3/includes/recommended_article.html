@@ -3,7 +3,7 @@
 <article class="bt-recommended-article">
   <div class="bt-recommended-content">
     {% if article.topics %}
-      {% include "includes/topics.html" with topics=article.topics %}
+      {% include "includes/topics.html" with topics=article.topics_sorted %}
     {% endif %}
     <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
     {% if article.authors %}

@@ -2,7 +2,7 @@
 
 <article class="feature-content feature-event {% if event.is_past %}past-event{% endif %}">
   <div class="event-content">
-    {% include "includes/topics.html" with topics=event.topics %}
+    {% include "includes/topics.html" with topics=event.topics_sorted %}
     {% include "includes/features/feature_content_title.html" with content=event %}
     <div class="meta">{{ event.publishing_date|date:"M j, Y - g:i A" }}</div>
     {% if event.multimedia_page and event.is_past %}
