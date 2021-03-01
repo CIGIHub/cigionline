@@ -77,18 +77,6 @@
     </div>
   {% endif %}
 
-  {% if self.embed_issuu %}
-  <section class="embed-issuu">
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          {% embed self.embed_issuu max_width=1110 %}
-        </div>
-      </div>
-    </div>
-  </section>
-{% endif %}
-
   {% if self.publication_type == "books" and self.embed_youtube %}
     <div class="container">
       <div class="row justify-content-center">
@@ -102,6 +90,35 @@
         </div>
       </div>
     </div>
+  {% endif %}
+
+  {% if self.editorial_reviews|length > 0 %}
+    <section class="editorial-reviews">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h3>Editorial Reviews</h3>
+            {% for review in self.editorial_reviews %}
+              <div class="editorial-review">
+                {{ review }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.embed_issuu %}
+    <section class="embed-issuu">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            {% embed self.embed_issuu max_width=1110 %}
+          </div>
+        </div>
+      </div>
+    </section>
   {% endif %}
 
   {% if self.publication_series %}
