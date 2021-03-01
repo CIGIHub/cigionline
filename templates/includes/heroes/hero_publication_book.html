@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-7">
-        {% include "includes/topics.html" with topics=self.topics %}
+        {% include "includes/topics.html" with topics=self.topics_sorted %}
         <h1>{{ title }}</h1>
         <h2>{{subtitle|safe}}</h2>
         <div class="meta"><span class="label">Published:</span> {% include "includes/date.html" with date=self.publishing_date %}</div>

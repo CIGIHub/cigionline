@@ -336,6 +336,10 @@ class ContentPage(Page, SearchablePageAbstract):
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
 
     @property
+    def topics_sorted(self):
+        return self.topics.order_by('title')
+
+    @property
     def related_people_ids(self):
         people_ids = []
         for author in self.authors.all():
