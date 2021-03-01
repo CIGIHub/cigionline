@@ -18,10 +18,10 @@
   {% include "includes/body.html" with body=self.body %}
 
   {% if self.embed_issuu %}
-    <section>
+    <section class="embed-issuu">
       <div class="container">
         <div class="row">
-          <div class="col-12">
+          <div class="col">
             {% embed self.embed_issuu max_width=1110 %}
           </div>
         </div>
