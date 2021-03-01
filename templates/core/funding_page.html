@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'fundingPage' 'css' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -7,14 +12,14 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h2>Fiscal 2019 Funding</h2>
+          <h2 class="paragraph-heading">Fiscal 2020 Funding</h2>
           <br>
           <table class="funding">
             <thead>
               <tr>
                 <th width="190" class="no-right-border"></th>
                 <th></th>
-                <th colspan='2' class="center">{{year}}</th>
+                <th colspan='2' class="text-center">2019-20</th>
               </tr>
               <tr>
                 <th width="190">Core Funding Sources</th>
@@ -46,9 +51,7 @@
               <tr class="no-padding">
                 <td>&nbsp;</td>
                 <td align="right">
-                  In
-                  {{year}}
-                  the fund earned:
+                  In 2019-20 the fund earned:
                 </td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -218,25 +221,24 @@
           <p>&nbsp;</p>
           <p>&nbsp;</p>
 
-          <h2>Donations and Grants</h2>
+          <h2 class="paragraph-heading">Donations and Grants</h2>
           <br>
           <table class="donations">
             <thead>
               <tr>
                 <th width="40%" class="no-right-border">&nbsp;</th>
                 <th>&nbsp;</th>
-                <th class="center">%&nbsp;of&nbsp;Total&nbsp;Income</th>
+                <th class="text-center">%&nbsp;of&nbsp;Total&nbsp;Income</th>
               </tr>
             </thead>
             <tbody>
               <tr class="underline">
                 <td class="no-right-border"><strong>SUPPORTERS $50,000 to $200,000</strong></td>
                 <td>&nbsp;</td>
-                <td class="center">0.95%</td>
+                <td class="text-center">0.95%</td>
               </tr>
               <tr>
-                <td>Omidyar Network Services</td>
-                <td>&nbsp;</td>
+                <td colspan="2">Omidyar Network Services</td>
                 <td>&nbsp;</td>
               </tr>
               <tr>
@@ -245,7 +247,7 @@
               <tr class="underline">
                 <td class="no-right-border"><strong>SUPPORTERS under $50,000</strong></td>
                 <td>&nbsp;</td>
-                <td class="center">1.38%</td>
+                <td class="text-center">1.38%</td>
               </tr>
               <tr>
                 <td colspan="2">Canadian School of Public Service</td>
@@ -261,22 +263,21 @@
               </tr>
               <tr class="overline">
                 <td colspan="2"><strong>Total Donations and Grants</strong></td>
-                <td class="center"><strong>2.33%</strong></td>
+                <td class="text-center"><strong>2.33%</strong></td>
               </tr>
             </tbody>
           </table>
 
           <br>
           <br>
-          <h2>In-kind contributions</h2>
+          <h2 class="paragraph-heading">In-kind contributions</h2>
 
-          <p>These contributions include sponsorships in kind from various partners, typically in the form of shared conference, research or travel expenses.</p>
-          <ul>
+          <p class="funding-contributions">These contributions include sponsorships in kind from various partners, typically in the form of shared conference, research or travel expenses.</p>
+          <ul class="funding-contributions-list">
             <li>Balsillie School of International Affairs</li>
             <li>Gateway House</li>
             <li>University of Pennsylvania</li>
           </ul>
-          <p>&nbsp;</p>
           <p>&nbsp;</p>
         </div>
       </div>

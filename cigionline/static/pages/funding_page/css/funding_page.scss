@@ -1,0 +1,125 @@
+@import '../../../css/global/mixins';
+
+.donations,
+.funding {
+  font-family: $primary-font-family;
+  font-size: 0.75em;
+  table-layout: auto;
+  width: 100%;
+
+  th {
+    border-bottom: 1px solid $cigi-dark-grey;
+    border-right: 1px solid $cigi-dark-grey;
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 0 10px;
+
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
+  td {
+    border-right: 1px solid $cigi-dark-grey;
+    padding: 16px 10px;
+    text-align: left;
+
+    &.text-right {
+      text-align: right;
+    }
+
+    &.total {
+      position: relative;
+
+      &::before {
+        background: $cigi-dark-grey;
+        content: '';
+        height: 1px;
+        left: 0;
+        margin: 0 5%;
+        position: absolute;
+        top: 0;
+        width: 90%;
+      }
+    }
+
+    &.final-total {
+      &::before {
+        background: transparent;
+        border-bottom: 1px solid $cigi-dark-grey;
+        border-top: 1px solid $cigi-dark-grey;
+        height: 4px;
+      }
+    }
+
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
+  .no-padding {
+    td {
+      padding: 0 1em;
+
+      &:last-child {
+        padding: 0 3em 0 1em;
+      }
+    }
+  }
+
+  .final-total {
+    td {
+      padding-top: 6px;
+    }
+  }
+
+  .donations {
+    td {
+      padding: 0.5em;
+    }
+
+    .underline {
+      border-bottom: 1px solid $cigi-dark-grey;
+    }
+
+    .overline {
+      border-top: 4px double $cigi-dark-grey;
+    }
+  }
+
+  .small-grey {
+    color: $cigi-dark-grey;
+    font-size: 0.9em;
+  }
+
+  .no-right-border {
+    border-right: 0;
+  }
+}
+
+.donations {
+  td {
+    padding: 0.5em;
+  }
+}
+
+.funding-contributions {
+  font-size: 14px;
+}
+
+.funding-contributions-list {
+  @include media-breakpoint-up(md) {
+    columns: 3;
+  }
+  list-style: none;
+
+  li {
+    @include media-breakpoint-up(md) {
+      display: inline-block;
+      font-size: 14px;
+      width: 100%;
+    }
+    padding: 0.25em 0;
+  }
+}
