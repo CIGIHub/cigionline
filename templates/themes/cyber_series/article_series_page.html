@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="cyber-series-article-series-hero-content">
-      {% include "includes/topics.html" with topics=self.topics %}
+      {% include "includes/topics.html" with topics=self.topics_sorted %}
       <h1><span>{{ self.title }}</span></h1>
       <div class="cyber-series-subtitle">
         {{ self.subtitle|richtext }}
