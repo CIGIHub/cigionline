@@ -14,7 +14,18 @@
 {% block og_type %}
   <meta name="og:type" content="article" />
 {% endblock %}
-
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta name="og:image" content="{{ self.get_site.root_url }}{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" with root_url=self.get_site.root_url %}
+  {% endif %}
+{% endblock %}
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
