@@ -346,12 +346,22 @@ class ContentPage(Page, SearchablePageAbstract):
         return self.topics.order_by('title')
 
     @property
+    def author_ids(self):
+        author_ids = []
+        for block in self.authors:
+            if block.block_type == 'author':
+                author_ids.append(block.value)
+        return author_ids
+
+    @property
     def related_people_ids(self):
         people_ids = []
-        # for author in self.authors.all():
-        #     people_ids.append(author.author.id)
-        # for editor in self.editors.all():
-        #     people_ids.append(editor.editor.id)
+        for author in self.authors:
+            if author.block_type == 'author':
+                people_ids.append(author.value)
+        for editor in self.editors:
+            if editor.block_type == 'editor':
+                people_ids.append(editor.value)
         if hasattr(self.specific, 'cigi_people_mentioned'):
             for block in self.specific.cigi_people_mentioned:
                 if block.block_type == 'cigi_person':
@@ -441,7 +451,7 @@ class ContentPage(Page, SearchablePageAbstract):
     ]
 
     search_fields = [
-        # AuthorFilterField('authors'),
+        index.FilterField('author_ids'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),
