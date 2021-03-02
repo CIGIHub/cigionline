@@ -8,16 +8,7 @@
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics %}
 
-  <section>
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-        <h2 class="paragraph-heading">About the Series</h2>
-          {{ self.subtitle|richtext }}
-        </div>
-      </div>
-    </div>
-  </section>
+  {% include "includes/body.html" with body=self.body heading="About the Series" %}
 
   <section>
     <div class="container">
