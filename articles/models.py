@@ -763,11 +763,10 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = item.value.specific.authors.all()
-            for person in people:
-                if person.author.title not in series_people:
-                    series_authors.append(person)
-                    series_people.add(person.author.title)
+            for block in item.value.specific.authors:
+                if block.block_type == 'author' and block.value.title not in series_people:
+                    series_authors.append(block)
+                    series_people.add(block.value.title)
 
         return series_authors
 
