@@ -1,6 +1,25 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
+{% block meta_description %}
+  {% if self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.subtitle %}
+    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta name="og:type" content="video.other" />
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.publishing_date %}
+    <meta name="video:release_date" content="{{ self.publishing_date|date:'c' }}" />
+  {% endif %}
+{% endblock %}
+
 {% block extra_css %}
   {% render_bundle 'multimediaPage' 'css' %}
 {% endblock %}
