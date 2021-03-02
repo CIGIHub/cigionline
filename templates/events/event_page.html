@@ -2,12 +2,16 @@
 {% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
 
 {% block meta_description %}
-  {% if self.subtitle %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
     <meta name="description" content="{{ self.subtitle|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_description %}
-  {% if self.subtitle %}
+  {% if self.social_description %}
+    <meta name="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
     <meta name="og:description" content="{{ self.subtitle|striptags }}" />
   {% endif %}
 {% endblock %}
