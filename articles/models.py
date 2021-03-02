@@ -722,15 +722,14 @@ class ArticleSeriesPage(
 
         for item in self.series_items:
             if item.block_type == 'series_item':
-                people = item.value.specific.authors.all()
-                for person in people:
-                    if person.author.title not in item_people:
+                for block in item.value.specific.authors:
+                    if block.block_type == 'author' and block.value.title not in item_people:
                         series_contributors.append({
-                            'id': person.author.id,
-                            'title': person.author.title,
-                            'url': person.author.url,
+                            'id': block.value.id,
+                            'title': block.value.title,
+                            'url': block.value.url,
                         })
-                        item_people.add(person.author.title)
+                        item_people.add(block.value.title)
         return series_contributors
 
     @property
