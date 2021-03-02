@@ -1,9 +1,5 @@
 .women-and-trade-series-article-series {
-  @include top-bar(
-    $background-color: transparent,
-    $color: $black,
-    $position: relative,
-  );
+  @include top-bar($background-color: transparent, $color: $black, $position: relative);
   background-color: $women-and-trade-series-background-colour;
 
   .women-and-trade-series-article-series-hero {
@@ -160,7 +156,13 @@
     background-color: $white;
     font-size: 1.06em;
     line-height: 1.42em;
+    margin-bottom: 0;
     padding-bottom: 3em;
+  }
+
+  .in-the-series {
+    background-color: $previous-body-bg;
+    padding-top: 2em;
   }
 
   .contributors {

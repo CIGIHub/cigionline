@@ -12,3 +12,7 @@
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
   {% endif %}
 {% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Innovation series multimedia pages #}
+{% endblock %}
