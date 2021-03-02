@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 {% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
 
+{% block meta_description %}
+  {% if self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.subtitle %}
+    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta name="og:type" content="article" />
+{% endblock %}
+
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}

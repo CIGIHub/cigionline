@@ -3,12 +3,12 @@
 
 {% block meta_description %}
   {% if self.short_description %}
-    <meta name="description" content="{{ self.short_description }}" />
+    <meta name="description" content="{{ self.short_description|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_description %}
   {% if self.short_description %}
-    <meta name="og:description" content="{{ self.short_description }}" />
+    <meta name="og:description" content="{{ self.short_description|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_type %}
