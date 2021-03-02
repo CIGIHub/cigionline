@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
+{% block meta_description %}
+  {% if self.short_bio %}
+    <meta name="description" content="{{ self.short_bio|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.short_bio %}
+    <meta name="og:description" content="{{ self.short_bio|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta name="og:type" content="profile" />
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.first_name %}
+    <meta name="profile:first_name" content="{{ self.first_name }}" />
+  {% endif %}
+  {% if self.last_name %}
+    <meta name="profile:last_name" content="{{ self.last_name }}" />
+  {% endif %}
+{% endblock %}
+
 {% block extra_css %}
   {% render_bundle 'personPage' 'css' %}
 {% endblock %}
