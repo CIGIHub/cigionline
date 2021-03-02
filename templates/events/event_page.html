@@ -70,8 +70,8 @@
 
   {% include "includes/body.html" with body=self.body %}
 
-  {% if self.authors.all|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors.all title_override="Event Speaker"%}
+  {% if self.authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors title_override="Event Speaker"%}
   {% endif %}
 
   {% if self.related_files %}
