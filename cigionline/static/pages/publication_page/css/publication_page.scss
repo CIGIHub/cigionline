@@ -4,6 +4,7 @@
   border-top: 1px solid $cigi-light-grey;
   columns: 2;
   list-style-type: none;
+  margin-bottom: 2em;
   padding-top: 2em;
 
   li {
@@ -26,7 +27,7 @@
 }
 
 .publication-part-of-series {
-  margin-bottom: 3em;
+  margin: 3em 0;
 
   h2 {
     color: $cigi-text-grey;
@@ -50,5 +51,36 @@
   .col {
     display: flex;
     justify-content: center;
+  }
+}
+
+.editorial-reviews {
+  h3 {
+    border-top: 3px solid $black;
+    display: inline-block;
+    font-size: 0.75em;
+    font-weight: 500;
+    line-height: 1.4em;
+    margin-bottom: 2.67em;
+    text-transform: uppercase;
+  }
+
+  .editorial-review {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    padding-bottom: 1em;
+    padding-left: 33px;
+    position: relative;
+
+    &::before {
+      color: $cigi-primary-colour;
+      content: '“';
+      font-family: Georgia, serif;
+      font-size: 80px;
+      left: -7px;
+      position: absolute;
+      top: -32px;
+    }
   }
 }
