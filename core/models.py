@@ -396,7 +396,7 @@ class ContentPage(Page, SearchablePageAbstract):
 
     def author_count(self):
         # @todo test this
-        return self.authors.count() + len(self.external_authors)
+        return len(self.authors)
 
     def recommended_content(self):
         recommended_content = []

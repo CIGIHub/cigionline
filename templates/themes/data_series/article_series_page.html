@@ -25,7 +25,7 @@
         <ul class="contributors">
           {% for item in self.series_contributors_by_article %}
             {% for contributor in item.contributors %}
-              <li>{{ contributor.author.title }}</li>
+              <li>{{ contributor.title }}</li>
             {% endfor %}
           {% endfor %}
         </ul>

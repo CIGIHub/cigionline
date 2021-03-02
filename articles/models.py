@@ -694,19 +694,20 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = item.value.specific.authors.all()
+            people = []
             people_string = ''
+            for block in item.value.specific.authors:
+                if block.block_type == 'author':
+                    people.append(block.value)
+                    person_string = block.value.title
+                    people_string += person_string
 
-            for person in people:
-                person_string = person.author.title
-                people_string += person_string
-
-                # Add each person as well so if there's an article with just
-                # a single author who's already been in another article in
-                # collaboration, then we won't add their name to the list
-                # again.
-                if len(people) > 1:
-                    item_people.add(person_string)
+                    # Add each person as well so if there's an article with just
+                    # a single author who's already been in another article in
+                    # collaboration, then we won't add their name to the list
+                    # again.
+                    if len(people) > 1:
+                        item_people.add(person_string)
 
             if people_string not in item_people:
                 series_contributors.append({'item': item.value.specific, 'contributors': people})
