@@ -12,7 +12,7 @@
     {% include "includes/authors.html" with authors=publication.authors.all external_authors=publication.external_authors %}
     {% include "includes/date.html" with date=publication.publishing_date %}
     {% if publication.pdf_downloads %}
-      <button class="button-action">
+      <button class="button-action button-square">
         <a href="{{ publication.pdf_downloads.0.value.file.url }}">
           <i class="fa fas fa-download"></i>
         </a>

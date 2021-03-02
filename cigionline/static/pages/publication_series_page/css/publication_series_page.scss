@@ -1,1 +1,11 @@
 @import '../../../css/global/mixins';
+
+h2 {
+  &.paragraph-heading {
+    margin-bottom: 2em;
+  }
+}
+
+section {
+  margin: 3em 0;
+}

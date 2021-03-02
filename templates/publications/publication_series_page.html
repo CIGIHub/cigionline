@@ -12,7 +12,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
-        <h3 class="paragraph-heading">About the Series</h3>
+        <h2 class="paragraph-heading">About the Series</h2>
           {{ self.subtitle|richtext }}
         </div>
       </div>
@@ -23,7 +23,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
-          <h3 class="paragraph-heading">In the Series</h3>
+          <h2 class="paragraph-heading">In the Series</h2>
           {% for item in self.series_items %}
             {% include 'includes/publication_teaser.html' with publication=item %}
           {% endfor %}
