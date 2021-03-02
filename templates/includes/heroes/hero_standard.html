@@ -10,9 +10,11 @@
         <h1>{{title}}</h1>
         <h2>{{subtitle|safe}}</h2>
         {% if self.hero_link %}
-          <div class="hero-link">
+          <div class="hero-links">
             {% for block in self.hero_link %}
-              {{ block }}
+              <div class="hero-link">
+                {{ block }}
+              </div>
             {% endfor %}
           </div>
         {% endif %}
