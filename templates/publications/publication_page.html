@@ -88,12 +88,17 @@
     </div>
   {% endif %}
 
-  {% if self.publication_series %}
+  {% if self.publication_series.live %}
     <section class="publication-part-of-series">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
             <h2>Part of Series</h2>
+            <h3>
+              <a href="{{ self.publication_series.url }}">
+                {{ self.publication_series.title }}
+              </a>
+            </h3>
             {{ self.publication_series.specific.subtitle|richtext }}
           </div>
         </div>
