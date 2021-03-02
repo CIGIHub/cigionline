@@ -122,7 +122,7 @@
     </div>
   {% endif %}
 
-  {% if self.publication_type == "books" and self.embed_youtube %}
+  {% if self.publication_type.title == "Books" and self.embed_youtube %}
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8 publication-book-trailer">
