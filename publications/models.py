@@ -219,7 +219,7 @@ class PublicationPage(
         verbose_name='PDF Downloads',
     )
     publication_series = models.ForeignKey(
-        'wagtailcore.Page',
+        'publications.PublicationSeriesPage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
