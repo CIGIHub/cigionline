@@ -360,6 +360,7 @@ class PublicationPage(
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
+            index.FilterField('publication_series'),
             index.FilterField('publication_type'),
             index.FilterField('publishing_date'),
         ]

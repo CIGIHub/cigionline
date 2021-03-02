@@ -4,6 +4,12 @@
 {% block extra_css %}
   {% render_bundle 'publicationSeriesPage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var publicationSeriesId = {{ self.id }};
+  </script>
+  {% render_bundle 'publicationSeriesPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block meta_description %}
   {% if self.subtitle %}
@@ -26,20 +32,16 @@
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics %}
-
   {% include "includes/body.html" with body=self.body heading="About the Series" %}
-
   <section>
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
           <h2 class="paragraph-heading">In the Series</h2>
-          {% for item in self.series_items %}
-            {% include 'includes/publication_teaser.html' with publication=item %}
-          {% endfor %}
+          <div id="publications-list">
+          </div>
         </div>
       </div>
     </div>
   </section>
-
 {% endblock content %}
