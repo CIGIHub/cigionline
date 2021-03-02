@@ -49,6 +49,11 @@ section {
             }
           }
         }
+
+        .topics {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          margin-bottom: 1em;
+        }
       }
 
       aside {

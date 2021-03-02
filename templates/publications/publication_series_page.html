@@ -1,5 +1,35 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'publicationSeriesPage' 'css' %}
+{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics %}
+
+  <section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+        <h3 class="paragraph-heading">About the Series</h3>
+          {{ self.subtitle|richtext }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h3 class="paragraph-heading">In the Series</h3>
+          {% for item in self.series_items %}
+            {% include 'includes/publication_teaser.html' with publication=item %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
 {% endblock content %}

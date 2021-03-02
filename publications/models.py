@@ -418,6 +418,10 @@ class PublicationSeriesPage(
     ContentPage,
     FeatureablePageAbstract,
 ):
+
+    def series_items(self):
+        return PublicationPage.objects.live().public().filter(publication_series=self).order_by('-publishing_date')
+
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
