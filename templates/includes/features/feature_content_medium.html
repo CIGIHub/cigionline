@@ -8,7 +8,7 @@
       {% elif content.image_hero %}
         {% define content.image_hero as feature_image %}
       {% else %}
-        <img src="{% static 'assets/CIGI-default-recommended-thumb.jpg' %}" alt="CIGI Logo">
+        <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
       {% endif %}
       {% if feature_image.file.url|file_extension == '.gif' %}
         <img src="{{feature_image.file.url}}" alt="{{feature_image.title}}" />
