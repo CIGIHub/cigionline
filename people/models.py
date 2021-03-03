@@ -1,7 +1,6 @@
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
-    ContentPage,
     SearchablePageAbstract,
     ThemeablePageAbstract,
 )
