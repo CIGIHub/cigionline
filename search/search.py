@@ -128,7 +128,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.authors:
             filters.append({
                 "terms": {
-                    "core_contentpage__authors_filter": self.authors,
+                    "core_contentpage__author_ids_filter": self.authors,
                 },
             })
         if self.projects:

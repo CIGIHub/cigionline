@@ -28,13 +28,12 @@
         <div class="col col-md-10 col-lg-8 meta">
           <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
           <p>
-            Author{{self.author_count|pluralize}}:
-            {% for item in self.authors.all %}
-              <span class="author"><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
-            {% endfor %}
-            {% for item in self.external_authors %}
-              {% if item.block_type == 'external_person' %}
-                <span class="author">{{ item.value }}</span>
+            Author{{self.authors|length|pluralize}}:
+            {% for item in self.authors %}
+              {% if item.block_type == 'author' %}
+                <span class="author"><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+              {% elif item.block_type == 'external_author' %}
+                  <span class="author">{{ item.value }}</span>
               {% endif %}
             {% endfor %}
           </p>
@@ -85,12 +84,11 @@
                     <article>
                       <h4><a href="{{ block.value.url }}">{{ block.value.title }}</a></h4>
                       <p class="authors">
-                        Author{{ block.value.specific.author_count|pluralize }}:
-                        {% for item in block.value.specific.authors.all %}
-                          <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
-                        {% endfor %}
-                        {% for item in block.value.specific.external_authors %}
-                          {% if item.block_type == 'external_person' %}
+                        Author{{ block.value.specific.authors|length|pluralize }}:
+                        {% for item in block.value.specific.authors %}
+                          {% if item.block_type == 'author' %}
+                            <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+                          {% elif item.block_type == 'external_author' %}
                             <span>{{ item.value }}</span>
                           {% endif %}
                         {% endfor %}

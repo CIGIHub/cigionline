@@ -34,10 +34,8 @@ class PublicationListPage(BasicPageAbstract, Page):
 
     def featured_publications_list(self):
         featured_publications = []
-        print('featured_publications')
         for item in self.featured_publications.prefetch_related(
             'publication_page',
-            'publication_page__authors__author',
             'publication_page__topics',
         ).all()[:4]:
             featured_publications.append(item.publication_page)
@@ -247,15 +245,15 @@ class PublicationPage(
         """
 
         # @todo test
-        person_list = list(self.authors.all()) + list(self.editors.all())
-        del person_list[3:]
-        result = []
-        for person in person_list:
-            if person.author:
-                result.append(person.author)
-            elif person.editor:
-                result.append(person.editor)
-        return result
+        person_list = []
+        for block in self.authors:
+            if block.block_type == 'author' and len(person_list) < 3:
+                person_list.append(block.value)
+        if len(person_list) < 3:
+            for block in self.editors:
+                if block.block_type == 'editor' and len(person_list) < 3:
+                    person_list.append(block.value)
+        return person_list
 
     def featured_person_list_has_more(self):
         """
@@ -264,7 +262,7 @@ class PublicationPage(
         """
 
         # @todo test
-        return (self.authors.count() + self.editors.count()) > 3
+        return (len(self.authors) + len(self.editors)) > 3
 
     def has_book_metadata(self):
         return (

@@ -27,7 +27,7 @@
       <div class="cyber-series-article-hero-content">
           {% include "includes/topics.html" with topics=self.topics_sorted %}
           <h1><span>{{ self.title }}</span></h1>
-          {% include "includes/authors.html" with authors=self.authors.all external_authors=self.external_authors %}
+          {% include "includes/authors.html" with authors=self.authors %}
           <div class="arrow-animate">
             <div class="arrow point1"></div>
             <div class="arrow point2"></div>
@@ -96,8 +96,8 @@
 
       {% include 'includes/disclaimer.html' %}
 
-      {% if self.is_opinion and self.authors.all|length > 0 %}
-        {% include "includes/about_the_author.html" with authors=self.authors.all %}
+      {% if self.is_opinion and self.authors|length > 0 %}
+        {% include "includes/about_the_author.html" with authors=self.authors %}
       {% endif %}
   </section>
 {% endblock %}
