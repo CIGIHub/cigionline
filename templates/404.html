@@ -3,6 +3,14 @@
 {% block body_class %}template-404{% endblock %}
 
 {% block content %}
-  <h1>Page not found</h1>
-  <h2>Sorry, this page could not be found.</h2>
+  {% include "includes/heroes/hero_plain.html" with title="Page Not Found" %}
+  <section class="body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2>Sorry, this page could not be found.</h2>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
