@@ -41,9 +41,11 @@ function MultimediaListing(props) {
           <li key={`${row.id}-author-more`}>And more</li>
         )}
       </ul>
-      <p className="multimedia-card-date">
-        {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
-      </p>
+      {row.publishing_date && (
+        <p className="multimedia-card-date">
+          {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
+        </p>
+      )}
     </div>
   );
 }
