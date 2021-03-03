@@ -132,8 +132,8 @@
 
     {% include 'includes/disclaimer.html' %}
 
-    {% if self.is_opinion and self.authors.all|length > 0 %}
-      {% include "includes/about_the_author.html" with authors=self.authors.all %}
+    {% if self.is_opinion and self.authors|length > 0 %}
+      {% include "includes/about_the_author.html" with authors=self.authors %}
     {% endif %}
 
   {% endblock %}

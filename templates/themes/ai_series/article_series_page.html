@@ -34,7 +34,7 @@
                   <ul class="authors">
                     {% for contributor in item.contributors %}
                       <li>
-                        {{ contributor.author.title }}
+                        {{ contributor.title }}
                       </li>
                     {% endfor %}
                   </ul>
@@ -74,8 +74,12 @@
                     </a>
                   {% endif %}
                   <ul class="authors">
-                    {% for item in block.value.specific.authors.all %}
-                      <li><a href="{{ item.author.url }}">{{ item.author.title }}</a></li>
+                    {% for item in block.value.specific.authors %}
+                      {% if item.block_type == 'author' %}
+                        <li><a href="{% pageurl item.value %}">{{ item.value.title }}</a></li>
+                      {% elif item.block_type == 'external_author' %}
+                        <li>{{ item.value }}</li>
+                      {% endif %}
                     {% endfor %}
                   </ul>
                 </div>

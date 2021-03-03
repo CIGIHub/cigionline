@@ -1,7 +1,6 @@
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
-    ContentPage,
     SearchablePageAbstract,
     ThemeablePageAbstract,
 )
@@ -30,7 +29,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 import random
 
-from .search_expert import expert_latest_in_the_news_search
+from .search_expert import expert_latest_activity_search, expert_latest_in_the_news_search
 
 
 class PeoplePage(Page):
@@ -230,7 +229,7 @@ class PersonPage(
 
     @property
     def has_authored_content(self):
-        return self.content_pages_as_author.count() > 0
+        return expert_latest_activity_search(expert_id=self.id).count() > 0
 
     @property
     def first_name_lowercase(self):
@@ -261,13 +260,9 @@ class PersonPage(
     @property
     def latest_activity(self):
         # @todo test
-        content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
-        content_pages_as_editor = self.content_pages_as_editor.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
-        latest_activity = content_pages_as_author.union(content_pages_as_editor).order_by('-content_page__publishing_date').first()
-        if latest_activity:
-            content_page = ContentPage.objects.get(pk=latest_activity.get('content_page_id'))
-            if content_page:
-                return content_page.specific
+        latest_activity_query = expert_latest_activity_search(expert_id=self.id)[:1]
+        if latest_activity_query.count() > 0:
+            return latest_activity_query[0]
         return False
 
     @property
