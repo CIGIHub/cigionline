@@ -106,13 +106,11 @@ class HomePage(Page):
 
     def featured_publications(self):
         return PublicationPage.objects.prefetch_related(
-            # 'authors__author',
             'topics',
         ).live().public().order_by('-publishing_date')[:4]
 
     def featured_multimedia_large(self):
         first_featured_multimedia = self.featured_multimedia.prefetch_related(
-            # 'featured_multimedia__authors__author',
             'featured_multimedia__topics',
         ).first()
         if first_featured_multimedia:
@@ -122,7 +120,6 @@ class HomePage(Page):
     def featured_multimedia_small(self):
         featured_multimedia_small = []
         for item in self.featured_multimedia.prefetch_related(
-            # 'featured_multimedia__authors__author',
             'featured_multimedia__topics',
         ).all()[1:]:
             featured_multimedia_small.append(item.featured_multimedia)

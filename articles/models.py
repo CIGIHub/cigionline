@@ -38,42 +38,36 @@ class ArticleLandingPage(Page):
     def featured_xlarge(self):
         return self.featured_articles.prefetch_related(
             'article_page',
-            # 'article_page__authors__author',
             'article_page__topics',
         ).all()[0:1]
 
     def featured_large_1(self):
         return self.featured_articles.prefetch_related(
             'article_page',
-            # 'article_page__authors__author',
             'article_page__topics',
         ).all()[1:2]
 
     def featured_small_1(self):
         return self.featured_articles.prefetch_related(
             'article_page',
-            # 'article_page__authors__author',
             'article_page__topics',
         ).all()[2:7]
 
     def featured_medium_1(self):
         return self.featured_articles.prefetch_related(
             'article_page',
-            # 'article_page__authors__author',
             'article_page__topics',
         ).all()[7:9]
 
     def featured_small_2(self):
         return self.featured_articles.prefetch_related(
             'article_page',
-            # 'article_page__authors__author',
             'article_page__topics',
         ).all()[10:15]
 
     def featured_large_2(self):
         return self.featured_articles.prefetch_related(
             'article_page',
-            # 'article_page__authors__author',
             'article_page__topics',
         ).all()[9:10]
 

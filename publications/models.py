@@ -34,10 +34,8 @@ class PublicationListPage(BasicPageAbstract, Page):
 
     def featured_publications_list(self):
         featured_publications = []
-        print('featured_publications')
         for item in self.featured_publications.prefetch_related(
             'publication_page',
-            # 'publication_page__authors__author',
             'publication_page__topics',
         ).all()[:4]:
             featured_publications.append(item.publication_page)
