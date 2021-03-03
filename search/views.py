@@ -24,6 +24,7 @@ def search_api(request):
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
         projects=request.GET.getlist('project', None),
+        publicationseriesid=request.GET.get('publicationseriesid', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
         searchtext=searchtext,
         sort=request.GET.get('sort', None),
