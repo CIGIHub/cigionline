@@ -230,7 +230,7 @@ class PersonPage(
 
     @property
     def has_authored_content(self):
-        return expert_latest_activity_search(expert_id=self.id).count > 0
+        return expert_latest_activity_search(expert_id=self.id).count() > 0
 
     @property
     def first_name_lowercase(self):
