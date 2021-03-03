@@ -10,16 +10,18 @@
       <div class="col col-lg-10 mm-hero-content">
         {% include "includes/topics.html" with topics=self.topics_sorted %}
         <h1>{{ self.title }}</h1>
-        <p class="mm-meta">
-          Speaker{{ self.authors|length|pluralize }}:
-          {% for item in self.authors %}
-            {% if item.block_type == 'author' %}
-              <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
-            {% elif item.block_type == 'external_author' %}
-              <span>{{ item.value }}</span>
-            {% endif %}
-          {% endfor %}
-        </p>
+        {% if self.authors|length > 0 %}
+          <p class="mm-meta">
+            Speaker{{ self.authors|length|pluralize }}:
+            {% for item in self.authors %}
+              {% if item.block_type == 'author' %}
+                <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+              {% elif item.block_type == 'external_author' %}
+                <span>{{ item.value }}</span>
+              {% endif %}
+            {% endfor %}
+          </p>
+        {% endif %}
         {% if self.multimedia_series %}
           <p class="mm-meta">
             Series:
