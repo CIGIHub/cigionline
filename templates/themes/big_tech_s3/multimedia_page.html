@@ -117,15 +117,17 @@
               <h2>Opinion</h2>
               <article>
                 <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
-                {% for item in self.companion_essay.specific.authors.all %}
-                  <a href="{{ item.author.url }}" class="author">
-                    <div class="author-image-wrapper">
-                      {% image item.author.image_square fill-100x100 %}
-                    </div>
-                    <div>
-                      {{ item.author.byline|richtext }}
-                    </div>
-                  </a>
+                {% for item in self.companion_essay.specific.authors %}
+                  {% if item.block_type == 'author' %}
+                    <a href="{% pageurl item.value %}" class="author">
+                      <div class="author-image-wrapper">
+                        {% image item.value.image_square fill-100x100 %}
+                      </div>
+                      <div>
+                        {{ item.value.byline|richtext }}
+                      </div>
+                    </a>
+                  {% endif %}
                 {% endfor %}
               </article>
             </div>

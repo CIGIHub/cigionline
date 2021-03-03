@@ -170,7 +170,7 @@
                       <p class="meta">
                         {{ article.publishing_date|date:"F j, Y" }}
                       </p>
-                      {% include "includes/authors.html" with authors=article.authors.all external_authors=article.external_authors %}
+                      {% include "includes/authors.html" with authors=article.authors %}
                     </article>
                   {% endfor %}
                 </div>

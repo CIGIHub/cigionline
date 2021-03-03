@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all registration_url=self.registration_url %}
+  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors registration_url=self.registration_url %}
 
   {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
     <section class="event-multimedia-embed-section">
@@ -70,8 +70,8 @@
 
   {% include "includes/body.html" with body=self.body %}
 
-  {% if self.authors.all|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors.all title_override="Event Speaker"%}
+  {% if self.authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors title_override="Event Speaker"%}
   {% endif %}
 
   {% if self.related_files %}

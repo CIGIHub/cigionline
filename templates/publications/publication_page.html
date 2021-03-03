@@ -184,11 +184,11 @@
     </section>
   {% endif %}
 
-  {% if self.authors.all|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors.all %}
+  {% if self.authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors %}
   {% endif %}
-  {% if self.editors.all|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.editors.all title_override="About the Editor" %}
+  {% if self.editors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.editors title_override="About the Editor" %}
   {% endif %}
 
   {% if self.recommended_content %}

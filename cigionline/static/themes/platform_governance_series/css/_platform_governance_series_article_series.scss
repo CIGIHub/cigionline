@@ -306,6 +306,10 @@
           font-size: 0.7em;
           margin: 0;
           text-transform: uppercase;
+
+          span {
+            @include comma-separated;
+          }
         }
 
         .series-article-image {

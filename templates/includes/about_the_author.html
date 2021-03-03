@@ -6,21 +6,24 @@
       <div class="col col-md-10 col-lg-8">
         <h3>{% if title_override %}{{ title_override }}{% else %}About the Author{% endif %}{{authors|length|pluralize}}</h3>
         {% for item in authors %}
-          {% if item.author %}
-            {% define item.author as person %}
-          {% elif item.editor %}
-            {% define item.editor as person %}
-          {% endif %}
-          <div class="author-block">
-            <div class="name">
-              <a href="{{ person.url }}">
-                {{ person.title }}
-              </a>
+          {% if item.block_type == 'author' or item.block_type == 'editor' %}
+            <div class="author-block">
+              <div class="name">
+                <a href="{% pageurl item.value %}">
+                  {{ item.value.title }}
+                </a>
+              </div>
+              {% if item.value.short_bio|length > 1 and not item.value.archive %}
+                {{ item.value.short_bio|richtext }}
+              {% endif %}
             </div>
-            {% if person.short_bio|length > 1 and not person.archive %}
-              {{ person.short_bio|richtext }}
-            {% endif %}
-          </div>
+          {% elif item.block_type == 'external_author' or item.block_type == 'external_editor' %}
+            <div class="author-block">
+              <div class="name">
+                {{ item.value }}
+              </div>
+            </div>
+          {% endif %}
         {% endfor %}
       </div>
     </div>
