@@ -1,9 +1,9 @@
-{% load wagtailimages_tags core_tags %}
+{% load wagtailimages_tags core_tags static %}
 
 <article class="bt-recommended-article">
   <div class="bt-recommended-content">
     {% if article.topics %}
-      {% include "includes/topics.html" with topics=article.topics %}
+      {% include "includes/topics.html" with topics=article.topics_sorted %}
     {% endif %}
     <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
     {% if article.authors %}
@@ -14,15 +14,19 @@
     {% endif %}
   </div>
   <div class="bt-recommended-image">
-    {% if article|page_type|in_list:'multimedia,opinion' and article.image_hero %}
-      <a href="{{ article.url }}">
+    <a href="{{ article.url }}">
+      {% if article.image_feature %}
+        {% image article.image_feature width-300 %}
+      {% elif article.image_hero %}
         {% image article.image_hero width-300 %}
-        {% if article|page_type == 'multimedia' %}
-          <div class="play-icon">
-            <i class="fas fa-play"></i>
-          </div>
-        {% endif %}
-      </a>
-    {% endif %}
+      {% else %}
+        <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
+      {% endif %}
+      {% if article|page_type == 'multimedia' %}
+        <div class="play-icon">
+          <i class="fas fa-play"></i>
+        </div>
+      {% endif %}
+    </a>
   </div>
 </article>
