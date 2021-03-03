@@ -8,10 +8,10 @@
         <h1>{{ title }}</h1>
         <h2>{{subtitle|safe}}</h2>
         <div class="meta"><span class="label">Published:</span> {% include "includes/date.html" with date=self.publishing_date %}</div>
-        {% if editors.all or self.external_editors %}
-          <div class="meta"><span class="label">Edited By:</span>  {% include "includes/editors.html" with editors=self.editors.all external_editors=self.external_editors %}</div>
-        {% elif authors.all or self.external_authors %}
-          <div class="meta"><span class="label">Author{{ self.author_count|pluralize }}:</span>  {% include "includes/authors.html" with authors=self.authors %}</div>
+        {% if editors|length > 0 %}
+          <div class="meta"><span class="label">Edited By:</span>  {% include "includes/authors.html" with authors=self.editors %}</div>
+        {% elif authors|length > 0 %}
+          <div class="meta"><span class="label">Author{{ self.authors|length|pluralize }}:</span>  {% include "includes/authors.html" with authors=self.authors %}</div>
         {% endif %}
         {% include "includes/social_links.html" with title=self.title %}
         {% if purchase_links %}
