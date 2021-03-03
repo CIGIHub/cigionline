@@ -50,6 +50,13 @@
     text-transform: uppercase;
   }
 
+  h3 {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
+    font-size: 1.3em;
+    line-height: 1.45em;
+    margin: 0.25em 0;
+  }
+
   p {
     color: $cigi-text-grey;
     margin: 0;

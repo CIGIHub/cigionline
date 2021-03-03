@@ -42,6 +42,7 @@ const config = {
     projectPage: './cigionline/static/pages/project_page/index.js',
     publicationListPage: './cigionline/static/pages/publication_list_page/index.js',
     publicationPage: './cigionline/static/pages/publication_page/index.js',
+    publicationSeriesPage: './cigionline/static/pages/publication_series_page/index.js',
     publicationTypePage: './cigionline/static/pages/publication_type_page/index.js',
     searchPage: './cigionline/static/pages/search_page/index.js',
     researchLandingPage: './cigionline/static/pages/research_landing_page/index.js',

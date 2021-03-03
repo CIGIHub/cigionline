@@ -27,8 +27,12 @@
             <p class="series-contributors">
               {% for block in self.series_items %}
                 {% if block.block_type == 'series_item' %}
-                  {% for item in block.value.specific.authors.all %}
-                    <span>{{ item.author.title }}</span>
+                  {% for item in block.value.specific.authors %}
+                    {% if item.block_type == 'author' %}
+                      <span>{{ item.value.title }}</span>
+                    {% elif item.block_type == 'external_author' %}
+                      <span>{{ item.value }}</span>
+                    {% endif %}
                   {% endfor %}
                 {% endif %}
               {% endfor %}
@@ -62,11 +66,10 @@
                     <div class="innovation-series-article-series-featured-item" style="background-image: url('{{ featured_item_banner.url }}');">
                       <div class="innovation-series-article-series-featured-item-content">
                         <p class="featured-item-authors">
-                          {% for item in featured_item.value.specific.authors.all %}
-                            <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
-                          {% endfor %}
-                          {% for item in featured_item.value.specific.external_authors %}
-                            {% if item.block_type == 'external_person' %}
+                          {% for item in featured_item.value.specific.authors %}
+                            {% if item.block_type == 'author' %}
+                              <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+                            {% elif item.block_type == 'external_author' %}
                               <span>{{ item.value }}</span>
                             {% endif %}
                           {% endfor %}
@@ -126,12 +129,11 @@
                   {% endif %}
                   {% if block.value.specific.author_count %}
                     <p class="authors">
-                      {% if block.value.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ block.value.specific.author_count|pluralize }}:
-                      {% for item in block.value.specific.authors.all %}
-                        <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
-                      {% endfor %}
-                      {% for item in block.value.specific.external_authors %}
-                        {% if item.block_type == 'external_person' %}
+                      {% if block.value.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ block.value.specific.authors|length|pluralize }}:
+                      {% for item in block.value.specific.authors %}
+                        {% if item.block_type == 'author' %}
+                          <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+                        {% elif item.block_type == 'external_author' %}
                           <span>{{ item.value }}</span>
                         {% endif %}
                       {% endfor %}

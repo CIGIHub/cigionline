@@ -24,6 +24,7 @@ def search_api(request):
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
         projects=request.GET.getlist('project', None),
+        publicationseriesid=request.GET.get('publicationseriesid', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
         searchtext=searchtext,
         sort=request.GET.get('sort', None),
@@ -56,11 +57,14 @@ def search_api(request):
         for field in fields:
             try:
                 if field == 'authors':
-                    item['authors'] = [{
-                        'id': author.author.id,
-                        'title': author.author.title,
-                        'url': author.author.url,
-                    } for author in page.specific.authors.all()]
+                    item['authors'] = []
+                    for block in page.specific.authors:
+                        if block.block_type == 'author':
+                            item['authors'].append({
+                                'id': block.value.id,
+                                'title': block.value.title,
+                                'url': block.value.url,
+                            })
                 elif field == 'cigi_people_mentioned':
                     item['cigi_people_mentioned'] = [{
                         'id': person.value.id,
