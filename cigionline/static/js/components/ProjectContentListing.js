@@ -42,7 +42,7 @@ function ProjectContentListing(props) {
               {row.title}
             </a>
             {row.publishing_date && (
-              <div className="search-result-meta">
+              <div className="table-infos-meta">
                 {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
               </div>
             )}
