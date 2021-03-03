@@ -1,3 +1,5 @@
+{% load wagtailcore_tags %}
+
 <div class="indigenous-lands-series-in-the-series">
   <h3>In the Series</h3>
   <div class="indigenous-lands-series-in-the-series-items">
@@ -10,9 +12,13 @@
             </a>
           </h4>
           <p class="authors meta">
-            Author{{ block.value.specific.author_count|pluralize }}:
-            {% for item in block.value.specific.authors.all %}
-              <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
+            Author{{ block.value.specific.authors|length|pluralize }}:
+            {% for item in block.value.specific.authors %}
+              {% if item.block_type == 'author' %}
+                <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+              {% elif item.block_type == 'external_author' %}
+                <span>{{ item.value }}</span>
+              {% endif %}
             {% endfor %}
           </p>
         </article>

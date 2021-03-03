@@ -1,6 +1,9 @@
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from search.filters import AuthorFilterField, ParentalManyToManyFilterField
+from search.filters import (
+    # AuthorFilterField,
+    ParentalManyToManyFilterField,
+)
 from streams.blocks import (
     AccordionBlock,
     ParagraphBlock,
@@ -18,6 +21,7 @@ from streams.blocks import (
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
     ChartBlock,
+    PersonBlock,
     PosterBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
@@ -319,15 +323,17 @@ class ArchiveablePageAbstract(models.Model):
 
 
 class ContentPage(Page, SearchablePageAbstract):
-    external_authors = StreamField(
+    authors = StreamField(
         [
-            ('external_person', ExternalPersonBlock()),
+            ('author', PersonBlock(page_type='people.PersonPage')),
+            ('external_author', ExternalPersonBlock()),
         ],
         blank=True,
     )
-    external_editors = StreamField(
+    editors = StreamField(
         [
-            ('external_person', ExternalPersonBlock()),
+            ('editor', PersonBlock(page_type='people.PersonPage')),
+            ('external_editor', ExternalPersonBlock()),
         ],
         blank=True,
     )
@@ -340,12 +346,22 @@ class ContentPage(Page, SearchablePageAbstract):
         return self.topics.order_by('title')
 
     @property
+    def author_ids(self):
+        author_ids = []
+        for block in self.authors:
+            if block.block_type == 'author':
+                author_ids.append(block.value)
+        return author_ids
+
+    @property
     def related_people_ids(self):
         people_ids = []
-        for author in self.authors.all():
-            people_ids.append(author.author.id)
-        for editor in self.editors.all():
-            people_ids.append(editor.editor.id)
+        for author in self.authors:
+            if author.block_type == 'author':
+                people_ids.append(author.value)
+        for editor in self.editors:
+            if editor.block_type == 'editor':
+                people_ids.append(editor.value)
         if hasattr(self.specific, 'cigi_people_mentioned'):
             for block in self.specific.cigi_people_mentioned:
                 if block.block_type == 'cigi_person':
@@ -380,7 +396,7 @@ class ContentPage(Page, SearchablePageAbstract):
 
     def author_count(self):
         # @todo test this
-        return self.authors.count() + len(self.external_authors)
+        return len(self.authors)
 
     def recommended_content(self):
         recommended_content = []
@@ -409,16 +425,14 @@ class ContentPage(Page, SearchablePageAbstract):
 
     authors_panel = MultiFieldPanel(
         [
-            InlinePanel('authors'),
-            StreamFieldPanel('external_authors'),
+            StreamFieldPanel('authors'),
         ],
         heading='Authors',
         classname='collapsible collapsed',
     )
     editors_panel = MultiFieldPanel(
         [
-            InlinePanel('editors'),
-            StreamFieldPanel('external_editors'),
+            StreamFieldPanel('editors'),
         ],
         heading='Editors',
         classname='collapsible collapsed',
@@ -437,7 +451,7 @@ class ContentPage(Page, SearchablePageAbstract):
     ]
 
     search_fields = [
-        AuthorFilterField('authors'),
+        index.FilterField('author_ids'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),
@@ -455,50 +469,6 @@ class ContentPage(Page, SearchablePageAbstract):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
-
-
-class ContentPageAuthor(Orderable):
-    content_page = ParentalKey(
-        'core.ContentPage',
-        related_name='authors',
-    )
-    author = models.ForeignKey(
-        'people.PersonPage',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='content_pages_as_author',
-        verbose_name='Author',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'author',
-            ['people.PersonPage'],
-        ),
-    ]
-
-
-class ContentPageEditor(Orderable):
-    content_page = ParentalKey(
-        'core.ContentPage',
-        related_name='editors',
-    )
-    editor = models.ForeignKey(
-        'people.PersonPage',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='content_pages_as_editor',
-        verbose_name='Editor',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'editor',
-            ['people.PersonPage'],
-        ),
-    ]
 
 
 class ContentPageRecommendedContent(Orderable):
