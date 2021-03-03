@@ -38,7 +38,7 @@
     {% if content|page_type == 'opinion-series' %}
       {% include 'includes/features/feature_content_people.html' with authors=content.series_authors %}
     {% else %}
-      {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+      {% include 'includes/features/feature_content_people.html' with authors=content.authors %}
     {% endif %}
     <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
   </div>

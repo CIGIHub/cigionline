@@ -29,6 +29,11 @@ section {
     .topics {
       margin: 1em 0;
     }
+
+    .publication-series {
+      @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+      color: $cigi-text-grey;
+    }
   }
 }
 
