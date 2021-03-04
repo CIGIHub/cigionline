@@ -93,6 +93,10 @@ img {
       border: 0;
       height: 100%;
       padding: 0;
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
     .input-group-append {
