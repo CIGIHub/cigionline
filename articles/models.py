@@ -74,7 +74,7 @@ class ArticleLandingPage(Page):
     def all_article_series(self):
         return ArticleSeriesPage.objects.prefetch_related(
             'topics',
-        ).live().public().order_by('-publishing_date')
+        ).live().public().order_by('-publishing_date')[:10]
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
