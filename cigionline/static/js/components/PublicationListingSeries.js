@@ -9,7 +9,7 @@ function PublicationListingSeries(props) {
 
   /* eslint-disable react/no-danger */
   return (
-    <article className="publication-listing-series">
+    <article className="publication-listing-series simple-listing">
       <ul className="topics custom-text-list feature-content-topic-list">
         {row.topics.map((topic) => (
           <li key={`${row.id}-topic-${topic.id}`}>
@@ -23,7 +23,7 @@ function PublicationListingSeries(props) {
       {row.short_description && (
         <p className="short-description" dangerouslySetInnerHTML={{ __html: row.short_description }} />
       )}
-      <p className="authors">
+      <p className="article-authors">
         {row.authors.map((author) => (
           <a key={`${row.id}-author-${author.id}`} href={author.url}>
             {author.title}
