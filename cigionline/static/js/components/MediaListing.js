@@ -32,7 +32,7 @@ function MediaListing(props) {
           Expert
         </div>
         <div className="table-content">
-          <ul className="custom-text-list">
+          <ul className="custom-text-list author-list">
             {row.cigi_people_mentioned.map((person) => (
               <li key={`${row.id}-person-${person.id}`}>
                 <a href={person.url} className="table-content-link table-content-link-black">
