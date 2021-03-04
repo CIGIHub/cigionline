@@ -305,22 +305,33 @@ header {
 
       .input-group-search {
         border-bottom: 3px solid $white;
-        height: calc(1.9em + 0.25em);
+        height: 2.5em;
 
         .form-control {
+          background-color: $black;
           color: $white;
           font-size: 1.8em;
           height: 100%;
+          margin-right: 1em;
 
           &::-webkit-input-placeholder,
           &::placeholder {
             color: $white;
           }
+
+          &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px $black inset;
+            -webkit-text-fill-color: $white;
+          }
         }
 
-        .btn-search {
-          font-size: 1.0625em;
-          height: 100%;
+        .input-group-append {
+          margin-left: 0.25em;
+
+          .btn-search {
+            font-size: 1.0625em;
+            height: 100%;
+          }
         }
       }
     }
