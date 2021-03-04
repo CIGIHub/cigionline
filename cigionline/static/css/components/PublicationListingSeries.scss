@@ -3,6 +3,7 @@
 article {
   &.publication-listing-series {
     border-bottom: 1px solid $cigi-light-grey;
+    margin-bottom: 0;
     padding: 2em 0;
 
     &:first-of-type {
