@@ -1,11 +1,11 @@
-{% load wagtailimages_tags core_tags static %}
+{% load wagtailcore_tags wagtailimages_tags core_tags static %}
 
 <article class="recommended-article">
   <div class="recommended-content">
     {% if article.topics %}
       {% include "includes/topics.html" with topics=article.topics %}
     {% endif %}
-    <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+    <h3><a href="{% pageurl article %}">{{ article.title }}</a></h3>
     {% if article.authors %}
       {% include "includes/authors.html" with authors=article.authors %}
     {% endif %}
@@ -17,7 +17,7 @@
     {% endif %}
   </div>
   <div class="recommended-image">
-    <a href="{{ article.url }}">
+    <a href="{% pageurl article %}">
       {% if article.image_feature %}
         {% image article.image_feature width-300 %}
       {% elif article.image_hero %}
