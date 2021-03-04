@@ -1,11 +1,11 @@
-{% load wagtailimages_tags core_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags static %}
 
 <article class="recommended-article">
   <div class="recommended-content">
     {% if article.topics %}
       {% include "includes/topics.html" with topics=article.topics %}
     {% endif %}
-    <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+    <h3><a href="{% pageurl article %}">{{ article.title }}</a></h3>
     {% if article.authors %}
       {% include "includes/authors.html" with authors=article.authors %}
     {% endif %}
@@ -17,19 +17,19 @@
     {% endif %}
   </div>
   <div class="recommended-image">
-    {% if article|page_type|in_list:'multimedia,opinion,publication' and article.image_hero or article.image_feature %}
-      <a href="{{ article.url }}">
-        {% if article.image_feature %}
-          {% image article.image_feature width-300 %}
-        {% else %}
-          {% image article.image_hero width-300 %}
-        {% endif %}
-        {% if article|page_type == 'multimedia' %}
-          <div class="play-icon">
-            <i class="fas fa-play"></i>
-          </div>
-        {% endif %}
-      </a>
-    {% endif %}
+    <a href="{% pageurl article %}">
+      {% if article.image_feature %}
+        {% image article.image_feature width-300 %}
+      {% elif article.image_hero %}
+        {% image article.image_hero width-300 %}
+      {% else %}
+        <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
+      {% endif %}
+      {% if article|page_type == 'multimedia' %}
+        <div class="play-icon">
+          <i class="fas fa-play"></i>
+        </div>
+      {% endif %}
+    </a>
   </div>
 </article>
