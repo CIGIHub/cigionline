@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags core_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags static %}
 
 <article class="feature-content feature-content-xlarge{% if dark_mode %} dark-mode{% endif %}">
   <a href="{% pageurl content %}" class="feature-content-image">
@@ -7,6 +7,8 @@
         {% define content.image_feature as feature_image %}
       {% elif content.image_hero %}
         {% define content.image_hero as feature_image %}
+      {% else %}
+        <img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="CIGI Logo">
       {% endif %}
       {% if feature_image.file.url|file_extension == '.gif' %}
         <img src="{{feature_image.file.url}}" alt="{{feature_image.title}}" />
