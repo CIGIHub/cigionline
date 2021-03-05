@@ -7,7 +7,7 @@ class NewsletterPageModelAdmin(ModelAdmin):
     model = NewsletterPage
     menu_label = 'Newsletters'
     menu_icon = 'site'
-    menu_order = 300
+    menu_order = 200
     list_display = ('title', 'live', 'html_file', 'latest_revision_created_at')
     list_filter = ('live', 'latest_revision_created_at')
     search_fields = ('title')
