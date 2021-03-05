@@ -5,6 +5,13 @@
   margin-top: 3em;
   position: relative;
 
+  .search-table-scroll {
+    height: 0;
+    position: absolute;
+    top: -5em;
+    width: 100%;
+  }
+
   .search-table-count {
     font-size: 0.9em;
   }
