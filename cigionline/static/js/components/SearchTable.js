@@ -8,7 +8,7 @@ import '../../css/components/SearchTable.scss';
 class SearchTable extends React.Component {
   constructor(props) {
     super(props);
-    this.searchResultsRef = React.createRef();
+    this.searchTableRef = React.createRef();
     const { filterTypes } = props;
     this.state = {
       currentPage: 1,
@@ -139,7 +139,7 @@ class SearchTable extends React.Component {
       loading: true,
     }));
     if (!loadingInitial) {
-      this.searchResultsRef.current.scrollIntoView({ behavior: 'smooth' });
+      this.searchTableRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
@@ -344,6 +344,7 @@ class SearchTable extends React.Component {
 
     return (
       <div className="search-table">
+        <div ref={this.searchTableRef} className="search-table-scroll" />
         {showSearch && (
           <div className="search-bar">
             <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
@@ -440,13 +441,13 @@ class SearchTable extends React.Component {
                 )}
                 {blockListing
                   ? (
-                    <div ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                    <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
                       {rows.map((row) => (
                         <RowComponent key={row.id} row={row} />
                       ))}
                     </div>
                   ) : (
-                    <table ref={this.searchResultsRef} className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                    <table className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
                       <thead>
                         <tr>
                           {tableColumns.map((tableColumn) => (
@@ -465,7 +466,7 @@ class SearchTable extends React.Component {
                   )}
               </>
             ) : (
-              <p ref={this.searchResultsRef}>
+              <p>
                 Your query returned no results. Please check your spelling and try again.
               </p>
             )}
