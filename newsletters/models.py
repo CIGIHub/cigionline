@@ -2,6 +2,7 @@ from core.models import (
     BasicPageAbstract,
 )
 from django.db import models
+from streams.blocks import (AdvertisementBlock, ContentBlock, FeaturedContentBlock, SocialBlock, TextBlock)
 from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
 from wagtail.core.blocks import (
     BooleanBlock,
@@ -55,66 +56,11 @@ class NewsletterPage(Page):
 
     body = StreamField(
         [
-            ('advertisement_block', StructBlock([
-                ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('url', URLBlock(required=True)),
-                ('image', ImageChooserBlock(required=False)),
-                ('cta', ChoiceBlock(
-                    choices=CallToActionChoices.choices,
-                    verbose_name='CTA',
-                    required=True,
-                )),
-            ])),
-            ('content_block', StructBlock([
-                ('content', PageChooserBlock(required=False)),
-                ('url', URLBlock(required=False)),
-                ('title_override', CharBlock(required=False)),
-                ('text_override', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('cta', ChoiceBlock(
-                    choices=CallToActionChoices.choices,
-                    verbose_name='CTA',
-                    required=True,
-                )),
-                ('line_separator_above', BooleanBlock(
-                    verbose_name='Add line separator above block',
-                )),
-            ])),
-            ('featured_content_block', StructBlock([
-                ('content', PageChooserBlock(required=False)),
-                ('url', URLBlock(required=False)),
-                ('title_override', CharBlock(required=False)),
-                ('text_override', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('image_override', ImageChooserBlock(required=False)),
-                ('cta', ChoiceBlock(
-                    choices=CallToActionChoices.choices,
-                    verbose_name='CTA',
-                    required=True,
-                )),
-            ])),
-            ('social_block', StructBlock([
-                ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-            ])),
-            ('text_block', StructBlock([
-                ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-            ])),
+            ('advertisement_block', AdvertisementBlock()),
+            ('content_block', ContentBlock()),
+            ('featured_content_block', FeaturedContentBlock()),
+            ('social_block', SocialBlock()),
+            ('text_block', TextBlock()),
         ],
         blank=True,
     )

@@ -1,3 +1,4 @@
+from django.db import models
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
 from wagtail.core import blocks
@@ -618,3 +619,90 @@ class TweetBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'social'
         label = 'Tweet'
         template = 'streams/tweet_block.html'
+
+
+class CallToActionChoices(models.TextChoices):
+    EXPLORE = ('explore', 'Explore')
+    FOLLOW = ('follow', 'Follow')
+    LEARN_MORE = ('learn_more', 'Learn More')
+    LISTEN = ('listen', 'Listen')
+    NO_CTA = ('no_cta', 'No CTA')
+    PDF = ('pdf', 'PDF')
+    READ = ('read', 'Read')
+    RSVP = ('rsvp', 'RSVP')
+    SHARE_FACEBOOK = ('share_facebook', 'Share (Facebook)')
+    SHARE_LINKEDIN = ('share_linkedin', 'Share (LinkedIn)')
+    SHARE_TWITTER = ('share_twitter', 'Share (Twitter)')
+    SUBSCRIBE = ('subscribe', 'Subscribe')
+    WATCH = ('watch', 'Watch')
+
+
+class AdvertisementBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    url = blocks.URLBlock(required=True)
+    image = ImageChooserBlock(required=False)
+    cta = blocks.ChoiceBlock(
+        choices=CallToActionChoices.choices,
+        verbose_name='CTA',
+        required=True,
+    )
+
+    class Meta:
+        icon = 'image'
+        label = 'Advertisement'
+        template = 'streams/newsletter/advertisement_block.html'
+
+
+class ContentBlock(blocks.StructBlock):
+    content = blocks.PageChooserBlock(required=False)
+    url = blocks.URLBlock(required=False)
+    title_override = blocks.CharBlock(required=False)
+    text_override = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    cta = blocks.ChoiceBlock(
+        choices=CallToActionChoices.choices,
+        verbose_name='CTA',
+        required=True,
+    )
+    line_separator_above = blocks.BooleanBlock(
+        verbose_name='Add line separator above block',
+        required=False,
+    )
+
+
+class FeaturedContentBlock(blocks.StructBlock):
+    content = blocks.PageChooserBlock(required=False)
+    url = blocks.URLBlock(required=False)
+    title_override = blocks.CharBlock(required=False)
+    text_override = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    image_override = ImageChooserBlock(required=False)
+    cta = blocks.ChoiceBlock(
+        choices=CallToActionChoices.choices,
+        verbose_name='CTA',
+        required=True,
+    )
+
+
+class SocialBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+
+
+class TextBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
