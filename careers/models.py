@@ -5,6 +5,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
+from django.template.defaultfilters import date
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
@@ -57,6 +58,12 @@ class JobPostingPage(
         null=False,
         features=['bold', 'italic', 'link'],
     )
+
+    @property
+    def closing_date_text(self):
+        if self.closing_date:
+            return 'Closing Date: %s' % date(self.closing_date, 'l F j, Y')
+        return ''
 
     content_panels = [
         MultiFieldPanel(
