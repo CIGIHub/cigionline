@@ -24,6 +24,10 @@ class Menu(index.Indexed, ClusterableModel):
         ),
     ]
 
+    @classmethod
+    def get_indexed_objects(cls):
+        return cls.objects.none()
+
     def __str__(self):
         return self.name
 
