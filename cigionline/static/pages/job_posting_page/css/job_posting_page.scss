@@ -1,0 +1,14 @@
+@import '../../../css/global/mixins';
+
+.job-posting-page {
+  .hero {
+    .hero-container {
+      .hero-main {
+        h2 {
+          color: $white;
+          font-size: 1.125em;
+        }
+      }
+    }
+  }
+}
