@@ -621,23 +621,47 @@ class TweetBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/tweet_block.html'
 
 
-class CallToActionChoices(models.TextChoices):
-    EXPLORE = ('explore', 'Explore')
-    FOLLOW = ('follow', 'Follow')
-    LEARN_MORE = ('learn_more', 'Learn More')
-    LISTEN = ('listen', 'Listen')
-    NO_CTA = ('no_cta', 'No CTA')
-    PDF = ('pdf', 'PDF')
-    READ = ('read', 'Read')
-    RSVP = ('rsvp', 'RSVP')
-    SHARE_FACEBOOK = ('share_facebook', 'Share (Facebook)')
-    SHARE_LINKEDIN = ('share_linkedin', 'Share (LinkedIn)')
-    SHARE_TWITTER = ('share_twitter', 'Share (Twitter)')
-    SUBSCRIBE = ('subscribe', 'Subscribe')
-    WATCH = ('watch', 'Watch')
+class NewsletterBlock(blocks.StructBlock):
+    class CallToActionChoices(models.TextChoices):
+        EXPLORE = ('explore', 'Explore')
+        FOLLOW = ('follow', 'Follow')
+        LEARN_MORE = ('learn_more', 'Learn More')
+        LISTEN = ('listen', 'Listen')
+        NO_CTA = ('no_cta', 'No CTA')
+        PDF = ('pdf', 'PDF')
+        READ = ('read', 'Read')
+        RSVP = ('rsvp', 'RSVP')
+        SHARE_FACEBOOK = ('share_facebook', 'Share (Facebook)')
+        SHARE_LINKEDIN = ('share_linkedin', 'Share (LinkedIn)')
+        SHARE_TWITTER = ('share_twitter', 'Share (Twitter)')
+        SUBSCRIBE = ('subscribe', 'Subscribe')
+        WATCH = ('watch', 'Watch')
+
+    def cta_image_link(self, cta):
+        cta_image_links = {
+            'watch': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/14d48b17-21b0-449a-81dd-3476baa65712.png',
+            'read': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/27c0957b-671e-4a91-b4a4-dc43c63446e1.png',
+            'pdf': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/caa024dc-e155-4c1f-a28b-2228770a99e2.png',
+            'share_facebook': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/25daee19-d6c6-45ac-afd7-e168e3d410d3.png',
+            'share_twitter': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/9f2bf138-03ac-45b7-b4db-7d27e663f15b.png',
+            'share_linkedin': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/c7585d80-fbcd-43f6-996f-de088d02ca20.png',
+            'rsvp': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/44282420-4212-477f-b678-5783c82dc51c.png',
+            'listen': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/cff5d5c0-f14f-4c58-86b6-1d20c77dc09e.png',
+            'explore': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4b5ad389-bfb3-4819-8732-3eaf95e4965e.png',
+            'subscribe': '',
+            'learn_more': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4b5ad389-bfb3-4819-8732-3eaf95e4965e.png',
+            'follow': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4ef4b224-1de1-4d41-8e8f-ca42068378d4.png',
+        }
+
+        return cta_image_links[cta]
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        context['cta_image_link'] = self.cta_image_link(value['cta'])
+        return context
 
 
-class AdvertisementBlock(blocks.StructBlock):
+class AdvertisementBlock(NewsletterBlock):
     title = blocks.CharBlock(required=False)
     text = blocks.RichTextBlock(
         features=['bold', 'italic', 'link'],
@@ -646,7 +670,7 @@ class AdvertisementBlock(blocks.StructBlock):
     url = blocks.URLBlock(required=True)
     image = ImageChooserBlock(required=False)
     cta = blocks.ChoiceBlock(
-        choices=CallToActionChoices.choices,
+        choices=NewsletterBlock.CallToActionChoices.choices,
         verbose_name='CTA',
         required=True,
     )
@@ -657,7 +681,7 @@ class AdvertisementBlock(blocks.StructBlock):
         template = 'streams/newsletter/advertisement_block.html'
 
 
-class ContentBlock(blocks.StructBlock):
+class ContentBlock(NewsletterBlock):
     content = blocks.PageChooserBlock(required=False)
     url = blocks.URLBlock(required=False)
     title_override = blocks.CharBlock(required=False)
@@ -666,7 +690,7 @@ class ContentBlock(blocks.StructBlock):
         required=False,
     )
     cta = blocks.ChoiceBlock(
-        choices=CallToActionChoices.choices,
+        choices=NewsletterBlock.CallToActionChoices.choices,
         verbose_name='CTA',
         required=True,
     )
@@ -676,7 +700,7 @@ class ContentBlock(blocks.StructBlock):
     )
 
 
-class FeaturedContentBlock(blocks.StructBlock):
+class FeaturedContentBlock(NewsletterBlock):
     content = blocks.PageChooserBlock(required=False)
     url = blocks.URLBlock(required=False)
     title_override = blocks.CharBlock(required=False)
@@ -686,7 +710,7 @@ class FeaturedContentBlock(blocks.StructBlock):
     )
     image_override = ImageChooserBlock(required=False)
     cta = blocks.ChoiceBlock(
-        choices=CallToActionChoices.choices,
+        choices=NewsletterBlock.CallToActionChoices.choices,
         verbose_name='CTA',
         required=True,
     )
