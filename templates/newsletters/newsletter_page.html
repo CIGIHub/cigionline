@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'newsletterPage' 'css' %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title %}
   {% include "./newsletter_html.html" %}

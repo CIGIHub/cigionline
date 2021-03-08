@@ -676,7 +676,7 @@ class NewsletterBlock(blocks.StructBlock):
         context = super().get_context(value, parent_context=parent_context)
         if value['cta'] != 'no_cta':
             context['cta_image_link'] = self.cta_image_link(value.get('cta'))
-            context['cta_text'] = self.cta_text(value.get('cta'))
+            context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         context['url'] = value.get('url')
         context['text'] = value.get('text')
