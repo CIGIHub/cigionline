@@ -655,9 +655,28 @@ class NewsletterBlock(blocks.StructBlock):
 
         return cta_image_links[cta]
 
+    def cta_text(self, cta):
+        cta_texts = {
+            'explore': 'Explore',
+            'follow': 'Follow',
+            'learn_more': 'Learn More',
+            'listen': 'Listen',
+            'pdf': 'PDF',
+            'read': 'Read',
+            'rsvp': 'RSVP',
+            'share_facebook': 'Share (Facebook)',
+            'share_linkedin': 'Share (LinkedIn)',
+            'share_twitter': 'Share (Twitter)',
+            'subscribe': 'Subscribe',
+            'watch': 'Watch',
+        }
+        return cta_texts[cta]
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        context['cta_image_link'] = self.cta_image_link(value['cta'])
+        if value['cta'] != 'no_cta':
+            context['cta_image_link'] = self.cta_image_link(value['cta'])
+            context['cta_text'] = self.cta_text(value['cta'])
         return context
 
 
