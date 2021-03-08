@@ -677,6 +677,23 @@ class NewsletterBlock(blocks.StructBlock):
         if value['cta'] != 'no_cta':
             context['cta_image_link'] = self.cta_image_link(value['cta'])
             context['cta_text'] = self.cta_text(value['cta'])
+        
+        if 'content' in value:
+          if 'title_override' in value and value['title_override']:
+              context['title'] = value['title_override']
+          else:
+              context['title'] = value['content'].title
+
+          if 'text_override' in value and value['text_override']:
+              context['text'] = value['text_override']
+          else:
+              context['text'] = value['content'].specific.short_description
+          
+          if 'url' in value and value['url']:
+              context['url'] = value['url']
+          else:
+              context['url'] = f'https://cigionline.org{value["content"].url}'
+        
         return context
 
 
@@ -717,6 +734,11 @@ class ContentBlock(NewsletterBlock):
         verbose_name='Add line separator above block',
         required=False,
     )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Content'
+        template = 'streams/newsletter/content_block.html'
 
 
 class FeaturedContentBlock(NewsletterBlock):

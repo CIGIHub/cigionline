@@ -1,63 +1,63 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-{% if self.image %}
+{% if value.line_separator_above %}
   <!--[if mso | IE]>
-      <table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600">
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-    <![endif]-->
-  <div style="margin:0px auto;max-width:600px;" class="section-ad">
-    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
-      class="section-ad">
+    <table
+        align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600"
+    >
+      <tr>
+        <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div style="margin:0px auto;max-width:600px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
       <tbody>
         <tr>
-          <td style="direction:ltr;font-size:0px;padding:20px 0;padding-bottom:0;text-align:center;">
+          <td style="direction:ltr;font-size:0px;padding:0;text-align:center;">
             <!--[if mso | IE]>
-              <table role="presentation" border="0" cellpadding="0" cellspacing="0">                 
-                <tr>
-                  <td class="" style="vertical-align:top;width:600px;">
-              <![endif]-->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0">       
+              <tr>
+                <td
+                    class="" style="vertical-align:top;width:600px;"
+                >
+            <![endif]-->
             <div class="mj-column-per-100 outlook-group-fix"
               style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
               <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;"
                 width="100%">
                 <tr>
-                  <td align="center" style="font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break-word;">
-                    <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                      style="border-collapse:collapse;border-spacing:0px;">
-                      <tbody>
+                  <td style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:0;word-break:break-word;">
+                    <p style="border-top:solid 1px #d8d8d8;font-size:1;margin:0px auto;width:100%;"></p>
+                    <!--[if mso | IE]>
+                      <table
+                          align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #d8d8d8;font-size:1;margin:0px auto;width:550px;" role="presentation" width="550px"
+                      >
                         <tr>
-                          <td style="width:550px;">
-                            <a href="{{ self.url }}" target="_blank">
-                              {% image self.image fill-600x238 as image %}
-                              <img alt="{{ self.image.title }}" height="auto"
-                                src="{{ request.scheme }}://{{ request.get_host }}{{ image.file.url }}"
-                                style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
-                                width="550" />
-                            </a>
+                          <td style="height:0;line-height:0;">
+                            &nbsp;
                           </td>
                         </tr>
-                      </tbody>
-                    </table>
+                      </table>
+                    <![endif]-->
                   </td>
                 </tr>
               </table>
             </div>
             <!--[if mso | IE]>
-                    </td>                 
-                  </tr>						                         
-                </table>
-              <![endif]-->
+                  </td>
+                </tr>
+              </table>
+            <![endif]-->
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
   <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-    <![endif]-->
+        </td>
+      </tr>
+    </table>
+  <![endif]-->
 {% endif %}
 
 <!--[if mso | IE]>
@@ -65,16 +65,15 @@
     <tr>
       <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
 <![endif]-->
-<div style="margin:0px auto;max-width:600px;" class="section-ad">
-  <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;"
-    class="section-ad">
+<div style="margin:0px auto;max-width:600px;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
     <tbody>
       <tr>
         <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
           <!--[if mso | IE]>
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0">           
-              <tr>
-                <td class="" style="vertical-align:middle;width:450px;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+             <tr>
+              <td class="" style="vertical-align:middle;width:450px;">
           <![endif]-->
           <div class="mj-column-per-75 outlook-group-fix"
             style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
@@ -84,7 +83,9 @@
                 <td align="left" style="font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break-word;">
                   <div
                     style="font-family:futura-pt, Arial, sans-serif;font-size:21px;font-style:normal;font-weight:400;line-height:21px;text-align:left;color:#000000;">
-                    <a href="{{ self.url }}" style="color: #000000; text-decoration: none;">{{ self.title }}</a>
+                    <a href="{{ url }}" style="color: #000000; text-decoration: none;">
+                      {{ title }}
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -92,13 +93,14 @@
                 <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                   <div
                     style="font-family:futura-pt, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;line-height:21px;text-align:left;color:#696969;">
-                    {{ self.text }}</div>
+                    {{ text }}
+                  </div>
                 </td>
               </tr>
             </table>
           </div>
           <!--[if mso | IE]>
-            </td>         
+              </td>
             <td class="" style="vertical-align:middle;width:150px;">
           <![endif]-->
           <div class="mj-column-per-25 outlook-group-fix"
@@ -115,7 +117,7 @@
                       <td align="center" bgcolor="transparent" role="presentation"
                         style="border:1px solid #e71b3e;border-radius:2px;cursor:auto;font-style:normal;mso-padding-alt:8px 16px;background:transparent;"
                         valign="middle">
-                        <a href="{{ self.url }}"
+                        <a href="{{ url }}"
                           style="display:inline-block;background:transparent;color:#e71b3e;font-family:futura-pt, Arial, sans-serif;font-size:10px;font-style:normal;font-weight:400;line-height:1;margin:0;text-decoration:none;text-transform:none;padding:8px 12px;mso-padding-alt:0px;border-radius:2px;"
                           target="_blank">
                           {% if cta_image_link %}<img src="{{ cta_image_link }}" width="13" height="13"
@@ -131,16 +133,16 @@
           </div>
           <!--[if mso | IE]>
               </td>
-            </tr>           
+            </tr>
           </table>
-        <![endif]-->
+          <![endif]-->
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 <!--[if mso | IE]>
-      </td>
-    </tr>
-  </table>
+    </td>
+  </tr>
+</table>
 <![endif]-->
