@@ -675,30 +675,24 @@ class NewsletterBlock(blocks.StructBlock):
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         if value['cta'] != 'no_cta':
-            context['cta_image_link'] = self.cta_image_link(value['cta'])
-            context['cta_text'] = self.cta_text(value['cta'])
+            context['cta_image_link'] = self.cta_image_link(value.get('cta'))
+            context['cta_text'] = self.cta_text(value.get('cta'))
 
-        if 'content' in value:
-            if 'title_override' in value and value['title_override']:
-                context['title'] = value['title_override']
-            else:
-                context['title'] = value['content'].title
+        context['url'] = value.get('url')
+        context['text'] = value.get('text')
 
-            if 'text_override' in value and value['text_override']:
-                context['text'] = value['text_override']
-            else:
-                context['text'] = value['content'].specific.short_description
+        if value.get('image'):
+            context['image_url'] = f'https://cigionline.org{value.get("image").get_rendition("fill-600x238").url}'
 
-            if 'url' in value and value['url']:
-                context['url'] = value['url']
-            else:
-                context['url'] = f'https://cigionline.org{value["content"].url}'
-            
-            if 'image_override' in value and value['image_override']:
-                context['image_url'] = f'https://cigionline.org{value["image_override"].get_rendition("fill-600x238").url}'
-            else:
-                context['image_url'] = f'https://cigionline.org{value["content"].specific.image_hero.get_rendition("fill-600x238").url}'
+        if value.get('content'):
+            context['title'] = value.get('title_override') if value.get('title_override') else value.get('content').title
+            context['text'] = value.get('text_override') if value.get('text_override') else value.get('content').specific.short_description
+            context['image_url'] = f'https://cigionline.org{value.get("image_override").get_rendition("fill-600x238").url}' \
+                if value.get('image_override') \
+                else f'https://cigionline.org{value.get("content").specific.image_hero.get_rendition("fill-600x238").url}'
 
+            if not value.get('url'):
+                context['url'] = f'https://cigionline.org{value.get("content").url}'
         return context
 
 
@@ -763,7 +757,7 @@ class FeaturedContentBlock(NewsletterBlock):
 
     class Meta:
         icon = 'doc-full'
-        label = 'Content'
+        label = 'Featured Content'
         template = 'streams/newsletter/featured_content_block.html'
 
 
@@ -774,6 +768,11 @@ class SocialBlock(blocks.StructBlock):
         required=False,
     )
 
+    class Meta:
+        icon = 'group'
+        label = 'Social'
+        template = 'streams/newsletter/social_block.html'
+
 
 class TextBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
@@ -781,3 +780,8 @@ class TextBlock(blocks.StructBlock):
         features=['bold', 'italic', 'link'],
         required=False,
     )
+
+    class Meta:
+        icon = 'groudoc-full'
+        label = 'Text'
+        template = 'streams/newsletter/text_block.html'
