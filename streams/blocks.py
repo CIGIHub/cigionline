@@ -677,23 +677,28 @@ class NewsletterBlock(blocks.StructBlock):
         if value['cta'] != 'no_cta':
             context['cta_image_link'] = self.cta_image_link(value['cta'])
             context['cta_text'] = self.cta_text(value['cta'])
-        
-        if 'content' in value:
-          if 'title_override' in value and value['title_override']:
-              context['title'] = value['title_override']
-          else:
-              context['title'] = value['content'].title
 
-          if 'text_override' in value and value['text_override']:
-              context['text'] = value['text_override']
-          else:
-              context['text'] = value['content'].specific.short_description
-          
-          if 'url' in value and value['url']:
-              context['url'] = value['url']
-          else:
-              context['url'] = f'https://cigionline.org{value["content"].url}'
-        
+        if 'content' in value:
+            if 'title_override' in value and value['title_override']:
+                context['title'] = value['title_override']
+            else:
+                context['title'] = value['content'].title
+
+            if 'text_override' in value and value['text_override']:
+                context['text'] = value['text_override']
+            else:
+                context['text'] = value['content'].specific.short_description
+
+            if 'url' in value and value['url']:
+                context['url'] = value['url']
+            else:
+                context['url'] = f'https://cigionline.org{value["content"].url}'
+            
+            if 'image_override' in value and value['image_override']:
+                context['image_url'] = f'https://cigionline.org{value["image_override"].get_rendition("fill-600x238").url}'
+            else:
+                context['image_url'] = f'https://cigionline.org{value["content"].specific.image_hero.get_rendition("fill-600x238").url}'
+
         return context
 
 
@@ -755,6 +760,11 @@ class FeaturedContentBlock(NewsletterBlock):
         verbose_name='CTA',
         required=True,
     )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Content'
+        template = 'streams/newsletter/featured_content_block.html'
 
 
 class SocialBlock(blocks.StructBlock):
