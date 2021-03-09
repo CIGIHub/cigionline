@@ -21,8 +21,12 @@
               {{ item.short_description|richtext }}
               <h4>CONTRIBUTORS</h4>
               <ul class="contributors">
-                {% for contributor in item.series_authors %}
-                  <li><a href="{% pageurl contributor.author %}">{{ contributor.author.title }}</a></li>
+                {% for block in item.series_authors %}
+                  {% if block.block_type == 'author' %}
+                    <li><a href="{% pageurl block.value %}">{{ block.value.title }}</a></li>
+                  {% elif block.block_type == 'external_author' %}
+                    <li>{{ block.value }}</li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </div>

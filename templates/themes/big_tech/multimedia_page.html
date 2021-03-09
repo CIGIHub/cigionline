@@ -2,6 +2,37 @@
 
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
+{% block meta_description %}
+  {% if self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.subtitle %}
+    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta name="og:type" content="article" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta name="og:image" content="{{ self.get_site.root_url }}{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" with root_url=self.get_site.root_url %}
+  {% endif %}
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.publishing_date %}
+    <meta name="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
+  {% endif %}
+{% endblock %}
+
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
 {% endblock %}
@@ -93,8 +124,10 @@
                 <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
                 {{ self.companion_essay.specific.short_description|richtext }}
                 <div class="meta">{{ self.publishing_date|date:"F j, Y" }}</div>
-                {% for item in self.companion_essay.specific.authors.all %}
-                  <a href="{{ item.author.url }}" class="author meta">{{ item.author.title }}</a>
+                {% for item in self.companion_essay.specific.authors %}
+                  {% if item.block_type == 'author' %}
+                    <a href="{% pageurl item.value %}" class="author meta">{{ item.value.title }}</a>
+                  {% endif %}
                 {% endfor %}
               </article>
             </div>

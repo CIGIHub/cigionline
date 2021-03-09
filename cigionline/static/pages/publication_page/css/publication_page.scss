@@ -4,6 +4,7 @@
   border-top: 1px solid $cigi-light-grey;
   columns: 2;
   list-style-type: none;
+  margin-bottom: 2em;
   padding-top: 2em;
 
   li {
@@ -18,21 +19,42 @@
 .publication-book-trailer {
   .publication-book-trailer-embed {
     margin-top: 0.5em;
+    position: relative;
+    width: 100%;
+
+    &::after {
+      content: '';
+      display: block;
+      padding-bottom: 56.25%;
+    }
 
     iframe {
+      height: 100%;
+      left: 0;
+      margin: 0;
+      max-width: 100%;
+      position: absolute;
+      top: 0;
       width: 100%;
     }
   }
 }
 
 .publication-part-of-series {
-  margin-bottom: 3em;
+  margin: 3em 0;
 
   h2 {
     color: $cigi-text-grey;
     font-size: 0.75em;
     margin-bottom: 0.25em;
     text-transform: uppercase;
+  }
+
+  h3 {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
+    font-size: 1.3em;
+    line-height: 1.45em;
+    margin: 0.25em 0;
   }
 
   p {
@@ -50,5 +72,36 @@
   .col {
     display: flex;
     justify-content: center;
+  }
+}
+
+.editorial-reviews {
+  h3 {
+    border-top: 3px solid $black;
+    display: inline-block;
+    font-size: 0.75em;
+    font-weight: 500;
+    line-height: 1.4em;
+    margin-bottom: 2.67em;
+    text-transform: uppercase;
+  }
+
+  .editorial-review {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    padding-bottom: 1em;
+    padding-left: 33px;
+    position: relative;
+
+    &::before {
+      color: $cigi-primary-colour;
+      content: '“';
+      font-family: Georgia, serif;
+      font-size: 80px;
+      left: -7px;
+      position: absolute;
+      top: -32px;
+    }
   }
 }

@@ -1,5 +1,13 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'jobPostingPage' 'css' %}
+{% endblock %}
+
+{% block body_class %}job-posting-page{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.closing_date_text %}
+  {% include "includes/body.html" with body=self.description %}
 {% endblock content %}

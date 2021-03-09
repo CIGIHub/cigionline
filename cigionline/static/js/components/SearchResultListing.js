@@ -71,8 +71,8 @@ function SearchResultListing(props) {
         )}
         {row.highlights && (
           <p className="search-result-highlight">
-            {row.highlights.map((highlight) => (
-              <span dangerouslySetInnerHTML={{ __html: highlight }} />
+            {row.highlights.map((highlight, index) => (
+              <span key={`${row.id}-highlight-${index}`} dangerouslySetInnerHTML={{ __html: highlight }} />
             ))}
           </p>
         )}

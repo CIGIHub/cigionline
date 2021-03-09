@@ -112,6 +112,11 @@ LOGGING = {
         }
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
         'testlogger': {
             'handlers': ['console'],
             'level': 'INFO',

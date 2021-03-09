@@ -56,7 +56,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid
+        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -70,6 +70,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.searchtext = searchtext
         self.articletypeid = None
         self.publicationtypeid = None
+        self.publicationseriesid = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -85,6 +86,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.articletypeid = articletypeid
         if publicationtypeid is not None:
             self.publicationtypeid = publicationtypeid
+        if publicationseriesid is not None:
+            self.publicationseriesid = publicationseriesid
 
     @property
     def queryset(self):
@@ -94,8 +97,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.searchtext:
             must = {
                 "multi_match": {
-                    "fields": ["*"],
-                    "operator": "and",
+                    "fields": ["title", "*__body"],
                     "query": self.searchtext,
                 },
             }
@@ -128,7 +130,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.authors:
             filters.append({
                 "terms": {
-                    "core_contentpage__authors_filter": self.authors,
+                    "core_contentpage__author_ids_filter": self.authors,
                 },
             })
         if self.projects:
@@ -155,6 +157,12 @@ class CIGIOnlineSearchQueryCompiler:
                     "publications_publicationpage__publication_type_id_filter": self.publicationtypeid,
                 },
             })
+        if self.publicationseriesid:
+            filters.append({
+                "term": {
+                    "publications_publicationpage__publication_series_id_filter": self.publicationseriesid,
+                },
+            })
 
         return {
             "bool": {
@@ -174,8 +182,8 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None):
+def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid)
+        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid)
     )

@@ -104,6 +104,10 @@ table {
 
         .custom-text-list {
           margin-bottom: 0;
+
+          &.author-list {
+            color: $cigi-text-grey;
+          }
         }
 
         .table-content-link {
