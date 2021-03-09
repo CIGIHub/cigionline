@@ -5,7 +5,6 @@ from wagtail.core import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
-import datetime
 
 
 class ThemeableBlock:
@@ -666,9 +665,9 @@ class NewsletterBlock(blocks.StructBlock):
             'pdf': 'PDF',
             'read': 'Read',
             'rsvp': 'RSVP',
-            'share_facebook': 'Share (Facebook)',
-            'share_linkedin': 'Share (LinkedIn)',
-            'share_twitter': 'Share (Twitter)',
+            'share_facebook': 'Share',
+            'share_linkedin': 'Share',
+            'share_twitter': 'Share',
             'subscribe': 'Subscribe',
             'watch': 'Watch',
         }
@@ -680,30 +679,31 @@ class NewsletterBlock(blocks.StructBlock):
         context['url'] = value.get('url')
         context['text'] = value.get('text')
 
-        if value['cta'] != 'no_cta':
+        if value.get('cta') != 'no_cta':
             context['cta_image_link'] = self.cta_image_link(value.get('cta'))
             context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         if value.get('image'):
-            context['image_url'] = f'https://cigionline.org{value.get("image").get_rendition("fill-600x238").url}'
+            context['image_url'] = f'https://www.cigionline.org{value.get("image").get_rendition("fill-600x238").url}'
 
         content_page = value.get('content')
         if content_page:
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
             context['text'] = value.get('text_override') if value.get('text_override') else content_page.specific.short_description
-            context['image_url'] = f'https://cigionline.org{value.get("image_override").get_rendition("fill-600x238").url}' \
+            context['image_url'] = f'https://www.cigionline.org{value.get("image_override").get_rendition("fill-600x238").url}' \
                 if value.get('image_override') \
-                else f'https://cigionline.org{value.get("content").specific.image_hero.get_rendition("fill-600x238").url}'
+                else f'https://www.cigionline.org{content_page.specific.image_hero.get_rendition("fill-600x238").url}'
+            context['image_alt'] = content_page.specific.image_hero.title
 
             if not value.get('url'):
-                context['url'] = f'https://cigionline.org{value.get("content").url}'
+                context['url'] = f'https://www.cigionline.org{content_page.url}'
 
             if content_page.specific.contenttype == 'Event':
-                event_time = content_page.specific.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m')
+                event_time = content_page.specific.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
                 event_location = f' – {content_page.specific.location_city}' if content_page.specific.location_city else ''
                 event_country = f', {content_page.specific.location_country}' if content_page.specific.location_country else ''
                 context['text'].source = context['text'].source.replace('<p>', f'<p><b>{event_time}{event_location}{event_country}:</b> ', 1)
-                print(event_time)
+
         return context
 
 
