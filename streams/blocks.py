@@ -794,6 +794,6 @@ class TextBlock(blocks.StructBlock):
     )
 
     class Meta:
-        icon = 'groudoc-full'
+        icon = 'doc-full'
         label = 'Text'
         template = 'streams/newsletter/text_block.html'
