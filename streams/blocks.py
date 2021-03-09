@@ -5,6 +5,7 @@ from wagtail.core import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
+import datetime
 
 
 class ThemeableBlock:
@@ -673,8 +674,8 @@ class NewsletterBlock(blocks.StructBlock):
         }
         return cta_texts[cta]
 
-    def get_context(self, value):
-        context = super(NewsletterBlock, self).get_context(value)
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
 
         context['url'] = value.get('url')
         context['text'] = value.get('text')
@@ -686,15 +687,23 @@ class NewsletterBlock(blocks.StructBlock):
         if value.get('image'):
             context['image_url'] = f'https://cigionline.org{value.get("image").get_rendition("fill-600x238").url}'
 
-        if value.get('content'):
-            context['title'] = value.get('title_override') if value.get('title_override') else value.get('content').title
-            context['text'] = value.get('text_override') if value.get('text_override') else value.get('content').specific.short_description
+        content_page = value.get('content')
+        if content_page:
+            context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
+            context['text'] = value.get('text_override') if value.get('text_override') else content_page.specific.short_description
             context['image_url'] = f'https://cigionline.org{value.get("image_override").get_rendition("fill-600x238").url}' \
                 if value.get('image_override') \
                 else f'https://cigionline.org{value.get("content").specific.image_hero.get_rendition("fill-600x238").url}'
 
             if not value.get('url'):
                 context['url'] = f'https://cigionline.org{value.get("content").url}'
+
+            if content_page.specific.contenttype == 'Event':
+                event_time = content_page.specific.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m')
+                event_location = f' – {content_page.specific.location_city}' if content_page.specific.location_city else ''
+                event_country = f', {content_page.specific.location_country}' if content_page.specific.location_country else ''
+                context['text'].source = context['text'].source.replace('<p>', f'<p><b>{event_time}{event_location}{event_country}:</b> ', 1)
+                print(event_time)
         return context
 
 
