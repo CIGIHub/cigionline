@@ -690,10 +690,11 @@ class NewsletterBlock(blocks.StructBlock):
         if content_page:
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
             context['text'] = value.get('text_override') if value.get('text_override') else content_page.specific.short_description
-            context['image_url'] = f'https://www.cigionline.org{value.get("image_override").get_rendition("fill-600x238").url}' \
-                if value.get('image_override') \
-                else f'https://www.cigionline.org{content_page.specific.image_hero.get_rendition("fill-600x238").url}'
-            context['image_alt'] = content_page.specific.image_hero.title
+            if value.get('image_override'):
+                context['image_url'] = f'https://www.cigionline.org{value.get("image_override").get_rendition("fill-600x238").url}'
+            elif content_page.specific.image_hero:
+                context['image_url'] = f'https://www.cigionline.org{content_page.specific.image_hero.get_rendition("fill-600x238").url}'
+                context['image_alt'] = content_page.specific.image_hero.title
 
             if not value.get('url'):
                 context['url'] = f'https://www.cigionline.org{content_page.url}'
