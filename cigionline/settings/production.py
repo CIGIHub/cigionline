@@ -93,3 +93,11 @@ if 'STATIC_URL' in os.environ:
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 if 'SENDGRID_API_KEY' in os.environ:
     SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
+
+# Mailchimp
+if 'MAILCHIMP_API_KEY' in os.environ:
+    MAILCHIMP_API_KEY = os.environ['MAILCHIMP_API_KEY']
+if 'MAILCHIMP_DATA_CENTER' in os.environ:
+    MAILCHIMP_DATA_CENTER = os.environ['MAILCHIMP_DATA_CENTER']
+if 'MAILCHIMP_NEWSLETTER_LIST_ID' in os.environ:
+    MAILCHIMP_NEWSLETTER_LIST_ID = os.environ['MAILCHIMP_NEWSLETTER_LIST_ID']

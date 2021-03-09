@@ -11,12 +11,17 @@ from mailchimp_marketing.api_client import ApiClientError
 import mailchimp_marketing as MailchimpMarketing
 import logging
 
+api_key = None
+server = None
+list_id = None
+if hasattr(settings, 'MAILCHIMP_API_KEY'):
+    api_key = settings.MAILCHIMP_API_KEY
+if hasattr(settings, 'MAILCHIMP_DATA_CENTER'):
+    server = settings.MAILCHIMP_DATA_CENTER
+if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID'):
+    list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID
 
-api_key = settings.MAILCHIMP_API_KEY
-server = settings.MAILCHIMP_DATA_CENTER
-list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID
-
-logger = logging.getLogger('subscribe.models')
+logger = logging.getLogger('cigionline')
 
 
 class SubscribePage(
@@ -77,16 +82,17 @@ class SubscribePage(
                 }
 
             try:
-                client = MailchimpMarketing.Client()
-                client.set_config({
-                    'api_key': api_key,
-                    'server': server,
-                })
+                if api_key and server and list_id:
+                    client = MailchimpMarketing.Client()
+                    client.set_config({
+                        'api_key': api_key,
+                        'server': server,
+                    })
 
-                member_info['status'] = 'pending'
+                    member_info['status'] = 'pending'
 
-                response = client.lists.add_list_member(list_id, member_info)
-                print('response: {}'.format(response))
+                    response = client.lists.add_list_member(list_id, member_info)
+                    logger.info(f'Successful newsletter sign up: {response["email_address"]}')
 
             except ApiClientError as error:
                 logger.error('An error occurred with Mailchimp: {}'.format(error.text))

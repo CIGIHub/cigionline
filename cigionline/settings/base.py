@@ -117,7 +117,7 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': False,
         },
-        'testlogger': {
+        'cigionline': {
             'handlers': ['console'],
             'level': 'INFO',
         }
