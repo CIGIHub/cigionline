@@ -5,15 +5,6 @@ from django.db import models
 from django.template.loader import render_to_string
 from streams.blocks import (AdvertisementBlock, ContentBlock, FeaturedContentBlock, SocialBlock, TextBlock)
 from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
-from wagtail.core.blocks import (
-    BooleanBlock,
-    CharBlock,
-    ChoiceBlock,
-    PageChooserBlock,
-    RichTextBlock,
-    StructBlock,
-    URLBlock,
-)
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
@@ -40,21 +31,6 @@ class NewsletterListPage(BasicPageAbstract, Page):
 
 
 class NewsletterPage(Page):
-    class CallToActionChoices(models.TextChoices):
-        EXPLORE = ('explore', 'Explore')
-        FOLLOW = ('follow', 'Follow')
-        LEARN_MORE = ('learn_more', 'Learn More')
-        LISTEN = ('listen', 'Listen')
-        NO_CTA = ('no_cta', 'No CTA')
-        PDF = ('pdf', 'PDF')
-        READ = ('read', 'Read')
-        RSVP = ('rsvp', 'RSVP')
-        SHARE_FACEBOOK = ('share_facebook', 'Share (Facebook)')
-        SHARE_LINKEDIN = ('share_linkedin', 'Share (LinkedIn)')
-        SHARE_TWITTER = ('share_twitter', 'Share (Twitter)')
-        SUBSCRIBE = ('subscribe', 'Subscribe')
-        WATCH = ('watch', 'Watch')
-
     body = StreamField(
         [
             ('advertisement_block', AdvertisementBlock()),
