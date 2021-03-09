@@ -8,7 +8,6 @@ from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.blocks import ImageChooserBlock
 
 
 class NewsletterListPage(BasicPageAbstract, Page):

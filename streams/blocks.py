@@ -673,14 +673,15 @@ class NewsletterBlock(blocks.StructBlock):
         }
         return cta_texts[cta]
 
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        if value['cta'] != 'no_cta':
-            context['cta_image_link'] = self.cta_image_link(value.get('cta'))
-            context['cta_text'] = self.cta_text(value.get('cta')).upper()
+    def get_context(self, value):
+        context = super(NewsletterBlock, self).get_context(value)
 
         context['url'] = value.get('url')
         context['text'] = value.get('text')
+
+        if value['cta'] != 'no_cta':
+            context['cta_image_link'] = self.cta_image_link(value.get('cta'))
+            context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         if value.get('image'):
             context['image_url'] = f'https://cigionline.org{value.get("image").get_rendition("fill-600x238").url}'
