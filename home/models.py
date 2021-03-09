@@ -181,7 +181,8 @@ class HomePage(Page):
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
         'research.ResearchLandingPage',
-        'research.TopicListPage'
+        'research.TopicListPage',
+        'subscribe.SubscribePage',
     ]
     templates = 'core/home_page.html'
 

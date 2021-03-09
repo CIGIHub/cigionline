@@ -58,6 +58,7 @@ media/
 static
 !*/static/
 staticmedia/
+local.py
 
 # Sphinx documentation
 docs/_build/

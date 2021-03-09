@@ -47,6 +47,7 @@ const config = {
     publicationTypePage: './cigionline/static/pages/publication_type_page/index.js',
     searchPage: './cigionline/static/pages/search_page/index.js',
     researchLandingPage: './cigionline/static/pages/research_landing_page/index.js',
+    subscribePage: './cigionline/static/pages/subscribe_page/index.js',
     themeAfterCovidSeries: './cigionline/static/themes/after_covid_series/index.js',
     themeAISeries: './cigionline/static/themes/ai_series/index.js',
     themeBigTech: './cigionline/static/themes/big_tech/index.js',

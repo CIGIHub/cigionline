@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load webpack_loader wagtailcore_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'subscribePage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_plain.html" with title=self.title %}
+  <section class="body">
+    {{self.body}}
+  </section>
+  <section>
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <hr>
+          <form class="cigi-subscribe-form" action="/subscribe/" method="POST" id="subscribe-form" accept-charset="UTF-8">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="button-action" type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="privacy-note">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          {{self.privacy_note|richtext}}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
