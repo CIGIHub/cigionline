@@ -2,6 +2,7 @@ from core.models import (
     BasicPageAbstract,
 )
 from django.db import models
+from django.template.loader import render_to_string
 from streams.blocks import (AdvertisementBlock, ContentBlock, FeaturedContentBlock, SocialBlock, TextBlock)
 from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
 from wagtail.core.blocks import (
@@ -91,6 +92,9 @@ class NewsletterPage(Page):
             classname='collapsible collapsed',
         ),
     ]
+
+    def html_string(self):
+        return render_to_string('newsletters/newsletter_html.html', {'self': self, 'page': self})
 
     parent_page_types = ['newsletters.NewsletterListPage']
     subpage_types = []

@@ -1,3 +1,5 @@
+{% load wagtailcore_tags %}
+
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
   xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -165,7 +167,7 @@
                       <div
                         style="font-family:futura-pt, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;line-height:21px;text-align:left;color:#696969;">
                         <p class="cigi-logo" style="margin:0;Margin:0;padding:0;line-height:1;">
-                          <a href="https://www.cigionline.org">
+                          <a href="https://www.cigionline.org?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{self.title|slugify}}">
                             <img
                               src="https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/97eb05b4-24e5-4fc4-8c85-89faea886811.png"
                               width="150" alt="Centre for International Governance Innovation" />
@@ -207,7 +209,9 @@
     </div>
 
     <!--BODY SECTION-->
-    {% include "includes/body.html" with body=self.body %}
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
 
     <!--FOOTER SECTION-->
     <div style="background:#000000;background-color:#000000;margin:0px auto;max-width:600px;">
@@ -290,11 +294,11 @@
                               <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                 <div
                                   style="font-family:futura-pt, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;line-height:1;text-align:center;color:#696969;">
-                                  <a href="https://www.facebook.com/cigionline"><img width="14"
+                                  <a href="https://www.facebook.com/cigionline?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{self.title|slugify}}"><img width="14"
                                       src="https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/0cfa05ea-040f-4f73-848a-9f12132fd52c.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-                                    href="https://twitter.com/cigionline"><img width="14"
+                                    href="https://twitter.com/cigionline?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{self.title|slugify}}"><img width="14"
                                       src="https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/a85581e0-e251-4cb0-bcde-0fd42ee8dc26.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-                                    href="https://www.linkedin.com/company/cigionline"><img width="14"
+                                    href="https://www.linkedin.com/company/cigionline?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{self.title|slugify}}"><img width="14"
                                       src="https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/010f251d-7354-41cd-9e64-fc4953dfc461.png" /></a>
                                 </div>
                               </td>
@@ -344,7 +348,7 @@
                                 style="font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break-word;">
                                 <div
                                   style="font-family:futura-pt, Arial, sans-serif;font-size:14px;font-style:normal;font-weight:400;line-height:14px;text-align:center;color:#ffffff;">
-                                  <a href="*|ARCHIVE|*" style="color:#ffffff;text-decoration:none;">View in a
+                                  <a href="*|ARCHIVE|*?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{self.title|slugify}}" style="color:#ffffff;text-decoration:none;">View in a
                                     browser</a>
                                 </div>
                               </td>
@@ -410,7 +414,7 @@
                     <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                       <div
                         style="font-family:futura-pt, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;line-height:21px;text-align:center;color:#696969;">
-                        <a href="*|UNSUB|*" style="color:#696969;text-decoration:none;">Click here to unsubscribe</a>
+                        <a href="*|UNSUB|*?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{self.title|slugify}}" style="color:#696969;text-decoration:none;">Click here to unsubscribe</a>
                       </div>
                     </td>
                   </tr>
