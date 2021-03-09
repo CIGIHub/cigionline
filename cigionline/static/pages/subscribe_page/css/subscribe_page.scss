@@ -1,0 +1,76 @@
+@import '../../../css/global/mixins';
+
+.hero-plain {
+  @include media-breakpoint-up(md) {
+    padding-top: 10em;
+  }
+}
+
+hr {
+  margin: 2em 0;
+}
+
+.cigi-subscribe-form {
+  p {
+    margin-bottom: 0;
+
+    &:first-of-type {
+      display: flex;
+      flex-direction: row-reverse;
+
+      label {
+        display: block;
+      }
+    }
+  }
+
+  label {
+    display: none;
+
+    &[for='id_confirmation'] {
+      display: block;
+      margin: 0 0 2em 0.5em;
+
+      &::after {
+        color: $cigi-primary-colour;
+        content: '*';
+      }
+    }
+  }
+
+  input {
+    &[type='text'],
+    &[type='email'] {
+      background: $white;
+      border: 1px solid $cigi-text-grey;
+      color: $cigi-text-grey;
+      margin-bottom: 0.7em;
+      outline: none;
+      padding: 0.5em 1em;
+      width: 100%;
+    }
+
+    &[type='checkbox'] {
+      margin-top: 0.3em;
+    }
+  }
+
+  button {
+    margin-top: 1em;
+  }
+}
+
+.privacy-note {
+  color: $cigi-text-grey;
+  margin: 2em 0 3em;
+}
+
+.social-links {
+  @include link($color: $black, $hover-color: $cigi-primary-colour);
+  margin-bottom: 6em;
+}
+
+h2 {
+  font-weight: 500;
+  margin-top: 2em;
+}

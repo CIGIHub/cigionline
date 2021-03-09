@@ -498,6 +498,7 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
         required=False,
         help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".'
     )
+    display = blocks.BooleanBlock(default=True)
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(PDFDownloadBlock, self).get_template(context, *args, **kwargs)

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'research',
     'search',
     'streams',
+    'subscribe',
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
@@ -116,7 +117,7 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': False,
         },
-        'testlogger': {
+        'cigionline': {
             'handlers': ['console'],
             'level': 'INFO',
         }

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load webpack_loader wagtailcore_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'subscribePage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_plain.html" with title="Thank you for signing up!" %}
+  {{ self.landing_page_body }}
+  <section class="social-links">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2>Follow Us:</h2>
+          <p>Stay connected with us on Facebook and Twitter for daily news, events and updates.</p>
+          <a href="https://www.facebook.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-square fa-2x" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter-square fa-2x" aria-hidden="true"></i></a>
+        </div> 
+      </div>
+    </div>
+  </section>
+{% endblock %}

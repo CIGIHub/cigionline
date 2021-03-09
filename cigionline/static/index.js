@@ -1,3 +1,4 @@
+/* global FB */
 import 'bootstrap/dist/js/bootstrap.bundle';
 import './css/cigionline.scss';
 
@@ -58,6 +59,15 @@ $(function() {
 
   $('.custom-popup-inner').on('click', function(e) {
     e.stopPropagation();
+  });
+
+  // Facebook Share buttons
+  $('.facebook-share-link').click(function() {
+    const href = $(this).data('url');
+    FB.ui({
+      method: 'shaer',
+      href,
+    }, function(/* response */) {});
   });
 });
 
