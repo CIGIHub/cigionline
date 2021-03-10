@@ -7,8 +7,13 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+    StreamFieldPanel,
+)
 from wagtail.core.blocks import (
     CharBlock,
     DateBlock,
@@ -19,7 +24,7 @@ from wagtail.core.blocks import (
     URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -256,3 +261,33 @@ class TopicPage(ArchiveablePageAbstract, Page):
         ]
         verbose_name = 'Topic Page'
         verbose_name_plural = 'Topic Pages'
+
+class TopicPageFeaturedPage(Orderable):
+    topic_page = ParentalKey(
+        'research.TopicPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            [
+                'articles.ArticlePage',
+                'articles.ArticleSeriesPage',
+                'events.EventPage',
+                'multimedia.MultimediaPage',
+                'multimedia.MultimediaSeriesPage',
+                'publications.PublicationPage',
+                'publications.PublicationSeriesPage',
+                'research.ProjectPage',
+            ]
+        )
+    ]
