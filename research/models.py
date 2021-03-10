@@ -262,6 +262,7 @@ class TopicPage(ArchiveablePageAbstract, Page):
         verbose_name = 'Topic Page'
         verbose_name_plural = 'Topic Pages'
 
+
 class TopicPageFeaturedPage(Orderable):
     topic_page = ParentalKey(
         'research.TopicPage',
