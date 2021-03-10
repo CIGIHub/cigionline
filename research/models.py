@@ -240,6 +240,18 @@ class TopicPage(ArchiveablePageAbstract, Page):
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def featured_pages(self):
+        featured_pages = []
+        for item in self.featured_pages.prefetch_related(
+            'featured_page',
+        ).all()[:3]:
+            featured_pages.append(item.featured_page)
+        if len(featured_pages) < 3:
+            for item in self.content_pages.live().order_by('-publishing_date')[:(3 - len(featured_pages))]:
+                featured_pages.append(item)
+        return featured_pages
+
     content_panels = Page.content_panels + [
         FieldPanel('description')
     ]
