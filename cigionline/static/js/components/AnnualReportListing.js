@@ -23,7 +23,7 @@ function AnnualReportListing(props) {
               Digital Interactive
             </div>
             <div className="table-content">
-              <a className="button-action" href={row.report_interactive}>
+              <a className="button-action" href={`https://www.cigionline.org${row.report_interactive}`}>
                 <i className="fas fa-mouse-pointer" />
                 Explore
               </a>

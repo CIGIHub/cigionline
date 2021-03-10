@@ -78,15 +78,6 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
-    search_fields = Page.search_fields \
-        + [
-            index.FilterField('report_english'),
-            index.FilterField('report_financial'),
-            index.FilterField('report_french'),
-            index.FilterField('report_interactive'),
-            index.FilterField('year'),
-        ]
-
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [

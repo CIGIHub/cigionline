@@ -29,12 +29,12 @@ class SearchTableAnnualReports extends React.Component {
     const year = Number(e.target.value);
     if (years.includes(year)) {
       this.setState({
-        searchValue: e.target.value,
+        searchValue: year,
         yearSelected: year,
       });
     } else {
       this.setState({
-        searchValue: e.target.value,
+        searchValue: year,
         yearSelected: 'All Years',
       });
     }
