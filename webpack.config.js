@@ -23,6 +23,7 @@ const config = {
   context: __dirname,
 
   entry: {
+    annualReportListPage: './cigionline/static/pages/annual_report_list_page/index.js',
     articleLandingPage: './cigionline/static/pages/article_landing_page/index.js',
     articlePage: './cigionline/static/pages/article_page/index.js',
     articleSeriesListPage: './cigionline/static/pages/article_series_list_page/index.js',

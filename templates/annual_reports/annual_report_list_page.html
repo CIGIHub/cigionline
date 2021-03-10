@@ -1,5 +1,30 @@
 {% extends "base.html" %}
 
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'annualReportListPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'annualReportListPage' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  <section class="featured">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="search-table" id="annual-reports-search-table">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}

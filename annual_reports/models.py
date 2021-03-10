@@ -12,6 +12,7 @@ from wagtail.admin.edit_handlers import (
 from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 
 class AnnualReportListPage(BasicPageAbstract, Page):
@@ -76,6 +77,15 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    search_fields = Page.search_fields \
+        + [
+            index.FilterField('report_english'),
+            index.FilterField('report_financial'),
+            index.FilterField('report_french'),
+            index.FilterField('report_interactive'),
+            index.FilterField('year'),
+        ]
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
