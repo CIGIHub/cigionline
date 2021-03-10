@@ -1,0 +1,25 @@
+@import '../../../css/global/mixins';
+
+.search {
+  .search-table {
+    td {
+      align-items: center;
+
+      &:first-child {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        font-size: 0.875em;
+        font-weight: 500;
+      }
+
+      &:not(:first-child) {
+        .table-content {
+          justify-content: center;
+        }
+      }
+
+      .button-action {
+        text-transform: capitalize;
+      }
+    }
+  }
+}

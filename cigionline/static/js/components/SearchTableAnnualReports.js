@@ -10,11 +10,10 @@ class SearchTableAnnualReports extends React.Component {
     this.state = {
       loading: true,
       loadingInitial: true,
-      loadingTopics: true,
       rows: [],
       searchValue: '',
       years: [],
-      yearSelectValue: null,
+      yearSelected: 'All Years',
     };
 
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
@@ -26,14 +25,25 @@ class SearchTableAnnualReports extends React.Component {
   }
 
   handleSearchValueChange(e) {
-    this.setState({
-      searchValue: e.target.value,
-    });
+    const { years } = this.state;
+    const year = Number(e.target.value);
+    if (years.includes(year)) {
+      this.setState({
+        searchValue: e.target.value,
+        yearSelected: year,
+      });
+    } else {
+      this.setState({
+        searchValue: e.target.value,
+        yearSelected: 'All Years',
+      });
+    }
   }
 
-  handleYearSelect(id) {
+  handleYearSelect(year) {
     this.setState({
-      yearSelectValue: id,
+      yearSelected: year,
+      searchValue: year,
     });
   }
 
@@ -58,52 +68,15 @@ class SearchTableAnnualReports extends React.Component {
       });
   }
 
-  // get dropdownSelectedYear() {
-  //   const { years, yearSelectValue } = this.state;
-  //   let selectedyear = 'All years';
-  //   years.forEach((year) => {
-  //     if (year.id === yearSelectValue) {
-  //       selectedYear = year;
-  //     }
-  //   });
-  //   return selectedTopic;
-  // }
-
-  // get dropdownTopics() {
-  //   const { topics, topicSelectValue } = this.state;
-  //   const dropdownTopics = [];
-  //   topics.forEach((topic) => {
-  //     if (topic.id !== topicSelectValue) {
-  //       dropdownTopics.push(topic);
-  //     }
-  //   });
-  //   if (topics.length !== dropdownTopics.length) {
-  //     dropdownTopics.unshift({
-  //       id: null,
-  //       title: 'All Topics',
-  //     });
-  //   }
-  //   return dropdownTopics;
-  // }
-
   render() {
     const {
       loading,
       loadingInitial,
-      loadingTopics,
       rows,
       searchValue,
-      sortSelected,
+      years,
+      yearSelected,
     } = this.state;
-
-    const sortOptions = [{
-      default: true,
-      name: 'Last Name',
-      value: 'last_name',
-    }, {
-      name: 'First Name',
-      value: 'first_name',
-    }];
 
     return (
       <div className="search-table">
@@ -129,8 +102,26 @@ class SearchTableAnnualReports extends React.Component {
               <div className="col-md-3 position-static">
                 <div className="dropdown custom-dropdown dropdown-full-width">
                   <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {yearSelected}
                   </button>
                   <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+                    <button
+                      className="dropdown-item"
+                      type="button"
+                      onClick={() => this.handleYearSelect('All Years')}
+                    >
+                      All Years
+                    </button>
+                    {years.map((year) => (
+                      <button
+                        key={year}
+                        className="dropdown-item"
+                        type="button"
+                        onClick={() => this.handleYearSelect(year)}
+                      >
+                        {year}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -141,7 +132,7 @@ class SearchTableAnnualReports extends React.Component {
           ? <SearchTableSkeleton />
           : rows.length
             ? (
-              <table className={['custom-theme-table', 'table-experts', 'search-results', loading && 'loading'].join(' ')}>
+              <table className={['custom-theme-table', 'search-results', loading && 'loading'].join(' ')}>
                 <thead>
                   <tr>
                     <th colSpan="4">Year</th>
@@ -152,9 +143,8 @@ class SearchTableAnnualReports extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((row) => (
-                    <AnnualReportListing key={row.year} row={row} />
-                  ))}
+                  {rows.map((row) => ((yearSelected === 'All Years' || row.year === yearSelected)
+                    && <AnnualReportListing key={row.year} row={row} />))}
                 </tbody>
               </table>
             ) : (

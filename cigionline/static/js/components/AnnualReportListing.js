@@ -7,37 +7,70 @@ function AnnualReportListing(props) {
   return (
     <tr>
       <td colSpan="4">
-        <a href={row.url}>
-          {`${row.year} Annual Report`}
-        </a>
+        <div className="table-mobile-text">
+          Year
+        </div>
+        <div className="table-content">
+          <a href={row.url}>
+            {`${row.year} Annual Report`}
+          </a>
+        </div>
       </td>
       <td colSpan="2">
         {row.report_interactive && (
-          <a className="button-action" href={row.report_interactive}>
-            <i className="fas fa-mouse-pointer" />
-            Explore
-          </a>
+          <>
+            <div className="table-mobile-text">
+              Digital Interactive
+            </div>
+            <div className="table-content">
+              <a className="button-action" href={row.report_interactive}>
+                <i className="fas fa-mouse-pointer" />
+                Explore
+              </a>
+            </div>
+          </>
         )}
       </td>
       <td colSpan="2">
         {row.report_english && (
-          <a className="table-btn-icon" href={row.report_english}>
-            <i className="fas fa-download" />
-          </a>
+          <>
+            <div className="table-mobile-text">
+              English
+            </div>
+            <div className="table-content">
+              <a className="table-btn-icon" href={row.report_english}>
+                <i className="fas fa-download" />
+              </a>
+            </div>
+          </>
         )}
       </td>
       <td colSpan="2">
         {row.report_french && (
-          <a className="table-btn-icon" href={row.report_french}>
-            <i className="fas fa-download" />
-          </a>
+          <>
+            <div className="table-mobile-text">
+              en français
+            </div>
+            <div className="table-content">
+              <a className="table-btn-icon" href={row.report_french}>
+                <i className="fas fa-download" />
+              </a>
+            </div>
+          </>
         )}
       </td>
       <td colSpan="2">
         {row.report_financial && (
-          <a className="table-btn-icon" href={row.report_financial}>
-            <i className="fas fa-download" />
-          </a>
+          <>
+            <div className="table-mobile-text">
+              Financial Statement
+            </div>
+            <div className="table-content">
+              <a className="table-btn-icon" href={row.report_financial}>
+                <i className="fas fa-download" />
+              </a>
+            </div>
+          </>
         )}
       </td>
     </tr>
