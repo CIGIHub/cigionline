@@ -21,8 +21,8 @@
         </div>
       </div>
       <div class="row">
-        {% for item in self.featured_pages %}
-          <div class="col-12 cold-md-4">
+        {% for item in self.featured_latest_pages %}
+          <div class="col-12 col-md-4">
             {% include "includes/features/feature_content_medium.html" with content=item %}
           </div>
         {% endfor %}

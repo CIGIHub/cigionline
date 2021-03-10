@@ -241,7 +241,7 @@ class TopicPage(ArchiveablePageAbstract, Page):
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
     @property
-    def featured_pages(self):
+    def featured_latest_pages(self):
         featured_pages = []
         for item in self.featured_pages.prefetch_related(
             'featured_page',
