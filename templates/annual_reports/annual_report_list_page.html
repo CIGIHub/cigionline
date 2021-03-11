@@ -11,14 +11,18 @@
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section class="featured">
-    <div class="container">
-      <div class="row">
-        <div class="col">
+  {% cache 86400 annual_reports_swiper %}
+    <section class="featured">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h2 class="paragraph-heading">Featured</h2>
+            {% include "includes/swiper.html" with swiper_content=self.featured_reports type="annual-reports" %}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endcache %}
   <section class="search">
     <div class="container">
       <div class="row">
