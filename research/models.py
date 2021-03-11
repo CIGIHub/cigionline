@@ -1,4 +1,3 @@
-from articles.models import ArticlePage
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
