@@ -28,9 +28,13 @@
               {% for submenu_item in submenu_items %}
                 {% if submenu_item.link_page %}
                   <li>
-                    <a href="{% pageurl submenu_item.link_page %}">
+                    {% if submenu_item.link_page.url == self.url %}
                       {{ submenu_item.title }}
-                    </a>
+                    {% else %}
+                      <a href="{% pageurl submenu_item.link_page %}">
+                        {{ submenu_item.title }}
+                      </a>
+                    {% endif %}
                   </li>
                 {% elif submenu_item.link_url %}
                   <li>
