@@ -14,6 +14,7 @@ if (swiperContainer) {
   const annualReportListPageSwiper = new Swiper('.swiper-container', {
     slidesPerView: 1,
     slidesPerGroup: 1,
+    spaceBetween: 20,
     speed: 800,
     autoHeight: true,
     grabCursor: true,
@@ -26,6 +27,21 @@ if (swiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
+    },
+
+    breakpoints: {
+      480: {
+        slidesPerView: 2,
+        slidesPerGroup: 2,
+      },
+      768: {
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+      },
+      992: {
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+      },
     },
   });
 }

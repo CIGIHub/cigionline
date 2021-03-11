@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load webpack_loader %}
+{% load webpack_loader cache %}
 
 {% block extra_css %}
   {% render_bundle 'annualReportListPage' 'css' %}

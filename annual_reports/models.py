@@ -8,7 +8,10 @@ from django.db import models
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
+    StreamFieldPanel,
 )
+from wagtail.core.blocks import PageChooserBlock
+from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -21,11 +24,28 @@ class AnnualReportListPage(BasicPageAbstract, Page):
     subpage_types = ['annual_reports.AnnualReportPage']
     templates = 'annual_reports/annual_report_list_page.html'
 
+    featured_reports = StreamField(
+        [
+            ('featured_report', PageChooserBlock(
+                required=True,
+                page_type=['annual_reports.AnnualReportPage'],
+            )),
+        ],
+        blank=True,
+    )
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.hero_link_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('featured_reports'),
+            ],
+            heading='Featured Annual Reports',
+            classname='collapsible collapsed',
+        ),
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,

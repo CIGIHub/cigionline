@@ -1,4 +1,5 @@
 @import '../../../css/global/mixins';
+@import '../../../css/includes/swiper';
 
 .search {
   .search-table {
@@ -24,6 +25,38 @@
       .button-action {
         text-transform: capitalize;
       }
+    }
+  }
+}
+
+.featured {
+  article {
+    @include hover-darken;
+
+    .img-wrapper {
+      color: transparent;
+      display: block;
+      margin-bottom: 1em;
+
+      img {
+        border: 1px solid $cigi-light-grey;
+        box-shadow: -5px 5px 10px $cigi-light-grey;
+
+        &:hover {
+          border: 1px solid $white;
+        }
+      }
+    }
+
+    h3 {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      font-size: 1.0625em;
+      line-height: 1.45em;
+      margin: 0 0 0.5em;
+    }
+
+    .button-action {
+      text-transform: capitalize;
     }
   }
 }
