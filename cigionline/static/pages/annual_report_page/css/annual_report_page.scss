@@ -21,7 +21,7 @@ section {
           border-left: 1px solid $cigi-light-grey;
           color: $cigi-text-grey;
           font-weight: 500;
-          padding: 0 0.625rem;
+          padding: 0 1em;
           text-align: left;
 
           &:first-child {
@@ -31,11 +31,15 @@ section {
         }
 
         td {
+          @include media-breakpoint-up(md) {
+            padding: 1rem 1em;
+          }
           font-size: 0.75em;
-          padding: 1rem 0.625rem;
 
           &:last-child {
-            text-align: center;
+            .table-content {
+              justify-content: center;
+            }
           }
 
           .button-action {
