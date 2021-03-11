@@ -15,7 +15,6 @@ from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.search import index
 
 
 class AnnualReportListPage(BasicPageAbstract, Page):

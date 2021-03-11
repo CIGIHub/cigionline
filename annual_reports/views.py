@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from .models import AnnualReportPage
 
+
 def all_annual_reports(request):
     annual_reports = AnnualReportPage.objects.live().order_by('-year')
 
