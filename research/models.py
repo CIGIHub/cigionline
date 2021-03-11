@@ -1,3 +1,4 @@
+from articles.models import ArticlePage
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
@@ -246,10 +247,10 @@ class TopicPage(ArchiveablePageAbstract, Page):
         for item in self.featured_pages.prefetch_related(
             'featured_page',
         ).all()[:3]:
-            featured_pages.append(item.featured_page)
+            featured_pages.append(item.featured_page.specific)
         if len(featured_pages) < 3:
-            for item in self.content_pages.live().order_by('-publishing_date')[:(3 - len(featured_pages))]:
-                featured_pages.append(item)
+            for item in self.content_pages.live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))]:
+                featured_pages.append(item.specific)
         return featured_pages
 
     content_panels = Page.content_panels + [
