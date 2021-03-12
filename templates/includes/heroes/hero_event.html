@@ -30,9 +30,9 @@
               <div class="custom-text-list">
                 {% for item in authors %}
                   {% if item.block_type == 'author' %}
-                    <div class="block-speaker"><a href="{% pageurl item.value %}">{{ item.value.title }}</a></div>
+                    <li class="block-speaker"><a href="{% pageurl item.value %}">{{ item.value.title }}</a></li>
                   {% elif item.block_type == 'external_author' %}
-                    <div class="block-speaker">{{ item.value }}</div>
+                    <li class="block-speaker">{{ item.value }}</li>
                   {% endif %}
                 {% endfor %}
               </div>
