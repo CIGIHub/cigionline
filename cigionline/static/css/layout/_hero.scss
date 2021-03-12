@@ -89,9 +89,9 @@ section {
 
             li {
               @include link($color: $white, $hover-color: $cigi-primary-colour);
-
               border-bottom: 1px solid $border-grey;
               break-inside: avoid-column;
+              color: $cigi-medium-light-grey;
               padding-bottom: 0.2em;
               padding-top: 0.2em;
             }
