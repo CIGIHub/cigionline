@@ -253,21 +253,21 @@
         </section>
       {% endwith %}
       {% endif %}
-      {% if self.has_authored_content %}
-        <section>
-          <div class="container">
-            <div class="row">
-              <div class="col-12">
-                <h2 class="paragraph-heading">
-                  From This Expert
-                </h2>
-                <div id="expert-search-table" class="expert-search-table">
-                </div>
+    {% endif %}
+    {% if self.has_authored_content %}
+      <section>
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="paragraph-heading">
+                From This Expert
+              </h2>
+              <div id="expert-search-table" class="expert-search-table">
               </div>
             </div>
           </div>
-        </section>
-      {% endif %}
+        </div>
+      </section>
     {% endif %}
   </article>
 {% endblock content %}
