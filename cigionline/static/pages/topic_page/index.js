@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import SearchTable from '../../js/components/SearchTable';
 import TopicContentListing from '../../js/components/TopicContentListing';
 
+import './css/topic_page.scss';
+
 const endpointParams = [];
 if (topicId) {
   endpointParams.push({
