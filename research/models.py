@@ -7,8 +7,13 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalManyToManyField
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+    StreamFieldPanel,
+)
 from wagtail.core.blocks import (
     CharBlock,
     DateBlock,
@@ -19,7 +24,7 @@ from wagtail.core.blocks import (
     URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -235,6 +240,18 @@ class TopicPage(ArchiveablePageAbstract, Page):
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def featured_latest_pages(self):
+        featured_pages = []
+        for item in self.featured_pages.prefetch_related(
+            'featured_page',
+        ).all()[:3]:
+            featured_pages.append(item.featured_page.specific)
+        if len(featured_pages) < 3:
+            for item in self.content_pages.live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))]:
+                featured_pages.append(item.specific)
+        return featured_pages
+
     content_panels = Page.content_panels + [
         FieldPanel('description')
     ]
@@ -256,3 +273,34 @@ class TopicPage(ArchiveablePageAbstract, Page):
         ]
         verbose_name = 'Topic Page'
         verbose_name_plural = 'Topic Pages'
+
+
+class TopicPageFeaturedPage(Orderable):
+    topic_page = ParentalKey(
+        'research.TopicPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            [
+                'articles.ArticlePage',
+                'articles.ArticleSeriesPage',
+                'events.EventPage',
+                'multimedia.MultimediaPage',
+                'multimedia.MultimediaSeriesPage',
+                'publications.PublicationPage',
+                'publications.PublicationSeriesPage',
+                'research.ProjectPage',
+            ]
+        )
+    ]
