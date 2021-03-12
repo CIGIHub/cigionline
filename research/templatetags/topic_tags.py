@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.inclusion_tag('research/highlighted_topics.html')
 def highlighted_topics():
-    highlighted_topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('contentpage'))
+    highlighted_topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('content_pages'))
     return {'highlighted_topics': highlighted_topics}
 
 
