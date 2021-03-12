@@ -1,4 +1,7 @@
-{% if image_url %}
+{% load wagtailimages_tags %}
+
+{% image self.image fill-600x238 as image %}
+{% if image %}
   <!--[if mso | IE]>
       <table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600">
         <tr>
@@ -27,8 +30,8 @@
                         <tr>
                           <td style="width:550px;">
                             <a href="{{ url|slice:':-1' }}?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{page.title|slugify}}" target="_blank">
-                              <img alt="{{ self.image.title }}" height="auto"
-                                src="{{ image_url }}"
+                              <img alt="{{ image.title }}" height="auto"
+                                src="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ image.url }}"
                                 style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
                                 width="550" />
                             </a>

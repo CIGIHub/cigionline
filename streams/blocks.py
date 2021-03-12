@@ -684,20 +684,20 @@ class NewsletterBlock(blocks.StructBlock):
             context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         if value.get('image'):
-            context['image_url'] = f'https://www.cigionline.org{value.get("image").get_rendition("fill-600x238").url}'
+            context['image_url'] = value.get("image").get_rendition("fill-600x238").url
 
         content_page = value.get('content')
         if content_page:
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
             context['text'] = value.get('text_override') if value.get('text_override') else content_page.specific.short_description
             if value.get('image_override'):
-                context['image_url'] = f'https://www.cigionline.org{value.get("image_override").get_rendition("fill-600x238").url}'
+                context['image_url'] = value.get("image_override").get_rendition("fill-600x238").url
             elif content_page.specific.image_hero:
-                context['image_url'] = f'https://www.cigionline.org{content_page.specific.image_hero.get_rendition("fill-600x238").url}'
+                context['image_url'] = content_page.specific.image_hero.get_rendition("fill-600x238").url
                 context['image_alt'] = content_page.specific.image_hero.title
 
             if not value.get('url'):
-                context['url'] = f'https://www.cigionline.org{content_page.url}'
+                context['url'] = f'https://www.cigionline.org{content_page.url_path}'
 
             if content_page.specific.contenttype == 'Event':
                 event_time = content_page.specific.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
