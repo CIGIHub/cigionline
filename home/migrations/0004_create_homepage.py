@@ -50,7 +50,7 @@ def remove_homepage(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    # run_before = [('wagtailcore', '0053_locale_model')]
+    run_before = [('wagtailcore', '0053_locale_model')]
 
     dependencies = [
         ('home', '0003_auto_20210302_1216'),
