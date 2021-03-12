@@ -28,7 +28,7 @@
               {% for submenu_item in submenu_items %}
                 {% if submenu_item.link_page %}
                   <li>
-                    {% if submenu_item.link_page.url == self.url %}
+                    {% if submenu_item.link_page.url_path == self.url_path %}
                       {{ submenu_item.title }}
                     {% else %}
                       <a href="{% pageurl submenu_item.link_page %}">
