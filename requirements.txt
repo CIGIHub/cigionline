@@ -45,7 +45,7 @@ libsass==0.20.1
 mailchimp-marketing==3.0.29
 mccabe==0.6.1
 openpyxl==3.0.6
-Pillow==8.1.1
+Pillow==8.1.2
 psycopg2==2.8.6
 pycodestyle==2.6.0
 pyflakes==2.2.0
