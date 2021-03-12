@@ -41,9 +41,11 @@ function TopicContentListing(props) {
             <a href={row.url} className="table-title-link">
               {row.title}
             </a>
-            <div className="table-infos-meta">
-              {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
-            </div>
+            {row.publishing_date && (
+              <div className="table-infos-meta">
+                {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
+              </div>
+            )}
           </div>
         </div>
       </td>
@@ -52,9 +54,9 @@ function TopicContentListing(props) {
           Expert
         </div>
         <div className="table-content">
-          <ul className="custom-text-list">
+          <ul className="custom-text-list author-list">
             {row.authors.map((author) => (
-              <li key={`${row.id}-${author.id}`}>
+              <li key={`${row.id}-author-${author.id}`}>
                 <a href={author.url} className="table-content-link table-content-link-black">
                   {author.title}
                 </a>
@@ -69,7 +71,7 @@ function TopicContentListing(props) {
         </div>
         <div className="table-content">
           <ul className="custom-text-list">
-            <li className="table-infos-meta">
+            <li key={`${row.id}-contenttype`} className="table-infos-meta">
               {row.contenttype}
             </li>
           </ul>

@@ -10,19 +10,23 @@
           <article class="row">
             <div class="img-wrapper col-md-3">
               {% if item.image_poster.file.url|file_extension == '.gif' %}
-                <img src="{{ item.image_poster.file.url }}" alt="{{ item.image_poster.title }}">
+                <img src="{{ item.image_poster.file.url }}" alt="{{ item.image_poster.title }}" />
               {% else %}
                 {% image item.image_poster width-700 %}
               {% endif %}
             </div>
             <div class="col-md-9">
               {% include "includes/topics.html" with topics=item.topics %}
-              <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+              <h3><a href="{% pageurl item %}">{{ item.title }}</a></h3>
               {{ item.short_description|richtext }}
               <h4>CONTRIBUTORS</h4>
               <ul class="contributors">
-                {% for contributor in item.series_authors %}
-                  <li><a href="{{ contributor.author.url }}">{{ contributor.author.title }}</a></li>
+                {% for block in item.series_authors %}
+                  {% if block.block_type == 'author' %}
+                    <li><a href="{% pageurl block.value %}">{{ block.value.title }}</a></li>
+                  {% elif block.block_type == 'external_author' %}
+                    <li>{{ block.value }}</li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </div>

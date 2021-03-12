@@ -301,6 +301,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
     implemented_themes = [
         'cyber_series_opinion',
         'data_series_opinion',
+        'longform_2_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -413,6 +414,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'subscript',
             'superscript',
             'ul',
+            'anchor',
         ]
 
     implemented_themes = [
@@ -475,6 +477,10 @@ class ReadMoreBlock(blocks.StructBlock, ThemeableBlock):
 class RecommendedBlock(blocks.PageChooserBlock, ThemeableBlock):
     """Recommended content block"""
 
+    implemented_themes = [
+        'longform_2_opinion',
+    ]
+
     def get_template(self, context, *args, **kwargs):
         standard_template = super(RecommendedBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'recommended_block')
@@ -491,6 +497,7 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
         required=False,
         help_text='Optional text to replace the button text. If left empty, the button will read "Download PDF".'
     )
+    display = blocks.BooleanBlock(default=True)
 
     def get_template(self, context, *args, **kwargs):
         standard_template = super(PDFDownloadBlock, self).get_template(context, *args, **kwargs)
@@ -520,6 +527,7 @@ class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
 
     implemented_themes = [
         'data_series_opinion',
+        'longform_2_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -544,6 +552,7 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
 
     implemented_themes = [
         'data_series_opinion',
+        'longform_2_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):

@@ -24,6 +24,7 @@ section {
 
     .label {
       padding-right: 0.2em;
+      white-space: nowrap;
     }
 
     .authors {
@@ -36,6 +37,12 @@ section {
     .social-share-list {
       justify-content: left;
       margin: 1em 0 0;
+
+      li {
+        &:first-child {
+          margin-left: -4px;
+        }
+      }
     }
 
     .date {
@@ -50,6 +57,14 @@ section {
       flex-direction: row;
       list-style: none;
       margin-top: 0.75em;
+
+      li {
+        &:first-child {
+          a {
+            margin-left: 0;
+          }
+        }
+      }
 
       a {
         @include media-breakpoint-up(md) {
@@ -70,6 +85,15 @@ section {
           color: $white;
         }
       }
+    }
+  }
+
+  &.book-excerpt-download {
+    margin: 3em 0;
+    text-align: center;
+
+    .button-action {
+      text-transform: capitalize;
     }
   }
 }

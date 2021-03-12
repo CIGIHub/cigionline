@@ -4,48 +4,47 @@
   <h6 class="featured-section-title">Featured</h6>
 
   <div class="row row-cols-1 row-cols-md-2 publications-featured-list-row">
+    {% for publication in publications %}
+      <div class="col publications-featured-list-col">
 
-    {% for featured_publication in self.featured_publications.all %}
-      {% with featured_publication.publication_page.contentpage.publicationpage as publication_page %}
-        <div class="col publications-featured-list-col">
-
-          <a href="{{ publication_page.url }}" class="publications-featured-list">
-            <div class="publications-featured-list-inner">
-              <div class="publications-featured-list-image-wrapper">
-                {% image publication_page.image_cover width-200 as image_rect %}
-                <div class="img-wrapper" style="background-image: url('{{ image_rect.url }}');"></div>
-              </div>
-
-              <div class="publications-featured-list-content">
-                {% if publication_page.topics.all %}
-                  <ul class="publications-featured-list-topics custom-text-list">
-                    {% for topic in publication_page.topics.all %}
-                      <li>{{ topic }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-
-                <p class="publications-featured-list-title">
-                  {{ publication_page.title }}
-                </p>
-
-                <p class="publications-featured-list-date">
-                  {{ publication_page.publishing_date|date:"F j, Y" }}
-                </p>
-
-                <ul class="publications-featured-list-authors custom-text-list">
-                  {% for person in publication_page.featured_person_list %}
-                    <li>{{ person.title }}</li>
-                  {% endfor %}
-                  {% if publication_page.featured_person_list_has_more %}
-                    <li>and more</li>
-                  {% endif %}
-                </ul>
-              </div>
+        <a href="{% pageurl publication %}" class="publications-featured-list">
+          <div class="publications-featured-list-inner">
+            <div class="publications-featured-list-image-wrapper">
+              {% image publication.image_cover width-200 as image_rect %}
+              <div class="img-wrapper" style="background-image: url('{{ image_rect.url }}');"></div>
             </div>
-          </a>
-        </div>
-      {% endwith %}
+
+            <div class="publications-featured-list-content">
+              {% if publication.topics.all %}
+                <ul class="publications-featured-list-topics custom-text-list">
+                  {% for topic in publication.topics.all %}
+                    <li>
+                      {{ topic.title }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+
+              <p class="publications-featured-list-title">
+                {{ publication.title }}
+              </p>
+
+              <p class="publications-featured-list-date">
+                {{ publication.publishing_date|date:"F j, Y" }}
+              </p>
+
+              <ul class="publications-featured-list-authors custom-text-list">
+                {% for person in publication.featured_person_list %}
+                  <li>{{ person.title }}</li>
+                {% endfor %}
+                {% if publication.featured_person_list_has_more %}
+                  <li>and more</li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </a>
+      </div>
     {% endfor %}
   </div>
 </section>

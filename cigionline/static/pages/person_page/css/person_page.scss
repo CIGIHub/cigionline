@@ -1,5 +1,40 @@
+@import '../../../css/global/mixins';
+
 .expert-search-table {
   .search-table {
     margin-top: 1em;
+  }
+}
+
+.person-page {
+  .person-in-the-news {
+    margin-bottom: 2em;
+    margin-top: 1em;
+
+    article {
+      margin-bottom: 1.5em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      h3 {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        font-size: 1.0625em;
+        margin-bottom: 0.3em;
+      }
+
+      .authors {
+        color: $cigi-text-grey;
+        font-size: 0.75em;
+        margin-bottom: 0;
+        margin-top: 0;
+        text-transform: uppercase;
+      }
+
+      .meta {
+        margin-bottom: 0;
+      }
+    }
   }
 }

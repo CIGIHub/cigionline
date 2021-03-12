@@ -14,7 +14,7 @@
   {% image self.image_banner original as image_banner %}
   <section class="health-security-series-article-hero" style="background-image: url('{{ image_banner.url }}')">
     <div class="fingerprint-icon-container">
-      <img src="{% static 'themes/health_security_series/assets/health-security-fingerprint-icon.svg' %}" alt="fingerprint-icon">
+      <img src="{% static 'themes/health_security_series/assets/health-security-fingerprint-icon.svg' %}" alt="fingerprint-icon" />
     </div>
     <div class="container">
       <div class="row justify-content-center">
@@ -23,18 +23,20 @@
           <h1>{{ self.title }}</h1>
           {% include "includes/date.html" with date=self.publishing_date %}
           <div class="authors">
-            {% for item in self.authors.all %}
-              <a href="{{ item.author.url }}">
-                <article>
-                  <div class="author-image">
-                    {% include "./includes/health_security_series_rings.html" %}
-                    {% image item.author.image_square fill-100x100 class="author-img" %}
-                  </div>
-                  <div class="author-name">
-                    {{ item.author.title }}
-                  </div>
-                </article>
-              </a>
+            {% for item in self.authors %}
+              {% if item.block_type == 'author' %}
+                <a href="{% pageurl item.value %}">
+                  <article>
+                    <div class="author-image">
+                      {% include "./includes/health_security_series_rings.html" %}
+                      {% image item.value.image_square fill-100x100 class="author-img" %}
+                    </div>
+                    <div class="author-name">
+                      {{ item.value.title }}
+                    </div>
+                  </article>
+                </a>
+              {% endif %}
             {% endfor %}
           </div>
         </div>
@@ -47,4 +49,8 @@
   {% if self.article_series %}
     {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
   {% endif %}
+{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Health Security series articles #}
 {% endblock %}

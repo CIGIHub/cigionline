@@ -1,12 +1,41 @@
 {% extends "base.html" %}
 {% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
 
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta name="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta name="og:type" content="article" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta name="og:image" content="{{ self.get_site.root_url }}{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" with root_url=self.get_site.root_url %}
+  {% endif %}
+{% endblock %}
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_event.html" with topics=self.topics title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all registration_url=self.registration_url %}
+  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors registration_url=self.registration_url %}
 
   {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
     <section class="event-multimedia-embed-section">
@@ -41,8 +70,8 @@
 
   {% include "includes/body.html" with body=self.body %}
 
-  {% if self.authors.all|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors.all title_override="Event Speaker"%}
+  {% if self.authors|length > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors title_override="Event Speaker"%}
   {% endif %}
 
   {% if self.related_files %}

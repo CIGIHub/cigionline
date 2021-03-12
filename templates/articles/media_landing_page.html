@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader %}
+{% load webpack_loader wagtailcore_tags %}
 
 {% block extra_css %}
   {% render_bundle 'mediaLandingPage' 'css' %}
@@ -27,8 +27,8 @@
           {% endif %}
           <div class="col-12 col-md-6 col-lg-4 media-latest-news-article">
             <article>
-              {% include "includes/topics.html" with topics=article.topics %}
-              <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+              {% include "includes/topics.html" with topics=article.topics_sorted %}
+              <h3><a href="{% pageurl article %}">{{ article.title }}</a></h3>
               <p class="meta">{{ article.article_type.title }}</p>
               <p class="cigi-people-mentioned">
                 {% for person in article.cigi_people_mentioned %}

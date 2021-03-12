@@ -2,6 +2,29 @@
 
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
+{% block meta_description %}
+  {% if self.short_description %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.short_description %}
+    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta name="og:image" content="{{ self.get_site.root_url }}{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" with root_url=self.get_site.root_url %}
+  {% endif %}
+{% endblock %}
+
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
 {% endblock %}
@@ -48,7 +71,7 @@
       <div class="row justify-content-center">
         <div class="col-md-8">
           <h2>LATEST EPISODE</h2>
-          {% include "includes/topics.html" with topics=latest_episode.topics %}
+          {% include "includes/topics.html" with topics=latest_episode.topics_sorted %}
           <h3>
             <a href="{{ latest_episode.url }}">
               {{ latest_episode.specific.podcast_guests }}
@@ -60,8 +83,8 @@
           </div>
           {{ latest_episode.specific.subtitle|richtext }}
           <div class="date">
-            {% if episode.specific.podcast_season and episode.specific.podcast_episode %}
-              S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / 
+            {% if latest_episode.specific.podcast_season and latest_episode.specific.podcast_episode %}
+              S{{ latest_episode.specific.podcast_season }}E{{ latest_episode.specific.podcast_episode }} /
             {% endif %}
             {{latest_episode.specific.publishing_date|date:"F j, Y"}}
           </div>
@@ -111,7 +134,7 @@
               {% for episode in episodes.published %}
                 <article class="flex-row {% if season == 3 and forloop.counter == 1 %}d-none{% endif %}">
                   <div class="episode-info">
-                    {% include "includes/topics.html" with topics=episode.topics %}
+                    {% include "includes/topics.html" with topics=episode.topics_sorted %}
                     <h3>
                       <a href="{{ episode.url }}">
                         {{ episode.specific.podcast_guests }}
@@ -121,7 +144,7 @@
                     {{ episode.specific.subtitle|richtext }}
                     <div class="date">
                       {% if episode.specific.podcast_season and episode.specific.podcast_episode %}
-                        S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} / 
+                        S{{ episode.specific.podcast_season }}E{{ episode.specific.podcast_episode }} /
                       {% endif %}
                       {{episode.specific.publishing_date|date:"F j, Y"}}
                     </div>

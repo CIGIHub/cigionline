@@ -24,6 +24,10 @@ class Menu(index.Indexed, ClusterableModel):
         ),
     ]
 
+    @classmethod
+    def get_indexed_objects(cls):
+        return cls.objects.none()
+
     def __str__(self):
         return self.name
 
@@ -58,11 +62,3 @@ class MenuItem(Orderable):
         FieldPanel('link_url'),
         FieldPanel('submenu'),
     ]
-
-    @property
-    def link(self):
-        if self.link_page:
-            return self.link_page.url
-        elif self.link_url:
-            return self.link_url
-        return '#'

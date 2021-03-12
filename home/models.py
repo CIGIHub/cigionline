@@ -79,59 +79,81 @@ class HomePage(Page):
     ]
 
     def featured_large(self):
-        first_featured = self.featured_pages.first()
+        first_featured = self.featured_pages.prefetch_related(
+            'featured_page',
+        ).first()
         if first_featured:
             return first_featured.featured_page.specific
         return False
 
     def featured_medium(self):
         featured_medium = []
-        featured_medium_query = self.featured_pages.all()[1:4]
+        featured_medium_query = self.featured_pages.prefetch_related(
+            'featured_page',
+        ).all()[1:4]
         for item in featured_medium_query:
             featured_medium.append(item.featured_page.specific)
         return featured_medium
 
     def featured_small(self):
         featured_small = []
-        featured_small_query = self.featured_pages.all()[4:]
+        featured_small_query = self.featured_pages.prefetch_related(
+            'featured_page',
+        ).all()[4:]
         for item in featured_small_query:
             featured_small.append(item.featured_page.specific)
         return featured_small
 
     def featured_publications(self):
-        return PublicationPage.objects.live().public().order_by('-publishing_date')[:4]
+        return PublicationPage.objects.prefetch_related(
+            'topics',
+        ).live().public().order_by('-publishing_date')[:4]
 
     def featured_multimedia_large(self):
-        first_featured_multimedia = self.featured_multimedia.first()
+        first_featured_multimedia = self.featured_multimedia.prefetch_related(
+            'featured_multimedia__topics',
+        ).first()
         if first_featured_multimedia:
             return first_featured_multimedia.featured_multimedia
         return False
 
     def featured_multimedia_small(self):
         featured_multimedia_small = []
-        for item in self.featured_multimedia.all()[1:]:
+        for item in self.featured_multimedia.prefetch_related(
+            'featured_multimedia__topics',
+        ).all()[1:]:
             featured_multimedia_small.append(item.featured_multimedia)
         return featured_multimedia_small
 
     def featured_experts_list(self):
         featured_experts = []
-        for item in self.featured_experts.all()[:3]:
+        for item in self.featured_experts.prefetch_related(
+            'featured_expert',
+        ).all()[:3]:
             featured_experts.append(item.featured_expert)
         return featured_experts
 
     def promotion_blocks_list(self):
         promotion_blocks_list = []
-        for item in self.promotion_blocks.all()[:2]:
+        for item in self.promotion_blocks.prefetch_related(
+            'promotion_block',
+        ).all()[:2]:
             promotion_blocks_list.append(item.promotion_block)
         return promotion_blocks_list
 
     def featured_events(self):
         featured_events = []
         now = timezone.now()
-        future_events = EventPage.objects.live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+        future_events = EventPage.objects.prefetch_related(
+            'multimedia_page',
+            'topics',
+        ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
         if len(future_events) < 3:
             Q = models.Q
-            past_events = EventPage.objects.live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+            past_events = EventPage.objects.prefetch_related(
+                'multimedia_page',
+                'topics',
+            ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
             featured_events = (list(future_events) + list(past_events))[:3]
         else:
             featured_events = future_events
@@ -159,7 +181,8 @@ class HomePage(Page):
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
         'research.ResearchLandingPage',
-        'research.TopicListPage'
+        'research.TopicListPage',
+        'subscribe.SubscribePage',
     ]
     templates = 'core/home_page.html'
 

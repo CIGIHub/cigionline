@@ -23,7 +23,7 @@
           <div class="row">
             <div class="col">
               <div class="hero-content">
-                {% include "includes/topics.html" with topics=self.topics %}
+                {% include "includes/topics.html" with topics=self.topics_sorted %}
                 <div class="platform-governance-series-article-series-social">
                   <a href="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
                     <i class="fab fa-facebook-square fa-lg"></i>
@@ -87,11 +87,10 @@
                     </a>
                   </h3>
                   <p class="authors">
-                    {% for item in block.value.specific.authors.all %}
-                      <span><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
-                    {% endfor %}
-                    {% for item in block.value.specific.external_authors %}
-                      {% if item.block_type == 'external_person' %}
+                    {% for item in block.value.specific.authors %}
+                      {% if item.block_type == 'author' %}
+                        <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+                      {% elif item.block_type == 'external_author' %}
                         <span>{{ item.value }}</span>
                       {% endif %}
                     {% endfor %}

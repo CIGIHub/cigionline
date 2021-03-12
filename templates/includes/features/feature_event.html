@@ -1,10 +1,12 @@
+{% load wagtailcore_tags %}
+
 <article class="feature-content feature-event {% if event.is_past %}past-event{% endif %}">
   <div class="event-content">
-    {% include "includes/topics.html" with topics=event.topics %}
+    {% include "includes/topics.html" with topics=event.topics_sorted %}
     {% include "includes/features/feature_content_title.html" with content=event %}
     <div class="meta">{{ event.publishing_date|date:"M j, Y - g:i A" }}</div>
-    {% if event.multimedia_url and event.is_past %}
-      <a href="{{ event.multimedia_url }}" class="button-action">
+    {% if event.multimedia_page and event.is_past %}
+      <a href="{% pageurl event.multimedia_page %}" class="button-action">
         <i class="fas fa-play"></i>&nbsp;&nbsp;WATCH
       </a>
     {% elif not event.event_access %}

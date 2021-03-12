@@ -13,6 +13,6 @@ def all_topics(request):
         'items': [{
             'id': topic.id,
             'title': topic.title,
-            'url': topic.url,
+            'url': topic.get_url(request),
         } for topic in topics[:100]],
     }, safe=False)

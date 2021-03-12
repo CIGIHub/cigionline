@@ -19,9 +19,11 @@ function EventListing(props) {
             <a href={row.url} className="table-title-link">
               {row.title}
             </a>
-            <div className="table-infos-meta">
-              {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
-            </div>
+            {row.publishing_date && (
+              <div className="table-infos-meta">
+                {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
+              </div>
+            )}
           </div>
         </div>
       </td>
@@ -32,7 +34,7 @@ function EventListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {row.topics.map((topic) => (
-              <li key={topic.id}>
+              <li key={`${row.id}-topic-${topic.id}`}>
                 <a href={topic.url} className="table-content-link">
                   {topic.title}
                 </a>
@@ -48,10 +50,10 @@ function EventListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             {!!row.location_city && (
-              <li className="table-infos-meta">{row.location_city}</li>
+              <li key={`${row.id}-city`} className="table-infos-meta">{row.location_city}</li>
             )}
             {!!row.location_country && (
-              <li className="table-infos-meta">{row.location_country}</li>
+              <li key={`${row.id}-country`} className="table-infos-meta">{row.location_country}</li>
             )}
           </ul>
         </div>

@@ -5,13 +5,63 @@ from wagtail.search.backends.elasticsearch7 import (
 )
 
 
+class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
+    def _get_es_body(self, for_count=False):
+        body = super()._get_es_body(for_count)
+
+        if not for_count:
+            body["highlight"] = {
+                "fields": {
+                    "*__body": {},
+                },
+                "fragment_size": 256,
+            }
+
+        return body
+
+    def _get_results_from_hits(self, hits):
+        """
+        Yields Django model instances from a page of hits returned by Elasticsearch
+        """
+        # Get pks from results
+        pks = [hit['fields']['pk'][0] for hit in hits]
+        scores = {str(hit['fields']['pk'][0]): hit['_score'] for hit in hits}
+        highlights = {}
+
+        for hit in hits:
+            highlight = hit.get('highlight', None)
+            if highlight is not None:
+                highlights[str(hit['fields']['pk'][0])] = [item for field in list(highlight.values()) for item in field]
+            else:
+                highlights[str(hit['fields']['pk'][0])] = []
+
+        # Initialise results dictionary
+        results = {str(pk): None for pk in pks}
+
+        # Find objects in database and add them to dict
+        for obj in self.query_compiler.queryset.filter(pk__in=pks):
+            results[str(obj.pk)] = obj
+
+            if self._score_field:
+                setattr(obj, self._score_field, scores.get(str(obj.pk)))
+
+            setattr(obj, '_highlights', highlights.get(str(obj.pk)))
+
+        # Yield results in order given by Elasticsearch
+        for pk in pks:
+            result = results[str(pk)]
+            if result:
+                yield result
+
+
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid
+        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
         self.content_type = content_type
+        self.sort = sort
         self.contenttypes = None
         self.contentsubtypes = None
         self.authors = None
@@ -20,6 +70,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.searchtext = searchtext
         self.articletypeid = None
         self.publicationtypeid = None
+        self.publicationseriesid = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -35,6 +86,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.articletypeid = articletypeid
         if publicationtypeid is not None:
             self.publicationtypeid = publicationtypeid
+        if publicationseriesid is not None:
+            self.publicationseriesid = publicationseriesid
 
     @property
     def queryset(self):
@@ -44,8 +97,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.searchtext:
             must = {
                 "multi_match": {
-                    "fields": ["*"],
-                    "operator": "and",
+                    "fields": ["title", "*__body"],
                     "query": self.searchtext,
                 },
             }
@@ -78,7 +130,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.authors:
             filters.append({
                 "terms": {
-                    "core_contentpage__authors_filter": self.authors,
+                    "core_contentpage__author_ids_filter": self.authors,
                 },
             })
         if self.projects:
@@ -105,6 +157,12 @@ class CIGIOnlineSearchQueryCompiler:
                     "publications_publicationpage__publication_type_id_filter": self.publicationtypeid,
                 },
             })
+        if self.publicationseriesid:
+            filters.append({
+                "term": {
+                    "publications_publicationpage__publication_series_id_filter": self.publicationseriesid,
+                },
+            })
 
         return {
             "bool": {
@@ -114,6 +172,9 @@ class CIGIOnlineSearchQueryCompiler:
         }
 
     def get_sort(self):
+        if self.sort == 'relevance':
+            return []
+
         return [{
             "core_contentpage__publishing_date_filter": {
                 "order": "desc",
@@ -121,8 +182,8 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None):
-    return Elasticsearch7SearchResults(
+def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None):
+    return CIGIOnlineElasticsearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid)
+        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid)
     )

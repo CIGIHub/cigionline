@@ -13,7 +13,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8 hero-content">
-          {% include "includes/topics.html" with topics=self.topics %}
+          {% include "includes/topics.html" with topics=self.topics_sorted %}
           <h1>{{ self.title }}</h1>
           <div class="subtitle">
             {{ self.subtitle|richtext }}
@@ -21,12 +21,11 @@
           <div class="meta">
             <p>Published: {{ self.publishing_date|date:"F j, Y" }}</p>
             <p>
-              Author{{ self.author_count|pluralize }}:
-              {% for item in self.authors.all %}
-                <span class="author"><a href="{{ item.author.url }}">{{ item.author.title }}</a></span>
-              {% endfor %}
-              {% for item in self.external_authors %}
-                {% if item.block_type == 'external_person' %}
+              Author{{ self.authors|length|pluralize }}:
+              {% for item in self.authors %}
+                {% if item.block_type == 'author' %}
+                  <span class="author"><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
+                {% elif item.block_type == 'external_author' %}
                   <span>{{ item.value }}</span>
                 {% endif %}
               {% endfor %}

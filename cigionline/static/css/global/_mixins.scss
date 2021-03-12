@@ -151,6 +151,19 @@
   }
 }
 
+@mixin inline-highlight($color: $white, $background: $cigi-primary-colour) {
+  background: $background;
+  box-decoration-break: clone;
+  box-shadow: 5px 0 0 $background, -5px 0 0 $background;
+  color: $color;
+  display: inline;
+  line-height: 125%;
+
+  &::after {
+    content: '';
+    display: block;
+  }
+}
 // IMAGES
 
 @mixin aspect-ratio($width, $height) {
@@ -279,7 +292,7 @@
 
     .logo-container,
     .footer-bracket,
-    .highlighted-topics {
+    .highlighted-topics-list {
       display: none;
     }
 

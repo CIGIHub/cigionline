@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'research',
     'search',
     'streams',
+    'subscribe',
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
@@ -111,7 +112,12 @@ LOGGING = {
         }
     },
     'loggers': {
-        'testlogger': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'cigionline': {
             'handlers': ['console'],
             'level': 'INFO',
         }
@@ -180,7 +186,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
             'USER': 'postgres',
             'PASSWORD': 'postgres',
             'CONN_MAX_AGE': 600,
-        }
+        },
     }
 
 WAGTAILSEARCH_BACKENDS = {
@@ -191,7 +197,7 @@ WAGTAILSEARCH_BACKENDS = {
         'TIMEOUT': 30,
         'OPTIONS': {},
         'INDEX_SETTINGS': {},
-    }
+    },
 }
 
 

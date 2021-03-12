@@ -9,12 +9,14 @@ function ArticleListingSimple(props) {
     <article className="simple-listing">
       <p className="article-type">{row.contentsubtype}</p>
       <h2 className="article-title"><a href={row.url}>{row.title}</a></h2>
-      <p className="article-date">
-        {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
-      </p>
+      {row.publishing_date && (
+        <p className="article-date">
+          {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
+        </p>
+      )}
       <p className="article-authors">
         {row.authors.map((author) => (
-          <a key={`${row.id}-${author.id}`} href={author.url}>
+          <a key={`${row.id}-author-${author.id}`} href={author.url}>
             {author.title}
           </a>
         ))}

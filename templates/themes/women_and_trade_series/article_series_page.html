@@ -37,7 +37,7 @@
           <div class="contributors">
             {% for item in self.series_contributors_by_article %}
               {% for contributor in item.contributors %}
-                <span>{{ contributor.author.title }}</span>
+                <span>{{ contributor.title }}</span>
               {% endfor %}
             {% endfor %}
           </div>
@@ -55,7 +55,7 @@
       {% include_block block %}
     {% endfor %}
   </section>
-  <section>
+  <section class="in-the-series">
     <div class="container">
       <div class="row">
         <div class="col">

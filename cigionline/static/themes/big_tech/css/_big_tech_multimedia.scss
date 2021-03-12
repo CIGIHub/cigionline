@@ -240,4 +240,14 @@
       font-size: 0.875em;
     }
   }
+
+  .stream-read-more-block {
+    .read-more-btn {
+      color: $bigtech-teal;
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
 }

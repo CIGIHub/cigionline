@@ -1,7 +1,6 @@
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
-    ContentPage,
     SearchablePageAbstract,
     ThemeablePageAbstract,
 )
@@ -9,7 +8,12 @@ from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from search.filters import (
+    ParentalManyToManyFilterField,
+    ParentalManyToManyFilterFieldName,
+)
 from streams.blocks import ParagraphBlock
+from unidecode import unidecode
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -24,6 +28,8 @@ from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 import random
+
+from .search_expert import expert_latest_activity_search, expert_latest_in_the_news_search
 
 
 class PeoplePage(Page):
@@ -85,17 +91,7 @@ class PersonListPage(BasicPageAbstract, Page):
             'archive': ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
         }
 
-        if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
-            personFilter['person_types__name__in'] = ['CIGI Chair', 'Expert']
-            context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
-            personFilter['person_types__name'] = 'Staff'
-            letter = request.GET.get('letter')
-            if letter:
-                letter = letter[0:1]
-                personFilter['last_name__istartswith'] = letter
-            context['people'] = PersonPage.objects.live().filter(**personFilter).order_by(Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
-        elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
             personFilter['person_types__name'] = 'Management Team'
             context['senior_management'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
             personFilter['person_types__name'] = 'Board Member'
@@ -233,18 +229,46 @@ class PersonPage(
 
     @property
     def has_authored_content(self):
-        return self.content_pages_as_author.count() > 0
+        return expert_latest_activity_search(expert_id=self.id).count() > 0
 
+    @property
+    def first_name_lowercase(self):
+        return unidecode(self.first_name.lower())
+
+    @property
+    def last_name_lowercase(self):
+        return unidecode(self.last_name.lower())
+
+    @property
+    def image_square_url(self):
+        if self.image_square:
+            return self.image_square.get_rendition('fill-300x300').url
+        return ''
+
+    @property
+    def expertise_list(self):
+        expertise_list = []
+        for block in self.expertise:
+            if block.block_type == 'expertise':
+                expertise_list.append(block.value)
+        return expertise_list
+
+    @property
+    def phone_number_clean(self):
+        return self.phone_number.replace('.', ' ').lower()
+
+    @property
     def latest_activity(self):
         # @todo test
-        content_pages_as_author = self.content_pages_as_author.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
-        content_pages_as_editor = self.content_pages_as_editor.filter(content_page__live=True).values('content_page_id', 'content_page__publishing_date')
-        latest_activity = content_pages_as_author.union(content_pages_as_editor).order_by('-content_page__publishing_date').first()
-        if latest_activity:
-            content_page = ContentPage.objects.get(pk=latest_activity.get('content_page_id'))
-            if content_page:
-                return content_page.specific
+        latest_activity_query = expert_latest_activity_search(expert_id=self.id)[:1]
+        if latest_activity_query.count() > 0:
+            return latest_activity_query[0]
         return False
+
+    @property
+    def latest_cigi_in_the_news(self):
+        articles = expert_latest_in_the_news_search(expert_id=self.id)
+        return articles[:3]
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -353,6 +377,15 @@ class PersonPage(
         ArchiveablePageAbstract.archive_panel,
         ThemeablePageAbstract.theme_panel,
     ]
+
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields + [
+            index.SearchField('body'),
+            index.FilterField('first_name_lowercase'),
+            index.FilterField('last_name_lowercase'),
+            ParentalManyToManyFilterFieldName('person_types'),
+            ParentalManyToManyFilterField('topics'),
+        ]
 
     parent_page_types = ['people.PeoplePage']
     subpage_types = []

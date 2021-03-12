@@ -1,8 +1,14 @@
+{% load wagtailcore_tags %}
+
 <ul class="custom-text-list feature-content-people-list">
   {% with 3 as people_limit %}
     {% for item in authors %}
       {% if forloop.counter <= people_limit %}
-        <li><a href="{{ item.author.url }}">{{ item.author.title }}</a></li>
+        {% if item.block_type == 'author' %}
+          <li><a href="{% pageurl item.value %}">{{ item.value.title }}</a></li>
+        {% elif item.block_type == 'external_author' %}
+          <li>{{ item.value }}</li>
+        {% endif %}
       {% elif forloop.counter == people_limit|add:1 %}
         <li>and more</li>
       {% endif %}

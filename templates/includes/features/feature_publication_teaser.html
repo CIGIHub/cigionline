@@ -3,15 +3,15 @@
 <article class="feature-publication-teaser">
   <div class="feature-publication-teaser-content">
     <div class="feature-publication-teaser-title">
-      {% include "includes/topics.html" with topics=publication.topics %}
+      {% include "includes/topics.html" with topics=publication.topics_sorted %}
       <h3>
-        <a href="{{ publication.url }}">
+        <a href="{% pageurl publication %}">
           {{ publication.title }}
         </a>
       </h3>
     </div>
     <div class="feature-publication-teaser-meta">
-      {% include "includes/authors.html" with authors=publication.authors.all external_authors=publication.external_authors %}
+      {% include "includes/authors.html" with authors=publication.authors %}
       {% include "includes/date.html" with date=publication.publishing_date %}
       {% if publication.pdf_downloads %}
         <button class="button-action">

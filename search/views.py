@@ -1,51 +1,33 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
-
-from wagtail.core.models import Page
 from wagtail.search.models import Query
 
 from .search import cigi_search
 
 
 def search(request):  # pragma: no cover
-    search_query = request.GET.get('query', None)
-    page = request.GET.get('page', 1)
-
-    # Search
-    if search_query:
-        search_results = Page.objects.live().search(search_query)
-        query = Query.get(search_query)
-
-        # Record hit
-        query.add_hit()
-    else:
-        search_results = Page.objects.none()
-
-    # Pagination
-    paginator = Paginator(search_results, 10)
-    try:
-        search_results = paginator.page(page)
-    except PageNotAnInteger:
-        search_results = paginator.page(1)
-    except EmptyPage:
-        search_results = paginator.page(paginator.num_pages)
-
-    return render(request, 'search/search.html', {
-        'search_query': search_query,
-        'search_results': search_results,
-    })
+    return render(request, 'search/search.html')
 
 
 def search_api(request):
+    searchtext = request.GET.get('searchtext', None)
+    if searchtext:
+        query = Query.get(searchtext)
+
+        # Record hit
+        query.add_hit()
+
     pages = cigi_search(
         articletypeid=request.GET.get('articletypeid', None),
         authors=request.GET.getlist('author', None),
+        content_type=request.GET.get('content_type', None),
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
         projects=request.GET.getlist('project', None),
+        publicationseriesid=request.GET.get('publicationseriesid', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
-        searchtext=request.GET.get('searchtext', None),
+        searchtext=searchtext,
+        sort=request.GET.get('sort', None),
         topics=request.GET.getlist('topic', None),
     )
     default_limit = 24
@@ -67,30 +49,38 @@ def search_api(request):
     items = []
     for page in pages[offset:offsetLimit]:
         item = {
+            'highlights': page._highlights,
+            'id': page.id,
             'title': page.title,
-            'url': page.url,
+            'url': page.get_url(request),
         }
         for field in fields:
-            if field == 'authors':
-                item['authors'] = [{
-                    'id': author.author.id,
-                    'title': author.author.title,
-                    'url': author.author.url,
-                } for author in page.specific.authors.all()]
-            elif field == 'cigi_people_mentioned':
-                item['cigi_people_mentioned'] = [{
-                    'id': person.value.id,
-                    'title': person.value.title,
-                    'url': person.value.url,
-                } for person in page.specific.cigi_people_mentioned]
-            elif field == 'topics':
-                item['topics'] = [{
-                    'id': topic.id,
-                    'title': topic.title,
-                    'url': topic.url,
-                } for topic in page.specific.topics.all()]
-            else:
-                item[field] = getattr(page.specific, field)
+            try:
+                if field == 'authors':
+                    item['authors'] = []
+                    for block in page.specific.authors:
+                        if block.block_type == 'author':
+                            item['authors'].append({
+                                'id': block.value.id,
+                                'title': block.value.title,
+                                'url': block.value.url,
+                            })
+                elif field == 'cigi_people_mentioned':
+                    item['cigi_people_mentioned'] = [{
+                        'id': person.value.id,
+                        'title': person.value.title,
+                        'url': person.value.url,
+                    } for person in page.specific.cigi_people_mentioned]
+                elif field == 'topics':
+                    item['topics'] = [{
+                        'id': topic.id,
+                        'title': topic.title,
+                        'url': topic.url,
+                    } for topic in page.specific.topics.all()]
+                else:
+                    item[field] = getattr(page.specific, field)
+            except AttributeError:
+                pass
         items.append(item)
 
     return JsonResponse({

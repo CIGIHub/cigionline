@@ -17,7 +17,7 @@ function MultimediaListing(props) {
       </a>
       <ul className="custom-text-list multimedia-card-topic-list">
         {row.topics.map((topic) => (
-          <li key={topic.id}>
+          <li key={`${row.id}-topic-${topic.id}`}>
             <a href={topic.url} className="table-content-link">
               {topic.title}
             </a>
@@ -31,19 +31,21 @@ function MultimediaListing(props) {
       </p>
       <ul className="custom-text-list multimedia-card-speakers-list">
         {row.authors.slice(0, 3).map((author) => (
-          <li key={`${row.id}-${author.id}`}>
+          <li key={`${row.id}-author-${author.id}`}>
             <a href={author.url}>
               {author.title}
             </a>
           </li>
         ))}
         {row.authors.length > 3 && (
-          <li key="more">And more</li>
+          <li key={`${row.id}-author-more`}>And more</li>
         )}
       </ul>
-      <p className="multimedia-card-date">
-        {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
-      </p>
+      {row.publishing_date && (
+        <p className="multimedia-card-date">
+          {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
+        </p>
+      )}
     </div>
   );
 }

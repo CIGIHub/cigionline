@@ -1,6 +1,38 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
+{% block meta_description %}
+  {% if self.short_bio %}
+    <meta name="description" content="{{ self.short_bio|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.short_bio %}
+    <meta name="og:description" content="{{ self.short_bio|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta name="og:type" content="profile" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_media %}
+    {% image self.image_media fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta name="og:image" content="{{ self.get_site.root_url }}{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" with root_url=self.get_site.root_url %}
+  {% endif %}
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.first_name %}
+    <meta name="profile:first_name" content="{{ self.first_name }}" />
+  {% endif %}
+  {% if self.last_name %}
+    <meta name="profile:last_name" content="{{ self.last_name }}" />
+  {% endif %}
+{% endblock %}
+
 {% block extra_css %}
   {% render_bundle 'personPage' 'css' %}
 {% endblock %}
@@ -40,7 +72,7 @@
     </section>
 
     {% if not page.archive %}
-      {% if page.expertise or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number or page.curriculum_vitae %}
+      {% if page.expertise or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
         <section class="expertise">
           <div class="container">
             <div class="row justify-content-center">
@@ -53,16 +85,16 @@
                         <span class="expertise-item">{{ expertise }}</span>
                       {% endfor %}
                     </div>
-                    {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number or page.curriculum_vitae %}
+                    {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
                       <hr>
                     {% endif %}
                   {% endif %}
 
                   <div class="contact">
-                    {% if page.phone_number %}
+                    {% if page.phone_number_clean %}
                       <div class="contact-item">
                         <i class="fa fa-phone" aria-hidden="true"></i>
-                        {{ page.phone_number }}
+                        {{ page.phone_number_clean }}
                       </div>
                     {% endif %}
 
@@ -117,6 +149,36 @@
       {% endif %}
 
       {% include "includes/body.html" with body=self.body heading="Bio" %}
+
+      {% if self.latest_cigi_in_the_news %}
+        <section>
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-10 col-lg-8">
+                <h2 class="paragraph-heading">
+                  In the News
+                </h2>
+                <div class="person-in-the-news">
+                  {% for article in self.latest_cigi_in_the_news %}
+                    <article>
+                      <p class="meta">{{ article.contentsubtype }}</p>
+                      <h3>
+                        <a href="{% pageurl article %}">
+                          {{ article.title }}
+                        </a>
+                      </h3>
+                      <p class="meta">
+                        {{ article.publishing_date|date:"F j, Y" }}
+                      </p>
+                      {% include "includes/authors.html" with authors=article.authors %}
+                    </article>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
 
       {% if page.external_publications %}
       {% with publication.value.publication_type|lower as type %}
