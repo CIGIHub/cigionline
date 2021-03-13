@@ -1,5 +1,8 @@
 /* global FB */
 import 'bootstrap/dist/js/bootstrap.bundle';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import CookieConsent from './js/components/CookieConsent';
 import './css/cigionline.scss';
 
 import addInlineVideoActions from './js/inline_video_block';
@@ -72,3 +75,11 @@ $(function() {
 });
 
 addInlineVideoActions();
+
+const cookieBannerContainer = document.getElementById('cigi-cookie-banner-container');
+if (cookieBannerContainer) {
+  ReactDOM.render(
+    <CookieConsent />,
+    cookieBannerContainer,
+  );
+}
