@@ -1,0 +1,27 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailimages_tags core_tags %}
+
+{% block hero %}
+  {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
+
+  {% if self.image_hero %}
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <figure class="article-image-hero">
+            {% if self.image_hero.file.url|file_extension == '.gif' %}
+              <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.title}}" />
+            {% else %}
+              {% image self.image_hero width-1760 %}
+            {% endif %}
+            {% if self.image_hero.title %}
+              <figcaption>
+                {{ self.image_hero.title }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
