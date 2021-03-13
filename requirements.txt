@@ -44,7 +44,7 @@ lazy-object-proxy==1.4.3
 libsass==0.20.1
 mailchimp-marketing==3.0.29
 mccabe==0.6.1
-openpyxl==3.0.6
+openpyxl==3.0.7
 Pillow==8.1.2
 psycopg2==2.8.6
 pycodestyle==2.6.0
