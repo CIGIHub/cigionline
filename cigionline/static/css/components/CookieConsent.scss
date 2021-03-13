@@ -1,6 +1,19 @@
 @import '../global/variables';
 
+@keyframes bannerFadeIn {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .cigi-cookie-banner {
+  animation-duration: 0.5s;
+  animation-name: bannerFadeIn;
+  animation-timing-function: ease-in;
   background-color: $black-alpha-85;
   bottom: 0;
   left: 0;
