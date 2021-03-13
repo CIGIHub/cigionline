@@ -14,6 +14,7 @@ class CookieConsent extends React.Component {
   }
 
   handleConsent() {
+    fetch(encodeURI('/cookie_consent/'));
     this.setState({
       consentClicked: true,
     });

@@ -88,6 +88,8 @@
       {% include "includes/footer.html" %}
     {% endblock %}
 
-    <div id="cigi-cookie-banner-container"></div>
+    {% if not request.session.cookie_consent %}
+      <div id="cigi-cookie-banner-container"></div>
+    {% endif %}
   </body>
 </html>
