@@ -34,19 +34,19 @@ class CookieConsent extends React.Component {
           <div className="row">
             <div className="col-12">
               <div className="cigi-cookie-banner-content">
-                {consentClicked ? (
-                  <p>Thank You</p>
-                ) : (
-                  <>
-                    <p dangerouslySetInnerHTML={{ __html: bannerCopy }} />
-                    <button
-                      type="button"
-                      onClick={() => this.handleConsent()}
-                    >
-                      <span>OK</span>
-                      <i className="fa fa-check" />
-                    </button>
-                  </>
+                <p className={['cigi-cookie-banner-notice', consentClicked && 'accepted-consent'].join(' ')} dangerouslySetInnerHTML={{ __html: bannerCopy }} />
+                <button
+                  type="button"
+                  className={['cigi-cookie-banner-notice', consentClicked && 'accepted-consent'].join(' ')}
+                  onClick={() => this.handleConsent()}
+                >
+                  <span>OK</span>
+                  <i className="fa fa-check" />
+                </button>
+                {consentClicked && (
+                  <div className="cigi-cookie-banner-thank-you">
+                    <p>Thank You</p>
+                  </div>
                 )}
               </div>
             </div>
