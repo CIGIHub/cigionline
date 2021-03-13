@@ -16,10 +16,21 @@
   animation-timing-function: ease-in;
   background-color: $black-alpha-85;
   bottom: 0;
+  display: block;
   left: 0;
+  opacity: 1;
   position: fixed;
+  transition: opacity 0.5s ease-out;
   width: 100%;
   z-index: 100;
+
+  &.consent-complete {
+    display: none;
+  }
+
+  &.consent-fade {
+    opacity: 0;
+  }
 
   .cigi-cookie-banner-content {
     align-items: center;

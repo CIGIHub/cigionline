@@ -6,6 +6,8 @@ class CookieConsent extends React.Component {
     super(props);
     this.state = {
       consentClicked: false,
+      consentComplete: false,
+      consentFade: false,
     };
 
     this.handleConsent = this.handleConsent.bind(this);
@@ -15,10 +17,20 @@ class CookieConsent extends React.Component {
     this.setState({
       consentClicked: true,
     });
+    setTimeout(() => {
+      this.setState({
+        consentFade: true,
+      });
+    }, 1500);
+    setTimeout(() => {
+      this.setState({
+        consentComplete: true,
+      });
+    }, 2000);
   }
 
   render() {
-    const { consentClicked } = this.state;
+    const { consentClicked, consentFade, consentComplete } = this.state;
 
     const bannerCopy = `
       This site uses cookies to provide the best online experience. By using
@@ -29,7 +41,7 @@ class CookieConsent extends React.Component {
 
     /* eslint-disable react/no-danger */
     return (
-      <div className="cigi-cookie-banner">
+      <div className={['cigi-cookie-banner', consentFade && 'consent-fade', consentComplete && 'consent-complete'].join(' ')}>
         <div className="container">
           <div className="row">
             <div className="col-12">
