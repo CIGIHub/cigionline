@@ -42,7 +42,7 @@ jmespath==0.10.0
 l18n==2020.6.1
 lazy-object-proxy==1.4.3
 libsass==0.20.1
-mailchimp-marketing==3.0.29
+mailchimp-marketing==3.0.34
 mccabe==0.6.1
 openpyxl==3.0.7
 Pillow==8.1.2
