@@ -566,6 +566,18 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/pull_quote_right_block.html'
 
 
+class TextBackgroundBlock(blocks.RichTextBlock, ThemeableBlock):
+    """Text box with background colour """
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(TextBackgroundBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'text_background_block')
+
+    class Meta:
+        icon = 'edit'
+        label = 'Text Background Block'
+        template = 'streams/text_background_block.html'
+
+
 class TextBorderBlock(blocks.StructBlock, ThemeableBlock):
     """Text box with border and optional colour for border """
 

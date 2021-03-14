@@ -1,3 +1,103 @@
-// .longform-2-dark-mode-article {
-//
-// }
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+@import './longform_2_dark_mode_article';
+
+.longform-2-dark-mode-article {
+  @include top-bar(
+    $background-color: transparent,
+    $color: $white,
+    $position: relative,
+  );
+
+  .article-header-sticky {
+    background: $divider-grey;
+    $color: $black;
+    height: 0;
+    opacity: 0;
+    transition: height 0.5s ease, opacity 0.5s ease;
+
+    .article-header-sticky-content {
+      align-items: center;
+      display: flex;
+      padding: 0.5em;
+    }
+
+    .cigi-logo {
+      flex: 0 0 135px;
+    }
+
+    .series-title {
+      display: flex;
+      flex: 1;
+      font-size: .8em;
+      font-weight: 500;
+      justify-content: center;
+      line-height: 1.5em;
+      margin-left: -135px;
+    }
+
+    .social-links {
+      a {
+        color: $cigi-medium-grey;
+        cursor: pointer;
+        font-size: 1.25em;
+        padding-left: 1em;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
+  .progress-bar {
+    background-color: transparent;
+    position: relative;
+  }
+
+  progress {
+    background-color: transparent;
+    border: 0;
+    color: $black;
+    height: 5px;
+    width: 100%;
+
+    &::-moz-progress-bar {
+      background-color: $black !important;
+    }
+
+    &::-webkit-progress-bar {
+      background-color: transparent;
+      width: 100%;
+    }
+
+    &::-webkit-progress-value {
+      background-color: $black !important;
+    }
+  }
+
+  &.scrolled {
+
+    @include media-breakpoint-up(lg) {
+      .article-header-sticky {
+        height: auto;
+        opacity: 1;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+      }
+    }
+  }
+}
+
+section {
+  &.body {
+    position: relative;
+
+    .col {
+      position: static;
+    }
+  }
+}
+
