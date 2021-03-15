@@ -10,6 +10,7 @@ class SearchTableAnnualReports extends React.Component {
     this.state = {
       loading: true,
       loadingInitial: true,
+      displayRows: [],
       rows: [],
       searchValue: '',
       years: [],
@@ -17,6 +18,7 @@ class SearchTableAnnualReports extends React.Component {
     };
 
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.handleYearSelect = this.handleYearSelect.bind(this);
   }
 
@@ -24,27 +26,21 @@ class SearchTableAnnualReports extends React.Component {
     this.getRows();
   }
 
+  handleSearchSubmit(e) {
+    e.preventDefault();
+    this.search();
+  }
+
   handleSearchValueChange(e) {
-    const { years } = this.state;
-    const year = Number(e.target.value);
-    if (years.includes(year)) {
-      this.setState({
-        searchValue: year,
-        yearSelected: year,
-      });
-    } else {
-      this.setState({
-        searchValue: e.target.value,
-        yearSelected: 'All Years',
-      });
-    }
+    this.setState({
+      searchValue: e.target.value,
+    });
   }
 
   handleYearSelect(year) {
     this.setState({
       yearSelected: year,
-      searchValue: year,
-    });
+    }, this.search);
   }
 
   getRows() {
@@ -64,15 +60,37 @@ class SearchTableAnnualReports extends React.Component {
           loadingInitial: false,
           rows: data.items,
           years,
-        }));
+        }), this.search);
       });
+  }
+
+  search() {
+    const {
+      rows,
+      searchValue,
+      yearSelected,
+    } = this.state;
+
+    const displayRows = [];
+    for (const row of rows) {
+      if ((yearSelected === 'All Years'
+            || row.year === yearSelected)
+          && (!searchValue
+            || row.title.toLowerCase().includes(searchValue.toLowerCase()))) {
+        displayRows.push(row);
+      }
+    }
+
+    this.setState({
+      displayRows,
+    });
   }
 
   render() {
     const {
       loading,
       loadingInitial,
-      rows,
+      displayRows,
       searchValue,
       years,
       yearSelected,
@@ -81,7 +99,7 @@ class SearchTableAnnualReports extends React.Component {
     return (
       <div className="search-table">
         <div className="search-bar">
-          <form className="search-bar-form">
+          <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
             <div className="form-row position-relative">
               <div className="col">
                 <div className="input-group input-group-search">
@@ -130,7 +148,7 @@ class SearchTableAnnualReports extends React.Component {
         </div>
         {loadingInitial
           ? <SearchTableSkeleton />
-          : rows.length
+          : displayRows.length
             ? (
               <table className={['custom-theme-table', 'search-results', loading && 'loading'].join(' ')}>
                 <thead>
@@ -143,8 +161,9 @@ class SearchTableAnnualReports extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((row) => ((yearSelected === 'All Years' || row.year === yearSelected)
-                    && <AnnualReportListing key={row.year} row={row} />))}
+                  {displayRows.map((row) => (
+                    <AnnualReportListing key={row.year} row={row} />
+                  ))}
                 </tbody>
               </table>
             ) : (

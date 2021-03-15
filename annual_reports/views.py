@@ -14,7 +14,8 @@ def all_annual_reports(request):
             'report_french': annual_report.report_french.file.url if annual_report.report_french else '',
             'report_financial': annual_report.report_financial.file.url if annual_report.report_financial else '',
             'report_interactive': annual_report.report_interactive,
-            'year': annual_report.year,
+            'title': annual_report.title,
             'url': annual_report.url,
+            'year': annual_report.year,
         } for annual_report in annual_reports]
     })
