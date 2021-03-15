@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
+import './css/project_page.scss';
 
 const endpointParams = [];
 if (projectId) {

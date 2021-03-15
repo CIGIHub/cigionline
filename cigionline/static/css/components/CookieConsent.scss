@@ -1,0 +1,91 @@
+@import '../global/variables';
+
+@keyframes bannerFadeIn {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.cigi-cookie-banner {
+  animation-duration: 0.5s;
+  animation-name: bannerFadeIn;
+  animation-timing-function: ease-in;
+  background-color: $black-alpha-85;
+  bottom: 0;
+  display: block;
+  left: 0;
+  opacity: 1;
+  position: fixed;
+  transition: opacity 0.5s ease-out;
+  width: 100%;
+  z-index: 100;
+
+  &.consent-complete {
+    display: none;
+  }
+
+  &.consent-fade {
+    opacity: 0;
+  }
+
+  .cigi-cookie-banner-content {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1em;
+    padding-top: 1em;
+
+    button {
+      align-items: center;
+      border: 1px solid $white;
+      color: $white;
+      display: flex;
+      font-size: 1.2em;
+      justify-content: space-between;
+      margin-left: 2em;
+      margin-right: 2em;
+      outline: none;
+      padding: 0.4em 1em;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: $cigi-darkest-grey;
+      }
+
+      i {
+        margin-left: 0.5em;
+      }
+    }
+
+    p {
+      color: $white;
+      font-size: 0.9em;
+      margin-bottom: 0;
+    }
+
+    .cigi-cookie-banner-notice {
+      opacity: 1;
+      transition: opacity 0.2s ease;
+
+      &.accepted-consent {
+        opacity: 0;
+      }
+    }
+
+    .cigi-cookie-banner-thank-you {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+}
