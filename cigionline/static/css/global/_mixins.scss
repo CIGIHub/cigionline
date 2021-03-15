@@ -29,14 +29,19 @@
     .cigi-top-bar {
       .cigi-logo {
         svg {
+          @include media-breakpoint-down(md) {
+            * {
+              fill: $color;
+            }
+          }
           @include media-breakpoint-up(md) {
             fill: $color-medium;
+
+            * {
+              fill: $color-medium;
+            }
           }
           fill: $color;
-
-          * {
-            fill: $color;
-          }
         }
       }
 
