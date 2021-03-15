@@ -34,7 +34,7 @@ class SearchTableAnnualReports extends React.Component {
       });
     } else {
       this.setState({
-        searchValue: year,
+        searchValue: e.target.value,
         yearSelected: 'All Years',
       });
     }
