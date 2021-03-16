@@ -25,20 +25,29 @@
   {% endif %}
 {% endblock %}
 
-{% block extra_fonts %}
-  <link rel="stylesheet" href="https://use.typekit.net/ocy8tcr.css">
-{% endblock %}
 {% block extra_css %}
-  {% render_bundle 'themeBigTechS3' 'css' %}
+  {% render_bundle 'multimediaSeriesPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  {% render_bundle 'themeBigTechS3' 'js' attrs='defer' %}
+  <script type="text/javascript">
+    var multimediaSeriesId = {{ self.id }};
+  </script>
+  {% render_bundle 'multimediaSeriesPage' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}big-tech-s3-theme big-tech-s3-multimedia-series{% endblock %}
-
-
-
 {% block content %}
-
+  {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics %}
+  {% include "includes/body.html" with body=self.body heading="About the Series" %}
+  <section class="in-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">In the Series</h2>
+          {{self.id}}
+          <div id="multimedia-list">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
