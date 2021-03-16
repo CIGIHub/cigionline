@@ -22,7 +22,11 @@
         </div>
       </div>
     </div>
-    {% image self.image_banner original %}
+    {% if self.image_banner.file.url|file_extension == '.gif' %}
+      <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.title}}" />
+    {% else %}
+      {% image self.image_banner original %}
+    {% endif %}
   </section>
   <section class="body">
     <div class="container">
