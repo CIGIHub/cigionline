@@ -1,3 +1,4 @@
+from annual_reports import views as annual_report_views
 from core.views import cookie_consent
 from django.conf import settings
 from django.conf.urls import include, url
@@ -26,6 +27,7 @@ urlpatterns = [
     url(r'^api/search/$', search_views.search_api),
     url(r'^api/staff/$', people_views.all_staff),
     url(r'^api/topics/$', research_views.all_topics),
+    url(r'^api/annual-reports/', annual_report_views.all_annual_reports),
 
     url(r'^events/feed.ics$', EventFeed()),
 ]

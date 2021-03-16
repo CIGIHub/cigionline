@@ -39,7 +39,7 @@
     "cross-env": "7.0.3",
     "css-loader": "5.1.2",
     "cssnano": "4.1.10",
-    "eslint": "7.21.0",
+    "eslint": "7.22.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsx-a11y": "6.4.1",
@@ -60,7 +60,7 @@
     "scrollreveal": "4.0.9",
     "source-map-loader": "2.0.1",
     "style-loader": "2.0.0",
-    "webpack": "5.25.0",
+    "webpack": "5.26.0",
     "webpack-bundle-tracker": "0.4.3",
     "webpack-cli": "4.5.0"
   }
