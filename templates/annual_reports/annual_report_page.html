@@ -1,5 +1,209 @@
 {% extends "base.html" %}
 
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'annualReportPage' 'css' %}
+{% endblock %}
+
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title %}
+  {% include "includes/heroes/hero_plain.html" with title=self.title %}
+  {% include "includes/social_links.html" %}
+
+  <section class="reports">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <table class="custom-theme-table">
+            <thead>
+              <tr>
+                <th colspan="2">YEAR</th>
+                <th colspan="4">TYPE</th>
+                <th colspan="4">FORMAT</th>
+                <th colspan="3">LANGUAGE</th>
+                <th colspan="3"></th>
+              </tr>
+            </thead>
+            {% if self.report_interactive %}
+              <tr>
+                <td colspan="2">
+                  <div class="table-mobile-text">
+                    YEAR
+                  </div>
+                  <div class="table-content">
+                    {{ self.year }}
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    TYPE
+                  </div>
+                  <div class="table-content">
+                    Annual Report
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    FORMAT
+                  </div>
+                  <div class="table-content">
+                    Digital Interactive
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text">
+                    LANGUAGE
+                  </div>
+                  <div class="table-content">
+                    English
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text"></div>
+                  <div class="table-content">
+                    <a class="button-action" href="https://www.cigionline.org{{ self.report_interactive }}">
+                      <i class="fas fa-mouse-pointer"></i>
+                      Explore
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+            {% if self.report_english %}
+              <tr>
+                <td colspan="2">
+                  <div class="table-mobile-text">
+                    YEAR
+                  </div>
+                  <div class="table-content">
+                    {{ self.year }}
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    TYPE
+                  </div>
+                  <div class="table-content">
+                    Annual Report
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    FORMAT
+                  </div>
+                  <div class="table-content">
+                    Print
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text">
+                    LANGUAGE
+                  </div>
+                  <div class="table-content">
+                    English
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text"></div>
+                  <div class="table-content">
+                    <a class="table-btn-icon" href="{{ self.report_english }}">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+            {% if self.report_french %}
+              <tr>
+                <td colspan="2">
+                  <div class="table-mobile-text">
+                    YEAR
+                  </div>
+                  <div class="table-content">
+                    {{ self.year }}
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    TYPE
+                  </div>
+                  <div class="table-content">
+                    Rapport annuel
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    FORMAT
+                  </div>
+                  <div class="table-content">
+                    Print
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text">
+                    LANGUAGE
+                  </div>
+                  <div class="table-content">
+                    en français
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text"></div>
+                  <div class="table-content">
+                    <a class="table-btn-icon" href="{{ self.report_french }}">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+            {% if self.report_financial %}
+              <tr>
+                <td colspan="2">
+                  <div class="table-mobile-text">
+                    YEAR
+                  </div>
+                  <div class="table-content">
+                    {{ self.year }}
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    TYPE
+                  </div>
+                  <div class="table-content">
+                    Financial Statement
+                  </div>
+                </td>
+                <td colspan="4">
+                  <div class="table-mobile-text">
+                    FORMAT
+                  </div>
+                  <div class="table-content">
+                    Print
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text">
+                    LANGUAGE
+                  </div>
+                  <div class="table-content">
+                    English
+                  </div>
+                </td>
+                <td colspan="3">
+                  <div class="table-mobile-text"></div>
+                  <div class="table-content">
+                    <a class="table-btn-icon" href="{{ self.report_financial }}">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}

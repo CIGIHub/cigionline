@@ -1,0 +1,57 @@
+@import '../../../css/global/mixins';
+
+section {
+  &.hero-plain {
+    padding-top: 8em;
+
+    h1 {
+      margin-bottom: 0.5em;
+      text-align: center;
+    }
+  }
+
+  &.reports {
+    margin: 3em 0;
+
+    table {
+      tr {
+        border-bottom: 1px solid $cigi-light-grey;
+
+        th {
+          border-left: 1px solid $cigi-light-grey;
+          color: $cigi-text-grey;
+          font-weight: 500;
+          padding: 0 1em;
+          text-align: left;
+
+          &:first-child {
+            border-left: 0;
+            padding-left: 0;
+          }
+        }
+
+        td {
+          @include media-breakpoint-up(md) {
+            padding: 1rem 1em;
+          }
+          font-size: 0.75em;
+
+          &:last-child {
+            .table-content {
+              justify-content: center;
+            }
+          }
+
+          .button-action {
+            font-size: 0.625rem;
+            text-transform: capitalize;
+          }
+
+          .table-btn-icon {
+            font-size: 0.625rem;
+          }
+        }
+      }
+    }
+  }
+}
