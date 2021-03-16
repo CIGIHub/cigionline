@@ -25,12 +25,8 @@
       </div>
     </div>
   </section>
-  {% if self.image_banner.file.url|file_extension == '.gif' %}
-    {% define self.image_banner.file.url as image_banner_url %}
-  {% else %}
-    {% image self.image_banner original as image_banner %}
-    {% define image_banner.url as image_banner_url %}
-  {% endif %}
+  {% image self.image_banner original as image_banner %}
+  {% define image_banner.url as image_banner_url %}
   <div class="video-banner" style="background-image: url('{{ image_banner_url }}');"></div>
   <section class="after-covid-series-article-series-in-the-series">
     <div class="container">
