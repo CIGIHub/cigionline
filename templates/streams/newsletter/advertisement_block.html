@@ -31,7 +31,7 @@
                           <td style="width:550px;">
                             <a href="{{ url|slice:':-1' }}?utm_source=cigi_newsletter&utm_medium=email&utm_campaign={{page.title|slugify}}" target="_blank">
                               <img alt="{{ image.title }}" height="auto"
-                                src="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ image.url }}"
+                                src="{{ image_url }}"
                                 style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
                                 width="550" />
                             </a>
