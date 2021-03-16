@@ -10,11 +10,7 @@
       {% else %}
         <img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="CIGI Logo">
       {% endif %}
-      {% if feature_image.file.url|file_extension == '.gif' %}
-        <img src="{{feature_image.file.url}}" alt="{{feature_image.title}}" />
-      {% else %}
-        {% image feature_image fill-1440x990 %}
-      {% endif %}
+      {% image feature_image fill-1440x990 %}
     </div>
   </a>
   <div class="feature-content-text .center-text">
