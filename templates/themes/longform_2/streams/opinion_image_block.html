@@ -2,7 +2,11 @@
 
 <div class="container">
   <figure class="stream-image-block">
-    {% image self.image width-640 %}
+    {% if self.image.file.url|file_extension == '.gif' %}
+      <img src="{{self.image.file.url}}" alt="{{self.image.title}}" />
+    {% else %}
+      {% image self.image width-640 %}
+    {% endif %}
     <div class="row d-block">
       <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
         {% if not self.hide_image_caption %}

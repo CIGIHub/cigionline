@@ -1,7 +1,11 @@
 {% load core_tags wagtailimages_tags %}
 
-{% image promotion_block.image_promotion original as image_promotion %}
-{% define image_promotion.url as image_promotion_url %}
+{% if promotion_block.image_promotion.file.url|file_extension == '.gif' %}
+  {% define promotion_block.image_promotion.file.url as image_promotion_url %}
+{% else %}
+  {% image promotion_block.image_promotion original as image_promotion %}
+  {% define image_promotion.url as image_promotion_url %}
+{% endif %}
 <div class="promotion-block promotion-block-{{ promotion_block.block_type|slugify }}">
   {% if promotion_block.link_url %}
     <a href="{{ promotion_block.link_url }}">
@@ -24,8 +28,12 @@
         </div>
       {% endif %}
       {% if promotion_block.block_type == "wide" and promotion_block.image_promotion_small %}
-        {% image promotion_block.image_promotion_small original as image_promotion_small %}
-        {% define image_promotion_small.url as image_promotion_small_url %}
+        {% if promotion_block.image_promotion_small.file.url|file_extension == '.gif' %}
+          {% define promotion_block.image_promotion_small.file.url as image_promotion_small_url %}
+        {% else %}
+          {% image promotion_block.image_promotion_small original as image_promotion_small %}
+          {% define image_promotion_small.url as image_promotion_small_url %}
+        {% endif %}
         <div class="promotion-block-background promotion-block-background-small" style="background-image: url('{{ image_promotion_small_url }}');"></div>
       {% endif %}
     </div>
