@@ -37,10 +37,9 @@
 
 {% block header %}
   {% if self.image_banner %}
-    {% define True as transparent %}
-    {% define "scrolled-black" as additional_classes %}
+    {% define "transparent scrolled-black" as additional_classes %}
   {% endif %}
-  {% include "includes/top_bar.html" with transparent=transparent additional_classes=additional_classes %}
+  {% include "includes/top_bar.html" with additional_classes=additional_classes %}
 {% endblock %}
 
 {% block content %}

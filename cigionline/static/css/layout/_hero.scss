@@ -106,7 +106,7 @@ section {
       position: relative;
 
       &::before {
-        background: rgba(0, 0, 0, 0.5);
+        background: $black-alpha-50;
         bottom: 0;
         content: '';
         height: 100%;

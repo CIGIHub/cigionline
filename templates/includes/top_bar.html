@@ -3,7 +3,7 @@
 {% get_menu_items 'main' as main_menu_items %}
 {% get_menu_items 'footer' as footer_menu_items %}
 
-<header class="{{ additional_classes }}{% if transparent %} transparent{% endif %}">
+<header class="{{ additional_classes }}">
   {% cache 86400 top_bar %}
     <div class="main-navigation-wrapper">
       <div class="container">
