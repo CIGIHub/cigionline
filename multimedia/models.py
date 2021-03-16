@@ -327,6 +327,7 @@ class MultimediaPage(
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
+            index.FilterField('multimedia_series'),
             index.FilterField('multimedia_type'),
             index.FilterField('publishing_date'),
         ]

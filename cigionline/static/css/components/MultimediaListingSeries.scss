@@ -1,8 +1,10 @@
 @import '../global/mixins';
 
 article {
-  &.publication-listing-series {
+  &.multimedia-listing-series {
+    align-items: flex-start;
     border-bottom: 1px solid $cigi-light-grey;
+    display: flex;
     margin-bottom: 0;
     padding: 2em 0;
 
@@ -12,6 +14,39 @@ article {
 
     &:last-child {
       border-bottom: 0;
+    }
+
+    .multimedia-card-image {
+      @include hover-darken;
+      @include aspect-ratio(4, 3);
+      flex-basis: 40%;
+      flex-shrink: 0;
+      margin-right: 1em;
+
+      &:hover {
+        &::before {
+          background-color: $black;
+        }
+
+        .img-wrapper {
+          opacity: 0.8;
+          transition: opacity 0.2s ease;
+        }
+      }
+
+      .multimedia-image-type {
+        align-items: center;
+        background: $cigi-primary-colour;
+        bottom: 0;
+        color: $white;
+        display: inline-flex;
+        height: 40px;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        width: 40px;
+        z-index: 1;
+      }
     }
 
     p {

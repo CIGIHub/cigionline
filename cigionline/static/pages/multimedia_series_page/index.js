@@ -21,6 +21,7 @@ ReactDOM.render(
     limit={10}
     fields={[
       'authors',
+      'contentsubtype',
       'image_hero_url',
       'publishing_date',
       'subtitle',
