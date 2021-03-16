@@ -148,7 +148,7 @@ class MultimediaPage(
         verbose_name='Square image',
     )
     multimedia_series = models.ForeignKey(
-        'wagtailcore.Page',
+        'multimedia.MultimediaSeriesPage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
