@@ -12,11 +12,7 @@
 
 {% block hero %}
   <section class="wto-series-article-hero">
-    {% if self.image_banner.file.url|file_extension == '.gif' %}
-      <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.title}}" />
-    {% else %}
-      {% image self.image_banner original %}
-    {% endif %}
+    {% image self.image_banner original %}
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
