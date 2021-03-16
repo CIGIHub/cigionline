@@ -49,7 +49,11 @@
         <div class="row justify-content-center">
           <div class="col col-lg-10">
             <figure class="article-image-hero">
-              {% image self.image_hero width-1760 %}
+              {% if self.image_hero.file.url|file_extension == '.gif' %}
+                <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.title}}" />
+              {% else %}
+                {% image self.image_hero width-1760 %}
+              {% endif %}
               {% if self.image_hero.title %}
                 <figcaption>
                   {{ self.image_hero.title }}

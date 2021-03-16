@@ -11,8 +11,12 @@
 {% block body_class %}ai-series-article-series{% endblock %}
 
 {% block content %}
-  {% image self.image_banner original as image_banner %}
-  {% define image_banner.url as image_banner_url %}
+  {% if self.image_banner.file.url|file_extension == '.gif' %}
+    {% define ""|add:self.image_banner.file.url as image_banner_url %}
+  {% else %}
+    {% image self.image_banner original as image_banner %}
+    {% define image_banner.url as image_banner_url %}
+  {% endif %}
   <section class="ai-series-article-series-hero" style="background-image: url('{{ image_banner_url }}');">
     <div class="container">
       <div class="row justify-content-center">

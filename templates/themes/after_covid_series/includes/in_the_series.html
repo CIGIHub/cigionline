@@ -1,7 +1,11 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags %}
 
-{% image article_series.image_banner original as image_banner %}
-{% define image_banner.url as image_banner_url %}
+{% if article_series.image_banner.file.url|file_extension == '.gif' %}
+  {% define article_series.image_banner.file.url as image_banner_url %}
+{% else %}
+  {% image article_series.image_banner original as image_banner %}
+  {% define image_banner.url as image_banner_url %}
+{% endif %}
 
 <section class="after-covid-series-in-the-series">
   <div class="container">
