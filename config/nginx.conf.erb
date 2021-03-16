@@ -53,6 +53,7 @@ http {
 
 		<% if ENV['STATIC_PROXY'] %>
 			location /static/ {
+				add_header Cache-Control "public, max-age=86400";
 				proxy_pass http://<%= ENV['STATIC_PROXY'] %>/static/;
 			}
 		<% end %>
