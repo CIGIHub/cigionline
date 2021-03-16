@@ -1,5 +1,7 @@
 .data-series-hero {
   height: 100vh;
+  position: fixed;
+  width: 100%;
 
   .video-bg {
     video {
@@ -150,7 +152,8 @@
   }
 
   .page-header {
-    position: fixed;
+    height: 100vh;
+    position: relative;
     width: 100%;
     z-index: 0;
   }
@@ -158,7 +161,6 @@
   .page-content {
     background-color: $data-series-background-color;
     position: relative;
-    top: calc(100vh - 66px);
     z-index: 100;
   }
 
