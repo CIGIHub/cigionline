@@ -48,7 +48,7 @@ newrelic==6.2.0.156
 openpyxl==3.0.7
 Pillow==8.1.2
 psycopg2==2.8.6
-pycodestyle==2.6.0
+pycodestyle==2.7.0
 pyflakes==2.2.0
 python-dateutil==2.8.1
 python-http-client==3.3.2
