@@ -35,9 +35,32 @@
   {% render_bundle 'multimediaSeriesPage' 'js' attrs='defer' %}
 {% endblock %}
 
+{% block header %}
+  {% if self.image_banner %}
+    {% define True as transparent %}
+    {% define "scrolled-black" as additional_classes %}
+  {% endif %}
+  {% include "includes/top_bar.html" with transparent=transparent additional_classes=additional_classes %}
+{% endblock %}
+
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics %}
-  {% include "includes/body.html" with body=self.body heading="About the Series" %}
+  {% image self.image_banner original as image_banner %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics image_banner=image_banner %}
+  <section class="about-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">
+            About the Series
+          </h2>
+          <div class="series-text">
+            {{ self.subtitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="in-the-series">
     <div class="container">
       <div class="row justify-content-center">

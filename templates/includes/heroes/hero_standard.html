@@ -1,6 +1,8 @@
 {% load wagtailcore_tags menu_tags core_tags %}
-
-<section class="hero">
+{% if image_banner %}
+  {% define additional_classes|add:" banner-bg" as additional_classes %}
+{% endif %}
+<section class="hero{{ additional_classes }}" {% if image_banner %}style="background-image: url('{{ image_banner.url }}');"{% endif %}>
   <div class="container">
     <div class="row hero-container">
       <div class="hero-main col-md-7">
