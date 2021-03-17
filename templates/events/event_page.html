@@ -10,13 +10,13 @@
 {% endblock %}
 {% block og_description %}
   {% if self.social_description %}
-    <meta name="og:description" content="{{ self.social_description }}" />
+    <meta property="og:description" content="{{ self.social_description }}" />
   {% elif self.subtitle %}
-    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_type %}
-  <meta name="og:type" content="article" />
+  <meta property="og:type" content="article" />
 {% endblock %}
 {% block og_image %}
   {% if self.image_social %}
@@ -25,7 +25,7 @@
     {% image self.image_hero fill-1600x900 as og_image %}
   {% endif %}
   {% if og_image %}
-    <meta name="og:image" content="{{ og_image.url }}" />
+    <meta property="og:image" content="{{ og_image.url }}" />
   {% else %}
     {% include "includes/og_image_default.html" %}
   {% endif %}

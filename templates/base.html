@@ -26,12 +26,12 @@
     {% endblock %}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@CIGIOnline" />
-    <meta name="og:url" content="{{ self.full_url }}" />
+    <meta property="og:url" content="{{ self.full_url }}" />
     {% block og_type %}
-      <meta name="og:type" content="website" />
+      <meta property="og:type" content="website" />
     {% endblock %}
-    <meta name="og:site_name" content="{{ self.get_site.site_name }}" />
-    <meta name="og:title" content="{% if self.social_title %}{{ self.social_title }}{% else %}{{ self.title }}{% endif %}" />
+    <meta property="og:site_name" content="{{ self.get_site.site_name }}" />
+    <meta property="og:title" content="{% if self.social_title %}{{ self.social_title }}{% else %}{{ self.title }}{% endif %}" />
     {% block og_description %}
     {% endblock %}
     {% block og_image %}
