@@ -9,7 +9,7 @@
     </a>
   {% endif %}
 {% else %}
-  {% if content.contenttype == "Event" %}
+  {% if content.contenttype == "Event" and not content.is_past %}
     <a href="{{ content.url }}" class="button-action">
       <i class="fal fa-calendar-alt"></i> RSVP
     </a>
