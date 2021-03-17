@@ -690,27 +690,26 @@ class NewsletterBlock(blocks.StructBlock):
 
         context['url'] = value.get('url')
         context['text'] = value.get('text')
-        root_url = context['page'].get_site().root_url
 
         if value.get('cta') != 'no_cta':
             context['cta_image_link'] = self.cta_image_link(value.get('cta'))
             context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         if value.get('image'):
-            context['image_url'] = f'{root_url}{value.get("image").get_rendition("fill-600x238").url}'
+            context['image_url'] = value.get("image").get_rendition("fill-600x238").url
 
         content_page = value.get('content')
         if content_page:
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
             context['text'] = value.get('text_override') if value.get('text_override') else content_page.specific.short_description
             if value.get('image_override'):
-                context['image_url'] = f'{root_url}{value.get("image_override").get_rendition("fill-600x238").url}'
+                context['image_url'] = value.get("image_override").get_rendition("fill-600x238").url
             elif content_page.specific.image_hero:
-                context['image_url'] = f'{root_url}{content_page.specific.image_hero.get_rendition("fill-600x238").url}'
+                context['image_url'] = content_page.specific.image_hero.get_rendition("fill-600x238").url
                 context['image_alt'] = content_page.specific.image_hero.title
 
             if not value.get('url'):
-                context['url'] = f'{root_url}{content_page.url}'
+                context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
 
             if content_page.specific.contenttype == 'Event':
                 event_time = content_page.specific.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
@@ -795,7 +794,7 @@ class SocialBlock(blocks.StructBlock):
 
     class Meta:
         icon = 'group'
-        label = 'Social'
+        label = 'Recommended'
         template = 'streams/newsletter/social_block.html'
 
 
