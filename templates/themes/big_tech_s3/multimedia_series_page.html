@@ -9,7 +9,7 @@
 {% endblock %}
 {% block og_description %}
   {% if self.short_description %}
-    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_image %}
@@ -19,9 +19,9 @@
     {% image self.image_hero fill-1600x900 as og_image %}
   {% endif %}
   {% if og_image %}
-    <meta name="og:image" content="{{ self.get_site.root_url }}{{ og_image.url }}" />
+    <meta property="og:image" content="{{ og_image.url }}" />
   {% else %}
-    {% include "includes/og_image_default.html" with root_url=self.get_site.root_url %}
+    {% include "includes/og_image_default.html" %}
   {% endif %}
 {% endblock %}
 
