@@ -64,6 +64,9 @@ if 'REDIS_URL' in os.environ:
 if 'CLOUDFLARE_EMAIL' in os.environ \
         and 'CLOUDFLARE_API_KEY' in os.environ \
         and 'CLOUDFLARE_ZONEID' in os.environ:
+    INSTALLED_APPS = list(INSTALLED_APPS)
+    INSTALLED_APPS.append('wagtail.contrib.frontend_cache')
+    INSTALLED_APPS = tuple(INSTALLED_APPS)
     WAGTAILFRONTENDCACHE = {
         'cloudflare': {
             'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
@@ -86,6 +89,10 @@ if 'AWS_STORAGE_BUCKET_NAME' in os.environ:
 if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
     AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_S3_CUSTOM_DOMAIN']
 AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
+AWS_PRELOAD_METADATA = True
+AWS_S3_SECURE_URLS = False
+AWS_S3_FILE_OVERWRITE = False
 AWS_LOCATION = 'static'
 if 'STATIC_URL' in os.environ:
     STATIC_URL = os.environ['STATIC_URL']
