@@ -8,28 +8,28 @@
 {% endblock %}
 {% block og_description %}
   {% if self.short_bio %}
-    <meta name="og:description" content="{{ self.short_bio|striptags }}" />
+    <meta property="og:description" content="{{ self.short_bio|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_type %}
-  <meta name="og:type" content="profile" />
+  <meta property="og:type" content="profile" />
 {% endblock %}
 {% block og_image %}
   {% if self.image_media %}
     {% image self.image_media fill-1600x900 as og_image %}
   {% endif %}
   {% if og_image %}
-    <meta name="og:image" content="{{ og_image.url }}" />
+    <meta property="og:image" content="{{ og_image.url }}" />
   {% else %}
     {% include "includes/og_image_default.html" %}
   {% endif %}
 {% endblock %}
 {% block extra_og_meta %}
   {% if self.first_name %}
-    <meta name="profile:first_name" content="{{ self.first_name }}" />
+    <meta property="profile:first_name" content="{{ self.first_name }}" />
   {% endif %}
   {% if self.last_name %}
-    <meta name="profile:last_name" content="{{ self.last_name }}" />
+    <meta property="profile:last_name" content="{{ self.last_name }}" />
   {% endif %}
 {% endblock %}
 
