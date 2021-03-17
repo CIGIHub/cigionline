@@ -1,0 +1,31 @@
+{% if content.contenttype == "Annual Report" %}
+  {% if content.report_interactive %}
+    <a class="button-action" href="{{ content.report_interactive }}">
+      <i class="fas fa-mouse-pointer"></i> Explore
+    </a>
+  {% elif content.report_english %}
+    <a class="button-action" href="{{ content.report_english }}">
+      <i class="fa fas fa-download"></i>
+    </a>
+  {% endif %}
+{% else %}
+  {% if content.contenttype == "Event" %}
+    <a href="{{ content.url }}" class="button-action">
+      <i class="fal fa-calendar-alt"></i> RSVP
+    </a>
+  {% elif content.contenttype == 'Multimedia' %}
+    {% if content.contentsubtype == 'Audio' %}
+      <a href="{{ content.url }}" class="button-action">
+        <i class="fas fa-headphones"></i> Listen
+      </a>
+    {% else %}
+      <a href="{{ content.url }}" class="button-action">
+        <i class="fas fa-play"></i> Watch
+      </a>
+    {% endif %}
+  {% elif content.contentsubtype == "Books" %}
+    <a href="{{ content.url }}" class="button-action">
+      Purchase Book
+    </a>
+  {% endif %}
+{% endif %}
