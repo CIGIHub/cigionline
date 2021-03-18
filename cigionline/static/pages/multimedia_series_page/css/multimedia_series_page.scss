@@ -1,7 +1,7 @@
 @import '../../../css/global/mixins';
 
 .multimedia-series-page {
-  @include top-bar($background-color: transparent);
+  @include top-bar($background-color: transparent, $position: absolute);
 
   section {
     &.about-the-series {
