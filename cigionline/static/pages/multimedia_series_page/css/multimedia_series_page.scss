@@ -1,0 +1,25 @@
+@import '../../../css/global/mixins';
+
+.multimedia-series-page {
+  @include top-bar($background-color: transparent, $position: absolute);
+
+  section {
+    &.about-the-series {
+      margin-bottom: 2em;
+
+      h2 {
+        margin-top: 1.5em;
+      }
+
+      .series-text {
+        margin: 1em 0;
+      }
+    }
+
+    &.in-the-series {
+      .search-table {
+        margin-top: 2em;
+      }
+    }
+  }
+}
