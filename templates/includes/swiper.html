@@ -9,7 +9,11 @@
         {% elif type == "article-landing-series" %}
           <article class="row">
             <div class="img-wrapper col-md-3">
-              {% image item.image_poster width-700 %}
+              {% if item.image_poster.file.url|file_extension == '.gif' %}
+                <img src="{{ item.image_poster.file.url }}" alt="{{ item.image_poster.title }}" />
+              {% else %}
+                {% image item.image_poster width-700 %}
+              {% endif %}
             </div>
             <div class="col-md-9">
               {% include "includes/topics.html" with topics=item.topics %}

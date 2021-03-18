@@ -1,6 +1,33 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags static %}
 
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/zzr4vtn.css">
 {% endblock %}
@@ -14,8 +41,12 @@
 {% block body_class %}health-security-series health-security-series-article-series{% endblock %}
 
 {% block content %}
-  {% image self.image_banner original as image_banner %}
-  {% define image_banner.url as image_banner_url %}
+  {% if self.image_banner.file.url|file_extension == '.gif' %}
+    {% define self.image_banner.file.url as image_banner_url %}
+  {% else %}
+    {% image self.image_banner original as image_banner %}
+    {% define image_banner.url as image_banner_url %}
+  {% endif %}
   <section class="health-security-series-article-series-hero" style="background-image: url('{{ image_banner_url }}');">
     <div class="container">
       <div class="row justify-content-md-center">

@@ -1,7 +1,11 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags %}
 
-{% image article_series.image_hero original as image_hero %}
-{% define image_hero.url as image_hero_url %}
+{% if article_series.image_hero.file.url|file_extension == '.gif' %}
+  {% define article_series.image_hero.file.url as image_hero_url %}
+{% else %}
+  {% image article_series.image_hero original as image_hero %}
+  {% define image_hero.url as image_hero_url %}
+{% endif %}
 
 <section class="health-security-series-in-the-series">
   <div class="container">

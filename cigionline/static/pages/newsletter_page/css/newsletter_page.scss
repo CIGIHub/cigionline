@@ -1,0 +1,31 @@
+@import '../../../css/global/mixins';
+
+main {
+  img {
+    max-width: 100%;
+    width: unset;
+  }
+
+  table {
+    &.cta-button {
+      width: auto;
+    }
+
+    tbody {
+      tr {
+        td {
+          border-bottom: 0;
+          text-align: unset;
+        }
+      }
+    }
+  }
+}
+
+.newsletter-html-string {
+  margin: 1em 0 3em;
+
+  textarea {
+    width: 100%;
+  }
+}

@@ -7,7 +7,7 @@ class PublicationPageModelAdmin(ModelAdmin):
     model = PublicationPage
     menu_label = 'Publications'
     menu_icon = 'doc-full'
-    menu_order = 300
+    menu_order = 103
     list_display = ('title', 'publishing_date', 'publication_type', 'live', 'publication_series')
     list_filter = ('publishing_date', 'publication_type', 'live', 'publication_series')
     search_fields = ('title')
