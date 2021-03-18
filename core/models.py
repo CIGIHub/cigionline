@@ -353,7 +353,7 @@ class ContentPage(Page, SearchablePageAbstract):
             if block.block_type == 'author':
                 author_ids.append(block.value)
         return author_ids
-    
+
     @property
     def author_ids_display(self):
         author_ids_display = []
