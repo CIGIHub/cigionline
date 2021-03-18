@@ -7,7 +7,7 @@ class MultimediaPageModelAdmin(ModelAdmin):
     model = MultimediaPage
     menu_label = 'Multimedia'
     menu_icon = 'media'
-    menu_order = 300
+    menu_order = 102
     list_display = ('title', 'publishing_date', 'multimedia_type', 'theme', 'live')
     list_filter = ('publishing_date', 'multimedia_type', 'theme', 'live')
     search_fields = ('title',)
