@@ -1,5 +1,4 @@
 from django.forms.utils import flatatt
-from django.template.loader import render_to_string
 from django.utils.html import format_html, format_html_join
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
