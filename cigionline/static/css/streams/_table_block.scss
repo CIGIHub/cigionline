@@ -1,0 +1,45 @@
+.table-block {
+  table {
+    font-size: 0.75em;
+
+    tr {
+      border-bottom: 1px solid $cigi-light-grey;
+    }
+
+    thead {
+      tr {
+        th {
+          color: $cigi-dark-grey;
+          font-size: 1em;
+          font-weight: 700;
+          padding: 16px 10px;
+          text-align: left;
+          vertical-align: middle;
+
+          &:first-child {
+            padding-left: 0;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        th,
+        td {
+          padding: 16px 10px;
+        }
+
+        td {
+          border-bottom: 0;
+        }
+
+        th {
+          &:first-child {
+            padding-left: 0;
+          }
+        }
+      }
+    }
+  }
+}

@@ -26,6 +26,7 @@ from streams.blocks import (
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
+    TableStreamBlock,
     TextBackgroundBlock,
     TextBorderBlock,
     TooltipBlock,
@@ -40,7 +41,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
@@ -60,7 +60,7 @@ class BasicPageAbstract(models.Model):
         ('image', ImageBlock()),
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
         ('paragraph', ParagraphBlock()),
-        ('table', TableBlock()),
+        ('table', TableStreamBlock()),
         ('text_background_block', TextBackgroundBlock(
             features=['bold', 'italic', 'link'],
         )),
