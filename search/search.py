@@ -97,7 +97,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.searchtext:
             must = {
                 "multi_match": {
-                    "fields": ["title", "*__body"],
+                    "fields": ["title", "*__body", "*__author_ids_display"],
                     "query": self.searchtext,
                 },
             }
