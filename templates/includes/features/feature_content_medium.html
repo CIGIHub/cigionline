@@ -41,5 +41,8 @@
       {% include 'includes/features/feature_content_people.html' with authors=content.authors %}
     {% endif %}
     <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
+    {% if cta %}
+      {% include 'includes/features/feature_content_cta.html' %}
+    {% endif %}
   </div>
 </article>
