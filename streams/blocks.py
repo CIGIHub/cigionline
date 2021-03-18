@@ -1,5 +1,7 @@
 from django.forms.utils import flatatt
+from django.template.loader import render_to_string
 from django.utils.html import format_html, format_html_join
+from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -565,8 +567,27 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/pull_quote_right_block.html'
 
 
+class TableStreamBlock(TableBlock):
+
+    def render(self, value, context=None):
+        return """
+        <div class="container table-block">
+        <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {super_template}
+        </div>
+        </div>
+        </div>
+        """.format(super_template=super(TableStreamBlock, self).render(value, context))
+
+    class Meta:
+        icon = 'form'
+        label = 'Table'
+
+
 class TextBackgroundBlock(blocks.RichTextBlock, ThemeableBlock):
     """Text box with background colour """
+
     def get_template(self, context, *args, **kwargs):
         standard_template = super(TextBackgroundBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'text_background_block')
