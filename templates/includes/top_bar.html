@@ -3,8 +3,8 @@
 {% get_menu_items 'main' as main_menu_items %}
 {% get_menu_items 'footer' as footer_menu_items %}
 
-<header class="{{ additional_classes }}">
-  {% cache 86400 top_bar %}
+{% cache 86400 top_bar %}
+  <header>
     <div class="main-navigation-wrapper">
       <div class="container">
         <div class="row">
@@ -147,5 +147,5 @@
         </div>
       </div>
     </div>
-  {% endcache %}
-</header>
+  </header>
+{% endcache %}

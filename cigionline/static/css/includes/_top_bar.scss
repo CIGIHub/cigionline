@@ -7,16 +7,6 @@ header {
   width: 100%;
   z-index: 15;
 
-  &.transparent {
-    background: transparent;
-
-    &.scrolled-black {
-      &.scrolled {
-        background: $black;
-      }
-    }
-  }
-
   .main-navigation-wrapper {
     position: relative;
     z-index: 4;

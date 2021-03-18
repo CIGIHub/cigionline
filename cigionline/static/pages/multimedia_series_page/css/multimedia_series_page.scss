@@ -1,21 +1,25 @@
 @import '../../../css/global/mixins';
 
-section {
-  &.about-the-series {
-    margin-bottom: 2em;
+.multimedia-series-page {
+  @include top-bar($background-color: transparent);
 
-    h2 {
-      margin-top: 1.5em;
+  section {
+    &.about-the-series {
+      margin-bottom: 2em;
+
+      h2 {
+        margin-top: 1.5em;
+      }
+
+      .series-text {
+        margin: 1em 0;
+      }
     }
 
-    .series-text {
-      margin: 1em 0;
-    }
-  }
-
-  &.in-the-series {
-    .search-table {
-      margin-top: 2em;
+    &.in-the-series {
+      .search-table {
+        margin-top: 2em;
+      }
     }
   }
 }

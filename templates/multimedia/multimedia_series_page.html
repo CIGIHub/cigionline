@@ -35,12 +35,7 @@
   {% render_bundle 'multimediaSeriesPage' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block header %}
-  {% if self.image_banner %}
-    {% define "transparent scrolled-black" as additional_classes %}
-  {% endif %}
-  {% include "includes/top_bar.html" with additional_classes=additional_classes %}
-{% endblock %}
+{% block body_class %}multimedia-series-page{% endblock %}
 
 {% block content %}
   {% image self.image_banner original as image_banner %}
