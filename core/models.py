@@ -355,12 +355,12 @@ class ContentPage(Page, SearchablePageAbstract):
         return author_ids
 
     @property
-    def author_ids_display(self):
-        author_ids_display = []
+    def author_names(self):
+        author_names = []
         for block in self.authors:
             if block.block_type == 'author':
-                author_ids_display.append(block.value.title)
-        return author_ids_display
+                author_names.append(block.value.title)
+        return author_names
 
     @property
     def related_people_ids(self):
@@ -460,8 +460,8 @@ class ContentPage(Page, SearchablePageAbstract):
     ]
 
     search_fields = [
-        index.SearchField('author_ids_display'),
         index.FilterField('author_ids'),
+        index.SearchField('author_names'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),
