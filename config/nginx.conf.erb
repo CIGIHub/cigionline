@@ -63,5 +63,23 @@ http {
 				proxy_pass http://<%= ENV['INTERACTIVE_2017ANNUALREPORT_PROXY'] %>/;
 			}
 		<% end %>
+
+		<% if ENV['INTERACTIVE_GLOBALTHINKTANKSUMMIT_PROXY'] %>
+			location /interactives/globalthinktanksummit/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_GLOBALTHINKTANKSUMMIT_PROXY'] %>/;
+			}
+		<% end %>
+
+		<% if ENV['INTERACTIVE_IAEA_PROXY'] %>
+			location /interactives/iaea/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_IAEA_PROXY'] %>/;
+			}
+		<% end %>
+
+		<% if ENV['INTERACTIVE_SURVEYOFPROGRESS_PROXY'] %>
+			location /interactives/survey-of-progress/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_SURVEYOFPROGRESS_PROXY'] %>/;
+			}
+		<% end %>
 	}
 }
