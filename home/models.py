@@ -10,6 +10,7 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.core.models import Orderable, Page
 from django.utils import timezone
+from people.models import PersonPage
 
 
 class HomePage(Page):
@@ -78,31 +79,23 @@ class HomePage(Page):
         ),
     ]
 
-    def featured_large(self):
-        first_featured = self.featured_pages.prefetch_related(
-            'featured_page',
-        ).first()
-        if first_featured:
-            return first_featured.featured_page.specific
-        return False
+    def get_featured_pages(self):
+        featured_page_ids = self.featured_pages.values_list('featured_page', flat=True)
+        return Page.objects.filter(id__in=featured_page_ids).specific()
 
-    def featured_medium(self):
-        featured_medium = []
-        featured_medium_query = self.featured_pages.prefetch_related(
-            'featured_page',
-        ).all()[1:4]
-        for item in featured_medium_query:
-            featured_medium.append(item.featured_page.specific)
-        return featured_medium
+    def get_featured_experts(self):
+        featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
+        return PersonPage.objects.filter(id__in=featured_expert_ids)
 
-    def featured_small(self):
-        featured_small = []
-        featured_small_query = self.featured_pages.prefetch_related(
-            'featured_page',
-        ).all()[4:]
-        for item in featured_small_query:
-            featured_small.append(item.featured_page.specific)
-        return featured_small
+    def get_context(self, request):
+        context = super().get_context(request)
+        
+        context['featured_pages'] = self.get_featured_pages()
+        context['featured_experts'] = self.get_featured_experts()
+
+        return context
+
+
 
     def featured_publications(self):
         return PublicationPage.objects.prefetch_related(

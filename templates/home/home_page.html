@@ -15,18 +15,20 @@
     <div class="container">
       <div class="row">
         <div class="col-12 col-md-8">
-          {% if self.featured_large %}
-            {% include "includes/features/feature_content_large.html" with content=self.featured_large %}
+          {% if featured_pages|length > 0 %}
+            {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
           {% endif %}
         </div>
         <hr>
         <div class="col-12 col-md-4 featured-small">
-          {% for item in self.featured_small %}
+        {% with featured_pages|slice:"4:" as featured_small %}
+          {% for item in featured_small %}
             {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
             {% include "includes/features/feature_content_small.html" with content=item %}
           {% endfor %}
+        {% endwith %}
         </div>
       </div>
       <div class="row">
@@ -35,7 +37,8 @@
         </div>
       </div>
       <div class="row featured-medium">
-        {% for item in self.featured_medium %}
+      {% with featured_pages|slice:"1:4" as featured_medium %}
+        {% for item in featured_medium %}
           <div class="col-12 col-md-4">
             {% if forloop.counter > 1 %}
               <hr>
@@ -43,6 +46,7 @@
             {% include "includes/features/feature_content_medium.html" with content=item %}
           </div>
         {% endfor %}
+      {% endwith %}
       </div>
     </div>
   </section>
@@ -148,7 +152,7 @@
         </div>
       </div>
       <div class="row">
-        {% for expert in self.featured_experts_list %}
+        {% for expert in featured_experts %}
           <div class="col-12 col-md-4 homepage-featured-expert-row">
             {% include "includes/features/feature_expert_short.html" with expert=expert %}
           </div>
