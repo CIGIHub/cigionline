@@ -95,8 +95,6 @@ class HomePage(Page):
 
         return context
 
-
-
     def featured_publications(self):
         return PublicationPage.objects.prefetch_related(
             'topics',
