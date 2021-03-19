@@ -60,7 +60,7 @@ http {
 
 		<% if ENV['INTERACTIVE_2017ANNUALREPORT_PROXY'] %>
 			location /interactives/2017annualreport/ {
-				proxy_pass http://<% ENV['INTERACTIVE_2017ANNUALREPORT_PROXY'] %>
+				proxy_pass http://<% ENV['INTERACTIVE_2017ANNUALREPORT_PROXY'] %>;
 			}
 		<% end %>
 	}
