@@ -7,7 +7,7 @@ function PublicationListingSimple(props) {
 
   return (
     <article className="simple-listing">
-      <p className="article-type">{row.contentsubtype}</p>
+      <p className="article-type">{row.contentsubtype === 'Essay Series' ? row.contentsubtype : row.contentsubtype.slice(0, -1) }</p>
       <h2 className="article-title"><a href={row.url}>{row.title}</a></h2>
       {row.publishing_date && (
         <p className="article-date">
