@@ -18,19 +18,39 @@ class CIGIOnlineExpertLatestActivitySearchQueryCompiler:
         return {
             "bool": {
                 "filter": [{
-                    "term": {
-                        "live_filter": True,
+                    "bool": {
+                        "should": [{
+                            "bool": {
+                                "must": [{
+                                    "term": {
+                                        "content_type": "articles.ArticlePage",
+                                    },
+                                }, {
+                                    "terms": {
+                                        "core_contentpage__contentsubtype_filter": ["Opinion", "Op-Ed", "CIGI in the News"]
+                                    }
+                                }]
+                            }
+                        }, {
+                            "bool": {
+                                "must": [{
+                                    "term": {
+                                        "content_type": "publications.PublicationPage",
+                                    }
+                                }]
+                            }
+                        }],
                     },
                 }, {
-                    "terms": {
-                        "content_type": ["core.ContentPage"],
+                    "term": {
+                        "live_filter": True,
                     },
                 }, {
                     "terms": {
                         "core_contentpage__related_people_ids_filter": [self.expert_id],
                     },
                 }],
-            },
+            }
         }
 
     def get_sort(self):
