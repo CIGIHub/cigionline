@@ -27,7 +27,7 @@ class CIGIOnlineExpertLatestActivitySearchQueryCompiler:
                                     },
                                 }, {
                                     "terms": {
-                                        "core_contentpage__contentsubtype_filter": ["Opinion", "Op-Ed", "CIGI in the News"]
+                                        "core_contentpage__contentsubtype_filter": ["Opinion", "Op-Eds", "CIGI in the News"]
                                     }
                                 }]
                             }
