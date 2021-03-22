@@ -25,7 +25,7 @@
             {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
-            {% include "includes/features/feature_content_small.html" with content=item %}
+            {% include "includes/features/feature_content_small.html" with content=item cta=True %}
           {% endfor %}
         </div>
       </div>
@@ -40,7 +40,7 @@
             {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
-            {% include "includes/features/feature_content_medium.html" with content=item %}
+            {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
           </div>
         {% endfor %}
       </div>

@@ -39,6 +39,8 @@ const config = {
     mediaLandingPage: './cigionline/static/pages/media_landing_page/index.js',
     multimediaListPage: './cigionline/static/pages/multimedia_list_page/index.js',
     multimediaPage: './cigionline/static/pages/multimedia_page/index.js',
+    multimediaSeriesPage: './cigionline/static/pages/multimedia_series_page/index.js',
+    newsletterPage: './cigionline/static/pages/newsletter_page/index.js',
     personListExpertsPage: './cigionline/static/pages/person_list_experts_page/index.js',
     personListStaffPage: './cigionline/static/pages/person_list_staff_page/index.js',
     personPage: './cigionline/static/pages/person_page/index.js',

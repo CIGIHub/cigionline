@@ -78,7 +78,7 @@ function MediaListing(props) {
 MediaListing.propTypes = {
   row: PropTypes.shape({
     cigi_people_mentioned: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
+      id: PropTypes.number,
       title: PropTypes.string,
       url: PropTypes.string,
     })),

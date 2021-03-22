@@ -149,8 +149,10 @@ class SearchTable extends React.Component {
     for (const contenttype of contenttypes) {
       uri += `&contenttype=${contenttype}`;
     }
-    for (const contentsubtype of contentsubtypes) {
-      uri += `&contentsubtype=${contentsubtype}`;
+    if (!typeSelected) {
+      for (const contentsubtype of contentsubtypes) {
+        uri += `&contentsubtype=${contentsubtype}`;
+      }
     }
     for (const field of fields) {
       uri += `&field=${field}`;

@@ -26,6 +26,7 @@ from streams.blocks import (
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
+    TableStreamBlock,
     TextBackgroundBlock,
     TextBorderBlock,
     TooltipBlock,
@@ -40,7 +41,6 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
@@ -60,7 +60,7 @@ class BasicPageAbstract(models.Model):
         ('image', ImageBlock()),
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
         ('paragraph', ParagraphBlock()),
-        ('table', TableBlock()),
+        ('table', TableStreamBlock()),
         ('text_background_block', TextBackgroundBlock(
             features=['bold', 'italic', 'link'],
         )),
@@ -355,6 +355,14 @@ class ContentPage(Page, SearchablePageAbstract):
         return author_ids
 
     @property
+    def author_names(self):
+        author_names = []
+        for block in self.authors:
+            if block.block_type == 'author':
+                author_names.append(block.value.title)
+        return author_names
+
+    @property
     def related_people_ids(self):
         people_ids = []
         for author in self.authors:
@@ -453,6 +461,7 @@ class ContentPage(Page, SearchablePageAbstract):
 
     search_fields = [
         index.FilterField('author_ids'),
+        index.SearchField('author_names'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),

@@ -71,7 +71,7 @@ class ArticlePageModelAdmin(ModelAdmin):
     model = ArticlePage
     menu_label = 'Articles'
     menu_icon = 'doc-empty-inverse'
-    menu_order = 200
+    menu_order = 101
     list_display = ('title', 'publishing_date', 'article_type', 'theme', 'live')
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
     search_fields = ('title')
