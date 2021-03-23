@@ -53,7 +53,7 @@ class EventListPage(BasicPageAbstract, Page):
         featured_events = []
         for item in self.featured_events.all()[:6]:
             featured_events.append(item.event_page.specific)
-        return featured_events
+        return sorted(featured_events, key=lambda x: getattr(x, 'publishing_date'), reverse=True)
 
     class Meta:
         verbose_name = 'Event List Page'
