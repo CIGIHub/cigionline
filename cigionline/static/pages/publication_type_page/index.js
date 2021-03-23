@@ -19,7 +19,6 @@ ReactDOM.render(
     limit={10}
     fields={[
       'authors',
-      'contentsubtype',
       'publishing_date',
     ]}
     RowComponent={PublicationListingSimple}
