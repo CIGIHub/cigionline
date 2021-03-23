@@ -7,7 +7,6 @@ function PublicationListingSimple(props) {
 
   return (
     <article className="simple-listing">
-      <p className="article-type">{row.contentsubtype}</p>
       <h2 className="article-title"><a href={row.url}>{row.title}</a></h2>
       {row.publishing_date && (
         <p className="article-date">
@@ -32,7 +31,6 @@ PublicationListingSimple.propTypes = {
       type: PropTypes.string,
       value: PropTypes.any,
     })),
-    contentsubtype: PropTypes.string,
     id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
