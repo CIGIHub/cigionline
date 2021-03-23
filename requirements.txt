@@ -40,7 +40,7 @@ isort==5.8.0
 jdcal==1.4.1
 jmespath==0.10.0
 l18n==2020.6.1
-lazy-object-proxy==1.4.3
+lazy-object-proxy==1.6.0
 libsass==0.20.1
 mailchimp-marketing==3.0.36
 mccabe==0.6.1
