@@ -2,20 +2,12 @@ from core.models import (
     BasicPageAbstract,
 )
 from django.db import models
+from django.template.loader import render_to_string
+from streams.blocks import (AdvertisementBlock, ContentBlock, FeaturedContentBlock, SocialBlock, TextBlock)
 from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
-from wagtail.core.blocks import (
-    BooleanBlock,
-    CharBlock,
-    ChoiceBlock,
-    PageChooserBlock,
-    RichTextBlock,
-    StructBlock,
-    URLBlock,
-)
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.blocks import ImageChooserBlock
 
 
 class NewsletterListPage(BasicPageAbstract, Page):
@@ -38,83 +30,13 @@ class NewsletterListPage(BasicPageAbstract, Page):
 
 
 class NewsletterPage(Page):
-    class CallToActionChoices(models.TextChoices):
-        EXPLORE = ('explore', 'Explore')
-        FOLLOW = ('follow', 'Follow')
-        LEARN_MORE = ('learn_more', 'Learn More')
-        LISTEN = ('listen', 'Listen')
-        NO_CTA = ('no_cta', 'No CTA')
-        PDF = ('pdf', 'PDF')
-        READ = ('read', 'Read')
-        RSVP = ('rsvp', 'RSVP')
-        SHARE_FACEBOOK = ('share_facebook', 'Share (Facebook)')
-        SHARE_LINKEDIN = ('share_linkedin', 'Share (LinkedIn)')
-        SHARE_TWITTER = ('share_twitter', 'Share (Twitter)')
-        SUBSCRIBE = ('subscribe', 'Subscribe')
-        WATCH = ('watch', 'Watch')
-
     body = StreamField(
         [
-            ('advertisement_block', StructBlock([
-                ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('url', URLBlock(required=True)),
-                ('image', ImageChooserBlock(required=False)),
-                ('cta', ChoiceBlock(
-                    choices=CallToActionChoices.choices,
-                    verbose_name='CTA',
-                    required=True,
-                )),
-            ])),
-            ('content_block', StructBlock([
-                ('content', PageChooserBlock(required=False)),
-                ('url', URLBlock(required=False)),
-                ('title_override', CharBlock(required=False)),
-                ('text_override', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('cta', ChoiceBlock(
-                    choices=CallToActionChoices.choices,
-                    verbose_name='CTA',
-                    required=True,
-                )),
-                ('line_separator_above', BooleanBlock(
-                    verbose_name='Add line separator above block',
-                )),
-            ])),
-            ('featured_content_block', StructBlock([
-                ('content', PageChooserBlock(required=False)),
-                ('url', URLBlock(required=False)),
-                ('title_override', CharBlock(required=False)),
-                ('text_override', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('image_override', ImageChooserBlock(required=False)),
-                ('cta', ChoiceBlock(
-                    choices=CallToActionChoices.choices,
-                    verbose_name='CTA',
-                    required=True,
-                )),
-            ])),
-            ('social_block', StructBlock([
-                ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-            ])),
-            ('text_block', StructBlock([
-                ('title', CharBlock(required=False)),
-                ('text', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-            ])),
+            ('advertisement_block', AdvertisementBlock()),
+            ('content_block', ContentBlock()),
+            ('featured_content_block', FeaturedContentBlock()),
+            ('social_block', SocialBlock()),
+            ('text_block', TextBlock()),
         ],
         blank=True,
     )
@@ -145,6 +67,9 @@ class NewsletterPage(Page):
             classname='collapsible collapsed',
         ),
     ]
+
+    def html_string(self):
+        return render_to_string('newsletters/newsletter_html.html', {'self': self, 'page': self})
 
     parent_page_types = ['newsletters.NewsletterListPage']
     subpage_types = []

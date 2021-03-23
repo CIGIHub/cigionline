@@ -148,7 +148,7 @@ class MultimediaPage(
         verbose_name='Square image',
     )
     multimedia_series = models.ForeignKey(
-        'wagtailcore.Page',
+        'multimedia.MultimediaSeriesPage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -327,6 +327,7 @@ class MultimediaPage(
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
+            index.FilterField('multimedia_series'),
             index.FilterField('multimedia_type'),
             index.FilterField('publishing_date'),
         ]

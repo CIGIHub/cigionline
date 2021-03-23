@@ -31,6 +31,18 @@
               </ul>
             </div>
           </article>
+        {% elif type == "annual-reports" %}
+          <article>
+            <a class="img-wrapper" href="{{ item.value.url }}">
+              {% image item.value.image_poster width-700 %}
+            </a>
+            <h3>
+              <a href="{{ item.value.url }}">
+                {{ item.value.title }}
+              </a>
+            </h3>
+            <a class="button-action" href="https://www.cigionline.org{{ item.value.report_interactive }}"><i class="fas fa-mouse-pointer"></i>Explore</a>
+          </article>
         {% endif %}
       </div>
     {% endfor %}

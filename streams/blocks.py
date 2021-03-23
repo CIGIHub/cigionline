@@ -1,5 +1,7 @@
+from django.db import models
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
+from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -565,8 +567,27 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/pull_quote_right_block.html'
 
 
+class TableStreamBlock(TableBlock):
+
+    def render(self, value, context=None):
+        return """
+        <div class="container table-block">
+        <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {super_template}
+        </div>
+        </div>
+        </div>
+        """.format(super_template=super(TableStreamBlock, self).render(value, context))
+
+    class Meta:
+        icon = 'form'
+        label = 'Table'
+
+
 class TextBackgroundBlock(blocks.RichTextBlock, ThemeableBlock):
     """Text box with background colour """
+
     def get_template(self, context, *args, **kwargs):
         standard_template = super(TextBackgroundBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'text_background_block')
@@ -631,3 +652,180 @@ class TweetBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'social'
         label = 'Tweet'
         template = 'streams/tweet_block.html'
+
+
+class NewsletterBlock(blocks.StructBlock):
+    class CallToActionChoices(models.TextChoices):
+        EXPLORE = ('explore', 'Explore')
+        FOLLOW = ('follow', 'Follow')
+        LEARN_MORE = ('learn_more', 'Learn More')
+        LISTEN = ('listen', 'Listen')
+        NO_CTA = ('no_cta', 'No CTA')
+        PDF = ('pdf', 'PDF')
+        READ = ('read', 'Read')
+        RSVP = ('rsvp', 'RSVP')
+        SHARE_FACEBOOK = ('share_facebook', 'Share (Facebook)')
+        SHARE_LINKEDIN = ('share_linkedin', 'Share (LinkedIn)')
+        SHARE_TWITTER = ('share_twitter', 'Share (Twitter)')
+        SUBSCRIBE = ('subscribe', 'Subscribe')
+        WATCH = ('watch', 'Watch')
+
+    def cta_image_link(self, cta):
+        cta_image_links = {
+            'watch': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/14d48b17-21b0-449a-81dd-3476baa65712.png',
+            'read': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/27c0957b-671e-4a91-b4a4-dc43c63446e1.png',
+            'pdf': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/caa024dc-e155-4c1f-a28b-2228770a99e2.png',
+            'share_facebook': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/25daee19-d6c6-45ac-afd7-e168e3d410d3.png',
+            'share_twitter': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/9f2bf138-03ac-45b7-b4db-7d27e663f15b.png',
+            'share_linkedin': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/c7585d80-fbcd-43f6-996f-de088d02ca20.png',
+            'rsvp': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/44282420-4212-477f-b678-5783c82dc51c.png',
+            'listen': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/cff5d5c0-f14f-4c58-86b6-1d20c77dc09e.png',
+            'explore': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4b5ad389-bfb3-4819-8732-3eaf95e4965e.png',
+            'subscribe': '',
+            'learn_more': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4b5ad389-bfb3-4819-8732-3eaf95e4965e.png',
+            'follow': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4ef4b224-1de1-4d41-8e8f-ca42068378d4.png',
+        }
+
+        return cta_image_links[cta]
+
+    def cta_text(self, cta):
+        cta_texts = {
+            'explore': 'Explore',
+            'follow': 'Follow',
+            'learn_more': 'Learn More',
+            'listen': 'Listen',
+            'pdf': 'PDF',
+            'read': 'Read',
+            'rsvp': 'RSVP',
+            'share_facebook': 'Share',
+            'share_linkedin': 'Share',
+            'share_twitter': 'Share',
+            'subscribe': 'Subscribe',
+            'watch': 'Watch',
+        }
+        return cta_texts[cta]
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        context['url'] = value.get('url')
+        context['text'] = value.get('text')
+
+        if value.get('cta') != 'no_cta':
+            context['cta_image_link'] = self.cta_image_link(value.get('cta'))
+            context['cta_text'] = self.cta_text(value.get('cta')).upper()
+
+        if value.get('image'):
+            context['image_url'] = value.get("image").get_rendition("fill-600x238").url
+
+        content_page = value.get('content')
+        if content_page:
+            context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
+            context['text'] = value.get('text_override') if value.get('text_override') else content_page.specific.short_description
+            if value.get('image_override'):
+                context['image_url'] = value.get("image_override").get_rendition("fill-600x238").url
+            elif content_page.specific.image_hero:
+                context['image_url'] = content_page.specific.image_hero.get_rendition("fill-600x238").url
+                context['image_alt'] = content_page.specific.image_hero.title
+
+            if not value.get('url'):
+                context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
+
+            if content_page.specific.contenttype == 'Event':
+                event_time = content_page.specific.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
+                event_location = f' – {content_page.specific.location_city}' if content_page.specific.location_city else ''
+                event_country = f', {content_page.specific.location_country}' if content_page.specific.location_country else ''
+                context['text'].source = context['text'].source.replace('<p>', f'<p><b>{event_time}{event_location}{event_country}:</b> ', 1)
+
+        return context
+
+
+class AdvertisementBlock(NewsletterBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    url = blocks.URLBlock(required=True)
+    image = ImageChooserBlock(required=False)
+    cta = blocks.ChoiceBlock(
+        choices=NewsletterBlock.CallToActionChoices.choices,
+        verbose_name='CTA',
+        required=True,
+    )
+
+    class Meta:
+        icon = 'image'
+        label = 'Advertisement'
+        template = 'streams/newsletter/advertisement_block.html'
+
+
+class ContentBlock(NewsletterBlock):
+    content = blocks.PageChooserBlock(required=False)
+    url = blocks.URLBlock(required=False)
+    title_override = blocks.CharBlock(required=False)
+    text_override = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    cta = blocks.ChoiceBlock(
+        choices=NewsletterBlock.CallToActionChoices.choices,
+        verbose_name='CTA',
+        required=True,
+    )
+    line_separator_above = blocks.BooleanBlock(
+        verbose_name='Add line separator above block',
+        required=False,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Content'
+        template = 'streams/newsletter/content_block.html'
+
+
+class FeaturedContentBlock(NewsletterBlock):
+    content = blocks.PageChooserBlock(required=False)
+    url = blocks.URLBlock(required=False)
+    title_override = blocks.CharBlock(required=False)
+    text_override = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    image_override = ImageChooserBlock(required=False)
+    cta = blocks.ChoiceBlock(
+        choices=NewsletterBlock.CallToActionChoices.choices,
+        verbose_name='CTA',
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Featured Content'
+        template = 'streams/newsletter/featured_content_block.html'
+
+
+class SocialBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+
+    class Meta:
+        icon = 'group'
+        label = 'Recommended'
+        template = 'streams/newsletter/social_block.html'
+
+
+class TextBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Text'
+        template = 'streams/newsletter/text_block.html'

@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 
+{% load webpack_loader cache %}
+
+{% block extra_css %}
+  {% render_bundle 'annualReportListPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'annualReportListPage' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% cache 86400 annual_reports_swiper %}
+    <section class="featured">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h2 class="paragraph-heading">Featured</h2>
+            {% include "includes/swiper.html" with swiper_content=self.featured_reports type="annual-reports" %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endcache %}
+  <section class="search">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div id="annual-reports-search-table"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}

@@ -99,5 +99,27 @@ section {
         }
       }
     }
+
+    &.banner-bg {
+      background-position: center;
+      background-size: cover;
+      position: relative;
+
+      &::before {
+        background: $black-alpha-50;
+        bottom: 0;
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+      }
+
+      .hero-container {
+        position: relative;
+      }
+    }
   }
 }

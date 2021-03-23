@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.short_description %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.short_description %}
+    <meta name="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta name="og:image" content="{{ self.get_site.root_url }}{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" with root_url=self.get_site.root_url %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'multimediaSeriesPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var multimediaSeriesId = {{ self.id }};
+  </script>
+  {% render_bundle 'multimediaSeriesPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}multimedia-series-page{% endblock %}
+
+{% block content %}
+  {% image self.image_banner original as image_banner %}
+  {% include "includes/heroes/hero_standard.html" with title="Video Series: "|add:self.title topics=self.topics image_banner=image_banner %}
+  <section class="about-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">
+            About the Series
+          </h2>
+          <div class="series-text">
+            {{ self.subtitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="in-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">In the Series</h2>
+          <div id="multimedia-list">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

@@ -29,7 +29,7 @@ from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
 
 
-class ArticleLandingPage(Page):
+class ArticleLandingPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = []

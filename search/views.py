@@ -23,6 +23,7 @@ def search_api(request):
         content_type=request.GET.get('content_type', None),
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
+        multimediaseriesid=request.GET.get('multimediaseriesid', None),
         projects=request.GET.getlist('project', None),
         publicationseriesid=request.GET.get('publicationseriesid', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
