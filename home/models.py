@@ -11,6 +11,7 @@ from wagtail.admin.edit_handlers import (
 from wagtail.core.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
+from multimedia.models import MultimediaPage
 
 
 class HomePage(Page):
@@ -87,11 +88,21 @@ class HomePage(Page):
         featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
         return PersonPage.objects.filter(id__in=featured_expert_ids)
 
+    def get_highlight_pages(self):
+        highlight_pages_ids = self.highlight_pages.values_list('highlight_page', flat=True)
+        return Page.objects.filter(id__in=highlight_pages_ids).specific().prefetch_related('topics')
+
+    def get_featured_multimedia(self):
+        featured_multimedia_ids = self.featured_multimedia.values_list('featured_multimedia', flat=True)
+        return MultimediaPage.objects.filter(id__in=featured_multimedia_ids).prefetch_related('topics')
+
     def get_context(self, request):
         context = super().get_context(request)
         
         context['featured_pages'] = self.get_featured_pages()
         context['featured_experts'] = self.get_featured_experts()
+        context['highlight_pages'] = self.get_highlight_pages()
+        context['featured_multimedia'] = self.get_featured_multimedia()
 
         return context
 

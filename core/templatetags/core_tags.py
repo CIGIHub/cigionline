@@ -33,3 +33,12 @@ def social_string(value):
 @register.filter
 def file_extension(value):
     return Path(value).suffix
+
+
+@register.simple_tag(takes_context=True)
+def preview_cache_bust(context):
+    if context['request']:
+        if hasattr(context['request'], 'is_preview'):
+            if context['request'].is_preview:
+                return datetime.now().strftime("%Y%m%d%H%M%S")
+    return ''

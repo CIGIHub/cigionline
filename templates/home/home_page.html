@@ -86,7 +86,7 @@
       <div class="row">
         <div class="col-12">
           <h2 class="homepage-subheading"><span>Highlights</span></h2>
-          {% include "includes/swiper.html" with swiper_content=self.highlight_pages.all type="homepage-highlight" %}
+          {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
         </div>
       </div>
     </div>
@@ -104,19 +104,23 @@
       </div>
       <div class="row">
         <div class="col-12 col-md-8">
-          {% if self.featured_multimedia_large %}
-            {% include "includes/features/feature_content_large.html" with content=self.featured_multimedia_large dark_mode=True %}
+          {% if featured_multimedia|length > 0 %}
+            {% include "includes/features/feature_content_large.html" with content=featured_multimedia.0 dark_mode=True %}
           {% endif %}
         </div>
+        {% if featured_multimedia|length > 1 %}
         <hr>
         <div class="col-12 col-md-4 featured-small">
-          {% for item in self.featured_multimedia_small %}
-            {% if forloop.counter > 1 %}
-              <hr>
-            {% endif %}
-            {% include "includes/features/feature_content_small.html" with content=item dark_mode=True %}
-          {% endfor %}
+          {% with featured_multimedia|slice:"1:" as featured_multimedia_small %}
+            {% for item in  featured_multimedia_small %}
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_small.html" with content=item dark_mode=True %}
+            {% endfor %}
+          {% endwith %}
         </div>
+        {% endif %}
       </div>
     </div>
   </section>
