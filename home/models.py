@@ -81,20 +81,24 @@ class HomePage(Page):
     ]
 
     def get_featured_pages(self):
-        featured_page_ids = self.featured_pages.values_list('featured_page', flat=True)
-        return Page.objects.filter(id__in=featured_page_ids).specific()
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().in_bulk(featured_page_ids)
+        return [pages[x] for x in featured_page_ids]
 
     def get_featured_experts(self):
         featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
-        return PersonPage.objects.filter(id__in=featured_expert_ids)
+        experts = PersonPage.objects.in_bulk(featured_expert_ids)
+        return [experts[x] for x in featured_expert_ids]
 
     def get_highlight_pages(self):
         highlight_pages_ids = self.highlight_pages.values_list('highlight_page', flat=True)
-        return Page.objects.filter(id__in=highlight_pages_ids).specific().prefetch_related('topics')
+        pages = Page.objects.specific().prefetch_related('topics').in_bulk(highlight_pages_ids)
+        return [pages[x] for x in highlight_pages_ids]
 
     def get_featured_multimedia(self):
         featured_multimedia_ids = self.featured_multimedia.values_list('featured_multimedia', flat=True)
-        return MultimediaPage.objects.filter(id__in=featured_multimedia_ids).prefetch_related('topics')
+        multimedia = MultimediaPage.objects.prefetch_related('topics').in_bulk(featured_multimedia_ids)
+        return [multimedia[x] for x in featured_multimedia_ids]
 
     def get_context(self, request):
         context = super().get_context(request)
