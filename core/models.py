@@ -425,7 +425,7 @@ class ContentPage(Page, SearchablePageAbstract):
                 .filter(topics__in=self.topics.values_list('id', flat=True), publishing_date__isnull=False, eventpage__isnull=True)
                 .exclude(id__in=exclude_ids)
                 .exclude(articlepage__article_type__title='CIGI in the News')
-                .order_by('-publishing_date', 'topics')[:12-len(recommended_content)])
+                .order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
 
         return recommended_content
 

@@ -1,5 +1,8 @@
-from django import template
+from datetime import datetime
 from pathlib import Path
+
+from django import template
+
 register = template.Library()
 
 
