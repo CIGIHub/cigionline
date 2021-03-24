@@ -335,32 +335,32 @@ class ContentPage(Page, SearchablePageAbstract):
     @property
     def author_ids(self):
         author_ids = []
-        for block in self.authors:
-            if block.block_type == 'author':
-                author_ids.append(block.value)
+        # for block in self.authors:
+        #     if block.block_type == 'author':
+        #         author_ids.append(block.value)
         return author_ids
 
     @property
     def author_names(self):
         author_names = []
-        for block in self.authors:
-            if block.block_type == 'author':
-                author_names.append(block.value.title)
+        # for block in self.authors:
+        #     if block.block_type == 'author':
+        #         author_names.append(block.value.title)
         return author_names
 
     @property
     def related_people_ids(self):
         people_ids = []
-        for author in self.authors:
-            if author.block_type == 'author':
-                people_ids.append(author.value)
-        for editor in self.editors:
-            if editor.block_type == 'editor':
-                people_ids.append(editor.value)
-        if hasattr(self.specific, 'cigi_people_mentioned'):
-            for block in self.specific.cigi_people_mentioned:
-                if block.block_type == 'cigi_person':
-                    people_ids.append(block.value)
+        # for author in self.authors:
+        #     if author.block_type == 'author':
+        #         people_ids.append(author.value)
+        # for editor in self.editors:
+        #     if editor.block_type == 'editor':
+        #         people_ids.append(editor.value)
+        # if hasattr(self.specific, 'cigi_people_mentioned'):
+        #     for block in self.specific.cigi_people_mentioned:
+        #         if block.block_type == 'cigi_person':
+        #             people_ids.append(block.value)
         return people_ids
 
     @property
@@ -500,7 +500,7 @@ class ContentPageEditor(Orderable):
         null=False,
         blank=False,
         on_delete=models.CASCADE,
-        related_name='conetnt_pages_as_editor',
+        related_name='content_pages_as_editor',
         verbose_name='Editor',
     )
     hide_link = models.BooleanField(default=False)

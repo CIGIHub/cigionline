@@ -59,13 +59,13 @@ def search_api(request):
             try:
                 if field == 'authors':
                     item['authors'] = []
-                    for block in page.specific.authors:
-                        if block.block_type == 'author':
-                            item['authors'].append({
-                                'id': block.value.id,
-                                'title': block.value.title,
-                                'url': block.value.url,
-                            })
+                    # for block in page.specific.authors:
+                    #     if block.block_type == 'author':
+                    #         item['authors'].append({
+                    #             'id': block.value.id,
+                    #             'title': block.value.title,
+                    #             'url': block.value.url,
+                    #         })
                 elif field == 'cigi_people_mentioned':
                     item['cigi_people_mentioned'] = [{
                         'id': person.value.id,
