@@ -418,14 +418,16 @@ class ContentPage(Page, SearchablePageAbstract):
 
         if len(recommended_content) < 12:
 
-            recommended_content = list(recommended_content) + list(ContentPage
-                .objects
-                .live()
-                .public()
-                .filter(topics__in=self.topics.values_list('id', flat=True), publishing_date__isnull=False, eventpage__isnull=True)
-                .exclude(id__in=exclude_ids)
-                .exclude(articlepage__article_type__title='CIGI in the News')
-                .order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
+            additional_content = list(ContentPage
+                                      .objects.live()
+                                      .public()
+                                      .filter(topics__in=self.topics.values_list('id', flat=True),
+                                              publishing_date__isnull=False,
+                                              eventpage__isnull=True)
+                                      .exclude(id__in=exclude_ids)
+                                      .exclude(articlepage__article_type__title='CIGI in the News')
+                                      .order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
+            recommended_content = list(recommended_content) + additional_content
 
         return recommended_content
 
