@@ -324,20 +324,6 @@ class ArchiveablePageAbstract(models.Model):
 
 
 class ContentPage(Page, SearchablePageAbstract):
-    authors = StreamField(
-        [
-            ('author', PersonBlock(page_type='people.PersonPage')),
-            ('external_author', ExternalPersonBlock()),
-        ],
-        blank=True,
-    )
-    editors = StreamField(
-        [
-            ('editor', PersonBlock(page_type='people.PersonPage')),
-            ('external_editor', ExternalPersonBlock()),
-        ],
-        blank=True,
-    )
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True, related_name='content_pages')
@@ -434,14 +420,14 @@ class ContentPage(Page, SearchablePageAbstract):
 
     authors_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('authors'),
+            InlinePanel('authors'),
         ],
         heading='Authors',
         classname='collapsible collapsed',
     )
     editors_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('editors'),
+            InlinePanel('editors'),
         ],
         heading='Editors',
         classname='collapsible collapsed',
@@ -479,6 +465,52 @@ class ContentPage(Page, SearchablePageAbstract):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
+
+
+class ContentPageAuthor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='authors',
+    )
+    author = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_author',
+        verbose_name='Author',
+    )
+    hide_link = models.BooleanField(default=False)
+
+    panels = [
+        PageChooserPanel(
+            'author',
+            ['people.PersonPage'],
+        ),
+    ]
+
+
+class ContentPageEditor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='editors',
+    )
+    editor = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='conetnt_pages_as_editor',
+        verbose_name='Editor',
+    )
+    hide_link = models.BooleanField(default=False)
+
+    panels = [
+        PageChooserPanel(
+            'editor',
+            ['people.PersonPage'],
+        ),
+    ]
 
 
 class ContentPageRecommendedContent(Orderable):
