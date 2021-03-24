@@ -133,7 +133,7 @@ class SearchTable extends React.Component {
       this.updateQueryParams();
     }
 
-    let offset;
+    let offset = 0;
 
     if (action === 'search') {
       this.setState(() => ({
