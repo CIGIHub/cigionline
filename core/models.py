@@ -409,12 +409,13 @@ class ContentPage(Page, SearchablePageAbstract):
 
     def get_recommended(self):
         recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)
-        return Page.objects.filter(id__in=recommended_page_ids).specific()
+        pages = Page.objects.specific().in_bulk(recommended_page_ids)
+        return [pages[x] for x in recommended_page_ids]
 
     def recommended_content(self):
         recommended_content = self.get_recommended()
         exclude_ids = [self.id]
-        exclude_ids += recommended_content.values_list('id', flat=True)
+        exclude_ids += [item.id for item in recommended_content]
 
         if len(recommended_content) < 12:
 
