@@ -72,12 +72,10 @@
                 <div class="author-images block-{{page_type}}">
                   {% include './includes/health_security_series_rings.html' %}
                   {% if page_type == 'opinion' %}
-                    {% for item in block.value.specific.authors %}
-                      {% if item.block_type == 'author' %}
-                        <a href="{% pageurl item.value %}">
-                          {% image item.value.image_square fill-100x100 %}
-                        </a>
-                      {% endif %}
+                    {% for item in block.value.specific.authors.all %}
+                      <a href="{% pageurl item.author %}">
+                        {% image item.author.image_square fill-100x100 %}
+                      </a>
                     {% endfor %}
                   {% elif page_type == 'multimedia' %}
                     <a href="{{ block.value.url }}">
@@ -90,11 +88,11 @@
                     <a href="{{ block.value.url }}">{{ block.value.title }}</a>
                   </h3>
                   <p class="authors">
-                    {% for item in block.value.specific.authors %}
-                      {% if item.block_type == 'author' %}
-                        <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
-                      {% elif item.block_type == 'external_author' %}
-                        <span>{{ item.value }}</span>
+                    {% for item in block.value.specific.authors.all %}
+                      {% if item.hide_link %}
+                        <span>{{ item.author.title }}</span>
+                      {% else %}
+                        <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
                       {% endif %}
                     {% endfor %}
                   </p>

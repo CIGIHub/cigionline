@@ -27,7 +27,7 @@
   <div class="feature-content-text center-text">
     {% include 'includes/topics.html' with topics=content.topics_sorted %}
     {% include 'includes/features/feature_content_title.html' %}
-    {% include 'includes/features/feature_content_people.html' with authors=content.authors %}
+    {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
     <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
     {% if cta %}
       {% include 'includes/features/feature_content_cta.html' %}

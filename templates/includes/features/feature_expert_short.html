@@ -21,7 +21,7 @@
       <h4>Latest Activity</h4>
       {% include "includes/topics.html" with topics=expert.latest_activity.topics_sorted %}
       <h5><a href="{% pageurl expert.latest_activity %}">{{ expert.latest_activity.title }}</a></h5>
-      {% include "includes/features/feature_content_people.html" with authors=expert.latest_activity.authors %}
+      {% include "includes/features/feature_content_people.html" with authors=expert.latest_activity.authors.all %}
     </div>
   {% endif %}
 </article>

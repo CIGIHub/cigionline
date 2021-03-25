@@ -334,33 +334,23 @@ class ContentPage(Page, SearchablePageAbstract):
 
     @property
     def author_ids(self):
-        author_ids = []
-        # for block in self.authors:
-        #     if block.block_type == 'author':
-        #         author_ids.append(block.value)
-        return author_ids
+        return [item.author.id for item in self.authors]
 
     @property
     def author_names(self):
-        author_names = []
-        # for block in self.authors:
-        #     if block.block_type == 'author':
-        #         author_names.append(block.value.title)
-        return author_names
+        return [item.author.title for item in self.authors]
 
     @property
     def related_people_ids(self):
         people_ids = []
-        # for author in self.authors:
-        #     if author.block_type == 'author':
-        #         people_ids.append(author.value)
-        # for editor in self.editors:
-        #     if editor.block_type == 'editor':
-        #         people_ids.append(editor.value)
-        # if hasattr(self.specific, 'cigi_people_mentioned'):
-        #     for block in self.specific.cigi_people_mentioned:
-        #         if block.block_type == 'cigi_person':
-        #             people_ids.append(block.value)
+        for author in self.authors:
+            people_ids.append(author.author.id)
+        for editor in self.editors:
+            people_ids.append(editor.editor.id)
+        if hasattr(self.specific, 'cigi_people_mentioned'):
+            for block in self.specific.cigi_people_mentioned:
+                if block.block_type == 'cigi_person':
+                    people_ids.append(block.value)
         return people_ids
 
     @property
@@ -391,7 +381,7 @@ class ContentPage(Page, SearchablePageAbstract):
 
     def author_count(self):
         # @todo test this
-        return len(self.authors)
+        return self.authors.count()
 
     def recommended_content(self):
         recommended_content = []

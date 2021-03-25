@@ -7,7 +7,7 @@
         {% include "includes/topics.html" with topics=self.topics_sorted %}
         <h1>{{title}}</h1>
         <h2>{{subtitle|safe}}</h2>
-        {% include "includes/authors.html" with authors=self.authors %}
+        {% include "includes/authors.html" with authors=self.authors.all %}
         {% if self.publication_series.live %}
           <div class="publication-series">
             <span>Series:</span>

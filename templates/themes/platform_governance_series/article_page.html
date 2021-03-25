@@ -28,7 +28,7 @@
               </a>
             </div>
             <h1>{{ self.title }}</h1>
-            {% include "includes/authors.html" with authors=self.authors %}
+            {% include "includes/authors.html" with authors=self.authors.all %}
             {% include "includes/date.html" with date=self.publishing_date %}
             <div class="scrollanchor-container">
               <a href="#article-body">
@@ -82,11 +82,11 @@
                       {% endif %}
                     </h3>
                     <p class="authors">
-                      {% for item in block.value.specific.authors %}
-                        {% if item.block_type == 'author' %}
-                          <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
-                        {% elif item.block_type == 'external_author' %}
-                          <span>{{ item.value }}</span>
+                      {% for item in block.value.specific.authors.all %}
+                        {% if item.hide_link %}
+                          <span>{{ item.author.title }}<span>
+                        {% else %}
+                          <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
                         {% endif %}
                       {% endfor %}
                     </p>

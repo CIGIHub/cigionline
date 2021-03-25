@@ -7,10 +7,10 @@
     {% endif %}
     <h3><a href="{% pageurl article %}">{{ article.title }}</a></h3>
     {% if article.authors %}
-      {% include "includes/authors.html" with authors=article.authors %}
+      {% include "includes/authors.html" with authors=article.authors.all %}
     {% endif %}
     {% if article.editors %}
-      {% include "includes/authors.html" with authors=article.editors %}
+      {% include "includes/authors.html" with authors=article.editors.all %}
     {% endif %}
     {% if article.publishing_date %}
       {% include "includes/date.html" with date=article.publishing_date %}

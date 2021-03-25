@@ -77,13 +77,13 @@
         <div class="col col-md-10 col-lg-8 meta">
           <p>Published: {{self.publishing_date|date:"F j, Y" }}</p>
           <p>
-            Author{{self.authors|length|pluralize}}:
+            Author{{self.author_count|pluralize}}:
 
-            {% for item in self.authors %}
-              {% if item.block_type == 'author' %}
-                <span class="author"><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
-              {% elif item.block_type == 'external_author' %}
-                <span class="author">{{ item.value }}</span>
+            {% for item in self.authors.all %}
+              {% if item.hide_link %}
+                <span class="author">{{ item.author.title }}</span>
+              {% else %}
+                <span class="author"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
               {% endif %}
             {% endfor %}
           </p>

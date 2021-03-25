@@ -688,20 +688,19 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
+            people = item.value.specific.authors.all()
             people_string = ''
-            # for block in item.value.specific.authors:
-            #     if block.block_type == 'author':
-            #         people.append(block.value)
-            #         person_string = block.value.title
-            #         people_string += person_string
-            #
-            #         # Add each person as well so if there's an article with just
-            #         # a single author who's already been in another article in
-            #         # collaboration, then we won't add their name to the list
-            #         # again.
-            #         if len(people) > 1:
-            #             item_people.add(person_string)
+
+            for person in people:
+                person_string = person.author.title
+                people_string += person_string
+
+                # Add each person as well so if there's an article with just
+                # a single author who's already been in another article in
+                # collaboration, then we won't add their name to the list
+                # again.
+                if len(people) > 1:
+                    item_people.add(person_string)
 
             if people_string not in item_people:
                 series_contributors.append({'item': item.value.specific, 'contributors': people})
@@ -714,16 +713,17 @@ class ArticleSeriesPage(
         series_contributors = []
         item_people = set()
 
-        # for item in self.series_items:
-        #     if item.block_type == 'series_item':
-        #         for block in item.value.specific.authors:
-        #             if block.block_type == 'author' and block.value.title not in item_people:
-        #                 series_contributors.append({
-        #                     'id': block.value.id,
-        #                     'title': block.value.title,
-        #                     'url': block.value.url,
-        #                 })
-        #                 item_people.add(block.value.title)
+        for item in self.series_items:
+            if item.block_type == 'series_item':
+                people = item.value.specific.authors.all()
+                for person in people:
+                    if person.author.title not in item_people:
+                        series_contributors.append({
+                            'id': person.author.id,
+                            'title': person.author.title,
+                            'url': person.author.url,
+                        })
+                        item_people.add(person.author.title)
         return series_contributors
 
     @property
@@ -735,17 +735,22 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
+            people = item.value.specific.authors.all()
 
             # Skip items that have more than 2 authors/speakers. For
             # example, in the After COVID series, there is an introductory
             # video with many authors.
-            # if len(item.value.specific.authors) > 2:
-            #     continue
-            # else:
-            #     for block in item.value.specific.authors:
-            #         if block.block_type == 'author' and block.value.title not in item_people:
-            #             series_contributors.append({'item': item.value.specific, 'contributors': [block.value], 'last_name': block.value.last_name})
-            #             item_people.add(block.value.title)
+            if len(people) > 2:
+                continue
+            else:
+                for person in people:
+                    if person.author.title not in item_people:
+                        series_contributors.append({
+                            'item': item.value.specific,
+                            'contributors': [person.author],
+                            'last_name': person.author.last_name,
+                        })
+                        item_people.add(person.author.title)
 
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
@@ -757,11 +762,11 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            # for block in item.value.specific.authors:
-            #     if block.block_type == 'author' and block.value.title not in series_people:
-            #         series_authors.append(block)
-            #         series_people.add(block.value.title)
-
+            people = item.value.specific.authors.all()
+            for person in people:
+                if person.author.title not in series_people:
+                    series_authors.append(person.author)
+                    series_people.add(person.author.title)
         return series_authors
 
     class Meta:
