@@ -1,0 +1,39 @@
+{% load wagtailcore_tags core_tags %}
+
+<section class="hero hero-topic">
+  <div class="container">
+    <div class="row hero-container">
+      <div class="hero-main col-md-7">
+        <h1>{{title}}</h1>
+      </div>
+      <aside class="col-md-4 offset-md-1">
+        {% if submenu %}
+          <nav aria-label="secondary">
+            <h2><span>More</span></h2>
+            <ul {% if submenu|length > 5 %}class="multicol-2"{% endif %}>
+              {% for submenu_item in submenu %}
+                {% if submenu_item.link_page %}
+                  <li>
+                    {% if submenu_item.link_page.url_path == self.url_path %}
+                      {{ submenu_item.title }}
+                    {% else %}
+                      <a href="{% pageurl submenu_item.link_page %}">
+                        {{ submenu_item.title }}
+                      </a>
+                    {% endif %}
+                  </li>
+                {% elif submenu_item.link_url %}
+                  <li>
+                    <a href="{{ submenu_item.link_url }}">
+                      {{ submenu_item.title }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</section>

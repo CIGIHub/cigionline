@@ -567,6 +567,15 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/pull_quote_right_block.html'
 
 
+class SubmenuItemBlock(blocks.StructBlock):
+    text = blocks.CharBlock(required=True)
+    url = blocks.URLBlock(required=True)
+
+    class Meta:
+        icon = 'site'
+        label = 'Submenu Item'
+
+
 class TableStreamBlock(TableBlock):
 
     def render(self, value, context=None):

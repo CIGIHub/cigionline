@@ -8,6 +8,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import SubmenuItemBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
@@ -236,6 +237,13 @@ class TopicListPage(Page):
 class TopicPage(ArchiveablePageAbstract, Page):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    submenu = StreamField(
+        [
+            ('menu_item', SubmenuItemBlock()),
+        ],
+        blank=True,
+        help_text='Submenu item displayed in the hero section.',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
@@ -253,6 +261,7 @@ class TopicPage(ArchiveablePageAbstract, Page):
         return featured_pages
 
     content_panels = Page.content_panels + [
+        StreamFieldPanel('submenu'),
         FieldPanel('description')
     ]
     settings_panels = Page.settings_panels + [
