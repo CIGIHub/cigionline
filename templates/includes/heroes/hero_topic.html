@@ -11,25 +11,7 @@
           <nav aria-label="secondary">
             <h2><span>More</span></h2>
             <ul {% if submenu|length > 5 %}class="multicol-2"{% endif %}>
-              {% for submenu_item in submenu %}
-                {% if submenu_item.link_page %}
-                  <li>
-                    {% if submenu_item.link_page.url_path == self.url_path %}
-                      {{ submenu_item.title }}
-                    {% else %}
-                      <a href="{% pageurl submenu_item.link_page %}">
-                        {{ submenu_item.title }}
-                      </a>
-                    {% endif %}
-                  </li>
-                {% elif submenu_item.link_url %}
-                  <li>
-                    <a href="{{ submenu_item.link_url }}">
-                      {{ submenu_item.title }}
-                    </a>
-                  </li>
-                {% endif %}
-              {% endfor %}
+              {{ submenu }}
             </ul>
           </nav>
         {% endif %}

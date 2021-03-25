@@ -574,6 +574,7 @@ class SubmenuItemBlock(blocks.StructBlock):
     class Meta:
         icon = 'site'
         label = 'Submenu Item'
+        template = 'streams/submenu_item_block.html'
 
 
 class TableStreamBlock(TableBlock):
