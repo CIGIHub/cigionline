@@ -82,7 +82,10 @@ class HomePage(Page):
 
     def get_featured_pages(self):
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
-        pages = Page.objects.specific().in_bulk(featured_page_ids)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
 
     def get_featured_experts(self):
@@ -92,12 +95,18 @@ class HomePage(Page):
 
     def get_highlight_pages(self):
         highlight_pages_ids = self.highlight_pages.values_list('highlight_page', flat=True)
-        pages = Page.objects.specific().prefetch_related('topics').in_bulk(highlight_pages_ids)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(highlight_pages_ids)
         return [pages[x] for x in highlight_pages_ids]
 
     def get_featured_multimedia(self):
         featured_multimedia_ids = self.featured_multimedia.values_list('featured_multimedia', flat=True)
-        multimedia = MultimediaPage.objects.prefetch_related('topics').in_bulk(featured_multimedia_ids)
+        multimedia = MultimediaPage.objects.prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_multimedia_ids)
         return [multimedia[x] for x in featured_multimedia_ids]
 
     def get_context(self, request):
@@ -112,11 +121,13 @@ class HomePage(Page):
 
     def featured_publications(self):
         return PublicationPage.objects.prefetch_related(
+            'authors__author',
             'topics',
         ).live().public().order_by('-publishing_date')[:4]
 
     def featured_multimedia_large(self):
         first_featured_multimedia = self.featured_multimedia.prefetch_related(
+            'featured_multimedia__authors__author',
             'featured_multimedia__topics',
         ).first()
         if first_featured_multimedia:
@@ -126,6 +137,7 @@ class HomePage(Page):
     def featured_multimedia_small(self):
         featured_multimedia_small = []
         for item in self.featured_multimedia.prefetch_related(
+            'featured_multimedia__authors__author',
             'featured_multimedia__topics',
         ).all()[1:]:
             featured_multimedia_small.append(item.featured_multimedia)
