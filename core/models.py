@@ -477,6 +477,7 @@ class ContentPageAuthor(Orderable):
             'author',
             ['people.PersonPage'],
         ),
+        FieldPanel('hide_link'),
     ]
 
 
@@ -500,6 +501,7 @@ class ContentPageEditor(Orderable):
             'editor',
             ['people.PersonPage'],
         ),
+        FieldPanel('hide_link'),
     ]
 
 
