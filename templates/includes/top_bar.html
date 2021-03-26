@@ -1,9 +1,9 @@
 {% load wagtailcore_tags menu_tags cache %}
 
-{% get_menu_items 'main' as main_menu_items %}
-{% get_menu_items 'footer' as footer_menu_items %}
 
 {% cache 86400 top_bar %}
+  {% get_menu_items 'main' as main_menu_items %}
+  {% get_menu_items 'footer' as footer_menu_items %}
   <header>
     <div class="main-navigation-wrapper">
       <div class="container">
