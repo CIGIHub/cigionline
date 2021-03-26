@@ -5,7 +5,7 @@
     {% for item in swiper_content %}
       <div class="swiper-slide">
         {% if type == "homepage-highlight" %}
-          {% include "includes/features/feature_poster_teaser.html" with content=item.highlight_page.specific %}
+          {% include "includes/features/feature_poster_teaser.html" with content=item %}
         {% elif type == "article-landing-series" %}
           <article class="row">
             <div class="img-wrapper col-md-3">
