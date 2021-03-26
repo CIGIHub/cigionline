@@ -383,7 +383,10 @@ class ContentPage(Page, SearchablePageAbstract):
 
     def get_recommended(self):
         recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)
-        pages = Page.objects.specific().in_bulk(recommended_page_ids)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(recommended_page_ids)
         return [pages[x] for x in recommended_page_ids]
 
     def recommended_content(self):
@@ -401,6 +404,7 @@ class ContentPage(Page, SearchablePageAbstract):
                                               eventpage__isnull=True)
                                       .exclude(id__in=exclude_ids)
                                       .exclude(articlepage__article_type__title='CIGI in the News')
+                                      .prefetch_related('authors__author', 'topics')
                                       .order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
             recommended_content = list(recommended_content) + additional_content
 
