@@ -78,7 +78,10 @@ class SearchTable extends React.Component {
 
   handleSearchSubmit(e) {
     e.preventDefault();
-    this.getRows();
+    // When searching, set the page to the first page to display the most
+    // relevant results. Note that setPage will also call the API to update the
+    // table.
+    this.setPage(1);
   }
 
   handleSearchValueChange(e) {
@@ -191,7 +194,7 @@ class SearchTable extends React.Component {
           const itemIndex = existingFilterTypes.findIndex(
             (filterType) => (
               filterType.typeEndpoint === typeEndpoint
-                && filterType.typeValue === item.title
+              && filterType.typeValue === item.title
             ),
           );
           if (itemIndex >= 0) {
