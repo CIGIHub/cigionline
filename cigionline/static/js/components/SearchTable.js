@@ -66,7 +66,7 @@ class SearchTable extends React.Component {
       const filterTypeEndpoints = [];
       for (const filterType of filterTypes) {
         if (filterType.typeEndpoint
-          && filterTypeEndpoints.indexOf(filterType.typeEndpoint) < 0) {
+            && filterTypeEndpoints.indexOf(filterType.typeEndpoint) < 0) {
           filterTypeEndpoints.push(filterType.typeEndpoint);
         }
       }
@@ -78,7 +78,9 @@ class SearchTable extends React.Component {
 
   handleSearchSubmit(e) {
     e.preventDefault();
-    this.getRows('search');
+    this.setState({
+      currentPage: 1,
+    }, this.getRows);
   }
 
   handleSearchValueChange(e) {
@@ -111,7 +113,7 @@ class SearchTable extends React.Component {
     }
   }
 
-  getRows(action) {
+  getRows() {
     const {
       currentPage,
       loadingInitial,
@@ -133,15 +135,7 @@ class SearchTable extends React.Component {
       this.updateQueryParams();
     }
 
-    let offset = 0;
-
-    if (action === 'search') {
-      this.setState(() => ({
-        currentPage: 1,
-      }));
-    } else {
-      offset = (currentPage - 1) * limit;
-    }
+    const offset = (currentPage - 1) * limit;
 
     this.setState(() => ({
       loading: true,
@@ -280,9 +274,9 @@ class SearchTable extends React.Component {
     const dropdownTypes = [];
     filterTypes.forEach((filterType) => {
       if ((!filterType.typeEndpoint || filterType.id)
-        && (!typeSelected
-          || (typeSelected
-            && typeSelected.name !== filterType.name))) {
+          && (!typeSelected
+            || (typeSelected
+              && typeSelected.name !== filterType.name))) {
         dropdownTypes.push(filterType);
       }
     });
