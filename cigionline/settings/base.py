@@ -196,7 +196,13 @@ WAGTAILSEARCH_BACKENDS = {
         'INDEX': 'wagtail',
         'TIMEOUT': 30,
         'OPTIONS': {},
-        'INDEX_SETTINGS': {},
+        'INDEX_SETTINGS': {
+            'settings': {
+                'index': {
+                    'max_result_window': 13000,
+                }
+            }
+        },
     },
 }
 

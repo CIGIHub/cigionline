@@ -407,29 +407,29 @@ class ContentPage(Page, SearchablePageAbstract):
         # @todo test this
         return len(self.authors)
 
+    def get_recommended(self):
+        recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)
+        pages = Page.objects.specific().in_bulk(recommended_page_ids)
+        return [pages[x] for x in recommended_page_ids]
+
     def recommended_content(self):
-        recommended_content = []
-        topic_content = []
-        for item in self.recommended.all()[:3]:
-            recommended_content.append(item.recommended_content_page.specific)
-        for topic in self.topics.all():
-            topic_content.append(
-                ContentPage
-                .objects
-                .live()
-                .public()
-                .filter(topics=topic, publishing_date__isnull=False, eventpage__isnull=True)
-                .exclude(id=self.id)
-                .exclude(articlepage__article_type__title='CIGI in the News')
-                .order_by('-publishing_date')
-            )
-        for i in range(10):
-            for topic in topic_content:
-                if topic[i] in recommended_content:
-                    continue
-                recommended_content.append(topic[i])
-                if len(recommended_content) == 12:
-                    return recommended_content
+        recommended_content = self.get_recommended()
+        exclude_ids = [self.id]
+        exclude_ids += [item.id for item in recommended_content]
+
+        if len(recommended_content) < 12:
+
+            additional_content = list(ContentPage
+                                      .objects.live()
+                                      .public()
+                                      .filter(topics__in=self.topics.values_list('id', flat=True),
+                                              publishing_date__isnull=False,
+                                              eventpage__isnull=True)
+                                      .exclude(id__in=exclude_ids)
+                                      .exclude(articlepage__article_type__title='CIGI in the News')
+                                      .order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
+            recommended_content = list(recommended_content) + additional_content
+
         return recommended_content
 
     authors_panel = MultiFieldPanel(
