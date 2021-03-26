@@ -57,7 +57,7 @@
             <div class="subtitle">{{ self.subtitle|safe }}</div>
             <div class="meta">
               {% include "includes/date.html" with date=self.publishing_date %}
-              {% include "includes/authors.html" with authors=self.authors %}
+              {% include "includes/authors.html" with authors=self.authors.all %}
             </div>
           </div>
         </div>

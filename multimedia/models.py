@@ -234,7 +234,7 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('authors'),
+                InlinePanel('authors'),
             ],
             heading='Speakers',
             classname='collapsible collapsed',

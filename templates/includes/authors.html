@@ -1,11 +1,16 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags core_tags %}
 
 <div class="custom-text-list authors">
-  {% for block in authors %}
-    {% if block.block_type == 'author' or block.block_type == 'editor' %}
-      <a class="block-author" href="{% pageurl block.value %}">{{ block.value.title }}</a>
-    {% elif block.block_type == 'external_author' or block.block_type == 'external_editor' %}
-      <span class="block-author">{{ block.value }}</span>
+  {% for item in authors %}
+    {% if item.author %}
+      {% define item.author as person %}
+    {% elif item.editor %}
+      {% define item.editor as person %}
+    {% endif %}
+    {% if item.hide_link %}
+      <span class="block-author">{{ person.title }}</span>
+    {% else %}
+      <a class="block-author" href="{% pageurl person %}">{{ person.title }}</a>
     {% endif %}
   {% endfor %}
 </div>
