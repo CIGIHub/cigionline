@@ -334,18 +334,18 @@ class ContentPage(Page, SearchablePageAbstract):
 
     @property
     def author_ids(self):
-        return [item.author.id for item in self.authors]
+        return [item.author.id for item in self.authors.all()]
 
     @property
     def author_names(self):
-        return [item.author.title for item in self.authors]
+        return [item.author.title for item in self.authors.all()]
 
     @property
     def related_people_ids(self):
         people_ids = []
-        for author in self.authors:
+        for author in self.authors.all():
             people_ids.append(author.author.id)
-        for editor in self.editors:
+        for editor in self.editors.all():
             people_ids.append(editor.editor.id)
         if hasattr(self.specific, 'cigi_people_mentioned'):
             for block in self.specific.cigi_people_mentioned:
