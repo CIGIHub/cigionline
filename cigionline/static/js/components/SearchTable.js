@@ -78,9 +78,10 @@ class SearchTable extends React.Component {
 
   handleSearchSubmit(e) {
     e.preventDefault();
-    this.setState({
-      currentPage: 1,
-    }, this.getRows);
+    // When searching, set the page to the first page to display the most
+    // relevant results. Note that setPage will also call the API to update the
+    // table.
+    this.setPage(1);
   }
 
   handleSearchValueChange(e) {
