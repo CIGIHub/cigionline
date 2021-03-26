@@ -188,7 +188,7 @@ class EventPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('authors'),
+                InlinePanel('authors'),
             ],
             heading='Speakers',
             classname='collapsible collapsed',
