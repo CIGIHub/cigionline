@@ -7,6 +7,12 @@ import './css/research_landing_page.scss';
 ReactDOM.render(
   <SearchTable
     showSearch
+    contenttypes={[
+      'Publication',
+      'Opinion',
+      'Event',
+      'Multimedia',
+    ]}
     fields={[
       'authors',
       'contentsubtype',
