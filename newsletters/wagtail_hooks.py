@@ -1,5 +1,21 @@
-from newsletters.models import NewsletterPage
-from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from wagtail.contrib.modeladmin.helpers import PagePermissionHelper
+from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+from wagtail.core import hooks
+
+from .models import NewsletterPage
+
+
+@hooks.register('register_permissions')
+def register_newsletter_page_permissions():
+    newsletter_content_type = ContentType.objects.get(app_label='newsletters', model='newsletterpage')
+    return Permission.objects.filter(content_type=newsletter_content_type)
+
+
+class NewsletterPageModelAdminPermissionHelper(PagePermissionHelper):
+    def user_can_list(self, user):
+        return self.user_has_any_permissions(user)
 
 
 class NewsletterPageModelAdmin(ModelAdmin):
@@ -12,6 +28,7 @@ class NewsletterPageModelAdmin(ModelAdmin):
     list_filter = ('live', 'latest_revision_created_at')
     search_fields = ('title')
     ordering = ('-latest_revision_created_at',)
+    permission_helper_class = NewsletterPageModelAdminPermissionHelper
 
 
 modeladmin_register(NewsletterPageModelAdmin)
