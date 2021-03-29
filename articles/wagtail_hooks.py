@@ -84,7 +84,7 @@ class ArticlePageModelAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = ArticlePage
     menu_label = 'Articles'
-    menu_icon = 'doc-empty-inverse'
+    menu_icon = 'duplicate'
     menu_order = 101
     list_display = ('title', 'publishing_date', 'article_type', 'article_series', 'theme', 'live')
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
