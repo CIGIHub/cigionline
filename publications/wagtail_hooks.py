@@ -1,5 +1,21 @@
-from publications.models import PublicationPage
-from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from wagtail.contrib.modeladmin.helpers import PagePermissionHelper
+from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+from wagtail.core import hooks
+
+from .models import PublicationPage
+
+
+@hooks.register('register_permissions')
+def register_publication_page_permissions():
+    publication_content_type = ContentType.objects.get(app_label='publications', model='publicationpage')
+    return Permission.objects.filter(content_type=publication_content_type)
+
+
+class PublicationPageModelAdminPermissionHelper(PagePermissionHelper):
+    def user_can_list(self, user):
+        return self.user_has_any_permissions(user)
 
 
 class PublicationPageModelAdmin(ModelAdmin):
@@ -12,6 +28,7 @@ class PublicationPageModelAdmin(ModelAdmin):
     list_filter = ('publishing_date', 'publication_type', 'live', 'publication_series')
     search_fields = ('title')
     ordering = ['-publishing_date']
+    permission_helper_class = PublicationPageModelAdminPermissionHelper
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
