@@ -1,5 +1,3 @@
-@import '../global/mixins';
-
 .pagination-links-alphabetical {
   @include media-breakpoint-up(md) {
     justify-content: space-between;

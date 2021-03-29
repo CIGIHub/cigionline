@@ -1,5 +1,3 @@
-@import '../global/mixins';
-
 .article-series-row {
   @include media-breakpoint-up(md) {
     flex-direction: row-reverse;

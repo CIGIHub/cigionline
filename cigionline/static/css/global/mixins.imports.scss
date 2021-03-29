@@ -1,0 +1,356 @@
+@import './bootstrap_variables_overwrite';
+
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/bootstrap';
+
+@import './variables';
+
+@mixin top-bar(
+  $background-color: $black,
+  $background-color-medium: $background-color,
+  $background-color-scrolled: $background-color,
+  $color: $white,
+  $color-medium: $color,
+  $hover-color: $cigi-primary-colour,
+  $hover-color-medium: $hover-color,
+  $position: fixed
+) {
+  header {
+    @include media-breakpoint-up(md) {
+      background-color: $background-color-medium;
+    }
+    background-color: $background-color;
+    position: $position;
+
+    &.scrolled {
+      background-color: $background-color-scrolled;
+    }
+
+    .cigi-top-bar {
+      .cigi-logo {
+        svg {
+          @include media-breakpoint-down(md) {
+            * {
+              fill: $color;
+            }
+          }
+          @include media-breakpoint-up(md) {
+            fill: $color-medium;
+
+            * {
+              fill: $color-medium;
+            }
+          }
+          fill: $color;
+        }
+      }
+
+      nav {
+        ul {
+          a,
+          button {
+            @include media-breakpoint-up(md) {
+              color: $color-medium;
+            }
+            color: $color;
+
+            &:hover {
+              @include media-breakpoint-up(md) {
+                color: $hover-color-medium;
+              }
+              color: $hover-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink) {
+  a {
+    color: $color;
+
+    &:hover {
+      color: $hover-color;
+    }
+  }
+}
+
+@mixin link-underline($color: $black, $underline-color: $cigi-primary-colour) {
+  a {
+    background-image: linear-gradient(transparent calc(100% - 4px), $underline-color 10px);
+    background-repeat: no-repeat;
+    background-size: 0 100%;
+    color: $color;
+    transition: background-size 500ms;
+    width: calc(100%);
+
+    &:hover {
+      background-size: 100% 100%;
+      color: $color;
+    }
+  }
+}
+
+@mixin display-grid {
+  display: -ms-grid;
+  display: grid; // sass-lint:disable-line no-duplicate-properties
+}
+
+@mixin list($separator: ', ') {
+  &:not(:only-child) {
+    &::after {
+      content: $separator;
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+@mixin comma-separated {
+  &:not(:only-child) {
+    &::after {
+      content: ', ';
+      margin-right: 2px;
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+@mixin and-separated {
+  &:not(:only-child) {
+    &::after {
+      content: ' and ';
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+@mixin slash-separated($color: inherit) {
+  &:not(:only-child) {
+    &::after {
+      color: $color;
+      content: ' / ';
+    }
+  }
+
+  &:last-child {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+@mixin inline-highlight($color: $white, $background: $cigi-primary-colour) {
+  background: $background;
+  box-decoration-break: clone;
+  box-shadow: 5px 0 0 $background, -5px 0 0 $background;
+  color: $color;
+  display: inline;
+  line-height: 125%;
+
+  &::after {
+    content: '';
+    display: block;
+  }
+}
+// IMAGES
+
+@mixin aspect-ratio($width, $height) {
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    padding-top: ($height / $width) * 100%;
+    width: 100%;
+  }
+
+  > .img-wrapper {
+    background: $cigi-medium-light-grey;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+@mixin hover-darken {
+  .img-wrapper {
+    background-color: $black;
+
+    &:hover {
+      img {
+        opacity: 0.8;
+      }
+    }
+
+    img {
+      transition: opacity 0.2s ease;
+    }
+  }
+}
+
+@mixin image-button($size: 2em) {
+  .img-wrapper {
+    position: relative;
+
+    .image-button {
+      align-items: center;
+      background: $cigi-primary-colour;
+      bottom: 0;
+      color: $white;
+      display: inline-flex;
+      height: $size;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      width: $size;
+      z-index: 1;
+
+      i {
+        font-size: ($size / 2);
+      }
+    }
+  }
+}
+
+// VIDEOS
+
+@mixin video-aspect-ratio($width, $height) {
+  .video-wrapper {
+    overflow: hidden;
+    padding-top: ($height / $width) * 100%;
+    position: relative;
+    width: 100%;
+
+    > iframe {
+      bottom: 0;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+}
+
+@mixin inline-person-list {
+  li {
+    display: inline;
+
+    &:not(:only-child) {
+      &::after {
+        content: ' and ';
+      }
+    }
+
+    &:last-child {
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+// Date Circles
+
+@mixin date-circle($border-color: $black, $circle-size: 70px, $font-size: 1em) {
+  align-items: center;
+  border: 1px solid $border-color;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font-size: $font-size;
+  height: $circle-size;
+  justify-content: center;
+  line-height: 1.15em;
+  width: $circle-size;
+}
+
+@mixin light-footer {
+  footer {
+    background: $white;
+    color: $black;
+
+    .logo-container,
+    .footer-bracket,
+    .highlighted-topics-list {
+      display: none;
+    }
+
+    .footer-content {
+      form {
+        position: relative;
+
+        input {
+          border-bottom: 2px solid $black;
+
+          &[type='email'] {
+            background: $white;
+            color: $black;
+            width: 100%;
+          }
+
+          &::placeholder {
+            color: $black;
+          }
+        }
+
+        button {
+          background: none;
+          border: 0;
+          bottom: 8px;
+          color: $black;
+          font-size: 0;
+          position: absolute;
+          right: 0;
+          transition: color 0.2s ease;
+          width: auto;
+
+          i {
+            font-size: 1.2rem;
+          }
+
+          &:hover {
+            color: $cigi-dark-pink;
+          }
+        }
+      }
+
+      .footer-menu {
+        @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      }
+
+      .copyright {
+        color: $cigi-text-grey;
+      }
+
+      .social-links {
+        @include link($color: $black, $hover-color: $cigi-dark-pink);
+      }
+    }
+  }
+}

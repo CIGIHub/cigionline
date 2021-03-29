@@ -93,6 +93,7 @@ const config = {
           { loader: 'postcss-loader', options: { sourceMap: true } },
           { loader: 'resolve-url-loader', options: { sourceMap: true } },
           { loader: 'sass-loader', options: { sourceMap: true } },
+          { loader: 'sass-resources-loader', options: { resources: ['./cigionline/static/css/global/mixins.imports.scss'] } },
         ],
       },
       {

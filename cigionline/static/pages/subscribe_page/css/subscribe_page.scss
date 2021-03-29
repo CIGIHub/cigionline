@@ -1,5 +1,3 @@
-@import '../../../css/global/mixins';
-
 .hero-plain {
   @include media-breakpoint-up(md) {
     padding-top: 10em;

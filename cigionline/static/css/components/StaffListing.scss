@@ -1,5 +1,3 @@
-@import '../global/mixins';
-
 article {
   &.staff-listing {
     @include link($color: $black, $hover-color: $cigi-primary-colour);
