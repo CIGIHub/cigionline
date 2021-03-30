@@ -77,6 +77,11 @@ const config = {
     filename: '[name].js',
   },
   plugins,
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 
   module: {
     rules: [
