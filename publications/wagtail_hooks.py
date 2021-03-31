@@ -29,7 +29,7 @@ class PublicationPageAdmin(ModelAdmin):
 
 class PublicationSeriesPageAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
-    model = PublicationPage
+    model = PublicationSeriesPage
     menu_label = 'Publication Series'
     menu_icon = 'doc-full'
     menu_order = 102
