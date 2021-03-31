@@ -22,12 +22,10 @@ class PersonPageAdmin(ModelAdmin):
     search_fields = ('title',)
     ordering = ['-latest_revision_created_at']
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(person_types__name__in=['Expert', 'External profile'])
-
     def get_person_type(self, person):
         return [person_type.name for person_type in person.person_types.all()]
+    get_person_type.short_description = 'Person Types'
+    get_person_type.admin_order_field = 'person_types__name'
 
 
 class PersonGroup(ModelAdminGroup):
