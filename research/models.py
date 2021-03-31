@@ -179,6 +179,10 @@ class ProjectPage(
         ArchiveablePageAbstract.archive_panel,
     ]
 
+    search_fields = ArchiveablePageAbstract.search_fields \
+        + BasicPageAbstract.search_fields \
+        + ContentPage.search_fields
+
     parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
     subpage_types = []
     templates = 'research/project_page.html'
@@ -216,6 +220,8 @@ class ResearchLandingPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Research Landing Page'
@@ -259,9 +265,10 @@ class TopicPage(ArchiveablePageAbstract, Page):
         ArchiveablePageAbstract.archive_panel,
     ]
 
-    search_fields = Page.search_fields + [
-        index.FilterField('archive'),
-    ]
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields + [
+            index.FilterField('archive'),
+        ]
 
     parent_page_types = ['research.TopicListPage']
     subpage_types = []
