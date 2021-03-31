@@ -75,7 +75,7 @@ class ArticleLandingPageAdmin(ModelAdmin):
     list_display = ('title',)
 
 
-class ArticleAdmin(ModelAdmin):
+class ArticlePageAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = ArticlePage
     menu_label = 'Articles'
@@ -91,7 +91,7 @@ class ArticleAdmin(ModelAdmin):
         return qs.filter(publishing_date__isnull=False)
 
 
-class ArticleSeriesAdmin(ModelAdmin):
+class ArticleSeriesPageAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = ArticleSeriesPage
     menu_label = 'Article Series'
@@ -108,7 +108,7 @@ class ArticlesGroup(ModelAdminGroup):
     menu_label = 'Articles'
     menu_icon = 'doc-empty-inverse'
     menu_order = 101
-    items = (ArticleLandingPageAdmin, ArticleAdmin, ArticleSeriesAdmin)
+    items = (ArticleLandingPageAdmin, ArticlePageAdmin, ArticleSeriesPageAdmin)
 
 
 modeladmin_register(ArticlesGroup)

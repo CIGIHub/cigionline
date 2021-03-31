@@ -28,7 +28,7 @@ class PersonPageAdmin(ModelAdmin):
     get_person_type.admin_order_field = 'person_types__name'
 
 
-class PersonGroup(ModelAdminGroup):
+class PeopleGroup(ModelAdminGroup):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     menu_label = 'People'
     menu_icon = 'group'
@@ -36,4 +36,4 @@ class PersonGroup(ModelAdminGroup):
     items = (PersonListPageAdmin, PersonPageAdmin)
 
 
-modeladmin_register(PersonGroup)
+modeladmin_register(PeopleGroup)
