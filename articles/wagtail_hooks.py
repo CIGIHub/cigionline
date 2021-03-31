@@ -1,8 +1,8 @@
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail.core import hooks
-from articles.models import ArticlePage
-from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
+from articles.models import ArticlePage, ArticleSeriesPage, ArticleLandingPage
+from wagtail.contrib.modeladmin.options import (ModelAdmin, ModelAdminGroup, modeladmin_register)
 
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
@@ -66,7 +66,16 @@ def register_rich_text_anchor(features):
     })
 
 
-class ArticlePageModelAdmin(ModelAdmin):
+class ArticleLandingPageAdmin(ModelAdmin):
+    # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
+    model = ArticleLandingPage
+    menu_label = 'Article Landing Page'
+    menu_icon = 'doc-empty-inverse'
+    menu_order = 100
+    list_display = ('title',)
+
+
+class ArticleAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = ArticlePage
     menu_label = 'Articles'
@@ -82,4 +91,24 @@ class ArticlePageModelAdmin(ModelAdmin):
         return qs.filter(publishing_date__isnull=False)
 
 
-modeladmin_register(ArticlePageModelAdmin)
+class ArticleSeriesAdmin(ModelAdmin):
+    # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
+    model = ArticleSeriesPage
+    menu_label = 'Article Series'
+    menu_icon = 'doc-empty-inverse'
+    menu_order = 102
+    list_display = ('title', 'publishing_date', 'live')
+    list_filter = ('publishing_date', 'live')
+    search_fields = ('title')
+    ordering = ['-publishing_date']
+
+
+class ArticlesGroup(ModelAdminGroup):
+    # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
+    menu_label = 'Articles'
+    menu_icon = 'doc-empty-inverse'
+    menu_order = 101
+    items = (ArticleLandingPageAdmin, ArticleAdmin, ArticleSeriesAdmin)
+
+
+modeladmin_register(ArticlesGroup)

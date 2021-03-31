@@ -7,7 +7,7 @@ class PromotionBlockModelAdmin(ModelAdmin):
     model = PromotionBlock
     menu_label = 'Promotion Blocks'
     menu_icon = 'image'
-    menu_order = 900
+    menu_order = 300
     list_display = ('name', 'block_type')
     list_filter = ('block_type',)
     search_fields = ('name',)
