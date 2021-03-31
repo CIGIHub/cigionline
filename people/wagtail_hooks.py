@@ -17,8 +17,8 @@ class PersonPageAdmin(ModelAdmin):
     menu_label = 'People'
     menu_icon = 'group'
     menu_order = 101
-    list_display = ('title', 'get_person_type', 'latest_revision_created_at', 'live')
-    list_filter = ('latest_revision_created_at', 'person_types__name', 'live')
+    list_display = ('title', 'get_person_type', 'latest_revision_created_at', 'archive', 'live')
+    list_filter = ('latest_revision_created_at', 'person_types__name', 'archive', 'live')
     search_fields = ('title',)
     ordering = ['-latest_revision_created_at']
 
