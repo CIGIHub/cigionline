@@ -77,8 +77,6 @@ class PersonListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
-
     def featured_experts_random(self):
         expert_id_list = list(PersonPage.objects.live().public().filter(person_types=4, archive=0).values_list('id', flat=True))
         random_expert_id_list = random.sample(expert_id_list, min(len(expert_id_list), 6))

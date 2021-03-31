@@ -54,8 +54,6 @@ class SubscribePage(
         )
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
-
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = []

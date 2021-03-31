@@ -49,7 +49,6 @@ class AnnualReportListPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Annual Report List Page'

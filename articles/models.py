@@ -97,8 +97,6 @@ class ArticleLandingPage(BasicPageAbstract, Page):
         )
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
-
     class Meta:
         verbose_name = 'Article Landing Page'
 
@@ -138,8 +136,6 @@ class MediaLandingPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
-
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
@@ -448,7 +444,8 @@ class ArticlePage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    search_fields = BasicPageAbstract.search_fields \
+    search_fields = Page.search_fields \
+        + BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
             index.FilterField('article_type'),
@@ -490,8 +487,6 @@ class ArticleTypePage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
-
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     parent_page_types = ['articles.ArticleListPage']
     subpage_types = []
