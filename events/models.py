@@ -49,6 +49,8 @@ class EventListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     def featured_events_list(self):
         featured_events = []
         for item in self.featured_events.all()[:6]:
@@ -242,8 +244,7 @@ class EventPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    search_fields = Page.search_fields \
-        + BasicPageAbstract.search_fields \
+    search_fields = BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
             index.FilterField('publishing_date'),
