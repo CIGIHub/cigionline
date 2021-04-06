@@ -29,16 +29,16 @@ ReactDOM.render(
     limit={14}
     RowComponent={ExpertContentListing}
     tableColumns={[{
-      colSpan: '6',
+      colSpan: 6,
       colTitle: 'Title',
     }, {
-      colSpan: '3',
+      colSpan: 3,
       colTitle: 'Topic',
     }, {
-      colSpan: '2',
+      colSpan: 2,
       colTitle: 'Type',
     }, {
-      colSpan: '1',
+      colSpan: 1,
       colTitle: 'PDF',
     }]}
   />,

@@ -437,7 +437,7 @@ class ContentPage(Page, SearchablePageAbstract):
         FieldPanel('topics'),
     ]
 
-    search_fields = [
+    search_fields = Page.search_fields + [
         index.FilterField('author_ids'),
         index.SearchField('author_names'),
         index.FilterField('contenttype'),
@@ -563,6 +563,8 @@ class BasicPage(
         SearchablePageAbstract.search_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'home.HomePage']
     subpage_types = [
         'annual_reports.AnnualReportListPage',
@@ -598,6 +600,8 @@ class FundingPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     class Meta:
         verbose_name = 'Funding Page'
 
@@ -610,6 +614,8 @@ class PrivacyNoticePage(
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
     ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
