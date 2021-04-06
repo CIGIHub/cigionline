@@ -34,8 +34,8 @@ class CIGIOnlineExpertLatestActivitySearchQueryCompiler:
                         }, {
                             "bool": {
                                 "must": [{
-                                    "term": {
-                                        "content_type": "publications.PublicationPage",
+                                    "terms": {
+                                        "content_type": ["publications.PublicationPage", "multimedia.MultimediaPage"],
                                     }
                                 }]
                             }
