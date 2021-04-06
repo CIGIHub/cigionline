@@ -1,7 +1,7 @@
 {% load wagtailcore_tags %}
 
 <ul class="topics custom-text-list feature-content-topic-list">
-  {% for topic in topics.all %}
+  {% for topic in topics.all|dictsort:"title" %}
     <li><a href="{% pageurl topic %}" class="table-content-link">{{ topic.title }}</a></li>
   {% endfor %}
 </ul>

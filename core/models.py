@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -389,6 +390,7 @@ class ContentPage(Page, SearchablePageAbstract):
         ).in_bulk(recommended_page_ids)
         return [pages[x] for x in recommended_page_ids]
 
+    @cached_property
     def recommended_content(self):
         recommended_content = self.get_recommended()
         exclude_ids = [self.id]
@@ -397,7 +399,7 @@ class ContentPage(Page, SearchablePageAbstract):
         if len(recommended_content) < 12:
 
             additional_content = list(ContentPage
-                                      .objects.live()
+                                      .objects.specific().live()
                                       .public()
                                       .filter(topics__in=self.topics.values_list('id', flat=True),
                                               publishing_date__isnull=False,
