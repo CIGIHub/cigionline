@@ -15,7 +15,7 @@ const plugins = [
   }),
   new BundleTracker({ filename: './webpack-stats.json' }),
   new MiniCssExtractPlugin({
-    filename: '[name].css',
+    filename: '[name].[contenthash].css',
   }),
 ];
 
@@ -74,7 +74,7 @@ const config = {
   output: {
     path: path.resolve('./cigionline/static/bundles/'),
     publicPath: '/static/bundles/',
-    filename: '[name].js',
+    filename: '[name].[contenthash].js',
   },
   plugins,
 
