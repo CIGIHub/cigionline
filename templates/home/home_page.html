@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags webpack_loader cache %}
 
 {% block extra_css %}
   {% render_bundle 'homePage' 'css' %}
@@ -81,16 +81,18 @@
       </div>
     </div>
   </section>
-  <section class="homepage-featured-highlights">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="homepage-subheading"><span>Highlights</span></h2>
-          {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
+  {% cache 86400 homepage_highlights_swiper %}
+    <section class="homepage-featured-highlights">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="homepage-subheading"><span>Highlights</span></h2>
+            {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endcache %}
   <section class="featured homepage-featured-multimedia">
     <div class="container">
       <div class="row">
