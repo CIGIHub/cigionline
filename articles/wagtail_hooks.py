@@ -1,12 +1,12 @@
-from articles.models import ArticlePage
+from core.helpers import CIGIModelAdminPermissionHelper
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from wagtail.contrib.modeladmin.helpers import PagePermissionHelper
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
 from wagtail.core import hooks
 
+from .models import ArticlePage
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
 
@@ -75,11 +75,6 @@ def register_article_page_permissions():
     return Permission.objects.filter(content_type=article_content_type)
 
 
-class ArticlePageModelAdminPermissionHelper(PagePermissionHelper):
-    def user_can_list(self, user):
-        return self.user_has_any_permissions(user)
-
-
 class ArticlePageModelAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = ArticlePage
@@ -90,7 +85,7 @@ class ArticlePageModelAdmin(ModelAdmin):
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
     search_fields = ('title')
     ordering = ['-publishing_date']
-    permission_helper_class = ArticlePageModelAdminPermissionHelper
+    permission_helper_class = CIGIModelAdminPermissionHelper
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

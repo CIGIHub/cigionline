@@ -1,6 +1,6 @@
+from core.helpers import CIGIModelAdminPermissionHelper
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from wagtail.contrib.modeladmin.helpers import PagePermissionHelper
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
 from wagtail.core import hooks
 
@@ -13,11 +13,6 @@ def register_event_page_permissions():
     return Permission.objects.filter(content_type=event_content_type)
 
 
-class EventPageModelAdminPermissionHelper(PagePermissionHelper):
-    def user_can_list(self, user):
-        return self.user_has_any_permissions(user)
-
-
 class EventPageModelAdmin(ModelAdmin):
     model = EventPage
     menu_label = 'Events'
@@ -27,7 +22,7 @@ class EventPageModelAdmin(ModelAdmin):
     list_filter = ('publishing_date', 'event_type', 'live')
     search_fields = ('title')
     ordering = ['-publishing_date']
-    permission_helper_class = EventPageModelAdminPermissionHelper
+    permission_helper_class = CIGIModelAdminPermissionHelper
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
