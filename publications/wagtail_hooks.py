@@ -1,10 +1,31 @@
 from core.helpers import CIGIModelAdminPermissionHelper
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+from wagtail.contrib.modeladmin.options import (
+    ModelAdmin,
+    ModelAdminGroup,
+    modeladmin_register,
+)
 from wagtail.core import hooks
 
-from .models import PublicationPage
+from .models import PublicationListPage, PublicationPage
+
+
+@hooks.register('register_permissions')
+def register_publication_list_page_permissions():
+    publication_list_page_content_type = ContentType.objects.get(app_label='publications', model='publicationlistpage')
+    return Permission.objects.filter(content_type=publication_list_page_content_type)
+
+
+class PublicationListPageModelAdmin(ModelAdmin):
+    model = PublicationListPage
+    menu_label = 'Publications Landing Page'
+    menu_icon = 'home'
+    menu_order = 100
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
 
 
 @hooks.register('register_permissions')
@@ -18,7 +39,7 @@ class PublicationPageModelAdmin(ModelAdmin):
     model = PublicationPage
     menu_label = 'Publications'
     menu_icon = 'doc-full'
-    menu_order = 103
+    menu_order = 101
     list_display = ('title', 'publishing_date', 'publication_type', 'live', 'publication_series')
     list_filter = ('publishing_date', 'publication_type', 'live', 'publication_series')
     search_fields = ('title',)
@@ -30,4 +51,11 @@ class PublicationPageModelAdmin(ModelAdmin):
         return qs.filter(publishing_date__isnull=False)
 
 
-modeladmin_register(PublicationPageModelAdmin)
+class PublicationModelAdminGroup(ModelAdminGroup):
+    menu_label = 'Publications'
+    menu_icon = 'doc-full'
+    menu_order = 103
+    items = (PublicationListPageModelAdmin, PublicationPageModelAdmin)
+
+
+modeladmin_register(PublicationModelAdminGroup)
