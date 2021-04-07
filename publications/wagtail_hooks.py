@@ -21,7 +21,7 @@ class PublicationPageModelAdmin(ModelAdmin):
     menu_order = 103
     list_display = ('title', 'publishing_date', 'publication_type', 'live', 'publication_series')
     list_filter = ('publishing_date', 'publication_type', 'live', 'publication_series')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ['-publishing_date']
     permission_helper_class = CIGIModelAdminPermissionHelper
 

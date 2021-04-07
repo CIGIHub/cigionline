@@ -20,7 +20,7 @@ class PersonPageModelAdmin(ModelAdmin):
     menu_order = 105
     list_display = ('title', 'position', 'archive', 'live')
     list_filter = ('person_types', 'archive', 'live')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ['title']
     permission_helper_class = CIGIModelAdminPermissionHelper
 

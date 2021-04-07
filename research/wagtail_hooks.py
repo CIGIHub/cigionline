@@ -28,7 +28,7 @@ class ProjectPageModelAdmin(ModelAdmin):
     menu_order = 101
     list_display = ('title', 'publishing_date', 'live')
     list_filter = ('publishing_date', 'live')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ['-publishing_date']
     permission_helper_class = CIGIModelAdminPermissionHelper
 
@@ -46,10 +46,10 @@ def register_research_landing_page_permissions():
 class ResearchLandingPageModelAdmin(ModelAdmin):
     model = ResearchLandingPage
     menu_label = 'Research Landing Page'
-    menu_icon = 'site'
+    menu_icon = 'home'
     menu_order = 100
-    list_display = ('title')
-    search_fields = ('title')
+    list_display = ('title',)
+    search_fields = ('title',)
     ordering = ['title']
     permission_helper_class = CIGIModelAdminPermissionHelper
 
@@ -65,9 +65,9 @@ class TopicPageModelAdmin(ModelAdmin):
     menu_label = 'Topics'
     menu_icon = 'thumbtack'
     menu_order = 102
-    list_display = ('title')
-    list_filter = ('live')
-    search_fields = ('title')
+    list_display = ('title',)
+    list_filter = ('live',)
+    search_fields = ('title',)
     ordering = ['title']
     permission_helper_class = CIGIModelAdminPermissionHelper
 

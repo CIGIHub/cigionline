@@ -21,7 +21,7 @@ class NewsletterPageModelAdmin(ModelAdmin):
     menu_order = 200
     list_display = ('title', 'live', 'html_file', 'latest_revision_created_at')
     list_filter = ('live', 'latest_revision_created_at')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ('-latest_revision_created_at',)
     permission_helper_class = CIGIModelAdminPermissionHelper
 

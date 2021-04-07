@@ -20,7 +20,7 @@ class EventPageModelAdmin(ModelAdmin):
     menu_order = 104
     list_display = ('title', 'publishing_date', 'event_type', 'live')
     list_filter = ('publishing_date', 'event_type', 'live')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ['-publishing_date']
     permission_helper_class = CIGIModelAdminPermissionHelper
 

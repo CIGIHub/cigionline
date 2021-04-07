@@ -3,10 +3,18 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+from wagtail.contrib.modeladmin.options import (
+    ModelAdmin,
+    ModelAdminGroup,
+    modeladmin_register,
+)
 from wagtail.core import hooks
 
-from .models import ArticlePage
+from .models import (
+    ArticleLandingPage,
+    ArticlePage,
+    ArticleSeriesPage,
+)
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
 
@@ -70,6 +78,23 @@ def register_rich_text_anchor(features):
 
 
 @hooks.register('register_permissions')
+def register_article_landing_page_permissions():
+    article_landing_page_content_type = ContentType.objects.get(app_label='articles', model='articlelandingpage')
+    return Permission.objects.filter(content_type=article_landing_page_content_type)
+
+
+class ArticleLandingPageModelAdmin(ModelAdmin):
+    model = ArticleLandingPage
+    menu_label = 'Opinions Landing Page'
+    menu_icon = 'home'
+    menu_order = 100
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
+@hooks.register('register_permissions')
 def register_article_page_permissions():
     article_content_type = ContentType.objects.get(app_label='articles', model='articlepage')
     return Permission.objects.filter(content_type=article_content_type)
@@ -83,7 +108,7 @@ class ArticlePageModelAdmin(ModelAdmin):
     menu_order = 101
     list_display = ('title', 'publishing_date', 'article_type', 'article_series', 'theme', 'live')
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ['-publishing_date']
     permission_helper_class = CIGIModelAdminPermissionHelper
 
@@ -92,4 +117,32 @@ class ArticlePageModelAdmin(ModelAdmin):
         return qs.filter(publishing_date__isnull=False)
 
 
-modeladmin_register(ArticlePageModelAdmin)
+@hooks.register('register_permissions')
+def register_article_series_page_permissions():
+    article_series_content_type = ContentType.objects.get(app_label='articles', model='articleseriespage')
+    return Permission.objects.filter(content_type=article_series_content_type)
+
+
+class ArticleSeriesPageModelAdmin(ModelAdmin):
+    model = ArticleSeriesPage
+    menu_label = 'Article Series'
+    menu_icon = 'list-ul'
+    list_display = ('title', 'publishing_date', 'live')
+    list_filter = ('publishing_date', 'live')
+    search_fields = ('title',)
+    ordering = ['-publishing_date']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(publishing_date__isnull=False)
+
+
+class ArticleModelAdminGroup(ModelAdminGroup):
+    menu_label = 'Articles'
+    menu_icon = 'duplicate'
+    menu_order = 101
+    items = (ArticleLandingPageModelAdmin, ArticlePageModelAdmin, ArticleSeriesPageModelAdmin)
+
+
+modeladmin_register(ArticleModelAdminGroup)
