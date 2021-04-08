@@ -34,7 +34,7 @@ class TopicPageAdmin(ModelAdmin):
     menu_icon = 'snippet'
     menu_order = 102
     list_display = ('title', 'live')
-    list_filter = ('live')
+    list_filter = ('live',)
     search_fields = ('title',)
     ordering = ['title']
 
