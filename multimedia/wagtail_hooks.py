@@ -13,7 +13,7 @@ from .models import MultimediaListPage, MultimediaPage
 
 @hooks.register('register_permissions')
 def register_multimedia_list_page_permissions():
-    multimedia_list_page_content_type = ContentType.objects.get(app_label='Multimedia', model='multimedialistpage')
+    multimedia_list_page_content_type = ContentType.objects.get(app_label='multimedia', model='multimedialistpage')
     return Permission.objects.filter(content_type=multimedia_list_page_content_type)
 
 
