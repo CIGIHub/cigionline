@@ -14,6 +14,7 @@ from .models import (
     ArticleLandingPage,
     ArticlePage,
     ArticleSeriesPage,
+    MediaLandingPage,
 )
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
@@ -105,7 +106,7 @@ class ArticlePageModelAdmin(ModelAdmin):
     model = ArticlePage
     menu_label = 'Articles'
     menu_icon = 'duplicate'
-    menu_order = 101
+    menu_order = 102
     list_display = ('title', 'publishing_date', 'article_type', 'article_series', 'theme', 'live')
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
     search_fields = ('title',)
@@ -127,6 +128,7 @@ class ArticleSeriesPageModelAdmin(ModelAdmin):
     model = ArticleSeriesPage
     menu_label = 'Article Series'
     menu_icon = 'list-ul'
+    menu_order = 103
     list_display = ('title', 'publishing_date', 'live')
     list_filter = ('publishing_date', 'live')
     search_fields = ('title',)
@@ -138,11 +140,28 @@ class ArticleSeriesPageModelAdmin(ModelAdmin):
         return qs.filter(publishing_date__isnull=False)
 
 
+@hooks.register('register_permissions')
+def register_media_landing_page_permissions():
+    media_landing_page_content_type = ContentType.objects.get(app_label='articles', model='medialandingpage')
+    return Permission.objects.filter(content_type=media_landing_page_content_type)
+
+
+class MediaLandingPageModelAdmin(ModelAdmin):
+    model = MediaLandingPage
+    menu_label = 'Media Landing Page'
+    menu_icon = 'home'
+    menu_order = 101
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
 class ArticleModelAdminGroup(ModelAdminGroup):
     menu_label = 'Articles'
     menu_icon = 'duplicate'
     menu_order = 101
-    items = (ArticleLandingPageModelAdmin, ArticlePageModelAdmin, ArticleSeriesPageModelAdmin)
+    items = (ArticleLandingPageModelAdmin, MediaLandingPageModelAdmin, ArticlePageModelAdmin, ArticleSeriesPageModelAdmin)
 
 
 modeladmin_register(ArticleModelAdminGroup)
