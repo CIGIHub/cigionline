@@ -65,10 +65,10 @@ $(function() {
   });
 
   // Facebook Share buttons
-  $('.facebook-share-link').click(function() {
+  $('.facebook-share-link').on('click', function() {
     const href = $(this).data('url');
     FB.ui({
-      method: 'shaer',
+      method: 'share',
       href,
     }, function(/* response */) {});
   });
