@@ -109,7 +109,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
         related_name='featured_articles',
     )
     article_page = models.ForeignKey(
-        'articles.ArticlePage',
+        'core.ContentPage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
@@ -120,7 +120,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     panels = [
         PageChooserPanel(
             'article_page',
-            ['articles.ArticlePage'],
+            ['articles.ArticlePage', 'articles.ArticleSeriesPage'],
         ),
     ]
 
