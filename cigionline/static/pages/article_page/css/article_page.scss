@@ -52,10 +52,6 @@
   margin-bottom: 2em;
   margin-top: 2em;
 
-  a {
-    word-break: break-word;
-  }
-
   h2 {
     font-size: 1.3em;
     font-weight: 400;
@@ -77,6 +73,7 @@
   p {
     font-size: 0.8125em;
     padding: 0 1em;
+    word-break: break-word;
   }
 }
 
