@@ -3,7 +3,7 @@
 <section class="hero event-hero">
   <div class="container">
     <div class="hero-container row">
-      <div class="col col-md-9 event-hero-content">
+      <div class="col col-md-8 col-lg-9 event-hero-content">
         {% include "includes/topics.html" with topics=topics %}
         <h1>{{ title }}</h1>
 
@@ -52,7 +52,7 @@
           </li>
         </ul>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4 col-lg-3">
         <div class="event-date-circle">
           <div>{{ date|date:"M" }}</div>
           <div>{{ date|date:"j" }}</div>
