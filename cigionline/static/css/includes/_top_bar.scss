@@ -183,6 +183,17 @@ header {
     width: 100%;
     z-index: 1;
 
+    &.popup-menu {
+      &.opened-popup {
+        overflow: scroll;
+
+        .custom-popup-inner {
+          height: auto;
+          min-height: 100%;
+        }
+      }
+    }
+
     .custom-popup-inner {
       @include media-breakpoint-up(lg) {
         align-items: center;
