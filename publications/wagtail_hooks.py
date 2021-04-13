@@ -8,7 +8,11 @@ from wagtail.contrib.modeladmin.options import (
 )
 from wagtail.core import hooks
 
-from .models import PublicationListPage, PublicationPage
+from .models import (
+    PublicationListPage,
+    PublicationPage,
+    PublicationSeriesPage,
+)
 
 
 @hooks.register('register_permissions')
@@ -51,11 +55,27 @@ class PublicationPageModelAdmin(ModelAdmin):
         return qs.filter(publishing_date__isnull=False)
 
 
+class PublicationSeriesPageModelAdmin(ModelAdmin):
+    model = PublicationSeriesPage
+    menu_label = 'Publication Series'
+    menu_icon = 'list-ul'
+    menu_order = 102
+    list_display = ('title', 'publishing_date', 'live')
+    list_filter = ('publishing_date', 'live')
+    search_fields = ('title',)
+    ordering = ['-publishing_date']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(publishing_date__isnull=False)
+
+
 class PublicationModelAdminGroup(ModelAdminGroup):
     menu_label = 'Publications'
     menu_icon = 'doc-full'
     menu_order = 103
-    items = (PublicationListPageModelAdmin, PublicationPageModelAdmin)
+    items = (PublicationListPageModelAdmin, PublicationPageModelAdmin, PublicationSeriesPageModelAdmin)
 
 
 modeladmin_register(PublicationModelAdminGroup)
