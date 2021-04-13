@@ -20,7 +20,7 @@
       <div class="row">
         <div class="col-12">
           {% for item in self.featured_xlarge %}
-            {% include "includes/features/feature_content_xlarge.html" with content=item.article_page %}
+            {% include "includes/features/feature_content_xlarge.html" with content=item.article_page.specific %}
           {% endfor %}
         </div>
       </div>
@@ -28,7 +28,7 @@
       <div class="row">
         <div class="col-12 col-md-8">
           {% for item in self.featured_large_1 %}
-            {% include "includes/features/feature_content_large.html" with content=item.article_page %}
+            {% include "includes/features/feature_content_large.html" with content=item.article_page.specific %}
           {% endfor %}
         </div>
         <hr>
@@ -37,7 +37,7 @@
             {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
-            {% include "includes/features/feature_content_small.html" with content=item.article_page %}
+            {% include "includes/features/feature_content_small.html" with content=item.article_page.specific %}
           {% endfor %}
         </div>
       </div>
@@ -48,7 +48,7 @@
             <hr>
           {% endif %}
           <div class="col-12 col-md-6">
-            {% include "includes/features/feature_content_medium.html" with content=item.article_page with_subtitle=True %}
+            {% include "includes/features/feature_content_medium.html" with content=item.article_page.specific with_subtitle=True %}
           </div>
         {% endfor %}
       </div>
@@ -59,13 +59,13 @@
             {% if forloop.counter > 1 %}
               <hr>
             {% endif %}
-            {% include "includes/features/feature_content_small.html" with content=item.article_page %}
+            {% include "includes/features/feature_content_small.html" with content=item.article_page.specific %}
           {% endfor %}
         </div>
         <hr>
         <div class="col-12 col-md-8">
           {% for item in self.featured_large_2 %}
-            {% include "includes/features/feature_content_large.html" with content=item.article_page %}
+            {% include "includes/features/feature_content_large.html" with content=item.article_page.specific %}
           {% endfor %}
         </div>
       </div>
