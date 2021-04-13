@@ -30,7 +30,7 @@
   </a>
 
   <div class="feature-content-text center-text">
-    {% include 'includes/topics.html' with topics=content.topics %}
+    {% include 'includes/topics.html' with topics=content.topics_sorted %}
     {% include 'includes/features/feature_content_title.html' %}
     {% if with_subtitle is True %}
       {% include 'includes/features/feature_content_subtitle.html' %}
