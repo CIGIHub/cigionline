@@ -227,10 +227,11 @@ header {
               border-bottom: 0;
               border-right: solid 1px $cigi-darkest-grey;
               font-size: 1.3em;
-              height: 250px;
               margin-bottom: 2em;
-              padding: 0 0 0 1.3em;
+              min-height: 250px;
+              padding: 0 0.3em 0 1.3em;
             }
+
             border-bottom: 1px solid $divider-grey;
             font-size: 1.1em;
             padding: 1em;

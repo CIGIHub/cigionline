@@ -87,28 +87,30 @@
                       {{ sub_menu.title }}
                     </a>
                   {% endif %}
-                  {% if sub_menu.submenu.menu_items.all %}
-                    <div class="accordion">
-                      <i class="fas fa-plus"></i>
-                    </div>
-                  {% endif %}
-                  <ul>
-                    {% for menu_item in sub_menu.submenu.menu_items.all %}
-                      {% if menu_item.link_page %}
-                        <li>
-                          <a href="{% pageurl menu_item.link_page %}" class="overlay-menu-submenu-item-link">
-                            {{ menu_item.title }}
-                          </a>
-                        </li>
-                      {% elif menu_item.link_url %}
-                        <li>
-                          <a href="{{ menu_item.link_url }}" class="overlay-menu-submenu-item-link">
-                            {{ menu_item.title }}
-                          </a>
-                        </li>
-                      {% endif %}
-                    {% endfor %}
-                  </ul>
+                  {% with sub_menu.submenu.menu_items.all as submenu_items %}
+                    {% if submenu_items %}
+                      <div class="accordion">
+                        <i class="fas fa-plus"></i>
+                      </div>
+                      <ul>
+                        {% for menu_item in submenu_items %}
+                          {% if menu_item.link_page %}
+                          <li>
+                            <a href="{% pageurl menu_item.link_page %}" class="overlay-menu-submenu-item-link">
+                              {{ menu_item.title }}
+                            </a>
+                          </li>
+                          {% elif menu_item.link_url %}
+                          <li>
+                            <a href="{{ menu_item.link_url }}" class="overlay-menu-submenu-item-link">
+                              {{ menu_item.title }}
+                            </a>
+                          </li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  {% endwith %}
                 </div>
               {% endfor %}
               <div class="overlay-menu-submenu col">
