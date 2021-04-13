@@ -8,7 +8,11 @@ from wagtail.contrib.modeladmin.options import (
 )
 from wagtail.core import hooks
 
-from .models import MultimediaListPage, MultimediaPage
+from .models import (
+    MultimediaListPage,
+    MultimediaPage,
+    MultimediaSeriesPage,
+)
 
 
 @hooks.register('register_permissions')
@@ -51,11 +55,27 @@ class MultimediaPageModelAdmin(ModelAdmin):
         return qs.filter(publishing_date__isnull=False)
 
 
+class MultimediaSeriesPageModelAdmin(ModelAdmin):
+    model = MultimediaSeriesPage
+    menu_label = 'Multimedia Series'
+    menu_icon = 'list-ul'
+    menu_order = 102
+    list_display = ('title', 'publishing_date', 'live')
+    list_filter = ('publishing_date', 'live')
+    search_fields = ('title',)
+    ordering = ['-publishing_date']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(publishing_date__isnull=False)
+
+
 class MultimediaModelAdminGroup(ModelAdminGroup):
     menu_label = 'Multimedia'
     menu_icon = 'media'
     menu_order = 102
-    items = (MultimediaListPageModelAdmin, MultimediaPageModelAdmin)
+    items = (MultimediaListPageModelAdmin, MultimediaPageModelAdmin, MultimediaSeriesPageModelAdmin)
 
 
 modeladmin_register(MultimediaModelAdminGroup)
