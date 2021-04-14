@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -382,31 +383,28 @@ class ContentPage(Page, SearchablePageAbstract):
         return self.authors.count()
 
     def get_recommended(self):
-        recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)
+        recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)[:3]
         pages = Page.objects.specific().prefetch_related(
             'authors__author',
             'topics',
         ).in_bulk(recommended_page_ids)
         return [pages[x] for x in recommended_page_ids]
 
+    @cached_property
     def recommended_content(self):
         recommended_content = self.get_recommended()
         exclude_ids = [self.id]
         exclude_ids += [item.id for item in recommended_content]
 
-        if len(recommended_content) < 12:
+        additional_content = list(ContentPage.objects.specific().live().public().filter(
+            topics__in=self.topics.values_list('id', flat=True),
+            publishing_date__isnull=False,
+            eventpage__isnull=True
+        ).exclude(id__in=exclude_ids).exclude(
+            articlepage__article_type__title='CIGI in the News'
+        ).prefetch_related('authors__author', 'topics').order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
 
-            additional_content = list(ContentPage
-                                      .objects.live()
-                                      .public()
-                                      .filter(topics__in=self.topics.values_list('id', flat=True),
-                                              publishing_date__isnull=False,
-                                              eventpage__isnull=True)
-                                      .exclude(id__in=exclude_ids)
-                                      .exclude(articlepage__article_type__title='CIGI in the News')
-                                      .prefetch_related('authors__author', 'topics')
-                                      .order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
-            recommended_content = list(recommended_content) + additional_content
+        recommended_content = list(recommended_content) + additional_content
 
         return recommended_content
 
