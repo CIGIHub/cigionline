@@ -265,10 +265,7 @@ class TopicPage(ArchiveablePageAbstract, Page):
         ArchiveablePageAbstract.archive_panel,
     ]
 
-    search_fields = Page.search_fields \
-        + ArchiveablePageAbstract.search_fields + [
-            index.FilterField('archive'),
-        ]
+    search_fields = Page.search_fields + ArchiveablePageAbstract.search_fields
 
     parent_page_types = ['research.TopicListPage']
     subpage_types = []
