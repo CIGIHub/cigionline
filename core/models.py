@@ -430,7 +430,7 @@ class ContentPage(Page, SearchablePageAbstract):
         classname='collapsible collapsed',
     )
 
-    content_panels = Page.content_panels + [
+    content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
     ]
