@@ -34,7 +34,6 @@
     {% block og_description %}
     {% endblock %}
     {% block og_image %}
-      {% include "includes/og_image_default.html" %}
     {% endblock %}
     {% block extra_og_meta %}
     {% endblock %}
@@ -81,9 +80,5 @@
     <main>
       {% block content %}{% endblock %}
     </main>
-
-    {% if not request.session.cookie_consent %}
-      <div id="cigi-cookie-banner-container"></div>
-    {% endif %}
   </body>
 </html>
