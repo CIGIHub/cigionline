@@ -16,6 +16,13 @@ def search_api(request):
 
         # Record hit
         query.add_hit()
+    elif request.GET.get('searchpage'):
+        return JsonResponse({
+            'meta': {
+                'total_count': 0,
+            },
+            'items': [],
+        }, safe=False)
 
     pages = cigi_search(
         articletypeid=request.GET.get('articletypeid', None),
