@@ -56,7 +56,7 @@
 {% block content %}
   {% block hero %}
     {% if self.publication_type.title == 'Books' %}
-      {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors editors=self.editors %}
+      {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors.all editors=self.editors.all %}
     {% else %}
       {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
     {% endif %}
@@ -185,10 +185,10 @@
   {% endif %}
 
   {% if self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors %}
+    {% include "includes/about_the_author.html" with authors=self.authors.all %}
   {% endif %}
   {% if self.editors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.editors title_override="About the Editor" %}
+    {% include "includes/about_the_author.html" with authors=self.editors.all title_override="About the Editor" %}
   {% endif %}
 
   {% if self.recommended_content %}

@@ -16,12 +16,21 @@
       </p>
     </div>
   </div>
-  {% if expert.latest_activity %}
-    <div class="feature-expert-latest-activity">
-      <h4>Latest Activity</h4>
-      {% include "includes/topics.html" with topics=expert.latest_activity.topics_sorted %}
-      <h5><a href="{% pageurl expert.latest_activity %}">{{ expert.latest_activity.title }}</a></h5>
-      {% include "includes/features/feature_content_people.html" with authors=expert.latest_activity.authors %}
-    </div>
-  {% endif %}
+  {% with expert.latest_activity as latest_activity %}
+    {% if latest_activity %}
+      <div class="feature-expert-latest-activity">
+        <h4>Latest Activity</h4>
+        {% include "includes/topics.html" with topics=latest_activity.topics_sorted %}
+        <h5><a href="{% pageurl latest_activity %}">{{ latest_activity.title }}</a></h5>
+        {% include "includes/features/feature_content_people.html" with authors=latest_activity.authors.all %}
+        {% if latest_activity.specific.pdf_downloads %}
+          <button class="button-action button-square">
+            <a href="{{ latest_activity.specific.pdf_downloads.0.value.file.url }}">
+              <i class="fa fas fa-download"></i>
+            </a>
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endwith %}
 </article>

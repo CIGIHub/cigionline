@@ -71,7 +71,7 @@ function ResearchContentListing(props) {
         </div>
         <div className="table-content">
           <ul className="custom-text-list">
-            {row.topics.map((topic) => (
+            {row.topics && row.topics.map((topic) => (
               <li key={`${row.id}-topic-${topic.id}`}>
                 <a href={topic.url} className="table-content-link">
                   {topic.title}

@@ -68,6 +68,8 @@ class PublicationListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     class Meta:
         verbose_name = 'Publication List Page'
 
@@ -245,15 +247,15 @@ class PublicationPage(
         """
 
         # @todo test
-        person_list = []
-        for block in self.authors:
-            if block.block_type == 'author' and len(person_list) < 3:
-                person_list.append(block.value)
-        if len(person_list) < 3:
-            for block in self.editors:
-                if block.block_type == 'editor' and len(person_list) < 3:
-                    person_list.append(block.value)
-        return person_list
+        person_list = list(self.authors.all()) + list(self.editors.all())
+        del person_list[3:]
+        result = []
+        for person in person_list:
+            if person.author:
+                result.append(person.author)
+            elif person.editor:
+                result.append(person.editor)
+        return result
 
     def featured_person_list_has_more(self):
         """
@@ -262,7 +264,7 @@ class PublicationPage(
         """
 
         # @todo test
-        return (len(self.authors) + len(self.editors)) > 3
+        return (self.authors.count() + self.editors.count()) > 3
 
     def has_book_metadata(self):
         return (
@@ -354,8 +356,7 @@ class PublicationPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    search_fields = Page.search_fields \
-        + BasicPageAbstract.search_fields \
+    search_fields = BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
             index.FilterField('publication_series'),
@@ -384,6 +385,8 @@ class PublicationTypePage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     parent_page_types = ['publications.PublicationListPage']
     subpage_types = []
     templates = 'publications/publication_type_page.html'
@@ -407,6 +410,8 @@ class PublicationSeriesListPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Publication Series List Page'
@@ -444,6 +449,8 @@ class PublicationSeriesPage(
         FeatureablePageAbstract.feature_panel,
         SearchablePageAbstract.search_panel,
     ]
+
+    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields
 
     parent_page_types = ['publications.PublicationSeriesListPage']
     subpage_types = []

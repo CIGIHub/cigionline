@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.redirects',
     'wagtail.contrib.table_block',
-    # 'wagtail.contrib.styleguide',
+    'wagtail.contrib.styleguide',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -196,7 +196,13 @@ WAGTAILSEARCH_BACKENDS = {
         'INDEX': 'wagtail',
         'TIMEOUT': 30,
         'OPTIONS': {},
-        'INDEX_SETTINGS': {},
+        'INDEX_SETTINGS': {
+            'settings': {
+                'index': {
+                    'max_result_window': 13000,
+                }
+            }
+        },
     },
 }
 

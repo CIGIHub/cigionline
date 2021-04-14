@@ -68,6 +68,8 @@ class MultimediaListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     def featured_large(self):
         return self.featured_multimedia.all()[0:1]
 
@@ -234,7 +236,7 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('authors'),
+                InlinePanel('authors'),
             ],
             heading='Speakers',
             classname='collapsible collapsed',
@@ -323,8 +325,7 @@ class MultimediaPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    search_fields = Page.search_fields \
-        + BasicPageAbstract.search_fields \
+    search_fields = BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
             index.FilterField('multimedia_series'),

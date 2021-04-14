@@ -32,7 +32,7 @@ class Paginator extends React.Component {
         }
       }
     }
-    pageNumbers.sort();
+    pageNumbers.sort((a, b) => a - b);
     return pageNumbers.map((page) => ({
       current: page === currentPage,
       page,

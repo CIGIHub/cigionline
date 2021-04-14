@@ -10,6 +10,8 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.core.models import Orderable, Page
 from django.utils import timezone
+from people.models import PersonPage
+from multimedia.models import MultimediaPage
 
 
 class HomePage(Page):
@@ -78,39 +80,54 @@ class HomePage(Page):
         ),
     ]
 
-    def featured_large(self):
-        first_featured = self.featured_pages.prefetch_related(
-            'featured_page',
-        ).first()
-        if first_featured:
-            return first_featured.featured_page.specific
-        return False
+    def get_featured_pages(self):
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_page_ids)
+        return [pages[x] for x in featured_page_ids]
 
-    def featured_medium(self):
-        featured_medium = []
-        featured_medium_query = self.featured_pages.prefetch_related(
-            'featured_page',
-        ).all()[1:4]
-        for item in featured_medium_query:
-            featured_medium.append(item.featured_page.specific)
-        return featured_medium
+    def get_featured_experts(self):
+        featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
+        experts = PersonPage.objects.in_bulk(featured_expert_ids)
+        return [experts[x] for x in featured_expert_ids]
 
-    def featured_small(self):
-        featured_small = []
-        featured_small_query = self.featured_pages.prefetch_related(
-            'featured_page',
-        ).all()[4:]
-        for item in featured_small_query:
-            featured_small.append(item.featured_page.specific)
-        return featured_small
+    def get_highlight_pages(self):
+        highlight_pages_ids = self.highlight_pages.values_list('highlight_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(highlight_pages_ids)
+        return [pages[x] for x in highlight_pages_ids]
+
+    def get_featured_multimedia(self):
+        featured_multimedia_ids = self.featured_multimedia.values_list('featured_multimedia', flat=True)
+        multimedia = MultimediaPage.objects.prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_multimedia_ids)
+        return [multimedia[x] for x in featured_multimedia_ids]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        context['featured_pages'] = self.get_featured_pages()
+        context['featured_experts'] = self.get_featured_experts()
+        context['highlight_pages'] = self.get_highlight_pages()
+        context['featured_multimedia'] = self.get_featured_multimedia()
+
+        return context
 
     def featured_publications(self):
         return PublicationPage.objects.prefetch_related(
+            'authors__author',
             'topics',
         ).live().public().order_by('-publishing_date')[:4]
 
     def featured_multimedia_large(self):
         first_featured_multimedia = self.featured_multimedia.prefetch_related(
+            'featured_multimedia__authors__author',
             'featured_multimedia__topics',
         ).first()
         if first_featured_multimedia:
@@ -120,6 +137,7 @@ class HomePage(Page):
     def featured_multimedia_small(self):
         featured_multimedia_small = []
         for item in self.featured_multimedia.prefetch_related(
+            'featured_multimedia__authors__author',
             'featured_multimedia__topics',
         ).all()[1:]:
             featured_multimedia_small.append(item.featured_multimedia)

@@ -38,36 +38,42 @@ class ArticleLandingPage(BasicPageAbstract, Page):
     def featured_xlarge(self):
         return self.featured_articles.prefetch_related(
             'article_page',
+            'article_page__authors__author',
             'article_page__topics',
         ).all()[0:1]
 
     def featured_large_1(self):
         return self.featured_articles.prefetch_related(
             'article_page',
+            'article_page__authors__author',
             'article_page__topics',
         ).all()[1:2]
 
     def featured_small_1(self):
         return self.featured_articles.prefetch_related(
             'article_page',
+            'article_page__authors__author',
             'article_page__topics',
         ).all()[2:7]
 
     def featured_medium_1(self):
         return self.featured_articles.prefetch_related(
             'article_page',
+            'article_page__authors__author',
             'article_page__topics',
         ).all()[7:9]
 
     def featured_small_2(self):
         return self.featured_articles.prefetch_related(
             'article_page',
+            'article_page__authors__author',
             'article_page__topics',
         ).all()[10:15]
 
     def featured_large_2(self):
         return self.featured_articles.prefetch_related(
             'article_page',
+            'article_page__authors__author',
             'article_page__topics',
         ).all()[9:10]
 
@@ -91,6 +97,8 @@ class ArticleLandingPage(BasicPageAbstract, Page):
         )
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     class Meta:
         verbose_name = 'Article Landing Page'
 
@@ -101,7 +109,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
         related_name='featured_articles',
     )
     article_page = models.ForeignKey(
-        'articles.ArticlePage',
+        'core.ContentPage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
@@ -112,7 +120,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     panels = [
         PageChooserPanel(
             'article_page',
-            ['articles.ArticlePage'],
+            ['articles.ArticlePage', 'articles.ArticleSeriesPage'],
         ),
     ]
 
@@ -130,6 +138,8 @@ class MediaLandingPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
@@ -438,8 +448,7 @@ class ArticlePage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    search_fields = Page.search_fields \
-        + BasicPageAbstract.search_fields \
+    search_fields = BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
         + [
             index.FilterField('article_type'),
@@ -481,6 +490,8 @@ class ArticleTypePage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     parent_page_types = ['articles.ArticleListPage']
     subpage_types = []
@@ -688,20 +699,19 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            people = []
+            people = item.value.specific.authors.all()
             people_string = ''
-            for block in item.value.specific.authors:
-                if block.block_type == 'author':
-                    people.append(block.value)
-                    person_string = block.value.title
-                    people_string += person_string
 
-                    # Add each person as well so if there's an article with just
-                    # a single author who's already been in another article in
-                    # collaboration, then we won't add their name to the list
-                    # again.
-                    if len(people) > 1:
-                        item_people.add(person_string)
+            for person in people:
+                person_string = person.author.title
+                people_string += person_string
+
+                # Add each person as well so if there's an article with just
+                # a single author who's already been in another article in
+                # collaboration, then we won't add their name to the list
+                # again.
+                if len(people) > 1:
+                    item_people.add(person_string)
 
             if people_string not in item_people:
                 series_contributors.append({'item': item.value.specific, 'contributors': people})
@@ -716,14 +726,15 @@ class ArticleSeriesPage(
 
         for item in self.series_items:
             if item.block_type == 'series_item':
-                for block in item.value.specific.authors:
-                    if block.block_type == 'author' and block.value.title not in item_people:
+                people = item.value.specific.authors.all()
+                for person in people:
+                    if person.author.title not in item_people:
                         series_contributors.append({
-                            'id': block.value.id,
-                            'title': block.value.title,
-                            'url': block.value.url,
+                            'id': person.author.id,
+                            'title': person.author.title,
+                            'url': person.author.url,
                         })
-                        item_people.add(block.value.title)
+                        item_people.add(person.author.title)
         return series_contributors
 
     @property
@@ -735,17 +746,22 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
+            people = item.value.specific.authors.all()
 
             # Skip items that have more than 2 authors/speakers. For
             # example, in the After COVID series, there is an introductory
             # video with many authors.
-            if len(item.value.specific.authors) > 2:
+            if len(people) > 2:
                 continue
             else:
-                for block in item.value.specific.authors:
-                    if block.block_type == 'author' and block.value.title not in item_people:
-                        series_contributors.append({'item': item.value.specific, 'contributors': [block.value], 'last_name': block.value.last_name})
-                        item_people.add(block.value.title)
+                for person in people:
+                    if person.author.title not in item_people:
+                        series_contributors.append({
+                            'item': item.value.specific,
+                            'contributors': [person.author],
+                            'last_name': person.author.last_name,
+                        })
+                        item_people.add(person.author.title)
 
         series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
@@ -757,11 +773,11 @@ class ArticleSeriesPage(
         for item in self.series_items:
             if item.block_type == 'category_title':
                 continue
-            for block in item.value.specific.authors:
-                if block.block_type == 'author' and block.value.title not in series_people:
-                    series_authors.append(block)
-                    series_people.add(block.value.title)
-
+            people = item.value.specific.authors.all()
+            for person in people:
+                if person.author.title not in series_people:
+                    series_authors.append(person.author)
+                    series_people.add(person.author.title)
         return series_authors
 
     class Meta:

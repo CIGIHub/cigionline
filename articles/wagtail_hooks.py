@@ -1,9 +1,21 @@
+from core.helpers import CIGIModelAdminPermissionHelper
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
+from wagtail.contrib.modeladmin.options import (
+    ModelAdmin,
+    ModelAdminGroup,
+    modeladmin_register,
+)
 from wagtail.core import hooks
-from articles.models import ArticlePage
-from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
 
+from .models import (
+    ArticleLandingPage,
+    ArticlePage,
+    ArticleSeriesPage,
+    MediaLandingPage,
+)
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
 
@@ -66,20 +78,90 @@ def register_rich_text_anchor(features):
     })
 
 
+@hooks.register('register_permissions')
+def register_article_landing_page_permissions():
+    article_landing_page_content_type = ContentType.objects.get(app_label='articles', model='articlelandingpage')
+    return Permission.objects.filter(content_type=article_landing_page_content_type)
+
+
+class ArticleLandingPageModelAdmin(ModelAdmin):
+    model = ArticleLandingPage
+    menu_label = 'Opinions Landing Page'
+    menu_icon = 'home'
+    menu_order = 100
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
+@hooks.register('register_permissions')
+def register_article_page_permissions():
+    article_content_type = ContentType.objects.get(app_label='articles', model='articlepage')
+    return Permission.objects.filter(content_type=article_content_type)
+
+
 class ArticlePageModelAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = ArticlePage
     menu_label = 'Articles'
-    menu_icon = 'doc-empty-inverse'
-    menu_order = 101
-    list_display = ('title', 'publishing_date', 'article_type', 'theme', 'live')
+    menu_icon = 'duplicate'
+    menu_order = 102
+    list_display = ('title', 'publishing_date', 'article_type', 'article_series', 'theme', 'live')
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
-    search_fields = ('title')
+    search_fields = ('title',)
     ordering = ['-publishing_date']
+    permission_helper_class = CIGIModelAdminPermissionHelper
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(publishing_date__isnull=False)
 
 
-modeladmin_register(ArticlePageModelAdmin)
+@hooks.register('register_permissions')
+def register_article_series_page_permissions():
+    article_series_content_type = ContentType.objects.get(app_label='articles', model='articleseriespage')
+    return Permission.objects.filter(content_type=article_series_content_type)
+
+
+class ArticleSeriesPageModelAdmin(ModelAdmin):
+    model = ArticleSeriesPage
+    menu_label = 'Article Series'
+    menu_icon = 'list-ul'
+    menu_order = 103
+    list_display = ('title', 'publishing_date', 'live')
+    list_filter = ('publishing_date', 'live')
+    search_fields = ('title',)
+    ordering = ['-publishing_date']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(publishing_date__isnull=False)
+
+
+@hooks.register('register_permissions')
+def register_media_landing_page_permissions():
+    media_landing_page_content_type = ContentType.objects.get(app_label='articles', model='medialandingpage')
+    return Permission.objects.filter(content_type=media_landing_page_content_type)
+
+
+class MediaLandingPageModelAdmin(ModelAdmin):
+    model = MediaLandingPage
+    menu_label = 'Media Landing Page'
+    menu_icon = 'home'
+    menu_order = 101
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
+class ArticleModelAdminGroup(ModelAdminGroup):
+    menu_label = 'Articles'
+    menu_icon = 'duplicate'
+    menu_order = 101
+    items = (ArticleLandingPageModelAdmin, MediaLandingPageModelAdmin, ArticlePageModelAdmin, ArticleSeriesPageModelAdmin)
+
+
+modeladmin_register(ArticleModelAdminGroup)

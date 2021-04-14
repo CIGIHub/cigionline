@@ -38,11 +38,11 @@
                 {% endif %}
               </h4>
               <ul class="authors">
-                {% for item in block.value.specific.authors %}
-                  {% if item.block_type == 'author' %}
-                    <li><a href="{% pageurl item.value %}">{{ item.value.title }}</a></li>
-                  {% elif item.block_type == 'external_author' %}
-                    <li>{{ item.value }}</li>
+                {% for item in block.value.specific.authors.all %}
+                  {% if item.hide_link %}
+                    <li>{{ item.author.title }}</li>
+                  {% else %}
+                    <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
                   {% endif %}
                 {% endfor %}
               </ul>

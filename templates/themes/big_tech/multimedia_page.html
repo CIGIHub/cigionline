@@ -124,10 +124,8 @@
                 <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
                 {{ self.companion_essay.specific.short_description|richtext }}
                 <div class="meta">{{ self.publishing_date|date:"F j, Y" }}</div>
-                {% for item in self.companion_essay.specific.authors %}
-                  {% if item.block_type == 'author' %}
-                    <a href="{% pageurl item.value %}" class="author meta">{{ item.value.title }}</a>
-                  {% endif %}
+                {% for item in self.companion_essay.specific.authors.all %}
+                  <a href="{% pageurl item.author %}" class="author meta">{{ item.author.title }}</a>
                 {% endfor %}
               </article>
             </div>

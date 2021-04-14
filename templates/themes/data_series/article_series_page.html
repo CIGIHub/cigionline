@@ -52,7 +52,7 @@
         <ul class="contributors">
           {% for item in self.series_contributors_by_article %}
             {% for contributor in item.contributors %}
-              <li>{{ contributor.title }}</li>
+              <li>{{ contributor.author.title }}</li>
             {% endfor %}
           {% endfor %}
         </ul>
@@ -77,11 +77,11 @@
                 <article>
                   <h4 class="article-title"><a href="{{ block.value.url }}">{{ block.value.title}}</a></h4>
                   <p class="authors">
-                    {% for item in block.value.specific.authors %}
-                      {% if item.block_type == 'author' %}
-                        <span><a href="{% pageurl item.value %}">{{ item.value.title }}</a></span>
-                      {% elif item.block_type == 'external_author' %}
-                        <span>{{ item.value }}</span>
+                    {% for item in block.value.specific.authors.all %}
+                      {% if item.hide_link %}
+                        <span>{{ item.author.title }}</span>
+                      {% else %}
+                        <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
                       {% endif %}
                     {% endfor %}
                   </p>

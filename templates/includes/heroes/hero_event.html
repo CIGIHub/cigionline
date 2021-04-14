@@ -29,10 +29,10 @@
               Speaker{{ authors|length|pluralize }}:
               <ul class="custom-text-list">
                 {% for item in authors %}
-                  {% if item.block_type == 'author' %}
-                    <li class="block-speaker"><a href="{% pageurl item.value %}">{{ item.value.title }}</a></li>
-                  {% elif item.block_type == 'external_author' %}
-                    <li class="block-speaker">{{ item.value }}</li>
+                  {% if item.hide_link %}
+                    <div class="block-speaker">{{ item.author.title }}</div>
+                  {% else %}
+                    <div class="block-speaker"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></div>
                   {% endif %}
                 {% endfor %}
               </ul>

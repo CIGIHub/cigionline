@@ -20,7 +20,7 @@
             <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
             <div class="series-title">{{ self.title }}</div>
             <div class="social-links">
-              <a data-url="{{ request.build_absolute_uri|slice:':-1' }}">
+              <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
                 <i class="fab fa-facebook-square icon"></i>
               </a>
               <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
@@ -57,7 +57,7 @@
             <div class="subtitle">{{ self.subtitle|safe }}</div>
             <div class="meta">
               {% include "includes/date.html" with date=self.publishing_date %}
-              {% include "includes/authors.html" with authors=self.authors %}
+              {% include "includes/authors.html" with authors=self.authors.all %}
             </div>
           </div>
         </div>

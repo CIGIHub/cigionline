@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -11,7 +12,6 @@ from streams.blocks import (
     BlockQuoteBlock,
     EmbeddedMultimediaBlock,
     EmbeddedVideoBlock,
-    ExternalPersonBlock,
     ExternalQuoteBlock,
     ExternalVideoBlock,
     HeroLinkBlock,
@@ -21,7 +21,6 @@ from streams.blocks import (
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
     ChartBlock,
-    PersonBlock,
     PosterBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
@@ -324,20 +323,6 @@ class ArchiveablePageAbstract(models.Model):
 
 
 class ContentPage(Page, SearchablePageAbstract):
-    authors = StreamField(
-        [
-            ('author', PersonBlock(page_type='people.PersonPage')),
-            ('external_author', ExternalPersonBlock()),
-        ],
-        blank=True,
-    )
-    editors = StreamField(
-        [
-            ('editor', PersonBlock(page_type='people.PersonPage')),
-            ('external_editor', ExternalPersonBlock()),
-        ],
-        blank=True,
-    )
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True, related_name='content_pages')
@@ -348,29 +333,19 @@ class ContentPage(Page, SearchablePageAbstract):
 
     @property
     def author_ids(self):
-        author_ids = []
-        for block in self.authors:
-            if block.block_type == 'author':
-                author_ids.append(block.value)
-        return author_ids
+        return [item.author.id for item in self.authors.all()]
 
     @property
     def author_names(self):
-        author_names = []
-        for block in self.authors:
-            if block.block_type == 'author':
-                author_names.append(block.value.title)
-        return author_names
+        return [item.author.title for item in self.authors.all()]
 
     @property
     def related_people_ids(self):
         people_ids = []
-        for author in self.authors:
-            if author.block_type == 'author':
-                people_ids.append(author.value)
-        for editor in self.editors:
-            if editor.block_type == 'editor':
-                people_ids.append(editor.value)
+        for author in self.authors.all():
+            people_ids.append(author.author.id)
+        for editor in self.editors.all():
+            people_ids.append(editor.editor.id)
         if hasattr(self.specific, 'cigi_people_mentioned'):
             for block in self.specific.cigi_people_mentioned:
                 if block.block_type == 'cigi_person':
@@ -405,43 +380,44 @@ class ContentPage(Page, SearchablePageAbstract):
 
     def author_count(self):
         # @todo test this
-        return len(self.authors)
+        return self.authors.count()
 
+    def get_recommended(self):
+        recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)[:3]
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(recommended_page_ids)
+        return [pages[x] for x in recommended_page_ids]
+
+    @cached_property
     def recommended_content(self):
-        recommended_content = []
-        topic_content = []
-        for item in self.recommended.all()[:3]:
-            recommended_content.append(item.recommended_content_page.specific)
-        for topic in self.topics.all():
-            topic_content.append(
-                ContentPage
-                .objects
-                .live()
-                .public()
-                .filter(topics=topic, publishing_date__isnull=False, eventpage__isnull=True)
-                .exclude(id=self.id)
-                .exclude(articlepage__article_type__title='CIGI in the News')
-                .order_by('-publishing_date')
-            )
-        for i in range(10):
-            for topic in topic_content:
-                if topic[i] in recommended_content:
-                    continue
-                recommended_content.append(topic[i])
-                if len(recommended_content) == 12:
-                    return recommended_content
+        recommended_content = self.get_recommended()
+        exclude_ids = [self.id]
+        exclude_ids += [item.id for item in recommended_content]
+
+        additional_content = list(ContentPage.objects.specific().live().public().filter(
+            topics__in=self.topics.values_list('id', flat=True),
+            publishing_date__isnull=False,
+            eventpage__isnull=True
+        ).exclude(id__in=exclude_ids).exclude(
+            articlepage__article_type__title='CIGI in the News'
+        ).prefetch_related('authors__author', 'topics').order_by('-publishing_date', 'topics')[:12 - len(recommended_content)])
+
+        recommended_content = list(recommended_content) + additional_content
+
         return recommended_content
 
     authors_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('authors'),
+            InlinePanel('authors'),
         ],
         heading='Authors',
         classname='collapsible collapsed',
     )
     editors_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('editors'),
+            InlinePanel('editors'),
         ],
         heading='Editors',
         classname='collapsible collapsed',
@@ -454,12 +430,12 @@ class ContentPage(Page, SearchablePageAbstract):
         classname='collapsible collapsed',
     )
 
-    content_panels = Page.content_panels + [
+    content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
     ]
 
-    search_fields = [
+    search_fields = Page.search_fields + [
         index.FilterField('author_ids'),
         index.SearchField('author_names'),
         index.FilterField('contenttype'),
@@ -479,6 +455,54 @@ class ContentPage(Page, SearchablePageAbstract):
         self.bound_field.label = heading
         self.help_text = help_text
         self.bound_field.help_text = help_text
+
+
+class ContentPageAuthor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='authors',
+    )
+    author = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_author',
+        verbose_name='Author',
+    )
+    hide_link = models.BooleanField(default=False)
+
+    panels = [
+        PageChooserPanel(
+            'author',
+            ['people.PersonPage'],
+        ),
+        FieldPanel('hide_link'),
+    ]
+
+
+class ContentPageEditor(Orderable):
+    content_page = ParentalKey(
+        'core.ContentPage',
+        related_name='editors',
+    )
+    editor = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='content_pages_as_editor',
+        verbose_name='Editor',
+    )
+    hide_link = models.BooleanField(default=False)
+
+    panels = [
+        PageChooserPanel(
+            'editor',
+            ['people.PersonPage'],
+        ),
+        FieldPanel('hide_link'),
+    ]
 
 
 class ContentPageRecommendedContent(Orderable):
@@ -537,6 +561,8 @@ class BasicPage(
         SearchablePageAbstract.search_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'home.HomePage']
     subpage_types = [
         'annual_reports.AnnualReportListPage',
@@ -572,6 +598,8 @@ class FundingPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
     class Meta:
         verbose_name = 'Funding Page'
 
@@ -584,6 +612,8 @@ class PrivacyNoticePage(
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
     ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
