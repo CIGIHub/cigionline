@@ -42,65 +42,9 @@
   {% cache 86400 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
 
   {% block hero %}
-    {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
-
-    {% if self.image_hero %}
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-lg-10">
-            <figure class="article-image-hero">
-              {% if self.image_hero.file.url|file_extension == '.gif' %}
-                <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.title}}" />
-              {% else %}
-                {% image self.image_hero width-1760 %}
-              {% endif %}
-              {% if self.image_hero.title %}
-                <figcaption>
-                  {{ self.image_hero.title }}
-                </figcaption>
-              {% endif %}
-            </figure>
-          </div>
-        </div>
-      </div>
-    {% endif %}
   {% endblock %}
 
   {% block article_content %}
-
-    {% if self.footnotes %}
-      <section class="article-footnotes">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <div class="footnotes">
-                {{ self.footnotes|richtext }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% if self.works_cited %}
-      <section class="article-works-cited">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <h2>Works Cited</h2>
-              {{ self.works_cited|richtext }}
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% include 'includes/disclaimer.html' %}
-
-    {% if self.is_opinion and self.author_count > 0 %}
-      {% include "includes/about_the_author.html" with authors=self.authors.all %}
-    {% endif %}
-
   {% endblock %}
 
   {% block in_the_series %}
