@@ -143,9 +143,6 @@
   {% endblock %}
 
   {% block recommended %}
-    {% if self.recommended_content %}
-      {% include 'includes/recommended.html' with recommended=self.recommended_content %}
-    {% endif %}
   {% endblock %}
   {% endcache %}
 {% endblock content %}
