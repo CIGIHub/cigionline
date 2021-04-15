@@ -6,15 +6,7 @@
   {% cache 86400 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
 
   {% block hero %}
-    <section class="hero-container article-hero">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <h1>{{ self.title }}</h1>
-          </div>
-        </div>
-      </div>
-    </section>
+    {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
   {% endblock %}
 
   {% block article_content %}
