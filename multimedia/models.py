@@ -470,16 +470,15 @@ class MultimediaSeriesPage(
             classname='collapsible collapsed',
         ),
     ]
-
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
+    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields
 
     parent_page_types = ['home.HomePage', 'multimedia.MultimediaSeriesListPage']
     subpage_types = ['multimedia.MultimediaPage']
