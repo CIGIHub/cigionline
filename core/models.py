@@ -533,6 +533,7 @@ class BasicPage(
     FeatureablePageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     """Page with StreamField body"""
 
@@ -560,6 +561,9 @@ class BasicPage(
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
+    ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
@@ -572,6 +576,12 @@ class BasicPage(
         'research.ProjectPage',
     ]
     template = 'core/basic_page.html'
+
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/basic_page.html'
+        return standard_template
 
     class Meta:
         verbose_name = 'Page'
