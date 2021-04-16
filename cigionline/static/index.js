@@ -43,12 +43,16 @@ $(function() {
 
   $openSearchBtn.on('click', function() {
     $(this).toggleClass('open');
+    $openMenuBtn.removeClass('open');
+    $('#popup-menu').removeClass(openMenuClass);
     $('#popup-search').toggleClass(openMenuClass);
     $('body').toggleClass('disable-scroll');
   });
 
   $openMenuBtn.on('click', function() {
     $(this).toggleClass('open');
+    $openSearchBtn.removeClass('open');
+    $('#popup-search').removeClass(openMenuClass);
     $('#popup-menu').toggleClass(openMenuClass);
     $('body').toggleClass('disable-scroll');
   });
