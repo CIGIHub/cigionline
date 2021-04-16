@@ -34,6 +34,7 @@
     {% block og_description %}
     {% endblock %}
     {% block og_image %}
+      {% include "includes/og_image_default.html" %}
     {% endblock %}
     {% block extra_og_meta %}
     {% endblock %}
@@ -75,6 +76,7 @@
     {% wagtailuserbar %}
 
     {% block header %}
+      {% include "includes/top_bar.html" %}
     {% endblock %}
 
     <main>
