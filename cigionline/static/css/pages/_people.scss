@@ -42,6 +42,12 @@
 
         .expertise-item {
           @include comma-separated;
+
+          &:not(:only-child) {
+            &::after {
+              margin-right: 0;
+            }
+          }
         }
 
         .contact {
