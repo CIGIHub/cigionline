@@ -550,6 +550,18 @@ class BasicPage(
         BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featured Content',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
                 StreamFieldPanel('related_files'),
             ],
             heading='Related Files',
@@ -577,15 +589,50 @@ class BasicPage(
     ]
     template = 'core/basic_page.html'
 
+    def get_featured_pages(self):
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_page_ids)
+        return [pages[x] for x in featured_page_ids]
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)
         if self.theme:
             return f'themes/{self.get_theme_dir()}/basic_page.html'
         return standard_template
 
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        context['featured_pages'] = self.get_featured_pages()
+
     class Meta:
         verbose_name = 'Page'
         verbose_name_plural = 'Pages'
+
+
+class BasicPageFeaturedPage(Orderable):
+    basic_page = ParentalKey(
+        'core.BasicPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            ['wagtailcore.Page'],
+        ),
+    ]
 
 
 class FundingPage(BasicPageAbstract, Page):
