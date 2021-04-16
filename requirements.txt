@@ -46,7 +46,7 @@ mailchimp-marketing==3.0.36
 mccabe==0.6.1
 newrelic==6.2.0.156
 openpyxl==3.0.7
-Pillow==8.1.2
+Pillow==8.2.0
 psycopg2==2.8.6
 pycodestyle==2.7.0
 pyflakes==2.3.1
