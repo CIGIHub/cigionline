@@ -189,6 +189,12 @@
 
     a {
       @include comma-separated;
+
+      &:not(:only-child) {
+        &::after {
+          margin-right: 0;
+        }
+      }
     }
   }
 

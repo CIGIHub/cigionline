@@ -12,6 +12,9 @@ section {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
 
         h1 {
+          @include media-breakpoint-down(sm) {
+            font-size: 1.75em;
+          }
           font-weight: 400;
           line-height: 1.1em;
           margin-bottom: 0.5em;
@@ -44,7 +47,13 @@ section {
           margin-left: 0.2em;
         }
 
+        .feature-content-topic-list {
+          margin-bottom: 1em;
+        }
+
         .event-registration {
+          margin-bottom: 0;
+
           a {
             display: block;
 
@@ -57,6 +66,9 @@ section {
 
       .event-date-circle {
         @include date-circle($border-color: $white, $circle-size: 195px, $font-size: 2.625em);
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
       }
     }
   }

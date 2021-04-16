@@ -183,6 +183,17 @@ header {
     width: 100%;
     z-index: 1;
 
+    &.popup-menu {
+      &.opened-popup {
+        overflow: scroll;
+
+        .custom-popup-inner {
+          height: auto;
+          min-height: 100%;
+        }
+      }
+    }
+
     .custom-popup-inner {
       @include media-breakpoint-up(lg) {
         align-items: center;
@@ -216,13 +227,14 @@ header {
               border-bottom: 0;
               border-right: solid 1px $cigi-darkest-grey;
               font-size: 1.3em;
-              height: 250px;
               margin-bottom: 2em;
-              padding: 0 0 0 1.3em;
+              min-height: 250px;
+              padding: 0 0.4em 0 1.3em;
             }
+
             border-bottom: 1px solid $divider-grey;
             font-size: 1.1em;
-            padding: 1em;
+            padding: 1em 15px;
             position: relative;
 
             &:nth-child(4) {
