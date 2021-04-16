@@ -172,6 +172,9 @@ class SearchTable extends React.Component {
     if (typeSelected && typeSelected.param) {
       uri += `&${typeSelected.param}=${typeSelected.value}`;
     }
+    if (isSearchPage) {
+      uri += '&searchpage=true';
+    }
 
     fetch(encodeURI(uri))
       .then((res) => res.json())

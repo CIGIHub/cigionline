@@ -71,77 +71,79 @@
         </div>
       </div>
     </div>
-    <div class="custom-popup-wrapper" id="popup-menu">
+    <div class="custom-popup-wrapper popup-menu" id="popup-menu">
       <div class="custom-popup-inner overlay-menu">
         <div class="container">
-          <div class="row">
-            <div class="col overlay-menu-content row row-cols-1 row-cols-md-4 row-eq-height">
-              {% for sub_menu in main_menu_items %}
-                <div class="overlay-menu-submenu col">
-                  {% if sub_menu.link_page %}
-                    <a href="{% pageurl sub_menu.link_page %}" class="overlay-menu-submenu-link">
-                      {{ sub_menu.title }}
-                    </a>
-                  {% elif sub_menu.link_url %}
-                    <a href="{{ sub_menu.link_url }}" class="overlay-menu-submenu-link">
-                      {{ sub_menu.title }}
-                    </a>
-                  {% endif %}
-                  <div class="accordion">
-                    <i class="fas fa-plus"></i>
-                  </div>
-                  <ul>
-                    {% for menu_item in sub_menu.submenu.menu_items.all %}
-                      {% if menu_item.link_page %}
+          <div class="overlay-menu-content row row-cols-1 row-cols-md-4 row-eq-height">
+            {% for sub_menu in main_menu_items %}
+              <div class="overlay-menu-submenu col">
+                {% if sub_menu.link_page %}
+                  <a href="{% pageurl sub_menu.link_page %}" class="overlay-menu-submenu-link">
+                    {{ sub_menu.title }}
+                  </a>
+                {% elif sub_menu.link_url %}
+                  <a href="{{ sub_menu.link_url }}" class="overlay-menu-submenu-link">
+                    {{ sub_menu.title }}
+                  </a>
+                {% endif %}
+                {% with sub_menu.submenu.menu_items.all as submenu_items %}
+                  {% if submenu_items %}
+                    <div class="accordion">
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    <ul>
+                      {% for menu_item in submenu_items %}
+                        {% if menu_item.link_page %}
                         <li>
                           <a href="{% pageurl menu_item.link_page %}" class="overlay-menu-submenu-item-link">
                             {{ menu_item.title }}
                           </a>
                         </li>
-                      {% elif menu_item.link_url %}
+                        {% elif menu_item.link_url %}
                         <li>
                           <a href="{{ menu_item.link_url }}" class="overlay-menu-submenu-item-link">
                             {{ menu_item.title }}
                           </a>
                         </li>
-                      {% endif %}
-                    {% endfor %}
-                  </ul>
-                </div>
-              {% endfor %}
-              <div class="overlay-menu-submenu col">
-                <ul class="overlay-menu-footer-menu">
-                  {% for menu_item in footer_menu_items %}
-                    {% if menu_item.link_page %}
-                      <li>
-                        <a href="{% pageurl menu_item.link_page %}">
-                          {{ menu_item.title }}
-                        </a>
-                      </li>
-                    {% elif menu_item.link_url %}
-                      <li>
-                        <a href="{{ menu_item.link_url }}">
-                          {{ menu_item.title }}
-                        </a>
-                      </li>
-                    {% endif %}
-                  {% endfor %}
-                </ul>
-                <ul class="overlay-menu-social-links">
-                  <li>
-                    <a href="https://www.facebook.com/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
-                  </li>
-                  <li>
-                    <a href="https://twitter.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
-                  </li>
-                  <li>
-                    <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
-                  </li>
-                  <li>
-                    <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-                  </li>
-                </ul>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
               </div>
+            {% endfor %}
+            <div class="overlay-menu-submenu col">
+              <ul class="overlay-menu-footer-menu">
+                {% for menu_item in footer_menu_items %}
+                  {% if menu_item.link_page %}
+                    <li>
+                      <a href="{% pageurl menu_item.link_page %}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
+                  {% elif menu_item.link_url %}
+                    <li>
+                      <a href="{{ menu_item.link_url }}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+              <ul class="overlay-menu-social-links">
+                <li>
+                  <a href="https://www.facebook.com/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+                </li>
+                <li>
+                  <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
