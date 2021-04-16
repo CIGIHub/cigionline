@@ -2,6 +2,9 @@
   <div class="container">
     <div class="row hero-container">
       <div class="hero-main col-md-7">
+        {% if topics %}
+          {% include "includes/topics.html" %}
+        {% endif %}
         <h1>{{ title }}</h1>
       </div>
     </div>
