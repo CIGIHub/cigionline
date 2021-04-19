@@ -589,6 +589,13 @@ class ArticleSeriesPage(
     def image_poster_url(self):
         return self.image_poster.get_rendition('fill-672x895').url
 
+    @property
+    def article_series_items(self):
+        return self.series_items.prefetch_related(
+            'content_page',
+            'content_page__authors__author',
+        ).all()
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
