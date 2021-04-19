@@ -591,15 +591,13 @@ class BasicPage(
 
     def get_featured_pages(self):
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
-        pages = Page.objects.specific().prefetch_related(
-            'authors__author',
-            'topics',
-        ).in_bulk(featured_page_ids)
+        pages = Page.objects.specific().in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)
         if self.theme:
+            print(f'themes/{self.get_theme_dir()}/basic_page.html')
             return f'themes/{self.get_theme_dir()}/basic_page.html'
         return standard_template
 
@@ -607,6 +605,7 @@ class BasicPage(
         context = super().get_context(request)
 
         context['featured_pages'] = self.get_featured_pages()
+        return context
 
     class Meta:
         verbose_name = 'Page'
