@@ -5,6 +5,8 @@ from core.models import (
     FeatureablePageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
+    Orderable,
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
@@ -13,6 +15,7 @@ from wagtail.admin.edit_handlers import (
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
+    InlinePanel,
 )
 from wagtail.core.blocks import (
     CharBlock,
@@ -47,6 +50,7 @@ class ProjectPage(
     ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
@@ -167,6 +171,18 @@ class ProjectPage(
             heading='Related',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featured Content',
+            classname='collapsible collapsed',
+        ),
     ]
 
     promote_panels = Page.promote_panels + [
@@ -177,6 +193,7 @@ class ProjectPage(
 
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
+        ThemeablePageAbstract.theme_panel,
     ]
 
     search_fields = ArchiveablePageAbstract.search_fields \
@@ -186,6 +203,26 @@ class ProjectPage(
     parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
     subpage_types = []
     templates = 'research/project_page.html'
+
+    def get_featured_pages(self):
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_page_ids)
+        return [pages[x] for x in featured_page_ids]
+
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(ProjectPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/project_page.html'
+        return standard_template
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        context['featured_pages'] = self.get_featured_pages()
+        return context
 
     class Meta:
         verbose_name = 'Project'
@@ -205,6 +242,28 @@ class ProjectType(index.Indexed, models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProjectPageFeaturedPage(Orderable):
+    project_page = ParentalKey(
+        'research.ProjectPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            ['wagtailcore.Page'],
+        ),
+    ]
 
 
 class ResearchLandingPage(BasicPageAbstract, Page):
