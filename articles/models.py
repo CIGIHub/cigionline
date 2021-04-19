@@ -567,16 +567,6 @@ class ArticleSeriesPage(
         verbose_name='Poster image',
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
-    series_items = StreamField(
-        [
-            ('series_item', PageChooserBlock(
-                required=True,
-                page_type=['articles.ArticlePage', 'multimedia.MultimediaPage'],
-            )),
-            ('category_title', CharBlock(required=True)),
-        ],
-        blank=True,
-    )
     short_description = RichTextField(
         blank=True,
         null=False,
@@ -627,7 +617,7 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('series_items'),
+                InlinePanel('series_items'),
             ],
             heading='Series Items',
             classname='collapsible collapsed',
@@ -694,92 +684,116 @@ class ArticleSeriesPage(
     @property
     def series_contributors_by_article(self):
         series_contributors = []
-        item_people = set()
-
-        for item in self.series_items:
-            if item.block_type == 'category_title':
-                continue
-            people = item.value.specific.authors.all()
-            people_string = ''
-
-            for person in people:
-                person_string = person.author.title
-                people_string += person_string
-
-                # Add each person as well so if there's an article with just
-                # a single author who's already been in another article in
-                # collaboration, then we won't add their name to the list
-                # again.
-                if len(people) > 1:
-                    item_people.add(person_string)
-
-            if people_string not in item_people:
-                series_contributors.append({'item': item.value.specific, 'contributors': people})
-                item_people.add(people_string)
+        # item_people = set()
+        #
+        # for item in self.series_items:
+        #     if item.block_type == 'category_title':
+        #         continue
+        #     people = item.value.specific.authors.all()
+        #     people_string = ''
+        #
+        #     for person in people:
+        #         person_string = person.author.title
+        #         people_string += person_string
+        #
+        #         # Add each person as well so if there's an article with just
+        #         # a single author who's already been in another article in
+        #         # collaboration, then we won't add their name to the list
+        #         # again.
+        #         if len(people) > 1:
+        #             item_people.add(person_string)
+        #
+        #     if people_string not in item_people:
+        #         series_contributors.append({'item': item.value.specific, 'contributors': people})
+        #         item_people.add(people_string)
 
         return series_contributors
 
     @property
     def series_contributors(self):
         series_contributors = []
-        item_people = set()
-
-        for item in self.series_items:
-            if item.block_type == 'series_item':
-                people = item.value.specific.authors.all()
-                for person in people:
-                    if person.author.title not in item_people:
-                        series_contributors.append({
-                            'id': person.author.id,
-                            'title': person.author.title,
-                            'url': person.author.url,
-                        })
-                        item_people.add(person.author.title)
+        # item_people = set()
+        #
+        # for item in self.series_items:
+        #     if item.block_type == 'series_item':
+        #         people = item.value.specific.authors.all()
+        #         for person in people:
+        #             if person.author.title not in item_people:
+        #                 series_contributors.append({
+        #                     'id': person.author.id,
+        #                     'title': person.author.title,
+        #                     'url': person.author.url,
+        #                 })
+        #                 item_people.add(person.author.title)
         return series_contributors
 
     @property
     def series_contributors_by_person(self):
         # Series contributors ordered by last name
         series_contributors = []
-        item_people = set()
-
-        for item in self.series_items:
-            if item.block_type == 'category_title':
-                continue
-            people = item.value.specific.authors.all()
-
-            # Skip items that have more than 2 authors/speakers. For
-            # example, in the After COVID series, there is an introductory
-            # video with many authors.
-            if len(people) > 2:
-                continue
-            else:
-                for person in people:
-                    if person.author.title not in item_people:
-                        series_contributors.append({
-                            'item': item.value.specific,
-                            'contributors': [person.author],
-                            'last_name': person.author.last_name,
-                        })
-                        item_people.add(person.author.title)
-
-        series_contributors.sort(key=lambda x: x['last_name'])
+        # item_people = set()
+        #
+        # for item in self.series_items:
+        #     if item.block_type == 'category_title':
+        #         continue
+        #     people = item.value.specific.authors.all()
+        #
+        #     # Skip items that have more than 2 authors/speakers. For
+        #     # example, in the After COVID series, there is an introductory
+        #     # video with many authors.
+        #     if len(people) > 2:
+        #         continue
+        #     else:
+        #         for person in people:
+        #             if person.author.title not in item_people:
+        #                 series_contributors.append({
+        #                     'item': item.value.specific,
+        #                     'contributors': [person.author],
+        #                     'last_name': person.author.last_name,
+        #                 })
+        #                 item_people.add(person.author.title)
+        #
+        # series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
 
     @property
     def series_authors(self):
         series_authors = []
-        series_people = set()
-        for item in self.series_items:
-            if item.block_type == 'category_title':
-                continue
-            people = item.value.specific.authors.all()
-            for person in people:
-                if person.author.title not in series_people:
-                    series_authors.append(person.author)
-                    series_people.add(person.author.title)
+        # series_people = set()
+        # for item in self.series_items:
+        #     if item.block_type == 'category_title':
+        #         continue
+        #     people = item.value.specific.authors.all()
+        #     for person in people:
+        #         if person.author.title not in series_people:
+        #             series_authors.append(person.author)
+        #             series_people.add(person.author.title)
         return series_authors
 
     class Meta:
         verbose_name = 'Opinion Series'
         verbose_name_plural = 'Opinion Series'
+
+
+class ArticleSeriesPageSeriesItem(Orderable):
+    article_series_page = ParentalKey(
+        'articles.ArticleSeriesPage',
+        related_name='series_items',
+    )
+    content_page = models.ForeignKey(
+        'core.ContentPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Series Item',
+    )
+    category_title = models.CharField(blank=True, max_length=255)
+
+    panels = [
+        FieldPanel('category_title'),
+        PageChooserPanel(
+            'content_page',
+            ['articles.ArticlePage', 'multimedia.MultimediaPage'],
+        ),
+    ]
