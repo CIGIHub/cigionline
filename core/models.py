@@ -597,7 +597,6 @@ class BasicPage(
     def get_template(self, request, *args, **kwargs):
         standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)
         if self.theme:
-            print(f'themes/{self.get_theme_dir()}/basic_page.html')
             return f'themes/{self.get_theme_dir()}/basic_page.html'
         return standard_template
 

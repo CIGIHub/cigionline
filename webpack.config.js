@@ -59,6 +59,7 @@ const config = {
     themeCyberSeries: './cigionline/static/themes/cyber_series/index.js',
     themeDataSeries: './cigionline/static/themes/data_series/index.js',
     themeHealthSecuritySeries: './cigionline/static/themes/health_security_series/index.js',
+    themeIgc: './cigionline/static/themes/igc/index.js',
     themeIndigenousLandsSeries: './cigionline/static/themes/indigenous_lands_series/index.js',
     themeInnovationSeries: './cigionline/static/themes/innovation_series/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeIgc' 'css' %}
+{% endblock %}
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
@@ -21,19 +25,21 @@
   {% endif %}
 
   {% if featured_pages %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <h2 class="paragraph-heading">Featured</h2>
-          {% for featured_page in featured_pages %}
-            {% include "includes/features/feature_content_row.html" with content=featured_page %}
-          {% endfor %}
+    <section class="featured">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2 class="paragraph-heading">Featured</h2>
+            {% for featured_page in featured_pages %}
+              {% include "includes/features/feature_content_row.html" with content=featured_page %}
+            {% endfor %}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   {% endif %}
 
-  {% include "includes/body.html" with body=self.body %}
+  {% include "includes/body.html" with body=self.body heading="about" %}
 
   {% if self.related_files %}
     <section class="related-files">
