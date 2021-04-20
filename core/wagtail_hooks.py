@@ -80,6 +80,6 @@ def register_rich_text_paragraph_heading(features):
     )
 
     features.register_converter_rule('contentstate', feature_name, {
-        'from_database_format': {'h2[class=name]': InlineStyleElementHandler(type_)},
+        'from_database_format': {'h2[class=paragraph-heading]': InlineStyleElementHandler(type_)},
         'to_database_format': {'style_map': {type_: {'element': 'h2', 'props': {'class': 'paragraph-heading'}}}},
     })
