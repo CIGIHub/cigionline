@@ -100,30 +100,28 @@
       <div class="row d-block">
         <div class="col">
           <div class="platform-governance-listing">
-            {% for block in self.series_items %}
-              {% if block.block_type == 'series_item' %}
-                <article>
-                  <div class="series-article-image">
-                    {% image block.value.specific.image_banner fill-672x895 as article_image %}
-                    <a href="{{ block.value.url }}" style="background-image: url('{{ article_image.url }}');">
-                    </a>
-                  </div>
-                  <h3 class="series-article-title">
-                    <a href="{{ block.value.url }}">
-                      {{ block.value.title }}
-                    </a>
-                  </h3>
-                  <p class="authors">
-                    {% for item in block.value.specific.authors.all %}
-                      {% if item.hide_link %}
-                        <span>{{ item.author.title }}</span>
-                      {% else %}
-                        <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
-                      {% endif %}
-                    {% endfor %}
-                  </p>
-                </article>
-              {% endif %}
+            {% for series_item in self.article_series_items %}
+              <article>
+                <div class="series-article-image">
+                  {% image series_item.content_page.specific.image_banner fill-672x895 as article_image %}
+                  <a href="{% pageurl series_item.content_page %}" style="background-image: url('{{ article_image.url }}');">
+                  </a>
+                </div>
+                <h3 class="series-article-title">
+                  <a href="{% pageurl series_item.content_page %}">
+                    {{ series_item.content_page.title }}
+                  </a>
+                </h3>
+                <p class="authors">
+                  {% for item in series_item.content_page.authors.all %}
+                    {% if item.hide_link %}
+                      <span>{{ item.author.title }}</span>
+                    {% else %}
+                      <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
+                    {% endif %}
+                  {% endfor %}
+                </p>
+              </article>
             {% endfor %}
           </div>
         </div>

@@ -60,38 +60,36 @@
           <div class="col">
             <p class="series-subheading">In the Series</p>
             <div class="platform-governance-series-in-the-series-items">
-              {% for block in self.article_series.specific.series_items %}
-                {% if block.block_type == 'series_item' %}
-                  <article{% if block.value.id == self.id %} class="current"{% endif %}>
-                    <div class="series-article-image">
-                      {% if block.value.id == self.id %}
-                        {% image block.value.specific.image_banner fill-672x895 %}
+              {% for series_item in self.article_series.specific.article_series_items %}
+                <article{% if series_item.content_page.id == self.id %} class="current"{% endif %}>
+                  <div class="series-article-image">
+                    {% if series_item.content_page.id == self.id %}
+                      {% image series_item.content_page.specific.image_banner fill-672x895 %}
+                    {% else %}
+                      <a href="{% pageurl series_item.content_page %}">
+                        {% image series_item.content_page.specific.image_banner fill-672x895 %}
+                      </a>
+                    {% endif %}
+                  </div>
+                  <h3 class="series-article-title">
+                    {% if series_item.content_page.id == self.id %}
+                      {{ series_item.content_page.title }}
+                    {% else %}
+                      <a href="{% pageurl series_item.content_page %}">
+                        {{ series_item.content_page.title }}
+                      </a>
+                    {% endif %}
+                  </h3>
+                  <p class="authors">
+                    {% for item in series_item.content_page.authors.all %}
+                      {% if item.hide_link %}
+                        <span>{{ item.author.title }}<span>
                       {% else %}
-                        <a href="{{ block.value.url }}">
-                          {% image block.value.specific.image_banner fill-672x895 %}
-                        </a>
+                        <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
                       {% endif %}
-                    </div>
-                    <h3 class="series-article-title">
-                      {% if block.value.id == self.id %}
-                        {{ block.value.title }}
-                      {% else %}
-                        <a href="{{ block.value.url }}">
-                          {{ block.value.title }}
-                        </a>
-                      {% endif %}
-                    </h3>
-                    <p class="authors">
-                      {% for item in block.value.specific.authors.all %}
-                        {% if item.hide_link %}
-                          <span>{{ item.author.title }}<span>
-                        {% else %}
-                          <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
-                        {% endif %}
-                      {% endfor %}
-                    </p>
-                  </article>
-                {% endif %}
+                    {% endfor %}
+                  </p>
+                </article>
               {% endfor %}
             </div>
           </div>
