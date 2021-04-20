@@ -691,28 +691,26 @@ class ArticleSeriesPage(
     @property
     def series_contributors_by_article(self):
         series_contributors = []
-        # item_people = set()
-        #
-        # for item in self.series_items:
-        #     if item.block_type == 'category_title':
-        #         continue
-        #     people = item.value.specific.authors.all()
-        #     people_string = ''
-        #
-        #     for person in people:
-        #         person_string = person.author.title
-        #         people_string += person_string
-        #
-        #         # Add each person as well so if there's an article with just
-        #         # a single author who's already been in another article in
-        #         # collaboration, then we won't add their name to the list
-        #         # again.
-        #         if len(people) > 1:
-        #             item_people.add(person_string)
-        #
-        #     if people_string not in item_people:
-        #         series_contributors.append({'item': item.value.specific, 'contributors': people})
-        #         item_people.add(people_string)
+        item_people = set()
+
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
+            people_string = ''
+
+            for person in people:
+                person_string = person.author.title
+                people_string += person_string
+
+                # Add each person as well so if there's an article with just
+                # a single author who's already been in another article in
+                # collaboration, then we won't add their name to the list
+                # again.
+                if len(people) > 1:
+                    item_people.add(person_string)
+
+            if people_string not in item_people:
+                series_contributors.append({'item': series_item.content_page, 'contributors': people})
+                item_people.add(people_string)
 
         return series_contributors
 
