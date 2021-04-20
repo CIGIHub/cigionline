@@ -574,6 +574,7 @@ class BasicPage(
         SearchablePageAbstract.search_panel,
     ]
     settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
     ]
 

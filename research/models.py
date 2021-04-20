@@ -193,6 +193,7 @@ class ProjectPage(
 
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
     ]
 
