@@ -15,41 +15,40 @@
             </a>
           </div>
         {% endif %}
-        {% for block in series_items %}
-          {% if block.block_type == 'category_title' %}
-            {% define block.value|slugify as category_class %}
+        {% for series_item in series_items %}
+          {% if series_item.category_title %}
+            {% define series_item.category_title|slugify as category_class %}
             {% if not forloop.first %}
               </div>
             {% endif %}
-            <h3>{{ block.value }}</h3>
+            <h3>{{ series_item.category_title }}</h3>
             <div class="series-category">
-          {% elif block.block_type == 'series_item' %}
-            <article class="{{ category_class }}">
-              <span>
-                {% if block.value.specific|page_type == 'multimedia' %}
-                  <i class="fa fa-play"></i>
-                {% endif %}
-              </span>
-              <h4>
-                {% if block.value.id == article_id %}
-                  {{ block.value.title }}
+          {% endif %}
+          <article class="{{ category_class }}">
+            <span>
+              {% if series_item.content_page.specific|page_type == 'multimedia' %}
+                <i class="fa fa-play"></i>
+              {% endif %}
+            </span>
+            <h4>
+              {% if series_item.content_page.id == article_id %}
+                {{ series_item.content_page.title }}
+              {% else %}
+                <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+              {% endif %}
+            </h4>
+            <ul class="authors">
+              {% for item in series_item.content_page.authors.all %}
+                {% if item.hide_link %}
+                  <li>{{ item.author.title }}</li>
                 {% else %}
-                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                  <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
                 {% endif %}
-              </h4>
-              <ul class="authors">
-                {% for item in block.value.specific.authors.all %}
-                  {% if item.hide_link %}
-                    <li>{{ item.author.title }}</li>
-                  {% else %}
-                    <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            </article>
-            {% if forloop.last %}
-              </div>
-            {% endif %}
+              {% endfor %}
+            </ul>
+          </article>
+          {% if forloop.last %}
+            </div>
           {% endif %}
         {% endfor %}
       </div>

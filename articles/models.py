@@ -467,12 +467,11 @@ class ArticlePage(
     @property
     def article_series_category(self):
         category = ''
-        for item in self.article_series.specific.series_items:
-            if item.block_type == 'category_title':
-                category = item.value
-            else:
-                if item.value.specific.id == self.id:
-                    return category
+        for series_item in self.article_series.specific.article_series_items:
+            if series_item.category_title:
+                category = series_item.category_title
+            if series_item.content_page.id == self.id:
+                return category
 
     class Meta:
         verbose_name = 'Opinion'
