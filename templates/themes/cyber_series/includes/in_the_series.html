@@ -18,27 +18,25 @@
   <div class="container">
     <div class="row">
       <div class="col col-lg-10 offset-lg-1 cyber-series-article-series-series-items">
-        {% for block in article_series.series_items %}
-          {% if block.block_type == 'series_item' %}
-            <article>
-              <h5 class="article-title">
-                {% if block.value.id == article_id %}
-                  {{ block.value.title }}
+        {% for series_item in article_series.article_series_items %}
+          <article>
+            <h5 class="article-title">
+              {% if series_item.content_page.id == article_id %}
+                {{ series_item.content_page.title }}
+              {% else %}
+                <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+              {% endif %}
+            </h5>
+            <p class="authors">
+              {% for item in series_item.content_page.authors.all %}
+                {% if item.hide_link %}
+                  <span>{{ item.author.title }}</span>
                 {% else %}
-                  <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+                  <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
                 {% endif %}
-              </h5>
-              <p class="authors">
-                {% for item in block.value.specific.authors.all %}
-                  {% if item.hide_link %}
-                    <span>{{ item.author.title }}</span>
-                  {% else %}
-                    <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
-                  {% endif %}
-                {% endfor %}
-              </p>
-            </article>
-          {% endif %}
+              {% endfor %}
+            </p>
+          </article>
         {% endfor %}
       </div>
     </div>
