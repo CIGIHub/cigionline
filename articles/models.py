@@ -738,29 +738,27 @@ class ArticleSeriesPage(
     def series_contributors_by_person(self):
         # Series contributors ordered by last name
         series_contributors = []
-        # item_people = set()
-        #
-        # for item in self.series_items:
-        #     if item.block_type == 'category_title':
-        #         continue
-        #     people = item.value.specific.authors.all()
-        #
-        #     # Skip items that have more than 2 authors/speakers. For
-        #     # example, in the After COVID series, there is an introductory
-        #     # video with many authors.
-        #     if len(people) > 2:
-        #         continue
-        #     else:
-        #         for person in people:
-        #             if person.author.title not in item_people:
-        #                 series_contributors.append({
-        #                     'item': item.value.specific,
-        #                     'contributors': [person.author],
-        #                     'last_name': person.author.last_name,
-        #                 })
-        #                 item_people.add(person.author.title)
-        #
-        # series_contributors.sort(key=lambda x: x['last_name'])
+        item_people = set()
+
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
+
+            # Skip items that have more than 2 authors/speakers. For
+            # example, in the After COVID series, there is an introductory
+            # video with many authors.
+            if len(people) > 2:
+                continue
+            else:
+                for person in people:
+                    if person.author.title not in item_people:
+                        series_contributors.append({
+                            'item': series_item.content_page,
+                            'contributors': [person.author],
+                            'last_name': person.author.last_name,
+                        })
+                        item_people.add(person.author.title)
+
+        series_contributors.sort(key=lambda x: x['last_name'])
         return series_contributors
 
     @property
