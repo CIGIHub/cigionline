@@ -758,15 +758,13 @@ class ArticleSeriesPage(
     @property
     def series_authors(self):
         series_authors = []
-        # series_people = set()
-        # for item in self.series_items:
-        #     if item.block_type == 'category_title':
-        #         continue
-        #     people = item.value.specific.authors.all()
-        #     for person in people:
-        #         if person.author.title not in series_people:
-        #             series_authors.append(person.author)
-        #             series_people.add(person.author.title)
+        series_people = set()
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
+            for person in people:
+                if person.author.title not in series_people:
+                    series_authors.append(person.author)
+                    series_people.add(person.author.title)
         return series_authors
 
     class Meta:
