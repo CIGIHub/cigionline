@@ -65,42 +65,41 @@
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
           <div class="dots-divider"><span></span><span></span><span></span></div>
-          {% for block in self.series_items %}
-            {% if block.block_type == 'series_item' %}
-              {% define block.value.specific|page_type as page_type %}
-              <article>
-                <div class="author-images block-{{page_type}}">
-                  {% include './includes/health_security_series_rings.html' %}
-                  {% if page_type == 'opinion' %}
-                    {% for item in block.value.specific.authors.all %}
-                      <a href="{% pageurl item.author %}">
-                        {% image item.author.image_square fill-100x100 %}
-                      </a>
-                    {% endfor %}
-                  {% elif page_type == 'multimedia' %}
-                    <a href="{{ block.value.url }}">
-                      <i class="fa fa-play-circle"></i>
-                    </a>
-                  {% endif %}
-                </div>
-                <div>
-                  <h3>
-                    <a href="{{ block.value.url }}">{{ block.value.title }}</a>
-                  </h3>
-                  <p class="authors">
-                    {% for item in block.value.specific.authors.all %}
-                      {% if item.hide_link %}
-                        <span>{{ item.author.title }}</span>
-                      {% else %}
-                        <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
-                      {% endif %}
-                    {% endfor %}
-                  </p>
-                </div>
-              </article>
-            {% elif block.block_type == 'category_title' %}
-              <h2>{{ block.value }}</h2>
+          {% for series_item in self.article_series_items %}
+            {% if series_item.category_title %}
+              <h2>{{ series_item.category_title }}</h2>
             {% endif %}
+            {% define series_item.content_page.specific|page_type as page_type %}
+            <article>
+              <div class="author-images block-{{page_type}}">
+                {% include './includes/health_security_series_rings.html' %}
+                {% if page_type == 'opinion' %}
+                  {% for item in series_item.content_page.authors.all %}
+                    <a href="{% pageurl item.author %}">
+                      {% image item.author.image_square fill-100x100 %}
+                    </a>
+                  {% endfor %}
+                {% elif page_type == 'multimedia' %}
+                  <a href="{% pageurl series_item.content_page %}">
+                    <i class="fa fa-play-circle"></i>
+                  </a>
+                {% endif %}
+              </div>
+              <div>
+                <h3>
+                  <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                </h3>
+                <p class="authors">
+                  {% for item in series_item.content_page.authors.all %}
+                    {% if item.hide_link %}
+                      <span>{{ item.author.title }}</span>
+                    {% else %}
+                      <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
+                    {% endif %}
+                  {% endfor %}
+                </p>
+              </div>
+            </article>
           {% endfor %}
         </div>
       </div>
