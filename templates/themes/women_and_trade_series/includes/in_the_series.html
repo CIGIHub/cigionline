@@ -1,15 +1,18 @@
 {% load wagtailcore_tags core_tags %}
 
 <div class="women-and-trade-series-in-the-series">
-  {% for block in series_items %}
-    {% if block.block_type == 'series_item' and block.value.id != article_id %}
+  {% for series_item in series_items %}
+    {% if series_item.category_title %}
+      <h3>{{ series_item.category_title }}</h3>
+    {% endif %}
+    {% if series_item.content_page.id != article_id %}
       <article>
         <h4>
-          <a href="{{ block.value.url }}">{{ block.value.title }}</a>
+          <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
         </h4>
         <div class="authors">
-          <label>Author{{ block.value.specific.author_count|pluralize }}:</label>
-          {% for item in block.value.specific.authors.all %}
+          <label>Author{{ series_item.content_page.author_count|pluralize }}:</label>
+          {% for item in series_item.content_page.authors.all %}
             {% if item.hide_link %}
               <span>{{ item.author.title }}</span>
             {% else %}
@@ -18,8 +21,6 @@
           {% endfor %}
         </div>
       </article>
-    {% elif block.block_type == 'category_title' %}
-      <h3>{{ block.value }}</h3>
     {% endif %}
   {% endfor %}
 </div>
