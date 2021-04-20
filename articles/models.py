@@ -713,19 +713,18 @@ class ArticleSeriesPage(
     @property
     def series_contributors(self):
         series_contributors = []
-        # item_people = set()
-        #
-        # for item in self.series_items:
-        #     if item.block_type == 'series_item':
-        #         people = item.value.specific.authors.all()
-        #         for person in people:
-        #             if person.author.title not in item_people:
-        #                 series_contributors.append({
-        #                     'id': person.author.id,
-        #                     'title': person.author.title,
-        #                     'url': person.author.url,
-        #                 })
-        #                 item_people.add(person.author.title)
+        item_people = set()
+
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
+            for person in people:
+                if person.author.title not in item_people:
+                    series_contributors.append({
+                        'id': person.author.id,
+                        'title': person.author.title,
+                        'url': person.author.url,
+                    })
+                    item_people.add(person.author.title)
         return series_contributors
 
     @property
