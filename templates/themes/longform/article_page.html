@@ -79,13 +79,13 @@
               <h3><a href="{{self.article_series.url}}">{{ self.article_series.title }}</a></h3>
               <p class="in-the-series"><span>In The Series</span></p>
               <div class="series-items">
-                {% for block in self.article_series.specific.series_items %}
-                  {% if block.block_type == 'series_item' and block.value.id != self.id %}
+                {% for series_item in self.article_series.specific.article_series_items %}
+                  {% if series_item.content_page.id != self.id %}
                     <article>
-                      <h4><a href="{{ block.value.url }}">{{ block.value.title }}</a></h4>
+                      <h4><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a></h4>
                       <p class="authors">
-                        Author{{ block.value.specific.author_count|pluralize }}:
-                        {% for item in block.value.specific.authors.all %}
+                        Author{{ series_item.content_page.author_count|pluralize }}:
+                        {% for item in series_item.content_page.authors.all %}
                           {% if item.hide_link %}
                             <span>{{ item.author.title }}</span>
                           {% else %}
