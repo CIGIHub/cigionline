@@ -405,6 +405,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'bold',
             'dropcap',
             'endofarticle',
+            'paragraph_heading',
             'h2',
             'h3',
             'h4',

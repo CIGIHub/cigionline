@@ -59,3 +59,27 @@ def register_rich_text_name(features):
         'from_database_format': {'span[class=name]': InlineStyleElementHandler(type_)},
         'to_database_format': {'style_map': {type_: {'element': 'span', 'props': {'class': 'name'}}}},
     })
+
+
+@hooks.register('register_rich_text_features')
+def register_rich_text_paragraph_heading(features):
+    feature_name = 'paragraph_heading'
+    type_ = 'HEADING'
+
+    control = {
+        'type': type_,
+        'label': 'Heading',
+        'description': 'Paragraph Heading',
+        'element': 'h2',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.InlineStyleFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'h2[class=name]': InlineStyleElementHandler(type_)},
+        'to_database_format': {'style_map': {type_: {'element': 'h2', 'props': {'class': 'paragraph-heading'}}}},
+    })

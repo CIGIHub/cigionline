@@ -6,7 +6,6 @@ from core.models import (
     SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
-    Orderable,
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
