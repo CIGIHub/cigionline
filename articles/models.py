@@ -17,10 +17,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core.blocks import (
-    CharBlock,
-    PageChooserBlock,
-)
+from wagtail.core.blocks import PageChooserBlock
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
