@@ -70,14 +70,24 @@ class MultimediaListPage(BasicPageAbstract, Page):
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
-    def featured_large(self):
-        return self.featured_multimedia.all()[0:1]
+    def get_featured_multimedia(self):
+        featured_multimedia_ids = self.featured_multimedia.order_by('sort_order').values_list('multimedia_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_multimedia_ids)
+        return [pages[x] for x in featured_multimedia_ids]
 
-    def featured_small(self):
-        return self.featured_multimedia.all()[1:]
+    def get_promotion_blocks(self):
+        return self.promotion_blocks.prefetch_related(
+            'promotion_block',
+        ).all()[:1]
 
-    def promotion_blocks_list(self):
-        return self.promotion_blocks.all()[:1]
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['featured_multimedia'] = self.get_featured_multimedia()
+        context['promotion_blocks'] = self.get_promotion_blocks()
+        return context
 
     class Meta:
         verbose_name = 'Multimedia List Page'
