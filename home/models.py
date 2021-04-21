@@ -133,25 +133,24 @@ class HomePage(Page):
             featured_events = future_events
         return featured_events
 
-    def get_context(self, request):
-        context = super().get_context(request)
-
-        context['featured_pages'] = self.get_featured_pages()
-        context['featured_experts'] = self.get_featured_experts()
-        context['highlight_pages'] = self.get_highlight_pages()
-        context['featured_multimedia'] = self.get_featured_multimedia()
-        context['featured_publications'] = self.get_featured_publications()
-        context['featured_events'] = self.get_featured_events()
-
-        return context
-
-    def promotion_blocks_list(self):
+    def get_promotion_blocks(self):
         promotion_blocks_list = []
         for item in self.promotion_blocks.prefetch_related(
             'promotion_block',
         ).all()[:2]:
             promotion_blocks_list.append(item.promotion_block)
         return promotion_blocks_list
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['featured_pages'] = self.get_featured_pages()
+        context['featured_experts'] = self.get_featured_experts()
+        context['highlight_pages'] = self.get_highlight_pages()
+        context['featured_multimedia'] = self.get_featured_multimedia()
+        context['featured_publications'] = self.get_featured_publications()
+        context['featured_events'] = self.get_featured_events()
+        context['promotion_blocks'] = self.get_promotion_blocks()
+        return context
 
     max_count = 1
     subpage_types = [
