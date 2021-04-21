@@ -40,15 +40,16 @@ class ArticleLandingPage(BasicPageAbstract, Page):
         ).in_bulk(featured_article_ids)
         return [pages[x] for x in featured_article_ids]
 
-    def get_context(self, request):
-        context = super().get_context(request)
-        context['featured_articles'] = self.get_featured_articles()
-        return context
-
-    def all_article_series(self):
+    def get_featured_article_series(self):
         return ArticleSeriesPage.objects.prefetch_related(
             'topics',
         ).live().public().order_by('-publishing_date')[:10]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['featured_articles'] = self.get_featured_articles()
+        context['featured_article_series'] = self.get_featured_article_series()
+        return context
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
