@@ -15,9 +15,9 @@
     <div class="container">
       <h2>Featured</h2>
       <div class="row featured-event-row">
-        {% for event in self.featured_events_list %}
+        {% for item in featured_events %}
           <div class="col-md-4 featured-event-col">
-            {% include "includes/features/feature_event.html" with event=event %}
+            {% include "includes/features/feature_event.html" with event=item %}
           </div>
         {% endfor %}
       </div>

@@ -51,11 +51,17 @@ class EventListPage(BasicPageAbstract, Page):
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
-    def featured_events_list(self):
-        featured_events = []
-        for item in self.featured_events.all()[:6]:
-            featured_events.append(item.event_page.specific)
-        return featured_events
+    def get_featured_events(self):
+        featured_event_ids = self.featured_events.order_by('sort_order').values_list('event_page', flat=True)[:6]
+        pages = Page.objects.specific().prefetch_related(
+            'topics',
+        ).in_bulk(featured_event_ids)
+        return [pages[x] for x in featured_event_ids]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['featured_events'] = self.get_featured_events()
+        return context
 
     class Meta:
         verbose_name = 'Event List Page'
