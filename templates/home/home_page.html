@@ -62,7 +62,7 @@
         </div>
       </div>
       <div class="row">
-        {% for publication in self.featured_publications %}
+        {% for publication in featured_publications %}
           <div class="col-12 col-md-3 homepage-featured-publication-row">
             {% include "includes/features/feature_publication_teaser.html" with publication=publication %}
           </div>
@@ -138,7 +138,7 @@
         </div>
       </div>
       <div class="events-container row">
-        {% for event in self.featured_events %}
+        {% for event in featured_events %}
           <div class="col-12 col-md-4 homepage-featured-event-row">
             {% include "includes/features/feature_event.html" with event=event %}
           </div>
