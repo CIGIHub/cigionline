@@ -11,7 +11,7 @@ def highlighted_topics(context):
     result = {
         'highlighted_topics': highlighted_topics,
     }
-    if context and context['request']:
+    if context and hasattr(context, 'request'):
         result['request'] = context['request']
     return result
 
