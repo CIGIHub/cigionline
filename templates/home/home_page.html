@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader cache %}
+{% load wagtailcore_tags webpack_loader core_tags cache %}
 
 {% block extra_css %}
   {% render_bundle 'homePage' 'css' %}
@@ -11,6 +11,8 @@
 {% block body_class %}homepage{% endblock %}
 
 {% block content %}
+  {% preview_cache_bust as is_preview %}
+  {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
   <section class="featured homepage-featured">
     <div class="container">
       <div class="row">
@@ -70,29 +72,27 @@
       </div>
     </div>
   </section>
-  <section class="homepage-promotion-blocks">
+<section class="homepage-promotion-blocks">
+  <div class="container">
+    <div class="row">
+      {% for promotion_block in promotion_blocks %}
+        <div class="homepage-promotion-block col-md-6">
+          {% include "includes/promotion_block.html" with promotion_block=promotion_block %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+  <section class="homepage-featured-highlights">
     <div class="container">
       <div class="row">
-        {% for promotion_block in promotion_blocks %}
-          <div class="homepage-promotion-block col-md-6">
-            {% include "includes/promotion_block.html" with promotion_block=promotion_block %}
-          </div>
-        {% endfor %}
+        <div class="col-12">
+          <h2 class="homepage-subheading"><span>Highlights</span></h2>
+          {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
+        </div>
       </div>
     </div>
   </section>
-  {% cache 86400 homepage_highlights_swiper %}
-    <section class="homepage-featured-highlights">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading"><span>Highlights</span></h2>
-            {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
   <section class="featured homepage-featured-multimedia">
     <div class="container">
       <div class="row">
@@ -126,26 +126,30 @@
       </div>
     </div>
   </section>
-  <section class="homepage-featured-events">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="homepage-subheading">
-            <a href="/events/">
-              Events
-            </a>
-          </h2>
+  {% endcache %}
+  {% cache 86400 homepage_featured_events self.featured_events.0.id %}
+    <section class="homepage-featured-events">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="homepage-subheading">
+              <a href="/events/">
+                Events
+              </a>
+            </h2>
+          </div>
+        </div>
+        <div class="events-container row">
+          {% for event in featured_events %}
+            <div class="col-12 col-md-4 homepage-featured-event-row">
+              {% include "includes/features/feature_event.html" with event=event %}
+            </div>
+          {% endfor %}
         </div>
       </div>
-      <div class="events-container row">
-        {% for event in featured_events %}
-          <div class="col-12 col-md-4 homepage-featured-event-row">
-            {% include "includes/features/feature_event.html" with event=event %}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
+    </section>
+  {% endcache %}
+  {% cache 86400 homepage_featured_experts self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
   <section class="homepage-featured-experts">
     <div class="container">
       <div class="row">
@@ -166,4 +170,5 @@
       </div>
     </div>
   </section>
+  {% endcache %}
 {% endblock content %}

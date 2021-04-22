@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags webpack_loader core_tags cache %}
 
 {% block extra_css %}
   {% render_bundle 'publicationListPage' 'css' %}
@@ -9,13 +9,15 @@
 {% endblock %}
 
 {% block content %}
+  {% preview_cache_bust as is_preview %}
+  {% cache 86400 publications_featured_list self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <div class="container">
-    <div class="row">
-      <div class="col">
-        {% include "includes/publications_featured_list.html" with publications=self.featured_publications_list %}
+      <div class="row">
+        <div class="col">
+          {% include "includes/publications_featured_list.html" with publications=self.featured_publications_list %}
+        </div>
       </div>
-    </div>
     <div class="row">
       <div class="col">
         <div class="publication-list-section" id="publications-search-table">
@@ -23,4 +25,5 @@
       </div>
     </div>
   </div>
+  {% endcache %}
 {% endblock content %}
