@@ -32,52 +32,24 @@ class ArticleLandingPage(BasicPageAbstract, Page):
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
-    def featured_xlarge(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[0:1]
+    def get_featured_articles(self):
+        featured_article_ids = self.featured_articles.order_by('sort_order').values_list('article_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_article_ids)
+        return [pages[x] for x in featured_article_ids]
 
-    def featured_large_1(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[1:2]
-
-    def featured_small_1(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[2:7]
-
-    def featured_medium_1(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[7:9]
-
-    def featured_small_2(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[10:15]
-
-    def featured_large_2(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[9:10]
-
-    def all_article_series(self):
+    def get_featured_article_series(self):
         return ArticleSeriesPage.objects.prefetch_related(
             'topics',
         ).live().public().order_by('-publishing_date')[:10]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['featured_articles'] = self.get_featured_articles()
+        context['featured_article_series'] = self.get_featured_article_series()
+        return context
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(

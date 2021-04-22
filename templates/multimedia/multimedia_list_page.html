@@ -20,18 +20,20 @@
       </div>
       <div class="row">
         <div class="col-12 col-md-8">
-          {% for item in self.featured_large %}
-            {% include "includes/features/feature_content_large.html" with content=item.multimedia_page.specific %}
-          {% endfor %}
+          {% if featured_multimedia|length > 0 %}
+            {% include "includes/features/feature_content_large.html" with content=featured_multimedia.0 %}
+          {% endif %}
         </div>
         <hr>
         <div class="col-12 col-md-4 featured-small">
-          {% for item in self.featured_small %}
-            {% if forloop.counter > 1 %}
-              <hr>
-            {% endif %}
-            {% include "includes/features/feature_content_small.html" with content=item.multimedia_page.specific %}
-          {% endfor %}
+          {% with featured_multimedia|slice:"1:" as featured_small %}
+            {% for item in featured_small %}
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_small.html" with content=item %}
+            {% endfor %}
+          {% endwith %}
         </div>
       </div>
     </div>
@@ -39,7 +41,7 @@
   <section class="multimedia-promotion-blocks">
     <div class="container">
       <div class="row">
-        {% for promotion_block in self.promotion_blocks_list %}
+        {% for promotion_block in promotion_blocks %}
           <div class="col">
             {% include "includes/promotion_block.html" with promotion_block=promotion_block.promotion_block %}
           </div>
