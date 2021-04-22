@@ -52,12 +52,10 @@
               Series Contributors:
             </p>
             <p class="series-contributors">
-              {% for block in self.series_items %}
-                {% if block.block_type == 'series_item' %}
-                  {% for item in block.value.specific.authors.all %}
-                    <span>{{ item.author.title }}</span>
-                  {% endfor %}
-                {% endif %}
+              {% for series_item in self.article_series_items %}
+                {% for item in series_item.content_page.authors.all %}
+                  <span>{{ item.author.title }}</span>
+                {% endfor %}
               {% endfor %}
             </p>
             <div class="scroll-anchor">
@@ -130,44 +128,42 @@
       <div class="row">
         <div class="col">
           <h2><span>In the Series</span></h2>
-          {% for block in self.series_items %}
-            {% if block.block_type == 'series_item' %}
-              <article>
-                <div class="media">
-                  {% if block.value.specific|page_type == 'multimedia' %}
-                    <i class="fa fa-play"></i>
-                  {% endif %}
-                </div>
-                {% if block.value.specific.image_banner_small %}
-                  {% image block.value.specific.image_banner_small original as article_background %}
-                {% elif block.value.specific.image_square %}
-                  {% image block.value.specific.image_square original as article_background %}
-                {% endif %}
-                <div class="article-data" {% if article_background %}style="background-image: url('{{ article_background.url }}');"{% endif %}>
-                  <h5><a href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
-                  {% if block.value.specific|page_type == 'opinion' %}
-                    <div class="article-subtitle">
-                      {{ block.value.specific.subtitle|richtext }}
-                    </div>
-                  {% endif %}
-                  {% if block.value.specific.author_count %}
-                    <p class="authors">
-                      {% if block.value.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ block.value.specific.author_count|pluralize }}:
-                      {% for item in block.value.specific.authors.all %}
-                        {% if item.hide_link %}
-                          <span>{{ item.author.title }}</span>
-                        {% else %}
-                          <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
-                        {% endif %}
-                      {% endfor %}
-                    </p>
-                  {% endif %}
-                </div>
-
-              </article>
-            {% elif block.block_type == 'category_title' %}
-              <h3>{{ block.value }}</h3>
+          {% for series_item in self.article_series_items %}
+            {% if series_item.category_title %}
+              <h3>{{ series_item.category_title }}</h3>
             {% endif %}
+            <article>
+              <div class="media">
+                {% if series_item.content_page.specific|page_type == 'multimedia' %}
+                  <i class="fa fa-play"></i>
+                {% endif %}
+              </div>
+              {% if series_item.content_page.specific.image_banner_small %}
+                {% image series_item.content_page.specific.image_banner_small original as article_background %}
+              {% elif series_item.content_page.specific.image_square %}
+                {% image series_item.content_page.specific.image_square original as article_background %}
+              {% endif %}
+              <div class="article-data" {% if article_background %}style="background-image: url('{{ article_background.url }}');"{% endif %}>
+                <h5><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a></h5>
+                {% if series_item.content_page.specific|page_type == 'opinion' %}
+                  <div class="article-subtitle">
+                    {{ series_item.content_page.specific.subtitle|richtext }}
+                  </div>
+                {% endif %}
+                {% if series_item.content_page.author_count %}
+                  <p class="authors">
+                    {% if series_item.content_page.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ block.value.specific.author_count|pluralize }}:
+                    {% for item in series_item.content_page.authors.all %}
+                      {% if item.hide_link %}
+                        <span>{{ item.author.title }}</span>
+                      {% else %}
+                        <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
+                      {% endif %}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+              </div>
+            </article>
           {% endfor %}
         </div>
       </div>

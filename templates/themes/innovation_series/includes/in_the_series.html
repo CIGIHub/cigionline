@@ -17,30 +17,33 @@
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8">
         <h3>In the Series</h3>
-        {% for block in article_series.series_items %}
-          {% if block.block_type == 'series_item' and block.value.id != article_id %}
+        {% for series_item in article_series.article_series_items %}
+          {% if series_item.category_title %}
+            <h4>{{ series_item.category_title }}</h4>
+          {% endif %}
+          {% if series_item.content_page.id != article_id %}
             <article>
               <div class="media">
-                {% if block.value.specific|page_type == 'multimedia' %}
+                {% if series_item.content_page.specific|page_type == 'multimedia' %}
                   <i class="fa fa-play"></i>
                 {% endif %}
               </div>
-              {% if block.value.specific.image_banner_small %}
-                {% image block.value.specific.image_banner_small original as article_background %}
-              {% elif block.value.specific.image_square %}
-                {% image block.value.specific.image_square original as article_background %}
+              {% if series_item.content_page.specific.image_banner_small %}
+                {% image series_item.content_page.specific.image_banner_small original as article_background %}
+              {% elif series_item.content_page.specific.image_square %}
+                {% image series_item.content_page.specific.image_square original as article_background %}
               {% endif %}
               <div class="article-data" {% if article_background %}style="background-image: url('{{ article_background.url }}');"{% endif %}>
-                <h5><a href="{{ block.value.url }}">{{ block.value.title }}</a></h5>
-                {% if block.value.specific|page_type == 'opinion' %}
+                <h5><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a></h5>
+                {% if series_item.content_page.specific|page_type == 'opinion' %}
                   <div class="article-subtitle">
-                    {{ block.value.specific.subtitle|richtext }}
+                    {{ series_item.content_page.specific.subtitle|richtext }}
                   </div>
                 {% endif %}
-                {% if block.value.specific.author_count %}
+                {% if series_item.content_page.author_count %}
                   <p class="authors">
-                    {% if block.value.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ block.value.specific.author_count|pluralize }}:
-                    {% for item in block.value.specific.authors.all %}
+                    {% if series_item.content_page.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ series_item.content_page.author_count|pluralize }}:
+                    {% for item in series_item.content_page.authors.all %}
                       {% if item.hide_link %}
                         <span>{{ item.author.title }}</span>
                       {% else %}
@@ -50,10 +53,7 @@
                   </p>
                 {% endif %}
               </div>
-
             </article>
-          {% elif block.block_type == 'category_title' %}
-            <h4>{{ block.value }}</h4>
           {% endif %}
         {% endfor %}
       </div>
