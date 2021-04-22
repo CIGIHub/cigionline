@@ -11,76 +11,76 @@
 {% block content %}
   {% preview_cache_bust as is_preview %}
   {% cache 86400 article_landing_featured_items self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section class="featured">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 mb-3">
-          <h2 class="paragraph-heading">Featured</h2>
+    {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+    <section class="featured">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 mb-3">
+            <h2 class="paragraph-heading">Featured</h2>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          {% if featured_articles|length > 0 %}
-            {% include "includes/features/feature_content_xlarge.html" with content=featured_articles.0 %}
-          {% endif %}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-12 col-md-8">
-          {% if featured_articles|length > 1 %}
-            {% include "includes/features/feature_content_large.html" with content=featured_articles.1 %}
-          {% endif %}
-        </div>
-        <hr>
-        <div class="col-12 col-md-4 featured-small">
-          {% with featured_articles|slice:"2:7" as featured_small %}
-            {% for item in featured_small %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item %}
-            {% endfor %}
-          {% endwith %}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        {% with featured_articles|slice:"7:9" as featured_medium %}
-          {% for item in featured_medium %}
-            {% if forloop.counter > 1 %}
-              <hr>
+        <div class="row">
+          <div class="col-12">
+            {% if featured_articles|length > 0 %}
+              {% include "includes/features/feature_content_xlarge.html" with content=featured_articles.0 %}
             {% endif %}
-            <div class="col-12 col-md-6">
-              {% include "includes/features/feature_content_medium.html" with content=item with_subtitle=True %}
-            </div>
-          {% endfor %}
-        {% endwith %}
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-12 col-md-4 featured-small">
-          {% with featured_articles|slice:"10:15" as featured_small %}
-            {% for item in featured_small %}
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-12 col-md-8">
+            {% if featured_articles|length > 1 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_articles.1 %}
+            {% endif %}
+          </div>
+          <hr>
+          <div class="col-12 col-md-4 featured-small">
+            {% with featured_articles|slice:"2:7" as featured_small %}
+              {% for item in featured_small %}
+                {% if forloop.counter > 1 %}
+                  <hr>
+                {% endif %}
+                {% include "includes/features/feature_content_small.html" with content=item %}
+              {% endfor %}
+            {% endwith %}
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          {% with featured_articles|slice:"7:9" as featured_medium %}
+            {% for item in featured_medium %}
               {% if forloop.counter > 1 %}
                 <hr>
               {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item %}
+              <div class="col-12 col-md-6">
+                {% include "includes/features/feature_content_medium.html" with content=item with_subtitle=True %}
+              </div>
             {% endfor %}
           {% endwith %}
         </div>
         <hr>
-        <div class="col-12 col-md-8">
-          {% if featured_articles|length > 9 %}
-            {% include "includes/features/feature_content_large.html" with content=featured_articles.9 %}
-          {% endif %}
+        <div class="row">
+          <div class="col-12 col-md-4 featured-small">
+            {% with featured_articles|slice:"10:15" as featured_small %}
+              {% for item in featured_small %}
+                {% if forloop.counter > 1 %}
+                  <hr>
+                {% endif %}
+                {% include "includes/features/feature_content_small.html" with content=item %}
+              {% endfor %}
+            {% endwith %}
+          </div>
+          <hr>
+          <div class="col-12 col-md-8">
+            {% if featured_articles|length > 9 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_articles.9 %}
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
   {% endcache %}
-  {% cache 86400 article_series_swiper self.pk self.featured_article_series.0.id %}
+  {% cache 86400 article_series_swiper self.pk self.featured_article_series.0.id is_preview %}
     <section class="series">
       <div class="container">
         <div class="row">

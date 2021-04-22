@@ -55,148 +55,147 @@
 
 {% block content %}
   {% preview_cache_bust as is_preview %}
-  {% cache 86400 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+  {% cache 604800 publication_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+    {% block hero %}
+      {% if self.publication_type.title == 'Books' %}
+        {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors.all editors=self.editors.all %}
+      {% else %}
+        {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
+      {% endif %}
+    {% endblock %}
 
-  {% block hero %}
-    {% if self.publication_type.title == 'Books' %}
-      {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors.all editors=self.editors.all %}
-    {% else %}
-      {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
-    {% endif %}
-  {% endblock %}
+    {% include "includes/body.html" with body=self.body %}
 
-  {% include "includes/body.html" with body=self.body %}
-
-  {% if self.book_excerpt_download %}
-    <section class="book-excerpt-download">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <a class="button-action" href="{{self.book_excerpt_download.file.url}}">
-              Download Excerpt
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% if self.has_book_metadata %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <ul class="publication-book-metadata">
-            {% if self.isbn %}
-              <li>
-                <span>ISBN:</span> {{ self.isbn }}
-              </li>
-            {% endif %}
-            {% if self.isbn_ebook %}
-              <li>
-                <span>eBook ISBN:</span> {{ self.isbn_ebook }}
-              </li>
-            {% endif %}
-            {% if self.isbn_hardcover %}
-              <li>
-                <span>Hardcover ISBN:</span> {{ self.isbn_hardcover }}
-              </li>
-            {% endif %}
-            {% if self.book_publisher %}
-              <li>
-                <span>Publisher:</span> {{ self.book_publisher }}
-              </li>
-            {% endif %}
-            <li>
-              <span>Published:</span> {{ self.publishing_date|date:"F j, Y" }}
-            </li>
-            {% if self.book_pages %}
-              <li>
-                <span>Pages:</span> {{ self.book_pages }}
-              </li>
-            {% endif %}
-            {% if self.book_format %}
-              <li>
-                <span>Format:</span> {{ self.get_book_format_display }}
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
-  {% if self.publication_type.title == "Books" and self.embed_youtube %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8 publication-book-trailer">
-          <h2 class="paragraph-heading">
-            Book Trailer
-          </h2>
-          <div class="publication-book-trailer-embed">
-            {% embed self.embed_youtube max_width=620 %}
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
-  {% if self.editorial_reviews|length > 0 %}
-    <section class="editorial-reviews">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <h3>Editorial Reviews</h3>
-            {% for review in self.editorial_reviews %}
-              <div class="editorial-review">
-                {{ review }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% if self.embed_issuu %}
-    <section class="embed-issuu">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            {% embed self.embed_issuu max_width=1110 %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% if self.publication_series.live %}
-    <section class="publication-part-of-series">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <h2>Part of Series</h2>
-            <h3>
-              <a href="{{ self.publication_series.url }}">
-                {{ self.publication_series.title }}
+    {% if self.book_excerpt_download %}
+      <section class="book-excerpt-download">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <a class="button-action" href="{{self.book_excerpt_download.file.url}}">
+                Download Excerpt
               </a>
-            </h3>
-            {{ self.publication_series.specific.subtitle|richtext }}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if self.has_book_metadata %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <ul class="publication-book-metadata">
+              {% if self.isbn %}
+                <li>
+                  <span>ISBN:</span> {{ self.isbn }}
+                </li>
+              {% endif %}
+              {% if self.isbn_ebook %}
+                <li>
+                  <span>eBook ISBN:</span> {{ self.isbn_ebook }}
+                </li>
+              {% endif %}
+              {% if self.isbn_hardcover %}
+                <li>
+                  <span>Hardcover ISBN:</span> {{ self.isbn_hardcover }}
+                </li>
+              {% endif %}
+              {% if self.book_publisher %}
+                <li>
+                  <span>Publisher:</span> {{ self.book_publisher }}
+                </li>
+              {% endif %}
+              <li>
+                <span>Published:</span> {{ self.publishing_date|date:"F j, Y" }}
+              </li>
+              {% if self.book_pages %}
+                <li>
+                  <span>Pages:</span> {{ self.book_pages }}
+                </li>
+              {% endif %}
+              {% if self.book_format %}
+                <li>
+                  <span>Format:</span> {{ self.get_book_format_display }}
+                </li>
+              {% endif %}
+            </ul>
           </div>
         </div>
       </div>
-    </section>
-  {% endif %}
+    {% endif %}
 
-  {% if self.authors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors.all %}
-  {% endif %}
-  {% if self.editors|length > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.editors.all title_override="About the Editor" %}
-  {% endif %}
+    {% if self.publication_type.title == "Books" and self.embed_youtube %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8 publication-book-trailer">
+            <h2 class="paragraph-heading">
+              Book Trailer
+            </h2>
+            <div class="publication-book-trailer-embed">
+              {% embed self.embed_youtube max_width=620 %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
 
-  {% if self.recommended_content %}
-    {% include 'includes/recommended.html' with recommended=self.recommended_content %}
-  {% endif %}
+    {% if self.editorial_reviews|length > 0 %}
+      <section class="editorial-reviews">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <h3>Editorial Reviews</h3>
+              {% for review in self.editorial_reviews %}
+                <div class="editorial-review">
+                  {{ review }}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if self.embed_issuu %}
+      <section class="embed-issuu">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              {% embed self.embed_issuu max_width=1110 %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if self.publication_series.live %}
+      <section class="publication-part-of-series">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <h2>Part of Series</h2>
+              <h3>
+                <a href="{{ self.publication_series.url }}">
+                  {{ self.publication_series.title }}
+                </a>
+              </h3>
+              {{ self.publication_series.specific.subtitle|richtext }}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if self.authors|length > 0 %}
+      {% include "includes/about_the_author.html" with authors=self.authors.all %}
+    {% endif %}
+    {% if self.editors|length > 0 %}
+      {% include "includes/about_the_author.html" with authors=self.editors.all title_override="About the Editor" %}
+    {% endif %}
+
+    {% if self.recommended_content %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content %}
+    {% endif %}
   {% endcache %}
 {% endblock content %}
 

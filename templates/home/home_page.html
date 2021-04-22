@@ -13,121 +13,121 @@
 {% block content %}
   {% preview_cache_bust as is_preview %}
   {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
-  <section class="featured homepage-featured">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 col-md-8">
-          {% if featured_pages|length > 0 %}
-            {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
-          {% endif %}
-        </div>
-        <hr>
-        <div class="col-12 col-md-4 featured-small">
-        {% with featured_pages|slice:"4:" as featured_small %}
-          {% for item in featured_small %}
-            {% if forloop.counter > 1 %}
-              <hr>
+    <section class="featured homepage-featured">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-8">
+            {% if featured_pages|length > 0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
             {% endif %}
-            {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+          </div>
+          <hr>
+          <div class="col-12 col-md-4 featured-small">
+          {% with featured_pages|slice:"4:" as featured_small %}
+            {% for item in featured_small %}
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+            {% endfor %}
+          {% endwith %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+        <div class="row featured-medium">
+        {% with featured_pages|slice:"1:4" as featured_medium %}
+          {% for item in featured_medium %}
+            <div class="col-12 col-md-4">
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
+            </div>
           {% endfor %}
         {% endwith %}
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <hr>
+    </section>
+    <section class="homepage-featured-publications">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="homepage-subheading">
+              <a href="/publications/">
+                Publications
+              </a>
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          {% for publication in featured_publications %}
+            <div class="col-12 col-md-3 homepage-featured-publication-row">
+              {% include "includes/features/feature_publication_teaser.html" with publication=publication %}
+            </div>
+          {% endfor %}
         </div>
       </div>
-      <div class="row featured-medium">
-      {% with featured_pages|slice:"1:4" as featured_medium %}
-        {% for item in featured_medium %}
-          <div class="col-12 col-md-4">
-            {% if forloop.counter > 1 %}
-              <hr>
+    </section>
+    <section class="homepage-promotion-blocks">
+      <div class="container">
+        <div class="row">
+          {% for promotion_block in promotion_blocks %}
+            <div class="homepage-promotion-block col-md-6">
+              {% include "includes/promotion_block.html" with promotion_block=promotion_block %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <section class="homepage-featured-highlights">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="homepage-subheading"><span>Highlights</span></h2>
+            {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="featured homepage-featured-multimedia">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="homepage-subheading dark-mode">
+              <a href="/multimedia/">
+                Multimedia
+              </a>
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-8">
+            {% if featured_multimedia|length > 0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_multimedia.0 dark_mode=True %}
             {% endif %}
-            {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
           </div>
-        {% endfor %}
-      {% endwith %}
-      </div>
-    </div>
-  </section>
-  <section class="homepage-featured-publications">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="homepage-subheading">
-            <a href="/publications/">
-              Publications
-            </a>
-          </h2>
-        </div>
-      </div>
-      <div class="row">
-        {% for publication in featured_publications %}
-          <div class="col-12 col-md-3 homepage-featured-publication-row">
-            {% include "includes/features/feature_publication_teaser.html" with publication=publication %}
+          {% if featured_multimedia|length > 1 %}
+          <hr>
+          <div class="col-12 col-md-4 featured-small">
+            {% with featured_multimedia|slice:"1:" as featured_multimedia_small %}
+              {% for item in  featured_multimedia_small %}
+                {% if forloop.counter > 1 %}
+                  <hr>
+                {% endif %}
+                {% include "includes/features/feature_content_small.html" with content=item dark_mode=True %}
+              {% endfor %}
+            {% endwith %}
           </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-<section class="homepage-promotion-blocks">
-  <div class="container">
-    <div class="row">
-      {% for promotion_block in promotion_blocks %}
-        <div class="homepage-promotion-block col-md-6">
-          {% include "includes/promotion_block.html" with promotion_block=promotion_block %}
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-  <section class="homepage-featured-highlights">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="homepage-subheading"><span>Highlights</span></h2>
-          {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="featured homepage-featured-multimedia">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="homepage-subheading dark-mode">
-            <a href="/multimedia/">
-              Multimedia
-            </a>
-          </h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-8">
-          {% if featured_multimedia|length > 0 %}
-            {% include "includes/features/feature_content_large.html" with content=featured_multimedia.0 dark_mode=True %}
           {% endif %}
         </div>
-        {% if featured_multimedia|length > 1 %}
-        <hr>
-        <div class="col-12 col-md-4 featured-small">
-          {% with featured_multimedia|slice:"1:" as featured_multimedia_small %}
-            {% for item in  featured_multimedia_small %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item dark_mode=True %}
-            {% endfor %}
-          {% endwith %}
-        </div>
-        {% endif %}
       </div>
-    </div>
-  </section>
+    </section>
   {% endcache %}
-  {% cache 86400 homepage_featured_events self.featured_events.0.id %}
+  {% cache 86400 homepage_featured_events self.featured_events.0.id is_preview %}
     <section class="homepage-featured-events">
       <div class="container">
         <div class="row">
@@ -150,25 +150,25 @@
     </section>
   {% endcache %}
   {% cache 86400 homepage_featured_experts self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
-  <section class="homepage-featured-experts">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="homepage-subheading">
-            <a href="/experts/">
-              Experts
-            </a>
-          </h2>
+    <section class="homepage-featured-experts">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="homepage-subheading">
+              <a href="/experts/">
+                Experts
+              </a>
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          {% for expert in featured_experts %}
+            <div class="col-12 col-md-4 homepage-featured-expert-row">
+              {% include "includes/features/feature_expert_short.html" with expert=expert %}
+            </div>
+          {% endfor %}
         </div>
       </div>
-      <div class="row">
-        {% for expert in featured_experts %}
-          <div class="col-12 col-md-4 homepage-featured-expert-row">
-            {% include "includes/features/feature_expert_short.html" with expert=expert %}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
+    </section>
   {% endcache %}
 {% endblock content %}
