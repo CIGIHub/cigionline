@@ -2,34 +2,4 @@
 {% load wagtailimages_tags %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  {% if self.image_hero %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <figure>
-            {% image self.image_hero width-1280 %}
-            {% if self.image_hero.title %}
-              <figcaption>
-                {{ self.image_hero.title }}
-              </figcaption>
-            {% endif %}
-          </figure>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-  {% include "includes/body.html" with body=self.body %}
-
-  {% if self.related_files %}
-    <section class="related-files">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
 {% endblock content %}
