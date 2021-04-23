@@ -109,57 +109,13 @@ class HomePage(Page):
         ).in_bulk(featured_multimedia_ids)
         return [multimedia[x] for x in featured_multimedia_ids]
 
-    def get_context(self, request):
-        context = super().get_context(request)
-
-        context['featured_pages'] = self.get_featured_pages()
-        context['featured_experts'] = self.get_featured_experts()
-        context['highlight_pages'] = self.get_highlight_pages()
-        context['featured_multimedia'] = self.get_featured_multimedia()
-
-        return context
-
-    def featured_publications(self):
+    def get_featured_publications(self):
         return PublicationPage.objects.prefetch_related(
             'authors__author',
             'topics',
         ).live().public().order_by('-publishing_date')[:4]
 
-    def featured_multimedia_large(self):
-        first_featured_multimedia = self.featured_multimedia.prefetch_related(
-            'featured_multimedia__authors__author',
-            'featured_multimedia__topics',
-        ).first()
-        if first_featured_multimedia:
-            return first_featured_multimedia.featured_multimedia
-        return False
-
-    def featured_multimedia_small(self):
-        featured_multimedia_small = []
-        for item in self.featured_multimedia.prefetch_related(
-            'featured_multimedia__authors__author',
-            'featured_multimedia__topics',
-        ).all()[1:]:
-            featured_multimedia_small.append(item.featured_multimedia)
-        return featured_multimedia_small
-
-    def featured_experts_list(self):
-        featured_experts = []
-        for item in self.featured_experts.prefetch_related(
-            'featured_expert',
-        ).all()[:3]:
-            featured_experts.append(item.featured_expert)
-        return featured_experts
-
-    def promotion_blocks_list(self):
-        promotion_blocks_list = []
-        for item in self.promotion_blocks.prefetch_related(
-            'promotion_block',
-        ).all()[:2]:
-            promotion_blocks_list.append(item.promotion_block)
-        return promotion_blocks_list
-
-    def featured_events(self):
+    def get_featured_events(self):
         featured_events = []
         now = timezone.now()
         future_events = EventPage.objects.prefetch_related(
@@ -176,6 +132,25 @@ class HomePage(Page):
         else:
             featured_events = future_events
         return featured_events
+
+    def get_promotion_blocks(self):
+        promotion_blocks_list = []
+        for item in self.promotion_blocks.prefetch_related(
+            'promotion_block',
+        ).all()[:2]:
+            promotion_blocks_list.append(item.promotion_block)
+        return promotion_blocks_list
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['featured_pages'] = self.get_featured_pages()
+        context['featured_experts'] = self.get_featured_experts()
+        context['highlight_pages'] = self.get_highlight_pages()
+        context['featured_multimedia'] = self.get_featured_multimedia()
+        context['featured_publications'] = self.get_featured_publications()
+        context['featured_events'] = self.get_featured_events()
+        context['promotion_blocks'] = self.get_promotion_blocks()
+        return context
 
     max_count = 1
     subpage_types = [

@@ -17,10 +17,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core.blocks import (
-    CharBlock,
-    PageChooserBlock,
-)
+from wagtail.core.blocks import PageChooserBlock
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -35,52 +32,24 @@ class ArticleLandingPage(BasicPageAbstract, Page):
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
-    def featured_xlarge(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[0:1]
+    def get_featured_articles(self):
+        featured_article_ids = self.featured_articles.order_by('sort_order').values_list('article_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_article_ids)
+        return [pages[x] for x in featured_article_ids]
 
-    def featured_large_1(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[1:2]
-
-    def featured_small_1(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[2:7]
-
-    def featured_medium_1(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[7:9]
-
-    def featured_small_2(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[10:15]
-
-    def featured_large_2(self):
-        return self.featured_articles.prefetch_related(
-            'article_page',
-            'article_page__authors__author',
-            'article_page__topics',
-        ).all()[9:10]
-
-    def all_article_series(self):
+    def get_featured_article_series(self):
         return ArticleSeriesPage.objects.prefetch_related(
             'topics',
         ).live().public().order_by('-publishing_date')[:10]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['featured_articles'] = self.get_featured_articles()
+        context['featured_article_series'] = self.get_featured_article_series()
+        return context
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -467,12 +436,11 @@ class ArticlePage(
     @property
     def article_series_category(self):
         category = ''
-        for item in self.article_series.specific.series_items:
-            if item.block_type == 'category_title':
-                category = item.value
-            else:
-                if item.value.specific.id == self.id:
-                    return category
+        for series_item in self.article_series.specific.article_series_items:
+            if series_item.category_title:
+                category = series_item.category_title
+            if series_item.content_page.id == self.id:
+                return category
 
     class Meta:
         verbose_name = 'Opinion'
@@ -567,16 +535,6 @@ class ArticleSeriesPage(
         verbose_name='Poster image',
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
-    series_items = StreamField(
-        [
-            ('series_item', PageChooserBlock(
-                required=True,
-                page_type=['articles.ArticlePage', 'multimedia.MultimediaPage'],
-            )),
-            ('category_title', CharBlock(required=True)),
-        ],
-        blank=True,
-    )
     short_description = RichTextField(
         blank=True,
         null=False,
@@ -598,6 +556,13 @@ class ArticleSeriesPage(
     @property
     def image_poster_url(self):
         return self.image_poster.get_rendition('fill-672x895').url
+
+    @property
+    def article_series_items(self):
+        return self.series_items.prefetch_related(
+            'content_page',
+            'content_page__authors__author',
+        ).all()
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -627,7 +592,7 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('series_items'),
+                InlinePanel('series_items'),
             ],
             heading='Series Items',
             classname='collapsible collapsed',
@@ -696,10 +661,8 @@ class ArticleSeriesPage(
         series_contributors = []
         item_people = set()
 
-        for item in self.series_items:
-            if item.block_type == 'category_title':
-                continue
-            people = item.value.specific.authors.all()
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
             people_string = ''
 
             for person in people:
@@ -714,7 +677,7 @@ class ArticleSeriesPage(
                     item_people.add(person_string)
 
             if people_string not in item_people:
-                series_contributors.append({'item': item.value.specific, 'contributors': people})
+                series_contributors.append({'item': series_item.content_page, 'contributors': people})
                 item_people.add(people_string)
 
         return series_contributors
@@ -724,17 +687,16 @@ class ArticleSeriesPage(
         series_contributors = []
         item_people = set()
 
-        for item in self.series_items:
-            if item.block_type == 'series_item':
-                people = item.value.specific.authors.all()
-                for person in people:
-                    if person.author.title not in item_people:
-                        series_contributors.append({
-                            'id': person.author.id,
-                            'title': person.author.title,
-                            'url': person.author.url,
-                        })
-                        item_people.add(person.author.title)
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
+            for person in people:
+                if person.author.title not in item_people:
+                    series_contributors.append({
+                        'id': person.author.id,
+                        'title': person.author.title,
+                        'url': person.author.url,
+                    })
+                    item_people.add(person.author.title)
         return series_contributors
 
     @property
@@ -743,10 +705,8 @@ class ArticleSeriesPage(
         series_contributors = []
         item_people = set()
 
-        for item in self.series_items:
-            if item.block_type == 'category_title':
-                continue
-            people = item.value.specific.authors.all()
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
 
             # Skip items that have more than 2 authors/speakers. For
             # example, in the After COVID series, there is an introductory
@@ -757,7 +717,7 @@ class ArticleSeriesPage(
                 for person in people:
                     if person.author.title not in item_people:
                         series_contributors.append({
-                            'item': item.value.specific,
+                            'item': series_item.content_page,
                             'contributors': [person.author],
                             'last_name': person.author.last_name,
                         })
@@ -770,10 +730,8 @@ class ArticleSeriesPage(
     def series_authors(self):
         series_authors = []
         series_people = set()
-        for item in self.series_items:
-            if item.block_type == 'category_title':
-                continue
-            people = item.value.specific.authors.all()
+        for series_item in self.article_series_items:
+            people = series_item.content_page.authors.all()
             for person in people:
                 if person.author.title not in series_people:
                     series_authors.append(person.author)
@@ -783,3 +741,27 @@ class ArticleSeriesPage(
     class Meta:
         verbose_name = 'Opinion Series'
         verbose_name_plural = 'Opinion Series'
+
+
+class ArticleSeriesPageSeriesItem(Orderable):
+    article_series_page = ParentalKey(
+        'articles.ArticleSeriesPage',
+        related_name='series_items',
+    )
+    content_page = models.ForeignKey(
+        'core.ContentPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Series Item',
+    )
+    category_title = models.CharField(blank=True, max_length=255)
+
+    panels = [
+        FieldPanel('category_title'),
+        PageChooserPanel(
+            'content_page',
+            ['articles.ArticlePage', 'multimedia.MultimediaPage'],
+        ),
+    ]
