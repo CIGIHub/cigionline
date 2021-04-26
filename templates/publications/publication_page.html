@@ -187,10 +187,10 @@
     {% endif %}
 
     {% if self.author_count > 0 %}
-      {% include "includes/about_the_author.html" with authors=self.authors.all %}
+      {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
     {% endif %}
     {% if self.editor_count > 0 %}
-      {% include "includes/about_the_author.html" with authors=self.editors.all title_override="About the Editor" %}
+      {% include "includes/about_the_author.html" with authors=self.editors.all editor_count=self.editor_count title_override="About the Editor" %}
     {% endif %}
 
     {% if self.recommended_content %}
