@@ -735,7 +735,7 @@ class NewsletterBlock(blocks.StructBlock):
                 event_time = content_page.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
-                if not 'is_html_string' in context:
+                if 'is_html_string' not in context:
                     context['text'].source = context['text'].source.replace('<p>', f'<p><b>{event_time}{event_location}{event_country}:</b> ', 1)
 
         return context
