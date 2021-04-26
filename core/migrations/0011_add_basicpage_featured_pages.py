@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailcore', '0060_fix_workflow_unique_constraint'),
-        ('core', '0010_add_theme_to_basicpage'),
+        ('core', '0010_add_index_contentpage_publishing_date'),
     ]
 
     operations = [
