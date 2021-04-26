@@ -18,18 +18,6 @@
 {% block og_type %}
   <meta property="og:type" content="article" />
 {% endblock %}
-{% block og_image %}
-  {% if self.image_social %}
-    {% image self.image_social fill-1600x900 as og_image %}
-  {% elif self.image_hero %}
-    {% image self.image_hero fill-1600x900 as og_image %}
-  {% endif %}
-  {% if og_image %}
-    <meta property="og:image" content="{{ og_image.url }}" />
-  {% else %}
-    {% include "includes/og_image_default.html" %}
-  {% endif %}
-{% endblock %}
 {% block extra_og_meta %}
   {% if self.publishing_date %}
     <meta property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
@@ -44,26 +32,6 @@
   {% cache 604800 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
     {% block hero %}
       {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
-      {% if self.image_hero %}
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-lg-10">
-              <figure class="article-image-hero">
-                {% if self.image_hero.file.url|file_extension == '.gif' %}
-                  <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.title}}" />
-                {% else %}
-                  {% image self.image_hero width-1760 %}
-                {% endif %}
-                {% if self.image_hero.title %}
-                  <figcaption>
-                    {{ self.image_hero.title }}
-                  </figcaption>
-                {% endif %}
-              </figure>
-            </div>
-          </div>
-        </div>
-      {% endif %}
     {% endblock %}
     {% block article_content %}
       {% if self.body %}
