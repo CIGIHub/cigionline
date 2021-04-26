@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0010_add_index_contentpage_publishing_date'),
+        ('core', '0011_add_basicpage_featured_pages'),
     ]
 
     operations = [
