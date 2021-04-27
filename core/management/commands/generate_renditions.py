@@ -2,6 +2,7 @@ from articles.models import ArticlePage
 from django.core.management.base import BaseCommand
 from events.models import EventPage
 from multimedia.models import MultimediaPage
+from publications.models import PublicationPage
 from pathlib import Path
 
 RENDITIONS = [
@@ -108,3 +109,30 @@ class Command(BaseCommand):
                     print(f'Multimedia {multimedia.id}: Generating large feature image from image_hero')
                     multimedia.image_hero.get_rendition('fill-1440x990')
                 print(f'Multimedia {multimedia.id}: Finished')
+
+        publication_count = PublicationPage.objects.count()
+        print(f'Generating image renditions for {publication_count} publications')
+        for i in range((publication_count // batch_limit) + 1):
+            publications = PublicationPage.objects.all().order_by('id')[i * batch_limit:(i * batch_limit) + batch_limit]
+            for publication in publications:
+                print(f'Publication {publication.id}: Starting')
+                if publication.image_social:
+                    print(f'Publication {publication.id}: Generating og image from image_social')
+                    publication.image_social.get_rendition('fill-1600x900')
+                elif publication.image_hero and Path(publication.image_hero.file.url) != '.gif':
+                    print(f'Publication {publication.id}: Generating og image from image_hero')
+                    publication.image_hero.get_rendition('fill-1600x900')
+                if publication.image_cover:
+                    print(f'Publication {publication.id}: Generating cover image')
+                    publication.image_cover.get_rendition('fill-600x900')
+                if publication.image_feature and Path(publication.image_feature.file.url) != '.gif':
+                    print(f'Publication {publication.id}: Generating medium feature image from image_feature')
+                    publication.image_feature.get_rendition('fill-520x390')
+                    print(f'Publication {publication.id}: Generating large feature image from image_feature')
+                    publication.image_feature.get_rendition('fill-1440x990')
+                elif publication.image_hero and Path(publication.image_hero.file.url) != '.gif':
+                    print(f'Publication {publication.id}: Generating medium feature image from image_hero')
+                    publication.image_hero.get_rendition('fill-520x390')
+                    print(f'Publication {publication.id}: Generating large feature image from image_hero')
+                    publication.image_hero.get_rendition('fill-1440x990')
+                print(f'Publication {publication.id}: Finished')
