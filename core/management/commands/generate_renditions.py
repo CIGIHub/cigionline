@@ -44,5 +44,5 @@ class Command(BaseCommand):
             for rendition in RENDITIONS:
                 try:
                     image.get_rendition(rendition)
-                except Exception as e:
+                except Exception:
                     pass
