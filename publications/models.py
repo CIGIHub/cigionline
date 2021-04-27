@@ -264,7 +264,7 @@ class PublicationPage(
         """
 
         # @todo test
-        return (self.authors.count() + self.editors.count()) > 3
+        return (self.author_count + self.editor_count) > 3
 
     def has_book_metadata(self):
         return (
