@@ -10,6 +10,7 @@ from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
@@ -248,18 +249,33 @@ class TopicPage(ArchiveablePageAbstract, Page):
 
     @property
     def featured_latest_pages(self):
-        featured_pages = []
-        for item in self.featured_pages.prefetch_related(
-            'featured_page',
-        ).all()[:3]:
-            featured_pages.append(item.featured_page.specific)
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_page_ids)
+        featured_pages = [pages[x] for x in featured_page_ids]
         if len(featured_pages) < 3:
-            for item in self.content_pages.live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))]:
-                featured_pages.append(item.specific)
+            featured_pages = featured_pages + list(self.content_pages.specific().prefetch_related(
+                'authors__author',
+                'topics',
+            ).live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))])
         return featured_pages
 
     content_panels = Page.content_panels + [
-        FieldPanel('description')
+        FieldPanel('description'),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=3,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featuerd Content',
+            classname='collapsible collapsed',
+        ),
     ]
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,

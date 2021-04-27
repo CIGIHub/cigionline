@@ -71,7 +71,7 @@ class NewsletterPage(Page):
     ]
 
     def html_string(self):
-        return render_to_string('newsletters/newsletter_html.html', {'self': self, 'page': self})
+        return render_to_string('newsletters/newsletter_html.html', {'self': self, 'page': self, 'is_html_string': True})
 
     parent_page_types = ['newsletters.NewsletterListPage']
     subpage_types = []
