@@ -718,24 +718,25 @@ class NewsletterBlock(blocks.StructBlock):
         if value.get('image'):
             context['image_url'] = value.get("image").get_rendition("fill-600x238").url
 
-        content_page = value.get('content')
+        content_page = value.get('content').specific
         if content_page:
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
-            context['text'] = value.get('text_override') if value.get('text_override') else content_page.specific.short_description
+            context['text'] = value.get('text_override') if value.get('text_override') else content_page.short_description
             if value.get('image_override'):
                 context['image_url'] = value.get("image_override").get_rendition("fill-600x238").url
-            elif content_page.specific.image_hero:
-                context['image_url'] = content_page.specific.image_hero.get_rendition("fill-600x238").url
-                context['image_alt'] = content_page.specific.image_hero.title
+            elif content_page.image_hero:
+                context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").url
+                context['image_alt'] = content_page.image_hero.title
 
             if not value.get('url'):
                 context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
 
-            if content_page.specific.contenttype == 'Event':
-                event_time = content_page.specific.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
-                event_location = f' – {content_page.specific.location_city}' if content_page.specific.location_city else ''
-                event_country = f', {content_page.specific.location_country}' if content_page.specific.location_country else ''
-                context['text'].source = context['text'].source.replace('<p>', f'<p><b>{event_time}{event_location}{event_country}:</b> ', 1)
+            if content_page.contenttype == 'Event':
+                event_time = content_page.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
+                event_location = f' – {content_page.location_city}' if content_page.location_city else ''
+                event_country = f', {content_page.location_country}' if content_page.location_country else ''
+                if 'is_html_string' not in context:
+                    context['text'].source = context['text'].source.replace('<p>', f'<p><b>{event_time}{event_location}{event_country}:</b> ', 1)
 
         return context
 
