@@ -1,7 +1,7 @@
 from articles.models import ArticlePage
 from django.core.management.base import BaseCommand
+from events.models import EventPage
 from pathlib import Path
-# from wagtail.images import get_image_model
 
 RENDITIONS = [
     'fill-1600x900',  # og
@@ -43,7 +43,7 @@ class Command(BaseCommand):
         article_count = ArticlePage.objects.count()
         print(f'Generating image renditions for {article_count} articles')
         for i in range((article_count // batch_limit) + 1):
-            articles = ArticlePage.objects.all().order_by('id')[i * 50:(i * 50) + 50]
+            articles = ArticlePage.objects.all().order_by('id')[i * batch_limit:(i * batch_limit) + batch_limit]
             for article in articles:
                 print(f'Article {article.id}: Starting')
                 if article.image_social:
@@ -67,12 +67,19 @@ class Command(BaseCommand):
                     article.image_hero.get_rendition('fill-1440x990')
                 print(f'Article {article.id}: Finished')
 
-        # Image = get_image_model()
-        # images = Image.objects.all()
-        # print(f"Generating renditions for {images.count()} images...")
-        # for image in images:
-        #     for rendition in RENDITIONS:
-        #         try:
-        #             image.get_rendition(rendition)
-        #         except Exception:
-        #             pass
+        event_count = EventPage.objects.count()
+        print(f'Generating image renditions for {event_count} events')
+        for i in range((event_count // batch_limit) + 1):
+            events = EventPage.objects.all().order_by('id')[i * batch_limit:(i * batch_limit) + batch_limit]
+            for event in events:
+                print(f'Event {event.id}: Starting')
+                if event.image_social:
+                    print(f'Event {event.id}: Generating og image from image_social')
+                    event.image_social.get_rendition('fill-1600x900')
+                elif event.image_hero and Path(event.image_hero.file.url) != '.gif':
+                    print(f'Event {event.id}: Generating og image from image_hero')
+                    event.image_hero.get_rendition('fill-1600x900')
+                if event.image_hero and Path(event.image_hero.file.url) != '.gif':
+                    print(f'Event {event.id}: Generating hero image')
+                    event.image_hero.get_rendition('width-1280')
+                print(f'Event {event.id}: Finished')
