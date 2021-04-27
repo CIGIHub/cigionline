@@ -1,15 +1,5 @@
-import base64
-
-import requests
-
-from django.conf import settings
-from django.core.cache import cache
-from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
-from django.db.models import Q
-
 from wagtail.images import get_image_model
-
 
 RENDITIONS = [
     'fill-1600x900',
@@ -47,17 +37,12 @@ RENDITIONS = [
 class Command(BaseCommand):
 
     def handle(self, **options):
-
         Image = get_image_model()
-
         images = Image.objects.all()
-
         print(f"Generating renditions for {images.count()} images...")
-
         for image in images:
-            
             for rendition in RENDITIONS:
                 try:
                     image.get_rendition(rendition)
-                except:
+                except Exception as e:
                     pass
