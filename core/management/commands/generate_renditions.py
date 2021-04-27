@@ -1,4 +1,5 @@
 from articles.models import ArticlePage
+from datetime import datetime
 from django.core.management.base import BaseCommand
 from events.models import EventPage
 from multimedia.models import MultimediaPage
@@ -42,6 +43,9 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         batch_limit = 50
+
+        print(f'Starting... {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+
         article_count = ArticlePage.objects.count()
         print(f'Generating image renditions for {article_count} articles')
         for i in range((article_count // batch_limit) + 1):
@@ -136,3 +140,5 @@ class Command(BaseCommand):
                     print(f'Publication {publication.id}: Generating large feature image from image_hero')
                     publication.image_hero.get_rendition('fill-1440x990')
                 print(f'Publication {publication.id}: Finished')
+
+        print(f'Finished... {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
