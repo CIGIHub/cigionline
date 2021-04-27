@@ -3,6 +3,7 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from events.models import EventPage
 from multimedia.models import MultimediaPage
+from people.models import PersonPage
 from publications.models import PublicationPage
 from pathlib import Path
 
@@ -140,5 +141,21 @@ class Command(BaseCommand):
                     print(f'Publication {publication.id}: Generating large feature image from image_hero')
                     publication.image_hero.get_rendition('fill-1440x990')
                 print(f'Publication {publication.id}: Finished')
+
+        person_count = PersonPage.objects.count()
+        print(f'Generating image renditions for {person_count} people')
+        for i in range((person_count // batch_limit) + 1):
+            people = PersonPage.objects.all().order_by('id')[i * batch_limit:(i * batch_limit) + batch_limit]
+            for person in people:
+                print(f'Person {person.id}: Starting')
+                if person.image_media:
+                    print(f'Person {person.id}: Generating og image from image_media')
+                    person.image_media.get_rendition('fill-1600x900')
+                if person.image_square:
+                    print(f'Person {person.id}: Generating square image for expert page')
+                    person.image_square.get_rendition('fill-200x200')
+                    print(f'Person {person.id}: Generating square image for experts landing page')
+                    person.image_square.get_rendition('fill-300x300')
+                print(f'Person {person.id}: Finished')
 
         print(f'Finished... {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
