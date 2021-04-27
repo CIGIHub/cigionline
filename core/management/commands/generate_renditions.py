@@ -1,6 +1,7 @@
 from articles.models import ArticlePage
 from django.core.management.base import BaseCommand
 from events.models import EventPage
+from multimedia.models import MultimediaPage
 from pathlib import Path
 
 RENDITIONS = [
@@ -83,3 +84,27 @@ class Command(BaseCommand):
                     print(f'Event {event.id}: Generating hero image')
                     event.image_hero.get_rendition('width-1280')
                 print(f'Event {event.id}: Finished')
+
+        multimedia_count = MultimediaPage.objects.count()
+        print(f'Generating image renditions for {multimedia_count} multimedia')
+        for i in range((multimedia_count // batch_limit) + 1):
+            multimedia_pages = MultimediaPage.objects.all().order_by('id')[i * batch_limit:(i * batch_limit) + batch_limit]
+            for multimedia in multimedia_pages:
+                print(f'Multimedia {multimedia.id}: Starting')
+                if multimedia.image_social:
+                    print(f'Multimedia {multimedia.id}: Generating og image from image_social')
+                    multimedia.image_social.get_rendition('fill-1600x900')
+                elif multimedia.image_hero and Path(multimedia.image_hero.file.url) != '.gif':
+                    print(f'Multimedia {multimedia.id}: Generating og image from image_hero')
+                    multimedia.image_hero.get_rendition('fill-1600x900')
+                if multimedia.image_feature and Path(multimedia.image_feature.file.url) != '.gif':
+                    print(f'Multimedia {multimedia.id}: Generating medium feature image from image_feature')
+                    multimedia.image_feature.get_rendition('fill-520x390')
+                    print(f'Multimedia {multimedia.id}: Generating large feature image from image_feature')
+                    multimedia.image_feature.get_rendition('fill-1440x990')
+                elif multimedia.image_hero and Path(multimedia.image_hero.file.url) != '.gif':
+                    print(f'Multimedia {multimedia.id}: Generating medium feature image from image_hero')
+                    multimedia.image_hero.get_rendition('fill-520x390')
+                    print(f'Multimedia {multimedia.id}: Generating large feature image from image_hero')
+                    multimedia.image_hero.get_rendition('fill-1440x990')
+                print(f'Multimedia {multimedia.id}: Finished')
