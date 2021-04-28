@@ -378,9 +378,14 @@ class ContentPage(Page, SearchablePageAbstract):
             return self.specific.pdf_downloads[0].value['file'].url
         return ''
 
+    @cached_property
     def author_count(self):
         # @todo test this
         return self.authors.count()
+
+    @cached_property
+    def editor_count(self):
+        return self.editors.count()
 
     def get_recommended(self):
         recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)[:3]
