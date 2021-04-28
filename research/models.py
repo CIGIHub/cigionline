@@ -31,7 +31,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
-
+from streams.blocks import IgcTimelineBlock
 
 class ProjectListPage(Page):
     max_count = 1
@@ -56,51 +56,6 @@ class ProjectPage(
             BasicPageAbstract.body_poster_block,
             BasicPageAbstract.body_recommended_block,
             BasicPageAbstract.body_text_border_block,
-            ('igc_timeline', StructBlock([
-                ('date', CharBlock(required=True)),
-                ('title', CharBlock(required=False)),
-                ('body', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('location', CharBlock(required=False)),
-                ('countries_represented', ImageChooserBlock(required=False)),
-                ('outcomes', StreamBlock(
-                    [
-                        ('outcome', StructBlock([
-                            ('date', DateBlock(required=False)),
-                            ('text', RichTextBlock(
-                                features=['bold', 'italic', 'link'],
-                                required=False,
-                            )),
-                        ])),
-                    ],
-                    required=False,
-                )),
-                ('witnesses', StreamBlock(
-                    [
-                        ('witness_date', StructBlock([
-                            ('date', DateBlock(required=False)),
-                            ('witnesses', StreamBlock(
-                                [
-                                    ('witnesses_full_session', StructBlock([
-                                        ('title', CharBlock(required=False)),
-                                        ('witness_transcript', URLBlock(required=False)),
-                                        ('witness_video', URLBlock(required=False)),
-                                    ])),
-                                    ('witness', StructBlock([
-                                        ('name', CharBlock(required=False)),
-                                        ('title', CharBlock(required=False)),
-                                        ('witness_transcript', URLBlock(required=False)),
-                                        ('witness_video', URLBlock(required=False)),
-                                    ])),
-                                ],
-                            )),
-                        ])),
-                    ],
-                    required=False,
-                )),
-            ])),
         ],
         blank=True,
     )
@@ -227,6 +182,38 @@ class ProjectPage(
     class Meta:
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
+
+
+class IgcTimelinePage(BasicPageAbstract, Page):
+    """
+    A special singleton page for /igc/timeline
+    """
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    templates = 'research/igc_timeline_page.html'
+
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            ('igc_timeline', IgcTimelineBlock()),
+        ],
+        blank=True,
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    class Meta:
+        verbose_name = 'IGC Timeline Page'
 
 
 class ProjectType(index.Indexed, models.Model):
