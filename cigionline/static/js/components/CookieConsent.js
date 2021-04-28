@@ -14,7 +14,7 @@ class CookieConsent extends React.Component {
   }
 
   handleConsent() {
-    fetch(encodeURI('/cookie_consent/'));
+    document.cookie = 'cigionline.accept.privacy.notice=1';
     this.setState({
       consentClicked: true,
     });
