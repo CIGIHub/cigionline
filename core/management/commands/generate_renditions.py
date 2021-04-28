@@ -51,7 +51,7 @@ class Command(BaseCommand):
                 for block in article.body:
                     if block.block_type == 'image' or block.block_type == 'chart':
                         print(f'Article {article.id} Generating image for ImageBlock')
-                        block.value.image.get_rendition('width-640')
+                        block.value['image'].get_rendition('width-640')
                 print(f'Article {article.id}: Finished')
 
         article_series_count = ArticleSeriesPage.objects.count()
