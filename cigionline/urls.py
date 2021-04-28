@@ -1,5 +1,4 @@
 from annual_reports import views as annual_report_views
-from core.views import cookie_consent
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -21,7 +20,6 @@ urlpatterns = [
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
 
-    url(r'^cookie_consent/$', cookie_consent),
     url(r'^search/$', search_views.search, name='search'),
     url(r'^api/experts/$', people_views.all_experts),
     url(r'^api/search/$', search_views.search_api),
