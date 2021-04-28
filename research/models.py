@@ -18,12 +18,7 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.core.blocks import (
     CharBlock,
-    DateBlock,
     PageChooserBlock,
-    RichTextBlock,
-    StreamBlock,
-    StructBlock,
-    URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
@@ -32,6 +27,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from streams.blocks import IgcTimelineBlock
+
 
 class ProjectListPage(Page):
     max_count = 1

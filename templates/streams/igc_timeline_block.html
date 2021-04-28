@@ -3,21 +3,17 @@
 <div class="container igc-timeline-block">
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2 igc-timeline">
-
       <div class="timeline-separator">
         <div class="timeline-red-dot"></div>
         <div class="timeline-vertical-line"></div>
       </div>
       <div class="timeline-contents">
         <div class="timeline-date">{{self.date}}</div>
-    
         {% if self.title %}
           <div class="timeline-title">{{self.title}}</div>
         {% endif %}
-    
         <div class="timeline-location">{{self.location}}</div>
         <div class="timeline-body">{{self.body}}</div>
-    
         {% if self.countries_represented %}
           <div class="timeline-title">Countries Represented</div>
           <div class="timeline-countries">
@@ -27,7 +23,6 @@
             {% image self.countries_represented fill-1440x768 %}
           </div>
         {% endif %}
-    
         {% if self.witnesses %}
           <div class="timeline-title">Witnesses</div>
           <div class="witnesses-dates date-container"></div>
@@ -37,7 +32,7 @@
                 {% if witness_date_block.value.date %}
                 <div class="witnesses-date date">
                   <time>
-                    {{ witness_date_block.value.date}}
+                    {{ witness_date_block.value.date }}
                   </time>
                 </div>
                 {% endif %}
@@ -48,20 +43,18 @@
                         <div class="witness-row">
                           <div class="witness-info">
                             <div class="witness-full-session">
-                              {{ witnesses_block.value.title}}
+                              {{ witnesses_block.value.title }}
                             </div>
                           </div>
-                      
                           <div class="witness-links">
-                            {% if  witnesses_block.value.witness_transcript %}
+                            {% if witnesses_block.value.witness_transcript %}
                               <div class="witness-transcript">
                                 <a href="{{ witnesses_block.value.witness_transcript }}">
                                   <i class="fas fa-file-alt"></i><span class="witness-link-text"> Transcript</span>
                                 </a>
                               </div>
                             {% endif %}
-                      
-                            {% if  witnesses_block.value.witness_video %}
+                            {% if witnesses_block.value.witness_video %}
                               <div class="witness-video">
                                 <a href="{{ witnesses_block.value.witness_video }}">
                                   <i class="fas fa-play-circle"></i><span class="witness-link-text"> Video</span>
@@ -76,14 +69,12 @@
                         <div class="witness-row">
                           <div class="witness-info">
                             {% if witnesses_block.value.name %}
-                              <div class="witness-name">{{witnesses_block.value.name}}</div>
+                              <div class="witness-name">{{ witnesses_block.value.name }}</div>
                             {% endif %}
-                      
                             {% if witnesses_block.value.title %}
-                              <div class="witness-title meta">{{witnesses_block.value.title}}</div>
+                              <div class="witness-title meta">{{ witnesses_block.value.title }}</div>
                             {% endif %}
                           </div>
-                      
                           <div class="witness-links">
                             {% if witnesses_block.value.witness_transcript %}
                               <div class="witness-transcript">
@@ -92,7 +83,6 @@
                                 </a>
                               </div>
                             {% endif %}
-                      
                             {% if witnesses_block.value.witness_video %}
                               <div class="witness-video">
                                 <a href="{{witness_block.value.witness_video}}">
@@ -110,7 +100,6 @@
             {% endfor %}
           </div>
         {% endif %}
-    
         {% if self.outcomes %}
           <div class="timeline-title">Outcomes</div>
           <div class="outcomes-dates date-container"></div>
@@ -120,7 +109,7 @@
                 {% if outcomes_block.value.date %}
                   <div class="outcomes-date date">
                     <time>
-                      {{ outcomes_block.value.date}}
+                      {{ outcomes_block.value.date }}
                     </time>
                   </div>
                 {% endif %}
@@ -132,8 +121,6 @@
           </div>
         {% endif %}
       </div>
-
     </div>
   </div>
-
 </div>
