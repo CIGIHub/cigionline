@@ -34,7 +34,7 @@ function activateTab(hash, buttonElement, type) {
 }
 
 function appendDates(dates, type, hash, timelineDateString) {
-  dates.each(function () {
+  dates.each(function() {
     let dateClass;
     let contentClass;
     let containerClass;
@@ -70,22 +70,20 @@ function addActive(hash, type) {
   }
 
   for (const timelineDateKey in hash) {
-    for (const dateKey in hash[timelineDateKey]) {
-      const firstDateKey = Object.keys(hash[timelineDateKey])[0];
-      const container = hash[timelineDateKey][firstDateKey];
+    const firstDateKey = Object.keys(hash[timelineDateKey])[0];
+    const container = hash[timelineDateKey][firstDateKey];
 
-      container.content.addClass('active');
-      container.date.find('time').addClass('active');
-      container.content
-        .closest(containerClass)
-        .height(container.content.height());
-    }
+    container.content.addClass('active');
+    container.date.find('time').addClass('active');
+    container.content
+      .closest(containerClass)
+      .height(container.content.height());
   }
 }
 
 // use witnessesHash to link date elements to witnesses elements
 function initializeTimeline() {
-  $('.igc-timeline').each(function () {
+  $('.igc-timeline').each(function() {
     const timelineDate = $(this).find('.timeline-date');
     const witnessDates = $(this).find('.witnesses-date-block');
     const outcomesDates = $(this).find('.outcomes-block');
@@ -106,10 +104,10 @@ initializeTimeline();
 
 // add active class to date clicked and its corresponding witnesses element
 // remove active class from other dates and their corresponding witnesses
-$('.witnesses-date').on('click', function () {
+$('.witnesses-date').on('click', function() {
   activateTab(witnessesHash, $(this), 'witnesses');
 });
 
-$('.outcomes-date').on('click', function () {
+$('.outcomes-date').on('click', function() {
   activateTab(outcomesHash, $(this), 'outcomes');
 });
