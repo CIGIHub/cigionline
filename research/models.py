@@ -15,7 +15,6 @@ from wagtail.admin.edit_handlers import (
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
-    InlinePanel,
 )
 from wagtail.core.blocks import (
     CharBlock,
