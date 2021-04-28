@@ -45,6 +45,8 @@
 
 {% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify}}{% endfor %}{% endblock %}
 
+{% block header %}{% endblock %}
+
 {% block content %}
   <article>
     <section class="hero{% if page.archive %} archived{% endif %}">
