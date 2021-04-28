@@ -48,6 +48,10 @@ class Command(BaseCommand):
                     article.image_hero.get_rendition('fill-377x246')
                     print(f'Article {article.id}: Generating multimedia recommended image from image_hero')
                     article.image_hero.get_rendition('width-300')
+                for block in article.body:
+                    if block.block_type == 'image' or block.block_type == 'chart':
+                        print(f'Article {article.id} Generating image for ImageBlock')
+                        block.value.image.get_rendition('width-640')
                 print(f'Article {article.id}: Finished')
 
         event_count = EventPage.objects.count()
