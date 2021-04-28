@@ -1,4 +1,4 @@
-from articles.models import ArticlePage
+from articles.models import ArticlePage, ArticleSeriesPage
 from datetime import datetime
 from django.core.management.base import BaseCommand
 from events.models import EventPage
@@ -53,6 +53,27 @@ class Command(BaseCommand):
                         print(f'Article {article.id} Generating image for ImageBlock')
                         block.value.image.get_rendition('width-640')
                 print(f'Article {article.id}: Finished')
+
+        article_series_count = ArticleSeriesPage.objects.count()
+        print(f'Generating image renditions for {article_series_count} article series')
+        for i in range((article_series_count // batch_limit) + 1):
+            article_series_pages = ArticleSeriesPage.objects.all().order_by('id')[i * batch_limit:(i * batch_limit) + batch_limit]
+            for article_series in article_series_pages:
+                print(f'Article Series {article_series.id}: Starting')
+                if article_series.image_feature and Path(article_series.image_feature.file.url) != '.gif':
+                    print(f'Article Series {article_series.id}: Generating medium feature image from image_feature')
+                    article_series.image_feature.get_rendition('fill-520x390')
+                    print(f'Article Series {article_series.id}: Generating large feature image from image_feature')
+                    article_series.image_feature.get_rendition('fill-1440x990')
+                elif article_series.image_hero and Path(article_series.image_hero.file.url) != '.gif':
+                    print(f'Article Series {article_series.id}: Generating medium feature image from image_hero')
+                    article_series.image_hero.get_rendition('fill-520x390')
+                    print(f'Article Series {article_series.id}: Generating large feature image from image_hero')
+                    article_series.image_hero.get_rendition('fill-1440x990')
+                if article_series.image_poster and Path(article_series.image_poster.file.url) != '.gif':
+                    print(f'Article Series {article_series.id}: Generating poster image')
+                    article_series.image_poster.get_rendition('width-700')
+                print(f'Article Series {article_series.id}: Finished')
 
         event_count = EventPage.objects.count()
         print(f'Generating image renditions for {event_count} events')
@@ -128,6 +149,9 @@ class Command(BaseCommand):
                     publication.image_hero.get_rendition('fill-520x390')
                     print(f'Publication {publication.id}: Generating large feature image from image_hero')
                     publication.image_hero.get_rendition('fill-1440x990')
+                if publication.image_poster and Path(publication.image_poster.file.url) != '.gif':
+                    print(f'Publication {publication.id}: Generating poster image')
+                    publication.image_poster.get_rendition('width-700')
                 print(f'Publication {publication.id}: Finished')
 
         person_count = PersonPage.objects.count()
