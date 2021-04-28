@@ -168,6 +168,8 @@ class Command(BaseCommand):
                     person.image_square.get_rendition('fill-200x200')
                     print(f'Person {person.id}: Generating square image for experts landing page')
                     person.image_square.get_rendition('fill-300x300')
+                    print(f'Person {person.id}: Generating feature expert image')
+                    person.image_square.get_rendition('fill-140x140')
                 print(f'Person {person.id}: Finished')
 
         print(f'Finished... {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
