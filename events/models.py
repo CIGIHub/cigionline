@@ -152,6 +152,7 @@ class EventPage(
         ],
         blank=True,
     )
+    time_zone = models.CharField(blank=True, max_length=64)
     twitter_hashtag = models.CharField(blank=True, max_length=64)
     website_button_text = models.CharField(
         blank=True,
@@ -182,6 +183,7 @@ class EventPage(
         BasicPageAbstract.images_panel,
         FieldPanel('publishing_date', heading='Event start'),
         FieldPanel('event_end'),
+        FieldPanel('time_zone'),
         MultiFieldPanel(
             [
                 FieldPanel('event_type'),
