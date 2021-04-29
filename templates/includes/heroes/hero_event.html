@@ -29,9 +29,9 @@
             <ul class="custom-text-list">
               {% for item in authors %}
                 {% if item.hide_link %}
-                  <div class="block-speaker">{{ item.author.title }}</div>
+                  <li class="block-speaker">{{ item.author.title }}</li>
                 {% else %}
-                  <div class="block-speaker"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></div>
+                  <li class="block-speaker"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
                 {% endif %}
               {% endfor %}
             </ul>
