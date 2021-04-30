@@ -17,20 +17,20 @@ if 'BONSAI_URL' in environ:
 # setting. See urls.py
 CACHE_CONTROL_MAX_AGE = 600
 
-if 'CLOUDFLARE_EMAIL' in environ \
-        and 'CLOUDFLARE_API_KEY' in environ \
-        and 'CLOUDFLARE_ZONEID' in environ:
-    INSTALLED_APPS = list(INSTALLED_APPS)
-    INSTALLED_APPS.append('wagtail.contrib.frontend_cache')
-    INSTALLED_APPS = tuple(INSTALLED_APPS)
-    WAGTAILFRONTENDCACHE = {
-        'cloudflare': {
-            'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
-            'EMAIL': environ['CLOUDFLARE_EMAIL'],
-            'API_KEY': environ['CLOUDFLARE_API_KEY'],
-            'ZONEID': environ['CLOUDFLARE_ZONEID'],
-        },
-    }
+# if 'CLOUDFLARE_EMAIL' in environ \
+#         and 'CLOUDFLARE_API_KEY' in environ \
+#         and 'CLOUDFLARE_ZONEID' in environ:
+#     INSTALLED_APPS = list(INSTALLED_APPS)
+#     INSTALLED_APPS.append('wagtail.contrib.frontend_cache')
+#     INSTALLED_APPS = tuple(INSTALLED_APPS)
+#     WAGTAILFRONTENDCACHE = {
+#         'cloudflare': {
+#             'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
+#             'EMAIL': environ['CLOUDFLARE_EMAIL'],
+#             'API_KEY': environ['CLOUDFLARE_API_KEY'],
+#             'ZONEID': environ['CLOUDFLARE_ZONEID'],
+#         },
+#     }
 
 # Use AWS S3 for file storage
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
@@ -110,8 +110,8 @@ CACHES = {
     },
 }
 
-
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 try:
     from .local_env import *
