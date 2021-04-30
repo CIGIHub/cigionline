@@ -333,11 +333,11 @@ CACHES = {
 INTERNAL_IPS = ('127.0.0.1')
 
 try:
-    from .local import *
+    from .local import *  # NOQA
 except ImportError:
     pass
 
 try:
-    from .local_settings import *
+    from .local_settings import *  # NOQA
 except ImportError:
     pass
