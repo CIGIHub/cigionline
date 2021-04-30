@@ -114,7 +114,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 try:
-    from .local_env import *
+    from .local_env import *  # NOQA
 except ImportError as e:
     if 'local_env' not in str(e):
         raise
