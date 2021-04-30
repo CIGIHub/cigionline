@@ -85,3 +85,7 @@ target/
 .vscode
 
 cigionline/static/bundles/*
+
+local_settings.py
+local_env.py
+/puppet
