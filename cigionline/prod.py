@@ -99,9 +99,6 @@ CACHES = {
         'LOCATION': 'redis://localhost:6379/0',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'CONNECTION_POOL_KWARGS': {
-                'ssl_cert_reqs': False,
-            },
         },
     },
     'renditions': {
@@ -109,9 +106,6 @@ CACHES = {
         'LOCATION': 'redis://localhost:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'CONNECTION_POOL_KWARGS': {
-                'ssl_cert_reqs': False,
-            },
         },
     },
 }
