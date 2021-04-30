@@ -1,11 +1,10 @@
-from os import path
-from .base import *
+from os import path, environ
 
-if 'BONSAI_URL' in os.environ:
+if 'BONSAI_URL' in environ:
     WAGTAILSEARCH_BACKENDS = {
         'default': {
             'BACKEND': 'wagtail.search.backends.elasticsearch7',
-            'URLS': [os.environ['BONSAI_URL']],
+            'URLS': [environ['BONSAI_URL']],
             'INDEX': 'wagtail',
             'TIMEOUT': 30,
             'OPTIONS': {},
@@ -18,18 +17,18 @@ if 'BONSAI_URL' in os.environ:
 # setting. See urls.py
 CACHE_CONTROL_MAX_AGE = 600
 
-if 'CLOUDFLARE_EMAIL' in os.environ \
-        and 'CLOUDFLARE_API_KEY' in os.environ \
-        and 'CLOUDFLARE_ZONEID' in os.environ:
+if 'CLOUDFLARE_EMAIL' in environ \
+        and 'CLOUDFLARE_API_KEY' in environ \
+        and 'CLOUDFLARE_ZONEID' in environ:
     INSTALLED_APPS = list(INSTALLED_APPS)
     INSTALLED_APPS.append('wagtail.contrib.frontend_cache')
     INSTALLED_APPS = tuple(INSTALLED_APPS)
     WAGTAILFRONTENDCACHE = {
         'cloudflare': {
             'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
-            'EMAIL': os.environ['CLOUDFLARE_EMAIL'],
-            'API_KEY': os.environ['CLOUDFLARE_API_KEY'],
-            'ZONEID': os.environ['CLOUDFLARE_ZONEID'],
+            'EMAIL': environ['CLOUDFLARE_EMAIL'],
+            'API_KEY': environ['CLOUDFLARE_API_KEY'],
+            'ZONEID': environ['CLOUDFLARE_ZONEID'],
         },
     }
 
@@ -37,33 +36,33 @@ if 'CLOUDFLARE_EMAIL' in os.environ \
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3ManifestStaticStorage'
-if 'AWS_ACCESS_KEY_ID' in os.environ:
-    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-if 'AWS_SECRET_ACCESS_KEY' in os.environ:
-    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-if 'AWS_STORAGE_BUCKET_NAME' in os.environ:
-    AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
-if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
-    AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_S3_CUSTOM_DOMAIN']
+if 'AWS_ACCESS_KEY_ID' in environ:
+    AWS_ACCESS_KEY_ID = environ['AWS_ACCESS_KEY_ID']
+if 'AWS_SECRET_ACCESS_KEY' in environ:
+    AWS_SECRET_ACCESS_KEY = environ['AWS_SECRET_ACCESS_KEY']
+if 'AWS_STORAGE_BUCKET_NAME' in environ:
+    AWS_STORAGE_BUCKET_NAME = environ['AWS_STORAGE_BUCKET_NAME']
+if 'AWS_S3_CUSTOM_DOMAIN' in environ:
+    AWS_S3_CUSTOM_DOMAIN = environ['AWS_S3_CUSTOM_DOMAIN']
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
 AWS_PRELOAD_METADATA = True
 AWS_S3_FILE_OVERWRITE = False
 AWS_LOCATION = 'static'
-if 'STATIC_URL' in os.environ:
-    STATIC_URL = os.environ['STATIC_URL']
+if 'STATIC_URL' in environ:
+    STATIC_URL = environ['STATIC_URL']
 
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-if 'SENDGRID_API_KEY' in os.environ:
-    SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
+if 'SENDGRID_API_KEY' in environ:
+    SENDGRID_API_KEY = environ['SENDGRID_API_KEY']
 
 # Mailchimp
-if 'MAILCHIMP_API_KEY' in os.environ:
-    MAILCHIMP_API_KEY = os.environ['MAILCHIMP_API_KEY']
-if 'MAILCHIMP_DATA_CENTER' in os.environ:
-    MAILCHIMP_DATA_CENTER = os.environ['MAILCHIMP_DATA_CENTER']
-if 'MAILCHIMP_NEWSLETTER_LIST_ID' in os.environ:
-    MAILCHIMP_NEWSLETTER_LIST_ID = os.environ['MAILCHIMP_NEWSLETTER_LIST_ID']
+if 'MAILCHIMP_API_KEY' in environ:
+    MAILCHIMP_API_KEY = environ['MAILCHIMP_API_KEY']
+if 'MAILCHIMP_DATA_CENTER' in environ:
+    MAILCHIMP_DATA_CENTER = environ['MAILCHIMP_DATA_CENTER']
+if 'MAILCHIMP_NEWSLETTER_LIST_ID' in environ:
+    MAILCHIMP_NEWSLETTER_LIST_ID = environ['MAILCHIMP_NEWSLETTER_LIST_ID']
 
 
 SECRET_KEY = None  # ./local_env.py
