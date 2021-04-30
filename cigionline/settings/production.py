@@ -1,24 +1,6 @@
-import dj_database_url
-import os
 from .base import *
 
 DEBUG = False
-
-try:
-    from .local import *
-except ImportError:
-    pass
-
-if 'SECRET_KEY' in os.environ:
-    SECRET_KEY = os.environ['SECRET_KEY']
-
-if 'ALLOWED_HOSTS' in os.environ:
-    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
-
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
-    }
 
 if 'BONSAI_URL' in os.environ:
     WAGTAILSEARCH_BACKENDS = {
@@ -36,30 +18,6 @@ if 'BONSAI_URL' in os.environ:
 # This only applies to pages that do not have a more specific cache-control
 # setting. See urls.py
 CACHE_CONTROL_MAX_AGE = 600
-
-if 'REDIS_URL' in os.environ:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': os.environ['REDIS_URL'],
-            'OPTIONS': {
-                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                'CONNECTION_POOL_KWARGS': {
-                    'ssl_cert_reqs': False,
-                },
-            },
-        },
-        'renditions': {
-            'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': os.environ['REDIS_URL'],
-            'OPTIONS': {
-                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                'CONNECTION_POOL_KWARGS': {
-                    'ssl_cert_reqs': False,
-                },
-            },
-        },
-    }
 
 if 'CLOUDFLARE_EMAIL' in os.environ \
         and 'CLOUDFLARE_API_KEY' in os.environ \
@@ -107,3 +65,73 @@ if 'MAILCHIMP_DATA_CENTER' in os.environ:
     MAILCHIMP_DATA_CENTER = os.environ['MAILCHIMP_DATA_CENTER']
 if 'MAILCHIMP_NEWSLETTER_LIST_ID' in os.environ:
     MAILCHIMP_NEWSLETTER_LIST_ID = os.environ['MAILCHIMP_NEWSLETTER_LIST_ID']
+
+
+
+
+from os import path
+
+__author__ = 'snake'
+
+SECRET_KEY = None  # ./local_env.py
+DB_USER = 'cigionline'
+DB_NAME = 'cigionline'
+DB_PASS = 'fk03989vbtuuik3uy457gf84dijw0pfg0-ekrn4by34foidjb'
+ALLOWED_HOSTS = (
+    '159.203.12.201',
+    'cigionline.webisoft.org',
+)
+PROJECT_DOMAIN = 'https://cigionline.webisoft.org'
+
+
+DEBUG = False
+PROJECT_NAME = path.basename(path.dirname(__file__))
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'USER': DB_USER,
+        'NAME': DB_NAME,
+        'PASSWORD': DB_PASS,
+        'HOST': 'localhost',
+        'CONN_MAX_AGE': 30,
+        'OPTIONS': {
+            'sslmode': 'disable',
+        },
+    },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CONNECTION_POOL_KWARGS': {
+                'ssl_cert_reqs': False,
+            },
+        },
+    },
+    'renditions': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CONNECTION_POOL_KWARGS': {
+                'ssl_cert_reqs': False,
+            },
+        },
+    },
+}
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'redis'
+
+STATICFILES_STORAGE = 'libs.storage.CacheBustingStaticFilesStorage'
+
+try:
+    from .local_env import *
+except ImportError as e:
+    if 'local_env' not in str(e):
+        raise
