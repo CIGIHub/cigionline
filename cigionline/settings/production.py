@@ -1,6 +1,5 @@
+from os import path
 from .base import *
-
-DEBUG = False
 
 if 'BONSAI_URL' in os.environ:
     WAGTAILSEARCH_BACKENDS = {
@@ -67,12 +66,6 @@ if 'MAILCHIMP_NEWSLETTER_LIST_ID' in os.environ:
     MAILCHIMP_NEWSLETTER_LIST_ID = os.environ['MAILCHIMP_NEWSLETTER_LIST_ID']
 
 
-
-
-from os import path
-
-__author__ = 'snake'
-
 SECRET_KEY = None  # ./local_env.py
 DB_USER = 'cigionline'
 DB_NAME = 'cigionline'
@@ -125,10 +118,7 @@ CACHES = {
 }
 
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'redis'
-
-STATICFILES_STORAGE = 'libs.storage.CacheBustingStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 try:
     from .local_env import *
