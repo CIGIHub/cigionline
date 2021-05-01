@@ -550,8 +550,8 @@ class ArticleSeriesPage(
     )
 
     @property
-    def image_poster_title(self):
-        return self.image_poster.title
+    def image_poster_caption(self):
+        return self.image_poster.caption
 
     @property
     def image_poster_url(self):

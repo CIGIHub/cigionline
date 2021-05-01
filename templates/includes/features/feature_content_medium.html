@@ -11,7 +11,7 @@
         <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
       {% endif %}
       {% if feature_image.file.url|file_extension == '.gif' %}
-        <img src="{{feature_image.file.url}}" alt="{{feature_image.title}}" />
+        <img src="{{feature_image.file.url}}" alt="{{feature_image.caption}}" />
       {% else %}
         {% image feature_image fill-520x390 %}
       {% endif %}

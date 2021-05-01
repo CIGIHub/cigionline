@@ -56,9 +56,9 @@
           <div class="col col-md-10 col-lg-8">
             <figure class="event-image-hero">
               {% image self.image_hero width-1280 %}
-              {% if self.image_hero.title %}
+              {% if self.image_hero.caption %}
                 <figcaption>
-                  {{ self.image_hero.title }}
+                  {{ self.image_hero.caption }}
                 </figcaption>
               {% endif %}
             </figure>

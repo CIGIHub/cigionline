@@ -726,7 +726,7 @@ class NewsletterBlock(blocks.StructBlock):
                 context['image_url'] = value.get("image_override").get_rendition("fill-600x238").url
             elif content_page.image_hero:
                 context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").url
-                context['image_alt'] = content_page.image_hero.title
+                context['image_alt'] = content_page.image_hero.caption
 
             if not value.get('url'):
                 context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
