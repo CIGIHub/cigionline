@@ -144,7 +144,7 @@ class MultimediaPage(
         verbose_name='Companion essay',
     )
     image_banner = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -152,7 +152,7 @@ class MultimediaPage(
         verbose_name='Banner Image',
     )
     image_square = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -374,7 +374,7 @@ class MultimediaSeriesPage(
     ThemeablePageAbstract,
 ):
     image_banner = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -382,7 +382,7 @@ class MultimediaSeriesPage(
         verbose_name='Banner Image',
     )
     image_logo = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -390,7 +390,7 @@ class MultimediaSeriesPage(
         verbose_name='Series Logo',
     )
     image_poster = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
