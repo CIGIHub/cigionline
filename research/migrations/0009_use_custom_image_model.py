@@ -32,4 +32,9 @@ class Migration(migrations.Migration):
             name='image_hero',
             field=models.ForeignKey(blank=True, help_text='A large image to be displayed prominently on the page.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='images.cigionlineimage', verbose_name='Hero Image'),
         ),
+        migrations.AlterField(
+            model_name='igctimelinepage',
+            name='image_hero',
+            field=models.ForeignKey(blank=True, help_text='A large image to be displayed prominently on the page.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='images.cigionlineimage', verbose_name='Hero Image'),
+        ),
     ]
