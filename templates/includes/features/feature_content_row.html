@@ -1,0 +1,33 @@
+{% load wagtailcore_tags core_tags %}
+
+{% with content_type=content.contenttype content_subtype=content.contentsubtype %}
+  {% if content_type == 'Multimedia' %}
+    {% define 'play' as icon_class %}
+  {% elif content_type == 'Publication' %}
+    {% define 'file-alt' as icon_class %}
+  {% elif content_type == 'Event' %}
+    {% define 'calendar-alt' as icon_class %}
+  {% elif content_type == 'Opinion' %}
+    {% if content_subtype|in_list:'CIGI in the News,News Releases' %}
+      {% define 'bullhorn' as icon_class %}
+      {% define 'media' as content_type %}
+    {% else %}
+      {% define 'comment-dots' as icon_class %}
+    {% endif %}
+  {% endif %}
+    <article class="feature-content-row">
+      <div class="table-icon icon-{{content_type|lower}}">
+        <i class="fal fa-{{icon_class}}"></i>
+      </div>
+      <div>
+        <div class="meta">
+          {{content_type}}
+          {% if content_type == 'Event' %}
+            / {{content.publishing_date|date:'F j, Y - g:ia T.' }}
+          {% endif %}
+        </div>
+        <h3><a href="{{content.url}}">{{content.title}}</a></h3>
+        <p>{{content.subtitle|richtext}}</p>
+      </div>
+    </article>
+{% endwith %}
