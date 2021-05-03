@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('images', '0001_initial'),
-        ('core', '0010_add_index_contentpage_publishing_date'),
+        ('core', '0012_add_theme_to_basicpage'),
     ]
 
     operations = [

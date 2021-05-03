@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('images', '0001_initial'),
-        ('research', '0005_update_table_stream_block'),
+        ('research', '0008_create_igc_timeline_page'),
     ]
 
     operations = [
