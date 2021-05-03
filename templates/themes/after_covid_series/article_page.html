@@ -42,10 +42,10 @@
   {% if self.image_hero %}
     <figure class="article-image-hero">
       {% image self.image_hero width-768 %}
-      {% if self.image_hero.title %}
+      {% if self.image_hero.caption %}
       <div class="container">
         <figcaption>
-          {{ self.image_hero.title }}
+          {{ self.image_hero.caption }}
         </figcaption>
       </div>
       {% endif %}

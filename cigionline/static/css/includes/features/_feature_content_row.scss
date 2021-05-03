@@ -1,0 +1,35 @@
+.feature-content-row {
+  align-items: center;
+  border-bottom: 1px solid $cigi-light-grey;
+  display: flex;
+  padding: 1em 0;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  p {
+    color: $cigi-dark-grey;
+    line-height: 1.25;
+    margin-bottom: 0;
+  }
+
+  h3 {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
+    font-size: 1em;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+  }
+
+  .table-icon {
+    @include media-breakpoint-up(sm) {
+      font-size: 2em;
+    }
+    flex-shrink: 0;
+    font-size: 1em;
+    height: 2em;
+    line-height: 2em;
+    margin-right: 0.7em;
+    width: 2em;
+  }
+}

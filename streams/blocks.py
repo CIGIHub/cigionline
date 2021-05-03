@@ -405,6 +405,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'bold',
             'dropcap',
             'endofarticle',
+            'paragraph_heading',
             'h2',
             'h3',
             'h4',
@@ -726,7 +727,7 @@ class NewsletterBlock(blocks.StructBlock):
                 context['image_url'] = value.get("image_override").get_rendition("fill-600x238").url
             elif content_page.image_hero:
                 context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").url
-                context['image_alt'] = content_page.image_hero.title
+                context['image_alt'] = content_page.image_hero.caption
 
             if not value.get('url'):
                 context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
@@ -830,3 +831,54 @@ class TextBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Text'
         template = 'streams/newsletter/text_block.html'
+
+
+class IgcTimelineBlock(blocks.StructBlock):
+    date = blocks.CharBlock(required=True)
+    title = blocks.CharBlock(required=False)
+    body = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    location = blocks.CharBlock(required=False)
+    countries_represented = ImageChooserBlock(required=False)
+    outcomes = blocks.StreamBlock(
+        [
+            ('outcome', blocks.StructBlock([
+                ('date', blocks.DateBlock(required=False)),
+                ('text', blocks.RichTextBlock(
+                    features=['bold', 'italic', 'link'],
+                    required=False,
+                )),
+            ])),
+        ],
+        required=False,
+    )
+    witnesses = blocks.StreamBlock(
+        [
+            ('witness_date', blocks.StructBlock([
+                ('date', blocks.DateBlock(required=False)),
+                ('witnesses', blocks.StreamBlock(
+                    [
+                        ('witnesses_full_session', blocks.StructBlock([
+                            ('title', blocks.CharBlock(required=False)),
+                            ('witness_transcript', blocks.URLBlock(required=False)),
+                            ('witness_video', blocks.URLBlock(required=False)),
+                        ])),
+                        ('witness', blocks.StructBlock([
+                            ('name', blocks.CharBlock(required=False)),
+                            ('title', blocks.CharBlock(required=False)),
+                            ('witness_transcript', blocks.URLBlock(required=False)),
+                            ('witness_video', blocks.URLBlock(required=False)),
+                        ])),
+                    ],
+                )),
+            ])),
+        ],
+        required=False,
+    )
+
+    class Meta:
+        icon = 'arrows-up-down'
+        label = 'IGC Timeline'
+        template = 'streams/igc_timeline_block.html'
