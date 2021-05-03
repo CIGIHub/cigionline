@@ -242,7 +242,7 @@ class ArticlePage(
         help_text='Placement of the title within the hero section. Currently only works on the Longform 2 theme.',
     )
     image_banner = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -250,7 +250,7 @@ class ArticlePage(
         verbose_name='Banner Image',
     )
     image_banner_small = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -511,7 +511,7 @@ class ArticleSeriesPage(
         blank=True,
     )
     image_banner = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -519,7 +519,7 @@ class ArticleSeriesPage(
         verbose_name='Banner Image',
     )
     image_banner_small = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -527,7 +527,7 @@ class ArticleSeriesPage(
         verbose_name='Banner Image Small'
     )
     image_poster = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -550,8 +550,8 @@ class ArticleSeriesPage(
     )
 
     @property
-    def image_poster_title(self):
-        return self.image_poster.title
+    def image_poster_caption(self):
+        return self.image_poster.caption
 
     @property
     def image_poster_url(self):

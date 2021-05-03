@@ -10,7 +10,7 @@ class MenuAdminPermissionHelper(PermissionHelper):
         return True
 
     def user_can_create(self, user):
-        return False
+        return True
 
     def user_can_edit_obj(self, user, obj):
         return True

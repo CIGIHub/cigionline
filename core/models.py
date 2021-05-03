@@ -99,7 +99,7 @@ class BasicPageAbstract(models.Model):
         help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.',
     )
     image_hero = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -175,7 +175,7 @@ class FeatureablePageAbstract(models.Model):
     feature_subtitle = models.CharField(blank=True, max_length=255)
     feature_title = models.CharField(blank=True, max_length=255)
     image_feature = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -223,7 +223,7 @@ class ShareablePageAbstract(models.Model):
     social_title = models.CharField(blank=True, max_length=255)
     social_description = models.CharField(blank=True, max_length=255)
     image_social = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -543,6 +543,7 @@ class BasicPage(
     FeatureablePageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     """Page with StreamField body"""
 
@@ -559,6 +560,18 @@ class BasicPage(
         BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featured Content',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
                 StreamFieldPanel('related_files'),
             ],
             heading='Related Files',
@@ -569,6 +582,10 @@ class BasicPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+        ThemeablePageAbstract.theme_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
@@ -583,9 +600,48 @@ class BasicPage(
     ]
     template = 'core/basic_page.html'
 
+    def get_featured_pages(self):
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().in_bulk(featured_page_ids)
+        return [pages[x] for x in featured_page_ids]
+
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/basic_page.html'
+        return standard_template
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        context['featured_pages'] = self.get_featured_pages()
+        return context
+
     class Meta:
         verbose_name = 'Page'
         verbose_name_plural = 'Pages'
+
+
+class BasicPageFeaturedPage(Orderable):
+    basic_page = ParentalKey(
+        'core.BasicPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            ['wagtailcore.Page'],
+        ),
+    ]
 
 
 class FundingPage(BasicPageAbstract, Page):

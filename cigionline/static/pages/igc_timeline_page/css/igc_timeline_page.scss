@@ -1,0 +1,193 @@
+@import '../../../css/global/mixins';
+
+.igc-timeline-block {
+  margin-top: 2em;
+
+  ~ .igc-timeline-block {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 3rem;
+
+    .timeline-vertical-line {
+      border-bottom: 1px solid $cigi-light-grey;
+    }
+  }
+
+  .igc-timeline {
+    display: flex;
+
+    .timeline-separator {
+      margin: 0 0.5rem;
+      position: relative;
+      top: -10px;
+
+      .timeline-red-dot {
+        background-color: $cigi-primary-colour;
+        border-radius: 50%;
+        display: inline-block;
+        height: 25px;
+        width: 25px;
+      }
+
+      .timeline-vertical-line {
+        border-left: 1px solid $cigi-light-grey;
+        height: 100%;
+        left: 50%;
+        position: relative;
+        top: -10px;
+        z-index: -1;
+      }
+    }
+
+    .timeline-contents {
+      border-top: 3px solid $cigi-primary-colour;
+      margin-left: -2rem;
+      padding: 1rem 0 0 2rem;
+    }
+
+    .timeline-date {
+      font-family: $tisa-pro;
+      font-size: 18px;
+      font-weight: $sans-bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-title {
+      font-size: 16px;
+      font-weight: $sans-bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-location {
+      font-weight: $sans-medium;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-countries {
+      margin-bottom: 2rem;
+
+      .timeline-countries-list {
+        margin-bottom: 0;
+      }
+    }
+
+    .date-container {
+      display: flex;
+
+      .date {
+        border-left: 1px solid $cigi-light-grey;
+        color: $cigi-medium-light-grey;
+        cursor: pointer;
+        margin: 0.5rem 0 1rem;
+        padding: 0.5rem 1rem;
+        transition: color 0.2s ease;
+
+        &:first-child {
+          border-left: 0;
+          padding-left: 0;
+        }
+
+        time {
+          &.active {
+            border-bottom: 3px solid $cigi-primary-colour;
+            color: $black;
+          }
+
+          &:hover {
+            border-bottom: solid $cigi-primary-colour 3px;
+          }
+        }
+      }
+    }
+
+    .timeline-witnesses {
+      margin-bottom: 2rem;
+      overflow: hidden;
+      position: relative;
+      transition: height 0.5s cubic-bezier(0.07, 0.9, 0.7, 0.75);
+
+      .witnesses-date-block {
+        height: 0;
+        margin-bottom: 0;
+        position: absolute;
+        width: 100%;
+
+        .witnesses {
+          opacity: 0;
+          transition: visibility 0s, opacity 0.5s linear;
+          visibility: hidden;
+
+          &.active {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+
+        .witnesses-block,
+        .witnesses-full-session-block {
+          margin-bottom: 0;
+
+          .witness-row {
+            align-items: center;
+            border-bottom: 1px solid $cigi-light-grey;
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+
+            .witness-name {
+              font-weight: $sans-medium;
+            }
+
+            .witness-links {
+              display: flex;
+              flex-grow: 0;
+
+              .witness-transcript,
+              .witness-video {
+                display: inline-block;
+                margin: 0 1rem;
+
+                .witness-link-text {
+                  @include media-breakpoint-up(sm) {
+                    display: inline;
+                  }
+                  display: none;
+                }
+
+                i {
+                  margin-right: 0.2rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .timeline-outcomes {
+      margin-bottom: 2rem;
+      position: relative;
+      transition: height 0.5s cubic-bezier(0.07, 0.9, 0.7, 0.75);
+
+      .outcomes-block {
+        height: 0;
+        margin-bottom: 0;
+        position: absolute;
+        width: 100%;
+
+        .outcomes-text {
+          opacity: 0;
+          transition: visibility 0s, opacity 0.5s linear;
+          visibility: hidden;
+
+          &.active {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

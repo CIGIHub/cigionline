@@ -26,7 +26,7 @@ class PromotionBlock(models.Model):
         help_text='An external URL (https://...) or an internal URL (/interactives/2019annualreport/).',
     )
     image_promotion = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -35,7 +35,7 @@ class PromotionBlock(models.Model):
         help_text='The background image of the promotion block.',
     )
     image_promotion_small = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

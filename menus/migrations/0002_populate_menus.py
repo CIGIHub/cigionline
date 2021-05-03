@@ -15,6 +15,7 @@ def populate_menus(apps, schema_editor):
         ('opinions', 'Opinions'),
         ('publications', 'Publications'),
         ('research', 'Research'),
+        ('igc', 'IGC')
     ]
     Menu = apps.get_model('menus', 'Menu')
     for slug, name in INITIAL_MENUS:
