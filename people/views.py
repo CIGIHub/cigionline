@@ -8,7 +8,7 @@ from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
 
-EXPERTS_API_CACHE_TIMEOUT = 60 * 60
+EXPERTS_API_CACHE_TIMEOUT = 86400
 
 
 def all_experts(request):
@@ -18,7 +18,7 @@ def all_experts(request):
     topics = request.GET.getlist('topic', None)
 
     # Check if query exists in cache
-    cache_key = "all_experts_"
+    cache_key = "all_experts"
     if searchtext:
         cache_key += f"_{searchtext}"
     if sort:
@@ -67,7 +67,7 @@ def all_experts(request):
             'items': items,
         }
 
-        # Set the cache with a timeout of one hour
+        # Set the cache with a timeout of 1 day
         cache.set(cache_key, response, timeout=EXPERTS_API_CACHE_TIMEOUT)
 
         return JsonResponse(response, safe=False)
