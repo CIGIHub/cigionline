@@ -81,7 +81,7 @@ $(function() {
 addInlineVideoActions();
 
 const cookieBannerContainer = document.getElementById('cigi-cookie-banner-container');
-if (cookieBannerContainer) {
+if (cookieBannerContainer && !document.cookie.split(';').some((item) => item.includes('cigionline.accept.privacy.notice=1'))) {
   ReactDOM.render(
     <CookieConsent />,
     cookieBannerContainer,

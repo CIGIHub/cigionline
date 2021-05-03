@@ -1,6 +1,6 @@
 anyascii==0.2.0
 asgiref==3.3.4
-astroid==2.5.2
+astroid==2.5.6
 beautifulsoup4==4.8.2
 boto3==1.17.27
 botocore==1.20.27
@@ -11,7 +11,7 @@ coveralls==3.0.1
 dj-database-url==0.5.0
 Django==3.1.7
 django-appconf==1.0.4
-django-compressor==2.4
+django-compressor==2.4.1
 django-debug-toolbar==3.2.1
 django-filter==2.4.0
 django-ical==1.7.1
@@ -28,7 +28,7 @@ djangorestframework==3.12.4
 docopt==0.6.2
 docutils==0.17.1
 draftjs-exporter==2.1.7
-elasticsearch==7.12.0
+elasticsearch==7.12.1
 et-xmlfile==1.0.1
 flake8==3.9.1
 future==0.18.2
@@ -42,7 +42,7 @@ jmespath==0.10.0
 l18n==2020.6.1
 lazy-object-proxy==1.6.0
 libsass==0.20.1
-mailchimp-marketing==3.0.36
+mailchimp-marketing==3.0.41
 mccabe==0.6.1
 newrelic==6.2.0.156
 openpyxl==3.0.7
