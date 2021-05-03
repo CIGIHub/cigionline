@@ -99,7 +99,7 @@ class BasicPageAbstract(models.Model):
         help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.',
     )
     image_hero = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -175,7 +175,7 @@ class FeatureablePageAbstract(models.Model):
     feature_subtitle = models.CharField(blank=True, max_length=255)
     feature_title = models.CharField(blank=True, max_length=255)
     image_feature = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -223,7 +223,7 @@ class ShareablePageAbstract(models.Model):
     social_title = models.CharField(blank=True, max_length=255)
     social_description = models.CharField(blank=True, max_length=255)
     image_social = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

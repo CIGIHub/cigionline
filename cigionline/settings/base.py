@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'core',
     'events',
     'home',
+    'images',
     'menus',
     'multimedia',
     'newsletters',
@@ -162,6 +163,8 @@ WAGTAILEMBEDS_FINDERS = [
     {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider], },
     {'class': 'wagtail.embeds.finders.oembed', },
 ]
+
+WAGTAILIMAGES_IMAGE_MODEL = 'images.CigionlineImage'
 
 
 # Database
