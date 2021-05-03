@@ -1,0 +1,32 @@
+@import '../../../css/global/mixins';
+
+.featured {
+  margin-bottom: 2em;
+}
+
+.stream-block-blockquote {
+  .stream-block-blockquote-content {
+    padding: 0 0 0.7em;
+
+    &::before {
+      content: none;
+    }
+
+    blockquote {
+      @include media-breakpoint-up(md) {
+        font-size: 1.35em;
+      }
+      color: $black;
+      font-size: 1em;
+      font-weight: 700;
+    }
+
+    a {
+      @include media-breakpoint-up(md) {
+        font-size: 1.1em;
+      }
+      color: $cigi-text-grey;
+      float: right;
+    }
+  }
+}

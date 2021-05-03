@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeIgc' 'css' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title="The International Grand Committee on Disinformation" subtitle=self.subtitle submenu=self.submenu %}
+  {% if self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <figure>
+            {% image self.image_hero width-1280 %}
+            {% if self.image_hero.title %}
+              <figcaption>
+                {{ self.image_hero.title }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if featured_pages %}
+    <section class="featured">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2 class="paragraph-heading">Featured</h2>
+            {% for featured_page in featured_pages %}
+              {% include "includes/features/feature_content_row.html" with content=featured_page %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% include "includes/body.html" with body=self.body %}
+
+  {% if self.related_files %}
+    <section class="related-files">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock content %}
