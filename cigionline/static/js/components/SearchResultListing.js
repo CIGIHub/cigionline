@@ -93,6 +93,7 @@ SearchResultListing.propTypes = {
     })),
     contentsubtype: PropTypes.string,
     contenttype: PropTypes.string,
+    elevated: PropTypes.bool,
     highlights: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     publishing_date: PropTypes.string,
