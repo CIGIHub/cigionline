@@ -126,6 +126,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         'after_covid_series_opinion',
         'cyber_series_opinion',
         'health_security_series_opinion',
+        'ai_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
