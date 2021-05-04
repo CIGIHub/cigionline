@@ -52,6 +52,11 @@ article {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
         font-size: 1.0625em;
         margin-bottom: 0.25em;
+
+        .elevate-bookmark {
+            margin-left: 5px;
+            font-size: 15px;
+        }
       }
     }
   }

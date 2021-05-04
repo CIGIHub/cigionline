@@ -46,7 +46,10 @@ function SearchResultListing(props) {
           ))}
         </ul>
         <h2 className="search-result-title">
-          <a href={row.url}>{row.title}</a>
+          <a href={row.url}>
+            {row.title}
+            {row.elevated && <i className="fal fa-bookmark elevate-bookmark" />}
+          </a>
         </h2>
         {row.publishing_date && (
           <div className="search-result-meta">

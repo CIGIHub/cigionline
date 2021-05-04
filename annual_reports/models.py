@@ -49,7 +49,7 @@ class AnnualReportListPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Annual Report List Page'
@@ -128,6 +128,9 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         FeatureablePageAbstract.feature_panel,
         SearchablePageAbstract.search_panel,
     ]
+
+    search_fields = Page.search_fields + SearchablePageAbstract.search_fields
+
     parent_page_types = ['annual_reports.AnnualReportListPage']
     subpage_types = []
     templates = 'annual_reports/annual_report_page.html'
