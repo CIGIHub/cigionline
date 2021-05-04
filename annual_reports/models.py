@@ -59,7 +59,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     """View annual report page"""
 
     image_poster = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

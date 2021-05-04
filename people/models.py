@@ -173,7 +173,7 @@ class PersonPage(
     ], blank=True)
     first_name = models.CharField(blank=True, max_length=255)
     image_media = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -182,7 +182,7 @@ class PersonPage(
         help_text='A high resolution image that is downloadable from the expert\'s page.'
     )
     image_square = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
