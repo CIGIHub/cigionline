@@ -120,9 +120,6 @@
   }
 
   .stream-block-blockquote {
-    @include media-breakpoint-up(md) {
-      max-width: 50rem;
-    }
     overflow: visible;
 
     .stream-block-blockquote-content {
