@@ -20,6 +20,11 @@ function SearchResultListing(props) {
           <i className="fal fa-play" />
         </span>
       )}
+      {row.contenttype === 'Multimedia Series' && row.contentsubtype === 'Multimedia Series' && (
+        <span className="table-icon icon-multimedia">
+          <i className="fal fa-play" />
+        </span>
+      )}
       {row.contenttype === 'Multimedia' && row.contentsubtype === 'Audio' && (
         <span className="table-icon icon-multimedia">
           <i className="fal fa-headphones" />
