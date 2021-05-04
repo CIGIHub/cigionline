@@ -387,7 +387,8 @@ class PersonPage(
             index.FilterField('last_name_lowercase'),
             ParentalManyToManyFilterFieldName('person_types'),
             ParentalManyToManyFilterField('topics'),
-        ]
+        ] \
+        + SearchablePageAbstract.search_fields
 
     parent_page_types = ['people.PeoplePage']
     subpage_types = []

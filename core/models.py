@@ -215,6 +215,10 @@ class SearchablePageAbstract(models.Model):
         classname='collapsible collapsed',
     )
 
+    search_fields = [
+        index.SearchField('search_terms'),
+    ]
+
     class Meta:
         abstract = True
 
@@ -440,7 +444,7 @@ class ContentPage(Page, SearchablePageAbstract):
         FieldPanel('topics'),
     ]
 
-    search_fields = Page.search_fields + [
+    search_fields = Page.search_fields + SearchablePageAbstract.search_fields + [
         index.FilterField('author_ids'),
         index.SearchField('author_names'),
         index.FilterField('contenttype'),
@@ -588,7 +592,7 @@ class BasicPage(
         ThemeablePageAbstract.theme_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'home.HomePage']
     subpage_types = [
