@@ -1,7 +1,9 @@
-from .base import *
+from .base import *  # noqa: F401,F403
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+ADMIN_ENABLED = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'a%86$z=ubc$(fh7@eqli92u!0t03#q-bq3=_trv1nn2+a=_5$n'
@@ -55,6 +57,6 @@ CACHES = {
 INTERNAL_IPS = ('127.0.0.1')
 
 try:
-    from .local import *
+    from .local import *  # noqa: F401,F403
 except ImportError:
     pass
