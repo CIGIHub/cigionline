@@ -1,9 +1,5 @@
 .innovation-series-article {
-  @include top-bar(
-    $background-color: $innovation-series-background-color,
-    $color: $black,
-    $position: relative,
-  );
+  @include top-bar($background-color: $innovation-series-background-color, $color: $black, $position: relative);
   background-color: $innovation-series-background-color;
 
   .hero {
@@ -55,6 +51,21 @@
       .topics {
         margin: 0;
       }
+    }
+  }
+
+  .body {
+    .container {
+      &:first-child {
+        .stream-image-block {
+          float: left;
+          margin: 10px 10px 0 0;
+        }
+      }
+    }
+
+    .float-left {
+      margin: 10px 10px 0 0;
     }
   }
 
