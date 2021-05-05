@@ -1,7 +1,6 @@
 from annual_reports import views as annual_report_views
 from django.conf import settings
 from django.conf.urls import include, url
-from django.contrib import admin
 from django.urls import path
 from django.views.decorators.cache import cache_control
 from events.feeds import EventFeed
