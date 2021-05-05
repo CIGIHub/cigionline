@@ -9,7 +9,6 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import PersonBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
