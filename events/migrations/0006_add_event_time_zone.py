@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0004_update_table_stream_block'),
+        ('events', '0005_use_custom_image_model'),
     ]
 
     operations = [
