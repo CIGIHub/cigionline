@@ -1,11 +1,13 @@
 import dj_database_url
 import os
-from .base import *
+from .base import *  # noqa: F403
 
 DEBUG = False
 
+ADMIN_ENABLED = False
+
 try:
-    from .local import *
+    from .local import *  # noqa: F403
 except ImportError:
     pass
 
@@ -64,7 +66,7 @@ if 'REDIS_URL' in os.environ:
 if 'CLOUDFLARE_EMAIL' in os.environ \
         and 'CLOUDFLARE_API_KEY' in os.environ \
         and 'CLOUDFLARE_ZONEID' in os.environ:
-    INSTALLED_APPS = list(INSTALLED_APPS)
+    INSTALLED_APPS = list(INSTALLED_APPS)  # noqa: F405
     INSTALLED_APPS.append('wagtail.contrib.frontend_cache')
     INSTALLED_APPS = tuple(INSTALLED_APPS)
     WAGTAILFRONTENDCACHE = {

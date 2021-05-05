@@ -5,6 +5,7 @@ from core.models import (
     FeatureablePageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
@@ -17,19 +18,14 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.core.blocks import (
     CharBlock,
-    DateBlock,
     PageChooserBlock,
-    RichTextBlock,
-    StreamBlock,
-    StructBlock,
-    URLBlock,
 )
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
+from streams.blocks import IgcTimelineBlock
 
 
 class ProjectListPage(Page):
@@ -39,7 +35,7 @@ class ProjectListPage(Page):
     templates = 'research/project_list_page.html'
 
     class Meta:
-        verbose_name = 'Project List Page'
+        verbose_name = 'Activity List Page'
 
 
 class ProjectPage(
@@ -48,57 +44,13 @@ class ProjectPage(
     ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             BasicPageAbstract.body_poster_block,
             BasicPageAbstract.body_recommended_block,
             BasicPageAbstract.body_text_border_block,
-            ('igc_timeline', StructBlock([
-                ('date', CharBlock(required=True)),
-                ('title', CharBlock(required=False)),
-                ('body', RichTextBlock(
-                    features=['bold', 'italic', 'link'],
-                    required=False,
-                )),
-                ('location', CharBlock(required=False)),
-                ('countries_represented', ImageChooserBlock(required=False)),
-                ('outcomes', StreamBlock(
-                    [
-                        ('outcome', StructBlock([
-                            ('date', DateBlock(required=False)),
-                            ('text', RichTextBlock(
-                                features=['bold', 'italic', 'link'],
-                                required=False,
-                            )),
-                        ])),
-                    ],
-                    required=False,
-                )),
-                ('witnesses', StreamBlock(
-                    [
-                        ('witness_date', StructBlock([
-                            ('date', DateBlock(required=False)),
-                            ('witnesses', StreamBlock(
-                                [
-                                    ('witnesses_full_session', StructBlock([
-                                        ('title', CharBlock(required=False)),
-                                        ('witness_transcript', URLBlock(required=False)),
-                                        ('witness_video', URLBlock(required=False)),
-                                    ])),
-                                    ('witness', StructBlock([
-                                        ('name', CharBlock(required=False)),
-                                        ('title', CharBlock(required=False)),
-                                        ('witness_transcript', URLBlock(required=False)),
-                                        ('witness_video', URLBlock(required=False)),
-                                    ])),
-                                ],
-                            )),
-                        ])),
-                    ],
-                    required=False,
-                )),
-            ])),
         ],
         blank=True,
     )
@@ -168,6 +120,18 @@ class ProjectPage(
             heading='Related',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featured Content',
+            classname='collapsible collapsed',
+        ),
     ]
 
     promote_panels = Page.promote_panels + [
@@ -178,6 +142,8 @@ class ProjectPage(
 
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
+        ThemeablePageAbstract.theme_panel,
     ]
 
     search_fields = ArchiveablePageAbstract.search_fields \
@@ -188,9 +154,61 @@ class ProjectPage(
     subpage_types = []
     templates = 'research/project_page.html'
 
+    def get_featured_pages(self):
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'topics',
+        ).in_bulk(featured_page_ids)
+        return [pages[x] for x in featured_page_ids]
+
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(ProjectPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/project_page.html'
+        return standard_template
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        context['featured_pages'] = self.get_featured_pages()
+        return context
+
     class Meta:
-        verbose_name = 'Project'
-        verbose_name_plural = 'Projects'
+        verbose_name = 'Activity'
+        verbose_name_plural = 'Activities'
+
+
+class IgcTimelinePage(BasicPageAbstract, Page):
+    """
+    A special singleton page for /igc/timeline
+    """
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    templates = 'research/igc_timeline_page.html'
+
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            ('igc_timeline', IgcTimelineBlock()),
+        ],
+        blank=True,
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    class Meta:
+        verbose_name = 'IGC Timeline Page'
 
 
 class ProjectType(index.Indexed, models.Model):
@@ -206,6 +224,28 @@ class ProjectType(index.Indexed, models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProjectPageFeaturedPage(Orderable):
+    project_page = ParentalKey(
+        'research.ProjectPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            ['wagtailcore.Page'],
+        ),
+    ]
 
 
 class ResearchLandingPage(BasicPageAbstract, Page):

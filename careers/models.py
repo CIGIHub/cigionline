@@ -104,6 +104,8 @@ class JobPostingPage(
         SearchablePageAbstract.search_panel,
     ]
 
+    search_fields = Page.search_fields + SearchablePageAbstract.search_fields
+
     parent_page_types = ['careers.JobPostingListPage']
     subpage_types = []
     templates = 'careers/job_posting_page.html'

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'igcTimelinePage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'igcTimelinePage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% if self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <figure>
+            {% image self.image_hero width-1280 %}
+            {% if self.image_hero.title %}
+              <figcaption>
+                {{ self.image_hero.title }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% include "includes/body.html" with body=self.body %}
+{% endblock content %}

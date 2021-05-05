@@ -13,6 +13,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
             body["highlight"] = {
                 "fields": {
                     "*__body": {},
+                    "*__search_terms": {}
                 },
                 "fragment_size": 256,
             }
@@ -27,13 +28,19 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
         pks = [hit['fields']['pk'][0] for hit in hits]
         scores = {str(hit['fields']['pk'][0]): hit['_score'] for hit in hits}
         highlights = {}
+        elevated = {}
 
         for hit in hits:
             highlight = hit.get('highlight', None)
             if highlight is not None:
-                highlights[str(hit['fields']['pk'][0])] = [item for field in list(highlight.values()) for item in field]
+                if '__search_terms' in "".join(highlight.keys()):
+                    elevated[str(hit['fields']['pk'][0])] = True
+                else:
+                    elevated[str(hit['fields']['pk'][0])] = False
+                highlights[str(hit['fields']['pk'][0])] = [item for key, value in highlight.items() for item in highlight[key] if '__search_terms' not in key]
             else:
                 highlights[str(hit['fields']['pk'][0])] = []
+                elevated[str(hit['fields']['pk'][0])] = False
 
         # Initialise results dictionary
         results = {str(pk): None for pk in pks}
@@ -46,6 +53,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                 setattr(obj, self._score_field, scores.get(str(obj.pk)))
 
             setattr(obj, '_highlights', highlights.get(str(obj.pk)))
+            setattr(obj, '_elevated', elevated.get(str(obj.pk)))
 
         # Yield results in order given by Elasticsearch
         for pk in pks:
@@ -100,7 +108,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.searchtext:
             must = {
                 "multi_match": {
-                    "fields": ["title", "*__body", "core_contentpage__author_names"],
+                    "fields": ["title", "*__body", "core_contentpage__author_names", "*__search_terms^100"],
                     "query": self.searchtext,
                 },
             }

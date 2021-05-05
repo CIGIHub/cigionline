@@ -59,7 +59,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     """View annual report page"""
 
     image_poster = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -128,6 +128,9 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         FeatureablePageAbstract.feature_panel,
         SearchablePageAbstract.search_panel,
     ]
+
+    search_fields = Page.search_fields + SearchablePageAbstract.search_fields
+
     parent_page_types = ['annual_reports.AnnualReportListPage']
     subpage_types = []
     templates = 'annual_reports/annual_report_page.html'

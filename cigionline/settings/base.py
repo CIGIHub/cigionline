@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'core',
     'events',
     'home',
+    'images',
     'menus',
     'multimedia',
     'newsletters',
@@ -163,6 +164,8 @@ WAGTAILEMBEDS_FINDERS = [
     {'class': 'wagtail.embeds.finders.oembed', },
 ]
 
+WAGTAILIMAGES_IMAGE_MODEL = 'images.CigionlineImage'
+
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -206,6 +209,7 @@ WAGTAILSEARCH_BACKENDS = {
     },
 }
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
