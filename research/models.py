@@ -35,7 +35,7 @@ class ProjectListPage(Page):
     templates = 'research/project_list_page.html'
 
     class Meta:
-        verbose_name = 'Project List Page'
+        verbose_name = 'Activity List Page'
 
 
 class ProjectPage(
@@ -175,8 +175,8 @@ class ProjectPage(
         return context
 
     class Meta:
-        verbose_name = 'Project'
-        verbose_name_plural = 'Projects'
+        verbose_name = 'Activity'
+        verbose_name_plural = 'Activities'
 
 
 class IgcTimelinePage(BasicPageAbstract, Page):
