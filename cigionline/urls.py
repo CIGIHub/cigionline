@@ -14,10 +14,12 @@ from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
 
 
-urlpatterns = [
-    url(r'^django-admin/', admin.site.urls),
-
-    url(r'^admin/', include(wagtailadmin_urls)),
+urlpatterns = []
+if settings.ADMIN_ENABLED:
+    urlpatterns = urlpatterns + [
+        url(r'^admin/', include(wagtailadmin_urls)),
+    ]
+urlpatterns = urlpatterns + [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
