@@ -54,21 +54,6 @@
     }
   }
 
-  .body {
-    .container {
-      &:first-child {
-        .stream-image-block {
-          float: left;
-          margin: 10px 10px 0 0;
-        }
-      }
-    }
-
-    .float-left {
-      margin: 10px 10px 0 0;
-    }
-  }
-
   .social {
     ul {
       display: flex;
@@ -125,6 +110,19 @@
       height: 37px;
       margin: 2em auto 3em;
       width: 134px;
+    }
+
+    .container {
+      &:first-child {
+        .stream-image-block {
+          float: left;
+          margin: 10px 10px 0 0;
+        }
+      }
+    }
+
+    .float-left {
+      margin: 10px 10px 0 0;
     }
   }
 
