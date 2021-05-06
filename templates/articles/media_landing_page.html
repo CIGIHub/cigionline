@@ -31,10 +31,8 @@
               <h3><a href="{% pageurl article %}">{{ article.title }}</a></h3>
               <p class="meta">{{ article.article_type.title }}</p>
               <p class="cigi-people-mentioned">
-                {% for person in article.cigi_people_mentioned %}
-                  {% if person.block_type == 'cigi_person' %}
-                    <a href="{{ person.value.url }}">{{ person.value.title }}</a>
-                  {% endif %}
+                {% for person in article.cigi_people_mentioned.all %}
+                  <a href="{% pageurl person.person %}">{{ person.person.title }}</a>
                 {% endfor %}
               </p>
               {% include "includes/date.html" with date=article.publishing_date %}
