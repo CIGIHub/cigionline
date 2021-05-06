@@ -87,6 +87,7 @@ header {
       display: flex;
 
       ul {
+        align-items: center;
         display: flex;
         list-style: none;
         margin: 0;
@@ -94,7 +95,6 @@ header {
         a,
         button {
           color: $white;
-          display: block;
           font-size: 0.8125rem;
           padding: 1.9em 0.9em;
 
@@ -117,7 +117,7 @@ header {
         }
 
         .overlay-controls {
-          display: inline-block;
+          display: flex;
 
           &.menu-break {
             margin-left: 1.5em;

@@ -37,7 +37,7 @@ function ArticleSeriesListing(props) {
         </div>
       </div>
       <a href={row.url} className="article-series-image">
-        <img src={row.image_poster_url} alt={row.image_poster_title} width="672" height="895" />
+        <img src={row.image_poster_url} alt={row.image_poster_caption} width="672" height="895" />
       </a>
     </article>
   );
@@ -46,7 +46,7 @@ function ArticleSeriesListing(props) {
 ArticleSeriesListing.propTypes = {
   row: PropTypes.shape({
     id: PropTypes.number,
-    image_poster_title: PropTypes.string,
+    image_poster_caption: PropTypes.string,
     image_poster_url: PropTypes.string,
     series_contributors: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,

@@ -14,6 +14,29 @@
     font-size: 1.065em;
   }
 
+  hr {
+    @include media-breakpoint-up(md) {
+      margin-bottom: 3.5em;
+    }
+    border: 0;
+    font-size: 18px;
+    height: 0;
+    margin: 2.5em 0;
+
+    &::after {
+      @include media-breakpoint-up(md) {
+        font-size: 18px;
+        letter-spacing: 6px;
+      }
+      color: $black;
+      content: '\25A0\25A0\25A0';
+      font-size: 8px;
+      left: calc(50% - 23px);
+      letter-spacing: 2px;
+      position: absolute;
+    }
+  }
+
   .cyber-series-article-hero {
     @include media-breakpoint-up(md) {
       height: 400px;
@@ -193,11 +216,12 @@
   }
 
   .stream-block-blockquote {
+    margin: 2rem 0 1rem;
     position: relative;
 
     blockquote {
       &::before {
-        background-color: $cyber-series-primary-colour;
+        border-bottom: 5px solid $cyber-series-primary-colour;
         content: '';
         height: 5px;
         left: 0;

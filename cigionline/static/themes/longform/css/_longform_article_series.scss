@@ -115,11 +115,12 @@
         display: block;
       }
       display: none;
-      left: 0;
+      left: 50%;
       min-height: 100%;
       min-width: 100%;
       position: absolute;
-      top: 0;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
     }
   }
 

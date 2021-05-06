@@ -11,7 +11,7 @@ ReactDOM.render(
     ]}
     limit={5}
     fields={[
-      'image_poster_title',
+      'image_poster_caption',
       'image_poster_url',
       'series_contributors',
       'short_description',

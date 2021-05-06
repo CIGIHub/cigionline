@@ -13,6 +13,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
             body["highlight"] = {
                 "fields": {
                     "*__body": {},
+                    "*__search_terms": {}
                 },
                 "fragment_size": 256,
             }
@@ -38,6 +39,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                 highlights[str(hit['fields']['pk'][0])] = [item for key, value in highlight.items() for item in highlight[key] if '__search_terms' not in key]
             else:
                 highlights[str(hit['fields']['pk'][0])] = []
+                elevated[str(hit['fields']['pk'][0])] = False
 
         # Initialise results dictionary
         results = {str(pk): None for pk in pks}
@@ -105,7 +107,7 @@ class CIGIOnlineSearchQueryCompiler:
         if self.searchtext:
             must = {
                 "multi_match": {
-                    "fields": ["title", "*__body", "core_contentpage__author_names"],
+                    "fields": ["title", "*__body", "core_contentpage__author_names", "*__search_terms^100"],
                     "query": self.searchtext,
                 },
             }
