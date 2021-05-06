@@ -17,6 +17,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                 },
                 "fragment_size": 256,
             }
+
         return body
 
     def _get_results_from_hits(self, hits):
