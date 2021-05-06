@@ -16,6 +16,7 @@ def populate_menus(apps, schema_editor):
         ('publications', 'Publications'),
         ('research', 'Research'),
         ('igc', 'IGC'),
+        ('gcig', 'GCIG'),
         ('topic-india', 'Topic - India'),
         ('topic-internet-governance', 'Topic - Internet Governance'),
         ('topic-platform-governance', 'Topic - Platform Governance'),
