@@ -24,3 +24,16 @@
 .draftail_rich_text_area a {
   word-break: break-all;
 }
+
+#id_featured_articles-FORMS,
+#id_featured_pages-FORMS,
+#id_featured_multimedia-FORMS {
+  counter-reset: featured-item;
+}
+
+#id_featured_articles-FORMS [id^='inline_child_featured_articles']::before,
+#id_featured_pages-FORMS [id^='inline_child_featured_pages']::before,
+#id_featured_multimedia-FORMS [id^='inline_child_featured_multimedia']::before  {
+  counter-increment: featured-item;
+  content: 'Item ' counter(featured-item) ': ';
+}

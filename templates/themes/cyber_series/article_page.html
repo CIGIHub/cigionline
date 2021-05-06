@@ -62,10 +62,12 @@
 {% endblock %}
 
 {% block article_content %}
-  <section class="article-wrapper">
+  <section class="article-wrapper body">
   {% image self.image_banner original as image_banner %}
   <div class="cyber-series-article-bg-image" style="background-image: linear-gradient(#f2f0ea 0%, transparent 200%), url('{{ image_banner.url }}');"></div>
-    {{ self.body }}
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
 
     {% if self.footnotes %}
         <div class="article-footnotes">
