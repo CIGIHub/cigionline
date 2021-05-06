@@ -29,6 +29,7 @@ class HomePage(Page):
             ],
             heading='Featured Content',
             classname='collapsible collapsed',
+            help_text='1: large | 2-4: medium | 5-9: small'
         ),
         MultiFieldPanel(
             [

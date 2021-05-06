@@ -12,5 +12,7 @@
 // Column on home page and article landing page
 // that contains small feature items
 .featured-small {
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
