@@ -130,6 +130,7 @@ class SearchTable extends React.Component {
       fields,
       isSearchPage,
       limit,
+      sortOptions,
     } = this.props;
 
     if (isSearchPage) {
@@ -148,6 +149,12 @@ class SearchTable extends React.Component {
     let uri = `/api/search/?limit=${limit}&offset=${offset}`;
     if (sortSelected) {
       uri += `&sort=${sortSelected}`;
+    } else {
+      for (const sortOption of sortOptions) {
+        if (sortOption.default) {
+          uri += `&sort=${sortOption.value}`;
+        }
+      }
     }
     for (const contenttype of contenttypes) {
       uri += `&contenttype=${contenttype}`;
