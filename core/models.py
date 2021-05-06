@@ -350,8 +350,9 @@ class ContentPage(Page, SearchablePageAbstract):
             people_ids.append(author.author.id)
         for editor in self.editors.all():
             people_ids.append(editor.editor.id)
-        for person in self.cigi_people_mentioned.all():
-            people_ids.append(person.person.id)
+        if self.specific and hasattr(self.specific, 'cigi_people_mentioned'):
+            for person in self.cigi_people_mentioned.all():
+                people_ids.append(person.person.id)
         return people_ids
 
     @property
