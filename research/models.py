@@ -280,7 +280,7 @@ class TopicListPage(Page):
         verbose_name = 'Topic List Page'
 
 
-class TopicPage(ArchiveablePageAbstract, Page):
+class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
 
@@ -319,6 +319,7 @@ class TopicPage(ArchiveablePageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
     ]
 
     search_fields = Page.search_fields + ArchiveablePageAbstract.search_fields

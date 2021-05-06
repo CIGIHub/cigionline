@@ -17,6 +17,11 @@ def populate_menus(apps, schema_editor):
         ('research', 'Research'),
         ('igc', 'IGC'),
         ('gcig', 'GCIG'),
+        ('topic-india', 'Topic - India'),
+        ('topic-internet-governance', 'Topic - Internet Governance'),
+        ('topic-platform-governance', 'Topic - Platform Governance'),
+        ('topic-refugees', 'Topic - Refugees'),
+        ('topic-security', 'Topic - Security'),
     ]
     Menu = apps.get_model('menus', 'Menu')
     for slug, name in INITIAL_MENUS:
