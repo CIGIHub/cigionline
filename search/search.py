@@ -27,7 +27,6 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
         pks = [hit['fields']['pk'][0] for hit in hits]
         scores = {str(hit['fields']['pk'][0]): hit['_score'] for hit in hits}
         highlights = {}
-        elevated = {}
 
         for hit in hits:
             highlight = hit.get('highlight', None)
