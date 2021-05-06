@@ -12,11 +12,11 @@ ReactDOM.render(
     showSearch
     sortOptions={[{
       default: true,
-      name: 'Date',
-      value: 'date',
-    }, {
       name: 'Relevance',
       value: 'relevance',
+    }, {
+      name: 'Date',
+      value: 'date',
     }]}
     fields={[
       'authors',
