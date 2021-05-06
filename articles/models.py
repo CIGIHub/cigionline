@@ -9,7 +9,6 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import PersonBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -203,12 +202,6 @@ class ArticlePage(
         ],
         blank=True,
     )
-    cigi_people_mentioned = StreamField(
-        [
-            ('cigi_person', PersonBlock(required=True, page_type='people.PersonPage')),
-        ],
-        blank=True,
-    )
     embed_youtube = models.URLField(
         blank=True,
         verbose_name='YouTube Embed',
@@ -324,11 +317,7 @@ class ArticlePage(
 
     @property
     def cigi_people_mentioned_ids(self):
-        people_ids = []
-        for block in self.specific.cigi_people_mentioned:
-            if block.block_type == 'cigi_person':
-                people_ids.append(block.value)
-        return people_ids
+        return [item.person.id for item in self.cigi_people_mentioned.all()]
 
     def is_opinion(self):
         return self.article_type.title in [
@@ -400,7 +389,7 @@ class ArticlePage(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
-                StreamFieldPanel('cigi_people_mentioned'),
+                InlinePanel('cigi_people_mentioned'),
                 StreamFieldPanel('interviewers'),
                 StreamFieldPanel('related_files'),
             ],
@@ -446,6 +435,28 @@ class ArticlePage(
     class Meta:
         verbose_name = 'Opinion'
         verbose_name_plural = 'Opinions'
+
+
+class ArticlePagePersonMentioned(Orderable):
+    article_page = ParentalKey(
+        'articles.ArticlePage',
+        related_name='cigi_people_mentioned',
+    )
+    person = models.ForeignKey(
+        'people.PersonPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Person',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'person',
+            ['people.PersonPage'],
+        ),
+    ]
 
 
 class ArticleTypePage(BasicPageAbstract, Page):
