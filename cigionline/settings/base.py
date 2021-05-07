@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'promotions',
     'publications',
     'research',
+    'robots',
     'search',
     'streams',
     'subscribe',
