@@ -16,6 +16,7 @@ class Menu(index.Indexed, ClusterableModel):
     slug = models.CharField(max_length=32)
 
     panels = [
+        FieldPanel('name'),
         MultiFieldPanel(
             [
                 InlinePanel('menu_items'),
@@ -33,7 +34,7 @@ class Menu(index.Indexed, ClusterableModel):
 
 
 class MenuItem(Orderable):
-    title = models.CharField(max_length=32)
+    title = models.CharField(max_length=128)
     link_page = models.ForeignKey(
         'wagtailcore.Page',
         null=True,

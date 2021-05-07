@@ -47,7 +47,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
   {% if self.image_hero %}
     <section class="image-hero">

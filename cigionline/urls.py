@@ -1,12 +1,12 @@
 from annual_reports import views as annual_report_views
 from django.conf import settings
 from django.conf.urls import include, url
-from django.contrib import admin
 from django.urls import path
 from django.views.decorators.cache import cache_control
 from events.feeds import EventFeed
 from people import views as people_views
 from research import views as research_views
+from robots import views as robots_views
 from search import views as search_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
@@ -14,10 +14,12 @@ from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
 
 
-urlpatterns = [
-    url(r'^django-admin/', admin.site.urls),
-
-    url(r'^admin/', include(wagtailadmin_urls)),
+urlpatterns = []
+if settings.ADMIN_ENABLED:
+    urlpatterns = urlpatterns + [
+        url(r'^admin/', include(wagtailadmin_urls)),
+    ]
+urlpatterns = urlpatterns + [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
@@ -28,6 +30,7 @@ urlpatterns = [
     url(r'^api/annual-reports/', annual_report_views.all_annual_reports),
 
     url(r'^events/feed.ics$', EventFeed()),
+    url(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
 ]
 
 

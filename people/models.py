@@ -80,7 +80,12 @@ class PersonListPage(BasicPageAbstract, Page):
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     def featured_experts_random(self):
-        expert_id_list = list(PersonPage.objects.live().public().filter(person_types=4, archive=0).values_list('id', flat=True))
+        expert_id_list = list(PersonPage.objects.live().public().filter(
+            person_types=4,
+            archive=0,
+            content_pages_as_author__isnull=False,
+        ).values_list('id', flat=True))
+        expert_id_list = list(set(expert_id_list))
         random_expert_id_list = random.sample(expert_id_list, min(len(expert_id_list), 6))
         random_experts = PersonPage.objects.filter(id__in=random_expert_id_list)
 
@@ -173,7 +178,7 @@ class PersonPage(
     ], blank=True)
     first_name = models.CharField(blank=True, max_length=255)
     image_media = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -182,7 +187,7 @@ class PersonPage(
         help_text='A high resolution image that is downloadable from the expert\'s page.'
     )
     image_square = models.ForeignKey(
-        'wagtailimages.Image',
+        'images.CigionlineImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -387,7 +392,8 @@ class PersonPage(
             index.FilterField('last_name_lowercase'),
             ParentalManyToManyFilterFieldName('person_types'),
             ParentalManyToManyFilterField('topics'),
-        ]
+        ] \
+        + SearchablePageAbstract.search_fields
 
     parent_page_types = ['people.PeoplePage']
     subpage_types = []

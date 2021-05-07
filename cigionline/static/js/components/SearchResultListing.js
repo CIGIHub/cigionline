@@ -20,6 +20,11 @@ function SearchResultListing(props) {
           <i className="fal fa-play" />
         </span>
       )}
+      {row.contenttype === 'Multimedia Series' && row.contentsubtype === 'Multimedia Series' && (
+        <span className="table-icon icon-multimedia">
+          <i className="fal fa-play" />
+        </span>
+      )}
       {row.contenttype === 'Multimedia' && row.contentsubtype === 'Audio' && (
         <span className="table-icon icon-multimedia">
           <i className="fal fa-headphones" />
@@ -46,7 +51,10 @@ function SearchResultListing(props) {
           ))}
         </ul>
         <h2 className="search-result-title">
-          <a href={row.url}>{row.title}</a>
+          <a href={row.url}>
+            {row.title}
+            {row.elevated && <i className="fal fa-bookmark elevate-bookmark" />}
+          </a>
         </h2>
         {row.publishing_date && (
           <div className="search-result-meta">
@@ -90,6 +98,7 @@ SearchResultListing.propTypes = {
     })),
     contentsubtype: PropTypes.string,
     contenttype: PropTypes.string,
+    elevated: PropTypes.bool,
     highlights: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     publishing_date: PropTypes.string,
