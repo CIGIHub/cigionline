@@ -95,7 +95,7 @@ header {
         a,
         button {
           color: $white;
-          font-size: 0.8125rem;
+          font-size: 0.875rem;
           padding: 1.9em 0.9em;
 
           &:hover {
@@ -196,7 +196,6 @@ header {
 
     .custom-popup-inner {
       @include media-breakpoint-up(lg) {
-        align-items: center;
         height: 26.875em;
         padding-top: 0;
       }
@@ -249,7 +248,7 @@ header {
             &:nth-child(1),
             &:nth-child(5) {
               @include media-breakpoint-up(md) {
-                padding-left: 0.8em;
+                padding-left: 15px;
               }
             }
 
