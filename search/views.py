@@ -75,20 +75,22 @@ def search_api(request):
         sort=request.GET.get('sort', None),
         topics=request.GET.getlist('topic', None),
     )
-    promoted_pages = cigi_search_promoted(
-        articletypeid=request.GET.get('articletypeid', None),
-        authors=request.GET.getlist('author', None),
-        content_type=request.GET.get('content_type', None),
-        contenttypes=request.GET.getlist('contenttype', None),
-        contentsubtypes=request.GET.getlist('contentsubtype', None),
-        multimediaseriesid=request.GET.get('multimediaseriesid', None),
-        projects=request.GET.getlist('project', None),
-        publicationseriesid=request.GET.get('publicationseriesid', None),
-        publicationtypeid=request.GET.get('publicationtypeid', None),
-        searchtext=searchtext,
-        sort=request.GET.get('sort', None),
-        topics=request.GET.getlist('topic', None),
-    )
+    promoted_pages = []
+    if request.GET.get('searchpage'):
+        promoted_pages = cigi_search_promoted(
+            articletypeid=request.GET.get('articletypeid', None),
+            authors=request.GET.getlist('author', None),
+            content_type=request.GET.get('content_type', None),
+            contenttypes=request.GET.getlist('contenttype', None),
+            contentsubtypes=request.GET.getlist('contentsubtype', None),
+            multimediaseriesid=request.GET.get('multimediaseriesid', None),
+            projects=request.GET.getlist('project', None),
+            publicationseriesid=request.GET.get('publicationseriesid', None),
+            publicationtypeid=request.GET.get('publicationtypeid', None),
+            searchtext=searchtext,
+            sort=request.GET.get('sort', None),
+            topics=request.GET.getlist('topic', None),
+        )
 
     default_limit = 24
     default_offset = 0
