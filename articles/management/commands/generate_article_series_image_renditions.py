@@ -32,6 +32,79 @@ class Command(BaseCommand):
                 if article_series.image_poster and Path(article_series.image_poster.file.url) != '.gif':
                     print(f'Article Series {article_series.id}: Generating poster image')
                     article_series.image_poster.get_rendition('width-700')
+                    print(f'Article Series {article_series.id}: Generating poster image for opinion series page')
+                    article_series.image_poster.get_rendition('fill-672x895')
+                if article_series.theme.name == 'Platform Governance Series':
+                    print(f'Article Series {article_series.id}: Generating Platform Governance series banner image')
+                    article_series.image_banner.get_rendition('width-1440')
+                    print(f'Article Series {article_series.id}: Generating Platform Governance series small banner image')
+                    article_series.image_banner.get_rendition('width-100')
+                if article_series.theme.name == 'Indigenous Lands Series':
+                    print(f'Article Series {article_series.id}: Generating Indigenous Lands series hero image')
+                    article_series.image_hero.get_rendition('original')
+                if article_series.theme.name == 'Cyber Series':
+                    print(f'Article Series {article_series.id}: Generating Cyber series hero image')
+                    article_series.image_hero.get_rendition('original')
+                if article_series.theme.name == 'Longform':
+                    print(f'Article Series {article_series.id}: Generating Longform banner image')
+                    article_series.image_banner.get_rendition('original')
+                if article_series.theme.name == 'Innovation Series':
+                    print(f'Article Series {article_series.id}: Generating Innovation series hero image')
+                    article_series.image_hero.get_rendition('original')
+                for series_item in article_series.article_series_items:
+                    if article_series.theme.name == 'AI Series':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating AI series in the series image')
+                            series_item.content_page.specific.image_banner.get_rendition('max-450x200')
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating AI series hero image')
+                            series_item.content_page.specific.image_banner.get_rendition('original')
+                    if article_series.theme.name == 'Health Security Series':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Health Security series hero image')
+                            series_item.content_page.specific.image_banner.get_rendition('original')
+                    if article_series.theme.name == 'After-COVID Series':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating After-COVID series banner image')
+                            series_item.content_page.specific.image_banner.get_rendition('original')
+                        if series_item.content_page.specific.image_hero:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating After-COVID series hero image')
+                            series_item.content_page.specific.image_hero.get_rendition('width-768')
+                    if article_series.theme.name == 'Platform Governance Series':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Platform Governance series banner image')
+                            series_item.content_page.specific.image_banner.get_rendition('width-1440')
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Platform Governance series small banner image')
+                            series_item.content_page.specific.image_banner.get_rendition('width-100')
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Platform Governance series in the series image')
+                            series_item.content_page.specific.image_banner.get_rendition('fill-672x895')
+                    if article_series.theme.name == 'Cyber Series':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Cyber series banner image')
+                            series_item.content_page.specific.image_banner.get_rendition('original')
+                    if article_series.theme.name == 'Longform':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Longform banner image')
+                            series_item.content_page.specific.image_banner.get_rendition('original')
+                        if series_item.content_page.specific.image_hero:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Longform featured image')
+                            series_item.content_page.specific.image_hero.get_rendition('original')
+                    if article_series.theme.name == 'Data Series':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Data series banner image')
+                            series_item.content_page.specific.image_banner.get_rendition('original')
+                    if article_series.theme.name == 'Innovation Series':
+                        if series_item.content_page.specific.image_banner:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Innovation series banner image')
+                            series_item.content_page.specific.image_banner.get_rendition('original')
+                        if series_item.content_page.specific.image_hero:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Innovation series featured image')
+                            series_item.content_page.specific.image_hero.get_rendition('original')
+                        if hasattr(series_item.content_page.specific, 'image_banner_small') and series_item.content_page.specific.image_banner_small:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Innovation series article background from image_banner_small')
+                            series_item.content_page.specific.image_banner_small.get_rendition('original')
+                        elif hasattr(series_item.content_page.specific, 'image_square') and series_item.content_page.specific.image_square:
+                            print(f'Article Series {article_series.id}, {series_item.content_page.id}: Generating Innovation series article background from image_square')
+                            series_item.content_page.specific.image_square.get_rendition('original')
                 print(f'Article Series {article_series.id}: Finished')
 
         print(f'Finished... {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
