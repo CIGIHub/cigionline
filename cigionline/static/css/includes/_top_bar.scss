@@ -183,6 +183,14 @@ header {
     width: 100%;
     z-index: 1;
 
+    &.popup-search {
+      .custom-popup-inner {
+        @include media-breakpoint-up(lg) {
+          align-items: center;
+        }
+      }
+    }
+
     &.popup-menu {
       &.opened-popup {
         overflow: scroll;
