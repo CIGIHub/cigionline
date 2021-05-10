@@ -458,7 +458,7 @@ class SearchTable extends React.Component {
                   ? (
                     <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
                       {rows.map((row) => (
-                        <RowComponent key={row.id} row={row} />
+                        <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
                       ))}
                     </div>
                   ) : (
@@ -474,7 +474,7 @@ class SearchTable extends React.Component {
                       </thead>
                       <tbody>
                         {rows.map((row) => (
-                          <RowComponent key={row.id} row={row} />
+                          <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
                         ))}
                       </tbody>
                     </table>
