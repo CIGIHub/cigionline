@@ -50,14 +50,14 @@
         </div>
       </div>
     </div>
-    <div class="custom-popup-wrapper" id="popup-search">
+    <div class="custom-popup-wrapper popup-search" id="popup-search">
       <div class="custom-popup-inner">
         <div class="container">
           <div class="row">
             <div class="col custom-popup-content custom-popup-nav-search">
               <form action="{% url 'search' %}" method="get">
                 <div class="input-group input-group-search">
-                  <input type="text" class="form-control" name="query" placeholder="Keyword Search" aria-label="search-bar"
+                  <input type="text" class="form-control" id="nav-search-input" name="query" placeholder="Keyword Search" aria-label="search-bar"
                     aria-describedby="search-bar" required>
                   <div class="input-group-append">
                     <button class="btn-search" type="submit" id="search-bar">
