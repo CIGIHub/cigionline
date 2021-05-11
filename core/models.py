@@ -392,7 +392,7 @@ class ContentPage(Page, SearchablePageAbstract):
 
     def get_recommended(self):
         recommended_page_ids = self.recommended.values_list('recommended_content_page_id', flat=True)[:3]
-        pages = Page.objects.specific().prefetch_related(
+        pages = Page.objects.specific().select_related(
             'authors__author',
             'topics',
         ).in_bulk(recommended_page_ids)
