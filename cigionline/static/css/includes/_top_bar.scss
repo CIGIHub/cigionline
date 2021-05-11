@@ -173,7 +173,7 @@ header {
 
   .custom-popup-wrapper {
     @include media-breakpoint-up(md) {
-      -ms-overflow-style: none;  /* IE and Edge */
+      -ms-overflow-style: none;
       scrollbar-width: none;
     }
     background: $popup-overlay;
