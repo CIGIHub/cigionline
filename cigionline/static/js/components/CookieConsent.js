@@ -14,7 +14,7 @@ class CookieConsent extends React.Component {
   }
 
   handleConsent() {
-    document.cookie = 'cigionline.accept.privacy.notice=1';
+    document.cookie = `cigionline.accept.privacy.notice=1; expires=${new Date(2147483647 * 1000).toUTCString()}`;
     this.setState({
       consentClicked: true,
     });
