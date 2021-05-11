@@ -240,6 +240,9 @@ header {
         .overlay-menu-content {
           .overlay-menu-submenu {
             @include link($color: $white, $hover-color: $cigi-dark-pink);
+            @include media-breakpoint-up(sm) {
+              padding-left: 22px;
+            }
             @include media-breakpoint-up(md) {
               border-bottom: 0;
               border-right: solid 1px $cigi-darkest-grey;
@@ -248,10 +251,9 @@ header {
               min-height: 250px;
               padding: 0 0.4em 0 1.3em;
             }
-
             border-bottom: 1px solid $divider-grey;
             font-size: 1.1em;
-            padding: 1em 22px;
+            padding: 1em 15px;
             position: relative;
 
             &:nth-child(4) {
