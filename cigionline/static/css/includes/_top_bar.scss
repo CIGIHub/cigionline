@@ -172,6 +172,10 @@ header {
   }
 
   .custom-popup-wrapper {
+    @include media-breakpoint-up(md) {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;
+    }
     background: $popup-overlay;
     height: 100vh;
     opacity: 0;
@@ -182,6 +186,12 @@ header {
     visibility: hidden;
     width: 100%;
     z-index: 1;
+
+    &::-webkit-scrollbar {
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
+    }
 
     &.popup-search {
       .custom-popup-inner {
@@ -241,7 +251,7 @@ header {
 
             border-bottom: 1px solid $divider-grey;
             font-size: 1.1em;
-            padding: 1em 15px;
+            padding: 1em 22px;
             position: relative;
 
             &:nth-child(4) {
