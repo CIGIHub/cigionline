@@ -47,6 +47,9 @@ $(function() {
     $('#popup-menu').removeClass(openMenuClass);
     $('#popup-search').toggleClass(openMenuClass);
     $('body').toggleClass('disable-scroll');
+    setTimeout(function() {
+      document.getElementById('nav-search-input').focus();
+    }, 100);
   });
 
   $openMenuBtn.on('click', function() {
