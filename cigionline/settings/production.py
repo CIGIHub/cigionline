@@ -105,6 +105,9 @@ EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 if 'SENDGRID_API_KEY' in os.environ:
     SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
+if 'DEFAULT_FROM_EMAIL' in os.environ:
+    DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+
 # Mailchimp
 if 'MAILCHIMP_API_KEY' in os.environ:
     MAILCHIMP_API_KEY = os.environ['MAILCHIMP_API_KEY']
