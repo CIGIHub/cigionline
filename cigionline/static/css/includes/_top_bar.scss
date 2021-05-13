@@ -95,7 +95,7 @@ header {
         a,
         button {
           color: $white;
-          font-size: 0.8125rem;
+          font-size: 0.875rem;
           padding: 1.9em 0.9em;
 
           &:hover {
@@ -172,6 +172,10 @@ header {
   }
 
   .custom-popup-wrapper {
+    @include media-breakpoint-up(md) {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
     background: $popup-overlay;
     height: 100vh;
     opacity: 0;
@@ -182,6 +186,20 @@ header {
     visibility: hidden;
     width: 100%;
     z-index: 1;
+
+    &::-webkit-scrollbar {
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
+    }
+
+    &.popup-search {
+      .custom-popup-inner {
+        @include media-breakpoint-up(lg) {
+          align-items: center;
+        }
+      }
+    }
 
     &.popup-menu {
       &.opened-popup {
@@ -196,7 +214,6 @@ header {
 
     .custom-popup-inner {
       @include media-breakpoint-up(lg) {
-        align-items: center;
         height: 26.875em;
         padding-top: 0;
       }
@@ -223,6 +240,9 @@ header {
         .overlay-menu-content {
           .overlay-menu-submenu {
             @include link($color: $white, $hover-color: $cigi-dark-pink);
+            @include media-breakpoint-up(sm) {
+              padding-left: 22px;
+            }
             @include media-breakpoint-up(md) {
               border-bottom: 0;
               border-right: solid 1px $cigi-darkest-grey;
@@ -231,7 +251,6 @@ header {
               min-height: 250px;
               padding: 0 0.4em 0 1.3em;
             }
-
             border-bottom: 1px solid $divider-grey;
             font-size: 1.1em;
             padding: 1em 15px;
@@ -249,7 +268,7 @@ header {
             &:nth-child(1),
             &:nth-child(5) {
               @include media-breakpoint-up(md) {
-                padding-left: 0.8em;
+                padding-left: 15px;
               }
             }
 
