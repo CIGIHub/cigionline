@@ -729,12 +729,14 @@ class NewsletterBlock(blocks.StructBlock):
             elif content_page.image_hero:
                 context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").url
                 context['image_alt'] = content_page.image_hero.caption
+            if context.get('image_url'):
+                context['image_url'] = context['image_url'].replace('https://edit.cigionline.org', context['page'].get_site().root_url)
 
             if not value.get('url'):
                 context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
 
             if content_page.contenttype == 'Event':
-                event_time = content_page.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
+                event_time = content_page.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
                 event_time_zone = f' {content_page.time_zone}' if content_page.time_zone else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
