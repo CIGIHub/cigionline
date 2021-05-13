@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.forms.utils import flatatt
 from django.utils.html import format_html, format_html_join
@@ -718,19 +719,19 @@ class NewsletterBlock(blocks.StructBlock):
             context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         if value.get('image'):
-            context['image_url'] = value.get("image").get_rendition("fill-600x238").url
+            context['image_url'] = value.get("image").get_rendition("fill-600x238").file.name
 
         if value.get('content'):
             content_page = value.get('content').specific
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
             context['text'] = value.get('text_override') if value.get('text_override') else content_page.short_description
             if value.get('image_override'):
-                context['image_url'] = value.get("image_override").get_rendition("fill-600x238").url
+                context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
             elif content_page.image_hero:
-                context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").url
+                context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").file.name
                 context['image_alt'] = content_page.image_hero.caption
             if context.get('image_url'):
-                context['image_url'] = f'{context["page"].get_site().root_url}{context["image_url"]}'
+                context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url"]}'
 
             if not value.get('url'):
                 context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
