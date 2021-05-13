@@ -730,7 +730,7 @@ class NewsletterBlock(blocks.StructBlock):
                 context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").url
                 context['image_alt'] = content_page.image_hero.caption
             if context.get('image_url'):
-                context['image_url'] = context['image_url'].replace('https://edit.cigionline.org', context['page'].get_site().root_url)
+                context['image_url'] = f'{context["page"].get_site().root_url}{context["image_url"]}'
 
             if not value.get('url'):
                 context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
