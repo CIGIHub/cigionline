@@ -1,6 +1,11 @@
 name: Node.js CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - '**'
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
@@ -9,9 +14,18 @@ jobs:
   lint-js:
     runs-on: ubuntu-latest
 
+    if: |
+        (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
+        (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
       - name: Check out repository code
+        if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v2
+      - name: Check out Dependabot
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -24,9 +38,18 @@ jobs:
   lint-sass:
     runs-on: ubuntu-latest
 
+    if: |
+        (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
+        (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
       - name: Check out repository code
+        if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v2
+      - name: Check out Dependabot
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
