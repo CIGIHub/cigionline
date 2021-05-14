@@ -10,6 +10,7 @@ from wagtail.admin.edit_handlers import (
     MultiFieldPanel,
     StreamFieldPanel,
 )
+from wagtail.admin.mail import send_mail
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.contrib.forms.models import (
     AbstractEmailForm,
@@ -98,6 +99,12 @@ class ContactPage(AbstractEmailForm):
                 placeholder = placeholder + '*'
             field.widget.attrs.update({'placeholder': placeholder})
         return form
+
+    def send_mail(self, form):
+        subject = f"[Contact Us] {form.data['subject']}"
+        addresses = [x.strip() for x in self.to_address.split(',')]
+
+        send_mail(subject, self.render_email(form), addresses, self.from_address,)
 
     max_count = 1
     parent_page_types = ['home.HomePage']
