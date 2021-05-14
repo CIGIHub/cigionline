@@ -282,3 +282,5 @@ BASE_URL = 'http://example.com'
 
 WAGTAIL_USER_TIME_ZONES = ['America/Toronto']
 TIME_ZONE = 'America/Toronto'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
