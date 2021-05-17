@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'compressor',
     'contact',
     'core',
+    'embeds',
     'events',
     'home',
     'images',
@@ -161,6 +162,7 @@ simplecast_provider = {
 }
 
 WAGTAILEMBEDS_FINDERS = [
+    {'class': 'embeds.finders.oembed.YouTubeOEmbedFinder'},
     {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider], },
     {'class': 'wagtail.embeds.finders.oembed', },
 ]
