@@ -15,7 +15,7 @@ if 'SECRET_KEY' in os.environ:
     SECRET_KEY = os.environ['SECRET_KEY']
 
 if 'ALLOWED_HOSTS' in os.environ:
-    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
+    ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
 
 if 'DATABASE_URL' in os.environ:
     DATABASES = {
