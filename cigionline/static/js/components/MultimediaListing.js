@@ -12,7 +12,12 @@ function MultimediaListing(props) {
       <a href={row.url} className="multimedia-card-image">
         <div className="img-wrapper" style={{ backgroundImage: `url(${row.image_hero_url})` }} />
         <div className="multimedia-image-type">
-          <i className="fas fa-play" />
+          {row.contentsubtype === 'Video' && (
+            <i className="fas fa-play" />
+          )}
+          {row.contentsubtype === 'Audio' && (
+            <i className="fas fa-volume-up" />
+          )}
         </div>
       </a>
       <ul className="custom-text-list multimedia-card-topic-list">
@@ -57,6 +62,7 @@ MultimediaListing.propTypes = {
       type: PropTypes.string,
       value: PropTypes.any,
     })),
+    contentsubtype: PropTypes.string,
     id: PropTypes.number,
     image_hero_url: PropTypes.string,
     publishing_date: PropTypes.string,
