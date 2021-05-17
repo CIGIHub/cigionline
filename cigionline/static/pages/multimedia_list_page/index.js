@@ -13,6 +13,7 @@ ReactDOM.render(
     limit={18}
     fields={[
       'authors',
+      'contentsubtype',
       'image_hero_url',
       'publishing_date',
       'topics',
