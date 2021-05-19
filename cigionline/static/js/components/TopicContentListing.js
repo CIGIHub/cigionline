@@ -72,7 +72,7 @@ function TopicContentListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             <li key={`${row.id}-contenttype`} className="table-infos-meta">
-              {row.contenttype}
+              {row.contenttype === 'Opinion' ? row.contentsubtype : row.contenttype}
             </li>
           </ul>
         </div>
