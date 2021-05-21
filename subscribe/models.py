@@ -70,7 +70,7 @@ class SubscribePage(
         member_info = {}
 
         if request.GET:
-            form = SubscribeForm(initial={'email': request.GET['email']})
+            form = SubscribeForm(initial={'email': request.GET.get('email', None)})
 
         if request.method == 'POST':
             form = SubscribeForm(request.POST)
