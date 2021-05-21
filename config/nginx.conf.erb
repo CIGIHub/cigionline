@@ -69,15 +69,33 @@ http {
 			}
 		<% end %>
 
+		<% if ENV['INTERACTIVE_2018ANNUALREPORT_STATIC_PROXY'] %>
+			location /interactives/2018annualreport/static/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_STATIC_PROXY'] %>/;
+			}
+		<% end %>
+
 		<% if ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>
 			location /interactives/2018annualreport/ {
 				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>/;
 			}
 		<% end %>
 
+		<% if ENV['INTERACTIVE_2019ANNUALREPORT_STATIC_PROXY'] %>
+			location /interactives/2019annualreport/static/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_STATIC_PROXY'] %>/;
+			}
+		<% end %>
+
 		<% if ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>
 			location /interactives/2019annualreport/ {
 				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>/;
+			}
+		<% end %>
+
+		<% if ENV['INTERACTIVE_2020ANNUALREPORT_STATIC_PROXY'] %>
+			location /interactives/2020annualreport/static/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2020ANNUALREPORT_STATIC_PROXY'] %>/;
 			}
 		<% end %>
 
