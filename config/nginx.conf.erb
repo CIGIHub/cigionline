@@ -69,39 +69,99 @@ http {
 			}
 		<% end %>
 
-		<% if ENV['INTERACTIVE_2018ANNUALREPORT_STATIC_PROXY'] %>
-			location /interactives/2018annualreport/static/ {
-				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_STATIC_PROXY'] %>/;
+		<% if ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>
+			location /interactives/2018annualreport/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2018annualreport/assets/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>/assets/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2018annualreport/assets/favicon/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
 
-		<% if ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>
-			location /interactives/2018annualreport/ {
-				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>/;
+		<% if ENV['INTERACTIVE_2018ANNUALREPORT_STATIC_PROXY'] %>
+			location /interactives/2018annualreport/static/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_STATIC_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+		<% end %>
+
+		<% if ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>
+			location /interactives/2019annualreport/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2019annualreport/assets/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>/assets/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2019annualreport/assets/favicon {
+				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
 
 		<% if ENV['INTERACTIVE_2019ANNUALREPORT_STATIC_PROXY'] %>
 			location /interactives/2019annualreport/static/ {
 				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_STATIC_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
 
-		<% if ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>
-			location /interactives/2019annualreport/ {
-				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>/;
+		<% if ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>
+			location /interactives/2020annualreport/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2020annualreport/assets/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>/assets/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2020annualreport/assets/favicon/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
 
 		<% if ENV['INTERACTIVE_2020ANNUALREPORT_STATIC_PROXY'] %>
 			location /interactives/2020annualreport/static/ {
 				proxy_pass http://<%= ENV['INTERACTIVE_2020ANNUALREPORT_STATIC_PROXY'] %>/;
-			}
-		<% end %>
-
-		<% if ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>
-			location /interactives/2020annualreport/ {
-				proxy_pass http://<%= ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
 
