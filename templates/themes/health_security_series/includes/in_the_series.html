@@ -14,11 +14,11 @@
         <article>
           <div class="essay-series-label">A CIGI Essay Series</div>
           <div class="video-banner" style="background-image: url('{{image_hero_url}}');"></div>
-          <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
+          <h2><a href="{% pageurl article_series %}">{{ article_series.title }}</a></h2>
           <ul class="series-contributors">
             {% for item in article_series.series_contributors_by_person %}
               <li>
-                <a href="{{ item.item.url }}">
+                <a href="{% pageurl item.item %}">
                   {% for contributor in item.contributors %}
                     {{ contributor.title }}
                   {% endfor %}
