@@ -134,7 +134,7 @@ http {
 		<% end %>
 
 		<% if ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>
-			location /interactives/2020annualreport/ {
+			location /interactives/2020annualreport {
 				proxy_pass https://<%= ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>;
 				proxy_set_header X-Real-IP $remote_addr;
 				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
