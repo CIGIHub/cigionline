@@ -98,7 +98,6 @@ http {
 			location /interactives/2018annualreport/static/ {
 				proxy_pass https://<%= ENV['INTERACTIVE_2018ANNUALREPORT_STATIC_PROXY'] %>/;
 				proxy_set_header X-Real-IP $remote_addr;
-				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
@@ -130,7 +129,6 @@ http {
 			location /interactives/2019annualreport/static/ {
 				proxy_pass https://<%= ENV['INTERACTIVE_2019ANNUALREPORT_STATIC_PROXY'] %>/;
 				proxy_set_header X-Real-IP $remote_addr;
-				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
