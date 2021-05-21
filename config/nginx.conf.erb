@@ -69,6 +69,24 @@ http {
 			}
 		<% end %>
 
+		<% if ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>
+			location /interactives/2018annualreport/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2018ANNUALREPORT_PROXY'] %>/;
+			}
+		<% end %>
+
+		<% if ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>
+			location /interactives/2019annualreport/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2019ANNUALREPORT_PROXY'] %>/;
+			}
+		<% end %>
+
+		<% if ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>
+			location /interactives/2020annualreport/ {
+				proxy_pass http://<%= ENV['INTERACTIVE_2020ANNUALREPORT_PROXY'] %>/;
+			}
+		<% end %>
+
 		<% if ENV['INTERACTIVE_GLOBALTHINKTANKSUMMIT_PROXY'] %>
 			location /interactives/globalthinktanksummit/ {
 				proxy_pass http://<%= ENV['INTERACTIVE_GLOBALTHINKTANKSUMMIT_PROXY'] %>/;
