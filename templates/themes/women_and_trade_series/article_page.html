@@ -24,7 +24,7 @@
                 {% if item.hide_link %}
                   <span class="block-author">{{ item.author.title }}</span>
                 {% else %}
-                  <a href="block-author" href="{% pageurl item.author %}">{{ item.author.title }}</a>
+                  <a href="{% pageurl item.author %}">{{ item.author.title }}</a>
                 {% endif %}
               {% endfor %}
             </div>
