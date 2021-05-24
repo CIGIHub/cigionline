@@ -1,3 +1,5 @@
+
+from bs4 import BeautifulSoup
 from django.conf import settings
 from django.db import models
 from django.forms.utils import flatatt
@@ -734,7 +736,7 @@ class NewsletterBlock(blocks.StructBlock):
                 context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url"]}'
 
             if not value.get('url'):
-                context['url'] = f'{context["page"].get_site().root_url}{content_page.url}'
+                context['url'] = content_page.full_url
 
             if content_page.contenttype == 'Event':
                 event_time = content_page.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
@@ -742,7 +744,13 @@ class NewsletterBlock(blocks.StructBlock):
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
                 if 'is_html_string' not in context:
-                    context['text'].source = context['text'].source.replace('<p>', f'<p><b>{event_time}{event_time_zone}{event_location}{event_country}:</b> ', 1)
+                    soup = BeautifulSoup(context['text'].source)
+                    first_p = soup.find('p')
+                    event_info_tag = soup.new_tag('b')
+                    event_info_tag.string = f'{event_time}{event_time_zone}{event_location}{event_country}: '
+                    first_p.insert(0, event_info_tag)
+
+                    context['text'].source = str(first_p)
 
         return context
 
