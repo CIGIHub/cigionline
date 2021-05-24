@@ -3,12 +3,14 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.db import models
 from django.forms.utils import flatatt
+from django.utils import timezone
 from django.utils.html import format_html, format_html_join
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
+import pytz
 
 
 class ThemeableBlock:
@@ -739,12 +741,12 @@ class NewsletterBlock(blocks.StructBlock):
                 context['url'] = content_page.full_url
 
             if content_page.contenttype == 'Event':
-                event_time = content_page.publishing_date.strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
+                event_time = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
                 event_time_zone = f' {content_page.time_zone}' if content_page.time_zone else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
                 if 'is_html_string' not in context:
-                    soup = BeautifulSoup(context['text'].source)
+                    soup = BeautifulSoup(context['text'].source, "html.parser")
                     first_p = soup.find('p')
                     event_info_tag = soup.new_tag('b')
                     event_info_tag.string = f'{event_time}{event_time_zone}{event_location}{event_country}: '
