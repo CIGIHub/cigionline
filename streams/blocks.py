@@ -728,7 +728,10 @@ class NewsletterBlock(blocks.StructBlock):
         if value.get('content'):
             content_page = value.get('content').specific
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
-            context['text'] = value.get('text_override') if value.get('text_override') else content_page.short_description
+            if value.get('text_override'):
+                context['text'] = value.get('text_override')
+            elif (content_page.contenttype == 'Opinion' or content_page.contenttype == 'Publication') and content_page.short_description:
+                context['text'] = content_page.short_description
             if value.get('image_override'):
                 context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
             elif content_page.image_hero:
@@ -740,7 +743,7 @@ class NewsletterBlock(blocks.StructBlock):
             if not value.get('url'):
                 context['url'] = content_page.full_url
 
-            if content_page.contenttype == 'Event':
+            if content_page.contenttype == 'Event' and context.get('text'):
                 event_time = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
                 event_time_zone = f' {content_page.time_zone}' if content_page.time_zone else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
