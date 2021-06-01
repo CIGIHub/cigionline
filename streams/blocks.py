@@ -729,7 +729,7 @@ class NewsletterBlock(blocks.StructBlock):
             content_page = value.get('content').specific
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
             if value.get('text_override'):
-                context['text'] = value.get('text_override') 
+                context['text'] = value.get('text_override')
             elif (content_page.contenttype == 'Opinion' or content_page.contenttype == 'Publication') and content_page.short_description:
                 context['text'] = content_page.short_description
             if value.get('image_override'):
