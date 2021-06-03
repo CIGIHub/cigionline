@@ -18,6 +18,7 @@
       @include media-breakpoint-up(md) {
         padding: 1em 0;
       }
+
       @include media-breakpoint-down(sm) {
         padding-left: 0;
       }
@@ -60,12 +61,110 @@
           border-top: 1px solid $cigi-light-grey;
           padding: 1em 0;
         }
+
         @include media-breakpoint-up(md) {
           border-right: 1px solid $cigi-light-grey;
           padding: 0 1em;
         }
+
         height: 100%;
       }
+    }
+  }
+}
+
+.events-calendar {
+  position: relative;
+  margin-bottom: 2rem;
+
+  .events-calendar__loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.react-calendar {
+
+  .react-calendar__month-view__weekdays__weekday,
+  .react-calendar__navigation__label,
+  .react-calendar__month-view__days__day {
+    color: $white;
+  }
+
+  .react-calendar__month-view__days__day--neighboringMonth {
+    color: $cigi-text-grey;
+  }
+
+  .react-calendar__navigation {
+    padding: 0.5rem 0;
+    border-top: 2px solid $white;
+    border-bottom: 1px solid $white;
+  }
+
+  .react-calendar__viewContainer {
+    margin: 0.5rem 0;
+    border-bottom: 2px solid $white;
+  }
+
+  .react-calendar__tile {
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: stretch;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    position: relative;
+    cursor: default;
+
+    &:before {
+      content: "";
+      display: table;
+      padding-top: 100%;
+    }
+
+    abbr {
+      display: flex;
+      flex-grow: 1;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+
+    .react-calendar__tile__overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  .react-calendar__tile--has-event {
+    cursor: pointer;
+
+    abbr {
+      border: 2px solid $cigi-primary-colour;
+    }
+  }
+
+  .react-calendar__tile--now {
+    abbr {
+      background: $cigi-medium-grey;
+    }
+  }
+
+  .react-calendar__month-view__weekdays {
+    text-align: center;
+  }
+
+  .react-calendar__navigation__arrow {
+    color: $cigi-primary-colour;
+
+    &:hover {
+      color: $cigi-dark-pink;
     }
   }
 }
