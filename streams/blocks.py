@@ -723,7 +723,7 @@ class NewsletterBlock(blocks.StructBlock):
             context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         if value.get('image'):
-            context['image_url'] = value.get("image").get_rendition("fill-600x238").file.name
+            context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-600x238").file.name}'
 
         if value.get('content'):
             content_page = value.get('content').specific
