@@ -681,16 +681,16 @@ class NewsletterBlock(blocks.StructBlock):
         cta_image_links = {
             'watch': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/14d48b17-21b0-449a-81dd-3476baa65712.png',
             'read': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/27c0957b-671e-4a91-b4a4-dc43c63446e1.png',
-            'pdf': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/caa024dc-e155-4c1f-a28b-2228770a99e2.png',
-            'share_facebook': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/25daee19-d6c6-45ac-afd7-e168e3d410d3.png',
-            'share_twitter': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/9f2bf138-03ac-45b7-b4db-7d27e663f15b.png',
-            'share_linkedin': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/c7585d80-fbcd-43f6-996f-de088d02ca20.png',
+            'pdf': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/599997d4-6b93-ad64-450e-3e848ff2eb09.png',
+            'share_facebook': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/43333018-a716-1500-6eb7-92aa71454507.png',
+            'share_twitter': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/0794410e-335b-375c-0c23-9007997a6288.png',
+            'share_linkedin': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/044e1d7a-f595-dbc5-9915-950b06351a0a.png',
             'rsvp': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/44282420-4212-477f-b678-5783c82dc51c.png',
             'listen': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/cff5d5c0-f14f-4c58-86b6-1d20c77dc09e.png',
             'explore': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4b5ad389-bfb3-4819-8732-3eaf95e4965e.png',
             'subscribe': '',
             'learn_more': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4b5ad389-bfb3-4819-8732-3eaf95e4965e.png',
-            'follow': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/4ef4b224-1de1-4d41-8e8f-ca42068378d4.png',
+            'follow': 'https://gallery.mailchimp.com/3cafbe8a8401ae9ed275d2f75/images/3f938efb-c700-56b5-c3a8-3df53809e69e.png',
         }
 
         return cta_image_links[cta]
