@@ -74,19 +74,20 @@
 }
 
 .events-calendar {
-  position: relative;
+  // sass-lint:disable-block class-name-format
   margin-bottom: 2rem;
+  position: relative;
 
   .events-calendar__loader {
+    left: 50%;
     position: absolute;
     top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
   }
 }
 
 .react-calendar {
-
+  // sass-lint:disable-block class-name-format
   .react-calendar__month-view__weekdays__weekday,
   .react-calendar__navigation__label,
   .react-calendar__month-view__days__day {
@@ -98,47 +99,47 @@
   }
 
   .react-calendar__navigation {
-    padding: 0.5rem 0;
-    border-top: 2px solid $white;
     border-bottom: 1px solid $white;
+    border-top: 2px solid $white;
+    padding: 0.5rem 0;
   }
 
   .react-calendar__viewContainer {
-    margin: 0.5rem 0;
     border-bottom: 2px solid $white;
+    margin: 0.5rem 0;
   }
 
   .react-calendar__tile {
+    align-items: stretch;
+    box-sizing: border-box;
+    cursor: default;
     display: flex;
     flex-grow: 0;
     flex-shrink: 0;
     justify-content: center;
-    align-items: stretch;
     padding: 0.5rem;
-    box-sizing: border-box;
     position: relative;
-    cursor: default;
 
-    &:before {
-      content: "";
+    &::before {
+      content: '';
       display: table;
       padding-top: 100%;
     }
 
     abbr {
+      align-items: center;
+      border-radius: 50%;
       display: flex;
       flex-grow: 1;
       justify-content: center;
-      align-items: center;
-      border-radius: 50%;
     }
 
     .react-calendar__tile__overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
       bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
   }
 

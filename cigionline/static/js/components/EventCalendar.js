@@ -24,120 +24,127 @@ export default class EventCalendar extends React.Component {
      * @returns {Object|undefined}
      * */
   getEvent(date) {
-    return this.state.events.find((e) => {
+    const { events } = this.state;
+    return events.find((e) => {
       const eventDate = new Date(e.publishing_date);
       return eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth();
     });
   }
 
-    /**
-     * Render popover if a date has event.
-     * */
-    tileContent = ({ date }) => {
-      const eventOnThisDate = this.getEvent(date);
-      if (!eventOnThisDate) {
-        return null;
-      }
-      const popOverHtml = `<a href="${eventOnThisDate.url}">${eventOnThisDate.title}</a>`;
-      return (
-        <div
-          className="react-calendar__tile__overlay"
-          onMouseEnter={this.showPopover}
-          onMouseLeave={this.hidePopover}
-          onClick={this.togglePopover}
-          data-container="body"
-          data-toggle="popover"
-          data-placement="bottom"
-          data-html="true"
-          data-content={popOverHtml}
-          data-trigger="manual"
-          data-animation="false"
-        />
-      );
+  /**
+   * Render popover if a date has event.
+   * */
+  tileContent = ({ date }) => {
+    const eventOnThisDate = this.getEvent(date);
+    if (!eventOnThisDate) {
+      return null;
     }
+    const popOverHtml = `<a href="${eventOnThisDate.url}">${eventOnThisDate.title}</a>`;
+    return (
+      <div
+        className="react-calendar__tile__overlay"
+        role="menuitem"
+        aria-label="Events"
+        tabIndex="0"
+        onMouseEnter={this.showPopover}
+        onMouseLeave={this.hidePopover}
+        onClick={this.togglePopover}
+        onKeyPress={this.togglePopover}
+        data-container="body"
+        data-toggle="popover"
+        data-placement="bottom"
+        data-html="true"
+        data-content={popOverHtml}
+        data-trigger="manual"
+        data-animation="false"
+      />
+    );
+  }
 
-    fetchEvents = (date) => {
-      this.setState({ events: [], isLoading: true });
-      fetch(`/api/events/?month=${date.getMonth() + 1}&year=${date.getFullYear()}`)
-        .then((res) => res.json())
-        .then((res) => {
-          this.setState({ events: res.items, isLoading: false });
-        });
-    }
-
-    // Prevent popover from abruptly closing when user tries to hover on the event link.
-    showPopover = (e) => {
-      $(e.target).popover();
-      $(e.target).popover('show');
-      $('.popover').on('mouseleave', function() {
-        $(e.target).popover('hide');
+  fetchEvents = (date) => {
+    this.setState({ events: [], isLoading: true });
+    fetch(`/api/events/?month=${date.getMonth() + 1}&year=${date.getFullYear()}`)
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState({ events: res.items, isLoading: false });
       });
-    }
+  }
 
-    hidePopover = (e) => {
-      setTimeout(function() {
-        if (!$('.popover:hover').length) {
-          $(e.target).popover('hide');
-        }
-      }, 500);
-    }
+  // Prevent popover from abruptly closing when user tries to hover on the event link.
+  showPopover = (e) => {
+    $(e.target).popover();
+    $(e.target).popover('show');
+    $('.popover').on('mouseleave', function() {
+      $(e.target).popover('hide');
+    });
+  }
 
-    // Toggle popover for mobile devices
-    togglePopover = (e) => {
-      $(e.target).popover();
-      $(e.target).popover('toggle');
-    }
-
-    tileClassName = ({ date }) => {
-      const eventOnThisDate = this.getEvent(date);
-      if (eventOnThisDate) {
-        return 'react-calendar__tile--has-event';
+  hidePopover = (e) => {
+    setTimeout(function() {
+      if (!$('.popover:hover').length) {
+        $(e.target).popover('hide');
       }
-    }
+    }, 500);
+  }
 
-    /**
-     * Format weekdays to their initials.
-     * E.g. Sunday -> S
-     * */
-    formatShortWeekday = (locale, date) => date.toLocaleString(locale, { weekday: 'narrow' })
+  // Toggle popover for mobile devices
+  togglePopover = (e) => {
+    $(e.target).popover();
+    $(e.target).popover('toggle');
+  }
 
-    onActiveStartDateChange = ({ activeStartDate }) => {
-      this.fetchEvents(activeStartDate);
+  tileClassName = ({ date }) => {
+    const eventOnThisDate = this.getEvent(date);
+    if (eventOnThisDate) {
+      return 'react-calendar__tile--has-event';
     }
+    return null;
+  }
 
-    render() {
-      // Remount tile renderers when events change.
-      // This ensures that the events are displayed on calendar even if
-      // it loads after the calendar renders.
-      const tileContent = this.state.events.length ? this.tileContent : null;
-      const tileClassName = this.state.events.length ? this.tileClassName : null;
-      return (
-        <div className="events-calendar">
-          <Calendar
-            calendarType="US"
-            minDetail="month"
-            maxDetail="month"
-            nextLabel="››"
-            prevLabel="‹‹"
-            next2Label={null}
-            prev2Label={null}
-            formatShortWeekday={this.formatShortWeekday}
-            onActiveStartDateChange={this.onActiveStartDateChange}
-            tileContent={tileContent}
-            tileClassName={tileClassName}
-          />
-          {this.state.isLoading
-            ? (
-              <div className="events-calendar__loader">
-                <img
-                  src="/static/assets/loader_spinner.gif"
-                  alt="Loading..."
-                  className="loading-spinner"
-                />
-              </div>
-            )
-            : null}
-        </div>
-      );
-    }
+  /**
+   * Format weekdays to their initials.
+   * E.g. Sunday -> S
+   * */
+  formatShortWeekday = (locale, date) => date.toLocaleString(locale, { weekday: 'narrow' })
+
+  onActiveStartDateChange = ({ activeStartDate }) => {
+    this.fetchEvents(activeStartDate);
+  }
+
+  render() {
+    // Remount tile renderers when events change.
+    // This ensures that the events are displayed on calendar even if
+    // it loads after the calendar renders.
+    const { events, isLoading } = this.state;
+    const tileContent = events.length ? this.tileContent : null;
+    const tileClassName = events.length ? this.tileClassName : null;
+    return (
+      <div className="events-calendar">
+        <Calendar
+          calendarType="US"
+          minDetail="month"
+          maxDetail="month"
+          nextLabel="››"
+          prevLabel="‹‹"
+          next2Label={null}
+          prev2Label={null}
+          formatShortWeekday={this.formatShortWeekday}
+          onActiveStartDateChange={this.onActiveStartDateChange}
+          tileContent={tileContent}
+          tileClassName={tileClassName}
+        />
+        {isLoading
+          ? (
+            <div className="events-calendar__loader">
+              <img
+                src="/static/assets/loader_spinner.gif"
+                alt="Loading..."
+                className="loading-spinner"
+              />
+            </div>
+          )
+          : null}
+      </div>
+    );
+  }
 }
