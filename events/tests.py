@@ -1,7 +1,10 @@
+from datetime import datetime
 from home.models import HomePage
 from wagtail.tests.utils import WagtailPageTests
 
 from .models import EventListPage, EventPage
+
+from unittest.mock import patch
 
 
 class EventListPageTests(WagtailPageTests):
@@ -31,6 +34,54 @@ class EventPageTests(WagtailPageTests):
             {},
         )
 
+
+class EventsAPITests(WagtailPageTests):
+    fixtures = ['events_search_table.json']
+
+    @patch('events.views.timezone.now', return_value=datetime(2020, 1, 1))
+    def test_events_api(self, _):
+        response = self.client.get('/api/events/')
+        self.assertEqual(response.status_code, 200)
+        actual_response = response.json()
+        expected_response = {
+            "meta": {"total_count": 3},
+            "items": [
+                {
+                    "title": "Test Event 1",
+                    "url": "/events/event-1/",
+                    "publishing_date": "2020-01-02T13:00:00+00:00"
+                },
+                {
+                    "title": "Test Event 2",
+                    "url": "/events/event-2/",
+                    "publishing_date": "2020-01-15T13:00:00+00:00",
+                },
+                {
+                    "title": "Test Event 3 - Big Tech",
+                    "url": "/events/event-3/",
+                    "publishing_date": "2020-01-30T13:00:00+00:00"
+                },
+            ]
+        }
+        self.assertEqual(actual_response, expected_response)
+
+    def get_api_response(self, month, year):
+        response = self.client.get(f'/api/events/?month={month}&year={year}')
+        self.assertEqual(response.status_code, 200)
+        return response.json()
+
+    def test_events_api_by_month(self):
+        response_1 = self.get_api_response(1, 2020)
+        self.assertEqual(response_1['meta']['total_count'], 3)
+        self.assertEqual(len(response_1['items']), 3)
+
+        response_2 = self.get_api_response(2, 2020)
+        self.assertEqual(response_2['meta']['total_count'], 4)
+        self.assertEqual(len(response_2['items']), 4)
+
+        response_3 = self.get_api_response(12, 2010)
+        self.assertEqual(response_3['meta']['total_count'], 0)
+        self.assertEqual(len(response_3['items']), 0)
 
 # class EventPageViewSetTests(WagtailPageTests):
 #     fixtures = ['events_search_table.json']
