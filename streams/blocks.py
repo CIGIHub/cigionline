@@ -755,7 +755,13 @@ class NewsletterBlock(blocks.StructBlock):
                     event_info_tag.string = f'{event_time}{event_time_zone}{event_location}{event_country}: '
                     first_p.insert(0, event_info_tag)
 
-                    context['text'].source = str(first_p)
+                    context['text'].source = str(soup)
+
+        if context.get('text'):
+            text_soup = BeautifulSoup(context['text'].source, 'html.parser')
+            for link in text_soup.findAll('a'):
+                link['style'] = 'text-decoration: none; color: #ee1558;'
+            context['text'].source = str(text_soup)
 
         return context
 
