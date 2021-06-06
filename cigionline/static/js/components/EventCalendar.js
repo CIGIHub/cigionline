@@ -19,27 +19,15 @@ export default class EventCalendar extends React.Component {
   }
 
   /**
-     * Get event by date
-     * @param {Date} date
-     * @returns {Object|undefined}
-     * */
-  getEvent(date) {
-    const { events } = this.state;
-    return events.find((e) => {
-      const eventDate = new Date(e.publishing_date);
-      return eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth();
-    });
-  }
-
-  /**
    * Render popover if a date has event.
    * */
   tileContent = ({ date }) => {
-    const eventOnThisDate = this.getEvent(date);
-    if (!eventOnThisDate) {
+    const eventsOnThisDate = this.filterEvents(date);
+    if (!eventsOnThisDate.length) {
       return null;
     }
-    const popOverHtml = `<a href="${eventOnThisDate.url}">${eventOnThisDate.title}</a>`;
+    const eventLinks = eventsOnThisDate.map((eventOnThisDate) => `<a href="${eventOnThisDate.url}">${eventOnThisDate.title}</a>`).join('');
+    const popOverHtml = `<div class="react-calendar__tile__popover">${eventLinks}</div>`;
     return (
       <div
         className="react-calendar__tile__overlay"
@@ -94,8 +82,8 @@ export default class EventCalendar extends React.Component {
   }
 
   tileClassName = ({ date }) => {
-    const eventOnThisDate = this.getEvent(date);
-    if (eventOnThisDate) {
+    const eventsOnThisDate = this.filterEvents(date);
+    if (eventsOnThisDate.length) {
       return 'react-calendar__tile--has-event';
     }
     return null;
@@ -109,6 +97,19 @@ export default class EventCalendar extends React.Component {
 
   onActiveStartDateChange = ({ activeStartDate }) => {
     this.fetchEvents(activeStartDate);
+  }
+
+  /**
+   * Filter event by date
+   * @param {Date} date
+   * @returns {Object|undefined}
+   * */
+  filterEvents(date) {
+    const { events } = this.state;
+    return events.filter((e) => {
+      const eventDate = new Date(e.publishing_date);
+      return eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth();
+    });
   }
 
   render() {

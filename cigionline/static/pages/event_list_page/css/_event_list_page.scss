@@ -169,3 +169,17 @@
     }
   }
 }
+
+.popover-body {
+  // sass-lint:disable-block class-name-format
+  .react-calendar__tile__popover {
+    a {
+      display: block;
+      padding: 0.5rem 0;
+    }
+
+    a + a {
+      border-top: 1px solid $cigi-dark-grey;
+    }
+  }
+}
