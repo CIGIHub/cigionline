@@ -5,7 +5,7 @@
 <section class="hero{{ additional_classes }}" {% if image_banner %}style="background-image: url('{{ image_banner.url }}');"{% endif %}>
   <div class="container">
     <div class="row hero-container">
-      <div class="hero-main col-md-7">
+      <div class="hero-main col-md-6 col-lg-7">
         {% if topics %}
           {% include 'includes/topics.html' %}
         {% endif %}
@@ -21,7 +21,7 @@
           </div>
         {% endif %}
       </div>
-      <aside class="col-md-4 offset-md-1">
+      <aside class="col-sm-8 offset-sm-2 col-md-5 col-lg-4 offset-md-1">
         <div id='event-list-calendar'></div>
         {% if submenu %}
           {% get_menu_items submenu.slug as submenu_items %}

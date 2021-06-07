@@ -83,15 +83,24 @@
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
+    width: 50px;
   }
 }
 
 .react-calendar {
   // sass-lint:disable-block class-name-format
-  .react-calendar__month-view__weekdays__weekday,
   .react-calendar__navigation__label,
   .react-calendar__month-view__days__day {
     color: $white;
+  }
+
+  .react-calendar__month-view__weekdays__weekday {
+    color: $cigi-text-grey;
+
+    abbr {
+      cursor: auto;
+      text-decoration: none;
+    }
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
@@ -110,7 +119,7 @@
   }
 
   .react-calendar__tile {
-    align-items: stretch;
+    align-items: center;
     box-sizing: border-box;
     cursor: default;
     display: flex;
@@ -130,24 +139,38 @@
       align-items: center;
       border-radius: 50%;
       display: flex;
-      flex-grow: 1;
+      flex-grow: 0;
+      flex-shrink: 0;
+      height: 30px;
       justify-content: center;
+      width: 30px;
     }
 
     .react-calendar__tile__overlay {
-      bottom: 0;
-      left: 0;
+      border-radius: 50%;
+      height: 30px;
       position: absolute;
-      right: 0;
-      top: 0;
+      width: 30px;
     }
   }
 
   .react-calendar__tile--has-event {
     cursor: pointer;
 
-    abbr {
+    .react-calendar__tile__overlay {
       border: 2px solid $cigi-primary-colour;
+
+      &.border-3 {
+        border-width: 3px;
+      }
+
+      &.border-4 {
+        border-width: 4px;
+      }
+
+      &.border-5 {
+        border-width: 5px;
+      }
     }
   }
 
@@ -170,16 +193,23 @@
   }
 }
 
-.popover-body {
-  // sass-lint:disable-block class-name-format
-  .react-calendar__tile__popover {
-    a {
-      display: block;
-      padding: 0.5rem 0;
-    }
+.popover {
+  border-radius: 0;
 
-    a + a {
-      border-top: 1px solid $cigi-dark-grey;
+  .popover-body {
+    // sass-lint:disable-block class-name-format
+    .react-calendar__tile__popover {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+
+      a {
+        display: block;
+        font-size: 0.8em;
+        padding: 0.5rem 0;
+      }
+
+      a + a {
+        border-top: 1px solid $divider-grey;
+      }
     }
   }
 }

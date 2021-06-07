@@ -26,11 +26,12 @@ export default class EventCalendar extends React.Component {
     if (!eventsOnThisDate.length) {
       return null;
     }
+    const borderClass = eventsOnThisDate.length > 4 ? 5 : eventsOnThisDate.length + 1;
     const eventLinks = eventsOnThisDate.map((eventOnThisDate) => `<a href="${eventOnThisDate.url}">${eventOnThisDate.title}</a>`).join('');
     const popOverHtml = `<div class="react-calendar__tile__popover">${eventLinks}</div>`;
     return (
       <div
-        className="react-calendar__tile__overlay"
+        className={`react-calendar__tile__overlay border-${borderClass}`}
         role="menuitem"
         aria-label="Events"
         tabIndex="0"
@@ -72,7 +73,7 @@ export default class EventCalendar extends React.Component {
       if (!$('.popover:hover').length) {
         $(e.target).popover('hide');
       }
-    }, 500);
+    }, 100);
   }
 
   // Toggle popover for mobile devices
