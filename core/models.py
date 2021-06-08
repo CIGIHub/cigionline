@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import CharField
 from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
@@ -696,11 +697,71 @@ class PrivacyNoticePage(
 class TwentiethPage(
     Page,
     BasicPageAbstract,
-    FeatureablePageAbstract
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
 ):
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                ImageChooserPanel('slide_1_background'),
+            ],
+            heading='Slide 1 - Title',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                CharField('slide_1_title'),
+                RichTextField('slide_1_body'),
+                CharField('slide_1_embed'),
+            ],
+            heading='Slide 2 - Introduction',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                CharField('slide_3_title'),
+                StreamField(
+                    [
+                        ('year', blocks.StructBlock(
+                            [
+                                ('year', blocks.CharBlock()),
+                                ('text', blocks.RichTextBlock())
+                            ]
+                        ))
+                    ]
+                )
+            ],
+            heading='Slide 3 - Timeline',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                CharField('slide_4_title'),
+                RichTextField('slide_4_body'),
+                CharField('slide_4_embed'),
+            ],
+            heading='Slide 4 - Thank You',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                CharField('slide_5_title'),
+                CharField('slide_5_embed'),
+            ],
+            heading='Slide 5 - Social',
+            classname='collapsible collapsed'
+        ),
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
