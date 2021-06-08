@@ -701,6 +701,47 @@ class TwentiethPage(
     SearchablePageAbstract,
     ShareablePageAbstract,
 ):
+    slide_1_background = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Slide 1 Background Image',
+        help_text='Slide 1 Background image',
+    )
+    slide_2_title = CharField(blank=True, max_length=255)
+    slide_2_body = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+        verbose_name='Slide 2 body',
+        help_text='Slide 2 body',
+    )
+    slide_2_embed = CharField(blank=True, max_length=255)
+    slide_3_title = CharField(blank=True, max_length=255)
+    slide_3_timeline = StreamField(
+        [
+            ('year', blocks.StructBlock(
+                [
+                    ('year', blocks.CharBlock()),
+                    ('text', blocks.RichTextBlock())
+                ]
+            ))
+        ]
+    )
+    slide_4_title = CharField(blank=True, max_length=255)
+    slide_4_body = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+        verbose_name='Slide 4 body',
+        help_text='Slide 4 body',
+    )
+    slide_4_embed = CharField(blank=True, max_length=255)
+    slide_5_title = CharField(blank=True, max_length=255)
+    slide_5_embed = CharField(blank=True, max_length=255)
+    
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -712,43 +753,34 @@ class TwentiethPage(
         ),
         MultiFieldPanel(
             [
-                CharField('slide_1_title'),
-                RichTextField('slide_1_body'),
-                CharField('slide_1_embed'),
+                FieldPanel('slide_2_title'),
+                FieldPanel('slide_2_body'),
+                FieldPanel('slide_2_embed'),
             ],
             heading='Slide 2 - Introduction',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
-                CharField('slide_3_title'),
-                StreamField(
-                    [
-                        ('year', blocks.StructBlock(
-                            [
-                                ('year', blocks.CharBlock()),
-                                ('text', blocks.RichTextBlock())
-                            ]
-                        ))
-                    ]
-                )
+                FieldPanel('slide_3_title'),
+                StreamFieldPanel('slide_3_timeline')
             ],
             heading='Slide 3 - Timeline',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
-                CharField('slide_4_title'),
-                RichTextField('slide_4_body'),
-                CharField('slide_4_embed'),
+                FieldPanel('slide_4_title'),
+                FieldPanel('slide_4_body'),
+                FieldPanel('slide_4_embed'),
             ],
             heading='Slide 4 - Thank You',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
-                CharField('slide_5_title'),
-                CharField('slide_5_embed'),
+                FieldPanel('slide_5_title'),
+                FieldPanel('slide_5_embed'),
             ],
             heading='Slide 5 - Social',
             classname='collapsible collapsed'
