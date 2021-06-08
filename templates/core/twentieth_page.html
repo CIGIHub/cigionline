@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'twentiethPage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'twentiethPage' 'js' attrs='defer' %}
+{% endblock %}

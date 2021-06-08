@@ -693,6 +693,24 @@ class PrivacyNoticePage(
         verbose_name = 'Privacy Notice'
 
 
+class TwentiethPage(
+    Page,
+    BasicPageAbstract,
+    FeatureablePageAbstract
+):
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    templates = 'core/twentieth_page.html'
+
+
 class Theme(models.Model):
     name = models.CharField(max_length=255)
 
