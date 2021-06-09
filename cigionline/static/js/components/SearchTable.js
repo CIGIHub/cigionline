@@ -16,6 +16,7 @@ class SearchTable extends React.Component {
       loading: true,
       loadingInitial: true,
       loadingTopics: true,
+      loadingYears: false,
       rows: [],
       searchValue: '',
       sortSelected: null,
@@ -24,12 +25,15 @@ class SearchTable extends React.Component {
       topicsFilter: '',
       typeSelected: null,
       totalRows: 0,
+      years: [],
+      yearSelectValues: []
     };
 
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
     this.handleSortSelect = this.handleSortSelect.bind(this);
     this.handleTopicSelect = this.handleTopicSelect.bind(this);
+    this.handleYearSelect = this.handleYearSelect.band(this);
   }
 
   componentDidMount() {
@@ -107,6 +111,11 @@ class SearchTable extends React.Component {
     this.setState({
       topicSelectValue: topics,
     }, this.getRows);
+  }
+
+  handleYearSelect(e, year){
+    let years = this.state.yearSelectValues;
+    
   }
 
   handleTypeSelect(type) {
@@ -246,22 +255,30 @@ class SearchTable extends React.Component {
       });
   }
 
+  getYears() {
+    //Here we need to add fetch code for getting the years
+    this.setState(() => ({
+      loadingYears: false,
+      years: Array.from({ length: 12 }, (_, i) => 2021 - i)
+    }));
+  }
+
   setPage(page) {
     this.setState(() => ({
       currentPage: page,
     }), this.getRows);
   }
 
-  get dropdownSelectedTopic() {
-    const { topics, topicSelectValue } = this.state;
-    let selectedTopic = 'All Topics';
-    topics.forEach((topic) => {
-      if (topic.id === topicSelectValue) {
-        selectedTopic = topic.title;
-      }
-    });
-    return selectedTopic;
-  }
+  // get dropdownSelectedTopic() {
+  //   const { topics, topicSelectValue } = this.state;
+  //   let selectedTopic = 'All Topics';
+  //   topics.forEach((topic) => {
+  //     if (topic.id === topicSelectValue) {
+  //       selectedTopic = topic.title;
+  //     }
+  //   });
+  //   return selectedTopic;
+  // }
 
   get dropdownTopics() {
     const { topics, topicSelectValue } = this.state;
@@ -280,13 +297,13 @@ class SearchTable extends React.Component {
     return dropdownTopics;
   }
 
-  get dropdownSelectedType() {
-    const { typeSelected } = this.state;
-    if (typeSelected && typeSelected.name) {
-      return typeSelected.name;
-    }
-    return 'All Types';
-  }
+  // get dropdownSelectedType() {
+  //   const { typeSelected } = this.state;
+  //   if (typeSelected && typeSelected.name) {
+  //     return typeSelected.name;
+  //   }
+  //   return 'All Types';
+  // }
 
   get dropdownTypes() {
     const { typeSelected } = this.state;
@@ -354,11 +371,11 @@ class SearchTable extends React.Component {
       loading,
       loadingInitial,
       loadingTopics,
+      loadingYears,
       rows,
       searchValue,
       sortSelected,
       totalRows,
-      topicsFilter,
     } = this.state;
     const {
       blockListing,
@@ -379,7 +396,7 @@ class SearchTable extends React.Component {
           {!hideTopicDropdown && (
             <div className="dropdown custom-dropdown">
               <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {this.dropdownSelectedTopic}
+                Topics
               </button>
               <div className="dropdown-menu" aria-labelledby="search-bar-topics">
                 <div className="topic-filter">
@@ -387,7 +404,7 @@ class SearchTable extends React.Component {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="SEARCH FOR A TOPIC"
+                      placeholder="search of a topic"
                       onKeyUp={(e) => this.handleTopicsFilter(e)}
                     />
                     <div className="input-group-append">
@@ -420,7 +437,7 @@ class SearchTable extends React.Component {
           {!!filterTypes.length && (
             <div className="dropdown custom-dropdown">
               <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {this.dropdownSelectedType}
+                Types
               </button>
               <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
                 {this.dropdownTypes.map((type) => (
@@ -436,6 +453,31 @@ class SearchTable extends React.Component {
               </div>
             </div>
           )}
+
+          <div className="dropdown custom-dropdown">
+            <button className="dropdown-toggle" type="button" id="search-bar-years" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Years
+            </button>
+            <div className="dropdown-menu" aria-labelledby="search-bar-years">
+              {!loadingYears && (
+                <ul>
+                { this.dropdownYears.map((year) => (
+                  <li className="dropdown-item">
+                    <label>
+                      <input type="checkbox"
+                        id={`year-${year}`}
+                        key={`year-${year}`}
+                        defaultChecked={year in this.state.yearSelectValue ? "checked" : ""}
+                        onClick={(e) => this.handleYearSelect(e, year)}
+                      />
+                      {year}
+                    </label>
+                  </li>
+                ))}
+                </ul>
+              )}
+            </div>
+          </div>
         </div>
         <div className="search-table col-md-9">
           <div ref={this.searchTableRef} className="search-table-scroll" />

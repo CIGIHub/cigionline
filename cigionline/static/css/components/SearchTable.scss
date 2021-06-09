@@ -8,6 +8,7 @@
     overflow-y: scroll;
     margin: 0;
     padding: 0;
+    border-bottom: 1em solid white;
     .topic-filter{
       display: block;
       position: sticky;
@@ -16,6 +17,7 @@
       padding: 1em 0.75em 0.75em 0.75em;
       input::placeholder{
         color: $cigi-light-grey;
+        text-transform: uppercase;
       }
       .btn-search{
         color: $cigi-medium-grey
