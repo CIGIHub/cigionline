@@ -599,6 +599,7 @@ class BasicPage(
         'annual_reports.AnnualReportListPage',
         'core.BasicPage',
         'core.FundingPage',
+        'core.TwentiethPage',
         'people.PersonListPage',
         'research.ProjectPage',
     ]
