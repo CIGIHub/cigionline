@@ -20,7 +20,7 @@ class SearchTable extends React.Component {
       searchValue: '',
       sortSelected: null,
       topics: [],
-      topicSelectValue: null,
+      topicSelectValue: [],
       typeSelected: null,
       totalRows: 0,
     };
@@ -48,7 +48,7 @@ class SearchTable extends React.Component {
         initialState.sortSelected = sort;
       }
       if (topic && !isNaN(topic)) {
-        initialState.topicSelectValue = parseInt(topic, 10);
+        initialState.topicSelectValue = topic.split(",").map(t => parseInt(t, 10));
       }
       if (type) {
         for (const filterType of propsFilterTypes) {
@@ -96,9 +96,15 @@ class SearchTable extends React.Component {
     }, this.getRows);
   }
 
-  handleTopicSelect(id) {
+  handleTopicSelect(e, id) {
+    let topics = this.state.topicSelectValue;
+    if(e.target.checked){
+      topics.push(id);
+    }else{
+      topics.pop(id);
+    }
     this.setState({
-      topicSelectValue: id,
+      topicSelectValue: topics,
     }, this.getRows);
   }
 
@@ -174,7 +180,9 @@ class SearchTable extends React.Component {
       uri += `&searchtext=${searchValue}`;
     }
     if (topicSelectValue) {
-      uri += `&topic=${topicSelectValue}`;
+      topicSelectValue.map(t => {
+        uri += `&topic=${t}`;
+      })
     }
     if (typeSelected && typeSelected.param) {
       uri += `&${typeSelected.param}=${typeSelected.value}`;
@@ -358,145 +366,150 @@ class SearchTable extends React.Component {
     } = this.props;
 
     return (
-      <div className="search-table">
-        <div ref={this.searchTableRef} className="search-table-scroll" />
-        {showSearch && (
-          <div className="search-bar">
-            <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
-              <div className="form-row position-relative">
-                <div className="col">
-                  <div className="input-group input-group-search">
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={searchValue}
-                      placeholder={searchPlaceholder}
-                      onChange={this.handleSearchValueChange}
-                    />
-                    <div className="input-group-append">
-                      <button className="btn-search" type="submit">
-                        <i className="far fa-search" />
-                      </button>
+      <div class="row">
+        <div className="search-filters col-md-3">
+          {!hideTopicDropdown && (
+            <div className="dropdown custom-dropdown">
+              <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {this.dropdownSelectedTopic}
+              </button>
+              <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+                {!loadingTopics && (
+                  <ul>
+                  { this.dropdownTopics.map((topic) => (
+                    <li className="dropdown-item">
+                      <label>
+                        <input type="checkbox"
+                          id={`topic-${topic.id}`}
+                          key={`topic-${topic.id}`}
+                          defaultChecked={topic.id in this.state.topicSelectValue ? "checked" : ""}
+                          onClick={(e) => this.handleTopicSelect(e, topic.id)}
+                        />
+                        {topic.title}
+                      </label>
+                    </li>
+                  ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
+          {!!filterTypes.length && (
+            <div className="dropdown custom-dropdown">
+              <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {this.dropdownSelectedType}
+              </button>
+              <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
+                {this.dropdownTypes.map((type) => (
+                  <button
+                    key={`type-${type.name.replace(' ', '_')}`}
+                    className="dropdown-item"
+                    type="button"
+                    onClick={() => this.handleTypeSelect(type)}
+                  >
+                    {type.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="search-table col-md-9">
+          <div ref={this.searchTableRef} className="search-table-scroll" />
+          {showSearch && (
+            <div className="search-bar">
+              <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
+                <div className="form-row position-relative">
+                  <div className="col">
+                    <div className="input-group input-group-search">
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={searchValue}
+                        placeholder={searchPlaceholder}
+                        onChange={this.handleSearchValueChange}
+                      />
+                      <div className="input-group-append">
+                        <button className="btn-search" type="submit">
+                          <i className="far fa-search" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-                {!hideTopicDropdown && (
-                  <div className="col-md-3 position-static">
-                    <div className="dropdown custom-dropdown dropdown-full-width">
-                      <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {this.dropdownSelectedTopic}
+              </form>
+              <div className="search-bar-sort-wrapper">
+                <span>Sort by:</span>
+                <ul className="search-bar-sort-list">
+                  {sortOptions.map((sortOption) => (
+                    <li key={`sort-${sortOption.value}`}>
+                      <button
+                        type="button"
+                        className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
+                        onClick={() => this.handleSortSelect(sortOption.value)}
+                      >
+                        {sortOption.name}
                       </button>
-                      <div className="dropdown-menu" aria-labelledby="search-bar-topics">
-                        {!loadingTopics && (
-                          this.dropdownTopics.map((topic) => (
-                            <button
-                              key={`topic-${topic.id}`}
-                              className="dropdown-item"
-                              type="button"
-                              onClick={() => this.handleTopicSelect(topic.id)}
-                            >
-                              {topic.title}
-                            </button>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {!!filterTypes.length && (
-                  <div className="col-md-3 position-relative">
-                    <div className="dropdown custom-dropdown">
-                      <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {this.dropdownSelectedType}
-                      </button>
-                      <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
-                        {this.dropdownTypes.map((type) => (
-                          <button
-                            key={`type-${type.name.replace(' ', '_')}`}
-                            className="dropdown-item"
-                            type="button"
-                            onClick={() => this.handleTypeSelect(type)}
-                          >
-                            {type.name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </form>
-            <div className="search-bar-sort-wrapper">
-              <span>Sort by:</span>
-              <ul className="search-bar-sort-list">
-                {sortOptions.map((sortOption) => (
-                  <li key={`sort-${sortOption.value}`}>
-                    <button
-                      type="button"
-                      className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
-                      onClick={() => this.handleSortSelect(sortOption.value)}
-                    >
-                      {sortOption.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
             </div>
-          </div>
-        )}
-        {loadingInitial
-          ? <SearchTableSkeleton />
-          : rows.length
-            ? (
-              <>
-                {showCount && totalRows && (
-                  <div className="search-table-count">
-                    {`${totalRows} results found.`}
-                  </div>
-                )}
-                {blockListing
-                  ? (
-                    <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                      {rows.map((row) => (
-                        <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
-                      ))}
+          )}
+          {loadingInitial
+            ? <SearchTableSkeleton />
+            : rows.length
+              ? (
+                <>
+                  {showCount && totalRows && (
+                    <div className="search-table-count">
+                      {`${totalRows} results found.`}
                     </div>
-                  ) : (
-                    <table className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
-                      <thead>
-                        <tr>
-                          {tableColumns.map((tableColumn) => (
-                            <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
-                              {tableColumn.colTitle}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
+                  )}
+                  {blockListing
+                    ? (
+                      <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
                         {rows.map((row) => (
                           <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
                         ))}
-                      </tbody>
-                    </table>
-                  )}
-              </>
-            ) : (
-              <p>
-                Your query returned no results. Please check your spelling and try again.
-              </p>
-            )}
-        <Paginator
-          currentPage={currentPage}
-          totalPages={this.totalPages}
-          setPage={(page) => this.setPage(page)}
-        />
-        {loading && (
-          <img
-            src="/static/assets/loader_spinner.gif"
-            alt="Loading..."
-            className="loading-spinner"
+                      </div>
+                    ) : (
+                      <table className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
+                        <thead>
+                          <tr>
+                            {tableColumns.map((tableColumn) => (
+                              <th colSpan={tableColumn.colSpan} key={tableColumn.colTitle}>
+                                {tableColumn.colTitle}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {rows.map((row) => (
+                            <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                </>
+              ) : (
+                <p>
+                  Your query returned no results. Please check your spelling and try again.
+                </p>
+              )}
+          <Paginator
+            currentPage={currentPage}
+            totalPages={this.totalPages}
+            setPage={(page) => this.setPage(page)}
           />
-        )}
+          {loading && (
+            <img
+              src="/static/assets/loader_spinner.gif"
+              alt="Loading..."
+              className="loading-spinner"
+            />
+          )}
+        </div>
       </div>
     );
   }
