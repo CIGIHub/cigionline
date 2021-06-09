@@ -1,5 +1,39 @@
 @import '../global/variables';
 
+.search-filters{
+  .dropdown-menu.show{
+    position: relative!important;
+    transform: none!important;
+    height: 300px;
+    overflow-y: scroll;
+    margin: 0;
+    padding: 0;
+    .topic-filter{
+      display: block;
+      position: sticky;
+      top: 0;
+      background-color: $white;
+      padding: 1em 0.75em 0.75em 0.75em;
+      input::placeholder{
+        color: $cigi-light-grey;
+      }
+      .btn-search{
+        color: $cigi-medium-grey
+      }
+    }
+  }
+  .dropdown-item{
+    padding-left: 1em;
+    padding-right: 1em;
+    label{
+      margin-bottom: 0;
+    }
+    input[type="checkbox"]{
+      margin-right: 0.5em;
+    }
+  }
+}
+
 .search-table {
   margin-bottom: 4em;
   margin-top: 3em;
