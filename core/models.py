@@ -742,7 +742,42 @@ class TwentiethPage(
     slide_4_embed = CharField(blank=True, max_length=255)
     slide_5_title = CharField(blank=True, max_length=255)
     slide_5_embed = CharField(blank=True, max_length=255)
-    
+
+    def slides(self):
+        timeline = []
+        for year in self.slide_3_timeline:
+            timeline.append({
+              'year': year.value['year'],
+              'body': year.value['text'].source
+            })
+        print (self.slide_1_background.get_rendition('original').url)
+        return [{
+            'slide': 1,
+            'background': self.slide_1_background.get_rendition('original').url,
+        },
+        {
+            'slide': 2,
+            'title': self.slide_2_title,
+            'body': self.slide_2_body,
+            'embed': self.slide_2_embed,
+        },
+        {
+            'slide': 3,
+            'title': self.slide_3_title,
+            'timeline': timeline,
+        },
+        {
+            'slide': 4,
+            'title': self.slide_4_title,
+            'body': self.slide_4_body,
+            'embed': self.slide_4_embed,
+        },
+        {
+            'slide': 5,
+            'title': self.slide_5_title,
+            'embed': self.slide_5_embed,
+        }]
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(

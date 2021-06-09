@@ -1,1 +1,28 @@
 @import '../../../css/global/mixins';
+
+.slides {
+  background-color: $black;
+  color: $white;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 1000;
+
+  * {
+    position: relative;
+  }
+
+  button {
+    color: $white;
+  }
+  .background-image {
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    width: 100vw;
+  }
+}

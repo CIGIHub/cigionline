@@ -6,5 +6,16 @@
 {% endblock %}
 
 {% block extra_js %}
-  {% render_bundle 'twentiethPage' 'js' attrs='defer' %}
+{% render_bundle 'twentiethPage' 'js' attrs='defer' %}
+  {{ self.slides|json_script:"slides" }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+  <div id='twentieth-page'></div>
+  </div>
+  </div>
+  </div>
 {% endblock %}
