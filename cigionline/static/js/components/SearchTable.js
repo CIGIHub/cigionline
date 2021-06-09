@@ -179,7 +179,7 @@ class SearchTable extends React.Component {
     if (searchValue) {
       uri += `&searchtext=${searchValue}`;
     }
-    if (topicSelectValue) {
+    if (topicSelectValue.length > 0) {
       topicSelectValue.map(t => {
         uri += `&topic=${t}`;
       })
@@ -328,8 +328,10 @@ class SearchTable extends React.Component {
     } else {
       url.searchParams.delete('sort');
     }
-    if (topicSelectValue) {
-      url.searchParams.set('topic', topicSelectValue);
+    if (topicSelectValue.length > 0) {
+      topicSelectValue.map(t => {
+        url.searchParams.set('topic', t);
+      })
     } else {
       url.searchParams.delete('topic');
     }
@@ -369,7 +371,7 @@ class SearchTable extends React.Component {
       <div class="row">
         <div className="search-filters col-md-3">
           {!hideTopicDropdown && (
-            <div className="dropdown custom-dropdown">
+            <div className="dropdown custom-dropdown keep-open">
               <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {this.dropdownSelectedTopic}
               </button>
@@ -378,7 +380,7 @@ class SearchTable extends React.Component {
                   <ul>
                   { this.dropdownTopics.map((topic) => (
                     <li className="dropdown-item">
-                      <label>
+                      <label className="keep-open">
                         <input type="checkbox"
                           id={`topic-${topic.id}`}
                           key={`topic-${topic.id}`}
