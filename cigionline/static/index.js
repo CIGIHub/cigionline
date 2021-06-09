@@ -79,6 +79,20 @@ $(function() {
       href,
     }, function(/* response */) {});
   });
+
+  $('.dropdown.custom-dropdown.keep-open').on('hide.bs.dropdown', function (e) {
+
+    if (e.clickEvent !== undefined) {
+      var target = $(e.clickEvent.target);
+      
+      if(target.hasClass("keep-open") || target.parents(".keep-open").length){
+          return false; // returning false should stop the dropdown from hiding.
+      }else{
+          return true;
+      }
+    }
+    return true;
+  });
 });
 
 addInlineVideoActions();

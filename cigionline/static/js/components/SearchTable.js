@@ -43,7 +43,7 @@ class SearchTable extends React.Component {
       const params = (new URL(window.location)).searchParams;
       const query = params.get('query');
       const sort = params.get('sort');
-      const topic = params.get('topic');
+      const topic = params.getAll('topic').map(t => parseInt(t));
       const type = params.get('type');
       const initialState = {};
       if (query) {
@@ -52,8 +52,8 @@ class SearchTable extends React.Component {
       if (sort) {
         initialState.sortSelected = sort;
       }
-      if (topic && !isNaN(topic)) {
-        initialState.topicSelectValue = topic.split(",").map(t => parseInt(t, 10));
+      if (topic.length > 0) {
+        initialState.topicSelectValue = topic
       }
       if (type) {
         for (const filterType of propsFilterTypes) {
@@ -105,8 +105,8 @@ class SearchTable extends React.Component {
     let topics = this.state.topicSelectValue;
     if(e.target.checked){
       topics.push(id);
-    }else{
-      topics.pop(id);
+    } else{
+      topics = topics.filter(f => f !== id)
     }
     this.setState({
       topicSelectValue: topics,
@@ -189,7 +189,7 @@ class SearchTable extends React.Component {
     if (searchValue) {
       uri += `&searchtext=${searchValue}`;
     }
-    if (topicSelectValue) {
+    if (topicSelectValue.length > 0) {
       topicSelectValue.map(t => {
         uri += `&topic=${t}`;
       })
@@ -346,8 +346,11 @@ class SearchTable extends React.Component {
     } else {
       url.searchParams.delete('sort');
     }
-    if (topicSelectValue) {
-      url.searchParams.set('topic', topicSelectValue);
+    if (topicSelectValue.length > 0) {
+      url.searchParams.delete('topic');
+      topicSelectValue.map(t => {
+        url.searchParams.append('topic', t);
+      })
     } else {
       url.searchParams.delete('topic');
     }
@@ -391,10 +394,10 @@ class SearchTable extends React.Component {
     } = this.props;
 
     return (
-      <div class="row">
+      <div className="row">
         <div className="search-filters col-md-3">
           {!hideTopicDropdown && (
-            <div className="dropdown custom-dropdown">
+            <div className="dropdown custom-dropdown keep-open">
               <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Topics
               </button>
@@ -418,11 +421,11 @@ class SearchTable extends React.Component {
                   <ul>
                   { this.dropdownTopics.filter(topic => this.state.topicsFilter == "" || topic.title.toLowerCase().includes(this.state.topicsFilter.toLowerCase())).map((topic) => (
                     <li className="dropdown-item">
-                      <label>
+                      <label className="keep-open">
                         <input type="checkbox"
                           id={`topic-${topic.id}`}
                           key={`topic-${topic.id}`}
-                          defaultChecked={topic.id in this.state.topicSelectValue ? "checked" : ""}
+                          defaultChecked={this.state.topicSelectValue.includes(topic.id) ? "checked" : ""}
                           onClick={(e) => this.handleTopicSelect(e, topic.id)}
                         />
                         {topic.title}
