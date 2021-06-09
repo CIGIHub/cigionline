@@ -21,6 +21,7 @@ class SearchTable extends React.Component {
       sortSelected: null,
       topics: [],
       topicSelectValue: [],
+      topicsFilter: '',
       typeSelected: null,
       totalRows: 0,
     };
@@ -343,6 +344,12 @@ class SearchTable extends React.Component {
     window.history.pushState({}, '', url);
   }
 
+  handleTopicsFilter(e) {
+    this.setState(() => ({
+      topicsFilter: e.target.value
+    }))
+  }
+
   render() {
     const {
       currentPage,
@@ -353,6 +360,7 @@ class SearchTable extends React.Component {
       searchValue,
       sortSelected,
       totalRows,
+      topicsFilter,
     } = this.state;
     const {
       blockListing,
@@ -376,9 +384,24 @@ class SearchTable extends React.Component {
                 {this.dropdownSelectedTopic}
               </button>
               <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+                <div className="topic-filter">
+                  <div className="input-group input-group-search">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="SEARCH FOR A TOPIC"
+                      onKeyUp={(e) => this.handleTopicsFilter(e)}
+                    />
+                    <div className="input-group-append">
+                      <button className="btn-search" type="submit">
+                        <i className="far fa-search" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 {!loadingTopics && (
                   <ul>
-                  { this.dropdownTopics.map((topic) => (
+                  { this.dropdownTopics.filter(topic => this.state.topicsFilter == "" || topic.title.toLowerCase().includes(this.state.topicsFilter.toLowerCase())).map((topic) => (
                     <li className="dropdown-item">
                       <label className="keep-open">
                         <input type="checkbox"
