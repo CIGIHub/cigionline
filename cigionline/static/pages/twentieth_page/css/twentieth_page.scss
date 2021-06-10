@@ -17,6 +17,7 @@
   button {
     color: $white;
   }
+
   .background-image {
     background-position: center;
     background-size: cover;
@@ -24,5 +25,10 @@
     left: 0;
     top: 0;
     width: 100vw;
+  }
+
+  .prev-slide,
+  .next-slide {
+    font-size: 5em;
   }
 }
