@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import TwentiethPageSlide2Content from './TwentiethPageSlide2Content';
+import TwentiethPageSlide3Content from './TwentiethPageSlide3Content';
+import TwentiethPageSlide4Content from './TwentiethPageSlide4Content';
 
 const TwentiethPageSlide = (props) => {
   const { slide } = props;
@@ -15,12 +18,28 @@ const TwentiethPageSlide = (props) => {
       >
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col">
-              {slide.title && <h1>{slide.title}</h1>}
-              {slide.body && <p>{slide.body}</p>}
-              {slide.embed && <p>{slide.embed}</p>}
-              {/* {currentSlide.timeline && <h1>{currentSlide.timeline}</h1>} */}
-            </div>
+            {slide.slide === 2 && (
+              <TwentiethPageSlide2Content
+                title={slide.title}
+                body={slide.body}
+                embed={slide.embed}
+              />
+            )}
+
+            {slide.slide === 3 && (
+              <TwentiethPageSlide3Content
+                title={slide.title}
+                timeline={slide.timeline}
+              />
+            )}
+
+            {slide.slide === 4 && (
+              <TwentiethPageSlide4Content
+                title={slide.title}
+                body={slide.body}
+                embed={slide.embed}
+              />
+            )}
           </div>
         </div>
       </div>
