@@ -24,14 +24,42 @@
       }
     }
   }
+  .columns-2{
+    column-count: 2;
+  }
   .dropdown-item{
     padding-left: 1em;
     padding-right: 1em;
     label{
       margin-bottom: 0;
+      cursor: pointer;
     }
     input[type="checkbox"]{
-      margin-right: 0.5em;
+      display: none;
+      &+span{
+        width: 12px;
+        height: 12px;
+        border: 1px solid $black;
+        position: relative;
+        display: inline-block;
+        margin-right: 0.5em;
+        vertical-align: sub;
+        cursor: pointer;
+        &:after{
+          content: "";
+          width: 8px;
+          height: 8px;
+          position: absolute;
+          left: 1px;
+          top: 1px;
+        }
+      }
+      &.partial+span:after{
+        background-color: cyan;
+      }
+      &:checked+span:after{
+        background-color: blue;
+      }
     }
   }
 }

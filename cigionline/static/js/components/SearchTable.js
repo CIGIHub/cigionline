@@ -16,24 +16,26 @@ class SearchTable extends React.Component {
       loading: true,
       loadingInitial: true,
       loadingTopics: true,
-      loadingYears: false,
+      loadingYears: true,
+      loadingTypes: true,
       rows: [],
       searchValue: '',
       sortSelected: null,
       topics: [],
-      topicSelectValue: [],
+      topicSelectValues: [],
       topicsFilter: '',
-      typeSelected: null,
-      totalRows: 0,
+      typeSelectValues: [],
       years: [],
-      yearSelectValues: []
+      yearSelectValues: [],
+      totalRows: 0
     };
 
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
     this.handleSortSelect = this.handleSortSelect.bind(this);
     this.handleTopicSelect = this.handleTopicSelect.bind(this);
-    this.handleYearSelect = this.handleYearSelect.band(this);
+    this.handleTypeSelect = this.handleTypeSelect.bind(this);
+    this.handleYearSelect = this.handleYearSelect.bind(this);
   }
 
   componentDidMount() {
@@ -44,7 +46,8 @@ class SearchTable extends React.Component {
       const query = params.get('query');
       const sort = params.get('sort');
       const topic = params.getAll('topic').map(t => parseInt(t));
-      const type = params.get('type');
+      const type = params.getAll('type');
+      const year = params.getAll('year').map(t => parseInt(t));
       const initialState = {};
       if (query) {
         initialState.searchValue = query;
@@ -53,14 +56,13 @@ class SearchTable extends React.Component {
         initialState.sortSelected = sort;
       }
       if (topic.length > 0) {
-        initialState.topicSelectValue = topic
+        initialState.topicSelectValues = topic
       }
-      if (type) {
-        for (const filterType of propsFilterTypes) {
-          if (type === filterType.name) {
-            initialState.typeSelected = filterType;
-          }
-        }
+      if (type.length > 0) {
+        initialState.typeSelectValues = type
+      }
+      if (year.length > 0) {
+        initialState.yearSelectValues = year
       }
       this.setState(initialState, this.getRows);
     } else {
@@ -68,16 +70,18 @@ class SearchTable extends React.Component {
     }
     if (showSearch) {
       this.getTopics();
-      const filterTypeEndpoints = [];
-      for (const filterType of filterTypes) {
-        if (filterType.typeEndpoint
-            && filterTypeEndpoints.indexOf(filterType.typeEndpoint) < 0) {
-          filterTypeEndpoints.push(filterType.typeEndpoint);
-        }
-      }
-      for (const filterTypeEndpoint of filterTypeEndpoints) {
-        this.getTypes(filterTypeEndpoint);
-      }
+      this.getYears();
+      this.getTypes();
+      // const filterTypeEndpoints = [];
+      // for (const filterType of filterTypes) {
+      //   if (filterType.typeEndpoint
+      //       && filterTypeEndpoints.indexOf(filterType.typeEndpoint) < 0) {
+      //     filterTypeEndpoints.push(filterType.typeEndpoint);
+      //   }
+      // }
+      // for (const filterTypeEndpoint of filterTypeEndpoints) {
+      //   this.getTypes(filterTypeEndpoint);
+      // }
     }
   }
 
@@ -102,32 +106,64 @@ class SearchTable extends React.Component {
   }
 
   handleTopicSelect(e, id) {
-    let topics = this.state.topicSelectValue;
+    let topics = this.state.topicSelectValues;
     if(e.target.checked){
       topics.push(id);
     } else{
       topics = topics.filter(f => f !== id)
     }
     this.setState({
-      topicSelectValue: topics,
+      topicSelectValues: topics,
     }, this.getRows);
   }
 
   handleYearSelect(e, year){
     let years = this.state.yearSelectValues;
-    
+    if(e.target.checked){
+      years.push(year);
+    } else{
+      years = years.filter(f => f !== year)
+    }
+    this.setState({
+      yearSelectValues: years,
+    }, this.getRows);
   }
 
-  handleTypeSelect(type) {
-    if (type.id || type.value || type.endpoint) {
-      this.setState({
-        typeSelected: type,
-      }, this.getRows);
-    } else {
-      this.setState({
-        typeSelected: null,
-      }, this.getRows);
+  handleTypeSelect(e, type, subtype) {
+    let types = this.state.typeSelectValues;
+    let filtertype = this.props.filterTypes.find(f => f.name === type);
+    if(filtertype.subtypes == undefined){
+      filtertype.subtypes = []
     }
+    // if we are dealing with parent type
+    if(subtype === undefined){
+      if(e.target.checked){ // if we are adding, we need to add all
+        types.push(type);
+        filtertype.subtypes.map((s) => {
+          types.push(type+"_"+s);
+        })
+      } else{ // if we are removing we need to remove all
+        types = types.filter(f => f !== type)
+        filtertype.subtypes.map((s) => {
+          types = types.filter(f => f !== type+"_"+s);
+        })
+      }
+    }else{ // if subtype is defined
+      if(e.target.checked){ // if we are adding, we need to check if all are added and then add parent
+        types.push(type + "_" + subtype);
+        let allchecked = filtertype.subtypes.map(f => types.includes(type + "_" + f)).every(Boolean)
+        if(allchecked){
+          types.push(type)
+        }
+      }else{ // if we are removing, we need to remove parent
+        types = types.filter(f => f !== type+"_"+subtype);
+        types = types.filter(f => f !== type);
+      }
+    }
+    
+    this.setState({
+      typeSelectValues: [...new Set(types)],
+    }, this.getRows);
   }
 
   getRows() {
@@ -136,8 +172,9 @@ class SearchTable extends React.Component {
       loadingInitial,
       searchValue,
       sortSelected,
-      topicSelectValue,
-      typeSelected,
+      topicSelectValues,
+      yearSelectValues,
+      typeSelectValues
     } = this.state;
     const {
       contentsubtypes,
@@ -172,7 +209,7 @@ class SearchTable extends React.Component {
         }
       }
     }
-    if (!typeSelected) {
+    if (typeSelectValues.length == 0) {
       for (const contenttype of contenttypes) {
         uri += `&contenttype=${contenttype}`;
       }
@@ -189,13 +226,20 @@ class SearchTable extends React.Component {
     if (searchValue) {
       uri += `&searchtext=${searchValue}`;
     }
-    if (topicSelectValue.length > 0) {
-      topicSelectValue.map(t => {
+    if (topicSelectValues.length > 0) {
+      topicSelectValues.map(t => {
         uri += `&topic=${t}`;
       })
     }
-    if (typeSelected && typeSelected.param) {
-      uri += `&${typeSelected.param}=${typeSelected.value}`;
+    if (yearSelectValues.length > 0) {
+      yearSelectValues.map(t => {
+        uri += `&year=${t}`;
+      })
+    }
+    if (typeSelectValues > 0) {
+      typeSelectValues.map(t => {
+        uri += `&type=${t}`;
+      })
     }
     if (isSearchPage) {
       uri += '&searchpage=true';
@@ -210,34 +254,6 @@ class SearchTable extends React.Component {
           rows: data.items,
           totalRows: data.meta.total_count,
         }));
-      });
-  }
-
-  getTypes(typeEndpoint) {
-    fetch(encodeURI(`/api${typeEndpoint}/?limit=40&offset=0&fields=title`))
-      .then((res) => res.json())
-      .then((data) => {
-        for (const item of data.items) {
-          const { filterTypes: existingFilterTypes } = this.state;
-          const itemIndex = existingFilterTypes.findIndex(
-            (filterType) => (
-              filterType.typeEndpoint === typeEndpoint
-              && filterType.typeValue === item.title
-            ),
-          );
-          if (itemIndex >= 0) {
-            this.setState(({ filterTypes }) => ({
-              filterTypes: [
-                ...filterTypes.slice(0, itemIndex),
-                {
-                  ...filterTypes[itemIndex],
-                  id: item.id,
-                },
-                ...filterTypes.slice(itemIndex + 1),
-              ],
-            }));
-          }
-        }
       });
   }
 
@@ -263,30 +279,23 @@ class SearchTable extends React.Component {
     }));
   }
 
+  getTypes() {
+    this.setState(() => ({
+      loadingTypes: false,
+    }));
+  }
+
   setPage(page) {
     this.setState(() => ({
       currentPage: page,
     }), this.getRows);
   }
 
-  // get dropdownSelectedTopic() {
-  //   const { topics, topicSelectValue } = this.state;
-  //   let selectedTopic = 'All Topics';
-  //   topics.forEach((topic) => {
-  //     if (topic.id === topicSelectValue) {
-  //       selectedTopic = topic.title;
-  //     }
-  //   });
-  //   return selectedTopic;
-  // }
-
   get dropdownTopics() {
-    const { topics, topicSelectValue } = this.state;
+    const { topics, topicSelectValues } = this.state;
     const dropdownTopics = [];
     topics.forEach((topic) => {
-      if (topic.id !== topicSelectValue) {
         dropdownTopics.push(topic);
-      }
     });
     if (topics.length !== dropdownTopics.length) {
       dropdownTopics.unshift({
@@ -297,25 +306,12 @@ class SearchTable extends React.Component {
     return dropdownTopics;
   }
 
-  // get dropdownSelectedType() {
-  //   const { typeSelected } = this.state;
-  //   if (typeSelected && typeSelected.name) {
-  //     return typeSelected.name;
-  //   }
-  //   return 'All Types';
-  // }
-
   get dropdownTypes() {
     const { typeSelected } = this.state;
     const { filterTypes } = this.state;
     const dropdownTypes = [];
     filterTypes.forEach((filterType) => {
-      if ((!filterType.typeEndpoint || filterType.id)
-          && (!typeSelected
-            || (typeSelected
-              && typeSelected.name !== filterType.name))) {
         dropdownTypes.push(filterType);
-      }
     });
     if (filterTypes.length !== dropdownTypes.length) {
       dropdownTypes.unshift({
@@ -336,8 +332,9 @@ class SearchTable extends React.Component {
     const {
       searchValue,
       sortSelected,
-      topicSelectValue,
-      typeSelected,
+      topicSelectValues,
+      typeSelectValues,
+      yearSelectValues,
     } = this.state;
     const url = new URL(window.location);
     url.searchParams.set('query', searchValue);
@@ -346,18 +343,29 @@ class SearchTable extends React.Component {
     } else {
       url.searchParams.delete('sort');
     }
-    if (topicSelectValue.length > 0) {
+    if (topicSelectValues.length > 0) {
       url.searchParams.delete('topic');
-      topicSelectValue.map(t => {
+      topicSelectValues.map(t => {
         url.searchParams.append('topic', t);
       })
     } else {
       url.searchParams.delete('topic');
     }
-    if (typeSelected) {
-      url.searchParams.set('type', typeSelected.name);
+    if (typeSelectValues.length > 0) {
+      url.searchParams.delete('type');
+      typeSelectValues.map(t => {
+        url.searchParams.append('type', t);
+      })
     } else {
       url.searchParams.delete('type');
+    }
+    if (yearSelectValues.length > 0) {
+      url.searchParams.delete('year');
+      yearSelectValues.map(t => {
+        url.searchParams.append('year', t);
+      })
+    } else {
+      url.searchParams.delete('year');
     }
     window.history.pushState({}, '', url);
   }
@@ -375,6 +383,7 @@ class SearchTable extends React.Component {
       loadingInitial,
       loadingTopics,
       loadingYears,
+      loadingTypes,
       rows,
       searchValue,
       sortSelected,
@@ -401,7 +410,7 @@ class SearchTable extends React.Component {
               <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Topics
               </button>
-              <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+              <div className="dropdown-menu show" aria-labelledby="search-bar-topics">
                 <div className="topic-filter">
                   <div className="input-group input-group-search">
                     <input
@@ -420,14 +429,14 @@ class SearchTable extends React.Component {
                 {!loadingTopics && (
                   <ul>
                   { this.dropdownTopics.filter(topic => this.state.topicsFilter == "" || topic.title.toLowerCase().includes(this.state.topicsFilter.toLowerCase())).map((topic) => (
-                    <li className="dropdown-item">
+                    <li className="dropdown-item" key={`topic-${topic.id}`}>
                       <label className="keep-open">
                         <input type="checkbox"
                           id={`topic-${topic.id}`}
-                          key={`topic-${topic.id}`}
-                          defaultChecked={this.state.topicSelectValue.includes(topic.id) ? "checked" : ""}
-                          onClick={(e) => this.handleTopicSelect(e, topic.id)}
+                          checked={this.state.topicSelectValues.includes(topic.id) ? "checked" : ""}
+                          onChange={(e) => this.handleTopicSelect(e, topic.id)}
                         />
+                        <span></span>
                         {topic.title}
                       </label>
                     </li>
@@ -437,22 +446,45 @@ class SearchTable extends React.Component {
               </div>
             </div>
           )}
-          {!!filterTypes.length && (
+          {!loadingTypes && (
             <div className="dropdown custom-dropdown">
               <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Types
               </button>
-              <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
-                {this.dropdownTypes.map((type) => (
-                  <button
-                    key={`type-${type.name.replace(' ', '_')}`}
-                    className="dropdown-item"
-                    type="button"
-                    onClick={() => this.handleTypeSelect(type)}
-                  >
-                    {type.name}
-                  </button>
-                ))}
+              <div className="dropdown-menu w-100 show" aria-labelledby="search-bar-types">
+                  <ul>
+                  {this.dropdownTypes.map(function(type){
+                    return (
+                    <li className="dropdown-item" key={`type-${type.name.replace(' ', '_')}`}>
+                      <label className="keep-open">
+                        <input type="checkbox"
+                          onChange={(e) => this.handleTypeSelect(e, type.name)}
+                          className={`${this.state.typeSelectValues.some(t => t.split("_")[0] === type.name) ? "partial" : ""}`}
+                          checked={this.state.typeSelectValues.includes(type.name) ? "checked" : ""}
+                        />
+                        <span></span>
+                        {type.name}
+                        </label>
+                        { type.subtypes && type.subtypes.length > 0 &&
+                        <ul>
+                        { type.subtypes.map((subtype) => (
+                          <li className="dropdown-item" key={`subtype-${subtype.replace(' ', '_')}`}>
+                            <label className="keep-open">
+                              <input type="checkbox"
+                                  onChange={(e) => this.handleTypeSelect(e, type.name, subtype)}
+                                  checked={this.state.typeSelectValues.includes(type.name + "_" + subtype) ? "checked" : ""}
+                                  className={`${type.name} ${type.name + "_" + subtype}`}
+                              />
+                              <span></span>
+                              {subtype}
+                            </label>
+                          </li>
+                        ))}
+                        </ul>
+                        }
+                    </li>
+                  )}, this)}
+                  </ul>
               </div>
             </div>
           )}
@@ -461,18 +493,18 @@ class SearchTable extends React.Component {
             <button className="dropdown-toggle" type="button" id="search-bar-years" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Years
             </button>
-            <div className="dropdown-menu" aria-labelledby="search-bar-years">
+            <div className="dropdown-menu show" aria-labelledby="search-bar-years">
               {!loadingYears && (
-                <ul>
-                { this.dropdownYears.map((year) => (
-                  <li className="dropdown-item">
+                <ul className="columns-2">
+                { this.state.years.map((year) => (
+                  <li className="dropdown-item" key={`year-${year}`}>
                     <label>
                       <input type="checkbox"
                         id={`year-${year}`}
-                        key={`year-${year}`}
-                        defaultChecked={year in this.state.yearSelectValue ? "checked" : ""}
-                        onClick={(e) => this.handleYearSelect(e, year)}
+                        checked={this.state.yearSelectValues.includes(year) ? "checked" : ""}
+                        onChange={(e) => this.handleYearSelect(e, year)}
                       />
+                      <span></span>
                       {year}
                     </label>
                   </li>
