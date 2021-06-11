@@ -718,7 +718,7 @@ class NewsletterBlock(blocks.StructBlock):
         context['url'] = value.get('url')
         context['text'] = value.get('text')
 
-        if value.get('cta') != 'no_cta':
+        if value.get('cta') and value.get('cta') != 'no_cta':
             context['cta_image_link'] = self.cta_image_link(value.get('cta'))
             context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
@@ -831,7 +831,7 @@ class FeaturedContentBlock(NewsletterBlock):
         template = 'streams/newsletter/featured_content_block.html'
 
 
-class SocialBlock(blocks.StructBlock):
+class SocialBlock(NewsletterBlock):
     title = blocks.CharBlock(required=False)
     text = blocks.RichTextBlock(
         features=['bold', 'italic', 'link'],
@@ -844,24 +844,12 @@ class SocialBlock(blocks.StructBlock):
         template = 'streams/newsletter/social_block.html'
 
 
-class TextBlock(blocks.StructBlock):
+class TextBlock(NewsletterBlock):
     title = blocks.CharBlock(required=False)
     text = blocks.RichTextBlock(
         features=['bold', 'italic', 'link'],
         required=False,
     )
-
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-
-        if value.get('text'):
-            context['text'] = value.get('text')
-            text_soup = BeautifulSoup(context['text'].source, 'html.parser')
-            for link in text_soup.findAll('a'):
-                link['style'] = 'text-decoration: none; color: #ee1558;'
-            context['text'].source = str(text_soup)
-
-        return context
 
     class Meta:
         icon = 'doc-full'
