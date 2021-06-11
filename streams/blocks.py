@@ -851,6 +851,18 @@ class TextBlock(blocks.StructBlock):
         required=False,
     )
 
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        if value.get('text'):
+            context['text'] = value.get('text')
+            text_soup = BeautifulSoup(context['text'].source, 'html.parser')
+            for link in text_soup.findAll('a'):
+                link['style'] = 'text-decoration: none; color: #ee1558;'
+            context['text'].source = str(text_soup)
+
+        return context
+
     class Meta:
         icon = 'doc-full'
         label = 'Text'
