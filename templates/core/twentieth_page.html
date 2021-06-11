@@ -10,6 +10,8 @@
   {{ self.slides|json_script:"slides" }}
 {% endblock %}
 
+{% block body_class %}twentieth-page{% endblock %}
+
 {% block content %}
-  <div id='twentieth-page'></div>
+  <div id='twentieth-page-slides' class='twentieth-page-slides'></div>
 {% endblock %}

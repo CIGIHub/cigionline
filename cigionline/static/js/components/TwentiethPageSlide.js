@@ -11,35 +11,30 @@ const TwentiethPageSlide = (props) => {
       <div
         className="background-image"
         style={
-          slide.background && {
-            backgroundImage: `url(${slide.background})`,
-          }
+          slide.background
+            ? {
+                backgroundImage: `url(${slide.background})`,
+              }
+            : {}
         }
       >
         <div className="container">
           <div className="row justify-content-center">
-            {slide.slide === 2 && (
-              <TwentiethPageSlide2Content
-                title={slide.title}
-                body={slide.body}
-                embed={slide.embed}
-              />
-            )}
+            <div className="slide-content">
+              {slide.slide !== 3 && (
+                <TwentiethPageSlide2Content
+                  title={slide.title}
+                  body={slide.body}
+                />
+              )}
 
-            {slide.slide === 3 && (
-              <TwentiethPageSlide3Content
-                title={slide.title}
-                timeline={slide.timeline}
-              />
-            )}
-
-            {slide.slide === 4 && (
-              <TwentiethPageSlide4Content
-                title={slide.title}
-                body={slide.body}
-                embed={slide.embed}
-              />
-            )}
+              {slide.slide === 3 && (
+                <TwentiethPageSlide3Content
+                  title={slide.title}
+                  timeline={slide.timeline}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>

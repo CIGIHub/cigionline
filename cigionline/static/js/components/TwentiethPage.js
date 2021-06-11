@@ -6,40 +6,30 @@ import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 const TwentiethPage = (props) => {
   const { slides } = props;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const header = document.getElementsByTagName('header')[0];
+  const topBar = document.getElementsByClassName('cigi-top-bar')[0];
   useEffect(() => {
-    if (!header.classList.contains('minimized')) {
+    if (!topBar.classList.contains('scrolled-nav')) {
       if (currentSlideIndex > 0) {
-        header.classList.add('minimized');
+        topBar.classList.add('scrolled-nav');
       }
     } else if (currentSlideIndex === 0) {
-      header.classList.remove('minimized');
+      topBar.classList.remove('scrolled-nav');
     }
   });
 
   return (
-    <div className="slides">
-      <div className="controls d-flex">
-        {slides.map((slide) => (
-          <div className="" key={slide.slide}>
-            <button
-              type="button"
-              onClick={() => setCurrentSlideIndex(slide.slide - 1)}
-            >
-              {slide.slide}
-            </button>
-          </div>
-        ))}
+    <>
+      <div className="slides">
+        <TwentiethPageSlide
+          slide={slides[currentSlideIndex]}
+          key={currentSlideIndex}
+        />
       </div>
       <TwentiethPageNavArrows
         currentSlideIndex={currentSlideIndex}
         setCurrentSlideIndex={setCurrentSlideIndex}
       />
-      <TwentiethPageSlide
-        slide={slides[currentSlideIndex]}
-        key={currentSlideIndex}
-      />
-    </div>
+    </>
   );
 };
 

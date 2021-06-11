@@ -711,71 +711,116 @@ class TwentiethPage(
         verbose_name='Slide 1 Background Image',
         help_text='Slide 1 Background image',
     )
+    slide_2_background = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Slide 2 Background Image',
+        help_text='Slide 2 Background image',
+    )
+    slide_3_background = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Slide 3 Background Image',
+        help_text='Slide 3 Background image',
+    )
+    slide_4_background = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Slide 4 Background Image',
+        help_text='Slide 4 Background image',
+    )
+    slide_5_background = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Slide 5 Background Image',
+        help_text='Slide 5 Background image',
+    )
     slide_2_title = CharField(blank=True, max_length=255)
-    slide_2_body = RichTextField(
-        blank=True,
-        null=False,
-        features=['bold', 'italic', 'link'],
-        verbose_name='Slide 2 body',
-        help_text='Slide 2 body',
-    )
-    slide_2_embed = CharField(blank=True, max_length=255)
+    slide_2_body = StreamField([
+        ('embed', blocks.CharBlock()),
+        ('text', blocks.RichTextBlock()),
+    ], blank=True)
     slide_3_title = CharField(blank=True, max_length=255)
-    slide_3_timeline = StreamField(
-        [
-            ('year', blocks.StructBlock(
-                [
-                    ('year', blocks.CharBlock()),
-                    ('text', blocks.RichTextBlock())
-                ]
-            ))
-        ]
-    )
+    slide_3_timeline = StreamField([
+        ('year', blocks.StructBlock(
+            [
+                ('year', blocks.CharBlock()),
+                ('text', blocks.RichTextBlock())
+            ]
+        ))
+    ], blank=True)
     slide_4_title = CharField(blank=True, max_length=255)
-    slide_4_body = RichTextField(
-        blank=True,
-        null=False,
-        features=['bold', 'italic', 'link'],
-        verbose_name='Slide 4 body',
-        help_text='Slide 4 body',
-    )
-    slide_4_embed = CharField(blank=True, max_length=255)
+    slide_4_body = StreamField([
+        ('embed', blocks.CharBlock()),
+        ('text', blocks.RichTextBlock()),
+    ], blank=True)
     slide_5_title = CharField(blank=True, max_length=255)
-    slide_5_embed = CharField(blank=True, max_length=255)
+    slide_5_body = StreamField([
+        ('embed', blocks.CharBlock()),
+        ('text', blocks.RichTextBlock()),
+    ], blank=True)
 
     def slides(self):
-        timeline = []
-        for year in self.slide_3_timeline:
-            timeline.append({
-              'year': year.value['year'],
-              'body': year.value['text'].source
-            })
-        print (self.slide_1_background.get_rendition('original').url)
+        slide_2_body_json = []
+        slide_4_body_json = []
+        slide_5_body_json = []
+        for block in self.slide_2_body:
+            if block.block_type == 'text':
+                slide_2_body_json.append({'type': 'text', 'value': block.value.source})
+            else:
+                slide_2_body_json.append({'type': block.block_type, 'value': block.value})
+        for block in self.slide_4_body:
+            if block.block_type == 'text':
+                slide_4_body_json.append({'type': 'text', 'value': block.value.source})
+            else:
+                slide_4_body_json.append({'type': block.block_type, 'value': block.value})
+        for block in self.slide_5_body:
+            if block.block_type == 'text':
+                slide_5_body_json.append({'type': 'text', 'value': block.value.source})
+            else:
+                slide_5_body_json.append({'type': block.block_type, 'value': block.value})
         return [{
             'slide': 1,
-            'background': self.slide_1_background.get_rendition('original').url,
+            'background': self.slide_1_background.get_rendition('original').url if self.slide_1_background else '',
         },
-        {
+            {
             'slide': 2,
+            'background': self.slide_2_background.get_rendition('original').url if self.slide_2_background else '',
             'title': self.slide_2_title,
-            'body': self.slide_2_body,
-            'embed': self.slide_2_embed,
+            'body': slide_2_body_json,
         },
-        {
+            {
             'slide': 3,
+            'background': self.slide_3_background.get_rendition('original').url if self.slide_3_background else '',
             'title': self.slide_3_title,
-            'timeline': timeline,
+            'timeline': [{
+                'year': year.value['year'],
+                'body': year.value['text'].source
+            } for year in self.slide_3_timeline]
         },
-        {
+            {
             'slide': 4,
+            'background': self.slide_4_background.get_rendition('original').url if self.slide_4_background else '',
             'title': self.slide_4_title,
-            'body': self.slide_4_body,
-            'embed': self.slide_4_embed,
+            'body': slide_4_body_json,
         },
-        {
+            {
             'slide': 5,
+            'background': self.slide_5_background.get_rendition('original').url if self.slide_5_background else '',
             'title': self.slide_5_title,
-            'embed': self.slide_5_embed,
+            'body': slide_5_body_json,
         }]
 
     content_panels = [
@@ -789,15 +834,16 @@ class TwentiethPage(
         ),
         MultiFieldPanel(
             [
+                ImageChooserPanel('slide_2_background'),
                 FieldPanel('slide_2_title'),
-                FieldPanel('slide_2_body'),
-                FieldPanel('slide_2_embed'),
+                StreamFieldPanel('slide_2_body'),
             ],
             heading='Slide 2 - Introduction',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
+                ImageChooserPanel('slide_3_background'),
                 FieldPanel('slide_3_title'),
                 StreamFieldPanel('slide_3_timeline')
             ],
@@ -806,17 +852,18 @@ class TwentiethPage(
         ),
         MultiFieldPanel(
             [
+                ImageChooserPanel('slide_4_background'),
                 FieldPanel('slide_4_title'),
-                FieldPanel('slide_4_body'),
-                FieldPanel('slide_4_embed'),
+                StreamFieldPanel('slide_4_body'),
             ],
             heading='Slide 4 - Thank You',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
+                ImageChooserPanel('slide_5_background'),
                 FieldPanel('slide_5_title'),
-                FieldPanel('slide_5_embed'),
+                StreamFieldPanel('slide_5_body'),
             ],
             heading='Slide 5 - Social',
             classname='collapsible collapsed'

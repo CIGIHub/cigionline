@@ -8,5 +8,5 @@ const slides = JSON.parse(document.getElementById('slides').textContent);
 
 ReactDOM.render(
   <TwentiethPage slides={slides} />,
-  document.getElementById('twentieth-page')
+  document.getElementById('twentieth-page-slides')
 );

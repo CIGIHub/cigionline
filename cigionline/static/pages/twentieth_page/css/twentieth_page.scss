@@ -1,34 +1,58 @@
 @import '../../../css/global/mixins';
 
-.slides {
-  background-color: $black;
-  color: $white;
-  height: 100vh;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100vw;
-  z-index: 14;
-
-  * {
-    position: relative;
+.twentieth-page {
+  header {
+    background-color: transparent;
   }
 
-  button {
-    color: $white;
-  }
+  .twentieth-page-slides {
+    button {
+      color: $white;
+    }
 
-  .background-image {
-    background-position: center;
-    background-size: cover;
-    height: 100vh;
-    left: 0;
-    top: 0;
-    width: 100vw;
-  }
+    .prev-slide,
+    .next-slide {
+      font-size: 3em;
+      left: 50%;
+      position: fixed;
+      z-index: 500;
+    }
 
-  .prev-slide,
-  .next-slide {
-    font-size: 5em;
+    .prev-slide {
+      margin-top: -1em;
+      top: 0;
+    }
+
+    .next-slide {
+      bottom: 0;
+    }
+
+    .slides {
+      background-color: $black;
+      color: $white;
+      height: 100vh;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100vw;
+      z-index: 14;
+
+      * {
+        position: relative;
+      }
+
+      .background-image {
+        background-position: center;
+        background-size: cover;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        width: 100vw;
+      }
+
+      .slide-content {
+        padding-top: 5em;
+      }
+    }
   }
 }
