@@ -36,6 +36,7 @@ class SearchTable extends React.Component {
     this.handleTopicSelect = this.handleTopicSelect.bind(this);
     this.handleTypeSelect = this.handleTypeSelect.bind(this);
     this.handleYearSelect = this.handleYearSelect.bind(this);
+    this.removeAllFilters = this.removeAllFilters.bind(this);
   }
 
   componentDidMount() {
@@ -46,7 +47,8 @@ class SearchTable extends React.Component {
       const query = params.get('query');
       const sort = params.get('sort');
       const topic = params.getAll('topic').map(t => parseInt(t));
-      const type = params.getAll('type');
+      const type = params.getAll('contenttype');
+      const subtype = params.getAll('contentsubtype');
       const year = params.getAll('year').map(t => parseInt(t));
       const initialState = {};
       if (query) {
@@ -60,6 +62,9 @@ class SearchTable extends React.Component {
       }
       if (type.length > 0) {
         initialState.typeSelectValues = type
+      }
+      if (subtype.length > 0) {
+        initialState.typeSelectValues = initialState.typeSelectValues.concat(subtype)
       }
       if (year.length > 0) {
         initialState.yearSelectValues = year
@@ -387,33 +392,12 @@ class SearchTable extends React.Component {
     }))
   }
 
-  removeTopicsFilter(topic){
-    const { topicSelectValues } = this.state;
-    this.setState(() => ({
-      topicSelectValues: topicSelectValues.filter(f => f !== topic)
-    }, this.getRows))
-  }
-
-  removeTypeFilter(type){
-    const { typeSelectValues } = this.state;
-    this.setState(() => ({
-      typeSelectValues: typeSelectValues.filter(f => f !== type)
-    }, this.getRows))
-  }
-
-  removeYearFilter(year){
-    const { yearSelectValues } = this.state;
-    this.setState(() => ({
-      yearSelectValues: yearSelectValues.filter(f => f !== year)
-    }, this.getRows))
-  }
-
   removeAllFilters(){
-    this.setState(() => ({
+    this.setState({
       topicSelectValues: [],
       typeSelectValues: [],
       yearSelectValues: []
-    }, this.getRows))
+    }, this.getRows)
   }
 
   renderSelectedFilters(){
@@ -427,29 +411,32 @@ class SearchTable extends React.Component {
     if (topicSelectValues.length > 0) {
       topicSelectValues.map(t => {
         const topic = topics.filter((to) => to.id === t)[0]
-        filter.push(<span className="filter" onClick={(e)=> this.handleTopicSelect(e, t, false)}>{topic.title}</span>)
+        filter.push(<span className="filter" onClick={(e)=> this.handleTopicSelect(e, t, false)}>{topic.title}<i className="fa fa-times" /></span>)
       })
     }
     if (typeSelectValues.length > 0) {
       typeSelectValues.map(s => {
         const parts = s.split("_");
         if(parts.length > 1){
-          filter.push(<span className="filter" onClick={(e)=> this.handleTypeSelect(e, parts[0], parts[1], false)}>{parts[1]}</span>)
+          filter.push(<span className="filter" onClick={(e)=> this.handleTypeSelect(e, parts[0], parts[1], false)}>{parts[1]}<i className="fa fa-times" /></span>)
         }else{
-          filter.push(<span className="filter" onClick={(e)=> this.handleTypeSelect(e, s, undefined, false)}>{s}</span>)
+          filter.push(<span className="filter" onClick={(e)=> this.handleTypeSelect(e, s, undefined, false)}>{s}<i className="fa fa-times" /></span>)
         }
       })
     }
     if (yearSelectValues.length > 0) {
       yearSelectValues.map(y => {
-        filter.push(<span className="filter" onClick={(e)=> this.handleYearSelect(e, y, false)}>{y}</span>)
+        filter.push(<span className="filter" onClick={(e)=> this.handleYearSelect(e, y, false)}>{y}<i className="fa fa-times" /></span>)
       })
     }
     if(filter.length > 0){
-      filter.push(<span className="filter red" onClick={() => this.removeAllFilters()}>Clear All</span>)
+      filter.push(<span className="filter red" onClick={this.removeAllFilters}>Clear All</span>)
     }
 
-    return <div className="filterlist">{filter}</div>;
+    return (<div className="filterlist">
+              {filter.length > 0 ? <div className="filtertitle">Selected Filters:</div>:""}
+              {filter}
+            </div>);
   }
 
   render() {
@@ -614,22 +601,6 @@ class SearchTable extends React.Component {
                   </div>
                 </div>
               </form>
-              <div className="search-bar-sort-wrapper">
-                <span>Sort by:</span>
-                <ul className="search-bar-sort-list">
-                  {sortOptions.map((sortOption) => (
-                    <li key={`sort-${sortOption.value}`}>
-                      <button
-                        type="button"
-                        className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
-                        onClick={() => this.handleSortSelect(sortOption.value)}
-                      >
-                        {sortOption.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           )}
           {loadingInitial
@@ -639,10 +610,27 @@ class SearchTable extends React.Component {
                 <>
                   {showCount && totalRows && (
                     <div className="search-table-count">
-                      {`${totalRows} results found.`}
+                      {`${totalRows} results for "${searchValue}"`}
                     </div>
                   )}
                   {this.renderSelectedFilters()}
+
+                  <div className="search-bar-sort-wrapper">
+                    <span>Sort by:</span>
+                    <ul className="search-bar-sort-list">
+                      {sortOptions.map((sortOption) => (
+                        <li key={`sort-${sortOption.value}`}>
+                          <button
+                            type="button"
+                            className={['search-bar-sort-link', (sortSelected === sortOption.value || (!sortSelected && sortOption.default)) && 'active'].join(' ')}
+                            onClick={() => this.handleSortSelect(sortOption.value)}
+                          >
+                            {sortOption.name}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                   {blockListing
                     ? (
                       <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>
