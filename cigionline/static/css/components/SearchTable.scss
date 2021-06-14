@@ -1,6 +1,9 @@
 @import '../global/variables';
 
 .search-filters {
+  .dropdown {
+    margin-bottom: 12px;
+  }
   .dropdown-menu {
     &.show {
       border-bottom: 1em solid $white;
