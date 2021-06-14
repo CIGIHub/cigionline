@@ -506,7 +506,11 @@ class SearchTable extends React.Component {
               <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Topics
               </button>
+<<<<<<< HEAD
               <div className="dropdown-menu show pt-0" aria-labelledby="search-bar-topics">
+=======
+              <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+>>>>>>> b089ac2720a40dcb2a68a25624c59d9ab923c932
                 <div className="topic-filter">
                   <div className="input-group input-group-search">
                     <input
@@ -543,11 +547,11 @@ class SearchTable extends React.Component {
             </div>
           )}
           {!loadingTypes && (
-            <div className="dropdown custom-dropdown">
+            <div className="dropdown custom-dropdown keep-open">
               <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Types
               </button>
-              <div className="dropdown-menu w-100 show" aria-labelledby="search-bar-types">
+              <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
                   <ul>
                   {this.dropdownTypes.map(function(type){
                     return (
@@ -585,16 +589,16 @@ class SearchTable extends React.Component {
             </div>
           )}
 
-          <div className="dropdown custom-dropdown">
+          <div className="dropdown custom-dropdown keep-open">
             <button className="dropdown-toggle" type="button" id="search-bar-years" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Years
             </button>
-            <div className="dropdown-menu show" aria-labelledby="search-bar-years">
+            <div className="dropdown-menu" aria-labelledby="search-bar-years">
               {!loadingYears && (
                 <ul className="columns-2">
                 { this.state.years.map((year) => (
                   <li className="dropdown-item" key={`year-${year}`}>
-                    <label>
+                    <label className="keep-open">
                       <input type="checkbox"
                         id={`year-${year}`}
                         checked={this.state.yearSelectValues.includes(year) ? "checked" : ""}
