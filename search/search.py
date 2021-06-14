@@ -188,10 +188,10 @@ class CIGIOnlineSearchQueryCompiler:
                     }
                 })
             filters.append({
-                    "bool": {
-                        "should": year_ranges
-                    }
-                })
+                "bool": {
+                    "should": year_ranges
+                }
+            })
 
         return {
             "bool": {
