@@ -32,12 +32,12 @@ ReactDOM.render(
       name: 'Event',
       param: 'content_type',
       value: 'events.EventPage',
-      subtypes: ['Private', 'Public']
+      subtypes: ['Private', 'Public'],
     }, {
       name: 'Multimedia',
       param: 'content_type',
       value: 'multimedia.MultimediaPage',
-      subtypes: ['Video', 'Podcast']
+      subtypes: ['Video', 'Podcast'],
     }, {
       name: 'Opinion',
       param: 'content_type',
@@ -46,7 +46,7 @@ ReactDOM.render(
       name: 'Publication',
       param: 'content_type',
       value: 'publications.PublicationPage',
-      subtypes: ['Books', 'Conference Reports', 'Essay Series', 'Papers', 'Policy Briefs', 'Policy Memos', 'Special Reports']
+      subtypes: ['Books', 'Conference Reports', 'Essay Series', 'Papers', 'Policy Briefs', 'Policy Memos', 'Special Reports'],
     }, {
       name: 'Staff/Expert',
       param: 'content_type',
