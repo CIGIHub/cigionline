@@ -510,7 +510,7 @@ class SearchTable extends React.Component {
             </div>
           )}
           {!loadingTypes && (
-            <div className="dropdown custom-dropdown">
+            <div className="dropdown custom-dropdown keep-open">
               <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Types
               </button>
