@@ -584,7 +584,7 @@ class SearchTable extends React.Component {
               <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
                 <div className="form-row position-relative">
                   <div className="col">
-                    <div className="input-group input-group-search">
+                    <div className="input-group input-group-search large">
                       <input
                         type="text"
                         className="form-control"

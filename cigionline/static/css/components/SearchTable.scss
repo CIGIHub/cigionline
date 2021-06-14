@@ -91,6 +91,7 @@
           &+span {
             &::after {
               background-color: $color--blue;
+              opacity: 1;
             }
           }
         }
@@ -173,6 +174,10 @@
 
     form {
       margin-bottom: 0.5em;
+
+      .input-group-search {
+        height: 2em;
+      }
 
       input {
         color: $color--blue;
