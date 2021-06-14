@@ -18,24 +18,17 @@ const TwentiethPageSlide = (props) => {
             : {}
         }
       >
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="slide-content">
-              {slide.slide !== 3 && (
-                <TwentiethPageSlide2Content
-                  title={slide.title}
-                  body={slide.body}
-                />
-              )}
+        <div className="slide-content">
+          {slide.slide !== 3 && (
+            <TwentiethPageSlide2Content title={slide.title} body={slide.body} />
+          )}
 
-              {slide.slide === 3 && (
-                <TwentiethPageSlide3Content
-                  title={slide.title}
-                  timeline={slide.timeline}
-                />
-              )}
-            </div>
-          </div>
+          {slide.slide === 3 && (
+            <TwentiethPageSlide3Content
+              title={slide.title}
+              timeline={slide.timeline}
+            />
+          )}
         </div>
       </div>
     </div>
