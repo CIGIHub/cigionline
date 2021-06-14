@@ -439,6 +439,34 @@ class SearchTable extends React.Component {
             </div>);
   }
 
+  renderSearchBar(){
+    const { searchValue } = this.state
+    const { searchPlaceholder } = this.props
+    return(
+      <div className="search-bar">
+        <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
+          <div className="form-row position-relative">
+            <div className="col">
+              <div className="input-group input-group-search large">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={searchValue}
+                  placeholder={searchPlaceholder}
+                  onChange={this.handleSearchValueChange}
+                />
+                <div className="input-group-append">
+                  <button className="btn-search" type="submit">
+                    <i className="far fa-search" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    )}
+
   render() {
     const {
       currentPage,
@@ -467,13 +495,18 @@ class SearchTable extends React.Component {
 
     return (
       <div className="row">
+        {showSearch && (
+          <div className="search-table col-12 d-block d-md-none">
+            {this.renderSearchBar()}
+          </div>
+        )}
         <div className="search-filters col-md-3">
           {!hideTopicDropdown && (
             <div className="dropdown custom-dropdown keep-open">
               <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Topics
               </button>
-              <div className="dropdown-menu show" aria-labelledby="search-bar-topics">
+              <div className="dropdown-menu show pt-0" aria-labelledby="search-bar-topics">
                 <div className="topic-filter">
                   <div className="input-group input-group-search">
                     <input
@@ -580,27 +613,8 @@ class SearchTable extends React.Component {
         <div className="search-table col-md-9">
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {showSearch && (
-            <div className="search-bar">
-              <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
-                <div className="form-row position-relative">
-                  <div className="col">
-                    <div className="input-group input-group-search large">
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={searchValue}
-                        placeholder={searchPlaceholder}
-                        onChange={this.handleSearchValueChange}
-                      />
-                      <div className="input-group-append">
-                        <button className="btn-search" type="submit">
-                          <i className="far fa-search" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
+            <div className="d-none d-md-block">
+              {this.renderSearchBar()}
             </div>
           )}
           {loadingInitial
