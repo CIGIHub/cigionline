@@ -16,7 +16,6 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                 },
                 "fragment_size": 256,
             }
-
         return body
 
     def _get_results_from_hits(self, hits):
@@ -57,7 +56,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid
+        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -73,6 +72,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.publicationtypeid = None
         self.publicationseriesid = None
         self.multimediaseriesid = None
+        self.years = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -92,6 +92,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.publicationseriesid = publicationseriesid
         if multimediaseriesid is not None:
             self.multimediaseriesid = multimediaseriesid
+        if years is not None:
+            self.years = years
 
     @property
     def queryset(self):
@@ -173,6 +175,23 @@ class CIGIOnlineSearchQueryCompiler:
                     "multimedia_multimediapage__multimedia_series_id_filter": self.multimediaseriesid,
                 },
             })
+        if self.years:
+            year_ranges = []
+            for year in self.years:
+                year_ranges.append({
+                    "range": {
+                        "core_contentpage__publishing_date_filter": {
+                            "gte": f"{year}||/y",
+                            "lte": f"{year}||/y",
+                            "format": "yyyy"
+                        }
+                    }
+                })
+            filters.append({
+                    "bool": {
+                        "should": year_ranges
+                    }
+                })
 
         return {
             "bool": {
@@ -192,10 +211,10 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None, multimediaseriesid=None):
+def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None, multimediaseriesid=None, years=None):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid)
+        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years)
     )
 
 
@@ -271,6 +290,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         self.publicationtypeid = None
         self.publicationseriesid = None
         self.multimediaseriesid = None
+        self.years = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes

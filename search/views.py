@@ -74,6 +74,7 @@ def search_api(request):
         searchtext=searchtext,
         sort=request.GET.get('sort', None),
         topics=request.GET.getlist('topic', None),
+        years=request.GET.getlist('year', None),
     )
     promoted_pages = []
     if request.GET.get('searchpage'):
