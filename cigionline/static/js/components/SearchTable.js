@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes, { resetWarningCache } from 'prop-types';
 import React from 'react';
 
 import Paginator from './Paginator';
@@ -105,9 +105,9 @@ class SearchTable extends React.Component {
     }, this.getRows);
   }
 
-  handleTopicSelect(e, id) {
+  handleTopicSelect(e, id, check_override) {
     let topics = this.state.topicSelectValues;
-    if(e.target.checked){
+    if(e.target.checked || check_override){
       topics.push(id);
     } else{
       topics = topics.filter(f => f !== id)
@@ -117,9 +117,9 @@ class SearchTable extends React.Component {
     }, this.getRows);
   }
 
-  handleYearSelect(e, year){
+  handleYearSelect(e, year, check_override){
     let years = this.state.yearSelectValues;
-    if(e.target.checked){
+    if(e.target.checked || check_override){
       years.push(year);
     } else{
       years = years.filter(f => f !== year)
@@ -129,7 +129,7 @@ class SearchTable extends React.Component {
     }, this.getRows);
   }
 
-  handleTypeSelect(e, type, subtype) {
+  handleTypeSelect(e, type, subtype, check_override) {
     let types = this.state.typeSelectValues;
     let filtertype = this.props.filterTypes.find(f => f.name === type);
     if(filtertype.subtypes == undefined){
@@ -137,7 +137,7 @@ class SearchTable extends React.Component {
     }
     // if we are dealing with parent type
     if(subtype === undefined){
-      if(e.target.checked){ // if we are adding, we need to add all
+      if(e.target.checked || check_override){ // if we are adding, we need to add all
         types.push(type);
         filtertype.subtypes.map((s) => {
           types.push(type+"_"+s);
@@ -149,7 +149,7 @@ class SearchTable extends React.Component {
         })
       }
     }else{ // if subtype is defined
-      if(e.target.checked){ // if we are adding, we need to check if all are added and then add parent
+      if(e.target.checked || check_override){ // if we are adding, we need to check if all are added and then add parent
         types.push(type + "_" + subtype);
         let allchecked = filtertype.subtypes.map(f => types.includes(type + "_" + f)).every(Boolean)
         if(allchecked){
@@ -236,9 +236,14 @@ class SearchTable extends React.Component {
         uri += `&year=${t}`;
       })
     }
-    if (typeSelectValues > 0) {
+    if (typeSelectValues.length > 0) {
       typeSelectValues.map(t => {
-        uri += `&type=${t}`;
+        const parts = t.split("_");
+        if(parts.length > 1){
+          uri += `&contentsubtype=${parts[1]}`;
+        }else{
+          uri += `&contenttype=${t}`;
+        }
       })
     }
     if (isSearchPage) {
@@ -352,9 +357,15 @@ class SearchTable extends React.Component {
       url.searchParams.delete('topic');
     }
     if (typeSelectValues.length > 0) {
-      url.searchParams.delete('type');
+      url.searchParams.delete('contenttype');
+      url.searchParams.delete('contentsubtype');
       typeSelectValues.map(t => {
-        url.searchParams.append('type', t);
+        const parts = t.split("_");
+        if(parts.length > 1){
+          url.searchParams.append('contentsubtype', parts[1]);
+        }else{
+          url.searchParams.append('contenttype', t);
+        }
       })
     } else {
       url.searchParams.delete('type');
@@ -374,6 +385,71 @@ class SearchTable extends React.Component {
     this.setState(() => ({
       topicsFilter: e.target.value
     }))
+  }
+
+  removeTopicsFilter(topic){
+    const { topicSelectValues } = this.state;
+    this.setState(() => ({
+      topicSelectValues: topicSelectValues.filter(f => f !== topic)
+    }, this.getRows))
+  }
+
+  removeTypeFilter(type){
+    const { typeSelectValues } = this.state;
+    this.setState(() => ({
+      typeSelectValues: typeSelectValues.filter(f => f !== type)
+    }, this.getRows))
+  }
+
+  removeYearFilter(year){
+    const { yearSelectValues } = this.state;
+    this.setState(() => ({
+      yearSelectValues: yearSelectValues.filter(f => f !== year)
+    }, this.getRows))
+  }
+
+  removeAllFilters(){
+    this.setState(() => ({
+      topicSelectValues: [],
+      typeSelectValues: [],
+      yearSelectValues: []
+    }, this.getRows))
+  }
+
+  renderSelectedFilters(){
+    const {
+      topics,
+      topicSelectValues,
+      typeSelectValues,
+      yearSelectValues,
+    } = this.state;
+    const filter = []
+    if (topicSelectValues.length > 0) {
+      topicSelectValues.map(t => {
+        const topic = topics.filter((to) => to.id === t)[0]
+        filter.push(<span className="filter" onClick={(e)=> this.handleTopicSelect(e, t, false)}>{topic.title}</span>)
+      })
+    }
+    if (typeSelectValues.length > 0) {
+      typeSelectValues.map(s => {
+        const parts = s.split("_");
+        if(parts.length > 1){
+          filter.push(<span className="filter" onClick={(e)=> this.handleTypeSelect(e, parts[0], parts[1], false)}>{parts[1]}</span>)
+        }else{
+          filter.push(<span className="filter" onClick={(e)=> this.handleTypeSelect(e, s, undefined, false)}>{s}</span>)
+        }
+      })
+    }
+    if (yearSelectValues.length > 0) {
+      yearSelectValues.map(y => {
+        filter.push(<span className="filter" onClick={(e)=> this.handleYearSelect(e, y, false)}>{y}</span>)
+      })
+    }
+    if(filter.length > 0){
+      filter.push(<span className="filter red" onClick={() => this.removeAllFilters()}>Clear All</span>)
+    }
+
+    return <div className="filterlist">{filter}</div>;
   }
 
   render() {
@@ -566,6 +642,7 @@ class SearchTable extends React.Component {
                       {`${totalRows} results found.`}
                     </div>
                   )}
+                  {this.renderSelectedFilters()}
                   {blockListing
                     ? (
                       <div className={[...containerClass, 'search-results', loading && 'loading'].join(' ')}>

@@ -64,6 +64,23 @@
   }
 }
 
+.filterlist{
+  .filter{
+    display: inline-block;
+    position: relative;
+    padding: 0.5em 2em 0.5em 1em;
+    border: 1px solid black;
+    margin-right: 0.5em;
+    &:after{
+      content: 'X';
+      position: absolute;
+      right: 0.5em;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
+
 .search-table {
   margin-bottom: 4em;
   margin-top: 3em;
