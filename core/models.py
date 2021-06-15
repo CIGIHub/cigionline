@@ -704,56 +704,26 @@ class TwentiethPage(
     ShareablePageAbstract,
 ):
 
-    def slides(self):
-        slide_2_body_json = []
-        slide_4_body_json = []
-        slide_5_body_json = []
-        for block in self.slide_2_body:
-            if block.block_type == 'text':
-                slide_2_body_json.append({'type': 'text', 'value': block.value.source})
-            else:
-                slide_2_body_json.append({'type': block.block_type, 'value': block.value})
-        for block in self.slide_4_body:
-            if block.block_type == 'text':
-                slide_4_body_json.append({'type': 'text', 'value': block.value.source})
-            else:
-                slide_4_body_json.append({'type': block.block_type, 'value': block.value})
-        for block in self.slide_5_body:
-            if block.block_type == 'text':
-                slide_5_body_json.append({'type': 'text', 'value': block.value.source})
-            else:
-                slide_5_body_json.append({'type': block.block_type, 'value': block.value})
-        return [{
-            'slide': 1,
-            'background': self.slide_1_background.get_rendition('original').url if self.slide_1_background else '',
-        },
-            {
-            'slide': 2,
-            'background': self.slide_2_background.get_rendition('original').url if self.slide_2_background else '',
-            'title': self.slide_2_title,
-            'body': slide_2_body_json,
-        },
-            {
-            'slide': 3,
-            'background': self.slide_3_background.get_rendition('original').url if self.slide_3_background else '',
-            'title': self.slide_3_title,
-            'timeline': [{
-                'year': year.value['year'],
-                'body': year.value['text'].source
-            } for year in self.slide_3_timeline]
-        },
-            {
-            'slide': 4,
-            'background': self.slide_4_background.get_rendition('original').url if self.slide_4_background else '',
-            'title': self.slide_4_title,
-            'body': slide_4_body_json,
-        },
-            {
-            'slide': 5,
-            'background': self.slide_5_background.get_rendition('original').url if self.slide_5_background else '',
-            'title': self.slide_5_title,
-            'body': slide_5_body_json,
-        }]
+    def slides_json(self):
+        slides = []
+        for item in self.slides.all():
+            body = []
+            for block in item.slide.body:
+                if block.block_type == 'text':
+                    body.append({'type': 'text', 'value': block.value.source})
+                else:
+                    body.append({'type': block.block_type, 'value': block.value})
+            slides.append({
+                'title': item.slide.title,
+                'body': body,
+                'background': item.slide.image_background.get_rendition('original').url if item.slide.image_background else '',
+                'timeline': [{
+                    'year': year.value['year'],
+                    'body': year.value['text'].source
+                } for year in item.slide.timeline]
+            })
+
+        return slides
 
     content_panels = [
         BasicPageAbstract.title_panel,
