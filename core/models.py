@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.fields import CharField
+from django.db.models.fields import CharField, IntegerField
 from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
@@ -46,6 +46,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 
 
@@ -702,75 +703,6 @@ class TwentiethPage(
     SearchablePageAbstract,
     ShareablePageAbstract,
 ):
-    slide_1_background = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Slide 1 Background Image',
-        help_text='Slide 1 Background image',
-    )
-    slide_2_background = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Slide 2 Background Image',
-        help_text='Slide 2 Background image',
-    )
-    slide_3_background = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Slide 3 Background Image',
-        help_text='Slide 3 Background image',
-    )
-    slide_4_background = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Slide 4 Background Image',
-        help_text='Slide 4 Background image',
-    )
-    slide_5_background = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Slide 5 Background Image',
-        help_text='Slide 5 Background image',
-    )
-    slide_2_title = CharField(blank=True, max_length=255)
-    slide_2_body = StreamField([
-        ('embed', blocks.CharBlock()),
-        ('text', blocks.RichTextBlock()),
-    ], blank=True)
-    slide_3_title = CharField(blank=True, max_length=255)
-    slide_3_timeline = StreamField([
-        ('year', blocks.StructBlock(
-            [
-                ('year', blocks.CharBlock()),
-                ('text', blocks.RichTextBlock())
-            ]
-        ))
-    ], blank=True)
-    slide_4_title = CharField(blank=True, max_length=255)
-    slide_4_body = StreamField([
-        ('embed', blocks.CharBlock()),
-        ('text', blocks.RichTextBlock()),
-    ], blank=True)
-    slide_5_title = CharField(blank=True, max_length=255)
-    slide_5_body = StreamField([
-        ('embed', blocks.CharBlock()),
-        ('text', blocks.RichTextBlock()),
-    ], blank=True)
 
     def slides(self):
         slide_2_body_json = []
@@ -827,47 +759,11 @@ class TwentiethPage(
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
             [
-                ImageChooserPanel('slide_1_background'),
+                InlinePanel('slides'),
             ],
-            heading='Slide 1 - Title',
-            classname='collapsible collapsed'
-        ),
-        MultiFieldPanel(
-            [
-                ImageChooserPanel('slide_2_background'),
-                FieldPanel('slide_2_title'),
-                StreamFieldPanel('slide_2_body'),
-            ],
-            heading='Slide 2 - Introduction',
-            classname='collapsible collapsed'
-        ),
-        MultiFieldPanel(
-            [
-                ImageChooserPanel('slide_3_background'),
-                FieldPanel('slide_3_title'),
-                StreamFieldPanel('slide_3_timeline')
-            ],
-            heading='Slide 3 - Timeline',
-            classname='collapsible collapsed'
-        ),
-        MultiFieldPanel(
-            [
-                ImageChooserPanel('slide_4_background'),
-                FieldPanel('slide_4_title'),
-                StreamFieldPanel('slide_4_body'),
-            ],
-            heading='Slide 4 - Thank You',
-            classname='collapsible collapsed'
-        ),
-        MultiFieldPanel(
-            [
-                ImageChooserPanel('slide_5_background'),
-                FieldPanel('slide_5_title'),
-                StreamFieldPanel('slide_5_body'),
-            ],
-            heading='Slide 5 - Social',
-            classname='collapsible collapsed'
-        ),
+            heading='slides',
+            classname='collapsible',
+        )
     ]
 
     promote_panels = Page.promote_panels + [
@@ -883,8 +779,79 @@ class TwentiethPage(
 
     max_count = 1
     parent_page_types = ['core.BasicPage']
-    subpage_types = []
+    subpage_types = ['core.SlidePage']
     templates = 'core/twentieth_page.html'
+
+
+class TwentiethPageSlide(Orderable):
+    twentieth_page = ParentalKey(
+        'core.TwentiethPage',
+        related_name='slides',
+    )
+    slide = models.ForeignKey(
+        'core.SlidePage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Slide',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'slide',
+            ['core.SlidePage'],
+        ),
+    ]
+
+
+class SlidePage(Page, ThemeablePageAbstract):
+    image_background = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Slide 1 Background Image',
+        help_text='Slide 1 Background image',
+    )
+    background_colour = CharField(blank=True, max_length=16)
+    body = StreamField([
+        ('embed', blocks.CharBlock()),
+        ('text', blocks.RichTextBlock()),
+    ], blank=True)
+    timeline = StreamField([
+        ('slide', blocks.StructBlock(
+            [
+                ('year', blocks.CharBlock()),
+                ('text', blocks.RichTextBlock()),
+                ('image', ImageChooserBlock()),
+            ]
+        ))
+    ], blank=True)
+    theme = models.ForeignKey(
+        'core.Theme',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        limit_choices_to={'name__startswith': 'Slide-'}
+    )
+
+    content_panels = Page.content_panels + [
+        ImageChooserPanel('image_background'),
+        FieldPanel('background_colour'),
+        StreamFieldPanel('body'),
+        StreamFieldPanel('timeline'),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
+    ]
+
+    parent_page_types = ['core.TwentiethPage']
+    subpage_types = []
+    templates = 'core/slide_page.html'
 
 
 class Theme(models.Model):
