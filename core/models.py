@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.fields import CharField, IntegerField
+from django.http.response import Http404
 from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
@@ -44,6 +45,7 @@ from wagtail.admin.edit_handlers import (
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
+from wagtail.core.url_routing import RouteResult
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
@@ -720,10 +722,37 @@ class TwentiethPage(
                 'timeline': [{
                     'year': year.value['year'],
                     'body': year.value['text'].source
-                } for year in item.slide.timeline]
+                } for year in item.slide.timeline],
+                'theme': item.slide.theme.name,
             })
 
         return slides
+
+    def route(self, request, path_components):
+        if path_components:
+            # request is for a child of this page
+            child_slug = path_components[0]
+
+            # find a matching child or 404
+            try:
+                subpage = self.get_children().get(slug=child_slug)
+            except Page.DoesNotExist:
+                raise Http404
+
+        if self.live:
+            # Return a RouteResult that will tell Wagtail to call
+            # this page's serve() method
+            return RouteResult(self, kwargs={'path_components': path_components})
+        else:
+            # the page matches the request, but isn't published, so 404
+            raise Http404
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        if kwargs.get('path_components'):
+            context['path_components'] = kwargs.get('path_components')
+
+        return context
 
     content_panels = [
         BasicPageAbstract.title_panel,

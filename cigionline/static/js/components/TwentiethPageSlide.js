@@ -18,18 +18,20 @@ const TwentiethPageSlide = (props) => {
             : {}
         }
       >
-        <div className="slide-content">
-          {slide.slide !== 3 && (
+        {slide.theme !== 'Slide-3' && (
+          <div className="slide-content">
             <TwentiethPageSlide2Content title={slide.title} body={slide.body} />
-          )}
+          </div>
+        )}
 
-          {slide.slide === 3 && (
+        {slide.theme === 'Slide-3' && (
+          <div className="slide-content">
             <TwentiethPageSlide3Content
               title={slide.title}
               timeline={slide.timeline}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

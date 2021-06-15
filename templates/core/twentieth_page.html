@@ -6,8 +6,9 @@
 {% endblock %}
 
 {% block extra_js %}
-{% render_bundle 'twentiethPage' 'js' attrs='defer' %}
+  {% render_bundle 'twentiethPage' 'js' attrs='defer' %}
   {{ self.slides_json|json_script:"slides" }}
+  {{ path_components|json_script:"path-components" }}
 {% endblock %}
 
 {% block body_class %}twentieth-page{% endblock %}

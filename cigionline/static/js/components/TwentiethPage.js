@@ -5,6 +5,7 @@ import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 
 const TwentiethPage = (props) => {
   const { slides } = props;
+  const slidesCount = slides.length;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const topBar = document.getElementsByClassName('cigi-top-bar')[0];
   useEffect(() => {
@@ -28,6 +29,7 @@ const TwentiethPage = (props) => {
       <TwentiethPageNavArrows
         currentSlideIndex={currentSlideIndex}
         setCurrentSlideIndex={setCurrentSlideIndex}
+        slidesCount={slidesCount}
       />
     </>
   );

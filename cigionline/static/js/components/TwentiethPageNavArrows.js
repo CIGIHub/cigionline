@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const TwentiethPageNavArrows = ({
   currentSlideIndex,
   setCurrentSlideIndex,
+  slidesCount,
 }) => (
   <>
     {currentSlideIndex > 0 && (
@@ -15,7 +16,7 @@ const TwentiethPageNavArrows = ({
         <i className="fal fa-angle-up" />
       </button>
     )}
-    {currentSlideIndex < 4 && (
+    {currentSlideIndex < slidesCount - 1 && (
       <button
         className="next-slide"
         type="button"
