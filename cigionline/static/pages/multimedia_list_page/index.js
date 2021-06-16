@@ -20,12 +20,18 @@ ReactDOM.render(
     ]}
     filterTypes={[{
       name: 'Video',
-      param: 'contentsubtype',
-      value: 'Video',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Video',
+      }]
     }, {
       name: 'Audio',
-      param: 'contentsubtype',
-      value: 'Audio',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Audio',
+      }]
     }]}
     containerClass={[
       'row',

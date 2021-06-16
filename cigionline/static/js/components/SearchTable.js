@@ -47,7 +47,7 @@ class SearchTable extends React.Component {
   }
 
   componentDidMount() {
-    const { filterTypes: isSearchPage, showSearch } = this.props;
+    const { filterTypes: isSearchPage, showSidebar } = this.props;
     if (isSearchPage) {
       const params = (new URL(window.location)).searchParams;
       const query = params.get('query');
@@ -81,7 +81,7 @@ class SearchTable extends React.Component {
     } else {
       this.getRows();
     }
-    if (showSearch) {
+    if (showSidebar) {
       this.getTopics();
       this.getYears();
       this.getTypes();
@@ -545,9 +545,11 @@ class SearchTable extends React.Component {
       blockListing,
       containerClass,
       hideTopicDropdown,
+      filterTypes,
       RowComponent,
       showCount,
       showSearch,
+      showSidebar,
       sortOptions,
       tableColumns,
     } = this.props;
@@ -559,90 +561,92 @@ class SearchTable extends React.Component {
             {this.renderSearchBar()}
           </div>
         )}
-        <div className="search-filters col-md-3">
-          {!hideTopicDropdown && (
-            <div className="dropdown custom-dropdown keep-open">
-              <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Topics
-              </button>
-              <div className="dropdown-menu pt-0" aria-labelledby="search-bar-topics">
-                <div className="topic-filter">
-                  <div className="input-group input-group-search">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="search of a topic"
-                      onKeyUp={(e) => this.handleTopicsFilter(e)}
-                    />
-                    <div className="input-group-append">
-                      <button className="btn-search" type="submit">
-                        <i className="far fa-search" />
-                      </button>
+        {showSidebar
+        && (
+          <div className="search-filters col-md-3">
+            {!hideTopicDropdown && (
+              <div className="dropdown custom-dropdown keep-open">
+                <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Topics
+                </button>
+                <div className="dropdown-menu pt-0" aria-labelledby="search-bar-topics">
+                  <div className="topic-filter">
+                    <div className="input-group input-group-search">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="search of a topic"
+                        onKeyUp={(e) => this.handleTopicsFilter(e)}
+                      />
+                      <div className="input-group-append">
+                        <button className="btn-search" type="submit">
+                          <i className="far fa-search" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                {!loadingTopics && (
-                  <ul>
-                    { this.dropdownTopics.filter((topic) => topicsFilter === '' || topic.title.toLowerCase().includes(topicsFilter.toLowerCase())).map((topic) => (
-                      <li className="dropdown-item" key={`topic-${topic.id}`}>
-                        <label htmlFor={`topic-${topic.id}`} className="keep-open">
-                          <input
-                            id={`topic-${topic.id}`}
-                            type="checkbox"
-                            checked={topicSelectValues.includes(topic.id) ? 'checked' : ''}
-                            onChange={(e) => this.handleTopicSelect(e, topic.id)}
-                          />
-                          <span />
-                          {topic.title}
-                          &nbsp;
-                          {aggregations.topics[topic.id]
-                            ? (
-                              <>
-                                (
-                                {aggregations.topics[topic.id]}
-                                )
-                              </>
-                            ) : <>(0)</>}
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          )}
-          {!loadingTypes && (
-            <div className="dropdown custom-dropdown keep-open">
-              <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Types
-              </button>
-              <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
-                <ul>
-                  {this.dropdownTypes.map(function(type) {
-                    if (!Object.keys(type).includes('parent')) {
-                      return (
-                        <li className="dropdown-item" key={`type-${type.name.replace(' ', '_')}`}>
-                          <label htmlFor={`input_type_${type.name}`} className="keep-open">
+                  {!loadingTopics && (
+                    <ul>
+                      { this.dropdownTopics.filter((topic) => topicsFilter === '' || topic.title.toLowerCase().includes(topicsFilter.toLowerCase())).map((topic) => (
+                        <li className="dropdown-item" key={`topic-${topic.id}`}>
+                          <label htmlFor={`topic-${topic.id}`} className="keep-open">
                             <input
-                              id={`input_type_${type.name}`}
+                              id={`topic-${topic.id}`}
                               type="checkbox"
-                              onChange={(e) => this.handleTypeSelect(e, type.name)}
-                              className={`${typeSelectValues.some((t) => t.split('_')[0] === type.name) ? 'partial' : ''}`}
-                              checked={typeSelectValues.includes(type.name) ? 'checked' : ''}
+                              checked={topicSelectValues.includes(topic.id) ? 'checked' : ''}
+                              onChange={(e) => this.handleTopicSelect(e, topic.id)}
                             />
                             <span />
-                            {type.name}
-                            &nbsp;
-                            {this.getAggregationCount(type)
+                            {topic.title}
+                          &nbsp;
+                            {aggregations.topics[topic.id]
                               ? (
                                 <>
                                   (
-                                  {this.getAggregationCount(type)}
+                                  {aggregations.topics[topic.id]}
                                   )
                                 </>
                               ) : <>(0)</>}
                           </label>
-                          { this.getSubTypes(type.name)
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
+            {!loadingTypes && filterTypes.length > 0 && (
+              <div className="dropdown custom-dropdown keep-open">
+                <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Types
+                </button>
+                <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
+                  <ul>
+                    {this.dropdownTypes.map(function(type) {
+                      if (!Object.keys(type).includes('parent')) {
+                        return (
+                          <li className="dropdown-item" key={`type-${type.name.replace(' ', '_')}`}>
+                            <label htmlFor={`input_type_${type.name}`} className="keep-open">
+                              <input
+                                id={`input_type_${type.name}`}
+                                type="checkbox"
+                                onChange={(e) => this.handleTypeSelect(e, type.name)}
+                                className={`${typeSelectValues.some((t) => t.split('_')[0] === type.name) ? 'partial' : ''}`}
+                                checked={typeSelectValues.includes(type.name) ? 'checked' : ''}
+                              />
+                              <span />
+                              {type.name}
+                            &nbsp;
+                              {this.getAggregationCount(type)
+                                ? (
+                                  <>
+                                    (
+                                    {this.getAggregationCount(type)}
+                                    )
+                                  </>
+                                ) : <>(0)</>}
+                            </label>
+                            { this.getSubTypes(type.name)
                             && this.getSubTypes(type.name).length > 0
                             && (
                               <ul>
@@ -672,52 +676,53 @@ class SearchTable extends React.Component {
                                 ))}
                               </ul>
                             )}
-                        </li>
-                      );
-                    }
-                    return null;
-                  }, this)}
-                </ul>
+                          </li>
+                        );
+                      }
+                      return null;
+                    }, this)}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            <div className="dropdown custom-dropdown keep-open">
+              <button className="dropdown-toggle" type="button" id="search-bar-years" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Years
+              </button>
+              <div className="dropdown-menu" aria-labelledby="search-bar-years">
+                {!loadingYears && (
+                  <ul className="columns-2">
+                    { years.map((year) => (
+                      <li className="dropdown-item" key={`year-${year}`}>
+                        <label htmlFor={`year-${year}`} className="keep-open">
+                          <input
+                            type="checkbox"
+                            id={`year-${year}`}
+                            checked={yearSelectValues.includes(year) ? 'checked' : ''}
+                            onChange={(e) => this.handleYearSelect(e, year)}
+                          />
+                          <span />
+                          {year}
+                        &nbsp;
+                          {aggregations.years[year]
+                            ? (
+                              <>
+                                (
+                                {aggregations.years[year]}
+                                )
+                              </>
+                            ) : <>(0)</>}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
-          )}
-
-          <div className="dropdown custom-dropdown keep-open">
-            <button className="dropdown-toggle" type="button" id="search-bar-years" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Years
-            </button>
-            <div className="dropdown-menu" aria-labelledby="search-bar-years">
-              {!loadingYears && (
-                <ul className="columns-2">
-                  { years.map((year) => (
-                    <li className="dropdown-item" key={`year-${year}`}>
-                      <label htmlFor={`year-${year}`} className="keep-open">
-                        <input
-                          type="checkbox"
-                          id={`year-${year}`}
-                          checked={yearSelectValues.includes(year) ? 'checked' : ''}
-                          onChange={(e) => this.handleYearSelect(e, year)}
-                        />
-                        <span />
-                        {year}
-                        &nbsp;
-                        {aggregations.years[year]
-                          ? (
-                            <>
-                              (
-                              {aggregations.years[year]}
-                              )
-                            </>
-                          ) : <>(0)</>}
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
           </div>
-        </div>
-        <div className="search-table col-md-9">
+        )}
+        <div className={`search-table ${showSidebar ? 'col-md-9' : 'col-md-12'}`}>
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {showSearch && (
             <div className="d-none d-md-block">
@@ -829,6 +834,7 @@ SearchTable.propTypes = {
   searchPlaceholder: PropTypes.string,
   showCount: PropTypes.bool,
   showSearch: PropTypes.bool,
+  showSidebar: PropTypes.bool,
   sortOptions: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     value: PropTypes.string,
@@ -852,6 +858,7 @@ SearchTable.defaultProps = {
   searchPlaceholder: 'Search',
   showCount: false,
   showSearch: false,
+  showSidebar: true,
   sortOptions: [{
     default: true,
     name: 'Date',
