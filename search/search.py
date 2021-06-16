@@ -16,7 +16,61 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                 },
                 "fragment_size": 256,
             }
+            body['aggregations'] = {
+                "topics": {
+                    "terms": {
+                        "field": "core_contentpage__topics_filter",
+                        "size": 50,
+                    }
+                },
+                "years": {
+                    "date_histogram": {
+                        "field": "core_contentpage__publishing_date_filter",
+                        "calendar_interval": "year",
+                        "format": "yyyy",
+                    }
+                },
+                "contenttypes": {
+                    "terms": {
+                        "field": "core_contentpage__contenttype_filter",
+                        "size": 50,
+                    }
+                },
+                "contentsubtypes": {
+                    "terms": {
+                        "field": "core_contentpage__contentsubtype_filter",
+                        "size": 50,
+                    }
+                }
+            }
+
         return body
+
+    def get_aggregations(self):
+        params = {
+            'index': self.backend.get_index_for_model(self.query_compiler.queryset.model).name,
+            'body': self._get_es_body(),
+            '_source': False,
+            self.fields_param_name: 'pk',
+        }
+
+        search_results = self.backend.es.search(**params)
+        aggregations = search_results['aggregations']
+
+        def bucket_map(val):
+            k = 'key'
+            if 'key_as_string' in val.keys():
+                k = 'key_as_string'
+            return {'key': val[k], 'value': val['doc_count']}
+
+        aggs = {}
+        for key, value in aggregations.items():
+            temp = list(map(bucket_map, value['buckets']))
+            aggs[key] = {}
+            for item in temp:
+                aggs[key][item['key']] = item['value']
+
+        return aggs
 
     def _get_results_from_hits(self, hits):
         """

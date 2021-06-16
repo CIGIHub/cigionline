@@ -57,6 +57,12 @@ def search_api(request):
         return JsonResponse({
             'meta': {
                 'total_count': 0,
+                'aggregations': {
+                    'topics': {},
+                    'contenttypes': {},
+                    'contentsubtypes': {},
+                    'years': {},
+                }
             },
             'items': [],
         }, safe=False)
@@ -74,7 +80,7 @@ def search_api(request):
         searchtext=searchtext,
         sort=request.GET.get('sort', None),
         topics=request.GET.getlist('topic', None),
-        years=request.GET.getlist('year', None),
+        years=request.GET.getlist('year', None)
     )
     promoted_pages = []
     if request.GET.get('searchpage'):
@@ -92,6 +98,8 @@ def search_api(request):
             sort=request.GET.get('sort', None),
             topics=request.GET.getlist('topic', None),
         )
+
+    aggregations = pages.get_aggregations()
 
     default_limit = 24
     default_offset = 0
@@ -116,6 +124,7 @@ def search_api(request):
     return JsonResponse({
         'meta': {
             'total_count': pages.count(),
+            'aggregations': aggregations
         },
         'items': items,
     }, safe=False)
