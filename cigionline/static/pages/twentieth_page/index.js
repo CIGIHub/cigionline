@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TwentiethPage from '../../js/components/TwentiethPage';
-
+import { BrowserRouter as Router } from 'react-router-dom';
 import './css/twentieth_page.scss';
 
 const slides = JSON.parse(document.getElementById('slides').textContent);
@@ -11,6 +11,8 @@ const initialSlide = initialSlideText
   : 1;
 
 ReactDOM.render(
-  <TwentiethPage slides={slides} initialSlide={initialSlide} />,
+  <Router>
+    <TwentiethPage slides={slides} initialSlide={initialSlide} />
+  </Router>,
   document.getElementById('twentieth-page-slides'),
 );

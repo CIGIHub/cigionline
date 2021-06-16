@@ -724,6 +724,7 @@ class TwentiethPage(
                     'body': year.value['text'].source
                 } for year in item.slide.timeline],
                 'theme': item.slide.theme.name,
+                'slug': item.slide.slug,
             })
 
         return slides
