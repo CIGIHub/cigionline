@@ -750,7 +750,7 @@ class TwentiethPage(
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         if kwargs.get('path_components'):
-            context['path_components'] = kwargs.get('path_components')
+            context['initial_slide'] = kwargs.get('path_components')[0]
 
         return context
 
