@@ -127,6 +127,8 @@ ReactDOM.render(
       }],
     }, {
       name: 'Staff/Expert',
+      alias: 'people.PersonPage',
+      aggregationField: 'content_types',
       params: [{
         name: 'content_type',
         value: 'people.PersonPage',

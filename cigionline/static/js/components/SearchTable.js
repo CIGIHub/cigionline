@@ -33,6 +33,7 @@ class SearchTable extends React.Component {
         topics: {},
         contenttypes: {},
         contentsubtypes: {},
+        content_types: {},
       },
     };
 

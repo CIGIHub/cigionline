@@ -41,6 +41,12 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                         "field": "core_contentpage__contentsubtype_filter",
                         "size": 50,
                     }
+                },
+                "content_types": {
+                    "terms": {
+                        "field": "content_type",
+                        "size": 50,
+                    }
                 }
             }
 

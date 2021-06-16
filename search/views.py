@@ -62,6 +62,7 @@ def search_api(request):
                     'contenttypes': {},
                     'contentsubtypes': {},
                     'years': {},
+                    'content_types': {},
                 }
             },
             'items': [],
