@@ -29,47 +29,47 @@ ReactDOM.render(
       params: [{
         name: 'contenttype',
         value: 'Event',
-      }]
+      }],
     }, {
       name: 'Publication',
       params: [{
         name: 'contenttype',
         value: 'Publication',
-      }]
+      }],
     }, {
       name: 'Multimedia',
       params: [{
         name: 'contenttype',
         value: 'Multimedia',
-      }]
+      }],
     }, {
       name: 'Opinion',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'Opinion',
-      }]
+      }],
     }, {
       name: 'Op-Eds',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'Op-Eds',
-      }]
+      }],
     }, {
       name: 'CIGI in the News',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'CIGI in the News',
-      }]
+      }],
     }, {
       name: 'News Releases',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'News Releases',
-      }]
+      }],
     }]}
     RowComponent={ResearchContentListing}
     tableColumns={[{

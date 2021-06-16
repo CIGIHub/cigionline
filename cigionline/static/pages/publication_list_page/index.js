@@ -21,35 +21,35 @@ ReactDOM.render(
       params: [{
         name: 'contentsubtype',
         value: 'Books',
-      }]
+      }],
     }, {
       name: 'Papers',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'CIGI Papers',
-      }]
+      }],
     }, {
       name: 'Conference Reports',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'Conference Reports',
-      }]
+      }],
     }, {
       name: 'Essay Series',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'Essay Series',
-      }]
+      }],
     }, {
       name: 'Policy Briefs',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'Policy Briefs',
-      }]
+      }],
 
     }, {
       name: 'Policy Memos',
@@ -57,7 +57,7 @@ ReactDOM.render(
       params: [{
         name: 'contentsubtype',
         value: 'Policy Memos',
-      }]
+      }],
 
     }, {
       name: 'Special Reports',
@@ -65,7 +65,7 @@ ReactDOM.render(
       params: [{
         name: 'contentsubtype',
         value: 'Special Reports',
-      }]
+      }],
     }]}
     containerClass={[
       'custom-theme-table',

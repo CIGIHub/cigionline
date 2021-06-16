@@ -24,14 +24,14 @@ ReactDOM.render(
       params: [{
         name: 'contentsubtype',
         value: 'Video',
-      }]
+      }],
     }, {
       name: 'Audio',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
         value: 'Audio',
-      }]
+      }],
     }]}
     containerClass={[
       'row',
