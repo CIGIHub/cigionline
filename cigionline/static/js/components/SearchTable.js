@@ -574,6 +574,9 @@ class SearchTable extends React.Component {
                         </label>
                       </li>
                     ))}
+                    { this.dropdownTopics.filter((topic) => topicsFilter === '' || topic.title.toLowerCase().includes(topicsFilter.toLowerCase())).length === 0 &&
+                      <li className="dropdown-item" key="noresults">No results matching "{topicsFilter}"</li>
+                    }
                   </ul>
                 )}
               </div>
