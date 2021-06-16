@@ -9,7 +9,7 @@ chardet==4.0.0
 coverage==5.5
 coveralls==3.0.1
 dj-database-url==0.5.0
-Django==3.2.3
+Django==3.2.4
 django-appconf==1.0.4
 django-compressor==2.4.1
 django-debug-toolbar==3.2.1
@@ -42,7 +42,7 @@ jmespath==0.10.0
 l18n==2020.6.1
 lazy-object-proxy==1.6.0
 libsass==0.20.1
-mailchimp-marketing==3.0.41
+mailchimp-marketing==3.0.47
 mccabe==0.6.1
 newrelic==6.2.0.156
 openpyxl==3.0.7
