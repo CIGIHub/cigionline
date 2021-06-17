@@ -714,6 +714,8 @@ class TwentiethPage(
             for block in item.slide.body:
                 if block.block_type == 'text':
                     body.append({'type': 'text', 'value': block.value.source})
+                elif block.block_type == 'separator':
+                    body.append({'type': 'separator', 'value': None})
                 else:
                     body.append({'type': block.block_type, 'value': block.value})
             slide_data = {
@@ -723,7 +725,8 @@ class TwentiethPage(
                 'background_colour': item.slide.background_colour,
                 'timeline': [{
                     'year': year.value['year'],
-                    'body': year.value['text'].source
+                    'body': year.value['text'].source,
+                    'image': year.value['image'].get_rendition('original').url if year.value['image'] else '',
                 } for year in item.slide.timeline],
                 'theme': item.slide.theme.name,
                 'slug': item.slide.slug,
@@ -826,6 +829,7 @@ class SlidePage(Page, ThemeablePageAbstract):
     body = StreamField([
         ('embed', blocks.CharBlock()),
         ('text', blocks.RichTextBlock()),
+        ('separator', blocks.StructBlock()),
     ], blank=True)
     timeline = StreamField([
         ('slide', blocks.StructBlock(

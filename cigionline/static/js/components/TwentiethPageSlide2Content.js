@@ -7,7 +7,7 @@ const TwentiethPageSlide2Content = ({ slide }) => (
     <div className="container">
       <div className="row justify-content-center text-center">
         <div className="col-md-10 col-lg-8 slide-2">
-          {slide.title && <h1 className="mb-1">{slide.title}</h1>}
+          {slide.title && <h1 className="mb-4">{slide.title}</h1>}
         </div>
       </div>
       <div className="row justify-content-center">
@@ -37,6 +37,10 @@ const TwentiethPageSlide2Content = ({ slide }) => (
                     />
                   </div>
                 );
+              }
+
+              if (block.type === 'separator') {
+                return <hr />;
               }
               return <div key={uuidv4()}>{block.value}</div>;
             })}
