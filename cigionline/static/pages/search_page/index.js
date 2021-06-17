@@ -161,6 +161,14 @@ ReactDOM.render(
         name: 'contentsubtype',
         value: 'Op-Eds',
       }],
+    }, {
+      name: 'Research Project',
+      alias: 'research.ProjectPage',
+      aggregationField: 'content_types',
+      params: [{
+        name: 'content_type',
+        value: 'research.ProjectPage',
+      }],
     }].sort((a, b) => a.name.localeCompare(b.name))}
     RowComponent={SearchResultListing}
   />,
