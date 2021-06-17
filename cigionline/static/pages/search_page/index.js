@@ -37,16 +37,20 @@ ReactDOM.render(
     }, {
       name: 'Private',
       parent: 'Event',
+      aggregationField: "event_access",
+      alias: "0",
       params: [{
-        name: 'contentsubtype',
-        value: 'Private',
+        name: 'eventaccess',
+        value: '0',
       }],
     }, {
       name: 'Public',
       parent: 'Event',
+      aggregationField: "event_access",
+      alias: "1",
       params: [{
-        name: 'contentsubtype',
-        value: 'Public',
+        name: 'eventaccess',
+        value: '1',
       }],
     }, {
       name: 'Multimedia',

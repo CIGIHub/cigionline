@@ -47,6 +47,12 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                         "field": "content_type",
                         "size": 50,
                     }
+                },
+                "event_access": {
+                    "terms": {
+                        "field": "events_eventpage__event_access_filter",
+                        "size": "50"
+                    }
                 }
             }
 
@@ -116,7 +122,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years
+        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years, eventaccess
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -133,6 +139,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.publicationseriesid = None
         self.multimediaseriesid = None
         self.years = None
+        self.eventaccess = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -152,6 +159,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.publicationseriesid = publicationseriesid
         if multimediaseriesid is not None:
             self.multimediaseriesid = multimediaseriesid
+        if eventaccess is not None:
+            self.eventaccess = eventaccess
         if years is not None:
             self.years = years
 
@@ -235,6 +244,12 @@ class CIGIOnlineSearchQueryCompiler:
                     "multimedia_multimediapage__multimedia_series_id_filter": self.multimediaseriesid,
                 },
             })
+        if self.eventaccess:
+            filters.append({
+                "terms": {
+                    "events_eventpage__event_access_filter": self.eventaccess,
+                },
+            })
         if self.years:
             year_ranges = []
             for year in self.years:
@@ -271,10 +286,10 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None, multimediaseriesid=None, years=None):
+def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None, multimediaseriesid=None, years=None, eventaccess=None):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years)
+        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years, eventaccess)
     )
 
 

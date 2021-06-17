@@ -34,6 +34,7 @@ class SearchTable extends React.Component {
         contenttypes: {},
         contentsubtypes: {},
         content_types: {},
+        event_access: {},
       },
     };
 
@@ -395,6 +396,7 @@ class SearchTable extends React.Component {
       url.searchParams.delete('content_type');
       url.searchParams.delete('contenttype');
       url.searchParams.delete('contentsubtype');
+      url.searchParams.delete('eventaccess');
       typeSelectValues.map((t) => {
         const filter = filterTypes.filter((f) => f.name === t);
         if (filter.length > 0) {
@@ -409,6 +411,7 @@ class SearchTable extends React.Component {
       url.searchParams.delete('content_type');
       url.searchParams.delete('contenttype');
       url.searchParams.delete('contentsubtype');
+      url.searchParams.delete('eventaccess');
     }
     if (yearSelectValues.length > 0) {
       url.searchParams.delete('year');
