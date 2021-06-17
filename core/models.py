@@ -720,6 +720,7 @@ class TwentiethPage(
                 'title': item.slide.title,
                 'body': body,
                 'background': item.slide.image_background.get_rendition('original').url if item.slide.image_background else '',
+                'background_colour': item.slide.background_colour,
                 'timeline': [{
                     'year': year.value['year'],
                     'body': year.value['text'].source

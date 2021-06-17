@@ -11,9 +11,9 @@ import '../../css/components/TwentiethPageSlide3Content.scss';
 
 SwiperCore.use([Navigation, Pagination]);
 
-const TwentiethPageSlide3Content = ({ timeline, title }) => {
-  timeline.sort((a, b) => Number(a.year) - Number(b.year));
-  const years = timeline.map((year) => year.year);
+const TwentiethPageSlide3Content = ({ slide }) => {
+  slide.timeline.sort((a, b) => Number(a.year) - Number(b.year));
+  const years = slide.timeline.map((year) => year.year);
   const [currentYear, setCurrentYear] = useState(years[0]);
 
   const setYear = (year) => {
@@ -21,10 +21,10 @@ const TwentiethPageSlide3Content = ({ timeline, title }) => {
   };
   return (
     <div className="col slide-3">
-      {title && <h1>{title}</h1>}
+      {slide.title && <h1>{slide.title}</h1>}
       <h2>Current Year: {currentYear}</h2>
       <ul>
-        {timeline.map((year) => (
+        {slide.timeline.map((year) => (
           <li key={year.year}>
             <button type="button" onClick={() => setYear(year.year)}>
               {year.year}
@@ -32,7 +32,7 @@ const TwentiethPageSlide3Content = ({ timeline, title }) => {
           </li>
         ))}
       </ul>
-      {timeline && (
+      {slide.timeline && (
         <Swiper
           slidesPerView={4}
           centeredSlides
@@ -43,7 +43,7 @@ const TwentiethPageSlide3Content = ({ timeline, title }) => {
           navigation
           className="mySwiper"
         >
-          {timeline.map((year) => (
+          {slide.timeline.map((year) => (
             <SwiperSlide key={year.year}>
               <div className="timeline-slide" key={year.year}>
                 <h2 className="timeline-year">{year.year}</h2>
