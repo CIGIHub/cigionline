@@ -37,8 +37,8 @@ ReactDOM.render(
     }, {
       name: 'Private',
       parent: 'Event',
-      aggregationField: "event_access",
-      alias: "0",
+      aggregationField: 'event_access',
+      alias: '0',
       params: [{
         name: 'eventaccess',
         value: '0',
@@ -46,8 +46,8 @@ ReactDOM.render(
     }, {
       name: 'Public',
       parent: 'Event',
-      aggregationField: "event_access",
-      alias: "1",
+      aggregationField: 'event_access',
+      alias: '1',
       params: [{
         name: 'eventaccess',
         value: '1',
