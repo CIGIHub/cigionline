@@ -1,33 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TwentiethPageNavArrows = ({
-  currentSlideIndex,
-  setCurrentSlideIndex,
-  changeSlide,
-  slidesCount,
-}) => (
+const TwentiethPageNavArrows = ({ changeSlide, slide }) => (
   <>
-    {currentSlideIndex > 0 && (
+    {slide.prev_slide && (
       <button
         className="prev-slide"
         type="button"
-        onClick={() => {
-          setCurrentSlideIndex(currentSlideIndex - 1);
-          changeSlide();
-        }}
+        onClick={() => changeSlide(slide.prev_slide)}
       >
         <i className="fal fa-angle-up" />
       </button>
     )}
-    {currentSlideIndex < slidesCount - 1 && (
+    {slide.next_slide && (
       <button
         className="next-slide"
         type="button"
-        onClick={() => {
-          setCurrentSlideIndex(currentSlideIndex + 1);
-          changeSlide();
-        }}
+        onClick={() => changeSlide(slide.next_slide)}
       >
         <i className="fal fa-angle-down" />
       </button>

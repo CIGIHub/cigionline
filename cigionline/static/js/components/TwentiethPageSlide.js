@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TwentiethPageSlide2Content from './TwentiethPageSlide2Content';
-import TwentiethPageSlide3Content from './TwentiethPageSlide3Content';
-import TwentiethPageSlide4Content from './TwentiethPageSlide4Content';
 
-const TwentiethPageSlide = (props) => {
-  const { slide } = props;
+const TwentiethPageSlide = ({ slide }) => {
+  console.log(slide);
   return (
-    <div className={`slide-${slide.slide}`}>
+    <div className={`slide-${slide.slide_number}`}>
       <div
         className="background-image"
         style={
@@ -18,20 +15,9 @@ const TwentiethPageSlide = (props) => {
             : {}
         }
       >
-        {slide.theme !== 'Slide-3' && (
-          <div className="slide-content">
-            <TwentiethPageSlide2Content title={slide.title} body={slide.body} />
-          </div>
-        )}
+        {slide.theme !== 'Slide-3' && <div className="slide-content"></div>}
 
-        {slide.theme === 'Slide-3' && (
-          <div className="slide-content">
-            <TwentiethPageSlide3Content
-              title={slide.title}
-              timeline={slide.timeline}
-            />
-          </div>
-        )}
+        {slide.theme === 'Slide-3' && <div className="slide-content"></div>}
       </div>
     </div>
   );

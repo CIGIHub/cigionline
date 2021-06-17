@@ -16,20 +16,8 @@
       color: $white;
     }
 
-    .prev-slide,
-    .next-slide {
-      font-size: 3em;
-      left: 50%;
-      position: fixed;
-      z-index: 500;
-    }
-
-    .prev-slide {
-      top: 0;
-    }
-
-    .next-slide {
-      bottom: 0;
+    * {
+      position: relative;
     }
 
     .slides {
@@ -42,8 +30,20 @@
       width: 100vw;
       z-index: 14;
 
-      * {
-        position: relative;
+      .prev-slide,
+      .next-slide {
+        font-size: 3em;
+        left: 50%;
+        position: fixed;
+        z-index: 500;
+      }
+
+      .prev-slide {
+        top: 0;
+      }
+
+      .next-slide {
+        bottom: 0;
       }
 
       .background-image {

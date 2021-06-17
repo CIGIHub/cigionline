@@ -708,6 +708,7 @@ class TwentiethPage(
 
     def slides_json(self):
         slides = []
+        counter = 1
         for item in self.slides.all():
             body = []
             for block in item.slide.body:
@@ -715,7 +716,7 @@ class TwentiethPage(
                     body.append({'type': 'text', 'value': block.value.source})
                 else:
                     body.append({'type': block.block_type, 'value': block.value})
-            slides.append({
+            slide_data = {
                 'title': item.slide.title,
                 'body': body,
                 'background': item.slide.image_background.get_rendition('original').url if item.slide.image_background else '',
@@ -725,7 +726,12 @@ class TwentiethPage(
                 } for year in item.slide.timeline],
                 'theme': item.slide.theme.name,
                 'slug': item.slide.slug,
-            })
+                'slide_number': counter,
+            }
+            slide_data['prev_slide'] = counter - 1 if counter > 1 else None
+            slide_data['next_slide'] = counter + 1 if counter < len(self.slides.all()) else None
+            slides.append(slide_data)
+            counter = counter + 1
 
         return slides
 

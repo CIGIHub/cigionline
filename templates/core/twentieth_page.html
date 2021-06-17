@@ -7,8 +7,9 @@
 
 {% block extra_js %}
   {% render_bundle 'twentiethPage' 'js' attrs='defer' %}
-  {{ self.slides_json|json_script:"slides" }}
-  {{ initial_slide|json_script:"initial-slide" }}
+  {{ self.slides_json|json_script:'slides' }}
+  {{ initial_slide|json_script:'initial-slide' }}
+  {{ self.slug|json_script:'page-url'}}
 {% endblock %}
 
 {% block body_class %}twentieth-page{% endblock %}
