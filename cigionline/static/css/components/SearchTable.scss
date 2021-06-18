@@ -141,6 +141,7 @@
 }
 
 .search-table {
+
   margin-bottom: 4em;
   position: relative;
 
@@ -181,13 +182,15 @@
       margin-bottom: 0.5em;
 
       .input-group-search {
-        height: 2em;
-      }
+        &.large {
+          height: 2em;
 
-      input {
-        color: $color--blue;
-        font-size: 1.5em;
-        font-style: italic;
+          input {
+            color: $color--blue;
+            font-size: 1.5em;
+            font-style: italic;
+          }
+        }
       }
     }
   }

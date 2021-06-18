@@ -497,7 +497,7 @@ class SearchTable extends React.Component {
     );
   }
 
-  renderSearchBar() {
+  renderSearchBar(showSidebar) {
     const { searchValue } = this.state;
     const { searchPlaceholder } = this.props;
     return (
@@ -505,7 +505,7 @@ class SearchTable extends React.Component {
         <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
           <div className="form-row position-relative">
             <div className="col">
-              <div className="input-group input-group-search large">
+              <div className={`input-group input-group-search ${showSidebar ? 'large' : ''}`}>
                 <input
                   type="text"
                   className="form-control"
@@ -562,7 +562,7 @@ class SearchTable extends React.Component {
       <div className="row search-table-container">
         {showSearch && (
           <div className="search-table col-12 d-block d-md-none">
-            {this.renderSearchBar()}
+            {this.renderSearchBar(showSidebar)}
           </div>
         )}
         {showSidebar
@@ -738,7 +738,7 @@ class SearchTable extends React.Component {
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {showSearch && (
             <div className="d-none d-md-block">
-              {this.renderSearchBar()}
+              {this.renderSearchBar(showSidebar)}
             </div>
           )}
           {loadingInitial
