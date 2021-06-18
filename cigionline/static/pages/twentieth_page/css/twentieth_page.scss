@@ -93,6 +93,8 @@
         }
 
         .timeline-nav {
+          margin: 2em 0;
+
           li {
             font-size: 0.75em;
             list-style: none;
@@ -119,6 +121,31 @@
 
         .swiper-container {
           overflow: visible;
+
+          .swiper-button-next,
+          .swiper-button-prev {
+            align-items: center;
+            color: $cigi-primary-colour;
+            cursor: pointer;
+            display: flex;
+            font-size: 5em;
+            justify-content: center;
+            position: absolute;
+            top: 40%;
+            z-index: 10;
+          }
+
+          .swiper-button-next {
+            right: 0;
+          }
+
+          .swiper-button-prev {
+            left: 0;
+          }
+
+          .swiper-button-disabled {
+            display: none;
+          }
 
           .timeline-slide {
             min-height: 500px;

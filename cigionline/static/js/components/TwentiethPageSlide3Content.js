@@ -1,11 +1,9 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-
 import SwiperCore, { Navigation, Pagination } from 'swiper/core';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper.scss';
 
 import '../../css/components/TwentiethPageSlide3Content.scss';
 
@@ -60,13 +58,23 @@ const TwentiethPageSlide3Content = ({ slide }) => {
               <Swiper
                 slidesPerView={2}
                 spaceBetween={30}
-                navigation
+                navigation={{
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
+                  disabledClass: 'swiper-button-disabled',
+                }}
                 className="mySwiper"
                 onSlideChange={({ activeIndex }) =>
                   setCurrentYear(years[activeIndex])
                 }
                 onSwiper={setSwiper}
               >
+                <div className="swiper-button-next">
+                  <i className="fal fa-angle-right" />
+                </div>
+                <div className="swiper-button-prev">
+                  <i className="fal fa-angle-left" />
+                </div>
                 {slide.timeline.map((year) => (
                   <SwiperSlide key={year.year}>
                     <div className="timeline-slide d-flex" key={year.year}>
