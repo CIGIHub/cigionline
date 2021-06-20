@@ -3,6 +3,27 @@
 .twentieth-page {
   color: $white;
 
+  #slides-nav-arrows {
+    position: relative;
+    z-index: 500;
+
+    .prev-slide,
+    .next-slide {
+      font-size: 3em;
+      left: 50%;
+      position: fixed;
+      z-index: 500;
+    }
+  }
+
+  .prev-slide {
+    top: 0;
+  }
+
+  .next-slide {
+    bottom: 0;
+  }
+
   &.dark {
     @include top-bar($background-color: transparent, $color: $black);
     color: $black;
@@ -27,6 +48,17 @@
 
   header {
     background-color: transparent;
+
+    .cigi-top-bar {
+      transition: height 0.2s ease;
+
+      .cigi-logo {
+        svg {
+          fill: $white;
+          transition: opacity 0.3s ease;
+        }
+      }
+    }
   }
 
   .nav {
@@ -48,22 +80,6 @@
       top: 0;
       width: 100vw;
       z-index: 14;
-
-      .prev-slide,
-      .next-slide {
-        font-size: 3em;
-        left: 50%;
-        position: fixed;
-        z-index: 500;
-      }
-
-      .prev-slide {
-        top: 0;
-      }
-
-      .next-slide {
-        bottom: 0;
-      }
 
       .background-image {
         background-position: center;
@@ -193,23 +209,29 @@
     }
   }
 
-  .fade-appear,
   .fade-enter {
     opacity: 0;
-    z-index: 1;
   }
 
-  .fade-appear-active,
-  .fade-enter.fade-enter-active {
+  .fade-enter-active {
+    opacity: 0.5;
+    transition: opacity 300ms;
+  }
+
+  .fade-enter-done {
     opacity: 1;
-    transition: opacity 300ms linear 150ms;
   }
 
   .fade-exit {
     opacity: 1;
   }
-  .fade-exit.fade-exit-active {
+
+  .fade-exit-active {
+    opacity: 0.5;
+    transition: opacity 300ms;
+  }
+
+  .fade-exit-done {
     opacity: 0;
-    transition: opacity 300ms linear;
   }
 }

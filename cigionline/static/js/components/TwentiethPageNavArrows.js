@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Portal from './Portal';
 
 const TwentiethPageNavArrows = ({ changeSlide, slide }) => (
-  <>
+  <Portal>
     {slide.prev_slide && (
       <button
         className="prev-slide"
@@ -21,7 +22,7 @@ const TwentiethPageNavArrows = ({ changeSlide, slide }) => (
         <i className="fal fa-angle-down" />
       </button>
     )}
-  </>
+  </Portal>
 );
 
 TwentiethPageNavArrows.propTypes = {};

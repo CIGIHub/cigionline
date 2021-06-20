@@ -29,7 +29,7 @@ const TwentiethPageSlide2Content = ({ slide }) => (
                     <iframe
                       width="853"
                       height="480"
-                      src={`https://www.youtube.com/embed/${block.value}`}
+                      src={`https://www.youtube-nocookie.com/embed/${block.value}`}
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
@@ -40,7 +40,7 @@ const TwentiethPageSlide2Content = ({ slide }) => (
               }
 
               if (block.type === 'separator') {
-                return <hr />;
+                return <hr key={uuidv4()} />;
               }
               return <div key={uuidv4()}>{block.value}</div>;
             })}

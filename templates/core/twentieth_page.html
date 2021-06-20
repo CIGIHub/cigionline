@@ -2,7 +2,7 @@
 {% load webpack_loader %}
 
 {% block extra_css %}
-  {% render_bundle 'twentiethPage' 'css' %}
+{% render_bundle 'twentiethPage' 'css' %}
 {% endblock %}
 
 {% block extra_js %}
@@ -16,6 +16,11 @@
 
 {% block content %}
   <div id='twentieth-page-slides' class='twentieth-page-slides'></div>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" %}
+  <div id='slides-nav-arrows'></div>
 {% endblock %}
 
 {% block footer %}{% endblock %}

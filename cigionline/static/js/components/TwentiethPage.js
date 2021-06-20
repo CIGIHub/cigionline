@@ -12,10 +12,22 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import TwentiethPageSlide from './TwentiethPageSlide';
 import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 
-const TwentiethPage = ({ slides, pageUrl }) => {
+const TwentiethPage = ({ slides, pageUrl, initialSlide }) => {
   const history = useHistory();
+  const location = useLocation();
+
   const pageBody = document.getElementsByClassName('twentieth-page')[0];
   const topBar = document.getElementsByClassName('cigi-top-bar')[0];
+  const currentSlide = slides.filter((slide) => slide.slug === initialSlide);
+
+  const routes = slides.map((slide) => ({
+    slug: `${slide.slug}`,
+    slide,
+  }));
+
+  if (currentSlide.background_colour === '#FFFFFF') {
+    pageBody.classList.add('dark');
+  }
 
   function changeSlide(slideNumber) {
     const slide = slides.filter(
@@ -25,9 +37,18 @@ const TwentiethPage = ({ slides, pageUrl }) => {
     history.push(`${pageUrl}${slug}`);
   }
 
-  function Slide() {
-    const { slug } = useParams();
+  function handleRouteChange(previousRoute, nextRoute) {
+    // const currentSlide = slides.filter((slide) => slide.slug === slug)[0];
+    // if (currentSlide.background_colour === '#FFFFFF') {
+    //   pageBody.classList.add('dark');
+    // } else {
+    //   pageBody.classList.remove('dark');
+    // }
+  }
+
+  function Slide({ slug }) {
     const currentSlide = slides.filter((slide) => slide.slug === slug)[0];
+
     return (
       <>
         <TwentiethPageSlide
@@ -43,24 +64,42 @@ const TwentiethPage = ({ slides, pageUrl }) => {
     );
   }
 
-  useEffect(() => {});
+  useEffect(() => {
+    const pathArray = location.pathname.split('/').filter(slug => slug);
+    const currentSlug = pathArray[pathArray.length - 1];
+    const currentSlide = slides.filter(
+      (slide) => slide.slug === currentSlug
+    )[0];
+
+    if (currentSlide.background_colour === '#FFFFFF') {
+      pageBody.classList.add('dark');
+    } else {
+      pageBody.classList.remove('dark');
+    }
+  });
 
   return (
-    <>
-      <Route
-        render={({ location }) => (
-          <TransitionGroup className="slides">
-            <CSSTransition key={location.key} timeout={300} classNames="fade">
-              <Switch location={location}>
-                <Route path={`${pageUrl}:slug`}>
-                  <Slide />
-                </Route>
-              </Switch>
+    <div className="slides">
+      {routes.map(({ slug }) => (
+        <Route
+          key={slug}
+          exact
+          path={`${pageUrl}${slug}`}
+          onChange={handleRouteChange}
+        >
+          {({ match }) => (
+            <CSSTransition
+              in={match != null}
+              timeout={500}
+              classNames="fade"
+              unmountOnExit
+            >
+              <Slide slug={slug} />
             </CSSTransition>
-          </TransitionGroup>
-        )}
-      />
-    </>
+          )}
+        </Route>
+      ))}
+    </div>
   );
 };
 

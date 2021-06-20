@@ -6,14 +6,12 @@ import TwentiethPageSlide4Content from './TwentiethPageSlide4Content';
 import TwentiethPageSlide5Content from './TwentiethPageSlide5Content';
 
 const TwentiethPageSlide = ({ slide, pageBody, topBar }) => {
-  if (slide.background_colour === '#FFFFFF') {
-    pageBody.classList.add('dark');
-  } else pageBody.classList.remove('dark');
-  if (slide.slide_number !== 1) {
-    topBar.classList.add('scrolled-nav');
-  } else topBar.classList.remove('scrolled-nav');
+  // if (slide.slide_number !== 1) {
+  //   topBar.classList.add('scrolled-nav');
+  // } else topBar.classList.remove('scrolled-nav');
 
-  console.log(slide);
+  topBar.classList.add('scrolled-nav');
+
   const styles = {};
   if (slide.background) {
     styles.backgroundImage = `url(${slide.background})`;
