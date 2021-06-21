@@ -36,13 +36,13 @@
     .cigi-top-bar {
       svg {
         * {
-          transition: fill 300ms linear 150ms;
+          transition: fill 300ms ease 150ms;
         }
       }
     }
 
     button {
-      transition: color 300ms linear 150ms;
+      transition: color 300ms ease 150ms;
     }
   }
 
@@ -112,6 +112,12 @@
 
       .slide-content {
         padding-top: 6em;
+
+        h1,
+        h2,
+        p {
+          transition: color 300ms ease;
+        }
 
         .video-responsive {
           height: 0;
@@ -253,7 +259,7 @@
     position: absolute;
     top: 0;
     transform: translateY(0);
-    transition: opacity 300ms linear, transform 300ms linear;
+    transition: opacity 300ms ease, transform 300ms ease;
   }
 
   .fade-exit {
@@ -264,6 +270,6 @@
   .fade-exit-active {
     opacity: 0;
     transform: translateY(-10px);
-    transition: opacity 300ms linear, transform 300ms linear;
+    transition: opacity 300ms ease, transform 300ms ease;
   }
 }

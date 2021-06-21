@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Route, useHistory, useLocation } from 'react-router-dom';
+import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import TwentiethPageSlide from './TwentiethPageSlide';
 import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 
-const TwentiethPage = ({ slides, pageUrl, initialSlideNumber }) => {
+const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   const history = useHistory();
   const location = useLocation();
 
   const pageBody = document.getElementsByClassName('twentieth-page')[0];
   const topBar = document.getElementsByClassName('cigi-top-bar')[0];
   const initialSlide = slides.filter(
-    (slide) => slide.slug === initialSlideNumber
-  );
+    (slide) => slide.slug === initialSlideSlug
+  )[0];
 
   const routes = slides.map((slide) => ({
     slug: `${slide.slug}`,
@@ -40,9 +40,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideNumber }) => {
 
     return (
       <>
-        <TwentiethPageSlide
-          slide={currentSlide}
-        />
+        <TwentiethPageSlide slide={currentSlide} />
         <TwentiethPageNavArrows
           changeSlide={changeSlide}
           slide={currentSlide}
@@ -53,7 +51,10 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideNumber }) => {
 
   useEffect(() => {
     const pathArray = location.pathname.split('/').filter((slug) => slug);
-    const currentSlug = pathArray[pathArray.length - 1];
+    let currentSlug = pathArray[pathArray.length - 1];
+    if (location.pathname === pageUrl) {
+      currentSlug = slides[0].slug;
+    }
     const currentSlide = slides.filter(
       (slide) => slide.slug === currentSlug
     )[0];
@@ -73,6 +74,9 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideNumber }) => {
 
   return (
     <div className="slides">
+      <Route exact path={`${pageUrl}`}>
+        <Redirect to={`${pageUrl}${slides[0].slug}`} />
+      </Route>
       {routes.map(({ slug }) => (
         <Route key={slug} exact path={`${pageUrl}${slug}`}>
           {({ match }) => (

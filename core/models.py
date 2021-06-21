@@ -736,7 +736,6 @@ class TwentiethPage(
             slide_data['next_slide'] = counter + 1 if counter < len(self.slides.all()) else None
             slides.append(slide_data)
             counter = counter + 1
-            print(item.slide.background_colour)
 
         return slides
 
