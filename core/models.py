@@ -736,6 +736,7 @@ class TwentiethPage(
             slide_data['next_slide'] = counter + 1 if counter < len(self.slides.all()) else None
             slides.append(slide_data)
             counter = counter + 1
+            print(item.slide.background_colour)
 
         return slides
 
@@ -816,6 +817,8 @@ class TwentiethPageSlide(Orderable):
 
 
 class SlidePage(Page, ThemeablePageAbstract):
+    BACKGROUND_COLOUR_CHOICES = [('WHITE', 'WHITE'), ('BLACK', 'BLACK'), ('RED', 'RED')]
+    THEME_CHOICES = [('SLIDE-1')]
     image_background = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -825,7 +828,7 @@ class SlidePage(Page, ThemeablePageAbstract):
         verbose_name='Slide 1 Background Image',
         help_text='Slide 1 Background image',
     )
-    background_colour = CharField(blank=True, max_length=16)
+    background_colour = CharField(blank=True, max_length=16, choices=BACKGROUND_COLOUR_CHOICES)
     body = StreamField([
         ('embed', blocks.CharBlock()),
         ('text', blocks.RichTextBlock()),

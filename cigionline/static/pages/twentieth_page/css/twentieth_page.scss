@@ -3,16 +3,20 @@
 .twentieth-page {
   color: $white;
 
-  #slides-nav-arrows {
+  .slides-nav-arrows {
+    color: $cigi-primary-colour;
     position: relative;
     z-index: 500;
+
+    button {
+      color: $cigi-primary-colour;
+    }
 
     .prev-slide,
     .next-slide {
       font-size: 3em;
       left: 50%;
       position: fixed;
-      z-index: 500;
     }
   }
 
@@ -24,7 +28,8 @@
     bottom: 0;
   }
 
-  &.dark {
+  &.white-bg,
+  &.red-bg {
     @include top-bar($background-color: transparent, $color: $black);
     color: $black;
 
@@ -37,13 +42,16 @@
     }
 
     button {
-      color: $black;
       transition: color 300ms linear 150ms;
     }
   }
 
-  button {
-    color: $white;
+  &.red-bg {
+    .slides-nav-arrows {
+      button {
+        color: $black;
+      }
+    }
   }
 
   header {
@@ -72,8 +80,7 @@
     }
 
     .slides {
-      background-color: $black;
-
+      background-image: $black;
       height: 100vh;
       left: 0;
       position: fixed;
@@ -84,10 +91,23 @@
       .background-image {
         background-position: center;
         background-size: cover;
-        height: 100vh;
+        height: 110vh;
         left: 0;
         top: 0;
         width: 100vw;
+
+        &.background-WHITE {
+          background-color: $white;
+        }
+
+        &.background-BLACK {
+          background-color: $black;
+        }
+
+        &.background-RED {
+          background-color: $cigi-primary-colour;
+          color: $white;
+        }
       }
 
       .slide-content {
@@ -206,32 +226,44 @@
           }
         }
       }
+
+      .slide-4 {
+        .slide-content {
+          padding-top: 12em;
+
+          p {
+            text-align: center;
+          }
+
+          .video-responsive {
+            margin-top: 2em;
+          }
+        }
+      }
     }
   }
 
   .fade-enter {
     opacity: 0;
+    transform: translateY(-10px);
   }
 
   .fade-enter-active {
-    opacity: 0.5;
-    transition: opacity 300ms;
-  }
-
-  .fade-enter-done {
     opacity: 1;
+    position: absolute;
+    top: 0;
+    transform: translateY(0);
+    transition: opacity 300ms linear, transform 300ms linear;
   }
 
   .fade-exit {
     opacity: 1;
+    transform: translateY(0);
   }
 
   .fade-exit-active {
-    opacity: 0.5;
-    transition: opacity 300ms;
-  }
-
-  .fade-exit-done {
     opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 300ms linear, transform 300ms linear;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import SwiperCore, { Navigation, Pagination } from 'swiper/core';
