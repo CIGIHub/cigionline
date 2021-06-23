@@ -14,11 +14,19 @@ const TwentiethPageSlide3Content = ({ slide }) => {
   const years = slide.timeline.map((year) => year.year);
   const [currentYear, setCurrentYear] = useState(years[0]);
   const [swiper, setSwiper] = useState(null);
+  const [swiperModal, setSwiperModal] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const setYear = (year) => {
     setCurrentYear(year);
     swiper.slideTo(years.indexOf(year));
   };
+
+  function handleSlideClick() {
+    swiperModal.slideTo(swiper.clickedIndex, 0);
+    setShowModal(true);
+  }
+
   return (
     <div className="slide-content">
       <div className="container">
@@ -76,7 +84,7 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   <i className="fal fa-angle-left" />
                 </div>
                 {slide.timeline.map((year) => (
-                  <SwiperSlide key={year.year}>
+                  <SwiperSlide key={year.year} onClick={handleSlideClick}>
                     <div className="timeline-slide d-flex" key={year.year}>
                       <div className="img-wrapper d-flex align-items-center">
                         <img src={year.image} alt="" />
@@ -92,6 +100,52 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   </SwiperSlide>
                 ))}
               </Swiper>
+              <div className={`modal-overlay ${showModal && 'modal-active'}`}>
+                <Swiper
+                  slidesPerView={1}
+                  centeredSlides
+                  navigation={{
+                    nextEl: '.swiper-modal-button-next',
+                    prevEl: '.swiper-modal-button-prev',
+                    disabledClass: 'swiper-modal-button-disabled',
+                  }}
+                  className="mySwiper"
+                  onSwiper={setSwiperModal}
+                >
+                  <div className="swiper-modal-button-next">
+                    <i className="fal fa-angle-right" />
+                  </div>
+                  <div className="swiper-modal-button-prev">
+                    <i className="fal fa-angle-left" />
+                  </div>
+
+                  <div
+                    className="close-modal"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <i className="fal fa-times-square" />
+                  </div>
+                  {slide.timeline.map((year) => (
+                    <SwiperSlide key={year.year}>
+                      <div
+                        className="timeline-slide-modal d-flex flex-column"
+                        key={year.year}
+                      >
+                        <div className="img-wrapper d-flex align-items-center">
+                          <img src={year.image} alt="" />
+                        </div>
+                        <div className="timeline-text">
+                          <h2 className="timeline-year">{year.year}</h2>
+                          <div
+                            className="timeline-body"
+                            dangerouslySetInnerHTML={{ __html: year.body }}
+                          />
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             </div>
           </div>
         </div>
