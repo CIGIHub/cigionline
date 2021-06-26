@@ -12,7 +12,7 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   reviewers:
-  - gabrieltanchen
+  - johnbxu
   ignore:
   - dependency-name: boto3
     versions:
