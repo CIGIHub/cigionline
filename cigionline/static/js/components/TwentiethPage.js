@@ -35,6 +35,18 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
     history.push(`${pageUrl}${slug}`);
   }
 
+  function handleWheel(e) {
+    const pathArray = location.pathname.split('/').filter((slug) => slug);
+    const currentSlug = pathArray[pathArray.length - 1];
+    const currentSlide = slides.filter((slide) => slide.slug === currentSlug)[0];
+    if (e.deltaY > 0 && currentSlide.next_slide) {
+      changeSlide(currentSlide.next_slide);
+    }
+    if (e.deltaY < 0 && currentSlide.prev_slide) {
+      changeSlide(currentSlide.prev_slide);
+    }
+  }
+
   function Slide({ slug }) {
     const currentSlide = slides.filter((slide) => slide.slug === slug)[0];
 
@@ -73,7 +85,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   }, [location]);
 
   return (
-    <div className="slides">
+    <div className="slides" onWheel={handleWheel}>
       <Route exact path={`${pageUrl}`}>
         <Redirect to={`${pageUrl}${slides[0].slug}`} />
       </Route>
@@ -82,7 +94,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
           {({ match }) => (
             <CSSTransition
               in={match != null}
-              timeout={300}
+              timeout={500}
               classNames="fade"
               unmountOnExit
             >

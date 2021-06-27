@@ -64,8 +64,14 @@ const TwentiethPageSlide3Content = ({ slide }) => {
           <div className="row justify-content-center text-center">
             <div className="col">
               <Swiper
-                slidesPerView={2}
+                slidesPerView={1}
                 spaceBetween={30}
+                breakpoints={{
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: 30,
+                  },
+                }}
                 navigation={{
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev',
@@ -135,7 +141,10 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                           <img src={year.image} alt="" />
                         </div>
                         <div className="timeline-text">
-                          <h2 className="timeline-year">{year.year}</h2>
+                          <h2 className="timeline-year">
+                            {year.year}
+                            <div className="underline" />
+                          </h2>
                           <div
                             className="timeline-body"
                             dangerouslySetInnerHTML={{ __html: year.body }}
