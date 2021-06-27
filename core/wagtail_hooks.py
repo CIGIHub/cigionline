@@ -64,6 +64,30 @@ def register_rich_text_name(features):
 
 
 @hooks.register('register_rich_text_features')
+def register_rich_text_underline(features):
+    feature_name = 'underline'
+    type_ = 'UNDERLINE'
+
+    control = {
+        'type': type_,
+        'label': 'U',
+        'description': 'underline',
+        'element': 'span',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.InlineStyleFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'span[class=underline]': InlineStyleElementHandler(type_)},
+        'to_database_format': {'style_map': {type_: {'element': 'span', 'props': {'class': 'underline'}}}},
+    })
+
+
+@hooks.register('register_rich_text_features')
 def register_rich_text_paragraph_heading(features):
     feature_name = 'paragraph_heading'
     type_ = 'HEADING'
@@ -85,6 +109,7 @@ def register_rich_text_paragraph_heading(features):
         'from_database_format': {'h2[class=paragraph-heading]': InlineStyleElementHandler(type_)},
         'to_database_format': {'style_map': {type_: {'element': 'h2', 'props': {'class': 'paragraph-heading'}}}},
     })
+
 
 class ThemeModelAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/

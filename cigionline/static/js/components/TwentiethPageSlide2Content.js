@@ -7,7 +7,12 @@ const TwentiethPageSlide2Content = ({ slide }) => (
     <div className="container">
       <div className="row justify-content-center text-center">
         <div className="col-md-10 col-lg-8 slide-2">
-          {slide.title && <h1 className="mb-4">{slide.title}</h1>}
+          {slide.title && (
+            <h1
+              className="mb-4"
+              dangerouslySetInnerHTML={{ __html: slide.title }}
+            />
+          )}
         </div>
       </div>
       <div className="row justify-content-center">

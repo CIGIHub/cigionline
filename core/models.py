@@ -711,7 +711,8 @@ class TwentiethPage(
         counter = 1
         for item in self.slides.all():
             body = []
-            for block in item.slide.body:
+            slide = item.slide
+            for block in slide.body:
                 if block.block_type == 'text':
                     body.append({'type': 'text', 'value': block.value.source})
                 elif block.block_type == 'separator':
@@ -719,17 +720,17 @@ class TwentiethPage(
                 else:
                     body.append({'type': block.block_type, 'value': block.value})
             slide_data = {
-                'title': item.slide.title,
+                'title': slide.title_override if slide.title_override else slide.title,
                 'body': body,
-                'background': item.slide.image_background.get_rendition('original').url if item.slide.image_background else '',
-                'background_colour': item.slide.background_colour,
+                'background': slide.image_background.get_rendition('original').url if slide.image_background else '',
+                'background_colour': slide.background_colour,
                 'timeline': [{
                     'year': year.value['year'],
                     'body': year.value['text'].source,
                     'image': year.value['image'].get_rendition('original').url if year.value['image'] else '',
-                } for year in item.slide.timeline],
-                'theme': item.slide.theme.name,
-                'slug': item.slide.slug,
+                } for year in slide.timeline],
+                'theme': slide.theme.name,
+                'slug': slide.slug,
                 'slide_number': counter,
             }
             slide_data['prev_slide'] = counter - 1 if counter > 1 else None
@@ -850,8 +851,15 @@ class SlidePage(Page, ThemeablePageAbstract):
         related_name='+',
         limit_choices_to={'name__startswith': 'Slide-'}
     )
+    title_override = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'underline'],
+        help_text=('The title will be replaced by this field. Leave empty to use title field.')
+    )
 
     content_panels = Page.content_panels + [
+        FieldPanel('title_override'),
         ImageChooserPanel('image_background'),
         FieldPanel('background_colour'),
         StreamFieldPanel('body'),

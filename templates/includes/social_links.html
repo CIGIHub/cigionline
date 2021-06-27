@@ -1,6 +1,6 @@
 {% load static wagtailcore_tags core_tags %}
 
-<ul class="social-share-list {% if no_circle %}no-stack{% endif %}">
+<ul class="social-share-list {% if no_circle %}no-stack{% endif %}" {% if id %}id={{id}}{% endif %}>
   <li class="facebook">
     <a class="facebook-share-link {% if no_circle is not True %}fa-stack{% endif %}" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
       {% if no_circle is not True %}

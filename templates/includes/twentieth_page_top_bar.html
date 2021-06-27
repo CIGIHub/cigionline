@@ -33,6 +33,13 @@
               </ul>
               <ul>
                 <li class="overlay-controls menu-break">
+                  {% include 'includes/social_links.html' with id='social-share-list' no_circle=True %}
+                  <button class="custom-nav-popup-btn overlay-controls-button" id="open-share-btn">
+                    <span class="icon-opened"><i class="far fa-arrow-right"></i></span>
+                    <span class="icon-closed"><i class="fas fa-share-alt"></i></span>
+                  </button>
+                </li>
+                <li class="overlay-controls">
                   <button class="custom-nav-popup-btn overlay-controls-button" id="open-search-btn">
                     <span class="icon-opened"><i class="far fa-times"></i></span>
                     <span class="icon-closed"><i class="far fa-search"></i></span>
@@ -46,27 +53,6 @@
                 </li>
               </ul>
             </nav>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="custom-popup-wrapper popup-search" id="popup-search">
-      <div class="custom-popup-inner">
-        <div class="container">
-          <div class="row">
-            <div class="col custom-popup-content custom-popup-nav-search">
-              <form action="{% url 'search' %}" method="get">
-                <div class="input-group input-group-search">
-                  <input type="text" class="form-control" id="nav-search-input" name="query" placeholder="Keyword Search" aria-label="search-bar"
-                    aria-describedby="search-bar" required>
-                  <div class="input-group-append">
-                    <button class="btn-search" type="submit" id="search-bar">
-                      <i class="far fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
           </div>
         </div>
       </div>
