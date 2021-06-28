@@ -14,12 +14,12 @@ const pageUrl = `/about/${JSON.parse(
 const socialButton = $('#open-share-btn');
 const socialMenu = $('#social-share-list');
 socialButton.on('click', function () {
-  $(this).toggleClass('open');
   if ($(this).hasClass('open')) {
-    socialMenu.animate({ opacity: 1, width: '100px', marginRight: 0 });
-  } else {
     socialMenu.animate({ opacity: 0, width: '40px', marginRight: '-20px' });
+  } else {
+    socialMenu.animate({ opacity: 1, width: '100px', marginRight: 0 });
   }
+  $(this).toggleClass('open');
 });
 
 ReactDOM.render(

@@ -126,10 +126,51 @@
           background-color: $cigi-primary-colour;
           color: $white;
         }
+
+        video {
+          height: 100vh;
+          left: 0;
+          object-fit: cover;
+          position: fixed;
+          top: 0;
+          width: 100vw;
+        }
+
+        .opacity-gradient {
+          background: rgb(0, 0, 0);
+          background: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.2) 40%);
+          height: 100vh;
+          left: 0;
+          opacity: 0.8;
+          position: fixed;
+          top: 0;
+          width: 100vw;
+          z-index: 1;
+        }
+      }
+
+      .slide-1-buttons {
+        bottom: 15%;
+        position: absolute;
+        width: 100%;
+
+        button {
+          color: $white;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: $cigi-primary-colour;
+          }
+
+          &:first-child {
+            margin-right: 1em;
+          }
+        }
       }
 
       .slide-content {
         padding-top: 6em;
+        z-index: 2;
 
         h1,
         h2,
@@ -359,19 +400,10 @@
                   h2 {
                     font-size: 3em;
                     font-weight: 700;
+                    height: fit-content;
                     margin-bottom: 0.25em;
                     margin-left: -100%;
                     z-index: 1;
-
-                    .underline {
-                      background-color: $cigi-primary-colour;
-                      height: 0.15em;
-                      margin-left: -5%;
-                      position: absolute;
-                      top: 0.9em;
-                      width: 100%;
-                      z-index: -1;
-                    }
                   }
 
                   .timeline-body {

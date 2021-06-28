@@ -141,9 +141,8 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                           <img src={year.image} alt="" />
                         </div>
                         <div className="timeline-text">
-                          <h2 className="timeline-year">
+                          <h2 className="timeline-year underline">
                             {year.year}
-                            <div className="underline" />
                           </h2>
                           <div
                             className="timeline-body"
