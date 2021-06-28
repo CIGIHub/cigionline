@@ -3,6 +3,7 @@ from django.db.models.fields import CharField, IntegerField
 from django.http.response import Http404
 from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from wagtail.core.blocks.field_block import URLBlock
 from search.filters import (
     # AuthorFilterField,
     ParentalManyToManyFilterField,
@@ -717,6 +718,13 @@ class TwentiethPage(
                     body.append({'type': 'text', 'value': block.value.source})
                 elif block.block_type == 'separator':
                     body.append({'type': 'separator', 'value': None})
+                elif block.block_type == 'video':
+                    body.append({
+                        'type': 'video',
+                        'value': {
+                            'video_url': block.value['video_url'],
+                            'video_image': block.value['video_image'].get_rendition('original').url if block.value['video_image'] else '',
+                        }})
                 else:
                     body.append({'type': block.block_type, 'value': block.value})
             slide_data = {
@@ -728,8 +736,12 @@ class TwentiethPage(
                     'year': year.value['year'],
                     'body': year.value['text'].source,
                     'image': year.value['image'].get_rendition('original').url if year.value['image'] else '',
+                    'video': {
+                        'video_url': year.value['video_url'] if year.value['video_url'] else '',
+                        'video_image': year.value['video_image'].get_rendition('original').url if year.value['video_image'] else '',
+                    }
                 } for year in slide.timeline],
-                'theme': slide.theme.name,
+                'theme': slide.theme,
                 'slug': slide.slug,
                 'slide_number': counter,
             }
@@ -816,9 +828,9 @@ class TwentiethPageSlide(Orderable):
     ]
 
 
-class SlidePage(Page, ThemeablePageAbstract):
+class SlidePage(Page):
     BACKGROUND_COLOUR_CHOICES = [('WHITE', 'WHITE'), ('BLACK', 'BLACK'), ('RED', 'RED')]
-    THEME_CHOICES = [('SLIDE-1')]
+    THEME_CHOICES = [('SLIDE-1', 'SLIDE-1'), ('SLIDE-2', 'SLIDE-2'), ('SLIDE-3', 'SLIDE-3'), ('SLIDE-4', 'SLIDE-4'), ('SLIDE-5', 'SLIDE-5')]
     image_background = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -830,7 +842,10 @@ class SlidePage(Page, ThemeablePageAbstract):
     )
     background_colour = CharField(blank=True, max_length=16, choices=BACKGROUND_COLOUR_CHOICES)
     body = StreamField([
-        ('embed', blocks.CharBlock()),
+        ('video', blocks.StructBlock([
+            ('video_url', blocks.CharBlock()),
+            ('video_image', ImageChooserBlock()),
+        ])),
         ('text', blocks.RichTextBlock()),
         ('separator', blocks.StructBlock()),
     ], blank=True)
@@ -839,18 +854,13 @@ class SlidePage(Page, ThemeablePageAbstract):
             [
                 ('year', blocks.CharBlock()),
                 ('text', blocks.RichTextBlock()),
-                ('image', ImageChooserBlock()),
+                ('image', ImageChooserBlock(required=False)),
+                ('video_url', blocks.CharBlock(required=False)),
+                ('video_image', ImageChooserBlock(required=False)),
             ]
         ))
     ], blank=True)
-    theme = models.ForeignKey(
-        'core.Theme',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        limit_choices_to={'name__startswith': 'Slide-'}
-    )
+    theme = CharField(blank=True, null=True, max_length=16, choices=THEME_CHOICES)
     title_override = RichTextField(
         blank=True,
         null=False,
@@ -860,14 +870,11 @@ class SlidePage(Page, ThemeablePageAbstract):
 
     content_panels = Page.content_panels + [
         FieldPanel('title_override'),
+        FieldPanel('theme'),
         ImageChooserPanel('image_background'),
         FieldPanel('background_colour'),
         StreamFieldPanel('body'),
         StreamFieldPanel('timeline'),
-    ]
-
-    settings_panels = Page.settings_panels + [
-        ThemeablePageAbstract.theme_panel,
     ]
 
     parent_page_types = ['core.TwentiethPage']

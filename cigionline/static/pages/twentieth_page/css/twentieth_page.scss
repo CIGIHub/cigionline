@@ -164,10 +164,41 @@
         }
 
         .video-responsive {
+          cursor: pointer;
           height: 0;
           overflow: hidden;
           padding-bottom: 56.25%;
           position: relative;
+
+          .img-wrapper {
+            background-color: $black;
+
+            img {
+              transition: opacity 0.2s linear;
+            }
+          }
+
+          &:hover {
+            img {
+              opacity: 0.8;
+            }
+          }
+
+          button {
+            background-color: $cigi-primary-colour;
+            height: 40px;
+            left: 50%;
+            margin: -20px 0 0 -20px;
+            position: absolute;
+            top: 50%;
+            transition: background-color 0.2s ease;
+            width: 40px;
+
+            i {
+              color: $white;
+              transition: color 0.2s ease;
+            }
+          }
 
           iframe {
             height: 100%;
@@ -175,6 +206,10 @@
             position: absolute;
             top: 0;
             width: 100%;
+
+            &.hidden {
+              display: none;
+            }
           }
         }
 

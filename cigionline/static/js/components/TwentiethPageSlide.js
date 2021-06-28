@@ -17,16 +17,16 @@ const TwentiethPageSlide = ({ slide }) => {
         className={`background-image background-${slide.background_colour}`}
         style={styles}
       >
-        {slide.theme === 'Slide-2' && (
+        {slide.theme === 'SLIDE-2' && (
           <TwentiethPageSlide2Content slide={slide} />
         )}
-        {slide.theme === 'Slide-3' && (
+        {slide.theme === 'SLIDE-3' && (
           <TwentiethPageSlide3Content slide={slide} />
         )}
-        {slide.theme === 'Slide-4' && (
+        {slide.theme === 'SLIDE-4' && (
           <TwentiethPageSlide4Content slide={slide} />
         )}
-        {slide.theme === 'Slide-5' && (
+        {slide.theme === 'SLIDE-5' && (
           <TwentiethPageSlide5Content slide={slide} />
         )}
       </div>
