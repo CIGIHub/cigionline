@@ -149,10 +149,11 @@
         }
 
         .underline {
+          transition: background-color 0.5s ease;
           z-index: 1;
 
           &::before {
-            background: $cigi-primary-colour;
+            background-color: $cigi-primary-colour;
             bottom: 7px;
             content: '';
             height: 0.22em;
