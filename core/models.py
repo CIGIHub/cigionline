@@ -758,11 +758,10 @@ class TwentiethPage(
             child_slug = path_components[0]
 
             # find a matching child or 404
-            if child_slug:
-                try:
-                    subpage = self.get_children().get(slug=child_slug)
-                except Page.DoesNotExist:
-                    raise Http404
+            try:
+                subpage = self.get_children().get(slug=child_slug)
+            except Page.DoesNotExist:
+                raise Http404
 
         if self.live:
             # Return a RouteResult that will tell Wagtail to call
@@ -817,8 +816,8 @@ class TwentiethPageSlide(Orderable):
     )
     slide = models.ForeignKey(
         'core.SlidePage',
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name='+',
         verbose_name='Slide',
