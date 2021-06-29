@@ -244,15 +244,20 @@
         h1 {
           @include media-breakpoint-up(md) {
             font-size: 2.5rem;
+            margin-bottom: 1.5rem;
           }
 
           font-size: 1.5rem;
           font-weight: 700;
+          margin-bottom: 1rem;
         }
 
         hr {
+          @include media-breakpoint-up(md) {
+            margin: 1.5em auto;
+          }
           background: $cigi-medium-grey;
-          margin: 1.5em auto;
+          margin: 1em auto;
           width: 30%;
         }
 
@@ -323,7 +328,11 @@
         }
 
         .timeline-nav {
-          margin: 2em 0;
+          @include media-breakpoint-up(md) {
+            margin: 2em 0;
+          }
+          display: flex;
+          margin: 0.5em 0;
 
           li {
             font-size: 0.75em;
@@ -357,6 +366,9 @@
           .swiper-button-prev,
           .swiper-modal-button-next,
           .swiper-modal-button-prev {
+            @include media-breakpoint-down(sm) {
+              top: 10%;
+            }
             align-items: center;
             color: $cigi-primary-colour;
             cursor: pointer;
@@ -384,24 +396,36 @@
           }
 
           .timeline-slide {
+            @include media-breakpoint-down(sm) {
+              flex-direction: column;
+            }
             cursor: pointer;
+            display: flex;
             min-height: 500px;
 
             .timeline-text {
-              padding-left: 1em;
-              padding-top: 5em;
-              width: 35%;
+              @include media-breakpoint-up(md) {
+                padding-left: 1em;
+                padding-top: 5em;
+                width: 35%;
+              }
 
               h2 {
-                font-size: 3em;
+                @include media-breakpoint-up(md) {
+                  font-size: 3em;
+                  margin-bottom: 0.25em;
+                  margin-left: -100%;
+                }
                 font-weight: 700;
-                margin-bottom: 0.25em;
-                margin-left: -100%;
+                text-align: left;
                 z-index: 1;
 
                 &::before {
+                  @include media-breakpoint-up(md) {
+                    bottom: 7px;
+                  }
                   background: $cigi-primary-colour;
-                  bottom: 7px;
+                  bottom: 0;
                   content: '';
                   height: 0.25em;
                   margin-left: -0.2em;
@@ -422,12 +446,17 @@
 
             .img-wrapper {
               align-items: center;
+              display: flex;
+              margin-bottom: 0.5em;
               max-width: 60%;
             }
           }
         }
 
         .modal-overlay {
+          @include media-breakpoint-down(sm) {
+            display: none;
+          }
           align-items: center;
           background-color: rgba(0, 0, 0, 0.8);
           display: flex;

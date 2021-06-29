@@ -23,8 +23,10 @@ const TwentiethPageSlide3Content = ({ slide }) => {
   };
 
   function handleSlideClick() {
-    swiperModal.slideTo(swiper.clickedIndex, 0);
-    setShowModal(true);
+    if (screen.width > 768) {
+      swiperModal.slideTo(swiper.clickedIndex, 0);
+      setShowModal(true);
+    }
   }
 
   return (
@@ -37,7 +39,7 @@ const TwentiethPageSlide3Content = ({ slide }) => {
         </div>
         <div className="row justify-content-center text-center">
           <div className="col-md-8 col-lg-6">
-            <ul className="timeline-nav d-flex">
+            <ul className="timeline-nav">
               {years.map((year, index) => (
                 <li
                   className={
@@ -91,8 +93,8 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                 </div>
                 {slide.timeline.map((year) => (
                   <SwiperSlide key={year.year} onClick={handleSlideClick}>
-                    <div className="timeline-slide d-flex" key={year.year}>
-                      <div className="img-wrapper d-flex align-items-center">
+                    <div className="timeline-slide" key={year.year}>
+                      <div className="img-wrapper align-items-center">
                         <img src={year.image} alt="" />
                       </div>
                       <div className="timeline-text">

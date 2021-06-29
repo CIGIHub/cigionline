@@ -11,10 +11,7 @@ const TwentiethPageSlide2Content = ({ slide }) => {
         <div className="row justify-content-center text-center">
           <div className="col-md-10 col-lg-8 slide-2">
             {slide.title && (
-              <h1
-                className="mb-4"
-                dangerouslySetInnerHTML={{ __html: slide.title }}
-              />
+              <h1 dangerouslySetInnerHTML={{ __html: slide.title }} />
             )}
           </div>
         </div>
