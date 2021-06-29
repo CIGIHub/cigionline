@@ -1,6 +1,7 @@
 @import '../../../css/global/mixins';
 
 .twentieth-page {
+  @include top-bar($background-color: transparent, $color: $white);
   color: $white;
 
   .slides-nav-arrows {
@@ -28,25 +29,15 @@
     bottom: 0;
   }
 
-  &.white-bg,
-  &.red-bg {
+  &.white-bg {
     @include top-bar($background-color: transparent, $color: $black);
     color: $black;
-
-    .cigi-top-bar {
-      svg {
-        * {
-          transition: fill 500ms ease 250ms;
-        }
-      }
-    }
-
-    button {
-      transition: color 500ms ease 250ms;
-    }
   }
 
   &.red-bg {
+    @include top-bar($background-color: transparent, $color: $black, $hover-color: $white);
+    color: $black;
+
     h1 {
       color: $white;
     }
@@ -56,6 +47,10 @@
         color: $black;
       }
     }
+  }
+
+  button {
+    transition: color 500ms ease 250ms;
   }
 
   header {
@@ -72,10 +67,9 @@
         }
       }
 
-      .cigi-logo {
-        svg {
-          fill: $white;
-          transition: opacity 0.3s ease;
+      svg {
+        * {
+          transition: fill 500ms ease 250ms;
         }
       }
 
