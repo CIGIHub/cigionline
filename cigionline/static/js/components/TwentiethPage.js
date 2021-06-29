@@ -6,6 +6,8 @@ import TwentiethPageSlide from './TwentiethPageSlide';
 import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 
 const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
   const history = useHistory();
   const location = useLocation();
 
@@ -38,11 +40,36 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   function handleWheel(e) {
     const pathArray = location.pathname.split('/').filter((slug) => slug);
     const currentSlug = pathArray[pathArray.length - 1];
-    const currentSlide = slides.filter((slide) => slide.slug === currentSlug)[0];
+    const currentSlide = slides.filter(
+      (slide) => slide.slug === currentSlug
+    )[0];
     if (e.deltaY > 0 && currentSlide.next_slide) {
       changeSlide(currentSlide.next_slide);
     }
     if (e.deltaY < 0 && currentSlide.prev_slide) {
+      changeSlide(currentSlide.prev_slide);
+    }
+  }
+
+  function handleTouchStart(e) {
+    setTouchStart(e.targetTouches[0].clientY);
+  }
+
+  function handleTouchMove(e) {
+    setTouchEnd(e.targetTouches[0].clientY);
+  }
+
+  function handleTouchEnd() {
+    const pathArray = location.pathname.split('/').filter((slug) => slug);
+    const currentSlug = pathArray[pathArray.length - 1];
+    const currentSlide = slides.filter(
+      (slide) => slide.slug === currentSlug
+    )[0];
+    if (touchStart - touchEnd > 150 && currentSlide.next_slide) {
+      changeSlide(currentSlide.next_slide);
+    }
+
+    if (touchStart - touchEnd < -150 && currentSlide.prev_slide) {
       changeSlide(currentSlide.prev_slide);
     }
   }
@@ -85,7 +112,13 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   }, [location]);
 
   return (
-    <div className="slides" onWheel={handleWheel}>
+    <div
+      className="slides"
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <Route exact path={`${pageUrl}`}>
         <Redirect to={`${pageUrl}${slides[0].slug}`} />
       </Route>
