@@ -64,6 +64,14 @@
     .cigi-top-bar {
       transition: height 0.2s ease;
 
+      &.scrolled-nav {
+        .open-share-btn {
+          margin-right: 0;
+          opacity: 1;
+          width: 22px;
+        }
+      }
+
       .cigi-logo {
         svg {
           fill: $white;
@@ -71,18 +79,11 @@
         }
       }
 
-      .social-share-list {
-        margin-right: -20px;
+      .open-share-btn {
         opacity: 0;
-        width: 20px;
-
-        a {
-          padding: 0 0.5em;
-        }
-
-        i {
-          color: inherit;
-        }
+        margin-right: -1em;
+        transition: opacity 500ms ease 250ms, width 500ms ease 250ms, color 500ms ease 250ms, margin-right 500ms ease 250ms;
+        width: 0;
       }
     }
   }
@@ -90,6 +91,20 @@
   .nav {
     bottom: 200px;
     position: static;
+  }
+
+  .social-share-list {
+    margin-right: -20px;
+    opacity: 0;
+    width: 20px;
+
+    a {
+      padding: 0 0.5em;
+    }
+
+    i {
+      color: inherit;
+    }
   }
 
   .twentieth-page-slides {
@@ -144,8 +159,13 @@
           opacity: 0.8;
           position: fixed;
           top: 0;
+          transition: opacity 0.5s ease;
           width: 100vw;
           z-index: 1;
+
+          &.show-bg {
+            opacity: 0;
+          }
         }
       }
 
@@ -153,6 +173,7 @@
         bottom: 15%;
         position: absolute;
         width: 100%;
+        z-index: 2;
 
         button {
           color: $white;
@@ -164,6 +185,43 @@
 
           &:first-child {
             margin-right: 1em;
+          }
+        }
+
+        .bg-controls-buttons-right {
+          display: flex;
+
+          .social-share-list {
+            margin: 0;
+            transition: margin-right 0.5s ease, opacity 0.5s ease, width 0.5s ease;
+
+            &.open {
+              margin-right: 0;
+              opacity: 1;
+              width: 100px;
+            }
+          }
+
+          .share {
+            margin-right: 1.5em;
+
+            span {
+              left: 0;
+              margin-left: auto;
+              margin-right: auto;
+              position: absolute;
+              right: 0;
+              top: 0;
+              transition: transform 0.3s ease;
+            }
+
+            .icon-opened {
+              transform: scale(0);
+            }
+
+            .icon-closed {
+              transform: scale(1);
+            }
           }
         }
       }

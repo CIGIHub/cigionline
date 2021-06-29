@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader %}
+{% load webpack_loader core_tags %}
 
 {% block extra_css %}
 {% render_bundle 'twentiethPage' 'css' %}
@@ -9,7 +9,10 @@
   {% render_bundle 'twentiethPage' 'js' attrs='defer' %}
   {{ self.slides_json|json_script:'slides' }}
   {{ initial_slide|json_script:'initial-slide' }}
-  {{ self.slug|json_script:'page-url'}}
+  {{ self.slug|json_script:'page-url' }}
+  {{ self.title|social_string|json_script:'social-string' }}
+  {{ request.build_absolute_uri|slice:':-1'|json_script:'absolute-url' }}
+  
 {% endblock %}
 
 {% block body_class %}twentieth-page{% endblock %}
