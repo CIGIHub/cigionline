@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { debounce } from 'lodash';
 import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import TwentiethPageSlide from './TwentiethPageSlide';
@@ -87,10 +88,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   }, [location]);
 
   return (
-    <div
-      className="slides"
-      onWheel={handleWheel}
-    >
+    <div className="slides" onWheel={debounce(handleWheel, 100)}>
       <Route exact path={`${pageUrl}`}>
         <Redirect to={`${pageUrl}${slides[0].slug}`} />
       </Route>
