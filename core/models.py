@@ -744,6 +744,7 @@ class TwentiethPage(
                 'theme': slide.theme,
                 'slug': slide.slug,
                 'slide_number': counter,
+                'walls_embed': slide.walls_embed,
             }
             slide_data['prev_slide'] = counter - 1 if counter > 1 else None
             slide_data['next_slide'] = counter + 1 if counter < len(self.slides.all()) else None
@@ -840,8 +841,8 @@ class SlidePage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Slide 1 Background Image',
-        help_text='Slide 1 Background image',
+        verbose_name='Background Image',
+        help_text='Background image',
     )
     background_colour = CharField(blank=True, max_length=16, choices=BACKGROUND_COLOUR_CHOICES)
     body = StreamField([
@@ -862,14 +863,15 @@ class SlidePage(Page):
                 ('video_image', ImageChooserBlock(required=False)),
             ]
         ))
-    ], blank=True)
-    theme = CharField(blank=True, null=True, max_length=16, choices=THEME_CHOICES)
+    ], blank=True, help_text='Only for timeline slide.')
+    theme = CharField(blank=False, null=True, max_length=16, choices=THEME_CHOICES)
     title_override = RichTextField(
         blank=True,
         null=False,
         features=['bold', 'italic', 'underline'],
         help_text=('The title will be replaced by this field. Leave empty to use title field.')
     )
+    walls_embed = CharField(blank=True, null=True, max_length=16, help_text='Only for social slide.')
 
     content_panels = Page.content_panels + [
         FieldPanel('title_override'),
@@ -878,6 +880,7 @@ class SlidePage(Page):
         FieldPanel('background_colour'),
         StreamFieldPanel('body'),
         StreamFieldPanel('timeline'),
+        FieldPanel('walls_embed'),
     ]
 
     parent_page_types = ['core.TwentiethPage']
