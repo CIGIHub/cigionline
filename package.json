@@ -25,9 +25,9 @@
     "bootstrap": "4.6.0",
     "jquery": "3.6.0",
     "normalize.css": "8.0.1",
+    "react-calendar": "3.4.0",
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.2",
-    "react-calendar": "3.4.0",
     "rimraf": "3.0.2",
     "swiper": "^6.6.1"
   },
