@@ -1,6 +1,9 @@
 from django.db import models
+from django.db.models.fields import CharField, IntegerField
+from django.http.response import Http404
 from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from wagtail.core.blocks.field_block import URLBlock
 from search.filters import (
     # AuthorFilterField,
     ParentalManyToManyFilterField,
@@ -43,8 +46,10 @@ from wagtail.admin.edit_handlers import (
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
+from wagtail.core.url_routing import RouteResult
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 
 
@@ -598,6 +603,7 @@ class BasicPage(
         'annual_reports.AnnualReportListPage',
         'core.BasicPage',
         'core.FundingPage',
+        'core.TwentiethPage',
         'people.PersonListPage',
         'research.ProjectPage',
     ]
@@ -691,6 +697,198 @@ class PrivacyNoticePage(
 
     class Meta:
         verbose_name = 'Privacy Notice'
+
+
+class TwentiethPage(
+    Page,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+):
+
+    def slides_json(self):
+        slides = []
+        counter = 1
+        for item in self.slides.all():
+            body = []
+            slide = item.slide
+            for block in slide.body:
+                if block.block_type == 'text':
+                    body.append({'type': 'text', 'value': block.value.source})
+                elif block.block_type == 'separator':
+                    body.append({'type': 'separator', 'value': None})
+                elif block.block_type == 'video':
+                    body.append({
+                        'type': 'video',
+                        'value': {
+                            'video_url': block.value['video_url'],
+                            'video_image': block.value['video_image'].get_rendition('original').url if block.value['video_image'] else '',
+                        }})
+                else:
+                    body.append({'type': block.block_type, 'value': block.value})
+            slide_data = {
+                'title': slide.title_override if slide.title_override else slide.title,
+                'body': body,
+                'background': slide.image_background.get_rendition('original').url if slide.image_background else '',
+                'background_colour': slide.background_colour,
+                'timeline': [{
+                    'year': year.value['year'],
+                    'body': year.value['text'].source,
+                    'image': year.value['image'].get_rendition('original').url if year.value['image'] else '',
+                    'video': {
+                        'video_url': year.value['video_url'] if year.value['video_url'] else '',
+                        'video_image': year.value['video_image'].get_rendition('original').url if year.value['video_image'] else '',
+                    }
+                } for year in slide.timeline],
+                'theme': slide.theme,
+                'slug': slide.slug,
+                'slide_number': counter,
+                'walls_embed': slide.walls_embed,
+            }
+            slide_data['prev_slide'] = counter - 1 if counter > 1 else None
+            slide_data['next_slide'] = counter + 1 if counter < len(self.slides.all()) else None
+            slides.append(slide_data)
+            counter = counter + 1
+
+        return slides
+
+    def route(self, request, path_components):
+        if path_components:
+            # request is for a child of this page
+            child_slug = path_components[0]
+
+            # find a matching child or 404
+            try:
+                subpage = self.get_children().get(slug=child_slug)
+            except Page.DoesNotExist:
+                raise Http404
+
+        if self.live:
+            # Return a RouteResult that will tell Wagtail to call
+            # this page's serve() method
+            return RouteResult(self, kwargs={'path_components': path_components})
+        else:
+            # the page matches the request, but isn't published, so 404
+            raise Http404
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        if kwargs.get('path_components'):
+            context['initial_slide'] = kwargs.get('path_components')[0]
+
+        return context
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                InlinePanel('slides'),
+            ],
+            heading='slides',
+            classname='collapsible',
+        )
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = ['core.SlidePage']
+    templates = 'core/twentieth_page.html'
+
+    class Meta:
+        verbose_name = 'Twentieth Page'
+
+
+class TwentiethPageSlide(Orderable):
+    twentieth_page = ParentalKey(
+        'core.TwentiethPage',
+        related_name='slides',
+    )
+    slide = models.ForeignKey(
+        'core.SlidePage',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Slide',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'slide',
+            ['core.SlidePage'],
+        ),
+    ]
+
+
+class SlidePage(Page):
+    BACKGROUND_COLOUR_CHOICES = [('WHITE', 'WHITE'), ('BLACK', 'BLACK'), ('RED', 'RED')]
+    THEME_CHOICES = [('SLIDE-1', 'SLIDE-1'), ('SLIDE-2', 'SLIDE-2'), ('SLIDE-3', 'SLIDE-3'), ('SLIDE-4', 'SLIDE-4'), ('SLIDE-5', 'SLIDE-5')]
+    image_background = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Background Image',
+        help_text='Background image',
+    )
+    background_colour = CharField(blank=True, max_length=16, choices=BACKGROUND_COLOUR_CHOICES)
+    body = StreamField([
+        ('video', blocks.StructBlock([
+            ('video_url', blocks.CharBlock()),
+            ('video_image', ImageChooserBlock()),
+        ])),
+        ('text', blocks.RichTextBlock()),
+        ('separator', blocks.StructBlock()),
+    ], blank=True)
+    timeline = StreamField([
+        ('slide', blocks.StructBlock(
+            [
+                ('year', blocks.CharBlock()),
+                ('text', blocks.RichTextBlock()),
+                ('image', ImageChooserBlock(required=False)),
+                ('video_url', blocks.CharBlock(required=False)),
+                ('video_image', ImageChooserBlock(required=False)),
+            ]
+        ))
+    ], blank=True, help_text='Only for timeline slide.')
+    theme = CharField(blank=False, null=True, max_length=16, choices=THEME_CHOICES)
+    title_override = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'underline'],
+        help_text=('The title will be replaced by this field. Leave empty to use title field.')
+    )
+    walls_embed = CharField(blank=True, null=True, max_length=16, help_text='Only for social slide.')
+
+    content_panels = Page.content_panels + [
+        FieldPanel('title_override'),
+        FieldPanel('theme'),
+        ImageChooserPanel('image_background'),
+        FieldPanel('background_colour'),
+        StreamFieldPanel('body'),
+        StreamFieldPanel('timeline'),
+        FieldPanel('walls_embed'),
+    ]
+
+    parent_page_types = ['core.TwentiethPage']
+    subpage_types = []
+    templates = 'core/slide_page.html'
+
+    class Meta:
+        verbose_name = 'Twentieth Page Slide'
 
 
 class Theme(models.Model):

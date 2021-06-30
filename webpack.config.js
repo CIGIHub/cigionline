@@ -70,6 +70,7 @@ const config = {
     themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',
+    twentiethPage: './cigionline/static/pages/twentieth_page/index.js',
   },
 
   devtool: 'source-map',
