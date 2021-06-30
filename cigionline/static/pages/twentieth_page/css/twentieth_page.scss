@@ -2,6 +2,7 @@
 
 .twentieth-page {
   @include top-bar($background-color: transparent, $color: $white);
+  overscroll-behavior: none;
 
   h1 {
     .underline {
@@ -20,7 +21,12 @@
   .slides-nav-arrows {
     color: $cigi-primary-colour;
     position: relative;
+    transition: opacity 0.2s ease;
     z-index: 500;
+
+    &.hidden {
+      opacity: 0;
+    }
 
     button {
       color: $cigi-primary-colour;
@@ -30,6 +36,7 @@
     .next-slide {
       font-size: 3em;
       left: 50%;
+      margin-left: -12px;
       position: fixed;
     }
   }
@@ -183,7 +190,10 @@
       }
 
       .slide-1-buttons {
-        bottom: 15%;
+        @include media-breakpoint-up(sm) {
+          bottom: 15%;
+        }
+        bottom: 25%;
         position: absolute;
         width: 100%;
         z-index: 2;
@@ -527,8 +537,7 @@
                 @include media-breakpoint-up(lg) {
                   width: 70%;
                 }
-                .img-wrapper {
-                }
+
                 .timeline-text {
                   display: flex;
                   justify-content: flex-end;
@@ -553,8 +562,8 @@
             }
 
             .close-modal {
+              color: $white;
               cursor: pointer;
-              font-size: 2em;
               position: absolute;
               right: 0;
               top: 0;

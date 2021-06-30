@@ -26,6 +26,19 @@ const TwentiethPageSlide3Content = ({ slide }) => {
     if (screen.width > 768) {
       swiperModal.slideTo(swiper.clickedIndex, 0);
       setShowModal(true);
+      document.getElementById('slides-nav-arrows').classList.add('hidden');
+    }
+  }
+
+  function handleCloseModal(e) {
+    if (
+      !(
+        e.target.classList.contains('fa-angle-right') ||
+        e.target.classList.contains('fa-angle-left')
+      )
+    ) {
+      setShowModal(false);
+      document.getElementById('slides-nav-arrows').classList.remove('hidden');
     }
   }
 
@@ -77,8 +90,8 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   },
                 }}
                 navigation={{
-                  nextEl: '.swiper-button-next',
-                  prevEl: '.swiper-button-prev',
+                  nextEl: 'swiper-button-next',
+                  prevEl: 'swiper-button-prev',
                   disabledClass: 'swiper-button-disabled',
                 }}
                 className="mySwiper"
@@ -111,7 +124,10 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              <div className={`modal-overlay ${showModal && 'modal-active'}`}>
+              <div
+                className={`modal-overlay ${showModal && 'modal-active'}`}
+                onClick={handleCloseModal}
+              >
                 <Swiper
                   slidesPerView={1}
                   centeredSlides
@@ -130,12 +146,13 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                     <i className="fal fa-angle-left" />
                   </div>
 
-                  <div
+                  <button
+                    type="button"
                     className="close-modal"
-                    onClick={() => setShowModal(false)}
+                    onClick={handleCloseModal}
                   >
                     <i className="fal fa-times-square" />
-                  </div>
+                  </button>
                   {slide.timeline.map((year) => (
                     <SwiperSlide key={year.year}>
                       <div

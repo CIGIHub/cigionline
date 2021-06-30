@@ -50,12 +50,21 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
     }
   }
 
+  function handleScroll(e) {
+    const pathArray = location.pathname.split('/').filter((slug) => slug);
+    const currentSlug = pathArray[pathArray.length - 1];
+    const currentSlide = slides.filter(
+      (slide) => slide.slug === currentSlug
+    )[0];
+    console.log(e);
+  }
+
   function Slide({ slug }) {
     const currentSlide = slides.filter((slide) => slide.slug === slug)[0];
 
     return (
       <>
-        <TwentiethPageSlide slide={currentSlide} />
+        <TwentiethPageSlide slide={currentSlide} changeSlide={changeSlide} />
         <TwentiethPageNavArrows
           changeSlide={changeSlide}
           slide={currentSlide}
