@@ -29,6 +29,18 @@ const TwentiethPageSlide3Content = ({ slide }) => {
     }
   }
 
+  function highlightYear(year, index) {
+    if (screen.width > 768) {
+      return index === years.indexOf(currentYear) ||
+        index === years.indexOf(currentYear) + 1 ||
+        (index === year.length - 2 &&
+          years.indexOf(currentYear) === years.length - 1)
+        ? 'active'
+        : '';
+    }
+    return index === years.indexOf(currentYear) ? 'active' : '';
+  }
+
   return (
     <div className="slide-content">
       <div className="container">
@@ -41,17 +53,7 @@ const TwentiethPageSlide3Content = ({ slide }) => {
           <div className="col-md-8 col-lg-6">
             <ul className="timeline-nav">
               {years.map((year, index) => (
-                <li
-                  className={
-                    index === years.indexOf(currentYear) ||
-                    index === years.indexOf(currentYear) + 1 ||
-                    (index === year.length - 2 &&
-                      years.indexOf(currentYear) === years.length - 1)
-                      ? 'active'
-                      : ''
-                  }
-                  key={year}
-                >
+                <li className={highlightYear(year, index)} key={year}>
                   <button type="button" onClick={() => setYear(year)}>
                     {year}
                   </button>

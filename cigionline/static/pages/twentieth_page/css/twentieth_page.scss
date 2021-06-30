@@ -2,10 +2,19 @@
 
 .twentieth-page {
   @include top-bar($background-color: transparent, $color: $white);
-  color: $white;
 
   h1 {
-    color: $white;
+    .underline {
+      &::before {
+        opacity: 0;
+      }
+    }
+  }
+
+  h1,
+  h2,
+  p {
+    transition: color 500ms ease;
   }
 
   .slides-nav-arrows {
@@ -36,15 +45,15 @@
   &.white-bg {
     @include top-bar($background-color: transparent, $color: $black);
     color: $black;
+
+    h1 {
+      color: $black;
+    }
   }
 
   &.red-bg {
     @include top-bar($background-color: transparent, $color: $black, $hover-color: $white);
     color: $black;
-
-    h1 {
-      color: $white;
-    }
 
     .slides-nav-arrows {
       button {
@@ -134,11 +143,16 @@
 
         &.background-BLACK {
           background-color: $black;
+          color: $white;
         }
 
         &.background-RED {
           background-color: $cigi-primary-colour;
           color: $white;
+
+          h1 {
+            color: $white;
+          }
         }
 
         video {
@@ -233,12 +247,6 @@
         padding-top: 4em;
         z-index: 2;
 
-        h1,
-        h2,
-        p {
-          transition: color 500ms ease 250ms;
-        }
-
         h1 {
           @include media-breakpoint-up(md) {
             font-size: 2.5rem;
@@ -260,7 +268,6 @@
         }
 
         .underline {
-          transition: background-color 0.5s ease;
           z-index: 1;
 
           &::before {
@@ -269,7 +276,9 @@
             content: '';
             height: 0.22em;
             margin-left: -2.5%;
+            opacity: 1;
             position: absolute;
+            transition: opacity 500ms ease 250ms;
             width: 105%;
             z-index: -1;
           }
@@ -407,6 +416,7 @@
             .timeline-text {
               @include media-breakpoint-up(md) {
                 padding-left: 1em;
+                padding-top: 4%;
                 width: 35%;
               }
 
@@ -426,12 +436,13 @@
                     margin-left: -0.2em;
                     width: 2.8em;
                   }
-                  background: $cigi-primary-colour;
+                  background-color: $cigi-primary-colour;
                   bottom: 0;
                   content: '';
                   height: 0.25em;
                   margin-left: -0.1em;
                   position: absolute;
+                  transition: background-color 500ms ease 250ms;
                   width: 2.6em;
                   z-index: -1;
                 }
@@ -551,6 +562,7 @@
 
       .slide-5 {
         h1 {
+          color: $white;
           margin-bottom: 1em;
         }
 
