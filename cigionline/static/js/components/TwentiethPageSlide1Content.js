@@ -94,14 +94,6 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                     <i className="fas fa-share-alt" />
                   </span>
                 </button>
-                <button
-                  type="button"
-                  className="camera"
-                  onMouseEnter={() => setShowBg(true)}
-                  onMouseLeave={() => setShowBg(false)}
-                >
-                  <i className="fas fa-camera" />
-                </button>
               </div>
             </div>
           </div>

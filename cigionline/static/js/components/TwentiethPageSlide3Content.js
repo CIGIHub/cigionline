@@ -90,8 +90,8 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   },
                 }}
                 navigation={{
-                  nextEl: 'swiper-button-next',
-                  prevEl: 'swiper-button-prev',
+                  nextEl: '.swiper-button-next',
+                  prevEl: '.swiper-button-prev',
                   disabledClass: 'swiper-button-disabled',
                 }}
                 className="mySwiper"
