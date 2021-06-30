@@ -4,6 +4,10 @@
   @include top-bar($background-color: transparent, $color: $white);
   color: $white;
 
+  h1 {
+    color: $white;
+  }
+
   .slides-nav-arrows {
     color: $cigi-primary-colour;
     position: relative;
@@ -232,7 +236,7 @@
         h1,
         h2,
         p {
-          transition: color 500ms ease;
+          transition: color 500ms ease 250ms;
         }
 
         h1 {
