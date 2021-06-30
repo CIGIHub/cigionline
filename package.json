@@ -25,8 +25,12 @@
     "bootstrap": "4.6.0",
     "jquery": "3.6.0",
     "normalize.css": "8.0.1",
+<<<<<<< HEAD
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.2",
+=======
+    "react-calendar": "3.4.0",
+>>>>>>> master
     "rimraf": "3.0.2",
     "swiper": "^6.6.1"
   },
@@ -43,7 +47,7 @@
     "cssnano": "5.0.2",
     "eslint": "7.26.0",
     "eslint-config-airbnb": "18.2.1",
-    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-import": "2.23.4",
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-react": "7.23.2",
     "file-loader": "6.2.0",
@@ -51,7 +55,7 @@
     "luxon": "1.26.0",
     "mini-css-extract-plugin": "1.6.0",
     "postcss": "8.2.15",
-    "postcss-loader": "5.2.0",
+    "postcss-loader": "5.3.0",
     "prop-types": "15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
