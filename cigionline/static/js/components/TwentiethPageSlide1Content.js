@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const TwentiethPageSlide2Content = ({ slide }) => {
   const [showBg, setShowBg] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const socialString = JSON.parse(
     document.getElementById('social-string').textContent
   );
@@ -14,11 +15,13 @@ const TwentiethPageSlide2Content = ({ slide }) => {
   function playVideo() {
     const videoBg = document.getElementById('video-bg');
     videoBg.play();
+    setPlaying(true);
   }
 
   function pauseVideo() {
     const videoBg = document.getElementById('video-bg');
     videoBg.pause();
+    setPlaying(false);
   }
 
   function handleBgToggle() {}
@@ -30,6 +33,7 @@ const TwentiethPageSlide2Content = ({ slide }) => {
         autoPlay
         muted
         playsInline
+        loop
         id="video-bg"
         poster={slide.background}
       >
@@ -44,10 +48,10 @@ const TwentiethPageSlide2Content = ({ slide }) => {
           <div className="row justify-content-center text-center">
             <div className="col slide-1 d-flex justify-content-between">
               <div className="bg-controls-buttons-left">
-                <button type="button" className="pause" onClick={pauseVideo}>
+                <button type="button" className={`pause ${!playing ? 'hide' : ''}`} onClick={pauseVideo}>
                   <i className="fas fa-pause" />
                 </button>
-                <button type="button" className="play" onClick={playVideo}>
+                <button type="button" className={`play ${playing ? 'hide' : ''}`} onClick={playVideo}>
                   <i className="fas fa-play" />
                 </button>
               </div>

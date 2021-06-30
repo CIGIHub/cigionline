@@ -199,6 +199,10 @@
           &:first-child {
             margin-right: 1em;
           }
+
+          &.hide {
+            display: none;
+          }
         }
 
         .bg-controls-buttons-right {
@@ -293,15 +297,14 @@
 
           .img-wrapper {
             background-color: $black;
-
-            img {
-              transition: opacity 0.2s linear;
-            }
+            height: 100%;
+            width: 100%;
+            z-index: 0;
           }
 
           &:hover {
-            img {
-              opacity: 0.8;
+            button {
+              background-color: $cigi-dark-pink;
             }
           }
 
@@ -327,9 +330,11 @@
             position: absolute;
             top: 0;
             width: 100%;
+            z-index: 1;
 
             &.hidden {
-              display: none;
+              opacity: 0;
+              z-index: -1;
             }
           }
         }
@@ -389,13 +394,25 @@
             z-index: 10;
           }
 
-          .swiper-modal-button-next,
-          .swiper-button-next {
+          .swiper-modal-button-next {
             right: 0;
           }
 
-          .swiper-modal-button-prev,
+          .swiper-modal-button-prev {
+            left: 0;
+          }
+
+          .swiper-button-next {
+            @media screen and (min-width: 576px) {
+              right: -6%;
+            }
+            right: 0;
+          }
+
           .swiper-button-prev {
+            @media screen and (min-width: 576px) {
+              left: -6%;
+            }
             left: 0;
           }
 
@@ -404,27 +421,34 @@
             display: none;
           }
 
+          .swiper-slide {
+            filter: grayscale(100%);
+            transition: filter 1s ease;
+
+            &.swiper-slide-active,
+            &.swiper-slide-next {
+              filter: none;
+            }
+          }
+
           .timeline-slide {
             @include media-breakpoint-down(sm) {
               align-items: center;
-              flex-direction: column;
             }
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             min-height: 400px;
 
             .timeline-text {
               @include media-breakpoint-up(md) {
-                padding-left: 1em;
-                padding-top: 4%;
-                width: 35%;
+                padding-top: 0.5em;
               }
 
               h2 {
                 @include media-breakpoint-up(md) {
-                  font-size: 3em;
+                  font-size: 2em;
                   margin-bottom: 0.25em;
-                  margin-left: -50%;
                 }
                 font-weight: 700;
                 text-align: left;
@@ -432,9 +456,9 @@
 
                 &::before {
                   @include media-breakpoint-up(md) {
-                    bottom: 7px;
-                    margin-left: -0.2em;
-                    width: 2.8em;
+                    bottom: 5px;
+                    margin-left: -0.05em;
+                    width: 2.5em;
                   }
                   background-color: $cigi-primary-colour;
                   bottom: 0;
@@ -461,7 +485,6 @@
               align-items: center;
               display: flex;
               margin-bottom: 0.5em;
-              max-width: 60%;
               z-index: 1;
             }
           }
@@ -501,8 +524,11 @@
               justify-content: center;
 
               .timeline-slide-modal {
-                width: 70%;
-
+                @include media-breakpoint-up(lg) {
+                  width: 70%;
+                }
+                .img-wrapper {
+                }
                 .timeline-text {
                   display: flex;
                   justify-content: flex-end;
@@ -528,10 +554,16 @@
 
             .close-modal {
               cursor: pointer;
+              font-size: 2em;
               position: absolute;
               right: 0;
               top: 0;
+              transition: color 0.2s ease;
               z-index: 1;
+
+              &:hover {
+                color: $cigi-primary-colour;
+              }
             }
           }
         }

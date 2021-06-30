@@ -86,6 +86,7 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   setCurrentYear(years[activeIndex])
                 }
                 onSwiper={setSwiper}
+                watchSlidesProgress
               >
                 <div className="swiper-button-next">
                   <i className="fal fa-angle-right" />
