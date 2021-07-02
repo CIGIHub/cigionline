@@ -44,13 +44,10 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
 
   function handleWheel(e) {
     if (!allowScroll) return;
-
     setAllowScroll(false);
-
     setTimeout(function () {
       setAllowScroll(true);
-    }, 1000);
-
+    }, 2000);
     if (e.deltaY > 0 && currentSlide.next_slide) {
       changeSlide(currentSlide.next_slide);
     }

@@ -145,14 +145,6 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   <div className="swiper-modal-button-prev">
                     <i className="fal fa-angle-left" />
                   </div>
-
-                  <button
-                    type="button"
-                    className="close-modal"
-                    onClick={handleCloseModal}
-                  >
-                    <i className="fal fa-times-square" />
-                  </button>
                   {slide.timeline.map((year) => (
                     <SwiperSlide key={year.year}>
                       <div
@@ -171,6 +163,13 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                             dangerouslySetInnerHTML={{ __html: year.body }}
                           />
                         </div>
+                        <button
+                          type="button"
+                          className="close-modal"
+                          onClick={handleCloseModal}
+                        >
+                          <i className="fal fa-times-square" />
+                        </button>
                       </div>
                     </SwiperSlide>
                   ))}
