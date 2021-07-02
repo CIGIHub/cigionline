@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
 import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import TwentiethPageSlide from './TwentiethPageSlide';
@@ -9,6 +8,13 @@ import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   const history = useHistory();
   const location = useLocation();
+  const [allowScroll, setAllowScroll] = useState(true);
+  const pathArray = location.pathname.split('/').filter((slug) => slug);
+  const currentSlug = pathArray[pathArray.length - 1];
+  if (location.pathname === pageUrl) {
+    currentSlug = slides[0].slug;
+  }
+  const currentSlide = slides.filter((slide) => slide.slug === currentSlug)[0];
 
   const pageBody = document.getElementsByClassName('twentieth-page')[0];
   const topBar = document.getElementsByClassName('cigi-top-bar')[0];
@@ -37,26 +43,20 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   }
 
   function handleWheel(e) {
-    const pathArray = location.pathname.split('/').filter((slug) => slug);
-    const currentSlug = pathArray[pathArray.length - 1];
-    const currentSlide = slides.filter(
-      (slide) => slide.slug === currentSlug
-    )[0];
+    if (!allowScroll) return;
+
+    setAllowScroll(false);
+
+    setTimeout(function () {
+      setAllowScroll(true);
+    }, 1000);
+
     if (e.deltaY > 0 && currentSlide.next_slide) {
       changeSlide(currentSlide.next_slide);
     }
     if (e.deltaY < 0 && currentSlide.prev_slide) {
       changeSlide(currentSlide.prev_slide);
     }
-  }
-
-  function handleScroll(e) {
-    const pathArray = location.pathname.split('/').filter((slug) => slug);
-    const currentSlug = pathArray[pathArray.length - 1];
-    const currentSlide = slides.filter(
-      (slide) => slide.slug === currentSlug
-    )[0];
-    console.log(e);
   }
 
   function Slide({ slug }) {
@@ -74,15 +74,6 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   }
 
   useEffect(() => {
-    const pathArray = location.pathname.split('/').filter((slug) => slug);
-    let currentSlug = pathArray[pathArray.length - 1];
-    if (location.pathname === pageUrl) {
-      currentSlug = slides[0].slug;
-    }
-    const currentSlide = slides.filter(
-      (slide) => slide.slug === currentSlug
-    )[0];
-
     if (currentSlide.background_colour === 'WHITE') {
       pageBody.classList.add('white-bg');
     } else if (currentSlide.background_colour === 'RED') {
@@ -97,7 +88,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   }, [location]);
 
   return (
-    <div className="slides" onWheel={debounce(handleWheel, 100)}>
+    <div className="slides" onWheel={handleWheel}>
       <Route exact path={`${pageUrl}`}>
         <Redirect to={`${pageUrl}${slides[0].slug}`} />
       </Route>
