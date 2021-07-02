@@ -379,6 +379,22 @@
             button {
               color: $cigi-medium-grey;
               transition: color 0.3s ease;
+
+              &::before {
+                background-color: $cigi-primary-colour;
+                bottom: 0;
+                content: '';
+                height: 0.2em;
+                position: absolute;
+                transition: width 300ms ease;
+                width: 0;
+              }
+
+              &:hover {
+                &::before {
+                  width: 100%;
+                }
+              }
             }
           }
         }
@@ -458,10 +474,6 @@
             }
 
             .timeline-text {
-              @include media-breakpoint-up(md) {
-                display: none;
-              }
-
               h2 {
                 @include media-breakpoint-up(md) {
                   font-size: 2em;
@@ -475,7 +487,7 @@
                   @include media-breakpoint-up(md) {
                     bottom: 5px;
                     margin-left: -0.05em;
-                    width: 2.5em;
+                    width: 2.55em;
                   }
                   background-color: $cigi-primary-colour;
                   bottom: 0;
@@ -496,6 +508,9 @@
               }
 
               .timeline-body {
+                @include media-breakpoint-up(md) {
+                  display: none;
+                }
                 text-align: left;
               }
             }
