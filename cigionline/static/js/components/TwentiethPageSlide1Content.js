@@ -24,8 +24,6 @@ const TwentiethPageSlide2Content = ({ slide }) => {
     setPlaying(false);
   }
 
-  function handleBgToggle() {}
-
   return (
     <>
       <video
@@ -48,12 +46,6 @@ const TwentiethPageSlide2Content = ({ slide }) => {
           <div className="row justify-content-center text-center">
             <div className="col slide-1 d-flex justify-content-between">
               <div className="bg-controls-buttons-left">
-                <button type="button" className={`pause ${!playing ? 'hide' : ''}`} onClick={pauseVideo}>
-                  <i className="fas fa-pause" />
-                </button>
-                <button type="button" className={`play ${playing ? 'hide' : ''}`} onClick={playVideo}>
-                  <i className="fas fa-play" />
-                </button>
               </div>
               <div className="bg-controls-buttons-right">
                 <ul
@@ -93,6 +85,12 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                   <span className={showShare ? 'icon-opened' : 'icon-closed'}>
                     <i className="fas fa-share-alt" />
                   </span>
+                </button>
+                <button type="button" className={`pause ${!playing ? 'hide' : ''}`} onClick={pauseVideo}>
+                  <i className="fas fa-pause" />
+                </button>
+                <button type="button" className={`play ${playing ? 'hide' : ''}`} onClick={playVideo}>
+                  <i className="fas fa-play" />
                 </button>
               </div>
             </div>

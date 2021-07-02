@@ -483,7 +483,9 @@
               }
 
               p {
-                font-size: 0.75em;
+                font-size: 0.9em;
+                font-weight: 100;
+                line-height: 1.3em;
               }
 
               .timeline-body {
@@ -535,7 +537,7 @@
 
               .timeline-slide-modal {
                 @include media-breakpoint-up(lg) {
-                  width: 70%;
+                  width: 75%;
                 }
 
                 .timeline-text {
@@ -552,7 +554,7 @@
                   }
 
                   .timeline-body {
-                    flex-basis: 35%;
+                    flex-basis: 75%;
                     font-size: 0.75em;
                     margin: 0.5em 0 0 2em;
                     text-align: left;
@@ -565,8 +567,8 @@
               color: $white;
               cursor: pointer;
               position: absolute;
-              right: 0;
-              top: 0;
+              right: -15px;
+              top: -20px;
               transition: color 0.2s ease;
               z-index: 1;
 
