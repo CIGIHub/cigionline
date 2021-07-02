@@ -10,7 +10,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   const location = useLocation();
   const [allowScroll, setAllowScroll] = useState(true);
   const pathArray = location.pathname.split('/').filter((slug) => slug);
-  const currentSlug = pathArray[pathArray.length - 1];
+  let currentSlug = pathArray[pathArray.length - 1];
   if (location.pathname === pageUrl) {
     currentSlug = slides[0].slug;
   }
