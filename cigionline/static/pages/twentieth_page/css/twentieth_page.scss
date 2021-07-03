@@ -2,7 +2,6 @@
 
 .twentieth-page {
   @include top-bar($background-color: transparent, $color: $white);
-  overscroll-behavior: none;
 
   h1 {
     .underline {
@@ -94,10 +93,10 @@
       }
 
       .open-share-btn {
-        opacity: 0;
         margin-right: -1em;
+        opacity: 0;
         transition: opacity 500ms ease 250ms, width 500ms ease 250ms, color 500ms ease 250ms,
-          margin-right 500ms ease 250ms;
+        margin-right 500ms ease 250ms;
         width: 0;
       }
     }
@@ -144,16 +143,16 @@
         top: 0;
         width: 100vw;
 
-        &.background-WHITE {
+        &.background-white {
           background-color: $white;
         }
 
-        &.background-BLACK {
+        &.background-black {
           background-color: $black;
           color: $white;
         }
 
-        &.background-RED {
+        &.background-red {
           background-color: $cigi-primary-colour;
           color: $white;
 
@@ -172,8 +171,8 @@
         }
 
         .opacity-gradient {
-          background: rgb(0, 0, 0);
-          background: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.2) 40%);
+          background: linear-gradient($black 0%, $black-alpha-40, 20%);
+          background-color: $black;
           height: 100vh;
           left: 0;
           opacity: 0.8;
@@ -522,7 +521,7 @@
             display: none;
           }
           align-items: center;
-          background-color: rgba(0, 0, 0, 0.8);
+          background-color: $black-alpha-80;
           display: flex;
           height: 100vh;
           justify-content: center;
