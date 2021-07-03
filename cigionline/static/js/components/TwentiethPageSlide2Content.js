@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable react/no-danger */
+/* eslint-disable react/prop-types */
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 const TwentiethPageSlide2Content = ({ slide }) => (
@@ -14,8 +15,8 @@ const TwentiethPageSlide2Content = ({ slide }) => (
       </div>
       <div className="row justify-content-center">
         <div className="col-md-8 col-lg-6 slide-2">
-          {slide.body &&
-            slide.body.map((block) => {
+          {slide.body
+            && slide.body.map((block) => {
               if (block.type === 'text') {
                 return (
                   <div
@@ -51,6 +52,5 @@ const TwentiethPageSlide2Content = ({ slide }) => (
     </div>
   </div>
 );
-TwentiethPageSlide2Content.propTypes = {};
 
 export default TwentiethPageSlide2Content;
