@@ -1,5 +1,5 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import PropTypes from 'prop-types';
 import Portal from './Portal';
 
 const TwentiethPageNavArrows = ({ changeSlide, slide }) => {
@@ -26,7 +26,5 @@ const TwentiethPageNavArrows = ({ changeSlide, slide }) => {
     </Portal>
   );
 };
-
-TwentiethPageNavArrows.propTypes = {};
 
 export default TwentiethPageNavArrows;

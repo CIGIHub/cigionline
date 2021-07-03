@@ -1,6 +1,11 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import TwentiethPageSlide from './TwentiethPageSlide';
 import TwentiethPageNavArrows from './TwentiethPageNavArrows';
@@ -19,7 +24,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   const pageBody = document.getElementsByClassName('twentieth-page')[0];
   const topBar = document.getElementsByClassName('cigi-top-bar')[0];
   const initialSlide = slides.filter(
-    (slide) => slide.slug === initialSlideSlug
+    (slide) => slide.slug === initialSlideSlug,
   )[0];
 
   const routes = slides.map((slide) => ({
@@ -36,7 +41,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
 
   function changeSlide(slideNumber) {
     const slide = slides.filter(
-      (slide) => slide.slide_number === slideNumber
+      (element) => element.slide_number === slideNumber,
     )[0];
     const slug = slide.slug;
     history.push(`${pageUrl}${slug}`);
@@ -45,7 +50,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   function handleWheel(e) {
     if (!allowScroll) return;
     setAllowScroll(false);
-    setTimeout(function () {
+    setTimeout(function() {
       setAllowScroll(true);
     }, 2000);
     if (e.deltaY > 0 && currentSlide.next_slide) {
@@ -57,14 +62,14 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   }
 
   function Slide({ slug }) {
-    const currentSlide = slides.filter((slide) => slide.slug === slug)[0];
+    const routeSlide = slides.filter((slide) => slide.slug === slug)[0];
 
     return (
       <>
-        <TwentiethPageSlide slide={currentSlide} changeSlide={changeSlide} />
+        <TwentiethPageSlide slide={routeSlide} changeSlide={changeSlide} />
         <TwentiethPageNavArrows
           changeSlide={changeSlide}
-          slide={currentSlide}
+          slide={routeSlide}
         />
       </>
     );
@@ -106,7 +111,5 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
     </div>
   );
 };
-
-TwentiethPage.propTypes = {};
 
 export default TwentiethPage;

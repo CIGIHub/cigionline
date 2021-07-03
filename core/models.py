@@ -1,9 +1,8 @@
 from django.db import models
-from django.db.models.fields import CharField, IntegerField
+from django.db.models.fields import CharField
 from django.http.response import Http404
 from django.utils.functional import cached_property
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from wagtail.core.blocks.field_block import URLBlock
 from search.filters import (
     # AuthorFilterField,
     ParentalManyToManyFilterField,
@@ -760,7 +759,7 @@ class TwentiethPage(
 
             # find a matching child or 404
             try:
-                subpage = self.get_children().get(slug=child_slug)
+                self.get_children().get(slug=child_slug)
             except Page.DoesNotExist:
                 raise Http404
 
