@@ -1,16 +1,15 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 
 const TwentiethPageSlide2Content = ({ slide }) => {
-  const [showBg, setShowBg] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [playing, setPlaying] = useState(true);
   const socialString = JSON.parse(
-    document.getElementById('social-string').textContent
+    document.getElementById('social-string').textContent,
   );
   const absoluteUrl = JSON.parse(
-    document.getElementById('absolute-url').textContent
+    document.getElementById('absolute-url').textContent,
   );
   function playVideo() {
     const videoBg = document.getElementById('video-bg');
@@ -40,13 +39,11 @@ const TwentiethPageSlide2Content = ({ slide }) => {
           type="video/mp4"
         />
       </video>
-      <div className={`opacity-gradient ${showBg ? 'show-bg' : ''}`} />
+      <div className="opacity-gradient" />
       <div className="slide-1-buttons">
         <div className="container">
           <div className="row justify-content-center text-center">
             <div className="col slide-1 d-flex justify-content-between">
-              <div className="bg-controls-buttons-left">
-              </div>
               <div className="bg-controls-buttons-right">
                 <ul
                   className={`social-share-list ${showShare ? 'open' : ''}`}
@@ -100,6 +97,5 @@ const TwentiethPageSlide2Content = ({ slide }) => {
     </>
   );
 };
-TwentiethPageSlide2Content.propTypes = {};
 
 export default TwentiethPageSlide2Content;

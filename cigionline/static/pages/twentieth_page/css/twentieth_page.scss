@@ -22,7 +22,7 @@
     color: $cigi-primary-colour;
     position: relative;
     transition: opacity 0.2s ease;
-    z-index: 500;
+    z-index: 100;
 
     &.hidden {
       opacity: 0;
@@ -304,13 +304,6 @@
           overflow: hidden;
           padding-bottom: 56.25%;
           position: relative;
-
-          .img-wrapper {
-            background-color: $black;
-            height: 100%;
-            width: 100%;
-            z-index: 0;
-          }
 
           &:hover {
             button {

@@ -1,6 +1,8 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/no-danger */
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-
 import SwiperCore, { Navigation, Pagination } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.scss';
@@ -33,8 +35,8 @@ const TwentiethPageSlide3Content = ({ slide }) => {
   function handleCloseModal(e) {
     if (
       !(
-        e.target.classList.contains('fa-angle-right') ||
-        e.target.classList.contains('fa-angle-left')
+        e.target.classList.contains('fa-angle-right')
+        || e.target.classList.contains('fa-angle-left')
       )
     ) {
       setShowModal(false);
@@ -44,10 +46,10 @@ const TwentiethPageSlide3Content = ({ slide }) => {
 
   function highlightYear(year, index) {
     if (screen.width > 768) {
-      return index === years.indexOf(currentYear) ||
-        index === years.indexOf(currentYear) + 1 ||
-        (index === year.length - 2 &&
-          years.indexOf(currentYear) === years.length - 1)
+      return index === years.indexOf(currentYear)
+        || index === years.indexOf(currentYear) + 1
+        || (index === year.length - 2
+        && years.indexOf(currentYear) === years.length - 1)
         ? 'active'
         : '';
     }
@@ -95,9 +97,7 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   disabledClass: 'swiper-button-disabled',
                 }}
                 className="mySwiper"
-                onSlideChange={({ activeIndex }) =>
-                  setCurrentYear(years[activeIndex])
-                }
+                onSlideChange={({ activeIndex }) => setCurrentYear(years[activeIndex])}
                 onSwiper={setSwiper}
                 watchSlidesProgress
               >
@@ -182,6 +182,5 @@ const TwentiethPageSlide3Content = ({ slide }) => {
     </div>
   );
 };
-TwentiethPageSlide3Content.propTypes = {};
 
 export default TwentiethPageSlide3Content;

@@ -1,71 +1,54 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-const TwentiethPageSlide4Content = ({ slide }) => {
-  const [hideVideo, setHideVideo] = useState(true);
-
-  return (
-    <div className="slide-content">
-      <div className="container">
-        <div className="row justify-content-center text-center">
-          <div className="col-md-10 col-lg-8 slide-2">
-            {slide.title && <h1>{slide.title}</h1>}
-          </div>
+const TwentiethPageSlide4Content = ({ slide }) => (
+  <div className="slide-content">
+    <div className="container">
+      <div className="row justify-content-center text-center">
+        <div className="col-md-10 col-lg-8 slide-2">
+          {slide.title && <h1>{slide.title}</h1>}
         </div>
-        <div className="row justify-content-center">
-          <div className="col-md-8 col-lg-6 slide-2">
-            {slide.body &&
-              slide.body.map((block) => {
-                if (block.type === 'text') {
-                  return (
-                    <div
-                      key={uuidv4()}
-                      dangerouslySetInnerHTML={{ __html: block.value }}
+      </div>
+      <div className="row justify-content-center">
+        <div className="col-md-8 col-lg-6 slide-2">
+          {slide.body
+            && slide.body.map((block) => {
+              if (block.type === 'text') {
+                return (
+                  <div
+                    key={uuidv4()}
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: block.value }}
+                  />
+                );
+              }
+
+              if (block.type === 'video') {
+                return (
+                  <div key={uuidv4()} className="video-responsive">
+                    <iframe
+                      width="853"
+                      height="480"
+                      src={`https://www.youtube-nocookie.com/embed/${block.value.video_url}`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title="Embedded youtube"
                     />
-                  );
-                }
+                  </div>
+                );
+              }
 
-                if (block.type === 'video') {
-                  return (
-                    <div
-                      key={uuidv4()}
-                      className="video-responsive"
-                      onClick={() => setHideVideo(false)}
-                    >
-                      <div className="img-wrapper">
-                        <img src={block.value.video_image} alt="" />
-                      </div>
-                      <button type="button">
-                        <i className="fas fa-play" />
-                      </button>
-                      <iframe
-                        width="853"
-                        height="480"
-                        className={hideVideo ? 'hidden' : ''}
-                        src={`https://www.youtube-nocookie.com/embed/${
-                          block.value.video_url
-                        }${hideVideo ? '' : '?autoplay=1'}`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        title="Embedded youtube"
-                      />
-                    </div>
-                  );
-                }
-
-                if (block.type === 'separator') {
-                  return <hr key={uuidv4()} />;
-                }
-                return <div key={uuidv4()}>{block.value}</div>;
-              })}
-          </div>
+              if (block.type === 'separator') {
+                return <hr key={uuidv4()} />;
+              }
+              return <div key={uuidv4()}>{block.value}</div>;
+            })}
         </div>
       </div>
     </div>
-  );
-};
-TwentiethPageSlide4Content.propTypes = {};
+  </div>
+);
 
 export default TwentiethPageSlide4Content;

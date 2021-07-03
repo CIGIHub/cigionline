@@ -1,5 +1,5 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import TwentiethPageSlide1Content from './TwentiethPageSlide1Content';
 import TwentiethPageSlide2Content from './TwentiethPageSlide2Content';
 import TwentiethPageSlide3Content from './TwentiethPageSlide3Content';
