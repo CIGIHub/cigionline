@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/body.html" with body=self.body %}
+{% endblock content %}

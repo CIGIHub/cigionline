@@ -906,3 +906,29 @@ class IgcTimelineBlock(blocks.StructBlock):
         icon = 'arrows-up-down'
         label = 'IGC Timeline'
         template = 'streams/igc_timeline_block.html'
+
+
+class TimelineGalleryBlock(blocks.StructBlock):
+    timeline = blocks.StreamBlock(
+        [
+            ('slide', blocks.StructBlock(
+                [
+                    ('year', blocks.CharBlock()),
+                    ('text', blocks.RichTextBlock()),
+                    ('image', ImageChooserBlock()),
+                ]
+            ))
+        ],
+        required=False,
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        context['years'] = [x.value['year'] for x in value.get('timeline')]
+
+        return context
+
+    class Meta:
+        icon = 'image'
+        label = 'Timeline Gallery'
+        template = 'streams/timeline_gallery_block.html'
