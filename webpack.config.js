@@ -71,6 +71,7 @@ const config = {
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',
     twentiethPage: './cigionline/static/pages/twentieth_page/index.js',
+    twentiethPageSingleton: './cigionline/static/pages/twentieth_page_singleton/index.js',
   },
 
   devtool: 'source-map',

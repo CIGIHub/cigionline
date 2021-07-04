@@ -1,33 +1,35 @@
 {% load wagtailimages_tags %}
 
-<div class="container">
-  <div class="row d-block">
-    <div class="col col-lg-10 offset-lg-1">
-      <div class="timeline-gallery-block">
+<div class="timeline-gallery-block">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-lg-10 offset-lg-1">
         <ul className="timeline-nav">
           {% for year in years %}
-            <li><button>{{year}}</button></li>
+          <li><button>{{year}}</button></li>
           {% endfor %}
         </ul>
-
-        <div class="swiper-container">
-          <div class="swiper-wrapper">
-            {% for block in self.timeline %}
-              <div class="swiper-slide">
-                <div class="img-wrapper">
-                  {% image block.value.image original %}
-                </div>
-                <div>{{block.value.year}}</div>
-                <div>{{block.value.text}}</div>
-              </div>
-            {% endfor %}
-          </div>
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-scrollbar"></div>
-        </div>
       </div>
     </div>
+  </div>
+
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      {% for block in self.timeline %}
+      <div class="swiper-slide">
+        <div class="img-wrapper">
+          {% image block.value.image original %}
+        </div>
+        <div class="gallery-text">
+          <div>{{block.value.year}}</div>
+          <div>{{block.value.text}}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-scrollbar"></div>
   </div>
 </div>

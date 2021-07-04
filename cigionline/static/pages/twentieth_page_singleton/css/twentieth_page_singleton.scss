@@ -1,0 +1,20 @@
+@import '../../../css/global/mixins';
+
+.swiper-container {
+  .swiper-wrapper {
+    justify-content: center;
+
+    .swiper-slide {
+      &.swiper-slide-next,
+      &.swiper-slide-prev {
+        transition: width 1s ease;
+        width: 250px !important;
+
+        .gallery-text {
+          opacity: 0;
+          transition: opacity 1s ease;
+        }
+      }
+    }
+  }
+}
