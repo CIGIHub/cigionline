@@ -35,7 +35,7 @@ if (swiperContainer) {
   });
 
   swiper.on('activeIndexChange', function(e) {
-    for (let i = 0; i < timelineNavButtons.length; i++) {
+    for (let i = 0; i < timelineNavButtons.length; i += 1) {
       if (timelineNavButtons[i].dataset.year === years[e.activeIndex]) {
         [].map.call(timelineNavButtons, function(elem) {
           elem.classList.remove('active');
@@ -44,6 +44,6 @@ if (swiperContainer) {
       }
     }
 
-    swiperContainer.style.paddingBottom = `${60 + swiper.slides[e.activeIndex].querySelector('.gallery-text').offsetHeight}px`;
+    swiperContainer.style.paddingBottom = `${70 + swiper.slides[e.activeIndex].querySelector('.gallery-text').offsetHeight}px`;
   });
 }

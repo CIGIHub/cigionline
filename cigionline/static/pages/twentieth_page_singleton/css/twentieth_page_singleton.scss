@@ -1,11 +1,17 @@
 @import '../../../css/global/mixins';
 
+hr {
+  margin: 3em auto;
+  width: 50%;
+}
+
 .timeline-gallery-block {
   .timeline-nav {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin: 0.5em 0 1em;
+    padding-left: 0;
 
     li {
       font-size: 0.75em;
@@ -49,8 +55,9 @@
 
   .swiper-container {
     overflow: hidden visible;
-    padding-bottom: 166px;
+    padding-bottom: 176px;
     padding-top: 2em;
+    transition: padding-bottom 0.2s ease;
 
     .swiper-wrapper {
       align-items: center;
@@ -113,27 +120,27 @@
           }
         }
       }
+    }
 
-      .swiper-button-next,
-      .swiper-button-prev {
-        align-items: center;
-        color: $cigi-primary-colour;
-        cursor: pointer;
-        display: flex;
-        font-size: 5em;
-        justify-content: center;
-        position: absolute;
-        top: 40%;
-        z-index: 10;
-      }
+    .swiper-button-next,
+    .swiper-button-prev {
+      align-items: center;
+      color: $cigi-primary-colour;
+      cursor: pointer;
+      display: flex;
+      font-size: 5em;
+      justify-content: center;
+      position: absolute;
+      top: 25%;
+      z-index: 10;
+    }
 
-      .swiper-modal-button-next {
-        right: 0;
-      }
+    .swiper-button-next {
+      right: 25%;
+    }
 
-      .swiper-modal-button-prev {
-        left: 0;
-      }
+    .swiper-button-prev {
+      left: 25%;
     }
   }
 }
