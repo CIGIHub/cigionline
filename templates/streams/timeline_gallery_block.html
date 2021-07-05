@@ -1,12 +1,13 @@
 {% load wagtailimages_tags %}
+{{ years|json_script:'years' }}
 
 <div class="timeline-gallery-block">
   <div class="container">
     <div class="row d-block">
       <div class="col col-lg-10 offset-lg-1">
-        <ul className="timeline-nav">
+        <ul class="timeline-nav" id="timeline-nav">
           {% for year in years %}
-          <li><button>{{year}}</button></li>
+          <li><button data-year="{{year}}" {% if forloop.counter == 1 %}class="active"{% endif %}>{{year}}</button></li>
           {% endfor %}
         </ul>
       </div>
@@ -16,20 +17,18 @@
   <div class="swiper-container">
     <div class="swiper-wrapper">
       {% for block in self.timeline %}
-      <div class="swiper-slide">
-        <div class="img-wrapper">
-          {% image block.value.image original %}
+        <div class="swiper-slide">
+          <div class="img-wrapper">
+            {% image block.value.image original %}
+          </div>
+          <div class="gallery-text">
+            <div class="year">{{block.value.year}}</div>
+            <div class="caption">{{block.value.text}}</div>
+          </div>
         </div>
-        <div class="gallery-text">
-          <div>{{block.value.year}}</div>
-          <div>{{block.value.text}}</div>
-        </div>
-      </div>
       {% endfor %}
+      <div class="swiper-button-prev"><i className="fal fa-angle-left"></i></div>
+      <div class="swiper-button-next"><i className="fal fa-angle-right"></i></div>
     </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-scrollbar"></div>
   </div>
 </div>

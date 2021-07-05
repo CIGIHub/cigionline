@@ -1,19 +1,138 @@
 @import '../../../css/global/mixins';
 
-.swiper-container {
-  .swiper-wrapper {
+.timeline-gallery-block {
+  .timeline-nav {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    margin: 0.5em 0 1em;
 
-    .swiper-slide {
-      &.swiper-slide-next,
-      &.swiper-slide-prev {
-        transition: width 1s ease;
-        width: 250px !important;
+    li {
+      font-size: 0.75em;
+      list-style: none;
+
+      &:not(:last-child) {
+        &::after {
+          color: $cigi-primary-colour;
+          content: '/';
+          padding: 0 0.5em;
+        }
+      }
+
+      button {
+        color: $cigi-medium-grey;
+        position: relative;
+        transition: color 0.3s ease;
+
+        &::before {
+          background-color: $cigi-primary-colour;
+          bottom: 0;
+          content: '';
+          height: 0.2em;
+          position: absolute;
+          transition: width 300ms ease;
+          width: 0;
+        }
+
+        &:hover {
+          &::before {
+            width: 100%;
+          }
+        }
+
+        &.active {
+          color: $black;
+        }
+      }
+    }
+  }
+
+  .swiper-container {
+    overflow: hidden visible;
+    padding-bottom: 166px;
+    padding-top: 2em;
+
+    .swiper-wrapper {
+      align-items: center;
+
+      .swiper-slide {
+        opacity: 0;
+        transform: scale(0.7);
+        transition: opacity 1s ease, transform 1s ease, filter 1s ease;
+
+        .img-wrapper {
+          img {
+            border-radius: 15px;
+          }
+        }
 
         .gallery-text {
+          display: flex;
+          margin-top: 1em;
           opacity: 0;
+          position: absolute;
           transition: opacity 1s ease;
+
+          .year {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0 0.75em;
+            position: relative;
+            text-align: right;
+
+            &::before {
+              background-color: $cigi-primary-colour;
+              content: '';
+              height: 0.25em;
+              position: absolute;
+              top: 0.95em;
+              width: 100%;
+              z-index: -1;
+            }
+          }
+
+          .caption {
+            flex-basis: 90%;
+            font-size: 0.75em;
+            line-height: 1.3;
+          }
         }
+
+        &.swiper-slide-next,
+        &.swiper-slide-prev {
+          filter: grayscale(100%);
+          opacity: 0.7;
+        }
+
+        &.swiper-slide-active {
+          opacity: 1;
+          transform: scale(1.2);
+
+          .gallery-text {
+            opacity: 1;
+          }
+        }
+      }
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        align-items: center;
+        color: $cigi-primary-colour;
+        cursor: pointer;
+        display: flex;
+        font-size: 5em;
+        justify-content: center;
+        position: absolute;
+        top: 40%;
+        z-index: 10;
+      }
+
+      .swiper-modal-button-next {
+        right: 0;
+      }
+
+      .swiper-modal-button-prev {
+        left: 0;
       }
     }
   }
