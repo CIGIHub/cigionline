@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load webpack_loader wagtailimages_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'twentiethPageSingleton' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'twentiethPageSingleton' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/body.html" with body=self.body %}
+{% endblock content %}
