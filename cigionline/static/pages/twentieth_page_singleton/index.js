@@ -3,12 +3,19 @@ import 'swiper/swiper.scss';
 import Swiper, { Navigation, Pagination } from 'swiper';
 
 Swiper.use([Navigation, Pagination]);
+
 const swiperContainer = document.querySelector('.swiper-container');
 if (swiperContainer) {
   const swiper = new Swiper('.swiper-container', {
-    slidesPerView: 3,
+    slidesPerView: 1,
     spaceBetween: 0,
     centeredSlides: true,
+
+    breakpoints: {
+      768: {
+        slidesPerView: 3,
+      },
+    },
 
     navigation: {
       nextEl: '.swiper-button-next',
@@ -20,7 +27,16 @@ if (swiperContainer) {
     },
   });
 
-  const timelineNavButtons = document.querySelectorAll('#timeline-nav li button');
+  const setSwiperPadding = (slideIndex) => {
+    const offsetHeight = (screen.width > 768 ? 70 : 20);
+    swiperContainer.style.paddingBottom = `${
+      offsetHeight + swiper.slides[slideIndex].querySelector('.gallery-text').offsetHeight
+    }px`;
+  };
+
+  const timelineNavButtons = document.querySelectorAll(
+    '#timeline-nav li button',
+  );
   const years = JSON.parse(document.getElementById('years').textContent);
 
   const toggleYear = function() {
@@ -44,6 +60,9 @@ if (swiperContainer) {
       }
     }
 
-    swiperContainer.style.paddingBottom = `${70 + swiper.slides[e.activeIndex].querySelector('.gallery-text').offsetHeight}px`;
+    setSwiperPadding(e.activeIndex);
   });
+
+  setSwiperPadding(0);
+  window.addEventListener('resize', function() { setSwiperPadding(swiper.activeIndex); });
 }

@@ -1,7 +1,9 @@
 @import '../../../css/global/mixins';
 
 hr {
-  margin: 3em auto;
+  @include media-breakpoint-up(md) {
+    margin: 3em auto;
+  }
   width: 50%;
 }
 
@@ -48,6 +50,7 @@ hr {
 
         &.active {
           color: $black;
+          font-weight: 600;
         }
       }
     }
@@ -56,25 +59,30 @@ hr {
   .swiper-container {
     overflow: hidden visible;
     padding-bottom: 176px;
-    padding-top: 2em;
+    padding-top: 2.5vw;
     transition: padding-bottom 0.2s ease;
 
     .swiper-wrapper {
       align-items: center;
 
       .swiper-slide {
+        @include media-breakpoint-up(md) {
+          transform: scale(0.7);
+        }
         opacity: 0;
-        transform: scale(0.7);
         transition: opacity 1s ease, transform 1s ease, filter 1s ease;
 
         .img-wrapper {
           img {
-            border-radius: 15px;
+            @include media-breakpoint-up(md) {
+              border-radius: 15px;
+            }
           }
         }
 
         .gallery-text {
           display: flex;
+          margin-right: 18px;
           margin-top: 1em;
           opacity: 0;
           position: absolute;
@@ -112,8 +120,10 @@ hr {
         }
 
         &.swiper-slide-active {
+          @include media-breakpoint-up(md) {
+            transform: scale(1.2);
+          }
           opacity: 1;
-          transform: scale(1.2);
 
           .gallery-text {
             opacity: 1;
@@ -136,11 +146,17 @@ hr {
     }
 
     .swiper-button-next {
-      right: 25%;
+      @include media-breakpoint-up(md) {
+        right: 25%;
+      }
+      right: 0;
     }
 
     .swiper-button-prev {
-      left: 25%;
+      @include media-breakpoint-up(md) {
+        left: 25%;
+      }
+      left: 0;
     }
   }
 }
