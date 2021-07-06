@@ -32,8 +32,8 @@ if (swiperContainer) {
 
   const setSwiperPadding = (slideIndex) => {
     let offset;
-    if (screen.width > 768) {
-      offset = (screen.width > 2200) ? 100 : 80;
+    if (screen.width >= 768) {
+      offset = (screen.width > 2200) ? 100 : 70;
       swiperContainer.style.paddingBottom = `${
         offset
         + swiper.slides[slideIndex].querySelector('.gallery-text').offsetHeight
@@ -47,7 +47,7 @@ if (swiperContainer) {
     const swiperHeight = parseFloat(swiperWrapper.clientHeight)
       - parseFloat(swiper.slides[swiper.activeIndex].querySelector('.gallery-text')
         .offsetHeight);
-    if (screen.width > 768) {
+    if (screen.width >= 768) {
       timelineNavArrows.forEach((elem) => {
         elem.style.top = `${parseFloat(swiperWrapper.clientHeight) / 2}px`;
       });
