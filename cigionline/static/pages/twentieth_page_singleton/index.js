@@ -32,8 +32,15 @@ if (swiperContainer) {
 
   const setSwiperPadding = (slideIndex) => {
     let offset;
-    if (screen.width >= 768) {
-      offset = (screen.width > 2200) ? 100 : 70;
+    const screenWidth = screen.width;
+    if (screenWidth >= 768) {
+      if (screenWidth > 2200) {
+        offset = 100;
+      } else if (screenWidth > 1200) {
+        offset = 80;
+      } else {
+        offset = 70;
+      }
       swiperContainer.style.paddingBottom = `${
         offset
         + swiper.slides[slideIndex].querySelector('.gallery-text').offsetHeight
