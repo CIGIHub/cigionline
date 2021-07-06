@@ -68,7 +68,6 @@ hr {
 
   .swiper-container {
     cursor: grab;
-    overflow: hidden visible;
     padding-bottom: 176px;
     padding-top: 2.5vw;
     transition: padding-bottom 0.2s ease;
@@ -103,6 +102,9 @@ hr {
 
           .year {
             @include media-breakpoint-up(md) {
+              font-size: 1.25em;
+            }
+            @include media-breakpoint-up(lg) {
               font-size: 1.5em;
             }
             font-size: 1em;
@@ -125,6 +127,12 @@ hr {
             flex-basis: 90%;
             font-size: 0.75em;
             line-height: 1.3;
+
+            p {
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
           }
         }
 
