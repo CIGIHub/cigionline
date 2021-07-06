@@ -32,7 +32,7 @@ if (swiperContainer) {
 
   const setSwiperPadding = (slideIndex) => {
     const windowWidth = window.innerWidth;
-    const offset = windowWidth / 150 + 65;
+    const offset = windowWidth / 175 + 60;
     if (windowWidth >= 768) {
       swiperContainer.style.paddingBottom = `${
         offset

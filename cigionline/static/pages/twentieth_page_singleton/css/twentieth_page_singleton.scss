@@ -22,7 +22,7 @@ hr {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 0.5em 0 1em;
+    margin: -0.5em 0 1em;
     padding-left: 0;
 
     li {
@@ -67,6 +67,12 @@ hr {
   }
 
   .swiper-container {
+    @include media-breakpoint-up(md) {
+      margin-bottom: -0.25em;
+    }
+    @include media-breakpoint-up(lg) {
+      margin-bottom: -0.5em;
+    }
     cursor: grab;
     padding-bottom: 176px;
     padding-top: 2.5vw;
