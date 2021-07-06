@@ -1,9 +1,14 @@
 @import '../../../css/global/mixins';
 
+body {
+  margin-bottom: 2em;
+}
+
 hr {
   @include media-breakpoint-up(md) {
     margin: 3em auto;
   }
+  margin: 1em auto;
   width: 50%;
 }
 
@@ -81,19 +86,23 @@ hr {
         }
 
         .gallery-text {
+          @include media-breakpoint-up(md) {
+            position: absolute;
+          }
           display: flex;
           margin-right: 18px;
           margin-top: 1em;
           opacity: 0;
-          position: absolute;
           transition: opacity 1s ease;
 
           .year {
-            font-size: 1.5em;
+            @include media-breakpoint-up(md) {
+              font-size: 1.5em;
+            }
+            font-size: 1em;
             font-weight: 700;
             margin: 0 0.75em;
             position: relative;
-            text-align: right;
 
             &::before {
               background-color: $cigi-primary-colour;
@@ -134,14 +143,17 @@ hr {
 
     .swiper-button-next,
     .swiper-button-prev {
+      @include media-breakpoint-up(md) {
+        margin-top: -20px;
+      }
       align-items: center;
       color: $cigi-primary-colour;
       cursor: pointer;
       display: flex;
       font-size: 5em;
       justify-content: center;
+      margin-top: -40px;
       position: absolute;
-      top: 25%;
       z-index: 10;
     }
 
