@@ -32,11 +32,11 @@ if (swiperContainer) {
 
   const setSwiperPadding = (slideIndex) => {
     let offset;
-    const screenWidth = screen.width;
-    if (screenWidth >= 768) {
-      if (screenWidth > 2200) {
+    const windowWidth = window.innerWidth;
+    if (windowWidth >= 768) {
+      if (windowWidth > 2200) {
         offset = 100;
-      } else if (screenWidth > 1200) {
+      } else if (windowWidth > 1200) {
         offset = 80;
       } else {
         offset = 70;
@@ -54,7 +54,7 @@ if (swiperContainer) {
     const swiperHeight = parseFloat(swiperWrapper.clientHeight)
       - parseFloat(swiper.slides[swiper.activeIndex].querySelector('.gallery-text')
         .offsetHeight);
-    if (screen.width >= 768) {
+    if (window.innerWidth >= 768) {
       timelineNavArrows.forEach((elem) => {
         elem.style.top = `${parseFloat(swiperWrapper.clientHeight) / 2}px`;
       });
