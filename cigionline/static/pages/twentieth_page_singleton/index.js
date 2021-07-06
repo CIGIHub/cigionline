@@ -12,7 +12,7 @@ if (swiperContainer) {
     centeredSlides: true,
 
     breakpoints: {
-      768: {
+      992: {
         slidesPerView: 3,
       },
     },
@@ -33,7 +33,7 @@ if (swiperContainer) {
   const setSwiperPadding = (slideIndex) => {
     const windowWidth = window.innerWidth;
     const offset = windowWidth / 175 + 60;
-    if (windowWidth >= 768) {
+    if (windowWidth >= 992) {
       swiperContainer.style.paddingBottom = `${
         offset
         + swiper.slides[slideIndex].querySelector('.gallery-text').offsetHeight
@@ -47,7 +47,7 @@ if (swiperContainer) {
     const swiperHeight = parseFloat(swiperWrapper.clientHeight)
       - parseFloat(swiper.slides[swiper.activeIndex].querySelector('.gallery-text')
         .offsetHeight);
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 992) {
       timelineNavArrows.forEach((elem) => {
         elem.style.top = `${parseFloat(swiperWrapper.clientHeight) / 2}px`;
       });
