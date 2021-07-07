@@ -251,4 +251,14 @@
     border-color: $color-media;
     color: $color-media;
   }
+
+  &.icon-person {
+    border-color: $color-person;
+    color: $color-person;
+  }
+
+  &.icon-topic {
+    border-color: $color-topic;
+    color: $color-topic;
+  }
 }

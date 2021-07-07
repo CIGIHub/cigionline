@@ -7,7 +7,6 @@ from .search import cigi_search, cigi_search_promoted
 
 def process_item(page, request):
     fields = request.GET.getlist('field', [])
-
     item = {
         'highlights': page._highlights,
         'elevated': page._elevated,
@@ -35,6 +34,16 @@ def process_item(page, request):
                     'title': topic.title,
                     'url': topic.url,
                 } for topic in page.specific.topics.all()]
+            elif field == 'contenttype':
+                verbose_name = page.specific._meta.verbose_name
+                if verbose_name == 'Person Page':
+                    item['contenttype'] = 'Person'
+                elif verbose_name == 'Topic Page':
+                    item['contenttype'] = 'Topic'
+                elif verbose_name == 'Publication Series':
+                    item['contenttype'] = verbose_name
+                else:
+                    item['contenttype'] = getattr(page.specific, field)
             else:
                 item[field] = getattr(page.specific, field)
         except AttributeError:

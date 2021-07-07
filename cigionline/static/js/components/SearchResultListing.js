@@ -20,7 +20,8 @@ function SearchResultListing(props) {
           <i className="fal fa-play" />
         </span>
       )}
-      {row.contenttype === 'Multimedia Series' && row.contentsubtype === 'Multimedia Series' && (
+      {row.contenttype === 'Multimedia Series'
+        && row.contentsubtype === 'Multimedia Series' && (
         <span className="table-icon icon-multimedia">
           <i className="fal fa-play" />
         </span>
@@ -30,25 +31,39 @@ function SearchResultListing(props) {
           <i className="fal fa-headphones" />
         </span>
       )}
-      {row.contenttype === 'Publication' && (
-        <span className="table-icon icon-publication">
-          <i className="fal fa-file-alt" />
+      {row.contenttype === 'Publication'
+        || (row.contenttype === 'Publication Series' && (
+          <span className="table-icon icon-publication">
+            <i className="fal fa-file-alt" />
+          </span>
+        ))}
+      {row.contenttype === 'Person' && (
+        <span className="table-icon icon-person">
+          <i className="fal fa-user" />
         </span>
       )}
-      {['Opinion', 'CIGI in the News', 'Op-Eds', 'News Releases'].includes(row.contenttype) && (
+      {row.contenttype === 'Topic' && (
+        <span className="table-icon icon-topic">
+          <i className="fal fa-copy" />
+        </span>
+      )}
+      {['Opinion', 'CIGI in the News', 'Op-Eds', 'News Releases'].includes(
+        row.contenttype,
+      ) && (
         <span className="table-icon icon-opinion">
           <i className="fal fa-comment-dots" />
         </span>
       )}
       <div className="search-result-content">
         <ul className="topics custom-text-list feature-content-topic-list">
-          {row.topics && row.topics.map((topic) => (
-            <li key={`${row.id}-topic-${topic.id}`}>
-              <a href={topic.url} className="table-content-link">
-                {topic.title}
-              </a>
-            </li>
-          ))}
+          {row.topics
+            && row.topics.map((topic) => (
+              <li key={`${row.id}-topic-${topic.id}`}>
+                <a href={topic.url} className="table-content-link">
+                  {topic.title}
+                </a>
+              </li>
+            ))}
         </ul>
         <h2 className="search-result-title">
           <a href={row.url}>
@@ -58,21 +73,19 @@ function SearchResultListing(props) {
         </h2>
         {row.publishing_date && (
           <div className="search-result-meta">
-            {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
+            {DateTime.fromISO(row.publishing_date).toLocaleString(
+              DateTime.DATE_FULL,
+            )}
           </div>
         )}
         {row.contentsubtype && (
-          <div className="search-result-meta">
-            {row.contentsubtype}
-          </div>
+          <div className="search-result-meta">{row.contentsubtype}</div>
         )}
         {row.authors && (
           <ul className="custom-text-list search-result-meta">
             {row.authors.map((author) => (
               <li key={`${row.id}-author-${author.id}`}>
-                <a href={author.url}>
-                  {author.title}
-                </a>
+                <a href={author.url}>{author.title}</a>
               </li>
             ))}
           </ul>
@@ -80,7 +93,10 @@ function SearchResultListing(props) {
         {row.highlights && (
           <p className="search-result-highlight">
             {row.highlights.map((highlight, index) => (
-              <span key={`${row.id}-highlight-${index}`} dangerouslySetInnerHTML={{ __html: highlight }} />
+              <span
+                key={`${row.id}-highlight-${index}`}
+                dangerouslySetInnerHTML={{ __html: highlight }}
+              />
             ))}
           </p>
         )}
@@ -91,11 +107,13 @@ function SearchResultListing(props) {
 
 SearchResultListing.propTypes = {
   row: PropTypes.shape({
-    authors: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      type: PropTypes.string,
-      value: PropTypes.any,
-    })),
+    authors: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        type: PropTypes.string,
+        value: PropTypes.any,
+      }),
+    ),
     contentsubtype: PropTypes.string,
     contenttype: PropTypes.string,
     elevated: PropTypes.bool,
@@ -103,11 +121,13 @@ SearchResultListing.propTypes = {
     id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string,
-    topics: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      title: PropTypes.string,
-      url: PropTypes.string,
-    })),
+    topics: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        url: PropTypes.string,
+      }),
+    ),
     url: PropTypes.string,
   }).isRequired,
 };
