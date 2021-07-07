@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load webpack_loader core_tags wagtailimages_tags %}
+
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock%}
+
+{% block extra_css %}
+{% render_bundle 'twentiethPage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'twentiethPage' 'js' attrs='defer' %}
+  {{ self.slides_json|json_script:'slides' }}
+  {{ initial_slide|json_script:'initial-slide' }}
+  {{ self.slug|json_script:'page-url' }}
+  {{ self.title|social_string|json_script:'social-string' }}
+  {{ request.build_absolute_uri|slice:':-1'|json_script:'absolute-url' }}
+  
+{% endblock %}
+
+{% block body_class %}twentieth-page{% endblock %}
+
+{% block content %}
+  <div id='twentieth-page-slides' class='twentieth-page-slides'></div>
+{% endblock %}
+
+{% block header %}
+  {% include "includes/twentieth_page_top_bar.html" %}
+  <div id='slides-nav-arrows' class='slides-nav-arrows'></div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
