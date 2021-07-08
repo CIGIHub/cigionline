@@ -67,7 +67,7 @@
     {% endblock %}
     {% block article_content %}
       {% if self.body %}
-        {% if self.article_type.title == 'CIGI in the News' %}
+        {% if self.article_type.title == 'CIGI in the News' and not self.hide_excerpt %}
           <section class="body" id="article-body">
             <div class="container">
               <div class="row justify-content-center">

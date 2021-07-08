@@ -235,6 +235,11 @@ class ArticlePage(
         verbose_name='Hero Title Placement',
         help_text='Placement of the title within the hero section. Currently only works on the Longform 2 theme.',
     )
+    hide_excerpt = models.BooleanField(
+        default=False,
+        verbose_name='Hide Excerpt',
+        help_text='For "CIGI in the News" only: when enabled, hide excerpt and display full article instead',
+    )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -349,6 +354,7 @@ class ArticlePage(
                     'article_type',
                     ['articles.ArticleTypePage'],
                 ),
+                FieldPanel('hide_excerpt'),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
