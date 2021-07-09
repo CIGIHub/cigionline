@@ -3,8 +3,8 @@
 
 <div class="timeline-gallery-block">
   <div class="container">
-    <div class="row d-block">
-      <div class="col col-md-10 offset-md-1 col-lg-6 offset-lg-3">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8 col-xl-7">
         <ul class="timeline-nav" id="timeline-nav">
           {% for year in years %}
           <li><button data-year="{{year}}" {% if forloop.counter == 1 %}class="active"{% endif %}>{{year}}</button></li>
@@ -28,7 +28,7 @@
         </div>
       {% endfor %}
     </div>
-    <div class="swiper-button-prev"><i class="fal fa-angle-left"></i></div>
-    <div class="swiper-button-next"><i class="fal fa-angle-right"></i></div>
+    <div class="swiper-button-prev swiper-button"><i class="fal fa-angle-left"></i></div>
+    <div class="swiper-button-next swiper-button"><i class="fal fa-angle-right"></i></div>
   </div>
 </div>
