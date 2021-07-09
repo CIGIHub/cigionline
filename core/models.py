@@ -30,6 +30,7 @@ from streams.blocks import (
     TableStreamBlock,
     TextBackgroundBlock,
     TextBorderBlock,
+    TimelineGalleryBlock,
     TooltipBlock,
     TweetBlock,
     InlineVideoBlock,
@@ -603,6 +604,7 @@ class BasicPage(
         'core.BasicPage',
         'core.FundingPage',
         'core.TwentiethPage',
+        'core.TwentiethPageSingleton',
         'people.PersonListPage',
         'research.ProjectPage',
     ]
@@ -888,6 +890,60 @@ class SlidePage(Page):
 
     class Meta:
         verbose_name = 'Twentieth Page Slide'
+
+
+class TwentiethPageSingleton(
+    ContentPage,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+    body = StreamField(BasicPageAbstract.body_default_blocks + [
+        ('gallery', TimelineGalleryBlock())
+    ])
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                StreamFieldPanel('body'),
+            ]
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        )
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    templates = 'core/twentieth_page_singleton.html'
+
+    class Meta:
+        verbose_name = 'Twentieth Page Singleton'
 
 
 class Theme(models.Model):

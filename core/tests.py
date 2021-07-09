@@ -12,6 +12,7 @@ from .models import (
     FundingPage,
     PrivacyNoticePage,
     TwentiethPage,
+    TwentiethPageSingleton,
 )
 
 
@@ -31,7 +32,7 @@ class BasicPageTests(WagtailPageTests):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage, ProjectPage, TwentiethPage}
+            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage, ProjectPage, TwentiethPage, TwentiethPageSingleton}
         )
 
 
