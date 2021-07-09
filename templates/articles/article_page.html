@@ -67,35 +67,45 @@
     {% endblock %}
     {% block article_content %}
       {% if self.body %}
-        {% if self.article_type.title == 'CIGI in the News' and not self.hide_excerpt %}
+        {% if self.article_type.title == 'CIGI in the News' %}
           <section class="body" id="article-body">
-            <div class="container">
-              <div class="row justify-content-center">
-                <div class="col col-md-10 col-lg-8">
-                  <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
+            {% if self.hide_excerpt %}
+              {% for block in self.body %}
+                {% include_block block %}
+              {% endfor %}
+            {% else %}
+              <div class="container">
+                <div class="row justify-content-center">
+                  <div class="col col-md-10 col-lg-8">
+                    <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
+                  </div>
                 </div>
               </div>
-            </div>
-            {{ self.body|truncatewords_html:100 }}
-            <div class="container">
-              <div class="row justify-content-center">
-                <div class="col col-md-10 col-lg-8">
-                  <p class="text-center">* * *</p>
+              {{ self.body|truncatewords_html:100 }}
+              <div class="container">
+                <div class="row justify-content-center">
+                  <div class="col col-md-10 col-lg-8">
+                    <p class="text-center">* * *</p>
+                  </div>
                 </div>
               </div>
-              <div class="row justify-content-center">
-                <div class="col col-md-10 col-lg-8 text-center">
-                  <a class="button-action" href="{{self.website_url}}">
-                    <i class="fas fa-external-link-alt"></i>
-                    {% if self.website_button_text %}
-                      {{ self.website_button_text }}
-                    {% else %}
-                      View Full Article
-                    {% endif %}
-                  </a>
+            {% endif %}
+            {% if self.website_url %}
+              <div class="container">
+                <div class="row justify-content-center">
+                  <div class="col col-md-10 col-lg-8 text-center">
+                    <a class="button-action" href="{{self.website_url}}">
+                      <i class="fas fa-external-link-alt"></i>
+                      {% if self.website_button_text %}
+                        {{ self.website_button_text }}
+                      {% else %}
+                        View Full Article
+                      {% endif %}
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
+            {% endif %}
           </section>
         {% else %}
           {% include "includes/body.html" with body=self.body %}
