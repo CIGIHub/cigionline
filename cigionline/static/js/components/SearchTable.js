@@ -561,7 +561,7 @@ class SearchTable extends React.Component {
     return (
       <div className="row search-table-container">
         {showSearch && (
-          <div className="search-table col-12 d-block d-md-none">
+          <div className="search-table search-table-mobile col-12 d-block d-md-none">
             {this.renderSearchBar(showSidebar)}
           </div>
         )}
@@ -569,7 +569,7 @@ class SearchTable extends React.Component {
         && (
           <div className="search-filters col-md-3">
             {!hideTopicDropdown && (
-              <div className="dropdown custom-dropdown keep-open">
+              <div className="dropdown custom-dropdown dropdown-topics keep-open">
                 <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Topics
                 </button>
@@ -579,7 +579,7 @@ class SearchTable extends React.Component {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="search of a topic"
+                        placeholder="search topics"
                         onKeyUp={(e) => this.handleTopicsFilter(e)}
                       />
                       <div className="input-group-append">

@@ -1,14 +1,22 @@
-@import '../global/variables';
+@import '../global/mixins';
 
 .search-filters {
   .dropdown {
     margin-bottom: 12px;
+
+    &.dropdown-topics {
+      .dropdown-menu {
+        &.show {
+          border-bottom: 1em solid $white;
+          height: 300px;
+        }
+      }
+    }
   }
 
   .dropdown-menu {
     &.show {
-      border-bottom: 1em solid $white;
-      height: 300px;
+      height: auto;
       margin: 0 0 2em;
       overflow-y: scroll;
       position: relative !important;
@@ -38,6 +46,9 @@
   }
 
   .columns-2 {
+    @include media-breakpoint-only(md) {
+      column-count: 1;
+    }
     column-count: 2;
   }
 
@@ -55,11 +66,10 @@
     }
 
     input {
-
       &[type='checkbox'] {
         display: none;
 
-        &+span {
+        & + span {
           border: 1px solid $black;
           cursor: pointer;
           display: inline-block;
@@ -80,7 +90,7 @@
         }
 
         &.partial {
-          &+span {
+          & + span {
             &::after {
               background-color: $color--blue;
               opacity: 0.42;
@@ -89,7 +99,7 @@
         }
 
         &:checked {
-          &+span {
+          & + span {
             &::after {
               background-color: $color--blue;
               opacity: 1;
@@ -141,9 +151,12 @@
 }
 
 .search-table {
-
   margin-bottom: 4em;
   position: relative;
+
+  &.search-table-mobile {
+    margin-bottom: 0;
+  }
 
   .search-table-scroll {
     height: 0;
@@ -163,7 +176,7 @@
     transition: opacity 1s;
 
     &.loading {
-      opacity: .5;
+      opacity: 0.5;
     }
   }
 
