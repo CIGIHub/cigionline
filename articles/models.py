@@ -395,7 +395,7 @@ class ArticlePage(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
-                InlinePanel('cigi_people_mentioned'),
+                InlinePanel('cigi_people_mentioned', label='People Mentioned'),
                 StreamFieldPanel('interviewers'),
                 StreamFieldPanel('related_files'),
             ],
