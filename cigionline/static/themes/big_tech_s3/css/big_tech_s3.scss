@@ -10,15 +10,15 @@ $bigtech-light-grey: #b1b1b1;
   width: $width;
 }
 
-@import '../../../css/global/mixins';
-@import '../../../css/global/animations/slide_down';
+@import "../../../css/global/mixins";
+@import "../../../css/global/animations/slide_down";
 
-@import './big_tech_s3_article';
-@import './big_tech_s3_multimedia';
-@import './big_tech_s3_multimedia_series';
+@import "./big_tech_s3_article";
+@import "./big_tech_s3_multimedia";
+@import "./big_tech_s3_multimedia_series";
 
 .big-tech-s3-theme {
-  font-family: 'nunito-sans', sans-serif;
+  font-family: "nunito-sans", sans-serif;
 
   header,
   main {
@@ -32,7 +32,8 @@ $bigtech-light-grey: #b1b1b1;
       text-transform: uppercase;
     }
 
-    p, li {
+    p,
+    li {
       font-size: 0.875em;
     }
   }
@@ -61,7 +62,7 @@ $bigtech-light-grey: #b1b1b1;
   }
 
   .big-tech-hero {
-    background-image: url('../../../assets/bigtech_s3_background.png');
+    background-image: url("../../../assets/bigtech_s3_background.png");
     background-position: top;
     margin-bottom: 3em;
   }
@@ -283,9 +284,9 @@ $bigtech-light-grey: #b1b1b1;
       &::after {
         align-items: center;
         border: 0;
-        content: '\f078';
+        content: "\f078";
         display: inline-flex;
-        font-family: 'Font Awesome 5 Pro';
+        font-family: "Font Awesome 5 Pro";
         height: 100%;
         margin-left: 0;
         transform: rotate(0deg);
@@ -294,7 +295,7 @@ $bigtech-light-grey: #b1b1b1;
         width: 0.75em;
       }
 
-      &[aria-expanded='true'] {
+      &[aria-expanded="true"] {
         &::after {
           transform: rotate(180deg);
         }
