@@ -1,5 +1,5 @@
 anyascii==0.2.0
-asgiref==3.3.4
+asgiref==3.4.1
 astroid==2.5.6
 beautifulsoup4==4.9.3
 boto3==1.17.68
