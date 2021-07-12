@@ -18,7 +18,7 @@ django-ical==1.8.0
 django-libsass==0.8
 django-modelcluster==5.1
 django-recurrence==1.10.3
-django-redis==4.12.1
+django-redis==5.0.0
 django-sendgrid-v5==0.9.1
 django-storages==1.11.1
 django-taggit==1.5.1
