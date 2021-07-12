@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% load webpack_loader wagtailimages_tags %}
 
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock%}
+
 {% block extra_css %}
   {% render_bundle 'twentiethPageSingleton' 'css' %}
 {% endblock %}
