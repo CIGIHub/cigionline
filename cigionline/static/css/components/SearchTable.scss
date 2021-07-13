@@ -12,103 +12,113 @@
         }
       }
     }
-  }
 
-  .dropdown-menu {
-    &.show {
-      height: auto;
-      margin: 0 0 2em;
-      overflow-y: scroll;
-      position: relative !important;
-      transform: none !important;
-      z-index: 14;
+    .dropdown-menu {
+      &.show {
+        height: auto;
+        margin: 0 0 2em;
+        overflow-y: scroll;
+        position: relative !important;
+        transform: none !important;
+        z-index: 14;
 
-      .topic-filter {
-        background-color: $white;
-        display: block;
-        padding: 1em 0.75em 0.5em;
-        position: sticky;
-        top: 0;
-        z-index: 2;
+        .topic-filter {
+          background-color: $white;
+          display: block;
+          padding: 1em 0.75em 0.5em;
+          position: sticky;
+          top: 0;
+          z-index: 2;
 
-        input {
-          &::placeholder {
-            color: $cigi-medium-light-grey;
-            font-size: 0.75em;
-            text-transform: uppercase;
-          }
-        }
-
-        .btn-search {
-          color: $cigi-medium-grey;
-        }
-      }
-    }
-  }
-
-  .columns-2 {
-    @include media-breakpoint-only(md) {
-      column-count: 1;
-    }
-    column-count: 2;
-  }
-
-  .dropdown-item {
-    padding-left: 1em;
-    padding-right: 1em;
-
-    .dropdown-item {
-      font-size: 1em;
-    }
-
-    label {
-      cursor: pointer;
-      margin-bottom: 0;
-
-      &.inactive {
-        color: $cigi-medium-grey;
-        pointer-events: none;
-      }
-    }
-
-    input {
-      &[type='checkbox'] {
-        display: none;
-
-        & + span {
-          border: 1px solid $black;
-          cursor: pointer;
-          display: inline-block;
-          height: 12px;
-          margin-right: 0.5em;
-          position: relative;
-          vertical-align: sub;
-          width: 12px;
-
-          &::after {
-            content: '';
-            height: 8px;
-            left: 1px;
-            position: absolute;
-            top: 1px;
-            width: 8px;
-          }
-        }
-
-        &.partial {
-          & + span {
-            &::after {
-              background-color: $color--blue;
-              opacity: 0.42;
+          input {
+            &::placeholder {
+              color: $cigi-medium-light-grey;
+              font-size: 0.75em;
+              text-transform: uppercase;
             }
           }
+
+          .btn-search {
+            color: $cigi-medium-grey;
+          }
+        }
+      }
+    }
+
+    .columns-2 {
+      @include media-breakpoint-only(md) {
+        column-count: 1;
+      }
+      column-count: 2;
+    }
+
+    .dropdown-item {
+      @include media-breakpoint-up(lg) {
+        font-size: 0.8em;
+      }
+      padding-bottom: 0;
+      padding-left: 1em;
+      padding-right: 1em;
+
+      .dropdown-item {
+        font-size: 1em;
+      }
+
+      label {
+        align-items: center;
+        cursor: pointer;
+        display: flex;
+        margin-bottom: 0;
+
+        &.inactive {
+          color: $cigi-medium-grey;
+          pointer-events: none;
         }
 
-        &:checked {
+        span {
+          flex-shrink: 0;
+        }
+      }
+
+      input {
+        &[type='checkbox'] {
+          display: none;
+
           & + span {
+            border: 1px solid $black;
+            cursor: pointer;
+            display: inline-block;
+            height: 12px;
+            margin-right: 0.5em;
+            position: relative;
+            vertical-align: sub;
+            width: 12px;
+
             &::after {
-              background-color: $color--blue;
-              opacity: 1;
+              content: '';
+              height: 8px;
+              left: 1px;
+              position: absolute;
+              top: 1px;
+              width: 8px;
+            }
+          }
+
+          &.partial {
+            & + span {
+              &::after {
+                background-color: $color--blue;
+                opacity: 0.42;
+              }
+            }
+          }
+
+          &:checked {
+            & + span {
+              &::after {
+                background-color: $color--blue;
+                opacity: 1;
+              }
             }
           }
         }
