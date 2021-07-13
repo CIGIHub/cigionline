@@ -433,6 +433,11 @@ class SearchTable extends React.Component {
     }, this.getRows);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  toggleDropdown(e) {
+    e.target.nextSibling.classList.toggle('show');
+  }
+
   renderSelectedFilters() {
     const {
       topics,
@@ -570,7 +575,7 @@ class SearchTable extends React.Component {
           <div className="search-filters col-md-3">
             {!hideTopicDropdown && (
               <div className="dropdown custom-dropdown dropdown-topics keep-open">
-                <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button className="dropdown-toggle" type="button" id="search-bar-topics" onClick={(e) => this.toggleDropdown(e)} aria-haspopup="true" aria-expanded="false">
                   Topics
                 </button>
                 <div className="dropdown-menu pt-0" aria-labelledby="search-bar-topics">
@@ -593,7 +598,7 @@ class SearchTable extends React.Component {
                     <ul>
                       { this.dropdownTopics.filter((topic) => topicsFilter === '' || topic.title.toLowerCase().includes(topicsFilter.toLowerCase())).map((topic) => (
                         <li className="dropdown-item" key={`topic-${topic.id}`}>
-                          <label htmlFor={`topic-${topic.id}`} className="keep-open">
+                          <label htmlFor={`topic-${topic.id}`} className={`keep-open ${!aggregations.topics[topic.id] ? 'inactive' : ''}`}>
                             <input
                               id={`topic-${topic.id}`}
                               type="checkbox"
@@ -629,7 +634,7 @@ class SearchTable extends React.Component {
             )}
             {!loadingTypes && filterTypes.length > 0 && (
               <div className="dropdown custom-dropdown keep-open">
-                <button className="dropdown-toggle" type="button" id="search-bar-types" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button className="dropdown-toggle" type="button" id="search-bar-types" onClick={(e) => this.toggleDropdown(e)} aria-haspopup="true" aria-expanded="false">
                   Types
                 </button>
                 <div className="dropdown-menu w-100" aria-labelledby="search-bar-types">
@@ -638,7 +643,7 @@ class SearchTable extends React.Component {
                       if (!Object.keys(type).includes('parent')) {
                         return (
                           <li className="dropdown-item" key={`type-${type.name.replace(' ', '_')}`}>
-                            <label htmlFor={`input_type_${type.name}`} className="keep-open">
+                            <label htmlFor={`input_type_${type.name}`} className={`keep-open ${!this.getAggregationCount(type) ? 'inactive' : ''}`}>
                               <input
                                 id={`input_type_${type.name}`}
                                 type="checkbox"
@@ -664,7 +669,7 @@ class SearchTable extends React.Component {
                               <ul>
                                 { this.getSubTypes(type.name).map((subtype) => (
                                   <li className="dropdown-item" key={`subtype-${subtype.name.replace(' ', '_')}`}>
-                                    <label htmlFor={`input_${type.name}_${subtype.name}`} className="keep-open">
+                                    <label htmlFor={`input_${type.name}_${subtype.name}`} className={`keep-open ${!this.getAggregationCount(subtype) ? 'inactive' : ''}`}>
                                       <input
                                         id={`input_${type.name}_${subtype.name}`}
                                         type="checkbox"
@@ -699,7 +704,7 @@ class SearchTable extends React.Component {
             )}
 
             <div className="dropdown custom-dropdown keep-open">
-              <button className="dropdown-toggle" type="button" id="search-bar-years" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button className="dropdown-toggle" type="button" id="search-bar-years" onClick={(e) => this.toggleDropdown(e)} aria-haspopup="true" aria-expanded="false">
                 Years
               </button>
               <div className="dropdown-menu" aria-labelledby="search-bar-years">
@@ -707,7 +712,7 @@ class SearchTable extends React.Component {
                   <ul className="columns-2">
                     { years.map((year) => (
                       <li className="dropdown-item" key={`year-${year}`}>
-                        <label htmlFor={`year-${year}`} className="keep-open">
+                        <label htmlFor={`year-${year}`} className={`keep-open ${!aggregations.years[year] ? 'inactive' : ''}`}>
                           <input
                             type="checkbox"
                             id={`year-${year}`}

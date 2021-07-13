@@ -21,6 +21,7 @@
       overflow-y: scroll;
       position: relative !important;
       transform: none !important;
+      z-index: 14;
 
       .topic-filter {
         background-color: $white;
@@ -63,6 +64,11 @@
     label {
       cursor: pointer;
       margin-bottom: 0;
+
+      &.inactive {
+        color: $cigi-medium-grey;
+        pointer-events: none;
+      }
     }
 
     input {

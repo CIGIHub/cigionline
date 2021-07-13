@@ -31,12 +31,11 @@ function SearchResultListing(props) {
           <i className="fal fa-headphones" />
         </span>
       )}
-      {row.contenttype === 'Publication'
-        || (row.contenttype === 'Publication Series' && (
-          <span className="table-icon icon-publication">
-            <i className="fal fa-file-alt" />
-          </span>
-        ))}
+      {['Publication', 'Publication Series'].includes(row.contenttype) && (
+        <span className="table-icon icon-publication">
+          <i className="fal fa-file-alt" />
+        </span>
+      )}
       {row.contenttype === 'Person' && (
         <span className="table-icon icon-person">
           <i className="fal fa-user" />
