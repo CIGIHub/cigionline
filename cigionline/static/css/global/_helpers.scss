@@ -261,4 +261,14 @@
     border-color: $color-topic;
     color: $color-topic;
   }
+
+  &.icon-opinion-series {
+    border-color: $color-opinion;
+    color: $color-opinion;
+  }
+
+  &.icon-activity {
+    border-color: $color-activity;
+    color: $color-activity;
+  }
 }

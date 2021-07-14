@@ -1,3 +1,4 @@
+from newsletters.models import NewsletterPage
 from wagtail.core.models import Page
 from wagtail.search.backends import get_search_backend
 from wagtail.search.backends.elasticsearch7 import (
@@ -166,7 +167,7 @@ class CIGIOnlineSearchQueryCompiler:
 
     @property
     def queryset(self):
-        return Page.objects.live()
+        return Page.objects.not_type(NewsletterPage).live()
 
     def get_query(self):
         if self.searchtext:
@@ -313,6 +314,7 @@ class CIGIOnlineElevatedElasticsearchResults(Elasticsearch7SearchResults):
         # Get pks from results
         pks = [hit['fields']['pk'][0] for hit in hits]
         scores = {str(hit['fields']['pk'][0]): hit['_score'] for hit in hits}
+        print(scores)
         highlights = {}
         elevated = {}
 
@@ -388,7 +390,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
 
     @property
     def queryset(self):
-        return Page.objects.live()
+        return Page.objects.not_type(NewsletterPage).live()
 
     def get_query(self):
         if self.searchtext:

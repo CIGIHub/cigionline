@@ -53,6 +53,16 @@ function SearchResultListing(props) {
           <i className="fal fa-comment-dots" />
         </span>
       )}
+      {row.contenttype === 'Opinion Series' && (
+        <span className="table-icon icon-opinion-series">
+          <i className="fal fa-comments" />
+        </span>
+      )}
+      {row.contenttype === 'Activity' && (
+        <span className="table-icon icon-activity">
+          <i className="fal fa-file-search" />
+        </span>
+      )}
       <div className="search-result-content">
         <ul className="topics custom-text-list feature-content-topic-list">
           {row.topics
@@ -79,6 +89,9 @@ function SearchResultListing(props) {
         )}
         {row.contentsubtype && (
           <div className="search-result-meta">{row.contentsubtype}</div>
+        )}
+        {!row.contentsubtype && row.contenttype && (
+          <div className="search-result-meta">{row.contenttype}</div>
         )}
         {row.authors && (
           <ul className="custom-text-list search-result-meta">
