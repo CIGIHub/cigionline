@@ -189,6 +189,7 @@ class ArticlePage(
             BasicPageAbstract.body_embedded_tiktok_block,
             BasicPageAbstract.body_external_quote_block,
             BasicPageAbstract.body_external_video_block,
+            BasicPageAbstract.body_extract_block,
             BasicPageAbstract.body_highlight_title_block,
             BasicPageAbstract.body_image_full_bleed_block,
             BasicPageAbstract.body_image_scroll_block,
