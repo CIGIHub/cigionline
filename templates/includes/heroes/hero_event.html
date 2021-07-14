@@ -47,7 +47,7 @@
             <li class="dropdown-button-list">
               <button class="button">Add to Calendar <i class="fas fa-chevron-down"></i></button>
               <ul>
-                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ title }}&amp;dates={{date|date:'c'}}&amp;ctz=America/Toronto&amp;details=More Event Information: {{ request.build_absolute_uri|slice:':-1' }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" class="cal_google">Google</a></li>
+                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ title }}&amp;dates={{date|date:'Ymd His'}}/{{end_date|date:'Ymd His'}}&amp;ctz=America/Toronto&amp;details=More Event Information: {{ request.build_absolute_uri|slice:':-1' }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" class="cal_google">Google</a></li>
                 <li><a href="/events/feed.ics?id={{self.id}}">Outlook</a></li>
                 <li><a href="/events/feed.ics?id={{self.id}}">iCal</a></li>
               </ul>
