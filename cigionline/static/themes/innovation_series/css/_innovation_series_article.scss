@@ -113,7 +113,8 @@
     }
 
     .container {
-      &:first-child {
+      &:first-child,
+      &:nth-child(2) {
         .stream-image-block {
           float: left;
           margin: 10px 10px 0 0;
