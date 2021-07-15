@@ -263,10 +263,12 @@ class SearchTable extends React.Component {
     fetch(encodeURI(uri))
       .then((res) => res.json())
       .then((data) => {
+        const rows = data.items.filter((v, i, a) => a.findIndex((t) => (t.id === v.id)) === i);
+
         this.setState(() => ({
           loading: false,
           loadingInitial: false,
-          rows: data.items,
+          rows,
           aggregations: data.meta.aggregations,
           totalRows: data.meta.total_count,
         }));
