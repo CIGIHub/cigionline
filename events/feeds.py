@@ -32,10 +32,16 @@ class EventFeed(ICalFeed):
         can pass `return item.publishing_date` instead
         - This applies to item.event_end as well
         '''
-        return item.publishing_date.astimezone(pytz.timezone('America/Toronto')).replace(tzinfo=pytz.timezone(item.time_zone))
+        if item.time_zone == '' or not item.time_zone:
+            return item.publishing_date
+        else:
+            return item.publishing_date.astimezone(pytz.timezone('America/Toronto')).replace(tzinfo=pytz.timezone(item.time_zone))
 
     def item_end_datetime(self, item):
-        return item.event_end.astimezone(pytz.timezone('America/Toronto')).replace(tzinfo=pytz.timezone(item.time_zone))
+        if item.time_zone == '' or not item.time_zone:
+            return item.event_end
+        else:
+            return item.event_end.astimezone(pytz.timezone('America/Toronto')).replace(tzinfo=pytz.timezone(item.time_zone))
 
     def item_link(self, item):
         return item.url

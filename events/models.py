@@ -19,6 +19,7 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
+import pytz
 
 
 class EventListPage(BasicPageAbstract, Page):
@@ -152,7 +153,12 @@ class EventPage(
         ],
         blank=True,
     )
-    time_zone = models.CharField(blank=True, max_length=64)
+    time_zone = models.CharField(
+        blank=True,
+        max_length=64,
+        choices=list(zip(pytz.common_timezones, pytz.common_timezones)),
+        default='America/Toronto'
+    )
     twitter_hashtag = models.CharField(blank=True, max_length=64)
     website_button_text = models.CharField(
         blank=True,
