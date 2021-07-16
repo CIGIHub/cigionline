@@ -22,10 +22,10 @@ class EventFeed(ICalFeed):
 
     def item_start_datetime(self, item):
         '''
-        - The datetime value entered in EventPage is currently assumed tzinfo="America/Toronto", 
+        - The datetime value entered in EventPage is currently assumed tzinfo="America/Toronto",
         regardless of the "time_zone" field specified; eg. "07:00:00AM America/Los_Angelos"
         - This is then converted to UTC and stored as "publishing_date"; eg. "11:00:00 (during daylight saving)."
-        - So to allow specifying different timezones for the "time_zone" field, we need to first 
+        - So to allow specifying different timezones for the "time_zone" field, we need to first
         convert "publishing_date" from UTC back to "America/Toronto", then replace tzinfo with "item_zone"
         - If in the future, "publishing_date" is fixed to have user-specified timezone instead,
         this conversion and replacement would be unnecessary (and incorrect);
