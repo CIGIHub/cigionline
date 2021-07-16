@@ -19,7 +19,6 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
-import pytz
 
 
 class EventListPage(BasicPageAbstract, Page):
@@ -120,6 +119,32 @@ class EventPage(
         INVITATION_ONLY = (1, 'Invitation Only')
         NO_RSVP = (2, 'No RSVP Required')
 
+    class EventTimeZones(models.TextChoices):
+        HAWAII = ('US/Hawaii', '(UTC-10:00) Hawaiian Time')
+        LOS_ANGELES = ('America/Los_Angeles', '(UTC-07:00/08:00) Pacific Time')
+        MEXICO_CITY = ('America/Mexico_City', '(UTC-05:00/06:00) Central Time (Mexico)')
+        TORONTO = ('America/Toronto', '(UTC-04:00/05:00) Eastern Time')
+        CARACAS = ('America/Caracas', '(UTC-04:30) Venezuela Time')
+        HALIFAX = ('America/Halifax', '(UTC-03:00/04:00) Atlantic Time')
+        SAO_PAULO = ('America/Sao_Paulo', '(UTC-03:00) E. South America Time')
+        CAPE_VERDE = ('Atlantic/Cape_Verde', '(UTC-01:00) Cape Verde Time')
+        LONDON = ('Europe/London', '(UTC+00:00/01:00) GMT Time')
+        BERLIN = ('Europe/Berlin', '(UTC+01:00/02:00) Central Europe Time')
+        BEIRUT = ('Asia/Beirut', '(UTC+02:00/03:00) Middle East Time')
+        TEHRAN = ('Asia/Tehran', '(UTC+03:30/04:30) Iran Time')
+        MOSCOW = ('Europe/Moscow', '(UTC+03:00) Russian Time')
+        KABUL = ('Asia/Kabul', '(UTC+04:30) Afghanistan Time')
+        DUBAI = ('Asia/Dubai', '(UTC+04:00) Arabian Time')
+        KATHMANDU = ('Asia/Kathmandu', '(UTC+05:45) Nepal Time')
+        KOLKATA = ('Asia/Kolkata', '(UTC+05:30) India Time')
+        ASHGABAT = ('Asia/Ashgabat', '(UTC+05:00) West Asia Time')
+        YANGON = ('Asia/Yangon', '(UTC+06:30) Myanmar Time')
+        BANGKOK = ('Asia/Bangkok', '(UTC+07:00) SE Asia Time')
+        SHANGHAI = ('Asia/Shanghai', '(UTC+08:00) China Time')
+        TOKYO = ('Asia/Tokyo', '(UTC+09:00) Tokyo Time')
+        SYDNEY = ('Australia/Sydney', '(UTC+10:00/11:00) AUS Eastern Time')
+        AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
+
     embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
@@ -156,8 +181,8 @@ class EventPage(
     time_zone = models.CharField(
         blank=True,
         max_length=64,
-        choices=list(zip(pytz.common_timezones, pytz.common_timezones)),
-        default='America/Toronto'
+        choices=EventTimeZones.choices,
+        default=EventTimeZones.TORONTO,
     )
     twitter_hashtag = models.CharField(blank=True, max_length=64)
     website_button_text = models.CharField(
@@ -182,6 +207,14 @@ class EventPage(
             return self.event_end < now
         else:
             return self.publishing_date < now
+
+    def time_zone_label(self):
+        # splitting and joining the label by ' ' to remove (UTC-offset)
+        label = ' '.join(self.EventTimeZones.TORONTO.label.split(' ')[1:])
+        for i in range(len(self.EventTimeZones.choices)):
+            if self.EventTimeZones.values[i] == self.time_zone:
+                label = ' '.join(self.EventTimeZones.labels[i].split(' ')[1:])
+        return label
 
     content_panels = [
         BasicPageAbstract.title_panel,
