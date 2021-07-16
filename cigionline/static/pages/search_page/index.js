@@ -145,11 +145,11 @@ ReactDOM.render(
         value: 'Opinion',
       }],
     }, {
-      name: 'CIGI In the News',
+      name: 'CIGI in the News',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
-        value: 'CIGI In the News',
+        value: 'CIGI in the News',
       }],
     }, {
       name: 'News Releases',
