@@ -18,9 +18,15 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                 "fragment_size": 256,
             }
             body['aggregations'] = {
-                "topics": {
+                "topics_contentpage": {
                     "terms": {
                         "field": "core_contentpage__topics_filter",
+                        "size": 50,
+                    }
+                },
+                "topics_personpage": {
+                    "terms": {
+                        "field": "people_personpage__topics_filter",
                         "size": 50,
                     }
                 },
@@ -164,6 +170,7 @@ class CIGIOnlineSearchQueryCompiler:
             self.eventaccess = eventaccess
         if years is not None:
             self.years = years
+        print(self.topics)
 
     @property
     def queryset(self):
@@ -217,9 +224,26 @@ class CIGIOnlineSearchQueryCompiler:
             })
         if self.topics:
             filters.append({
-                "terms": {
-                    "core_contentpage__topics_filter": self.topics,
-                },
+                "bool": {
+                    "must": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "terms": {
+                                            "people_personpage__topics_filter": self.topics,
+                                        }
+                                    },
+                                    {
+                                        "terms": {
+                                            "core_contentpage__topics_filter": self.topics,
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
             })
         if self.articletypeid:
             filters.append({
@@ -314,7 +338,6 @@ class CIGIOnlineElevatedElasticsearchResults(Elasticsearch7SearchResults):
         # Get pks from results
         pks = [hit['fields']['pk'][0] for hit in hits]
         scores = {str(hit['fields']['pk'][0]): hit['_score'] for hit in hits}
-        print(scores)
         highlights = {}
         elevated = {}
 
