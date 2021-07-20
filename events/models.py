@@ -19,6 +19,9 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
+import datetime
+import pytz
+import re
 
 
 class EventListPage(BasicPageAbstract, Page):
@@ -120,31 +123,35 @@ class EventPage(
         NO_RSVP = (2, 'No RSVP Required')
 
     class EventTimeZones(models.TextChoices):
+        def tz_offset(tz):
+            offset = datetime.datetime.now(pytz.timezone(tz)).strftime('%z')
+            return '(UTC' + offset[:3] + ':' + offset[3:] + ')'
+
         HAWAII = ('US/Hawaii', '(UTC-10:00) Hawaiian Time')
-        LOS_ANGELES = ('America/Los_Angeles', '(UTC-07:00/08:00) Pacific Time')
-        DENVER = ('America/Denver', '(UTC-06:00/07:00) Mountain Time')
-        MEXICO_CITY = ('America/Mexico_City', '(UTC-05:00/06:00) Central Time')
-        TORONTO = ('America/Toronto', '(UTC-04:00/05:00) Eastern Time')
+        LOS_ANGELES = ('America/Los_Angeles', f'{tz_offset("America/Los_Angeles")} Pacific Time')
+        DENVER = ('America/Denver', f'{tz_offset("America/Denver")} Mountain Time')
+        CHICAGO = ('America/Chicago', f'{tz_offset("America/Chicago")} Central Time')
+        TORONTO = ('America/Toronto', f'{tz_offset("America/Toronto")} Eastern Time')
         CARACAS = ('America/Caracas', '(UTC-04:30) Venezuela Time')
-        HALIFAX = ('America/Halifax', '(UTC-03:00/04:00) Atlantic Time')
+        HALIFAX = ('America/Halifax', f'{tz_offset("America/Halifax")} Atlantic Time')
         SAO_PAULO = ('America/Sao_Paulo', '(UTC-03:00) E. South America Time')
         CAPE_VERDE = ('Atlantic/Cape_Verde', '(UTC-01:00) Cape Verde Time')
-        LONDON = ('Europe/London', '(UTC+00:00/01:00) GMT')
-        BERLIN = ('Europe/Berlin', '(UTC+01:00/02:00) Central Europe Time')
-        BEIRUT = ('Asia/Beirut', '(UTC+02:00/03:00) Middle East Time')
-        TEHRAN = ('Asia/Tehran', '(UTC+03:30/04:30) Iran Time')
+        LONDON = ('Europe/London', f'{tz_offset("Europe/London")} GMT')
+        BERLIN = ('Europe/Berlin', f'{tz_offset("Europe/Berlin")} Central Europe Time')
+        BEIRUT = ('Asia/Beirut', f'{tz_offset("Asia/Beirut")} Middle East Time')
         MOSCOW = ('Europe/Moscow', '(UTC+03:00) Russian Time')
-        KABUL = ('Asia/Kabul', '(UTC+04:30) Afghanistan Time')
+        TEHRAN = ('Asia/Tehran', f'{tz_offset("Asia/Tehran")} Iran Time')
         DUBAI = ('Asia/Dubai', '(UTC+04:00) Arabian Time')
-        KATHMANDU = ('Asia/Kathmandu', '(UTC+05:45) Nepal Time')
-        KOLKATA = ('Asia/Kolkata', '(UTC+05:30) India Time')
+        KABUL = ('Asia/Kabul', '(UTC+04:30) Afghanistan Time')
         ASHGABAT = ('Asia/Ashgabat', '(UTC+05:00) West Asia Time')
+        KOLKATA = ('Asia/Kolkata', '(UTC+05:30) India Time')
+        KATHMANDU = ('Asia/Kathmandu', '(UTC+05:45) Nepal Time')
         YANGON = ('Asia/Yangon', '(UTC+06:30) Myanmar Time')
         BANGKOK = ('Asia/Bangkok', '(UTC+07:00) SE Asia Time')
         SHANGHAI = ('Asia/Shanghai', '(UTC+08:00) China Time')
         TOKYO = ('Asia/Tokyo', '(UTC+09:00) Tokyo Time')
-        SYDNEY = ('Australia/Sydney', '(UTC+10:00/11:00) AUS Eastern Time')
-        AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
+        SYDNEY = ('Australia/Sydney', f'{tz_offset("Australia/Sydney")} AUS Eastern Time')
+        AUCKLAND = ('Pacific/Auckland', f'{tz_offset("Pacific/Auckland")} New Zealand Time')
 
     embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
@@ -209,13 +216,21 @@ class EventPage(
         else:
             return self.publishing_date < now
 
+    @property
     def time_zone_label(self):
-        # splitting and joining the label by ' ' to remove (UTC-offset)
-        label = ' '.join(self.EventTimeZones.TORONTO.label.split(' ')[1:])
-        for i in range(len(self.EventTimeZones.choices)):
-            if self.EventTimeZones.values[i] == self.time_zone:
-                label = ' '.join(self.EventTimeZones.labels[i].split(' ')[1:])
-        return label
+        if self.time_zone in self.EventTimeZones.values:
+            '''
+            timezone name set to short code based on self.time_zone value; in case no name is available,
+            "%Z" returns offset: (eg "+0430" for Iran Time, together with offset this becomes "+0430 (UTC+0430)");
+            use regex matching to remove the short code and only display offset in this case.
+            '''
+            tz = re.sub(r'[-+]\d{4} ',
+                        '',
+                        datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%Z') + ' ')
+            offset = datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%z')
+            return '{tz}(UTC{offset})'.format(tz=tz,
+                                              offset=offset[:3] + ':' + offset[3:])
+        return self.time_zone
 
     content_panels = [
         BasicPageAbstract.title_panel,
