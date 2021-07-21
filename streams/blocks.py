@@ -300,6 +300,40 @@ class ExternalVideoBlock(blocks.ListBlock, ThemeableBlock):
         template = 'streams/external_video_block.html'
 
 
+class ExtractBlock(blocks.RichTextBlock, ThemeableBlock):
+    def __init__(
+        self, required=True, help_text=None, editor="default", features=None, **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.features = [
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+        ]
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ExtractBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'extract_block')
+
+    class Meta:
+        icon = 'edit'
+        label = 'Extract'
+        template = 'streams/extract_block.html'
+
+
 class ImageBlock(blocks.StructBlock, ThemeableBlock):
     """Image"""
 
