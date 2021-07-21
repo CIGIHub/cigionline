@@ -123,9 +123,10 @@ class EventPage(
         NO_RSVP = (2, 'No RSVP Required')
 
     class EventTimeZones(models.TextChoices):
+        # use this function to determine timezone offsets at current time; unnecessary for those not subjected to DST
         def tz_offset(tz):
             offset = datetime.datetime.now(pytz.timezone(tz)).strftime('%z')
-            return '(UTC' + offset[:3] + ':' + offset[3:] + ')'
+            return f'(UTC{offset[:3]}:{offset[3:]})'
 
         HAWAII = ('US/Hawaii', '(UTC-10:00) Hawaiian Time')
         LOS_ANGELES = ('America/Los_Angeles', f'{tz_offset("America/Los_Angeles")} Pacific Time')
@@ -226,10 +227,10 @@ class EventPage(
             '''
             tz = re.sub(r'[-+]\d{4} ',
                         '',
-                        datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%Z') + ' ')
+                        f'{datetime.datetime.now(pytz.timezone(self.time_zone)).strftime("%Z")} ')
             offset = datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%z')
-            return '{tz}(UTC{offset})'.format(tz=tz,
-                                              offset=offset[:3] + ':' + offset[3:])
+            # return string format: "TZ (OFFSET)"" eg. "EDT (UTC-04:00)"
+            return f'{tz}(UTC{offset[:3]}:{offset[3:]})'
         return self.time_zone
 
     content_panels = [
