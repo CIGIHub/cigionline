@@ -179,10 +179,23 @@ class CIGIOnlineSearchQueryCompiler:
     def get_query(self):
         if self.searchtext:
             must = {
-                "multi_match": {
-                    "fields": ["title", "*__body", "core_contentpage__author_names"],
-                    "query": self.searchtext,
-                },
+                "bool": {
+                  "should": [
+                    {
+                      "multi_match": {
+                          "fields": ["title", "*__body", "core_contentpage__author_names"],
+                          "query": self.searchtext,
+                          "type": "phrase_prefix",
+                      },
+                    },
+                    {
+                      "multi_match": {
+                          "fields": ["title", "*__body", "core_contentpage__author_names"],
+                          "query": self.searchtext,
+                      },
+                    },
+                  ]
+                }
             }
         else:
             must = {
@@ -421,6 +434,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
                 "multi_match": {
                     "fields": ["*__search_terms^100"],
                     "query": self.searchtext,
+                    "type": "phrase_prefix",
                 },
             }
         else:
