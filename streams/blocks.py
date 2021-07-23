@@ -788,7 +788,7 @@ class NewsletterBlock(blocks.StructBlock):
 
             if content_page.contenttype == 'Event' and context.get('text'):
                 event_time = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
-                event_time_zone = f' {content_page.time_zone_label}' if content_page.time_zone_label else ''
+                event_time_zone = f' {content_page.time_zone}' if content_page.time_zone else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
                 if 'is_html_string' not in context:

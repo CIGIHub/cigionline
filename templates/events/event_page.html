@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all author_count=self.author_count registration_url=self.registration_url time_zone=self.time_zone time_zone_label=self.time_zone_label is_past=self.is_past %}
+  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all author_count=self.author_count registration_url=self.registration_url time_zone=self.time_zone is_past=self.is_past %}
 
   {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
     <section class="event-multimedia-embed-section">
