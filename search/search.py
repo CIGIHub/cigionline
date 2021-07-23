@@ -180,21 +180,21 @@ class CIGIOnlineSearchQueryCompiler:
         if self.searchtext:
             must = {
                 "bool": {
-                  "should": [
-                    {
-                      "multi_match": {
-                          "fields": ["title", "*__body", "core_contentpage__author_names"],
-                          "query": self.searchtext,
-                          "type": "phrase_prefix",
-                      },
-                    },
-                    {
-                      "multi_match": {
-                          "fields": ["title", "*__body", "core_contentpage__author_names"],
-                          "query": self.searchtext,
-                      },
-                    },
-                  ]
+                    "should": [
+                        {
+                            "multi_match": {
+                                "fields": ["title", "*__body", "core_contentpage__author_names"],
+                                "query": self.searchtext,
+                                "type": "phrase_prefix",
+                            },
+                        },
+                        {
+                            "multi_match": {
+                                "fields": ["title", "*__body", "core_contentpage__author_names"],
+                                "query": self.searchtext,
+                            },
+                        },
+                    ]
                 }
             }
         else:
