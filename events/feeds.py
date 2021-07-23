@@ -35,13 +35,25 @@ class EventFeed(ICalFeed):
         if item.time_zone == '' or not item.time_zone:
             return item.publishing_date
         else:
-            return item.publishing_date.astimezone(pytz.timezone('America/Toronto')).replace(tzinfo=pytz.timezone(item.time_zone))
+            default_tz = pytz.timezone('America/Toronto')
+            correct_tz = pytz.timezone(item.time_zone)
+            return pytz.utc.normalize(
+                correct_tz.localize(
+                    item.publishing_date.astimezone(default_tz).replace(tzinfo=None)
+                )
+            )
 
     def item_end_datetime(self, item):
         if item.time_zone == '' or not item.time_zone:
             return item.event_end
         else:
-            return item.event_end.astimezone(pytz.timezone('America/Toronto')).replace(tzinfo=pytz.timezone(item.time_zone))
+            default_tz = pytz.timezone('America/Toronto')
+            correct_tz = pytz.timezone(item.time_zone)
+            return pytz.utc.normalize(
+                correct_tz.localize(
+                    item.event_end.astimezone(default_tz).replace(tzinfo=None)
+                )
+            )
 
     def item_link(self, item):
         return item.url
