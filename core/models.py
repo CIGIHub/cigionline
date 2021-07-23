@@ -9,6 +9,7 @@ from search.filters import (
 )
 from streams.blocks import (
     AccordionBlock,
+    ExtractBlock,
     ParagraphBlock,
     ReadMoreBlock,
     BlockQuoteBlock,
@@ -79,6 +80,7 @@ class BasicPageAbstract(models.Model):
     ))
     body_external_quote_block = ('external_quote', ExternalQuoteBlock())
     body_external_video_block = ('external_video', ExternalVideoBlock())
+    body_extract_block = ('extract', ExtractBlock())
     body_highlight_title_block = ('highlight_title', HighlightTitleBlock())
     body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
     body_image_scroll_block = ('image_scroll', ImageScrollBlock())
