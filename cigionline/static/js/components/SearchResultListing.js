@@ -65,7 +65,7 @@ function SearchResultListing(props) {
       )}
       {!row.contenttype && !row.contentsubtype && (
         <span className="table-icon icon-basic-page">
-          <i className="fal fa-comments" />
+          <i className="fal fa-file" />
         </span>
       )}
       <div className="search-result-content">
@@ -117,6 +117,11 @@ function SearchResultListing(props) {
             ))}
           </p>
         )}
+        {row.search_result_description && (
+          <p className="search-result-highlight">
+            {row.search_result_description}
+          </p>
+        )}
       </div>
     </article>
   );
@@ -137,6 +142,7 @@ SearchResultListing.propTypes = {
     highlights: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     publishing_date: PropTypes.string,
+    search_result_description: PropTypes.string,
     title: PropTypes.string,
     topics: PropTypes.arrayOf(
       PropTypes.shape({

@@ -213,12 +213,18 @@ class SearchablePageAbstract(models.Model):
         blank=True,
         help_text='A list of search terms for which this page will be elevated in the search results.',
     )
+    search_result_description = models.CharField(
+        blank=True,
+        null=True,
+        max_length=1024,
+        help_text='Text that is displayed when this page appears in search results')
 
     search_panel = MultiFieldPanel(
         [
             StreamFieldPanel('search_terms'),
+            FieldPanel('search_result_description'),
         ],
-        heading='Search Terms',
+        heading='Search',
         classname='collapsible collapsed',
     )
 
@@ -341,7 +347,7 @@ class ContentPage(Page, SearchablePageAbstract):
     @property
     def topics_sorted(self):
         return self.topics.order_by('title')
-    
+
     @property
     def topic_names(self):
         return [item.title for item in self.topics.all()]

@@ -182,14 +182,14 @@ class CIGIOnlineSearchQueryCompiler:
                     "should": [
                         {
                             "multi_match": {
-                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^1.5"],
+                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^2"],
                                 "query": self.searchtext,
                                 "type": "phrase_prefix",
                             },
                         },
                         {
                             "multi_match": {
-                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^1.5"],
+                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^2"],
                                 "query": self.searchtext,
                             },
                         },
@@ -425,7 +425,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
 
     @property
     def queryset(self):
-        return Page.objects.not_type(NewsletterPage, AnnualReportPage).live()
+        return Page.objects.not_type(NewsletterPage).live()
 
     def get_query(self):
         if self.searchtext:

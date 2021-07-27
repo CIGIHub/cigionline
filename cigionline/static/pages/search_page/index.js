@@ -23,6 +23,7 @@ ReactDOM.render(
       'contenttype',
       'contentsubtype',
       'publishing_date',
+      'search_result_description',
       'topics',
     ]}
     containerClass={[

@@ -17,7 +17,7 @@ from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 
-class AnnualReportListPage(BasicPageAbstract, Page):
+class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
     max_count = 1
     parent_page_types = ['core.BasicPage']
     subpage_types = ['annual_reports.AnnualReportPage']
@@ -45,6 +45,9 @@ class AnnualReportListPage(BasicPageAbstract, Page):
             heading='Featured Annual Reports',
             classname='collapsible collapsed',
         ),
+    ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
