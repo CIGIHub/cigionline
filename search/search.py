@@ -170,7 +170,6 @@ class CIGIOnlineSearchQueryCompiler:
             self.eventaccess = eventaccess
         if years is not None:
             self.years = years
-        print(self.topics)
 
     @property
     def queryset(self):
@@ -183,14 +182,14 @@ class CIGIOnlineSearchQueryCompiler:
                     "should": [
                         {
                             "multi_match": {
-                                "fields": ["title", "*__body", "core_contentpage__author_names"],
+                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^1.5"],
                                 "query": self.searchtext,
                                 "type": "phrase_prefix",
                             },
                         },
                         {
                             "multi_match": {
-                                "fields": ["title", "*__body", "core_contentpage__author_names"],
+                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^1.5"],
                                 "query": self.searchtext,
                             },
                         },
@@ -426,7 +425,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
 
     @property
     def queryset(self):
-        return Page.objects.not_type(NewsletterPage).live()
+        return Page.objects.not_type(NewsletterPage, AnnualReportPage).live()
 
     def get_query(self):
         if self.searchtext:

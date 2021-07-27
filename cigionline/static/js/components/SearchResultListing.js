@@ -15,7 +15,7 @@ function SearchResultListing(props) {
           <i className="fal fa-calendar-alt" />
         </span>
       )}
-      {row.contenttype === 'Multimedia' && row.contentsubtype === 'Video' && (
+      {row.contenttype === 'Multimedia' && row.contentsubtype !== 'Audio' && (
         <span className="table-icon icon-multimedia">
           <i className="fal fa-play" />
         </span>
@@ -61,6 +61,11 @@ function SearchResultListing(props) {
       {row.contenttype === 'Activity' && (
         <span className="table-icon icon-activity">
           <i className="fal fa-file-search" />
+        </span>
+      )}
+      {!row.contenttype && !row.contentsubtype && (
+        <span className="table-icon icon-basic-page">
+          <i className="fal fa-comments" />
         </span>
       )}
       <div className="search-result-content">

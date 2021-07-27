@@ -339,6 +339,10 @@ class ContentPage(Page, SearchablePageAbstract):
     @property
     def topics_sorted(self):
         return self.topics.order_by('title')
+    
+    @property
+    def topic_names(self):
+        return [item.title for item in self.topics.all()]
 
     @property
     def author_ids(self):
@@ -450,11 +454,12 @@ class ContentPage(Page, SearchablePageAbstract):
 
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields + [
         index.FilterField('author_ids'),
-        index.SearchField('author_names', boost=5.0),
+        index.SearchField('author_names', boost=2),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),
         index.FilterField('publishing_date'),
+        index.SearchField('topic_names'),
         index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
     ]

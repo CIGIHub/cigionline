@@ -247,6 +247,10 @@ class PersonPage(
         return unidecode(self.last_name.lower())
 
     @property
+    def topic_names(self):
+        return [item.title for item in self.topics.all()]
+
+    @property
     def image_square_url(self):
         if self.image_square:
             return self.image_square.get_rendition('fill-300x300').url
@@ -390,6 +394,7 @@ class PersonPage(
             index.SearchField('body'),
             index.FilterField('first_name_lowercase'),
             index.FilterField('last_name_lowercase'),
+            index.SearchField('topic_names'),
             ParentalManyToManyFilterFieldName('person_types'),
             ParentalManyToManyFilterField('topics'),
         ] \
