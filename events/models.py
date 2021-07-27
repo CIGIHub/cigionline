@@ -19,6 +19,9 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
+import datetime
+import pytz
+import re
 
 
 class EventListPage(BasicPageAbstract, Page):
@@ -119,6 +122,38 @@ class EventPage(
         INVITATION_ONLY = (1, 'Invitation Only')
         NO_RSVP = (2, 'No RSVP Required')
 
+    class EventTimeZones(models.TextChoices):
+        # use this function to determine timezone offsets at current time; unnecessary for those not subjected to DST
+        def tz_offset(tz):
+            offset = datetime.datetime.now(pytz.timezone(tz)).strftime('%z')
+            return f'(UTC{offset[:3]}:{offset[3:]})'
+
+        HAWAII = ('US/Hawaii', '(UTC-10:00) Hawaiian Time')
+        LOS_ANGELES = ('America/Los_Angeles', f'{tz_offset("America/Los_Angeles")} Pacific Time')
+        DENVER = ('America/Denver', f'{tz_offset("America/Denver")} Mountain Time')
+        CHICAGO = ('America/Chicago', f'{tz_offset("America/Chicago")} Central Time')
+        TORONTO = ('America/Toronto', f'{tz_offset("America/Toronto")} Eastern Time')
+        CARACAS = ('America/Caracas', '(UTC-04:30) Venezuela Time')
+        HALIFAX = ('America/Halifax', f'{tz_offset("America/Halifax")} Atlantic Time')
+        SAO_PAULO = ('America/Sao_Paulo', '(UTC-03:00) E. South America Time')
+        CAPE_VERDE = ('Atlantic/Cape_Verde', '(UTC-01:00) Cape Verde Time')
+        LONDON = ('Europe/London', f'{tz_offset("Europe/London")} GMT')
+        BERLIN = ('Europe/Berlin', f'{tz_offset("Europe/Berlin")} Central Europe Time')
+        BEIRUT = ('Asia/Beirut', f'{tz_offset("Asia/Beirut")} Middle East Time')
+        MOSCOW = ('Europe/Moscow', '(UTC+03:00) Russian Time')
+        TEHRAN = ('Asia/Tehran', f'{tz_offset("Asia/Tehran")} Iran Time')
+        DUBAI = ('Asia/Dubai', '(UTC+04:00) Arabian Time')
+        KABUL = ('Asia/Kabul', '(UTC+04:30) Afghanistan Time')
+        ASHGABAT = ('Asia/Ashgabat', '(UTC+05:00) West Asia Time')
+        KOLKATA = ('Asia/Kolkata', '(UTC+05:30) India Time')
+        KATHMANDU = ('Asia/Kathmandu', '(UTC+05:45) Nepal Time')
+        YANGON = ('Asia/Yangon', '(UTC+06:30) Myanmar Time')
+        BANGKOK = ('Asia/Bangkok', '(UTC+07:00) SE Asia Time')
+        SHANGHAI = ('Asia/Shanghai', '(UTC+08:00) China Time')
+        TOKYO = ('Asia/Tokyo', '(UTC+09:00) Tokyo Time')
+        SYDNEY = ('Australia/Sydney', f'{tz_offset("Australia/Sydney")} AUS Eastern Time')
+        AUCKLAND = ('Pacific/Auckland', f'{tz_offset("Pacific/Auckland")} New Zealand Time')
+
     embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
@@ -152,7 +187,12 @@ class EventPage(
         ],
         blank=True,
     )
-    time_zone = models.CharField(blank=True, max_length=64)
+    time_zone = models.CharField(
+        blank=True,
+        max_length=64,
+        choices=EventTimeZones.choices,
+        default=EventTimeZones.TORONTO,
+    )
     twitter_hashtag = models.CharField(blank=True, max_length=64)
     website_button_text = models.CharField(
         blank=True,
@@ -176,6 +216,22 @@ class EventPage(
             return self.event_end < now
         else:
             return self.publishing_date < now
+
+    @property
+    def time_zone_label(self):
+        if self.time_zone in self.EventTimeZones.values:
+            '''
+            timezone name set to short code based on self.time_zone value; in case no name is available,
+            "%Z" returns offset: (eg "+0430" for Iran Time, together with offset this becomes "+0430 (UTC+0430)");
+            use regex matching to remove the short code and only display offset in this case.
+            '''
+            tz = re.sub(r'[-+]\d{4} ',
+                        '',
+                        f'{datetime.datetime.now(pytz.timezone(self.time_zone)).strftime("%Z")} ')
+            offset = datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%z')
+            # return string format: "TZ (OFFSET)"" eg. "EDT (UTC-04:00)"
+            return f'{tz}(UTC{offset[:3]}:{offset[3:]})'
+        return self.time_zone
 
     content_panels = [
         BasicPageAbstract.title_panel,
