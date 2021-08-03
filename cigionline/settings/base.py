@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'streams',
     'subscribe',
 
+    'wagtail_localize',
+    'wagtail_localize.locales',
+
     'wagtail.api.v2',
     'wagtail.contrib.forms',
     'wagtail.contrib.modeladmin',
@@ -246,6 +249,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+WAGTAIL_I18N_ENABLED = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -286,3 +291,8 @@ WAGTAIL_USER_TIME_ZONES = ['America/Toronto']
 TIME_ZONE = 'America/Toronto'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
+    ('en', "English"),
+    ('fr', "French"),
+]

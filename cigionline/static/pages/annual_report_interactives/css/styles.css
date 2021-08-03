@@ -1,0 +1,23 @@
+
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.swiper-pagination-custom{
+bottom: 0px !important; 
+  top: 190px !important;
+    left: 0;
+    width: 100%;
+}

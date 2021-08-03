@@ -68,6 +68,7 @@ typed-ast==1.4.3
 Unidecode==1.2.0
 urllib3==1.26.5
 wagtail==2.13.2
+wagtail-localize==1.0rc3
 wagtailmedia==0.7.0
 webencodings==0.5.1
 Willow==1.4
