@@ -537,6 +537,7 @@ class SearchTable extends React.Component {
             onKeyDown={(e) => this.handleYearSelect(e, y, false)}
             role="button"
             tabIndex="0"
+            key={y}
           >
             {y}
             <i className="fa fa-times" />

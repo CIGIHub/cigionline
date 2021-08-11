@@ -128,8 +128,6 @@
 }
 
 .filterlist {
-  margin-bottom: 1.5em;
-
   .filtertitle {
     color: $cigi-medium-light-grey;
     font-size: 0.875em;
@@ -228,6 +226,7 @@
     align-items: baseline;
     display: flex;
     font-size: 0.9em;
+    margin-bottom: 1em;
 
     span {
       color: $cigi-medium-grey;

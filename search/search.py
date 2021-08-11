@@ -182,14 +182,14 @@ class CIGIOnlineSearchQueryCompiler:
                     "should": [
                         {
                             "multi_match": {
-                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^2"],
+                                "fields": ["title", "*__body", "core_contentpage__author_names^2", "*__topic_names^2"],
                                 "query": self.searchtext,
                                 "type": "phrase_prefix",
                             },
                         },
                         {
                             "multi_match": {
-                                "fields": ["title^2", "*__body", "core_contentpage__author_names", "*__topic_names^2"],
+                                "fields": ["title", "*__body", "core_contentpage__author_names", "*__topic_names^2"],
                                 "query": self.searchtext,
                             },
                         },
@@ -306,9 +306,19 @@ class CIGIOnlineSearchQueryCompiler:
             })
 
         return {
-            "bool": {
-                "must": must,
-                "filter": filters,
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "must": must,
+                        "filter": filters,
+                    },
+                },
+                "functions": [
+                    {
+                        "filter": {"match": {"core_contentpage__contentsubtype_filter": "CIGI in the News"}},
+                        "weight": 0.5
+                    }
+                ],
             },
         }
 
