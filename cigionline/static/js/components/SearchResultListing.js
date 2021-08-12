@@ -107,7 +107,7 @@ function SearchResultListing(props) {
             ))}
           </ul>
         )}
-        {row.highlights && (
+        {row.highlights.length && (
           <p className="search-result-highlight">
             {row.highlights.map((highlight, index) => (
               <span
@@ -115,6 +115,13 @@ function SearchResultListing(props) {
                 dangerouslySetInnerHTML={{ __html: highlight }}
               />
             ))}
+          </p>
+        )}
+        {!row.highlights.length && row.snippet && (
+          <p className="search-result-highlight" maxLength="100">
+            <span>
+              {row.snippet}
+            </span>
           </p>
         )}
         {row.search_result_description && (
@@ -136,6 +143,7 @@ SearchResultListing.propTypes = {
         value: PropTypes.any,
       }),
     ),
+    snippet: PropTypes.string,
     contentsubtype: PropTypes.string,
     contenttype: PropTypes.string,
     elevated: PropTypes.bool,

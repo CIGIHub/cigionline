@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from django.db import models
 from django.db.models.fields import CharField
 from django.http.response import Http404
@@ -124,6 +125,14 @@ class BasicPageAbstract(models.Model):
         help_text='Select a submenu to appear in the right section of the hero.',
     )
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
+
+    @property
+    def body_snippet(self):
+        snippet = BeautifulSoup(self.body[0].value.source, "html.parser").get_text()
+        if self.body:
+            return snippet[:500] if len(snippet) > 500 else snippet
+        else:
+            return ''
 
     @property
     def image_hero_url(self):

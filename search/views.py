@@ -13,6 +13,7 @@ def process_item(page, request):
         'id': page.id,
         'title': page.title,
         'url': page.get_url(request),
+        'snippet': page.specific.body_snippet if page.specific.body_snippet else '',
     }
     for field in fields:
         try:

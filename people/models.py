@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
@@ -280,10 +281,18 @@ class PersonPage(
     def latest_cigi_in_the_news(self):
         articles = expert_latest_in_the_news_search(expert_id=self.id)
         return articles[:3]
-    
+
     @property
     def person_name(self):
         return self.title
+
+    @property
+    def body_snippet(self):
+        snippet = BeautifulSoup(self.body[0].value.source, "html.parser").get_text()
+        if self.body:
+            return snippet[:100] if len(snippet) > 100 else snippet
+        else:
+            return ''
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
