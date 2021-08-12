@@ -280,6 +280,10 @@ class PersonPage(
     def latest_cigi_in_the_news(self):
         articles = expert_latest_in_the_news_search(expert_id=self.id)
         return articles[:3]
+    
+    @property
+    def person_name(self):
+        return self.title
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -395,6 +399,7 @@ class PersonPage(
             index.FilterField('first_name_lowercase'),
             index.FilterField('last_name_lowercase'),
             index.SearchField('topic_names'),
+            index.SearchField('person_name'),
             ParentalManyToManyFilterFieldName('person_types'),
             ParentalManyToManyFilterField('topics'),
         ] \

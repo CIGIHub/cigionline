@@ -182,9 +182,9 @@ class CIGIOnlineSearchQueryCompiler:
                     "should": [
                         {
                             "multi_match": {
-                                "fields": ["title", "*__body", "core_contentpage__author_names^2", "*__topic_names^2"],
+                                "fields": ["title", "*__body", "core_contentpage__author_names^2", "*__topic_names^2", "research_topicpage__topic_name^100", "people_personpage__person_name^100"],
                                 "query": self.searchtext,
-                                "type": "phrase_prefix",
+                                "type": "phrase",
                             },
                         },
                         {
