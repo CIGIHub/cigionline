@@ -14,6 +14,16 @@
         }
       }
     }
+
+    .feature-content-topic-list {
+      @include link($color: pink, $hover-color: $cigi-primary-colour);
+
+      li {
+        &::after {
+          color: pink;
+        }
+      }
+    }
   }
 
   .feature-content-topic-list {
