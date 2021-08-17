@@ -107,7 +107,7 @@ function SearchResultListing(props) {
             ))}
           </ul>
         )}
-        {row.highlights.length && (
+        {row.highlights.length > 0 && (
           <p className="search-result-highlight">
             {row.highlights.map((highlight, index) => (
               <span
@@ -117,7 +117,7 @@ function SearchResultListing(props) {
             ))}
           </p>
         )}
-        {!row.highlights.length && row.snippet && (
+        {row.highlights.length === 0 && row.snippet && (
           <p className="search-result-highlight" maxLength="100">
             <span>
               {row.snippet}

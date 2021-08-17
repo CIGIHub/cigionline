@@ -60,6 +60,12 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                         "field": "events_eventpage__event_access_filter",
                         "size": "50"
                     }
+                },
+                "experts": {
+                    "terms": {
+                        "field": "core_contentpage__author_ids_filter",
+                        "size": 50,
+                    }
                 }
             }
 
@@ -129,7 +135,22 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
 
 class CIGIOnlineSearchQueryCompiler:
     def __init__(
-        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years, eventaccess
+        self,
+        content_type,
+        sort,
+        contenttypes,
+        contentsubtypes,
+        authors,
+        projects,
+        topics,
+        searchtext,
+        articletypeid,
+        publicationtypeid,
+        publicationseriesid,
+        multimediaseriesid,
+        years,
+        eventaccess,
+        experts,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -147,6 +168,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.multimediaseriesid = None
         self.years = None
         self.eventaccess = None
+        self.experts = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -158,6 +180,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.projects = projects
         if topics and len(topics) > 0:
             self.topics = topics
+        if experts and len(experts) > 0:
+            self.experts = experts
         if articletypeid is not None:
             self.articletypeid = articletypeid
         if publicationtypeid is not None:
@@ -226,6 +250,12 @@ class CIGIOnlineSearchQueryCompiler:
             filters.append({
                 "terms": {
                     "core_contentpage__author_ids_filter": self.authors,
+                },
+            })
+        if self.experts:
+            filters.append({
+                "terms": {
+                    "core_contentpage__author_ids_filter": [self.experts],
                 },
             })
         if self.projects:
@@ -333,10 +363,38 @@ class CIGIOnlineSearchQueryCompiler:
         }]
 
 
-def cigi_search(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None, multimediaseriesid=None, years=None, eventaccess=None):
+def cigi_search(content_type=None,
+                sort=None,
+                contenttypes=None,
+                contentsubtypes=None,
+                authors=None,
+                projects=None,
+                topics=None,
+                searchtext=None,
+                articletypeid=None,
+                publicationtypeid=None,
+                publicationseriesid=None,
+                multimediaseriesid=None,
+                years=None,
+                eventaccess=None,
+                experts=None,):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
-        CIGIOnlineSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid, years, eventaccess)
+        CIGIOnlineSearchQueryCompiler(content_type,
+                                      sort,
+                                      contenttypes,
+                                      contentsubtypes,
+                                      authors,
+                                      projects,
+                                      topics,
+                                      searchtext,
+                                      articletypeid,
+                                      publicationtypeid,
+                                      publicationseriesid,
+                                      multimediaseriesid,
+                                      years,
+                                      eventaccess,
+                                      experts,)
     )
 
 
@@ -396,7 +454,20 @@ class CIGIOnlineElevatedElasticsearchResults(Elasticsearch7SearchResults):
 
 class CIGIOnlineElevatedSearchQueryCompiler:
     def __init__(
-        self, content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid
+        self,
+        content_type,
+        sort,
+        contenttypes,
+        contentsubtypes,
+        authors,
+        projects,
+        topics,
+        searchtext,
+        articletypeid,
+        publicationtypeid,
+        publicationseriesid,
+        multimediaseriesid,
+        experts,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -413,6 +484,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         self.publicationseriesid = None
         self.multimediaseriesid = None
         self.years = None
+        self.experts = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -420,6 +492,8 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             self.contentsubtypes = contentsubtypes
         if authors and len(authors) > 0:
             self.authors = authors
+        if experts and len(experts) > 0:
+            self.experts = experts
         if projects and len(projects) > 0:
             self.projects = projects
         if topics and len(topics) > 0:
@@ -526,8 +600,32 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         return []
 
 
-def cigi_search_promoted(content_type=None, sort=None, contenttypes=None, contentsubtypes=None, authors=None, projects=None, topics=None, searchtext=None, articletypeid=None, publicationtypeid=None, publicationseriesid=None, multimediaseriesid=None):
+def cigi_search_promoted(content_type=None,
+                         sort=None,
+                         contenttypes=None,
+                         contentsubtypes=None,
+                         authors=None,
+                         projects=None,
+                         topics=None,
+                         searchtext=None,
+                         articletypeid=None,
+                         publicationtypeid=None,
+                         publicationseriesid=None,
+                         multimediaseriesid=None,
+                         experts=None):
     return CIGIOnlineElevatedElasticsearchResults(
         get_search_backend(),
-        CIGIOnlineElevatedSearchQueryCompiler(content_type, sort, contenttypes, contentsubtypes, authors, projects, topics, searchtext, articletypeid, publicationtypeid, publicationseriesid, multimediaseriesid)
+        CIGIOnlineElevatedSearchQueryCompiler(content_type,
+                                              sort,
+                                              contenttypes,
+                                              contentsubtypes,
+                                              authors,
+                                              projects,
+                                              topics,
+                                              searchtext,
+                                              articletypeid,
+                                              publicationtypeid,
+                                              publicationseriesid,
+                                              multimediaseriesid,
+                                              experts)
     )

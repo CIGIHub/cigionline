@@ -472,6 +472,7 @@ class ContentPage(Page, SearchablePageAbstract):
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields + [
         index.FilterField('author_ids'),
         index.SearchField('author_names', boost=2),
+        index.FilterField('author_names'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),

@@ -6,6 +6,12 @@ from .search import cigi_search, cigi_search_promoted
 
 
 def process_item(page, request):
+    snippet = ''
+    if request.GET.get('searchpage'):
+        try:
+            snippet = page.specific.body_snippet
+        except IndexError:
+            snippet = ''
     fields = request.GET.getlist('field', [])
     item = {
         'highlights': page._highlights,
@@ -13,7 +19,7 @@ def process_item(page, request):
         'id': page.id,
         'title': page.title,
         'url': page.get_url(request),
-        'snippet': page.specific.body_snippet if page.specific.body_snippet else '',
+        'snippet': snippet,
     }
     for field in fields:
         try:
@@ -73,6 +79,7 @@ def search_api(request):
                     'contentsubtypes': {},
                     'years': {},
                     'content_types': {},
+                    'experts': {},
                 }
             },
             'items': [],
@@ -93,6 +100,7 @@ def search_api(request):
         topics=request.GET.getlist('topic', None),
         years=request.GET.getlist('year', None),
         eventaccess=request.GET.getlist('eventaccess', None),
+        experts=request.GET.get('expert', None),
     )
     promoted_pages = []
     if request.GET.get('searchpage'):
@@ -109,6 +117,7 @@ def search_api(request):
             searchtext=searchtext,
             sort=request.GET.get('sort', None),
             topics=request.GET.getlist('topic', None),
+            experts=request.GET.get('expert', None),
         )
 
     aggregations = pages.get_aggregations()

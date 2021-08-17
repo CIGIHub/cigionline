@@ -25,9 +25,12 @@ class SearchTable extends React.Component {
     const { filterTypes } = props;
     this.state = {
       currentPage: 1,
+      expertsFilter: '',
+      expertSelectValues: [],
       filterTypes,
       loading: true,
       loadingInitial: true,
+      loadingExperts: true,
       loadingTopics: true,
       loadingYears: true,
       loadingTypes: true,
@@ -48,6 +51,7 @@ class SearchTable extends React.Component {
         contentsubtypes: {},
         content_types: {},
         event_access: {},
+        experts: {},
       },
     };
 
@@ -67,6 +71,7 @@ class SearchTable extends React.Component {
       const params = new URL(window.location).searchParams;
       const query = params.get('query');
       const sort = params.get('sort');
+      const expert = params.getAll('expert').map((t) => parseInt(t, 10));
       const topic = params.getAll('topic').map((t) => parseInt(t, 10));
       const type = params.getAll('contenttype');
       const subtype = params.getAll('contentsubtype');
@@ -77,6 +82,9 @@ class SearchTable extends React.Component {
       }
       if (sort) {
         initialState.sortSelected = sort;
+      }
+      if (expert.length > 0) {
+        initialState.expertSelectValues = expert;
       }
       if (topic.length > 0) {
         initialState.topicSelectValues = topic;
@@ -97,6 +105,7 @@ class SearchTable extends React.Component {
       this.getRows();
     }
     if (showSidebar) {
+      this.getExperts();
       this.getTopics();
       this.getYears();
       this.getTypes();
@@ -121,6 +130,22 @@ class SearchTable extends React.Component {
     this.setState(
       {
         sortSelected: sortValue,
+      },
+      this.getRows,
+    );
+  }
+
+  handleExpertSelect(e, id, checkOverride) {
+    const { expertSelectValues } = this.state;
+    let experts = expertSelectValues;
+    if (e.target.checked || checkOverride) {
+      experts.push(id);
+    } else {
+      experts = experts.filter((f) => f !== id);
+    }
+    this.setState(
+      {
+        expertSelectValues: experts,
       },
       this.getRows,
     );
@@ -192,12 +217,19 @@ class SearchTable extends React.Component {
     }));
   }
 
+  handleExpertsFilter(e) {
+    this.setState(() => ({
+      expertsFilter: e.target.value,
+    }));
+  }
+
   getRows() {
     const {
       currentPage,
       loadingInitial,
       searchValue,
       sortSelected,
+      expertSelectValues,
       topicSelectValues,
       yearSelectValues,
       typeSelectValues,
@@ -252,6 +284,12 @@ class SearchTable extends React.Component {
     }
     if (searchValue) {
       uri += `&searchtext=${searchValue}`;
+    }
+    if (expertSelectValues.length > 0) {
+      expertSelectValues.map((t) => {
+        uri += `&expert=${t}`;
+        return true;
+      });
     }
     if (topicSelectValues.length > 0) {
       topicSelectValues.map((t) => {
@@ -333,6 +371,20 @@ class SearchTable extends React.Component {
       });
   }
 
+  getExperts() {
+    fetch(encodeURI('/api/all_experts_search/'))
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState(() => ({
+          loadingExperts: false,
+          experts: data.items.map((expert) => ({
+            id: expert.id,
+            title: expert.title,
+          })),
+        }));
+      });
+  }
+
   getYears() {
     // Here we need to add fetch code for getting the years
     this.setState(() => ({
@@ -377,6 +429,21 @@ class SearchTable extends React.Component {
     return dropdownTopics;
   }
 
+  get dropdownExperts() {
+    const { experts } = this.state;
+    const dropdownExperts = [];
+    experts.forEach((expert) => {
+      dropdownExperts.push(expert);
+    });
+    if (experts.length !== dropdownExperts.length) {
+      dropdownExperts.unshift({
+        id: null,
+        title: 'All Experts',
+      });
+    }
+    return dropdownExperts;
+  }
+
   get dropdownTypes() {
     const { filterTypes } = this.state;
     const dropdownTypes = [];
@@ -402,6 +469,7 @@ class SearchTable extends React.Component {
     const {
       searchValue,
       sortSelected,
+      expertSelectValues,
       topicSelectValues,
       typeSelectValues,
       yearSelectValues,
@@ -413,6 +481,15 @@ class SearchTable extends React.Component {
       url.searchParams.set('sort', sortSelected);
     } else {
       url.searchParams.delete('sort');
+    }
+    if (expertSelectValues.length > 0) {
+      url.searchParams.delete('expert');
+      expertSelectValues.map((t) => {
+        url.searchParams.append('expert', t);
+        return true;
+      });
+    } else {
+      url.searchParams.delete('expert');
     }
     if (topicSelectValues.length > 0) {
       url.searchParams.delete('topic');
@@ -459,6 +536,7 @@ class SearchTable extends React.Component {
   removeAllFilters() {
     this.setState(
       {
+        expertSelectValues: [],
         topicSelectValues: [],
         typeSelectValues: [],
         yearSelectValues: [],
@@ -474,9 +552,32 @@ class SearchTable extends React.Component {
 
   renderSelectedFilters() {
     const {
-      topics, topicSelectValues, typeSelectValues, yearSelectValues,
+      experts,
+      topics,
+      expertSelectValues,
+      topicSelectValues,
+      typeSelectValues,
+      yearSelectValues,
     } = this.state;
     const filter = [];
+    if (expertSelectValues.length > 0) {
+      expertSelectValues.map((t) => {
+        const expert = experts.filter((to) => to.id === t)[0];
+        filter.push(
+          <span
+            className="filter"
+            onClick={(e) => this.handleExpertSelect(e, t, false)}
+            onKeyDown={(e) => this.handleExpertSelect(e, t, false)}
+            role="button"
+            tabIndex="0"
+          >
+            {expert.title}
+            <i className="fa fa-times" />
+          </span>,
+        );
+        return true;
+      });
+    }
     if (topicSelectValues.length > 0) {
       topicSelectValues.map((t) => {
         const topic = topics.filter((to) => to.id === t)[0];
@@ -608,7 +709,9 @@ class SearchTable extends React.Component {
   render() {
     const {
       currentPage,
+      expertsFilter,
       loading,
+      loadingExperts,
       loadingInitial,
       loadingTopics,
       loadingYears,
@@ -618,6 +721,7 @@ class SearchTable extends React.Component {
       searchValue,
       sortSelected,
       topicsFilter,
+      expertSelectValues,
       topicSelectValues,
       totalRows,
       typeSelectValues,
@@ -627,8 +731,9 @@ class SearchTable extends React.Component {
     const {
       blockListing,
       containerClass,
-      hideTopicDropdown,
       filterTypes,
+      hideExpertDropdown,
+      hideTopicDropdown,
       RowComponent,
       showCount,
       showSearch,
@@ -646,6 +751,101 @@ class SearchTable extends React.Component {
         )}
         {showSidebar && (
           <div className="search-filters col-md-3">
+            {!hideExpertDropdown && (
+              <div className="dropdown custom-dropdown dropdown-experts keep-open">
+                <button
+                  className="dropdown-toggle"
+                  type="button"
+                  id="search-bar-experts"
+                  onClick={(e) => this.toggleDropdown(e)}
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Experts
+                </button>
+                <div
+                  className="dropdown-menu pt-0"
+                  aria-labelledby="search-bar-experts"
+                >
+                  <div className="expert-filter">
+                    <div className="input-group input-group-search">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="search experts"
+                        onKeyUp={(e) => this.handleExpertsFilter(e)}
+                      />
+                      <div className="input-group-append">
+                        <button className="btn-search" type="submit">
+                          <i className="far fa-search" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {!loadingExperts && (
+                    <ul>
+                      {this.dropdownExperts
+                        .filter(
+                          (expert) => aggregations.experts[expert.id] > 0 && (expertsFilter === ''
+                            || expert.title
+                              .toLowerCase()
+                              .includes(expertsFilter.toLowerCase())),
+                        )
+                        .map((expert) => (
+                          <li
+                            className="dropdown-item"
+                            key={`expert-${expert.id}`}
+                          >
+                            <label
+                              htmlFor={`expert-${expert.id}`}
+                              className={`keep-open ${
+                                !aggregations.experts[expert.id]
+                                  ? 'inactive'
+                                  : ''
+                              }`}
+                            >
+                              <input
+                                id={`expert-${expert.id}`}
+                                type="checkbox"
+                                checked={
+                                  expertSelectValues.includes(expert.id)
+                                    ? 'checked'
+                                    : ''
+                                }
+                                onChange={(e) => this.handleExpertSelect(e, expert.id)}
+                              />
+                              <span />
+                              {expert.title}
+                              &nbsp;
+                              {aggregations.experts[expert.id] ? (
+                                <>
+                                  (
+                                  {aggregations.experts[expert.id]}
+                                  )
+                                </>
+                              ) : (
+                                <>(0)</>
+                              )}
+                            </label>
+                          </li>
+                        ))}
+                      {this.dropdownExperts.filter(
+                        (expert) => expertsFilter === ''
+                          || expert.title
+                            .toLowerCase()
+                            .includes(expertsFilter.toLowerCase()),
+                      ).length === 0 && (
+                        <li className="dropdown-item" key="noresults">
+                          No results matching &quot;
+                          {expertsFilter}
+                          &quot;
+                        </li>
+                      )}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
             {!hideTopicDropdown && (
               <div className="dropdown custom-dropdown dropdown-topics keep-open">
                 <button
@@ -1053,6 +1253,7 @@ SearchTable.propTypes = {
       ),
     }),
   ),
+  hideExpertDropdown: PropTypes.bool,
   hideTopicDropdown: PropTypes.bool,
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
@@ -1082,6 +1283,7 @@ SearchTable.defaultProps = {
   contenttypes: [],
   endpointParams: [],
   filterTypes: [],
+  hideExpertDropdown: false,
   hideTopicDropdown: false,
   isSearchPage: false,
   limit: 24,
