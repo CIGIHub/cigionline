@@ -95,7 +95,7 @@ def all_staff(request):
     })
 
 def all_experts_search(request):
-    experts = PersonPage.objects.public().live().filter(archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED, person_types__name__in=['Expert', 'CIGI Chair']).order_by('title')
+    experts = PersonPage.objects.public().live().filter(archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED, person_types__name__in=['Expert', 'CIGI Chair']).distinct()
     return JsonResponse({
         'meta': {
             'total_count': experts.count(),

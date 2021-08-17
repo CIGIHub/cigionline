@@ -128,11 +128,19 @@ class BasicPageAbstract(models.Model):
 
     @property
     def body_snippet(self):
-        snippet = BeautifulSoup(self.body[0].value.source, "html.parser").get_text()
+        snippet = ''
+        for i in range(5):
+            try:
+                snippet = BeautifulSoup(self.body[i].value.source, "html.parser").get_text()
+                break
+            except AttributeError:
+                continue
+            except IndexError:
+                break
         if self.body:
             return snippet[:500] if len(snippet) > 500 else snippet
         else:
-            return ''
+            return snippet
 
     @property
     def image_hero_url(self):

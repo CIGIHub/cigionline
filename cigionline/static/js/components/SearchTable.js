@@ -570,6 +570,7 @@ class SearchTable extends React.Component {
             onKeyDown={(e) => this.handleExpertSelect(e, t, false)}
             role="button"
             tabIndex="0"
+            key={`expert-filter-${expert.id}`}
           >
             {expert.title}
             <i className="fa fa-times" />
@@ -588,6 +589,7 @@ class SearchTable extends React.Component {
             onKeyDown={(e) => this.handleTopicSelect(e, t, false)}
             role="button"
             tabIndex="0"
+            key={`topic-filter-${topic.id}`}
           >
             {topic.title}
             <i className="fa fa-times" />
@@ -607,6 +609,7 @@ class SearchTable extends React.Component {
               onKeyDown={(e) => this.handleTypeSelect(e, parts[0], parts[1], false)}
               role="button"
               tabIndex="0"
+              key={parts[1]}
             >
               {parts[1]}
               <i className="fa fa-times" />
@@ -620,6 +623,7 @@ class SearchTable extends React.Component {
               onKeyDown={(e) => this.handleTypeSelect(e, s, undefined, false)}
               role="button"
               tabIndex="0"
+              key={s}
             >
               {s}
               <i className="fa fa-times" />
@@ -655,6 +659,7 @@ class SearchTable extends React.Component {
           onKeyDown={this.removeAllFilters}
           role="button"
           tabIndex="0"
+          key="clear-all"
         >
           Clear All
         </span>,
@@ -732,7 +737,7 @@ class SearchTable extends React.Component {
       blockListing,
       containerClass,
       filterTypes,
-      hideExpertDropdown,
+      showExpertDropDown,
       hideTopicDropdown,
       RowComponent,
       showCount,
@@ -751,7 +756,7 @@ class SearchTable extends React.Component {
         )}
         {showSidebar && (
           <div className="search-filters col-md-3">
-            {!hideExpertDropdown && (
+            {!showExpertDropDown && (
               <div className="dropdown custom-dropdown dropdown-experts keep-open">
                 <button
                   className="dropdown-toggle"
@@ -786,10 +791,15 @@ class SearchTable extends React.Component {
                     <ul>
                       {this.dropdownExperts
                         .filter(
-                          (expert) => aggregations.experts[expert.id] > 0 && (expertsFilter === ''
-                            || expert.title
-                              .toLowerCase()
-                              .includes(expertsFilter.toLowerCase())),
+                          (expert) => aggregations.experts[expert.id] > 0
+                            && (expertsFilter === ''
+                              || expert.title
+                                .toLowerCase()
+                                .includes(expertsFilter.toLowerCase())),
+                        )
+                        .sort(
+                          (a, b) => aggregations.experts[b.id]
+                            - aggregations.experts[a.id],
                         )
                         .map((expert) => (
                           <li
@@ -1253,7 +1263,7 @@ SearchTable.propTypes = {
       ),
     }),
   ),
-  hideExpertDropdown: PropTypes.bool,
+  showExpertDropDown: PropTypes.bool,
   hideTopicDropdown: PropTypes.bool,
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
@@ -1283,7 +1293,7 @@ SearchTable.defaultProps = {
   contenttypes: [],
   endpointParams: [],
   filterTypes: [],
-  hideExpertDropdown: false,
+  showExpertDropDown: false,
   hideTopicDropdown: false,
   isSearchPage: false,
   limit: 24,

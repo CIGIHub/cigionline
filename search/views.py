@@ -4,14 +4,11 @@ from wagtail.search.models import Query
 
 from .search import cigi_search, cigi_search_promoted
 
+import logging
+
 
 def process_item(page, request):
-    snippet = ''
-    if request.GET.get('searchpage'):
-        try:
-            snippet = page.specific.body_snippet
-        except IndexError:
-            snippet = ''
+    snippet = page.specific.body_snippet
     fields = request.GET.getlist('field', [])
     item = {
         'highlights': page._highlights,

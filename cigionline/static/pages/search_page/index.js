@@ -10,6 +10,7 @@ ReactDOM.render(
     isSearchPage
     showCount
     showSearch
+    showExpertsDropdown
     sortOptions={[{
       default: true,
       name: 'Relevance',
