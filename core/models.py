@@ -138,7 +138,7 @@ class BasicPageAbstract(models.Model):
             except IndexError:
                 break
         if self.body:
-            return snippet[:500] if len(snippet) > 500 else snippet
+            return snippet[:350] if len(snippet) > 350 else snippet
         else:
             return snippet
 

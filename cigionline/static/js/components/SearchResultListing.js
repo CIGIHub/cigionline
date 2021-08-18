@@ -112,8 +112,8 @@ function SearchResultListing(props) {
             {row.highlights
               .reduce((acc, curr) => {
                 const accLength = [...acc, curr].reduce((a, b) => a + b.length, 0);
-                if (accLength > 500) {
-                  return [...acc, curr.substring(0, accLength - 500)];
+                if (accLength > 350) {
+                  return [...acc, curr.substring(0, accLength - 350)];
                 }
                 return [...acc, curr];
               }, [])
