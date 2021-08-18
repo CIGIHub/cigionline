@@ -109,19 +109,25 @@ function SearchResultListing(props) {
         )}
         {row.highlights.length > 0 && (
           <p className="search-result-highlight">
-            {row.highlights.map((highlight, index) => (
-              <span
-                key={`${row.id}-highlight-${index}`}
-                dangerouslySetInnerHTML={{ __html: highlight }}
-              />
-            ))}
+            {row.highlights
+              .reduce((acc, curr) => {
+                const accLength = [...acc, curr].reduce((a, b) => a + b.length, 0);
+                if (accLength > 500) {
+                  return [...acc, curr.substring(0, accLength - 500)];
+                }
+                return [...acc, curr];
+              }, [])
+              .map((highlight, index) => (
+                <span
+                  key={`${row.id}-highlight-${index}`}
+                  dangerouslySetInnerHTML={{ __html: highlight }}
+                />
+              ))}
           </p>
         )}
         {row.highlights.length === 0 && row.snippet && (
           <p className="search-result-highlight" maxLength="100">
-            <span>
-              {row.snippet}
-            </span>
+            <span>{row.snippet}</span>
           </p>
         )}
         {row.search_result_description && (
