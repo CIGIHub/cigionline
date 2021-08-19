@@ -5,6 +5,8 @@ from wagtail.search.backends.elasticsearch7 import (
     Elasticsearch7SearchResults
 )
 
+import shlex
+
 
 class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
     def _get_es_body(self, for_count=False):
@@ -201,23 +203,30 @@ class CIGIOnlineSearchQueryCompiler:
 
     def get_query(self):
         if self.searchtext:
+            search_list = shlex.split(self.searchtext, posix=False)
+            terms = []
+            should = []
+            for item in search_list:
+                if item.startswith('"') and item.endswith('"'):
+                    should.append({
+                        "multi_match": {
+                            "fields": ["title", "*__body", "core_contentpage__author_names^2", "*__topic_names^2", "research_topicpage__topic_name^100", "people_personpage__person_name^100"],
+                            "query": item,
+                            "type": "phrase",
+                        },
+                    })
+                else:
+                    terms.append(item)
+            should.append({
+                "multi_match": {
+                    "fields": ["title", "*_body", "core_contentpage__author_names", "*__topic_names^2"],
+                    "query": ' '.join(terms),
+                },
+            },)
+
             must = {
                 "bool": {
-                    "should": [
-                        {
-                            "multi_match": {
-                                "fields": ["title", "*__body", "core_contentpage__author_names^2", "*__topic_names^2", "research_topicpage__topic_name^100", "people_personpage__person_name^100"],
-                                "query": self.searchtext,
-                                "type": "phrase",
-                            },
-                        },
-                        {
-                            "multi_match": {
-                                "fields": ["title", "*__body", "core_contentpage__author_names", "*__topic_names^2"],
-                                "query": self.searchtext,
-                            },
-                        },
-                    ]
+                    "should": should
                 }
             }
         else:
@@ -550,6 +559,12 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             filters.append({
                 "terms": {
                     "core_contentpage__author_ids_filter": self.authors,
+                },
+            })
+        if self.experts:
+            filters.append({
+                "terms": {
+                    "core_contentpage__author_ids_filter": [self.experts],
                 },
             })
         if self.projects:

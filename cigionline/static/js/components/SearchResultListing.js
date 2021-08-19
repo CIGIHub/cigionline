@@ -110,9 +110,10 @@ function SearchResultListing(props) {
         {row.highlights.length > 0 && (
           <p className="search-result-highlight">
             {row.highlights
-              .reduce((acc, curr) => {
+              .reduce((acc, curr, i, arr) => {
                 const accLength = [...acc, curr].reduce((a, b) => a + b.length, 0);
                 if (accLength > 350) {
+                  arr.splice(1);
                   return [...acc, curr.substring(0, accLength - 350)];
                 }
                 return [...acc, curr];

@@ -25,6 +25,7 @@ class SearchTable extends React.Component {
     const { filterTypes } = props;
     this.state = {
       currentPage: 1,
+      emptyQuery: false,
       expertsFilter: '',
       expertSelectValues: [],
       filterTypes,
@@ -100,7 +101,15 @@ class SearchTable extends React.Component {
       if (year.length > 0) {
         initialState.yearSelectValues = year;
       }
-      this.setState(initialState, this.getRows);
+      if (query) {
+        this.setState(initialState, this.getRows);
+      } else {
+        this.setState({
+          loadingInitial: false,
+          loading: false,
+          emptyQuery: true,
+        });
+      }
     } else {
       this.getRows();
     }
@@ -113,11 +122,14 @@ class SearchTable extends React.Component {
   }
 
   handleSearchSubmit(e) {
+    const { searchValue } = this.state;
     e.preventDefault();
-    // When searching, set the page to the first page to display the most
-    // relevant results. Note that setPage will also call the API to update the
-    // table.
-    this.setPage(1);
+    if (searchValue) {
+      // When searching, set the page to the first page to display the most
+      // relevant results. Note that setPage will also call the API to update the
+      // table.
+      this.setPage(1);
+    }
   }
 
   handleSearchValueChange(e) {
@@ -191,7 +203,9 @@ class SearchTable extends React.Component {
       // if we are adding, we need to add all
       types.push(type);
       this.getSubTypes(type).map((s) => {
-        types.push(s.name);
+        if (this.getAggregationCount(s) > 0) {
+          types.push(s.name);
+        }
         return true;
       });
     } else {
@@ -697,6 +711,7 @@ class SearchTable extends React.Component {
                   value={searchValue}
                   placeholder={searchPlaceholder}
                   onChange={this.handleSearchValueChange}
+                  required="required"
                 />
                 <div className="input-group-append">
                   <button className="btn-search" type="submit">
@@ -714,6 +729,7 @@ class SearchTable extends React.Component {
   render() {
     const {
       currentPage,
+      emptyQuery,
       expertsFilter,
       loading,
       loadingExperts,
@@ -1212,6 +1228,10 @@ class SearchTable extends React.Component {
                 </table>
               )}
             </>
+          ) : emptyQuery ? (
+            <p>
+              Please enter your search terms into the Search field.
+            </p>
           ) : (
             <>
               {this.renderSelectedFilters()}

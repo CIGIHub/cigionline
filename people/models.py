@@ -288,11 +288,19 @@ class PersonPage(
 
     @property
     def body_snippet(self):
-        snippet = BeautifulSoup(self.body[0].value.source, "html.parser").get_text()
+        snippet = ''
+        for i in range(5):
+            try:
+                snippet = BeautifulSoup(self.body[i].value.source, "html.parser").get_text()
+                break
+            except AttributeError:
+                continue
+            except IndexError:
+                break
         if self.body:
-            return snippet[:100] if len(snippet) > 100 else snippet
+            return snippet[:350] if len(snippet) > 350 else snippet
         else:
-            return ''
+            return snippet
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
