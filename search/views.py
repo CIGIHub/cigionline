@@ -4,8 +4,6 @@ from wagtail.search.models import Query
 
 from .search import cigi_search, cigi_search_promoted
 
-import logging
-
 
 def process_item(page, request):
     snippet = page.specific.body_snippet

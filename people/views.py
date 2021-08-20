@@ -4,7 +4,7 @@ from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.core.cache import cache
 
-from .models import PeoplePage, PersonPage
+from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
 
@@ -93,6 +93,7 @@ def all_staff(request):
             'url': person.get_url(request),
         } for person in staff[:50]]
     })
+
 
 def all_experts_search(request):
     experts = PersonPage.objects.public().live().filter(archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED, person_types__name__in=['Expert', 'CIGI Chair']).distinct()
