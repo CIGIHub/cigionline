@@ -354,8 +354,8 @@ class CIGIOnlineSearchQueryCompiler:
                 },
                 "functions": [
                     {
-                        "filter": {"match": {"core_contentpage__contentsubtype_filter": "CIGI in the News"}},
-                        "weight": 0.5
+                        "filter": {"terms": {"core_contentpage__contentsubtype_filter": ["CIGI in the News", "News Releases"]}},
+                        "weight": 0.25,
                     }
                 ],
             },

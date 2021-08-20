@@ -67,7 +67,7 @@ class SearchTable extends React.Component {
   }
 
   componentDidMount() {
-    const { filterTypes: isSearchPage, showSidebar } = this.props;
+    const { isSearchPage, showSidebar } = this.props;
     if (isSearchPage) {
       const params = new URL(window.location).searchParams;
       const query = params.get('query');
@@ -1159,7 +1159,7 @@ class SearchTable extends React.Component {
             <>
               {showCount && totalRows && (
                 <div className="search-table-count">
-                  {`${totalRows} results for "${searchValue}"`}
+                  {`${totalRows} results for '${searchValue}'`}
                 </div>
               )}
               {this.renderSelectedFilters()}
