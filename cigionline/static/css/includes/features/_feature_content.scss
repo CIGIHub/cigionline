@@ -16,11 +16,11 @@
     }
 
     .feature-content-topic-list {
-      @include link($color: #ffc0cb, $hover-color: $cigi-primary-colour);
+      @include link($color: $cigi-primary-colour, $hover-color: $cigi-primary-colour);
 
       li {
         &::after {
-          color: #ffc0cb;
+          color: $cigi-primary-colour;
         }
       }
     }
