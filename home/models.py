@@ -190,18 +190,18 @@ class HomePageFeaturedPage(Orderable):
         related_name='featured_pages',
     )
     featured_page = models.ForeignKey(
-        'wagtailcore.Page',
+        'core.ContentPage',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
         related_name='+',
-        verbose_name='Page',
+        verbose_name='Content Page',
     )
 
     panels = [
         PageChooserPanel(
             'featured_page',
-            ['wagtailcore.Page'],
+            ['core.ContentPage'],
         ),
     ]
 
