@@ -11,6 +11,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
+from django.utils.text import slugify
 
 
 class ThemeableBlock:
@@ -825,10 +826,19 @@ class NewsletterBlock(blocks.StructBlock):
 
                     context['text'].source = str(soup)
 
+        def in_line_tracking(href, title):
+            tracking = f'utm_source=cigi_newsletter&utm_medium=email&utm_campaign={slugify(title)}'
+            if '?' in href:
+                return f'{href};&{tracking}'
+            else:
+                return f'{href}?{tracking}'
+
         if context.get('text'):
             text_soup = BeautifulSoup(context['text'].source, 'html.parser')
             for link in text_soup.findAll('a'):
                 link['style'] = 'text-decoration: none; color: #ee1558;'
+                link['href'] = in_line_tracking(link['href'], context['page'].title)
+
             context['text'].source = str(text_soup)
 
         return context
