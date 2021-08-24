@@ -111,10 +111,11 @@ class HomePage(Page):
         return [multimedia[x] for x in featured_multimedia_ids]
 
     def get_featured_publications(self):
+        featured_items_ids = self.featured_pages.values_list('featured_page', flat=True)
         return PublicationPage.objects.prefetch_related(
             'authors__author',
             'topics',
-        ).live().public().order_by('-publishing_date')[:4]
+        ).live().public().exclude(id__in=featured_items_ids).order_by('-publishing_date')[:4]
 
     def get_featured_events(self):
         featured_events = []
