@@ -60,7 +60,7 @@
       {% if self.publication_type.title == 'Books' %}
         {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors.all author_count=self.author_count editors=self.editors.all editor_count=self.editor_count %}
       {% else %}
-        {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads %}
+        {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads ctas=self.ctas %}
       {% endif %}
     {% endblock %}
 
