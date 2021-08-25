@@ -16,12 +16,8 @@
     }
 
     .feature-content-topic-list {
-      @include link($color: $cigi-primary-colour, $hover-color: $cigi-primary-colour);
-
-      li {
-        &::after {
-          color: $cigi-primary-colour;
-        }
+      a {
+        color: $cigi-primary-colour;
       }
     }
   }
