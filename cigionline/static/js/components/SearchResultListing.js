@@ -131,11 +131,15 @@ function SearchResultListing(props) {
             <span>{row.snippet}</span>
           </p>
         )}
-        {row.search_result_description && (
+        {row.search_result_description ? (
           <p className="search-result-highlight">
             {row.search_result_description}
           </p>
-        )}
+        ) : row.contenttype === 'Topic' ? (
+          <p className="search-result-highlight">
+            View results related to this topic.
+          </p>
+        ) : ''}
       </div>
     </article>
   );
