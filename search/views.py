@@ -6,7 +6,10 @@ from .search import cigi_search, cigi_search_promoted
 
 
 def process_item(page, request):
-    snippet = page.specific.body_snippet
+    try:
+        snippet = page.specific.body_snippet
+    except AttributeError:
+        snippet = ''
     fields = request.GET.getlist('field', [])
     item = {
         'highlights': page._highlights,
