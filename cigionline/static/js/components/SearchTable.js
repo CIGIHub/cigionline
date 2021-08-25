@@ -1159,7 +1159,7 @@ class SearchTable extends React.Component {
             <>
               {showCount && totalRows && (
                 <div className="search-table-count">
-                  {`${totalRows} results for '${searchValue}'. For exact matches, enclose search terms in double quotation marks (e.g. "platform governance").`}
+                  {`${totalRows} results for ${searchValue}. For exact matches, enclose search terms in double quotation marks (e.g. "platform governance").`}
                 </div>
               )}
               {this.renderSelectedFilters()}
