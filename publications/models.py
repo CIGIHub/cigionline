@@ -11,6 +11,7 @@ from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
     PDFDownloadBlock,
+    CTABlock,
 )
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -156,6 +157,13 @@ class PublicationPage(
             ('purchase_link', BookPurchaseLinkBlock())
         ],
         blank=True,
+    )
+    ctas = StreamField(
+        [
+            ('ctas', CTABlock())
+        ],
+        blank=True,
+        verbose_name='Call to Action Buttons',
     )
     editorial_reviews = StreamField(
         [
@@ -330,6 +338,7 @@ class PublicationPage(
             [
                 FieldPanel('embed_issuu'),
                 StreamFieldPanel('pdf_downloads'),
+                StreamFieldPanel('ctas'),
                 FieldPanel('embed_youtube'),
             ],
             heading='Media',

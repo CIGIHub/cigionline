@@ -91,6 +91,7 @@ def all_staff(request):
             'position': person.position,
             'title': person.title,
             'url': person.get_url(request),
+            'has_bio': False if not person.body else True,
         } for person in staff[:50]]
     })
 
