@@ -19,6 +19,12 @@
       a {
         color: $cigi-primary-colour;
       }
+
+      li {
+        &::after {
+          color: $cigi-primary-colour;
+        }
+      }
     }
   }
 
