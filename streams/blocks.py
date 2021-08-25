@@ -829,7 +829,7 @@ class NewsletterBlock(blocks.StructBlock):
         def in_line_tracking(href, title):
             tracking = f'utm_source=cigi_newsletter&utm_medium=email&utm_campaign={slugify(title)}'
             if '?' in href:
-                return f'{href};&{tracking}'
+                return f'{href}&{tracking}'
             else:
                 return f'{href}?{tracking}'
 
