@@ -17,32 +17,55 @@ ReactDOM.render(
     ]}
     filterTypes={[{
       name: 'Books',
-      param: 'contentsubtype',
-      value: 'Books',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Books',
+      }],
     }, {
-      name: 'CIGI Papers',
-      param: 'contentsubtype',
-      value: 'CIGI Papers',
+      name: 'Papers',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'CIGI Papers',
+      }],
     }, {
       name: 'Conference Reports',
-      param: 'contentsubtype',
-      value: 'Conference Reports',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Conference Reports',
+      }],
     }, {
       name: 'Essay Series',
-      param: 'contentsubtype',
-      value: 'Essay Series',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Essay Series',
+      }],
     }, {
       name: 'Policy Briefs',
-      param: 'contentsubtype',
-      value: 'Policy Briefs',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Policy Briefs',
+      }],
+
     }, {
       name: 'Policy Memos',
-      param: 'contentsubtype',
-      value: 'Policy Memos',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Policy Memos',
+      }],
+
     }, {
       name: 'Special Reports',
-      param: 'contentsubtype',
-      value: 'Special Reports',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Special Reports',
+      }],
     }]}
     containerClass={[
       'custom-theme-table',

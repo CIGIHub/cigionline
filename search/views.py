@@ -6,14 +6,18 @@ from .search import cigi_search, cigi_search_promoted
 
 
 def process_item(page, request):
+    try:
+        snippet = page.specific.body_snippet
+    except AttributeError:
+        snippet = ''
     fields = request.GET.getlist('field', [])
-
     item = {
         'highlights': page._highlights,
         'elevated': page._elevated,
         'id': page.id,
         'title': page.title,
         'url': page.get_url(request),
+        'snippet': snippet,
     }
     for field in fields:
         try:
@@ -35,6 +39,16 @@ def process_item(page, request):
                     'title': topic.title,
                     'url': topic.url,
                 } for topic in page.specific.topics.all()]
+            elif field == 'contenttype':
+                verbose_name = page.specific._meta.verbose_name
+                if verbose_name == 'Person Page':
+                    item['contenttype'] = 'Person'
+                elif verbose_name == 'Topic Page':
+                    item['contenttype'] = 'Topic'
+                elif verbose_name == 'Publication Series':
+                    item['contenttype'] = verbose_name
+                else:
+                    item['contenttype'] = getattr(page.specific, field)
             else:
                 item[field] = getattr(page.specific, field)
         except AttributeError:
@@ -57,6 +71,14 @@ def search_api(request):
         return JsonResponse({
             'meta': {
                 'total_count': 0,
+                'aggregations': {
+                    'topics': {},
+                    'contenttypes': {},
+                    'contentsubtypes': {},
+                    'years': {},
+                    'content_types': {},
+                    'experts': {},
+                }
             },
             'items': [],
         }, safe=False)
@@ -74,6 +96,9 @@ def search_api(request):
         searchtext=searchtext,
         sort=request.GET.get('sort', None),
         topics=request.GET.getlist('topic', None),
+        years=request.GET.getlist('year', None),
+        eventaccess=request.GET.getlist('eventaccess', None),
+        experts=request.GET.get('expert', None),
     )
     promoted_pages = []
     if request.GET.get('searchpage'):
@@ -90,7 +115,10 @@ def search_api(request):
             searchtext=searchtext,
             sort=request.GET.get('sort', None),
             topics=request.GET.getlist('topic', None),
+            experts=request.GET.get('expert', None),
         )
+
+    aggregations = pages.get_aggregations()
 
     default_limit = 24
     default_offset = 0
@@ -115,6 +143,7 @@ def search_api(request):
     return JsonResponse({
         'meta': {
             'total_count': pages.count(),
+            'aggregations': aggregations
         },
         'items': items,
     }, safe=False)

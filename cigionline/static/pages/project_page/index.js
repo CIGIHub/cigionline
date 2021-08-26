@@ -30,32 +30,50 @@ ReactDOM.render(
     ]}
     filterTypes={[{
       name: 'Event',
-      param: 'contenttype',
-      value: 'Event',
+      params: [{
+        name: 'contenttype',
+        value: 'Event',
+      }],
     }, {
       name: 'Publication',
-      param: 'contenttype',
-      value: 'Publication',
+      params: [{
+        name: 'contenttype',
+        value: 'Publication',
+      }],
     }, {
       name: 'Multimedia',
-      param: 'contenttype',
-      value: 'Multimedia',
+      params: [{
+        name: 'contenttype',
+        value: 'Multimedia',
+      }],
     }, {
       name: 'Opinion',
-      param: 'contentsubtype',
-      value: 'Opinion',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Opinion',
+      }],
     }, {
       name: 'Op-Eds',
-      param: 'contentsubtype',
-      value: 'Op-Eds',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Op-Eds',
+      }],
     }, {
       name: 'CIGI in the News',
-      param: 'contentsubtype',
-      value: 'CIGI in the News',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'CIGI in the News',
+      }],
     }, {
       name: 'News Releases',
-      param: 'contentsubtype',
-      value: 'News Releases',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'News Releases',
+      }],
     }]}
     RowComponent={ProjectContentListing}
     tableColumns={[{

@@ -1,9 +1,179 @@
-@import '../global/variables';
+@import '../global/mixins';
+
+.search-filters {
+  .dropdown {
+    margin-bottom: 12px;
+
+    &.dropdown-topics {
+      .dropdown-menu {
+        &.show {
+          border-bottom: 1em solid $white;
+          height: 300px;
+        }
+      }
+    }
+
+    .dropdown-menu {
+      &.show {
+        height: auto;
+        margin: 0 0 2em;
+        overflow-y: scroll;
+        position: relative !important;
+        transform: none !important;
+        z-index: 14;
+
+        .expert-filter,
+        .topic-filter {
+          background-color: $white;
+          display: block;
+          padding: 1em 0.75em 0.5em;
+          position: sticky;
+          top: 0;
+          z-index: 2;
+
+          input {
+            &::placeholder {
+              color: $cigi-medium-light-grey;
+              font-size: 0.75em;
+              text-transform: uppercase;
+            }
+          }
+
+          .btn-search {
+            color: $cigi-medium-grey;
+          }
+        }
+      }
+    }
+
+    .columns-2 {
+      @include media-breakpoint-only(md) {
+        column-count: 1;
+      }
+      column-count: 2;
+    }
+
+    .dropdown-item {
+      @include media-breakpoint-up(lg) {
+        font-size: 0.8em;
+      }
+      padding-bottom: 0;
+      padding-left: 1em;
+      padding-right: 1em;
+
+      .dropdown-item {
+        font-size: 1em;
+      }
+
+      label {
+        align-items: center;
+        cursor: pointer;
+        display: flex;
+        margin-bottom: 0;
+
+        &.inactive {
+          color: $cigi-medium-grey;
+          pointer-events: none;
+        }
+
+        span {
+          flex-shrink: 0;
+        }
+      }
+
+      input {
+        &[type='checkbox'] {
+          display: none;
+
+          & + span {
+            border: 1px solid $black;
+            cursor: pointer;
+            display: inline-block;
+            height: 12px;
+            margin-right: 0.5em;
+            position: relative;
+            vertical-align: sub;
+            width: 12px;
+
+            &::after {
+              content: '';
+              height: 8px;
+              left: 1px;
+              position: absolute;
+              top: 1px;
+              width: 8px;
+            }
+          }
+
+          &.partial {
+            & + span {
+              &::after {
+                background-color: $color--blue;
+                opacity: 0.42;
+              }
+            }
+          }
+
+          &:checked {
+            & + span {
+              &::after {
+                background-color: $color--blue;
+                opacity: 1;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.filterlist {
+  margin-bottom: 0.5em;
+
+  .filtertitle {
+    color: $cigi-medium-light-grey;
+    font-size: 0.875em;
+    font-weight: 500;
+    margin-bottom: 0.25em;
+  }
+
+  .filter {
+    border: 2px solid $color--blue;
+    border-radius: 3px;
+    color: $color--blue;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.625em;
+    font-weight: 500;
+    margin-right: 0.5em;
+    padding: 0.3em 0.75em;
+    position: relative;
+    text-transform: uppercase;
+
+    i {
+      margin-left: 0.5em;
+    }
+
+    &.red {
+      background-color: $cigi-primary-colour;
+      border: 1px solid $cigi-primary-colour;
+      color: $white;
+    }
+  }
+}
+
+.search-table-container {
+  margin-top: 4em;
+}
 
 .search-table {
   margin-bottom: 4em;
-  margin-top: 3em;
   position: relative;
+
+  &.search-table-mobile {
+    margin-bottom: 0;
+  }
 
   .search-table-scroll {
     height: 0;
@@ -13,7 +183,9 @@
   }
 
   .search-table-count {
+    color: $cigi-medium-light-grey;
     font-size: 0.9em;
+    margin-bottom: 1.5em;
   }
 
   .search-results {
@@ -21,7 +193,7 @@
     transition: opacity 1s;
 
     &.loading {
-      opacity: .5;
+      opacity: 0.5;
     }
   }
 
@@ -34,60 +206,73 @@
   }
 
   .search-bar {
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
 
     form {
       margin-bottom: 0.5em;
-    }
 
-    .search-bar-sort-wrapper {
-      align-items: baseline;
-      display: flex;
-      font-size: 0.9em;
+      .input-group-search {
+        &.large {
+          height: 2.2em;
 
-      span {
-        color: $cigi-medium-grey;
-        flex: 0 0 auto;
-        font-weight: 500;
-        margin-right: 1em;
-      }
-
-      .search-bar-sort-list {
-        align-items: center;
-        display: flex;
-        flex-wrap: wrap;
-        list-style: none;
-        margin-bottom: 0;
-
-        li {
-          &:not(:first-child) {
-            padding-left: 1em;
-            position: relative;
-
-            &::before {
-              color: $cigi-medium-light-grey;
-              content: '|';
-              display: inline-flex;
-              left: 0;
-              position: absolute;
-              top: 0;
-            }
+          input {
+            color: $color--blue;
+            font-size: 1.5em;
+            font-style: italic;
           }
         }
+      }
+    }
+  }
 
-        .search-bar-sort-link {
-          color: $cigi-medium-light-grey;
-          margin-right: 1em;
+  .search-bar-sort-wrapper {
+    align-items: baseline;
+    display: flex;
+    font-size: 0.9em;
+    margin-bottom: 1em;
 
-          &:hover {
-            border-bottom: 3px solid $cigi-primary-colour;
-            text-decoration: none;
+    span {
+      color: $cigi-medium-grey;
+      flex: 0 0 auto;
+      font-weight: 500;
+      margin-right: 1em;
+    }
+
+    .search-bar-sort-list {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      list-style: none;
+      margin-bottom: 0;
+
+      li {
+        &:not(:first-child) {
+          padding-left: 1em;
+          position: relative;
+
+          &::before {
+            color: $cigi-medium-light-grey;
+            content: '|';
+            display: inline-flex;
+            left: 0;
+            position: absolute;
+            top: 0;
           }
+        }
+      }
 
-          &.active {
-            border-bottom: 3px solid $cigi-primary-colour;
-            color: $black;
-          }
+      .search-bar-sort-link {
+        color: $cigi-medium-light-grey;
+        margin-right: 1em;
+
+        &:hover {
+          border-bottom: 3px solid $cigi-primary-colour;
+          text-decoration: none;
+        }
+
+        &.active {
+          border-bottom: 3px solid $cigi-primary-colour;
+          color: $black;
         }
       }
     }

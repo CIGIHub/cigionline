@@ -170,6 +170,7 @@ class MultimediaPage(
         blank=False,
         max_length=8,
         choices=MultimediaTypes.choices,
+        default=MultimediaTypes.VIDEO,
     )
     multimedia_url = models.URLField(
         blank=True,

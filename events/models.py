@@ -321,6 +321,7 @@ class EventPage(
         + ContentPage.search_fields \
         + [
             index.FilterField('publishing_date'),
+            index.FilterField('event_access'),
         ]
 
     parent_page_types = ['events.EventListPage']

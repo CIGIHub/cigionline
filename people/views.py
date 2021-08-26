@@ -94,3 +94,16 @@ def all_staff(request):
             'has_bio': False if not person.body else True,
         } for person in staff[:50]]
     })
+
+
+def all_experts_search(request):
+    experts = PersonPage.objects.public().live().filter(archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED, person_types__name__in=['Expert', 'CIGI Chair']).distinct()
+    return JsonResponse({
+        'meta': {
+            'total_count': experts.count(),
+        },
+        'items': [{
+            'id': expert.id,
+            'title': expert.title,
+        } for expert in experts],
+    }, safe=False)
