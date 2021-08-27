@@ -837,7 +837,10 @@ class NewsletterBlock(blocks.StructBlock):
             text_soup = BeautifulSoup(context['text'].source, 'html.parser')
             for link in text_soup.findAll('a'):
                 link['style'] = 'text-decoration: none; color: #ee1558;'
-                link['href'] = in_line_tracking(link['href'], context['page'].title)
+                try:
+                    link['href'] = in_line_tracking(link['href'], context['page'].title)
+                except KeyError:
+                    pass
 
             context['text'].source = str(text_soup)
 
