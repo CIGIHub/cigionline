@@ -201,7 +201,7 @@ header {
 
         .container {
           @include media-breakpoint-up(lg) {
-            margin-top: -33%;
+            margin-top: -33vh;
           }
         }
       }
