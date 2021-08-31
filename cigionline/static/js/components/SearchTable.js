@@ -36,7 +36,6 @@ class SearchTable extends React.Component {
       loadingYears: true,
       loadingTypes: true,
       rows: [],
-      searchBarTotalRows: 0,
       searchValue: '',
       sortSelected: null,
       topics: [],
@@ -134,12 +133,9 @@ class SearchTable extends React.Component {
   }
 
   handleSearchValueChange(e) {
-    this.setState(
-      {
-        searchValue: e.target.value,
-      },
-      this.setPage(1),
-    );
+    this.setState({
+      searchValue: e.target.value,
+    }, this.setPage(1));
   }
 
   handleSortSelect(sortValue) {
