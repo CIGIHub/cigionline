@@ -84,10 +84,9 @@ class NewsletterPage(Page):
                                                    {'self': self, 'page': self, 'is_html_string': True}),
                                   'html.parser')
 
-        title = self.title
         for link in text_soup.findAll('a'):
             try:
-                link['href'] = in_line_tracking(link['href'], title)
+                link['href'] = in_line_tracking(link['href'], self.title)
             except KeyError:
                 pass
 
