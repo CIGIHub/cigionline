@@ -88,7 +88,7 @@ class NewsletterPage(Page):
         for link in text_soup.findAll('a'):
             try:
                 link['href'] = in_line_tracking(link['href'], title)
-            except TypeError:
+            except KeyError:
                 pass
 
         return str(text_soup)
