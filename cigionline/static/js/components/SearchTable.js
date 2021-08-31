@@ -36,10 +36,8 @@ class SearchTable extends React.Component {
       loadingYears: true,
       loadingTypes: true,
       rows: [],
-      searchBarRows: [],
       searchBarTotalRows: 0,
       searchValue: '',
-      showSearchBarRows: false,
       sortSelected: null,
       topics: [],
       topicSelectValues: [],
@@ -136,14 +134,12 @@ class SearchTable extends React.Component {
   }
 
   handleSearchValueChange(e) {
-    let showSearchBarRows = false;
-    if (e.target.value) {
-      showSearchBarRows = true;
-    }
-    this.setState({
-      searchValue: e.target.value,
-      showSearchBarRows,
-    }, this.getRowsSearchBar);
+    this.setState(
+      {
+        searchValue: e.target.value,
+      },
+      this.setPage(1),
+    );
   }
 
   handleSortSelect(sortValue) {
@@ -243,105 +239,6 @@ class SearchTable extends React.Component {
     this.setState(() => ({
       expertsFilter: e.target.value,
     }));
-  }
-
-  getRowsSearchBar() {
-    const {
-      searchValue,
-      sortSelected,
-      expertSelectValues,
-      topicSelectValues,
-      yearSelectValues,
-      typeSelectValues,
-    } = this.state;
-    const {
-      contentsubtypes,
-      contenttypes,
-      endpointParams,
-      fields,
-      filterTypes,
-      sortOptions,
-    } = this.props;
-
-    let uri = '/api/search/?limit=6&offset=0';
-
-    if (searchValue) {
-      console.log(searchValue.length);
-      if (sortSelected) {
-        uri += `&sort=${sortSelected}`;
-      } else {
-        for (const sortOption of sortOptions) {
-          if (sortOption.default) {
-            uri += `&sort=${sortOption.value}`;
-          }
-        }
-      }
-      if (typeSelectValues.length === 0) {
-        for (const contenttype of contenttypes) {
-          uri += `&contenttype=${contenttype}`;
-        }
-        for (const contentsubtype of contentsubtypes) {
-          uri += `&contentsubtype=${contentsubtype}`;
-        }
-      }
-      for (const field of fields) {
-        uri += `&field=${field}`;
-      }
-      for (const endpointParam of endpointParams) {
-        uri += `&${endpointParam.paramName}=${endpointParam.paramValue}`;
-      }
-      if (searchValue) {
-        uri += `&searchtext=${searchValue}`;
-      }
-      if (expertSelectValues.length > 0) {
-        expertSelectValues.map((t) => {
-          uri += `&expert=${t}`;
-          return true;
-        });
-      }
-      if (topicSelectValues.length > 0) {
-        topicSelectValues.map((t) => {
-          uri += `&topic=${t}`;
-          return true;
-        });
-      }
-      if (yearSelectValues.length > 0) {
-        yearSelectValues.map((t) => {
-          uri += `&year=${t}`;
-          return true;
-        });
-      }
-      if (typeSelectValues.length > 0) {
-        typeSelectValues.map((t) => {
-          const filter = filterTypes.filter((f) => f.name === t);
-          if (filter.length > 0) {
-            filter[0].params.map((p) => {
-              uri += `&${p.name}=${p.value}`;
-              return true;
-            });
-          }
-          return true;
-        });
-      }
-
-      fetch(encodeURI(uri))
-        .then((res) => res.json())
-        .then((data) => {
-          const rows = data.items.filter(
-            (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-          );
-          const aggregations = data.meta.aggregations;
-          aggregations.topics = mergeObjects([
-            aggregations.topics_contentpage,
-            aggregations.topics_personpage,
-          ]);
-
-          this.setState(() => ({
-            searchBarRows: rows,
-            searchBarTotalRows: data.meta.total_count,
-          }));
-        });
-    }
   }
 
   getRows() {
@@ -800,9 +697,7 @@ class SearchTable extends React.Component {
   }
 
   renderSearchBar(showSidebar) {
-    const {
-      searchValue, showSearchBarRows, searchBarRows, searchBarTotalRows,
-    } = this.state;
+    const { searchValue } = this.state;
     const { searchPlaceholder } = this.props;
     return (
       <div className="search-bar">
@@ -826,21 +721,6 @@ class SearchTable extends React.Component {
                   <button className="btn-search" type="submit">
                     <i className="far fa-search" />
                   </button>
-                </div>
-                <div className={`search-bar-dropdown ${showSearchBarRows ? 'show' : ''}`}>
-                  <div>
-                    Results
-                    (
-                    {searchBarTotalRows}
-                    )
-                  </div>
-                  <ul>
-                    {searchBarRows.map((row) => (
-                      <li key={row.id}>
-                        <a href={row.url}>{row.title}</a>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             </div>
@@ -1354,8 +1234,9 @@ class SearchTable extends React.Component {
             </>
           ) : emptyQuery ? (
             <p>
-              Please enter your search terms into the Search field. For exact matches, enclose
-              search terms in double quotation marks (e.g. &quot;platform governance&quot;).
+              Please enter your search terms into the Search field. For exact
+              matches, enclose search terms in double quotation marks (e.g.
+              &quot;platform governance&quot;).
             </p>
           ) : (
             <>
