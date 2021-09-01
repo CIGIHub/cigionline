@@ -8,7 +8,11 @@ function StaffListing(props) {
   return (
     <article className="staff-listing">
       <div className="name-container">
-        <a className="name" href={row.url}>{row.title}</a>
+        {row.has_bio ? (
+          <a className="name" href={row.url}>{row.title}</a>
+        ) : (
+          <div className="name">{row.title}</div>
+        )}
         <div className="position">{row.position}</div>
       </div>
       <div className="contact-container">
@@ -32,6 +36,7 @@ function StaffListing(props) {
 StaffListing.propTypes = {
   row: PropTypes.shape({
     email: PropTypes.string,
+    has_bio: PropTypes.bool,
     phone_number: PropTypes.string,
     position: PropTypes.string,
     title: PropTypes.string.isRequired,
