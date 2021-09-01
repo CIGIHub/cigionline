@@ -20,6 +20,7 @@ ReactDOM.render(
     containerClass={[
       'articles-series-row',
     ]}
+    showSidebar={false}
     RowComponent={ArticleSeriesListing}
   />,
   document.getElementById('article-series-search-table'),

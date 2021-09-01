@@ -26,6 +26,7 @@ urlpatterns = urlpatterns + [
 
     url(r'^search/$', search_views.search, name='search'),
     url(r'^api/experts/$', people_views.all_experts),
+    url(r'^api/all_experts_search/$', people_views.all_experts_search),
     url(r'^api/search/$', search_views.search_api),
     url(r'^api/staff/$', people_views.all_staff),
     url(r'^api/topics/$', research_views.all_topics),
