@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from core.models import (
     ArchiveablePageAbstract,
     BasicPageAbstract,
@@ -247,6 +248,10 @@ class PersonPage(
         return unidecode(self.last_name.lower())
 
     @property
+    def topic_names(self):
+        return [item.title for item in self.topics.all()]
+
+    @property
     def image_square_url(self):
         if self.image_square:
             return self.image_square.get_rendition('fill-300x300').url
@@ -276,6 +281,26 @@ class PersonPage(
     def latest_cigi_in_the_news(self):
         articles = expert_latest_in_the_news_search(expert_id=self.id)
         return articles[:3]
+
+    @property
+    def person_name(self):
+        return self.title
+
+    @property
+    def body_snippet(self):
+        snippet = ''
+        for i in range(5):
+            try:
+                snippet = BeautifulSoup(self.body[i].value.source, "html.parser").get_text()
+                break
+            except AttributeError:
+                continue
+            except IndexError:
+                break
+        if self.body:
+            return snippet[:350] if len(snippet) > 350 else snippet
+        else:
+            return snippet
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -390,6 +415,8 @@ class PersonPage(
             index.SearchField('body'),
             index.FilterField('first_name_lowercase'),
             index.FilterField('last_name_lowercase'),
+            index.SearchField('topic_names'),
+            index.SearchField('person_name'),
             ParentalManyToManyFilterFieldName('person_types'),
             ParentalManyToManyFilterField('topics'),
         ] \

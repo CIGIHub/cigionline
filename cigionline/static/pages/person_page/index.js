@@ -41,6 +41,7 @@ ReactDOM.render(
       colSpan: 1,
       colTitle: 'PDF',
     }]}
+    showSidebar={false}
   />,
   document.getElementById('expert-search-table'),
 );
