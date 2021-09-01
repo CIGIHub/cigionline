@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from django.db import models
 from django.db.models.fields import CharField
 from django.http.response import Http404
@@ -9,6 +10,7 @@ from search.filters import (
 )
 from streams.blocks import (
     AccordionBlock,
+    ExtractBlock,
     ParagraphBlock,
     ReadMoreBlock,
     BlockQuoteBlock,
@@ -79,6 +81,7 @@ class BasicPageAbstract(models.Model):
     ))
     body_external_quote_block = ('external_quote', ExternalQuoteBlock())
     body_external_video_block = ('external_video', ExternalVideoBlock())
+    body_extract_block = ('extract', ExtractBlock())
     body_highlight_title_block = ('highlight_title', HighlightTitleBlock())
     body_image_full_bleed_block = ('image_full_bleed', ImageFullBleedBlock())
     body_image_scroll_block = ('image_scroll', ImageScrollBlock())
@@ -122,6 +125,22 @@ class BasicPageAbstract(models.Model):
         help_text='Select a submenu to appear in the right section of the hero.',
     )
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
+
+    @property
+    def body_snippet(self):
+        snippet = ''
+        for i in range(5):
+            try:
+                snippet = BeautifulSoup(self.body[i].value.source, "html.parser").get_text()
+                break
+            except AttributeError:
+                continue
+            except IndexError:
+                break
+        if self.body:
+            return snippet[:350] if len(snippet) > 350 else snippet
+        else:
+            return snippet
 
     @property
     def image_hero_url(self):
@@ -211,12 +230,18 @@ class SearchablePageAbstract(models.Model):
         blank=True,
         help_text='A list of search terms for which this page will be elevated in the search results.',
     )
+    search_result_description = models.CharField(
+        blank=True,
+        null=True,
+        max_length=1024,
+        help_text='Text that is displayed when this page appears in search results')
 
     search_panel = MultiFieldPanel(
         [
             StreamFieldPanel('search_terms'),
+            FieldPanel('search_result_description'),
         ],
-        heading='Search Terms',
+        heading='Search',
         classname='collapsible collapsed',
     )
 
@@ -341,6 +366,10 @@ class ContentPage(Page, SearchablePageAbstract):
         return self.topics.order_by('title')
 
     @property
+    def topic_names(self):
+        return [item.title for item in self.topics.all()]
+
+    @property
     def author_ids(self):
         return [item.author.id for item in self.authors.all()]
 
@@ -450,11 +479,13 @@ class ContentPage(Page, SearchablePageAbstract):
 
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields + [
         index.FilterField('author_ids'),
-        index.SearchField('author_names'),
+        index.SearchField('author_names', boost=2),
+        index.FilterField('author_names'),
         index.FilterField('contenttype'),
         index.FilterField('contentsubtype'),
         ParentalManyToManyFilterField('projects'),
         index.FilterField('publishing_date'),
+        index.SearchField('topic_names'),
         index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
     ]

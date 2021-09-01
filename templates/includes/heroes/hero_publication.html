@@ -26,6 +26,14 @@
             </button>
           {% endif %}
         {% endfor %}
+        {% for cta in ctas %}
+          <button class="button">
+            <a href="{% if cta.value.file %}{{cta.value.file}}{% else %}{{ cta.value.link }}{% endif %}">
+                <i class="{{ cta.value.button_icon }}"></i>
+                {{ cta.value.button_text }}
+            </a>
+          </button>
+        {% endfor %}
       </div>
     </div>
   </div>

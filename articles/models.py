@@ -62,7 +62,7 @@ class ArticleLandingPage(BasicPageAbstract, Page):
             ],
             heading='Featured Opinions',
             classname='collapsible collapsed',
-            help_text='1: xlarge | 2: large | 3-7: smal | 8-9: medium | 10-14: small | 15: large',
+            help_text='1: xlarge | 2: large | 3-7: small | 8-9: medium | 10-14: small | 15: large',
         )
     ]
 
@@ -189,6 +189,7 @@ class ArticlePage(
             BasicPageAbstract.body_embedded_tiktok_block,
             BasicPageAbstract.body_external_quote_block,
             BasicPageAbstract.body_external_video_block,
+            BasicPageAbstract.body_extract_block,
             BasicPageAbstract.body_highlight_title_block,
             BasicPageAbstract.body_image_full_bleed_block,
             BasicPageAbstract.body_image_scroll_block,
@@ -234,6 +235,11 @@ class ArticlePage(
         choices=HeroTitlePlacements.choices,
         verbose_name='Hero Title Placement',
         help_text='Placement of the title within the hero section. Currently only works on the Longform 2 theme.',
+    )
+    hide_excerpt = models.BooleanField(
+        default=False,
+        verbose_name='Hide Excerpt',
+        help_text='For "CIGI in the News" only: when enabled, hide excerpt and display full article instead',
     )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
@@ -349,6 +355,7 @@ class ArticlePage(
                     'article_type',
                     ['articles.ArticleTypePage'],
                 ),
+                FieldPanel('hide_excerpt'),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
@@ -389,7 +396,7 @@ class ArticlePage(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
-                InlinePanel('cigi_people_mentioned'),
+                InlinePanel('cigi_people_mentioned', label='People Mentioned'),
                 StreamFieldPanel('interviewers'),
                 StreamFieldPanel('related_files'),
             ],

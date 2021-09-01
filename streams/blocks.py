@@ -199,6 +199,31 @@ class ContactPersonBlock(blocks.PageChooserBlock):
         template = 'streams/contact_person_block.html'
 
 
+class CTABlock(blocks.StructBlock, ThemeableBlock):
+    class CTAText(models.TextChoices):
+        DOWNLOAD = ('Download', 'Download')
+        DOWNLOAD_PDF = ('Download PDF', 'Download PDF')
+        EXPLORE_SERIES = ('Explore Series', 'Explore Series')
+
+    class CTAIcon(models.TextChoices):
+        NO_ICON = ('', 'No Icon')
+        DOWNLOAD = ('fas fa-download', 'Download')
+        POINTER = ('fas fa-mouse-pointer', 'Pointer')
+
+    file = DocumentChooserBlock(required=False)
+    link = blocks.CharBlock(required=False, help_text="This will only work if no file is uploaded.")
+    button_text = blocks.ChoiceBlock(required=False, choices=CTAText.choices, max_length=32)
+    button_icon = blocks.ChoiceBlock(required=False, choices=CTAIcon.choices, default=CTAIcon.NO_ICON, max_length=32)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(CTABlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'cta_block')
+
+    class Meta:
+        icon = 'view'
+        label = 'Call to Action'
+
+
 class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
 
     def get_template(self, context, *args, **kwargs):
@@ -298,6 +323,40 @@ class ExternalVideoBlock(blocks.ListBlock, ThemeableBlock):
         icon = 'media'
         label = 'External Video Block'
         template = 'streams/external_video_block.html'
+
+
+class ExtractBlock(blocks.RichTextBlock, ThemeableBlock):
+    def __init__(
+        self, required=True, help_text=None, editor="default", features=None, **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.features = [
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+        ]
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ExtractBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'extract_block')
+
+    class Meta:
+        icon = 'edit'
+        label = 'Extract'
+        template = 'streams/extract_block.html'
 
 
 class ImageBlock(blocks.StructBlock, ThemeableBlock):
@@ -723,7 +782,10 @@ class NewsletterBlock(blocks.StructBlock):
             context['cta_text'] = self.cta_text(value.get('cta')).upper()
 
         if value.get('image'):
-            context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-600x238").file.name}'
+            if value.get('image').file.url.endswith('.gif'):
+                context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").file.name}'
+            else:
+                context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-600x238").file.name}'
 
         if value.get('content'):
             content_page = value.get('content').specific
@@ -733,9 +795,15 @@ class NewsletterBlock(blocks.StructBlock):
             elif (content_page.contenttype == 'Opinion' or content_page.contenttype == 'Publication') and content_page.short_description:
                 context['text'] = content_page.short_description
             if value.get('image_override'):
-                context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
+                if value.get('image_override').file.url.endswith('.gif'):
+                    context['image_url'] = value.get("image_override").file.name
+                else:
+                    context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
             elif content_page.image_hero:
-                context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").file.name
+                if content_page.image_hero.file.url.endswith('.gif'):
+                    context['image_url'] = content_page.image_hero.file.name
+                else:
+                    context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").file.name
                 context['image_alt'] = content_page.image_hero.caption
             if context.get('image_url'):
                 context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url"]}'
@@ -745,7 +813,7 @@ class NewsletterBlock(blocks.StructBlock):
 
             if content_page.contenttype == 'Event' and context.get('text'):
                 event_time = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
-                event_time_zone = f' {content_page.time_zone}' if content_page.time_zone else ''
+                event_time_zone = f' {content_page.time_zone_label}' if content_page.time_zone_label else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
                 if 'is_html_string' not in context:
@@ -761,6 +829,7 @@ class NewsletterBlock(blocks.StructBlock):
             text_soup = BeautifulSoup(context['text'].source, 'html.parser')
             for link in text_soup.findAll('a'):
                 link['style'] = 'text-decoration: none; color: #ee1558;'
+
             context['text'].source = str(text_soup)
 
         return context
