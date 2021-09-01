@@ -62,7 +62,7 @@ class ArticleLandingPage(BasicPageAbstract, Page):
             ],
             heading='Featured Opinions',
             classname='collapsible collapsed',
-            help_text='1: xlarge | 2: large | 3-7: smal | 8-9: medium | 10-14: small | 15: large',
+            help_text='1: xlarge | 2: large | 3-7: small | 8-9: medium | 10-14: small | 15: large',
         )
     ]
 

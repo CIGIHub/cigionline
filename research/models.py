@@ -302,6 +302,10 @@ class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
             ).live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))])
         return featured_pages
 
+    @property
+    def topic_name(self):
+        return self.title
+
     content_panels = Page.content_panels + [
         FieldPanel('description'),
         MultiFieldPanel(
@@ -322,7 +326,9 @@ class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + ArchiveablePageAbstract.search_fields
+    search_fields = Page.search_fields + ArchiveablePageAbstract.search_fields + [
+        index.SearchField('topic_name')
+    ]
 
     parent_page_types = ['research.TopicListPage']
     subpage_types = []

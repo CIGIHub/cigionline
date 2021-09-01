@@ -26,16 +26,25 @@ ReactDOM.render(
     ]}
     filterTypes={[{
       name: 'News Releases',
-      param: 'contentsubtype',
-      value: 'News Releases',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'News Releases',
+      }],
     }, {
       name: 'CIGI in the News',
-      param: 'contentsubtype',
-      value: 'CIGI in the News',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'CIGI in the News',
+      }],
     }, {
       name: 'Op-Eds',
-      param: 'contentsubtype',
-      value: 'Op-Eds',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Op-Eds',
+      }],
     }]}
     RowComponent={MediaListing}
     tableColumns={[{

@@ -829,6 +829,7 @@ class NewsletterBlock(blocks.StructBlock):
             text_soup = BeautifulSoup(context['text'].source, 'html.parser')
             for link in text_soup.findAll('a'):
                 link['style'] = 'text-decoration: none; color: #ee1558;'
+
             context['text'].source = str(text_soup)
 
         return context
