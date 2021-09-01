@@ -219,6 +219,8 @@ class EventPage(
 
     @property
     def time_zone_label(self):
+        # timezone could have been assigned in freeform (previous version), or from a list of options (post change)
+        # if it's from a list of options post change:
         if self.time_zone in self.EventTimeZones.values:
             '''
             timezone name set to short code based on self.time_zone value; in case no name is available,
@@ -230,8 +232,15 @@ class EventPage(
                         f'{datetime.datetime.now(pytz.timezone(self.time_zone)).strftime("%Z")} ')
             offset = datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%z')
             # return string format: "TZ (OFFSET)"" eg. "EDT (UTC-04:00)"
-            return f'{tz}(UTC{offset[:3]}:{offset[3:]})'
-        return self.time_zone
+            label = f'{tz}(UTC{offset[:3]}:{offset[3:]})'
+        # if it's not assigned: default to eastern
+        elif not self.time_zone:
+            tz_and_offset = datetime.datetime.now(pytz.timezone('America/Toronto')).strftime('%Z%z')
+            label = f'{tz_and_offset[:3]} (UTC{tz_and_offset[3:6]}:{tz_and_offset[6:]})'
+        # if it was assigned in freeform - preserve
+        else:
+            label = self.time_zone
+        return label
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -312,6 +321,7 @@ class EventPage(
         + ContentPage.search_fields \
         + [
             index.FilterField('publishing_date'),
+            index.FilterField('event_access'),
         ]
 
     parent_page_types = ['events.EventListPage']

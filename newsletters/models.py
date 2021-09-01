@@ -8,6 +8,8 @@ from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
+from bs4 import BeautifulSoup
+from django.utils.text import slugify
 
 
 class NewsletterListPage(BasicPageAbstract, Page):
@@ -71,7 +73,24 @@ class NewsletterPage(Page):
     ]
 
     def html_string(self):
-        return render_to_string('newsletters/newsletter_html.html', {'self': self, 'page': self, 'is_html_string': True})
+        def in_line_tracking(href, title):
+            tracking = f'utm_source=cigi_newsletter&utm_medium=email&utm_campaign={slugify(title)}'
+            if '?' in href:
+                return f'{href}&{tracking}'
+            else:
+                return f'{href}?{tracking}'
+
+        text_soup = BeautifulSoup(render_to_string('newsletters/newsletter_html.html',
+                                                   {'self': self, 'page': self, 'is_html_string': True}),
+                                  'html.parser')
+
+        for link in text_soup.findAll('a'):
+            try:
+                link['href'] = in_line_tracking(link['href'], self.title)
+            except KeyError:
+                pass
+
+        return str(text_soup)
 
     parent_page_types = ['newsletters.NewsletterListPage']
     subpage_types = []
