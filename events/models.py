@@ -126,17 +126,17 @@ class EventPage(
         # use this function to determine timezone offsets at current time; unnecessary for those not subjected to DST
         def tz_offset(tz):
             offset = datetime.datetime.now(pytz.timezone(tz)).strftime('%z')
-            return f'(UTC{offset[:3]}:{offset[3:]})'
+            return f'(UTC{offset[:3].replace("-", "–")}:{offset[3:]})'
 
-        HAWAII = ('US/Hawaii', '(UTC-10:00) Hawaiian Time')
+        HAWAII = ('US/Hawaii', '(UTC–10:00) Hawaiian Time')
         LOS_ANGELES = ('America/Los_Angeles', f'{tz_offset("America/Los_Angeles")} Pacific Time')
         DENVER = ('America/Denver', f'{tz_offset("America/Denver")} Mountain Time')
         CHICAGO = ('America/Chicago', f'{tz_offset("America/Chicago")} Central Time')
         TORONTO = ('America/Toronto', f'{tz_offset("America/Toronto")} Eastern Time')
-        CARACAS = ('America/Caracas', '(UTC-04:30) Venezuela Time')
+        CARACAS = ('America/Caracas', '(UTC–04:30) Venezuela Time')
         HALIFAX = ('America/Halifax', f'{tz_offset("America/Halifax")} Atlantic Time')
-        SAO_PAULO = ('America/Sao_Paulo', '(UTC-03:00) E. South America Time')
-        CAPE_VERDE = ('Atlantic/Cape_Verde', '(UTC-01:00) Cape Verde Time')
+        SAO_PAULO = ('America/Sao_Paulo', '(UTC–03:00) E. South America Time')
+        CAPE_VERDE = ('Atlantic/Cape_Verde', '(UTC–01:00) Cape Verde Time')
         LONDON = ('Europe/London', f'{tz_offset("Europe/London")} GMT')
         BERLIN = ('Europe/Berlin', f'{tz_offset("Europe/Berlin")} Central Europe Time')
         BEIRUT = ('Asia/Beirut', f'{tz_offset("Asia/Beirut")} Middle East Time')
@@ -227,16 +227,16 @@ class EventPage(
             "%Z" returns offset: (eg "+0430" for Iran Time, together with offset this becomes "+0430 (UTC+0430)");
             use regex matching to remove the short code and only display offset in this case.
             '''
-            tz = re.sub(r'[-+]\d{4} ',
+            tz = re.sub(r'[-+]\d{2,4} ',
                         '',
                         f'{datetime.datetime.now(pytz.timezone(self.time_zone)).strftime("%Z")} ')
             offset = datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%z')
             # return string format: "TZ (OFFSET)"" eg. "EDT (UTC-04:00)"
-            label = f'{tz}(UTC{offset[:3]}:{offset[3:]})'
+            label = f'{tz}(UTC{offset[:3].replace("-", "–")}:{offset[3:]})'
         # if it's not assigned: default to eastern
         elif not self.time_zone:
             tz_and_offset = datetime.datetime.now(pytz.timezone('America/Toronto')).strftime('%Z%z')
-            label = f'{tz_and_offset[:3]} (UTC{tz_and_offset[3:6]}:{tz_and_offset[6:]})'
+            label = f'{tz_and_offset[:3]} (UTC{tz_and_offset[3:6].replace("-", "–")}:{tz_and_offset[6:]})'
         # if it was assigned in freeform - preserve
         else:
             label = self.time_zone
