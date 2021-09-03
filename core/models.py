@@ -407,7 +407,7 @@ class ContentPage(Page, SearchablePageAbstract):
             if contenttype == 'Multimedia':
                 return self.specific.get_multimedia_type_display()
             if contenttype == 'Event':
-                return self.specific.event_type.title
+                return self.specific.get_event_type_display()
             return contenttype
         return ''
 

@@ -21,26 +21,23 @@ ReactDOM.render(
     filterTypes={[{
       name: 'CIGI Sponsored',
       aggregationField: 'contentsubtypes',
-      alias: 'Cigi_Sponsored',
       params: [{
         name: 'contentsubtype',
-        value: 'Cigi_Sponsored',
+        value: 'CIGI Sponsored',
       }],
     }, {
       name: 'Cinema Series',
       aggregationField: 'contentsubtypes',
-      alias: 'Cinema_Series',
       params: [{
         name: 'contentsubtype',
-        value: 'Cinema_Series',
+        value: 'Cinema Series',
       }],
     }, {
       name: 'Community Event',
       aggregationField: 'contentsubtypes',
-      alias: 'Community_Event',
       params: [{
         name: 'contentsubtype',
-        value: 'Community_Event',
+        value: 'Community Event',
       }],
     }, {
       name: 'Conference',
@@ -52,34 +49,30 @@ ReactDOM.render(
     }, {
       name: 'Global Policy Forum',
       aggregationField: 'contentsubtypes',
-      alias: 'Global_Policy_Forum',
       params: [{
         name: 'contentsubtype',
-        value: 'Global_Policy_Forum',
+        value: 'Global Policy Forum',
       }],
     }, {
       name: 'Noon Lecture Series',
       aggregationField: 'contentsubtypes',
-      alias: 'Noon_Lecture_Series',
       params: [{
         name: 'contentsubtype',
-        value: 'Noon_Lecture_Series',
+        value: 'Noon Lecture Series',
       }],
     }, {
       name: 'Panel Discussion',
       aggregationField: 'contentsubtypes',
-      alias: 'Panel_Discussion',
       params: [{
         name: 'contentsubtype',
-        value: 'Panel_Discussion',
+        value: 'Panel Discussion',
       }],
     }, {
       name: 'Publication Launch',
       aggregationField: 'contentsubtypes',
-      alias: 'Publication_Launch',
       params: [{
         name: 'contentsubtype',
-        value: 'Publication_Launch',
+        value: 'Publication Launch',
       }],
     }, {
       name: 'Roundtable',
@@ -98,18 +91,16 @@ ReactDOM.render(
     }, {
       name: 'Signature Lecture',
       aggregationField: 'contentsubtypes',
-      alias: 'Signature_Lecture',
       params: [{
         name: 'contentsubtype',
-        value: 'Signature_Lecture',
+        value: 'Signature Lecture',
       }],
     }, {
       name: 'Virtual Event',
       aggregationField: 'contentsubtypes',
-      alias: 'Virtual_Event',
       params: [{
         name: 'contentsubtype',
-        value: 'Virtual_Event',
+        value: 'Virtual Event',
       }],
     }, {
       name: 'Workshop',
