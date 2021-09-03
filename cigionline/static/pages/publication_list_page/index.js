@@ -24,6 +24,7 @@ ReactDOM.render(
       }],
     }, {
       name: 'Papers',
+      alias: 'CIGI Papers',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',

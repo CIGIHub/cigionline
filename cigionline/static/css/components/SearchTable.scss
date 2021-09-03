@@ -18,7 +18,7 @@
         height: auto;
         margin: 0 0 2em;
         overflow-y: scroll;
-        position: relative !important;
+        position: relative;
         transform: none !important;
         z-index: 14;
 
@@ -121,6 +121,61 @@
                 opacity: 1;
               }
             }
+          }
+        }
+      }
+    }
+  }
+
+  &.search-filters-below-search-bar {
+    @include media-breakpoint-down(sm) {
+      flex-wrap: wrap;
+    }
+    position: relative;
+
+    .dropdown {
+      @include media-breakpoint-down(sm) {
+        position: relative;
+        width: 100%;
+      }
+      flex-grow: 1;
+      position: static;
+      width: 100%;
+
+      &:not(:last-child) {
+        @include media-breakpoint-up(md) {
+          margin-right: 0.5em;
+        }
+      }
+
+      .dropdown-menu {
+        &.show {
+          @include media-breakpoint-up(md) {
+            padding-top: 0;
+          }
+          border-bottom: 0;
+          height: auto;
+          overflow-y: auto;
+          padding-bottom: 1em;
+          position: absolute;
+        }
+
+        ul {
+          display: flex;
+          flex-wrap: wrap;
+          margin-bottom: 0;
+
+          li {
+            @include media-breakpoint-up(sm) {
+              flex-basis: 50%;
+            }
+            @include media-breakpoint-up(md) {
+              flex-basis: 33%;
+            }
+            @include media-breakpoint-up(lg) {
+              flex-basis: 25%;
+            }
+            flex: 100% 0 0;
           }
         }
       }
