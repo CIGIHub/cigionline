@@ -561,14 +561,21 @@ class SearchTable extends React.Component {
 
   // eslint-disable-next-line class-methods-use-this
   toggleDropdown(e) {
-    const targetMenu = e.target.nextSibling;
+    const targetButton = e.target;
+    const targetMenu = targetButton.nextSibling;
     const siblings = Array.from(
-      e.target.parentNode.parentNode.querySelectorAll('.dropdown-menu.show'),
+      targetButton.parentNode.parentNode.querySelectorAll('.dropdown-menu.show'),
     ).filter((s) => s !== targetMenu);
     for (let i = 0; i < siblings.length; i += 1) {
       siblings[i].classList.remove('show');
+      siblings[i].previousSibling.setAttribute('aria-expanded', false);
     }
     targetMenu.classList.toggle('show');
+    if (targetButton.getAttribute('aria-expanded') === 'true') {
+      targetButton.setAttribute('aria-expanded', false);
+    } else {
+      targetButton.setAttribute('aria-expanded', true);
+    }
   }
 
   renderSelectedFilters() {
@@ -1053,7 +1060,7 @@ class SearchTable extends React.Component {
               >
                 Years
               </button>
-              <div className="dropdown-menu" aria-labelledby="search-bar-years">
+              <div className="dropdown-menu dropdown-menu-years" aria-labelledby="search-bar-years">
                 {!loadingYears && (
                   <ul className="columns-2">
                     {years.map((year) => (
