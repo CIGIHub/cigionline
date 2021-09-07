@@ -724,7 +724,7 @@ class SearchTable extends React.Component {
     } = this.state;
     const {
       searchPlaceholder,
-      hideExpertDropDown,
+      showExpertDropDown,
       hideTopicDropdown,
       filterTypes,
       isSearchPage,
@@ -759,7 +759,7 @@ class SearchTable extends React.Component {
 
         {!isSearchPage && (
           <div className="search-filters search-filters-below-search-bar d-flex">
-            {!hideExpertDropDown && (
+            {showExpertDropDown && (
               <div className="dropdown custom-dropdown dropdown-experts keep-open">
                 <button
                   className="dropdown-toggle"
@@ -1131,7 +1131,7 @@ class SearchTable extends React.Component {
       blockListing,
       containerClass,
       filterTypes,
-      hideExpertDropDown,
+      showExpertDropDown,
       hideTopicDropdown,
       isSearchPage,
       RowComponent,
@@ -1151,7 +1151,7 @@ class SearchTable extends React.Component {
         )}
         {isSearchPage && showSidebar && (
           <div className="search-filters search-filters-search-page col-md-3">
-            {!hideExpertDropDown && (
+            {showExpertDropDown && (
               <div className="dropdown custom-dropdown dropdown-experts keep-open">
                 <button
                   className="dropdown-toggle"
@@ -1664,7 +1664,7 @@ SearchTable.propTypes = {
       ),
     }),
   ),
-  hideExpertDropDown: PropTypes.bool,
+  showExpertDropDown: PropTypes.bool,
   hideTopicDropdown: PropTypes.bool,
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
@@ -1694,7 +1694,7 @@ SearchTable.defaultProps = {
   contenttypes: [],
   endpointParams: [],
   filterTypes: [],
-  hideExpertDropDown: false,
+  showExpertDropDown: false,
   hideTopicDropdown: false,
   isSearchPage: false,
   limit: 24,
