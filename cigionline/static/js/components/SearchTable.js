@@ -135,7 +135,7 @@ class SearchTable extends React.Component {
   handleSearchValueChange(e) {
     this.setState({
       searchValue: e.target.value,
-    });
+    }, this.setPage(1));
   }
 
   handleSortSelect(sortValue) {

@@ -278,6 +278,36 @@
         }
       }
     }
+
+    .search-bar-dropdown {
+      background-clip: padding-box;
+      background-color: $white;
+      border: 0;
+      border-radius: .25em;
+      box-shadow: 0 5px 10px $cigi-light-grey;
+      opacity: 0;
+      padding: 1em;
+      position: absolute;
+      top: 2.2em;
+      transition: opacity ease 0.2s;
+      width: 100%;
+      z-index: 1;
+
+      &.show {
+        opacity: 1;
+      }
+
+      ul {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        list-style: none;
+        margin: 0.75em 0 0;
+
+        li {
+          line-height: 1.2;
+          margin-bottom: 0.35em;
+        }
+      }
+    }
   }
 
   .search-bar-sort-wrapper {
