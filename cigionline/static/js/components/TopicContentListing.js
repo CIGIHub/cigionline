@@ -55,7 +55,7 @@ function TopicContentListing(props) {
         </div>
         <div className="table-content">
           <ul className="custom-text-list author-list">
-            {row.authors.map((author) => (
+            {row.authors && row.authors.map((author) => (
               <li key={`${row.id}-author-${author.id}`}>
                 <a href={author.url} className="table-content-link table-content-link-black">
                   {author.title}
