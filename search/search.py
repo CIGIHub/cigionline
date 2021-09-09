@@ -203,7 +203,10 @@ class CIGIOnlineSearchQueryCompiler:
 
     def get_query(self):
         if self.searchtext:
-            search_list = shlex.split(self.searchtext, posix=False)
+            try:
+                search_list = shlex.split(self.searchtext, posix=False)
+            except ValueError:
+                search_list = self.searchtext.split()
             terms = []
             should = []
             for item in search_list:
