@@ -22,6 +22,9 @@ class SearchTable extends React.Component {
   constructor(props) {
     super(props);
     this.searchTableRef = React.createRef();
+    this.searchFilterRef = React.createRef();
+    this.setSearchFilterRef = this.setSearchFilterRef.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
     const { filterTypes } = props;
     this.state = {
       currentPage: 1,
@@ -119,6 +122,12 @@ class SearchTable extends React.Component {
       this.getYears();
       this.getTypes();
     }
+
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   handleSearchSubmit(e) {
@@ -235,6 +244,21 @@ class SearchTable extends React.Component {
     this.setState(() => ({
       expertsFilter: e.target.value,
     }));
+  }
+
+  handleClickOutside(event) {
+    const current = this.searchFilterRef.current;
+    if (this.searchFilterRef && !current.contains(event.target)) {
+      const dropDowns = current.childNodes;
+      for (let i = 0; i < dropDowns.length; i += 1) {
+        console.log(dropDowns[i].getElementsByClassName('show'));
+        dropDowns[i].getElementsByClassName('show').classList.remove('show');
+      }
+    }
+  }
+
+  setSearchFilterRef(node) {
+    this.wrapperRef = node;
   }
 
   getRows() {
@@ -758,7 +782,7 @@ class SearchTable extends React.Component {
         </form>
 
         {!isSearchPage && (
-          <div className="search-filters search-filters-below-search-bar d-flex">
+          <div className="search-filters search-filters-below-search-bar d-flex" ref={this.searchFilterRef}>
             {showExpertDropDown && (
               <div className="dropdown custom-dropdown dropdown-experts keep-open">
                 <button
