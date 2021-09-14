@@ -6,9 +6,9 @@
       <div class="stream-block-recommended">
         <div class="img-wrapper">
           <a href="{% pageurl self %}">
-            {% if self.specific.image_feature %}
+            {% if self.specific.image_feature and not self.expired_image %}
               {% image self.specific.image_feature fill-377x246 %}
-            {% elif self.specific.image_hero %}
+            {% elif self.specific.image_hero and not self.expired_image %}
               {% image self.specific.image_hero fill-377x246 %}
             {% else %}
               <img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="CIGI Logo">

@@ -23,6 +23,8 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
+import datetime
+import pytz
 
 
 class ArticleLandingPage(BasicPageAbstract, Page):
@@ -324,6 +326,10 @@ class ArticlePage(
     @property
     def cigi_people_mentioned_ids(self):
         return [item.person.id for item in self.cigi_people_mentioned.all()]
+  
+    @property
+    def expired_image(self):
+        return self.publishing_date < datetime.datetime(2017, 1, 1).astimezone(pytz.timezone('America/Toronto'))
 
     def is_opinion(self):
         return self.article_type.title in [
