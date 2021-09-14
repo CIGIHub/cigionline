@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.urls import path
 from django.views.decorators.cache import cache_control
+from core import views as core_views
 from events.feeds import EventFeed
 from images.views import favicon_view
 from people import views as people_views
@@ -32,6 +33,7 @@ urlpatterns = urlpatterns + [
     url(r'^api/topics/$', research_views.all_topics),
     url(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     url(r'^api/events/$', events_views.events_api),
+    url(r'^api/content_pages/$', core_views.content_pages),
 
     url(r'^events/feed.ics$', EventFeed()),
     url(r'^favicon\.ico$', favicon_view),
