@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="mt-5">
+  <div>count: {{count}}</div>
+  <table>
+    <thead>
+      <th>title</th>
+      <th>image hero url</th>
+    </thead>
+    {% for page in pages %}
+    <tr>
+      <td>{{page.title}}</td>
+      <td>{{page.image_hero_url}}</td>
+    </tr>
+    {% endfor %}
+
+  </ul>
+
+</section>
+{% endblock content %}
