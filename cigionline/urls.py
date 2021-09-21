@@ -33,7 +33,7 @@ urlpatterns = urlpatterns + [
     url(r'^api/topics/$', research_views.all_topics),
     url(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     url(r'^api/events/$', events_views.events_api),
-    url(r'^api/content_pages/$', core_views.content_pages),
+    url(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
 
     url(r'^events/feed.ics$', EventFeed()),
     url(r'^favicon\.ico$', favicon_view),

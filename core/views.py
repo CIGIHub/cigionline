@@ -3,44 +3,55 @@ from core.models import ContentPage
 from django.http import JsonResponse
 
 
-def content_pages(request):
-    content_pages = ContentPage.objects.live().filter(multimediapage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases']).filter(publishing_date__range=["2020-08-01", "2021-07-31"])
+def ar_timeline_pages(request):
+    content_pages = ContentPage.objects.live().filter(projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).filter(publishing_date__range=["2020-08-01", "2021-07-31"])
 
     json_items = []
 
     for content_page in content_pages:
+        type = ''
+        subtype = []
         authors = ''
         speakers = ''
         event_date = ''
         summary = ''
+        subtitle = ''
         if content_page.contenttype == 'Event':
+            type = 'event'
             speakers = content_page.author_names
+            event_date = content_page.publishing_date
         else:
             authors = content_page.author_names
-            event_date = content_page.publishing_date
+            publishing_date = content_page.publishing_date
 
         if content_page.contenttype == 'Opinion':
             summary = content_page.specific.short_description
+            type = 'article'
+            subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
         elif content_page.contenttype == 'Publication':
+            type = 'publication'
+            subtype = content_page.contentsubtype if content_page.contentsubtype else [],
             for block in content_page.specific.body:
                 if block.block_type == 'paragraph':
                     summary += str(block.value)
 
         soup = BeautifulSoup(summary, features='html5lib')
         summary = soup.get_text()
+        soup = BeautifulSoup(content_page.specific.subtitle, features='html5lib')
+        subtitle = soup.get_text()
 
         json_items.append({
             'id': content_page.id,
             'title': content_page.title,
-            'subtitle': content_page.specific.subtitle,
-            'authors': [authors] if authors else [],
-            'speakers': [speakers] if speakers else [],
-            'published_date': content_page.publishing_date,
+            'subtitle': subtitle,
+            'authors': authors if authors else [],
+            'speakers': speakers if speakers else [],
+            'published_date': publishing_date,
             'event_date': event_date,
             'url_landing_page': content_page.url,
             'pdf_url': content_page.pdf_download,
-            'type': content_page.contenttype.lower(),
-            'subtype': [content_page.contentsubtype] if content_page.contentsubtype else [],
+            'type': type,
+            'subtype': subtype,
             'word_count': content_page.specific.word_count,
             'summary': summary,
             'image': content_page.specific.image_hero.get_rendition('fill-1600x900').url if content_page.specific.image_hero else '',
