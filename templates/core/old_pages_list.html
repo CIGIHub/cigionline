@@ -1,20 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="mt-5">
-  <div>count: {{count}}</div>
-  <table>
-    <thead>
-      <th>title</th>
-      <th>image hero url</th>
-    </thead>
-    {% for page in pages %}
-    <tr>
-      <td>{{page.title}}</td>
-      <td>{{page.image_hero_url}}</td>
-    </tr>
-    {% endfor %}
-
-  </ul>
-
-</section>
+  <section class="mt-5">
+    <div>count: {{count}}</div>
+    <table>
+      <thead>
+        <th>id</th>
+        <th>title</th>
+        <th>image hero url 1600x900</th>
+        <th>image hero url width-1760</th>
+        <th>publishing date</th>
+        <th>url</th>
+      </thead>
+      {% for page in pages %}
+      <tr>
+        <td>{{page.id}}</td>
+        <td>{{page.title}}</td>
+        <td>{{page.image_hero_url_1600_900}}</td>
+        <td>{{page.image_hero_url_width_1760}}</td>
+        <td>{{page.publishing_date}}</td>
+        <td>{{page.url}}</td>
+      </tr>
+      {% endfor %}
+    </ul>
+  </section>
 {% endblock content %}
