@@ -1,7 +1,5 @@
 from core.models import ContentPage
-from django.http import JsonResponse
 from django.template.response import TemplateResponse
-from datetime import datetime
 
 
 def old_images(request):
