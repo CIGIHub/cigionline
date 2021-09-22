@@ -15,7 +15,8 @@ def ar_timeline_pages(request):
         speakers = ''
         event_date = ''
         summary = ''
-        subtitle = ''
+        subtitle = content_page.specific.subtitle
+        publishing_date = ''
         if content_page.contenttype == 'Event':
             type = 'event'
             speakers = content_page.author_names
@@ -25,23 +26,26 @@ def ar_timeline_pages(request):
             publishing_date = content_page.publishing_date
 
         if content_page.contenttype == 'Opinion':
-            summary = content_page.specific.short_description
             type = 'article'
             subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
         elif content_page.contenttype == 'Publication':
             type = 'publication'
             subtype = content_page.contentsubtype if content_page.contentsubtype else [],
-            for block in content_page.specific.body:
-                if block.block_type == 'paragraph':
-                    summary += str(block.value)
+        try:
+            summary = content_page.specific.short_description
+        except AttributeError:
+            if content_page.specific.subtitle:
+                summary = content_page.specific.subtitle
+            else:
+                for block in content_page.specific.body:
+                    if block.block_type == 'paragraph':
+                        summary += str(block.value)
 
         soup = BeautifulSoup(summary, features='html5lib')
         summary = soup.get_text()
-        soup = BeautifulSoup(content_page.specific.subtitle, features='html5lib')
-        subtitle = soup.get_text()
 
         json_items.append({
-            'id': content_page.id,
+            'id': str(content_page.id),
             'title': content_page.title,
             'subtitle': subtitle,
             'authors': authors if authors else [],
