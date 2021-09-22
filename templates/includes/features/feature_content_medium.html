@@ -3,9 +3,9 @@
 <article class="feature-content feature-content-medium{% if dark_mode %} dark-mode{% endif %}">
   <a href="{% pageurl content %}" class="feature-content-image">
     <div class="img-wrapper">
-      {% if content.image_feature %}
+      {% if content.image_feature and not content.expired_image %}
         {% define content.image_feature as feature_image %}
-      {% elif content.image_hero %}
+      {% elif content.image_hero and not content.expired_image %}
         {% define content.image_hero as feature_image %}
       {% else %}
         <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
