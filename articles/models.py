@@ -329,7 +329,9 @@ class ArticlePage(
 
     @property
     def expired_image(self):
-        return self.publishing_date < datetime.datetime(2017, 1, 1).astimezone(pytz.timezone('America/Toronto'))
+        if self.publishing_date:
+            return self.publishing_date < datetime.datetime(2017, 1, 1).astimezone(pytz.timezone('America/Toronto'))
+        return False
 
     def is_opinion(self):
         return self.article_type.title in [
