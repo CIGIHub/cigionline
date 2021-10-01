@@ -40,7 +40,7 @@ http {
 		add_header Strict-Transport-Security "max-age=31536000";
 		add_header Referrer-Policy "no-referrer, same-origin";
     add_header X-XSS-Protection "1; mode=block";
-    add_header Content-Security-Policy "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'; font-src 'https://use.typekit.net'";
+    add_header Content-Security-Policy "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'";
     
 		<% if ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
 			auth_basic "Restricted";
