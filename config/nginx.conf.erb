@@ -37,10 +37,12 @@ http {
 		server_name _;
 		keepalive_timeout 5;
 
-		add_header Strict-Transport-Security "max-age=31536000";
+		add_header Strict-Transport-Security "max-age=63072000; includeSubDomains";
 		add_header Referrer-Policy "no-referrer, same-origin";
     add_header X-XSS-Protection "1; mode=block";
     add_header Content-Security-Policy "default-src 'self' https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'";
+    add_header X-Content-Type-Options "nosniff";
+    add_header X-Frame-Options "DENY";
     
 		<% if ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
 			auth_basic "Restricted";
