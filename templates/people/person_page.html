@@ -2,33 +2,35 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
 {% block meta_description %}
-  {% if self.short_bio %}
+  {% if not page.archive and self.short_bio %}
     <meta name="description" content="{{ self.short_bio|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_description %}
-  {% if self.short_bio %}
+  {% if not page.archive and self.short_bio %}
     <meta property="og:description" content="{{ self.short_bio|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_type %}
-  <meta property="og:type" content="profile" />
+  {% if not page.archive %}
+    <meta property="og:type" content="profile" />
+  {% endif %}
 {% endblock %}
 {% block og_image %}
   {% if self.image_media %}
     {% image self.image_media fill-1600x900 as og_image %}
   {% endif %}
-  {% if og_image %}
+  {% if not page.archive and og_image %}
     <meta property="og:image" content="{{ og_image.url }}" />
   {% else %}
     {% include "includes/og_image_default.html" %}
   {% endif %}
 {% endblock %}
 {% block extra_og_meta %}
-  {% if self.first_name %}
+  {% if not page.archive and self.first_name %}
     <meta property="profile:first_name" content="{{ self.first_name }}" />
   {% endif %}
-  {% if self.last_name %}
+  {% if not page.archive and self.last_name %}
     <meta property="profile:last_name" content="{{ self.last_name }}" />
   {% endif %}
 {% endblock %}
