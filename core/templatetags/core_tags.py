@@ -53,5 +53,6 @@ def preview_cache_bust(context):
 @stringfilter
 def formerize_position(value):
     if 'former' not in value.lower():
-        return f'Former {value}'
+        cigi_prefix = 'CIGI ' if 'cigi' not in value.lower() else ''
+        return f'Former {cigi_prefix}{value}'
     return value
