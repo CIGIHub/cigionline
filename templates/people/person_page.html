@@ -2,12 +2,20 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
 {% block meta_description %}
-  {% if self.short_bio %}
+  {% if page.archive %}
+    {% if page.position %}
+      <meta name="description" content="{{ page.position|formerize_position }}" />
+    {% endif %}
+  {% elif self.short_bio %}
     <meta name="description" content="{{ self.short_bio|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_description %}
-  {% if self.short_bio %}
+  {% if page.archive %}
+    {% if page.position %}
+      <meta name="og:description" content="{{ page.position|formerize_position }}" />
+    {% endif %}
+  {% elif self.short_bio %}
     <meta property="og:description" content="{{ self.short_bio|striptags }}" />
   {% endif %}
 {% endblock %}
@@ -15,13 +23,15 @@
   <meta property="og:type" content="profile" />
 {% endblock %}
 {% block og_image %}
-  {% if self.image_media %}
-    {% image self.image_media fill-1600x900 as og_image %}
-  {% endif %}
-  {% if og_image %}
-    <meta property="og:image" content="{{ og_image.url }}" />
-  {% else %}
-    {% include "includes/og_image_default.html" %}
+  {% if not page.archive %}
+    {% if self.image_media %}
+      {% image self.image_media fill-1600x900 as og_image %}
+    {% endif %}
+    {% if og_image %}
+      <meta property="og:image" content="{{ og_image.url }}" />
+    {% else %}
+      {% include "includes/og_image_default.html" %}
+    {% endif %}
   {% endif %}
 {% endblock %}
 {% block extra_og_meta %}

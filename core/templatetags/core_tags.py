@@ -3,6 +3,8 @@ from pathlib import Path
 
 from django import template
 
+from django.template.defaultfilters import stringfilter
+
 register = template.Library()
 
 
@@ -45,3 +47,12 @@ def preview_cache_bust(context):
             if context['request'].is_preview:
                 return datetime.now().strftime("%Y%m%d%H%M%S")
     return ''
+
+
+@register.filter
+@stringfilter
+def formerize_position(value):
+    if 'former' not in value.lower():
+        cigi_prefix = 'CIGI ' if 'cigi' not in value.lower() else ''
+        return f'Former {cigi_prefix}{value}'
+    return value
