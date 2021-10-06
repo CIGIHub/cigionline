@@ -17,10 +17,12 @@ def ar_timeline_pages(request):
         summary = ''
         subtitle = content_page.specific.subtitle
         publishing_date = ''
+        image = ''
         if content_page.contenttype == 'Event':
             type = 'event'
             speakers = content_page.author_names
             event_date = content_page.publishing_date
+            image = content_page.specific.image_hero.get_rendition('fill-1600x900').url if content_page.specific.image_hero else ''
         else:
             authors = content_page.author_names
             publishing_date = content_page.publishing_date
@@ -28,9 +30,11 @@ def ar_timeline_pages(request):
         if content_page.contenttype == 'Opinion':
             type = 'article'
             subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
-        elif content_page.contenttype == 'Publication':
+            image = content_page.specific.image_hero.get_rendition('fill-1600x900').url if content_page.specific.image_hero else ''
+        if content_page.contenttype == 'Publication':
             type = 'publication'
-            subtype = content_page.contentsubtype if content_page.contentsubtype else [],
+            subtype = content_page.contentsubtype if content_page.contentsubtype else []
+            image = content_page.specific.image_feature.get_rendition('fill-1600x900').url if content_page.specific.image_feature else '',
         try:
             summary = content_page.specific.short_description
         except AttributeError:
@@ -58,7 +62,7 @@ def ar_timeline_pages(request):
             'subtype': subtype,
             'word_count': content_page.specific.word_count,
             'summary': summary,
-            'image': content_page.specific.image_hero.get_rendition('fill-1600x900').url if content_page.specific.image_hero else '',
+            'image': image,
         })
 
     return JsonResponse({
