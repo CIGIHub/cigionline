@@ -1,6 +1,7 @@
 @import '../../../css/global/mixins';
 
 @include top-bar($background-color: transparent, $color: $white, $background-color-scrolled: $black);
+
 .image-hero {
   margin-bottom: 1em;
 }
