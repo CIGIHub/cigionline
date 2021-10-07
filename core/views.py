@@ -33,8 +33,8 @@ def ar_timeline_pages(request):
             image = content_page.specific.image_hero.get_rendition('fill-1600x900').url if content_page.specific.image_hero else ''
         if content_page.contenttype == 'Publication':
             type = 'publication'
-            subtype = content_page.contentsubtype if content_page.contentsubtype else []
-            image = content_page.specific.image_feature.get_rendition('fill-1600x900').url if content_page.specific.image_feature else '',
+            subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
+            image = content_page.specific.image_feature.get_rendition('fill-1600x900').url if content_page.specific.image_feature else ''
         try:
             summary = content_page.specific.short_description
         except AttributeError:
