@@ -1,8 +1,14 @@
 @import '../../../css/global/mixins';
 @import '../../../css/includes/swiper';
 
+section {
+  margin: 4em 0;
+}
+
 .search {
   .search-table {
+    margin-bottom: 0;
+
     td {
       align-items: center;
 
