@@ -7,6 +7,7 @@ section {
     font-size: 1rem;
     padding-bottom: 3em;
     padding-top: 5em;
+    position: relative;
 
     .hero-container {
       .hero-main {
@@ -104,25 +105,18 @@ section {
       }
     }
 
-    &.banner-bg {
-      background-position: center;
-      background-size: cover;
-      position: relative;
+    .banner-bg {
+      height: 100%;
+      left: 0;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      width: 100%;
 
-      &::before {
-        background: $black-alpha-50;
-        bottom: 0;
-        content: '';
+      img {
         height: 100%;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
+        object-fit: cover;
         width: 100%;
-      }
-
-      .hero-container {
-        position: relative;
       }
     }
   }

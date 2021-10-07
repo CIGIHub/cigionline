@@ -47,7 +47,8 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% image self.image_banner original as image_banner %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
 
   {% if self.image_hero %}
     <section class="image-hero">
@@ -106,7 +107,7 @@
     </section>
   {% endif %}
 
-  {% include "includes/body.html" with body=self.body heading="About" %}
+  {% include "includes/body.html" with body=self.body %}
 
   <section>
     <div class="container">
