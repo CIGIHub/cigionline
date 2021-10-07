@@ -6,6 +6,29 @@
   @include hover-darken;
   line-height: 1.25;
 
+  &.portrait {
+    display: flex;
+
+    > a {
+      flex: 0 0 50%;
+    }
+
+    .img-wrapper {
+      color: transparent;
+      display: block;
+      margin-right: 1em;
+
+      img {
+        border: 1px solid $cigi-light-grey;
+        box-shadow: 5px 5px 10px $cigi-light-grey;
+
+        &:hover {
+          border: 1px solid $white;
+        }
+      }
+    }
+  }
+
   .img-wrapper {
     margin-bottom: 1em;
   }
