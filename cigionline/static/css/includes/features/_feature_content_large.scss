@@ -11,23 +11,28 @@
       display: flex;
     }
 
-    > a {
+    .feature-content-image {
       flex: 0 0 50%;
-    }
+      padding-right: 15px;
 
-    .img-wrapper {
-      color: transparent;
-      display: block;
-      margin-right: 1em;
+      .img-wrapper {
+        color: transparent;
+        display: block;
 
-      img {
-        border: 1px solid $cigi-light-grey;
-        box-shadow: 5px 5px 10px $cigi-light-grey;
+        img {
+          border: 1px solid $cigi-light-grey;
+          box-shadow: 5px 5px 10px $cigi-light-grey;
 
-        &:hover {
-          border: 1px solid $white;
+          &:hover {
+            border: 1px solid $white;
+          }
         }
       }
+    }
+
+    .feature-content-text {
+      margin-top: 0;
+      padding-left: 15px;
     }
   }
 
