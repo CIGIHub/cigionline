@@ -7,7 +7,9 @@
   line-height: 1.25;
 
   &.portrait {
-    display: flex;
+    @include media-breakpoint-up(sm) {
+      display: flex;
+    }
 
     > a {
       flex: 0 0 50%;
