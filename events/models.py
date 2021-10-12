@@ -19,7 +19,7 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
-import datetime
+# import datetime
 import pytz
 import re
 
@@ -123,25 +123,20 @@ class EventPage(
         NO_RSVP = (2, 'No RSVP Required')
 
     class EventTimeZones(models.TextChoices):
-        # use this function to determine timezone offsets at current time; unnecessary for those not subjected to DST
-        def tz_offset(tz):
-            offset = datetime.datetime.now(pytz.timezone(tz)).strftime('%z')
-            return f'(UTC{offset[:3].replace("-", "–")}:{offset[3:]})'
-
         HAWAII = ('US/Hawaii', '(UTC–10:00) Hawaiian Time')
-        LOS_ANGELES = ('America/Los_Angeles', f'{tz_offset("America/Los_Angeles")} Pacific Time')
-        DENVER = ('America/Denver', f'{tz_offset("America/Denver")} Mountain Time')
-        CHICAGO = ('America/Chicago', f'{tz_offset("America/Chicago")} Central Time')
-        TORONTO = ('America/Toronto', f'{tz_offset("America/Toronto")} Eastern Time')
+        LOS_ANGELES = ('America/Los_Angeles', '(UTC–08:00/09:00) Pacific Time')
+        DENVER = ('America/Denver', '(UTC–06:00/07:00) Mountain Time')
+        CHICAGO = ('America/Chicago', '(UTC–05:00/06:00) Central Time')
+        TORONTO = ('America/Toronto', '(UTC–04:00/05:00) Eastern Time')
         CARACAS = ('America/Caracas', '(UTC–04:30) Venezuela Time')
-        HALIFAX = ('America/Halifax', f'{tz_offset("America/Halifax")} Atlantic Time')
+        HALIFAX = ('America/Halifax', '(UTC–03:00/04:00) Atlantic Time')
         SAO_PAULO = ('America/Sao_Paulo', '(UTC–03:00) E. South America Time')
         CAPE_VERDE = ('Atlantic/Cape_Verde', '(UTC–01:00) Cape Verde Time')
-        LONDON = ('Europe/London', f'{tz_offset("Europe/London")} GMT')
-        BERLIN = ('Europe/Berlin', f'{tz_offset("Europe/Berlin")} Central Europe Time')
-        BEIRUT = ('Asia/Beirut', f'{tz_offset("Asia/Beirut")} Middle East Time')
+        LONDON = ('Europe/London', '(UTC+00:00/01:00) GMT/BST')
+        BERLIN = ('Europe/Berlin', '(UTC+01:00/02:00) Central European Time')
+        BEIRUT = ('Asia/Beirut', '(UTC+02:00/03:00) Eastern European Time')
         MOSCOW = ('Europe/Moscow', '(UTC+03:00) Russian Time')
-        TEHRAN = ('Asia/Tehran', f'{tz_offset("Asia/Tehran")} Iran Time')
+        TEHRAN = ('Asia/Tehran', '(UTC+02:30/03:30) Iran Time')
         DUBAI = ('Asia/Dubai', '(UTC+04:00) Arabian Time')
         KABUL = ('Asia/Kabul', '(UTC+04:30) Afghanistan Time')
         ASHGABAT = ('Asia/Ashgabat', '(UTC+05:00) West Asia Time')
@@ -151,8 +146,8 @@ class EventPage(
         BANGKOK = ('Asia/Bangkok', '(UTC+07:00) SE Asia Time')
         SHANGHAI = ('Asia/Shanghai', '(UTC+08:00) China Time')
         TOKYO = ('Asia/Tokyo', '(UTC+09:00) Tokyo Time')
-        SYDNEY = ('Australia/Sydney', f'{tz_offset("Australia/Sydney")} AUS Eastern Time')
-        AUCKLAND = ('Pacific/Auckland', f'{tz_offset("Pacific/Auckland")} New Zealand Time')
+        SYDNEY = ('Australia/Sydney', '(UTC+10:00/11:00) AUS Eastern Time')
+        AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
 
     embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
@@ -218,6 +213,44 @@ class EventPage(
             return self.publishing_date < now
 
     @property
+    def event_start_time_utc(self):
+        '''
+        returns UTC datetime object
+        - The datetime value entered in EventPage is currently assumed tzinfo="America/Toronto",
+        regardless of the "time_zone" field specified; eg. "07:00:00AM America/Los_Angelos"
+        - This is then converted to UTC and stored as "publishing_date"; eg. "11:00:00 (during daylight saving)."
+        - So to allow specifying different timezones for the "time_zone" field, we need to first
+        convert "publishing_date" from UTC back to "America/Toronto", then replace tzinfo with "time_zone"
+        - If in the future, "publishing_date" is fixed to have user-specified timezone instead,
+        this conversion and replacement would be unnecessary (and incorrect);
+        can pass `return item.publishing_date` instead
+        - This applies to item.event_end as well
+        '''
+        if self.time_zone == '' or not self.time_zone:
+            return self.publishing_date
+        else:
+            default_tz = pytz.timezone('America/Toronto')
+            correct_tz = pytz.timezone(self.time_zone)
+            return pytz.utc.normalize(
+                correct_tz.localize(
+                    self.publishing_date.astimezone(default_tz).replace(tzinfo=None)
+                )
+            )
+
+    @property
+    def event_end_time_utc(self):
+        if self.time_zone == '' or not self.time_zone:
+            return self.event_end
+        else:
+            default_tz = pytz.timezone('America/Toronto')
+            correct_tz = pytz.timezone(self.time_zone)
+            return pytz.utc.normalize(
+                correct_tz.localize(
+                    self.event_end.astimezone(default_tz).replace(tzinfo=None)
+                )
+            )
+
+    @property
     def time_zone_label(self):
         # timezone could have been assigned in freeform (previous version), or from a list of options (post change)
         # if it's from a list of options post change:
@@ -229,13 +262,13 @@ class EventPage(
             '''
             tz = re.sub(r'[-+]\d{2,4} ',
                         '',
-                        f'{datetime.datetime.now(pytz.timezone(self.time_zone)).strftime("%Z")} ')
-            offset = datetime.datetime.now(pytz.timezone(self.time_zone)).strftime('%z')
+                        f'{self.event_start_time_utc.astimezone(pytz.timezone(self.time_zone)).strftime("%Z")} ')
+            offset = self.event_start_time_utc.astimezone(pytz.timezone(self.time_zone)).strftime('%z')
             # return string format: "TZ (OFFSET)"" eg. "EDT (UTC-04:00)"
             label = f'{tz}(UTC{offset[:3].replace("-", "–")}:{offset[3:]})'
         # if it's not assigned: default to eastern
         elif not self.time_zone:
-            tz_and_offset = datetime.datetime.now(pytz.timezone('America/Toronto')).strftime('%Z%z')
+            tz_and_offset = self.event_start_time_utc.astimezone(pytz.timezone('America/Toronto')).strftime('%Z%z')
             label = f'{tz_and_offset[:3]} (UTC{tz_and_offset[3:6].replace("-", "–")}:{tz_and_offset[6:]})'
         # if it was assigned in freeform - preserve
         else:
