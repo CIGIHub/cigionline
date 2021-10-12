@@ -73,7 +73,7 @@
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 portrait=True %}
             {% endif %}
           </div>
-          <hr>
+          <hr class="separator-large">
           <div class="col-12 col-md-4 featured-small">
           {% with featured_pages|slice:"4:" as featured_small %}
             {% for item in featured_small %}

@@ -8,4 +8,11 @@
 
 .featured {
   margin-bottom: 4em;
+
+  .separator-large {
+    @include media-breakpoint-down(sm) {
+      margin-left: 15px;
+      margin-right: 15px;
+    }
+  }
 }
