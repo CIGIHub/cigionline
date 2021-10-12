@@ -86,7 +86,7 @@ section {
 }
 
 .feature-border-right {
-  @include media-breakpoint-up(md) { 
+  @include media-breakpoint-up(md) {
     border-right: 1px solid $cigi-light-grey;
   }
 }
