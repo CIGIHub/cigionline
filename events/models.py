@@ -19,7 +19,6 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
-# import datetime
 import pytz
 import re
 
