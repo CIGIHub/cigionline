@@ -125,7 +125,7 @@ class ThemeModelAdmin(ModelAdmin):
 @hooks.register('construct_page_chooser_queryset')
 def order_pages_in_chooser(pages, request):
     if "choose-page" in request.path:
-        return pages.order_by('-first_published_at')
+        return pages.order_by('-latest_revision_created_at')
     return pages
 
 
