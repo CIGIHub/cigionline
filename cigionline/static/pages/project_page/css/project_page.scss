@@ -7,7 +7,7 @@
 }
 
 .featured {
-  margin-bottom: 4em;
+  margin-bottom: 2em;
 
   .separator-large {
     @include media-breakpoint-down(sm) {
@@ -15,4 +15,11 @@
       margin-right: 15px;
     }
   }
+}
+
+.search-table-container {
+  @include media-breakpoint-up(md) {
+    margin-top: 2em;
+  }
+  margin-top: 0;
 }
