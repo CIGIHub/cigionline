@@ -151,6 +151,15 @@ class MultimediaPage(
         related_name='+',
         verbose_name='Banner Image',
     )
+    image_poster = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster Image',
+        help_text='A poster image used in feature sections',
+    )
     image_square = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -300,6 +309,7 @@ class MultimediaPage(
                 ImageChooserPanel('image_hero'),
                 ImageChooserPanel('image_banner'),
                 ImageChooserPanel('image_square'),
+                ImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
