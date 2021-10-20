@@ -6,7 +6,7 @@
   @include hover-darken;
   line-height: 1.25;
 
-  &.portrait {
+  &.poster {
     @include media-breakpoint-up(sm) {
       display: flex;
     }

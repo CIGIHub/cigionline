@@ -1,14 +1,14 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags static %}
 
-{% if portrait %}
-  {% define additional_classes|add:" portrait" as additional_classes %}
+{% if poster %}
+  {% define additional_classes|add:" poster" as additional_classes %}
 {% endif %}
 
 <article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %}{{ additional_classes }}">
   <a href="{% pageurl content %}" class="feature-content-image">
     <div class="img-wrapper">
-      {% if portrait %}
-        {% image content.image_cover original %}
+      {% if poster %}
+        {% image content.image_poster original %}
       {% else %}
         {% if content.image_feature %}
           {% define content.image_feature as feature_image %}
@@ -36,7 +36,7 @@
     </div>
   </a>
 
-  <div class="feature-content-text {% if not portrait %}center-text{% endif %}">
+  <div class="feature-content-text {% if not poster %}center-text{% endif %}">
     {% include 'includes/topics.html' with topics=content.topics_sorted %}
     {% include 'includes/features/feature_content_title.html' %}
     {% include 'includes/features/feature_content_subtitle.html' %}
