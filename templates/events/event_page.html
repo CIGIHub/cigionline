@@ -5,14 +5,14 @@
   {% if self.social_description %}
     <meta name="description" content="{{ self.social_description }}" />
   {% elif self.subtitle %}
-    <meta name="description" content="{{ self.subtitle|striptags }}" />
+    <meta name="description" content="{{ self.subtitle|safe|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_description %}
   {% if self.social_description %}
     <meta property="og:description" content="{{ self.social_description }}" />
   {% elif self.subtitle %}
-    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+    <meta property="og:description" content="{{ self.subtitle|safe|striptags }}" />
   {% endif %}
 {% endblock %}
 {% block og_type %}
