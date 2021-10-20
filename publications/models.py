@@ -330,6 +330,7 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_cover'),
+                ImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
