@@ -3,8 +3,8 @@
 <section class="hero{{ additional_classes }}">
   {% if image_banner %}
     {% image image_banner original as image_banner_lg %}
-    {% image image_banner fill-768x412 as image_banner_md %}
-    {% image image_banner fill-425x295 as image_banner_sm %}
+    {% image image_banner fill-1440x484 as image_banner_md %}
+    {% image image_banner fill-768x412 as image_banner_sm %}
     <picture class="banner-bg">
       <source srcset="{{image_banner_lg.url}}, 1440w" media="(min-width: 1440px)">
       <source srcset="{{image_banner_md.url}}, 768w" media="(min-width: 768px)">
