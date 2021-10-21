@@ -54,6 +54,14 @@ class ProjectPage(
         ],
         blank=True,
     )
+    image_banner = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+    )
     project_contacts = StreamField(
         [
             ('contact', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -108,6 +116,7 @@ class ProjectPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',

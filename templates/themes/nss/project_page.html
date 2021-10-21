@@ -66,11 +66,10 @@
   {% if featured_pages|length > 0 %}
     <section class="featured">
       <div class="container">
-        <h2 class="paragraph-heading">Featured</h2>
         <div class="row">
-          <div class="col-12 col-md-8">
+          <div class="col-12 col-md-8 feature-border-right">
             {% if featured_pages|length > 0 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True cta_pdf=True %}
             {% endif %}
           </div>
           <hr class="separator-large">
@@ -101,6 +100,11 @@
             </div>
           {% endfor %}
         {% endwith %}
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
         </div>
       </div>
     </section>
