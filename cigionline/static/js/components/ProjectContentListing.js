@@ -27,7 +27,7 @@ function ProjectContentListing(props) {
               <i className="fal fa-headphones" />
             </span>
           )}
-          {row.contenttype === 'Publication' && (
+          {['Publication', 'Publication Series'].includes(row.contenttype) && (
             <span className="table-icon icon-publication">
               <i className="fal fa-file-alt" />
             </span>
