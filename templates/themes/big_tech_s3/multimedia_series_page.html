@@ -137,8 +137,12 @@
                     {% include "includes/topics.html" with topics=episode.topics_sorted %}
                     <h3>
                       <a href="{{ episode.url }}">
-                        {{ episode.specific.podcast_guests }}
-                        <div>{{ episode.specific.podcast_subtitle }}</div>
+                        {% if not episode.specific.podcast_subtitle %}
+                          <div class="block-guest">{{ episode.title }}</div>
+                        {% else %}
+                          {{ episode.specific.podcast_guests }}
+                          <div>{{ episode.specific.podcast_subtitle }}</div>
+                        {% endif %}
                       </a>
                     </h3>
                     {{ episode.specific.subtitle|richtext }}
