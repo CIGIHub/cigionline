@@ -12,21 +12,11 @@
             Subscribe
           </button>
           <div class="dropdown-menu" aria-labelledby="bigTechSubscribeButton">
-            {% if podcast_apple_url %}
-              <a class="dropdown-item" href="{{ podcast_apple_url }}" target="_blank" rel="noopener noreferrer">
-                Apple
+            {% for button in podcast_subscribe_buttons %}
+              <a class="dropdown-item" href="{{ button.value.url }}" target="_blank" rel="noopener noreferrer">
+                {{button.value.label}}
               </a>
-            {% endif %}
-            {% if podcast_spotify_url %}
-              <a class="dropdown-item" href="{{ podcast_spotify_url }}" target="_blank" rel="noopener noreferrer">
-                Spotify
-              </a>
-            {% endif %}
-            {% if podcast_google_url %}
-              <a class="dropdown-item" href="{{ podcast_google_url }}" target="_blank" rel="noopener noreferrer">
-                Google
-              </a>
-            {% endif %}
+            {% endfor %}
           </div>
         </div>
       </div>
