@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
+from streams.blocks import PodcastSubscribeButtonBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -425,6 +426,13 @@ class MultimediaSeriesPage(
         help_text='Enter the link to the Spotify Podcast landing page for the podcast.',
     )
 
+    podcast_subscribe_buttons = StreamField([
+            ('podcast_subscribe_button', PodcastSubscribeButtonBlock())
+        ],
+        blank=True,
+        help_text='A list of search terms for which this page will be elevated in the search results.',
+    )
+
     @property
     def series_seasons(self):
         episode_filter = {
@@ -479,6 +487,7 @@ class MultimediaSeriesPage(
                 FieldPanel('podcast_apple_url'),
                 FieldPanel('podcast_spotify_url'),
                 FieldPanel('podcast_google_url'),
+                StreamFieldPanel('podcast_subscribe_buttons'),
             ],
             heading='Podcast Details',
             classname='collapsible collapsed',

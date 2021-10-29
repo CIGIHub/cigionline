@@ -1001,3 +1001,12 @@ class TimelineGalleryBlock(blocks.StructBlock):
         icon = 'image'
         label = 'Timeline Gallery'
         template = 'streams/timeline_gallery_block.html'
+
+
+class PodcastSubscribeButtonBlock(blocks.StructBlock):
+    label = blocks.CharBlock(required=True)
+    url = blocks.URLBlock(required=True)
+
+    class Meta:
+        icon = 'link'
+        label = 'Podcast Subscribe Button'
