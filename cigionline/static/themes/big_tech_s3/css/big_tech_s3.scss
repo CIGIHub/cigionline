@@ -171,6 +171,10 @@ $bigtech-light-grey: #b1b1b1;
           svg {
             path {
               fill: $white;
+
+              &.glyph-path {
+                fill: $bigtech-s3-red;
+              }
             }
           }
         }
