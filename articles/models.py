@@ -259,6 +259,15 @@ class ArticlePage(
         related_name='+',
         verbose_name='Banner Image Small'
     )
+    image_poster = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster Image',
+        help_text='A poster image used in feature sections',
+    )
     interviewers = StreamField(
         [
             ('interviewer', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -376,6 +385,7 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_poster'),
                 ImageChooserPanel('image_banner'),
                 ImageChooserPanel('image_banner_small'),
             ],
