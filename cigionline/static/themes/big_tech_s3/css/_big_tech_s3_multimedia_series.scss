@@ -2,6 +2,12 @@
   &.big-tech-s3-theme {
     @include link($color: $cigi-darkest-grey, $hover-color: $bigtech-teal);
 
+    .wagtail-userbar__item {
+      a {
+        color: $cigi-medium-light-grey;
+      }
+    }
+
     .topics {
       @include link($color: $cigi-text-grey, $hover-color: $bigtech-teal);
     }
