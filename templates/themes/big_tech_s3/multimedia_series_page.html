@@ -39,7 +39,7 @@
 
 {% block header %}
   <div class="big-tech-hero">
-    {% include "./includes/top_bar.html" with podcast_apple_url=self.podcast_apple_url podcast_spotify_url=self.podcast_spotify_url podcast_google_url=self.podcast_google_url %}
+    {% include "./includes/top_bar.html" with podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8 big-tech-mm-series-hero">
@@ -52,11 +52,11 @@
             SUBSCRIBE:
           </div>
           <div class="subscribe-links">
-            <a class="apple" href="{{ self.podcast_apple_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/apple_podcasts_icon.svg' %}</a>
+            <a class="apple" href="{{ self.podcast_subscribe_buttons.0.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/apple_podcasts_icon.svg' %}</a>
             <span class="slash"></span>
-            <a class="spotify" href="{{ self.podcast_spotify_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/spotify_podcasts_icon.svg' %}</a>
+            <a class="spotify" href="{{ self.podcast_subscribe_buttons.1.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/spotify_podcasts_icon.svg' %}</a>
             <span class="slash"></span>
-            <a class="google" href="{{ self.podcast_google_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/google_podcasts_icon.svg' %}</a>
+            <a class="pocket-casts" href="{{ self.podcast_subscribe_buttons.2.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/pocket_casts_icon.svg' %}</a>
           </div>
         </div>
       </div>
@@ -178,5 +178,5 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with podcast_apple_url=self.podcast_apple_url podcast_spotify_url=self.podcast_spotify_url podcast_google_url=self.podcast_google_url %}
+  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
 {% endblock %}
