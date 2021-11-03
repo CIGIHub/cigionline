@@ -29,6 +29,15 @@
         max-width: 600px;
       }
 
+      .season-tagline {
+        color: $bigtech-teal;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 100%;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+      }
+
       .description {
         font-style: italic;
         margin-top: 2rem;
@@ -77,7 +86,7 @@
         }
 
         .pocket-casts {
-          width: 160px;
+          width: 140px;
         }
       }
     }
