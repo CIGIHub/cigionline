@@ -427,8 +427,8 @@ class MultimediaSeriesPage(
     )
 
     podcast_subscribe_buttons = StreamField([
-            ('podcast_subscribe_button', PodcastSubscribeButtonBlock())
-        ],
+        ('podcast_subscribe_button', PodcastSubscribeButtonBlock())
+    ],
         blank=True,
         help_text='A list of search terms for which this page will be elevated in the search results.',
     )

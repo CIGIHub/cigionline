@@ -2,6 +2,7 @@
   &.big-tech-s3-theme {
     @include link($color: $cigi-darkest-grey, $hover-color: $bigtech-teal);
 
+    // sass-lint:disable-block class-name-format
     .wagtail-userbar__item {
       a {
         color: $cigi-medium-light-grey;
