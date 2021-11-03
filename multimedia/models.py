@@ -1,3 +1,4 @@
+from django.db.models.fields import CharField
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -410,27 +411,14 @@ class MultimediaSeriesPage(
         verbose_name='Poster Image',
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
-    podcast_apple_url = models.URLField(
-        blank=True,
-        verbose_name='Apple Podcast URL',
-        help_text='Enter the link to the Apple Podcast landing page for this podcast.',
-    )
-    podcast_google_url = models.URLField(
-        blank=True,
-        verbose_name='Google Podcast URL',
-        help_text='Enter the link to the Google Podcast landing page for the podcast.',
-    )
-    podcast_spotify_url = models.URLField(
-        blank=True,
-        verbose_name='Spotify Podcast URL',
-        help_text='Enter the link to the Spotify Podcast landing page for the podcast.',
-    )
+    podcast_season_tagline = CharField(blank=True, null=True, max_length=256)
 
     podcast_subscribe_buttons = StreamField([
         ('podcast_subscribe_button', PodcastSubscribeButtonBlock())
     ],
         blank=True,
-        help_text='A list of search terms for which this page will be elevated in the search results.',
+        verbose_name='Podcast Subscribe Buttons',
+        help_text='A list of subscribe links to various podcast providers',
     )
 
     @property
@@ -484,9 +472,7 @@ class MultimediaSeriesPage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_logo'),
-                FieldPanel('podcast_apple_url'),
-                FieldPanel('podcast_spotify_url'),
-                FieldPanel('podcast_google_url'),
+                FieldPanel('podcast_season_tagline'),
                 StreamFieldPanel('podcast_subscribe_buttons'),
             ],
             heading='Podcast Details',
