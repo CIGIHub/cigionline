@@ -43,9 +43,11 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8 big-tech-mm-series-hero">
-          <div class="season-tagline">
-            {{ self.podcast_season_tagline }}
-          </div>
+          {% if self.podcast_season_tagline %}
+            <div class="season-tagline">
+              {{ self.podcast_season_tagline }}
+            </div>
+          {% endif %}
           {% image self.image_banner width-600 %}
           <div class="description">
             {{ self.subtitle|richtext }}
