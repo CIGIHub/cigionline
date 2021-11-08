@@ -79,8 +79,12 @@
           {% include "includes/topics.html" with topics=latest_episode.topics_sorted %}
           <h3>
             <a href="{{ latest_episode.url }}">
-              {{ latest_episode.specific.podcast_guests }}
-              <div>{{ latest_episode.specific.podcast_subtitle }}</div>
+              {% if not latest_episode.specific.podcast_subtitle %}
+                <div class="block-guest">{{ latest_episode.title }}</div>
+              {% else %}
+                {{ latest_episode.specific.podcast_guests }}
+                <div>{{ latest_episode.specific.podcast_subtitle }}</div>
+              {% endif %}
             </a>
           </h3>
           <div class="simplecast-embed">
@@ -108,24 +112,31 @@
         <div class="col col-lg-9">
           <div class="big-tech-dropdown">
             <button class="btn btn-secondary dropdown-toggle" id="season-select-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              SEASON 3
+              SEASON 4
             </button>
             <ul class="dropdown-menu" id="season-select">
+              <li data-season="season-4"><button>SEASON 4</button></li>
               <li data-season="season-3"><button>SEASON 3</button></li>
               <li data-season="season-2"><button>SEASON 2</button></li>
               <li data-season="season-1"><button>SEASON 1</button></li>
             </ul>
           </div>
           {% for season, episodes in self.series_seasons.items %}
-            <div class="season-episodes {% if season == 3 %}active{% endif %}" id="season-{{ season }}">
+            <div class="season-episodes {% if season == 4 %}active{% endif %}" id="season-{{ season }}">
               {% if episodes.unpublished %}
                 {% for unpublushed_episode in episodes.unpublished %}
                   <article class="flex-row unpublished">
                     <div class="episode-info">
                       <div class="date">Available on {{unpublushed_episode.specific.publishing_date|date:"F j, Y"}}</div>
                       <h3>
-                        {{ unpublushed_episode.specific.podcast_guests }}
-                        <div>{{ unpublushed_episode.specific.podcast_subtitle }}</div>
+                        {% if not unpublushed_episode.specific.podcast_subtitle %}
+                          <div class="block-guest title-case">
+                            {{ unpublushed_episode.title }}
+                          </div>
+                        {% else %}
+                          {{ unpublushed_episode.specific.podcast_guests }}
+                          <div>{{ unpublushed_episode.specific.podcast_subtitle }}</div>
+                        {% endif %}
                       </h3>
                       {{ unpublushed_episode.specific.subtitle|richtext }}
                     </div>
@@ -143,7 +154,7 @@
                     <h3>
                       <a href="{{ episode.url }}">
                         {% if not episode.specific.podcast_subtitle %}
-                          <div class="block-guest">{{ episode.title }}</div>
+                          <div class="block-guest title-case">{{ episode.title }}</div>
                         {% else %}
                           {{ episode.specific.podcast_guests }}
                           <div>{{ episode.specific.podcast_subtitle }}</div>
