@@ -80,7 +80,7 @@
           <h3>
             <a href="{{ latest_episode.url }}">
               {% if not latest_episode.specific.podcast_subtitle %}
-                <div class="block-guest">{{ latest_episode.title }}</div>
+                <div class="block-guest title-case">{{ latest_episode.title }}</div>
               {% else %}
                 {{ latest_episode.specific.podcast_guests }}
                 <div>{{ latest_episode.specific.podcast_subtitle }}</div>

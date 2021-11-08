@@ -118,7 +118,7 @@
           text-transform: uppercase;
 
           &.title-case {
-            text-transform: capitalize;
+            text-transform: none;
           }
         }
       }
@@ -254,7 +254,7 @@
                 text-transform: uppercase;
 
                 &.title-case {
-                  text-transform: capitalize;
+                  text-transform: none;
                 }
               }
             }
