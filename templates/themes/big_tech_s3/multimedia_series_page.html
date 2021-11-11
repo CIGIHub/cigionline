@@ -112,17 +112,16 @@
         <div class="col col-lg-9">
           <div class="big-tech-dropdown">
             <button class="btn btn-secondary dropdown-toggle" id="season-select-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              SEASON 4
+              SEASON 3
             </button>
             <ul class="dropdown-menu" id="season-select">
-              <li data-season="season-4"><button>SEASON 4</button></li>
               <li data-season="season-3"><button>SEASON 3</button></li>
               <li data-season="season-2"><button>SEASON 2</button></li>
               <li data-season="season-1"><button>SEASON 1</button></li>
             </ul>
           </div>
           {% for season, episodes in self.series_seasons.items %}
-            <div class="season-episodes {% if season == 4 %}active{% endif %}" id="season-{{ season }}">
+            <div class="season-episodes {% if season == 3 %}active{% endif %}" id="season-{{ season }}">
               {% if episodes.unpublished %}
                 {% for unpublushed_episode in episodes.unpublished %}
                   <article class="flex-row unpublished">
@@ -148,7 +147,7 @@
               {% endif %}
 
               {% for episode in episodes.published %}
-                <article class="flex-row {% if season == 4 and forloop.counter == 1 %}d-none{% endif %}">
+                <article class="flex-row {% if season == 3 and forloop.counter == 1 %}d-none{% endif %}">
                   <div class="episode-info">
                     {% include "includes/topics.html" with topics=episode.topics_sorted %}
                     <h3>
