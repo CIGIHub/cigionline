@@ -84,13 +84,17 @@
 
       .subscribe {
         .subscribe-links {
+          @include media-breakpoint-up(sm) {
+            align-items: center;
+            flex-direction: row;
+          }
           @include media-breakpoint-up(md) {
             align-items: flex-start;
             flex-direction: column;
           }
-          align-items: center;
+          align-items: flex-start;
           display: flex;
-          flex-direction: row;
+          flex-direction: column;
 
           a {
             @include media-breakpoint-up(md) {
@@ -105,12 +109,21 @@
               max-width: 150px;
             }
 
-            &.google {
-              max-width: 180px;
+            &.pocket-casts {
+              margin-top: 0;
+              width: 130px;
             }
 
             &.spotify {
-              max-width: 100px;
+              @include media-breakpoint-up(sm) {
+                margin-top: 0;
+              }
+              @include media-breakpoint-up(md) {
+                margin-top: 0.8em;
+                max-width: 100px;
+              }
+              margin-top: 0.5em;
+              width: 95px;
             }
 
             svg {
