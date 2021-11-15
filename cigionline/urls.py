@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.urls import path
 from django.views.decorators.cache import cache_control
+from core import views as core_views
 from events.feeds import EventFeed
 from images.views import favicon_view
 from people import views as people_views
@@ -33,8 +34,7 @@ urlpatterns = urlpatterns + [
     url(r'^api/topics/$', research_views.all_topics),
     url(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     url(r'^api/events/$', events_views.events_api),
-    url(r'^api/old_images/$', core_views.old_images),
-
+    url(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
     url(r'^events/feed.ics$', EventFeed()),
     url(r'^favicon\.ico$', favicon_view),
     url(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
