@@ -66,6 +66,9 @@
       {% endif %}
     {% endblock %}
     {% block article_content %}
+      {% if self.from_the_archives and self.from_the_archives_blurb %}
+        {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
+      {% endif %}
       {% if self.body %}
         {% if self.article_type.title == 'CIGI in the News' %}
           <section class="body" id="article-body">
