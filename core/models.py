@@ -411,7 +411,7 @@ class ContentPage(Page, SearchablePageAbstract):
             if contenttype == 'Opinion':
                 return self.specific.article_type.title
             if contenttype == 'Publication':
-                return self.specific.publication_type.title
+                return self.specific.publication_type.title if self.specific.publication_type else ''
             if contenttype == 'Multimedia':
                 return self.specific.get_multimedia_type_display()
             if contenttype == 'Event':
