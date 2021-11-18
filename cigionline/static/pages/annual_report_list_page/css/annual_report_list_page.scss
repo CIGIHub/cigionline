@@ -1,8 +1,14 @@
 @import '../../../css/global/mixins';
 @import '../../../css/includes/swiper';
 
+section {
+  margin: 4em 0;
+}
+
 .search {
   .search-table {
+    margin-bottom: 0;
+
     td {
       align-items: center;
 
@@ -20,6 +26,16 @@
 
       .button-action {
         text-transform: capitalize;
+      }
+    }
+
+    .search-bar {
+      margin-bottom: 2em;
+
+      .search-bar-form {
+        .input-group-search {
+          margin-bottom: 0.5em;
+        }
       }
     }
   }

@@ -13,3 +13,15 @@ section {
     }
   }
 }
+
+.in-the-series {
+  .search-table-container {
+    margin-top: 0;
+
+    .search-table {
+      .search-bar-sort-wrapper {
+        display: none;
+      }
+    }
+  }
+}

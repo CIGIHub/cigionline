@@ -6,6 +6,38 @@
   @include hover-darken;
   line-height: 1.25;
 
+  &.poster {
+    @include media-breakpoint-up(sm) {
+      display: flex;
+    }
+
+    .feature-content-image {
+      flex: 0 0 50%;
+      padding-right: 15px;
+
+      .img-wrapper {
+        color: transparent;
+        display: block;
+
+        img {
+          border: 1px solid $cigi-light-grey;
+          box-shadow: 5px 5px 10px $cigi-light-grey;
+
+          &:hover {
+            border: 1px solid $white;
+          }
+        }
+      }
+    }
+
+    .feature-content-text {
+      @include media-breakpoint-up(sm) {
+        padding-left: 15px;
+      }
+      margin-top: 0;
+    }
+  }
+
   .img-wrapper {
     margin-bottom: 1em;
   }
@@ -32,5 +64,9 @@
       font-size: 1.375em;
       line-height: 1.25;
     }
+  }
+
+  .button-action {
+    margin-top: .5em;
   }
 }

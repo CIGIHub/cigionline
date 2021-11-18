@@ -55,6 +55,12 @@ section {
             border-top: 1px $cigi-light-grey solid;
             padding-bottom: 1em;
             padding-top: 1em;
+
+            .feature-content-text {
+              @include media-breakpoint-down(sm) {
+                margin-top: 0;
+              }
+            }
           }
 
           &:nth-child(-n + 3) {

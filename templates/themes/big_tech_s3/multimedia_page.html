@@ -47,7 +47,7 @@
 
 {% block header %}
   <div class="big-tech-hero">
-    {% include "./includes/top_bar.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+    {% include "./includes/top_bar.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons %}
     <div class="container">
       <div class="row">
         <div class="col big-tech-mm-hero">
@@ -165,5 +165,5 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons %}
 {% endblock %}
