@@ -12,7 +12,11 @@
     </div>
     <div class="feature-publication-teaser-meta">
       {% include "includes/authors.html" with authors=publication.authors.all %}
-      {% include "includes/date.html" with date=publication.publishing_date %}
+      {% if publication.from_the_archives %}
+        <div class="feature-content-from-the-archives">FROM THE ARCHIVES</div>
+      {% else %}
+        {% include "includes/date.html" with date=publication.publishing_date %}
+      {% endif %}
       {% if publication.pdf_downloads %}
         <button class="button-action">
           <a href="{{ publication.pdf_downloads.0.value.file.url }}">
