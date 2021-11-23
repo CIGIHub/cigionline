@@ -18,6 +18,7 @@ $bigtech-light-grey: #b1b1b1;
 @import './big_tech_s3_multimedia_series';
 
 .big-tech-s3-theme {
+  @include top-bar();
   font-family: 'nunito-sans', sans-serif;
 
   header,

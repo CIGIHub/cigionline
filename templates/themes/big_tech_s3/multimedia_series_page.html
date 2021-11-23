@@ -38,6 +38,7 @@
 {% block body_class %}big-tech-s3-theme big-tech-s3-multimedia-series{% endblock %}
 
 {% block header %}
+  {% include "includes/top_bar.html" %}
   <div class="big-tech-hero">
     {% include "./includes/top_bar.html" with podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
     <div class="container">
