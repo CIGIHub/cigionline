@@ -1,4 +1,4 @@
-{% load core_tags wagtailimages_tags %}
+{% load core_tags wagtailcore_tags wagtailimages_tags static %}
 
 {% if promotion_block.image_promotion.file.url|file_extension == '.gif' %}
   {% define promotion_block.image_promotion.file.url as image_promotion_url %}
@@ -7,37 +7,55 @@
   {% define image_promotion.url as image_promotion_url %}
 {% endif %}
 <div class="promotion-block promotion-block-{{ promotion_block.block_type|slugify }}">
-  {% if promotion_block.link_url %}
-    <a href="{{ promotion_block.link_url }}">
-  {% endif %}
-    <div class="promotion-block-background" style="background-image: url('{{ image_promotion_url }}');">
-      {% if promotion_block.block_type == "social" %}
-        <div class='social-content'>
-          <div class='social-text'>Follow us on social media</div>
-          <div class='social-links'>
-            <a class='social-link' href='https://www.facebook.com/cigionline/' target='_blank' rel="noopener noreferrer">
-              <i class='fab fa-facebook-f'></i>
-            </a>
-            <a class='social-link' href='https://twitter.com/cigionline' target='_blank' rel="noopener noreferrer">
-              <i class='fab fa-twitter'></i>
-            </a>
-            <a class='social-link' href='https://www.linkedin.com/company/cigionline/' target='_blank' rel="noopener noreferrer">
-              <i class='fab fa-linkedin-in'></i>
-            </a>
-          </div>
-        </div>
-      {% endif %}
-      {% if promotion_block.block_type == "wide" and promotion_block.image_promotion_small %}
-        {% if promotion_block.image_promotion_small.file.url|file_extension == '.gif' %}
-          {% define promotion_block.image_promotion_small.file.url as image_promotion_small_url %}
-        {% else %}
-          {% image promotion_block.image_promotion_small original as image_promotion_small %}
-          {% define image_promotion_small.url as image_promotion_small_url %}
-        {% endif %}
-        <div class="promotion-block-background promotion-block-background-small" style="background-image: url('{{ image_promotion_small_url }}');"></div>
-      {% endif %}
-    </div>
-  {% if promotion_block.link_url %}
+  {% if promotion_block.block_type == "podcast_player" %}
+    {% with episode=promotion_block.episode %}
+    <a href="/big-tech" class="podcast-logo">
+      <img class="ad-block-bt-logo" src="/static/assets/ad_block_bt_logo.svg" alt="">
+      <img class="ad-block-bt-logo-sm" src="/static/assets/ad_block_bt_logo_sm.svg" alt="">
+      <p class="logo-text">Is big tech going to save humanity or destroy it? Host Taylor Owen thinks it's more complicated than that.</p>
     </a>
+    <a href="{{episode.url}} class="podcast-image">
+      {% image episode.image_square fill-250x250 %}
+    </a>
+    <div class="podcast-info">
+      <a href="{{episode.url}}" class="podcast-title">{{episode.title}}</a>
+      <div class="podcast-description">{{episode.subtitle|richtext}}</div>
+      {% include "includes/simplecast_embed.html" with simplecast_url=episode.multimedia_url %}
+    </div>
+    {% endwith %}
+  {% else %}
+    {% if promotion_block.link_url %}
+      <a href="{{ promotion_block.link_url }}">
+    {% endif %}
+      <div class="promotion-block-background" style="background-image: url('{{ image_promotion_url }}');">
+        {% if promotion_block.block_type == "social" %}
+          <div class='social-content'>
+            <div class='social-text'>Follow us on social media</div>
+            <div class='social-links'>
+              <a class='social-link' href='https://www.facebook.com/cigionline/' target='_blank' rel="noopener noreferrer">
+                <i class='fab fa-facebook-f'></i>
+              </a>
+              <a class='social-link' href='https://twitter.com/cigionline' target='_blank' rel="noopener noreferrer">
+                <i class='fab fa-twitter'></i>
+              </a>
+              <a class='social-link' href='https://www.linkedin.com/company/cigionline/' target='_blank' rel="noopener noreferrer">
+                <i class='fab fa-linkedin-in'></i>
+              </a>
+            </div>
+          </div>
+        {% endif %}
+        {% if promotion_block.block_type == "wide" and promotion_block.image_promotion_small %}
+          {% if promotion_block.image_promotion_small.file.url|file_extension == '.gif' %}
+            {% define promotion_block.image_promotion_small.file.url as image_promotion_small_url %}
+          {% else %}
+            {% image promotion_block.image_promotion_small original as image_promotion_small %}
+            {% define image_promotion_small.url as image_promotion_small_url %}
+          {% endif %}
+          <div class="promotion-block-background promotion-block-background-small" style="background-image: url('{{ image_promotion_small_url }}');"></div>
+        {% endif %}
+      </div>
+    {% if promotion_block.link_url %}
+      </a>
+    {% endif %}
   {% endif %}
 </div>

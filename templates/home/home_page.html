@@ -76,7 +76,13 @@
       <div class="container">
         <div class="row">
           {% for promotion_block in promotion_blocks %}
-            <div class="homepage-promotion-block col-md-6">
+            <div class="homepage-promotion-block 
+              {% if promotion_block.block_type == 'wide' or promotion_block.block_type == 'podcast_player' %}
+                col
+              {% else %}
+                col-md-6
+              {% endif %}
+            ">
               {% include "includes/promotion_block.html" with promotion_block=promotion_block %}
             </div>
           {% endfor %}
