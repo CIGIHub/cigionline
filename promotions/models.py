@@ -1,6 +1,4 @@
 from django.db import models
-import multimedia
-
 from multimedia.models import MultimediaPage
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -74,8 +72,7 @@ class PromotionBlock(models.Model):
     def episode(self):
         if self.podcast_episode:
             return self.podcast_episode
-        else:
-            return MultimediaPage.objects.live().filter(multimedia_series__title="Big Tech Podcast").order_by("-publishing_date")[0]
+        return MultimediaPage.objects.live().filter(multimedia_series__title="Big Tech Podcast").order_by("-publishing_date")[0]
 
     class Meta:
         verbose_name = 'Promotion Block'
