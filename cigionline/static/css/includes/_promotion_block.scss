@@ -108,6 +108,7 @@
     }
   }
 
+  // sass-lint:disable-block class-name-format
   &.promotion-block-podcast_player {
     @include media-breakpoint-down(sm) {
       flex-direction: column;
