@@ -15,9 +15,15 @@ $bigtech-light-grey: #b1b1b1;
 @import './big_tech_multimedia';
 
 .big-tech-theme {
+  @include top-bar($background-color: $black, $color: $white, $background-color-scrolled: $black);
   font-family: 'nunito-sans', sans-serif;
 
-  header,
+  header {
+    font-family: 'futura-pt', sans-serif;
+    z-index: 1;
+  }
+
+  .big-tech-top-bar,
   main {
     @include link($color: $bigtech-teal, $hover-color: $cigi-dark-grey);
 
@@ -35,31 +41,27 @@ $bigtech-light-grey: #b1b1b1;
     }
   }
 
-  header {
-    background-color: transparent;
-    position: relative;
+  .big-tech-top-bar {
+    @include media-breakpoint-up(sm) {
+      padding-top: 1.5em;
+    }
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1.5em;
+    padding-top: 1em;
 
-    .big-tech-top-bar {
-      @include media-breakpoint-up(sm) {
-        padding-top: 1.5em;
-      }
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      padding-bottom: 1.5em;
-      padding-top: 1em;
-
-      .big-tech-logo {
-        svg {
-          height: 45px;
-          width: 45px;
-        }
+    .big-tech-logo {
+      svg {
+        height: 45px;
+        width: 45px;
       }
     }
   }
 
   .big-tech-hero {
     margin-bottom: 3em;
+    padding-top: 2.2em;
   }
 
   .body {
