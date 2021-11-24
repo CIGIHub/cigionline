@@ -60,8 +60,11 @@ $bigtech-light-grey: #b1b1b1;
   }
 
   .big-tech-hero {
+    @include media-breakpoint-up(sm) {
+      padding-top: 2.2em;
+    }
     margin-bottom: 3em;
-    padding-top: 2.2em;
+    padding-top: 2.7em;
   }
 
   .body {
