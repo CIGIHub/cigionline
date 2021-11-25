@@ -46,6 +46,7 @@
 {% block body_class %}big-tech-theme big-tech-multimedia{% endblock %}
 
 {% block header %}
+  {% include "includes/top_bar.html" with small=True %}
   <div class="big-tech-hero">
     {% include "./includes/top_bar.html" with podcast_subscribe_buttons=self.multimedia_series.podcast_subscribe_buttons %}
     <div class="container">
