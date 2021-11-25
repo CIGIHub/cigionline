@@ -7,6 +7,30 @@ header {
   width: 100%;
   z-index: 15;
 
+  &.small {
+    .cigi-top-bar {
+      height: 50px;
+
+      .cigi-logo {
+        .large-logo {
+          opacity: 0;
+        }
+
+        .small-logo {
+          opacity: 1;
+        }
+      }
+
+      .desktop-menu {
+        opacity: 0;
+
+        a {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
   .main-navigation-wrapper {
     position: relative;
     z-index: 4;

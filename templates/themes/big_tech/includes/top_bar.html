@@ -1,25 +1,23 @@
 {% load wagtailcore_tags %}
 
-<header>
-  <div class="container">
-    <div class="row">
-      <div class="col big-tech-top-bar">
-        <a href="/big-tech/" class="big-tech-logo">
-          {% include "./big_tech_logo.svg" %}
-        </a>
-        <div class="big-tech-dropdown big-tech-subscribe">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="bigTechSubscribeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Subscribe
-          </button>
-          <div class="dropdown-menu" aria-labelledby="bigTechSubscribeButton">
-            {% for button in podcast_subscribe_buttons %}
-              <a class="dropdown-item" href="{{ button.value.url }}" target="_blank" rel="noopener noreferrer">
-                {{button.value.label}}
-              </a>
-            {% endfor %}
-          </div>
+<div class="container">
+  <div class="row">
+    <div class="col big-tech-top-bar">
+      <a href="/big-tech/" class="big-tech-logo">
+        {% include "./big_tech_logo.svg" %}
+      </a>
+      <div class="big-tech-dropdown big-tech-subscribe">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="bigTechSubscribeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Subscribe
+        </button>
+        <div class="dropdown-menu" aria-labelledby="bigTechSubscribeButton">
+          {% for button in podcast_subscribe_buttons %}
+            <a class="dropdown-item" href="{{ button.value.url }}" target="_blank" rel="noopener noreferrer">
+              {{button.value.label}}
+            </a>
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
-</header>
+</div>
