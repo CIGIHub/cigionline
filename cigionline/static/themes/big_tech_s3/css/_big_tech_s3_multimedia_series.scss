@@ -185,7 +185,7 @@
         }
 
         article {
-          border-bottom: solid 1px $cigi-medium-light-grey;
+          border-top: solid 1px $cigi-medium-light-grey;
           display: flex;
           padding: 0.875em 0;
 
@@ -225,8 +225,8 @@
             }
           }
 
-          &:last-of-type {
-            border-bottom: 0;
+          &:first-of-type {
+            border-top: 0;
           }
 
           .episode-info {
