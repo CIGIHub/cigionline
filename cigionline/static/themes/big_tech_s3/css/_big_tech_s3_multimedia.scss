@@ -103,6 +103,11 @@
     display: flex;
     justify-content: space-between;
     padding-bottom: 3em;
+    position: relative;
+
+    & > div {
+      flex-grow: 1;
+    }
 
     h1 {
       .podcast-guest {

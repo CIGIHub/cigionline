@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load webpack_loader wagtailimages_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta property="og:type" content="article" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.publishing_date %}
+    <meta property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
+  {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'projectPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+  </script>
+  {% render_bundle 'projectPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
+
+  {% if self.image_hero %}
+    <section class="image-hero">
+      <div class="container">
+        <div class="row">
+          <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <figure>
+              {% image self.image_hero width-1760 %}
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if featured_pages|length > 0 %}
+    <section class="featured">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-8 feature-border-right">
+            {% if featured_pages|length > 0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True cta_pdf=True %}
+            {% endif %}
+          </div>
+          <hr class="separator-large">
+          <div class="col-12 col-md-4 featured-small">
+          {% with featured_pages|slice:"4:" as featured_small %}
+            {% for item in featured_small %}
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+            {% endfor %}
+          {% endwith %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+        <div class="row featured-medium">
+        {% with featured_pages|slice:"1:4" as featured_medium %}
+          {% for item in featured_medium %}
+            <div class="col-12 col-md-4">
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
+            </div>
+          {% endfor %}
+        {% endwith %}
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% include "includes/body.html" with body=self.body %}
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="project-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

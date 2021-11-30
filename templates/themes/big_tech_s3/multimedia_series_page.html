@@ -38,11 +38,17 @@
 {% block body_class %}big-tech-s3-theme big-tech-s3-multimedia-series{% endblock %}
 
 {% block header %}
+  {% include "includes/top_bar.html" with small=True %}
   <div class="big-tech-hero">
-    {% include "./includes/top_bar.html" with podcast_apple_url=self.podcast_apple_url podcast_spotify_url=self.podcast_spotify_url podcast_google_url=self.podcast_google_url %}
+    {% include "./includes/top_bar.html" with podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8 big-tech-mm-series-hero">
+          {% if self.podcast_season_tagline %}
+            <div class="season-tagline">
+              {{ self.podcast_season_tagline }}
+            </div>
+          {% endif %}
           {% image self.image_banner width-600 %}
           <div class="description">
             {{ self.subtitle|richtext }}
@@ -52,11 +58,11 @@
             SUBSCRIBE:
           </div>
           <div class="subscribe-links">
-            <a class="apple" href="{{ self.podcast_apple_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/apple_podcasts_icon.svg' %}</a>
+            <a class="apple" href="{{ self.podcast_subscribe_buttons.0.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/apple_podcasts_icon.svg' %}</a>
             <span class="slash"></span>
-            <a class="spotify" href="{{ self.podcast_spotify_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/spotify_podcasts_icon.svg' %}</a>
+            <a class="spotify" href="{{ self.podcast_subscribe_buttons.1.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/spotify_podcasts_icon.svg' %}</a>
             <span class="slash"></span>
-            <a class="google" href="{{ self.podcast_google_url }}" rel="noopener noreferrer" target="_blank">{% include './includes/google_podcasts_icon.svg' %}</a>
+            <a class="pocket-casts" href="{{ self.podcast_subscribe_buttons.2.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/pocket_casts_icon.svg' %}</a>
           </div>
         </div>
       </div>
@@ -74,8 +80,12 @@
           {% include "includes/topics.html" with topics=latest_episode.topics_sorted %}
           <h3>
             <a href="{{ latest_episode.url }}">
-              {{ latest_episode.specific.podcast_guests }}
-              <div>{{ latest_episode.specific.podcast_subtitle }}</div>
+              {% if not latest_episode.specific.podcast_subtitle %}
+                <div class="block-guest title-case">{{ latest_episode.title }}</div>
+              {% else %}
+                {{ latest_episode.specific.podcast_guests }}
+                <div>{{ latest_episode.specific.podcast_subtitle }}</div>
+              {% endif %}
             </a>
           </h3>
           <div class="simplecast-embed">
@@ -103,24 +113,31 @@
         <div class="col col-lg-9">
           <div class="big-tech-dropdown">
             <button class="btn btn-secondary dropdown-toggle" id="season-select-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              SEASON 3
+              SEASON 4
             </button>
             <ul class="dropdown-menu" id="season-select">
+              <li data-season="season-4"><button>SEASON 4</button></li>
               <li data-season="season-3"><button>SEASON 3</button></li>
               <li data-season="season-2"><button>SEASON 2</button></li>
               <li data-season="season-1"><button>SEASON 1</button></li>
             </ul>
           </div>
           {% for season, episodes in self.series_seasons.items %}
-            <div class="season-episodes {% if season == 3 %}active{% endif %}" id="season-{{ season }}">
+            <div class="season-episodes {% if season == 4 %}active{% endif %}" id="season-{{ season }}">
               {% if episodes.unpublished %}
                 {% for unpublushed_episode in episodes.unpublished %}
                   <article class="flex-row unpublished">
                     <div class="episode-info">
                       <div class="date">Available on {{unpublushed_episode.specific.publishing_date|date:"F j, Y"}}</div>
                       <h3>
-                        {{ unpublushed_episode.specific.podcast_guests }}
-                        <div>{{ unpublushed_episode.specific.podcast_subtitle }}</div>
+                        {% if not unpublushed_episode.specific.podcast_subtitle %}
+                          <div class="block-guest title-case">
+                            {{ unpublushed_episode.title }}
+                          </div>
+                        {% else %}
+                          {{ unpublushed_episode.specific.podcast_guests }}
+                          <div>{{ unpublushed_episode.specific.podcast_subtitle }}</div>
+                        {% endif %}
                       </h3>
                       {{ unpublushed_episode.specific.subtitle|richtext }}
                     </div>
@@ -132,13 +149,17 @@
               {% endif %}
 
               {% for episode in episodes.published %}
-                <article class="flex-row {% if season == 3 and forloop.counter == 1 %}d-none{% endif %}">
+                <article class="flex-row {% if season == 4 and forloop.counter == 1 %}d-none{% endif %}">
                   <div class="episode-info">
                     {% include "includes/topics.html" with topics=episode.topics_sorted %}
                     <h3>
                       <a href="{{ episode.url }}">
-                        {{ episode.specific.podcast_guests }}
-                        <div>{{ episode.specific.podcast_subtitle }}</div>
+                        {% if not episode.specific.podcast_subtitle %}
+                          <div class="block-guest title-case">{{ episode.title }}</div>
+                        {% else %}
+                          {{ episode.specific.podcast_guests }}
+                          <div>{{ episode.specific.podcast_subtitle }}</div>
+                        {% endif %}
                       </a>
                     </h3>
                     {{ episode.specific.subtitle|richtext }}
@@ -178,5 +199,5 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with podcast_apple_url=self.podcast_apple_url podcast_spotify_url=self.podcast_spotify_url podcast_google_url=self.podcast_google_url %}
+  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
 {% endblock %}

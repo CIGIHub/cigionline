@@ -1,34 +1,42 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags static %}
 
-<article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %}">
+{% if poster %}
+  {% define additional_classes|add:" poster" as additional_classes %}
+{% endif %}
+
+<article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %}{{ additional_classes }}">
   <a href="{% pageurl content %}" class="feature-content-image">
     <div class="img-wrapper">
-      {% if content.image_feature %}
-        {% define content.image_feature as feature_image %}
-      {% elif content.image_hero %}
-        {% define content.image_hero as feature_image %}
+      {% if poster %}
+        {% image content.image_poster original %}
       {% else %}
-        <img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="CIGI Logo">
-      {% endif %}
-      {% if feature_image.file.url|file_extension == '.gif' %}
-        <img src="{{feature_image.file.url}}" alt="{{feature_image.caption}}" />
-      {% else %}
-        {% image feature_image fill-1440x990 %}
-      {% endif %}
-      {% if content|page_type == 'multimedia' %}
-        {% if content.multimedia_type == 'video' %}
-          {% define 'fa-play' as icon_class %}
-        {% elif content.multimedia_type == 'audio' %}
-          {% define 'fa-volume-up' as icon_class %}
+        {% if content.image_feature %}
+          {% define content.image_feature as feature_image %}
+        {% elif content.image_hero %}
+          {% define content.image_hero as feature_image %}
+        {% else %}
+          <img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="CIGI Logo">
         {% endif %}
-        <div class="image-button feature-content-image-button">
-          <i class="fas {{ icon_class }}"></i>
-        </div>
+        {% if feature_image.file.url|file_extension == '.gif' %}
+          <img src="{{feature_image.file.url}}" alt="{{feature_image.caption}}" />
+        {% else %}
+          {% image feature_image fill-1440x990 %}
+        {% endif %}
+        {% if content|page_type == 'multimedia' %}
+          {% if content.multimedia_type == 'video' %}
+            {% define 'fa-play' as icon_class %}
+          {% elif content.multimedia_type == 'audio' %}
+            {% define 'fa-volume-up' as icon_class %}
+          {% endif %}
+          <div class="image-button feature-content-image-button">
+            <i class="fas {{ icon_class }}"></i>
+          </div>
+        {% endif %}
       {% endif %}
     </div>
   </a>
 
-  <div class="feature-content-text center-text">
+  <div class="feature-content-text {% if not poster %}center-text{% endif %}">
     {% include 'includes/topics.html' with topics=content.topics_sorted %}
     {% include 'includes/features/feature_content_title.html' %}
     {% include 'includes/features/feature_content_subtitle.html' %}
@@ -37,6 +45,13 @@
     {% else %}
       {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
     {% endif %}
-    <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
+    {% if content.from_the_archives %}
+      <div class="feature-content-from-the-archives">FROM THE ARCHIVES</div>
+    {% else %}
+      <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
+    {% endif %}
+    {% if cta %}
+      {% include 'includes/features/feature_content_cta.html' with cta_pdf=cta_pdf %}
+    {% endif %}
   </div>
 </article>

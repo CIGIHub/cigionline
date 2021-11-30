@@ -47,7 +47,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
 
   {% if self.image_hero %}
     <section class="image-hero">
@@ -63,7 +63,51 @@
     </section>
   {% endif %}
 
+  {% if featured_pages|length > 0 %}
+    <section class="featured">
+      <div class="container">
+        <h2 class="paragraph-heading">Featured</h2>
+        <div class="row">
+          <div class="col-12 col-md-8">
+            {% if featured_pages|length > 0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
+            {% endif %}
+          </div>
+          <hr class="separator-large">
+          <div class="col-12 col-md-4 featured-small">
+          {% with featured_pages|slice:"4:" as featured_small %}
+            {% for item in featured_small %}
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+            {% endfor %}
+          {% endwith %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+        <div class="row featured-medium">
+        {% with featured_pages|slice:"1:4" as featured_medium %}
+          {% for item in featured_medium %}
+            <div class="col-12 col-md-4">
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
+            </div>
+          {% endfor %}
+        {% endwith %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
   {% include "includes/body.html" with body=self.body %}
+
   <section>
     <div class="container">
       <div class="row">

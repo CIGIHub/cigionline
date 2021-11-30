@@ -23,6 +23,8 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
+import datetime
+import pytz
 
 
 class ArticleLandingPage(BasicPageAbstract, Page):
@@ -257,6 +259,15 @@ class ArticlePage(
         related_name='+',
         verbose_name='Banner Image Small'
     )
+    image_poster = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster Image',
+        help_text='A poster image used in feature sections',
+    )
     interviewers = StreamField(
         [
             ('interviewer', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -325,6 +336,12 @@ class ArticlePage(
     def cigi_people_mentioned_ids(self):
         return [item.person.id for item in self.cigi_people_mentioned.all()]
 
+    @property
+    def expired_image(self):
+        if self.publishing_date:
+            return self.publishing_date < datetime.datetime(2017, 1, 1).astimezone(pytz.timezone('America/Toronto'))
+        return False
+
     def is_opinion(self):
         return self.article_type.title in [
             'Op-Eds',
@@ -368,6 +385,7 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 ImageChooserPanel('image_hero'),
+                ImageChooserPanel('image_poster'),
                 ImageChooserPanel('image_banner'),
                 ImageChooserPanel('image_banner_small'),
             ],

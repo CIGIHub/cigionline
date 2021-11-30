@@ -15,7 +15,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 class JobPostingListPage(BasicPageAbstract, Page):
     def get_context(self, request):
         context = super().get_context(request)
-        context['job_postings'] = JobPostingPage.objects.live().public().order_by(models.F('closing_date').desc(nulls_last=True))
+        context['job_postings'] = JobPostingPage.objects.live().public().order_by(models.F('closing_date').asc(nulls_first=True))
         return context
 
     max_count = 1

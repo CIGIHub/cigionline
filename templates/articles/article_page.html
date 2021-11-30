@@ -44,7 +44,7 @@
   {% cache 604800 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
     {% block hero %}
       {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
-      {% if self.image_hero %}
+      {% if not self.expired_image and self.image_hero %}
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-lg-10">
@@ -66,6 +66,9 @@
       {% endif %}
     {% endblock %}
     {% block article_content %}
+      {% if self.from_the_archives and self.from_the_archives_blurb %}
+        {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
+      {% endif %}
       {% if self.body %}
         {% if self.article_type.title == 'CIGI in the News' %}
           <section class="body" id="article-body">

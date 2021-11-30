@@ -121,4 +121,12 @@ class ThemeModelAdmin(ModelAdmin):
     search_fields = ('name',)
 
 
+# sort page chooser panels by most recent pages
+@hooks.register('construct_page_chooser_queryset')
+def order_pages_in_chooser(pages, request):
+    if "choose-page" in request.path:
+        return pages.order_by('-live', '-latest_revision_created_at')
+    return pages
+
+
 modeladmin_register(ThemeModelAdmin)
