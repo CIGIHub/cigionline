@@ -16,13 +16,7 @@
 
             <div class="publications-featured-list-content">
               {% if publication.topics.all %}
-                <ul class="publications-featured-list-topics custom-text-list">
-                  {% for topic in publication.topics.all %}
-                    <li>
-                      {{ topic.title }}
-                    </li>
-                  {% endfor %}
-                </ul>
+                {% include "includes/topics.html" with topics=publication.topics %}
               {% endif %}
 
               <p class="publications-featured-list-title">
