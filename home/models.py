@@ -71,7 +71,7 @@ class HomePage(Page):
             [
                 InlinePanel(
                     'promotion_blocks',
-                    max_num=2,
+                    max_num=4,
                     min_num=0,
                     label='Promotion Block',
                 ),
@@ -139,7 +139,7 @@ class HomePage(Page):
         promotion_blocks_list = []
         for item in self.promotion_blocks.prefetch_related(
             'promotion_block',
-        ).all()[:2]:
+        ).all():
             promotion_blocks_list.append(item.promotion_block)
         return promotion_blocks_list
 

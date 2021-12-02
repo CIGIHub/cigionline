@@ -154,6 +154,10 @@
         }
         margin-bottom: 1em;
       }
+
+      &.promotion-block-wide {
+        flex-basis: 100%;
+      }
     }
   }
 }
