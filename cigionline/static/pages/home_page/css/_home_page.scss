@@ -148,6 +148,8 @@
 
   .homepage-promotion-blocks {
     .homepage-promotion-block {
+      margin-bottom: 2em;
+
       &:first-child {
         @include media-breakpoint-up(md) {
           margin-bottom: 0;
