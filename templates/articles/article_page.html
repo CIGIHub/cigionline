@@ -32,7 +32,7 @@
 {% endblock %}
 {% block extra_og_meta %}
   {% if self.publishing_date %}
-    <meta property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
+    <meta name="publish_date" property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
     {% if self.author_count > 0 %}
       <meta name="author" content="{{ self.author_names|join:", " }}" />
       <meta name="twitter:label1" value="Author{{ self.author_count|pluralize }}" />
