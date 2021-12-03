@@ -148,6 +148,14 @@ class BasicPageAbstract(models.Model):
             return self.image_hero.get_rendition('fill-520x390').url
         return ''
 
+    @property
+    def word_count(self):
+        count = 0
+        for block in self.body:
+            if block.block_type == 'paragraph':
+                count += len(str(block.value).split())
+        return count
+
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
         [
