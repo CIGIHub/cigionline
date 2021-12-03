@@ -148,13 +148,13 @@
 
   .homepage-promotion-blocks {
     .homepage-promotion-block {
-      margin-bottom: 2em;
+      @include media-breakpoint-up(md) {
+        margin-bottom: 2em;
+      }
+      margin-bottom: 1em;
 
-      &:first-child {
-        @include media-breakpoint-up(md) {
-          margin-bottom: 0;
-        }
-        margin-bottom: 1em;
+      &:last-child {
+        margin-bottom: 0;
       }
 
       &.promotion-block-wide {
