@@ -40,15 +40,13 @@ def ar_timeline_pages(request):
         try:
             summary = content_page.specific.short_description
         except AttributeError:
+            summary = ''
             if content_page.specific.subtitle:
                 summary = content_page.specific.subtitle
             else:
                 for block in content_page.specific.body:
                     if block.block_type == 'paragraph':
                         summary += str(block.value)
-
-        soup = BeautifulSoup(summary, features='html5lib')
-        summary = soup.get_text()
 
         json_items.append({
             'id': str(content_page.id),
