@@ -32,14 +32,13 @@
       .publications-featured-list-image-wrapper {
         @include aspect-ratio(8, 11);
         border: 1px solid $cigi-light-grey;
-        opacity: .85;
-        transition: box-shadow 300ms ease 0s, opacity 300ms ease 0s, transform 300ms ease 0s;
+        opacity: 0.85;
+        transition: box-shadow 300ms ease 0s, opacity 300ms ease 0s,
+          transform 300ms ease 0s;
         width: 100%;
       }
     }
   }
-
-
 
   .publications-featured-list-content {
     flex: 1 1 65%;
