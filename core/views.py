@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from core.models import ContentPage
 from django.http import JsonResponse
 from django.http import HttpResponse
