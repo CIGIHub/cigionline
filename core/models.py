@@ -53,6 +53,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
+import math
 
 
 class BasicPageAbstract(models.Model):
@@ -155,6 +156,13 @@ class BasicPageAbstract(models.Model):
             if block.block_type == 'paragraph':
                 count += len(str(block.value).split())
         return count
+    
+    @property
+    def read_time(self):
+        read_time = 0
+        if self.word_count > 0:
+            read_time = int(math.ceil(self.word_count / 325))
+        return read_time
 
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
