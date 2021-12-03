@@ -33,6 +33,10 @@
 {% block extra_og_meta %}
   {% if self.publishing_date %}
     <meta property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
+    <meta property="article:author" content="{{ self.author_names|join:", " }}" />
+    <meta property="article:publisher" content="https://www.cigionline.org/" />
+    <meta name="twitter:label1" value="Time To Read" />
+    <meta name="twitter:data1" value="10 Minutes" />
   {% endif %}
 {% endblock %}
 {% block extra_css %}
