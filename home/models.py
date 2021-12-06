@@ -94,6 +94,19 @@ class HomePage(Page):
         experts = PersonPage.objects.in_bulk(featured_expert_ids)
         return [experts[x] for x in featured_expert_ids]
 
+    def get_featured_experts_list(self):
+        featured_experts = self.get_featured_experts()
+        exclude_ids = [expert.id for expert in featured_experts]
+
+        additional_experts = list(PersonPage.objects.live().public().filter(
+            person_types__name='Expert'
+        ).exclude(id__in=exclude_ids).exclude(
+            archive=1
+        ).distinct()[:3 - len(featured_experts)])
+        featured_experts = list(featured_experts) + additional_experts
+
+        return featured_experts
+
     def get_highlight_pages(self):
         highlight_pages_ids = self.highlight_pages.values_list('highlight_page', flat=True)
         pages = Page.objects.specific().prefetch_related(
@@ -146,7 +159,7 @@ class HomePage(Page):
     def get_context(self, request):
         context = super().get_context(request)
         context['featured_pages'] = self.get_featured_pages()
-        context['featured_experts'] = self.get_featured_experts()
+        context['featured_experts'] = self.get_featured_experts_list()
         context['highlight_pages'] = self.get_highlight_pages()
         context['featured_multimedia'] = self.get_featured_multimedia()
         context['featured_publications'] = self.get_featured_publications()
