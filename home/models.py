@@ -103,9 +103,6 @@ class HomePage(Page):
         ).exclude(id__in=exclude_ids).exclude(
             archive=1
         ).distinct()[:3 - len(featured_experts)])
-
-        print(additional_experts)
-
         featured_experts = list(featured_experts) + additional_experts
 
         return featured_experts
