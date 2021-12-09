@@ -75,11 +75,11 @@ ReactDOM.render(
         value: 'Publication Launch',
       }],
     }, {
-      name: 'Roundtable',
+      name: 'Round Table',
       aggregationField: 'contentsubtypes',
       params: [{
         name: 'contentsubtype',
-        value: 'Roundtable',
+        value: 'Round Table',
       }],
     }, {
       name: 'Seminar',
