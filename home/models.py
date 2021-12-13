@@ -103,7 +103,7 @@ class HomePage(Page):
             'topics',
         ).in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
-    
+
     def get_replaced_feature_pages(self):
         featured_pages = self.get_featured_pages()
         replacement_featured_page_ids = self.replacement_featured_pages.order_by('sort_order').values_list('replacement_featured_page', 'position')
