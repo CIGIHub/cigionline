@@ -12,6 +12,7 @@ from wagtail.core.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
+import random
 
 
 class HomePage(Page):
@@ -71,7 +72,7 @@ class HomePage(Page):
             [
                 InlinePanel(
                     'promotion_blocks',
-                    max_num=2,
+                    max_num=4,
                     min_num=0,
                     label='Promotion Block',
                 ),
@@ -93,6 +94,19 @@ class HomePage(Page):
         featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
         experts = PersonPage.objects.in_bulk(featured_expert_ids)
         return [experts[x] for x in featured_expert_ids]
+
+    def get_featured_experts_list(self):
+        featured_experts = self.get_featured_experts()
+        exclude_ids = [expert.id for expert in featured_experts]
+
+        additional_experts_id_list = list(PersonPage.objects.live().public().filter(
+            person_types__name='Expert',
+            archive=0
+        ).exclude(id__in=exclude_ids).distinct().values_list('id', flat=True))
+        random_additional_experts_id_list = random.sample(additional_experts_id_list, min(len(additional_experts_id_list), 3))
+        featured_experts = list(featured_experts) + list(PersonPage.objects.filter(id__in=random_additional_experts_id_list))[:3 - len(featured_experts)]
+
+        return featured_experts
 
     def get_highlight_pages(self):
         highlight_pages_ids = self.highlight_pages.values_list('highlight_page', flat=True)
@@ -139,14 +153,14 @@ class HomePage(Page):
         promotion_blocks_list = []
         for item in self.promotion_blocks.prefetch_related(
             'promotion_block',
-        ).all()[:2]:
+        ).all():
             promotion_blocks_list.append(item.promotion_block)
         return promotion_blocks_list
 
     def get_context(self, request):
         context = super().get_context(request)
         context['featured_pages'] = self.get_featured_pages()
-        context['featured_experts'] = self.get_featured_experts()
+        context['featured_experts'] = self.get_featured_experts_list()
         context['highlight_pages'] = self.get_highlight_pages()
         context['featured_multimedia'] = self.get_featured_multimedia()
         context['featured_publications'] = self.get_featured_publications()

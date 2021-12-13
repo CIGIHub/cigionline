@@ -110,7 +110,7 @@ class EventPage(
         NOON_LECTURE_SERIES = ('noon_lecture_series', 'Noon Lecture Series')
         PANEL_DISCUSSION = ('panel_discussion', 'Panel Discussion')
         PUBLICATION_LAUNCH = ('publication_launch', 'Publication Launch')
-        ROUNDTABLE = ('roundtable', 'Roundtable')
+        ROUNDTABLE = ('roundtable', 'Round Table')
         SEMINAR = ('seminar', 'Seminar')
         SIGNATURE_LECTURE = ('signature_lecture', 'Signature Lecture')
         VIRTUAL_EVENT = ('virtual_event', 'Virtual Event')

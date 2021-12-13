@@ -32,9 +32,14 @@ function ProjectContentListing(props) {
               <i className="fal fa-file-alt" />
             </span>
           )}
-          {['Opinion', 'CIGI in the News', 'Op-Eds', 'News Releases'].includes(row.contenttype) && (
+          {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
             <span className="table-icon icon-opinion">
               <i className="fal fa-comment-dots" />
+            </span>
+          )}
+          {row.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
+            <span className="table-icon icon-media">
+              <i className="fal fa-bullhorn" />
             </span>
           )}
           <div className="table-infos">
@@ -88,7 +93,9 @@ function ProjectContentListing(props) {
         <div className="table-content">
           <ul className="custom-text-list">
             <li key={`${row.id}-contenttype`} className="table-infos-meta">
-              {row.contenttype}
+              {row.contenttype === 'Opinion'
+                ? row.contentsubtype
+                : row.contenttype}
             </li>
           </ul>
         </div>

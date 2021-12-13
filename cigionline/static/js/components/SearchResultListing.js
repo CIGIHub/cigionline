@@ -54,11 +54,14 @@ function SearchResultListing(props) {
           <i className="fal fa-copy" />
         </span>
       )}
-      {['Opinion', 'CIGI in the News', 'Op-Eds', 'News Releases'].includes(
-        row.contenttype,
-      ) && (
+      {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
         <span className="table-icon icon-opinion">
           <i className="fal fa-comment-dots" />
+        </span>
+      )}
+      {row.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
+        <span className="table-icon icon-media">
+          <i className="fal fa-bullhorn" />
         </span>
       )}
       {row.contenttype === 'Opinion Series' && (

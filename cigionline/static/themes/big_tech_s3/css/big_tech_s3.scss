@@ -24,6 +24,10 @@ $bigtech-light-grey: #b1b1b1;
   header {
     font-family: 'futura-pt', sans-serif;
     z-index: 1;
+
+    &.small {
+      font-size: 1rem;
+    }
   }
 
   .big-tech-top-bar,
