@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
@@ -43,7 +44,7 @@ class HomePage(Page):
             ],
             heading='Replacement Featured Content',
             classname='collapsible collapsed',
-            help_text='1: large | 2-4: medium | 5-9: small; Use this section if items that need to be featured are not of Content Page type. Items in this list will replace items in the Featured Content of the same positions.'
+            help_text='1: large | 2-4: medium | 5-9: small; Use this section if items that need to be featured are not of Content Page type. Items in this list will replace items in the Featured Content.'
         ),
         MultiFieldPanel(
             [
@@ -105,13 +106,15 @@ class HomePage(Page):
     
     def get_replaced_feature_pages(self):
         featured_pages = self.get_featured_pages()
-        replacement_featured_page_ids = self.replacement_featured_pages.order_by('sort_order').values_list('replacement_featured_page', flat=True)
-        replacement_featured_pages = list(Page.objects.specific().live().public().filter(id__in=replacement_featured_page_ids))
-        if len(replacement_featured_pages < len(featured_pages)):
-            for i in range(len(replacement_featured_pages)):
-                featured_pages[i] = replacement_featured_pages[i]
-        else:
-            featured_pages = replacement_featured_pages
+        replacement_featured_page_ids = self.replacement_featured_pages.order_by('sort_order').values_list('replacement_featured_page', 'position')
+        pages = Page.objects.specific().in_bulk([i[0] for i in replacement_featured_page_ids])
+        replacement_featured_pages = [pages[x[0]] for x in replacement_featured_page_ids]
+
+        for i in range(len(replacement_featured_pages)):
+            position = replacement_featured_page_ids[i][1] - 1
+            if (len(featured_pages) > position):
+                featured_pages[position] = replacement_featured_pages[i]
+
         return featured_pages
 
     def get_featured_experts(self):
@@ -258,12 +261,19 @@ class HomePageReplacementFeaturedPage(Orderable):
         related_name='+',
         verbose_name='Page',
     )
+    position = models.IntegerField(
+        null=False,
+        blank=False,
+        help_text='Enter the position of the item that will be replaced',
+        validators=[MinValueValidator(1), MaxValueValidator(9)]
+    )
 
     panels = [
         PageChooserPanel(
             'replacement_featured_page',
             ['wagtailcore.Page'],
         ),
+        FieldPanel('position'),
     ]
 
 
