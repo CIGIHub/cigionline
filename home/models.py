@@ -35,6 +35,19 @@ class HomePage(Page):
         MultiFieldPanel(
             [
                 InlinePanel(
+                    'replacement_featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Replacement Featured Content',
+            classname='collapsible collapsed',
+            help_text='1: large | 2-4: medium | 5-9: small; Use this section if items that need to be featured are not of Content Page type. Items in this list will replace items in the Featured Content of the same positions.'
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
                     'highlight_pages',
                     max_num=12,
                     min_num=0,
@@ -89,6 +102,17 @@ class HomePage(Page):
             'topics',
         ).in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
+    
+    def get_replaced_feature_pages(self):
+        featured_pages = self.get_featured_pages()
+        replacement_featured_page_ids = self.replacement_featured_pages.order_by('sort_order').values_list('replacement_featured_page', flat=True)
+        replacement_featured_pages = list(Page.objects.specific().live().public().filter(id__in=replacement_featured_page_ids))
+        if len(replacement_featured_pages < len(featured_pages)):
+            for i in range(len(replacement_featured_pages)):
+                featured_pages[i] = replacement_featured_pages[i]
+        else:
+            featured_pages = replacement_featured_pages
+        return featured_pages
 
     def get_featured_experts(self):
         featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
@@ -159,7 +183,7 @@ class HomePage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_pages'] = self.get_featured_pages()
+        context['featured_pages'] = self.get_replaced_feature_pages()
         context['featured_experts'] = self.get_featured_experts_list()
         context['highlight_pages'] = self.get_highlight_pages()
         context['featured_multimedia'] = self.get_featured_multimedia()
@@ -217,6 +241,28 @@ class HomePageFeaturedPage(Orderable):
         PageChooserPanel(
             'featured_page',
             ['core.ContentPage'],
+        ),
+    ]
+
+
+class HomePageReplacementFeaturedPage(Orderable):
+    home_page = ParentalKey(
+        'home.HomePage',
+        related_name='replacement_featured_pages',
+    )
+    replacement_featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'replacement_featured_page',
+            ['wagtailcore.Page'],
         ),
     ]
 
