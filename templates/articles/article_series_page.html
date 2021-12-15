@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'articleSeriesPage' 'css' %}
+{% endblock %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle topics=self.topics image_banner=self.image_banner %}
+  {% include "includes/body.html" with body=self.body heading="About" %}
+  <section class="in-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">In the Series</h2>
+          {% for series_item in self.article_series_items %}
+            {% if series_item.category_title %}
+              {% if not forloop.first %}
+                </div>
+              {% endif %}
+              <h3>{{ series_item.category_title }}</h3>
+              <div class="series-category">
+            {% endif %}
+            <article>
+              <span class="icon">
+                {% if series_item.content_page.specific|page_type == 'multimedia' %}
+                  <i class="fa fa-play"></i>
+                {% endif %}
+              </span>
+              <h4>
+                <a href="{% pageurl series_item.content_page %}">
+                  {{ series_item.content_page.title }}
+                </a>
+              </h4>
+              <p class="short-description">
+                {{ series_item.content_page.specific.subtitle|richtext }}
+              </p>
+              {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+              {% include 'includes/date.html' with date=series_item.content_page.publishing_date %}
+            </article>
+            {% if forloop.last %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

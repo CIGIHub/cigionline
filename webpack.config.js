@@ -27,6 +27,7 @@ const config = {
     annualReportListPage: './cigionline/static/pages/annual_report_list_page/index.js',
     articleLandingPage: './cigionline/static/pages/article_landing_page/index.js',
     articlePage: './cigionline/static/pages/article_page/index.js',
+    articleSeriesPage: './cigionline/static/pages/article_series_page/index.js',
     articleSeriesListPage: './cigionline/static/pages/article_series_list_page/index.js',
     articleTypePage: './cigionline/static/pages/article_type_page/index.js',
     cigionline: './cigionline/static/index.js',
