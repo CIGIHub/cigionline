@@ -114,7 +114,6 @@ class HomePage(Page):
             position = replacement_featured_page_ids[i][1] - 1
             if (len(featured_pages) > position):
                 featured_pages[position] = replacement_featured_pages[i]
-
         return featured_pages
 
     def get_featured_experts(self):
