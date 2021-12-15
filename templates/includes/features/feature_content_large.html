@@ -5,7 +5,7 @@
 {% endif %}
 
 <article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %}{{ additional_classes }}">
-  <a href="{% pageurl content %}" class="feature-content-image">
+  <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}" class="feature-content-image">
     <div class="img-wrapper">
       {% if poster %}
         {% image content.image_poster original %}

@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags%}
 
 <article class="feature-content feature-poster-teaser">
-  <a class="img-wrapper" href="{{ content.url }}">
+  <a class="img-wrapper" href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}">
     {% if content.image_poster.file.url|file_extension == '.gif' %}
       <img src="{{content.image_poster.file.url}}" alt="{{content.image_poster.caption}}" />
     {% else %}
@@ -10,7 +10,7 @@
   </a>
   {% include 'includes/topics.html' with topics=content.topics_sorted %}
   <h3>
-    <a href="{{ content.url }}">
+    <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}">
       {{ content.title }}
     </a>
   </h3>
