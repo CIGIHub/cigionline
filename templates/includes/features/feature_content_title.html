@@ -1,7 +1,7 @@
 {% load wagtailcore_tags %}
 
 <h3 class="feature-content-title">
-  <a href="{% pageurl content %}">
+  <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}">
     {% if content.feature_title %}
       {{ content.feature_title }}
     {% else %}

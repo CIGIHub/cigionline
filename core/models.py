@@ -215,12 +215,14 @@ class FeatureablePageAbstract(models.Model):
         verbose_name='Feature image',
         help_text='Image used when featuring on landing pages such as the home page',
     )
+    feature_url = models.URLField(blank=True)
 
     feature_panel = MultiFieldPanel(
         [
             FieldPanel('feature_title'),
             FieldPanel('feature_subtitle'),
             ImageChooserPanel('image_feature'),
+            FieldPanel('feature_url'),
         ],
         heading='Feature Information',
         classname='collapsible collapsed',
