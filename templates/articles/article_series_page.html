@@ -49,13 +49,15 @@
               <div class="series-category">
             {% endif %}
             <article>
-              <span class="icon">
-                {% if series_item.content_page.specific|page_type == 'multimedia' %}
-                  <i class="fa fa-play"></i>
-                {% endif %}
-              </span>
               <h4>
                 <a href="{% pageurl series_item.content_page %}">
+                  {% if series_item.content_page.specific|page_type == 'multimedia' %}
+                    <span class="icon-container">
+                      <div class="icon">
+                        <i class="fa fa-play"></i>
+                      </div>
+                    </span>
+                  {% endif %}
                   {{ series_item.content_page.title }}
                 </a>
               </h4>

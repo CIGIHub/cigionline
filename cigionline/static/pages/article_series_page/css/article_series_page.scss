@@ -1,6 +1,8 @@
-@import '../../../css/global/mixins';
+@import "../../../css/global/mixins";
 
 .in-the-series {
+  margin-bottom: 4em;
+
   h2 {
     margin-bottom: 2em;
   }
@@ -23,13 +25,45 @@
       border-bottom: 0;
     }
 
-    p {
-      color: $cigi-text-grey;
+    .icon-container {
+      @include media-breakpoint-up(md) {
+        display: flex;
+        position: absolute;
+      }
+      @include media-breakpoint-down(sm) {
+        transform: translateY(-15%);
+      }
+      align-items: center;
+      display: inline-block;
+      height: 26px;
+      justify-content: center;
+      left: -1em;
+      width: 26px;
+
+      .icon {
+        align-items: center;
+        background-color: $cigi-primary-colour;
+        border-radius: 50%;
+        display: flex;
+        height: 1em;
+        justify-content: center;
+        width: 1em;
+
+        i {
+          color: $white;
+          font-size: 0.4em;
+        }
+      }
     }
 
     h4 {
       @include link($color: $black, $hover-color: $cigi-primary-colour);
+      display: inline-block;
       font-size: 1.3em;
+    }
+
+    p {
+      color: $cigi-text-grey;
     }
 
     .topics {
