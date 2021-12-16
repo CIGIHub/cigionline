@@ -61,9 +61,9 @@
                   {{ series_item.content_page.title }}
                 </a>
               </h4>
-              <p class="short-description">
+              <div class="short-description">
                 {{ series_item.content_page.specific.subtitle|richtext }}
-              </p>
+              </div>
               {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
               {% include 'includes/date.html' with date=series_item.content_page.publishing_date %}
             </article>

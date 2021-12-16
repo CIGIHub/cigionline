@@ -342,6 +342,13 @@ class ArticlePage(
             return self.publishing_date < datetime.datetime(2017, 1, 1).astimezone(pytz.timezone('America/Toronto'))
         return False
 
+    @property
+    def article_series_description(self):
+        print(self.article_series)
+        if self.article_series:
+            return self.article_series.specific.series_items_description
+        return None
+
     def is_opinion(self):
         return self.article_type.title in [
             'Op-Eds',
@@ -577,6 +584,11 @@ class ArticleSeriesPage(
         null=False,
         features=['bold', 'italic', 'link'],
     )
+    series_items_description = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
     video_banner = models.ForeignKey(
         'wagtailmedia.Media',
         null=True,
@@ -629,6 +641,7 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('series_items_description'),
                 InlinePanel('series_items'),
             ],
             heading='Series Items',
