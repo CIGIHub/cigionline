@@ -52,6 +52,19 @@
     {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
   {% endif %}
 
+  {% if self.article_series_description %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-description">
+            <i class="fas fa-grip-vertical"></i>
+            {{self.article_series_description|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
   {% include "includes/body.html" with body=self.body %}
 
   {% if self.transcript %}
