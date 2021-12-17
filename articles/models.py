@@ -344,9 +344,14 @@ class ArticlePage(
 
     @property
     def article_series_description(self):
-        print(self.article_series)
         if self.article_series:
             return self.article_series.specific.series_items_description
+        return None
+
+    @property
+    def article_series_disclaimer(self):
+        if self.article_series:
+            return self.article_series.specific.series_items_disclaimer
         return None
 
     def is_opinion(self):
@@ -589,6 +594,11 @@ class ArticleSeriesPage(
         null=True,
         features=['bold', 'italic', 'link'],
     )
+    series_items_disclaimer = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
     video_banner = models.ForeignKey(
         'wagtailmedia.Media',
         null=True,
@@ -642,6 +652,7 @@ class ArticleSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('series_items_description'),
+                FieldPanel('series_items_disclaimer'),
                 InlinePanel('series_items'),
             ],
             heading='Series Items',
