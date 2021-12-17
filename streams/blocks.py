@@ -806,7 +806,6 @@ class NewsletterBlock(blocks.StructBlock):
                     context['image_url'] = value.get("image_override").file.name
                 else:
                     context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
-                print(context['image_url'])
             elif content_type != 'other' and content_page.image_hero:
                 if content_page.image_hero.file.url.endswith('.gif'):
                     context['image_url'] = content_page.image_hero.file.name
