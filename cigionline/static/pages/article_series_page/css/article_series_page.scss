@@ -1,0 +1,93 @@
+@import '../../../css/global/mixins';
+
+.in-the-series {
+  margin-bottom: 4em;
+
+  h2 {
+    margin-bottom: 2em;
+  }
+
+  h3 {
+    color: $cigi-primary-colour;
+    font-size: 1em;
+    margin: 1.5em 0;
+    text-transform: uppercase;
+  }
+
+  article {
+    border-bottom: 1px solid $cigi-light-grey;
+    margin-bottom: 0;
+    padding: 2em 0;
+
+    &:first-of-type {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    .icon-container {
+      @include media-breakpoint-up(md) {
+        display: flex;
+        position: absolute;
+      }
+      @include media-breakpoint-down(sm) {
+        transform: translateY(-15%);
+      }
+      align-items: center;
+      display: inline-block;
+      height: 26px;
+      justify-content: center;
+      left: -1em;
+      width: 26px;
+
+      .icon {
+        align-items: center;
+        background-color: $cigi-primary-colour;
+        border-radius: 50%;
+        display: flex;
+        height: 1em;
+        justify-content: center;
+        width: 1em;
+
+        i {
+          color: $white;
+          font-size: 0.4em;
+        }
+      }
+    }
+
+    h4 {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      display: inline-block;
+      font-size: 1.3em;
+    }
+
+    p {
+      color: $cigi-text-grey;
+    }
+
+    .topics {
+      margin-bottom: 0.5em;
+    }
+
+    .authors {
+      @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      font-size: 0.75em;
+      margin-bottom: 0;
+      text-transform: uppercase;
+
+      li {
+        color: $cigi-text-grey;
+        display: inline;
+      }
+    }
+
+    .date {
+      color: $cigi-text-grey;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+  }
+}
