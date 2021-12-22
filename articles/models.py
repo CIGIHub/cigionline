@@ -823,6 +823,6 @@ class ArticleSeriesPageSeriesItem(Orderable):
         FieldPanel('category_title'),
         PageChooserPanel(
             'content_page',
-            ['articles.ArticlePage', 'multimedia.MultimediaPage'],
+            ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
     ]
