@@ -240,7 +240,6 @@ class MultimediaPage(
 
     @property
     def article_series_description(self):
-        print(self.article_series)
         if self.article_series:
             return self.article_series.specific.series_items_description
         return None
