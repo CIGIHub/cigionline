@@ -1,0 +1,19 @@
+{% load wagtailimages_tags %}
+
+<div class="container">
+  <div class="row d-block">
+    <div class="col col-lg-10 offset-lg-1">
+      {% if self.title %}
+        <h3 class="stream-block-chart-title">
+          {{ self.title }}
+        </h3>
+      {% endif %}
+      <figure>
+        {% image self.image original %}
+        {% if not self.hide_image_caption %}
+          <figcaption>{{self.image.caption}}</figcaption>
+        {% endif %}
+      </figure>
+    </div>
+  </div>
+</div>

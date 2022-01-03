@@ -173,6 +173,7 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
 
     implemented_themes = [
         'cyber_series_opinion',
+        'pfpc_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
