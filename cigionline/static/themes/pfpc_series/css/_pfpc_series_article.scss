@@ -1,0 +1,34 @@
+.pfpc-series-article {
+
+  .article-footnotes,
+  .article-works-cited {
+    font-family: Helvetica, sans-serif;
+
+    h2 {
+      margin-bottom: 0.5em;
+      padding-bottom: 0;
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+
+  .article-footnotes {
+    font-size: 0.8125em;
+
+    ol {
+      line-height: 24px;
+      list-style: none;
+      margin: 0 0 1em 1em;
+
+      li {
+        &::before {
+          content: counter(list-item);
+          font-weight: 600;
+          margin-right: 0.25em;
+        }
+      }
+    }
+  }
+}

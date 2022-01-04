@@ -1,0 +1,8 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themePfPCSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}pfpc-series-article{% endblock %}
