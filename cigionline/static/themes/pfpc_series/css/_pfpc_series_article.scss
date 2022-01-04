@@ -31,4 +31,13 @@
       }
     }
   }
+
+  .stream-block-chart {
+    .stream-block-chart-title {
+      border-top: 5px solid $cigi-primary-colour;
+      color: $cigi-primary-colour;
+      line-height: 1.25;
+      padding: 0.5em 0 1em;
+    }
+  }
 }
