@@ -17,7 +17,7 @@
   article {
     border-bottom: 1px solid $cigi-light-grey;
     margin-bottom: 0;
-    padding: 2em 0;
+    padding: 1.3em 0;
 
     &:first-of-type {
       padding-top: 0;
@@ -25,6 +25,7 @@
 
     &:last-child {
       border-bottom: 0;
+      padding-bottom: 3em;
     }
 
     .icon-container {
@@ -76,6 +77,7 @@
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.75em;
       margin-bottom: 0;
+      margin-top: 0;
       text-transform: uppercase;
 
       li {
