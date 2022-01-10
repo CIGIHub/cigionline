@@ -156,10 +156,10 @@ class BasicPageAbstract(models.Model):
             if block.block_type == 'paragraph':
                 count += len(str(block.value).split())
         return count
-    
+
     @property
     def read_time(self):
-        read_time = 0
+        read_time = 1
         if self.word_count > 0:
             read_time = int(math.ceil(self.word_count / 325))
         return read_time
