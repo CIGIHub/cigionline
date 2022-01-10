@@ -238,6 +238,12 @@ class MultimediaPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def article_series_description(self):
+        if self.article_series:
+            return self.article_series.specific.series_items_description
+        return None
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(MultimediaPage, self).get_template(request, *args, **kwargs)
         if self.theme:

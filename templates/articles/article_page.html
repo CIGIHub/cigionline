@@ -75,6 +75,17 @@
       {% endif %}
     {% endblock %}
     {% block article_content %}
+      {% if self.article_series_description %}
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <div class="article-series-description">
+                {{self.article_series_description|richtext}}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
       {% if self.from_the_archives and self.from_the_archives_blurb %}
         {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
       {% endif %}
@@ -149,6 +160,18 @@
             </div>
           </div>
         </section>
+      {% endif %}
+
+      {% if self.article_series_disclaimer %}
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <div class="article-series-disclaimer">
+                {{self.article_series_disclaimer|richtext}}
+              </div>
+            </div>
+          </div>
+        </div>
       {% endif %}
 
       {% include 'includes/disclaimer.html' %}

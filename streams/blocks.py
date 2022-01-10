@@ -173,6 +173,7 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
 
     implemented_themes = [
         'cyber_series_opinion',
+        'pfpc_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -789,29 +790,37 @@ class NewsletterBlock(blocks.StructBlock):
 
         if value.get('content'):
             content_page = value.get('content').specific
+            content_type = 'other'
+            if hasattr(content_page, 'contenttype'):
+                content_type = content_page.contenttype
+
             context['title'] = value.get('title_override') if value.get('title_override') else content_page.title
             if value.get('text_override'):
                 context['text'] = value.get('text_override')
-            elif (content_page.contenttype == 'Opinion' or content_page.contenttype == 'Publication') and content_page.short_description:
+            elif content_type == 'other':
+                context['text'] = ''
+            elif (content_type == 'Opinion' or content_type == 'Publication') and content_page.short_description:
                 context['text'] = content_page.short_description
+
             if value.get('image_override'):
                 if value.get('image_override').file.url.endswith('.gif'):
                     context['image_url'] = value.get("image_override").file.name
                 else:
                     context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
-            elif content_page.image_hero:
+            elif content_type != 'other' and content_page.image_hero:
                 if content_page.image_hero.file.url.endswith('.gif'):
                     context['image_url'] = content_page.image_hero.file.name
                 else:
                     context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").file.name
                 context['image_alt'] = content_page.image_hero.caption
+
             if context.get('image_url'):
                 context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url"]}'
 
             if not value.get('url'):
                 context['url'] = content_page.full_url
 
-            if content_page.contenttype == 'Event' and context.get('text'):
+            if content_type == 'Event' and context.get('text'):
                 event_time = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
                 event_time_zone = f' {content_page.time_zone_label}' if content_page.time_zone_label else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''

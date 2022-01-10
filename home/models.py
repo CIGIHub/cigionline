@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
@@ -12,6 +13,7 @@ from wagtail.core.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
+import random
 
 
 class HomePage(Page):
@@ -30,6 +32,19 @@ class HomePage(Page):
             heading='Featured Content',
             classname='collapsible collapsed',
             help_text='1: large | 2-4: medium | 5-9: small'
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'replacement_featured_pages',
+                    max_num=9,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Replacement Featured Content',
+            classname='collapsible collapsed',
+            help_text='1: large | 2-4: medium | 5-9: small; Use this section if items that need to be featured are not of Content Page type. Items in this list will replace items in the Featured Content.'
         ),
         MultiFieldPanel(
             [
@@ -71,7 +86,7 @@ class HomePage(Page):
             [
                 InlinePanel(
                     'promotion_blocks',
-                    max_num=2,
+                    max_num=4,
                     min_num=0,
                     label='Promotion Block',
                 ),
@@ -89,10 +104,35 @@ class HomePage(Page):
         ).in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
 
+    def get_replaced_feature_pages(self):
+        featured_pages = self.get_featured_pages()
+        replacement_featured_page_ids = self.replacement_featured_pages.order_by('sort_order').values_list('replacement_featured_page', 'position')
+        pages = Page.objects.specific().in_bulk([i[0] for i in replacement_featured_page_ids])
+        replacement_featured_pages = [pages[x[0]] for x in replacement_featured_page_ids]
+
+        for i in range(len(replacement_featured_pages)):
+            position = replacement_featured_page_ids[i][1] - 1
+            if (len(featured_pages) > position):
+                featured_pages[position] = replacement_featured_pages[i]
+        return featured_pages
+
     def get_featured_experts(self):
         featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
         experts = PersonPage.objects.in_bulk(featured_expert_ids)
         return [experts[x] for x in featured_expert_ids]
+
+    def get_featured_experts_list(self):
+        featured_experts = self.get_featured_experts()
+        exclude_ids = [expert.id for expert in featured_experts]
+
+        additional_experts_id_list = list(PersonPage.objects.live().public().filter(
+            person_types__name='Expert',
+            archive=0
+        ).exclude(id__in=exclude_ids).distinct().values_list('id', flat=True))
+        random_additional_experts_id_list = random.sample(additional_experts_id_list, min(len(additional_experts_id_list), 3))
+        featured_experts = list(featured_experts) + list(PersonPage.objects.filter(id__in=random_additional_experts_id_list))[:3 - len(featured_experts)]
+
+        return featured_experts
 
     def get_highlight_pages(self):
         highlight_pages_ids = self.highlight_pages.values_list('highlight_page', flat=True)
@@ -139,14 +179,14 @@ class HomePage(Page):
         promotion_blocks_list = []
         for item in self.promotion_blocks.prefetch_related(
             'promotion_block',
-        ).all()[:2]:
+        ).all():
             promotion_blocks_list.append(item.promotion_block)
         return promotion_blocks_list
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_pages'] = self.get_featured_pages()
-        context['featured_experts'] = self.get_featured_experts()
+        context['featured_pages'] = self.get_replaced_feature_pages()
+        context['featured_experts'] = self.get_featured_experts_list()
         context['highlight_pages'] = self.get_highlight_pages()
         context['featured_multimedia'] = self.get_featured_multimedia()
         context['featured_publications'] = self.get_featured_publications()
@@ -204,6 +244,35 @@ class HomePageFeaturedPage(Orderable):
             'featured_page',
             ['core.ContentPage'],
         ),
+    ]
+
+
+class HomePageReplacementFeaturedPage(Orderable):
+    home_page = ParentalKey(
+        'home.HomePage',
+        related_name='replacement_featured_pages',
+    )
+    replacement_featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+    position = models.IntegerField(
+        null=False,
+        blank=False,
+        help_text='Enter the position of the item that will be replaced',
+        validators=[MinValueValidator(1), MaxValueValidator(9)]
+    )
+
+    panels = [
+        PageChooserPanel(
+            'replacement_featured_page',
+            ['wagtailcore.Page'],
+        ),
+        FieldPanel('position'),
     ]
 
 
