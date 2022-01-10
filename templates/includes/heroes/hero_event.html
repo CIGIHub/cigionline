@@ -39,7 +39,7 @@
           </div>
         {% endif %}
         
-        {% if not is_past %}
+        {% if event_access != 'Private' and not is_past %}
           <ul class="event-registration inline-list">
             {% if registration_url|length > 0 %}
               <li><a class="button" href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">Register Now</a></li>
