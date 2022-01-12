@@ -1,1 +1,113 @@
-{% extends "articles/article_series_page.html" %}
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/xfi6rry.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themePfPCSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themePfPCSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}pfpc-series-article-series{% endblock %}
+
+{% block content %}
+  {% if not self.video_banner %}
+    {% image self.image_hero original as image_hero %}
+  {% endif %}
+  <section class="pfpc-series-article-series-hero">
+    {% comment %} <div class="video-bg" style="background-image: url('{{ image_hero.url }}');">
+      {% if self.video_banner %}
+      <video playsinline autoplay muted loop>
+        <source src="{{ self.video_banner.url }}" type="video/mp4">
+      </video>
+      {% endif %}
+    </div> {% endcomment %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-10">
+          <div class="opinion-series-label">Opinion Series</div>
+          <h1>{{ self.title }}</h1>
+          <hr>
+          <div class="short-description">
+            <p>{{ self.short_description|richtext }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="pfpc-series-article-series-in-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-12">
+          {% for series_item in self.article_series_items %}
+            {% if series_item.category_title %}
+              <h2>{{ series_item.category_title }}</h2>
+            {% endif %}
+            {% define series_item.content_page.specific|page_type as page_type %}
+            <article>
+              <div class="author-images block-{{page_type}}">
+                {% if page_type == 'opinion' %}
+                  {% for item in series_item.content_page.authors.all %}
+                    <a href="{% pageurl item.author %}">
+                      {% image item.author.image_square fill-100x100 %}
+                    </a>
+                  {% endfor %}
+                {% elif page_type == 'multimedia' %}
+                  <a href="{{ block.value.url }}">
+                    <div class="icon-wrapper">
+                      <i class="fa fa-play-circle"></i>
+                    </div>
+                  </a>
+                {% endif %}
+              </div>
+              <div>
+                <h3>
+                  <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                </h3>
+                <p class="authors">
+                  {% for item in series_item.content_page.authors.all %}
+                    {% if item.hide_link %}
+                      <span>{{ item.author.title }}</span>
+                    {% else %}
+                      <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
+                    {% endif %}
+                  {% endfor %}
+                </p>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
