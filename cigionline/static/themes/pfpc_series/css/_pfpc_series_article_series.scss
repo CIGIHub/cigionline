@@ -5,6 +5,7 @@
   .pfpc-series-article-series-hero {
     margin-bottom: 2em;
     padding-top: 8em;
+    position: relative;
     text-align: center;
 
     .opinion-series-label {
@@ -23,7 +24,7 @@
       background-size: cover;
       height: 100%;
       left: 0;
-      position: fixed;
+      position: absolute;
       top: 0;
       width: 100%;
       z-index: -1;
@@ -114,16 +115,6 @@
           width: 50px;
         }
 
-        i {
-          color: $white;
-          cursor: pointer;
-          font-size: 48px;
-          transition: color 0.2s ease, background-color 0.2s ease;
-
-          &:hover {
-            background-color: $black;
-          }
-        }
 
         .icon-wrapper {
           align-items: center;
@@ -136,7 +127,23 @@
           transition: color 0.2s ease, background-color 0.2s ease;
           
           &:hover {
-            background-color: $black;
+            background-color: $white;
+
+            i {
+              background-color: $black;
+              color: $white;
+            }
+          }
+
+          i {
+            background-color: $white;
+            border-radius: 50%;
+            color: $black;
+            cursor: pointer;
+            font-size: 48px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+            width: 48px;
+            height: 48px;
           }
         }
       }

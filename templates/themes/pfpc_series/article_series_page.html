@@ -45,13 +45,13 @@
     {% image self.image_hero original as image_hero %}
   {% endif %}
   <section class="pfpc-series-article-series-hero">
-    {% comment %} <div class="video-bg" style="background-image: url('{{ image_hero.url }}');">
+    <div class="video-bg" style="background-image: url('{{ image_hero.url }}');">
       {% if self.video_banner %}
       <video playsinline autoplay muted loop>
         <source src="{{ self.video_banner.url }}" type="video/mp4">
       </video>
       {% endif %}
-    </div> {% endcomment %}
+    </div>
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-10">
