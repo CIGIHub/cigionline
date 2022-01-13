@@ -4,9 +4,45 @@
 
   .pfpc-series-article-series-hero {
     margin-bottom: 2em;
-    padding-top: 8em;
+    padding-top: 20%;
     position: relative;
     text-align: center;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      content: '';
+      background-image: linear-gradient(
+        $black 10%, transparent 30%, transparent 70%, $black 90%
+      );
+      z-index: -1;
+    }
+
+    h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2em;
+      }
+      color: $white;
+      font-family: $tisa-pro;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0 0 1em;
+    }
+
+    hr {
+      margin: auto;
+      text-align: center;
+      width: 33.33%;
+    }
+
+    p {
+      color: $white;
+      line-height: 1.25;
+      text-align: left;
+    }
 
     .opinion-series-label {
       color: $white;
@@ -36,29 +72,6 @@
         object-fit: cover;
         width: 100%;
       }
-    }
-
-    h1 {
-      @include media-breakpoint-up(md) {
-        font-size: 2em;
-      }
-      color: $white;
-      font-family: $tisa-pro;
-      font-size: 1.5em;
-      font-weight: 600;
-      margin: 0 0 1em;
-    }
-
-    hr {
-      margin: auto;
-      text-align: center;
-      width: 33.33%;
-    }
-
-    p {
-      color: $white;
-      line-height: 1.25;
-      text-align: left;
     }
   }
 
