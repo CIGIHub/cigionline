@@ -4,7 +4,8 @@ from django.db import models
 from django.shortcuts import redirect
 from django.utils import translation
 from wagtail.admin.edit_handlers import (FieldPanel, MultiFieldPanel,
-                                         PageChooserPanel, StreamFieldPanel)
+                                         PageChooserPanel, StreamFieldPanel,
+                                         InlinePanel)
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.blocks import PageChooserBlock
 from wagtail.core.fields import StreamField
@@ -12,6 +13,7 @@ from wagtail.core.models import Orderable, Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailmedia.edit_handlers import MediaChooserPanel
+from modelcluster.fields import ParentalKey
 
 from core.models import (BasicPageAbstract, FeatureablePageAbstract,
                          SearchablePageAbstract, ShareablePageAbstract)
@@ -185,6 +187,7 @@ class AnnualReportPage(RoutablePageMixin, FeatureablePageAbstract, Page, Searcha
     @route(r'^interactives/(?P<locale>[\w-]+)/$')
     @route(r'^interactives/(?P<locale>[\w-]+)/(?P<slug>[\w-]+)/$')
     def interactives(self, request, locale, slug=None):
+        import ipdb; ipdb.set_trace()
         with translation.override(locale):
             page = self.localized
         return self.render(
@@ -376,6 +379,118 @@ class ContentSlidePage(BaseSlidePage):
 
 class OutputsAndActivitiesSlidePage(BaseSlidePage):
     max_count_per_parent = 1
+
+    content_panels = BaseSlidePage.content_panels + [
+        InlinePanel('publications', label="Publication"),
+        InlinePanel('opinions', label="Opinion"),
+        InlinePanel('events', label="Event"),
+    ]
+
+    def as_json(self):
+        data = {
+            "publications": {
+                "items": [
+                    {
+                        'publishing_date': publication.publication.publishing_date.strftime("%B %d, %Y"),
+                        'type': publication.publication.publication_type.title,
+                        'id': publication.publication.id,
+                        'title': publication.publication.title,
+                        'subtitle': publication.publication.short_description,
+                        'url': publication.publication.url,
+                        'authors': [author.author.person_name for author in publication.publication.authors.all()]
+                    } for publication in self.publications.all()
+                ]
+            },
+            "opinions": {
+                "items": [
+                    {
+                        'publishing_date': opinion.opinion.publishing_date.strftime("%B %d, %Y"),
+                        'type': opinion.opinion.article_type.title,
+                        'id': opinion.opinion.id,
+                        'title': opinion.opinion.title,
+                        'subtitle': opinion.opinion.subtitle,
+                        'url': opinion.opinion.url,
+                        'authors': [author.author.person_name for author in opinion.opinion.authors.all()]
+                    } for opinion in self.opinions.all()
+                ]
+            },
+            "events": {
+                "items": [
+                    {
+                        'publishing_date': event.event.publishing_date.strftime("%B %d, %Y"),
+                        'type': event.event.event_type,
+                        'id': event.event.id,
+                        'title': event.event.title,
+                        'subtitle': event.event.subtitle,
+                        'url': event.event.url,
+                        'authors': [author.author.person_name for author in event.event.authors.all()]
+                    } for event in self.events.all()
+                ]
+            },
+        }
+        json_response = super().as_json()
+        json_response['value'].update(data)
+        return json_response
+
+
+class OutputsAndActivitiesSlidePagePublication(Orderable):
+    page = ParentalKey(
+        OutputsAndActivitiesSlidePage,
+        on_delete=models.CASCADE,
+        related_name='publications'
+    )
+    publication = models.ForeignKey(
+        'publications.PublicationPage',
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+
+    def __str__(self):
+        return self.publication.title
+
+    panels = [
+        PageChooserPanel('publication'),
+    ]
+
+
+class OutputsAndActivitiesSlidePageEvent(Orderable):
+    page = ParentalKey(
+        OutputsAndActivitiesSlidePage,
+        on_delete=models.CASCADE,
+        related_name='events'
+    )
+    event = models.ForeignKey(
+        'events.EventPage',
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+
+    def __str__(self):
+        return self.event.title
+
+    panels = [
+        PageChooserPanel('event'),
+    ]
+
+
+class OutputsAndActivitiesSlidePageOpinion(Orderable):
+    page = ParentalKey(
+        OutputsAndActivitiesSlidePage,
+        on_delete=models.CASCADE,
+        related_name='opinions'
+    )
+    opinion = models.ForeignKey(
+        'articles.ArticlePage',
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+
+    def __str__(self):
+        return self.event.title
+
+    panels = [
+        PageChooserPanel('opinion'),
+    ]
 
 
 class TimelineSlidePage(BaseSlidePage):
