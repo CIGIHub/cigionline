@@ -128,13 +128,13 @@
 
         .icon-wrapper {
           align-items: center;
+          border-radius: 50%;
+          color: $black;
           display: flex;
           height: 50px;
           justify-content: center;
-          width: 50px;
-          border-radius: 50%;
-          color: $black;
           transition: color 0.2s ease, background-color 0.2s ease;
+          width: 50px;
 
           &:hover {
             background-color: $white;
@@ -151,9 +151,9 @@
             color: $black;
             cursor: pointer;
             font-size: 48px;
+            height: 48px;
             transition: color 0.2s ease, background-color 0.2s ease;
             width: 48px;
-            height: 48px;
           }
         }
       }
