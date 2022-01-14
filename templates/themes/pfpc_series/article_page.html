@@ -1,52 +1,5 @@
-{% extends "base.html" %}
-{% load cache static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
-
-{% block meta_description %}
-  {% if self.social_description %}
-    <meta name="description" content="{{ self.social_description }}" />
-  {% elif self.short_description %}
-    <meta name="description" content="{{ self.short_description|striptags }}" />
-  {% endif %}
-{% endblock %}
-{% block og_description %}
-  {% if self.social_description %}
-    <meta property="og:description" content="{{ self.social_description }}" />
-  {% elif self.short_description %}
-    <meta property="og:description" content="{{ self.short_description|striptags }}" />
-  {% endif %}
-{% endblock %}
-{% block og_type %}
-  <meta property="og:type" content="article" />
-{% endblock %}
-{% block og_image %}
-  {% if self.image_social %}
-    {% image self.image_social fill-1600x900 as og_image %}
-  {% elif self.image_hero %}
-    {% image self.image_hero fill-1600x900 as og_image %}
-  {% endif %}
-  {% if og_image %}
-    <meta property="og:image" content="{{ og_image.url }}" />
-  {% else %}
-    {% include "includes/og_image_default.html" %}
-  {% endif %}
-{% endblock %}
-{% block extra_og_meta %}
-  {% if self.publishing_date %}
-    <meta name="publish_date" property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
-    {% if self.author_count > 0 %}
-      <meta name="author" content="{{ self.author_names|join:", " }}" />
-      <meta name="twitter:label1" value="Author{{ self.author_count|pluralize }}" />
-      <meta name="twitter:data1" value="{{ self.author_names|join:", " }}" />
-    {% endif %}
-    {% if self.read_time > 0 %}
-      <meta name="twitter:label2" value="Time To Read" />
-      <meta name="twitter:data2" value="{{ self.read_time }} Minutes" />
-    {% endif %}
-  {% endif %}
-{% endblock %}
-{% block extra_css %}
-  {% render_bundle 'articlePage' 'css' %}
-{% endblock %}
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/xfi6rry.css">
@@ -57,148 +10,41 @@
 
 {% block body_class %}pfpc-series-article{% endblock %}
 
-{% block content %}
-  {% preview_cache_bust as is_preview %}
-  {% cache 604800 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
-    {% block hero %}
-      {% image self.image_banner original as image_banner %}
-      <section class="pfpc-series-article-hero" style="background-image: url('{{ image_banner.url }}');">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-10 hero-content">
-              <h1>{{ self.title }}</h1>
+{% block hero %}
+{% image self.image_banner original as image_banner %}
+<section class="pfpc-series-article-hero" style="background-image: url('{{ image_banner.url }}');">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8 hero-content">
+        <h1>{{ self.title }}</h1>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="pfpc-series-article-description">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <div class="authors">
+          {% for item in self.authors.all %}
+            <div class="author">
+              {% image item.author.image_square fill-100x100 %}
+              <div class="author-title">
+                <a href="{% pageurl item.author %}">{{ item.author.title }}</a>
+              </div>
             </div>
-          </div>
+          {% endfor %}
+          {% include "includes/date.html" with date=self.publishing_date %}
         </div>
-      </section>
-      <section class="pfpc-series-article-description">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-10">
-              <div class="authors">
-                {% for item in self.authors.all %}
-                  <div class="author">
-                    {% image item.author.image_square fill-100x100 %}
-                    <div class="author-title">
-                      <a href="{% pageurl item.author %}">{{ item.author.title }}</a>
-                    </div>
-                  </div>
-                {% endfor %}
-                {% include "includes/date.html" with date=self.publishing_date %}
-              </div>
-              <p class="series-blurb">This article is a part of <a href="{{ self.article_series.url }}">{{ self.article_series }}</a>, an opinion series offering analysis of the post-pandemic world.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endblock %}
-    {% block article_content %}
-      {% if self.from_the_archives and self.from_the_archives_blurb %}
-        {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
-      {% endif %}
-      {% if self.body %}
-        {% if self.article_type.title == 'CIGI in the News' %}
-          <section class="body" id="article-body">
-            {% if self.hide_excerpt %}
-              {% for block in self.body %}
-                {% include_block block %}
-              {% endfor %}
-            {% else %}
-              <div class="container">
-                <div class="row justify-content-center">
-                  <div class="col col-md-10 col-lg-10">
-                    <p class="article-excerpt-blurb"><em>The following is an excerpt. To view the full article please visit the link below</em></p>
-                  </div>
-                </div>
-              </div>
-              {{ self.body|truncatewords_html:100 }}
-              <div class="container">
-                <div class="row justify-content-center">
-                  <div class="col col-md-10 col-lg-10">
-                    <p class="text-center">* * *</p>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-            {% if self.website_url %}
-              <div class="container">
-                <div class="row justify-content-center">
-                  <div class="col col-md-10 col-lg-10 text-center">
-                    <a class="button-action" href="{{self.website_url}}">
-                      <i class="fas fa-external-link-alt"></i>
-                      {% if self.website_button_text %}
-                        {{ self.website_button_text }}
-                      {% else %}
-                        View Full Article
-                      {% endif %}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          </section>
-        {% else %}
-          {% include "./includes/body.html" with body=self.body %}
-        {% endif %}
-      {% endif %}
+        <p class="series-blurb">This article is a part of <a href="{{ self.article_series.url }}">{{ self.article_series }}</a>, an opinion series offering analysis of the post-pandemic world.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
 
-      {% if self.footnotes %}
-        <section class="article-footnotes">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col col-md-10 col-lg-10">
-                <div class="footnotes">
-                  {{ self.footnotes|richtext }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      {% endif %}
-
-      {% if self.works_cited %}
-        <section class="article-works-cited">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col col-md-10 col-lg-10">
-                <h2>Works Cited</h2>
-                {{ self.works_cited|richtext }}
-              </div>
-            </div>
-          </div>
-        </section>
-      {% endif %}
-
-      {% if self.article_series_disclaimer %}
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-10">
-              <div class="article-series-disclaimer">
-                {{self.article_series_disclaimer|richtext}}
-              </div>
-            </div>
-          </div>
-        </div>
-      {% endif %}
-
-      {% include 'includes/disclaimer.html' %}
-
-      {% if self.is_opinion and self.author_count > 0 %}
-        {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
-      {% endif %}
-
-    {% endblock %}
-
-    {% block in_the_series %}
-      {% if self.article_series %}
-        {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
-      {% endif %}
-    {% endblock %}
-
-    {% block recommended %}
-      {% if self.recommended_content %}
-        {% include 'includes/recommended.html' with recommended=self.recommended_content %}
-      {% endif %}
-    {% endblock %}
-  {% endcache %}
-{% endblock content %}
+{% block in_the_series %}
+{% if self.article_series %}
+  {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
+{% endif %}
+{% endblock %}

@@ -33,16 +33,19 @@
     }
   }
 
+  .article-series-description {
+    display: none;
+  }
+
   .pfpc-series-article-hero {
     background-size: cover;
-    color: $white;
-    min-height: 640px;
-    padding-top: 40%;
+    min-height: 30em;
+    padding-top: 25%;
     position: relative;
     text-align: center;
 
     &::after {
-      background-image: linear-gradient($black 10%, transparent 50%, $black 90%);
+      background-image: linear-gradient($black 10%, transparent 50%, $black 85%);
       content: '';
       height: 100%;
       left: 0;
@@ -102,6 +105,7 @@
         }
 
         .author-title {
+          @include link($color: $white, $hover-color: $cigi-dark-pink);
           font-family: $tisa-pro;
           font-size: 0.8em;
           font-weight: 600;
@@ -118,6 +122,7 @@
     }
 
     .series-blurb {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
       margin-bottom: 2em;
 
       a {
