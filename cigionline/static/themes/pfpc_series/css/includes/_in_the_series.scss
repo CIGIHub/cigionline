@@ -3,7 +3,7 @@
   .pfpc-series-in-the-series {
     @include link($color: $white, $hover-color: $cigi-dark-pink);
     background-size: cover;
-    min-height: 40em;
+    min-height: 20em;
     padding: 2em 0;
     position: relative;
     text-align: center;
@@ -23,13 +23,13 @@
     .essay-series-label,
     .contributors-label {
       color: $landing-heading-teal;
-      font-size: 1em;
+      font-size: 1.25em;
       font-weight: 400;
       margin-bottom: 1em;
     }
 
     .series-info {
-      padding-bottom: 40%;
+      padding-bottom: 20%;
 
       h2 {
         @include media-breakpoint-up(md) {
@@ -55,6 +55,7 @@
           columns: 4;
         }
         columns: 2;
+        text-align: left;
 
         li {
           list-style: none;
