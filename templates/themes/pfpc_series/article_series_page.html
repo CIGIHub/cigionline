@@ -81,7 +81,7 @@
                     {% image series_item.content_page.specific.image_banner fill-100x100 %}
                   </a>
                 {% elif page_type == 'multimedia' %}
-                  <a href="{{ block.value.url }}">
+                  <a href="{% pageurl series_item.content_page %}">
                     <div class="icon-wrapper">
                       <i class="fa fa-play-circle"></i>
                     </div>
