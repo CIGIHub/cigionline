@@ -1,0 +1,69 @@
+.pfpc-series-article,
+.pfpc-series-multimedia {
+  .pfpc-series-in-the-series {
+    @include link($color: $white, $hover-color: $cigi-dark-pink);
+    background: $black;
+    padding: 4em 0;
+
+    .essay-series-label,
+    .contributors-label {
+      color: $landing-heading-blue;
+      font-size: 1em;
+      font-weight: 400;
+      margin-bottom: 1em;
+    }
+
+    .series-info {
+      h2 {
+        @include media-breakpoint-up(md) {
+          flex-basis: 50%;
+        }
+        flex-shrink: 0;
+        font-family: $tisa-pro;
+        font-size: 2em;
+        font-weight: 900;
+        margin: 0 1em 1em 0;
+      }
+
+      .short-description {
+        color: $landing-description-grey;
+        line-height: 1.25em;
+      }
+    }
+
+    .video-banner {
+      background-repeat: repeat-x;
+      background-size: auto 100%;
+      height: 125px;
+      left: 50%;
+      margin: 2em -50vw;
+      position: relative;
+      right: 50%;
+      width: 100vw;
+    }
+
+    .series-contributors {
+      .contributors {
+        @include media-breakpoint-up(md) {
+          columns: 3;
+        }
+        @include media-breakpoint-up(lg) {
+          columns: 4;
+        }
+        columns: 2;
+
+        li {
+          list-style: none;
+          padding: 0;
+
+          a {
+            font-family: $tisa-pro;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}

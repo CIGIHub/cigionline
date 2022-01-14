@@ -1,4 +1,5 @@
 .pfpc-series-article {
+  @include top-bar($background-color: transparent);
 
   .article-footnotes,
   .article-works-cited {
@@ -28,6 +29,100 @@
           font-weight: 600;
           margin-right: 0.25em;
         }
+      }
+    }
+  }
+
+  .pfpc-series-article-hero {
+    background-size: cover;
+    color: $white;
+    min-height: 640px;
+    padding-top: 40%;
+    position: relative;
+    text-align: center;
+
+    &::after {
+      background-image: linear-gradient($black 10%, transparent 50%, $black 90%);
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+
+    h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2em;
+      }
+      color: $white;
+      font-family: $tisa-pro;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0 0 1em;
+    }
+
+    .hero-content {
+      padding-bottom: 1em;
+      z-index: 1;
+    }
+
+    .date {
+      color: $black;
+      font-family: $primary-font-family;
+      font-size: 0.75em;
+      text-transform: uppercase;
+    }
+
+    .opinion-label,
+    .date,
+    .author-byline {
+      @include media-breakpoint-up(md) {
+        color: $white;
+      }
+    }
+  }
+
+  .pfpc-series-article-description {
+    background-color: $black;
+    color: $white;
+    left:0;
+    margin-bottom: 2em;
+
+    .authors {
+      font-size: 1em;
+      margin: 1em 0;
+      text-align: center;
+  
+      .author {
+        img {
+          border-radius: 50%;
+          height: 4em;
+          width: 4em;
+        }
+  
+        .author-title {
+          font-family: $tisa-pro;
+          font-size: 0.8em;
+          font-weight: 600;
+
+          a {
+            color: $white;
+          }
+        }
+      }
+
+      .date {
+        color: $white;
+      }
+    }
+
+    .series-blurb {
+      margin-bottom: 2em;
+  
+      a {
+        color: $white;
+        text-decoration: underline;
       }
     }
   }
