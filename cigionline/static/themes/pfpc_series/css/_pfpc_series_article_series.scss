@@ -3,8 +3,11 @@
   background-color: $black;
 
   .pfpc-series-article-series-hero {
+    align-items: flex-end;
+    display: flex;
     margin-bottom: 2em;
-    padding-top: 20%;
+    min-height: 40em;
+    // padding-top: 20%;
     position: relative;
     text-align: center;
 
