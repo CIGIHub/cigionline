@@ -1,5 +1,12 @@
 .pfpc-series-article {
-  @include top-bar($background-color: transparent);
+  header {
+    @include media-breakpoint-up(md) {
+      background-color: transparent;
+      position: absolute;
+    }
+    background-color: $black;
+    position: fixed;
+  }
 
   .article-footnotes,
   .article-works-cited {
@@ -38,14 +45,23 @@
   }
 
   .pfpc-series-article-hero {
-    background-size: cover;
-    min-height: 30em;
-    padding-top: 25%;
+    @include link($color: $black, $hover-color: $cigi-dark-pink);
+    @include media-breakpoint-up(md) {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
+      background-size: cover;
+      color: $white;
+      min-height: 30em;
+      padding-top: 25%;
+    }
+    background-size: 0;
+    color: $black;
     position: relative;
     text-align: center;
 
     &::after {
-      background-image: linear-gradient($black 10%, transparent 50%, $black 85%);
+      @include media-breakpoint-up(md) {
+        background-image: linear-gradient($black 10%, transparent 50%, $black 85%);
+      }
       content: '';
       height: 100%;
       left: 0;
@@ -56,17 +72,23 @@
 
     h1 {
       @include media-breakpoint-up(md) {
+        color: $white;
         font-size: 2em;
+        margin: 0 0 1em;
       }
-      color: $white;
+      color: $black;
       font-family: $tisa-pro;
       font-size: 1.5em;
       font-weight: 600;
-      margin: 0 0 1em;
     }
 
     .hero-content {
-      padding-bottom: 1em;
+      @include media-breakpoint-up(md) {
+        margin-top: 0;
+        padding-bottom: 1em;
+      }
+      margin-top: 60px;
+      padding-bottom: 0;
       z-index: 1;
     }
 
@@ -87,8 +109,11 @@
   }
 
   .pfpc-series-article-description {
-    background-color: $black;
-    color: $white;
+    @include media-breakpoint-up(md) {
+      background-color: $black;
+      color: $white;
+    }
+    color: $black;
     left: 0;
     margin-bottom: 2em;
 
@@ -105,28 +130,40 @@
         }
 
         .author-title {
-          @include link($color: $white, $hover-color: $cigi-dark-pink);
+          @include media-breakpoint-up(md) {
+            @include link($color: $white, $hover-color: $cigi-dark-pink);
+
+            a {
+              color: $white !important;
+            }
+          }
+          @include link($color: $black, $hover-color: $cigi-dark-pink);
           font-family: $tisa-pro;
           font-size: 0.8em;
           font-weight: 600;
-
-          a {
-            color: $white;
-          }
         }
       }
 
       .date {
-        color: $white;
+        @include media-breakpoint-up(md) {
+          color: $white;
+        }
+        color: $black;
       }
     }
 
     .series-blurb {
-      @include link($color: $white, $hover-color: $cigi-dark-pink);
+      @include media-breakpoint-up(md) {
+        @include link($color: $white, $hover-color: $cigi-dark-pink);
+
+        a {
+          color: $white !important;
+        }
+      }
+      @include link($color: $black, $hover-color: $cigi-dark-pink);
       margin-bottom: 2em;
 
       a {
-        color: $white;
         text-decoration: underline;
       }
     }
