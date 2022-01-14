@@ -2,13 +2,12 @@
 .pfpc-series-multimedia {
   .pfpc-series-in-the-series {
     @include link($color: $white, $hover-color: $cigi-dark-pink);
-    align-items: center;
     background-size: cover;
     min-height: 40em;
     padding: 2em 0;
     position: relative;
     text-align: center;
-    z-index: -1;
+    z-index: 1;
 
     &::after {
       background-image: linear-gradient($black 10%, transparent 40%, $black 70%);
@@ -46,6 +45,7 @@
 
     .series-contributors {
       bottom: 0;
+      z-index: 1;
 
       .contributors {
         @include media-breakpoint-up(md) {

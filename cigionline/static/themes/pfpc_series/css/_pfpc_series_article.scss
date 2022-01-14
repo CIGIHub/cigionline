@@ -131,11 +131,7 @@
 
         .author-title {
           @include media-breakpoint-up(md) {
-            @include link($color: $white, $hover-color: $cigi-dark-pink);
-
-            a {
-              color: $white !important;
-            }
+            @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
           }
           @include link($color: $black, $hover-color: $cigi-dark-pink);
           font-family: $tisa-pro;
@@ -154,11 +150,7 @@
 
     .series-blurb {
       @include media-breakpoint-up(md) {
-        @include link($color: $white, $hover-color: $cigi-dark-pink);
-
-        a {
-          color: $white !important;
-        }
+        @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
       }
       @include link($color: $black, $hover-color: $cigi-dark-pink);
       margin-bottom: 2em;
