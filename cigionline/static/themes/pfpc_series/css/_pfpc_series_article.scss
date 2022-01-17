@@ -119,11 +119,16 @@
     margin-bottom: 2em;
 
     .authors {
+      align-items: end;
+      display: flex;
       font-size: 1em;
-      margin: 1em 0;
+      justify-content: center;
+      margin: 1em 0 0.25em;
       text-align: center;
 
       .author {
+        margin: 0 1em 0;
+
         img {
           border-radius: 50%;
           height: 4em;
@@ -140,13 +145,15 @@
           font-weight: 600;
         }
       }
+    }
 
-      .date {
-        @include media-breakpoint-up(md) {
-          color: $white;
-        }
-        color: $black;
+    .date {
+      @include media-breakpoint-up(md) {
+        color: $white;
       }
+      color: $black;
+      margin-bottom: 1em;
+      text-align: center;
     }
 
     .series-blurb {
@@ -154,7 +161,7 @@
         @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
       }
       @include link($color: $black, $hover-color: $cigi-dark-pink);
-      margin-bottom: 2em;
+      margin-bottom: 4em;
 
       a {
         text-decoration: underline;

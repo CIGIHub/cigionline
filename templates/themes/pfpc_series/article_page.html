@@ -34,8 +34,8 @@
               </div>
             </div>
           {% endfor %}
-          {% include "includes/date.html" with date=self.publishing_date %}
         </div>
+        {% include "includes/date.html" with date=self.publishing_date %}
         <p class="series-blurb">This article is a part of <a href="{{ self.article_series.url }}">{{ self.article_series }}</a>, an opinion series offering analysis of the post-pandemic world.</p>
       </div>
     </div>
