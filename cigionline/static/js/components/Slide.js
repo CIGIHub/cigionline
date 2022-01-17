@@ -33,7 +33,7 @@ const Slide = ({
         <OutputsAndActivities slide={slide} contentOpacity={contentOpacity} />
       );
     } if (slide.type === 'timelineslidepage') {
-      return <Timeline slide={slide} contentOpacity={contentOpacity} />;
+      return <Timeline slide={slide} slides={slides} contentOpacity={contentOpacity} />;
     } if (slide.type === 'tabbedslidepage') {
       return <Financials slide={slide} contentOpacity={contentOpacity} />;
     }
