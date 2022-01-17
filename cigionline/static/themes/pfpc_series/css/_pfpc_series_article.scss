@@ -119,26 +119,13 @@
     margin-bottom: 2em;
 
     .authors {
-      align-items: end;
-      display: flex;
-      font-size: 1em;
-      justify-content: center;
-      margin: 1em 0 0.25em;
-      text-align: center;
-
-      .author {
-        margin: 0 1em;
-
-        .author-title {
-          @include media-breakpoint-up(md) {
-            @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
-          }
-          @include link($color: $black, $hover-color: $cigi-dark-pink);
-          font-family: $tisa-pro;
-          font-size: 0.8em;
-          font-weight: 600;
-        }
+      @include media-breakpoint-up(md) {
+        @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
       }
+      @include link($color: $black, $hover-color: $cigi-dark-pink);
+      font-family: $tisa-pro;
+      font-weight: 600;
+      justify-content: center;
     }
 
     .date {

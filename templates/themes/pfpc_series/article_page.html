@@ -25,15 +25,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-10 col-lg-8">
-        <div class="authors">
-          {% for item in self.authors.all %}
-            <div class="author">
-              <div class="author-title">
-                <a href="{% pageurl item.author %}">{{ item.author.title }}</a>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
+        {% include "includes/authors.html" with authors=self.authors.all %}
         {% include "includes/date.html" with date=self.publishing_date %}
         <p class="series-blurb">This article is a part of <a href="{{ self.article_series.url }}">{{ self.article_series }}</a>, an opinion series offering analysis of the post-pandemic world.</p>
       </div>
