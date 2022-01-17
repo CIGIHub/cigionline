@@ -1,12 +1,10 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags %}
 
-{% if not article_series.video_banner %}
-  {% if article_series.image_banner.file.url|file_extension == '.gif' %}
-    {% define article_series.image_banner.file.url as image_banner_url %}
-  {% else %}
-    {% image article_series.image_banner original as image_banner %}
-    {% define image_banner.url as image_banner_url %}
-  {% endif %}
+{% if article_series.image_banner.file.url|file_extension == '.gif' %}
+  {% define article_series.image_banner.file.url as image_banner_url %}
+{% else %}
+  {% image article_series.image_banner original as image_banner %}
+  {% define image_banner.url as image_banner_url %}
 {% endif %}
 
 <section class="pfpc-series-in-the-series">

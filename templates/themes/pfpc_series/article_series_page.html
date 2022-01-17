@@ -41,9 +41,7 @@
 {% block body_class %}pfpc-series-article-series{% endblock %}
 
 {% block content %}
-  {% if not self.video_banner %}
-    {% image self.image_hero original as image_hero %}
-  {% endif %}
+  {% image self.image_hero original as image_hero %}
   <section class="pfpc-series-article-series-hero">
     <div class="video-bg" style="background-image: url('{{ image_hero.url }}');">
       {% if self.video_banner %}
