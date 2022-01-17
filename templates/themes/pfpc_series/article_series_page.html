@@ -54,7 +54,7 @@
     </div>
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-10">
+        <div class="col-md-10 col-lg-8">
           <div class="opinion-series-label">Opinion Series</div>
           <h1>{{ self.title }}</h1>
           <hr>
@@ -68,10 +68,14 @@
   <section class="pfpc-series-article-series-in-the-series">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-md-12 col-lg-12">
+        <div class="col-md-10 col-lg-8">
           {% for series_item in self.article_series_items %}
             {% if series_item.category_title %}
-              <h2>{{ series_item.category_title }}</h2>
+              {% if series_item.category_title == 'None'%}
+                <hr>
+              {% else %}
+                <h2>{{ series_item.category_title }}</h2>
+              {% endif %}
             {% endif %}
             {% define series_item.content_page.specific|page_type as page_type %}
             <article>

@@ -2,6 +2,12 @@
   @include top-bar($background-color: transparent);
   background-color: $black;
 
+  hr {
+    margin: 0 auto 1.75em;
+    text-align: center;
+    width: 33.33%;
+  }
+
   .pfpc-series-article-series-hero {
     align-items: flex-end;
     display: flex;
@@ -33,9 +39,7 @@
     }
 
     hr {
-      margin: auto;
-      text-align: center;
-      width: 33.33%;
+      margin-bottom: 0;
     }
 
     p {

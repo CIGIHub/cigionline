@@ -1,13 +1,22 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags %}
 
-{% if article_series.image_banner.file.url|file_extension == '.gif' %}
-  {% define article_series.image_banner.file.url as image_banner_url %}
-{% else %}
-  {% image article_series.image_banner original as image_banner %}
-  {% define image_banner.url as image_banner_url %}
+{% if not article_series.video_banner %}
+  {% if article_series.image_banner.file.url|file_extension == '.gif' %}
+    {% define article_series.image_banner.file.url as image_banner_url %}
+  {% else %}
+    {% image article_series.image_banner original as image_banner %}
+    {% define image_banner.url as image_banner_url %}
+  {% endif %}
 {% endif %}
 
-<section class="pfpc-series-in-the-series" style="background-image: url('{{image_banner_url}}');">
+<section class="pfpc-series-in-the-series">
+  <div class="video-bg" style="background-image: url('{{ image_banner_url }}');">
+    {% if article_series.video_banner %}
+    <video playsinline autoplay muted loop>
+      <source src="{{ article_series.video_banner.url }}" type="video/mp4">
+    </video>
+    {% endif %}
+  </div>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-10 col-lg-8">
