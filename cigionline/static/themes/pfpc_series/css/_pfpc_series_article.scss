@@ -74,7 +74,7 @@
     h1 {
       @include media-breakpoint-up(md) {
         color: $white;
-        font-size: 2em;
+        font-size: 2.3em;
         margin: 0 0 1em;
       }
       color: $black;
@@ -123,9 +123,10 @@
         @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
       }
       @include link($color: $black, $hover-color: $cigi-dark-pink);
-      font-family: $tisa-pro;
       font-weight: 600;
+      margin-bottom: 0;
       justify-content: center;
+      text-transform: uppercase;
     }
 
     .date {
@@ -133,6 +134,7 @@
         color: $white;
       }
       color: $black;
+      font-weight: 600;
       margin-bottom: 1em;
       text-align: center;
     }
