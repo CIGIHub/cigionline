@@ -92,31 +92,16 @@
       padding-bottom: 0;
       z-index: 1;
     }
-
-    .date {
-      color: $black;
-      font-family: $primary-font-family;
-      font-size: 0.75em;
-      text-transform: uppercase;
-    }
-
-    .opinion-label,
-    .date,
-    .author-byline {
-      @include media-breakpoint-up(md) {
-        color: $white;
-      }
-    }
   }
 
   .pfpc-series-article-description {
     @include media-breakpoint-up(md) {
       background-color: $black;
       color: $white;
+      margin-bottom: 2em;
     }
     color: $black;
     left: 0;
-    margin-bottom: 2em;
 
     .authors {
       @include media-breakpoint-up(md) {
@@ -124,8 +109,8 @@
       }
       @include link($color: $black, $hover-color: $cigi-dark-pink);
       font-weight: 600;
-      margin-bottom: 0;
       justify-content: center;
+      margin-bottom: 0;
       text-transform: uppercase;
     }
 
@@ -142,9 +127,9 @@
     .series-blurb {
       @include media-breakpoint-up(md) {
         @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
+        margin-bottom: 4em;
       }
       @include link($color: $black, $hover-color: $cigi-dark-pink);
-      margin-bottom: 4em;
 
       a {
         text-decoration: underline;
