@@ -98,10 +98,10 @@
     @include media-breakpoint-up(md) {
       background-color: $black;
       color: $white;
-      margin-bottom: 2em;
     }
     color: $black;
     left: 0;
+    margin-bottom: 2em;
 
     .authors {
       @include media-breakpoint-up(md) {
