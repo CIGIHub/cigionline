@@ -129,12 +129,6 @@
       .author {
         margin: 0 1em;
 
-        img {
-          border-radius: 50%;
-          height: 4em;
-          width: 4em;
-        }
-
         .author-title {
           @include media-breakpoint-up(md) {
             @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
