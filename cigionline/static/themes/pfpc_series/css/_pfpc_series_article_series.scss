@@ -8,6 +8,12 @@
     width: 33.33%;
   }
 
+  .cigi-top-bar {
+    @include media-breakpoint-down(sm) {
+      background-color: $black;
+    }
+  }
+
   .pfpc-series-article-series-hero {
     align-items: flex-end;
     display: flex;
@@ -16,15 +22,30 @@
     position: relative;
     text-align: center;
 
-    &::after {
-      background-image: linear-gradient($black 10%, transparent 30%, transparent 70%, $black 90%);
+    &::before {
+      @include media-breakpoint-up(md) {
+        background-color: $black-alpha-20;
+      }
+      background-color: $black-alpha-65;
       content: '';
       height: 100%;
       left: 0;
       position: absolute;
       top: 0;
       width: 100%;
-      z-index: -1;
+    }
+
+    &::after {
+      @include media-breakpoint-up(md) {
+        background-image: linear-gradient($black 5%, transparent 25%, $black 90%);
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: -1;
+      }
     }
 
     h1 {

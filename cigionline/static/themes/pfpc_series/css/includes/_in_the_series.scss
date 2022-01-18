@@ -8,21 +8,36 @@
     text-align: center;
     z-index: 1;
 
-    &::after {
-      background-image: linear-gradient($black 10%, transparent 40%, $black 70%);
+    &::before {
+      @include media-breakpoint-up(md) {
+        background-color: $black-alpha-20;
+      }
+      background-color: $black-alpha-65;
       content: '';
       height: 100%;
       left: 0;
       position: absolute;
       top: 0;
       width: 100%;
-      z-index: -1;
+    }
+
+    &::after {
+      @include media-breakpoint-up(md) {
+        background-image: linear-gradient($black 15%, transparent 40%, $black 70%);
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: -1;
+      }
     }
 
     .essay-series-label,
     .contributors-label {
       color: $landing-heading-teal;
-      font-size: 1.25em;
+      font-size: 1em;
       font-weight: 600;
       margin-bottom: 1em;
     }
