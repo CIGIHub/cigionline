@@ -61,7 +61,7 @@
 
     &::after {
       @include media-breakpoint-up(md) {
-        background-image: linear-gradient($black 10%, transparent 30%, transparent 65%, $black 85%);
+        background-image: linear-gradient($black, transparent 30%, transparent 50%, $black 99%);
       }
       content: '';
       height: 100%;
