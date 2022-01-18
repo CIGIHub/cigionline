@@ -392,11 +392,15 @@ class OutputsAndActivitiesSlidePage(BaseSlidePage):
                     {
                         'publishing_date': publication.publication.publishing_date.strftime("%B %d, %Y"),
                         'type': publication.publication.publication_type.title,
+                        'event_date': "",
                         'id': publication.publication.id,
                         'title': publication.publication.title,
-                        'subtitle': publication.publication.short_description,
-                        'url': publication.publication.url,
-                        'authors': [author.author.person_name for author in publication.publication.authors.all()]
+                        'subtitle': publication.publication.subtitle,
+                        'summary': publication.publication.short_description,
+                        'url_landing_page': publication.publication.url,
+                        'speakers': [],
+                        'authors': [author.author.person_name for author in publication.publication.authors.all()],
+                        'image': publication.publication.image_cover.file.url
                     } for publication in self.publications.all()
                 ]
             },
@@ -404,25 +408,33 @@ class OutputsAndActivitiesSlidePage(BaseSlidePage):
                 "items": [
                     {
                         'publishing_date': opinion.opinion.publishing_date.strftime("%B %d, %Y"),
+                        'event_date': "",
                         'type': opinion.opinion.article_type.title,
                         'id': opinion.opinion.id,
                         'title': opinion.opinion.title,
                         'subtitle': opinion.opinion.subtitle,
-                        'url': opinion.opinion.url,
-                        'authors': [author.author.person_name for author in opinion.opinion.authors.all()]
+                        'summary': opinion.opinion.short_description,
+                        'url_landing_page': opinion.opinion.url,
+                        'speakers': [],
+                        'authors': [author.author.person_name for author in opinion.opinion.authors.all()],
+                        'image': opinion.opinion.image_hero_url
                     } for opinion in self.opinions.all()
                 ]
             },
             "events": {
                 "items": [
                     {
-                        'publishing_date': event.event.publishing_date.strftime("%B %d, %Y"),
+                        'publishing_date': "",
+                        'event_date': event.event.event_start_time_utc.strftime("%B %d, %Y"),
                         'type': event.event.event_type,
                         'id': event.event.id,
                         'title': event.event.title,
-                        'subtitle': event.event.subtitle,
-                        'url': event.event.url,
-                        'authors': [author.author.person_name for author in event.event.authors.all()]
+                        'subtitle': '',
+                        'summary': event.event.subtitle,
+                        'url_landing_page': event.event.url,
+                        'authors': [],
+                        'speakers': [author.author.person_name for author in event.event.authors.all()],
+                        'image': event.event.image_hero_url
                     } for event in self.events.all()
                 ]
             },
