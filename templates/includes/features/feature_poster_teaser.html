@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags core_tags%}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
 
 <article class="feature-content feature-poster-teaser">
   <a class="img-wrapper" href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}">
