@@ -350,7 +350,7 @@ class ArticlePage(
 
     @property
     def article_series_disclaimer(self):
-        if self.article_series:
+        if self.article_series:  # add condition that hide_series_disclaimer for this article is False)
             return self.article_series.specific.series_items_disclaimer
         return None
 
@@ -818,6 +818,7 @@ class ArticleSeriesPageSeriesItem(Orderable):
         verbose_name='Series Item',
     )
     category_title = models.CharField(blank=True, max_length=255)
+    hide_series_disclaimer = models.BooleanField(default=False)
 
     panels = [
         FieldPanel('category_title'),
@@ -825,4 +826,5 @@ class ArticleSeriesPageSeriesItem(Orderable):
             'content_page',
             ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
+        FieldPanel('hide_series_disclaimer'),
     ]
