@@ -41,7 +41,7 @@ function AnnualReportListing(props) {
               <i className="fas fa-download" />
             </a>
           )) || (
-            <a className="table-btn-icon" href={`${row.report_interactive}en`}>
+            <a className="table-btn-icon" href={`https://www.cigionline.org${row.report_interactive}en`}>
               <i className="fas fa-mouse-pointer" />
             </a>
           )}
@@ -57,7 +57,7 @@ function AnnualReportListing(props) {
               <i className="fas fa-download" />
             </a>
           )) || (
-            <a className="table-btn-icon" href={`${row.report_interactive}fr`}>
+            <a className="table-btn-icon" href={`https://www.cigionline.org${row.report_interactive}fr`}>
               <i className="fas fa-mouse-pointer" />
             </a>
           )}
