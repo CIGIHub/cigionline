@@ -9,7 +9,7 @@
     {% endif %}
   </a>
   {% include 'includes/topics.html' with topics=content.topics_sorted %}
-  <h3>
+  <h3 class="feature-content-title">
     <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}">
       {{ content.title }}
     </a>

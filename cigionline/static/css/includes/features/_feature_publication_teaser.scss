@@ -71,12 +71,6 @@ article {
       }
 
       .feature-publication-teaser-title {
-        h3 {
-          @include link($color: $black, $hover-color: $cigi-primary-colour);
-          font-size: 1.0625em;
-          line-height: 1.45;
-        }
-
         .topics {
           color: $cigi-primary-colour;
           margin-bottom: 0.5em;

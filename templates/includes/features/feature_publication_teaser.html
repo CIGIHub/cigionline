@@ -1,10 +1,10 @@
 {% load wagtailcore_tags %}
 
-<article class="feature-publication-teaser">
+<article class="feature-content feature-publication-teaser">
   <div class="feature-publication-teaser-content">
     <div class="feature-publication-teaser-title">
       {% include "includes/topics.html" with topics=publication.topics_sorted %}
-      <h3>
+      <h3 class="feature-content-title">
         <a href="{% pageurl publication %}">
           {{ publication.title }}
         </a>
