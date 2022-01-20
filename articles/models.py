@@ -351,7 +351,9 @@ class ArticlePage(
     @property
     def article_series_disclaimer(self):
         if self.article_series:
-            return self.article_series.specific.series_items_disclaimer
+            for series_item in self.article_series.specific.article_series_items:
+                if series_item.content_page.specific == self and not series_item.hide_series_disclaimer:
+                    return self.article_series.specific.series_items_disclaimer
         return None
 
     def is_opinion(self):
@@ -818,6 +820,7 @@ class ArticleSeriesPageSeriesItem(Orderable):
         verbose_name='Series Item',
     )
     category_title = models.CharField(blank=True, max_length=255)
+    hide_series_disclaimer = models.BooleanField(default=False)
 
     panels = [
         FieldPanel('category_title'),
@@ -825,4 +828,5 @@ class ArticleSeriesPageSeriesItem(Orderable):
             'content_page',
             ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
+        FieldPanel('hide_series_disclaimer'),
     ]
