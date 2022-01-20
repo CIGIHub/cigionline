@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars, consistent-return, array-callback-return */
 import React, { Fragment, useState } from 'react';
 import queryString from 'query-string';
 import {
@@ -12,30 +12,25 @@ const Financials = ({
   const originUrl = window.location.origin;
   const currentPath = window.location.pathname;
   const params = queryString.parse(window.location.search);
-  const type = params.type ? params.type : "auditors-report";
+  const type = params.tabtype ? params.tabtype : 'auditors-report';
   const [tabtype, settabtype] = useState(type);
 
-  // const currentPath = window.location.pathname.split('/')[-1];
-  // const isAcknowledgementsval = !!(params.acknowledgements === 'true' || params.remerciements === 'true');
-  // const [isAcknowledgements, setIsAcknowledgements] = useState(isAcknowledgementsval);
   const language = getLanguage();
   const siteUrl = getSiteUrl();
 
   function loadTabs() {
     return slide.value.tabs.map((tab) => {
-      let title = tab.value.title.split(' ').join('-').replace(/'/g, '').toLocaleLowerCase();
+      const title = tab.value.title.split(' ').join('-').replace(/'/g, '').toLocaleLowerCase();
       const hrefUrl = `?tabtype=${title}/`;
       return (
         tabtype === title
-          ?
-          (
+          ? (
             <>
               {tab.value.title}
               <span className="menu-break">/</span>
             </>
           )
-          :
-          (
+          : (
             <>
               <a
                 href={hrefUrl}
@@ -50,6 +45,38 @@ const Financials = ({
           )
       );
     });
+  }
+
+  function isNumber(n) {
+    return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
+  }
+
+  function getClassName(content, index) {
+    if (index === 0) {
+      return 'text-col';
+    }
+    const data = content.replace(/[^\d\.\-]/g, ''); // eslint-disable-line
+    if (data) {
+      if (!isNaN(data)) {
+        return 'num-col';
+      }
+      return 'text-col';
+    }
+    return 'num-col dollar-sign';
+  }
+
+  function getRowClassName(trow) {
+    if (trow[0] === '' && trow[2] && trow[4]) {
+      return 'table-subtotal';
+    }
+    if (trow[0].indexOf('Total') > -1 && trow[2] && trow[4]) {
+      return 'table-total';
+    }
+
+    if (trow[4] === '') {
+      return 'table-subtitle';
+    }
+    return 'table-line-entry';
   }
 
   function firstHalfBody() {
@@ -86,47 +113,19 @@ const Financials = ({
 
   function loadTableCell(tableBody) {
     return tableBody.map(function(trow) {
-      return (<tr className={getRowClassName(trow)}>
-        {
-          trow.map(function(cell){
-          return (<td className={getClassName(cell)}>{cell}</td>)
-
-          })
-        }
-        </tr>)
-    })
-  }
-  
-  function isNumber(n) {
-    return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
-  }
-
-  function getClassName(data) {
-    if (data) {
-      if (isNumber(data)) {
-        return 'num-col';
-      }
-      return 'text-col';
-    }
-    return 'num-col dollar-sign';
-  }
-
-  function getRowClassName(trow) {
-    if (trow[4] == "") {
-      return 'table-subtitle';
-    }else{
-      return 'table-line-entry';
-    }
+      return (
+        <tr className={getRowClassName(trow)}>
+          {
+            trow.map(function(cell, index) {
+              return (<td className={getClassName(cell, index)}>{cell}</td>);
+            })
+          }
+        </tr>
+      );
+    });
   }
 
   function loadBody() {
-    //     <div className="cell medium-6">
-    //   <div dangerouslySetInnerHTML={{ __html: firstHalfBody() }} />
-    // </div>
-    // <div className="cell medium-6">
-    //   <div dangerouslySetInnerHTML={{ __html: secondHalfBody() }} />
-    // </div>
-
     return slide.value.tabs.map(function(tab) {
       const title = tab.value.title.split(' ').join('-').replace(/'/g, '').toLocaleLowerCase();
       if (tabtype === title) {
@@ -142,28 +141,29 @@ const Financials = ({
             </>
           );
         }
-        else{
-          const content = tab.value.body[0];
 
-          if (content.type === 'table') {
-            const tableData = content.value;
-            const theader = tableData['first_row_is_table_header'] ? tableData.data[0] : [];
-            const tbody = tableData['first_row_is_table_header'] ? tableData.data.slice(1) : tableData.data;
+        const content = tab.value.body[0];
 
-            return (
+        if (content.type === 'table') {
+          const tableData = content.value;
+          const theader = tableData.first_row_is_table_header ? tableData.data[0] : [];
+          const tbody = tableData.first_row_is_table_header
+            ? tableData.data.slice(1) : tableData.data;
+
+          return (
+            <div className="cell">
               <table>
                 <tbody>
                   <tr className="table-title">
-                    {theader.map(function(paragraph) {
-                      return (<td className={getClassName(paragraph)}>{paragraph}</td>)
-                    })
-                    }
+                    {theader.map(function(paragraph, index) {
+                      return (<td className={getClassName(paragraph, index)}>{paragraph}</td>);
+                    })}
                   </tr>
                   { loadTableCell(tbody) }
                 </tbody>
               </table>
-            );
-          }
+            </div>
+          );
         }
       }
     });

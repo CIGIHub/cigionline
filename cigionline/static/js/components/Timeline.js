@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import React, { Fragment, useState } from 'react';
 import queryString from 'query-string';
 
@@ -66,10 +67,10 @@ const Timeline = ({ slide, slides }) => {
               className={`timeline-bubble node-15400 ${mappedItem.art_type} search-match`}
               style={{ left: calleft(index, mappedItem), top: calTop(index, mappedItem) }}
               onClick={(e) => {
-                      e.preventDefault();
-                      setItemId(mappedItem.id);
-                      window.history.pushState({}, '', `${originUrl}${currentPath}?id=${mappedItem.id}`);
-                    }}
+                e.preventDefault();
+                setItemId(mappedItem.id);
+                window.history.pushState({}, '', `${originUrl}${currentPath}?id=${mappedItem.id}`);
+              }}
             >
               <div className="preview">
                 <div className="preview-image-container">
@@ -91,17 +92,19 @@ const Timeline = ({ slide, slides }) => {
 
   function loadItemDetail() {
     return (
-      <div className="outputs-activities-overlay background-image" style={{ backgroundImage: `url('https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454.jpg'), url('https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454-thumbnail.jpg')` }}>
+      <div className="outputs-activities-overlay background-image" style={{ backgroundImage: 'url(\'https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454.jpg\'), url(\'https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454-thumbnail.jpg\')' }}>
         <div className="outputs-activities-overlay-container">
           <div className="grid-container">
             <div className="grid-x grid-margin-x">
               <div className="cell medium-10">
-                <button className="clearfix back-link" type="button"
+                <button
+                  className="clearfix back-link"
+                  type="button"
                   onClick={(e) => {
-                        e.preventDefault();
-                        setItemId(null);
-                        window.history.pushState({}, '', `${originUrl}${currentPath}`);
-                      }}
+                    e.preventDefault();
+                    setItemId(null);
+                    window.history.pushState({}, '', `${originUrl}${currentPath}`);
+                  }}
                 >
                   <div className="float-left back-link-icon publication">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="0.22in" height="0.19in" viewBox="0 0 16 14">
@@ -110,7 +113,7 @@ const Timeline = ({ slide, slides }) => {
                           <rect className="a" x="257" y="317" width="16" height="14" />
                         </clipPath>
                       </defs>
-                      <g className="b" style={{ clipPath: `url(#a)` }}>
+                      <g className="b" style={{ clipPath: 'url(#a)' }}>
                         <path d="M262.73,317.19a.69.69,0,0,1,.55-.19.81.81,0,0,1,.5.23.7.7,0,0,1,.2.52v2.5a14.77,14.77,0,0,1,6.38,1.16,4.83,4.83,0,0,1,2.63,4.66,5.53,5.53,0,0,1-.78,2.75,6.23,6.23,0,0,1-1.81,2.06.56.56,0,0,1-.45.11.6.6,0,0,1-.37-.23.43.43,0,0,1,0-.44,6,6,0,0,0,.28-3.48,2.82,2.82,0,0,0-1.91-1.8,12.18,12.18,0,0,0-3.91-.53v2.75a.7.7,0,0,1-.2.52.8.8,0,0,1-.5.23.7.7,0,0,1-.55-.19l-5.5-4.75a.76.76,0,0,1,0-1.12Z" transform="translate(-256.98 -317)" />
                       </g>
                     </svg>

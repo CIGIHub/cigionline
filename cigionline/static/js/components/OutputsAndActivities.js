@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars, jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState } from 'react';
 import queryString from 'query-string';
 
@@ -31,17 +31,19 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
 
   function loadItemDetail() {
     return (
-      <div className="outputs-activities-overlay background-image" style={{ backgroundImage: `url('https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454.jpg'), url('https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454-thumbnail.jpg')` }}>
+      <div className="outputs-activities-overlay background-image" style={{ backgroundImage: 'url(\'https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454.jpg\'), url(\'https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454-thumbnail.jpg\')' }}>
         <div className="outputs-activities-overlay-container">
           <div className="grid-container">
             <div className="grid-x grid-margin-x">
               <div className="cell medium-10">
-                <button className="clearfix back-link" type="button"
+                <button
+                  className="clearfix back-link"
+                  type="button"
                   onClick={(e) => {
-                        e.preventDefault();
-                        setItemId(null);
-                        window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}`);
-                      }}
+                    e.preventDefault();
+                    setItemId(null);
+                    window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}`);
+                  }}
                 >
                   <div className="float-left back-link-icon publication">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="0.22in" height="0.19in" viewBox="0 0 16 14">
@@ -50,7 +52,7 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
                           <rect className="a" x="257" y="317" width="16" height="14" />
                         </clipPath>
                       </defs>
-                      <g className="b" style={{ clipPath: `url(#a)` }}>
+                      <g className="b" style={{ clipPath: 'url(#a)' }}>
                         <path d="M262.73,317.19a.69.69,0,0,1,.55-.19.81.81,0,0,1,.5.23.7.7,0,0,1,.2.52v2.5a14.77,14.77,0,0,1,6.38,1.16,4.83,4.83,0,0,1,2.63,4.66,5.53,5.53,0,0,1-.78,2.75,6.23,6.23,0,0,1-1.81,2.06.56.56,0,0,1-.45.11.6.6,0,0,1-.37-.23.43.43,0,0,1,0-.44,6,6,0,0,0,.28-3.48,2.82,2.82,0,0,0-1.91-1.8,12.18,12.18,0,0,0-3.91-.53v2.75a.7.7,0,0,1-.2.52.8.8,0,0,1-.5.23.7.7,0,0,1-.55-.19l-5.5-4.75a.76.76,0,0,1,0-1.12Z" transform="translate(-256.98 -317)" />
                       </g>
                     </svg>
@@ -206,11 +208,11 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => {
-                      e.preventDefault();
-                      setItemId(item.id);
-                      setItemObject(item);
-                      window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
-                    }}
+                e.preventDefault();
+                setItemId(item.id);
+                setItemObject(item);
+                window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
+              }}
             >
               <h6>
                 {item.publishing_date}
@@ -225,11 +227,11 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
               className="outputs-activities-listing show-for-medium"
               type="button"
               onClick={(e) => {
-                      e.preventDefault();
-                      setItemId(item.id);
-                      setItemObject(item);
-                      window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
-                    }}
+                e.preventDefault();
+                setItemId(item.id);
+                setItemObject(item);
+                window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
+              }}
             >
               <h6>
                 {item.publishing_date}
@@ -248,86 +250,90 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
 
   return (itemId
     ? loadItemDetail()
-    : (<div className="outputs-activities">
-      <div className="grid-container">
-        <div className="grid-x grid-margin-x">
-          <div className="cell">
-            <h1>Outputs and Activities</h1>
+    : (
+      <div className="outputs-activities">
+        <div className="grid-container">
+          <div className="grid-x grid-margin-x">
+            <div className="cell">
+              <h1>Outputs and Activities</h1>
+            </div>
           </div>
-        </div>
-        <div className="grid-x grid-margin-x outputs-activities-content">
-          <div className="cell">
-            <div className="outputs-activities-header clearfix">
-              <div className="publications-menu">
-                { pageType === 'publications' ? 'Publications'
-                  : (
-                    <button
-                      className="view-publications-btn"
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setPageType('publications');
-                        setCurrentPage('1');
-                        window.history.pushState({}, '', `${originUrl}${currentPath}?type=publications`);
-                      }}
-                    >
-                      Publications
-                    </button>)
-                }
-                <span>/</span>
-                { pageType === 'opinions' ? 'Opinions'
-                : <button
-                    className="view-opinions-btn"
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPageType('opinions');
-                      setCurrentPage('1');
-                      window.history.pushState({}, '', `${originUrl}${currentPath}?type=opinions`);
-                    }}
-                  >
-                    Opinions
-                  </button>
-              }
-                <span>/</span>
-              { pageType === 'events' ? 'Events'
-              : <button
-                  className="view-events-btn"
-                  type="button"
-                  onClick={(e) => {
-                      e.preventDefault();
-                      setPageType('events');
-                      setCurrentPage('1');
-                      window.history.pushState({}, '', `${originUrl}${currentPath}?type=events`);
-                    }}
-                >
-                  Events
-                </button>
-                }
-              </div>
-              <div className="outputs-activities-pagination">
-                {renderPrevButton()}
-                {renderPageNumbers()}
-                {renderNextButton()}
+          <div className="grid-x grid-margin-x outputs-activities-content">
+            <div className="cell">
+              <div className="outputs-activities-header clearfix">
+                <div className="publications-menu">
+                  { pageType === 'publications' ? 'Publications'
+                    : (
+                      <button
+                        className="view-publications-btn"
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPageType('publications');
+                          setCurrentPage('1');
+                          window.history.pushState({}, '', `${originUrl}${currentPath}?type=publications`);
+                        }}
+                      >
+                        Publications
+                      </button>
+                    )}
+                  <span>/</span>
+                  { pageType === 'opinions' ? 'Opinions'
+                    : (
+                      <button
+                        className="view-opinions-btn"
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPageType('opinions');
+                          setCurrentPage('1');
+                          window.history.pushState({}, '', `${originUrl}${currentPath}?type=opinions`);
+                        }}
+                      >
+                        Opinions
+                      </button>
+                    )}
+                  <span>/</span>
+                  { pageType === 'events' ? 'Events'
+                    : (
+                      <button
+                        className="view-events-btn"
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPageType('events');
+                          setCurrentPage('1');
+                          window.history.pushState({}, '', `${originUrl}${currentPath}?type=events`);
+                        }}
+                      >
+                        Events
+                      </button>
+                    )}
+                </div>
+                <div className="outputs-activities-pagination">
+                  {renderPrevButton()}
+                  {renderPageNumbers()}
+                  {renderNextButton()}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="grid-x grid-margin-x outputs-activities-content">
-          {loadContent()}
-        </div>
-        <div className="grid-x outputs-activities-content">
-          <div className="cell">
-            <p className="page-count">
-              Page
-              {currentPage}
-              of
-              {findNumberOfPages()}
-            </p>
+          <div className="grid-x grid-margin-x outputs-activities-content">
+            {loadContent()}
+          </div>
+          <div className="grid-x outputs-activities-content">
+            <div className="cell">
+              <p className="page-count">
+                Page
+                {currentPage}
+                of
+                {findNumberOfPages()}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>));
+    ));
 };
 
 export default OutputsAndActivities;
