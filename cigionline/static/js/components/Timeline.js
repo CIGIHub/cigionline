@@ -44,9 +44,9 @@ const Timeline = ({ slide, slides }) => {
     );
     opMonth.map((item) => { item.art_type = 'opinion'; return item; });
     const eventsMonth = timelineData.value.events.items.filter(
-      (item) => item.publishing_date.toLocaleLowerCase().indexOf(val) > -1,
+      (item) => item.event_date.toLocaleLowerCase().indexOf(val) > -1,
     );
-    eventsMonth.map((item) => { item.art_type = 'event'; return item; });
+    eventsMonth.map((item) => { item.art_type = 'event'; item.publishing_date = item.event_date; return item; });
     const monthDataUnsorted = [...pubMonth,
       ...opMonth,
       ...eventsMonth];
@@ -74,13 +74,13 @@ const Timeline = ({ slide, slides }) => {
             >
               <div className="preview">
                 <div className="preview-image-container">
-                  <div className="preview-image timeline-15400-thumbnail" />
+                  <div className="preview-image timeline-15400-thumbnail" style={{ backgroundImage: `url(${originUrl}${mappedItem.image})` }} />
                 </div>
                 <div className="preview-line" />
                 <div className="preview-text preview-text-right">
-                  <h6>Opinion</h6>
+                  <h6>{ mappedItem.type }</h6>
                   <h5>{ mappedItem.title }</h5>
-                  <h6 className="pub-date">{ mappedItem.publishing_date }</h6>
+                  <h6 className="pub-date">{ mappedItem.publishing_date ? mappedItem.publishing_date : mappedItem.event_date }</h6>
                 </div>
               </div>
             </div>
@@ -92,7 +92,7 @@ const Timeline = ({ slide, slides }) => {
 
   function loadItemDetail() {
     return (
-      <div className="outputs-activities-overlay background-image" style={{ backgroundImage: 'url(\'https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454.jpg\'), url(\'https://www.cigionline.org/interactives/2020annualreport/static/ec2ef5ec1b848824/nodes/15454-thumbnail.jpg\')' }}>
+      <div className="outputs-activities-overlay background-image" style={{ backgroundImage: `url(${originUrl}${itemObject.image})` }}>
         <div className="outputs-activities-overlay-container">
           <div className="grid-container">
             <div className="grid-x grid-margin-x">
@@ -137,16 +137,18 @@ const Timeline = ({ slide, slides }) => {
             <div className="grid-x grid-margin-x">
               <div className="cell medium-10">
                 <h6 className="pub-date">
-                  { itemObject.authors.join(', ') }
+                  { itemObject.authors.length === 0
+                    ? itemObject.speakers.join(', ') : itemObject.authors.join(', ') }
                   <br />
-                  { itemObject.publishing_date }
+                  { itemObject.publishing_date
+                    ? itemObject.publishing_date : itemObject.event_date }
                 </h6>
-                <p className="publication-summary">{ itemObject.title }</p>
+                <p className="publication-summary">{ itemObject.summary }</p>
               </div>
             </div>
             <div className="grid-x grid-margin-x">
               <div className="cell medium-10">
-                <a className="clearfix read-link" href="https://www.cigionline.org/publications/reforming-investor-state-arbitration-recourse-domestic-courts-host-states" target="_blank" rel="noopener noreferrer">
+                <a className="clearfix read-link" href={itemObject.url_landing_page} target="_blank" rel="noopener noreferrer">
                   <div className="float-left read-link-icon">
                     <svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false" aria-hidden="true" data-icon="file-alt" data-prefix="fal" id="ember1580" className="svg-inline--fa fa-file-alt fa-w-12 fa-lg ember-view">
                       <path fill="currentColor" d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zm-22.6 22.7c2.1 2.1 3.5 4.6 4.2 7.4H256V32.5c2.8.7 5.3 2.1 7.4 4.2l83.9 83.9zM336 480H48c-8.8 0-16-7.2-16-16V48c0-8.8 7.2-16 16-16h176v104c0 13.3 10.7 24 24 24h104v304c0 8.8-7.2 16-16 16zm-48-244v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm0 64v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm0 64v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12z" />
