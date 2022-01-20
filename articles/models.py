@@ -354,7 +354,6 @@ class ArticlePage(
             for series_item in self.article_series.specific.article_series_items:
                 if series_item.content_page.specific == self and not series_item.hide_series_disclaimer:
                     return self.article_series.specific.series_items_disclaimer
-            return None
         return None
 
     def is_opinion(self):
