@@ -2,7 +2,7 @@
 import React, { Fragment, useState } from 'react';
 import queryString from 'query-string';
 
-const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-vars
+const OutputsAndActivities = ({ slide, setOutputDetail }) => { // eslint-disable-line no-unused-vars
   const itemsPerPage = 1;
   const originUrl = window.location.origin;
   const currentPath = window.location.pathname;
@@ -42,6 +42,7 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
                   onClick={(e) => {
                     e.preventDefault();
                     setItemId(null);
+                    setOutputDetail(false);
                     window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}`);
                   }}
                 >
@@ -210,6 +211,7 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
               onClick={(e) => {
                 e.preventDefault();
                 setItemId(item.id);
+                setOutputDetail(true);
                 setItemObject(item);
                 window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
               }}
@@ -229,6 +231,7 @@ const OutputsAndActivities = ({ slide }) => { // eslint-disable-line no-unused-v
               onClick={(e) => {
                 e.preventDefault();
                 setItemId(item.id);
+                setOutputDetail(true);
                 setItemObject(item);
                 window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
               }}

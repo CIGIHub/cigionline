@@ -9,7 +9,7 @@ import Financials from './Financials';
 import Timeline from './Timeline';
 
 const Slide = ({
-  slide, slides, contentOpacity, navigateToSlide, isOpen,
+  slide, slides, contentOpacity, navigateToSlide, isOpen, setOutputDetail,
 }) => {
   const getComponent = () => {
     if (slide.type === '') {
@@ -30,7 +30,11 @@ const Slide = ({
       return <ContentSlide slide={slide} contentOpacity={contentOpacity} />;
     } if (slide.type === 'outputsandactivitiesslidepage') {
       return (
-        <OutputsAndActivities slide={slide} contentOpacity={contentOpacity} />
+        <OutputsAndActivities
+          slide={slide}
+          contentOpacity={contentOpacity}
+          setOutputDetail={setOutputDetail}
+        />
       );
     } if (slide.type === 'timelineslidepage') {
       return <Timeline slide={slide} slides={slides} contentOpacity={contentOpacity} />;

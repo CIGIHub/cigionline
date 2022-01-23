@@ -178,6 +178,21 @@ const ContentSlide = ({ slide, contentOpacity }) => {
     });
   }
 
+  function loadMobileContentLinks() {
+    return slide.value.links.map(function(link) {
+      return (
+        /* eslint-disable-next-line jsx-a11y/control-has-associated-label */
+        <a
+          className="clearfix content-link-mobile"
+          href={link.value.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          dangerouslySetInnerHTML={{ __html: link.value.title }}
+        />
+      );
+    });
+  }
+
   function loadBody() {
     return slide.value.body.map(function(paragraph) {
       return paragraph.value;
@@ -201,15 +216,7 @@ const ContentSlide = ({ slide, contentOpacity }) => {
             <div className="cell large-6 paragraphs">
               <div dangerouslySetInnerHTML={{ __html: loadBody() }} />
               <div className="content-links-mobile hide-for-large">
-                <a
-                  className="clearfix content-link-mobile"
-                  href="https://www.cigionline.org/sites/default/files/documents/Strategic_Plan-2020-web-2_1.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Read CIGI’s new Strategic Plan focused on shaping governance
-                  in a digital era.
-                </a>
+                {loadMobileContentLinks()}
               </div>
             </div>
           </div>

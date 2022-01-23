@@ -1,4 +1,5 @@
 import React from 'react';
+import queryString from 'query-string';
 import MenuPortal from './MenuPortal';
 import {
   lightBackgroundSlugs,
@@ -16,9 +17,12 @@ const AnnualReportMenu = ({
 }) => {
   const language = getLanguage();
 
+  const params = queryString.parse(window.location.search);
+  const isDetail = !!params.id;
+
   return (
     <MenuPortal>
-      <div className={`cigi-top-bar${slideindex >= 0 && lightBackgroundSlugs.indexOf(slides[slideindex].type) > -1 ? ' light-background' : ''}`} style={{ opacity: 1 }}>
+      <div className={`cigi-top-bar${slideindex >= 0 && lightBackgroundSlugs.indexOf(slides[slideindex].type) > -1 ? (isDetail ? '' : ' light-background') : ''}`} style={{ opacity: 1 }}>
         <div className="cigi-logo">
           <a href="https://www.cigionline.org">
             <svg

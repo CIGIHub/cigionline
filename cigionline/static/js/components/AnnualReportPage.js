@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { debounce } from 'lodash';
 import MobileDetect from 'mobile-detect';
+import queryString from 'query-string';
 import AnnualReportMenu from './AnnualReportMenu';
 import {
   lightBackgroundSlugs,
@@ -29,6 +30,10 @@ const AnnualReportPage = ({
 
   const siteUrl = getSiteUrl();
   const currentSlug = getCurrentSlug();
+
+  const params = queryString.parse(window.location.search);
+  const isDetail = !!params.id;
+  const [isOutputDetail, setIsOutputDetail] = useState(isDetail);
 
   let translationKey = '';
   let otherLangSlug = '';
@@ -195,6 +200,7 @@ const AnnualReportPage = ({
                 isOpen={isOpen}
                 contentOpacity={contentOpacity}
                 navigateToSlide={navigateToSlide}
+                setOutputDetail={setIsOutputDetail}
               />
             ) : (
               isOpen ? (
@@ -204,6 +210,7 @@ const AnnualReportPage = ({
                   isOpen={isOpen}
                   contentOpacity={contentOpacity}
                   navigateToSlide={navigateToSlide}
+                  setOutputDetail={setIsOutputDetail}
                 />
               ) : <HomeSlide year={year} />
             )}
@@ -225,7 +232,7 @@ const AnnualReportPage = ({
                 className={`dot-nav show-for-large 
               ${
               lightBackgroundSlugs.indexOf(slides[slideindex].type) > -1
-                ? ' light-background'
+                ? (isOutputDetail ? '' : ' light-background')
                 : ''
               }
             `}
@@ -279,7 +286,7 @@ const AnnualReportPage = ({
                 className={`scroll-arrow scroll-arrow-up-btn${
                   slideindex >= 0
                   && lightBackgroundSlugs.indexOf(slides[slideindex].type) > -1
-                    ? ' light-background'
+                    ? (isOutputDetail ? '' : ' light-background')
                     : ''
                 }`}
                 aria-label="Prev"
@@ -295,7 +302,7 @@ const AnnualReportPage = ({
                 className={`scroll-arrow scroll-arrow-down-btn scroll-arrow-after-content${
                   slideindex >= 0
                   && lightBackgroundSlugs.indexOf(slides[slideindex].type) > -1
-                    ? ' light-background'
+                    ? (isOutputDetail ? '' : ' light-background')
                     : ''
                 }`}
                 aria-label="Next"
@@ -309,7 +316,7 @@ const AnnualReportPage = ({
               className={`vertical-title${
                 slideindex >= 0
                 && lightBackgroundSlugs.indexOf(slides[slideindex].type) > -1
-                  ? ' light-background'
+                  ? (isOutputDetail ? '' : ' light-background')
                   : ''
               }`}
               style={{ opacity: contentOpacity ? 1 : 0 }}
