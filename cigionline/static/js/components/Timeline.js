@@ -11,7 +11,7 @@ const Timeline = ({ slide, slides }) => {
   const id = params.id ? params.id : null;
   const [itemId, setItemId] = useState(id);
   let itemObject = null;
-  if (id != null) {
+  if (id != null && timelineData !== undefined) {
     itemObject = timelineData.value.publications.items.find((obj) => obj.id === parseInt(id, 10));
     if (itemObject == null) {
       itemObject = timelineData.value.opinions.items.find((obj) => obj.id === parseInt(id, 10));

@@ -195,6 +195,16 @@ const OutputsAndActivities = ({ slide, setOutputDetail }) => { // eslint-disable
     );
   }
 
+  function onClickDetail(item) {
+    return function(e) {
+      e.preventDefault();
+      setItemId(item.id);
+      setOutputDetail(true);
+      setItemObject(item);
+      window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
+    };
+  }
+
   function loadContent() {
     const startIndex = currentPage === 1 ? 0 : (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -208,13 +218,7 @@ const OutputsAndActivities = ({ slide, setOutputDetail }) => { // eslint-disable
               href="#"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => {
-                e.preventDefault();
-                setItemId(item.id);
-                setOutputDetail(true);
-                setItemObject(item);
-                window.history.pushState({}, '', `${originUrl}${currentPath}?type=${pageType}&page=${currentPage}&id=${item.id}`);
-              }}
+              onClick={onClickDetail(item)}
             >
               <h6>
                 { currentPage === 'events' ? item.event_date : item.publishing_date }
