@@ -2,6 +2,15 @@
 @import '../../../css/includes/swiper';
 
 .homepage {
+  hr {
+    &.has-margin {
+      @include media-breakpoint-down(sm) {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+    }
+  }
+
   .homepage-featured {
     @include media-breakpoint-up(lg) {
       padding-top: 7em;
@@ -63,6 +72,8 @@
 
   .homepage-featured-publications {
     .homepage-featured-publication-row {
+      display: flex;
+
       &:last-child {
         article {
           @include media-breakpoint-down(sm) {
