@@ -21,7 +21,7 @@
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
             {% endif %}
           </div>
-          <hr>
+          <hr class="has-margin">
           <div class="col-12 col-md-4 featured-small">
           {% with featured_pages|slice:"4:" as featured_small %}
             {% for item in featured_small %}
@@ -111,7 +111,7 @@
             {% endif %}
           </div>
           {% if featured_multimedia|length > 1 %}
-          <hr>
+          <hr class="has-margin">
           <div class="col-12 col-md-4 featured-small">
             {% with featured_multimedia|slice:"1:" as featured_multimedia_small %}
               {% for item in  featured_multimedia_small %}
