@@ -4,7 +4,7 @@ from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.core.cache import cache
 
-from .models import PersonPage
+from .models import PersonListPage, PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
 
@@ -16,6 +16,7 @@ def all_experts(request):
     searchtext = request.GET.get('search', None)
     sort = request.GET.get('sort', None)
     topics = request.GET.getlist('topic', None)
+    revision_date = PersonListPage.objects.get(person_list_page_type=1).latest_revision_created_at.timestamp()
 
     # Check if query exists in cache
     cache_key = "all_experts"
@@ -25,6 +26,8 @@ def all_experts(request):
         cache_key += f"_{sort}"
     if topics:
         cache_key += f"_{topics}"
+    if revision_date:
+        cache_key += f"_{revision_date}"
 
     response = cache.get(cache_key)
 
