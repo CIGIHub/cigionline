@@ -38,7 +38,7 @@ class PublicationListPage(BasicPageAbstract, Page):
         for item in self.featured_publications.prefetch_related(
             'publication_page',
             'publication_page__topics',
-        ).all()[:4]:
+        ).all():
             featured_publications.append(item.publication_page)
         return featured_publications
 
@@ -56,7 +56,7 @@ class PublicationListPage(BasicPageAbstract, Page):
             [
                 InlinePanel(
                     'featured_publications',
-                    max_num=4,
+                    max_num=12,
                     min_num=0,
                     label='Publication',
                 ),

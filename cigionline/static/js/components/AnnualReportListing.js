@@ -32,32 +32,36 @@ function AnnualReportListing(props) {
         )}
       </td>
       <td colSpan="2">
-        {row.report_english && (
-          <>
-            <div className="table-mobile-text">
-              English
-            </div>
-            <div className="table-content">
-              <a className="table-btn-icon" href={row.report_english}>
-                <i className="fas fa-download" />
-              </a>
-            </div>
-          </>
-        )}
+        <div className="table-mobile-text">
+          English
+        </div>
+        <div className="table-content">
+          {(row.report_english && (
+            <a className="table-btn-icon" href={row.report_english}>
+              <i className="fas fa-download" />
+            </a>
+          )) || (
+            <a className="table-btn-icon" href={`https://www.cigionline.org${row.report_interactive}en`}>
+              <i className="fas fa-mouse-pointer" />
+            </a>
+          )}
+        </div>
       </td>
       <td colSpan="2">
-        {row.report_french && (
-          <>
-            <div className="table-mobile-text">
-              en français
-            </div>
-            <div className="table-content">
-              <a className="table-btn-icon" href={row.report_french}>
-                <i className="fas fa-download" />
-              </a>
-            </div>
-          </>
-        )}
+        <div className="table-mobile-text">
+          en français
+        </div>
+        <div className="table-content">
+          {(row.report_french && (
+            <a className="table-btn-icon" href={row.report_french}>
+              <i className="fas fa-download" />
+            </a>
+          )) || (
+            <a className="table-btn-icon" href={`https://www.cigionline.org${row.report_interactive}fr`}>
+              <i className="fas fa-mouse-pointer" />
+            </a>
+          )}
+        </div>
       </td>
       <td colSpan="2">
         {row.report_financial && (
