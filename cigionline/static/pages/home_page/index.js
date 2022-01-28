@@ -44,8 +44,4 @@ if (swiperContainer) {
       },
     },
   });
-
-  if (swiperContainer.querySelectorAll('.swiper-slide').length <= 4) {
-    swiperControls.style.display = 'none';
-  }
 }

@@ -1,7 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Swiper, { Navigation, Pagination } from 'swiper';
 import PublicationListing from '../../js/components/PublicationListing';
 import SearchTable from '../../js/components/SearchTable';
+import './css/publication_list_page.scss';
+import 'swiper/swiper-bundle.css';
 
 ReactDOM.render(
   <SearchTable
@@ -90,3 +94,44 @@ ReactDOM.render(
   />,
   document.getElementById('publications-search-table'),
 );
+
+// Homepage Highlights
+Swiper.use([Navigation, Pagination]);
+const swiperContainer = document.querySelector('.swiper-container');
+
+if (swiperContainer) {
+  const swiperControls = swiperContainer.querySelector('.swiper-controls');
+  const publicationListPageSwiper = new Swiper('.swiper-container', {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+    spaceBetween: 20,
+    speed: 800,
+    autoHeight: true,
+    grabCursor: true,
+
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+
+    breakpoints: {
+      480: {
+        slidesPerView: 2,
+        slidesPerGroup: 2,
+      },
+      768: {
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+      },
+      992: {
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+      },
+    },
+  });
+}

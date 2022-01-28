@@ -1,8 +1,5 @@
 .swiper-container {
-  @include media-breakpoint-up(sm) {
-    margin-top: -2em;
-  }
-  margin-top: 0;
+  margin-top: -2em;
   padding-top: 2em !important;
 
   .swiper-controls {
@@ -14,12 +11,15 @@
 
     .swiper-button-next,
     .swiper-button-prev {
+      @include media-breakpoint-up(sm) {
+        top: 3px;
+      }
       color: $black;
       display: inline-block;
       left: auto;
       position: relative;
       right: auto;
-      top: 3px;
+      top: 4px;
       width: auto;
 
       &::after {
@@ -28,8 +28,10 @@
     }
 
     .swiper-pagination {
+      @include media-breakpoint-up(sm) {
+        padding: 0 7px;
+      }
       display: inline-block;
-      padding: 0 7px;
       position: relative;
 
       .swiper-pagination-bullet {

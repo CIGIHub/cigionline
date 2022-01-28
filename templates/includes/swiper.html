@@ -4,7 +4,7 @@
   <div class="swiper-wrapper">
     {% for item in swiper_content %}
       <div class="swiper-slide">
-        {% if type == "homepage-highlight" %}
+        {% if type == "homepage-highlight" or type == "publication-list-page-featured" %}
           {% include "includes/features/feature_poster_teaser.html" with content=item %}
         {% elif type == "article-landing-series" %}
           <article class="row">
