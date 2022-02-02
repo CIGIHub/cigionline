@@ -16,7 +16,7 @@ def all_experts(request):
     searchtext = request.GET.get('search', None)
     sort = request.GET.get('sort', None)
     topics = request.GET.getlist('topic', None)
-    revision_date = PersonListPage.objects.get(person_list_page_type=1).latest_revision_created_at.timestamp()
+    revision_date = request.GET.get('revision_date', None)
 
     # Check if query exists in cache
     cache_key = "all_experts"
