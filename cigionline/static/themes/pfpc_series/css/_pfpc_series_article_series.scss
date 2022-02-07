@@ -73,12 +73,17 @@
       color: $landing-heading-teal;
       font-size: 1em;
       font-weight: 500;
-      margin-bottom: 1em;
+      margin-bottom: 0.5em;
     }
 
     .short-description {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
       font-size: 1.1em;
       padding: 1em 10% 0;
+
+      a {
+        text-decoration: underline;
+      }
     }
 
     .video-bg {
@@ -107,7 +112,7 @@
     h2 {
       color: $landing-heading-teal;
       font-size: 1em;
-      font-weight: 600;
+      font-weight: 500;
       margin-top: 2em;
       text-transform: none;
       width: 100%;
