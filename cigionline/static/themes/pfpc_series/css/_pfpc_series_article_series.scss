@@ -44,7 +44,6 @@
         position: absolute;
         top: 0;
         width: 100%;
-        z-index: -1;
       }
     }
 
@@ -67,6 +66,10 @@
       color: $white;
       line-height: 1.25;
       text-align: left;
+    }
+
+    .container {
+      z-index: 1;
     }
 
     .opinion-series-label {
@@ -94,7 +97,6 @@
       position: absolute;
       top: 0;
       width: 100%;
-      z-index: -1;
 
       video {
         height: 50%;
