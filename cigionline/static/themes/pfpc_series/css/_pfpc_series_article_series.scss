@@ -10,7 +10,7 @@
 
   .pfpc-series-article-series-hero {
     @include media-breakpoint-up(sm) {
-      padding-top: 0;
+      padding-top: 10vw;
     }
     align-items: flex-end;
     display: flex;
