@@ -9,14 +9,13 @@
   }
 
   .pfpc-series-article-series-hero {
-    @include media-breakpoint-up(md) {
-      padding: 5em 0 0;
+    @include media-breakpoint-up(sm) {
+      padding-top: 0;
     }
     align-items: flex-end;
     display: flex;
-    margin-bottom: 2em;
     min-height: 40em;
-    padding: 30vw 0 10vw;
+    padding: 30vw 0 3em;
     position: relative;
     text-align: center;
 
@@ -56,7 +55,7 @@
       @include media-breakpoint-up(sm) {
         font-size: 1.5em;
       }
-      @include media-breakpoint-up(md) {
+      @include media-breakpoint-up(xl) {
         font-size: 2.3em;
       }
       color: $white;
@@ -129,6 +128,10 @@
       margin-top: 2em;
       text-transform: none;
       width: 100%;
+
+      &:first-child {
+        margin-top: 0;
+      }
     }
 
     article {
