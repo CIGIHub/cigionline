@@ -33,7 +33,6 @@
     }
 
     &::after {
-      z-index: -1;
       background-image: linear-gradient($black 5%, transparent 25%, $black 90%);
       content: '';
       height: 100%;
