@@ -34,21 +34,14 @@
 
     &::after {
       z-index: -1;
-
-      @include media-breakpoint-up(md) {
-        background-image: linear-gradient(
-          $black 5%,
-          transparent 25%,
-          $black 90%
-        );
-        content: '';
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 0;
-      }
+      background-image: linear-gradient($black 5%, transparent 25%, $black 90%);
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 0;
     }
 
     h1 {
@@ -109,6 +102,9 @@
       z-index: -1;
 
       video {
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
         height: 50%;
         min-height: 100%;
         min-width: 100%;
