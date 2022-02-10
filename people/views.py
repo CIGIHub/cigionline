@@ -4,7 +4,7 @@ from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.core.cache import cache
 
-from .models import PersonListPage, PersonPage
+from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
 
