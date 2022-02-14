@@ -19,6 +19,7 @@
       position: absolute;
       top: 0;
       width: 100%;
+      z-index: 1;
     }
 
     &::after {
@@ -96,6 +97,9 @@
       width: 100%;
 
       video {
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
         height: 50%;
         min-height: 100%;
         min-width: 100%;
