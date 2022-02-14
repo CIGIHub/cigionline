@@ -28,11 +28,15 @@
             <ul class="contributors">
               {% for item in article_series.series_contributors_by_person %}
                 <li>
-                  <a href="{{ item.item.url }}">
-                    {% for contributor in item.contributors %}
-                      {{ contributor.title }}
-                    {% endfor %}
-                  </a>
+                  {% if item.item.live %}
+                    <a href="{{ item.item.url }}">
+                  {% endif %}
+                  {% for contributor in item.contributors %}
+                    {{ contributor.title }}
+                  {% endfor %}
+                  {% if item.item.live %}
+                    </a>
+                  {% endif %}
                 </li>
               {% endfor %}
             </ul>
