@@ -78,21 +78,27 @@
             {% define series_item.content_page.specific|page_type as page_type %}
             <article>
               <div class="icon-images block-{{page_type}}">
-                {% if page_type == 'opinion' %}
+                {% if series_item.content_page.live %}
                   <a href="{% pageurl series_item.content_page %}">
+                {% endif %}
+                  {% if page_type == 'opinion' %}
                     {% image series_item.content_page.specific.image_banner fill-100x100 %}
-                  </a>
-                {% elif page_type == 'multimedia' %}
-                  <a href="{% pageurl series_item.content_page %}">
+                  {% elif page_type == 'multimedia' %}
                     <div class="icon-wrapper">
                       <i class="fa fa-play-circle"></i>
                     </div>
+                  {% endif %}
+                {% if series_item.content_page.live %}
                   </a>
                 {% endif %}
               </div>
               <div>
                 <h3>
-                  <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                  {% if series_item.content_page.live %}
+                    <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                  {% else %}
+                    {{ series_item.content_page.title }}
+                  {% endif %}
                 </h3>
                 <p class="authors">
                   {% for item in series_item.content_page.authors.all %}
