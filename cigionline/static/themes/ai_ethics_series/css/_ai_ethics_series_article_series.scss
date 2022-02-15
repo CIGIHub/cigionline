@@ -1,0 +1,9 @@
+.ai-ethics-series-article-series {
+  @include top-bar($background-color: transparent);
+
+  .ai-ethics-series-article-series-hero {
+    @include media-breakpoint-up(sm) {
+      padding-top: 10vw;
+    }
+  }
+}
