@@ -49,11 +49,35 @@
 
     hr {
       background-color: $cigi-text-grey;
+      margin: 0;
       width: 40%;
     }
 
     article {
-      margin-left: 2em;
+      padding: 2em 2em;
+      position: relative;
+
+      &:hover {
+        .article-short-description {
+          max-height: 200px;
+          opacity: 1;
+        }
+
+        .article-overlay {
+          opacity: 1;
+        }
+
+        a {
+          color: transparent;
+          pointer-events: none;
+        }
+
+        li {
+          &::after {
+            color: transparent;
+          }
+        }
+      }
 
       h3 {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
@@ -68,7 +92,10 @@
         margin-top: 0.5em;
 
         li {
-          @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
           @include comma-separated;
           font-weight: 600;
           list-style: none;
@@ -77,6 +104,40 @@
             color: $cigi-text-grey;
           }
         }
+      }
+
+      // .article-short-description {
+      //   bottom: 0;
+      //   max-height: 0;
+      //   left: 0;
+      //   // position: absolute;
+      //   overflow: none;
+      //   opacity: 0;
+      //   right: 0;
+      //   top: 0;
+      //   transition: max-height 0.5s ease, opacity 0.25s ease;
+      // }
+
+      .article-short-description {
+        color: $black;
+
+        p {
+          margin-bottom: 0;
+        }
+      }
+
+      .article-overlay {
+        align-items: center;
+        bottom: 0;
+        display: flex;
+        left: 0;
+        position: absolute;
+        right: 0;
+        opacity: 0;
+        padding: 0 2em;
+        top: 0;
+        transition: opacity 0.4s ease-in-out 0s;
+        width: 100%;
       }
     }
   }
