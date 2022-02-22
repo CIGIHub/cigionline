@@ -58,19 +58,15 @@
       position: relative;
 
       &:hover {
-        .article-short-description {
+        .article-overlay {
           max-height: 200px;
           opacity: 1;
         }
 
-        .article-overlay {
-          opacity: 1;
-        }
-
-        a {
-          color: transparent;
-          pointer-events: none;
-        }
+        // a {
+        //   color: transparent;
+        //   pointer-events: none;
+        // }
 
         li {
           &::after {
@@ -128,8 +124,10 @@
 
       .article-overlay {
         align-items: center;
+        background-color: $white;
         bottom: 0;
         display: flex;
+        justify-content: space-between;
         left: 0;
         position: absolute;
         right: 0;
@@ -137,7 +135,23 @@
         padding: 0 2em;
         top: 0;
         transition: opacity 0.4s ease-in-out 0s;
-        width: 100%;
+        width: calc(100% + 5em);
+
+        button {
+          border: 1px solid $black;
+          margin-left: 4em;
+          padding: 0.5em 1em;
+          transition: background-color 0.2s ease, color 0.2s ease;
+
+          a {
+            color: $black;
+          }
+
+          &:hover {
+            background-color: $black;
+            color: $white;
+          }
+        }
       }
     }
   }

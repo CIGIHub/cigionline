@@ -82,11 +82,16 @@
             {% endif %}
             <article>
               {% with series_item.content_page.specific as article %}
-              <div class="article-overlay">
-                <div class="article-short-description">
-                  {{ article.short_description|richtext }}
+              <a href={{article.url}}>
+                <div class="article-overlay flex">
+                  <div class="article-short-description">
+                    {{ article.short_description|richtext }}
+                  </div>
+                  <div class="article-links">
+                    <button type="button">Read</button>
+                  </div>
                 </div>
-              </div>
+              </a>
               <h3>
                 {% if article.live %}
                   <a href="{% pageurl article %}">{{ article.title }}</a>

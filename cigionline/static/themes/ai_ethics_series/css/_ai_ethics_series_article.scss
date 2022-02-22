@@ -1,1 +1,7 @@
+.ai-ethics-series-article {
+  @include top-bar($color: $black, $background-color: transparent);
 
+  .drop-caps {
+      border: 0;
+  }
+}
