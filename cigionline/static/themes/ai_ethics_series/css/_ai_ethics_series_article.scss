@@ -1,7 +1,64 @@
 .ai-ethics-series-article {
   @include top-bar($color: $black, $background-color: transparent);
 
+  .article-hero {
+    padding-top: calc(5vw + 4em);
+
+    h1 {
+      @include media-breakpoint-up(xl) {
+        font-size: 4em;
+      }
+      font-family: $ai_ethics_heading;
+      font-weight: 700;
+      font-size: calc(3.5vw + 1em);
+      line-height: 1;
+    }
+
+    .authors {
+      font-family: $ai_ethics_bilo;
+      font-size: 1.1em;
+      margin: 1em 0 0.25em;
+    }
+
+    .date {
+      font-family: $ai_ethics_bilo;
+    }
+
+    .banner {
+      margin: calc(1em + 2.5vw) 0;
+    }
+  }
+
   .drop-caps {
-      border: 0;
+    border: 0;
+    font-family: $ai_ethics_heading;
+    line-height: 0.65;
+    padding-top: 0.3em;
+  }
+
+  .article-series-description {
+    @include media-breakpoint-up(md) {
+      margin-bottom: 2em;
+    }
+    border: 0;
+    margin-bottom: 1em;
+
+    a {
+      font-style: italic;
+    }
+  }
+
+  .body {
+    h2 {
+      font-family: $ai_ethics_heading;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
+  }
+
+  .footnotes {
+    ol {
+      padding-left: 1.75em;
+    }
   }
 }
