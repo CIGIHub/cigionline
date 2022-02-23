@@ -34,6 +34,9 @@
 {% block theme_css %}
   {% render_bundle 'themeAIEthicsSeries' 'css' %}
 {% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeAIEthicsSeries' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block body_class %}ai-ethics-series-article-series{% endblock %}
 
@@ -108,5 +111,30 @@
         </div>
       </div>
     </div>
+  </section>
+  <div class="container">
+    <div class="row justify-content-center loaders">
+      <div id="article-message" class="show">
+        <i class="far fa-arrow-down fa-2x"></i>
+        Scroll down to read series introduction
+      </div>
+      <div id="spinner">
+        <img src="/static/assets/loader_spinner.gif" alt="Loading..." />
+        Loading Article...
+      </div>
+    </div>
+  </div>
+  <section id="introduction-article" class="ai-ethics-series-article">
+    <section class="article-hero">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8 hero-content">
+            <h2 id="introduction-title"><h2>
+            <ul id="introduction-authors" class="custom-text-list authors"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="introduction-body"></div>
   </section>
 {% endblock %}

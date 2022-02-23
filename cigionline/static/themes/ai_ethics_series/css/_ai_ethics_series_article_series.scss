@@ -1,3 +1,5 @@
+@import '../../../css/global/animations/bounce';
+
 .ai-ethics-series-article-series {
   @include top-bar($color: $black, $background-color: transparent);
 
@@ -40,7 +42,7 @@
 
   .article-series-in-the-series {
     font-family: $ai_ethics_bilo;
-    margin-bottom: 4em;
+    margin-bottom: 2em;
 
     h2 {
       font-weight: 600;
@@ -149,6 +151,69 @@
           }
         }
       }
+    }
+  }
+
+  .loaders {
+    margin-bottom: 6em;
+    position: relative;
+  }
+
+  #article-message {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 0.25s ease-in-out;
+
+    &.show {
+      opacity: 1;
+    }
+
+    i {
+      animation: 'bounce' 2s infinite;
+      margin-right: 1em;
+    }
+  }
+
+  #spinner {
+    opacity: 0;
+    margin-bottom: 4em;
+    position: absolute;
+    transition: opacity 0.25s ease-in-out;
+
+    &.show {
+      opacity: 1;
+    }
+
+    img {
+      width: 50px;
+    }
+  }
+
+  #introduction-article {
+    display: none;
+    margin-bottom: 4em;
+    opacity: 0;
+    transition: opacity 0.25s ease-in-out, max-height 1s ease-in-out;
+
+    .article-hero {
+      padding-top: 0;
+    }
+
+    #introduction-title {
+      @include media-breakpoint-up(xl) {
+        font-size: 3em;
+      }
+      font-family: $ai_ethics_heading;
+      font-weight: 700;
+      font-size: calc(2.5vw + 1em);
+      line-height: 1;
+    }
+
+    &.show {
+      display: block;
+      opacity: 1;
     }
   }
 }
