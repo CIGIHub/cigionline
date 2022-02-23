@@ -82,28 +82,26 @@
             {% endif %}
             <article>
               {% with series_item.content_page.specific as article %}
-              <a href={{article.url}}>
-                <div class="article-overlay flex">
-                  <div class="article-short-description">
-                    {{ article.short_description|richtext }}
-                  </div>
-                  <div class="article-links">
-                    <button type="button">Read</button>
-                  </div>
-                </div>
-              </a>
               <h3>
-                {% if article.live %}
-                  <a href="{% pageurl article %}">{{ article.title }}</a>
-                {% else %}
-                  {{ article.title }}
-                {% endif %}
+                {{ article.title }}
               </h3>
               <ul class="authors">
                 {% for item in article.authors.all %}
                   <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
                 {% endfor %}
               </ul>
+              <div class="article-overlay">
+                <a href={{article.url}} class="description-link">
+                  <div class="article-short-description">
+                    {{ article.short_description|richtext }}
+                  </div>
+                </a>
+                <div class="article-links">
+                  <a href={{article.url}}>
+                    <button type="button">Read</button>
+                  </a>
+                </div>
+              </div>
               {% endwith %}
             </article>
           {% endfor %}

@@ -59,14 +59,15 @@
 
       &:hover {
         .article-overlay {
-          max-height: 200px;
+          max-height: 500px;
           opacity: 1;
+          pointer-events: auto;
+          touch-action: auto;
         }
 
-        // a {
-        //   color: transparent;
-        //   pointer-events: none;
-        // }
+        .description-link {
+          touch-action: auto;
+        }
 
         li {
           &::after {
@@ -76,7 +77,6 @@
       }
 
       h3 {
-        @include link($color: $black, $hover-color: $cigi-primary-colour);
         @include media-breakpoint-up(md) {
           font-size: 1.75em;
         }
@@ -102,18 +102,6 @@
         }
       }
 
-      // .article-short-description {
-      //   bottom: 0;
-      //   max-height: 0;
-      //   left: 0;
-      //   // position: absolute;
-      //   overflow: none;
-      //   opacity: 0;
-      //   right: 0;
-      //   top: 0;
-      //   transition: max-height 0.5s ease, opacity 0.25s ease;
-      // }
-
       .article-short-description {
         color: $black;
 
@@ -123,23 +111,31 @@
       }
 
       .article-overlay {
-        align-items: center;
+        @include media-breakpoint-up(md) {
+          align-items: center;
+          bottom: 0;
+          display: flex;
+          left: 0;
+          justify-content: space-between;
+          padding: 0 2em;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: calc(100% + 5em);
+        }
         background-color: $white;
-        bottom: 0;
-        display: flex;
-        justify-content: space-between;
-        left: 0;
-        position: absolute;
-        right: 0;
+        max-height: 0;
         opacity: 0;
-        padding: 0 2em;
-        top: 0;
-        transition: opacity 0.4s ease-in-out 0s;
-        width: calc(100% + 5em);
+        pointer-events: none;
+        touch-action: none;
+        transition: max-height 0.25s ease-in-out, opacity 0.25s ease-in-out;
 
         button {
+          @include media-breakpoint-up(md) {
+            margin-left: 4em;
+          }
           border: 1px solid $black;
-          margin-left: 4em;
+          margin-top: 1em;
           padding: 0.5em 1em;
           transition: background-color 0.2s ease, color 0.2s ease;
 
