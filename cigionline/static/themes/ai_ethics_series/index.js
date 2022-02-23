@@ -10,7 +10,7 @@ const introductionTitle = document.getElementById('introduction-title');
 const footer = document.querySelector('footer');
 // load more data from api
 function loadArticle() {
-  const url = 'http://127.0.0.1:8000/api/series/ai_ethics';
+  const url = '/api/series/ai_ethics';
   articleMessage.classList.remove('show');
   spinner.classList.add('show');
   fetch(url)
