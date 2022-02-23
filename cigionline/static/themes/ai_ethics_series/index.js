@@ -8,7 +8,7 @@ const introductionBody = document.getElementById('introduction-body');
 const introductionAuthors = document.getElementById('introduction-authors');
 const introductionTitle = document.getElementById('introduction-title');
 const footer = document.querySelector('footer');
-// load more data from api
+
 function loadArticle() {
   const url = '/api/series/ai_ethics';
   articleMessage.classList.remove('show');
@@ -16,7 +16,6 @@ function loadArticle() {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      introductionTitle.innerHTML = data.title;
       data.authors.forEach((author) => {
         const authorElement = document.createElement('li');
         const authorLink = document.createElement('a');
@@ -34,7 +33,6 @@ function loadArticle() {
     });
 }
 
-// event listener to load data from api when scrolling to bottom of page
 window.addEventListener('scroll', () => {
   if (!loaded) {
     const rect = footer.getBoundingClientRect();

@@ -1,11 +1,9 @@
-from articles.models import ArticleSeriesPage, ArticlePage
+from articles.models import ArticleSeriesPage
 from django.http import JsonResponse
-from django.http import HttpResponse
-from django.template.response import TemplateResponse
 
 
 def ai_ethics(request):
-    series_page = ArticleSeriesPage.objects.get(slug='the-ethics-of-automated-warfare-and-artiﬁcial-intelligence')
+    series_page = ArticleSeriesPage.objects.get(slug='the-ethics-of-automated-warfare-and-artificial-intelligence')
     introduction_page = series_page.series_items.first().content_page.specific
     print(introduction_page)
 
