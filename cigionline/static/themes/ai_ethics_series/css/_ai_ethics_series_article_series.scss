@@ -52,11 +52,16 @@
     hr {
       background-color: $cigi-text-grey;
       margin: 0;
+      position: relative;
       width: 40%;
+      z-index: 2;
     }
 
     article {
-      padding: 2em 2em;
+      @include media-breakpoint-up(md) {
+        padding: 2em;
+      }
+      padding: 1em;
       position: relative;
 
       &:hover {
@@ -187,6 +192,7 @@
     }
 
     img {
+      margin-right: 0.5em;
       width: 50px;
     }
   }
