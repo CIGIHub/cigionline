@@ -159,6 +159,32 @@
     }
   }
 
+  .credits {
+    > .container {
+      border-top: 1px solid $cigi-text-grey;
+      padding-top: 2em;
+    }
+
+    h2,
+    .name {
+      font-family: $ai_ethics_bilo;
+    }
+
+    .credits-content {
+      @include media-breakpoint-up(sm) {
+        columns: 3;
+      }
+      @include media-breakpoint-up(xl) {
+        columns: 4;
+      }
+      columns: 2;
+
+      .name {
+        text-transform: capitalize;
+      }
+    }
+  }
+
   .loaders {
     margin-bottom: 6em;
     position: relative;

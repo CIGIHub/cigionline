@@ -112,6 +112,20 @@
       </div>
     </div>
   </section>
+  {% if self.credits %}
+    <section class="credits">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Credits</h2>
+            <div class="credits-content">
+              {{ self.credits|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
   <div class="container">
     <div class="row justify-content-center loaders">
       <div id="article-message" class="show">
