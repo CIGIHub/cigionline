@@ -78,7 +78,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-          <h2>In the Series</h2>
+          <h2 id="in-the-series">In the Series</h2>
           {% for series_item in self.article_series_items %}
             {% if forloop.counter > 1 %}
               <hr>
@@ -86,14 +86,19 @@
             <article>
               {% with series_item.content_page.specific as article %}
               <h3>
-                {{ article.title }}
+                <a href={{article.url}}>
+                  {{ article.title }}
+                </a>
               </h3>
+              <div class="article-short-description">
+                {{ article.short_description|richtext }}
+              </div>
               <ul class="authors">
                 {% for item in article.authors.all %}
                   <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
                 {% endfor %}
               </ul>
-              <div class="article-overlay">
+              {% comment %} <div class="article-overlay">
                 <a href={{article.url}} class="description-link">
                   <div class="article-short-description">
                     {{ article.short_description|richtext }}
@@ -104,11 +109,59 @@
                     <button type="button">Read</button>
                   </a>
                 </div>
-              </div>
+              </div> {% endcomment %}
               {% endwith %}
             </article>
           {% endfor %}
         </div>
+      </div>
+    </div>
+  </section>
+  <div class="container">
+    <div class="row justify-content-center loaders">
+      <div id="article-message" class="article-message show">
+        Scroll down to read series introduction
+      </div>
+      <div id="spinner" class="spinner">
+        <img src="/static/assets/loader_spinner.gif" alt="Loading..." />
+        Loading Article...
+      </div>
+    </div>
+    <div class="row align-items-center flex-column">
+      <div class="line-vertical"></div>
+      <div class="arrow-down"></div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <img id="introduction-loading-background" class="introduction-loading-background" src="/static/themes/ai_ethics_series/assets/ai_ethics_loading_bg.png">
+      </div>
+    </div>
+  </div>
+  <section id="introduction-article" class="ai-ethics-series-article">
+    <section class="article-hero">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8 hero-content">
+            <h2 id="introduction-title" class="introduction-title"><h2>
+            <ul id="introduction-authors" class="custom-text-list authors"></ul>
+            <div id="introduction-date" class="introduction-date"></div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-6 col-md-4">
+            <img id="introduction-image" class="introduction-image" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="introduction-body"></section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <p id="introduction-read-more" class="introduction-read-more col-md-10 col-lg-8">
+          <em><a href="#in-the-series">Read the other essays in the series</a></em>
+        </p>
       </div>
     </div>
   </section>
@@ -117,6 +170,10 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
+            <div class="ai-ethics-doodle">
+              <img src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_credits.png" />
+            </div>
+            <hr>
             <h2>Credits</h2>
             <div class="credits-content">
               {{ self.credits|richtext }}
@@ -126,29 +183,4 @@
       </div>
     </section>
   {% endif %}
-  <div class="container">
-    <div class="row justify-content-center loaders">
-      <div id="article-message" class="show">
-        <i class="far fa-arrow-down fa-2x"></i>
-        Scroll down to read series introduction
-      </div>
-      <div id="spinner">
-        <img src="/static/assets/loader_spinner.gif" alt="Loading..." />
-        Loading Article...
-      </div>
-    </div>
-  </div>
-  <section id="introduction-article" class="ai-ethics-series-article">
-    <section class="article-hero">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-8 hero-content">
-            <h2 id="introduction-title"><h2>
-            <ul id="introduction-authors" class="custom-text-list authors"></ul>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section id="introduction-body"></div>
-  </section>
 {% endblock %}

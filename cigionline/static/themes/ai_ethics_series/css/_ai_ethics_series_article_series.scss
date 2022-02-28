@@ -46,22 +46,16 @@
 
     h2 {
       font-weight: 600;
-      margin-bottom: 1em;
     }
 
     hr {
-      background-color: $cigi-text-grey;
+      background-color: $cigi-medium-grey;
       margin: 0;
       position: relative;
-      width: 40%;
-      z-index: 2;
     }
 
     article {
-      @include media-breakpoint-up(md) {
-        padding: 2em;
-      }
-      padding: 1em;
+      padding: 1em 2em;
       position: relative;
 
       &:hover {
@@ -84,6 +78,7 @@
       }
 
       h3 {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
         @include media-breakpoint-up(md) {
           font-size: 1.75em;
         }
@@ -95,12 +90,8 @@
         margin-top: 0.5em;
 
         li {
-          @include link(
-            $color: $cigi-text-grey,
-            $hover-color: $cigi-primary-colour
-          );
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
           @include comma-separated;
-          font-weight: 600;
           list-style: none;
 
           &::after {
@@ -110,7 +101,7 @@
       }
 
       .article-short-description {
-        color: $black;
+        color: $cigi-text-grey;
 
         p {
           margin-bottom: 0;
@@ -160,37 +151,55 @@
   }
 
   .credits {
-    > .container {
-      border-top: 1px solid $cigi-text-grey;
-      padding-top: 2em;
+    @include media-breakpoint-up(md) {
+      margin-bottom: 4em;
+    }
+    font-family: $ai_ethics_bilo;
+    margin-bottom: 2em;
+
+    hr {
+      background-color: $cigi-medium-grey;
+      margin: 3em 0;
     }
 
-    h2,
-    .name {
-      font-family: $ai_ethics_bilo;
+    .ai-ethics-doodle {
+      text-align: center;
+
+      img {
+        width: 100px;
+      }
     }
 
     .credits-content {
       @include media-breakpoint-up(sm) {
-        columns: 3;
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
       }
-      @include media-breakpoint-up(xl) {
-        columns: 4;
+      @include media-breakpoint-up(md) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
       }
-      columns: 2;
+      -ms-grid-columns: 1fr 0.5em 1fr;
+      display: -ms-grid;
+      display: grid; // sass-lint:disable-line no-duplicate-properties
+      font-size: 0.75em;
+      grid-column-gap: 0.5em;
+      grid-template-columns: 1fr 1fr;
+      margin-left: 2em;
+      margin-top: 1em;
 
       .name {
-        text-transform: capitalize;
+        font-size: 1.25em;
       }
     }
   }
 
   .loaders {
-    margin-bottom: 6em;
+    margin-bottom: 4em;
     position: relative;
   }
 
-  #article-message {
+  .article-message {
     display: flex;
     align-items: center;
     opacity: 0;
@@ -207,7 +216,7 @@
     }
   }
 
-  #spinner {
+  .spinner {
     opacity: 0;
     margin-bottom: 4em;
     position: absolute;
@@ -223,7 +232,30 @@
     }
   }
 
-  #introduction-article {
+  .line-vertical {
+    border-left: 1px solid $black;
+    height: 100px;
+  }
+
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 15px solid $black;
+    margin-bottom: 4em;
+  }
+
+
+  .introduction-loading-background {
+    display: none;
+
+    &.show {
+      display: block;
+    }
+  }
+  
+  .ai-ethics-series-article {
     display: none;
     margin-bottom: 4em;
     opacity: 0;
@@ -233,7 +265,7 @@
       padding-top: 0;
     }
 
-    #introduction-title {
+    .introduction-title {
       @include media-breakpoint-up(xl) {
         font-size: 3em;
       }
@@ -243,9 +275,47 @@
       line-height: 1;
     }
 
+    .introduction-date {
+      color: $cigi-text-grey;
+      font-family: $ai_ethics_bilo;
+    }
+
+    .introduction-image {
+      margin: 4em 0 2em;
+    }
+
     &.show {
       display: block;
       opacity: 1;
+    }
+
+    &.loading {
+      display: block;
+      max-height: 100vh;
+    }
+  }
+
+  .introduction-read-more {
+    @include link($color: $black, $hover-color: $cigi-primary-colour);
+    display: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-left: 0.5em;
+    margin-top: 1em;
+    position: relative;
+
+    &.show {
+      display: block;
+    }
+
+    &::before {
+      background-image: url('../assets/ai_ethics_doodle_square.png');
+      content: '';
+      left: 0.5em;
+      height: 0.5em;
+      position: absolute;
+      top: -0.5em;
+      width: 0.5em;
     }
   }
 }

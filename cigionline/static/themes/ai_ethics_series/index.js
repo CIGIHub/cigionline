@@ -7,6 +7,10 @@ const introductionArticle = document.getElementById('introduction-article');
 const introductionBody = document.getElementById('introduction-body');
 const introductionAuthors = document.getElementById('introduction-authors');
 const introductionTitle = document.getElementById('introduction-title');
+const introductionDate = document.getElementById('introduction-date');
+const introductionImage = document.getElementById('introduction-image');
+const introductionReadMore = document.getElementById('introduction-read-more');
+const introductionLoadingBackground = document.getElementById('introduction-loading-background');
 const footer = document.querySelector('footer');
 
 function loadArticle() {
@@ -26,17 +30,24 @@ function loadArticle() {
       });
       introductionTitle.innerHTML = data.title;
       introductionBody.innerHTML = data.body;
+      introductionDate.innerHTML = data.date;
+      introductionImage.src = data.image;
+      introductionArticle.classList.add('loading');
+      introductionLoadingBackground.classList.add('show');
       setTimeout(() => {
         spinner.classList.remove('show');
+        introductionArticle.classList.remove('loading');
+        introductionLoadingBackground.classList.remove('show');
         introductionArticle.classList.add('show');
-      }, 2000);
+        introductionReadMore.classList.add('show');
+      }, 1000);
     });
 }
 
 window.addEventListener('scroll', () => {
   if (!loaded) {
     const rect = footer.getBoundingClientRect();
-    if (rect.top <= window.innerHeight - 100) {
+    if (rect.top <= window.innerHeight + 100) {
       loadArticle();
       loaded = true;
     }
