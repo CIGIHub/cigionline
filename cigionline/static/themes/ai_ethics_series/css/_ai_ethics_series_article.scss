@@ -54,6 +54,16 @@
       font-size: 1.5em;
       font-weight: 600;
     }
+
+    hr {
+      background-color: transparent;
+      background-image: url('../assets/ai_ethics_doodle_hr.png');
+      background-position: calc(50% - 25px);
+      background-repeat: no-repeat;
+      background-size: contain;
+      height: 50px;
+      margin: 2em 0;
+    }
   }
 
   .footnotes {
