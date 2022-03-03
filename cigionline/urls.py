@@ -1,6 +1,7 @@
 from annual_reports import views as annual_report_views
 from django.conf import settings
 from django.conf.urls import include, url
+from django.conf.urls.i18n import i18n_patterns
 from django.urls import path
 from django.views.decorators.cache import cache_control
 from core import views as core_views
@@ -55,16 +56,17 @@ if settings.DEBUG:  # pragma: no cover
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
 
-urlpatterns = urlpatterns + [
+urlpatterns = urlpatterns + i18n_patterns(
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
     url(r"", include(wagtail_urls)),
+    prefix_default_language=False,
 
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
     #    url(r"^pages/", include(wagtail_urls)),
-]
+)
 
 cache_max_age = getattr(settings, 'CACHE_CONTROL_MAX_AGE', None)
 if cache_max_age:
