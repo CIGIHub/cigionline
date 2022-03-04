@@ -10,7 +10,7 @@
     </h3>
   </div>
   <div class="feature-publication-teaser-meta">
-    {% include "includes/authors.html" with authors=publication.authors.all|slice:":3" %}
+    {% include 'includes/features/feature_content_people.html' with authors=publication.authors.all %}
     {% if publication.from_the_archives %}
       <div class="feature-content-from-the-archives">FROM THE ARCHIVES</div>
     {% else %}
