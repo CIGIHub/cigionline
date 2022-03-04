@@ -27,13 +27,7 @@ article {
     padding-bottom: 1.5em;
 
     .feature-publication-teaser-meta {
-      .authors {
-        @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
-        font-size: 0.75em;
-        margin-bottom: 0;
-        margin-top: 0;
-        text-transform: uppercase;
-      }
+      margin-top: 1em;
 
       .button-action {
         align-items: center;
