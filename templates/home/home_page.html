@@ -127,7 +127,7 @@
       </div>
     </section>
   {% endcache %}
-  {% cache 86400 homepage_featured_events self.featured_events.0.id is_preview %}
+  {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview %}
     <section class="homepage-featured-events">
       <div class="container">
         <div class="row">
