@@ -400,7 +400,7 @@ class OutputsAndActivitiesSlidePage(BaseSlidePage):
                         'url_landing_page': publication.publication.url,
                         'speakers': [],
                         'authors': [author.author.person_name for author in publication.publication.authors.all()],
-                        'image': publication.publication.image_cover.file.url
+                        'image': publication.publication.image_cover_url
                     } for publication in self.publications.all()
                 ]
             },
