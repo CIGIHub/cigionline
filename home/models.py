@@ -2,7 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
-from events.models import EventPage
+from events.models import EventPage, EventListPage
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
@@ -14,6 +14,8 @@ from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
 import random
+import logging
+import traceback
 
 
 class HomePage(Page):
@@ -158,21 +160,26 @@ class HomePage(Page):
         ).live().public().exclude(id__in=featured_items_ids).order_by('-publishing_date')[:4]
 
     def get_featured_events(self):
-        featured_events = []
-        now = timezone.now()
-        future_events = EventPage.objects.prefetch_related(
-            'multimedia_page',
-            'topics',
-        ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
-        if len(future_events) < 3:
-            Q = models.Q
-            past_events = EventPage.objects.prefetch_related(
+        try:
+            featured_events = EventListPage.objects.first().get_featured_events()[:3]
+        except Exception:
+            logging.error(traceback.format_exc())
+            featured_events = []
+            now = timezone.now()
+            future_events = EventPage.objects.prefetch_related(
                 'multimedia_page',
                 'topics',
-            ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
-            featured_events = (list(future_events) + list(past_events))[:3]
-        else:
-            featured_events = future_events
+            ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+            if len(future_events) < 3:
+                Q = models.Q
+                past_events = EventPage.objects.prefetch_related(
+                    'multimedia_page',
+                    'topics',
+                ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+                featured_events = (list(future_events) + list(past_events))[:3]
+            else:
+                featured_events = future_events
+
         return featured_events
 
     def get_promotion_blocks(self):
