@@ -1,3 +1,5 @@
+import datetime
+
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -20,6 +22,9 @@ from core.models import (BasicPageAbstract, FeatureablePageAbstract,
 from streams.blocks import (ParagraphBlock, PersonBlock,
                             SlideAcknowledgedGroupBlock, SlideLinkBlock,
                             SlideQuoteBlock, SlideTabBlock)
+from publications.models import PublicationPage
+from events.models import EventPage
+from articles.models import ArticlePage
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -378,130 +383,90 @@ class ContentSlidePage(BaseSlidePage):
 
 class OutputsAndActivitiesSlidePage(BaseSlidePage):
     max_count_per_parent = 1
+    start_date = models.DateField(default=datetime.date.today)
+    end_date = models.DateField(default=datetime.date.today)
 
     content_panels = BaseSlidePage.content_panels + [
-        InlinePanel('publications', label="Publication"),
-        InlinePanel('opinions', label="Opinion"),
-        InlinePanel('events', label="Event"),
+        MultiFieldPanel(
+            [
+                FieldPanel('start_date'),
+                FieldPanel('end_date'),
+            ],
+            heading='Date Range',
+            classname='collapsible collapsed',
+        ),
     ]
 
     def as_json(self):
+        publications = PublicationPage.objects.filter(
+            publishing_date__gte=self.start_date,
+            publishing_date__lte=self.end_date
+        )
+        opinions = ArticlePage.objects.filter(
+            publishing_date__gte=self.start_date,
+            publishing_date__lte=self.end_date,
+            article_type__title='Opinion'
+        )
+        events = EventPage.objects.filter(
+            publishing_date__gte=self.start_date,
+            publishing_date__lte=self.end_date
+        )
         data = {
             "publications": {
                 "items": [
                     {
-                        'publishing_date': publication.publication.publishing_date.strftime("%B %d, %Y"),
-                        'type': publication.publication.publication_type.title,
+                        'publishing_date': publication.publishing_date.strftime("%B %d, %Y"),
+                        'type': publication.publication_type.title if publication.publication_type else '',
                         'event_date': "",
-                        'id': publication.publication.id,
-                        'title': publication.publication.title,
-                        'subtitle': publication.publication.subtitle,
-                        'summary': publication.publication.short_description,
-                        'url_landing_page': publication.publication.url,
+                        'id': publication.id,
+                        'title': publication.title,
+                        'subtitle': publication.subtitle,
+                        'summary': publication.short_description,
+                        'url_landing_page': publication.url,
                         'speakers': [],
-                        'authors': [author.author.person_name for author in publication.publication.authors.all()],
-                        'image': publication.publication.image_cover_url
-                    } for publication in self.publications.all()
+                        'authors': [author.author.person_name for author in publication.authors.all()],
+                        'image': publication.image_cover_url
+                    } for publication in publications
                 ]
             },
             "opinions": {
                 "items": [
                     {
-                        'publishing_date': opinion.opinion.publishing_date.strftime("%B %d, %Y"),
+                        'publishing_date': opinion.publishing_date.strftime("%B %d, %Y"),
                         'event_date': "",
-                        'type': opinion.opinion.article_type.title,
-                        'id': opinion.opinion.id,
-                        'title': opinion.opinion.title,
-                        'subtitle': opinion.opinion.subtitle,
-                        'summary': opinion.opinion.short_description,
-                        'url_landing_page': opinion.opinion.url,
+                        'type': opinion.article_type.title,
+                        'id': opinion.id,
+                        'title': opinion.title,
+                        'subtitle': opinion.subtitle,
+                        'summary': opinion.short_description,
+                        'url_landing_page': opinion.url,
                         'speakers': [],
-                        'authors': [author.author.person_name for author in opinion.opinion.authors.all()],
-                        'image': opinion.opinion.image_hero_url
-                    } for opinion in self.opinions.all()
+                        'authors': [author.author.person_name for author in opinion.authors.all()],
+                        'image': opinion.image_hero_url
+                    } for opinion in opinions
                 ]
             },
             "events": {
                 "items": [
                     {
                         'publishing_date': "",
-                        'event_date': event.event.event_start_time_utc.strftime("%B %d, %Y"),
-                        'type': event.event.event_type,
-                        'id': event.event.id,
-                        'title': event.event.title,
+                        'event_date': event.event_start_time_utc.strftime("%B %d, %Y"),
+                        'type': event.event_type,
+                        'id': event.id,
+                        'title': event.title,
                         'subtitle': '',
-                        'summary': event.event.subtitle,
-                        'url_landing_page': event.event.url,
+                        'summary': event.subtitle,
+                        'url_landing_page': event.url,
                         'authors': [],
-                        'speakers': [author.author.person_name for author in event.event.authors.all()],
-                        'image': event.event.image_hero_url
-                    } for event in self.events.all()
+                        'speakers': [author.author.person_name for author in event.authors.all()],
+                        'image': event.image_hero_url
+                    } for event in events
                 ]
             },
         }
         json_response = super().as_json()
         json_response['value'].update(data)
         return json_response
-
-
-class OutputsAndActivitiesSlidePagePublication(Orderable):
-    page = ParentalKey(
-        OutputsAndActivitiesSlidePage,
-        on_delete=models.CASCADE,
-        related_name='publications'
-    )
-    publication = models.ForeignKey(
-        'publications.PublicationPage',
-        on_delete=models.CASCADE,
-        related_name='+'
-    )
-
-    def __str__(self):
-        return self.publication.title
-
-    panels = [
-        PageChooserPanel('publication'),
-    ]
-
-
-class OutputsAndActivitiesSlidePageEvent(Orderable):
-    page = ParentalKey(
-        OutputsAndActivitiesSlidePage,
-        on_delete=models.CASCADE,
-        related_name='events'
-    )
-    event = models.ForeignKey(
-        'events.EventPage',
-        on_delete=models.CASCADE,
-        related_name='+'
-    )
-
-    def __str__(self):
-        return self.event.title
-
-    panels = [
-        PageChooserPanel('event'),
-    ]
-
-
-class OutputsAndActivitiesSlidePageOpinion(Orderable):
-    page = ParentalKey(
-        OutputsAndActivitiesSlidePage,
-        on_delete=models.CASCADE,
-        related_name='opinions'
-    )
-    opinion = models.ForeignKey(
-        'articles.ArticlePage',
-        on_delete=models.CASCADE,
-        related_name='+'
-    )
-
-    def __str__(self):
-        return self.event.title
-
-    panels = [
-        PageChooserPanel('opinion'),
-    ]
 
 
 class TimelineSlidePage(BaseSlidePage):
