@@ -64,6 +64,7 @@ const config = {
     themeIgc: './cigionline/static/themes/igc/index.js',
     themeIndigenousLandsSeries: './cigionline/static/themes/indigenous_lands_series/index.js',
     themeInnovationSeries: './cigionline/static/themes/innovation_series/index.js',
+    themeJohnHolmesSeries: './cigionline/static/themes/john_holmes_series/index.js',
     themeLongform: './cigionline/static/themes/longform/index.js',
     themeLongform2: './cigionline/static/themes/longform_2/index.js',
     themeLongform2DarkMode: './cigionline/static/themes/longform_2_dark_mode/index.js',

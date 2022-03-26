@@ -1,0 +1,112 @@
+.john-holmes-series-article-series {
+  @include top-bar($background-color: transparent, $color: $black);
+
+  .john-holmes-series-article-series-hero {
+    background: linear-gradient(167deg, $white 50%, #f3f3f3 50%);
+    background-position-y: 200px;
+    background-repeat: no-repeat;
+    padding-top: 5em;
+    text-align: center;
+
+    img {
+      margin-top: 6em;
+    }
+
+    h1 {
+      font-family: $john-holmes-font;
+      font-size: 2.75em;
+      font-weight: 600;
+      margin-bottom: 1em;
+    }
+
+    .opinion-series-label {
+      margin: 2.5em 0 2em;
+    }
+  }
+
+  .john-holmes-series-article-series-in-the-series {
+    background-color: #f3f3f3;
+    padding: 2em 0 4em;
+
+    .series-category {
+      margin-top: 2em;
+
+      h2 {
+        @include media-breakpoint-up(md) {
+          margin-bottom: 1em;
+          text-align: center;
+        }
+        font-size: 1.25em;
+        font-weight: 600;
+      }
+
+      .series-category-items {
+        display: flex;
+
+        @include media-breakpoint-down(sm) {
+          flex-direction: column;
+        }
+
+        article {
+          flex-basis: 50%;
+          flex-grow: 0;
+          flex-shrink: 0;
+          margin: 1em 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          &:first-child {
+            @include media-breakpoint-up(md) {
+              text-align: right;
+            }
+            position: relative;
+            padding-left: 0;
+            padding-right: 2em;
+
+            &::after {
+              @include media-breakpoint-up(md) {
+                content: '';
+                background: black;
+                position: absolute;
+                bottom: 10%;
+                right: -2.5px;
+                height: 80%;
+                width: 5px;
+              }
+            }
+
+            .custom-text-list {
+              @include media-breakpoint-up(md) {
+                justify-content: end;
+              }
+            }
+          }
+
+          &:nth-child(2) {
+            @include media-breakpoint-up(md) {
+              padding-left: 2em;
+              padding-right: 0;
+            }
+          }
+
+          h3 {
+            @include link($color: $black, $hover-color: $cigi-primary-colour);
+            font-size: 1.1em;
+            font-weight: 500;
+          }
+
+          .authors {
+            @include link(
+              $color: $cigi-text-grey,
+              $hover-color: $cigi-primary-colour
+            );
+            margin: 0;
+            text-transform: uppercase;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}

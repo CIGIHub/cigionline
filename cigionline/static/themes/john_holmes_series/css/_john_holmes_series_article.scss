@@ -1,0 +1,72 @@
+.john-holmes-series-article {
+  @include top-bar($background-color: transparent, $color: $black);
+
+  .john-holmes-series-article-hero {
+    margin-bottom: 4em;
+    padding-top: 8em;
+
+    .hero-content {
+      align-items: flex-end;
+      justify-content: space-between;
+
+      > * {
+        flex: 0 0 48%;
+      }
+
+      h1 {
+        font-size: 3em;
+        font-weight: 600;
+        line-height: 1.1;
+      }
+
+      .authors {
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .article-series-description {
+    border-bottom: 0;
+  }
+
+  .body {
+    .drop-caps {
+      border: 0;
+      font-family: $john-holmes-font;
+      font-weight: 600;
+    }
+
+    .stream-block-blockquote {
+      margin-bottom: 1em;
+
+      .stream-block-blockquote-content {
+        font-family: $john-holmes-font;
+        font-weight: 600;
+        margin-left: -2em;
+        margin-right: 2em;
+        padding: 1.5em 0;
+        position: relative;
+
+        &::before {
+          background-color: #f3f3f3;
+          border: 0;
+          height: 100%;
+          left: 70%;
+          position: absolute;
+          width: 70vw;
+          z-index: -1;
+        }
+
+        blockquote {
+          margin: 0;
+        }
+      }
+    }
+
+    .stream-block-recommended {
+      img {
+        filter: grayscale(100%);
+      }
+    }
+  }
+}
