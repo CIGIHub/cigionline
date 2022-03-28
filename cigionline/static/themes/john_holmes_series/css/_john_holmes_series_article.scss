@@ -34,6 +34,13 @@
 
   .article-series-description {
     border-bottom: 0;
+    color: $cigi-text-grey;
+    font-size: 0.95em;
+    margin-bottom: 1em;
+
+    a {
+      font-style: italic;
+    }
   }
 
   .body {
