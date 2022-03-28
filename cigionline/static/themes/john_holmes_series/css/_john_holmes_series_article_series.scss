@@ -5,28 +5,69 @@
     background: linear-gradient(167deg, $white 50%, #f3f3f3 50%);
     background-position-y: 200px;
     background-repeat: no-repeat;
+    height: 100vh;
     padding-top: 5em;
+    position: relative;
     text-align: center;
 
     img {
       margin-top: 6em;
     }
 
-    h1 {
-      font-family: $john-holmes-font;
-      font-size: 2.75em;
-      font-weight: 600;
-      margin-bottom: 1em;
+    .banner-bg {
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
+      background-position: 30%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      bottom: 0;
+      height: 25vh;
+      position: fixed;
+      width: 100%;
     }
 
-    .opinion-series-label {
-      margin: 2.5em 0 2em;
+    .hero-content {
+      @include media-breakpoint-down(sm) {
+        text-align: left;
+      }
+      height: 100vh;
+      position: fixed;
+      width: 100%;
+
+      h1 {
+        @include media-breakpoint-up(lg) {
+          font-size: 2.75em;
+        }
+        font-family: $john-holmes-font;
+        font-size: calc(3vw + 1em);
+        font-weight: 600;
+        margin-bottom: 1em;
+      }
+
+      img {
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
+      }
+
+      .opinion-series-label {
+        margin: 2.5em 0 1.5em;
+      }
+
+      .scrollanchor-container {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        animation: bounce 2s infinite;
+        margin: 2.5em 0;
+      }
     }
   }
 
   .john-holmes-series-article-series-in-the-series {
     background-color: #f3f3f3;
-    padding: 2em 0 4em;
+    position: relative;
+    padding: 2em 0 6em;
+    z-index: 1;
 
     .series-category {
       margin-top: 2em;
@@ -106,6 +147,42 @@
             text-align: right;
           }
         }
+      }
+    }
+  }
+
+  .credits {
+    background-color: #f3f3f3;
+    padding-bottom: 6em;
+    position: relative;
+    z-index: 1;
+    
+    h2 {
+      font-family: $john-holmes-font;
+      font-size: 1.25em;
+      font-weight: 600;
+    }
+
+    .credits-content {
+      @include media-breakpoint-up(sm) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      @include media-breakpoint-up(md) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      -ms-grid-columns: 1fr 0.5em 1fr;
+      display: -ms-grid;
+      display: grid; // sass-lint:disable-line no-duplicate-properties
+      font-size: 0.75em;
+      grid-column-gap: 0.5em;
+      grid-template-columns: 1fr 1fr;
+      margin-left: 2em;
+      margin-top: 1em;
+
+      .name {
+        font-size: 1.25em;
       }
     }
   }
