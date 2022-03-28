@@ -42,18 +42,31 @@
 
 {% block content %}
   <section class="john-holmes-series-article-series-hero">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          {% image self.image_banner width-1000 %}
-          <div class="opinion-series-label">A CIGI Essay Series</div>
-          <h1>{{ self.title }}</h1>
-          <p>{{ self.short_description|richtext }}</p>
+    <div class="hero-content">
+      {% image self.image_banner width-1000 as image_banner %}
+      <div class="banner-bg" style="background-image: url('{{image_banner.url}}')"></div>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-10">
+            {% image self.image_banner width-1000 %}
+            <div class="opinion-series-label">A CIGI Essay Series</div>
+            <h1>{{ self.title }}</h1>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <p>{{ self.short_description|richtext }}</p>
+            <div class="scrollanchor-container">
+              <a href="#article-series-items">
+                <i class="far fa-arrow-down fa-2x"></i>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
-  <section class="john-holmes-series-article-series-in-the-series">
+  <section class="john-holmes-series-article-series-in-the-series" id="article-series-items">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
@@ -82,4 +95,18 @@
       </div>
     </div>
   </section>
+  {% if self.credits %}
+    <section class="credits">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Credits</h2>
+            <div class="credits-content">
+              {{ self.credits|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}
