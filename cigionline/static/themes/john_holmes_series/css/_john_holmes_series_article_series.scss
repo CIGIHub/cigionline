@@ -13,10 +13,6 @@
     position: relative;
     text-align: center;
 
-    img {
-      margin-top: 6em;
-    }
-
     .banner-bg {
       @include media-breakpoint-up(md) {
         display: none;
@@ -34,18 +30,27 @@
       @include media-breakpoint-down(sm) {
         text-align: left;
       }
+      display: flex;
       height: 100vh;
       position: fixed;
       width: 100%;
 
+      >.container {
+        @include media-breakpoint-up(md) {
+          justify-content: center;
+        }
+        display: flex;
+        flex-direction: column;
+      }
+
       h1 {
         @include media-breakpoint-up(lg) {
-          font-size: 2.75em;
+          font-size: 2.5em;
         }
         font-family: $john-holmes-font;
         font-size: calc(3vw + 1em);
         font-weight: 600;
-        margin-bottom: 1em;
+        margin-bottom: 0.5em;
       }
 
       img {
@@ -55,7 +60,7 @@
       }
 
       .opinion-series-label {
-        margin: 2.5em 0 1.5em;
+        margin: 2em 0 1.25em;
       }
 
       .scrollanchor-container {
