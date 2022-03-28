@@ -48,7 +48,7 @@
 
       .stream-block-blockquote {
         margin-bottom: 1em;
-  
+
         .stream-block-blockquote-content {
           @include media-breakpoint-up(md) {
             margin-left: -2em;
@@ -58,7 +58,7 @@
           font-weight: 600;
           padding: 1.5em 0;
           position: relative;
-          
+
           &::before {
             content: none;
           }
@@ -68,13 +68,12 @@
           }
         }
       }
-  
-      .stream-block-recommended {
-        img {
-          filter: grayscale(100%);
-        }
-      }
     }
 
+    .stream-block-recommended {
+      img {
+        filter: grayscale(100%);
+      }
+    }
   }
 }
