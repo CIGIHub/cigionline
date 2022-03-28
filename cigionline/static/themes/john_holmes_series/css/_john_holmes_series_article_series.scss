@@ -3,7 +3,9 @@
 
   .john-holmes-series-article-series-hero {
     @include media-breakpoint-up(xl) {
-      background-color: linear-gradient(172deg, $white 50%, #f3f3f3 50%);
+      background: linear-gradient(172deg, $white 50%, #f3f3f3 50%);
+      background-position-y: 200px;
+      background-repeat: no-repeat;
     }
     background: linear-gradient(167deg, $white 50%, #f3f3f3 50%);
     background-position-y: 200px;
@@ -35,7 +37,7 @@
       position: fixed;
       width: 100%;
 
-      >.container {
+      > .container {
         @include media-breakpoint-up(md) {
           justify-content: center;
         }
@@ -164,7 +166,7 @@
     padding-bottom: 6em;
     position: relative;
     z-index: 1;
-    
+
     h2 {
       font-family: $john-holmes-font;
       font-size: 1.25em;
