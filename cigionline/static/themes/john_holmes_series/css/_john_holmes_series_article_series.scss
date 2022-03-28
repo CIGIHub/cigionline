@@ -2,6 +2,9 @@
   @include top-bar($background-color: transparent, $color: $black);
 
   .john-holmes-series-article-series-hero {
+    @include media-breakpoint-up(xl) {
+      background-color: linear-gradient(172deg, $white 50%, #f3f3f3 50%);
+    }
     background: linear-gradient(167deg, $white 50%, #f3f3f3 50%);
     background-position-y: 200px;
     background-repeat: no-repeat;
