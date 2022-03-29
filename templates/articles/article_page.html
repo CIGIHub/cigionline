@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load cache static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load adv_cache static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -50,7 +50,7 @@
 
 {% block content %}
   {% preview_cache_bust as is_preview %}
-  {% cache 604800 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+  {% cache 604800 self.page_cache_key request.path request.user.username self.pk self.latest_revision_created_at request.GET.urlencode is_preview %}
     {% block hero %}
       {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
       {% if not self.expired_image and self.image_hero %}

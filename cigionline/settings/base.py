@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'taggit',
     'wagtailmedia',
     'webpack_loader',
+    'adv_cache_tag',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -213,6 +214,8 @@ WAGTAILSEARCH_BACKENDS = {
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+ADV_CACHE_RESOLVE_NAME = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

@@ -470,6 +470,10 @@ class ContentPage(Page, SearchablePageAbstract):
 
         return recommended_content
 
+    def page_cache_key(self):
+        series = f'S:{self.specific.article_series.id}' if self.specific and self.specific.article_series else ''
+        return f'Ct:{self.specific.contenttype}Cst:{self.specific.contentsubtype}Id:{self.id}{series}'
+
     authors_panel = MultiFieldPanel(
         [
             InlinePanel('authors'),
