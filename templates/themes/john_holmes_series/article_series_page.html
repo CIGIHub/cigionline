@@ -70,15 +70,15 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
+          {% define start as true %}
           {% for series_item in self.article_series_items %}
             {% if series_item.category_title %}
               {% if not forloop.first %}
+                  </div>
                 </div>
               {% endif %}
               <div class="series-category">
               <h2>{{ series_item.category_title }}</h2>
-            {% endif %}
-            {% if not forloop.counter|divisibleby:2 %}
               <div class="series-category-items">
             {% endif %}
             <article>
@@ -87,9 +87,6 @@
               </h3>
               {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
             </article>
-            {% if forloop.counter|divisibleby:2 %}
-              </div>
-            {% endif %}
           {% endfor %}
         </div>
       </div>

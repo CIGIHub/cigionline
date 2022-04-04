@@ -16,7 +16,9 @@
             <div class="contributors-label">Contributors</div>
             <ul class="contributors">
               {% for item in article_series.series_contributors_by_person %}
-                <li>
+                {% if not forloop.counter|divisibleby:2 %}
+                  <li>
+                {% endif %}
                   {% if item.item.live %}
                     <a href="{{ item.item.url }}">
                   {% endif %}
@@ -26,7 +28,9 @@
                   {% if item.item.live %}
                     </a>
                   {% endif %}
-                </li>
+                {% if forloop.counter|divisibleby:2 %}
+                  </li>
+                {% endif %}
               {% endfor %}
             </ul>
           </div>

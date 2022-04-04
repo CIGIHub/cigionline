@@ -11,9 +11,9 @@
     background: linear-gradient(167deg, $white 42%, $john-holmes-bg-color 0);
     content: '';
     left: 0;
-    height: 200%;
+    height: 150%;
     position: absolute;
-    top: -66%;
+    top: -50%;
     width: 100%;
     z-index: -2;
   }
@@ -67,15 +67,11 @@
         list-style: none;
         display: inline;
 
-        &::after {
-          content: ' and ';
-        }
-
-        &:last-child {
-          content: none;
-
-          &::after {
-            content: none;
+        a {
+          &:first-child {
+            &::after {
+              content: ' and ';
+            }
           }
         }
       }

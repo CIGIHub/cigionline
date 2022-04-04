@@ -141,6 +141,20 @@
             }
           }
 
+          &:only-child {
+            flex-basis: 100%;
+            text-align: center;
+            padding-right: 0;
+
+            &::after {
+              content: none;
+            }
+
+            .authors {
+              justify-content: center;
+            }
+          }
+
           h3 {
             @include link($color: $black, $hover-color: $cigi-primary-colour);
             font-size: 1.1em;
