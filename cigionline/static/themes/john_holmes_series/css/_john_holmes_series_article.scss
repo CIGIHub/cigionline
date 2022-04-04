@@ -82,6 +82,12 @@
         filter: grayscale(100%);
       }
     }
+
+    .stream-block-chart-title {
+      color: $black;
+      font-family: $john-holmes-font;
+      font-weight: 500;
+    }
   }
 
   .recommended-section {
