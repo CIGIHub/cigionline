@@ -33,6 +33,6 @@
 
 {% block in_the_series %}
   {% if self.article_series %}
-    {% comment %} {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %} {% endcomment %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
   {% endif %}
 {% endblock %}

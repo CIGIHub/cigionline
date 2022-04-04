@@ -51,7 +51,7 @@
     }
 
     .stream-block-blockquote-background {
-      background: linear-gradient(90deg, $white 55%, #f3f3f3 55%);
+      background: linear-gradient(90deg, $white 55%, $john-holmes-bg-color 55%);
 
       .stream-block-blockquote {
         margin-bottom: 1em;
@@ -82,5 +82,11 @@
         filter: grayscale(100%);
       }
     }
+  }
+
+  .recommended-section {
+    background-color: $john-holmes-bg-color;
+    margin-bottom: 0;
+    padding-bottom: 4em;
   }
 }
