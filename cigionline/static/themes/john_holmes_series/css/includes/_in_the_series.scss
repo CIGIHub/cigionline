@@ -20,11 +20,13 @@
 
   &::after {
     @include media-breakpoint-down(sm) {
-      background: url('../../assets/series_banner_right.png') bottom right no-repeat;
+      background: url('../../assets/series_banner_right.png') bottom right
+        no-repeat;
       content: '';
       opacity: 0.3;
     }
-    background: url('../../assets/series_banner_left.png') bottom left no-repeat, url('../../assets/series_banner_right.png') bottom right no-repeat;
+    background: url('../../assets/series_banner_left.png') bottom left no-repeat,
+      url('../../assets/series_banner_right.png') bottom right no-repeat;
     bottom: 0;
     content: '';
     left: 0;
@@ -66,9 +68,20 @@
 
         a {
           &:first-child {
-            &::after {
-              color: $black;
-              content: ' and ';
+            &:not(:only-child) {
+              &::after {
+                content: ' and ';
+              }
+            }
+          }
+
+          span {
+            &:first-child {
+              &:not(:only-child) {
+                &::after {
+                  content: ' and ';
+                }
+              }
             }
           }
         }

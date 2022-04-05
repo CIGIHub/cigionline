@@ -15,15 +15,31 @@
           <div class="series-contributors right">
             <div class="contributors-label">Contributors</div>
             <ul class="contributors">
-              {% for contributor in article_series.series_contributors %}
-                {% if not forloop.counter|divisibleby:2 %}
-                  <li>
-                {% endif %}
-                  <a href="{{ contributor.url }}">
-                    {{ contributor.title }}
+              {% for item in article_series.series_contributors_by_article %}
+                {% if forloop.first %}
+                <li>
+                  <a href="{{ item.item.url }}">
+                    {% for contributor in item.contributors %}
+                      <span>{{ contributor.author.title }}</span>
+                    {% endfor %}
                   </a>
-                {% if forloop.counter|divisibleby:2 %}
+                </li>
+                {% else %}
+                  {% if forloop.counter|divisibleby:2 %}
+                  <li>
+                  {% endif %}
+                  {% if item.item.live %}
+                    <a href="{{ item.item.url }}">
+                  {% endif %}
+                  {% for contributor in item.contributors %}
+                    <span>{{ contributor.author.title }}</span>
+                  {% endfor %}
+                  {% if item.item.live %}
+                    </a>
+                  {% endif %}
+                  {% if not forloop.counter|divisibleby:2 %}
                   </li>
+                  {% endif %}
                 {% endif %}
               {% endfor %}
             </ul>
