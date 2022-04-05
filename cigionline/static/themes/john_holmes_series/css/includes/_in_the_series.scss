@@ -10,8 +10,8 @@
   &::before {
     background: linear-gradient(167deg, $white 42%, $john-holmes-bg-color 0);
     content: '';
-    left: 0;
     height: 150%;
+    left: 0;
     position: absolute;
     top: -50%;
     width: 100%;
@@ -20,19 +20,18 @@
 
   &::after {
     @include media-breakpoint-down(sm) {
-      opacity: 0.3;
-      background: url('../../assets/series_banner_right.png') bottom right
-        no-repeat;
+      background: url('../../assets/series_banner_right.png') bottom right no-repeat;
       content: '';
+      opacity: 0.3;
     }
     background: url('../../assets/series_banner_left.png') bottom left no-repeat,
       url('../../assets/series_banner_right.png') bottom right no-repeat;
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
     bottom: 0;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     z-index: -1;
   }
 

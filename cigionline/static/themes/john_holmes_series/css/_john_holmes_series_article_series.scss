@@ -114,18 +114,18 @@
             @include media-breakpoint-up(md) {
               text-align: right;
             }
-            position: relative;
             padding-left: 0;
             padding-right: 2em;
+            position: relative;
 
             &::after {
               @include media-breakpoint-up(md) {
-                content: '';
-                background: black;
-                position: absolute;
+                background: $black;
                 bottom: 10%;
-                right: -2.5px;
+                content: '';
                 height: 80%;
+                position: absolute;
+                right: -2.5px;
                 width: 5px;
               }
             }
