@@ -79,8 +79,8 @@
 
   .john-holmes-series-article-series-in-the-series {
     background-color: $john-holmes-bg-color;
-    position: relative;
     padding: 2em 0 3em;
+    position: relative;
     z-index: 1;
 
     .series-category {
@@ -96,20 +96,19 @@
       }
 
       .series-category-items {
-        display: flex;
-
         @include media-breakpoint-down(sm) {
           flex-direction: column;
         }
+        display: flex;
 
         article {
+          display: flex;
           flex-basis: 50%;
+          flex-direction: column;
           flex-grow: 0;
           flex-shrink: 0;
-          margin: 1em 0;
-          display: flex;
-          flex-direction: column;
           justify-content: space-between;
+          margin: 1em 0;
 
           &:first-child {
             @include media-breakpoint-up(md) {
