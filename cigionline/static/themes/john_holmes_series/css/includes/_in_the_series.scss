@@ -8,6 +8,9 @@
   position: relative;
 
   &::before {
+    @include media-breakpoint-up(xl) {
+      background: linear-gradient(172deg, $white 42%, $john-holmes-bg-color 0);
+    }
     background: linear-gradient(167deg, $white 42%, $john-holmes-bg-color 0);
     content: '';
     height: 150%;
