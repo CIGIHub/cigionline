@@ -68,6 +68,7 @@
           &:first-child {
             &:not(:only-child) {
               &::after {
+                color: $black;
                 content: ' and ';
               }
             }
