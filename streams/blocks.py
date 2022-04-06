@@ -132,6 +132,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         'cyber_series_opinion',
         'health_security_series_opinion',
         'ai_series_opinion',
+        'john_holmes_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):

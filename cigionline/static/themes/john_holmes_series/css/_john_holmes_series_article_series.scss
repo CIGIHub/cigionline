@@ -1,0 +1,221 @@
+.john-holmes-series-article-series {
+  @include top-bar($background-color: transparent, $color: $black);
+
+  .john-holmes-series-article-series-hero {
+    @include media-breakpoint-up(xl) {
+      background: linear-gradient(
+        172deg,
+        $white 50%,
+        $john-holmes-bg-color 50%
+      );
+      background-position-y: 200px;
+      background-repeat: no-repeat;
+    }
+    background: linear-gradient(167deg, $white 50%, $john-holmes-bg-color 50%);
+    background-position-y: 200px;
+    background-repeat: no-repeat;
+    height: 100vh;
+    padding-top: 5em;
+    position: relative;
+    text-align: center;
+
+    .banner-bg {
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
+      background-position: 30%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      bottom: 0;
+      height: 25vh;
+      position: fixed;
+      width: 100%;
+    }
+
+    .hero-content {
+      @include media-breakpoint-down(sm) {
+        text-align: left;
+      }
+      display: flex;
+      height: 100vh;
+      position: fixed;
+      width: 100%;
+
+      > .container {
+        @include media-breakpoint-up(md) {
+          justify-content: center;
+        }
+        display: flex;
+        flex-direction: column;
+      }
+
+      h1 {
+        @include media-breakpoint-up(lg) {
+          font-size: 2.5em;
+        }
+        font-family: $john-holmes-font;
+        font-size: calc(3vw + 1em);
+        font-weight: 600;
+        margin-bottom: 0.5em;
+      }
+
+      img {
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
+      }
+
+      .opinion-series-label {
+        margin: 2em 0 1.25em;
+      }
+
+      .scrollanchor-container {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        animation: bounce 2s infinite;
+        margin: 2.5em 0;
+      }
+    }
+  }
+
+  .john-holmes-series-article-series-in-the-series {
+    background-color: $john-holmes-bg-color;
+    padding: 2em 0 3em;
+    position: relative;
+    z-index: 1;
+
+    .series-category {
+      margin-top: 2em;
+
+      h2 {
+        @include media-breakpoint-up(md) {
+          margin-bottom: 1em;
+          text-align: center;
+        }
+        font-size: 1.25em;
+        font-weight: 600;
+      }
+
+      .series-category-items {
+        @include media-breakpoint-down(sm) {
+          flex-direction: column;
+        }
+        display: flex;
+
+        article {
+          display: flex;
+          flex-basis: 50%;
+          flex-direction: column;
+          flex-grow: 0;
+          flex-shrink: 0;
+          justify-content: space-between;
+          margin: 1em 0;
+
+          &:first-child {
+            @include media-breakpoint-up(md) {
+              text-align: right;
+            }
+            padding-left: 0;
+            padding-right: 2em;
+            position: relative;
+
+            &::after {
+              @include media-breakpoint-up(md) {
+                background: $black;
+                bottom: 10%;
+                content: '';
+                height: 80%;
+                position: absolute;
+                right: -2.5px;
+                width: 5px;
+              }
+            }
+
+            .custom-text-list {
+              @include media-breakpoint-up(md) {
+                justify-content: end;
+              }
+            }
+          }
+
+          &:nth-child(2) {
+            @include media-breakpoint-up(md) {
+              padding-left: 2em;
+              padding-right: 0;
+            }
+          }
+
+          &:only-child {
+            @include media-breakpoint-up(md) {
+              text-align: center;
+            }
+            flex-basis: 100%;
+            padding-right: 0;
+
+            &::after {
+              content: none;
+            }
+
+            .authors {
+              @include media-breakpoint-up(md) {
+                justify-content: center;
+              }
+            }
+          }
+
+          h3 {
+            @include link($color: $black, $hover-color: $cigi-primary-colour);
+            font-size: 1.1em;
+            font-weight: 500;
+          }
+
+          .authors {
+            @include link(
+              $color: $cigi-text-grey,
+              $hover-color: $cigi-primary-colour
+            );
+            margin: 0;
+            text-align: right;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
+
+  .credits {
+    background-color: $white;
+    padding: 3em 0 6em;
+    position: relative;
+    z-index: 1;
+
+    h2 {
+      font-family: $john-holmes-font;
+      font-size: 1.25em;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .credits-content {
+      @include media-breakpoint-up(sm) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      @include media-breakpoint-up(md) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      -ms-grid-columns: 1fr 0.5em 1fr;
+      display: -ms-grid;
+      display: grid; // sass-lint:disable-line no-duplicate-properties
+      font-size: 0.75em;
+      grid-column-gap: 0.5em;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 2em;
+
+      .name {
+        font-size: 1.25em;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
