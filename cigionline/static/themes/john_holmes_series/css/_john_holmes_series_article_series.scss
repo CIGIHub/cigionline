@@ -103,11 +103,12 @@
 
       h2 {
         @include media-breakpoint-up(md) {
-          margin-bottom: 1em;
           text-align: center;
         }
-        font-size: 1.25em;
+        color: $cigi-text-grey;
+        font-size: 1em;
         font-weight: 600;
+        margin-bottom: 0;
       }
 
       .series-category-items {
@@ -117,6 +118,9 @@
         display: flex;
 
         article {
+          @include media-breakpoint-down(sm) {
+            margin-bottom: 0;
+          }
           display: flex;
           flex-basis: 50%;
           flex-direction: column;
@@ -135,7 +139,7 @@
 
             &::after {
               @include media-breakpoint-up(md) {
-                background: $black;
+                background: $cigi-primary-colour;
                 bottom: 10%;
                 content: '';
                 height: 80%;
