@@ -23,6 +23,9 @@
       @include media-breakpoint-up(md) {
         display: none;
       }
+      @media (max-aspect-ratio: 5/8) and (max-height: 750px) {
+        opacity: 0.3;
+      }
       background-position: 30%;
       background-repeat: no-repeat;
       background-size: cover;
@@ -53,10 +56,13 @@
         @include media-breakpoint-up(lg) {
           font-size: 2.5em;
         }
+        @media (max-height: 820px) {
+          font-size: calc(1vh + 1em)
+        }
         font-family: $john-holmes-font;
         font-size: calc(3vw + 1em);
         font-weight: 600;
-        margin-bottom: 0.5em;
+        margin-bottom: 1em;
       }
 
       img {
@@ -69,8 +75,17 @@
         margin: 2em 0 1.25em;
       }
 
+      .short-description {
+        @media (min-aspect-ratio: 12/10) and (max-height: 700px) {
+           display: none;
+        }
+      }
+
       .scrollanchor-container {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
+        @media (min-aspect-ratio: 12/10) and (max-height: 700px) {
+          margin-top: 1em;
+        }
         animation: bounce 2s infinite;
         margin: 2.5em 0;
       }
