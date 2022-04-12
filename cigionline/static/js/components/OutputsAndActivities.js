@@ -3,7 +3,7 @@ import React, { Fragment, useState } from 'react';
 import queryString from 'query-string';
 
 const OutputsAndActivities = ({ slide, setOutputDetail }) => { // eslint-disable-line no-unused-vars
-  const itemsPerPage = 1;
+  const itemsPerPage = 16;
   const originUrl = window.location.origin;
   const currentPath = window.location.pathname;
   const params = queryString.parse(window.location.search);
