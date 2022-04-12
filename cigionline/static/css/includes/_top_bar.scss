@@ -315,7 +315,10 @@ header {
             }
 
             ul {
-              @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+              @include link(
+                $color: $cigi-text-grey,
+                $hover-color: $cigi-dark-pink
+              );
               @include media-breakpoint-up(md) {
                 max-height: 100%;
               }
@@ -330,7 +333,10 @@ header {
               }
 
               &.overlay-menu-footer-menu {
-                @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+                @include link(
+                  $color: $cigi-medium-grey,
+                  $hover-color: $cigi-dark-pink
+                );
                 margin-bottom: 1em;
                 max-height: 100%;
 
@@ -431,6 +437,48 @@ header {
       .custom-popup-inner {
         opacity: 1;
         transform: translate(0, 0);
+      }
+    }
+  }
+}
+
+body {
+  &.disable-scroll {
+    header {
+      .cigi-top-bar {
+        .cigi-logo {
+          svg {
+            @include media-breakpoint-down(md) {
+              * {
+                fill: $white;
+              }
+            }
+            @include media-breakpoint-up(md) {
+              fill: $white;
+
+              * {
+                fill: $white;
+              }
+            }
+            fill: $white;
+          }
+        }
+
+        nav {
+          ul {
+            a,
+            button {
+              @include media-breakpoint-up(md) {
+                color: $white;
+              }
+              color: $white;
+
+              &:hover {
+                color: $cigi-primary-colour;
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -150,7 +150,7 @@
 
             .custom-text-list {
               @include media-breakpoint-up(md) {
-                justify-content: end;
+                justify-content: flex-end;
               }
             }
           }
