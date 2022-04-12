@@ -24,7 +24,7 @@
                     {% endfor %}
                   </a>
                 </li>
-                {% else %}
+                {% elif not forloop.last %}
                   {% if forloop.counter|divisibleby:2 %}
                   <li>
                   {% endif %}
