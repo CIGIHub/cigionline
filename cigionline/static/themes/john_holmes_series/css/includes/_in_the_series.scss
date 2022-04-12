@@ -23,11 +23,13 @@
 
   &::after {
     @include media-breakpoint-down(sm) {
-      background: url('../../assets/series_banner_right.png') bottom right no-repeat;
+      background: url('../../assets/series_banner_right.png') bottom right
+        no-repeat;
       content: '';
       opacity: 0.3;
     }
-    background: url('../../assets/series_banner_left.png') bottom left no-repeat, url('../../assets/series_banner_right.png') bottom right no-repeat;
+    background: url('../../assets/series_banner_left.png') bottom left no-repeat,
+      url('../../assets/series_banner_right.png') bottom right no-repeat;
     bottom: 0;
     content: '';
     left: 0;
@@ -65,13 +67,20 @@
       }
 
       li {
+        @include link(
+          $color: $cigi-text-grey,
+          $hover-color: $cigi-primary-colour
+        );
+        color: $cigi-text-grey;
         list-style: none;
+        margin: 0;
+        text-transform: uppercase;
 
         a {
           &:first-child {
             &:not(:only-child) {
               &::after {
-                color: $black;
+                color: $cigi-text-grey;
                 content: ' and ';
               }
             }
