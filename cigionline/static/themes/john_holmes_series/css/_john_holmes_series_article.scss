@@ -1,5 +1,5 @@
 .john-holmes-series-article {
-  @include top-bar($background-color: $black, $color: $white);
+  @include top-bar($background-color: $john-holmes-bg-color, $color: $black);
 
   .john-holmes-series-article-hero {
     margin-bottom: 4em;
