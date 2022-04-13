@@ -1,5 +1,5 @@
 .john-holmes-series-article {
-  @include top-bar($background-color: transparent, $color: $black);
+  @include top-bar($background-color: $john-holmes-bg-color, $color: $black);
 
   .john-holmes-series-article-hero {
     margin-bottom: 4em;
@@ -88,6 +88,24 @@
       font-family: $john-holmes-font;
       font-weight: 500;
     }
+  }
+
+  .article-footnotes,
+  .article-works-cited {
+    font-family: Helvetica, sans-serif;
+
+    h2 {
+      margin-bottom: 0.5em;
+      padding-bottom: 0;
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+
+  .article-footnotes {
+    font-size: 0.8125em;
   }
 
   .recommended-section {

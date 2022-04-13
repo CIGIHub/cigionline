@@ -65,13 +65,20 @@
       }
 
       li {
+        @include link(
+          $color: $cigi-text-grey,
+          $hover-color: $cigi-primary-colour
+        );
+
         list-style: none;
+        margin: 0;
+        text-transform: uppercase;
 
         a {
           &:first-child {
             &:not(:only-child) {
               &::after {
-                color: $black;
+                color: $cigi-text-grey;
                 content: ' and ';
               }
             }
