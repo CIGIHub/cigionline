@@ -54,7 +54,7 @@ if 'REDIS_URL' in os.environ:
         'renditions': {
             'BACKEND': 'django_redis.cache.RedisCache',
             'LOCATION': os.environ['REDIS_URL'],
-            'TIMEOUT': 31_536_000,
+            'TIMEOUT': 31536000,
             'OPTIONS': {
                 'MAX_RETRIES': 200,
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
