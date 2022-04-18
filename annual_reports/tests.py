@@ -3,7 +3,8 @@ from wagtail.tests.utils import WagtailPageTests
 
 from .models import (
     AnnualReportListPage,
-    AnnualReportPage,
+    AnnualReportPage, SummarySlidePage, ContentSlidePage, MessageSlidePage, OutputsAndActivitiesSlidePage,
+    TimelineSlidePage, TabbedSlidePage,
 )
 
 
@@ -31,5 +32,12 @@ class AnnualReportPageTests(WagtailPageTests):
     def test_annualreportpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             AnnualReportPage,
-            {},
+            {
+                SummarySlidePage,
+                MessageSlidePage,
+                ContentSlidePage,
+                OutputsAndActivitiesSlidePage,
+                TimelineSlidePage,
+                TabbedSlidePage,
+            },
         )

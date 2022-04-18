@@ -249,6 +249,12 @@ class PublicationPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def image_cover_url(self):
+        if self.image_cover:
+            return self.image_cover.get_rendition('fill-600x900').url
+        return ''
+
     def featured_person_list(self):
         """
         For featured publications, only display the first 3 authors/editors.

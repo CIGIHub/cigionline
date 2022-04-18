@@ -4,9 +4,11 @@ from django.conf import settings
 from django.db import models
 from django.forms.utils import flatatt
 from django.utils import timezone
+from django.utils.encoding import force_str
 from django.utils.html import format_html, format_html_join
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
+from wagtail.core.rich_text import RichText
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
@@ -92,6 +94,7 @@ class PersonBlock(blocks.PageChooserBlock, ThemeableBlock):
             return {
                 'id': value.id,
                 'title': value.title,
+                'position': value.position,
                 'url': value.url,
             }
 
@@ -467,25 +470,27 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
     def __init__(
         self, required=True, help_text=None, editor="default", features=None, **kwargs
     ):
-        super().__init__(**kwargs)
-        self.features = [
-            'bold',
-            'dropcap',
-            'endofarticle',
-            'paragraph_heading',
-            'h2',
-            'h3',
-            'h4',
-            'hr',
-            'image',
-            'italic',
-            'link',
-            'ol',
-            'subscript',
-            'superscript',
-            'ul',
-            'anchor',
-        ]
+        super().__init__(required, help_text, editor, features, **kwargs)
+        # Use default features if not specified.
+        if features is None:
+            self.features = [
+                'bold',
+                'dropcap',
+                'endofarticle',
+                'paragraph_heading',
+                'h2',
+                'h3',
+                'h4',
+                'hr',
+                'image',
+                'italic',
+                'link',
+                'ol',
+                'subscript',
+                'superscript',
+                'ul',
+                'anchor',
+            ]
 
     implemented_themes = [
         'cyber_series_opinion_series',
@@ -501,6 +506,13 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
     def get_template(self, context, *args, **kwargs):
         standard_template = super(ParagraphBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'paragraph_block')
+
+    def get_api_representation(self, value, context=None):
+        """
+        Return HTML-formatted RichText instead of raw source.
+        This is needed so that internal links in the content renders in full format.
+        """
+        return force_str(RichText(self.get_prep_value(value)))
 
     class Meta:
         icon = 'edit'
@@ -1020,3 +1032,70 @@ class PodcastSubscribeButtonBlock(blocks.StructBlock):
     class Meta:
         icon = 'link'
         label = 'Podcast Subscribe Button'
+
+
+class SlideQuoteBlock(blocks.StructBlock):
+    message = ParagraphBlock(
+        required=True,
+        features=['bold', 'italic', 'link'],
+        label="Message"
+    )
+    subtitle = ParagraphBlock(
+        required=False,
+        features=['bold', 'italic', 'link'],
+        label="Subtitle"
+    )
+
+    class Meta:
+        icon = 'pencil'
+        label = 'Slide Quote'
+
+
+class SlideAcknowledgedGroupBlock(blocks.StructBlock):
+    title = blocks.CharBlock()
+    people = blocks.StreamBlock(
+        [
+            ('page', PersonBlock('people.PersonPage')),
+        ]
+    )
+
+    class Meta:
+        icon = 'user-friends'
+        label = 'Acknowledged Group'
+
+
+class SlideLinkBlock(blocks.StructBlock):
+    class LinkTypeChoices(models.TextChoices):
+        EVENT = ('EVENT', 'Event')
+        MEDIA = ('MEDIA', 'Media')
+        OPINION = ('OPINION', 'Opinion')
+        PODCAST = ('PODCAST', 'Podcast')
+        PUBLICATION = ('PUBLICATION', 'Publication')
+        VIDEO = ('VIDEO', 'Video')
+        EXPERTS = ('Experts', 'Experts')
+        SUBSCRIBE = ('SUBSCRIBE', 'Subscribe')
+        PARTNERS = ('PARTNERS', 'Partners')
+
+    title = blocks.RichTextBlock(features=['bold', 'italic'], required=True)
+    url = blocks.URLBlock(required=True)
+    type = blocks.ChoiceBlock(
+        choices=LinkTypeChoices.choices,
+        verbose_name='Type',
+        required=True,
+    )
+
+    class Meta:
+        icon = 'link'
+        label = 'Link'
+
+
+class SlideTabBlock(blocks.StructBlock):
+    title = blocks.CharBlock()
+    body = blocks.StreamBlock([
+        ('paragraph', ParagraphBlock()),
+        ('table', TableStreamBlock())
+    ])
+
+    class Meta:
+        icon = 'table'
+        label = 'Tab'
