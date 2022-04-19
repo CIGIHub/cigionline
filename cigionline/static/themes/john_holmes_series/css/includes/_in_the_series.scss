@@ -56,7 +56,10 @@
     }
 
     .right {
-      flex: 0 0 40%;
+      @include media-breakpoint-up(xl) {
+        flex: 0 0 40%;
+      }
+      flex: 0 0 30%;
 
       .contributors-label {
         font-family: $john-holmes-font;
@@ -65,6 +68,12 @@
       }
 
       ul {
+        @include media-breakpoint-up(md) {
+          columns: 1;
+        }
+        @include media-breakpoint-up(xl) {
+          columns: 2;
+        }
         columns: 2;
 
         li {
@@ -72,9 +81,9 @@
             $color: $cigi-text-grey,
             $hover-color: $cigi-primary-colour
           );
-  
-          list-style: none;
+
           font-size: 0.9em;
+          list-style: none;
           margin: 0;
           text-transform: uppercase;
         }
