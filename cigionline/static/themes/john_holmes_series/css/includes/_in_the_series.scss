@@ -3,8 +3,8 @@
     margin-top: 6em;
     padding-bottom: 6em;
   }
-  margin: 4em 0;
-  padding-bottom: 4em;
+  margin: 6em 0;
+  padding-bottom: 10em;
   position: relative;
 
   &::before {
@@ -56,7 +56,7 @@
     }
 
     .right {
-      flex: 0 0 30%;
+      flex: 0 0 40%;
 
       .contributors-label {
         font-family: $john-holmes-font;
@@ -64,35 +64,19 @@
         margin-bottom: 1em;
       }
 
-      li {
-        @include link(
-          $color: $cigi-text-grey,
-          $hover-color: $cigi-primary-colour
-        );
+      ul {
+        columns: 2;
 
-        list-style: none;
-        margin: 0;
-        text-transform: uppercase;
-
-        a {
-          &:first-child {
-            &:not(:only-child) {
-              &::after {
-                color: $cigi-text-grey;
-                content: ' and ';
-              }
-            }
-          }
-
-          span {
-            &:first-child {
-              &:not(:only-child) {
-                &::after {
-                  content: ' and ';
-                }
-              }
-            }
-          }
+        li {
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
+  
+          list-style: none;
+          font-size: 0.9em;
+          margin: 0;
+          text-transform: uppercase;
         }
       }
     }
