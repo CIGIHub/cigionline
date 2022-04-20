@@ -378,7 +378,7 @@ class ArticlePage(
                 FieldPanel('works_cited'),
             ],
             heading='Body',
-            classname='collapsible'
+            classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
@@ -393,7 +393,7 @@ class ArticlePage(
                 FieldPanel('language'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         ContentPage.authors_panel,
         MultiFieldPanel(
@@ -642,14 +642,14 @@ class ArticleSeriesPage(
                 StreamFieldPanel('body'),
             ],
             heading='Body',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
