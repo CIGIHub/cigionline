@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from articles.models import ArticleSeriesPage
-from wagtail.core.models import Page
 
 class Command(BaseCommand):
     help = 'Takes ArticleSeriesPage id and publishes all articles featured on the series page'
