@@ -212,7 +212,7 @@ class BasicPageAbstract(models.Model):
 
 
 class FeatureablePageAbstract(models.Model):
-    feature_subtitle = models.CharField(blank=True, max_length=255)
+    feature_subtitle = models.CharField(blank=True, max_length=500)
     feature_title = models.CharField(blank=True, max_length=255)
     image_feature = models.ForeignKey(
         'images.CigionlineImage',
