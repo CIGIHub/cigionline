@@ -16,7 +16,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core.blocks import PageChooserBlock
+from wagtail.core.blocks import PageChooserBlock, CharBlock, StructBlock, StreamBlock
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -548,6 +548,17 @@ class ArticleSeriesPage(
             'name',
         ],
     )
+    credits_stream_field = StreamField(
+        [
+            ('title', StructBlock([
+                ('title', CharBlock()),
+                ('people', StreamBlock([
+                    ('name', CharBlock())
+                ])),
+            ]))
+        ],
+        blank=True,
+    )
     credits_artwork = models.CharField(
         max_length=255,
         blank=True,
@@ -664,6 +675,7 @@ class ArticleSeriesPage(
             [
                 FieldPanel('credits'),
                 FieldPanel('credits_artwork'),
+                StreamFieldPanel('credits_stream_field'),
             ],
             heading='Credits',
             classname='collapsible collapsed',
