@@ -1,5 +1,7 @@
+from django.urls import reverse
 from django.utils.html import format_html
 from django.templatetags.static import static
+from wagtail.admin.menu import MenuItem
 from wagtail.admin.rich_text.converters.html_to_contentstate import (
     BlockElementHandler,
     InlineStyleElementHandler,
@@ -127,6 +129,11 @@ def order_pages_in_chooser(pages, request):
     if "choose-page" in request.path:
         return pages.order_by('-live', '-latest_revision_created_at')
     return pages
+
+
+# @hooks.register('register_admin_menu_item')
+# def register_frank_menu_item():
+#     return MenuItem('Frank', reverse('frank'), icon_name='folder-inverse', order=10000)
 
 
 modeladmin_register(ThemeModelAdmin)
