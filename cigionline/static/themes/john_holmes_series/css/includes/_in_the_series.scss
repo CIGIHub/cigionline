@@ -3,8 +3,8 @@
     margin-top: 6em;
     padding-bottom: 6em;
   }
-  margin: 4em 0;
-  padding-bottom: 4em;
+  margin: 6em 0;
+  padding-bottom: 10em;
   position: relative;
 
   &::before {
@@ -56,6 +56,9 @@
     }
 
     .right {
+      @include media-breakpoint-up(xl) {
+        flex: 0 0 40%;
+      }
       flex: 0 0 30%;
 
       .contributors-label {
@@ -64,35 +67,25 @@
         margin-bottom: 1em;
       }
 
-      li {
-        @include link(
-          $color: $cigi-text-grey,
-          $hover-color: $cigi-primary-colour
-        );
+      ul {
+        @include media-breakpoint-up(md) {
+          columns: 1;
+        }
+        @include media-breakpoint-up(xl) {
+          columns: 2;
+        }
+        columns: 2;
 
-        list-style: none;
-        margin: 0;
-        text-transform: uppercase;
+        li {
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
 
-        a {
-          &:first-child {
-            &:not(:only-child) {
-              &::after {
-                color: $cigi-text-grey;
-                content: ' and ';
-              }
-            }
-          }
-
-          span {
-            &:first-child {
-              &:not(:only-child) {
-                &::after {
-                  content: ' and ';
-                }
-              }
-            }
-          }
+          font-size: 0.9em;
+          list-style: none;
+          margin: 0;
+          text-transform: uppercase;
         }
       }
     }

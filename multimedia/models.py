@@ -260,7 +260,7 @@ class MultimediaPage(
                 FieldPanel('multimedia_url'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
@@ -464,7 +464,7 @@ class MultimediaSeriesPage(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [

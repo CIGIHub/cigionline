@@ -185,7 +185,7 @@ class BasicPageAbstract(models.Model):
             StreamFieldPanel('body'),
         ],
         heading='Body',
-        classname='collapsible'
+        classname='collapsible collapsed'
     )
     images_panel = MultiFieldPanel(
         [
@@ -971,7 +971,7 @@ class TwentiethPageSingleton(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible'
+            classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
