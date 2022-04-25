@@ -596,6 +596,12 @@ class ArticleSeriesPage(
         null=True,
         features=['bold', 'italic', 'link'],
     )
+    series_videos_description = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+        help_text='To be displayed on video/multimedia pages of the series in place of Series Items Description'
+    )
     series_items_disclaimer = RichTextField(
         blank=True,
         null=True,
@@ -654,6 +660,7 @@ class ArticleSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('series_items_description'),
+                FieldPanel('series_videos_description'),
                 FieldPanel('series_items_disclaimer'),
                 InlinePanel('series_items'),
             ],
