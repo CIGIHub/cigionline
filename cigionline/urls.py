@@ -11,6 +11,7 @@ from research import views as research_views
 from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
+from cacheclear import views as cacheclear_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -21,6 +22,7 @@ urlpatterns = []
 if settings.ADMIN_ENABLED:
     urlpatterns = urlpatterns + [
         url(r'^admin/', include(wagtailadmin_urls)),
+        url(r'^admin/cacheclear/clear_series_pages/', cacheclear_views.clear_series_pages),
     ]
 urlpatterns = urlpatterns + [
     url(r'^documents/', include(wagtaildocs_urls)),
