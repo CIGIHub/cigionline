@@ -51,7 +51,7 @@
     "image-webpack-loader": "7.0.1",
     "luxon": "1.28.0",
     "mini-css-extract-plugin": "2.1.0",
-    "postcss": "8.3.5",
+    "postcss": "8.4.12",
     "postcss-loader": "6.1.1",
     "prop-types": "15.7.2",
     "react": "17.0.2",
