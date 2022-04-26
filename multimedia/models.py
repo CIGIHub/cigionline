@@ -241,6 +241,8 @@ class MultimediaPage(
     @property
     def article_series_description(self):
         if self.article_series:
+            if self.article_series.specific.series_videos_description:
+                return self.article_series.specific.series_videos_description
             return self.article_series.specific.series_items_description
         return None
 
@@ -260,7 +262,7 @@ class MultimediaPage(
                 FieldPanel('multimedia_url'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
@@ -464,7 +466,7 @@ class MultimediaSeriesPage(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [

@@ -311,7 +311,7 @@ class PersonPage(
                 FieldPanel('board_position')
             ],
             heading='General Information',
-            classname='collapsible'
+            classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
