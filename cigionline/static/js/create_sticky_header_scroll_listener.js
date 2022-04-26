@@ -14,16 +14,20 @@ export default ({
     const mmHeroTop = scrollTriggerEl.offsetTop;
     const mmHeroBottom = mmHeroTop + mmHeroHeight;
 
+    const mmHero = document.querySelector('.big-tech-mm-hero');
+
     if (windowWidth > 768
         && windowHeight > 600
         && scrollTop > mmHeroBottom) {
       if (!stickyHeaderContainerEl.classList.contains('sticky-video')) {
         stickyHeaderContainerEl.style.height = `${multimediaHeroVideoHeight}px`;
         stickyHeaderContainerEl.classList.add('sticky-video');
+        mmHero.classList.add('z-index-1');
       }
     } else if (stickyHeaderContainerEl.classList.contains('sticky-video')) {
       stickyHeaderContainerEl.style.height = '';
       stickyHeaderContainerEl.classList.remove('sticky-video');
+      mmHero.classList.remove('z-index-1');
     }
   });
 };

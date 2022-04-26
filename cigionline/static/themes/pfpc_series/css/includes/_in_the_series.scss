@@ -1,0 +1,111 @@
+.pfpc-series-article,
+.pfpc-series-multimedia {
+  .pfpc-series-in-the-series {
+    @include link($color: $white, $hover-color: $cigi-dark-pink);
+    min-height: 20em;
+    padding: 2em 0;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+
+    &::before {
+      @include media-breakpoint-up(md) {
+        background-color: $black-alpha-20;
+      }
+      background-color: $black-alpha-65;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    &::after {
+      @include media-breakpoint-up(md) {
+        background-image: linear-gradient($black 15%, transparent 40%, $black 70%);
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+    }
+
+    article {
+      position: relative;
+      z-index: 1;
+    }
+
+    .essay-series-label,
+    .contributors-label {
+      color: $landing-heading-teal;
+      font-size: 1em;
+      font-weight: 500;
+      margin-bottom: 1em;
+    }
+
+    .series-info {
+      padding-bottom: 20%;
+
+      h2 {
+        @include media-breakpoint-up(md) {
+          flex-basis: 50%;
+        }
+        flex-shrink: 0;
+        font-family: $tisa-pro;
+        font-size: 1.5em;
+        font-weight: 600;
+      }
+    }
+
+    .series-contributors {
+      bottom: 0;
+      z-index: 1;
+
+      .contributors {
+        @include media-breakpoint-up(md) {
+          columns: 3;
+        }
+        @include media-breakpoint-up(lg) {
+          columns: 4;
+        }
+        columns: 2;
+        text-align: left;
+
+        li {
+          color: $white;
+          font-family: $tisa-pro;
+          font-size: 0.8em;
+          font-weight: 400;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+
+    .video-bg {
+      background-position: center;
+      background-size: cover;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      video {
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
+        height: 50%;
+        min-height: 100%;
+        min-width: 100%;
+        object-fit: cover;
+        width: 100%;
+      }
+    }
+  }
+}

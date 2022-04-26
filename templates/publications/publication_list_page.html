@@ -12,18 +12,21 @@
   {% preview_cache_bust as is_preview %}
   {% cache 86400 publications_featured_list self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
     {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          {% include "includes/publications_featured_list.html" with publications=self.featured_publications_list %}
+    <section class="featured-section">
+      <div class="container">
+        <h2 class="featured-section-title">Featured</h6>
+        <div class="row">
+          <div class="col">
+            {% include "includes/swiper.html" with swiper_content=self.featured_publications_list type="publication-list-page-featured" %}
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="publication-list-section" id="publications-search-table">
+        <div class="row">
+          <div class="col">
+            <div class="publication-list-section" id="publications-search-table">
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   {% endcache %}
 {% endblock content %}

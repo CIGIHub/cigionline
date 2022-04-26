@@ -7,6 +7,30 @@ header {
   width: 100%;
   z-index: 15;
 
+  &.small {
+    .cigi-top-bar {
+      height: 50px;
+
+      .cigi-logo {
+        .large-logo {
+          opacity: 0;
+        }
+
+        .small-logo {
+          opacity: 1;
+        }
+      }
+
+      .desktop-menu {
+        opacity: 0;
+
+        a {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
   .main-navigation-wrapper {
     position: relative;
     z-index: 4;
@@ -68,7 +92,7 @@ header {
           opacity: 0;
         }
 
-        height: 80%;
+        height: 60%;
         opacity: 1;
         position: absolute;
       }
@@ -291,7 +315,10 @@ header {
             }
 
             ul {
-              @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+              @include link(
+                $color: $cigi-text-grey,
+                $hover-color: $cigi-dark-pink
+              );
               @include media-breakpoint-up(md) {
                 max-height: 100%;
               }
@@ -306,7 +333,10 @@ header {
               }
 
               &.overlay-menu-footer-menu {
-                @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+                @include link(
+                  $color: $cigi-medium-grey,
+                  $hover-color: $cigi-dark-pink
+                );
                 margin-bottom: 1em;
                 max-height: 100%;
 
@@ -407,6 +437,48 @@ header {
       .custom-popup-inner {
         opacity: 1;
         transform: translate(0, 0);
+      }
+    }
+  }
+}
+
+body {
+  &.disable-scroll {
+    header {
+      .cigi-top-bar {
+        .cigi-logo {
+          svg {
+            @include media-breakpoint-down(md) {
+              * {
+                fill: $white;
+              }
+            }
+            @include media-breakpoint-up(md) {
+              fill: $white;
+
+              * {
+                fill: $white;
+              }
+            }
+            fill: $white;
+          }
+        }
+
+        nav {
+          ul {
+            a,
+            button {
+              @include media-breakpoint-up(md) {
+                color: $white;
+              }
+              color: $white;
+
+              &:hover {
+                color: $cigi-primary-colour;
+              }
+            }
+          }
+        }
       }
     }
   }

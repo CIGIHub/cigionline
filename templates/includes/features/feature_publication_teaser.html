@@ -1,25 +1,27 @@
 {% load wagtailcore_tags %}
 
-<article class="feature-publication-teaser">
-  <div class="feature-publication-teaser-content">
-    <div class="feature-publication-teaser-title">
-      {% include "includes/topics.html" with topics=publication.topics_sorted %}
-      <h3>
-        <a href="{% pageurl publication %}">
-          {{ publication.title }}
-        </a>
-      </h3>
-    </div>
-    <div class="feature-publication-teaser-meta">
-      {% include "includes/authors.html" with authors=publication.authors.all %}
+<article class="feature-content feature-publication-teaser">
+  <div class="feature-publication-teaser-title">
+    {% include "includes/topics.html" with topics=publication.topics_sorted %}
+    <h3 class="feature-content-title">
+      <a href="{% pageurl publication %}">
+        {{ publication.title }}
+      </a>
+    </h3>
+  </div>
+  <div class="feature-publication-teaser-meta">
+    {% include 'includes/features/feature_content_people.html' with authors=publication.authors.all %}
+    {% if publication.from_the_archives %}
+      <div class="feature-content-from-the-archives">FROM THE ARCHIVES</div>
+    {% else %}
       {% include "includes/date.html" with date=publication.publishing_date %}
-      {% if publication.pdf_downloads %}
-        <button class="button-action">
-          <a href="{{ publication.pdf_downloads.0.value.file.url }}">
-            <i class="fa fas fa-download"></i>
-          </a>
-        </button>
-      {% endif %}
-    </div>
+    {% endif %}
+    {% if publication.pdf_downloads %}
+      <button class="button-action">
+        <a href="{{ publication.pdf_downloads.0.value.file.url }}">
+          <i class="fa fas fa-download"></i>
+        </a>
+      </button>
+    {% endif %}
   </div>
 </article>

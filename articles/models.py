@@ -342,6 +342,20 @@ class ArticlePage(
             return self.publishing_date < datetime.datetime(2017, 1, 1).astimezone(pytz.timezone('America/Toronto'))
         return False
 
+    @property
+    def article_series_description(self):
+        if self.article_series:
+            return self.article_series.specific.series_items_description
+        return None
+
+    @property
+    def article_series_disclaimer(self):
+        if self.article_series:
+            for series_item in self.article_series.specific.article_series_items:
+                if series_item.content_page.specific == self and not series_item.hide_series_disclaimer:
+                    return self.article_series.specific.series_items_disclaimer
+        return None
+
     def is_opinion(self):
         return self.article_type.title in [
             'Op-Eds',
@@ -364,7 +378,7 @@ class ArticlePage(
                 FieldPanel('works_cited'),
             ],
             heading='Body',
-            classname='collapsible'
+            classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
@@ -379,7 +393,7 @@ class ArticlePage(
                 FieldPanel('language'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         ContentPage.authors_panel,
         MultiFieldPanel(
@@ -577,6 +591,22 @@ class ArticleSeriesPage(
         null=False,
         features=['bold', 'italic', 'link'],
     )
+    series_items_description = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
+    series_videos_description = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+        help_text='To be displayed on video/multimedia pages of the series in place of Series Items Description'
+    )
+    series_items_disclaimer = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
     video_banner = models.ForeignKey(
         'wagtailmedia.Media',
         null=True,
@@ -618,17 +648,20 @@ class ArticleSeriesPage(
                 StreamFieldPanel('body'),
             ],
             heading='Body',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
+                FieldPanel('series_items_description'),
+                FieldPanel('series_videos_description'),
+                FieldPanel('series_items_disclaimer'),
                 InlinePanel('series_items'),
             ],
             heading='Series Items',
@@ -794,11 +827,13 @@ class ArticleSeriesPageSeriesItem(Orderable):
         verbose_name='Series Item',
     )
     category_title = models.CharField(blank=True, max_length=255)
+    hide_series_disclaimer = models.BooleanField(default=False)
 
     panels = [
         FieldPanel('category_title'),
         PageChooserPanel(
             'content_page',
-            ['articles.ArticlePage', 'multimedia.MultimediaPage'],
+            ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
+        FieldPanel('hide_series_disclaimer'),
     ]

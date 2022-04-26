@@ -53,6 +53,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
+import math
 
 
 class BasicPageAbstract(models.Model):
@@ -148,6 +149,21 @@ class BasicPageAbstract(models.Model):
             return self.image_hero.get_rendition('fill-520x390').url
         return ''
 
+    @property
+    def word_count(self):
+        count = 0
+        for block in self.body:
+            if block.block_type == 'paragraph':
+                count += len(str(block.value).split())
+        return count
+
+    @property
+    def read_time(self):
+        read_time = 1
+        if self.word_count > 0:
+            read_time = int(math.ceil(self.word_count / 325))
+        return read_time
+
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
         [
@@ -169,7 +185,7 @@ class BasicPageAbstract(models.Model):
             StreamFieldPanel('body'),
         ],
         heading='Body',
-        classname='collapsible'
+        classname='collapsible collapsed'
     )
     images_panel = MultiFieldPanel(
         [
@@ -207,12 +223,14 @@ class FeatureablePageAbstract(models.Model):
         verbose_name='Feature image',
         help_text='Image used when featuring on landing pages such as the home page',
     )
+    feature_url = models.URLField(blank=True)
 
     feature_panel = MultiFieldPanel(
         [
             FieldPanel('feature_title'),
             FieldPanel('feature_subtitle'),
             ImageChooserPanel('image_feature'),
+            FieldPanel('feature_url'),
         ],
         heading='Feature Information',
         classname='collapsible collapsed',
@@ -451,6 +469,10 @@ class ContentPage(Page, SearchablePageAbstract):
         recommended_content = list(recommended_content) + additional_content
 
         return recommended_content
+
+    def page_cache_key(self):
+        series = f'S:{self.specific.article_series.id}' if self.specific and self.specific.article_series else ''
+        return f'Ct:{self.specific.contenttype}Cst:{self.specific.contentsubtype}Id:{self.id}{series}'
 
     authors_panel = MultiFieldPanel(
         [
@@ -949,7 +971,7 @@ class TwentiethPageSingleton(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible'
+            classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [

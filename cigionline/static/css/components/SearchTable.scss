@@ -277,6 +277,12 @@
           }
         }
       }
+
+      .form-row {
+        > * {
+          margin-top: 0.5em;
+        }
+      }
     }
 
     .search-bar-dropdown {

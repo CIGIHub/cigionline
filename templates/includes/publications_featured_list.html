@@ -5,46 +5,46 @@
 
   <div class="row row-cols-1 row-cols-md-2 publications-featured-list-row">
     {% for publication in publications %}
-      <div class="col publications-featured-list-col">
-
-        <a href="{% pageurl publication %}" class="publications-featured-list">
-          <div class="publications-featured-list-inner">
+    <div class="col publications-featured-list-col">
+      <div class="publications-featured-list">
+        <div class="publications-featured-list-inner">
+          <a href="{% pageurl publication %}">
             <div class="publications-featured-list-image-wrapper">
               {% image publication.image_cover width-200 as image_rect %}
-              <div class="img-wrapper" style="background-image: url('{{ image_rect.url }}');"></div>
+              <div
+                class="img-wrapper"
+                style="background-image: url('{{ image_rect.url }}');"
+              ></div>
             </div>
+          </a>
 
-            <div class="publications-featured-list-content">
-              {% if publication.topics.all %}
-                <ul class="publications-featured-list-topics custom-text-list">
-                  {% for topic in publication.topics.all %}
-                    <li>
-                      {{ topic.title }}
-                    </li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
+          <div class="publications-featured-list-content">
+            {% if publication.topics.all %} 
+              {% include "includes/topics.html" with topics=publication.topics additional_class_names="publications-featured-list-topics" %} 
+            {% endif %}
 
-              <p class="publications-featured-list-title">
+            <p class="publications-featured-list-title">
+              <a href="{% pageurl publication %}">
                 {{ publication.title }}
-              </p>
+              </a>
+            </p>
 
-              <p class="publications-featured-list-date">
-                {{ publication.publishing_date|date:"F j, Y" }}
-              </p>
+            <p class="publications-featured-list-date">
+              {{ publication.publishing_date|date:"F j, Y" }}
+            </p>
 
-              <ul class="publications-featured-list-authors custom-text-list">
-                {% for person in publication.featured_person_list %}
-                  <li>{{ person.title }}</li>
-                {% endfor %}
-                {% if publication.featured_person_list_has_more %}
-                  <li>and more</li>
-                {% endif %}
-              </ul>
-            </div>
+            <ul class="publications-featured-list-authors custom-text-list">
+              {% for person in publication.featured_person_list %}
+              <li>{{ person.title }}</li>
+              {% endfor %} 
+              {% if publication.featured_person_list_has_more %}
+              <li>and more</li>
+              {% endif %}
+            </ul>
           </div>
-        </a>
+        </div>
       </div>
+    </div>
     {% endfor %}
   </div>
 </section>

@@ -18,6 +18,10 @@
       width: 40%;
     }
 
+    a {
+      word-break: break-word;
+    }
+
     p {
       font-size: 0.8125em;
       padding-left: 1em;
@@ -33,6 +37,20 @@
           line-height: 1em;
           padding-right: 0.5em;
           vertical-align: top;
+        }
+      }
+    }
+
+    ol {
+      line-height: 24px;
+      list-style: none;
+      margin: 0 0 1em 1em;
+
+      li {
+        &::before {
+          content: counter(list-item);
+          font-weight: 600;
+          margin-right: 0.25em;
         }
       }
     }
@@ -79,4 +97,24 @@
 
 .article-excerpt-blurb {
   margin-bottom: 2em;
+}
+
+.article-series-description {
+  align-items: center;
+  border-bottom: 1px solid $cigi-light-grey;
+  display: flex;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+
+  p {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+}
+
+.article-series-disclaimer {
+  color: $cigi-text-grey;
+  font-size: 0.85em;
+  font-style: italic;
+  margin-bottom: 0;
 }

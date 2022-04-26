@@ -1,0 +1,43 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/xfi6rry.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themePfPCSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}pfpc-series-article{% endblock %}
+
+{% block hero %}
+{% image self.image_banner original as image_banner %}
+<section class="pfpc-series-article-hero" style="background-image: url('{{ image_banner.url }}');">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8 hero-content">
+        <h1>{{ self.title }}</h1>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="pfpc-series-article-description">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        {% include "includes/authors.html" with authors=self.authors.all %}
+        {% include "includes/date.html" with date=self.publishing_date %}
+        <div class="series-blurb">
+          {{self.article_series_description|richtext}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block in_the_series %}
+{% if self.article_series %}
+  {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
+{% endif %}
+{% endblock %}

@@ -15,8 +15,9 @@
 {% block body_class %}big-tech-theme big-tech-article{% endblock %}
 
 {% block header %}
+  {% include "includes/top_bar.html" with small=True %}
   <div class="big-tech-hero">
-    {% include "./includes/top_bar.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+    {% include "./includes/top_bar.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons %}
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8 big-tech-article-hero">
@@ -53,15 +54,11 @@
             <div class="subscribe">
               <h2>Subscribe</h2>
               <div class="subscribe-links">
-                <a class="apple" href="{{ self.multimedia_series.specific.podcast_apple_url }}" target="_blank" rel="noopener noreferrer">
-                  {% include "./includes/apple_podcasts_icon.svg" %}
-                </a>
-                <a class="spotify" href="{{ self.multimedia_series.specific.podcast_spotify_url }}" target="_blank" rel="noopener noreferrer">
-                  {% include "./includes/spotify_podcasts_icon.svg" %}
-                </a>
-                <a class="google" href="{{ self.multimedia_series.specific.podcast_google_url }}" target="_blank" rel="noopener noreferrer">
-                  {% include "./includes/google_podcasts_icon.svg" %}
-                </a>
+                <a class="apple" href="{{ self.multimedia_series.specific.podcast_subscribe_buttons.0.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/apple_podcasts_icon.svg' %}</a>
+                <span class="slash"></span>
+                <a class="spotify" href="{{ self.multimedia_series.specific.podcast_subscribe_buttons.1.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/spotify_podcasts_icon.svg' %}</a>
+                <span class="slash"></span>
+                <a class="pocket-casts" href="{{ self.multimedia_series.specific.podcast_subscribe_buttons.2.value.url }}" rel="noopener noreferrer" target="_blank">{% include './includes/pocket_casts_icon.svg' %}</a>
               </div>
             </div>
           </div>
@@ -89,5 +86,5 @@
 {% endblock %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with podcast_apple_url=self.multimedia_series.specific.podcast_apple_url podcast_spotify_url=self.multimedia_series.specific.podcast_spotify_url podcast_google_url=self.multimedia_series.specific.podcast_google_url %}
+  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons %}
 {% endblock %}

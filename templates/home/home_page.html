@@ -21,7 +21,7 @@
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
             {% endif %}
           </div>
-          <hr>
+          <hr class="has-margin">
           <div class="col-12 col-md-4 featured-small">
           {% with featured_pages|slice:"4:" as featured_small %}
             {% for item in featured_small %}
@@ -74,9 +74,9 @@
     </section>
     <section class="homepage-promotion-blocks">
       <div class="container">
-        <div class="row">
+        <div class="row promotion-blocks-container">
           {% for promotion_block in promotion_blocks %}
-            <div class="homepage-promotion-block col-md-6">
+            <div class="homepage-promotion-block {% if promotion_block.block_type == 'wide' or promotion_block.block_type == 'podcast_player' %}col promotion-block-wide{% else %}col-md-6{% endif %}">
               {% include "includes/promotion_block.html" with promotion_block=promotion_block %}
             </div>
           {% endfor %}
@@ -111,7 +111,7 @@
             {% endif %}
           </div>
           {% if featured_multimedia|length > 1 %}
-          <hr>
+          <hr class="has-margin">
           <div class="col-12 col-md-4 featured-small">
             {% with featured_multimedia|slice:"1:" as featured_multimedia_small %}
               {% for item in  featured_multimedia_small %}
@@ -127,7 +127,7 @@
       </div>
     </section>
   {% endcache %}
-  {% cache 86400 homepage_featured_events self.featured_events.0.id is_preview %}
+  {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview %}
     <section class="homepage-featured-events">
       <div class="container">
         <div class="row">

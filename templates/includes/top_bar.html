@@ -1,17 +1,17 @@
 {% load wagtailcore_tags menu_tags cache %}
 
 
-{% cache 86400 top_bar %}
-  {% get_menu_items 'main' as main_menu_items %}
-  {% get_menu_items 'footer' as footer_menu_items %}
-  <header>
+<header class="{% if small %}small scrolled{% endif %}">
+  {% cache 86400 top_bar %}
+    {% get_menu_items 'main' as main_menu_items %}
+    {% get_menu_items 'footer' as footer_menu_items %}
     <div class="main-navigation-wrapper">
       <div class="container">
         <div class="row">
           <div class="col cigi-top-bar" id="global-nav">
             <a class="cigi-logo" href="/">
-              {% include './header_cigi_logo_20th_large.svg' %}
-              {% include './header_cigi_logo_20th_small.svg' %}
+              {% include './header_cigi_logo_large.svg' %}
+              {% include './header_cigi_logo_small.svg' %}
             </a>
             <nav aria-label="primary">
               <ul class="menu desktop-menu">
@@ -153,5 +153,5 @@
         </div>
       </div>
     </div>
-  </header>
-{% endcache %}
+  {% endcache %}
+</header>

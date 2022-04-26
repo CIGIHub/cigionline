@@ -143,7 +143,7 @@
                       </div>
                     {% endif %}
 
-                    {% if page.image_media %}
+                    {% if page.image_media and page.person_types.all|any_in_list:'Expert,Board Member' %}
                       {% image page.image_media original as high_res %}
                       <div class="contact-item">
                         <i class="fas fa-download" aria-hidden="true"></i>

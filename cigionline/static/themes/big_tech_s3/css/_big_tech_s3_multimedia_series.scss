@@ -2,6 +2,13 @@
   &.big-tech-s3-theme {
     @include link($color: $cigi-darkest-grey, $hover-color: $bigtech-teal);
 
+    // sass-lint:disable-block class-name-format
+    .wagtail-userbar__item {
+      a {
+        color: $cigi-medium-light-grey;
+      }
+    }
+
     .topics {
       @include link($color: $cigi-text-grey, $hover-color: $bigtech-teal);
     }
@@ -14,12 +21,20 @@
       @include media-breakpoint-up(md) {
         padding-bottom: 4em;
       }
-      font-size: 0.875em;
       padding-bottom: 2em;
       text-align: center;
 
       img {
         max-width: 600px;
+      }
+
+      .season-tagline {
+        color: $bigtech-teal;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 100%;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
       }
 
       .description {
@@ -69,8 +84,8 @@
           width: 100px;
         }
 
-        .google {
-          width: 180px;
+        .pocket-casts {
+          width: 140px;
         }
       }
     }
@@ -100,6 +115,10 @@
           font-weight: 600;
           line-height: 1.35;
           text-transform: uppercase;
+
+          &.title-case {
+            text-transform: none;
+          }
         }
       }
 
@@ -232,6 +251,10 @@
                 font-weight: 600;
                 line-height: 1.35;
                 text-transform: uppercase;
+
+                &.title-case {
+                  text-transform: none;
+                }
               }
             }
 

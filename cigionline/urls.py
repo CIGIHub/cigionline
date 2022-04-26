@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.urls import path
 from django.views.decorators.cache import cache_control
+from core import views as core_views
 from events.feeds import EventFeed
 from images.views import favicon_view
 from people import views as people_views
@@ -10,7 +11,6 @@ from research import views as research_views
 from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
-from core import views as core_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -33,6 +33,7 @@ urlpatterns = urlpatterns + [
     url(r'^api/topics/$', research_views.all_topics),
     url(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     url(r'^api/events/$', events_views.events_api),
+    url(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
     url(r'^api/old_images/$', core_views.old_images),
 
     url(r'^events/feed.ics$', EventFeed()),

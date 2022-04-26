@@ -107,7 +107,7 @@ class ArticlePageModelAdmin(ModelAdmin):
     menu_label = 'Articles'
     menu_icon = 'duplicate'
     menu_order = 102
-    list_display = ('title', 'publishing_date', 'article_type', 'article_series', 'theme', 'live')
+    list_display = ('title', 'publishing_date', 'article_type', 'article_series', 'theme', 'live', 'id')
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
     search_fields = ('title',)
     ordering = ['-publishing_date']
@@ -129,7 +129,7 @@ class ArticleSeriesPageModelAdmin(ModelAdmin):
     menu_label = 'Article Series'
     menu_icon = 'list-ul'
     menu_order = 103
-    list_display = ('title', 'publishing_date', 'live')
+    list_display = ('title', 'publishing_date', 'live', 'id')
     list_filter = ('publishing_date', 'live')
     search_fields = ('title',)
     ordering = ['-publishing_date']

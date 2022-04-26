@@ -17,9 +17,6 @@
         {% if self.countries_represented %}
           <div class="timeline-title">Countries Represented</div>
           <div class="timeline-countries">
-            <p class="meta timeline-countries-list">
-              {{self.countries_represented.title}}
-            </p>
             {% image self.countries_represented fill-1440x768 %}
           </div>
         {% endif %}

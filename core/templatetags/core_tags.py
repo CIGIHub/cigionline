@@ -25,6 +25,14 @@ def in_list(value, the_list):
     return value in the_list.split(',')
 
 
+@register.filter
+def any_in_list(values, the_list):
+    for value in values:
+        if str(value) in the_list.split(','):
+            return True
+    return False
+
+
 @register.simple_tag
 def define(value):
     return value

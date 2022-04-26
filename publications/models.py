@@ -38,7 +38,7 @@ class PublicationListPage(BasicPageAbstract, Page):
         for item in self.featured_publications.prefetch_related(
             'publication_page',
             'publication_page__topics',
-        ).all()[:4]:
+        ).all():
             featured_publications.append(item.publication_page)
         return featured_publications
 
@@ -56,7 +56,7 @@ class PublicationListPage(BasicPageAbstract, Page):
             [
                 InlinePanel(
                     'featured_publications',
-                    max_num=4,
+                    max_num=12,
                     min_num=0,
                     label='Publication',
                 ),
@@ -289,7 +289,7 @@ class PublicationPage(
                 StreamFieldPanel('body'),
             ],
             heading='Body',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
@@ -300,7 +300,7 @@ class PublicationPage(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         ContentPage.authors_panel,
         ContentPage.editors_panel,
@@ -443,7 +443,7 @@ class PublicationSeriesPage(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         BasicPageAbstract.images_panel,
         MultiFieldPanel(

@@ -78,7 +78,10 @@
 
 @mixin link-underline($color: $black, $underline-color: $cigi-primary-colour) {
   a {
-    background-image: linear-gradient(transparent calc(100% - 4px), $underline-color 10px);
+    background-image: linear-gradient(
+      transparent calc(100% - 4px),
+      $underline-color 10px
+    );
     background-repeat: no-repeat;
     background-size: 0 100%;
     color: $color;

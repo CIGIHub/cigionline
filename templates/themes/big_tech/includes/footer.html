@@ -4,7 +4,7 @@
       <div class="col bt-footer-content">
         <div class="logos">
           <a href="/" class="cigi-logo">
-            {% include "includes/header_cigi_logo_20th_large.svg" %}
+            {% include "includes/header_cigi_logo_large.svg" %}
           </a>
           <div class="spacer">
             <div class="slash"></div>
@@ -19,14 +19,14 @@
         <div class="about">
           <div class="subscribe">
             <p>Subscribe:</p>
-            <a href="{{ podcast_apple_url }}" target="_blank" rel="noopener noreferrer">
+            <a href="{{ podcast_subscribe_buttons.0.value.url }}" target="_blank" rel="noopener noreferrer">
               {% include "./apple_podcasts_sm.svg" %}
             </a>
-            <a href="{{ podcast_spotify_url }}" target="_blank" rel="noopener noreferrer">
+            <a href="{{ podcast_subscribe_buttons.1.value.url }}" target="_blank" rel="noopener noreferrer">
               {% include "./spotify_podcasts_sm.svg" %}
             </a>
-            <a href="{{ podcast_google_url }}" target="_blank" rel="noopener noreferrer">
-              {% include "./google_podcasts_sm.svg" %}
+            <a href="{{ podcast_subscribe_buttons.2.value.url }}" target="_blank" rel="noopener noreferrer">
+              {% include "./pocket_casts_sm.svg" %}
             </a>
           </div>
           <p>
