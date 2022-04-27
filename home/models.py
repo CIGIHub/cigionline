@@ -85,6 +85,18 @@ class HomePage(Page):
             heading='Featured Experts',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'promotion_blocks',
+                    max_num=4,
+                    min_num=0,
+                    label='Promotion Block',
+                ),
+            ],
+            heading='Promotion Blocks',
+            classname='collapsible collapsed',
+        ),
     ]
 
     def get_featured_pages(self):
@@ -172,13 +184,16 @@ class HomePage(Page):
         return featured_events
 
     def get_promotion_blocks(self):
-        featured_promotions_page = HomePageFeaturedPromotionsPage.objects.first()
-        promotion_blocks_list = []
-        for item in featured_promotions_page.promotion_blocks.prefetch_related(
-            'promotion_block',
-        ).all():
-            promotion_blocks_list.append(item.promotion_block)
-        return promotion_blocks_list
+        try:
+            featured_promotions_page = HomePageFeaturedPromotionsPage.objects.first()
+            promotion_blocks_query_set = featured_promotions_page.promotion_blocks.prefetch_related(
+                'promotion_block',
+            ).all()
+        except Exception:
+            promotion_blocks_query_set = self.promotion_blocks.prefetch_related(
+                'promotion_block',
+            ).all()
+        return [promotion_block.promotion_block for promotion_block in promotion_blocks_query_set]
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -336,5 +351,27 @@ class HomePageFeaturedMultimedia(Orderable):
         PageChooserPanel(
             'featured_multimedia',
             ['multimedia.MultimediaPage'],
+        ),
+    ]
+
+
+class HomePagePromotionBlocks(Orderable):
+    home_page = ParentalKey(
+        'home.HomePage',
+        related_name='promotion_blocks',
+    )
+    promotion_block = models.ForeignKey(
+        'promotions.PromotionBlock',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Promotion Block',
+    )
+
+    panels = [
+        FieldPanel(
+            'promotion_block',
+            ['promotions.PromotionBlock'],
         ),
     ]
