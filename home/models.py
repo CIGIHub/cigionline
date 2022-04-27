@@ -3,6 +3,7 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
 from events.models import EventPage, EventListPage
+from features.models import HomePageFeaturedPromotionsPage
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
@@ -82,18 +83,6 @@ class HomePage(Page):
                 ),
             ],
             heading='Featured Experts',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'promotion_blocks',
-                    max_num=4,
-                    min_num=0,
-                    label='Promotion Block',
-                ),
-            ],
-            heading='Promotion Blocks',
             classname='collapsible collapsed',
         ),
     ]
@@ -183,8 +172,9 @@ class HomePage(Page):
         return featured_events
 
     def get_promotion_blocks(self):
+        featured_promotions_page = HomePageFeaturedPromotionsPage.objects.first()
         promotion_blocks_list = []
-        for item in self.promotion_blocks.prefetch_related(
+        for item in featured_promotions_page.promotion_blocks.prefetch_related(
             'promotion_block',
         ).all():
             promotion_blocks_list.append(item.promotion_block)
@@ -213,6 +203,7 @@ class HomePage(Page):
         'core.BasicPage',
         'core.PrivacyNoticePage',
         'events.EventListPage',
+        'features.FeaturesListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
         'multimedia.MultimediaSeriesPage',
@@ -345,27 +336,5 @@ class HomePageFeaturedMultimedia(Orderable):
         PageChooserPanel(
             'featured_multimedia',
             ['multimedia.MultimediaPage'],
-        ),
-    ]
-
-
-class HomePagePromotionBlocks(Orderable):
-    home_page = ParentalKey(
-        'home.HomePage',
-        related_name='promotion_blocks',
-    )
-    promotion_block = models.ForeignKey(
-        'promotions.PromotionBlock',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Promotion Block',
-    )
-
-    panels = [
-        FieldPanel(
-            'promotion_block',
-            ['promotions.PromotionBlock'],
         ),
     ]
