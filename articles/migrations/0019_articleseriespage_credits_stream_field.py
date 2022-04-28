@@ -8,7 +8,7 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles', '0017_articleseriespageseriesitem_hide_series_disclaimer'),
+        ('articles', '0018_articleseriespage_series_videos_description'),
     ]
 
     operations = [
