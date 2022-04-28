@@ -102,7 +102,7 @@ class ProjectPage(
                 FieldPanel('project_types'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
