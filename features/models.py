@@ -15,12 +15,11 @@ class FeaturesListPage(Page):
     subpage_types = ['features.HomePageFeaturedPromotionsPage']
     max_count = 1
 
+    class Meta:
+        verbose_name = 'Feature List Page'
+
 
 class HomePageFeaturedPromotionsPage(Page):
-    def save(self, *args, **kwargs):
-        cache.delete_many(cache.keys("*homepage_featured_promotions*"))
-        return super().save(*args, **kwargs)
-
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -39,6 +38,9 @@ class HomePageFeaturedPromotionsPage(Page):
     parent_page_types = ['features.FeaturesListPage']
     subpage_types = []
     max_count = 1
+
+    class Meta:
+        verbose_name = 'Home Page Featured Promotions Page'
 
 
 class FeaturesPagePromotionBlocks(Orderable):
