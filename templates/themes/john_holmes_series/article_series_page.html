@@ -101,7 +101,18 @@
           <div class="col col-md-10">
             <h2>Credits</h2>
             <div class="credits-content">
-              {{ self.credits|richtext }}
+              {% if self.credits_stream_field %}
+                {% for title in self.credits_stream_field %}
+                  <div class="title-container">
+                    <div class="title">{{ title.value.title }}</div>
+                    {% for person in title.value.people %}
+                      <div class="name">{{ person }}</div>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                {{ self.credits|richtext }}
+              {% endif %}
             </div>
           </div>
         </div>
