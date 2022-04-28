@@ -3,6 +3,7 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
 from events.models import EventPage, EventListPage
+from features.models import HomePageFeaturedPromotionsPage
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
@@ -183,12 +184,16 @@ class HomePage(Page):
         return featured_events
 
     def get_promotion_blocks(self):
-        promotion_blocks_list = []
-        for item in self.promotion_blocks.prefetch_related(
-            'promotion_block',
-        ).all():
-            promotion_blocks_list.append(item.promotion_block)
-        return promotion_blocks_list
+        try:
+            featured_promotions_page = HomePageFeaturedPromotionsPage.objects.first()
+            promotion_blocks_query_set = featured_promotions_page.promotion_blocks.prefetch_related(
+                'promotion_block',
+            ).all()
+        except Exception:
+            promotion_blocks_query_set = self.promotion_blocks.prefetch_related(
+                'promotion_block',
+            ).all()
+        return [promotion_block.promotion_block for promotion_block in promotion_blocks_query_set]
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -213,6 +218,7 @@ class HomePage(Page):
         'core.BasicPage',
         'core.PrivacyNoticePage',
         'events.EventListPage',
+        'features.FeaturesListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
         'multimedia.MultimediaSeriesPage',

@@ -12,6 +12,7 @@ from core.models import (
     PrivacyNoticePage,
 )
 from events.models import EventListPage
+from features.models import FeaturesListPage
 from multimedia.models import MultimediaListPage, MultimediaSeriesListPage, MultimediaSeriesPage
 from newsletters.models import NewsletterListPage
 from people.models import PeoplePage, PersonListPage
@@ -44,6 +45,7 @@ class HomePageTests(WagtailPageTests):
                 BasicPage,
                 ContactPage,
                 EventListPage,
+                FeaturesListPage,
                 JobPostingListPage,
                 MediaLandingPage,
                 MultimediaListPage,
