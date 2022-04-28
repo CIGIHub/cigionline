@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles', '0018_articleseriespage_series_videos_description'),
+        ('articles', '0019_articleseriespage_credits_stream_field'),
     ]
 
     operations = [
