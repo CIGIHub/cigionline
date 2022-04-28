@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'core',
     'embeds',
     'events',
+    'features',
     'home',
     'images',
     'menus',

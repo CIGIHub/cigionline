@@ -52,6 +52,9 @@
         </div>
       </div>
     </section>
+  {% endcache %}
+
+  {% cache 86400 homepage_featured_publications self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
     <section class="homepage-featured-publications">
       <div class="container">
         <div class="row">
@@ -72,6 +75,9 @@
         </div>
       </div>
     </section>
+  {% endcache %}
+
+  {% cache 86400 homepage_featured_promotions %}
     <section class="homepage-promotion-blocks">
       <div class="container">
         <div class="row promotion-blocks-container">
@@ -83,6 +89,9 @@
         </div>
       </div>
     </section>
+  {% endcache %}
+
+  {% cache 86400 homepage_featured_highlights self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
     <section class="homepage-featured-highlights">
       <div class="container">
         <div class="row">
@@ -93,6 +102,9 @@
         </div>
       </div>
     </section>
+  {% endcache %}
+
+  {% cache 86400 homepage_featured_multimedia self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
     <section class="featured homepage-featured-multimedia">
       <div class="container">
         <div class="row">
@@ -127,6 +139,7 @@
       </div>
     </section>
   {% endcache %}
+
   {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview %}
     <section class="homepage-featured-events">
       <div class="container">
@@ -149,6 +162,7 @@
       </div>
     </section>
   {% endcache %}
+
   {% cache 86400 homepage_featured_experts self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
     <section class="homepage-featured-experts">
       <div class="container">

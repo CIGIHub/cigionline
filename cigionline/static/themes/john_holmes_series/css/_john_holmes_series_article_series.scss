@@ -234,9 +234,17 @@
       grid-template-columns: 1fr 1fr;
       margin-top: 2em;
 
-      .name {
-        font-size: 1.25em;
-        text-transform: uppercase;
+      .title-container {
+        margin-bottom: 1em;
+
+        .title {
+          text-transform: uppercase;
+        }
+
+        .name {
+          font-size: 1.25em;
+          text-transform: uppercase;
+        }
       }
     }
   }
