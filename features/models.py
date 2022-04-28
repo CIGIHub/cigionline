@@ -15,6 +15,9 @@ class FeaturesListPage(Page):
     subpage_types = ['features.HomePageFeaturedPromotionsPage']
     max_count = 1
 
+    class Meta:
+        verbose_name = 'Feature List Page'
+
 
 class HomePageFeaturedPromotionsPage(Page):
     content_panels = Page.content_panels + [
@@ -35,6 +38,9 @@ class HomePageFeaturedPromotionsPage(Page):
     parent_page_types = ['features.FeaturesListPage']
     subpage_types = []
     max_count = 1
+
+    class Meta:
+        verbose_name = 'Home Page Featured Promotions Page'
 
 
 class FeaturesPagePromotionBlocks(Orderable):
