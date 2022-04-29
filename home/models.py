@@ -39,19 +39,6 @@ class HomePage(Page):
         MultiFieldPanel(
             [
                 InlinePanel(
-                    'replacement_featured_pages',
-                    max_num=9,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Replacement Featured Content',
-            classname='collapsible collapsed',
-            help_text='1: large | 2-4: medium | 5-9: small; Use this section if items that need to be featured are not of Content Page type. Items in this list will replace items in the Featured Content.'
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
                     'highlight_pages',
                     max_num=12,
                     min_num=0,
@@ -101,10 +88,7 @@ class HomePage(Page):
 
     def get_featured_pages(self):
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
-        pages = Page.objects.specific().prefetch_related(
-            'authors__author',
-            'topics',
-        ).in_bulk(featured_page_ids)
+        pages = Page.objects.specific().in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
 
     def get_replaced_feature_pages(self):
@@ -197,7 +181,7 @@ class HomePage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_pages'] = self.get_replaced_feature_pages()
+        context['featured_pages'] = self.get_featured_pages()
         context['featured_experts'] = self.get_featured_experts_list()
         context['highlight_pages'] = self.get_highlight_pages()
         context['featured_multimedia'] = self.get_featured_multimedia()
@@ -244,18 +228,18 @@ class HomePageFeaturedPage(Orderable):
         related_name='featured_pages',
     )
     featured_page = models.ForeignKey(
-        'core.ContentPage',
+        'wagtailcore.Page',
         null=False,
         blank=False,
         on_delete=models.CASCADE,
         related_name='+',
-        verbose_name='Content Page',
+        verbose_name='Page',
     )
 
     panels = [
         PageChooserPanel(
             'featured_page',
-            ['core.ContentPage'],
+            ['wagtailcore.Page'],
         ),
     ]
 
