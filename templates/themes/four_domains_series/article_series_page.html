@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeJohnHolmesSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeJohnHolmesSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}john-holmes-series-article-series{% endblock %}
+
+{% block content %}
+  <section class="john-holmes-series-article-series-hero">
+    <div class="hero-content">
+      {% image self.image_banner width-1000 as image_banner %}
+      <div class="banner-bg" style="background-image: url('{{image_banner.url}}')"></div>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-10">
+            {% image self.image_banner width-1000 %}
+            <div class="opinion-series-label">A CIGI Essay Series</div>
+            <h1>{{ self.title }}</h1>
+          </div>
+        </div>
+        {% if self.short_description %}
+          <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+              <div class="short-description">{{ self.short_description|richtext }}</div>
+              <div class="scrollanchor-container">
+                <a href="#article-series-items">
+                  <i class="far fa-arrow-down fa-2x"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  <section class="john-holmes-series-article-series-in-the-series" id="article-series-items">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          {% define start as true %}
+          {% for series_item in self.article_series_items %}
+            {% if series_item.category_title %}
+              {% if not forloop.first %}
+                  </div>
+                </div>
+              {% endif %}
+              <div class="series-category">
+              <h2>{{ series_item.category_title }}</h2>
+              <div class="series-category-items">
+            {% endif %}
+            <article>
+              <h3>
+                <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+              </h3>
+              {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% if self.credits %}
+    <section class="credits">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10">
+            <h2>Credits</h2>
+            <div class="credits-content">
+              {% if self.credits_stream_field %}
+                {% for title in self.credits_stream_field %}
+                  <div class="title-container">
+                    <div class="title">{{ title.value.title }}</div>
+                    {% for person in title.value.people %}
+                      <div class="name">{{ person }}</div>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                {{ self.credits|richtext }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

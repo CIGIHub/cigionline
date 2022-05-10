@@ -10,6 +10,7 @@ from search.filters import (
 )
 from streams.blocks import (
     AccordionBlock,
+    AdditionalImageBlock,
     ExtractBlock,
     ParagraphBlock,
     ReadMoreBlock,
@@ -94,6 +95,7 @@ class BasicPageAbstract(models.Model):
     body_text_border_block = ('text_border_block', TextBorderBlock())
     body_tool_tip_block = ('tool_tip', TooltipBlock())
     body_tweet_block = ('tweet', TweetBlock())
+    additional_image_block = ('additional_image', AdditionalImageBlock())
 
     body = StreamField(
         body_default_blocks,

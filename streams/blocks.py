@@ -1020,3 +1020,13 @@ class PodcastSubscribeButtonBlock(blocks.StructBlock):
     class Meta:
         icon = 'link'
         label = 'Podcast Subscribe Button'
+
+
+class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
+    image = ImageChooserBlock(required=True)
+    class_name = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'Additional Image'
+        help_text = 'Additional images to be used only if the theme requires them.'

@@ -202,6 +202,7 @@ class ArticlePage(
             BasicPageAbstract.body_text_border_block,
             BasicPageAbstract.body_tool_tip_block,
             BasicPageAbstract.body_tweet_block,
+            BasicPageAbstract.additional_image_block,
         ],
         blank=True,
     )
@@ -367,6 +368,14 @@ class ArticlePage(
         if self.theme:
             return f'themes/{self.get_theme_dir()}/article_page.html'
         return standard_template
+
+    def get_additional_images(self):
+        additional_images = []
+        # loop through body streamfield blocks
+
+        for block in self.body.stream_data:
+            print(block)
+        return additional_images
 
     content_panels = [
         BasicPageAbstract.title_panel,
