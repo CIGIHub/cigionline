@@ -7,6 +7,9 @@
 {% block theme_css %}
   {% render_bundle 'themeFourDomainsSeries' 'css' %}
 {% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block body_class %}four-domains-series-article{% endblock %}
 
@@ -25,12 +28,14 @@
             {% include "includes/authors.html" with authors=self.authors.all %}
             {% include "includes/date.html" with date=self.publishing_date %}
           </div>
+          <div class="background-images" id="background-images">
+            {% for block in self.get_additional_images %}
+              {% image block.image width-1000 class=block.class_name %}
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
-    {% for image in self.get_additional_images %}
-
-    {% endfor %}
   </section>
 {% endblock %}
 

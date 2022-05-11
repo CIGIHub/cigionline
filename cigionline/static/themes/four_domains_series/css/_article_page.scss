@@ -1,0 +1,18 @@
+.four-domains-series-article-hero {
+  padding-top: 50em;
+  .background-images {
+    position: relative;
+    .image {
+      bottom: 0;
+      position: absolute;
+      width: 250px;
+      &.left {
+        left: 0;
+      }
+
+      &.right {
+        right: 0;
+      }
+    }
+  }
+}

@@ -371,10 +371,10 @@ class ArticlePage(
 
     def get_additional_images(self):
         additional_images = []
-        # loop through body streamfield blocks
 
-        for block in self.body.stream_data:
-            print(block)
+        for block in self.body:
+            if block.block_type == 'additional_image':
+                additional_images.append(block.value)
         return additional_images
 
     content_panels = [
