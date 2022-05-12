@@ -23,7 +23,6 @@
   .homepage-featured-multimedia,
   .homepage-featured-publications,
   .homepage-featured-highlights,
-  .homepage-promotion-blocks,
   .homepage-featured-events {
     @include media-breakpoint-up(md) {
       margin-bottom: 4em;
@@ -158,6 +157,11 @@
   }
 
   .homepage-promotion-blocks {
+    @include media-breakpoint-up(md) {
+      margin-bottom: 2em;
+    }
+    margin-bottom: 1em;
+
     .homepage-promotion-block {
       @include media-breakpoint-up(md) {
         margin-bottom: 2em;
