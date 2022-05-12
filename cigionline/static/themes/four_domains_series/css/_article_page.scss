@@ -1,18 +1,49 @@
+.four-domains-series-article {
+  @include top-bar($background-color: transparent, $color: $black);
+  background-color: #e9e9de;
+}
 .four-domains-series-article-hero {
-  padding-top: 50em;
+  padding-top: 10em;
   .background-images {
+    height: 100%;
+    margin-bottom: 6em;
     position: relative;
-    .image {
-      bottom: 0;
+    width: 100%;
+
+    .layer {
+      left: 0;
+      right: 0;
       position: absolute;
-      width: 250px;
-      &.left {
-        left: 0;
+
+      &.mid {
+        @include media-breakpoint-up(md) {
+          top: 100px;
+        }
+        top: 50px;
       }
 
-      &.right {
-        right: 0;
+      &.top {
+        @include media-breakpoint-up(md) {
+          top: 200px;
+        }
+        top: 100px;
       }
+    }
+
+    .base {
+      z-index: 1;
+    }
+
+    .mid {
+      z-index: 2;
+    }
+    .top {
+      z-index: 3;
+    }
+
+    .bottom {
+      bottom: 0;
+      position: absolute;
     }
   }
 }

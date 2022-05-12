@@ -17,23 +17,22 @@
   <section class="four-domains-series-article-hero">
     <div class="container">
       <div class="row">
-        <div class="col hero-content d-flex">
-          {% if self.image_hero %}
-            <figure class="article-image-hero">
-              {% image self.image_hero width-768 %}
-            </figure>
-          {% endif %}
+        <div class="col hero-content">
           <div>
             <h1>{{ self.title }}</h1>
             {% include "includes/authors.html" with authors=self.authors.all %}
             {% include "includes/date.html" with date=self.publishing_date %}
           </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
           <div class="background-images" id="background-images">
             {% for block in self.get_additional_images %}
-              {% image block.image width-1000 class=block.class_name %}
+              {% image block.image original class=block.class_name %}
             {% endfor %}
           </div>
-        </div>
+        </div
       </div>
     </div>
   </section>
@@ -51,8 +50,10 @@
           </div>
         </div>
       {% endif %}
-      {% for block in body %}
-        {% include_block block %}
+      {% for block in self.body %}
+        {% if block.block_type != 'additional_image' %}
+          {% include_block block %}
+        {% endif %}
       {% endfor %}
     </section>
   {% endif %}
