@@ -27,7 +27,7 @@
     @include media-breakpoint-up(md) {
       margin-bottom: 4em;
     }
-    margin-bottom: 2em;
+    margin-bottom: 3em;
   }
 
   .homepage-featured-experts {
@@ -65,8 +65,8 @@
 
   .homepage-featured-multimedia {
     background-color: $black;
-    padding-bottom: 4em;
-    padding-top: 4em;
+    padding-bottom: 3em;
+    padding-top: 3em;
   }
 
   .homepage-featured-publications {
@@ -107,6 +107,8 @@
         article {
           border-bottom: 0;
           border-right: 0;
+          margin-bottom: 0;
+          padding-bottom: 0;
         }
       }
 
@@ -129,6 +131,7 @@
     color: $black;
     font-size: 0.75em;
     margin-bottom: 1.5em;
+    margin-top: 0.3em;
     text-transform: uppercase;
 
     &.dark-mode {
@@ -157,20 +160,13 @@
   }
 
   .homepage-promotion-blocks {
-    @include media-breakpoint-up(md) {
-      margin-bottom: 2em;
-    }
-    margin-bottom: 1em;
+    margin-bottom: 2em;
 
     .homepage-promotion-block {
       @include media-breakpoint-up(md) {
         margin-bottom: 2em;
       }
       margin-bottom: 1em;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
 
       &.promotion-block-wide {
         flex-basis: 100%;
