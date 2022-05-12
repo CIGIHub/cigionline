@@ -64,6 +64,10 @@
   }
 
   .homepage-featured-multimedia {
+    @include media-breakpoint-up(md) {
+      padding-bottom: 4em;
+      padding-top: 4em;
+    }
     background-color: $black;
     padding-bottom: 3em;
     padding-top: 3em;
