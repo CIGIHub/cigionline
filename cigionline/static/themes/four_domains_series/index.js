@@ -1,32 +1,52 @@
 import './css/four_domains_series.scss';
 
-const backgroundImages = document.getElementById('background-images');
-const topImage = backgroundImages.querySelector('.top');
-const midImage = backgroundImages.querySelector('.mid');
-const topImageInitialTop = parseInt(topImage.offsetTop, 10);
-const midImageInitialTop = parseInt(midImage.offsetTop, 10);
-console.log(topImageInitialTop);
+const backgroundImages = Array.from(
+  document.getElementById('background-images').querySelectorAll('img')
+).map((img) => {
+  const image = {
+    img,
+    classes: Array.from(img.classList),
+    animation: img.dataset.animation,
+    position: img.dataset.position,
+    initialTop: parseInt(img.offsetTop, 10),
+  };
+  return image;
+});
 
 let lastKnownScrollPosition = 0;
 let ticking = false;
 
-function animateImage(scrollPos) {
-  if (lastKnownScrollPosition < 800) {
-    topImage.style.top = `${topImageInitialTop - scrollPos * 0.4}px`;
-    midImage.style.top = `${midImageInitialTop - scrollPos * 0.2}px`;
-
-    // topImage.style.transform = `scale(${1 + scrollPos * 0.0002})`;
-    // midImage.style.transform = `scale(${1 + scrollPos * 0.0002})`;
-  } else {
-
+function animateVertically(scrollPos, img) {
+  const speedFast = window.innerWidth / (1980 * 0.4);
+  const speedSlow = window.innerWidth / (1980 * 0.2);
+  switch (img.position) {
+  case 'top':
+    img.img.style.top = `${img.initialTop - scrollPos * speedFast}px`;
+    break;
+  case 'mid':
+    img.img.style.top = `${img.initialTop - scrollPos * speedSlow}px`;
+    break;
+  default:
+    break;
   }
-  // leftImage.style.transform = `scale(${1 + scrollPos * 0.001})`;
-  // rightImage.style.transform = `scale(${1 + scrollPos * 0.001})`;
 }
 
-document.addEventListener('scroll', function (e) {
+function animateImage(scrollPos) {
+  backgroundImages.forEach((image) => {
+    if (lastKnownScrollPosition < 800) {
+      switch (image.animation) {
+      case 'vertical':
+        animateVertically(scrollPos, image);
+        break;
+      default:
+        break;
+      }
+    }
+  });
+}
+
+document.addEventListener('scroll', function () {
   lastKnownScrollPosition = window.scrollY;
-  console.log(lastKnownScrollPosition);
 
   if (!ticking) {
     window.requestAnimationFrame(function () {

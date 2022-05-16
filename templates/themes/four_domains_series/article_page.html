@@ -29,7 +29,14 @@
         <div class="col">
           <div class="background-images" id="background-images">
             {% for block in self.get_additional_images %}
-              {% image block.image original class=block.class_name %}
+              {% image block.image original as additional_image %}
+              <img 
+                src="{{ additional_image.url }}"
+                alt="{{ additional_image.alt }}"
+                class="{{ block.classes }}"
+                data-position="{{ block.position }}"
+                data-animation="{{ block.animation }}" 
+              />
             {% endfor %}
           </div>
         </div

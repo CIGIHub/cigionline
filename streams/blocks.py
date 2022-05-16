@@ -1023,8 +1023,25 @@ class PodcastSubscribeButtonBlock(blocks.StructBlock):
 
 
 class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
+    class PositionChoices(models.TextChoices):
+        TOP = ('top', 'Top')
+        MID = ('mid', 'Middle')
+        BASE = ('base', 'Base')
+
+    class AnimationChoices(models.TextChoices):
+        VERTICAL = ('vertical', 'Vertical')
+        HORIZONTAL = ('horizontal', 'Horizontal')
+        NONE = ('none', 'None')
+
     image = ImageChooserBlock(required=True)
-    class_name = blocks.CharBlock(required=False)
+    classes = blocks.CharBlock(required=False)
+    position = blocks.ChoiceBlock(
+        choices=PositionChoices.choices,
+    )
+    animation = blocks.ChoiceBlock(
+        choices=AnimationChoices.choices,
+        default=AnimationChoices.NONE,
+    )
 
     class Meta:
         icon = 'image'

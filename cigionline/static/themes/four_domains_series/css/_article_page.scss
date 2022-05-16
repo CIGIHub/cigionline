@@ -4,25 +4,29 @@
 }
 .four-domains-series-article-hero {
   padding-top: 10em;
+  margin-bottom: 4em;
+
   .background-images {
     height: 100%;
-    margin-bottom: 6em;
     position: relative;
     width: 100%;
 
-    .layer {
-      left: 0;
-      right: 0;
-      position: absolute;
+    img {
+      &:not([data-position='base']) {
+        left: 0;
+        margin-bottom: -1em;
+        right: 0;
+        position: absolute;
+      }
 
-      &.mid {
+      &[data-position='mid'] {
         @include media-breakpoint-up(md) {
           top: 100px;
         }
         top: 50px;
       }
 
-      &.top {
+      &[data-position='top'] {
         @include media-breakpoint-up(md) {
           top: 200px;
         }
