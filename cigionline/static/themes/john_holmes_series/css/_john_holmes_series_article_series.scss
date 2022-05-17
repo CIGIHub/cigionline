@@ -42,6 +42,9 @@
       @include media-breakpoint-down(sm) {
         text-align: left;
       }
+      @media (min-aspect-ratio: 8 / 5) and (max-height: 500px) {
+        position: relative;
+      }
       display: flex;
       height: 100vh;
       position: fixed;
@@ -79,15 +82,15 @@
       }
 
       .short-description {
-        @media (min-aspect-ratio: 12 / 10) and (max-height: 700px) {
-          display: none;
+        @media (min-aspect-ratio: 8 / 5) and (max-height: 500px) {
+          font-size: small;
         }
       }
 
       .scrollanchor-container {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
-        @media (min-aspect-ratio: 12 / 10) and (max-height: 700px) {
-          margin-top: 1em;
+        @media (min-aspect-ratio: 8 / 5) and (max-height: 500px) {
+          display: none;
         }
         animation: bounce 2s infinite;
         margin: 2.5em 0;
@@ -96,6 +99,9 @@
   }
 
   .john-holmes-series-article-series-in-the-series {
+    @media (min-aspect-ratio: 8 / 5) and (max-height: 500px) {
+      position: static;
+    }
     background-color: $john-holmes-bg-color;
     padding: 2em 0 3em;
     position: relative;
