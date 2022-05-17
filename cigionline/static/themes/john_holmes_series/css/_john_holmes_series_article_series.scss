@@ -100,6 +100,7 @@
 
   .john-holmes-series-article-series-in-the-series {
     @media (min-aspect-ratio: 8 / 5) and (max-height: 500px) {
+      padding-top: 15%;
       position: static;
     }
     background-color: $john-holmes-bg-color;
