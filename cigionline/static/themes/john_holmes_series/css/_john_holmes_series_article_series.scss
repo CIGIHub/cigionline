@@ -14,6 +14,10 @@
     @media (min-aspect-ratio: 3 / 2) {
       background-position-y: 0;
     }
+    @media (max-height: 500px) {
+      background-position-y: 0;
+      height: auto;
+    }
     background: linear-gradient(167deg, $white 50%, $john-holmes-bg-color 50%);
     background-position-y: 200px;
     background-repeat: no-repeat;
@@ -46,6 +50,7 @@
         text-align: left;
       }
       @media (max-height: 500px) {
+        height: auto;
         position: relative;
       }
       display: flex;
@@ -105,9 +110,6 @@
     @media (max-height: 500px) {
       position: static;
     }
-    // @include media-breakpoint-up(sm){
-    //   padding-top: 5%;
-    // }
     background-color: $john-holmes-bg-color;
     padding: 2em 0 3em;
     position: relative;
