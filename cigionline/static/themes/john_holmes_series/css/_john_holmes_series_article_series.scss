@@ -14,6 +14,10 @@
     @media (min-aspect-ratio: 3 / 2) {
       background-position-y: 0;
     }
+    @media (max-height: 500px) {
+      background-position-y: 0;
+      height: auto;
+    }
     background: linear-gradient(167deg, $white 50%, $john-holmes-bg-color 50%);
     background-position-y: 200px;
     background-repeat: no-repeat;
@@ -29,6 +33,9 @@
       @media (max-aspect-ratio: 5 / 8) and (max-height: 750px) {
         opacity: 0.3;
       }
+      @media (max-height: 500px) {
+        opacity: 0.3;
+      }
       background-position: 30%;
       background-repeat: no-repeat;
       background-size: cover;
@@ -41,6 +48,10 @@
     .hero-content {
       @include media-breakpoint-down(sm) {
         text-align: left;
+      }
+      @media (max-height: 500px) {
+        height: auto;
+        position: relative;
       }
       display: flex;
       height: 100vh;
@@ -78,16 +89,10 @@
         margin: 2em 0 1.25em;
       }
 
-      .short-description {
-        @media (min-aspect-ratio: 12 / 10) and (max-height: 700px) {
-          display: none;
-        }
-      }
-
       .scrollanchor-container {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
-        @media (min-aspect-ratio: 12 / 10) and (max-height: 700px) {
-          margin-top: 1em;
+        @media (max-height: 500px) {
+          display: none;
         }
         animation: bounce 2s infinite;
         margin: 2.5em 0;
@@ -96,6 +101,9 @@
   }
 
   .john-holmes-series-article-series-in-the-series {
+    @media (max-height: 500px) {
+      position: static;
+    }
     background-color: $john-holmes-bg-color;
     padding: 2em 0 3em;
     position: relative;
