@@ -3,7 +3,7 @@
   background-color: #e9e9de;
 }
 .four-domains-series-article-hero {
-  padding-top: 10em;
+  padding-top: 20em;
   margin-bottom: 4em;
 
   .background-images {
@@ -19,18 +19,36 @@
         position: absolute;
       }
 
-      &[data-position='mid'] {
-        @include media-breakpoint-up(md) {
+      &[data-animation='vertical'] {
+        &[data-position='mid'] {
+          @include media-breakpoint-up(md) {
+            top: 100px;
+          }
+          top: 50px;
+        }
+
+        &[data-position='top'] {
+          @include media-breakpoint-up(md) {
+            top: 200px;
+          }
           top: 100px;
         }
-        top: 50px;
       }
 
-      &[data-position='top'] {
-        @include media-breakpoint-up(md) {
-          top: 200px;
+      &[data-animation='horizontal'] {
+        &[data-position='mid'] {
+          @include media-breakpoint-up(md) {
+            left: -100px;
+          }
+          left: -50px;
         }
-        top: 100px;
+
+        &[data-position='top'] {
+          @include media-breakpoint-up(md) {
+            left: -200px;
+          }
+          left: -100px;
+        }
       }
     }
 
