@@ -12,6 +12,9 @@ const backgroundImages = Array.from(
     initialTop: parseInt(img.offsetTop, 10),
     initialLeft: parseInt(img.offsetLeft, 10),
   };
+  image.img.style.left = `${image.initialLeft}px`;
+  image.img.style.top = `${image.initialTop}px`;
+  image.img.style.opacity = 1;
   return image;
 });
 
@@ -24,19 +27,20 @@ document.addEventListener('resize', () => {
 });
 
 function animateVertically(scrollPos, img) {
-  const speed = windowSizeConstant * 0.1 * img.speed;
+  const speed = windowSizeConstant * 0.05 * img.speed;
   img.img.style.top = `${img.initialTop - scrollPos * speed}px`;
 }
 
 function animateHorizontally(scrollPos, img) {
-  const speed = windowSizeConstant * 0.1 * img.speed;
+  const speed = windowSizeConstant * 0.05 * img.speed;
   img.img.style.left = `${img.initialLeft + scrollPos * speed}px`;
 }
 
 function animateZoom(scrollPos, img) {
   const speed = windowSizeConstant * img.speed;
-  const zoom = 1 + scrollPos * 0.001 * speed;
+  const zoom = 1 + scrollPos * 0.0001 * speed;
   img.img.style.transform = `scale(${zoom})`;
+  img.img.style.top = `${img.initialTop + scrollPos * 0.05 * speed}px`;
 }
 
 function animateImage(scrollPos) {

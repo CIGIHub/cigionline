@@ -12,43 +12,15 @@
     width: 100%;
 
     img {
-      &:not([data-position='base']) {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out, transform 0.25s ease,
+        top 0.25s ease, left 0.25s ease;
+
+      &:not([data-position='0']) {
         left: 0;
         margin-bottom: -1em;
         right: 0;
         position: absolute;
-      }
-
-      &[data-animation='vertical'] {
-        &[data-position='mid'] {
-          @include media-breakpoint-up(md) {
-            top: 100px;
-          }
-          top: 50px;
-        }
-
-        &[data-position='top'] {
-          @include media-breakpoint-up(md) {
-            top: 200px;
-          }
-          top: 100px;
-        }
-      }
-
-      &[data-animation='horizontal'] {
-        &[data-position='mid'] {
-          @include media-breakpoint-up(md) {
-            left: -100px;
-          }
-          left: -50px;
-        }
-
-        &[data-position='top'] {
-          @include media-breakpoint-up(md) {
-            left: -200px;
-          }
-          left: -100px;
-        }
       }
     }
 
