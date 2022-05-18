@@ -1047,9 +1047,9 @@ class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
         choices=AnimationChoices.choices,
         default=AnimationChoices.NONE,
     )
-    speed = blocks.IntegerBlock()
-    initial_top = blocks.IntegerBlock()
-    initial_left = blocks.IntegerBlock()
+    speed = blocks.IntegerBlock(default=0)
+    initial_top = blocks.IntegerBlock(default=0)
+    initial_left = blocks.IntegerBlock(default=0)
 
     class Meta:
         icon = 'image'

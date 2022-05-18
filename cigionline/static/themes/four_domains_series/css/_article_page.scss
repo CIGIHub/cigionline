@@ -13,14 +13,43 @@
 
     img {
       opacity: 0;
-      transition: opacity 0.5s ease-in-out, transform 0.25s ease,
-        top 0.25s ease, left 0.25s ease;
+      position: relative;
+      transition: opacity 0.5s ease-in-out, transform 0.25s ease, top 0.25s ease,
+        left 0.25s ease;
 
       &:not([data-position='0']) {
         left: 0;
         margin-bottom: -1em;
         right: 0;
         position: absolute;
+      }
+
+      &[data-position='0'] {
+        z-index: 0;
+      }
+
+      &[data-position='1'] {
+        z-index: 1;
+      }
+
+      &[data-position='2'] {
+        z-index: 2;
+      }
+
+      &[data-position='3'] {
+        z-index: 3;
+      }
+
+      &[data-position='4'] {
+        z-index: 4;
+      }
+
+      &[data-position='5'] {
+        z-index: 5;
+      }
+
+      &[data-position='6'] {
+        z-index: 6;
       }
     }
 

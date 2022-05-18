@@ -1,5 +1,7 @@
 import './css/four_domains_series.scss';
 
+let windowSizeConstant = window.innerWidth / 1980;
+
 const backgroundImages = Array.from(
   document.getElementById('background-images').querySelectorAll('img')
 ).map((img) => {
@@ -9,8 +11,8 @@ const backgroundImages = Array.from(
     animation: img.dataset.animation,
     position: img.dataset.position,
     speed: Number(img.dataset.speed),
-    initialTop: parseInt(img.offsetTop, 10),
-    initialLeft: parseInt(img.offsetLeft, 10),
+    initialTop: Number(img.dataset.initialTop) * windowSizeConstant,
+    initialLeft: Number(img.dataset.initialLeft) * windowSizeConstant,
   };
   image.img.style.left = `${image.initialLeft}px`;
   image.img.style.top = `${image.initialTop}px`;
@@ -20,7 +22,6 @@ const backgroundImages = Array.from(
 
 let lastKnownScrollPosition = 0;
 let ticking = false;
-let windowSizeConstant = window.innerWidth / 1980;
 
 document.addEventListener('resize', () => {
   windowSizeConstant = window.innerWidth / 1980;
