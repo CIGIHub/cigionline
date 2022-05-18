@@ -89,11 +89,11 @@
         margin: 2em 0 1.25em;
       }
 
-      .short-description {
-        @media (max-height: 500px) {
-          font-size: small;
-        }
-      }
+      // .short-description {
+      //   @media (max-height: 500px) {
+      //     font-size: small;
+      //   }
+      // }
 
       .scrollanchor-container {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
