@@ -1047,7 +1047,7 @@ class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
         choices=AnimationChoices.choices,
         default=AnimationChoices.NONE,
     )
-    speed = blocks.IntegerBlock(default=0)
+    speed = blocks.DecimalBlock(default=0)
     initial_top = blocks.IntegerBlock(default=0)
     initial_left = blocks.IntegerBlock(default=0)
 

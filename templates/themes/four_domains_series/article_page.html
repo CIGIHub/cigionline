@@ -16,8 +16,8 @@
 {% block hero %}
   <section class="four-domains-series-article-hero">
     <div class="container">
-      <div class="row">
-        <div class="col hero-content">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 hero-content">
           <div>
             {% include "includes/topics.html" with topics=self.topics_sorted %}
             <h1>{{ self.title }}</h1>
@@ -43,7 +43,7 @@
               />
             {% endfor %}
           </div>
-        </div
+        </div>
       </div>
     </div>
   </section>
