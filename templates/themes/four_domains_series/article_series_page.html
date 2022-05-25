@@ -32,16 +32,16 @@
   <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css">
 {% endblock %}
 {% block theme_css %}
-  {% render_bundle 'themeJohnHolmesSeries' 'css' %}
+  {% render_bundle 'themeFourDomainsSeries' 'css' %}
 {% endblock %}
 {% block theme_js %}
-  {% render_bundle 'themeJohnHolmesSeries' 'js' attrs='defer' %}
+  {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}john-holmes-series-article-series{% endblock %}
+{% block body_class %}four-domains-series-article-series{% endblock %}
 
 {% block content %}
-  <section class="john-holmes-series-article-series-hero">
+  <section class="four-domains-series-article-series-hero">
     <div class="hero-content">
       {% image self.image_banner width-1000 as image_banner %}
       <div class="banner-bg" style="background-image: url('{{image_banner.url}}')"></div>
@@ -68,55 +68,71 @@
       </div>
     </div>
   </section>
-  <section class="john-holmes-series-article-series-in-the-series" id="article-series-items">
+  <section class="four-domains-series-article-series-in-the-series" id="article-series-items">
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          {% define start as true %}
-          {% for series_item in self.article_series_items %}
-            {% if series_item.category_title %}
-              {% if not forloop.first %}
-                  </div>
+      {% with self.series_items_by_category|first as introduction %}
+        {% if introduction %}
+          <div class="series-introduction">
+            {% for item in introduction.series_items %}
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                  <article>
+                    <h3 class="series-item-title">
+                      <a href={{item.url}}>{{ item.title }}</a>
+                    </h3>
+                    <div class="series-item-authors">
+                      {% include 'includes/authors.html' with authors=item.authors.all %}
+                    </div>
+                  </article>
                 </div>
-              {% endif %}
-              <div class="series-category">
-              <h2>{{ series_item.category_title }}</h2>
-              <div class="series-category-items">
-            {% endif %}
-            <article>
-              <h3>
-                <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
-              </h3>
-              {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
-            </article>
-          {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+
+
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="series-items">
+            {% for category in self.series_items_by_category|slice:"1:" %}
+              {% with forloop.counter as counter %}
+                <h2 class="series-item-label column-{{ counter }}">{{ category.category }}</h2>
+                {% for item in category.series_items %}
+                  <article class="column-{{ counter }}">
+                    <h3 class="series-item-title">
+                      <a href={{item.url}}>{{ item.title }}</a>
+                    </h3>
+                    <div class="series-item-authors">
+                      {% include 'includes/authors.html' with authors=item.authors.all %}
+                    </div>
+                  </article>
+                {% endfor %}
+              {% endwith %}
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
   </section>
-  {% if self.credits %}
-    <section class="credits">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10">
-            <h2>Credits</h2>
-            <div class="credits-content">
-              {% if self.credits_stream_field %}
-                {% for title in self.credits_stream_field %}
-                  <div class="title-container">
-                    <div class="title">{{ title.value.title }}</div>
-                    {% for person in title.value.people %}
-                      <div class="name">{{ person }}</div>
-                    {% endfor %}
-                  </div>
+  <section class="credits">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10">
+          <h2>Credits</h2>
+          <div class="credits-content">
+            {% for title in self.credits_stream_field %}
+              <div class="title-container">
+                <div class="title">{{ title.value.title }}</div>
+                {% for person in title.value.people %}
+                  <div class="name">{{ person }}</div>
                 {% endfor %}
-              {% else %}
-                {{ self.credits|richtext }}
-              {% endif %}
-            </div>
+              </div>
+            {% endfor %}
           </div>
         </div>
       </div>
-    </section>
-  {% endif %}
+    </div>
+  </section>
 {% endblock %}
