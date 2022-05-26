@@ -1,6 +1,8 @@
+$blockquote-color: #ffca00;
+
 .four-domains-series-article {
-  @include top-bar($background-color: $four_domains_bg_color, $color: $black);
-  background-color: $four_domains_bg_color;
+  @include top-bar($background-color: $four-domains-bg-color, $color: $black);
+  background-color: $four-domains-bg-color;
 
   .four-domains-series-article-hero {
     @include media-breakpoint-up(md) {
@@ -17,14 +19,13 @@
       img {
         opacity: 0;
         position: relative;
-        transition: opacity 0.5s ease-in-out, transform 0.25s ease,
-          top 0.25s ease, left 0.25s ease;
+        transition: opacity 0.5s ease-in-out, transform 0.25s ease, top 0.25s ease, left 0.25s ease;
 
         &:not([data-position='0']) {
           left: 0;
           margin-bottom: -1em;
-          right: 0;
           position: absolute;
+          right: 0;
         }
 
         &[data-position='0'] {
@@ -63,6 +64,7 @@
       .mid {
         z-index: 2;
       }
+
       .top {
         z-index: 3;
       }
@@ -94,7 +96,7 @@
           font-size: 3em;
         }
         color: $black;
-        font-family: $four_domains_font;
+        font-family: $four-domains-font;
         font-size: calc(1em + 2.5vw);
         font-weight: 700;
       }
@@ -116,7 +118,7 @@
   .body {
     .drop-caps {
       border: 0;
-      font-family: $four_domains_font;
+      font-family: $four-domains-font;
       font-weight: 600;
     }
 
@@ -125,11 +127,11 @@
       padding-top: 0;
 
       .stream-block-blockquote-content {
-        font-family: $four_domains_font;
+        font-family: $four-domains-font;
         padding: 1em 0;
 
         &::before {
-          border-bottom: 10px solid #ffca00;
+          border-bottom: 10px solid $blockquote-color;
           bottom: 15px;
           top: auto;
         }

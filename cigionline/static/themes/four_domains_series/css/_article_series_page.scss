@@ -13,9 +13,9 @@
 
     .banner-bg {
       @include media-breakpoint-up(sm) {
-        position: absolute;
-        opacity: 1;
         height: auto;
+        opacity: 1;
+        position: absolute;
         width: 100vw;
       }
       @include media-breakpoint-up(lg) {
@@ -68,8 +68,8 @@
       }
 
       .opinion-series-label {
-        font-weight: 500;
         font-style: italic;
+        font-weight: 500;
         margin-bottom: 1em;
       }
 
@@ -86,6 +86,7 @@
 
   .four-domains-series-article-series-in-the-series {
     padding-top: 3em;
+
     .series-introduction {
       margin-bottom: 2em;
       text-align: center;
@@ -148,7 +149,7 @@
 
       h2 {
         color: $cigi-medium-grey;
-        font-family: $four_domains_font;
+        font-family: $four-domains-font;
         font-size: 1rem;
         font-weight: 600;
         padding-bottom: 1.5em;
@@ -161,7 +162,7 @@
         padding-bottom: 1em;
 
         &:nth-child(5n) {
-          border-bottom: none;
+          border-bottom: 0;
         }
 
         h3 {
@@ -200,8 +201,8 @@
   }
 
   .credits {
-    margin-top: 3em;
     margin-bottom: 4em;
+    margin-top: 3em;
 
     h2 {
       font-weight: 500;

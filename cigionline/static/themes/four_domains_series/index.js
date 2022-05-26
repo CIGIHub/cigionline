@@ -64,11 +64,11 @@ function animateImage(
   });
 }
 
-if (document.querySelector('four-domains-series-article')) {
+if (document.querySelector('.four-domains-series-article')) {
   let windowSizeConstant = window.innerWidth / 1980;
 
   const backgroundImages = Array.from(
-    document.getElementById('background-images').querySelectorAll('img')
+    document.getElementById('background-images').querySelectorAll('img'),
   ).map((img) => {
     const image = {
       img,
