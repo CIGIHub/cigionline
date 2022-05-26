@@ -1,0 +1,11 @@
+$four-domains-font: Georgia, 'Times New Roman', Times, serif;
+$four-domains-bg-color: #e9e9de;
+$four-domains-series-page-bg-color: #eceae1;
+
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+
+@import './article_series_page';
+@import './article_page';
+@import './multimedia_page';
+@import './includes/in_the_series';

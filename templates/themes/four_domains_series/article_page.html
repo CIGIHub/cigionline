@@ -1,0 +1,77 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_fonts %}
+  {% comment %} <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css"> {% endcomment %}
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeFourDomainsSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}four-domains-series-article{% endblock %}
+
+{% block hero %}
+  <section class="four-domains-series-article-hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 hero-content">
+          <div>
+            {% include "includes/topics.html" with topics=self.topics_sorted %}
+            <h1>{{ self.title }}</h1>
+            {% include "includes/authors.html" with authors=self.authors.all %}
+            {% include "includes/date.html" with date=self.publishing_date %}
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="background-images" id="background-images">
+            {% for block in self.get_additional_images %}
+              {% image block.image original as additional_image %}
+              <img 
+                src="{{ additional_image.url }}"
+                alt="{{ additional_image.alt }}"
+                class="{{ block.classes }}"
+                data-position="{{ block.position }}"
+                data-animation="{{ block.animation }}"
+                data-speed="{{ block.speed }}"
+                data-initial-top="{{ block.initial_top }}"
+                data-initial-left="{{ block.initial_left }}"
+              />
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block article_content %}
+  {% if self.body %}
+    <section class="body" id="article-body">
+      {% if heading %}
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12{% if full_heading is not True %} col-md-10 col-lg-8{% endif %}">
+              <h2 class="paragraph-heading">{{ heading }}</h2>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      {% for block in self.body %}
+        {% if block.block_type != 'additional_image' %}
+          {% include_block block %}
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% endif %}
+{% endblock %}
+
+{% block in_the_series %}
+  {% if self.article_series %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
+  {% endif %}
+{% endblock %}
