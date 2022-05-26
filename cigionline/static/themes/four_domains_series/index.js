@@ -1,26 +1,26 @@
 import './css/four_domains_series.scss';
 
-if (document.querySelector('.four-domains-series-article-series')) {
-  const seriesItems = document.getElementById('article-series-items');
-  const columns = [];
-  for (let i = 1; i <= 5; i += 1) {
-    columns.push(seriesItems.querySelectorAll(`.column-${i}`));
-  }
-  columns.forEach((column) => {
-    column.forEach((item) => {
-      item.addEventListener('mouseover', () => {
-        column.forEach((article) => {
-          article.classList.add('hover');
-        });
-      });
-      item.addEventListener('mouseout', () => {
-        column.forEach((article) => {
-          article.classList.remove('hover');
-        });
-      });
-    });
-  });
-}
+// if (document.querySelector('.four-domains-series-article-series')) {
+//   const seriesItems = document.getElementById('article-series-items');
+//   const columns = [];
+//   for (let i = 1; i <= 5; i += 1) {
+//     columns.push(seriesItems.querySelectorAll(`.column-${i}`));
+//   }
+//   columns.forEach((column) => {
+//     column.forEach((item) => {
+//       item.addEventListener('mouseover', () => {
+//         column.forEach((article) => {
+//           article.classList.add('hover');
+//         });
+//       });
+//       item.addEventListener('mouseout', () => {
+//         column.forEach((article) => {
+//           article.classList.remove('hover');
+//         });
+//       });
+//     });
+//   });
+// }
 
 function animateVertically(scrollPos, img, windowSizeConstant) {
   const speed = windowSizeConstant * 0.05 * img.speed;

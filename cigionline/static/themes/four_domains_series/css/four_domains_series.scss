@@ -3,6 +3,8 @@ $four_domains_bg_color: #e9e9de;
 $four-domains-series-page-bg-color: #eceae1;
 
 @import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+
 @import './article_series_page';
 @import './article_page';
 @import './multimedia_page';

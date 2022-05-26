@@ -43,19 +43,13 @@
 {% block content %}
   <section class="four-domains-series-article-series-hero">
     <div class="hero-content">
-      {% image self.image_banner width-1000 as image_banner %}
-      <div class="banner-bg" style="background-image: url('{{image_banner.url}}')"></div>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-10">
-            {% image self.image_banner width-1000 %}
-            <div class="opinion-series-label">A CIGI Essay Series</div>
-            <h1>{{ self.title }}</h1>
-          </div>
-        </div>
-        {% if self.short_description %}
+      {% image self.image_banner width-1000 class="banner-bg" %}
+      <div class="hero-text">
+        <div class="container">
           <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8">
+            <div class="col-md-8 col-lg-6">
+              <h1>{{ self.title }}</h1>
+              <div class="opinion-series-label">A CIGI Essay Series</div>
               <div class="short-description">{{ self.short_description|richtext }}</div>
               <div class="scrollanchor-container">
                 <a href="#article-series-items">
@@ -64,10 +58,11 @@
               </div>
             </div>
           </div>
-        {% endif %}
+        </div>
       </div>
     </div>
   </section>
+
   <section class="four-domains-series-article-series-in-the-series" id="article-series-items">
     <div class="container">
       {% with self.series_items_by_category|first as introduction %}
@@ -91,24 +86,24 @@
         {% endif %}
       {% endwith %}
 
-
-
       <div class="row justify-content-center">
         <div class="col">
           <div class="series-items">
             {% for category in self.series_items_by_category|slice:"1:" %}
               {% with forloop.counter as counter %}
-                <h2 class="series-item-label column-{{ counter }}">{{ category.category }}</h2>
-                {% for item in category.series_items %}
-                  <article class="column-{{ counter }}">
-                    <h3 class="series-item-title">
-                      <a href={{item.url}}>{{ item.title }}</a>
-                    </h3>
-                    <div class="series-item-authors">
-                      {% include 'includes/authors.html' with authors=item.authors.all %}
-                    </div>
-                  </article>
-                {% endfor %}
+                <div class="series-category">
+                  <h2 class="series-item-label column-{{ counter }}">{{ category.category }}</h2>
+                  {% for item in category.series_items %}
+                    <article class="column-{{ counter }}">
+                      <h3 class="series-item-title">
+                        <a href={{item.url}}>{{ item.title }}</a>
+                      </h3>
+                      <div class="series-item-authors">
+                        {% include 'includes/authors.html' with authors=item.authors.all %}
+                      </div>
+                    </article>
+                  {% endfor %}
+                </div>
               {% endwith %}
             {% endfor %}
           </div>

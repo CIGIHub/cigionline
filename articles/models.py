@@ -650,7 +650,7 @@ class ArticleSeriesPage(
             'content_page',
             'content_page__authors__author',
         ).all()
-    
+
     def series_items_by_category(self):
         series_items = self.article_series_items
         series_items_by_category = []
