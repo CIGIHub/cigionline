@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeFourDomainsSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}four-domains-series-article-series{% endblock %}
+
+{% block content %}
+  <section class="four-domains-series-article-series-hero">
+    <div class="hero-content">
+      {% image self.image_banner width-1000 class="banner-bg" %}
+      <div class="hero-text">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+              <h1>{{ self.title }}</h1>
+              <div class="opinion-series-label">A CIGI Essay Series</div>
+              <div class="short-description">{{ self.short_description|richtext }}</div>
+              <div class="scrollanchor-container">
+                <a href="#article-series-items">
+                  <i class="far fa-arrow-down fa-2x"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="four-domains-series-article-series-in-the-series" id="article-series-items">
+    <div class="container">
+      {% with self.series_items_by_category|first as introduction %}
+        {% if introduction %}
+          <div class="series-introduction">
+            {% for item in introduction.series_items %}
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                  <article>
+                    <h3 class="series-item-title">
+                      <a href={{item.url}}>{{ item.title }}</a>
+                    </h3>
+                    <div class="series-item-authors">
+                      {% include 'includes/authors.html' with authors=item.authors.all %}
+                    </div>
+                  </article>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="series-items">
+            {% for category in self.series_items_by_category|slice:"1:" %}
+              {% with forloop.counter as counter %}
+                <div class="series-category">
+                  <h2 class="series-item-label column-{{ counter }}">{{ category.category }}</h2>
+                  {% for item in category.series_items %}
+                    <article class="column-{{ counter }}">
+                      <h3 class="series-item-title">
+                        <a href={{item.url}}>{{ item.title }}</a>
+                      </h3>
+                      <div class="series-item-authors">
+                        {% include 'includes/authors.html' with authors=item.authors.all %}
+                      </div>
+                    </article>
+                  {% endfor %}
+                </div>
+              {% endwith %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="credits">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10">
+          <h2>Credits</h2>
+          <div class="credits-content">
+            {% for title in self.credits_stream_field %}
+              <div class="title-container">
+                <div class="title">{{ title.value.title }}</div>
+                {% for person in title.value.people %}
+                  <div class="name">{{ person }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

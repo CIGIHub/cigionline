@@ -1,0 +1,141 @@
+$blockquote-color: #ffca00;
+
+.four-domains-series-article {
+  @include top-bar($background-color: $four-domains-bg-color, $color: $black);
+  background-color: $four-domains-bg-color;
+
+  .four-domains-series-article-hero {
+    @include media-breakpoint-up(md) {
+      padding-top: 10em;
+    }
+    margin-bottom: 6em;
+    padding-top: 5em;
+
+    .background-images {
+      height: 100%;
+      position: relative;
+      width: 100%;
+
+      img {
+        opacity: 0;
+        position: relative;
+        transition: opacity 0.5s ease-in-out, transform 0.25s ease, top 0.25s ease, left 0.25s ease;
+
+        &:not([data-position='0']) {
+          left: 0;
+          margin-bottom: -1em;
+          position: absolute;
+          right: 0;
+        }
+
+        &[data-position='0'] {
+          z-index: 0;
+        }
+
+        &[data-position='1'] {
+          z-index: 1;
+        }
+
+        &[data-position='2'] {
+          z-index: 2;
+        }
+
+        &[data-position='3'] {
+          z-index: 3;
+        }
+
+        &[data-position='4'] {
+          z-index: 4;
+        }
+
+        &[data-position='5'] {
+          z-index: 5;
+        }
+
+        &[data-position='6'] {
+          z-index: 6;
+        }
+      }
+
+      .base {
+        z-index: 1;
+      }
+
+      .mid {
+        z-index: 2;
+      }
+
+      .top {
+        z-index: 3;
+      }
+
+      .bottom {
+        bottom: 0;
+        position: absolute;
+      }
+    }
+
+    .hero-content {
+      @include media-breakpoint-up(md) {
+        text-align: center;
+      }
+
+      .topics {
+        @include link(
+          $color: $cigi-text-grey,
+          $hover-color: $cigi-primary-colour
+        );
+        @include media-breakpoint-up(md) {
+          justify-content: center;
+        }
+        margin-bottom: 1.5em;
+      }
+
+      h1 {
+        @include media-breakpoint-up(lg) {
+          font-size: 3em;
+        }
+        color: $black;
+        font-family: $four-domains-font;
+        font-size: calc(1em + 2.5vw);
+        font-weight: 700;
+      }
+
+      .authors {
+        @include media-breakpoint-up(md) {
+          justify-content: center;
+        }
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        text-transform: uppercase;
+      }
+
+      .date {
+        color: $black;
+      }
+    }
+  }
+
+  .body {
+    .drop-caps {
+      border: 0;
+      font-family: $four-domains-font;
+      font-weight: 600;
+    }
+
+    .stream-block-blockquote {
+      margin-top: 1em;
+      padding-top: 0;
+
+      .stream-block-blockquote-content {
+        font-family: $four-domains-font;
+        padding: 1em 0;
+
+        &::before {
+          border-bottom: 10px solid $blockquote-color;
+          bottom: 15px;
+          top: auto;
+        }
+      }
+    }
+  }
+}

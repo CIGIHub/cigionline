@@ -1,0 +1,33 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+<section class="four-domains-series-in-the-series">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <article class="d-flex">
+          <div class="left">
+            <div class="essay-series-label">A CIGI Essay Series</div>
+            <div class="series-info">
+              <h2><a href="{{ article_series.url }}">{{ article_series.title }}</a></h2>
+            </div>
+            {{ article_series.specific.short_description|richtext }}
+          </div>
+          <div class="series-contributors right">
+            <div class="contributors-label">Contributors</div>
+            <ul class="contributors">
+              {% for item in article_series.series_contributors_by_article %}
+                {% for contributor in item.contributors %}
+                  <li>
+                    <a href="{{ item.item.url }}">
+                      <span>{{ contributor.author.title }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
