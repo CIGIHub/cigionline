@@ -87,9 +87,22 @@
   .four-domains-series-article-series-in-the-series {
     padding-top: 3em;
 
+    h2 {
+      color: $cigi-medium-grey;
+      font-family: $four-domains-font;
+      font-size: 1rem;
+      font-weight: 600;
+      padding-bottom: 1.5em;
+      transition: color 0.2s ease;
+    }
+
     .series-introduction {
       margin-bottom: 2em;
       text-align: center;
+
+      h2 {
+        color: $black;
+      }
 
       article {
         margin-bottom: 2em;
@@ -116,18 +129,19 @@
     .series-items {
       @include media-breakpoint-up(md) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-rows: auto 1fr 1fr 1fr 1fr;
       }
       border-bottom: 1px solid $cigi-text-grey;
       column-gap: 2em;
       display: grid;
-      grid-auto-flow: column;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: repeat(2, auto 1fr 1fr 1fr 1fr);
       margin-bottom: 2em;
 
       .series-category {
-        display: contents;
+        @include media-breakpoint-only(md) {
+          grid-template-rows: 66px repeat(4, 1fr);
+        }
+        display: grid;
+        grid-template-rows: auto repeat(4, 1fr);
 
         &:hover {
           h2 {
@@ -145,55 +159,46 @@
             );
           }
         }
-      }
 
-      h2 {
-        color: $cigi-medium-grey;
-        font-family: $four-domains-font;
-        font-size: 1rem;
-        font-weight: 600;
-        padding-bottom: 1.5em;
-        transition: color 0.2s ease;
-      }
+        article {
+          border-bottom: 1px solid $cigi-text-grey;
+          margin-bottom: 1em;
+          padding-bottom: 1em;
 
-      article {
-        border-bottom: 1px solid $cigi-text-grey;
-        margin-bottom: 1em;
-        padding-bottom: 1em;
+          &:nth-child(5n) {
+            border-bottom: 0;
+          }
 
-        &:nth-child(5n) {
-          border-bottom: 0;
-        }
-
-        h3 {
-          @include link(
-            $color: $cigi-medium-grey,
-            $hover-color: $cigi-primary-colour
-          );
-          font-size: 1rem;
-          font-weight: 500;
-          margin-bottom: 0.75em;
-        }
-
-        .authors {
-          @include link(
-            $color: $cigi-medium-grey,
-            $hover-color: $cigi-primary-colour
-          );
-          font-size: 0.75em;
-          text-transform: uppercase;
-        }
-
-        &.hover {
           h3 {
-            @include link($color: $black, $hover-color: $cigi-primary-colour);
+            @include link(
+              $color: $cigi-medium-grey,
+              $hover-color: $cigi-primary-colour
+            );
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.75em;
           }
 
           .authors {
             @include link(
-              $color: $cigi-text-grey,
+              $color: $cigi-medium-grey,
               $hover-color: $cigi-primary-colour
             );
+            font-size: 0.75em;
+            text-transform: uppercase;
+          }
+
+          &.hover {
+            h3 {
+              @include link($color: $black, $hover-color: $cigi-primary-colour);
+            }
+
+            .authors {
+              @include link(
+                $color: $cigi-text-grey,
+                $hover-color: $cigi-primary-colour
+              );
+            }
           }
         }
       }
