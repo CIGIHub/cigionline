@@ -11,7 +11,7 @@
   {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}four-domains-series-article{% endblock %}
+{% block body_class %}four-domains-series-article {{self.article_series_category}}{% endblock %}
 
 {% block hero %}
   <section class="four-domains-series-article-hero">
@@ -67,6 +67,51 @@
         {% endif %}
       {% endfor %}
     </section>
+  {% endif %}
+
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Works Cited</h2>
+            {{ self.works_cited|richtext }}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.article_series_disclaimer %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-disclaimer">
+            {{self.article_series_disclaimer|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% include 'includes/disclaimer.html' %}
+
+  {% if self.is_opinion and self.author_count > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
   {% endif %}
 {% endblock %}
 

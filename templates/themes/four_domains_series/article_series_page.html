@@ -71,6 +71,7 @@
             {% for item in introduction.series_items %}
               <div class="row justify-content-center">
                 <div class="col-md-10 col-lg-8">
+                  <h2 class="series-item-label">{{ introduction.category }}</h2>
                   <article>
                     <h3 class="series-item-title">
                       <a href={{item.url}}>{{ item.title }}</a>
