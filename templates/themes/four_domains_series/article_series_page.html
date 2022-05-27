@@ -68,13 +68,18 @@
       {% with self.series_items_by_category|first as introduction %}
         {% if introduction %}
           <div class="series-introduction">
+            <h2 class="series-item-label">{{ introduction.category }}</h2>
             {% for item in introduction.series_items %}
               <div class="row justify-content-center">
                 <div class="col-md-10 col-lg-8">
-                  <h2 class="series-item-label">{{ introduction.category }}</h2>
                   <article>
                     <h3 class="series-item-title">
-                      <a href={{item.url}}>{{ item.title }}</a>
+                      <a href={{item.url}}>
+                        {% if item.contenttype == 'Multimedia' %}
+                          <i class="fas fa-play"></i>
+                        {% endif %}
+                        {{ item.title }}
+                      </a>
                     </h3>
                     <div class="series-item-authors">
                       {% include 'includes/authors.html' with authors=item.authors.all %}
@@ -92,15 +97,23 @@
           <div class="series-items">
             {% for category in self.series_items_by_category|slice:"1:" %}
               {% with forloop.counter as counter %}
-                <div class="series-category">
+                <div class="series-category {% if category.live %}live{% endif %}">
                   <h2 class="series-item-label column-{{ counter }}">{{ category.category }}</h2>
                   {% for item in category.series_items %}
                     <article class="column-{{ counter }}">
                       <h3 class="series-item-title">
-                        <a href={{item.url}}>{{ item.title }}</a>
+                        {% if category.live %}
+                          <a href={{item.url}}>{{ item.title }}</a>
+                        {% else %}
+                          {{ item.title }}
+                        {% endif %}
                       </h3>
                       <div class="series-item-authors">
-                        {% include 'includes/authors.html' with authors=item.authors.all %}
+                        {% if category.live %}
+                          {% include 'includes/authors.html' with authors=item.authors.all %}
+                        {% else %}
+                          {% include 'includes/authors.html' with authors=item.authors.all hide_link=True %}
+                        {% endif %}
                       </div>
                     </article>
                   {% endfor %}

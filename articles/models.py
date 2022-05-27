@@ -661,7 +661,8 @@ class ArticleSeriesPage(
             if category:
                 series_items_by_category.append({
                     'category': category,
-                    'series_items': [series_item.content_page]
+                    'series_items': [series_item.content_page],
+                    'live': series_item.content_page.live,
                 })
             else:
                 series_items_by_category[-1]['series_items'].append(series_item.content_page)

@@ -10,6 +10,8 @@
     }
     height: 100vh;
     padding-top: 5em;
+    position: relative;
+    z-index: 0;
 
     .banner-bg {
       @include media-breakpoint-up(sm) {
@@ -86,6 +88,7 @@
 
   .four-domains-series-article-series-in-the-series {
     padding-top: 3em;
+    position: relative;
 
     h2 {
       color: $cigi-medium-grey;
@@ -94,6 +97,10 @@
       font-weight: 600;
       padding-bottom: 1.5em;
       transition: color 0.2s ease;
+    }
+
+    i {
+      margin-right: 0.5em;
     }
 
     .series-introduction {
@@ -138,14 +145,18 @@
 
       .series-category {
         @include media-breakpoint-only(md) {
-          grid-template-rows: 66px repeat(4, 1fr);
+          grid-template-rows: 80px repeat(4, 1fr);
         }
         display: grid;
-        grid-template-rows: auto repeat(4, 1fr);
+        grid-template-rows: 66px repeat(4, 1fr);
 
-        &:hover {
+        &.live {
           h2 {
             color: $black;
+
+            &::after {
+              content: none;
+            }
           }
 
           h3 {
@@ -160,6 +171,14 @@
           }
         }
 
+        h2 {
+          &::after {
+            content: '(forthcoming)';
+            display: block;
+            font-style: italic;
+          }
+        }
+
         article {
           border-bottom: 1px solid $cigi-text-grey;
           margin-bottom: 1em;
@@ -170,20 +189,14 @@
           }
 
           h3 {
-            @include link(
-              $color: $cigi-medium-grey,
-              $hover-color: $cigi-primary-colour
-            );
+            color: $cigi-medium-grey;
             font-size: 1rem;
             font-weight: 500;
             margin-bottom: 0.75em;
           }
 
           .authors {
-            @include link(
-              $color: $cigi-medium-grey,
-              $hover-color: $cigi-primary-colour
-            );
+            color: $cigi-medium-grey;
             font-size: 0.75em;
             text-transform: uppercase;
           }
