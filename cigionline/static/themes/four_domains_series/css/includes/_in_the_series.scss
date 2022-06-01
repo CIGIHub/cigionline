@@ -115,7 +115,9 @@
         @include media-breakpoint-up(lg) {
           flex: 0 1 17.5%;
         }
+        display: flex;
         flex: 0 1 47.5%;
+        flex-direction: column;
         grid-template-rows: auto 1fr;
         margin-bottom: 2em;
 
@@ -197,13 +199,13 @@
         }
 
         .series-item-text {
-          display: flex;
-          flex-direction: column;
+          display: grid;
+          flex-grow: 1;
+          grid-template-rows: 1fr 1fr;
           margin-top: 1em;
 
           .series-item-authors {
             color: $cigi-medium-grey;
-            flex: 1;
             font-size: 0.75em;
             text-transform: uppercase;
           }
