@@ -1,40 +1,40 @@
 $blockquote-color: #ffca00;
-$content-policy-bg-color: #d6ccb5;
-$data-policy-bg-color: #e6e5db;
-$competition-policy-bg-color: #f4e7d8;
-$infrastructure-policy-bg-color: #e7e5da;
+$content-bg-color: #d6ccb5;
+$data-bg-color: #e6e5db;
+$competition-bg-color: #f4e7d8;
+$infrastructure-bg-color: #e7e5da;
 
 .four-domains-series-article {
   @include top-bar($background-color: $four-domains-bg-color, $color: $black);
   background-color: $four-domains-bg-color;
 
-  &.content-policy {
+  &.content {
     @include top-bar(
-      $background-color: $content-policy-bg-color,
+      $background-color: $content-bg-color,
       $color: $black
     );
-    background-color: $content-policy-bg-color;
+    background-color: $content-bg-color;
   }
 
-  &.data-policy {
-    @include top-bar($background-color: $data-policy-bg-color, $color: $black);
-    background-color: $data-policy-bg-color;
+  &.data {
+    @include top-bar($background-color: $data-bg-color, $color: $black);
+    background-color: $data-bg-color;
   }
 
-  &.competition-policy {
+  &.competition {
     @include top-bar(
-      $background-color: $competition-policy-bg-color,
+      $background-color: $competition-bg-color,
       $color: $black
     );
-    background-color: $competition-policy-bg-color;
+    background-color: $competition-bg-color;
   }
 
-  &.infrastructure-policy {
+  &.infrastructure {
     @include top-bar(
-      $background-color: $infrastructure-policy-bg-color,
+      $background-color: $infrastructure-bg-color,
       $color: $black
     );
-    background-color: $infrastructure-policy-bg-color;
+    background-color: $infrastructure-bg-color;
   }
 
   .four-domains-series-article-hero {
