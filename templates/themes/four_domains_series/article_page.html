@@ -11,7 +11,7 @@
   {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}four-domains-series-article {{self.article_series_category}}{% endblock %}
+{% block body_class %}four-domains-series-article {{self.article_series_category|slugify}}{% endblock %}
 
 {% block hero %}
   <section class="four-domains-series-article-hero">
@@ -117,6 +117,6 @@
 
 {% block in_the_series %}
   {% if self.article_series %}
-    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article=True %}
   {% endif %}
 {% endblock %}

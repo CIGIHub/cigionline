@@ -1,14 +1,48 @@
 $blockquote-color: #ffca00;
+$content-policy-bg-color: #d6ccb5;
+$data-policy-bg-color: #e6e5db;
+$competition-policy-bg-color: #f4e7d8;
+$infrastructure-policy-bg-color: #e7e5da;
 
 .four-domains-series-article {
   @include top-bar($background-color: $four-domains-bg-color, $color: $black);
   background-color: $four-domains-bg-color;
+
+  &.content-policy {
+    @include top-bar(
+      $background-color: $content-policy-bg-color,
+      $color: $black
+    );
+    background-color: $content-policy-bg-color;
+  }
+
+  &.data-policy {
+    @include top-bar($background-color: $data-policy-bg-color, $color: $black);
+    background-color: $data-policy-bg-color;
+  }
+
+  &.competition-policy {
+    @include top-bar(
+      $background-color: $competition-policy-bg-color,
+      $color: $black
+    );
+    background-color: $competition-policy-bg-color;
+  }
+
+  &.infrastructure-policy {
+    @include top-bar(
+      $background-color: $infrastructure-policy-bg-color,
+      $color: $black
+    );
+    background-color: $infrastructure-policy-bg-color;
+  }
 
   .four-domains-series-article-hero {
     @include media-breakpoint-up(md) {
       padding-top: 10em;
     }
     margin-bottom: 6em;
+    overflow: hidden;
     padding-top: 5em;
 
     .background-images {
@@ -19,7 +53,8 @@ $blockquote-color: #ffca00;
       img {
         opacity: 0;
         position: relative;
-        transition: opacity 0.5s ease-in-out, transform 0.25s ease, top 0.25s ease, left 0.25s ease;
+        transition: opacity 0.5s ease-in-out, transform 0.25s ease,
+          top 0.25s ease, left 0.25s ease;
 
         &:not([data-position='0']) {
           left: 0;
@@ -159,5 +194,25 @@ $blockquote-color: #ffca00;
 
   .recommended-section {
     margin-bottom: 4em;
+  }
+
+  .about-the-author {
+    h3 {
+      border: 0;
+      font-family: $four-domains-font;
+      font-size: 1em;
+      font-weight: 600;
+      text-transform: none;
+    }
+  }
+
+  .in-the-series {
+    padding-top: 0;
+
+    .in-the-series-label {
+      border-top: 1px $cigi-medium-grey solid;
+      margin-bottom: 1em;
+      padding-top: 4em;
+    }
   }
 }
