@@ -16,7 +16,7 @@
 {% block hero %}
   <section class="four-domains-series-article-hero">
     <div class="container">
-      <div class="row justify-content-center">
+      <div class="row justify-content-center z-1">
         <div class="col-md-10 col-lg-8 hero-content">
           <div>
             {% include "includes/topics.html" with topics=self.topics_sorted %}
@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center z-0">
         <div class="col-lg-10">
           <div class="background-images" id="background-images">
             {% for block in self.get_additional_images %}

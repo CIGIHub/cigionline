@@ -1036,6 +1036,7 @@ class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
         VERTICAL = ('vertical', 'Vertical')
         HORIZONTAL = ('horizontal', 'Horizontal')
         ZOOM = ('zoom', 'Zoom')
+        MOUSE = ('mouse', 'Mouse')
         NONE = ('none', 'None')
 
     image = ImageChooserBlock(required=True)

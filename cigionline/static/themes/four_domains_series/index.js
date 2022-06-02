@@ -1,20 +1,35 @@
 import './css/four_domains_series.scss';
 
 function animateVertically(scrollPos, img, windowSizeConstant) {
-  const speed = windowSizeConstant * 0.05 * img.speed;
+  const speed = (0.25 * windowSizeConstant + 0.75) * 0.05 * img.speed;
   img.img.style.top = `${img.initialTop - scrollPos * speed}px`;
 }
 
 function animateHorizontally(scrollPos, img, windowSizeConstant) {
-  const speed = windowSizeConstant * 0.05 * img.speed;
+  const speed = (0.25 * windowSizeConstant + 0.75) * 0.05 * img.speed;
   img.img.style.left = `${img.initialLeft + scrollPos * speed}px`;
 }
 
-function animateZoom(scrollPos, img, windowSizeConstant) {
-  const speed = (windowSizeConstant * 0.3 + 0.7) * img.speed;
+function animateZoom(scrollPos, img) {
+  const speed = img.speed;
   const zoom = 1 + scrollPos * 0.0001 * speed;
   img.img.style.transform = `scale(${zoom})`;
   img.img.style.top = `${img.initialTop + scrollPos * 0.03 * speed}px`;
+}
+
+function animateMouse(mouseX, mouseY, img) {
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const middleX = screenWidth / 2;
+  const middleY = screenHeight / 2;
+
+  const x = mouseX - middleX;
+  const y = mouseY - middleY;
+
+  const speed = (1 / img.position) * img.speed * 0.1;
+
+  img.img.style.top = `${-y * speed}px`;
+  img.img.style.left = `${-x * speed}px`;
 }
 
 function animateImage(
@@ -101,5 +116,15 @@ if (document.querySelector('.four-domains-series-article')) {
 
       ticking = true;
     }
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    backgroundImages.forEach((image) => {
+      if (image.animation === 'mouse') {
+        window.requestAnimationFrame(function() {
+          animateMouse(e.clientX, e.clientY, image);
+        });
+      }
+    });
   });
 }
