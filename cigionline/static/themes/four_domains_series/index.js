@@ -11,7 +11,7 @@ function animateHorizontally(scrollPos, img, windowSizeConstant) {
 }
 
 function animateZoom(scrollPos, img, windowSizeConstant) {
-  const speed = windowSizeConstant * img.speed;
+  const speed = (windowSizeConstant * 0.3 + 0.7) * img.speed;
   const zoom = 1 + scrollPos * 0.0001 * speed;
   img.img.style.transform = `scale(${zoom})`;
   img.img.style.top = `${img.initialTop + scrollPos * 0.03 * speed}px`;
