@@ -53,9 +53,9 @@ $four-domains-series-page-bg-color: #e4e4d8;
       h1 {
         @include media-breakpoint-up(sm) {
           font-size: 2.5em;
+          margin: 0 auto 4em;
           margin-left: auto;
           margin-right: auto;
-          margin: 0 auto 4em;
           width: 70%;
         }
         @include media-breakpoint-up(md) {
