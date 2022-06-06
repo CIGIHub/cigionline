@@ -22,7 +22,6 @@
     font-family: $four-domains-font;
     font-size: 1rem;
     font-weight: 600;
-    padding-bottom: 1.5em;
     transition: color 0.2s ease;
   }
 
@@ -70,18 +69,15 @@
     }
 
     .category-items {
-      @include media-breakpoint-up(md) {
-        margin-bottom: 2em;
-      }
       border-bottom: 1px solid $cigi-text-grey;
       display: flex;
       flex-wrap: wrap;
-      margin-bottom: 1em;
+      margin-bottom: 1.5em;
 
       article {
         @include media-breakpoint-up(md) {
           flex: 0 1 28%;
-          margin-bottom: 2em;
+          margin-bottom: 1.5em;
         }
         @include media-breakpoint-up(lg) {
           flex: 0 1 17.5%;
@@ -90,7 +86,6 @@
         display: flex;
         flex: 0 1 44%;
         flex-direction: column;
-        grid-template-rows: auto 1fr;
         margin-bottom: 1em;
         margin-right: 5%;
 
@@ -188,7 +183,7 @@
         .series-item-text {
           display: grid;
           flex-grow: 1;
-          grid-template-rows: 1fr 1fr;
+          grid-template-rows: auto 2.5em;
           margin-top: 1em;
 
           .series-item-authors {
