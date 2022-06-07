@@ -70,13 +70,7 @@
                   <div class="series-item-card-image">
                 {% endif %}
                   <div class="img-wrapper">
-                    {% if item.contenttype == 'Opinion' %}
-                      {% image item.specific.image_hero width-300 class="series-item-image" %}
-                    {% else %}
-                      <div class="icon-container">
-                        <i class="fas fa-play"></i>
-                      </div>
-                    {% endif %}
+                    {% image item.specific.image_hero width-300 class="series-item-image" %}
                   </div>
                 {% if category.live %}
                   </a>
