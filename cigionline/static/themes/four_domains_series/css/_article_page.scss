@@ -3,6 +3,10 @@ $content-bg-color: #d6ccb5;
 $data-bg-color: #e6e5db;
 $competition-bg-color: #f4e7d8;
 $infrastructure-bg-color: #e7e5da;
+$blockquote-color-content: #d57a0e;
+$blockquote-color-data: #ffce00;
+$blockquote-color-competition: #32798d;
+$blockquote-color-infrastructure: #217f50;
 
 .four-domains-series-article {
   @include top-bar($background-color: $four-domains-bg-color, $color: $black);
@@ -11,16 +15,34 @@ $infrastructure-bg-color: #e7e5da;
   &.content {
     @include top-bar($background-color: $content-bg-color, $color: $black);
     background-color: $content-bg-color;
+
+    .stream-block-blockquote-content {
+      &::before {
+        border-bottom: 10px solid $blockquote-color;
+      }
+    }
   }
 
   &.data {
     @include top-bar($background-color: $data-bg-color, $color: $black);
     background-color: $data-bg-color;
+
+    .stream-block-blockquote-content {
+      &::before {
+        border-bottom: 10px solid $blockquote-color;
+      }
+    }
   }
 
   &.competition {
     @include top-bar($background-color: $competition-bg-color, $color: $black);
     background-color: $competition-bg-color;
+
+    .stream-block-blockquote-content {
+      &::before {
+        border-bottom: 10px solid $blockquote-color;
+      }
+    }
   }
 
   &.infrastructure {
@@ -29,6 +51,12 @@ $infrastructure-bg-color: #e7e5da;
       $color: $black
     );
     background-color: $infrastructure-bg-color;
+
+    .stream-block-blockquote-content {
+      &::before {
+        border-bottom: 10px solid $blockquote-color;
+      }
+    }
   }
 
   main {
@@ -172,7 +200,6 @@ $infrastructure-bg-color: #e7e5da;
         padding: 1em 0;
 
         &::before {
-          border-bottom: 10px solid $blockquote-color;
           bottom: 15px;
           top: auto;
         }
@@ -214,11 +241,5 @@ $infrastructure-bg-color: #e7e5da;
 
   .in-the-series {
     padding-top: 0;
-
-    .in-the-series-label {
-      border-top: 1px $cigi-medium-grey solid;
-      margin-bottom: 1em;
-      padding-top: 4em;
-    }
   }
 }

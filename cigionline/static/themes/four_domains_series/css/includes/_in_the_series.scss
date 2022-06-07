@@ -1,6 +1,5 @@
 .in-the-series {
-  margin: 3em 0;
-  padding-top: 3em;
+  padding: 3em 0;
   position: relative;
 
   h2 {
@@ -19,9 +18,8 @@
 
   h3 {
     color: $cigi-medium-grey;
-    font-family: $four-domains-font;
     font-size: 1rem;
-    font-weight: 600;
+    text-transform: uppercase;
     transition: color 0.2s ease;
   }
 
@@ -29,7 +27,54 @@
     margin-right: 0.5em;
   }
 
+  .introduction {
+    @include media-breakpoint-up(lg) {
+      display: flex;
+    }
+
+    .series-description {
+      @include media-breakpoint-up(lg) {
+        padding-right: 8em;
+      }
+      @include media-breakpoint-down(xs) {
+        display: none;
+      }
+      flex: 0 0 63.5%;
+      margin-bottom: 2em;
+      padding-top: 1em;
+
+      .opinion-series-label {
+        margin-bottom: 1em;
+        text-transform: uppercase;
+      }
+    }
+
+    .series-category {
+      .category-items {
+        article {
+          @include media-breakpoint-up(sm) {
+            flex: 0 1 28%;
+          }
+          @include media-breakpoint-up(md) {
+            flex: 0 1 20%;
+            margin-bottom: 1.5em;
+          }
+          @include media-breakpoint-up(lg) {
+            flex: 0 1 41%;
+            margin-right: 2.5%;
+          }
+          display: flex;
+          flex: 0 1 44%;
+        }
+      }
+    }
+  }
+
   .series-category {
+    border-top: 1px solid $cigi-text-grey;
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+
     &.live {
       h3 {
         color: $black;
@@ -70,18 +115,19 @@
     }
 
     .category-items {
-      border-bottom: 1px solid $cigi-text-grey;
       display: flex;
       flex-wrap: wrap;
-      margin-bottom: 1.5em;
 
       article {
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(sm) {
           flex: 0 1 28%;
+        }
+        @include media-breakpoint-up(md) {
+          flex: 0 1 20%;
           margin-bottom: 1.5em;
         }
         @include media-breakpoint-up(lg) {
-          flex: 0 1 17.5%;
+          flex: 0 1 15%;
           margin-right: 2.5%;
         }
         display: flex;
@@ -96,7 +142,7 @@
 
         &:hover {
           img {
-            transform: scale(1.1);
+            transform: scale(1.05);
           }
         }
 
@@ -111,7 +157,6 @@
         .series-item-card-image {
           display: block;
           margin-bottom: 0.5em;
-          overflow: hidden;
           position: relative;
 
           &::before {
@@ -168,7 +213,7 @@
               display: flex;
               height: 150px;
               justify-content: center;
-              transition: background-color 0.3s ease, border 0.3s ease;
+              transition: background-color 0.3s ease;
               width: 150px;
 
               i {

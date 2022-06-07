@@ -1,7 +1,7 @@
 $four-domains-series-page-bg-color: #e4e4d8;
 
 .four-domains-series-article-series {
-  @include top-bar($background-color: transparent, $color: $black);
+  @include top-bar($background-color: $four-domains-series-page-bg-color, $color: $black);
   background-color: $four-domains-series-page-bg-color;
 
   .four-domains-series-article-series-hero {
@@ -15,11 +15,17 @@ $four-domains-series-page-bg-color: #e4e4d8;
     position: relative;
     z-index: 0;
 
+    .series-description {
+      @include media-breakpoint-up(sm) {
+        display: none;
+      }
+    }
+
     .banner-bg {
       @include media-breakpoint-up(sm) {
         height: auto;
         opacity: 1;
-        position: absolute;
+        position: static;
         width: 100vw;
       }
       @include media-breakpoint-up(lg) {
@@ -44,6 +50,8 @@ $four-domains-series-page-bg-color: #e4e4d8;
       @include media-breakpoint-up(sm) {
         left: 0;
         padding-top: 35vw;
+        position: absolute;
+        top: 0;
       }
       @include media-breakpoint-up(xl) {
         padding-top: 27em;
@@ -75,11 +83,6 @@ $four-domains-series-page-bg-color: #e4e4d8;
         margin-bottom: 1em;
       }
 
-      .opinion-series-label {
-        font-weight: 500;
-        margin-bottom: 1em;
-      }
-
       .scrollanchor-container {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
         @include media-breakpoint-up(sm) {
@@ -102,7 +105,8 @@ $four-domains-series-page-bg-color: #e4e4d8;
   .credits {
     background-color: $four-domains-series-page-bg-color;
     margin-bottom: 4em;
-    margin-top: 3em;
+    padding-top: 3em;
+    position: relative;
 
     h2 {
       font-weight: 500;

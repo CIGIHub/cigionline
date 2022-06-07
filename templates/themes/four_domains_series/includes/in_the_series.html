@@ -2,51 +2,65 @@
 
 <section class="in-the-series" id="article-series-items">
   <div class="container">
-    {% comment %} {% with self.series_items_by_category|first as introduction %}
-      {% if introduction %}
-        <div class="series-introduction">
-          <h3 class="series-item-label">{{ introduction.category }}</h3>
-          {% for item in introduction.series_items %}
-            <div class="row justify-content-center">
-              <div class="col-md-10 col-lg-8">
-                <article>
-                  <h3 class="series-item-title">
-                    <a href={{item.url}}>
-                      {% if item.contenttype == 'Multimedia' %}
-                        <i class="fas fa-play"></i>
-                      {% endif %}
-                      {{ item.title }}
-                    </a>
-                  </h3>
-                  <div class="series-item-authors">
-                    {% include 'includes/authors.html' with authors=item.authors.all %}
-                  </div>
-                </article>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %} {% endcomment %}
-    {% if article %}
-      <div class="row"> 
-        <div class="col">
-          <div class="in-the-series-label">IN THE SERIES</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-10">
-          <h2>
-            <a href="{{ article_series.url }}">{{ article_series.title }}</a>
-          </h2>
-        </div>      
-      </div>
-    {% endif %}
     <div class="row justify-content-center">
       <div class="col">
-        {% for category in article_series.series_items_by_category %}
+        {% with article_series.series_items_by_category as series_categories %}
+        <div class="introduction">
+          <div class="series-description {% if article %}article{% endif %}">
+            {% if article %}
+              <div class="in-the-series-label">IN THE SERIES</div>
+              <h2>
+                <a href="{{ article_series.url }}">{{ article_series.title }}</a>
+              </h2>
+            {% else %}
+              <div class="opinion-series-label">A CIGI Essay Series</div>
+              <div class="short-description">{{ self.short_description|richtext }}</div>
+            {% endif %}
+          </div>
+          <div class="series-category live">
+            {% with series_categories.0 as category %}
+            <h3 class="series-item-label">{{ category.category }}</h3>
+            <div class="category-items">
+              {% for item in category.series_items %}
+                <article>
+                  {% if category.live %}
+                    <a href="{{item.url}}" class="series-item-card-image live">
+                  {% else %}
+                    <div class="series-item-card-image">
+                  {% endif %}
+                    <div class="img-wrapper">
+                      {% image item.specific.image_hero width-300 class="series-item-image" %}
+                    </div>
+                  {% if category.live %}
+                    </a>
+                  {% else %}
+                    </div>
+                  {% endif %}
+                  <div class="series-item-text">
+                    <h4 class="series-item-title">
+                      {% if category.live %}
+                        <a href={{item.url}}>{{ item.title }}</a>
+                      {% else %}
+                        {{ item.title }}
+                      {% endif %}
+                    </h4>
+                    <div class="series-item-authors">
+                      {% if category.live %}
+                        {% include 'includes/authors.html' with authors=item.authors.all %}
+                      {% else %}
+                        {% include 'includes/authors.html' with authors=item.authors.all hide_link=True %}
+                      {% endif %}
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+            {% endwith %}
+          </div>
+        </div>
+        {% for category in series_categories|slice:"1:" %}
           <div class="series-category {% if category.live %}live{% endif %}">
-            <h3 class="series-item-label column-{{ counter }}">{{ category.category }}</h3>
+            <h3 class="series-item-label">{{ category.category }}</h3>
             <div class="category-items">
             {% for item in category.series_items %}
               <article>
@@ -90,6 +104,7 @@
             </div>
           </div>
         {% endfor %}
+        {% endwith %}
       </div>
     </div>
   </div>
