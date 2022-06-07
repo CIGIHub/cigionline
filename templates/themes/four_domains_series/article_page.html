@@ -117,6 +117,6 @@
 
 {% block in_the_series %}
   {% if self.article_series %}
-    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article=True %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
   {% endif %}
 {% endblock %}

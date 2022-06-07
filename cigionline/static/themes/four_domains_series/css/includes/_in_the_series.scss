@@ -36,9 +36,7 @@
       @include media-breakpoint-up(lg) {
         padding-right: 8em;
       }
-      @include media-breakpoint-down(xs) {
-        display: none;
-      }
+
       flex: 0 0 63.5%;
       margin-bottom: 2em;
       padding-top: 1em;
