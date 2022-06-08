@@ -100,6 +100,18 @@ $four-domains-series-page-bg-color: #e4e4d8;
 
   .in-the-series {
     background-color: $four-domains-series-page-bg-color;
+
+    .series-category {
+      &:last-child {
+        border-bottom: 1px solid $cigi-text-grey;
+      }
+    }
+
+    .introduction {
+      .series-category {
+        border-bottom: 0;
+      }
+    }
   }
 
   .credits {
