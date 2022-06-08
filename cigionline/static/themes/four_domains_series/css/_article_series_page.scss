@@ -108,6 +108,12 @@ $four-domains-series-page-bg-color: #e4e4d8;
     }
 
     .introduction {
+      .series-description {
+        @include media-breakpoint-up(sm) {
+          display: block;
+        }
+        display: none;
+      }
       .series-category {
         border-bottom: 0;
       }
