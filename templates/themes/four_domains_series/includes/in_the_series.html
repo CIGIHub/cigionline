@@ -8,10 +8,10 @@
         <div class="introduction">
           <div class="series-description {% if article %}article{% endif %}">
             {% if article %}
-              <div class="in-the-series-label">IN THE SERIES</div>
               <h2>
                 <a href="{{ article_series.url }}">{{ article_series.title }}</a>
               </h2>
+              <div class="short-description">{{ article_series.short_description|richtext }}</div>
             {% else %}
               <div class="opinion-series-label">A CIGI Essay Series</div>
               <div class="short-description">{{ article_series.short_description|richtext }}</div>

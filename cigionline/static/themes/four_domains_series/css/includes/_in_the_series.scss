@@ -4,14 +4,11 @@
 
   h2 {
     @include media-breakpoint-up(md) {
-      font-size: 2.5em;
-    }
-    @include media-breakpoint-up(lg) {
-      font-size: 3em;
+      font-size: 2em;
     }
     @include link($color: $black, $hover-color: $cigi-primary-colour);
     font-family: $four-domains-font;
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: 600;
     margin-bottom: 1em;
   }
@@ -49,8 +46,6 @@
 
     .series-category {
       .category-items {
-        justify-content: flex-start;
-
         article {
           @include media-breakpoint-up(sm) {
             flex: 0 1 28%;
@@ -118,10 +113,17 @@
       }
     }
 
+    &:last-child {
+      .category-items {
+        .series-item-text {
+          grid-template-rows: auto 2em;
+        }
+      }
+    }
+
     .category-items {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
 
       article {
         @include media-breakpoint-up(sm) {
