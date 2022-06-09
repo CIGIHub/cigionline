@@ -473,12 +473,14 @@ class ArticlePage(
 
     @property
     def article_series_category(self):
-        category = ''
-        for series_item in self.article_series.specific.article_series_items:
-            if series_item.category_title:
-                category = series_item.category_title
-            if series_item.content_page.id == self.id:
-                return category
+        if self.article_series:
+            category = ''
+            for series_item in self.article_series.specific.article_series_items:
+                if series_item.category_title:
+                    category = series_item.category_title
+                if series_item.content_page.id == self.id:
+                    return category
+        return ''
 
     class Meta:
         verbose_name = 'Opinion'
@@ -659,7 +661,8 @@ class ArticleSeriesPage(
             if category:
                 series_items_by_category.append({
                     'category': category,
-                    'series_items': [series_item.content_page]
+                    'series_items': [series_item.content_page],
+                    'live': series_item.content_page.live,
                 })
             else:
                 series_items_by_category[-1]['series_items'].append(series_item.content_page)
