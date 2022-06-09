@@ -147,6 +147,8 @@ class BasicPageAbstract(models.Model):
 
     @property
     def image_hero_url(self):
+        if self.specific.image_feature:
+            return self.specific.image_feature.get_rendition('fill-520x390').url
         if self.image_hero:
             return self.image_hero.get_rendition('fill-520x390').url
         return ''
