@@ -50,6 +50,17 @@
 {% endblock %}
 
 {% block article_content %}
+  {% if self.article_series_description %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-description">
+            {{self.article_series_description|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
   {% if self.body %}
     <section class="body" id="article-body">
       {% if heading %}
