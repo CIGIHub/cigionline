@@ -234,9 +234,10 @@
         }
 
         .series-item-text {
-          display: grid;
+          display: flex;
+          flex-direction: column;
           flex-grow: 1;
-          grid-template-rows: auto 1em;
+          justify-content: space-between;
           margin-top: 1em;
 
           .series-item-authors {
