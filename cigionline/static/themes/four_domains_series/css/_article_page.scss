@@ -1,5 +1,5 @@
 $blockquote-color: #ffca00;
-$content-bg-color: #d57a0e;
+$content-bg-color: #d6ccb5;
 $data-bg-color: #e6e5db;
 $competition-bg-color: #f4e7d8;
 $infrastructure-bg-color: #e7e5da;
@@ -56,12 +56,6 @@ $blockquote-color-infrastructure: #217f50;
       &::before {
         border-bottom: 10px solid $blockquote-color;
       }
-    }
-  }
-
-  .stream-block-blockquote-content {
-    &::before {
-      border-bottom: 10px solid $cigi-primary-colour;
     }
   }
 
