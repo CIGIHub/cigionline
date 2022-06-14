@@ -18,7 +18,7 @@ $blockquote-color-infrastructure: #217f50;
 
     .stream-block-blockquote-content {
       &::before {
-        border-bottom: 10px solid $blockquote-color;
+        border-bottom: 10px solid $blockquote-color-content;
       }
     }
   }
@@ -29,7 +29,7 @@ $blockquote-color-infrastructure: #217f50;
 
     .stream-block-blockquote-content {
       &::before {
-        border-bottom: 10px solid $blockquote-color;
+        border-bottom: 10px solid $blockquote-color-data;
       }
     }
   }
@@ -40,7 +40,7 @@ $blockquote-color-infrastructure: #217f50;
 
     .stream-block-blockquote-content {
       &::before {
-        border-bottom: 10px solid $blockquote-color;
+        border-bottom: 10px solid $blockquote-color-competition;
       }
     }
   }
@@ -54,7 +54,7 @@ $blockquote-color-infrastructure: #217f50;
 
     .stream-block-blockquote-content {
       &::before {
-        border-bottom: 10px solid $blockquote-color;
+        border-bottom: 10px solid $blockquote-color-infrastructure;
       }
     }
   }
