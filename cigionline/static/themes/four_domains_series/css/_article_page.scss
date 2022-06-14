@@ -59,6 +59,12 @@ $blockquote-color-infrastructure: #217f50;
     }
   }
 
+  .stream-block-blockquote-content {
+    &::before {
+      border-bottom: 10px solid $cigi-primary-colour;
+    }
+  }
+
   main {
     overflow: hidden;
   }
