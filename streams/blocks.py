@@ -1020,3 +1020,39 @@ class PodcastSubscribeButtonBlock(blocks.StructBlock):
     class Meta:
         icon = 'link'
         label = 'Podcast Subscribe Button'
+
+
+class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
+    class PositionChoices(models.TextChoices):
+        layer_0 = ('0', '0')
+        layer_1 = ('1', '1')
+        layer_2 = ('2', '2')
+        layer_3 = ('3', '3')
+        layer_4 = ('4', '4')
+        layer_5 = ('5', '5')
+        layer_6 = ('6', '6')
+
+    class AnimationChoices(models.TextChoices):
+        VERTICAL = ('vertical', 'Vertical')
+        HORIZONTAL = ('horizontal', 'Horizontal')
+        ZOOM = ('zoom', 'Zoom')
+        MOUSE = ('mouse', 'Mouse')
+        NONE = ('none', 'None')
+
+    image = ImageChooserBlock(required=True)
+    classes = blocks.CharBlock(required=False)
+    position = blocks.ChoiceBlock(
+        choices=PositionChoices.choices,
+    )
+    animation = blocks.ChoiceBlock(
+        choices=AnimationChoices.choices,
+        default=AnimationChoices.NONE,
+    )
+    speed = blocks.DecimalBlock(default=0)
+    initial_top = blocks.IntegerBlock(default=0)
+    initial_left = blocks.IntegerBlock(default=0)
+
+    class Meta:
+        icon = 'image'
+        label = 'Additional Image'
+        help_text = 'Additional images to be used only if the theme requires them.'
