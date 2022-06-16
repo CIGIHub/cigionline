@@ -34,6 +34,16 @@ if 'BONSAI_URL' in os.environ:
         },
     }
 
+if all(key in os.environ for key in ('CLOUDFLARE_EMAIL', 'CLOUDFLARE_TOKEN', 'CLOUDFLARE_ZONE_ID')):
+    WAGTAILFRONTENDCACHE = {
+        'cloudflare': {
+            'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
+            'EMAIL': os.environ['CLOUDFLARE_EMAIL'],
+            'BEARER_TOKEN': os.environ['CLOUDFLARE_TOKEN'],
+            'ZONEID': os.environ['CLOUDFLARE_ZONE_ID'],
+        },
+    }
+
 # Cache everything for 10 minutes
 # This only applies to pages that do not have a more specific cache-control
 # setting. See urls.py
