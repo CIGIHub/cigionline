@@ -1,0 +1,18 @@
+{% extends "wagtailadmin/base.html" %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" with title="Caching" icon="date" %}
+
+    <div class="nice-padding">
+      <div class="row">
+        {{ title|safe }}
+      </div>
+      <div class="row">
+        {% if panels %}
+          {% for panel in panels %}
+              {% component panel fallback_render_method=True %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+{% endblock %}
