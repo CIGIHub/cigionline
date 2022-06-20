@@ -15,10 +15,15 @@
 
   &.banner-complete {
     max-height: 0;
+    opacity: 0;
   }
 
   &.banner-fade {
     opacity: 0;
+  }
+
+  &.banner-hidden {
+    display: none;
   }
 
   .cigi-cookie-banner-content {
