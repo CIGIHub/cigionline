@@ -1,0 +1,23 @@
+{% extends "wagtailadmin/reports/listing/_list_page_report.html" %}
+
+{% load i18n wagtailadmin_tags %}
+
+{% block extra_columns %}
+  <th>Article Series</th>
+  <th>Clear Cache</th>
+{% endblock %}
+
+
+{% block extra_page_data%}
+  <td valign="top">
+    {{ page.specific.article_series.title }}
+  </td>
+  <td valign="top">
+    <form action="{% url 'caching:clear_cache' page.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET }}">
+        <button type="submit" class="button button-secondary button-small">{% trans 'Clear Cache' %}</button>
+    </form>
+</td>
+{% endblock %}
+

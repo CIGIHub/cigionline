@@ -1,0 +1,11 @@
+{% extends 'wagtailadmin/reports/base_page_report.html' %}
+{% load i18n %}
+{% block listing %}
+    {% include "caching/_list_publish.html" %}
+{% endblock %}
+
+{% block actions %}
+    {% if object_list.count > 0 %}
+    {% endif %}
+    {{ block.super }}
+{% endblock %}

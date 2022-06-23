@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'search',
     'streams',
     'subscribe',
+    'wagtailschedules',
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
