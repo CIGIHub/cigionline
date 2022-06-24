@@ -3,12 +3,12 @@
 
 .cigi-cookie-banner {
   background-color: $color-event-blue;
-  top: 0;
   display: block;
   left: 0;
   max-height: 100px;
   opacity: 1;
   position: relative;
+  top: 0;
   transition: opacity 0.25s ease-out, max-height 0.25s ease;
   width: 100%;
   z-index: 100;
