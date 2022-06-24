@@ -66,7 +66,7 @@ class CookieBanner extends React.Component {
                   Win one of three $100 Visa cards by participating in
                   CIGI&apos;s feedback survey - take the survey, click&nbsp;
                   <a
-                    href="https://google.ca"
+                    href="https://surveys.ipsosinteractive.com/surveys/?pid=S22021076&id=&SupplierID=193&ReturnCode=NR&idType=real&groupcode=0004"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => this.handleBanner()}
