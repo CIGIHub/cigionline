@@ -203,6 +203,7 @@ class ArticlePage(
             BasicPageAbstract.body_tool_tip_block,
             BasicPageAbstract.body_tweet_block,
             BasicPageAbstract.additional_image_block,
+            BasicPageAbstract.additional_disclaimer_block,
         ],
         blank=True,
     )
@@ -376,6 +377,14 @@ class ArticlePage(
             if block.block_type == 'additional_image':
                 additional_images.append(block.value)
         return additional_images
+
+    def get_additional_disclaimers(self):
+        additional_disclaimers = []
+
+        for block in self.body:
+            if block.block_type == 'additional_disclaimer':
+                additional_disclaimers.append(block.value)
+        return additional_disclaimers
 
     content_panels = [
         BasicPageAbstract.title_panel,
