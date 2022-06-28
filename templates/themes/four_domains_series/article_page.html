@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
 {% block extra_fonts %}
   {% comment %} <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css"> {% endcomment %}
@@ -73,7 +73,7 @@
         </div>
       {% endif %}
       {% for block in self.body %}
-        {% if block.block_type != 'additional_image' %}
+        {% if not block.block_type|in_list:'additional_image,additional_disclaimer' %}
           {% include_block block %}
         {% endif %}
       {% endfor %}
@@ -119,7 +119,7 @@
     </div>
   {% endif %}
 
-  {% include 'includes/disclaimer.html' %}
+  {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
 
   {% if self.is_opinion and self.author_count > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
