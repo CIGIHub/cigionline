@@ -13,7 +13,7 @@
     {{ page.specific.article_series.title }}
   </td>
   <td valign="top">
-    <form action="{% url 'caching:clear_cache' page.id %}" method="post">
+    <form action="{% url 'caching:clear_article_cache' page.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
         <button type="submit" class="button button-secondary button-small">{% trans 'Clear Cache' %}</button>
