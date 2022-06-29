@@ -68,7 +68,7 @@ def formerize_position(value):
 
 @register.filter
 @stringfilter
-def url_trim_trailing_slash(value):
+def trim_trailing_slash(value):
     if value.endswith('/'):
         return value[:-1]
     return value

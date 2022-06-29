@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags core_tags %}
 
 {% image self.image fill-600x238 as image %}
 {% if image %}
@@ -29,7 +29,7 @@
                       <tbody>
                         <tr>
                           <td style="width:550px;">
-                            <a href="{{ url }}" target="_blank">
+                            <a href="{{ url|trim_trailing_slash }}" target="_blank">
                               <img alt="{{ image.caption }}" height="auto"
                                 src="{{ image_url }}"
                                 style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
@@ -85,7 +85,7 @@
                   <td align="left" style="font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break-word;">
                     <div
                       style="font-family:Helvetica, Arial, sans-serif;font-size:21px;font-style:normal;font-weight:400;line-height:21px;text-align:left;color:#000000;">
-                      <a href="{{ url }}" style="color: #000000; text-decoration: none;">{{ title }}</a>
+                      <a href="{{ url|trim_trailing_slash }}" style="color: #000000; text-decoration: none;">{{ title }}</a>
                     </div>
                   </td>
                 </tr>
@@ -117,7 +117,7 @@
                       <td align="center" bgcolor="transparent" role="presentation"
                         style="border:1px solid #e71b3e;border-radius:2px;cursor:auto;font-style:normal;mso-padding-alt:8px 16px;background:transparent;"
                         valign="middle">
-                        <a href="{{ url }}"
+                        <a href="{{ url|trim_trailing_slash }}"
                           style="display:inline-block;background:transparent;color:#e71b3e;font-family:Helvetica, Arial, sans-serif;font-size:10px;font-style:normal;font-weight:400;line-height:1;margin:0;text-decoration:none;text-transform:none;padding:8px 12px;mso-padding-alt:0px;border-radius:2px;"
                           target="_blank">
                           {% if cta_image_link %}<img src="{{ cta_image_link }}" width="13" height="13"
