@@ -12,7 +12,9 @@
       </div>
     {% endif %}
     {% for block in body %}
-      {% include_block block %}
+      {% if block.block_type != 'additional_disclaimer' %}
+        {% include_block block %}
+      {% endif %}
     {% endfor %}
   </section>
 {% endif %}

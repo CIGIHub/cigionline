@@ -10,6 +10,7 @@ from search.filters import (
 )
 from streams.blocks import (
     AccordionBlock,
+    AdditionalDisclaimerBlock,
     AdditionalImageBlock,
     ExtractBlock,
     ParagraphBlock,
@@ -96,6 +97,7 @@ class BasicPageAbstract(models.Model):
     body_tool_tip_block = ('tool_tip', TooltipBlock())
     body_tweet_block = ('tweet', TweetBlock())
     additional_image_block = ('additional_image', AdditionalImageBlock())
+    additional_disclaimer_block = ('additional_disclaimer', AdditionalDisclaimerBlock())
 
     body = StreamField(
         body_default_blocks,
