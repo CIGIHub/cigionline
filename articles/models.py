@@ -202,6 +202,8 @@ class ArticlePage(
             BasicPageAbstract.body_text_border_block,
             BasicPageAbstract.body_tool_tip_block,
             BasicPageAbstract.body_tweet_block,
+            BasicPageAbstract.additional_image_block,
+            BasicPageAbstract.additional_disclaimer_block,
         ],
         blank=True,
     )
@@ -368,6 +370,22 @@ class ArticlePage(
             return f'themes/{self.get_theme_dir()}/article_page.html'
         return standard_template
 
+    def get_additional_images(self):
+        additional_images = []
+
+        for block in self.body:
+            if block.block_type == 'additional_image':
+                additional_images.append(block.value)
+        return additional_images
+
+    def get_additional_disclaimers(self):
+        additional_disclaimers = []
+
+        for block in self.body:
+            if block.block_type == 'additional_disclaimer':
+                additional_disclaimers.append(block.value)
+        return additional_disclaimers
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -464,12 +482,14 @@ class ArticlePage(
 
     @property
     def article_series_category(self):
-        category = ''
-        for series_item in self.article_series.specific.article_series_items:
-            if series_item.category_title:
-                category = series_item.category_title
-            if series_item.content_page.id == self.id:
-                return category
+        if self.article_series:
+            category = ''
+            for series_item in self.article_series.specific.article_series_items:
+                if series_item.category_title:
+                    category = series_item.category_title
+                if series_item.content_page.id == self.id:
+                    return category
+        return ''
 
     class Meta:
         verbose_name = 'Opinion'
@@ -641,6 +661,21 @@ class ArticleSeriesPage(
             'content_page',
             'content_page__authors__author',
         ).all()
+
+    def series_items_by_category(self):
+        series_items = self.article_series_items
+        series_items_by_category = []
+        for series_item in series_items:
+            category = series_item.category_title
+            if category:
+                series_items_by_category.append({
+                    'category': category,
+                    'series_items': [series_item.content_page],
+                    'live': series_item.content_page.live,
+                })
+            else:
+                series_items_by_category[-1]['series_items'].append(series_item.content_page)
+        return series_items_by_category
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)

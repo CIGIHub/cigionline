@@ -33,7 +33,7 @@ class CookieConsent extends React.Component {
   render() {
     const { consentClicked, consentFade, consentComplete } = this.state;
 
-    const bannerCopy = `
+    const consentCopy = `
       This site uses cookies to provide the best online experience. By using
       this site, you agree to the use of cookies and collection of personal
       information per our <a href="/privacy-policy">Privacy Notice</a>. To
@@ -42,22 +42,22 @@ class CookieConsent extends React.Component {
 
     /* eslint-disable react/no-danger */
     return (
-      <div className={['cigi-cookie-banner', consentFade && 'consent-fade', consentComplete && 'consent-complete'].join(' ')}>
+      <div className={['cigi-cookie-consent', consentFade && 'consent-fade', consentComplete && 'consent-complete'].join(' ')}>
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <div className="cigi-cookie-banner-content">
-                <p className={['cigi-cookie-banner-notice', consentClicked && 'accepted-consent'].join(' ')} dangerouslySetInnerHTML={{ __html: bannerCopy }} />
+              <div className="cigi-cookie-consent-content">
+                <p className={['cigi-cookie-consent-notice', consentClicked && 'accepted-consent'].join(' ')} dangerouslySetInnerHTML={{ __html: consentCopy }} />
                 <button
                   type="button"
-                  className={['cigi-cookie-banner-notice', consentClicked && 'accepted-consent'].join(' ')}
+                  className={['cigi-cookie-consent-notice', consentClicked && 'accepted-consent'].join(' ')}
                   onClick={() => this.handleConsent()}
                 >
                   <span>OK</span>
                   <i className="fa fa-check" />
                 </button>
                 {consentClicked && (
-                  <div className="cigi-cookie-banner-thank-you">
+                  <div className="cigi-cookie-consent-thank-you">
                     <p>Thank You</p>
                   </div>
                 )}

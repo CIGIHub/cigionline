@@ -6,6 +6,10 @@
   display: flex;
   flex-direction: column;
 
+  a {
+    flex-grow: 1;
+  }
+
   .feature-content-text {
     @include media-breakpoint-up(md) {
       margin-top: 0;

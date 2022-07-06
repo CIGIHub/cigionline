@@ -94,7 +94,9 @@
           <section class="body" id="article-body">
             {% if self.hide_excerpt %}
               {% for block in self.body %}
-                {% include_block block %}
+                {% if block.block_type != 'additional_disclaimer' %}
+                  {% include_block block %}
+                {% endif %}
               {% endfor %}
             {% else %}
               <div class="container">
@@ -174,7 +176,7 @@
         </div>
       {% endif %}
 
-      {% include 'includes/disclaimer.html' %}
+      {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
 
       {% if self.is_opinion and self.author_count > 0 %}
         {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}

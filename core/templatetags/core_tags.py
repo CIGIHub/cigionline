@@ -64,3 +64,11 @@ def formerize_position(value):
         cigi_prefix = 'CIGI ' if 'cigi' not in value.lower() else ''
         return f'Former {cigi_prefix}{value}'
     return value
+
+
+@register.filter
+@stringfilter
+def trim_trailing_slash(value):
+    if value.endswith('/'):
+        return value[:-1]
+    return value
