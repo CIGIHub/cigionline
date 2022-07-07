@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from django.shortcuts import render
 from core.models import BasicPageAbstract
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from streams.blocks import ParagraphBlock
@@ -47,7 +47,7 @@ class SubscribePage(
         FieldPanel('privacy_note'),
         MultiFieldPanel(
             [
-                StreamFieldPanel('landing_page_body'),
+                FieldPanel('landing_page_body'),
             ],
             heading='Landing Page Body',
             classname='collapsible',

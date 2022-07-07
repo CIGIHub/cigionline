@@ -12,7 +12,6 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
@@ -316,7 +315,7 @@ class EventPage(
         MultiFieldPanel(
             [
                 FieldPanel('embed_youtube'),
-                StreamFieldPanel('related_files'),
+                FieldPanel('related_files'),
             ],
             heading='Media',
             classname='collapsible collapsed',

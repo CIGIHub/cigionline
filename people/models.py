@@ -20,13 +20,10 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
-from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 import random
 
@@ -316,7 +313,7 @@ class PersonPage(
         MultiFieldPanel(
             [
                 FieldPanel('short_bio'),
-                StreamFieldPanel('body'),
+                FieldPanel('body'),
                 FieldPanel('byline'),
             ],
             heading='Biography',
@@ -348,8 +345,8 @@ class PersonPage(
         MultiFieldPanel(
             [
                 FieldPanel('person_types'),
-                StreamFieldPanel('languages'),
-                DocumentChooserPanel('curriculum_vitae'),
+                FieldPanel('languages'),
+                FieldPanel('curriculum_vitae'),
                 FieldPanel('person_weight'),
             ],
             heading='Additional Information',
@@ -357,14 +354,14 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('education')
+                FieldPanel('education')
             ],
             heading='Education',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('expertise'),
+                FieldPanel('expertise'),
                 FieldPanel('projects'),
             ],
             heading='Expertise',
@@ -372,8 +369,8 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_square'),
-                ImageChooserPanel('image_media')
+                FieldPanel('image_square'),
+                FieldPanel('image_media')
             ],
             heading='Images',
             classname='collapsible collapsed'
@@ -394,7 +391,7 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('external_publications')
+                FieldPanel('external_publications')
             ],
             heading='External Publications',
             classname='collapsible collapsed'

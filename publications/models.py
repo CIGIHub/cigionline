@@ -18,15 +18,12 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
 from wagtail.blocks import (
     RichTextBlock,
 )
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
-from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 
@@ -286,7 +283,7 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 FieldPanel('short_description'),
-                StreamFieldPanel('body'),
+                FieldPanel('body'),
             ],
             heading='Body',
             classname='collapsible collapsed',
@@ -313,8 +310,8 @@ class PublicationPage(
                 FieldPanel('isbn_hardcover'),
                 FieldPanel('isbn_ebook'),
                 FieldPanel('book_pages'),
-                StreamFieldPanel('book_purchase_links'),
-                DocumentChooserPanel('book_excerpt_download'),
+                FieldPanel('book_purchase_links'),
+                FieldPanel('book_excerpt_download'),
                 FieldPanel('book_excerpt'),
             ],
             heading='Book Info',
@@ -322,15 +319,15 @@ class PublicationPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('editorial_reviews'),
+                FieldPanel('editorial_reviews'),
             ],
             heading='Editorial Reviews',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_cover'),
-                ImageChooserPanel('image_poster'),
+                FieldPanel('image_cover'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -338,8 +335,8 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 FieldPanel('embed_issuu'),
-                StreamFieldPanel('pdf_downloads'),
-                StreamFieldPanel('ctas'),
+                FieldPanel('pdf_downloads'),
+                FieldPanel('ctas'),
                 FieldPanel('embed_youtube'),
             ],
             heading='Media',

@@ -14,7 +14,6 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
 from wagtail.blocks import (
     CharBlock,
@@ -23,7 +22,6 @@ from wagtail.blocks import (
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from streams.blocks import IgcTimelineBlock
 
@@ -106,17 +104,17 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('project_leads'),
-                StreamFieldPanel('project_members'),
-                StreamFieldPanel('project_contacts'),
+                FieldPanel('project_leads'),
+                FieldPanel('project_members'),
+                FieldPanel('project_contacts'),
             ],
             heading='People',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_banner'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -124,7 +122,7 @@ class ProjectPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
-                StreamFieldPanel('related_files'),
+                FieldPanel('related_files'),
             ],
             heading='Related',
             classname='collapsible collapsed',

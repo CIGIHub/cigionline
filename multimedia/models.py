@@ -16,7 +16,6 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
 from wagtail.blocks import (
     CharBlock,
@@ -26,7 +25,6 @@ from wagtail.blocks import (
 )
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 
@@ -274,14 +272,14 @@ class MultimediaPage(
         MultiFieldPanel(
             [
                 FieldPanel('youtube_id'),
-                StreamFieldPanel('video_chapters'),
+                FieldPanel('video_chapters'),
             ],
             heading='Video Chapters',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('transcript'),
+                FieldPanel('transcript'),
             ],
             heading='Transcript',
             classname='collapsible collapsed',
@@ -291,7 +289,7 @@ class MultimediaPage(
                 FieldPanel('podcast_subtitle'),
                 FieldPanel('podcast_season'),
                 FieldPanel('podcast_episode'),
-                StreamFieldPanel('podcast_guests'),
+                FieldPanel('podcast_guests'),
                 MultiFieldPanel(
                     [
                         FieldPanel('podcast_audio_url'),
@@ -316,10 +314,10 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_banner'),
-                ImageChooserPanel('image_square'),
-                ImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_square'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -470,18 +468,18 @@ class MultimediaSeriesPage(
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_banner'),
-                ImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_logo'),
+                FieldPanel('image_logo'),
                 FieldPanel('podcast_season_tagline'),
-                StreamFieldPanel('podcast_subscribe_buttons'),
+                FieldPanel('podcast_subscribe_buttons'),
             ],
             heading='Podcast Details',
             classname='collapsible collapsed',

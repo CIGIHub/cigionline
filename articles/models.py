@@ -14,13 +14,11 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
 from wagtail.blocks import PageChooserBlock, CharBlock, StructBlock, StreamBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
 import datetime
@@ -391,7 +389,7 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 FieldPanel('short_description'),
-                StreamFieldPanel('body'),
+                FieldPanel('body'),
                 FieldPanel('footnotes'),
                 FieldPanel('works_cited'),
             ],
@@ -416,10 +414,10 @@ class ArticlePage(
         ContentPage.authors_panel,
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_poster'),
-                ImageChooserPanel('image_banner'),
-                ImageChooserPanel('image_banner_small'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_poster'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_banner_small'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -447,8 +445,8 @@ class ArticlePage(
                     ['multimedia.MultimediaSeriesPage'],
                 ),
                 InlinePanel('cigi_people_mentioned', label='People Mentioned'),
-                StreamFieldPanel('interviewers'),
-                StreamFieldPanel('related_files'),
+                FieldPanel('interviewers'),
+                FieldPanel('related_files'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -691,7 +689,7 @@ class ArticleSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('short_description'),
-                StreamFieldPanel('body'),
+                FieldPanel('body'),
             ],
             heading='Body',
             classname='collapsible collapsed',
@@ -717,17 +715,17 @@ class ArticleSeriesPage(
             [
                 FieldPanel('credits'),
                 FieldPanel('credits_artwork'),
-                StreamFieldPanel('credits_stream_field'),
+                FieldPanel('credits_stream_field'),
             ],
             heading='Credits',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_banner'),
-                ImageChooserPanel('image_banner_small'),
-                ImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_banner_small'),
+                FieldPanel('image_poster'),
             ],
             heading='Image',
             classname='collapsible collapsed',
@@ -741,7 +739,7 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('featured_items'),
+                FieldPanel('featured_items'),
             ],
             heading='Featured Series Items',
             classname='collapsible collapsed',

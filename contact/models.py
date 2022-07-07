@@ -8,7 +8,6 @@ from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
-    StreamFieldPanel,
 )
 from wagtail.admin.mail import send_mail
 from wagtail.fields import RichTextField, StreamField
@@ -73,19 +72,19 @@ class ContactPage(AbstractEmailForm):
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('human_resources_contact'),
+                FieldPanel('human_resources_contact'),
             ],
             heading='Human Resources',
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('events_contact'),
+                FieldPanel('events_contact'),
             ],
             heading='Events',
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('media_contact'),
+                FieldPanel('media_contact'),
             ],
             heading='Media',
         ),
