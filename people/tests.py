@@ -1,7 +1,7 @@
 from core.models import BasicPage
 from home.models import HomePage
-from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import nested_form_data, rich_text
+from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils.form_data import nested_form_data, rich_text
 
 from .models import PeoplePage, PersonListPage, PersonPage
 

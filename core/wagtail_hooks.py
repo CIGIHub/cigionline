@@ -6,7 +6,7 @@ from wagtail.admin.rich_text.converters.html_to_contentstate import (
 )
 from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from wagtail.core import hooks
+from wagtail import hooks
 from .models import Theme
 
 

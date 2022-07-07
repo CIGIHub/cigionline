@@ -11,21 +11,21 @@ from core.models import (
 from django.db import models
 from modelcluster.fields import ParentalKey
 from streams.blocks import PodcastSubscribeButtonBlock
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core.blocks import (
+from wagtail.blocks import (
     CharBlock,
     IntegerBlock,
     StructBlock,
     TextBlock,
 )
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Orderable, Page
+from wagtail.fields import StreamField
+from wagtail.models import Orderable, Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 

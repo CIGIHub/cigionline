@@ -9,19 +9,19 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core.blocks import (
+from wagtail.blocks import (
     CharBlock,
     PageChooserBlock,
 )
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Orderable, Page
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index

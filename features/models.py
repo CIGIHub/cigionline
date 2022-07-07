@@ -1,12 +1,12 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     FieldPanel
 )
-from wagtail.core.models import Page
-from wagtail.core.models import Orderable
+from wagtail.models import Page
+from wagtail.models import Orderable
 
 
 class FeaturesListPage(Page):

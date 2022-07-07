@@ -2,9 +2,9 @@ from django import forms
 from django.conf import settings
 from django.shortcuts import render
 from core.models import BasicPageAbstract
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Page
 from streams.blocks import ParagraphBlock
 
 from mailchimp_marketing.api_client import ApiClientError

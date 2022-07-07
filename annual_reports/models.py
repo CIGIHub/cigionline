@@ -5,14 +5,14 @@ from core.models import (
 )
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
     StreamFieldPanel,
 )
-from wagtail.core.blocks import PageChooserBlock
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
+from wagtail.blocks import PageChooserBlock
+from wagtail.fields import StreamField
+from wagtail.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 

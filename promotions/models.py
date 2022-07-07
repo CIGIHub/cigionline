@@ -1,6 +1,6 @@
 from django.db import models
 from multimedia.models import MultimediaPage
-from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
+from wagtail.admin.panels import FieldPanel, PageChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 

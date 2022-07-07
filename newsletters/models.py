@@ -4,9 +4,9 @@ from core.models import (
 from django.db import models
 from django.template.loader import render_to_string
 from streams.blocks import (AdvertisementBlock, ContentBlock, FeaturedContentBlock, SocialBlock, TextBlock)
-from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
+from wagtail.admin.panels import MultiFieldPanel, StreamFieldPanel
+from wagtail.fields import StreamField
+from wagtail.models import Page
 from wagtail.documents.edit_handlers import DocumentChooserPanel
 from bs4 import BeautifulSoup
 from django.utils.text import slugify

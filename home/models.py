@@ -4,13 +4,13 @@ from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
 from events.models import EventPage, EventListPage
 from features.models import HomePageFeaturedPromotionsPage
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     FieldPanel
 )
-from wagtail.core.models import Orderable, Page
+from wagtail.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage

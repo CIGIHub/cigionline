@@ -6,7 +6,7 @@ from django.forms.utils import flatatt
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
 from wagtail.contrib.table_block.blocks import TableBlock
-from wagtail.core import blocks
+from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock

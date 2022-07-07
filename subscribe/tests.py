@@ -1,4 +1,4 @@
-from wagtail.tests.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTests
 from subscribe.models import SubscribePage
 from home.models import HomePage
 

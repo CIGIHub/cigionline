@@ -4,14 +4,14 @@ from streams.blocks import (
     ContactEmailBlock,
     ContactPersonBlock,
 )
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     StreamFieldPanel,
 )
 from wagtail.admin.mail import send_mail
-from wagtail.core.fields import RichTextField, StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.contrib.forms.models import (
     AbstractEmailForm,
     AbstractFormField,

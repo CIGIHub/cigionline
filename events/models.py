@@ -7,15 +7,15 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Orderable, Page
+from wagtail.fields import StreamField
+from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
