@@ -372,6 +372,5 @@ class HomePagePromotionBlocks(Orderable):
     panels = [
         FieldPanel(
             'promotion_block',
-            ['promotions.PromotionBlock'],
         ),
     ]

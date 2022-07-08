@@ -3,7 +3,8 @@ from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
-    FieldPanel
+    FieldPanel,
+    PageChooserPanel
 )
 from wagtail.models import Page
 from wagtail.models import Orderable
@@ -59,6 +60,5 @@ class FeaturesPagePromotionBlocks(Orderable):
     panels = [
         FieldPanel(
             'promotion_block',
-            ['promotions.PromotionBlock'],
         ),
     ]
