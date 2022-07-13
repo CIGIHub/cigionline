@@ -100,6 +100,7 @@ class BasicPageAbstract(models.Model):
     body = StreamField(
         body_default_blocks,
         blank=True,
+        use_json_field=True,
     )
     hero_link = StreamField(
         [
@@ -108,6 +109,7 @@ class BasicPageAbstract(models.Model):
         ],
         blank=True,
         help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.',
+        use_json_field=True,
     )
     image_hero = models.ForeignKey(
         'images.CigionlineImage',
@@ -251,6 +253,7 @@ class SearchablePageAbstract(models.Model):
         ],
         blank=True,
         help_text='A list of search terms for which this page will be elevated in the search results.',
+        use_json_field=True,
     )
     search_result_description = models.CharField(
         blank=True,
@@ -619,6 +622,7 @@ class BasicPage(
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = [
@@ -905,25 +909,34 @@ class SlidePage(Page):
         help_text='Background image',
     )
     background_colour = CharField(blank=True, max_length=16, choices=BACKGROUND_COLOUR_CHOICES)
-    body = StreamField([
-        ('video', blocks.StructBlock([
-            ('video_url', blocks.CharBlock()),
-            ('video_image', ImageChooserBlock()),
-        ])),
-        ('text', blocks.RichTextBlock()),
-        ('separator', blocks.StructBlock()),
-    ], blank=True)
-    timeline = StreamField([
-        ('slide', blocks.StructBlock(
-            [
-                ('year', blocks.CharBlock()),
-                ('text', blocks.RichTextBlock()),
-                ('image', ImageChooserBlock(required=False)),
-                ('video_url', blocks.CharBlock(required=False)),
-                ('video_image', ImageChooserBlock(required=False)),
-            ]
-        ))
-    ], blank=True, help_text='Only for timeline slide.')
+    body = StreamField(
+        [
+            ('video', blocks.StructBlock([
+                ('video_url', blocks.CharBlock()),
+                ('video_image', ImageChooserBlock()),
+            ])),
+            ('text', blocks.RichTextBlock()),
+            ('separator', blocks.StructBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    timeline = StreamField(
+        [
+            ('slide', blocks.StructBlock(
+                [
+                    ('year', blocks.CharBlock()),
+                    ('text', blocks.RichTextBlock()),
+                    ('image', ImageChooserBlock(required=False)),
+                    ('video_url', blocks.CharBlock(required=False)),
+                    ('video_image', ImageChooserBlock(required=False)),
+                ]
+            ))
+        ],
+        blank=True,
+        help_text='Only for timeline slide.',
+        use_json_field=True,
+    )
     theme = CharField(blank=False, null=True, max_length=16, choices=THEME_CHOICES)
     title_override = RichTextField(
         blank=True,
@@ -961,7 +974,7 @@ class TwentiethPageSingleton(
 ):
     body = StreamField(BasicPageAbstract.body_default_blocks + [
         ('gallery', TimelineGalleryBlock())
-    ])
+    ], use_json_field=True)
 
     content_panels = [
         BasicPageAbstract.title_panel,

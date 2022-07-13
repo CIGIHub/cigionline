@@ -39,6 +39,7 @@ class SubscribePage(
         ],
         blank=True,
         help_text='The contents of this stream field will be displayed after sign up.',
+        use_json_field=True,
     )
 
     content_panels = [

@@ -4,7 +4,6 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     FieldPanel,
-    PageChooserPanel
 )
 from wagtail.models import Page
 from wagtail.models import Orderable

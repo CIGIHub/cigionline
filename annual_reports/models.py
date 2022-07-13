@@ -28,6 +28,7 @@ class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = [

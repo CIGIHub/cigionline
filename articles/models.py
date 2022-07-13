@@ -204,6 +204,7 @@ class ArticlePage(
             BasicPageAbstract.additional_disclaimer_block,
         ],
         blank=True,
+        use_json_field=True,
     )
     embed_youtube = models.URLField(
         blank=True,
@@ -273,6 +274,7 @@ class ArticlePage(
             ('interviewer', PageChooserBlock(required=True, page_type='people.PersonPage')),
         ],
         blank=True,
+        use_json_field=True,
     )
     language = models.CharField(
         blank=True,
@@ -293,6 +295,7 @@ class ArticlePage(
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
     short_description = RichTextField(
         blank=True,
@@ -576,6 +579,7 @@ class ArticleSeriesPage(
             ]))
         ],
         blank=True,
+        use_json_field=True,
     )
     credits_artwork = models.CharField(
         max_length=255,
@@ -589,6 +593,7 @@ class ArticleSeriesPage(
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',

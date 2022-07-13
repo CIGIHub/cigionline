@@ -154,6 +154,7 @@ class PublicationPage(
             ('purchase_link', BookPurchaseLinkBlock())
         ],
         blank=True,
+        use_json_field=True,
     )
     ctas = StreamField(
         [
@@ -161,6 +162,7 @@ class PublicationPage(
         ],
         blank=True,
         verbose_name='Call to Action Buttons',
+        use_json_field=True,
     )
     editorial_reviews = StreamField(
         [
@@ -169,6 +171,7 @@ class PublicationPage(
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     embed_issuu = models.URLField(
         blank=True,
@@ -222,6 +225,7 @@ class PublicationPage(
         ],
         blank=True,
         verbose_name='PDF Downloads',
+        use_json_field=True,
     )
     publication_series = models.ForeignKey(
         'publications.PublicationSeriesPage',

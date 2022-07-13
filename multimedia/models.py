@@ -199,6 +199,7 @@ class MultimediaPage(
             ('guest', CharBlock(required=True)),
         ],
         blank=True,
+        use_json_field=True,
     )
     podcast_season = models.IntegerField(
         blank=True,
@@ -215,6 +216,7 @@ class MultimediaPage(
             BasicPageAbstract.body_read_more_block,
         ],
         blank=True,
+        use_json_field=True,
     )
     video_chapters = StreamField(
         [
@@ -225,6 +227,7 @@ class MultimediaPage(
             ])),
         ],
         blank=True,
+        use_json_field=True,
     )
     youtube_id = models.CharField(
         blank=True,
@@ -425,6 +428,7 @@ class MultimediaSeriesPage(
         blank=True,
         verbose_name='Podcast Subscribe Buttons',
         help_text='A list of subscribe links to various podcast providers',
+        use_json_field=True,
     )
 
     @property

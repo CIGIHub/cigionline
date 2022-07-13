@@ -42,6 +42,7 @@ class NewsletterPage(Page):
             ('text_block', TextBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
     html_file = models.ForeignKey(
         'wagtaildocs.Document',

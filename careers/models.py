@@ -48,12 +48,14 @@ class JobPostingPage(
     description = StreamField(
         BasicPageAbstract.body_default_blocks,
         blank=True,
+        use_json_field=True,
     )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
     short_description = RichTextField(
         blank=True,

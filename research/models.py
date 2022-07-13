@@ -51,6 +51,7 @@ class ProjectPage(
             BasicPageAbstract.body_text_border_block,
         ],
         blank=True,
+        use_json_field=True,
     )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
@@ -65,6 +66,7 @@ class ProjectPage(
             ('contact', PageChooserBlock(required=True, page_type='people.PersonPage')),
         ],
         blank=True,
+        use_json_field=True,
     )
     project_leads = StreamField(
         [
@@ -72,6 +74,7 @@ class ProjectPage(
             ('external_project_lead', CharBlock(required=True)),
         ],
         blank=True,
+        use_json_field=True,
     )
     project_members = StreamField(
         [
@@ -79,6 +82,7 @@ class ProjectPage(
             ('external_project_member', CharBlock(required=True)),
         ],
         blank=True,
+        use_json_field=True,
     )
     project_types = ParentalManyToManyField('research.ProjectType', blank=True)
     related_files = StreamField(
@@ -86,6 +90,7 @@ class ProjectPage(
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -201,6 +206,7 @@ class IgcTimelinePage(BasicPageAbstract, Page):
             ('igc_timeline', IgcTimelineBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = [

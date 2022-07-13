@@ -34,6 +34,7 @@ class ContactPage(AbstractEmailForm):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     human_resources_contact = StreamField(
         [
@@ -43,6 +44,7 @@ class ContactPage(AbstractEmailForm):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     media_contact = StreamField(
         [
@@ -52,6 +54,7 @@ class ContactPage(AbstractEmailForm):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     thank_you_message = RichTextField(
         blank=True,

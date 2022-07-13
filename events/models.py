@@ -179,6 +179,7 @@ class EventPage(
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
     time_zone = models.CharField(
         blank=True,
