@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load adv_cache static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load adv_cache static wagtailcore_tags wagtailimages_tags webpack_loader core_tags lazyimages_tags %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -61,7 +61,7 @@
                 {% if self.image_hero.file.url|file_extension == '.gif' %}
                   <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
                 {% else %}
-                  {% image self.image_hero width-1760 %}
+                  {% lazy_image self.image_hero width-1760 class="lazy" %}
                 {% endif %}
                 {% if self.image_hero.caption %}
                   <figcaption>

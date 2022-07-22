@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'wagtailmedia',
     'webpack_loader',
     'adv_cache_tag',
+    'wagtail_lazyimages',
 
     'django.contrib.admin',
     'django.contrib.auth',
