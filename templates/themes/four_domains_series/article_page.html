@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
 {% block extra_fonts %}
   {% comment %} <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css"> {% endcomment %}
@@ -11,12 +11,12 @@
   {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}four-domains-series-article{% endblock %}
+{% block body_class %}four-domains-series-article {{self.article_series_category|slugify}}{% endblock %}
 
 {% block hero %}
   <section class="four-domains-series-article-hero">
     <div class="container">
-      <div class="row justify-content-center">
+      <div class="row justify-content-center z-1">
         <div class="col-md-10 col-lg-8 hero-content">
           <div>
             {% include "includes/topics.html" with topics=self.topics_sorted %}
@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center z-0">
         <div class="col-lg-10">
           <div class="background-images" id="background-images">
             {% for block in self.get_additional_images %}
@@ -50,6 +50,17 @@
 {% endblock %}
 
 {% block article_content %}
+  {% if self.article_series_description %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-description">
+            {{self.article_series_description|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
   {% if self.body %}
     <section class="body" id="article-body">
       {% if heading %}
@@ -62,16 +73,61 @@
         </div>
       {% endif %}
       {% for block in self.body %}
-        {% if block.block_type != 'additional_image' %}
+        {% if not block.block_type|in_list:'additional_image,additional_disclaimer' %}
           {% include_block block %}
         {% endif %}
       {% endfor %}
     </section>
   {% endif %}
+
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Works Cited</h2>
+            {{ self.works_cited|richtext }}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.article_series_disclaimer %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-disclaimer">
+            {{self.article_series_disclaimer|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
+
+  {% if self.is_opinion and self.author_count > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
+  {% endif %}
 {% endblock %}
 
 {% block in_the_series %}
   {% if self.article_series %}
-    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article=True %}
   {% endif %}
 {% endblock %}

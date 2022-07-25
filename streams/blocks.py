@@ -1036,6 +1036,7 @@ class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
         VERTICAL = ('vertical', 'Vertical')
         HORIZONTAL = ('horizontal', 'Horizontal')
         ZOOM = ('zoom', 'Zoom')
+        MOUSE = ('mouse', 'Mouse')
         NONE = ('none', 'None')
 
     image = ImageChooserBlock(required=True)
@@ -1055,3 +1056,12 @@ class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'image'
         label = 'Additional Image'
         help_text = 'Additional images to be used only if the theme requires them.'
+
+
+class AdditionalDisclaimerBlock(blocks.StructBlock):
+    disclaimer = blocks.CharBlock()
+
+    class Meta:
+        icon = 'text'
+        label = 'Additional Disclaimer'
+        help_text = 'Additional disclaimer if necessary; placed in order above standard CIGI disclaimer.'
