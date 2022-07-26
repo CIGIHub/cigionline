@@ -14,6 +14,18 @@ function SearchResultListing(props) {
     }
     return [...acc, curr];
   }, []);
+  const contentTypes = [
+    'Opinion',
+    'Opinion Series',
+    'Publication',
+    'Publication Series',
+    'Multimedia',
+    'Multimedia Series',
+    'Event',
+    'Activity',
+    'Person',
+    'Topic',
+  ];
 
   /* eslint-disable react/no-danger */
   return (
@@ -74,11 +86,12 @@ function SearchResultListing(props) {
           <i className="fal fa-file-search" />
         </span>
       )}
-      {!row.contenttype && !row.contentsubtype && (
+      {!contentTypes.includes(row.contenttype) && (
         <span className="table-icon icon-basic-page">
           <i className="fal fa-file" />
         </span>
       )}
+
       <div className="search-result-content">
         <ul className="topics custom-text-list feature-content-topic-list">
           {row.topics
