@@ -3,7 +3,6 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import CookieConsent from './js/components/CookieConsent';
-import CookieBanner from './js/components/CookieBanner';
 import './css/cigionline.scss';
 
 import addInlineVideoActions from './js/inline_video_block';
@@ -134,13 +133,5 @@ if (cookieConsentContainer && !document.cookie.split(';').some((item) => item.in
   ReactDOM.render(
     <CookieConsent />,
     cookieConsentContainer,
-  );
-}
-
-const cookieBannerContainer = document.getElementById('cigi-cookie-banner-container');
-if (cookieBannerContainer && !document.cookie.split(';').some((item) => item.includes('cigionline.accept.banner=1'))) {
-  ReactDOM.render(
-    <CookieBanner />,
-    cookieBannerContainer,
   );
 }
