@@ -1,4 +1,5 @@
 from wagtail.core.signals import page_published
+from articles.models import ArticlePage
 import requests
 import json
 import os
@@ -12,9 +13,8 @@ def send_to_slack(sender, **kwargs):
         "text": "%s was published by %s " % (instance.title, instance.owner.username),
     }
 
-    response = requests.post(url, json.dumps(values))
-    print(response.text)
+    requests.post(url, json.dumps(values))
 
 
 # Register a receiver
-page_published.connect(send_to_slack)
+page_published.connect(send_to_slack, sender=ArticlePage)
