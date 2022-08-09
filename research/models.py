@@ -317,7 +317,7 @@ class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
 
     def get_admin_display_title(self):
         return f"{self.title} (Archived)" if self.archive == 1 else self.title
-    
+
     def __str__(self):
         return f"{self.title} (Archived)" if self.archive == 1 else self.title
 
