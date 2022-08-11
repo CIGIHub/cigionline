@@ -17,7 +17,7 @@ def send_to_slack(sender, **kwargs):
 
 
 class SignalsConfig(AppConfig):
-    name = 'cigionline.signals'
+    name = 'signals'
     verbose_name = "Signals"
 
     def ready(self):
