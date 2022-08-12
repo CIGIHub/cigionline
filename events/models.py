@@ -23,7 +23,7 @@ import pytz
 import re
 
 
-class EventListPage(BasicPageAbstract, Page):
+class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['events.EventPage']

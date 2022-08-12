@@ -12,7 +12,7 @@ from wagtail.core.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 
 
-class JobPostingListPage(BasicPageAbstract, Page):
+class JobPostingListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     def get_context(self, request):
         context = super().get_context(request)
         context['job_postings'] = JobPostingPage.objects.live().public().order_by(models.F('closing_date').asc(nulls_first=True))
