@@ -245,6 +245,34 @@ class CIGIOnlineSearchQueryCompiler:
             "terms": {
                 "content_type": [self.content_type],
             },
+        }, {
+            "bool": {
+                "should": [{
+                    "term": {
+                        "core_contentpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "core_basicpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "core_twentiethpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "people_personpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "annual_reports_annualreportpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "careers_jobpostingpage__exclude_from_search_filter": False,
+                    },
+                }],
+            },
         }]
         if self.contenttypes:
             filters.append({
@@ -545,6 +573,20 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             "terms": {
                 "content_type": [self.content_type],
             },
+        },
+            {
+            "bool": {
+                "should": [{
+                    "term": {
+                        "core_contentpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "annual_reports_annualreportpage__exclude_from_search_filter": False,
+                    },
+                }],
+            },
+
         }]
         if self.contenttypes:
             filters.append({
