@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /admin/
-Disallow: /search/
-Disallow: /publications/improving-the-cyber-health-of-canadas-isps-a-need-for-public-private-partnership
-Disallow: /documents/2203/ISPs_ReportWebReduced_20_Sep_2019.pdf
