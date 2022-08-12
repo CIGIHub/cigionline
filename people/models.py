@@ -48,7 +48,7 @@ class PeoplePage(Page):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonListPage(BasicPageAbstract, Page):
+class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     """
     The pages that show people. There are currently 2 on our website:
     /experts and /about/staff. This was made into a separate page model so that

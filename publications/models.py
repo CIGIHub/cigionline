@@ -30,7 +30,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 
-class PublicationListPage(BasicPageAbstract, Page):
+class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     """Publication list page"""
 
     def featured_publications_list(self):

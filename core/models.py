@@ -259,11 +259,13 @@ class SearchablePageAbstract(models.Model):
         null=True,
         max_length=1024,
         help_text='Text that is displayed when this page appears in search results')
+    exclude_from_search = models.BooleanField(default=False)
 
     search_panel = MultiFieldPanel(
         [
             StreamFieldPanel('search_terms'),
             FieldPanel('search_result_description'),
+            FieldPanel('exclude_from_search'),
         ],
         heading='Search',
         classname='collapsible collapsed',
@@ -271,6 +273,7 @@ class SearchablePageAbstract(models.Model):
 
     search_fields = [
         index.SearchField('search_terms'),
+        index.FilterField('exclude_from_search'),
     ]
 
     class Meta:
@@ -744,6 +747,7 @@ class FundingPage(BasicPageAbstract, Page):
 class PrivacyNoticePage(
     Page,
     BasicPageAbstract,
+    SearchablePageAbstract,
 ):
     content_panels = [
         BasicPageAbstract.title_panel,

@@ -27,7 +27,7 @@ import datetime
 import pytz
 
 
-class ArticleLandingPage(BasicPageAbstract, Page):
+class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = []
@@ -96,7 +96,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     ]
 
 
-class MediaLandingPage(BasicPageAbstract, Page):
+class MediaLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     def latest_cigi_in_the_news(self):
         return ArticlePage.objects.live().public().filter(article_type__title='CIGI in the News').order_by('-publishing_date')[:6]
