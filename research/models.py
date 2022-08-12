@@ -289,7 +289,12 @@ class TopicListPage(Page):
         verbose_name = 'Topic List Page'
 
 
-class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
+class TopicPage(
+    ArchiveablePageAbstract,
+    BasicPageAbstract,
+    SearchablePageAbstract,
+    Page
+):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
 

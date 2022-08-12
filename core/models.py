@@ -747,6 +747,7 @@ class FundingPage(BasicPageAbstract, Page):
 class PrivacyNoticePage(
     Page,
     BasicPageAbstract,
+    SearchablePageAbstract,
 ):
     content_panels = [
         BasicPageAbstract.title_panel,

@@ -257,7 +257,35 @@ class CIGIOnlineSearchQueryCompiler:
                     },
                 }, {
                     "term": {
-                        "core_twentiethpage__exclude_from_search_filter": False,
+                        "core_privacynoticepage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "articles_articlelandingpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "events_eventlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "multimedia_multimedialistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "publications_publicationlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "newsletters_newsletterlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "subscribe_subscribepage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "people_personlistpage__exclude_from_search_filter": False,
                     },
                 }, {
                     "term": {
@@ -269,7 +297,19 @@ class CIGIOnlineSearchQueryCompiler:
                     },
                 }, {
                     "term": {
+                        "annual_reports_annualreportlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
                         "careers_jobpostingpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "careers_jobpostinglistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "research_topicpage__exclude_from_search_filter": False,
                     },
                 }],
             },
