@@ -1,5 +1,6 @@
 from core.models import (
     BasicPageAbstract,
+    SearchablePageAbstract,
 )
 from django.db import models
 from django.template.loader import render_to_string
@@ -12,7 +13,7 @@ from bs4 import BeautifulSoup
 from django.utils.text import slugify
 
 
-class NewsletterListPage(BasicPageAbstract, Page):
+class NewsletterListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.Homepage']
     subpage_types = ['newsletters.NewsletterPage']

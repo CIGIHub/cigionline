@@ -30,7 +30,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 
-class MultimediaListPage(BasicPageAbstract, Page):
+class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['multimedia.MultimediaPage']
