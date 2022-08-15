@@ -336,14 +336,20 @@ class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
             classname='collapsible collapsed',
         ),
     ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel,
+    ]
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + ArchiveablePageAbstract.search_fields + [
-        index.SearchField('topic_name')
-    ]
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + SearchablePageAbstract.search_fields \
+        + [
+            index.SearchField('topic_name')
+        ]
 
     parent_page_types = ['research.TopicListPage']
     subpage_types = []

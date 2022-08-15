@@ -51,7 +51,7 @@ class EventListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     def get_featured_events(self):
         featured_event_ids = self.featured_events.order_by('sort_order').values_list('event_page', flat=True)[:6]

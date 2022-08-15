@@ -68,7 +68,7 @@ class ArticleLandingPage(BasicPageAbstract, Page):
         )
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Article Landing Page'
@@ -110,7 +110,7 @@ class MediaLandingPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
