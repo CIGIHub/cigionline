@@ -43,7 +43,7 @@ def send_notifications(sender, **kwargs):
 
 
 class SignalsConfig(AppConfig):
-    name = 'cigionline.signals'
+    name = 'signals'
     verbose_name = "Signals"
 
     def ready(self):
