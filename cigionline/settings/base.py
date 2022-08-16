@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'streams',
     'subscribe',
     'wagtailschedules',
-    'cigionline.signals',
+    'signals',
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
