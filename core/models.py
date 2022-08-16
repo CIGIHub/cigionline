@@ -754,7 +754,7 @@ class PrivacyNoticePage(
         BasicPageAbstract.body_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
@@ -865,7 +865,7 @@ class TwentiethPage(
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['core.BasicPage']
@@ -1001,7 +1001,7 @@ class TwentiethPageSingleton(
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['core.BasicPage']

@@ -78,7 +78,7 @@ class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     def featured_experts_random(self):
         expert_id_list = list(PersonPage.objects.live().public().filter(
