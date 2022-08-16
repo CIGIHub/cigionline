@@ -21,6 +21,7 @@ class PublishEmailNotification(ClusterableModel):
         InlinePanel('page_type_permissions'),
     ]
 
+
 class PageTypePermission(Orderable):
     permission = ParentalKey(
         'signals.PublishEmailNotification',
