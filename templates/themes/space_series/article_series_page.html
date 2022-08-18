@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeSpaceSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeSpaceSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}space-series-article-series{% endblock %}
+
+{% block content %}
+  <section class="space-series-article-series-hero">
+    <div class="hero-content">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="opinion-series-label">A CIGI Essay Series</div>
+            <div class="title">{{ self.title }}</div>
+            <div class="subtitle">{{ self.subtitle|richtext }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="short-description">
+              {{ self.short_description|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="credits">
+    <div class="container">
+      <div class="row">
+        <div class="col col-md-10">
+          <h2>Credits</h2>
+          <div class="credits-content">
+            {% for title in self.credits_stream_field %}
+              <div class="title-container">
+                <div class="title">{{ title.value.title }}</div>
+                {% for person in title.value.people %}
+                  <div class="name">{{ person }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
