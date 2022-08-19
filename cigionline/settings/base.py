@@ -292,3 +292,17 @@ WAGTAIL_USER_TIME_ZONES = ['America/Toronto']
 TIME_ZONE = 'America/Toronto'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# Email settings
+# NOTIFICATION_OFF is a flag to determine whether notifications are sent in dev, staging, prod envs
+if 'NOTIFICATION_OFF' in os.environ:
+    # if set to True, sendgrid debug mode is true: silent
+    SENDGRID_SANDBOX_MODE_IN_DEBUG = (os.environ['NOTIFICATION_OFF'].lower() == "true")
+else:
+    # default to silent
+    SENDGRID_SANDBOX_MODE_IN_DEBUG = True
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+if 'SENDGRID_API_KEY' in os.environ:
+    SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
+if 'DEFAULT_FROM_EMAIL' in os.environ:
+    DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
