@@ -6,8 +6,23 @@ from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
 
 
-def send_email(title, authors, page_owner):
+def instance_info(instance):
+    title = instance.title
+    authors = ', '.join(instance.author_names)
+    page_owner = instance.owner.username
+    content_type = instance.contenttype
+    return title, authors, page_owner, content_type
+
+
+def notification_list(content_type):
+    # based on contenttype, pull notification list, use as recipients
+    recipients = []
+    return recipients
+
+
+def send_email(title, authors, page_owner, content_type):
     recipients = ['ywang@cigionline.org']  # hardcoded placeholder test recipients
+    # recipients = notification_list(content_type)
 
     text_content = f"{title} By Author(s): {authors} Published By: {page_owner}"
     html_content = f"<p><i>{title}</i></p><p>By Author(s): {authors}</p><p>Published By: {page_owner}</p>"
@@ -41,23 +56,16 @@ def send_to_slack(title, authors, page_owner):
         requests.post(url, json.dumps(values))
 
 
-def instance_info(instance):
-    title = instance.title
-    authors = ', '.join([' '.join([author.author.first_name, author.author.last_name]) for author in instance.authors.all()])
-    page_owner = instance.owner.username
-    return title, authors, page_owner
-
-
 # Let everyone know when a new page is published
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
 
-    title, authors, page_owner = instance_info(instance)
+    title, authors, page_owner, content_type = instance_info(instance)
 
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
     try:
         send_to_slack(title, authors, page_owner)
-        send_email(title, authors, page_owner)
+        send_email(title, authors, page_owner, content_type)
     except Exception as e:
         print(e)
 
