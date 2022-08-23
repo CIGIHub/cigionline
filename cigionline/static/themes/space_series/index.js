@@ -3,15 +3,16 @@ import Swiper, { Navigation } from 'swiper';
 import 'swiper/swiper-bundle.css';
 
 Swiper.use([Navigation]);
-const swiperContainer = document.querySelector('.swiper-container');
+const breakpoint = window.matchMedia('(max-width:992px)');
+let spaceSeriesPageSwiper;
 
-if (swiperContainer) {
-  const spaceSeriesPageSwiper = new Swiper('.swiper-container', {
-    slidesPerView: 1,
+const enableSwiper = function () {
+  spaceSeriesPageSwiper = new Swiper('.swiper-container', {
     spaceBetween: 0,
     speed: 800,
     autoHeight: true,
     grabCursor: true,
+    disabled: true,
 
     navigation: {
       nextEl: '.swiper-button-next',
@@ -20,15 +21,26 @@ if (swiperContainer) {
     },
 
     breakpoints: {
-      480: {
-        slidesPerView: 3,
-      },
-      768: {
-        slidesPerView: 4,
-      },
       992: {
-        slidesPerView: 6,
+        slidesPerView: 8,
       },
     },
   });
-}
+};
+
+const breakpointChecker = function () {
+  // if larger viewport and multi-row layout needed
+  console.log('breakpoint', breakpoint.matches);
+  if (breakpoint.matches === true) {
+    // clean up old instances and inline styles when available
+    if (spaceSeriesPageSwiper !== undefined) spaceSeriesPageSwiper.destroy(true, true);
+    // else if a small viewport and single column layout needed
+  } else if (breakpoint.matches === false) {
+    // fire small viewport version of swiper
+    return enableSwiper();
+  }
+};
+
+breakpoint.addEventListener('change', breakpointChecker);
+
+breakpointChecker();
