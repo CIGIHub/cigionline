@@ -1071,3 +1071,12 @@ class AdditionalDisclaimerBlock(blocks.StructBlock):
         icon = 'text'
         label = 'Additional Disclaimer'
         help_text = 'Additional disclaimer if necessary; placed in order above standard CIGI disclaimer.'
+
+
+class SeriesItemImageBlock(blocks.StructBlock):
+    class PositionChoices(models.TextChoices):
+        top = ('top', 'Top')
+        bottom = ('bottom', 'Bottom')
+
+    image = ImageChooserBlock(required=True)
+    position = blocks.ChoiceBlock(choices=PositionChoices.choices, required=False)

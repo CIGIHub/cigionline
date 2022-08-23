@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
+from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -875,6 +876,12 @@ class ArticleSeriesPageSeriesItem(Orderable):
     )
     category_title = models.CharField(blank=True, max_length=255)
     hide_series_disclaimer = models.BooleanField(default=False)
+    additional_fields = StreamField(
+        [
+            ('image', SeriesItemImageBlock()),
+        ],
+        blank=True,
+    )
 
     panels = [
         FieldPanel('category_title'),
@@ -883,4 +890,5 @@ class ArticleSeriesPageSeriesItem(Orderable):
             ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
         FieldPanel('hide_series_disclaimer'),
+        StreamFieldPanel('additional_fields'),
     ]
