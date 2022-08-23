@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block extra_fonts %}
-  <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css">
+  <link rel="stylesheet" href="https://use.typekit.net/rwn6tvm.css">
 {% endblock %}
 {% block theme_css %}
   {% render_bundle 'themeSpaceSeries' 'css' %}
@@ -50,7 +50,7 @@
             <div class="title">{{ self.title }}</div>
             <div class="subtitle">{{ self.subtitle|richtext }}</div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-5 offset-md-1">
             <div class="short-description">
               {{ self.short_description|richtext }}
             </div>
@@ -59,24 +59,40 @@
       </div>
     </div>
   </section>
-
-  <section class="credits">
-    <div class="container">
-      <div class="row">
-        <div class="col col-md-10">
-          <h2>Credits</h2>
-          <div class="credits-content">
-            {% for title in self.credits_stream_field %}
-              <div class="title-container">
-                <div class="title">{{ title.value.title }}</div>
-                {% for person in title.value.people %}
-                  <div class="name">{{ person }}</div>
+  <section class="in-the-series">
+    <div class="container swiper">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          {% for series_item in self.article_series_items %}
+            <article class="swiper-slide series-item">
+              <div class="series-item-images">
+                {% for additional_block in series_item.additional_fields %}
+                  {% if additional_block.block_type == 'image' %}
+                    {% image additional_block.value.image fill-300x300 %}
+                  {% endif %}
                 {% endfor %}
               </div>
-            {% endfor %}
-          </div>
+              <div class="series-item-content">
+                <div>
+                  <div class="series-item-counter">
+                    <span></span>
+                    <span>0{{ forloop.counter }}</span>
+                  </div>
+                  <h3 class="series-item-title">
+                    <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                  </h3>
+                </div>
+                {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+              </div>
+            </article>
+          {% endfor %}
         </div>
       </div>
+      <div class="swiper-button-prev swiper-button"></div>
+      <div class="swiper-button-next swiper-button"></div>
     </div>
   </section>
+{% endblock %}
+
+{% block footer %}
 {% endblock %}
