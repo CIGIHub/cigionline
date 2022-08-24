@@ -45,15 +45,17 @@ body {
   }
 
   .in-the-series {
-    overflow: hidden;
-
     .swiper {
       margin-top: 4em;
       position: relative;
 
-      .swiper-wrapper {
-        @include media-breakpoint-down(md) {
-          flex-direction: column;
+      .swiper-container {
+        padding: 0.5em;
+
+        .swiper-wrapper {
+          @include media-breakpoint-down(md) {
+            flex-direction: column;
+          }
         }
       }
 
@@ -67,6 +69,24 @@ body {
         border-top: 1px solid $cigi-text-grey;
         display: flex;
         height: 100%;
+        position: relative;
+
+        &::before {
+          content: '';
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          transition: box-shadow 0.2s ease;
+          width: 100%;
+          z-index: -1;
+        }
+
+        &:hover {
+          &::before {
+            box-shadow: 0 0 10px 1px $white-alpha-80;
+          }
+        }
 
         &:last-child {
           @include media-breakpoint-up(lg) {
@@ -81,7 +101,9 @@ body {
             width: auto;
           }
           flex-shrink: 0;
+          position: relative;
           width: 100px;
+          z-index: -2;
         }
 
         .series-item-content {
