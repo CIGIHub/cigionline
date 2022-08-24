@@ -24,8 +24,11 @@ body {
       }
 
       .title {
+        @include media-breakpoint-up(lg) {
+          font-size: 2.25em;
+        }
         font-family: $space-series-font-primary;
-        font-size: 2.25em;
+        font-size: calc(3vw + 1em);
         font-weight: 500;
         line-height: 1;
         text-transform: uppercase;
@@ -130,6 +133,9 @@ body {
       }
 
       .swiper-button {
+        @include media-breakpoint-down(md) {
+          display: none;
+        }
         color: $white;
         transition: color 0.3s ease;
 

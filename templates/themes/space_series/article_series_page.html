@@ -64,27 +64,29 @@
       <div class="swiper-container">
         <div class="swiper-wrapper">
           {% for series_item in self.article_series_items %}
-            <article class="swiper-slide series-item">
-              <div class="series-item-image">
-                {% for additional_block in series_item.additional_fields %}
-                  {% if additional_block.block_type == 'image' %}
-                    {% image additional_block.value.image fill-300x300 %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-              <div class="series-item-content">
-                <div>
-                  <div class="series-item-counter">
-                    <span></span>
-                    <span>0{{ forloop.counter }}</span>
-                  </div>
-                  <h3 class="series-item-title">
-                    <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
-                  </h3>
+            <a href="{% pageurl series_item.content_page %}">
+              <article class="swiper-slide series-item">
+                <div class="series-item-image">
+                  {% for additional_block in series_item.additional_fields %}
+                    {% if additional_block.block_type == 'image' %}
+                      {% image additional_block.value.image fill-300x300 %}
+                    {% endif %}
+                  {% endfor %}
                 </div>
-                {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
-              </div>
-            </article>
+                <div class="series-item-content">
+                  <div>
+                    <div class="series-item-counter">
+                      <span></span>
+                      <span>0{{ forloop.counter }}</span>
+                    </div>
+                    <h3 class="series-item-title">
+                      <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                    </h3>
+                  </div>
+                  {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+                </div>
+              </article>
+            </a>
           {% endfor %}
         </div>
       </div>
