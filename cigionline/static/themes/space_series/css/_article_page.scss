@@ -48,6 +48,33 @@
     top: 50px;
     z-index: 1;
 
+    &.sticky {
+      .swiper {
+        .swiper-container {
+          .swiper-wrapper {
+            height: 50px;
+
+            article {
+              border: 0;
+
+              .series-item-content {
+                h3,
+                .authors {
+                  opacity: 0;
+                }
+              }
+            }
+          }
+        }
+
+        .swiper-button {
+          &::before {
+            opacity: 0;
+          }
+        }
+      }
+    }
+
     h2 {
       font-size: 1em;
       font-weight: 500;
@@ -58,6 +85,7 @@
       .swiper-container {
         .swiper-wrapper {
           height: 170px;
+          transition: height 0.5s ease, transform 0.5s ease;
         }
       }
 
@@ -81,6 +109,20 @@
           justify-content: space-between;
           padding: 0 1em;
 
+          & > a {
+            &:hover {
+              .series-item-counter {
+                span {
+                  &:first-child {
+                    &::before {
+                      background-color: $cigi-primary-colour;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
           .series-item-counter {
             display: flex;
 
@@ -96,6 +138,7 @@
                   content: '';
                   height: 5px;
                   position: absolute;
+                  transition: background-color 0.2s ease;
                   width: 100%;
                 }
               }
@@ -104,10 +147,12 @@
 
           .series-item-title {
             font-size: 1em;
+            transition: opacity 0.3s ease;
           }
 
           .authors {
             margin: 0;
+            transition: opacity 0.3s ease;
           }
         }
       }
@@ -117,8 +162,6 @@
           display: none;
         }
         background-color: $space-series-background-colour;
-        // border-left: 1px solid $cigi-text-grey;
-        // border-right: 1px solid $cigi-text-grey;
         color: $white;
         height: 100%;
         margin-top: 0;
@@ -131,17 +174,17 @@
         }
 
         &::before {
+          bottom: 25px;
           content: 'MORE';
           position: absolute;
-          bottom: 25px;
         }
 
         &.swiper-button-prev {
-          left: 0;
+          left: -1em;
         }
 
         &.swiper-button-next {
-          right: 0;
+          right: -1em;
         }
 
         &.swiper-button-disabled {

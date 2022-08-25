@@ -12,17 +12,14 @@ if (document.querySelector('.space-series-article')) {
   pageType = 'article series';
 }
 
-const enableSwiper = function (articleType) {
+const enableSwiper = function(articleType) {
   const slidesPerView = articleType === 'article series' ? 8 : 6;
   spaceSeriesPageSwiper = new Swiper('.swiper-container', {
     spaceBetween: 0,
     speed: 800,
-    autoHeight: true,
+    autoHeight: pageType === 'article series',
     grabCursor: true,
-    disabled: true,
-    grid: {
-      rows: 1,
-    },
+    effect: 'slide',
 
     navigation: {
       nextEl: '.swiper-button-next',
@@ -35,21 +32,14 @@ const enableSwiper = function (articleType) {
         slidesPerView,
       },
     },
-
-    on: {
-      navigationNext() {
-        console.log(this);
-      },
-    },
   });
 };
 
-const breakpointChecker = function () {
+const breakpointChecker = function() {
   if (breakpoint.matches === true) {
-    if (spaceSeriesPageSwiper !== undefined)
-      spaceSeriesPageSwiper.destroy(true, true);
+    if (spaceSeriesPageSwiper !== undefined) spaceSeriesPageSwiper.destroy(true, true);
   } else if (breakpoint.matches === false) {
-    return enableSwiper(pageType);
+    enableSwiper(pageType);
   }
 };
 
@@ -57,6 +47,33 @@ breakpoint.addEventListener('change', breakpointChecker);
 
 breakpointChecker();
 
-document.addEventListener('scroll', function () {
-  console.log(window.scrollY);
-});
+if (pageType === 'article') {
+  let sticky;
+  const stickyHeader = document.getElementById('sticky-in-the-series');
+  const observer = new IntersectionObserver(
+    ([e]) => {
+      setTimeout(() => {
+        e.target.classList.toggle('sticky', e.intersectionRatio < 1);
+        if (e.intersectionRatio < 1) {
+          sticky = true;
+        } else {
+          sticky = false;
+        }
+      }, 50);
+    },
+    { rootMargin: '-51px 0px 0px 0px', threshold: [1] },
+  );
+
+  observer.observe(stickyHeader);
+
+  stickyHeader.addEventListener('mouseenter', () => {
+    if (sticky) {
+      stickyHeader.classList.remove('sticky');
+    }
+  });
+  stickyHeader.addEventListener('mouseleave', () => {
+    if (sticky) {
+      stickyHeader.classList.add('sticky');
+    }
+  });
+}

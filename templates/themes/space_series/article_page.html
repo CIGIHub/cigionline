@@ -33,7 +33,7 @@
       </div>
     </div>
   </section>
-  <section class="in-the-series">
+  <section class="in-the-series" id="sticky-in-the-series">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-1">
@@ -46,15 +46,13 @@
                 {% for series_item in self.article_series.specific.article_series_items %}
                   <article class="swiper-slide series-item">
                     <div class="series-item-content">
-                      <div>
+                      <a href="{% pageurl series_item.content_page %}">
                         <div class="series-item-counter">
                           <span></span>
                           <span>0{{ forloop.counter }}</span>
                         </div>
-                        <h3 class="series-item-title">
-                          <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
-                        </h3>
-                      </div>
+                        <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
+                      </a>
                       {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
                     </div>
                   </article>
