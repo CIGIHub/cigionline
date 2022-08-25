@@ -11,43 +11,66 @@
   {% render_bundle 'themeSpaceSeries' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}space-series-article {{self.article_series_category|slugify}}{% endblock %}
+{% block body_class %}space-series-article{% endblock %}
 
 {% block hero %}
   <section class="space-series-article-hero">
     <div class="container">
-      <div class="row justify-content-center z-1">
-        <div class="col-md-10 col-lg-8 hero-content">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-lg-4 hero-content">
           <div>
-            {% include "includes/topics.html" with topics=self.topics_sorted %}
             <h1>{{ self.title }}</h1>
+            {{ self.subtitle|richtext }}
             {% include "includes/authors.html" with authors=self.authors.all %}
             {% include "includes/date.html" with date=self.publishing_date %}
           </div>
         </div>
+        <div class="col-lg-6 offset-lg-2 hero-image">
+          {% if self.image_hero %}
+            {% image self.image_hero fill-1600x1600 %}
+          {% endif %}
+        </div>
       </div>
-      <div class="row justify-content-center z-0">
-        <div class="col-lg-10">
-          <div class="background-images" id="background-images">
-            {% for block in self.get_additional_images %}
-              {% image block.image original as additional_image %}
-              <img 
-                src="{{ additional_image.url }}"
-                alt="{{ additional_image.alt }}"
-                class="{{ block.classes }}"
-                data-position="{{ block.position }}"
-                data-animation="{{ block.animation }}"
-                data-speed="{{ block.speed }}"
-                data-initial-top="{{ block.initial_top }}"
-                data-initial-left="{{ block.initial_left }}"
-              />
-            {% endfor %}
+    </div>
+  </section>
+  <section class="in-the-series">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-1">
+          <h2>IN THE SERIES</h2>
+        </div>
+        <div class="col-11">
+          <div class="swiper">
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                {% for series_item in self.article_series.specific.article_series_items %}
+                  <article class="swiper-slide series-item">
+                    <div class="series-item-content">
+                      <div>
+                        <div class="series-item-counter">
+                          <span></span>
+                          <span>0{{ forloop.counter }}</span>
+                        </div>
+                        <h3 class="series-item-title">
+                          <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                        </h3>
+                      </div>
+                      {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+                    </div>
+                  </article>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="swiper-button-prev swiper-button"></div>
+            <div class="swiper-button-next swiper-button"></div>
           </div>
         </div>
       </div>
     </div>
   </section>
+  
 {% endblock %}
+
 
 {% block article_content %}
   {% if self.article_series_description %}
@@ -73,9 +96,7 @@
         </div>
       {% endif %}
       {% for block in self.body %}
-        {% if not block.block_type|in_list:'additional_image,additional_disclaimer' %}
-          {% include_block block %}
-        {% endif %}
+        {% include_block block %}
       {% endfor %}
     </section>
   {% endif %}
@@ -123,11 +144,5 @@
 
   {% if self.is_opinion and self.author_count > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
-  {% endif %}
-{% endblock %}
-
-{% block in_the_series %}
-  {% if self.article_series %}
-    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article=True %}
   {% endif %}
 {% endblock %}

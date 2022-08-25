@@ -5,14 +5,24 @@ import 'swiper/swiper-bundle.css';
 Swiper.use([Navigation]);
 const breakpoint = window.matchMedia('(max-width:992px)');
 let spaceSeriesPageSwiper;
+let pageType;
+if (document.querySelector('.space-series-article')) {
+  pageType = 'article';
+} else if (document.querySelector('.space-series-article-series')) {
+  pageType = 'article series';
+}
 
-const enableSwiper = function () {
+const enableSwiper = function (articleType) {
+  const slidesPerView = articleType === 'article series' ? 8 : 6;
   spaceSeriesPageSwiper = new Swiper('.swiper-container', {
     spaceBetween: 0,
     speed: 800,
     autoHeight: true,
     grabCursor: true,
     disabled: true,
+    grid: {
+      rows: 1,
+    },
 
     navigation: {
       nextEl: '.swiper-button-next',
@@ -22,25 +32,31 @@ const enableSwiper = function () {
 
     breakpoints: {
       992: {
-        slidesPerView: 8,
+        slidesPerView,
+      },
+    },
+
+    on: {
+      navigationNext() {
+        console.log(this);
       },
     },
   });
 };
 
 const breakpointChecker = function () {
-  // if larger viewport and multi-row layout needed
-  console.log('breakpoint', breakpoint.matches);
   if (breakpoint.matches === true) {
-    // clean up old instances and inline styles when available
-    if (spaceSeriesPageSwiper !== undefined) spaceSeriesPageSwiper.destroy(true, true);
-    // else if a small viewport and single column layout needed
+    if (spaceSeriesPageSwiper !== undefined)
+      spaceSeriesPageSwiper.destroy(true, true);
   } else if (breakpoint.matches === false) {
-    // fire small viewport version of swiper
-    return enableSwiper();
+    return enableSwiper(pageType);
   }
 };
 
 breakpoint.addEventListener('change', breakpointChecker);
 
 breakpointChecker();
+
+document.addEventListener('scroll', function () {
+  console.log(window.scrollY);
+});

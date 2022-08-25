@@ -1,0 +1,153 @@
+.space-series-article {
+  @include top-bar($background-color: $space-series-background-colour);
+
+  .space-series-article-hero,
+  .in-the-series {
+    @include link($color: $white, $hover-color: $cigi-primary-colour);
+    background-color: $space-series-background-colour;
+    color: $white;
+    font-family: $space-series-font-secondary;
+  }
+
+  .space-series-article-hero {
+    padding-top: 6em;
+
+    h1 {
+      font-family: $space-series-font-primary;
+      font-weight: 500;
+      line-height: 1;
+      position: relative;
+
+      &::before {
+        background-color: $white;
+        content: '';
+        height: 7px;
+        position: absolute;
+        top: -15px;
+        width: 100%;
+      }
+    }
+
+    p {
+      font-size: 1.25em;
+    }
+
+    .authors {
+      margin: 3.5em 0 0;
+      text-transform: uppercase;
+    }
+
+    .date {
+      text-transform: uppercase;
+    }
+  }
+
+  .in-the-series {
+    padding: 1em 0;
+    position: sticky;
+    top: 50px;
+    z-index: 1;
+
+    h2 {
+      font-size: 1em;
+      font-weight: 500;
+    }
+
+    .swiper {
+      position: relative;
+      .swiper-container {
+        .swiper-wrapper {
+          height: 170px;
+        }
+      }
+
+      article {
+        border-right: 1px solid $cigi-text-grey;
+        height: 100%;
+
+        &:last-child {
+          @include media-breakpoint-up(lg) {
+            border-bottom: 0;
+            border-right: 1px solid $cigi-text-grey;
+          }
+          border-bottom: 1px solid $cigi-text-grey;
+        }
+
+        .series-item-content {
+          display: flex;
+          flex-direction: column;
+          font-size: 0.8em;
+          height: 100%;
+          justify-content: space-between;
+          padding: 0 1em;
+
+          .series-item-counter {
+            display: flex;
+
+            span {
+              &:first-child {
+                margin-right: 0.25em;
+                position: relative;
+                width: 100%;
+
+                &::before {
+                  background-color: $white;
+                  bottom: 9px;
+                  content: '';
+                  height: 5px;
+                  position: absolute;
+                  width: 100%;
+                }
+              }
+            }
+          }
+
+          .series-item-title {
+            font-size: 1em;
+          }
+
+          .authors {
+            margin: 0;
+          }
+        }
+      }
+
+      .swiper-button {
+        @include media-breakpoint-down(md) {
+          display: none;
+        }
+        background-color: $space-series-background-colour;
+        // border-left: 1px solid $cigi-text-grey;
+        // border-right: 1px solid $cigi-text-grey;
+        color: $white;
+        height: 100%;
+        margin-top: 0;
+        width: 75px;
+        top: 0;
+        transition: color 0.3s ease, opacity 0.3s ease;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+
+        &::before {
+          content: 'MORE';
+          position: absolute;
+          bottom: 25px;
+        }
+
+        &.swiper-button-prev {
+          left: 0;
+        }
+
+        &.swiper-button-next {
+          right: 0;
+        }
+
+        &.swiper-button-disabled {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
