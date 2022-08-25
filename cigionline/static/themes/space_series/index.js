@@ -3,7 +3,6 @@ import Swiper, { Navigation } from 'swiper';
 import 'swiper/swiper-bundle.css';
 
 Swiper.use([Navigation]);
-const breakpoint = window.matchMedia('(max-width:992px)');
 let spaceSeriesPageSwiper;
 let pageType;
 if (document.querySelector('.space-series-article')) {
@@ -11,9 +10,13 @@ if (document.querySelector('.space-series-article')) {
 } else if (document.querySelector('.space-series-article-series')) {
   pageType = 'article series';
 }
+const breakpoint = pageType === 'article series'
+  ? window.matchMedia('(max-width:992px)')
+  : window.matchMedia('(max-width:768px)');
 
 const enableSwiper = function(articleType) {
-  const slidesPerView = articleType === 'article series' ? 8 : 6;
+  const slidesPerViewLg = articleType === 'article series' ? 8 : 6;
+  const slidesPerViewMd = articleType === 'article series' ? 8 : 4;
   spaceSeriesPageSwiper = new Swiper('.swiper-container', {
     spaceBetween: 0,
     speed: 800,
@@ -28,8 +31,11 @@ const enableSwiper = function(articleType) {
     },
 
     breakpoints: {
+      768: {
+        slidesPerView: slidesPerViewMd,
+      },
       992: {
-        slidesPerView,
+        slidesPerView: slidesPerViewLg,
       },
     },
   });
@@ -52,16 +58,16 @@ if (pageType === 'article') {
   const stickyHeader = document.getElementById('sticky-in-the-series');
   const observer = new IntersectionObserver(
     ([e]) => {
-      setTimeout(() => {
+      if (window.innerWidth > 768) {
         e.target.classList.toggle('sticky', e.intersectionRatio < 1);
         if (e.intersectionRatio < 1) {
           sticky = true;
         } else {
           sticky = false;
         }
-      }, 50);
+      }
     },
-    { rootMargin: '-51px 0px 0px 0px', threshold: [1] },
+    { rootMargin: '-50px 0px 0px 0px', threshold: [0.9, 1] },
   );
 
   observer.observe(stickyHeader);
@@ -75,5 +81,11 @@ if (pageType === 'article') {
     if (sticky) {
       stickyHeader.classList.add('sticky');
     }
+  });
+
+  const expandButton = document.getElementById('in-the-series-expand');
+  expandButton.addEventListener('click', () => {
+    stickyHeader.classList.toggle('expanded');
+    expandButton.classList.toggle('expanded');
   });
 }

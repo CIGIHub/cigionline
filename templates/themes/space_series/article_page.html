@@ -17,7 +17,7 @@
   <section class="space-series-article-hero">
     <div class="container">
       <div class="row justify-content-center align-items-center">
-        <div class="col-lg-4 hero-content">
+        <div class="col-md-6 col-lg-4 hero-content">
           <div>
             <h1>{{ self.title }}</h1>
             {{ self.subtitle|richtext }}
@@ -25,7 +25,7 @@
             {% include "includes/date.html" with date=self.publishing_date %}
           </div>
         </div>
-        <div class="col-lg-6 offset-lg-2 hero-image">
+        <div class="col-md-6 offset-lg-2 hero-image">
           {% if self.image_hero %}
             {% image self.image_hero fill-1600x1600 %}
           {% endif %}
@@ -35,27 +35,50 @@
   </section>
   <section class="in-the-series" id="sticky-in-the-series">
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-1">
+      <div class="row justify-content-between">
+        <div class="col-4 col-md-2 col-lg-1">
           <h2>IN THE SERIES</h2>
         </div>
-        <div class="col-11">
+        <i class="fas fa-plus in-the-series-expand" id="in-the-series-expand"></i>
+        <div class="col-md-10 col-lg-11">
           <div class="swiper">
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 {% for series_item in self.article_series.specific.article_series_items %}
-                  <article class="swiper-slide series-item">
-                    <div class="series-item-content">
-                      <a href="{% pageurl series_item.content_page %}">
-                        <div class="series-item-counter">
-                          <span></span>
-                          <span>0{{ forloop.counter }}</span>
+                  {% if series_item.content_page.url == self.url %}
+                    <article class="swiper-slide series-item disabled">
+                      <div class="series-item-image">
+                        {% for additional_block in series_item.additional_fields %}
+                          {% if additional_block.block_type == 'image' %}
+                            {% image additional_block.value.image fill-100x100 %}
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                      <div class="series-item-content">
+                        <div>
+                          <div class="series-item-counter">
+                            <span></span>
+                            <span>0{{ forloop.counter }}</span>
+                          </div>
+                          <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
                         </div>
-                        <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
-                      </a>
-                      {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
-                    </div>
-                  </article>
+                        {% include 'includes/authors.html' with authors=series_item.content_page.authors.all hide_link=True %}
+                      </div>
+                    </article>
+                  {% else %}
+                    <article class="swiper-slide series-item">
+                      <div class="series-item-content">
+                        <a href="{% pageurl series_item.content_page %}">
+                          <div class="series-item-counter">
+                            <span></span>
+                            <span>0{{ forloop.counter }}</span>
+                          </div>
+                          <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
+                        </a>
+                        {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+                      </div>
+                    </article>
+                  {% endif %}
                 {% endfor %}
               </div>
             </div>
