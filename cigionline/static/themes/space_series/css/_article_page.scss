@@ -1,6 +1,10 @@
 .space-series-article {
   @include top-bar($background-color: $space-series-background-colour);
 
+  &.no-scroll {
+    overflow: hidden;
+  }
+
   header {
     z-index: 100;
   }
@@ -55,16 +59,21 @@
   }
 
   .in-the-series {
-    padding: 1em 0;
-    position: sticky;
-    top: 49px;
+    padding: 2em 0;
     z-index: 1;
+
+    &.hidden {
+      height: 0;
+      opacity: 0;
+      padding: 0;
+    }
 
     &.sticky {
       .swiper {
         .swiper-container {
           .swiper-wrapper {
             height: 50px;
+            transition: height 0.5s ease-in-out;
 
             article {
               border: 0;
@@ -90,24 +99,25 @@
     &.expanded {
       bottom: 0;
       overflow-y: scroll;
+      overscroll-behavior: contain;
       position: fixed;
+      top: 50px;
       width: 100vw;
       z-index: 100;
 
       .swiper {
         display: block;
-        overflow: scroll;
 
         .swiper-container {
           .swiper-wrapper {
             height: 100%;
-            padding: 1em 0;
+            padding: 2em 0;
 
             article {
-              border-top: 1px solid $cigi-text-grey;
-              border-right: 0;
-              display: flex;
               align-items: center;
+              border-right: 0;
+              border-top: 1px solid $cigi-text-grey;
+              display: flex;
 
               &:last-child {
                 border-bottom: 1px solid $cigi-text-grey;

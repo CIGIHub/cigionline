@@ -13,32 +13,37 @@ if (document.querySelector('.space-series-article')) {
 const breakpoint = pageType === 'article series'
   ? window.matchMedia('(max-width:992px)')
   : window.matchMedia('(max-width:768px)');
+const swipers = {};
 
 const enableSwiper = function(articleType) {
   const slidesPerViewLg = articleType === 'article series' ? 8 : 6;
   const slidesPerViewMd = articleType === 'article series' ? 8 : 4;
-  spaceSeriesPageSwiper = new Swiper('.swiper-container', {
-    spaceBetween: 0,
-    speed: 800,
-    autoHeight: pageType === 'article series',
-    grabCursor: true,
-    effect: 'slide',
+  const swiperIds = articleType === 'article series' ? ['.swiper-container'] : ['.swiper-container-sticky', '.swiper-container-hero'];
+  swiperIds.forEach((id) => {
+    swipers[id] = new Swiper(id, {
+      spaceBetween: 0,
+      speed: 800,
+      autoHeight: pageType === 'article series',
+      grabCursor: true,
+      effect: 'slide',
 
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-      hiddenClass: 'swiper-button-hidden',
-    },
+      navigation: {
+        nextEl: `.swiper-button-next-${id.replace('.swiper-container-', '')}`,
+        prevEl: `.swiper-button-prev-${id.replace('.swiper-container-', '')}`,
+        hiddenClass: 'swiper-button-hidden',
+      },
 
-    breakpoints: {
-      768: {
-        slidesPerView: slidesPerViewMd,
+      breakpoints: {
+        768: {
+          slidesPerView: slidesPerViewMd,
+        },
+        992: {
+          slidesPerView: slidesPerViewLg,
+        },
       },
-      992: {
-        slidesPerView: slidesPerViewLg,
-      },
-    },
+    });
   });
+  console.log(swipers)
 };
 
 const breakpointChecker = function() {
@@ -53,39 +58,68 @@ breakpoint.addEventListener('change', breakpointChecker);
 
 breakpointChecker();
 
+function getOffset(el) {
+  const rect = el.getBoundingClientRect();
+  return {
+    left: rect.left,
+    top: rect.top
+  };
+}
+
 if (pageType === 'article') {
   let sticky;
-  const stickyHeader = document.getElementById('sticky-in-the-series');
-  const observer = new IntersectionObserver(
-    ([e]) => {
-      if (window.innerWidth > 768) {
-        e.target.classList.toggle('sticky', e.intersectionRatio < 1);
-        if (e.intersectionRatio < 1) {
-          sticky = true;
-        } else {
-          sticky = false;
-        }
+  const stickyInTheSeries = document.getElementById('sticky-in-the-series');
+  const heroInTheSeries = document.getElementById('hero-in-the-series');
+  const hero = document.querySelector('.space-series-article-hero');
+  let heroHeight = hero.offsetHeight;
+  
+
+  // const observer = new IntersectionObserver(
+  //   ([e]) => {
+  //     if (window.innerWidth > 768) {
+  //       e.target.classList.toggle('sticky', e.intersectionRatio < 1);
+  //       if (e.intersectionRatio < 1) {
+  //         sticky = true;
+  //       } else {
+  //         sticky = false;
+  //       }
+  //     }
+  //   },
+  //   { rootMargin: '-50px 0px 0px 0px', threshold: [0.5, 1] },
+  // );
+
+  // observer.observe(stickyHeader);
+
+  stickyInTheSeries.addEventListener('mouseenter', () => {
+    stickyInTheSeries.classList.remove('sticky');
+  });
+  stickyInTheSeries.addEventListener('mouseleave', () => {
+    stickyInTheSeries.classList.add('sticky');
+  });
+
+  const expandButtons = document.querySelectorAll('.in-the-series-expand');
+  const body = document.querySelector('body');
+  expandButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      heroInTheSeries.classList.toggle('expanded');
+      button.classList.toggle('expanded');
+      body.classList.toggle('no-scroll');
+
+      if (button.id === 'in-the-series-expand-sticky') {
+        heroInTheSeries.classList.toggle('hidden');
       }
-    },
-    { rootMargin: '-50px 0px 0px 0px', threshold: [0.9, 1] },
-  );
-
-  observer.observe(stickyHeader);
-
-  stickyHeader.addEventListener('mouseenter', () => {
-    if (sticky) {
-      stickyHeader.classList.remove('sticky');
-    }
+    });
   });
-  stickyHeader.addEventListener('mouseleave', () => {
-    if (sticky) {
-      stickyHeader.classList.add('sticky');
+  document.addEventListener('scroll', () => {
+    if (window.scrollY > (heroHeight - 50)) {
+      stickyInTheSeries.classList.remove('hidden');
+      stickyInTheSeries.classList.add('sticky');
+      heroInTheSeries.classList.add('hidden');
+      document.querySelector('.body').style.marginTop = '200px';
+    } else {
+      stickyInTheSeries.classList.add('hidden');
+      heroInTheSeries.classList.remove('hidden');
+      document.querySelector('.body').style.marginTop = '1em';
     }
-  });
-
-  const expandButton = document.getElementById('in-the-series-expand');
-  expandButton.addEventListener('click', () => {
-    stickyHeader.classList.toggle('expanded');
-    expandButton.classList.toggle('expanded');
   });
 }

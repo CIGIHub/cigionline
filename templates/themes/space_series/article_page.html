@@ -13,6 +13,10 @@
 
 {% block body_class %}space-series-article{% endblock %}
 
+{% block header %}
+  {% include './includes/top_bar.html' %}
+{% endblock %}
+
 {% block hero %}
   <section class="space-series-article-hero">
     <div class="container">
@@ -33,16 +37,16 @@
       </div>
     </div>
   </section>
-  <section class="in-the-series" id="sticky-in-the-series">
+  <section class="in-the-series" id="hero-in-the-series">
     <div class="container">
       <div class="row justify-content-between">
         <div class="col-4 col-md-2 col-lg-1">
           <h2>IN THE SERIES</h2>
         </div>
-        <i class="fas fa-plus in-the-series-expand" id="in-the-series-expand"></i>
+        <i class="fas fa-plus in-the-series-expand"></i>
         <div class="col-md-10 col-lg-11">
           <div class="swiper">
-            <div class="swiper-container">
+            <div class="swiper-container swiper-container-hero">
               <div class="swiper-wrapper">
                 {% for series_item in self.article_series.specific.article_series_items %}
                   {% if series_item.content_page.url == self.url %}
@@ -82,8 +86,8 @@
                 {% endfor %}
               </div>
             </div>
-            <div class="swiper-button-prev swiper-button"></div>
-            <div class="swiper-button-next swiper-button"></div>
+            <div class="swiper-button-prev swiper-button-prev-hero swiper-button"></div>
+            <div class="swiper-button-next swiper-button-next-hero swiper-button"></div>
           </div>
         </div>
       </div>
