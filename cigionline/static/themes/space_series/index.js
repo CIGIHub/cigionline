@@ -23,7 +23,7 @@ const enableSwiper = function(articleType) {
     swipers[id] = new Swiper(id, {
       spaceBetween: 0,
       speed: 800,
-      autoHeight: pageType === 'article series',
+      autoHeight: false,
       grabCursor: true,
       effect: 'slide',
 
@@ -43,12 +43,13 @@ const enableSwiper = function(articleType) {
       },
     });
   });
-  console.log(swipers)
 };
 
 const breakpointChecker = function() {
   if (breakpoint.matches === true) {
-    if (spaceSeriesPageSwiper !== undefined) spaceSeriesPageSwiper.destroy(true, true);
+    for (const swiper in swipers) {
+      if (swipers[swiper] !== undefined) swipers[swiper].destroy(true, true);
+    }
   } else if (breakpoint.matches === false) {
     enableSwiper(pageType);
   }
@@ -58,16 +59,7 @@ breakpoint.addEventListener('change', breakpointChecker);
 
 breakpointChecker();
 
-function getOffset(el) {
-  const rect = el.getBoundingClientRect();
-  return {
-    left: rect.left,
-    top: rect.top
-  };
-}
-
 if (pageType === 'article') {
-  let sticky;
   const stickyInTheSeries = document.getElementById('sticky-in-the-series');
   const heroInTheSeries = document.getElementById('hero-in-the-series');
   const hero = document.querySelector('.space-series-article-hero');

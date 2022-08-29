@@ -51,6 +51,9 @@ body {
             @include media-breakpoint-down(md) {
               flex-direction: column;
             }
+            @include media-breakpoint-up(lg) {
+              height: 400px;
+            }
           }
         }
 
