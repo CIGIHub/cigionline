@@ -61,7 +61,7 @@
   </section>
   <section class="in-the-series">
     <div class="container swiper">
-      <div class="swiper-container">
+      <div class="swiper-container-series">
         <div class="swiper-wrapper">
           {% for series_item in self.article_series_items %}
             <article class="swiper-slide series-item">
@@ -84,8 +84,8 @@
           {% endfor %}
         </div>
       </div>
-      <div class="swiper-button-prev swiper-button"></div>
-      <div class="swiper-button-next swiper-button"></div>
+      <div class="swiper-button-prev swiper-button-prev-series swiper-button"></div>
+      <div class="swiper-button-next swiper-button-next-series swiper-button"></div>
     </div>
   </section>
 {% endblock %}
