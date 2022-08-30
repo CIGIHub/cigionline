@@ -40,7 +40,7 @@ def send_email(title, authors, page_owner, content_type, recipients):
     msg = EmailMultiAlternatives(
         "New Page Published",  # title
         text_content,  # body
-        os.environ['DEFAULT_FROM_EMAIL'],  # from email
+        os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL'],  # from email
         recipients,  # to emails
     )
 
