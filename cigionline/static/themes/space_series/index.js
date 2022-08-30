@@ -3,7 +3,6 @@ import Swiper, { Navigation } from 'swiper';
 import 'swiper/swiper-bundle.css';
 
 Swiper.use([Navigation]);
-let spaceSeriesPageSwiper;
 let pageType;
 if (document.querySelector('.space-series-article')) {
   pageType = 'article';
@@ -20,8 +19,6 @@ const enableSwiper = function(articleType) {
   const slidesPerViewMd = articleType === 'article series' ? 8 : 4;
   const swiperIds = articleType === 'article series' ? ['.swiper-container-series'] : ['.swiper-container-sticky', '.swiper-container-hero'];
   swiperIds.forEach((id) => {
-    console.log(id)
-    console.log(swipers)
     swipers[id] = new Swiper(id, {
       spaceBetween: 0,
       speed: 800,
@@ -47,7 +44,6 @@ const enableSwiper = function(articleType) {
       },
     });
   });
-  console.log(swipers)
 };
 
 const breakpointChecker = function() {
@@ -68,24 +64,7 @@ if (pageType === 'article') {
   const stickyInTheSeries = document.getElementById('sticky-in-the-series');
   const heroInTheSeries = document.getElementById('hero-in-the-series');
   const hero = document.querySelector('.space-series-article-hero');
-  let heroHeight = hero.offsetHeight;
-  
-
-  // const observer = new IntersectionObserver(
-  //   ([e]) => {
-  //     if (window.innerWidth > 768) {
-  //       e.target.classList.toggle('sticky', e.intersectionRatio < 1);
-  //       if (e.intersectionRatio < 1) {
-  //         sticky = true;
-  //       } else {
-  //         sticky = false;
-  //       }
-  //     }
-  //   },
-  //   { rootMargin: '-50px 0px 0px 0px', threshold: [0.5, 1] },
-  // );
-
-  // observer.observe(stickyHeader);
+  const heroHeight = hero.offsetHeight;
 
   stickyInTheSeries.addEventListener('mouseenter', () => {
     stickyInTheSeries.classList.remove('sticky');
@@ -96,6 +75,7 @@ if (pageType === 'article') {
 
   const expandButtons = document.querySelectorAll('.in-the-series-expand');
   const body = document.querySelector('body');
+  const header = document.querySelector('header');
   expandButtons.forEach((button) => {
     button.addEventListener('click', () => {
       heroInTheSeries.classList.toggle('expanded');
@@ -112,11 +92,13 @@ if (pageType === 'article') {
       stickyInTheSeries.classList.remove('hidden');
       stickyInTheSeries.classList.add('sticky');
       heroInTheSeries.classList.add('hidden');
-      document.querySelector('.body').style.marginTop = '200px';
+      body.style.marginTop = '200px';
+      header.classList.add('dark');
     } else {
       stickyInTheSeries.classList.add('hidden');
       heroInTheSeries.classList.remove('hidden');
-      document.querySelector('.body').style.marginTop = '1em';
+      body.style.marginTop = '0';
+      header.classList.remove('dark');
     }
   });
 }
