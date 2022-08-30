@@ -16,6 +16,11 @@ class PublishEmailNotification(ClusterableModel):
         related_name='+',
         verbose_name='User',
     )
+
+    # @property
+    # def user_page_types(self):
+    #     return [page_type for page_type in self.page_type_permissions.all()]
+
     panels = [
         FieldPanel('user'),
         InlinePanel('page_type_permissions'),
