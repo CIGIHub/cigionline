@@ -41,12 +41,12 @@ body {
 
     .in-the-series {
       .swiper {
-        margin-top: 4em;
+        margin-top: 2em;
         position: relative;
 
         .swiper-container-series {
-          overflow-x: hidden;
-          padding: 0.5em;
+          overflow: hidden;
+          padding: 1em 0.5em;
 
           .swiper-wrapper {
             @include media-breakpoint-down(md) {
@@ -65,10 +65,13 @@ body {
             border-left: 1px solid $cigi-text-grey;
           }
           align-items: center;
+          background-color: $space-series-background-colour;
           border-top: 1px solid $cigi-text-grey;
           display: flex;
           height: 100%;
           position: relative;
+          transition: transform 0.2s ease;
+          z-index: 0;
 
           &::before {
             content: '';
@@ -82,6 +85,9 @@ body {
           }
 
           &:hover {
+            transform: scale(1.025);
+            z-index: 1;
+
             &::before {
               box-shadow: 0 0 10px 1px $white-alpha-80;
             }

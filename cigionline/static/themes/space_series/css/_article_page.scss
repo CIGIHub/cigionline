@@ -12,7 +12,12 @@
   main {
     position: relative;
     z-index: 1;
+
+    .in-the-series {
+      margin-bottom: 4em;
+    }
   }
+
   .space-series-article-hero,
   .in-the-series {
     @include link($color: $white, $hover-color: $cigi-primary-colour);
