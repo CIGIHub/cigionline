@@ -28,6 +28,8 @@ const enableSwiper = function(articleType) {
       autoHeight: false,
       grabCursor: true,
       effect: 'slide',
+      watchSlidesProgress: true,
+      watchSlidesVisibility: true,
 
       navigation: {
         nextEl: `.swiper-button-next-${id.replace('.swiper-container-', '')}`,
