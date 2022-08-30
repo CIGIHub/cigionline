@@ -2,7 +2,6 @@ body {
   &.space-series-article-series {
     @include media-breakpoint-up(lg) {
       height: 100vh;
-      overflow: hidden;
     }
     @include top-bar($background-color: transparent, $color: $white);
     background-color: $space-series-background-colour;
@@ -40,6 +39,8 @@ body {
     }
 
     .in-the-series {
+      overflow: hidden;
+
       .swiper {
         margin-top: 2em;
         position: relative;
@@ -114,12 +115,12 @@ body {
           .series-item-content {
             @include link($color: $white, $hover-color: $cigi-primary-colour);
             @include media-breakpoint-up(lg) {
-              margin-top: 4em;
+              margin-top: 2em;
               margin-left: 0;
             }
             display: flex;
             flex-direction: column;
-            font-size: 0.8em;
+            font-size: 1em;
             height: 100%;
             justify-content: space-between;
             margin-left: 3em;
@@ -164,7 +165,10 @@ body {
             display: none;
           }
           color: $white;
-          transition: color 0.3s ease;
+          height: 100%;
+          top: 2em;
+          width: 75px;
+          transition: color 0.3s ease, opacity 0.3s ease;
 
           &:hover {
             color: $cigi-primary-colour;
@@ -173,15 +177,19 @@ body {
           &::before {
             content: 'MORE';
             position: absolute;
-            bottom: -35px;
+            bottom: 35%;
           }
 
           &.swiper-button-prev {
-            left: -75px;
+            left: -50px;
           }
 
           &.swiper-button-next {
-            right: -75px;
+            right: -50px;
+          }
+
+          &.swiper-button-disabled {
+            opacity: 0;
           }
         }
       }
