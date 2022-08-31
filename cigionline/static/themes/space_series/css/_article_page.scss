@@ -6,10 +6,15 @@
   }
 
   header {
+    transition: none;
     z-index: 100;
 
     &.dark {
       background-color: $space-series-background-colour;
+    }
+
+    .in-the-series {
+      font-size: 1rem;
     }
   }
 
@@ -202,14 +207,14 @@
           @include media-breakpoint-down(sm) {
             flex-direction: column;
           }
-          height: 13em;
-          transition: height 0.2s ease, transform 0.2s ease;
+          max-height: 300px;
+          transition: max-height 0.2s ease, transform 0.2s ease;
         }
       }
 
       article {
         border-right: 1px solid $cigi-text-grey;
-        height: 100%;
+        height: auto;
 
         &.disabled {
           color: $cigi-text-grey;
