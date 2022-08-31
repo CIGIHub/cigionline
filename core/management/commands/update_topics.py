@@ -37,3 +37,5 @@ class Command(BaseCommand):
                 except Exception:
                     print('error adding topic')
                     break
+
+            topic_to_remove.unpublish()
