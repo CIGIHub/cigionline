@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from articles.models import ArticleSeriesPage
 from research.models import TopicPage
 from ...models import ContentPage
 
@@ -33,7 +32,7 @@ class Command(BaseCommand):
                         page.topics.add(topic_to_add)
                         page.save()
                     else:
-                        print(f'Topic already in list')
+                        print('Topic already in list')
                 except Exception:
                     print('error adding topic')
                     break
