@@ -2,7 +2,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
-from events.models import EventPage
+from events.models import EventPage, EventListPage
+from features.models import HomePageFeaturedPromotionsPage
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
@@ -14,6 +15,8 @@ from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
 import random
+import logging
+import traceback
 
 
 class HomePage(Page):
@@ -158,30 +161,39 @@ class HomePage(Page):
         ).live().public().exclude(id__in=featured_items_ids).order_by('-publishing_date')[:4]
 
     def get_featured_events(self):
-        featured_events = []
-        now = timezone.now()
-        future_events = EventPage.objects.prefetch_related(
-            'multimedia_page',
-            'topics',
-        ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
-        if len(future_events) < 3:
-            Q = models.Q
-            past_events = EventPage.objects.prefetch_related(
+        try:
+            featured_events = EventListPage.objects.first().get_featured_events()[:3]
+        except Exception:
+            logging.error(traceback.format_exc())
+            featured_events = []
+            now = timezone.now()
+            future_events = EventPage.objects.prefetch_related(
                 'multimedia_page',
                 'topics',
-            ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
-            featured_events = (list(future_events) + list(past_events))[:3]
-        else:
-            featured_events = future_events
+            ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+            if len(future_events) < 3:
+                Q = models.Q
+                past_events = EventPage.objects.prefetch_related(
+                    'multimedia_page',
+                    'topics',
+                ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+                featured_events = (list(future_events) + list(past_events))[:3]
+            else:
+                featured_events = future_events
+
         return featured_events
 
     def get_promotion_blocks(self):
-        promotion_blocks_list = []
-        for item in self.promotion_blocks.prefetch_related(
-            'promotion_block',
-        ).all():
-            promotion_blocks_list.append(item.promotion_block)
-        return promotion_blocks_list
+        try:
+            featured_promotions_page = HomePageFeaturedPromotionsPage.objects.first()
+            promotion_blocks_query_set = featured_promotions_page.promotion_blocks.prefetch_related(
+                'promotion_block',
+            ).all()
+        except Exception:
+            promotion_blocks_query_set = self.promotion_blocks.prefetch_related(
+                'promotion_block',
+            ).all()
+        return [promotion_block.promotion_block for promotion_block in promotion_blocks_query_set]
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -206,6 +218,7 @@ class HomePage(Page):
         'core.BasicPage',
         'core.PrivacyNoticePage',
         'events.EventListPage',
+        'features.FeaturesListPage',
         'multimedia.MultimediaListPage',
         'multimedia.MultimediaSeriesListPage',
         'multimedia.MultimediaSeriesPage',

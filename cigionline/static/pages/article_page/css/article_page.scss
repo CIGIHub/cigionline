@@ -40,6 +40,20 @@
         }
       }
     }
+
+    ol {
+      line-height: 24px;
+      list-style: none;
+      margin: 0 0 1em 1em;
+
+      li {
+        &::before {
+          content: counter(list-item);
+          font-weight: 600;
+          margin-right: 0.25em;
+        }
+      }
+    }
   }
 }
 

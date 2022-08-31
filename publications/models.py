@@ -30,7 +30,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 
-class PublicationListPage(BasicPageAbstract, Page):
+class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     """Publication list page"""
 
     def featured_publications_list(self):
@@ -69,7 +69,7 @@ class PublicationListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Publication List Page'
@@ -289,7 +289,7 @@ class PublicationPage(
                 StreamFieldPanel('body'),
             ],
             heading='Body',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
@@ -300,7 +300,7 @@ class PublicationPage(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         ContentPage.authors_panel,
         ContentPage.editors_panel,
@@ -443,7 +443,7 @@ class PublicationSeriesPage(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         BasicPageAbstract.images_panel,
         MultiFieldPanel(

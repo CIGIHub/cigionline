@@ -1,0 +1,14 @@
+{% extends "multimedia/multimedia_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeFourDomainsSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}four-domains-series-multimedia{% endblock %}
+
+{% block in_the_series %}
+{% if self.article_series %}
+  {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article=True %}
+{% endif %}
+{% endblock %}

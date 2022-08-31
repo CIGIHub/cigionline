@@ -16,6 +16,7 @@ def all_experts(request):
     searchtext = request.GET.get('search', None)
     sort = request.GET.get('sort', None)
     topics = request.GET.getlist('topic', None)
+    revision_date = request.GET.get('revision_date', None)
 
     # Check if query exists in cache
     cache_key = "all_experts"
@@ -25,6 +26,8 @@ def all_experts(request):
         cache_key += f"_{sort}"
     if topics:
         cache_key += f"_{topics}"
+    if revision_date:
+        cache_key += f"_{revision_date}"
 
     response = cache.get(cache_key)
 

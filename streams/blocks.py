@@ -132,6 +132,7 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         'cyber_series_opinion',
         'health_security_series_opinion',
         'ai_series_opinion',
+        'john_holmes_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
@@ -835,11 +836,17 @@ class NewsletterBlock(blocks.StructBlock):
                     context['text'].source = str(soup)
 
         if context.get('text'):
-            text_soup = BeautifulSoup(context['text'].source, 'html.parser')
+            is_str = isinstance(context['text'], str)
+            if is_str:
+                text_soup = BeautifulSoup(context['text'], 'html.parser')
+            else:
+                text_soup = BeautifulSoup(context['text'].source, 'html.parser')
             for link in text_soup.findAll('a'):
                 link['style'] = 'text-decoration: none; color: #ee1558;'
-
-            context['text'].source = str(text_soup)
+            if is_str:
+                context['text'] = str(text_soup)
+            else:
+                context['text'].source = str(text_soup)
 
         return context
 
@@ -1019,3 +1026,48 @@ class PodcastSubscribeButtonBlock(blocks.StructBlock):
     class Meta:
         icon = 'link'
         label = 'Podcast Subscribe Button'
+
+
+class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
+    class PositionChoices(models.TextChoices):
+        layer_0 = ('0', '0')
+        layer_1 = ('1', '1')
+        layer_2 = ('2', '2')
+        layer_3 = ('3', '3')
+        layer_4 = ('4', '4')
+        layer_5 = ('5', '5')
+        layer_6 = ('6', '6')
+
+    class AnimationChoices(models.TextChoices):
+        VERTICAL = ('vertical', 'Vertical')
+        HORIZONTAL = ('horizontal', 'Horizontal')
+        ZOOM = ('zoom', 'Zoom')
+        MOUSE = ('mouse', 'Mouse')
+        NONE = ('none', 'None')
+
+    image = ImageChooserBlock(required=True)
+    classes = blocks.CharBlock(required=False)
+    position = blocks.ChoiceBlock(
+        choices=PositionChoices.choices,
+    )
+    animation = blocks.ChoiceBlock(
+        choices=AnimationChoices.choices,
+        default=AnimationChoices.NONE,
+    )
+    speed = blocks.DecimalBlock(default=0)
+    initial_top = blocks.IntegerBlock(default=0)
+    initial_left = blocks.IntegerBlock(default=0)
+
+    class Meta:
+        icon = 'image'
+        label = 'Additional Image'
+        help_text = 'Additional images to be used only if the theme requires them.'
+
+
+class AdditionalDisclaimerBlock(blocks.StructBlock):
+    disclaimer = blocks.CharBlock()
+
+    class Meta:
+        icon = 'text'
+        label = 'Additional Disclaimer'
+        help_text = 'Additional disclaimer if necessary; placed in order above standard CIGI disclaimer.'

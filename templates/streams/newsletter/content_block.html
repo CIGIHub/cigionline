@@ -1,3 +1,4 @@
+{% load wagtailcore_tags %}
 {% if self.line_separator_above %}
   <!--[if mso | IE]>
     <table
@@ -91,7 +92,7 @@
                 <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                   <div
                     style="font-family:Helvetica, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;line-height:21px;text-align:left;color:#696969;">
-                    {{ text }}
+                    {{ text|richtext }}
                   </div>
                 </td>
               </tr>

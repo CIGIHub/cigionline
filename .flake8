@@ -11,3 +11,4 @@ exclude =
     static,
     venv,
     cigionline/settings
+    src/wagtailschedules

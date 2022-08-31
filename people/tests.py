@@ -36,7 +36,7 @@ class PeoplePageTests(WagtailPageTests):
             }))
             self.fail('Expected to error')
         except AssertionError as ae:
-            if str(ae) == 'Creating a page people.peoplepage didnt redirect the user to the explorer, but to [(\'/admin/\', 302)]':
+            if str(ae) == "Creating a page people.peoplepage didn't redirect the user to the explorer, but to [(\'/admin/\', 302)]":
                 pass
             else:
                 raise ae
@@ -66,7 +66,7 @@ class PersonListPageBasicTests(WagtailPageTests):
             }))
             self.fail('Expected to error')
         except AssertionError as ae:
-            if str(ae) == 'Creating a page people.personlistpage didnt redirect the user to the explorer, but to [(\'/admin/\', 302)]':
+            if str(ae) == "Creating a page people.personlistpage didn't redirect the user to the explorer, but to [(\'/admin/\', 302)]":
                 pass
             else:
                 raise ae

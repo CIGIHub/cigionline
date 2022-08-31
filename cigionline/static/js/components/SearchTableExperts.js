@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import ExpertListing from './ExpertListing';
@@ -58,6 +59,7 @@ class SearchTableExperts extends React.Component {
       sortSelected,
       topicSelectValue,
     } = this.state;
+    const { revisionDate } = this.props;
 
     this.setState(() => ({
       loading: true,
@@ -72,6 +74,9 @@ class SearchTableExperts extends React.Component {
     }
     if (topicSelectValue) {
       uri += `&topic=${topicSelectValue}`;
+    }
+    if (revisionDate) {
+      uri += `&revision_date=${revisionDate}`;
     }
 
     fetch(encodeURI(uri))
@@ -241,4 +246,13 @@ class SearchTableExperts extends React.Component {
     );
   }
 }
+
+SearchTableExperts.propTypes = {
+  revisionDate: PropTypes.string,
+};
+
+SearchTableExperts.defaultProps = {
+  revisionDate: '',
+};
+
 export default SearchTableExperts;

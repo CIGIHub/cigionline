@@ -10,6 +10,8 @@ from search.filters import (
 )
 from streams.blocks import (
     AccordionBlock,
+    AdditionalDisclaimerBlock,
+    AdditionalImageBlock,
     ExtractBlock,
     ParagraphBlock,
     ReadMoreBlock,
@@ -94,6 +96,8 @@ class BasicPageAbstract(models.Model):
     body_text_border_block = ('text_border_block', TextBorderBlock())
     body_tool_tip_block = ('tool_tip', TooltipBlock())
     body_tweet_block = ('tweet', TweetBlock())
+    additional_image_block = ('additional_image', AdditionalImageBlock())
+    additional_disclaimer_block = ('additional_disclaimer', AdditionalDisclaimerBlock())
 
     body = StreamField(
         body_default_blocks,
@@ -145,6 +149,8 @@ class BasicPageAbstract(models.Model):
 
     @property
     def image_hero_url(self):
+        if self.specific.image_feature:
+            return self.specific.image_feature.get_rendition('fill-520x390').url
         if self.image_hero:
             return self.image_hero.get_rendition('fill-520x390').url
         return ''
@@ -185,7 +191,7 @@ class BasicPageAbstract(models.Model):
             StreamFieldPanel('body'),
         ],
         heading='Body',
-        classname='collapsible'
+        classname='collapsible collapsed'
     )
     images_panel = MultiFieldPanel(
         [
@@ -212,7 +218,7 @@ class BasicPageAbstract(models.Model):
 
 
 class FeatureablePageAbstract(models.Model):
-    feature_subtitle = models.CharField(blank=True, max_length=255)
+    feature_subtitle = models.CharField(blank=True, max_length=500)
     feature_title = models.CharField(blank=True, max_length=255)
     image_feature = models.ForeignKey(
         'images.CigionlineImage',
@@ -253,11 +259,13 @@ class SearchablePageAbstract(models.Model):
         null=True,
         max_length=1024,
         help_text='Text that is displayed when this page appears in search results')
+    exclude_from_search = models.BooleanField(default=False)
 
     search_panel = MultiFieldPanel(
         [
             StreamFieldPanel('search_terms'),
             FieldPanel('search_result_description'),
+            FieldPanel('exclude_from_search'),
         ],
         heading='Search',
         classname='collapsible collapsed',
@@ -265,6 +273,7 @@ class SearchablePageAbstract(models.Model):
 
     search_fields = [
         index.SearchField('search_terms'),
+        index.FilterField('exclude_from_search'),
     ]
 
     class Meta:
@@ -469,6 +478,10 @@ class ContentPage(Page, SearchablePageAbstract):
         recommended_content = list(recommended_content) + additional_content
 
         return recommended_content
+
+    def page_cache_key(self):
+        series = f'S:{self.specific.article_series.id}' if self.specific and self.specific.article_series else ''
+        return f'Ct:{self.specific.contenttype}Cst:{self.specific.contentsubtype}Id:{self.id}{series}'
 
     authors_panel = MultiFieldPanel(
         [
@@ -734,13 +747,14 @@ class FundingPage(BasicPageAbstract, Page):
 class PrivacyNoticePage(
     Page,
     BasicPageAbstract,
+    SearchablePageAbstract,
 ):
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
@@ -851,7 +865,7 @@ class TwentiethPage(
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['core.BasicPage']
@@ -967,7 +981,7 @@ class TwentiethPageSingleton(
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible'
+            classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
@@ -987,7 +1001,7 @@ class TwentiethPageSingleton(
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['core.BasicPage']

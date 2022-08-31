@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load cache static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load adv_cache static wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -50,7 +50,7 @@
 
 {% block content %}
   {% preview_cache_bust as is_preview %}
-  {% cache 604800 article_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+  {% cache 604800 self.page_cache_key request.path request.user.username self.pk self.latest_revision_created_at request.GET.urlencode is_preview %}
     {% block hero %}
       {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
       {% if not self.expired_image and self.image_hero %}
@@ -94,7 +94,9 @@
           <section class="body" id="article-body">
             {% if self.hide_excerpt %}
               {% for block in self.body %}
-                {% include_block block %}
+                {% if block.block_type != 'additional_disclaimer' %}
+                  {% include_block block %}
+                {% endif %}
               {% endfor %}
             {% else %}
               <div class="container">
@@ -174,7 +176,7 @@
         </div>
       {% endif %}
 
-      {% include 'includes/disclaimer.html' %}
+      {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
 
       {% if self.is_opinion and self.author_count > 0 %}
         {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}

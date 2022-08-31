@@ -16,7 +16,7 @@ from wagtail.admin.edit_handlers import (
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core.blocks import PageChooserBlock
+from wagtail.core.blocks import PageChooserBlock, CharBlock, StructBlock, StreamBlock
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -27,7 +27,7 @@ import datetime
 import pytz
 
 
-class ArticleLandingPage(BasicPageAbstract, Page):
+class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = []
@@ -68,7 +68,7 @@ class ArticleLandingPage(BasicPageAbstract, Page):
         )
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Article Landing Page'
@@ -96,7 +96,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     ]
 
 
-class MediaLandingPage(BasicPageAbstract, Page):
+class MediaLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     def latest_cigi_in_the_news(self):
         return ArticlePage.objects.live().public().filter(article_type__title='CIGI in the News').order_by('-publishing_date')[:6]
@@ -110,7 +110,7 @@ class MediaLandingPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
@@ -202,6 +202,8 @@ class ArticlePage(
             BasicPageAbstract.body_text_border_block,
             BasicPageAbstract.body_tool_tip_block,
             BasicPageAbstract.body_tweet_block,
+            BasicPageAbstract.additional_image_block,
+            BasicPageAbstract.additional_disclaimer_block,
         ],
         blank=True,
     )
@@ -368,6 +370,22 @@ class ArticlePage(
             return f'themes/{self.get_theme_dir()}/article_page.html'
         return standard_template
 
+    def get_additional_images(self):
+        additional_images = []
+
+        for block in self.body:
+            if block.block_type == 'additional_image':
+                additional_images.append(block.value)
+        return additional_images
+
+    def get_additional_disclaimers(self):
+        additional_disclaimers = []
+
+        for block in self.body:
+            if block.block_type == 'additional_disclaimer':
+                additional_disclaimers.append(block.value)
+        return additional_disclaimers
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -378,7 +396,7 @@ class ArticlePage(
                 FieldPanel('works_cited'),
             ],
             heading='Body',
-            classname='collapsible'
+            classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
@@ -393,7 +411,7 @@ class ArticlePage(
                 FieldPanel('language'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         ContentPage.authors_panel,
         MultiFieldPanel(
@@ -464,12 +482,14 @@ class ArticlePage(
 
     @property
     def article_series_category(self):
-        category = ''
-        for series_item in self.article_series.specific.article_series_items:
-            if series_item.category_title:
-                category = series_item.category_title
-            if series_item.content_page.id == self.id:
-                return category
+        if self.article_series:
+            category = ''
+            for series_item in self.article_series.specific.article_series_items:
+                if series_item.category_title:
+                    category = series_item.category_title
+                if series_item.content_page.id == self.id:
+                    return category
+        return ''
 
     class Meta:
         verbose_name = 'Opinion'
@@ -548,6 +568,17 @@ class ArticleSeriesPage(
             'name',
         ],
     )
+    credits_stream_field = StreamField(
+        [
+            ('title', StructBlock([
+                ('title', CharBlock()),
+                ('people', StreamBlock([
+                    ('name', CharBlock())
+                ])),
+            ]))
+        ],
+        blank=True,
+    )
     credits_artwork = models.CharField(
         max_length=255,
         blank=True,
@@ -596,6 +627,12 @@ class ArticleSeriesPage(
         null=True,
         features=['bold', 'italic', 'link'],
     )
+    series_videos_description = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+        help_text='To be displayed on video/multimedia pages of the series in place of Series Items Description'
+    )
     series_items_disclaimer = RichTextField(
         blank=True,
         null=True,
@@ -625,6 +662,21 @@ class ArticleSeriesPage(
             'content_page__authors__author',
         ).all()
 
+    def series_items_by_category(self):
+        series_items = self.article_series_items
+        series_items_by_category = []
+        for series_item in series_items:
+            category = series_item.category_title
+            if category:
+                series_items_by_category.append({
+                    'category': category,
+                    'series_items': [series_item.content_page],
+                    'live': series_item.content_page.live,
+                })
+            else:
+                series_items_by_category[-1]['series_items'].append(series_item.content_page)
+        return series_items_by_category
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -642,18 +694,19 @@ class ArticleSeriesPage(
                 StreamFieldPanel('body'),
             ],
             heading='Body',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
             ],
             heading='General Information',
-            classname='collapsible',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
                 FieldPanel('series_items_description'),
+                FieldPanel('series_videos_description'),
                 FieldPanel('series_items_disclaimer'),
                 InlinePanel('series_items'),
             ],
@@ -664,6 +717,7 @@ class ArticleSeriesPage(
             [
                 FieldPanel('credits'),
                 FieldPanel('credits_artwork'),
+                StreamFieldPanel('credits_stream_field'),
             ],
             heading='Credits',
             classname='collapsible collapsed',

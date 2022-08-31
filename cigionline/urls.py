@@ -1,7 +1,7 @@
 from annual_reports import views as annual_report_views
 from django.conf import settings
-from django.conf.urls import include, url
-from django.urls import path
+from django.conf.urls import include
+from django.urls import path, re_path
 from django.views.decorators.cache import cache_control
 from articles import views as article_views
 from core import views as core_views
@@ -21,26 +21,25 @@ from wagtail.utils.urlpatterns import decorate_urlpatterns
 urlpatterns = []
 if settings.ADMIN_ENABLED:
     urlpatterns = urlpatterns + [
-        url(r'^admin/', include(wagtailadmin_urls)),
+        re_path(r'^admin/', include(wagtailadmin_urls)),
     ]
 urlpatterns = urlpatterns + [
-    url(r'^documents/', include(wagtaildocs_urls)),
+    re_path(r'^documents/', include(wagtaildocs_urls)),
 
-    url(r'^search/$', search_views.search, name='search'),
-    url(r'^api/experts/$', people_views.all_experts),
-    url(r'^api/all_experts_search/$', people_views.all_experts_search),
-    url(r'^api/search/$', search_views.search_api),
-    url(r'^api/staff/$', people_views.all_staff),
-    url(r'^api/topics/$', research_views.all_topics),
-    url(r'^api/annual-reports/', annual_report_views.all_annual_reports),
-    url(r'^api/events/$', events_views.events_api),
-    url(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
-    url(r'^api/old_images/$', core_views.old_images),
-    url(r'^api/series/ai_ethics', article_views.ai_ethics),
+    re_path(r'^search/$', search_views.search, name='search'),
+    re_path(r'^api/experts/$', people_views.all_experts),
+    re_path(r'^api/all_experts_search/$', people_views.all_experts_search),
+    re_path(r'^api/search/$', search_views.search_api),
+    re_path(r'^api/staff/$', people_views.all_staff),
+    re_path(r'^api/topics/$', research_views.all_topics),
+    re_path(r'^api/annual-reports/', annual_report_views.all_annual_reports),
+    re_path(r'^api/events/$', events_views.events_api),
+    re_path(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
+    re_path(r'^api/old_images/$', core_views.old_images),
 
-    url(r'^events/feed.ics$', EventFeed()),
-    url(r'^favicon\.ico$', favicon_view),
-    url(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
+    re_path(r'^events/feed.ics$', EventFeed()),
+    re_path(r'^favicon\.ico$', favicon_view),
+    re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
 ]
 
 
@@ -61,7 +60,7 @@ urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
-    url(r"", include(wagtail_urls)),
+    re_path(r"", include(wagtail_urls)),
 
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:

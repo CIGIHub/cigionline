@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mbo1jpc.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeFourDomainsSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeFourDomainsSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}four-domains-series-article-series{% endblock %}
+
+{% block content %}
+  <section class="four-domains-series-article-series-hero">
+    <div class="hero-content">
+      {% if self.image_banner.file.url|file_extension == '.gif' %}
+        <img class="banner-bg" src="{{self.image_banner.file.url}}" alt="{{self.image_banner.caption}}" />
+      {% else %}
+        {% image self.image_banner width-1000 class="banner-bg" %}
+      {% endif %}
+      <div class="hero-text">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+              <h1>{{ self.title }}</h1>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6 col-xl-5">
+              <div class="series-description">
+                <div class="opinion-series-label">A CIGI Essay Series</div>
+                <div class="short-description">{{ self.short_description|richtext }}</div>
+              </div>
+              <div class="scrollanchor-container">
+                <a href="#article-series-items">
+                  <i class="far fa-arrow-down fa-2x"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include './includes/in_the_series.html' with article_series=self %}
+
+  <section class="credits">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10">
+          <h2>Credits</h2>
+          <div class="credits-content">
+            {% for title in self.credits_stream_field %}
+              <div class="title-container">
+                <div class="title">{{ title.value.title }}</div>
+                {% for person in title.value.people %}
+                  <div class="name">{{ person }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
