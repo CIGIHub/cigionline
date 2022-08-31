@@ -31,7 +31,9 @@ class Command(BaseCommand):
                     print(f'Adding {topic_to_add} to {page}')
                     if topic_to_add not in page.topics.all():
                         page.topics.add(topic_to_add)
-                    page.save()
+                        page.save()
+                    else:
+                        print(f'Topic already in list')
                 except Exception:
                     print('error adding topic')
                     break
