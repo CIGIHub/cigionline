@@ -30,7 +30,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 
-class MultimediaListPage(BasicPageAbstract, Page):
+class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['multimedia.MultimediaPage']
@@ -70,7 +70,7 @@ class MultimediaListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     def get_featured_multimedia(self):
         featured_multimedia_ids = self.featured_multimedia.order_by('sort_order').values_list('multimedia_page', flat=True)
