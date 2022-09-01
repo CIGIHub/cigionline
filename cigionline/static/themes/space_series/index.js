@@ -81,6 +81,11 @@ if (pageType === 'article') {
       heroInTheSeries.classList.toggle('expanded');
       button.classList.toggle('expanded');
       body.classList.toggle('no-scroll');
+      if (heroInTheSeries.classList.contains('expanded') && !header.classList.contains('dark')) {
+        header.classList.add('dark');
+      } else if (window.scrollY < (heroHeight - 50)) {
+        header.classList.remove('dark');
+      }
 
       if (button.id === 'in-the-series-expand-sticky') {
         heroInTheSeries.classList.toggle('hidden');

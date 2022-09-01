@@ -126,6 +126,7 @@
 
     &.expanded {
       bottom: 0;
+      height: 100vh;
       overflow-y: scroll;
       overscroll-behavior: contain;
       position: fixed;
@@ -137,6 +138,9 @@
         display: block;
 
         .swiper-container {
+          height: 80vh;
+          overflow-y: auto;
+
           .swiper-wrapper {
             height: 100%;
             padding: 2em 0;
