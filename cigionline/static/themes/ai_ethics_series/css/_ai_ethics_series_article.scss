@@ -8,20 +8,20 @@
       @include media-breakpoint-up(xl) {
         font-size: 4em;
       }
-      font-family: $ai_ethics_heading;
-      font-weight: 700;
+      font-family: $ai-ethics-heading;
       font-size: calc(3.5vw + 1em);
+      font-weight: 700;
       line-height: 1;
     }
 
     .authors {
-      font-family: $ai_ethics_bilo;
+      font-family: $ai-ethics-bilo;
       font-size: 1.1em;
       margin: 1em 0 0.25em;
     }
 
     .date {
-      font-family: $ai_ethics_bilo;
+      font-family: $ai-ethics-bilo;
     }
 
     .banner {
@@ -31,7 +31,7 @@
 
   .drop-caps {
     border: 0;
-    font-family: $ai_ethics_heading;
+    font-family: $ai-ethics-heading;
     line-height: 0.65;
     padding-top: 0.3em;
   }
@@ -50,7 +50,7 @@
 
   .body {
     h2 {
-      font-family: $ai_ethics_heading;
+      font-family: $ai-ethics-heading;
       font-size: 1.5em;
       font-weight: 600;
     }

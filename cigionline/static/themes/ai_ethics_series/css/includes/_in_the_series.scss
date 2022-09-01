@@ -2,20 +2,20 @@
   @include link($color: $black, $hover-color: $cigi-primary-colour);
 
   > .container {
-    border-top: 1px $cigi-text-grey solid;
     border-bottom: 1px $cigi-text-grey solid;
-    padding-top: 2em;
+    border-top: 1px $cigi-text-grey solid;
     padding-bottom: 2em;
+    padding-top: 2em;
   }
 
   .essay-series-label {
+    font-family: $ai-ethics-bilo;
     margin-bottom: 0.5em;
-    font-family: $ai_ethics_bilo;
     text-align: center;
   }
 
   h2 {
-    font-family: $ai_ethics_heading;
+    font-family: $ai-ethics-heading;
     font-size: calc(2vw + 1em);
     font-weight: 600;
     margin: 0;
