@@ -60,9 +60,6 @@ body {
             @include media-breakpoint-down(md) {
               flex-direction: column;
             }
-            @include media-breakpoint-up(lg) {
-              height: 400px;
-            }
           }
         }
 
@@ -76,7 +73,7 @@ body {
           background-color: $space-series-background-colour;
           border-top: 1px solid $cigi-text-grey;
           display: flex;
-          height: 100%;
+          height: auto;
           position: relative;
           transition: transform 0.2s ease, opacity 0.3s ease;
           z-index: 0;
