@@ -93,9 +93,9 @@ body {
             transform: scale(1.025);
             z-index: 1;
 
-            &::before {
-              box-shadow: 0 0 10px 1px $white-alpha-80;
-            }
+            // &::before {
+            //   box-shadow: 0 0 10px 1px $white-alpha-80;
+            // }
           }
 
           &:last-child {
@@ -120,6 +120,10 @@ body {
             & ~ .swiper-slide-visible {
               @include media-breakpoint-up(lg) {
                 border-left: 0;
+              }
+
+              &:hover {
+                border-left: 1px solid $cigi-text-grey;
               }
             }
           }
