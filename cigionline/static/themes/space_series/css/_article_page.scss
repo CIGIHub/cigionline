@@ -19,6 +19,7 @@
   }
 
   main {
+    overflow-x: hidden;
     position: relative;
     z-index: 1;
 
@@ -100,7 +101,7 @@
       .swiper {
         .swiper-container {
           .swiper-wrapper {
-            height: 50px;
+            max-height: 50px;
             transition: height 0.5s ease-in-out;
 
             article {
@@ -118,7 +119,9 @@
 
         .swiper-button {
           &::before {
+            bottom: 0;
             opacity: 0;
+            transition: none;
           }
         }
       }
@@ -212,7 +215,7 @@
             flex-direction: column;
           }
           max-height: 300px;
-          transition: max-height 0.2s ease, transform 0.2s ease;
+          transition: max-height 0.5s ease-in-out, transform 0.2s ease;
         }
       }
 
@@ -250,6 +253,7 @@
         .series-item-content {
           display: flex;
           flex-direction: column;
+          font-size: 0.8em;
           height: 100%;
           justify-content: space-between;
           padding: 0 1em;
@@ -296,7 +300,9 @@
           }
 
           .authors {
+            font-size: 0.8em;
             margin: 0;
+            text-transform: uppercase;
             transition: opacity 0.3s ease;
           }
         }
@@ -306,7 +312,6 @@
         @include media-breakpoint-down(sm) {
           display: none;
         }
-        background-color: $space-series-background-colour;
         color: $white;
         height: 100%;
         margin-top: 0;
@@ -322,14 +327,15 @@
           bottom: 25px;
           content: 'MORE';
           position: absolute;
+          transition: opacity 0.3s cubic-bezier(1, 0, 1, 0);
         }
 
         &.swiper-button-prev {
-          left: -1em;
+          left: -5em;
         }
 
         &.swiper-button-next {
-          right: -1em;
+          right: -5em;
         }
 
         &.swiper-button-disabled {

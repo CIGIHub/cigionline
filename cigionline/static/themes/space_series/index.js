@@ -15,8 +15,9 @@ const breakpoint = pageType === 'article series'
 const swipers = {};
 
 const enableSwiper = function(articleType) {
-  const slidesPerViewLg = articleType === 'article series' ? 8 : 6;
-  const slidesPerViewMd = articleType === 'article series' ? 8 : 4;
+  const slidesPerViewMd = 4;
+  const slidesPerViewLg = articleType === 'article series' ? 5 : 6;
+  const slidesPerViewXl = 6;
   const swiperIds = articleType === 'article series' ? ['.swiper-container-series'] : ['.swiper-container-sticky', '.swiper-container-hero'];
   swiperIds.forEach((id) => {
     swipers[id] = new Swiper(id, {
@@ -36,10 +37,16 @@ const enableSwiper = function(articleType) {
 
       breakpoints: {
         768: {
+          slidesPerGroup: slidesPerViewMd,
           slidesPerView: slidesPerViewMd,
         },
         992: {
+          slidesPerGroup: slidesPerViewLg,
           slidesPerView: slidesPerViewLg,
+        },
+        1200: {
+          slidesPerGroup: slidesPerViewXl,
+          slidesPerView: slidesPerViewXl,
         },
       },
     });
