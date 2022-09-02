@@ -39,6 +39,7 @@
   .article-series-description {
     @include media-breakpoint-up(md) {
       margin-bottom: 2em;
+      width: 75%;
     }
     border: 0;
     margin-bottom: 1em;
