@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.shortcuts import render
-from core.models import BasicPageAbstract
+from core.models import BasicPageAbstract, SearchablePageAbstract
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
@@ -27,6 +27,7 @@ logger = logging.getLogger('cigionline')
 class SubscribePage(
     Page,
     BasicPageAbstract,
+    SearchablePageAbstract,
 ):
     privacy_note = RichTextField(
         blank=True,

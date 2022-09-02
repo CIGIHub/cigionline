@@ -27,7 +27,7 @@ import datetime
 import pytz
 
 
-class ArticleLandingPage(BasicPageAbstract, Page):
+class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = []
@@ -68,7 +68,7 @@ class ArticleLandingPage(BasicPageAbstract, Page):
         )
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Article Landing Page'
@@ -96,7 +96,7 @@ class ArticleLandingPageFeaturedArticle(Orderable):
     ]
 
 
-class MediaLandingPage(BasicPageAbstract, Page):
+class MediaLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     def latest_cigi_in_the_news(self):
         return ArticlePage.objects.live().public().filter(article_type__title='CIGI in the News').order_by('-publishing_date')[:6]
@@ -110,7 +110,7 @@ class MediaLandingPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
     parent_page_types = ['home.HomePage']
@@ -230,7 +230,6 @@ class ArticlePage(
             'ul',
             'subscript',
             'superscript',
-            'anchor',
         ],
     )
     hero_title_placement = models.CharField(

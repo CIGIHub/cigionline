@@ -245,6 +245,74 @@ class CIGIOnlineSearchQueryCompiler:
             "terms": {
                 "content_type": [self.content_type],
             },
+        }, {
+            "bool": {
+                "should": [{
+                    "term": {
+                        "core_contentpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "core_basicpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "core_privacynoticepage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "articles_articlelandingpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "events_eventlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "multimedia_multimedialistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "publications_publicationlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "newsletters_newsletterlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "subscribe_subscribepage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "people_personlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "people_personpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "annual_reports_annualreportpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "annual_reports_annualreportlistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "careers_jobpostingpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "careers_jobpostinglistpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "research_topicpage__exclude_from_search_filter": False,
+                    },
+                }],
+            },
         }]
         if self.contenttypes:
             filters.append({
@@ -545,6 +613,20 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             "terms": {
                 "content_type": [self.content_type],
             },
+        },
+            {
+            "bool": {
+                "should": [{
+                    "term": {
+                        "core_contentpage__exclude_from_search_filter": False,
+                    },
+                }, {
+                    "term": {
+                        "annual_reports_annualreportpage__exclude_from_search_filter": False,
+                    },
+                }],
+            },
+
         }]
         if self.contenttypes:
             filters.append({

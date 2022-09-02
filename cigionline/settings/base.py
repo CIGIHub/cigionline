@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'search',
     'streams',
     'subscribe',
+    'wagtailschedules',
+    'signals',
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
@@ -290,3 +292,17 @@ WAGTAIL_USER_TIME_ZONES = ['America/Toronto']
 TIME_ZONE = 'America/Toronto'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# Email settings
+# NOTIFICATIONS_ON is a flag to determine whether notifications are sent in dev, staging, prod envs
+if 'NOTIFICATIONS_ON' in os.environ:
+    # if set to True, notifications are toggled on, sendgrid debug mode is set to false
+    SENDGRID_SANDBOX_MODE_IN_DEBUG = not (os.environ['NOTIFICATIONS_ON'].lower() == "true")
+else:
+    # default to sandbox debug mode - will not send notifications
+    SENDGRID_SANDBOX_MODE_IN_DEBUG = True
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+if 'SENDGRID_API_KEY' in os.environ:
+    SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
+if 'PUBLISHING_NOTIFICATION_FROM_EMAIL' in os.environ:
+    PUBLISHING_NOTIFICATION_FROM_EMAIL = os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL']
