@@ -7,6 +7,7 @@ from wagtail.admin.rich_text.converters.html_to_contentstate import (
 from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail.core import hooks
+from wagtail.core.models import Page
 from .models import Theme
 
 
@@ -129,4 +130,26 @@ def order_pages_in_chooser(pages, request):
     return pages
 
 
+class AboutModelAdmin(ModelAdmin):
+    model = Page
+    menu_label = 'About'
+    menu_icon = 'help'
+    menu_order = 110
+    list_display = ('title',)
+    search_fields = ('title',)
+
+    page_names = [
+        'CIGI History',
+        'Our Partners',
+        'CIGI Campus',
+        'Strategy and Evaluation',
+        'The CIGI Rule',
+    ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(title__in=self.page_names)
+
+
 modeladmin_register(ThemeModelAdmin)
+modeladmin_register(AboutModelAdmin)
