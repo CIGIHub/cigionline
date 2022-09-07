@@ -6,10 +6,9 @@ from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
 
 
-# def user_info(user_id):
-#     from django.contrib.auth.models import User
-
-#     return User.objects.get(id=user_id)
+def datetime_compare(t1, t2, threshold):
+    # determine whether 2 datetime values are within a range
+    return True
 
 
 def instance_info(instance):
@@ -18,12 +17,10 @@ def instance_info(instance):
     page_owner = f'{instance.owner.first_name} {instance.owner.last_name}'
     content_type = 'Articles' if instance.contenttype == 'Opinion' else instance.contenttype  # adjust ContentPage.contenttype to match page_type
     publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
-    print(publisher)
-    # print('go live: ', instance.go_live_at)
-    # print('last published: ', instance.last_published_at)
-    # print('first published: ', instance.first_published_at)
-    # print('revision id: ', instance.live_revision_id)
-    return title, authors, page_owner, content_type
+    is_first_publish = (instance.revisions.count() == 1)
+    # is_scheduled_publish = datetime_compare(instance.go_live_at, instance.last_published_at)
+    # print(is_scheduled_publish)
+    return title, authors, page_owner, content_type, publisher, is_first_publish
 
 
 def notification_user_list(content_type):
@@ -42,12 +39,23 @@ def notification_email_list(notification_user_list):
     return [User.objects.get(id=user_to_notify.user.user_id).email for user_to_notify in notification_user_list]
 
 
-def send_email(title, authors, page_owner, content_type, recipients):
-    text_content = f"{title} By Author(s): {authors} Published By: {page_owner}"
+def notifications_on():
+    return ('NOTIFICATIONS_ON' in os.environ and (os.environ['NOTIFICATIONS_ON'].lower() == "true"))
+
+
+def set_publish_phrasing(is_first_publish):
+    if is_first_publish:
+        return 'Published'
+    return 'Re-published'
+
+
+def send_email(title, authors, page_owner, content_type, recipients, publisher, is_first_publish):
+    text_content = f"{title} By Author(s): {authors} {set_publish_phrasing(is_first_publish)} By: {page_owner}"
     html_content = f"""
         <p><i>{title}</i></p>
         <p>By Author(s): {authors}</p>
-        <p>Published By: {page_owner}</p>
+        <p>Page Created By: {page_owner}</p>
+        <p>Published By: {publisher}</p>
         <p><i>You are receiving this update because you are on the publish notification list for: {content_type}<i></p>
     """
 
@@ -61,37 +69,42 @@ def send_email(title, authors, page_owner, content_type, recipients):
     msg.attach_alternative(html_content, "text/html")
     msg.send()
     print('notification emails are sent to', recipients)
+    # print email content when notification is off
+    if not notifications_on():
+        print(html_content)
 
 
-def send_to_slack(title, authors, page_owner):
+def send_to_slack(title, authors, page_owner, publisher, is_first_publish):
     values = {
         "blocks": [
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"_{title}_ \n By Author(s): {authors} \n Published By: {page_owner}",
+                    "text": f"_{title}_ \n By Author(s): {authors} \n Page Created By: {page_owner} \n {set_publish_phrasing(is_first_publish)} By: {publisher}",
                 }
             }
         ]
     }
     url = os.environ['SLACK_WEBHOOK_URL']  # hardcoded placeholder test channel
 
-    if 'NOTIFICATIONS_ON' in os.environ and (os.environ['NOTIFICATIONS_ON'].lower() == "true"):
+    if notifications_on():
         requests.post(url, json.dumps(values))
+    else:
+        print(values)  # print what would've been sent to Slack
 
 
 # Let everyone know when a new page is published
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
 
-    title, authors, page_owner, content_type = instance_info(instance)
+    title, authors, page_owner, content_type, publisher, is_first_publish = instance_info(instance)
 
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
     try:
         notification_list = notification_email_list(notification_user_list(content_type))
-        send_to_slack(title, authors, page_owner)
-        send_email(title, authors, page_owner, content_type, notification_list)
+        send_to_slack(title, authors, page_owner, publisher, is_first_publish)
+        send_email(title, authors, page_owner, content_type, notification_list, publisher, is_first_publish)
     except Exception as e:
         print(e)
 
