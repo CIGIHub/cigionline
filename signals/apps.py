@@ -1,14 +1,16 @@
 import requests
 import json
 import os
+import datetime
 from wagtail.core.signals import page_published
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
 
 
-def datetime_compare(t1, t2, threshold):
-    # determine whether 2 datetime values are within a range
-    return True
+def datetime_compare(t1, t2):
+    if t1:  # if go_live_at field is populated; if not, default False
+        return ((t2 - t1) >= datetime.timedelta(hours=1))
+    return False
 
 
 def instance_info(instance):
@@ -18,9 +20,8 @@ def instance_info(instance):
     content_type = 'Articles' if instance.contenttype == 'Opinion' else instance.contenttype  # adjust ContentPage.contenttype to match page_type
     publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
     is_first_publish = (instance.revisions.count() == 1)
-    # is_scheduled_publish = datetime_compare(instance.go_live_at, instance.last_published_at)
-    # print(is_scheduled_publish)
-    return title, authors, page_owner, content_type, publisher, is_first_publish
+    is_scheduled_publish = datetime_compare(instance.go_live_at, instance.last_published_at)
+    return title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish
 
 
 def notification_user_list(content_type):
@@ -49,13 +50,13 @@ def set_publish_phrasing(is_first_publish):
     return 'Re-published'
 
 
-def send_email(title, authors, page_owner, content_type, recipients, publisher, is_first_publish):
-    text_content = f"{title} By Author(s): {authors} {set_publish_phrasing(is_first_publish)} By: {page_owner}"
+def send_email(title, authors, page_owner, content_type, recipients, publisher, publish_phrasing):
+    text_content = f"{title} By Author(s): {authors} Page Created By: {page_owner} {publish_phrasing} By: {page_owner}"
     html_content = f"""
         <p><i>{title}</i></p>
         <p>By Author(s): {authors}</p>
         <p>Page Created By: {page_owner}</p>
-        <p>Published By: {publisher}</p>
+        <p>{publish_phrasing} By: {publisher}</p>
         <p><i>You are receiving this update because you are on the publish notification list for: {content_type}<i></p>
     """
 
@@ -74,14 +75,14 @@ def send_email(title, authors, page_owner, content_type, recipients, publisher, 
         print(html_content)
 
 
-def send_to_slack(title, authors, page_owner, publisher, is_first_publish):
+def send_to_slack(title, authors, page_owner, publisher, publish_phrasing):
     values = {
         "blocks": [
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"_{title}_ \n By Author(s): {authors} \n Page Created By: {page_owner} \n {set_publish_phrasing(is_first_publish)} By: {publisher}",
+                    "text": f"_{title}_ \n By Author(s): {authors} \n Page Created By: {page_owner} \n {publish_phrasing} By: {publisher}",
                 }
             }
         ]
@@ -98,13 +99,14 @@ def send_to_slack(title, authors, page_owner, publisher, is_first_publish):
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
 
-    title, authors, page_owner, content_type, publisher, is_first_publish = instance_info(instance)
+    title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish = instance_info(instance)
+    publish_phrasing = set_publish_phrasing(is_first_publish)
 
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
     try:
         notification_list = notification_email_list(notification_user_list(content_type))
-        send_to_slack(title, authors, page_owner, publisher, is_first_publish)
-        send_email(title, authors, page_owner, content_type, notification_list, publisher, is_first_publish)
+        send_to_slack(title, authors, page_owner, publisher, publish_phrasing)
+        send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing)
     except Exception as e:
         print(e)
 
