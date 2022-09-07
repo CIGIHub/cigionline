@@ -6,11 +6,23 @@ from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
 
 
+# def user_info(user_id):
+#     from django.contrib.auth.models import User
+
+#     return User.objects.get(id=user_id)
+
+
 def instance_info(instance):
     title = instance.title
     authors = ', '.join(instance.author_names)
-    page_owner = instance.owner.username
+    page_owner = f'{instance.owner.first_name} {instance.owner.last_name}'
     content_type = 'Articles' if instance.contenttype == 'Opinion' else instance.contenttype  # adjust ContentPage.contenttype to match page_type
+    publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
+    print(publisher)
+    # print('go live: ', instance.go_live_at)
+    # print('last published: ', instance.last_published_at)
+    # print('first published: ', instance.first_published_at)
+    # print('revision id: ', instance.live_revision_id)
     return title, authors, page_owner, content_type
 
 
