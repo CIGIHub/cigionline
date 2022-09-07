@@ -35,6 +35,8 @@ def notification_user_list(content_type):
 
 def notification_email_list(notification_user_list):
     print(f'compiling email list for users: {notification_user_list}')
+
+    # going through User model because PublishEmailNotification returns UserProfile objects which has no 'email' attribute
     from django.contrib.auth.models import User
 
     return [User.objects.get(id=user_to_notify.user.user_id).email for user_to_notify in notification_user_list]
