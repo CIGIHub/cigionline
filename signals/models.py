@@ -1,7 +1,7 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.admin.edit_handlers import PageChooserPanel, InlinePanel, FieldPanel
+from wagtail.admin.edit_handlers import PageChooserPanel, InlinePanel, FieldPanel, MultiFieldPanel
 from wagtail.core.models import Orderable
 from wagtail.snippets.models import register_snippet
 
@@ -16,9 +16,26 @@ class PublishEmailNotification(ClusterableModel):
         related_name='+',
         verbose_name='User',
     )
+    republish_opt_in = models.BooleanField(
+        default=False,
+        verbose_name='Re-publish Opt-In',
+        help_text="When checked, receive re-publish notifications; otherwise receive only first-time publish notifications",
+    )
+    manual_publish_opt_in = models.BooleanField(
+        default=False,
+        verbose_name='Manual Publish Opt-In',
+        help_text="When checked, receive manual publish notifications; otherwise receive only scheduled publish notifications",
+    )
 
     panels = [
-        FieldPanel('user'),
+        MultiFieldPanel(
+            [
+                FieldPanel('user'),
+                FieldPanel('republish_opt_in'),
+                FieldPanel('manual_publish_opt_in'),
+            ],
+            heading='user',
+        ),
         InlinePanel('page_type_permissions'),
     ]
 

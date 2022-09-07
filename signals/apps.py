@@ -24,11 +24,16 @@ def instance_info(instance):
     return title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish
 
 
-def notification_user_list(content_type):
+def notification_user_list(content_type, is_first_publish, is_scheduled_publish):
     print(f'compiling user list for content type: {content_type}')
     from .models import PublishEmailNotification
 
-    return PublishEmailNotification.objects.filter(page_type_permissions__page_type__title__contains=content_type)
+    user_list = PublishEmailNotification.objects.filter(page_type_permissions__page_type__title__contains=content_type)
+    if not is_first_publish:
+        user_list = user_list.filter(republish_opt_in=True)
+    if not is_scheduled_publish:
+        user_list = user_list.filter(manual_publish_opt_in=True)
+    return user_list
 
 
 def notification_email_list(notification_user_list):
@@ -104,7 +109,7 @@ def send_notifications(sender, **kwargs):
 
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
     try:
-        notification_list = notification_email_list(notification_user_list(content_type))
+        notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
         send_to_slack(title, authors, page_owner, publisher, publish_phrasing)
         send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing)
     except Exception as e:
