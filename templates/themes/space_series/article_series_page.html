@@ -65,9 +65,16 @@
         <div class="swiper-wrapper">
           {% for series_item in self.article_series_items %}
             <article class="swiper-slide series-item">
-              <div class="series-item-image">
+              <a href="{% pageurl series_item.content_page %}" class="series-item-image">
                 {% image series_item.content_page.specific.image_hero fill-300x300 %}
-              </div>
+                {% if series_item.content_page.contenttype == "Multimedia" %}
+                  <div class="play-icon">
+                    <div class="outer-circle"></div>
+                    <div class="inner-circle"></div>
+                    <i class="fas fa-play"></i>
+                  </div>
+                {% endif %}
+              </a>
               <div class="series-item-content">
                 <div>
                   <div class="series-item-counter">
