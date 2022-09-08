@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import datetime
+import pytz
 from wagtail.core.signals import page_published
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
@@ -9,7 +10,7 @@ from django.core.mail import EmailMultiAlternatives
 
 def datetime_compare(t1, t2):
     if t1:  # if go_live_at field is populated; if not, default False
-        return ((t2 - t1) >= datetime.timedelta(hours=1))
+        return ((t2.astimezone(pytz.utc) - t1.astimezone(pytz.utc)) <= datetime.timedelta(hours=1))
     return False
 
 
@@ -21,11 +22,9 @@ def count_publishes(instance):
     # for some reason, the PageLogEntry objects are not including the most recent publish that triggered this script
     # so a first-time publish would have a count of 0
     is_first_publish = (len(all_publishes) == 0)
-    print(f'all publishes: {len(all_publishes)}')
 
     if instance.go_live_at:
         publishes_since_go_live_at = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish', timestamp__gte=instance.go_live_at)
-        print(f'publishes since go_live_at: {len(publishes_since_go_live_at)}')
         is_first_publish_since_go_live_at = (len(publishes_since_go_live_at) == 0)
     else:
         is_first_publish_since_go_live_at = False
@@ -40,7 +39,7 @@ def instance_info(instance):
     publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
     is_first_publish, is_first_publish_since_go_live_at = count_publishes(instance)
     is_scheduled_publish = (datetime_compare(instance.go_live_at, instance.last_published_at) and is_first_publish_since_go_live_at)
-    print(f'is first publish: {is_first_publish}; is scheduled publish: {is_scheduled_publish}')
+    print(f'first: {is_first_publish}, scheduled: {is_scheduled_publish}')
     return title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish
 
 
