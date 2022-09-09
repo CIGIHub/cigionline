@@ -169,7 +169,7 @@
                 display: flex;
                 flex-direction: column;
                 height: 100%;
-                justify-content: space-between;
+                justify-content: center;
                 margin-left: 1em;
                 padding: 0.5em;
 
@@ -347,5 +347,9 @@
 
   .body {
     margin-top: 2em;
+  }
+
+  footer {
+    z-index: 0;
   }
 }

@@ -169,18 +169,14 @@
                 {% for series_item in self.article_series.specific.article_series_items %}
                   {% if series_item.content_page.url == self.url %}
                     <article class="swiper-slide series-item disabled">
-                      <div class="series-item-image">
-                        {% for additional_block in series_item.additional_fields %}
-                          {% if additional_block.block_type == 'image' %}
-                            {% image additional_block.value.image fill-100x100 %}
-                          {% endif %}
-                        {% endfor %}
-                      </div>
+                      <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                        {% image series_item.content_page.specific.image_hero fill-300x300 %}
+                      </a>
                       <div class="series-item-content">
                         <div>
                           <div class="series-item-counter">
                             <span></span>
-                            <span>0{{ forloop.counter }}</span>
+                            <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
                           </div>
                           <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
                         </div>
@@ -193,7 +189,7 @@
                         <a href="{% pageurl series_item.content_page %}">
                           <div class="series-item-counter">
                             <span></span>
-                            <span>0{{ forloop.counter }}</span>
+                            <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
                           </div>
                           <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
                         </a>
