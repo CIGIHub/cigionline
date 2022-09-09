@@ -55,6 +55,7 @@ const config = {
     researchLandingPage: './cigionline/static/pages/research_landing_page/index.js',
     subscribePage: './cigionline/static/pages/subscribe_page/index.js',
     themeAfterCovidSeries: './cigionline/static/themes/after_covid_series/index.js',
+    themeAIEthicsSeries: './cigionline/static/themes/ai_ethics_series/index.js',
     themeAISeries: './cigionline/static/themes/ai_series/index.js',
     themeBigTech: './cigionline/static/themes/big_tech/index.js',
     themeBigTechS3: './cigionline/static/themes/big_tech_s3/index.js',

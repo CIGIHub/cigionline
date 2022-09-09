@@ -1,0 +1,70 @@
+.in-the-series {
+  @include link($color: $black, $hover-color: $cigi-primary-colour);
+
+  > .container {
+    border-bottom: 1px $cigi-text-grey solid;
+    border-top: 1px $cigi-text-grey solid;
+    padding-bottom: 2em;
+    padding-top: 2em;
+  }
+
+  .essay-series-label {
+    font-family: $ai-ethics-bilo;
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+
+  h2 {
+    font-family: $ai-ethics-heading;
+    font-size: calc(2vw + 1em);
+    font-weight: 600;
+    margin: 0;
+    position: relative;
+    text-align: center;
+
+    &::before {
+      background-image: url('../../assets/ai_ethics_doodle_square.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      content: '';
+      display: block;
+      height: 0.3em;
+      left: -0.3em;
+      position: absolute;
+      top: -0.3em;
+      width: 0.3em;
+    }
+  }
+
+  ul {
+    @include media-breakpoint-up(sm) {
+      columns: 3;
+    }
+    @include media-breakpoint-up(xl) {
+      columns: 4;
+    }
+    columns: 2;
+    list-style: none;
+    margin-top: 2em;
+  }
+
+  .ai-ethics-doodle {
+    max-width: 20%;
+
+    &.left {
+      text-align: right;
+
+      img {
+        width: 7.5vw;
+      }
+    }
+
+    &.right {
+      text-align: left;
+
+      img {
+        width: 7.5vw;
+      }
+    }
+  }
+}
