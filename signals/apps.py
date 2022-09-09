@@ -48,10 +48,16 @@ def notification_user_list(content_type, is_first_publish, is_scheduled_publish)
     from .models import PublishEmailNotification
 
     user_list = PublishEmailNotification.objects.filter(page_type_permissions__page_type__title__contains=content_type)
-    if not is_first_publish:
-        user_list = user_list.filter(republish_opt_in=True)
-    if not is_scheduled_publish:
-        user_list = user_list.filter(manual_publish_opt_in=True)
+
+    # additional filter based on scanerios created by combinations of the two flags
+    if is_first_publish:
+        user_list = user_list.filter(state_opt_in__in=('first_time', 'both'))
+    else:
+        user_list = user_list.filter(state_opt_in__in=('republish', 'both'))
+    if is_scheduled_publish:
+        user_list = user_list.filter(trigger_opt_in__in=('scheduled', 'both'))
+    else:
+        user_list = user_list.filter(trigger_opt_in__in=('manual', 'both'))
     return user_list
 
 
@@ -128,8 +134,9 @@ def send_notifications(sender, **kwargs):
 
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
     try:
+        if is_first_publish:
+            send_to_slack(title, authors, page_owner, publisher, publish_phrasing)
         notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
-        send_to_slack(title, authors, page_owner, publisher, publish_phrasing)
         send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing)
     except Exception as e:
         print(e)

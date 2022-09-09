@@ -16,23 +16,36 @@ class PublishEmailNotification(ClusterableModel):
         related_name='+',
         verbose_name='User',
     )
-    republish_opt_in = models.BooleanField(
-        default=False,
-        verbose_name='Re-publish Opt-In',
-        help_text="When checked, receive re-publish notifications; otherwise receive only first-time publish notifications",
+
+    class StateOptions(models.TextChoices):
+        FIRST_TIME = ('first_time', 'First-Time Publish')
+        REPUBLISH = ('republish', 'Republish')
+        BOTH = ('both', 'Both')
+
+    class TriggerOptions(models.TextChoices):
+        MANUAL = ('manual', 'Manual Publish')
+        SCHEDULED = ('scheduled', 'Scheduled Publish')
+        BOTH = ('both', 'Both')
+
+    state_opt_in = models.CharField(
+        max_length=25,
+        default='first_time',
+        choices=StateOptions.choices,
+        verbose_name='Publish State Opt-In',
     )
-    manual_publish_opt_in = models.BooleanField(
-        default=False,
-        verbose_name='Manual Publish Opt-In',
-        help_text="When checked, receive manual publish notifications; otherwise receive only scheduled publish notifications",
+    trigger_opt_in = models.CharField(
+        max_length=25,
+        default='scheduled',
+        choices=TriggerOptions.choices,
+        verbose_name='Publish Trigger Opt-In',
     )
 
     panels = [
         MultiFieldPanel(
             [
                 FieldPanel('user'),
-                FieldPanel('republish_opt_in'),
-                FieldPanel('manual_publish_opt_in'),
+                FieldPanel('state_opt_in'),
+                FieldPanel('trigger_opt_in'),
             ],
             heading='user',
         ),
