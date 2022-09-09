@@ -150,8 +150,10 @@ class SignalsConfig(AppConfig):
         from articles.models import ArticlePage, ArticleSeriesPage
         from publications.models import PublicationPage
         from multimedia.models import MultimediaPage
+        from events.models import EventPage
 
         page_published.connect(send_notifications, sender=ArticlePage)
         page_published.connect(send_notifications, sender=ArticleSeriesPage)
         page_published.connect(send_notifications, sender=PublicationPage)
         page_published.connect(send_notifications, sender=MultimediaPage)
+        page_published.connect(send_notifications, sender=EventPage)
