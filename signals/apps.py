@@ -77,7 +77,7 @@ def notifications_on():
 def set_publish_phrasing(is_first_publish):
     if is_first_publish:
         return 'Published'
-    return 'Re-published'
+    return 'Republished'
 
 
 def send_email(title, authors, page_owner, content_type, recipients, publisher, publish_phrasing):
