@@ -126,13 +126,14 @@ def send_email(title, authors, page_owner, content_type, recipients, publisher, 
         os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL'],  # from email
         recipients,  # to emails
     )
-
     msg.attach_alternative(html_content, "text/html")
-    msg.send()
-    print('notification emails are sent to', recipients)
+
+    if notifications_on():
+        msg.send()
     # print email content when notification is off
-    if not notifications_on():
+    else:
         print(html_content)
+    print('notification emails are sent to', recipients)
 
 
 def send_to_slack(title, authors, page_owner, publisher, publish_phrasing, page_url, header_label):
