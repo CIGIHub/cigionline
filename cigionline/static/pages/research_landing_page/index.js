@@ -12,6 +12,7 @@ ReactDOM.render(
       'Opinion',
       'Event',
       'Multimedia',
+      'Activity',
     ]}
     fields={[
       'authors',
@@ -69,6 +70,15 @@ ReactDOM.render(
       params: [{
         name: 'contentsubtype',
         value: 'News Releases',
+      }],
+    },
+    {
+      name: 'Research Project',
+      alias: 'research.ProjectPage',
+      aggregationField: 'content_types',
+      params: [{
+        name: 'content_type',
+        value: 'research.ProjectPage',
       }],
     }]}
     RowComponent={ResearchContentListing}
