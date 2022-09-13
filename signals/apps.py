@@ -8,6 +8,26 @@ from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
 
 
+def get_env():
+    # PYTHON_ENV values: 'production', 'admin', 'staging'
+    if 'PYTHON_ENV' in os.environ:
+        return os.environ.get('PYTHON_ENV')
+    return 'dev'
+
+
+def get_site_url():
+    env = get_env()
+
+    # values are the host root url intended for users' viewing. admin/production both return live site; staging returns staging site; dev returns local
+    site_url_dict = {
+        'admin': 'https://www.cigionline.org',
+        'production': 'https://www.cigionline.org',
+        'staging': 'https://staging.cigionline.org',
+        'dev': 'http://localhost:8000'
+    }
+    return site_url_dict[env]
+
+
 def datetime_compare(t1, t2):
     if t1:  # if go_live_at field is populated; if not, default False
         return ((t2.astimezone(pytz.utc) - t1.astimezone(pytz.utc)) <= datetime.timedelta(hours=1))
@@ -40,7 +60,8 @@ def instance_info(instance):
     is_first_publish, is_first_publish_since_go_live_at = count_publishes(instance)
     is_scheduled_publish = (datetime_compare(instance.go_live_at, instance.last_published_at) and is_first_publish_since_go_live_at)
     print(f'first: {is_first_publish}, scheduled: {is_scheduled_publish}')
-    return title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish
+    relative_url = instance.get_url_parts()[-1]  # last item in the tuple is the relative url to root; e.g. /articles/an-article/
+    return title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish, relative_url
 
 
 def notification_user_list(content_type, is_first_publish, is_scheduled_publish):
@@ -80,39 +101,49 @@ def set_publish_phrasing(is_first_publish):
     return 'Republished'
 
 
-def send_email(title, authors, page_owner, content_type, recipients, publisher, publish_phrasing):
+def get_header_label():
+    site_url = get_site_url()
+
+    if site_url == 'http://localhost:8000':
+        return 'dev environment'
+    return site_url.replace('https://', '')
+
+
+def send_email(title, authors, page_owner, content_type, recipients, publisher, publish_phrasing, page_url, header_label):
     text_content = f"{title} By Author(s): {authors} Page Created By: {page_owner} {publish_phrasing} By: {page_owner}"
     html_content = f"""
-        <p><i>{title}</i></p>
+        <p><a href="{page_url}"><i>{title}</i></a></p>
         <p>By Author(s): {authors}</p>
         <p>Page Created By: {page_owner}</p>
         <p>{publish_phrasing} By: {publisher}</p>
         <p><i>You are receiving this update because you are on the publish notification list for: {content_type}<i></p>
     """
+    email_title = f'[{header_label}] {title}'
 
     msg = EmailMultiAlternatives(
-        "New Page Published",  # title
+        email_title,  # title
         text_content,  # body
         os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL'],  # from email
         recipients,  # to emails
     )
-
     msg.attach_alternative(html_content, "text/html")
-    msg.send()
-    print('notification emails are sent to', recipients)
+
+    if notifications_on():
+        msg.send()
     # print email content when notification is off
-    if not notifications_on():
+    else:
         print(html_content)
+    print('notification emails are sent to', recipients)
 
 
-def send_to_slack(title, authors, page_owner, publisher, publish_phrasing):
+def send_to_slack(title, authors, page_owner, publisher, publish_phrasing, page_url, header_label):
     values = {
         "blocks": [
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"_{title}_ \n By Author(s): {authors} \n Page Created By: {page_owner} \n {publish_phrasing} By: {publisher}",
+                    "text": f"[{header_label}] <{page_url}|_{title}_> \n By Author(s): {authors} \n Page Created By: {page_owner} \n {publish_phrasing} By: {publisher}",
                 }
             }
         ]
@@ -129,15 +160,17 @@ def send_to_slack(title, authors, page_owner, publisher, publish_phrasing):
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
 
-    title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish = instance_info(instance)
+    title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish, relative_url = instance_info(instance)
     publish_phrasing = set_publish_phrasing(is_first_publish)
+    page_url = f'{get_site_url()}{relative_url}'
+    header_label = get_header_label()
 
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
     try:
         if is_first_publish:
-            send_to_slack(title, authors, page_owner, publisher, publish_phrasing)
+            send_to_slack(title, authors, page_owner, publisher, publish_phrasing, page_url, header_label)
         notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
-        send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing)
+        send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing, page_url, header_label)
     except Exception as e:
         print(e)
 
