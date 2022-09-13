@@ -67,12 +67,16 @@
       margin: 2em 0;
     }
 
-    p:first-child::first-letter {
-      float:left;
-      font-size: 4.5em;
-      font-weight: bold;
-      line-height: 1em;
-      padding: 0 0.25em 0 0;
+    p {
+      &:first-child {
+        &::first-letter {
+          float: left;
+          font-size: 4.5em;
+          font-weight: bold;
+          line-height: 1em;
+          padding: 0 0.25em 0 0;
+        }
+      }
     }
   }
 
