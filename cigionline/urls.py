@@ -3,7 +3,6 @@ from django.conf import settings
 from django.conf.urls import include
 from django.urls import path, re_path
 from django.views.decorators.cache import cache_control
-from articles import views as article_views
 from core import views as core_views
 from events.feeds import EventFeed
 from images.views import favicon_view
