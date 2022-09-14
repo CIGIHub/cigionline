@@ -1,7 +1,7 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.admin.edit_handlers import PageChooserPanel, InlinePanel, FieldPanel
+from wagtail.admin.edit_handlers import PageChooserPanel, InlinePanel, FieldPanel, MultiFieldPanel
 from wagtail.core.models import Orderable
 from wagtail.snippets.models import register_snippet
 
@@ -17,8 +17,38 @@ class PublishEmailNotification(ClusterableModel):
         verbose_name='User',
     )
 
+    class StateOptions(models.TextChoices):
+        FIRST_TIME = ('first_time', 'First-Time Publish')
+        REPUBLISH = ('republish', 'Republish')
+        BOTH = ('both', 'Both')
+
+    class TriggerOptions(models.TextChoices):
+        MANUAL = ('manual', 'Manual Publish')
+        SCHEDULED = ('scheduled', 'Scheduled Publish')
+        BOTH = ('both', 'Both')
+
+    state_opt_in = models.CharField(
+        max_length=25,
+        default='first_time',
+        choices=StateOptions.choices,
+        verbose_name='Publish State Opt-In',
+    )
+    trigger_opt_in = models.CharField(
+        max_length=25,
+        default='scheduled',
+        choices=TriggerOptions.choices,
+        verbose_name='Publish Trigger Opt-In',
+    )
+
     panels = [
-        FieldPanel('user'),
+        MultiFieldPanel(
+            [
+                FieldPanel('user'),
+                FieldPanel('state_opt_in'),
+                FieldPanel('trigger_opt_in'),
+            ],
+            heading='user',
+        ),
         InlinePanel('page_type_permissions'),
     ]
 
