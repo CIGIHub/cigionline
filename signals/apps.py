@@ -136,14 +136,14 @@ def send_email(title, authors, page_owner, content_type, recipients, publisher, 
     print('notification emails are sent to', recipients)
 
 
-def send_to_slack(title, authors, page_owner, publisher, publish_phrasing, page_url, header_label):
+def send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label):
     values = {
         "blocks": [
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"[{header_label}] <{page_url}|_{title}_> \n By Author(s): {authors} \n Page Created By: {page_owner} \n {publish_phrasing} By: {publisher}",
+                    "text": f"[{header_label}] <{page_url}|_{title}_> \n Type: {content_type} \n By Author(s): {authors} \n Page Created By: {page_owner} \n {publish_phrasing} By: {publisher}",
                 }
             }
         ]
@@ -168,7 +168,7 @@ def send_notifications(sender, **kwargs):
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
     try:
         if is_first_publish:
-            send_to_slack(title, authors, page_owner, publisher, publish_phrasing, page_url, header_label)
+            send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label)
         notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
         send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing, page_url, header_label)
     except Exception as e:
