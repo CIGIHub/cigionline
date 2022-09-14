@@ -195,67 +195,6 @@
     }
   }
 
-  .loaders {
-    margin-bottom: 4em;
-    position: relative;
-  }
-
-  .article-message {
-    align-items: center;
-    display: flex;
-    opacity: 0;
-    position: absolute;
-    transition: opacity 0.25s ease-in-out;
-
-    &.show {
-      opacity: 1;
-    }
-
-    i {
-      animation: 'bounce' 2s infinite;
-      margin-right: 1em;
-    }
-  }
-
-  .spinner {
-    margin-bottom: 4em;
-    opacity: 0;
-    position: absolute;
-    transition: opacity 0.25s ease-in-out;
-
-    &.show {
-      opacity: 1;
-    }
-
-    img {
-      margin-right: 0.5em;
-      width: 50px;
-    }
-  }
-
-  .line-vertical {
-    border-left: 1px solid $black;
-    height: 100px;
-  }
-
-  .arrow-down {
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 15px solid $black;
-    height: 0;
-    margin-bottom: 4em;
-    width: 0;
-  }
-
-  .introduction-loading-background {
-    display: none;
-
-    &.show {
-      display: block;
-      opacity: 0.5;
-    }
-  }
-
   .ai-ethics-series-article {
     display: none;
     margin-bottom: 4em;
