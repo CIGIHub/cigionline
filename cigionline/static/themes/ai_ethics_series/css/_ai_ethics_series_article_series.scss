@@ -3,6 +3,13 @@
 .ai-ethics-series-article-series {
   @include top-bar($color: $black, $background-color: transparent);
 
+  hr {
+    background-color: $cigi-medium-grey;
+    margin: 0;
+    opacity: 42%;
+    position: relative;
+  }
+
   .ai-ethics-series-article-series-hero {
     padding-top: calc(5vw + 2em);
 
@@ -42,17 +49,10 @@
 
   .article-series-in-the-series {
     font-family: $ai-ethics-bilo;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
 
     h2 {
       font-weight: 600;
-    }
-
-    hr {
-      background-color: $cigi-medium-grey;
-      margin: 0;
-      opacity: 42%;
-      position: relative;
     }
 
     article {
@@ -160,7 +160,7 @@
 
     hr {
       background-color: $cigi-medium-grey;
-      margin: 3em 0;
+      margin-bottom: 1em;
     }
 
     .ai-ethics-doodle {
@@ -186,6 +186,7 @@
       font-size: 0.75em;
       grid-column-gap: 0.5em;
       grid-template-columns: 1fr 1fr;
+      margin-bottom: 4em;
       margin-left: 2em;
       margin-top: 1em;
 
