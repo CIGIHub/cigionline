@@ -8,6 +8,8 @@ if (document.querySelector('.space-series-article')) {
   pageType = 'article';
 } else if (document.querySelector('.space-series-article-series')) {
   pageType = 'article series';
+} else if (document.querySelector('.space-series-multimedia')) {
+  pageType = 'multimedia';
 }
 const breakpoint = pageType === 'article series'
   ? window.matchMedia('(max-width:992px)')
@@ -18,7 +20,14 @@ const enableSwiper = function(articleType) {
   const slidesPerViewMd = 4;
   const slidesPerViewLg = articleType === 'article series' ? 5 : 6;
   const slidesPerViewXl = 6;
-  const swiperIds = articleType === 'article series' ? ['.swiper-container-series'] : ['.swiper-container-sticky', '.swiper-container-hero'];
+  let swiperIds;
+  if (articleType === 'article series') {
+    swiperIds = ['.swiper-container-series'];
+  } else if (articleType === 'article') {
+    swiperIds = ['.swiper-container-sticky', '.swiper-container-hero'];
+  } else if (articleType === 'multimedia') {
+    swiperIds = ['.swiper-container-hero'];
+  }
   swiperIds.forEach((id) => {
     swipers[id] = new Swiper(id, {
       spaceBetween: 0,
@@ -67,18 +76,10 @@ breakpoint.addEventListener('change', breakpointChecker);
 
 breakpointChecker();
 
-if (pageType === 'article') {
-  const stickyInTheSeries = document.getElementById('sticky-in-the-series');
+if (pageType === 'article' || pageType === 'multimedia') {
   const heroInTheSeries = document.getElementById('hero-in-the-series');
-  const hero = document.querySelector('.space-series-article-hero');
+  const hero = document.querySelector('.space-series-article-hero') || document.querySelector('.mm-hero');
   const heroHeight = hero.offsetHeight;
-
-  stickyInTheSeries.addEventListener('mouseenter', () => {
-    stickyInTheSeries.classList.remove('sticky');
-  });
-  stickyInTheSeries.addEventListener('mouseleave', () => {
-    stickyInTheSeries.classList.add('sticky');
-  });
 
   const expandButtons = document.querySelectorAll('.in-the-series-expand');
   const body = document.querySelector('body');
@@ -99,18 +100,28 @@ if (pageType === 'article') {
       }
     });
   });
-  document.addEventListener('scroll', () => {
-    if (window.scrollY > (heroHeight - 50)) {
-      stickyInTheSeries.classList.remove('hidden');
+
+  if (pageType === 'article') {
+    const stickyInTheSeries = document.getElementById('sticky-in-the-series');
+    stickyInTheSeries.addEventListener('mouseenter', () => {
+      stickyInTheSeries.classList.remove('sticky');
+    });
+    stickyInTheSeries.addEventListener('mouseleave', () => {
       stickyInTheSeries.classList.add('sticky');
-      heroInTheSeries.classList.add('hidden');
-      body.style.marginTop = '200px';
-      header.classList.add('dark');
-    } else {
-      stickyInTheSeries.classList.add('hidden');
-      heroInTheSeries.classList.remove('hidden');
-      body.style.marginTop = '0';
-      header.classList.remove('dark');
-    }
-  });
+    });
+    document.addEventListener('scroll', () => {
+      if (window.scrollY > (heroHeight - 50)) {
+        stickyInTheSeries.classList.remove('hidden');
+        stickyInTheSeries.classList.add('sticky');
+        heroInTheSeries.classList.add('hidden');
+        body.style.marginTop = '200px';
+        header.classList.add('dark');
+      } else {
+        stickyInTheSeries.classList.add('hidden');
+        heroInTheSeries.classList.remove('hidden');
+        body.style.marginTop = '0';
+        header.classList.remove('dark');
+      }
+    });
+  }
 }
