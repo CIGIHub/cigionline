@@ -27,6 +27,19 @@
       font-weight: 700;
       line-height: 1;
       margin-bottom: 0.5em;
+
+      &::before {
+        background-image: url('../assets/ai_ethics_doodle_square.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        content: '';
+        display: block;
+        height: 0.3em;
+        left: 3em;
+        position: absolute;
+        top: -0.5em;
+        width: 0.3em;
+      }
     }
 
     .banner {
@@ -34,6 +47,9 @@
     }
 
     .opinion-series-label {
+      @include media-breakpoint-down(sm) {
+        margin-bottom: 1em;
+      }
       font-family: $ai-ethics-bilo;
       font-size: 1em;
       font-weight: 500;
