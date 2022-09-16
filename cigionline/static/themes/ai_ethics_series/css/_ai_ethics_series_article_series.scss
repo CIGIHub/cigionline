@@ -47,13 +47,13 @@
     }
 
     .opinion-series-label {
-      @include media-breakpoint-down(sm) {
-        margin-bottom: 1em;
+      @include media-breakpoint-up(md) {
+        margin-bottom: 1.5em;
       }
       font-family: $ai-ethics-bilo;
       font-size: 1em;
       font-weight: 500;
-      margin-bottom: 1.5em;
+      margin-bottom: 1em;
     }
 
     .short-description {
