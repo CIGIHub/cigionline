@@ -35,7 +35,8 @@
 
     .opinion-series-label {
       font-family: $ai-ethics-bilo;
-      font-weight: 600;
+      font-size: 1em;
+      font-weight: 500;
       margin-bottom: 1.5em;
     }
 
@@ -52,7 +53,8 @@
     margin-bottom: 1em;
 
     h2 {
-      font-weight: 600;
+      font-size: 1em;
+      font-weight: 500;
     }
 
     article {
@@ -81,9 +83,9 @@
       h3 {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
         @include media-breakpoint-up(md) {
-          font-size: 1.75em;
+          font-size: 1.5em;
         }
-        font-weight: 600;
+        font-weight: 500;
       }
 
       ul {
