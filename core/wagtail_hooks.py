@@ -1,5 +1,5 @@
 from django.templatetags.static import static
-from django.utils.html import format_html, format_html_join
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from wagtail.admin.rich_text.converters.html_to_contentstate import (
     BlockElementHandler,
