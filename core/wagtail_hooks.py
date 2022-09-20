@@ -34,7 +34,7 @@ def editor_js():
                 }
                 $("#id_go_live_at").siblings("script").innerHtml = initDateTimeChooser(
                     "id_go_live_at",
-                    {"dayOfWeekStart": 0, "format": "Y-m-d H:i", "formatTime": "H:i", "allowTimes": times};
+                    {"dayOfWeekStart": 0, "format": "Y-m-d H:i", "formatTime": "H:i", "allowTimes": times}
                 );
                 $("#id_go_live_at").attr("readonly", "")
             });
