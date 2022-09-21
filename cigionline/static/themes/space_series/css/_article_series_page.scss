@@ -65,9 +65,9 @@ body {
 
         article {
           @include media-breakpoint-up(lg) {
-            flex-direction: column;
-            border-top: 0;
             border-right: 1px solid $cigi-text-grey;
+            border-top: 0;
+            flex-direction: column;
           }
           align-items: center;
           background-color: $space-series-background-colour;
@@ -187,8 +187,8 @@ body {
               margin-left: 3em;
             }
             @include media-breakpoint-up(lg) {
-              margin-top: 2em;
               margin-left: 0;
+              margin-top: 2em;
             }
             display: flex;
             flex-direction: column;
@@ -241,17 +241,17 @@ body {
           color: $white;
           height: 100%;
           top: 2em;
-          width: 75px;
           transition: color 0.3s ease, opacity 0.3s ease;
+          width: 75px;
 
           &:hover {
             color: $cigi-primary-colour;
           }
 
           &::before {
+            bottom: 35%;
             content: 'MORE';
             position: absolute;
-            bottom: 35%;
           }
 
           &.swiper-button-prev {
