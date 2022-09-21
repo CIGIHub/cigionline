@@ -37,6 +37,7 @@ rules:
     -
       'extra-properties':
         - 'scrollbar-width'
+        - 'overscroll-behavior'
   no-qualifying-elements: 1
   no-trailing-whitespace: 1
   no-trailing-zero: 1
