@@ -3,7 +3,7 @@ import json
 import os
 import datetime
 import pytz
-from wagtail.core.signals import page_published
+from wagtail.signals import page_published
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
 
@@ -35,7 +35,7 @@ def datetime_compare(t1, t2):
 
 
 def count_publishes(instance):
-    from wagtail.core.models import PageLogEntry
+    from wagtail.models import PageLogEntry
 
     all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish')
 
