@@ -293,7 +293,12 @@ class TopicListPage(Page):
         verbose_name = 'Topic List Page'
 
 
-class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
+class TopicPage(
+    ArchiveablePageAbstract,
+    BasicPageAbstract,
+    SearchablePageAbstract,
+    Page
+):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
 
@@ -319,6 +324,12 @@ class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
     def topic_name(self):
         return self.title
 
+    def get_admin_display_title(self):
+        return f"{self.title} (Archived)" if self.archive == 1 else self.title
+
+    def __str__(self):
+        return f"{self.title} (Archived)" if self.archive == 1 else self.title
+
     content_panels = Page.content_panels + [
         FieldPanel('description'),
         MultiFieldPanel(
@@ -334,14 +345,20 @@ class TopicPage(ArchiveablePageAbstract, BasicPageAbstract, Page):
             classname='collapsible collapsed',
         ),
     ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel,
+    ]
     settings_panels = Page.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + ArchiveablePageAbstract.search_fields + [
-        index.SearchField('topic_name')
-    ]
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + SearchablePageAbstract.search_fields \
+        + [
+            index.SearchField('topic_name')
+        ]
 
     parent_page_types = ['research.TopicListPage']
     subpage_types = []

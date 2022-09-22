@@ -27,6 +27,7 @@ logger = logging.getLogger('cigionline')
 class SubscribePage(
     Page,
     BasicPageAbstract,
+    SearchablePageAbstract,
 ):
     privacy_note = RichTextField(
         blank=True,

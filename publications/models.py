@@ -27,7 +27,7 @@ from wagtail.models import Orderable, Page
 from wagtail.search import index
 
 
-class PublicationListPage(BasicPageAbstract, Page):
+class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     """Publication list page"""
 
     def featured_publications_list(self):
@@ -66,7 +66,7 @@ class PublicationListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Publication List Page'

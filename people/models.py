@@ -45,7 +45,7 @@ class PeoplePage(Page):
         verbose_name_plural = 'Person List Pages'
 
 
-class PersonListPage(BasicPageAbstract, Page):
+class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     """
     The pages that show people. There are currently 2 on our website:
     /experts and /about/staff. This was made into a separate page model so that
@@ -75,7 +75,7 @@ class PersonListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     def featured_experts_random(self):
         expert_id_list = list(PersonPage.objects.live().public().filter(

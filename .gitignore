@@ -85,3 +85,6 @@ target/
 .vscode
 
 cigionline/static/bundles/*
+
+# redis dump
+*.rdb

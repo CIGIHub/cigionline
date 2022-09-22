@@ -12,7 +12,7 @@ from wagtail.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 
 
-class JobPostingListPage(BasicPageAbstract, Page):
+class JobPostingListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     def get_context(self, request):
         context = super().get_context(request)
         context['job_postings'] = JobPostingPage.objects.live().public().order_by(models.F('closing_date').asc(nulls_first=True))
@@ -32,7 +32,7 @@ class JobPostingListPage(BasicPageAbstract, Page):
         BasicPageAbstract.submenu_panel,
     ]
 
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Careers Page'
@@ -106,7 +106,7 @@ class JobPostingPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    search_fields = Page.search_fields + SearchablePageAbstract.search_fields
+    search_fields = Page.search_fields + SearchablePageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     parent_page_types = ['careers.JobPostingListPage']
     subpage_types = []
