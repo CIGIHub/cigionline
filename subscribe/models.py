@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.shortcuts import render
-from core.models import BasicPageAbstract
+from core.models import BasicPageAbstract, SearchablePageAbstract
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
