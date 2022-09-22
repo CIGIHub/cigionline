@@ -306,3 +306,5 @@ if 'SENDGRID_API_KEY' in os.environ:
     SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 if 'PUBLISHING_NOTIFICATION_FROM_EMAIL' in os.environ:
     PUBLISHING_NOTIFICATION_FROM_EMAIL = os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL']
+
+# Arbitrary comment for new heroku deployment
