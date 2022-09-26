@@ -2,8 +2,9 @@ from django.db import models
 from multimedia.models import MultimediaPage
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.snippets.models import register_snippet
 
-
+@register_snippet
 class PromotionBlock(models.Model):
     class PromotionBlockTypes(models.TextChoices):
         STANDARD = ('standard', 'Standard')

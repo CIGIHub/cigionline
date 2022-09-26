@@ -1,4 +1,6 @@
-from wagtail.core.blocks import StructBlock, PageChooserBlock
+from wagtail.core.blocks import StructBlock, PageChooserBlock, ChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
+from promotions.models import PromotionBlock
 
 
 class FeaturedPageBlock(StructBlock):
@@ -70,10 +72,7 @@ class FeaturedEventBlock(StructBlock):
 
 
 class FeaturedPromotionBlock(StructBlock):
-    page_types = [
-        'promotions.PromotionBlock',
-    ]
-    page = PageChooserBlock(page_type=page_types)
+    block = SnippetChooserBlock(PromotionBlock)
 
     class Meta:
         icon = 'pick'
