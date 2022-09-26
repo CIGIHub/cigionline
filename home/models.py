@@ -1,9 +1,18 @@
+from distutils.log import error
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
 from events.models import EventPage, EventListPage
-from features.models import HomePageFeaturedPromotionsPage
+from features.models import (
+    HomePageFeaturedPromotionsList,
+    HomePageFeaturedContentList,
+    HomePageFeaturedPublicationsList,
+    HomePageFeaturedExpertsList,
+    HomePageFeaturedMultimediaList,
+    HomePageFeaturedHighlightsList,
+    HomePageFeaturedEventsList,
+)
 from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
@@ -100,7 +109,12 @@ class HomePage(Page):
     ]
 
     def get_featured_pages(self):
-        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        try:
+            featured_pages_list = HomePageFeaturedContentList.objects.first().featured_pages
+            featured_page_ids = [page.value['page'].id for page in featured_pages_list]
+        except Exception:
+            error(traceback.format_exc())
+            featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
         pages = Page.objects.specific().prefetch_related(
             'authors__author',
             'topics',
@@ -120,7 +134,13 @@ class HomePage(Page):
         return featured_pages
 
     def get_featured_experts(self):
-        featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
+        try:
+            featured_experts = HomePageFeaturedExpertsList.objects.first().featured_experts
+            featured_expert_ids = [expert.value['page'].id for expert in featured_experts]
+        except Exception:
+            error(traceback.format_exc())
+            featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
+            
         experts = PersonPage.objects.in_bulk(featured_expert_ids)
         return [experts[x] for x in featured_expert_ids]
 
@@ -184,9 +204,23 @@ class HomePage(Page):
         return featured_events
 
     def get_promotion_blocks(self):
+        # featured_pages_list = HomePageFeaturedContentList.objects.first().featured_pages
+        # if featured_pages_list:
+        #     featured_page_ids = [page.value['page'].id for page in featured_pages_list]
+        # else:
+        #     featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        # pages = Page.objects.specific().prefetch_related(
+        #     'authors__author',
+        #     'topics',
+        # ).in_bulk(featured_page_ids)
+        # return [pages[x] for x in featured_page_ids]
+
+
         try:
-            featured_promotions_page = HomePageFeaturedPromotionsPage.objects.first()
-            promotion_blocks_query_set = featured_promotions_page.promotion_blocks.prefetch_related(
+            featured_promotions_list = HomePageFeaturedPromotionsList.objects.first()
+            if featured_promotions_list:
+                featured_page_ids = [page.value['page'].id for page in featured_promotions_list]
+            promotion_blocks_query_set = featured_promotions_list.promotion_blocks.prefetch_related(
                 'promotion_block',
             ).all()
         except Exception:

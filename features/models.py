@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from wagtail.admin.edit_handlers import StreamFieldPanel
+from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
 
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
@@ -18,7 +18,7 @@ class FeaturesListPage(Page):
     parent_page_types = ['home.HomePage']
     subpage_types = [
         'features.HomePageFeaturedPromotionsList',
-        'features.HomePageMainFeaturesList',
+        'features.HomePageFeaturedContentList',
         'features.HomePageFeaturedPublicationsList',
         'features.HomePageFeaturedExpertsList',
         'features.HomePageFeaturedMultimediaList',
@@ -37,10 +37,9 @@ class HomePageFeaturedPromotionsList(Page):
             ('featured_promotion', FeaturedPromotionBlock()),
         ],
         blank=True,
-        max_count=4,
     )
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_pages'),
+        StreamFieldPanel('featured_promotions'),
     ]
     parent_page_types = ['features.FeaturesListPage']
     subpage_types = []
@@ -63,7 +62,6 @@ class HomePageFeaturedContentList(Page):
             ('featured_page', FeaturedPageBlock()),
         ],
         blank=True,
-        max_count=12,
         help_text='1: large | 2-4: medium | 5-9: small'
     )
     content_panels = Page.content_panels + [
@@ -116,7 +114,7 @@ class HomePageFeaturedHighlightsList(Page):
         blank=True,
     )
 
-    panels = [
+    content_panels = Page.content_panels + [
         StreamFieldPanel('featured_highlights'),
     ]
 
@@ -140,7 +138,7 @@ class HomePageFeaturedMultimediaList(Page):
         blank=True,
     )
 
-    panels = [
+    content_panels = Page.content_panels + [
         StreamFieldPanel('featured_multimedia'),
     ]
 
@@ -164,7 +162,7 @@ class HomePageFeaturedEventsList(Page):
         blank=True,
     )
 
-    panels = [
+    content_panels = Page.content_panels + [
         StreamFieldPanel('featured_events'),
     ]
 
@@ -188,7 +186,7 @@ class HomePageFeaturedExpertsList(Page):
         blank=True,
     )
 
-    panels = [
+    content_panels = Page.content_panels + [
         StreamFieldPanel('featured_experts'),
     ]
 
