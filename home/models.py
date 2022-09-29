@@ -187,15 +187,21 @@ class HomePage(Page):
 
     def get_featured_publications(self):
         try:
-            featured_publications = HomePageFeaturedPublicationsList.objects.first().featured_publications
-            featured_publication_ids = [publication.value['page'].id for publication in featured_publications]
+            featured_publications_list = HomePageFeaturedPublicationsList.objects.first().featured_publications
+            featured_publication_ids = [publication.value['page'].id for publication in featured_publications_list]
+            featured_publications = PublicationPage.objects.prefetch_related(
+                'authors__author',
+                'topics',
+            ).in_bulk(featured_publication_ids)
+            return [featured_publications[x] for x in featured_publication_ids]
         except Exception:
             error(traceback.format_exc())
             featured_publication_ids = self.featured_pages.values_list('featured_page', flat=True)
-        return PublicationPage.objects.prefetch_related(
-            'authors__author',
-            'topics',
-        ).live().public().exclude(id__in=featured_publication_ids).order_by('-publishing_date')[:4]
+            featured_publications = PublicationPage.objects.prefetch_related(
+                'authors__author',
+                'topics',
+            ).live().public().exclude(id__in=featured_publication_ids).order_by('-publishing_date')[:4]
+            return featured_publications
 
     def get_featured_events(self):
         try:

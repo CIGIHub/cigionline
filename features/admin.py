@@ -75,7 +75,6 @@ class FeaturesModelAdminGroup(ModelAdminGroup):
         HomePageFeaturedExpertsListModelAdmin,
         HomePageFeaturedEventsListModelAdmin,
         HomePageFeaturedPromotionsListModelAdmin,
-
     )
 
 
