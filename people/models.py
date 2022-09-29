@@ -15,18 +15,15 @@ from search.filters import (
 )
 from streams.blocks import ParagraphBlock
 from unidecode import unidecode
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Orderable, Page
-from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail import blocks
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Orderable, Page
 from wagtail.search import index
 import random
 
@@ -155,7 +152,8 @@ class PersonPage(
             ('paragraph', ParagraphBlock())
         ],
         blank=True,
-        verbose_name='Full Biography'
+        verbose_name='Full Biography',
+        use_json_field=True,
     )
     byline = RichTextField(blank=True, features=['bold', 'italic', 'link'],)
     curriculum_vitae = models.ForeignKey(
@@ -165,18 +163,26 @@ class PersonPage(
         on_delete=models.SET_NULL,
         related_name='+'
     )
-    education = StreamField([
-        ('education', blocks.StructBlock([
-            ('degree', blocks.CharBlock(required=True)),
-            ('school', blocks.CharBlock(required=True)),
-            ('school_website', blocks.URLBlock(required=False)),
-            ('year', blocks.IntegerBlock(required=False))
-        ]))
-    ], blank=True)
+    education = StreamField(
+        [
+            ('education', blocks.StructBlock([
+                ('degree', blocks.CharBlock(required=True)),
+                ('school', blocks.CharBlock(required=True)),
+                ('school_website', blocks.URLBlock(required=False)),
+                ('year', blocks.IntegerBlock(required=False))
+            ]))
+        ],
+        blank=True,
+        use_json_field=True,
+    )
     email = models.EmailField(blank=True)
-    expertise = StreamField([
-        ('expertise', blocks.CharBlock(required=True))
-    ], blank=True)
+    expertise = StreamField(
+        [
+            ('expertise', blocks.CharBlock(required=True))
+        ],
+        blank=True,
+        use_json_field=True,
+    )
     first_name = models.CharField(blank=True, max_length=255)
     image_media = models.ForeignKey(
         'images.CigionlineImage',
@@ -196,9 +202,13 @@ class PersonPage(
         verbose_name='Square image',
         help_text='For circular profile images that are used throughout the website.'
     )
-    languages = StreamField([
-        ('language', blocks.CharBlock(required=True))
-    ], blank=True)
+    languages = StreamField(
+        [
+            ('language', blocks.CharBlock(required=True))
+        ],
+        blank=True,
+        use_json_field=True,
+    )
     last_name = models.CharField(blank=True, max_length=255)
     linkedin_url = models.URLField(blank=True)
     person_types = ParentalManyToManyField('people.PersonType', blank=True)
@@ -211,23 +221,27 @@ class PersonPage(
         features=['bold', 'italic', 'link'],
         verbose_name='Short Biography',
     )
-    external_publications = StreamField([
-        ('external_publication', blocks.StructBlock([
-            ('author', blocks.CharBlock(required=True)),
-            ('location_in_work', blocks.CharBlock(required=False)),
-            ('publisher_info', blocks.CharBlock(required=False)),
-            ('publication_type', blocks.ChoiceBlock(
-                required=True,
-                choices=ExternalPublicationTypes.choices,
-            )),
-            ('secondary_author', blocks.CharBlock(required=False)),
-            ('secondary_title', blocks.CharBlock(required=False)),
-            ('title', blocks.CharBlock(required=False)),
-            ('url', blocks.URLBlock(required=False)),
-            ('url_title', blocks.CharBlock(required=False)),
-            ('year', blocks.IntegerBlock(required=False))
-        ]))
-    ], blank=True)
+    external_publications = StreamField(
+        [
+            ('external_publication', blocks.StructBlock([
+                ('author', blocks.CharBlock(required=True)),
+                ('location_in_work', blocks.CharBlock(required=False)),
+                ('publisher_info', blocks.CharBlock(required=False)),
+                ('publication_type', blocks.ChoiceBlock(
+                    required=True,
+                    choices=ExternalPublicationTypes.choices,
+                )),
+                ('secondary_author', blocks.CharBlock(required=False)),
+                ('secondary_title', blocks.CharBlock(required=False)),
+                ('title', blocks.CharBlock(required=False)),
+                ('url', blocks.URLBlock(required=False)),
+                ('url_title', blocks.CharBlock(required=False)),
+                ('year', blocks.IntegerBlock(required=False))
+            ]))
+        ],
+        blank=True,
+        use_json_field=True,
+    )
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
@@ -316,7 +330,7 @@ class PersonPage(
         MultiFieldPanel(
             [
                 FieldPanel('short_bio'),
-                StreamFieldPanel('body'),
+                FieldPanel('body'),
                 FieldPanel('byline'),
             ],
             heading='Biography',
@@ -348,8 +362,8 @@ class PersonPage(
         MultiFieldPanel(
             [
                 FieldPanel('person_types'),
-                StreamFieldPanel('languages'),
-                DocumentChooserPanel('curriculum_vitae'),
+                FieldPanel('languages'),
+                FieldPanel('curriculum_vitae'),
                 FieldPanel('person_weight'),
             ],
             heading='Additional Information',
@@ -357,14 +371,14 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('education')
+                FieldPanel('education')
             ],
             heading='Education',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('expertise'),
+                FieldPanel('expertise'),
                 FieldPanel('projects'),
             ],
             heading='Expertise',
@@ -372,8 +386,8 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_square'),
-                ImageChooserPanel('image_media')
+                FieldPanel('image_square'),
+                FieldPanel('image_media')
             ],
             heading='Images',
             classname='collapsible collapsed'
@@ -394,7 +408,7 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('external_publications')
+                FieldPanel('external_publications')
             ],
             heading='External Publications',
             classname='collapsible collapsed'

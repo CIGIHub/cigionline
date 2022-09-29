@@ -2,9 +2,9 @@ from django import forms
 from django.conf import settings
 from django.shortcuts import render
 from core.models import BasicPageAbstract, SearchablePageAbstract
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Page
 from streams.blocks import ParagraphBlock
 
 from mailchimp_marketing.api_client import ApiClientError
@@ -40,6 +40,7 @@ class SubscribePage(
         ],
         blank=True,
         help_text='The contents of this stream field will be displayed after sign up.',
+        use_json_field=True,
     )
 
     content_panels = [
@@ -48,7 +49,7 @@ class SubscribePage(
         FieldPanel('privacy_note'),
         MultiFieldPanel(
             [
-                StreamFieldPanel('landing_page_body'),
+                FieldPanel('landing_page_body'),
             ],
             heading='Landing Page Body',
             classname='collapsible',

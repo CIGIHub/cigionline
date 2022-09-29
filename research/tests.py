@@ -1,8 +1,8 @@
 from core.models import BasicPage
 from home.models import HomePage
 from django.template import Context, Template
-from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import nested_form_data
+from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils.form_data import nested_form_data
 
 from .models import (
     ProjectListPage,

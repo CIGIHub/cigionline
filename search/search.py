@@ -1,5 +1,5 @@
 from newsletters.models import NewsletterPage
-from wagtail.core.models import Page
+from wagtail.models import Page
 from wagtail.search.backends import get_search_backend
 from wagtail.search.backends.elasticsearch7 import (
     Elasticsearch7SearchResults

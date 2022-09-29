@@ -5,7 +5,7 @@ from people.models import PersonListPage
 from research.models import (
     ProjectPage,
 )
-from wagtail.tests.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTests
 
 from .models import (
     BasicPage,
