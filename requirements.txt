@@ -40,7 +40,7 @@ idna==2.10
 isort==5.9.3
 jdcal==1.4.1
 jmespath==0.10.0
-l18n==2020.6.1
+l18n==2021.3
 lazy-object-proxy==1.6.0
 libsass==0.21.0
 mailchimp-marketing==3.0.53
