@@ -9,21 +9,19 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
-from wagtail.core.blocks import (
+from wagtail.blocks import (
     CharBlock,
     PageChooserBlock,
 )
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Orderable, Page
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from streams.blocks import IgcTimelineBlock
 
@@ -53,6 +51,7 @@ class ProjectPage(
             BasicPageAbstract.body_text_border_block,
         ],
         blank=True,
+        use_json_field=True,
     )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
@@ -67,6 +66,7 @@ class ProjectPage(
             ('contact', PageChooserBlock(required=True, page_type='people.PersonPage')),
         ],
         blank=True,
+        use_json_field=True,
     )
     project_leads = StreamField(
         [
@@ -74,6 +74,7 @@ class ProjectPage(
             ('external_project_lead', CharBlock(required=True)),
         ],
         blank=True,
+        use_json_field=True,
     )
     project_members = StreamField(
         [
@@ -81,6 +82,7 @@ class ProjectPage(
             ('external_project_member', CharBlock(required=True)),
         ],
         blank=True,
+        use_json_field=True,
     )
     project_types = ParentalManyToManyField('research.ProjectType', blank=True)
     related_files = StreamField(
@@ -88,6 +90,7 @@ class ProjectPage(
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -106,17 +109,17 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('project_leads'),
-                StreamFieldPanel('project_members'),
-                StreamFieldPanel('project_contacts'),
+                FieldPanel('project_leads'),
+                FieldPanel('project_members'),
+                FieldPanel('project_contacts'),
             ],
             heading='People',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_banner'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -124,7 +127,7 @@ class ProjectPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
-                StreamFieldPanel('related_files'),
+                FieldPanel('related_files'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -203,6 +206,7 @@ class IgcTimelinePage(BasicPageAbstract, Page):
             ('igc_timeline', IgcTimelineBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = [

@@ -11,22 +11,20 @@ from core.models import (
 from django.db import models
 from modelcluster.fields import ParentalKey
 from streams.blocks import PodcastSubscribeButtonBlock
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
-from wagtail.core.blocks import (
+from wagtail.blocks import (
     CharBlock,
     IntegerBlock,
     StructBlock,
     TextBlock,
 )
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Orderable, Page
-from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.fields import StreamField
+from wagtail.models import Orderable, Page
 from wagtail.search import index
 
 
@@ -201,6 +199,7 @@ class MultimediaPage(
             ('guest', CharBlock(required=True)),
         ],
         blank=True,
+        use_json_field=True,
     )
     podcast_season = models.IntegerField(
         blank=True,
@@ -217,6 +216,7 @@ class MultimediaPage(
             BasicPageAbstract.body_read_more_block,
         ],
         blank=True,
+        use_json_field=True,
     )
     video_chapters = StreamField(
         [
@@ -227,6 +227,7 @@ class MultimediaPage(
             ])),
         ],
         blank=True,
+        use_json_field=True,
     )
     youtube_id = models.CharField(
         blank=True,
@@ -274,14 +275,14 @@ class MultimediaPage(
         MultiFieldPanel(
             [
                 FieldPanel('youtube_id'),
-                StreamFieldPanel('video_chapters'),
+                FieldPanel('video_chapters'),
             ],
             heading='Video Chapters',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('transcript'),
+                FieldPanel('transcript'),
             ],
             heading='Transcript',
             classname='collapsible collapsed',
@@ -291,7 +292,7 @@ class MultimediaPage(
                 FieldPanel('podcast_subtitle'),
                 FieldPanel('podcast_season'),
                 FieldPanel('podcast_episode'),
-                StreamFieldPanel('podcast_guests'),
+                FieldPanel('podcast_guests'),
                 MultiFieldPanel(
                     [
                         FieldPanel('podcast_audio_url'),
@@ -316,10 +317,10 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_banner'),
-                ImageChooserPanel('image_square'),
-                ImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_square'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -427,6 +428,7 @@ class MultimediaSeriesPage(
         blank=True,
         verbose_name='Podcast Subscribe Buttons',
         help_text='A list of subscribe links to various podcast providers',
+        use_json_field=True,
     )
 
     @property
@@ -470,18 +472,18 @@ class MultimediaSeriesPage(
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_hero'),
-                ImageChooserPanel('image_banner'),
-                ImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_logo'),
+                FieldPanel('image_logo'),
                 FieldPanel('podcast_season_tagline'),
-                StreamFieldPanel('podcast_subscribe_buttons'),
+                FieldPanel('podcast_subscribe_buttons'),
             ],
             heading='Podcast Details',
             classname='collapsible collapsed',
@@ -536,6 +538,5 @@ class MultimediaListPagePromotionBlocks(Orderable):
     panels = [
         FieldPanel(
             'promotion_block',
-            ['promotions.PromotionBlock'],
         ),
     ]

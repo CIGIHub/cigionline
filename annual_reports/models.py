@@ -5,16 +5,13 @@ from core.models import (
 )
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
-    StreamFieldPanel,
 )
-from wagtail.core.blocks import PageChooserBlock
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
-from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.blocks import PageChooserBlock
+from wagtail.fields import StreamField
+from wagtail.models import Page
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -31,6 +28,7 @@ class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = [
@@ -40,7 +38,7 @@ class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
         BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
-                StreamFieldPanel('featured_reports'),
+                FieldPanel('featured_reports'),
             ],
             heading='Featured Annual Reports',
             classname='collapsible collapsed',
@@ -111,9 +109,9 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         ),
         MultiFieldPanel(
             [
-                DocumentChooserPanel('report_english'),
-                DocumentChooserPanel('report_french'),
-                DocumentChooserPanel('report_financial'),
+                FieldPanel('report_english'),
+                FieldPanel('report_french'),
+                FieldPanel('report_financial'),
                 FieldPanel('report_interactive'),
             ],
             heading='Reports',
@@ -121,7 +119,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         ),
         MultiFieldPanel(
             [
-                ImageChooserPanel('image_poster'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',

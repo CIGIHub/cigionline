@@ -1,8 +1,8 @@
 from django.db import models
 from multimedia.models import MultimediaPage
-from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.admin.panels import FieldPanel, PageChooserPanel
 from wagtail.snippets.models import register_snippet
+
 
 @register_snippet
 class PromotionBlock(models.Model):
@@ -61,8 +61,8 @@ class PromotionBlock(models.Model):
         FieldPanel('name'),
         FieldPanel('block_type'),
         FieldPanel('link_url'),
-        ImageChooserPanel('image_promotion'),
-        ImageChooserPanel('image_promotion_small'),
+        FieldPanel('image_promotion'),
+        FieldPanel('image_promotion_small'),
         PageChooserPanel('podcast_episode', ['multimedia.MultimediaPage']),
     ]
 

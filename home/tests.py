@@ -23,9 +23,9 @@ from research.models import (
     TopicListPage,
 )
 from subscribe.models import SubscribePage
-from wagtail.core.models import Page
-from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import nested_form_data
+from wagtail.models import Page
+from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils.form_data import nested_form_data
 
 from .models import HomePage
 

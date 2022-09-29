@@ -6,9 +6,9 @@ from core.models import (
 )
 from django.db import models
 from django.template.defaultfilters import date
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 
 
@@ -48,12 +48,14 @@ class JobPostingPage(
     description = StreamField(
         BasicPageAbstract.body_default_blocks,
         blank=True,
+        use_json_field=True,
     )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
     short_description = RichTextField(
         blank=True,
@@ -78,7 +80,7 @@ class JobPostingPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('description'),
+                FieldPanel('description'),
             ],
             heading='Job Description',
             classname='collapsible',
@@ -92,7 +94,7 @@ class JobPostingPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('related_files'),
+                FieldPanel('related_files'),
             ],
             heading='Related Files',
             classname='collapsible collapsed',

@@ -4,6 +4,7 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
 from events.models import EventPage, EventListPage
+<<<<<<< HEAD
 from features.models import (
     HomePageFeaturedPromotionsList,
     HomePageFeaturedContentList,
@@ -14,12 +15,16 @@ from features.models import (
     HomePageFeaturedEventsList,
 )
 from wagtail.admin.edit_handlers import (
+=======
+from features.models import HomePageFeaturedPromotionsPage
+from wagtail.admin.panels import (
+>>>>>>> master
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     FieldPanel
 )
-from wagtail.core.models import Orderable, Page
+from wagtail.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
@@ -408,6 +413,5 @@ class HomePagePromotionBlocks(Orderable):
     panels = [
         FieldPanel(
             'promotion_block',
-            ['promotions.PromotionBlock'],
         ),
     ]

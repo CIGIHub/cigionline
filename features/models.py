@@ -1,8 +1,8 @@
-from django.core.cache import cache
-from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel
 
+from django.core.cache import cache
+from wagtail.admin.panels import FieldPanel
 from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
+from wagtail.models import Page
 from .blocks import (
     FeaturedExpertBlock,
     FeaturedPageBlock,
@@ -37,9 +37,10 @@ class HomePageFeaturedPromotionsList(Page):
             ('featured_promotion', FeaturedPromotionBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_promotions'),
+        FieldPanel('featured_promotions'),
     ]
     parent_page_types = ['features.FeaturesListPage']
     subpage_types = []
@@ -65,7 +66,7 @@ class HomePageFeaturedContentList(Page):
         help_text='1: large | 2-4: medium | 5-9: small'
     )
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_pages'),
+        FieldPanel('featured_pages'),
     ]
     parent_page_types = ['features.FeaturesListPage']
     subpage_types = []
@@ -88,10 +89,11 @@ class HomePageFeaturedPublicationsList(Page):
             ('featured_publication', FeaturedPublicationBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_publications'),
+        FieldPanel('featured_publications'),
     ]
 
     parent_page_types = ['features.FeaturesListPage']
@@ -115,7 +117,7 @@ class HomePageFeaturedHighlightsList(Page):
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_highlights'),
+        FieldPanel('featured_highlights'),
     ]
 
     parent_page_types = ['features.FeaturesListPage']
@@ -136,10 +138,11 @@ class HomePageFeaturedMultimediaList(Page):
             ('featured_multimedia', FeaturedMultimediaBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_multimedia'),
+        FieldPanel('featured_multimedia'),
     ]
 
     parent_page_types = ['features.FeaturesListPage']
@@ -164,7 +167,7 @@ class HomePageFeaturedEventsList(Page):
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_events'),
+        FieldPanel('featured_events'),
     ]
 
     parent_page_types = ['features.FeaturesListPage']
@@ -185,10 +188,11 @@ class HomePageFeaturedExpertsList(Page):
             ('featured_expert', FeaturedExpertBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('featured_experts'),
+        FieldPanel('featured_experts'),
     ]
 
     parent_page_types = ['features.FeaturesListPage']

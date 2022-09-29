@@ -40,19 +40,17 @@ from streams.blocks import (
     InlineVideoBlock,
     HighlightTitleBlock,
 )
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Orderable, Page
-from wagtail.core.url_routing import RouteResult
+from wagtail import blocks
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Orderable, Page
+from wagtail.url_routing import RouteResult
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 import math
@@ -102,6 +100,7 @@ class BasicPageAbstract(models.Model):
     body = StreamField(
         body_default_blocks,
         blank=True,
+        use_json_field=True,
     )
     hero_link = StreamField(
         [
@@ -110,6 +109,7 @@ class BasicPageAbstract(models.Model):
         ],
         blank=True,
         help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.',
+        use_json_field=True,
     )
     image_hero = models.ForeignKey(
         'images.CigionlineImage',
@@ -181,21 +181,21 @@ class BasicPageAbstract(models.Model):
     )
     hero_link_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('hero_link'),
+            FieldPanel('hero_link'),
         ],
         heading='Hero Link',
         classname='collapsible collapsed'
     )
     body_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('body'),
+            FieldPanel('body'),
         ],
         heading='Body',
         classname='collapsible collapsed'
     )
     images_panel = MultiFieldPanel(
         [
-            ImageChooserPanel('image_hero'),
+            FieldPanel('image_hero'),
         ],
         heading='Images',
         classname='collapsible collapsed',
@@ -235,7 +235,7 @@ class FeatureablePageAbstract(models.Model):
         [
             FieldPanel('feature_title'),
             FieldPanel('feature_subtitle'),
-            ImageChooserPanel('image_feature'),
+            FieldPanel('image_feature'),
             FieldPanel('feature_url'),
         ],
         heading='Feature Information',
@@ -253,6 +253,7 @@ class SearchablePageAbstract(models.Model):
         ],
         blank=True,
         help_text='A list of search terms for which this page will be elevated in the search results.',
+        use_json_field=True,
     )
     search_result_description = models.CharField(
         blank=True,
@@ -263,7 +264,7 @@ class SearchablePageAbstract(models.Model):
 
     search_panel = MultiFieldPanel(
         [
-            StreamFieldPanel('search_terms'),
+            FieldPanel('search_terms'),
             FieldPanel('search_result_description'),
             FieldPanel('exclude_from_search'),
         ],
@@ -297,7 +298,7 @@ class ShareablePageAbstract(models.Model):
         [
             FieldPanel('social_title'),
             FieldPanel('social_description'),
-            ImageChooserPanel('image_social'),
+            FieldPanel('image_social'),
         ],
         heading='Social Media',
         classname='collapsible collapsed',
@@ -624,6 +625,7 @@ class BasicPage(
             ('file', DocumentChooserBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = [
@@ -644,7 +646,7 @@ class BasicPage(
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('related_files'),
+                FieldPanel('related_files'),
             ],
             heading='Related Files',
             classname='collapsible collapsed',
@@ -911,25 +913,34 @@ class SlidePage(Page):
         help_text='Background image',
     )
     background_colour = CharField(blank=True, max_length=16, choices=BACKGROUND_COLOUR_CHOICES)
-    body = StreamField([
-        ('video', blocks.StructBlock([
-            ('video_url', blocks.CharBlock()),
-            ('video_image', ImageChooserBlock()),
-        ])),
-        ('text', blocks.RichTextBlock()),
-        ('separator', blocks.StructBlock()),
-    ], blank=True)
-    timeline = StreamField([
-        ('slide', blocks.StructBlock(
-            [
-                ('year', blocks.CharBlock()),
-                ('text', blocks.RichTextBlock()),
-                ('image', ImageChooserBlock(required=False)),
-                ('video_url', blocks.CharBlock(required=False)),
-                ('video_image', ImageChooserBlock(required=False)),
-            ]
-        ))
-    ], blank=True, help_text='Only for timeline slide.')
+    body = StreamField(
+        [
+            ('video', blocks.StructBlock([
+                ('video_url', blocks.CharBlock()),
+                ('video_image', ImageChooserBlock()),
+            ])),
+            ('text', blocks.RichTextBlock()),
+            ('separator', blocks.StructBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    timeline = StreamField(
+        [
+            ('slide', blocks.StructBlock(
+                [
+                    ('year', blocks.CharBlock()),
+                    ('text', blocks.RichTextBlock()),
+                    ('image', ImageChooserBlock(required=False)),
+                    ('video_url', blocks.CharBlock(required=False)),
+                    ('video_image', ImageChooserBlock(required=False)),
+                ]
+            ))
+        ],
+        blank=True,
+        help_text='Only for timeline slide.',
+        use_json_field=True,
+    )
     theme = CharField(blank=False, null=True, max_length=16, choices=THEME_CHOICES)
     title_override = RichTextField(
         blank=True,
@@ -942,10 +953,10 @@ class SlidePage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('title_override'),
         FieldPanel('theme'),
-        ImageChooserPanel('image_background'),
+        FieldPanel('image_background'),
         FieldPanel('background_colour'),
-        StreamFieldPanel('body'),
-        StreamFieldPanel('timeline'),
+        FieldPanel('body'),
+        FieldPanel('timeline'),
         FieldPanel('walls_embed'),
     ]
 
@@ -967,13 +978,13 @@ class TwentiethPageSingleton(
 ):
     body = StreamField(BasicPageAbstract.body_default_blocks + [
         ('gallery', TimelineGalleryBlock())
-    ])
+    ], use_json_field=True)
 
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
             [
-                StreamFieldPanel('body'),
+                FieldPanel('body'),
             ]
         ),
         MultiFieldPanel(
