@@ -221,7 +221,7 @@ class HomePage(Page):
         return featured_events
 
     def get_promotion_blocks(self):
-        promotion_blocks = [block.value['page'] for block in HomePageFeaturedPromotionsList.objects.first().promotion_blocks]
+        promotion_blocks = [block.value['block'] for block in HomePageFeaturedPromotionsList.objects.first().featured_promotions]
 
         return promotion_blocks
 
