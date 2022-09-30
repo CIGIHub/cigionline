@@ -11,6 +11,7 @@ from features.models import (
     HomePageFeaturedExpertsList,
     HomePageFeaturedMultimediaList,
     HomePageFeaturedHighlightsList,
+    HomePageFeaturedEventsList,
 )
 from wagtail.admin.panels import (
     InlinePanel,
@@ -42,19 +43,6 @@ class HomePage(Page):
             heading='Featured Content',
             classname='collapsible collapsed',
             help_text='1: large | 2-4: medium | 5-9: small'
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'replacement_featured_pages',
-                    max_num=9,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Replacement Featured Content',
-            classname='collapsible collapsed',
-            help_text='1: large | 2-4: medium | 5-9: small; Use this section if items that need to be featured are not of Content Page type. Items in this list will replace items in the Featured Content.'
         ),
         MultiFieldPanel(
             [
@@ -119,18 +107,6 @@ class HomePage(Page):
         ).in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
 
-    def get_replaced_feature_pages(self):
-        featured_pages = self.get_featured_pages()
-        replacement_featured_page_ids = self.replacement_featured_pages.order_by('sort_order').values_list('replacement_featured_page', 'position')
-        pages = Page.objects.specific().in_bulk([i[0] for i in replacement_featured_page_ids])
-        replacement_featured_pages = [pages[x[0]] for x in replacement_featured_page_ids]
-
-        for i in range(len(replacement_featured_pages)):
-            position = replacement_featured_page_ids[i][1] - 1
-            if (len(featured_pages) > position):
-                featured_pages[position] = replacement_featured_pages[i]
-        return featured_pages
-
     def get_featured_experts(self):
         try:
             featured_experts = HomePageFeaturedExpertsList.objects.first().featured_experts
@@ -184,43 +160,57 @@ class HomePage(Page):
         return [multimedia[x] for x in featured_multimedia_ids]
 
     def get_featured_publications(self):
+        featured_publications = []
         try:
             featured_publications_list = HomePageFeaturedPublicationsList.objects.first().featured_publications
             featured_publication_ids = [publication.value['page'].id for publication in featured_publications_list]
-            featured_publications = PublicationPage.objects.prefetch_related(
+            featured_publications_query_set = PublicationPage.objects.prefetch_related(
                 'authors__author',
                 'topics',
             ).in_bulk(featured_publication_ids)
-            return [featured_publications[x] for x in featured_publication_ids]
+            featured_publications = [featured_publications_query_set[x] for x in featured_publication_ids]
         except Exception:
             error(traceback.format_exc())
+
+        if len(featured_publications) == 0:
             featured_publication_ids = self.featured_pages.values_list('featured_page', flat=True)
             featured_publications = PublicationPage.objects.prefetch_related(
                 'authors__author',
                 'topics',
             ).live().public().exclude(id__in=featured_publication_ids).order_by('-publishing_date')[:4]
-            return featured_publications
+
+        return featured_publications
 
     def get_featured_events(self):
+        featured_events = []
         try:
-            featured_events = EventListPage.objects.first().get_featured_events()[:3]
+            featured_events_query_set = HomePageFeaturedEventsList.objects.first().featured_events
+            featured_event_ids = [event.value['page'].id for event in featured_events_query_set]
+            featured_events = EventPage.objects.prefetch_related(
+                'authors__author',
+                'topics',
+            ).in_bulk(featured_event_ids)
+            featured_events = [featured_events[x] for x in featured_events]
         except Exception:
             error(traceback.format_exc())
-            featured_events = []
-            now = timezone.now()
-            future_events = EventPage.objects.prefetch_related(
-                'multimedia_page',
-                'topics',
-            ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
-            if len(future_events) < 3:
-                Q = models.Q
-                past_events = EventPage.objects.prefetch_related(
+
+        if len(featured_events) == 0:
+            featured_events = EventListPage.objects.first().get_featured_events()[:3]
+            if not featured_events:
+                now = timezone.now()
+                future_events = EventPage.objects.prefetch_related(
                     'multimedia_page',
                     'topics',
-                ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
-                featured_events = (list(future_events) + list(past_events))[:3]
-            else:
-                featured_events = future_events
+                ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+                if len(future_events) < 3:
+                    Q = models.Q
+                    past_events = EventPage.objects.prefetch_related(
+                        'multimedia_page',
+                        'topics',
+                    ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+                    featured_events = (list(future_events) + list(past_events))[:3]
+                else:
+                    featured_events = future_events
 
         return featured_events
 
@@ -231,7 +221,7 @@ class HomePage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_pages'] = self.get_replaced_feature_pages()
+        context['featured_pages'] = self.get_featured_pages()
         context['featured_experts'] = self.get_featured_experts_list()
         context['highlight_pages'] = self.get_highlight_pages()
         context['featured_multimedia'] = self.get_featured_multimedia()
@@ -291,35 +281,6 @@ class HomePageFeaturedPage(Orderable):
             'featured_page',
             ['core.ContentPage'],
         ),
-    ]
-
-
-class HomePageReplacementFeaturedPage(Orderable):
-    home_page = ParentalKey(
-        'home.HomePage',
-        related_name='replacement_featured_pages',
-    )
-    replacement_featured_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Page',
-    )
-    position = models.IntegerField(
-        null=False,
-        blank=False,
-        help_text='Enter the position of the item that will be replaced',
-        validators=[MinValueValidator(1), MaxValueValidator(9)]
-    )
-
-    panels = [
-        PageChooserPanel(
-            'replacement_featured_page',
-            ['wagtailcore.Page'],
-        ),
-        FieldPanel('position'),
     ]
 
 
