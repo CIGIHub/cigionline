@@ -4,7 +4,6 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
 from events.models import EventPage, EventListPage
-<<<<<<< HEAD
 from features.models import (
     HomePageFeaturedPromotionsList,
     HomePageFeaturedContentList,
@@ -12,13 +11,8 @@ from features.models import (
     HomePageFeaturedExpertsList,
     HomePageFeaturedMultimediaList,
     HomePageFeaturedHighlightsList,
-    HomePageFeaturedEventsList,
 )
-from wagtail.admin.edit_handlers import (
-=======
-from features.models import HomePageFeaturedPromotionsPage
 from wagtail.admin.panels import (
->>>>>>> master
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
@@ -29,7 +23,6 @@ from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
 import random
-import logging
 import traceback
 
 
