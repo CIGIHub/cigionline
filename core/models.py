@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-from distutils.log import error
 from django.db import models
 from django.db.models.fields import CharField
 from django.http.response import Http404
@@ -55,7 +54,6 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 import math
-import traceback
 
 
 class BasicPageAbstract(models.Model):
