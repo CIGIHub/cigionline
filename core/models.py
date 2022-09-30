@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from distutils.log import error
 from django.db import models
 from django.db.models.fields import CharField
 from django.http.response import Http404
@@ -54,6 +55,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 import math
+import traceback
 
 
 class BasicPageAbstract(models.Model):
@@ -460,6 +462,7 @@ class ContentPage(Page, SearchablePageAbstract):
             'authors__author',
             'topics',
         ).in_bulk(recommended_page_ids)
+
         return [pages[x] for x in recommended_page_ids]
 
     @cached_property
@@ -477,6 +480,25 @@ class ContentPage(Page, SearchablePageAbstract):
         ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_content)])
 
         recommended_content = list(recommended_content) + additional_content
+
+        return recommended_content
+
+    @cached_property
+    def recommended_content_preview(self):
+        recommended_pages = [page.recommended_content_page for page in self.recommended.all()[:3]]
+
+        exclude_ids = [self.id]
+        exclude_ids += [item.id for item in recommended_pages]
+
+        additional_content = list(ContentPage.objects.specific().live().public().filter(
+            topics__in=self.topics.values_list('id', flat=True),
+            publishing_date__isnull=False,
+            eventpage__isnull=True
+        ).exclude(id__in=exclude_ids).exclude(
+            articlepage__article_type__title='CIGI in the News'
+        ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_pages)])
+
+        recommended_content = list(recommended_pages) + additional_content
 
         return recommended_content
 
