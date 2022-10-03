@@ -114,6 +114,7 @@ class HomePageFeaturedHighlightsList(Page):
             ('featured_highlight', FeaturedHighlightBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     content_panels = Page.content_panels + [
@@ -163,6 +164,7 @@ class HomePageFeaturedEventsList(Page):
             ('featured_event', FeaturedEventBlock()),
         ],
         blank=True,
+        use_json_field=True,
         help_text='Use this list only if you want to feature different events than those featured on the Events Landing Page.',
     )
 
