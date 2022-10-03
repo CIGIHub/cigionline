@@ -483,7 +483,7 @@ class ContentPage(Page, SearchablePageAbstract):
 
     @cached_property
     def recommended_content_preview(self):
-        recommended_pages = [page.recommended_content_page for page in self.recommended.all()[:3]]
+        recommended_pages = [page.recommended_content_page.specific for page in self.recommended.all()[:3]]
 
         exclude_ids = [self.id]
         exclude_ids += [item.id for item in recommended_pages]
