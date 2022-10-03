@@ -4,7 +4,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
 import streams.blocks
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -23,10 +23,10 @@ class Migration(migrations.Migration):
                 ('to_address', models.CharField(blank=True, help_text='Optional - form submissions will be emailed to these addresses. Separate multiple addresses by comma.', max_length=255, verbose_name='to address')),
                 ('from_address', models.CharField(blank=True, max_length=255, verbose_name='from address')),
                 ('subject', models.CharField(blank=True, max_length=255, verbose_name='subject')),
-                ('events_contact', wagtail.core.fields.StreamField([('contact_email', streams.blocks.ContactEmailBlock()), ('contact_person', streams.blocks.ContactPersonBlock(page_type=['people.PersonPage']))], blank=True)),
-                ('human_resources_contact', wagtail.core.fields.StreamField([('contact_email', streams.blocks.ContactEmailBlock()), ('contact_person', streams.blocks.ContactPersonBlock(page_type=['people.PersonPage']))], blank=True)),
-                ('media_contact', wagtail.core.fields.StreamField([('contact_email', streams.blocks.ContactEmailBlock()), ('contact_person', streams.blocks.ContactPersonBlock(page_type=['people.PersonPage']))], blank=True)),
-                ('thank_you_message', wagtail.core.fields.RichTextField(blank=True)),
+                ('events_contact', wagtail.fields.StreamField([('contact_email', streams.blocks.ContactEmailBlock()), ('contact_person', streams.blocks.ContactPersonBlock(page_type=['people.PersonPage']))], blank=True)),
+                ('human_resources_contact', wagtail.fields.StreamField([('contact_email', streams.blocks.ContactEmailBlock()), ('contact_person', streams.blocks.ContactPersonBlock(page_type=['people.PersonPage']))], blank=True)),
+                ('media_contact', wagtail.fields.StreamField([('contact_email', streams.blocks.ContactEmailBlock()), ('contact_person', streams.blocks.ContactPersonBlock(page_type=['people.PersonPage']))], blank=True)),
+                ('thank_you_message', wagtail.fields.RichTextField(blank=True)),
             ],
             options={
                 'verbose_name': 'Contact Page',

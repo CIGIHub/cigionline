@@ -5,10 +5,9 @@ from core.models import (
 from django.db import models
 from django.template.loader import render_to_string
 from streams.blocks import (AdvertisementBlock, ContentBlock, FeaturedContentBlock, SocialBlock, TextBlock)
-from wagtail.admin.edit_handlers import MultiFieldPanel, StreamFieldPanel
-from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
-from wagtail.documents.edit_handlers import DocumentChooserPanel
+from wagtail.admin.panels import MultiFieldPanel, FieldPanel
+from wagtail.fields import StreamField
+from wagtail.models import Page
 from bs4 import BeautifulSoup
 from django.utils.text import slugify
 
@@ -44,6 +43,7 @@ class NewsletterPage(Page):
             ('text_block', TextBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
     html_file = models.ForeignKey(
         'wagtaildocs.Document',
@@ -59,14 +59,14 @@ class NewsletterPage(Page):
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
-                StreamFieldPanel('body'),
+                FieldPanel('body'),
             ],
             heading='Body',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                DocumentChooserPanel('html_file'),
+                FieldPanel('html_file'),
             ],
             heading='HTML File',
             classname='collapsible collapsed',

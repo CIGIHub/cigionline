@@ -85,7 +85,9 @@
       </div>
     </section>
   {% endif %}
-  {% if self.recommended_content %}
+  {% if request.is_preview and self.recommended_content_preview %}
+    {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
+  {% elif self.recommended_content %}
     {% include 'includes/recommended.html' with recommended=self.recommended_content %}
   {% endif %}
 {% endblock content %}

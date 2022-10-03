@@ -4,14 +4,13 @@ from streams.blocks import (
     ContactEmailBlock,
     ContactPersonBlock,
 )
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
-    StreamFieldPanel,
 )
 from wagtail.admin.mail import send_mail
-from wagtail.core.fields import RichTextField, StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.contrib.forms.models import (
     AbstractEmailForm,
     AbstractFormField,
@@ -35,6 +34,7 @@ class ContactPage(AbstractEmailForm):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     human_resources_contact = StreamField(
         [
@@ -44,6 +44,7 @@ class ContactPage(AbstractEmailForm):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     media_contact = StreamField(
         [
@@ -53,6 +54,7 @@ class ContactPage(AbstractEmailForm):
             )),
         ],
         blank=True,
+        use_json_field=True,
     )
     thank_you_message = RichTextField(
         blank=True,
@@ -73,19 +75,19 @@ class ContactPage(AbstractEmailForm):
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('human_resources_contact'),
+                FieldPanel('human_resources_contact'),
             ],
             heading='Human Resources',
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('events_contact'),
+                FieldPanel('events_contact'),
             ],
             heading='Events',
         ),
         MultiFieldPanel(
             [
-                StreamFieldPanel('media_contact'),
+                FieldPanel('media_contact'),
             ],
             heading='Media',
         ),

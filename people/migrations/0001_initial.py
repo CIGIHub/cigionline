@@ -5,8 +5,8 @@ import django.db.models.deletion
 import modelcluster.fields
 import streams.blocks
 import wagtail.contrib.table_block.blocks
-import wagtail.core.blocks
-import wagtail.core.fields
+import wagtail.blocks
+import wagtail.fields
 import wagtail.documents.blocks
 import wagtail.images.blocks
 import wagtail.search.index
@@ -38,9 +38,9 @@ class Migration(migrations.Migration):
             name='PersonListPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('body', wagtail.core.fields.StreamField([('block_quote', wagtail.core.blocks.StructBlock([('quote', wagtail.core.blocks.RichTextBlock(features=['bold', 'italic', 'link'], required=True)), ('quote_author', wagtail.core.blocks.CharBlock(required=False)), ('author_title', wagtail.core.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('link_url', wagtail.core.blocks.URLBlock(required=False)), ('link_text', wagtail.core.blocks.CharBlock(required=False))])), ('embedded_multimedia', wagtail.core.blocks.StructBlock([('multimedia_url', wagtail.core.blocks.URLBlock(required=True)), ('title', wagtail.core.blocks.CharBlock(required=False))])), ('embedded_video', wagtail.core.blocks.StructBlock([('video_url', wagtail.core.blocks.URLBlock(required=True)), ('caption', wagtail.core.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('aspect_ratio', wagtail.core.blocks.ChoiceBlock(choices=[('none', 'None'), ('landscape', 'Landscape'), ('square', 'Square')]))])), ('image', wagtail.core.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock(required=True)), ('hide_image_caption', wagtail.core.blocks.BooleanBlock(required=False))])), ('inline_video', streams.blocks.InlineVideoBlock(page_type=['multimedia.MultimediaPage'])), ('paragraph', streams.blocks.ParagraphBlock()), ('table', wagtail.contrib.table_block.blocks.TableBlock()), ('text_background_block', wagtail.core.blocks.RichTextBlock(features=['bold', 'italic', 'link']))], blank=True)),
-                ('hero_link', wagtail.core.fields.StreamField([('hero_link', wagtail.core.blocks.StructBlock([('hero_link_text', wagtail.core.blocks.CharBlock(required=True)), ('hero_link_url', wagtail.core.blocks.CharBlock(required=True)), ('hero_link_icon', wagtail.core.blocks.CharBlock(help_text='Use a font-awesome icon name such as fa-envelope', required=False))])), ('hero_document', wagtail.core.blocks.StructBlock([('hero_link_text', wagtail.core.blocks.CharBlock(required=True)), ('hero_link_document', wagtail.documents.blocks.DocumentChooserBlock(required=True)), ('hero_link_icon', wagtail.core.blocks.CharBlock(help_text='Use a font-awesome icon name such as fa-envelope', required=False))]))], blank=True, help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.')),
-                ('subtitle', wagtail.core.fields.RichTextField(blank=True)),
+                ('body', wagtail.fields.StreamField([('block_quote', wagtail.blocks.StructBlock([('quote', wagtail.blocks.RichTextBlock(features=['bold', 'italic', 'link'], required=True)), ('quote_author', wagtail.blocks.CharBlock(required=False)), ('author_title', wagtail.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('link_url', wagtail.blocks.URLBlock(required=False)), ('link_text', wagtail.blocks.CharBlock(required=False))])), ('embedded_multimedia', wagtail.blocks.StructBlock([('multimedia_url', wagtail.blocks.URLBlock(required=True)), ('title', wagtail.blocks.CharBlock(required=False))])), ('embedded_video', wagtail.blocks.StructBlock([('video_url', wagtail.blocks.URLBlock(required=True)), ('caption', wagtail.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('aspect_ratio', wagtail.blocks.ChoiceBlock(choices=[('none', 'None'), ('landscape', 'Landscape'), ('square', 'Square')]))])), ('image', wagtail.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock(required=True)), ('hide_image_caption', wagtail.blocks.BooleanBlock(required=False))])), ('inline_video', streams.blocks.InlineVideoBlock(page_type=['multimedia.MultimediaPage'])), ('paragraph', streams.blocks.ParagraphBlock()), ('table', wagtail.contrib.table_block.blocks.TableBlock()), ('text_background_block', wagtail.blocks.RichTextBlock(features=['bold', 'italic', 'link']))], blank=True)),
+                ('hero_link', wagtail.fields.StreamField([('hero_link', wagtail.blocks.StructBlock([('hero_link_text', wagtail.blocks.CharBlock(required=True)), ('hero_link_url', wagtail.blocks.CharBlock(required=True)), ('hero_link_icon', wagtail.blocks.CharBlock(help_text='Use a font-awesome icon name such as fa-envelope', required=False))])), ('hero_document', wagtail.blocks.StructBlock([('hero_link_text', wagtail.blocks.CharBlock(required=True)), ('hero_link_document', wagtail.documents.blocks.DocumentChooserBlock(required=True)), ('hero_link_icon', wagtail.blocks.CharBlock(help_text='Use a font-awesome icon name such as fa-envelope', required=False))]))], blank=True, help_text='Text with link to url, email or document and optional icon that appears below the page title in the hero section.')),
+                ('subtitle', wagtail.fields.RichTextField(blank=True)),
                 ('person_list_page_type', models.IntegerField(choices=[(0, 'Default'), (1, 'Experts'), (2, 'Staff'), (3, 'Leadership')], default=0)),
             ],
             options={
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
             name='PersonPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('search_terms', wagtail.core.fields.StreamField([('search_term', wagtail.core.blocks.CharBlock())], blank=True, help_text='A list of search terms for which this page will be elevated in the search results.')),
+                ('search_terms', wagtail.fields.StreamField([('search_term', wagtail.blocks.CharBlock())], blank=True, help_text='A list of search terms for which this page will be elevated in the search results.')),
                 ('archive', models.IntegerField(choices=[(0, 'No'), (1, 'Yes')], default=0)),
                 ('address_city', models.CharField(blank=True, max_length=255)),
                 ('address_country', models.CharField(blank=True, max_length=255)),
@@ -62,20 +62,20 @@ class Migration(migrations.Migration):
                 ('address_postal_code', models.CharField(blank=True, max_length=32)),
                 ('address_province', models.CharField(blank=True, max_length=255)),
                 ('board_position', models.CharField(blank=True, max_length=255)),
-                ('body', wagtail.core.fields.StreamField([('paragraph', streams.blocks.ParagraphBlock())], blank=True, verbose_name='Full Biography')),
-                ('byline', wagtail.core.fields.RichTextField(blank=True)),
-                ('education', wagtail.core.fields.StreamField([('education', wagtail.core.blocks.StructBlock([('degree', wagtail.core.blocks.CharBlock(required=True)), ('school', wagtail.core.blocks.CharBlock(required=True)), ('school_website', wagtail.core.blocks.URLBlock(required=False)), ('year', wagtail.core.blocks.IntegerBlock(required=False))]))], blank=True)),
+                ('body', wagtail.fields.StreamField([('paragraph', streams.blocks.ParagraphBlock())], blank=True, verbose_name='Full Biography')),
+                ('byline', wagtail.fields.RichTextField(blank=True)),
+                ('education', wagtail.fields.StreamField([('education', wagtail.blocks.StructBlock([('degree', wagtail.blocks.CharBlock(required=True)), ('school', wagtail.blocks.CharBlock(required=True)), ('school_website', wagtail.blocks.URLBlock(required=False)), ('year', wagtail.blocks.IntegerBlock(required=False))]))], blank=True)),
                 ('email', models.EmailField(blank=True, max_length=254)),
-                ('expertise', wagtail.core.fields.StreamField([('expertise', wagtail.core.blocks.CharBlock(required=True))], blank=True)),
+                ('expertise', wagtail.fields.StreamField([('expertise', wagtail.blocks.CharBlock(required=True))], blank=True)),
                 ('first_name', models.CharField(blank=True, max_length=255)),
-                ('languages', wagtail.core.fields.StreamField([('language', wagtail.core.blocks.CharBlock(required=True))], blank=True)),
+                ('languages', wagtail.fields.StreamField([('language', wagtail.blocks.CharBlock(required=True))], blank=True)),
                 ('last_name', models.CharField(blank=True, max_length=255)),
                 ('linkedin_url', models.URLField(blank=True)),
                 ('person_weight', models.IntegerField(default=0)),
                 ('phone_number', models.CharField(blank=True, max_length=32)),
                 ('position', models.CharField(blank=True, max_length=255)),
-                ('short_bio', wagtail.core.fields.RichTextField(blank=True, verbose_name='Short Biography')),
-                ('external_publications', wagtail.core.fields.StreamField([('external_publication', wagtail.core.blocks.StructBlock([('author', wagtail.core.blocks.CharBlock(required=True)), ('location_in_work', wagtail.core.blocks.CharBlock(required=False)), ('publisher_info', wagtail.core.blocks.CharBlock(required=False)), ('publication_type', wagtail.core.blocks.ChoiceBlock(choices=[('Generic', 'Generic'), ('Book', 'Book'), ('Book Section', 'Book Section'), ('Edited Book', 'Edited Book'), ('Electronic Article', 'Electronic Article'), ('Electronic Book', 'Electronic Book'), ('Journal Article', 'Journal Article'), ('Newspaper Article', 'Newspaper Article'), ('Report', 'Report'), ('Thesis', 'Thesis'), ('Web Page', 'Web Page')])), ('secondary_author', wagtail.core.blocks.CharBlock(required=False)), ('secondary_title', wagtail.core.blocks.CharBlock(required=False)), ('title', wagtail.core.blocks.CharBlock(required=False)), ('url', wagtail.core.blocks.URLBlock(required=False)), ('url_title', wagtail.core.blocks.CharBlock(required=False)), ('year', wagtail.core.blocks.IntegerBlock(required=False))]))], blank=True)),
+                ('short_bio', wagtail.fields.RichTextField(blank=True, verbose_name='Short Biography')),
+                ('external_publications', wagtail.fields.StreamField([('external_publication', wagtail.blocks.StructBlock([('author', wagtail.blocks.CharBlock(required=True)), ('location_in_work', wagtail.blocks.CharBlock(required=False)), ('publisher_info', wagtail.blocks.CharBlock(required=False)), ('publication_type', wagtail.blocks.ChoiceBlock(choices=[('Generic', 'Generic'), ('Book', 'Book'), ('Book Section', 'Book Section'), ('Edited Book', 'Edited Book'), ('Electronic Article', 'Electronic Article'), ('Electronic Book', 'Electronic Book'), ('Journal Article', 'Journal Article'), ('Newspaper Article', 'Newspaper Article'), ('Report', 'Report'), ('Thesis', 'Thesis'), ('Web Page', 'Web Page')])), ('secondary_author', wagtail.blocks.CharBlock(required=False)), ('secondary_title', wagtail.blocks.CharBlock(required=False)), ('title', wagtail.blocks.CharBlock(required=False)), ('url', wagtail.blocks.URLBlock(required=False)), ('url_title', wagtail.blocks.CharBlock(required=False)), ('year', wagtail.blocks.IntegerBlock(required=False))]))], blank=True)),
                 ('twitter_username', models.CharField(blank=True, max_length=255)),
                 ('website', models.URLField(blank=True)),
                 ('drupal_node_id', models.IntegerField(blank=True, null=True)),
