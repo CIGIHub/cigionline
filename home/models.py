@@ -1,5 +1,4 @@
 from distutils.log import error
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
