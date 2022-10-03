@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -97,7 +97,12 @@
   {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
 
   {% block recommended %}
-    {% if self.recommended_content %}
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% define self.recommended_content_preview as recommended_content %}
+    {% elif self.recommended_content %}
+      {% define self.recommended_content as recommended_content %}
+    {% endif %}
+    {% if recommended_content %}
       <section class="recommended">
         <div class="container">
           <div class="row justify-content-center">
@@ -108,8 +113,8 @@
                 <h2>Recommended</h2>
                 {% include "includes/footer_bracket.svg" %}
               </div>
-              {% for recommended_content in self.recommended_content|slice:":3" %}
-                {% include "includes/recommended_article.html" with article=recommended_content.specific %}
+              {% for page in recommended_content|slice:":3" %}
+                {% include "includes/recommended_article.html" with article=page.specific %}
               {% endfor %}
             </div>
           </div>
