@@ -899,7 +899,7 @@ class ArticleSeriesPageSeriesItem(Orderable):
             image_override['src'] = image.file.url
             image_override['src_static'] = image.get_rendition('original').file.url
         else:
-            image_override['src'] = image.get_rendition('fill-100x100').file.url
+            image_override['src'] = image.get_rendition('fill-300x300').file.url
         image_override['alt'] = image.caption if image.caption else image.title
         return image_override
 

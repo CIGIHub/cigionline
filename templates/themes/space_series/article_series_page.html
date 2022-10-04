@@ -70,7 +70,7 @@
                   <img class="image-static" src="{{ series_item.image_override.src_static }}" alt="{{ series_item.image_override.alt }}" />
                   <img class="image-gif" src="{{ series_item.image_override.src }}" alt="{{ series_item.image_override.alt }}" />
                 {% else %}
-                  {% image series_item.content_page.specific.image_hero fill-100x100 %}
+                  {% image series_item.content_page.specific.image_hero fill-300x300 %}
                 {% endif %}
                 {% if series_item.content_page.contenttype == "Multimedia" %}
                   <div class="play-icon">
