@@ -89,11 +89,18 @@ body {
             z-index: -1;
           }
 
+          .image-static {
+            position: absolute;
+          }
+
           &:hover {
             transform: scale(1.025);
             z-index: 1;
 
             .series-item-image {
+              .image-static {
+                opacity: 0;
+              }
               .play-icon {
                 color: $white;
 

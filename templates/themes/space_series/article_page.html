@@ -31,7 +31,11 @@
         </div>
         <div class="col-md-6 offset-lg-2 hero-image">
           {% if self.image_hero %}
-            {% image self.image_hero fill-1600x1600 %}
+            {% if self.image_hero.file.url|file_extension == '.gif' %}
+              <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
+            {% else %}
+              {% image self.image_hero fill-1600x1600 %}
+            {% endif %}
           {% endif %}
         </div>
       </div>

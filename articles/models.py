@@ -1,3 +1,4 @@
+from dataclasses import Field
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -886,6 +887,17 @@ class ArticleSeriesPageSeriesItem(Orderable):
         blank=True,
     )
 
+    def image_override(self):
+        image = [field for field in self.additional_fields if field.block_type == 'image'][0].value.get('image')
+        image_override = {}
+        if image.file.url.endswith('.gif'):
+            image_override['src'] = image.file.url
+            image_override['src_static'] = image.get_rendition('original').file.url
+        else:
+            image_override['src'] = image.get_rendition('fill-100x100').file.url
+        image_override['alt'] = image.caption if image.caption else image.title
+        return image_override
+
     panels = [
         FieldPanel('category_title'),
         PageChooserPanel(
@@ -893,5 +905,5 @@ class ArticleSeriesPageSeriesItem(Orderable):
             ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
         FieldPanel('hide_series_disclaimer'),
-        StreamFieldPanel('additional_fields'),
+        FieldPanel('additional_fields'),
     ]
