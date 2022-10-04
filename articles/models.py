@@ -889,7 +889,11 @@ class ArticleSeriesPageSeriesItem(Orderable):
     )
 
     def image_override(self):
-        image = [field for field in self.additional_fields if field.block_type == 'image'][0].value.get('image')
+        image = [field for field in self.additional_fields if field.block_type == 'image']
+        if not image:
+            return None
+
+        image = image[0].value.get('image')
         image_override = {}
         if image.file.url.endswith('.gif'):
             image_override['src'] = image.file.url
