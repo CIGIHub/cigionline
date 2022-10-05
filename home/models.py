@@ -132,7 +132,7 @@ class HomePage(Page):
 
     def get_highlight_pages(self):
         try:
-            highlight_pages = HomePageFeaturedHighlightsList.objects.first().highlight_pages
+            highlight_pages = HomePageFeaturedHighlightsList.objects.first().featured_highlights
             highlight_page_ids = [page.value['page'].id for page in highlight_pages]
         except Exception:
             error(traceback.format_exc())
