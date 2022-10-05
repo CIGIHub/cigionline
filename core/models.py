@@ -39,6 +39,7 @@ from streams.blocks import (
     TweetBlock,
     InlineVideoBlock,
     HighlightTitleBlock,
+    LineBreakBlock,
 )
 from wagtail.admin.panels import (
     FieldPanel,
@@ -96,6 +97,7 @@ class BasicPageAbstract(models.Model):
     body_tweet_block = ('tweet', TweetBlock())
     additional_image_block = ('additional_image', AdditionalImageBlock())
     additional_disclaimer_block = ('additional_disclaimer', AdditionalDisclaimerBlock())
+    line_break_block = ('linebreak', LineBreakBlock())
 
     body = StreamField(
         body_default_blocks,

@@ -1,0 +1,10 @@
+$space-series-font-primary: 'Termina', sans-serif;
+$space-series-font-secondary: 'Apertura', sans-serif;
+$space-series-background-colour: #171717;
+
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+
+@import './article_series_page';
+@import './article_page';
+@import './multimedia_page';

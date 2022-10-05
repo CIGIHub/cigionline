@@ -71,6 +71,7 @@ const config = {
     themeLongform2DarkMode: './cigionline/static/themes/longform_2_dark_mode/index.js',
     themePfPCSeries: './cigionline/static/themes/pfpc_series/index.js',
     themePlatformGovernanceSeries: './cigionline/static/themes/platform_governance_series/index.js',
+    themeSpaceSeries: './cigionline/static/themes/space_series/index.js',
     themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',

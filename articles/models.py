@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
+from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -202,6 +203,7 @@ class ArticlePage(
             BasicPageAbstract.body_tweet_block,
             BasicPageAbstract.additional_image_block,
             BasicPageAbstract.additional_disclaimer_block,
+            BasicPageAbstract.line_break_block,
         ],
         blank=True,
         use_json_field=True,
@@ -878,6 +880,27 @@ class ArticleSeriesPageSeriesItem(Orderable):
     )
     category_title = models.CharField(blank=True, max_length=255)
     hide_series_disclaimer = models.BooleanField(default=False)
+    additional_fields = StreamField(
+        [
+            ('image', SeriesItemImageBlock()),
+        ],
+        blank=True,
+    )
+
+    def image_override(self):
+        image = [field for field in self.additional_fields if field.block_type == 'image']
+        if not image:
+            return None
+
+        image = image[0].value.get('image')
+        image_override = {}
+        if image.file.url.endswith('.gif'):
+            image_override['src'] = image.file.url
+            image_override['src_static'] = image.get_rendition('original').file.url
+        else:
+            image_override['src'] = image.get_rendition('fill-300x300').file.url
+        image_override['alt'] = image.caption if image.caption else image.title
+        return image_override
 
     panels = [
         FieldPanel('category_title'),
@@ -886,4 +909,5 @@ class ArticleSeriesPageSeriesItem(Orderable):
             ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
         FieldPanel('hide_series_disclaimer'),
+        FieldPanel('additional_fields'),
     ]
