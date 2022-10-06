@@ -50,7 +50,6 @@ class HomePageFeaturedPromotionsList(Page):
         return 'Home Page Ad blocks List'
 
     def save(self, *args, **kwargs):
-        cache.delete_pattern('*homepage_featured_promotions*')
         super().save(*args, **kwargs)
 
     class Meta:
