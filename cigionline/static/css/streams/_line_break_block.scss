@@ -1,0 +1,13 @@
+.line-break-block {
+  margin: 1em 0 2em;
+
+  &.space-series-planets,
+  &.space-series-stars {
+    width: 100px;
+  }
+
+  &.space-series-orbit,
+  &.space-series-ringed-planet {
+    width: 50px;
+  }
+}

@@ -1,0 +1,210 @@
+{% load wagtailcore_tags menu_tags wagtailimages_tags cache %}
+
+
+<header class="{% if small %}small scrolled{% endif %}">
+  {% cache 86400 top_bar %}
+    {% get_menu_items 'main' as main_menu_items %}
+    {% get_menu_items 'footer' as footer_menu_items %}
+
+    <div class="main-navigation-wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col cigi-top-bar" id="global-nav">
+            <a class="cigi-logo" href="/">
+              {% include 'includes/header_cigi_logo_large.svg' %}
+              {% include 'includes/header_cigi_logo_small.svg' %}
+            </a>
+            <nav aria-label="primary">
+              <ul class="menu desktop-menu">
+                {% for menu_item in main_menu_items %}
+                  {% if menu_item.link_page %}
+                    <li>
+                      <a href="{% pageurl menu_item.link_page %}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
+                  {% elif menu_item.link_url %}
+                    <li>
+                      <a href="{{ menu_item.link_url }}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+              <ul>
+                <li class="overlay-controls menu-break">
+                  <button class="custom-nav-popup-btn overlay-controls-button" id="open-search-btn">
+                    <span class="icon-opened"><i class="far fa-times"></i></span>
+                    <span class="icon-closed"><i class="far fa-search"></i></span>
+                  </button>
+                </li>
+                <li class="overlay-controls">
+                  <button class="custom-nav-popup-btn overlay-controls-button" id="open-menu-btn">
+                    <span class="icon-opened"><i class="far fa-times"></i></span>
+                    <span class="icon-closed"><i class="far fa-bars"></i></span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-popup-wrapper popup-search" id="popup-search">
+      <div class="custom-popup-inner">
+        <div class="container">
+          <div class="row">
+            <div class="col custom-popup-content custom-popup-nav-search">
+              <form action="{% url 'search' %}" method="get" autocomplete="off">
+                <div class="input-group input-group-search">
+                  <input type="text" class="form-control" id="nav-search-input" name="query" placeholder="Keyword Search" aria-label="search-bar"
+                    aria-describedby="search-bar" required>
+                  <div class="nav-search-input-dropdown" id="nav-search-input-dropdown">
+                    <div id="nav-search-input-dropdown-count"></div>
+                    <ul class="nav-search-input-dropdown-list" id="nav-search-input-dropdown-list"></ul>
+                  </div>
+                  <div class="input-group-append">
+                    <button class="btn-search" type="submit" id="search-bar">
+                      <i class="far fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-popup-wrapper popup-menu" id="popup-menu">
+      <div class="custom-popup-inner overlay-menu">
+        <div class="container">
+          <div class="overlay-menu-content row row-cols-1 row-cols-md-4 row-eq-height">
+            {% for sub_menu in main_menu_items %}
+              <div class="overlay-menu-submenu col">
+                {% if sub_menu.link_page %}
+                  <a href="{% pageurl sub_menu.link_page %}" class="overlay-menu-submenu-link">
+                    {{ sub_menu.title }}
+                  </a>
+                {% elif sub_menu.link_url %}
+                  <a href="{{ sub_menu.link_url }}" class="overlay-menu-submenu-link">
+                    {{ sub_menu.title }}
+                  </a>
+                {% endif %}
+                {% with sub_menu.submenu.menu_items.all as submenu_items %}
+                  {% if submenu_items %}
+                    <div class="accordion">
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    <ul>
+                      {% for menu_item in submenu_items %}
+                        {% if menu_item.link_page %}
+                        <li>
+                          <a href="{% pageurl menu_item.link_page %}" class="overlay-menu-submenu-item-link">
+                            {{ menu_item.title }}
+                          </a>
+                        </li>
+                        {% elif menu_item.link_url %}
+                        <li>
+                          <a href="{{ menu_item.link_url }}" class="overlay-menu-submenu-item-link">
+                            {{ menu_item.title }}
+                          </a>
+                        </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+              </div>
+            {% endfor %}
+            <div class="overlay-menu-submenu col">
+              <ul class="overlay-menu-footer-menu">
+                {% for menu_item in footer_menu_items %}
+                  {% if menu_item.link_page %}
+                    <li>
+                      <a href="{% pageurl menu_item.link_page %}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
+                  {% elif menu_item.link_url %}
+                    <li>
+                      <a href="{{ menu_item.link_url }}">
+                        {{ menu_item.title }}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+              <ul class="overlay-menu-social-links">
+                <li>
+                  <a href="https://www.facebook.com/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+                </li>
+                <li>
+                  <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endcache %}
+  <section class="in-the-series sticky-in-the-series hidden" id="sticky-in-the-series">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-4 col-md-2 col-lg-1">
+          <h2>IN THE SERIES</h2>
+        </div>
+        <i class="fas fa-plus in-the-series-expand" id="in-the-series-expand-sticky"></i>
+        <div class="col-md-9 col-lg-10">
+          <div class="swiper">
+            <div class="swiper-container swiper-container-sticky">
+              <div class="swiper-wrapper">
+                {% for series_item in self.article_series.specific.article_series_items %}
+                  {% if series_item.content_page.url == self.url %}
+                    <article class="swiper-slide series-item disabled">
+                      <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                        {% image series_item.content_page.specific.image_hero fill-300x300 %}
+                      </a>
+                      <div class="series-item-content">
+                        <div>
+                          <div class="series-item-counter">
+                            <span></span>
+                            <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                          </div>
+                          <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
+                        </div>
+                        {% include 'includes/authors.html' with authors=series_item.content_page.authors.all hide_link=True %}
+                      </div>
+                    </article>
+                  {% else %}
+                    <article class="swiper-slide series-item">
+                      <div class="series-item-content">
+                        <a href="{% pageurl series_item.content_page %}">
+                          <div class="series-item-counter">
+                            <span></span>
+                            <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                          </div>
+                          <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
+                        </a>
+                        {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+                      </div>
+                    </article>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="swiper-button-prev swiper-button-prev-sticky swiper-button"></div>
+            <div class="swiper-button-next swiper-button-next-sticky swiper-button"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</header>
