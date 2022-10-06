@@ -350,7 +350,7 @@ class ExtractBlock(blocks.RichTextBlock, ThemeableBlock):
             'ul',
             'anchor',
         ]
-    
+
     implemented_themes = [
         'space_series_opinion',
     ]
