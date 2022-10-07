@@ -3,10 +3,12 @@ import json
 import os
 import datetime
 import pytz
-from wagtail.contrib.frontend_cache.utils import purge_url_from_cache
-from wagtail.signals import page_published
+import traceback
+from distutils.log import error
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
+from wagtail.contrib.frontend_cache.utils import purge_url_from_cache
+from wagtail.signals import page_published
 
 
 def get_env():
@@ -93,7 +95,7 @@ def notification_email_list(notification_user_list):
 
 
 def notifications_on():
-    return ('NOTIFICATIONS_ON' in os.environ and (os.environ['NOTIFICATIONS_ON'].lower() == "true"))
+    return ('NOTIFICATIONS_ON' and (os.environ['NOTIFICATIONS_ON'].lower() == "true"))
 
 
 def set_publish_phrasing(is_first_publish):
@@ -177,7 +179,10 @@ def send_notifications(sender, **kwargs):
 
 
 def clear_cloudflare_home_page_cache():
-    purge_url_from_cache('https://www.cigionline.org/')
+    try:
+        purge_url_from_cache('https://www.cigionline.org/')
+    except Exception:
+        error(traceback.format_exc())
 
 
 class SignalsConfig(AppConfig):
@@ -205,10 +210,13 @@ class SignalsConfig(AppConfig):
         page_published.connect(send_notifications, sender=MultimediaPage)
         page_published.connect(send_notifications, sender=EventPage)
 
-        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedContentList)
-        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPublicationsList)
-        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedMultimediaList)
-        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedEventsList)
-        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedHighlightsList)
-        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPromotionsList)
-        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedExpertsList)
+        if 'CLOUDFLARE_EMAIL' in os.environ \
+                and 'CLOUDFLARE_API_KEY' in os.environ \
+                and 'CLOUDFLARE_ZONEID' in os.environ:
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedContentList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPublicationsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedMultimediaList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedEventsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedHighlightsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPromotionsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedExpertsList)
