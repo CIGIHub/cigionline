@@ -48,9 +48,6 @@ class HomePageFeaturedPromotionsList(Page):
     def __str__(self):
         return 'Home Page Ad blocks List'
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
     class Meta:
         verbose_name = 'Home Page Featured Promotions List'
 
