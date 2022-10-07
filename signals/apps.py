@@ -3,6 +3,7 @@ import json
 import os
 import datetime
 import pytz
+from wagtail.contrib.frontend_cache.utils import purge_url_from_cache
 from wagtail.signals import page_published
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
@@ -175,6 +176,10 @@ def send_notifications(sender, **kwargs):
         print(e)
 
 
+def clear_cloudflare_home_page_cache():
+    purge_url_from_cache('https://www.cigionline.org/')
+
+
 class SignalsConfig(AppConfig):
     name = 'signals'
     verbose_name = "Signals"
@@ -184,9 +189,26 @@ class SignalsConfig(AppConfig):
         from publications.models import PublicationPage
         from multimedia.models import MultimediaPage
         from events.models import EventPage
+        from features.models import (
+            HomePageFeaturedContentList,
+            HomePageFeaturedPublicationsList,
+            HomePageFeaturedMultimediaList,
+            HomePageFeaturedEventsList,
+            HomePageFeaturedHighlightsList,
+            HomePageFeaturedPromotionsList,
+            HomePageFeaturedExpertsList,
+        )
 
         page_published.connect(send_notifications, sender=ArticlePage)
         page_published.connect(send_notifications, sender=ArticleSeriesPage)
         page_published.connect(send_notifications, sender=PublicationPage)
         page_published.connect(send_notifications, sender=MultimediaPage)
         page_published.connect(send_notifications, sender=EventPage)
+
+        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedContentList)
+        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPublicationsList)
+        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedMultimediaList)
+        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedEventsList)
+        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedHighlightsList)
+        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPromotionsList)
+        page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedExpertsList)
