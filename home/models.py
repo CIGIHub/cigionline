@@ -218,6 +218,27 @@ class HomePage(Page):
 
         return promotion_blocks
 
+    def featured_content_revision_created_at(self):
+        return HomePageFeaturedContentList.objects.first().latest_revision_created_at
+
+    def featured_publications_revision_created_at(self):
+        return HomePageFeaturedPublicationsList.objects.first().latest_revision_created_at
+
+    def featured_events_revision_created_at(self):
+        return HomePageFeaturedEventsList.objects.first().latest_revision_created_at
+
+    def featured_promotions_revision_created_at(self):
+        return HomePageFeaturedPromotionsList.objects.first().latest_revision_created_at
+
+    def featured_highlights_revision_created_at(self):
+        return HomePageFeaturedHighlightsList.objects.first().latest_revision_created_at
+
+    def featured_multimedia_revision_created_at(self):
+        return HomePageFeaturedMultimediaList.objects.first().latest_revision_created_at
+
+    def featured_experts_revision_created_at(self):
+        return HomePageFeaturedExpertsList.objects.first().latest_revision_created_at
+
     def get_context(self, request):
         context = super().get_context(request)
         context['featured_pages'] = self.get_featured_pages()
