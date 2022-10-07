@@ -12,7 +12,7 @@
 
 {% block content %}
   {% preview_cache_bust as is_preview %}
-  {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview  %}
+  {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_content_revision_created_at|date:"c" %}
     <section class="featured homepage-featured">
       <div class="container">
         <div class="row">
@@ -54,7 +54,7 @@
     </section>
   {% endcache %}
 
-  {% cache 86400 homepage_featured_publications self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+  {% cache 86400 homepage_featured_publications self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_publications_revision_created_at|date:"c" %}
     <section class="homepage-featured-publications">
       <div class="container">
         <div class="row">
@@ -77,7 +77,7 @@
     </section>
   {% endcache %}
 
-  {% cache 86400 homepage_featured_promotions self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+  {% cache 86400 homepage_featured_promotions self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_promotions_revision_created_at|date:"c" %}
     <section class="homepage-promotion-blocks">
       <div class="container">
         <div class="row promotion-blocks-container">
@@ -91,7 +91,7 @@
     </section>
   {% endcache %}
 
-  {% cache 86400 homepage_featured_highlights self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+  {% cache 86400 homepage_featured_highlights self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_highlights_revision_created_at|date:"c" %}
     <section class="homepage-featured-highlights">
       <div class="container">
         <div class="row">
@@ -104,7 +104,7 @@
     </section>
   {% endcache %}
 
-  {% cache 86400 homepage_featured_multimedia self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview  %}
+  {% cache 86400 homepage_featured_multimedia self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_multimedia_revision_created_at|date:"c" %}
     <section class="featured homepage-featured-multimedia">
       <div class="container">
         <div class="row">
@@ -140,7 +140,7 @@
     </section>
   {% endcache %}
 
-  {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview %}
+  {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview self.featured_events_revision_created_at|date:"c" %}
     <section class="homepage-featured-events">
       <div class="container">
         <div class="row">
@@ -163,7 +163,7 @@
     </section>
   {% endcache %}
 
-  {% cache 86400 homepage_featured_experts self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+  {% cache 86400 homepage_featured_experts self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_experts_revision_created_at|date:"c" %}
     <section class="homepage-featured-experts">
       <div class="container">
         <div class="row">
