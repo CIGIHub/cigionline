@@ -1,5 +1,4 @@
 
-from django.core.cache import cache
 from wagtail.admin.panels import FieldPanel
 from wagtail.core.fields import StreamField
 from wagtail.models import Page
