@@ -178,7 +178,7 @@ def send_notifications(sender, **kwargs):
         print(e)
 
 
-def clear_cloudflare_home_page_cache():
+def clear_cloudflare_home_page_cache(sender, **kwargs):
     try:
         purge_url_from_cache('https://www.cigionline.org/')
     except Exception:
