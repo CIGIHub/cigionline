@@ -74,10 +74,6 @@ class HomePageFeaturedContentList(Page):
     def __str__(self):
         return 'Home Page Main Features List'
 
-    def save(self, *args, **kwargs):
-        cache.delete_pattern('*homepage_featured_content*')
-        super().save(*args, **kwargs)
-
     class Meta:
         verbose_name = 'Home Page Main Features List'
 
@@ -102,10 +98,6 @@ class HomePageFeaturedPublicationsList(Page):
     def __str__(self):
         return 'Home Page Featured Publications List'
 
-    def save(self, *args, **kwargs):
-        cache.delete_pattern('*homepage_featured_publications*')
-        super().save(*args, **kwargs)
-
 
 class HomePageFeaturedHighlightsList(Page):
     featured_highlights = StreamField(
@@ -127,10 +119,6 @@ class HomePageFeaturedHighlightsList(Page):
     def __str__(self):
         return 'Home Page Featured Highlights List'
 
-    def save(self, *args, **kwargs):
-        cache.delete_pattern('*homepage_featured_highlights*')
-        super().save(*args, **kwargs)
-
 
 class HomePageFeaturedMultimediaList(Page):
     featured_multimedia = StreamField(
@@ -151,10 +139,6 @@ class HomePageFeaturedMultimediaList(Page):
 
     def __str__(self):
         return 'Home Page Featured Multimedia List'
-
-    def save(self, *args, **kwargs):
-        cache.delete_pattern('*homepage_featured_multimedia*')
-        super().save(*args, **kwargs)
 
 
 class HomePageFeaturedEventsList(Page):
@@ -178,10 +162,6 @@ class HomePageFeaturedEventsList(Page):
     def __str__(self):
         return 'Home Page Featured Events List'
 
-    def save(self, *args, **kwargs):
-        cache.delete_pattern('*homepage_featured_events*')
-        super().save(*args, **kwargs)
-
 
 class HomePageFeaturedExpertsList(Page):
     featured_experts = StreamField(
@@ -202,7 +182,3 @@ class HomePageFeaturedExpertsList(Page):
 
     def __str__(self):
         return 'Home Page Featured Experts List'
-
-    def save(self, *args, **kwargs):
-        cache.delete_pattern('*homepage_featured_experts*')
-        super().save(*args, **kwargs)
