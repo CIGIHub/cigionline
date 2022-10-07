@@ -95,7 +95,7 @@ def notification_email_list(notification_user_list):
 
 
 def notifications_on():
-    return ('NOTIFICATIONS_ON' and (os.environ['NOTIFICATIONS_ON'].lower() == "true"))
+    return ('NOTIFICATIONS_ON' in os.environ and (os.environ['NOTIFICATIONS_ON'].lower() == "true"))
 
 
 def set_publish_phrasing(is_first_publish):
