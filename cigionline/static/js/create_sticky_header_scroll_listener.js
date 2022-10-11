@@ -14,7 +14,7 @@ export default ({
     const mmHeroTop = scrollTriggerEl.offsetTop;
     const mmHeroBottom = mmHeroTop + mmHeroHeight;
 
-    const mmHero = document.querySelector('.big-tech-mm-hero');
+    const mmHero = document.querySelector('.big-tech-mm-hero') || document.querySelector('.mm-hero');
 
     if (windowWidth > 768
         && windowHeight > 600

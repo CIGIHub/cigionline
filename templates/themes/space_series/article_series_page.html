@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/rwn6tvm.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeSpaceSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeSpaceSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}space-series-article-series{% endblock %}
+
+{% block content %}
+  <section class="space-series-article-series-hero">
+    <div class="hero-content">
+      <div class="container">
+        <div class="opinion-series-label">A CIGI Essay Series</div>
+        <div class="row">
+          <div class="col-lg-5">
+            <div class="title">{{ self.title }}</div>
+            <div class="subtitle">{{ self.subtitle|richtext }}</div>
+          </div>
+          <div class="col-lg-5">
+            <div class="short-description">
+              {{ self.short_description|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="in-the-series">
+    <div class="container swiper">
+      <div class="swiper-container-series swiper-container">
+        <div class="swiper-wrapper">
+          {% for series_item in self.article_series_items %}
+            <article class="swiper-slide series-item">
+              <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                {% if series_item.image_override %}
+                  {% if series_item.image_override.src_static %}
+                    <img class="image-static" src="{{ series_item.image_override.src_static }}" alt="{{ series_item.image_override.alt }}" />
+                  {% endif %}
+                  <img class="image-gif" src="{{ series_item.image_override.src }}" alt="{{ series_item.image_override.alt }}" />
+                {% else %}
+                  {% image series_item.content_page.specific.image_hero fill-300x300 %}
+                {% endif %}
+                {% if series_item.content_page.contenttype == "Multimedia" %}
+                  <div class="play-icon">
+                    <div class="outer-circle"></div>
+                    <div class="inner-circle"></div>
+                    <i class="fas fa-play"></i>
+                  </div>
+                {% endif %}
+              </a>
+              <div class="series-item-content">
+                <div>
+                  <div class="series-item-counter">
+                    <span></span>
+                    <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                  </div>
+                  <h3 class="series-item-title">
+                    <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                  </h3>
+                </div>
+                {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="swiper-button-prev swiper-button-prev-series swiper-button"></div>
+      <div class="swiper-button-next swiper-button-next-series swiper-button"></div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

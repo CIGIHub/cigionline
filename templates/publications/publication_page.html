@@ -197,7 +197,9 @@
       {% include "includes/about_the_author.html" with authors=self.editors.all editor_count=self.editor_count title_override="About the Editor" %}
     {% endif %}
 
-    {% if self.recommended_content %}
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
+    {% elif self.recommended_content %}
       {% include 'includes/recommended.html' with recommended=self.recommended_content %}
     {% endif %}
   {% endcache %}

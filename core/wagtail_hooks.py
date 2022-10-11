@@ -1,19 +1,46 @@
-from django.utils.html import format_html
 from django.templatetags.static import static
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from wagtail.admin.rich_text.converters.html_to_contentstate import (
     BlockElementHandler,
     InlineStyleElementHandler,
 )
 from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from wagtail.core import hooks
-from wagtail.core.models import Page
+from wagtail import hooks
+from wagtail.models import Page
 from .models import Theme
 
 
 @hooks.register('insert_global_admin_css')
 def global_admin_css():
     return format_html('<link rel="stylesheet" href="{}">', static('css/admin.css'))
+
+
+@hooks.register('insert_editor_js')
+def editor_js():
+    return mark_safe(
+        """
+        <script>
+            /**
+            * @param {jQuery} $
+            */
+            window.addEventListener("DOMContentLoaded", (event) => {
+                var times = [];
+                for (let i = 0; i < 24; i++) {
+                    var hour = i < 10 ? "0" + i : i;
+                    times.push(hour + ":" + "00");
+                    times.push(hour + ":" + "30");
+                }
+                $("#id_go_live_at").siblings("script").innerHtml = initDateTimeChooser(
+                    "id_go_live_at",
+                    {"dayOfWeekStart": 0, "format": "Y-m-d H:i", "formatTime": "H:i", "allowTimes": times}
+                );
+                $("#id_go_live_at").attr("readonly", "")
+            });
+        </script>
+        """
+    )
 
 
 @hooks.register('register_rich_text_features')

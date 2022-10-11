@@ -1,0 +1,146 @@
+{% extends "multimedia/multimedia_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeSpaceSeries' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeSpaceSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}space-series-multimedia{% endblock %}
+
+{% block content %}
+  {% block hero %}
+    {% include "includes/heroes/hero_multimedia.html" %}
+    <section class="in-the-series" id="hero-in-the-series">
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-4 col-md-2 col-lg-1">
+            <h2>IN THE SERIES</h2>
+          </div>
+          <i class="fas fa-plus in-the-series-expand"></i>
+          <div class="col-md-9 col-lg-10">
+            <div class="swiper">
+              <div class="swiper-container swiper-container-hero">
+                <div class="swiper-wrapper">
+                  {% for series_item in self.article_series.specific.article_series_items %}
+                    {% if series_item.content_page.url == self.url %}
+                      <article class="swiper-slide series-item disabled">
+                        <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                          {% image series_item.content_page.specific.image_hero fill-100x100 %}
+                        </a>
+                        <div class="series-item-content">
+                          <div>
+                            <div class="series-item-counter">
+                              <span></span>
+                              <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                            </div>
+                            <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
+                          </div>
+                          {% include 'includes/authors.html' with authors=series_item.content_page.authors.all hide_link=True %}
+                        </div>
+                      </article>
+                    {% else %}
+                      <article class="swiper-slide series-item">
+                        <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                          {% image series_item.content_page.specific.image_hero fill-100x100 %}
+                        </a>
+                        <div class="series-item-content">
+                          <a href="{% pageurl series_item.content_page %}">
+                            <div class="series-item-counter">
+                              <span></span>
+                              <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                            </div>
+                            <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
+                          </a>
+                          {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+                        </div>
+                      </article>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="swiper-button-prev swiper-button-prev-hero swiper-button"></div>
+              <div class="swiper-button-next swiper-button-next-hero swiper-button"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endblock %}
+
+  {% if self.from_the_archives and self.from_the_archives_blurb %}
+    {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
+  {% endif %}
+
+  {% if self.article_series_description %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-description">
+            {{self.article_series_description|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% include "includes/body.html" with body=self.body %}
+
+  {% if self.transcript %}
+    <section>
+      {% for block in self.transcript %}
+        {% include_block block with id=block.id %}
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if self.multimedia_series %}
+    <section class="multimedia-series-block">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <article>
+              <h2>
+                Series:
+                <a href="{{self.multimedia_series.url}}">
+                  {{ self.multimedia_series.title }}
+                </a>
+              </h2>
+              <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
+
+  {% block recommended %}
+    {% if self.recommended_content %}
+      <section class="recommended">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <div class="flex-column align-items-center">
+                <div class="recommended-dot"></div>
+                <div class="recommended-vertical-line"></div>
+                <h2>Recommended</h2>
+                {% include "includes/footer_bracket.svg" %}
+              </div>
+              {% for recommended_content in self.recommended_content|slice:":3" %}
+                {% include "includes/recommended_article.html" with article=recommended_content.specific %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endblock recommended %}
+
+  {% block in_the_series %}
+    {# Override this in templates to add series listing #}
+  {% endblock %}
+{% endblock content %}

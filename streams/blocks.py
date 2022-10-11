@@ -6,7 +6,7 @@ from django.forms.utils import flatatt
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
 from wagtail.contrib.table_block.blocks import TableBlock
-from wagtail.core import blocks
+from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
@@ -1071,3 +1071,40 @@ class AdditionalDisclaimerBlock(blocks.StructBlock):
         icon = 'text'
         label = 'Additional Disclaimer'
         help_text = 'Additional disclaimer if necessary; placed in order above standard CIGI disclaimer.'
+
+
+class SeriesItemImageBlock(blocks.StructBlock):
+    class PositionChoices(models.TextChoices):
+        top = ('top', 'Top')
+        bottom = ('bottom', 'Bottom')
+
+    image = ImageChooserBlock(required=True)
+    position = blocks.ChoiceBlock(choices=PositionChoices.choices, required=False)
+
+
+class LineBreakBlock(blocks.StructBlock):
+    image_map = {
+        'space_series_planets': '/static/assets/space_series_planets.png',
+        'space_series_stars': '/static/assets/space_series_stars.png',
+        'space_series_orbit': '/static/assets/space_series_orbit.png',
+        'space_series_ringed_planet': '/static/assets/space_series_ringed_planet.png',
+    }
+    type = blocks.ChoiceBlock(
+        choices=[
+            ('space_series_planets', 'Space Series Planets'),
+            ('space_series_stars', 'Space Series Stars'),
+            ('space_series_orbit', 'Space Series Orbit'),
+            ('space_series_ringed_planet', 'Space Series Ringed Planet'),
+        ],
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        context['image'] = self.image_map[value.get('types')]
+        context['image_class'] = value.get('types').replace('_', '-')
+        return context
+
+    class Meta:
+        icon = 'horizontalrule'
+        label = 'Line Break'
+        template = 'streams/line_break_block.html'

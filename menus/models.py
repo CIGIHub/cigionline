@@ -1,13 +1,13 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     InlinePanel,
     FieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
 )
-from wagtail.core.models import Orderable
+from wagtail.models import Orderable
 from wagtail.search import index
 
 

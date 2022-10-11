@@ -3,9 +3,12 @@ import json
 import os
 import datetime
 import pytz
-from wagtail.core.signals import page_published
+import traceback
+from distutils.log import error
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
+from wagtail.contrib.frontend_cache.utils import purge_url_from_cache
+from wagtail.signals import page_published
 
 
 def get_env():
@@ -35,7 +38,7 @@ def datetime_compare(t1, t2):
 
 
 def count_publishes(instance):
-    from wagtail.core.models import PageLogEntry
+    from wagtail.models import PageLogEntry
 
     all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish')
 
@@ -175,6 +178,13 @@ def send_notifications(sender, **kwargs):
         print(e)
 
 
+def clear_cloudflare_home_page_cache(sender, **kwargs):
+    try:
+        purge_url_from_cache('https://www.cigionline.org/')
+    except Exception:
+        error(traceback.format_exc())
+
+
 class SignalsConfig(AppConfig):
     name = 'signals'
     verbose_name = "Signals"
@@ -184,9 +194,29 @@ class SignalsConfig(AppConfig):
         from publications.models import PublicationPage
         from multimedia.models import MultimediaPage
         from events.models import EventPage
+        from features.models import (
+            HomePageFeaturedContentList,
+            HomePageFeaturedPublicationsList,
+            HomePageFeaturedMultimediaList,
+            HomePageFeaturedEventsList,
+            HomePageFeaturedHighlightsList,
+            HomePageFeaturedPromotionsList,
+            HomePageFeaturedExpertsList,
+        )
 
         page_published.connect(send_notifications, sender=ArticlePage)
         page_published.connect(send_notifications, sender=ArticleSeriesPage)
         page_published.connect(send_notifications, sender=PublicationPage)
         page_published.connect(send_notifications, sender=MultimediaPage)
         page_published.connect(send_notifications, sender=EventPage)
+
+        if 'CLOUDFLARE_EMAIL' in os.environ \
+                and 'CLOUDFLARE_API_KEY' in os.environ \
+                and 'CLOUDFLARE_ZONEID' in os.environ:
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedContentList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPublicationsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedMultimediaList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedEventsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedHighlightsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPromotionsList)
+            page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedExpertsList)

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
-from wagtail.core import hooks
+from wagtail import hooks
 
 from .models import PromotionBlock
 

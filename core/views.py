@@ -1,4 +1,5 @@
 from core.models import ContentPage
+from datetime import date
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
@@ -6,7 +7,8 @@ from django.template.response import TemplateResponse
 
 def ar_timeline_pages(request):
     if request.user.is_authenticated:
-        content_pages = ContentPage.objects.live().filter(projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).filter(publishing_date__range=["2020-08-01", "2021-07-31"])
+        year = int(request.GET.get('year')) if request.GET.get('year') else date.today().year
+        content_pages = ContentPage.objects.live().filter(projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).filter(publishing_date__range=[f'{year - 1}-08-01', f'{year}-07-31'])
 
         json_items = []
 

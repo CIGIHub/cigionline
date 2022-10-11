@@ -1,64 +1,180 @@
-from django.db import models
-from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (
-    InlinePanel,
-    MultiFieldPanel,
-    FieldPanel
+
+from wagtail.admin.panels import FieldPanel
+from wagtail.core.fields import StreamField
+from wagtail.models import Page
+from .blocks import (
+    FeaturedExpertBlock,
+    FeaturedPageBlock,
+    FeaturedPublicationBlock,
+    FeaturedMultimediaBlock,
+    FeaturedHighlightBlock,
+    FeaturedEventBlock,
+    FeaturedPromotionBlock,
 )
-from wagtail.core.models import Page
-from wagtail.core.models import Orderable
 
 
 class FeaturesListPage(Page):
     parent_page_types = ['home.HomePage']
-    subpage_types = ['features.HomePageFeaturedPromotionsPage']
+    subpage_types = [
+        'features.HomePageFeaturedPromotionsList',
+        'features.HomePageFeaturedContentList',
+        'features.HomePageFeaturedPublicationsList',
+        'features.HomePageFeaturedExpertsList',
+        'features.HomePageFeaturedMultimediaList',
+        'features.HomePageFeaturedHighlightsList',
+        'features.HomePageFeaturedEventsList',
+    ]
     max_count = 1
 
     class Meta:
         verbose_name = 'Feature List Page'
 
 
-class HomePageFeaturedPromotionsPage(Page):
+class HomePageFeaturedPromotionsList(Page):
+    featured_promotions = StreamField(
+        [
+            ('featured_promotion', FeaturedPromotionBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
     content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'promotion_blocks',
-                    max_num=4,
-                    min_num=0,
-                    label='Promotion Block',
-                ),
-            ],
-            heading='Promotion Blocks',
-            classname='collapsible',
-        ),
+        FieldPanel('featured_promotions'),
+    ]
+    parent_page_types = ['features.FeaturesListPage']
+    subpage_types = []
+    max_count = 1
+
+    def __str__(self):
+        return 'Home Page Ad blocks List'
+
+    class Meta:
+        verbose_name = 'Home Page Featured Promotions List'
+
+
+class HomePageFeaturedContentList(Page):
+    featured_pages = StreamField(
+        [
+            ('featured_page', FeaturedPageBlock()),
+        ],
+        blank=True,
+        help_text='1: large | 2-4: medium | 5-9: small'
+    )
+    content_panels = Page.content_panels + [
+        FieldPanel('featured_pages'),
+    ]
+    parent_page_types = ['features.FeaturesListPage']
+    subpage_types = []
+    max_count = 1
+
+    def __str__(self):
+        return 'Home Page Main Features List'
+
+    class Meta:
+        verbose_name = 'Home Page Main Features List'
+
+
+class HomePageFeaturedPublicationsList(Page):
+    featured_publications = StreamField(
+        [
+            ('featured_publication', FeaturedPublicationBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('featured_publications'),
     ]
 
     parent_page_types = ['features.FeaturesListPage']
     subpage_types = []
     max_count = 1
 
-    class Meta:
-        verbose_name = 'Home Page Featured Promotions Page'
+    def __str__(self):
+        return 'Home Page Featured Publications List'
 
 
-class FeaturesPagePromotionBlocks(Orderable):
-    features_page = ParentalKey(
-        'features.HomePageFeaturedPromotionsPage',
-        related_name='promotion_blocks',
-    )
-    promotion_block = models.ForeignKey(
-        'promotions.PromotionBlock',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Promotion Block',
+class HomePageFeaturedHighlightsList(Page):
+    featured_highlights = StreamField(
+        [
+            ('featured_highlight', FeaturedHighlightBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
     )
 
-    panels = [
-        FieldPanel(
-            'promotion_block',
-            ['promotions.PromotionBlock'],
-        ),
+    content_panels = Page.content_panels + [
+        FieldPanel('featured_highlights'),
     ]
+
+    parent_page_types = ['features.FeaturesListPage']
+    subpage_types = []
+    max_count = 1
+
+    def __str__(self):
+        return 'Home Page Featured Highlights List'
+
+
+class HomePageFeaturedMultimediaList(Page):
+    featured_multimedia = StreamField(
+        [
+            ('featured_multimedia', FeaturedMultimediaBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('featured_multimedia'),
+    ]
+
+    parent_page_types = ['features.FeaturesListPage']
+    subpage_types = []
+    max_count = 1
+
+    def __str__(self):
+        return 'Home Page Featured Multimedia List'
+
+
+class HomePageFeaturedEventsList(Page):
+    featured_events = StreamField(
+        [
+            ('featured_event', FeaturedEventBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+        help_text='Use this list only if you want to feature different events than those featured on the Events Landing Page.',
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('featured_events'),
+    ]
+
+    parent_page_types = ['features.FeaturesListPage']
+    subpage_types = []
+    max_count = 1
+
+    def __str__(self):
+        return 'Home Page Featured Events List'
+
+
+class HomePageFeaturedExpertsList(Page):
+    featured_experts = StreamField(
+        [
+            ('featured_expert', FeaturedExpertBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('featured_experts'),
+    ]
+
+    parent_page_types = ['features.FeaturesListPage']
+    subpage_types = []
+    max_count = 1
+
+    def __str__(self):
+        return 'Home Page Featured Experts List'

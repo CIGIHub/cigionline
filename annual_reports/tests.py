@@ -1,5 +1,5 @@
 from core.models import BasicPage
-from wagtail.tests.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTests
 
 from .models import (
     AnnualReportListPage,
