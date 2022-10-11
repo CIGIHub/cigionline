@@ -76,6 +76,41 @@
     }
   }
 
+  .stream-block-pull-quote {
+    @include media-breakpoint-up(md) {
+      width: 30%;
+    }
+    font-family: $ai-ethics-heading;
+    font-weight: bold;
+    margin-bottom: 1em;
+    position: relative;
+
+    blockquote {
+      background: transparent;
+      border-left: 0;
+      margin: 0;
+    }
+
+    &.right {
+      margin-left: 1em;
+      padding-left: 1em;
+
+      blockquote {
+        padding: 0 0 0 0.5em;
+      }
+    }
+
+    &.left {
+      margin-right: 1em;
+      padding-right: 1em;
+
+      blockquote {
+        border-left: 0;
+        padding: 0 0.5em 0 0;
+      }
+    }
+  }
+
   .footnotes {
     ol {
       padding-left: 1.75em;
