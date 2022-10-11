@@ -62,7 +62,9 @@
       <div class="row justify-content-center">
         <div class="col-md-10">
           <div class="opinion-series-label">A CIGI Essay Series</div>
-          <h1>{{ self.title }}</h1>
+          <div class="series-title col">
+            <h1>{{ self.title }}</h1>
+          </div>
         </div>
       </div>
       <div class="row justify-content-center">
@@ -98,18 +100,6 @@
                   <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
                 {% endfor %}
               </ul>
-              {% comment %} <div class="article-overlay">
-                <a href={{article.url}} class="description-link">
-                  <div class="article-short-description">
-                    {{ article.short_description|richtext }}
-                  </div>
-                </a>
-                <div class="article-links">
-                  <a href={{article.url}}>
-                    <button type="button">Read</button>
-                  </a>
-                </div>
-              </div> {% endcomment %}
               {% endwith %}
             </article>
           {% endfor %}
@@ -117,66 +107,25 @@
       </div>
     </div>
   </section>
-  <div class="container">
-    <div class="row justify-content-center loaders">
-      <div id="article-message" class="article-message show">
-        Scroll down to read series introduction
-      </div>
-      <div id="spinner" class="spinner">
-        <img src="/static/assets/loader_spinner.gif" alt="Loading..." />
-        Loading Article...
-      </div>
-    </div>
-    <div class="row align-items-center flex-column">
-      <div class="line-vertical"></div>
-      <div class="arrow-down"></div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-10 col-lg-8">
-        <img id="introduction-loading-background" class="introduction-loading-background" src="/static/themes/ai_ethics_series/assets/ai_ethics_loading_bg.png">
-      </div>
-    </div>
-  </div>
-  <section id="introduction-article" class="ai-ethics-series-article">
-    <section class="article-hero">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-8 hero-content">
-            <h2 id="introduction-title" class="introduction-title"><h2>
-            <ul id="introduction-authors" class="custom-text-list authors"></ul>
-            <div id="introduction-date" class="introduction-date"></div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-6 col-md-4">
-            <img id="introduction-image" class="introduction-image" />
-          </div>
-        </div>
-      </div>
-    </section>
-    <section id="introduction-body"></section>
-    <div class="container">
-      <div class="row justify-content-center">
-        <p id="introduction-read-more" class="introduction-read-more col-md-10 col-lg-8">
-          <em><a href="#in-the-series">Read the other essays in the series</a></em>
-        </p>
-      </div>
-    </div>
-  </section>
-  {% if self.credits %}
+  {% if self.credits_stream_field %}
     <section class="credits">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
-            <div class="ai-ethics-doodle">
-              <img src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_credits.png" />
-            </div>
             <hr>
             <h2>Credits</h2>
             <div class="credits-content">
-              {{ self.credits|richtext }}
+              {% for title in self.credits_stream_field %}
+                <div class="title-container">
+                  {% for person in title.value.people %}
+                    <div class="name">{{ person }}</div>
+                  {% endfor %}
+                  <div class="title">{{ title.value.title }}</div>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="ai-ethics-doodle">
+              <img src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_credits.png" />
             </div>
           </div>
         </div>

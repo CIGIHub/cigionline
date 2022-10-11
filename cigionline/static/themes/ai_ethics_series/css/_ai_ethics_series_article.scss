@@ -2,26 +2,34 @@
   @include top-bar($color: $black, $background-color: transparent);
 
   .article-hero {
+    @include media-breakpoint-up(md) {
+      text-align: center;
+    }
     padding-top: calc(5vw + 4em);
+    text-align: left;
 
     h1 {
       @include media-breakpoint-up(xl) {
         font-size: 4em;
       }
-      font-family: $ai_ethics_heading;
-      font-weight: 700;
+      font-family: $ai-ethics-heading;
       font-size: calc(3.5vw + 1em);
+      font-weight: 700;
       line-height: 1;
     }
 
     .authors {
-      font-family: $ai_ethics_bilo;
+      @include media-breakpoint-up(md) {
+        justify-content: center;
+      }
+      font-family: $ai-ethics-bilo;
       font-size: 1.1em;
+      justify-content: left;
       margin: 1em 0 0.25em;
     }
 
     .date {
-      font-family: $ai_ethics_bilo;
+      font-family: $ai-ethics-bilo;
     }
 
     .banner {
@@ -31,7 +39,7 @@
 
   .drop-caps {
     border: 0;
-    font-family: $ai_ethics_heading;
+    font-family: $ai-ethics-heading;
     line-height: 0.65;
     padding-top: 0.3em;
   }
@@ -39,8 +47,10 @@
   .article-series-description {
     @include media-breakpoint-up(md) {
       margin-bottom: 2em;
+      width: 75%;
     }
     border: 0;
+    color: $cigi-medium-grey;
     margin-bottom: 1em;
 
     a {
@@ -50,7 +60,7 @@
 
   .body {
     h2 {
-      font-family: $ai_ethics_heading;
+      font-family: $ai-ethics-heading;
       font-size: 1.5em;
       font-weight: 600;
     }
