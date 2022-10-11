@@ -172,11 +172,17 @@ class HomePage(Page):
             error(traceback.format_exc())
 
         if len(featured_publications) == 0:
-            featured_publication_ids = self.featured_pages.values_list('featured_page', flat=True)
+            featured_page_ids = []
+            try:
+                featured_pages_list = HomePageFeaturedContentList.objects.first().featured_pages
+                featured_page_ids = [page.value['page'].id for page in featured_pages_list]
+            except Exception:
+                error(traceback.format_exc())
+                featured_page_ids = self.featured_pages.values_list('featured_page', flat=True)
             featured_publications = PublicationPage.objects.prefetch_related(
                 'authors__author',
                 'topics',
-            ).live().public().exclude(id__in=featured_publication_ids).order_by('-publishing_date')[:4]
+            ).live().public().exclude(id__in=featured_page_ids).order_by('-publishing_date')[:4]
 
         return featured_publications
 
@@ -226,7 +232,7 @@ class HomePage(Page):
 
     def featured_publications_revision_created_at(self):
         try:
-            return HomePageFeaturedPublicationsList.objects.first().latest_revision_created_at
+            return f'{HomePageFeaturedPublicationsList.objects.first().latest_revision_created_at}{HomePageFeaturedContentList.objects.first().latest_revision_created_at}'
         except Exception:
             return ''
 
