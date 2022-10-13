@@ -60,14 +60,20 @@
 
   .body {
     h2 {
-      font-family: $ai-ethics-heading;
+      font-family: $ai-ethics-bilo;
       font-size: 1.5em;
       font-weight: 600;
     }
 
+    h3 {
+      font-family: $ai-ethics-bilo;
+      font-size: 1.3em;
+      font-weight: 500;
+    }
+
     hr {
       background-color: transparent;
-      background-image: url('../assets/ai_ethics_doodle_hr.png');
+      background-image: url('../assets/ai_ethics_doodle_hr_green.png');
       background-position: calc(50% - 25px);
       background-repeat: no-repeat;
       background-size: contain;
@@ -81,7 +87,7 @@
       width: 30%;
     }
     font-family: $ai-ethics-heading;
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 1em;
     position: relative;
 
@@ -98,6 +104,18 @@
       blockquote {
         padding: 0 0 0 0.5em;
       }
+
+      &::before {
+        background-image: url('../assets/ai_ethics_doodle_rectangle.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        content: '';
+        display: block;
+        height: 0.7em;
+        position: absolute;
+        top: -0.5em;
+        width: 0.7em;
+      }
     }
 
     &.left {
@@ -107,6 +125,19 @@
       blockquote {
         border-left: 0;
         padding: 0 0.5em 0 0;
+      }
+
+      &::before {
+        background-image: url('../assets/ai_ethics_doodle_rectangle.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        content: '';
+        display: block;
+        height: 0.7em;
+        left: -0.7em;
+        position: absolute;
+        top: -0.5em;
+        width: 0.7em;
       }
     }
   }
