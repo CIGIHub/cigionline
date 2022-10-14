@@ -895,10 +895,10 @@ class ArticleSeriesPageSeriesItem(Orderable):
         image = image[0].value.get('image')
         image_override = {}
         if image.file.url.endswith('.gif'):
-            image_override['src'] = image.file.url
+            image_override['src_gif'] = image.file.url
             image_override['src_static'] = image.get_rendition('original').file.url
         else:
-            image_override['src'] = image.get_rendition('fill-300x300').file.url
+            image_override['src_static'] = image.get_rendition('fill-300x300').file.url
         image_override['alt'] = image.caption if image.caption else image.title
         return image_override
 
