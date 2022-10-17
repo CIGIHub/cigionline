@@ -351,6 +351,10 @@ class ExtractBlock(blocks.RichTextBlock, ThemeableBlock):
             'anchor',
         ]
 
+    implemented_themes = [
+        'space_series_opinion',
+    ]
+
     def get_template(self, context, *args, **kwargs):
         standard_template = super(ExtractBlock, self).get_template(context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'extract_block')
@@ -371,6 +375,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
         'cyber_series_opinion',
         'data_series_opinion',
         'longform_2_opinion',
+        'space_series_opinion',
     ]
 
     def get_template(self, context, *args, **kwargs):
