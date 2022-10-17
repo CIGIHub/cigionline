@@ -188,7 +188,7 @@ body {
             }
             @include media-breakpoint-up(lg) {
               margin-left: 0;
-              margin-top: 2em;
+              margin-top: 8em;
             }
             display: flex;
             flex-direction: column;
@@ -230,7 +230,7 @@ body {
 
             .authors {
               font-size: 0.8em;
-              margin: 0;
+              margin: 1em 0 0;
               text-transform: uppercase;
             }
           }
