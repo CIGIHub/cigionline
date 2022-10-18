@@ -40,6 +40,10 @@
 
 {% block body_class %}space-series-article-series{% endblock %}
 
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
 {% block content %}
   <section class="space-series-article-series-hero">
     <div class="hero-content">
