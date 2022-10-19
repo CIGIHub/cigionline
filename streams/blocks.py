@@ -1105,8 +1105,8 @@ class LineBreakBlock(blocks.StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        context['image'] = self.image_map[value.get('types')]
-        context['image_class'] = value.get('types').replace('_', '-')
+        context['image'] = self.image_map[value.get('type')]
+        context['image_class'] = value.get('type').replace('_', '-')
         return context
 
     class Meta:

@@ -23,7 +23,7 @@ body {
           }
           font-family: $space-series-font-primary;
           font-size: calc(3vw + 1em);
-          font-weight: 500;
+          font-weight: 600;
           line-height: 1;
           text-transform: uppercase;
         }
@@ -89,19 +89,11 @@ body {
             z-index: -1;
           }
 
-          .image-static {
-            position: absolute;
-          }
-
           &:hover {
             transform: scale(1.025);
             z-index: 1;
 
             .series-item-image {
-              .image-static {
-                opacity: 0;
-              }
-
               .play-icon {
                 color: $white;
 
@@ -196,7 +188,7 @@ body {
             }
             @include media-breakpoint-up(lg) {
               margin-left: 0;
-              margin-top: 2em;
+              margin-top: 8em;
             }
             display: flex;
             flex-direction: column;
@@ -213,6 +205,9 @@ body {
               display: none;
 
               span {
+                font-family: $space-series-font-primary;
+                font-weight: 600;
+
                 &:first-child {
                   margin-right: 0.25em;
                   position: relative;
@@ -220,7 +215,7 @@ body {
 
                   &::before {
                     background-color: $white;
-                    bottom: 9px;
+                    bottom: 7px;
                     content: '';
                     height: 5px;
                     position: absolute;
@@ -236,7 +231,7 @@ body {
 
             .authors {
               font-size: 0.8em;
-              margin: 0;
+              margin: 1em 0 0;
               text-transform: uppercase;
             }
           }

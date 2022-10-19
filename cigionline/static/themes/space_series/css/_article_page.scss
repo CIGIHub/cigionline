@@ -9,6 +9,20 @@
     transition: none;
     z-index: 100;
 
+    &::before {
+      background: linear-gradient(
+        $space-series-background-colour-light,
+        30%,
+        transparent
+      );
+      bottom: -20px;
+      content: '';
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
     &.dark {
       background-color: $space-series-background-colour;
     }
@@ -52,8 +66,9 @@
         }
         font-family: $space-series-font-primary;
         font-size: calc(3vw + 1em);
-        font-weight: 500;
-        line-height: 1;
+        font-weight: 600;
+        line-height: 1.1;
+        margin-top: 15px;
         position: relative;
 
         &::before {
@@ -71,11 +86,13 @@
       }
 
       .authors {
+        font-size: 0.75em;
         margin: 3.5em 0 0;
         text-transform: uppercase;
       }
 
       .date {
+        font-size: 0.75em;
         text-transform: uppercase;
       }
     }
@@ -184,11 +201,9 @@
     }
 
     h2 {
-      @include media-breakpoint-up(lg) {
-        font-size: 1em;
-      }
+      font-family: $space-series-font-primary;
       font-size: 0.75em;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .in-the-series-expand {
@@ -274,6 +289,8 @@
 
           .series-item-counter {
             display: flex;
+            font-family: $space-series-font-primary;
+            font-weight: 600;
 
             span {
               &:first-child {
@@ -283,7 +300,7 @@
 
                 &::before {
                   background-color: $white;
-                  bottom: 9px;
+                  bottom: 6px;
                   content: '';
                   height: 5px;
                   position: absolute;
@@ -347,6 +364,10 @@
 
   .body {
     margin-top: 2em;
+
+    h2 {
+      font-family: $space-series-font-secondary;
+    }
 
     .extract-block {
       @include media-breakpoint-up(lg) {
