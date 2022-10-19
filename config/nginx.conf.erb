@@ -41,8 +41,10 @@ http {
 		add_header Referrer-Policy "no-referrer, same-origin";
 
 		<% if ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
-			auth_basic "Restricted";
-			auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
+			location /admin {
+				auth_basic "Restricted";
+				auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
+			}
 		<% end %>
 
 		location / {
