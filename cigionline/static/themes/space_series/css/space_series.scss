@@ -1,7 +1,7 @@
 $space-series-font-primary: 'Termina', sans-serif;
 $space-series-font-secondary: 'Apertura', sans-serif;
 $space-series-background-colour: #171717;
-$space-series-background-colour-light: #171717c9;
+$space-series-background-colour-light: #171717c9; // sass-lint:disable-line
 
 @import '../../../css/global/mixins';
 @import '../../../css/global/animations/bounce';
