@@ -43,7 +43,7 @@ def count_publishes(instance):
     all_unpublishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.unpublish').order_by('-timestamp')
     if all_unpublishes:
         latest_unpublish = all_unpublishes[0].timestamp
-        all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish', timestamp__gt=latest_unpublish)    
+        all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish', timestamp__gt=latest_unpublish)
     else:
         all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish')
 
