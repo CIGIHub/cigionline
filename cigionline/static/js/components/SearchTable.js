@@ -1544,25 +1544,29 @@ class SearchTable extends React.Component {
               {this.renderSelectedFilters()}
 
               <div className="search-bar-sort-wrapper">
-                <span>Sort by:</span>
-                <ul className="search-bar-sort-list">
-                  {sortOptions.map((sortOption) => (
-                    <li key={`sort-${sortOption.value}`}>
-                      <button
-                        type="button"
-                        className={[
-                          'search-bar-sort-link',
-                          (sortSelected === sortOption.value
-                            || (!sortSelected && sortOption.default))
-                            && 'active',
-                        ].join(' ')}
-                        onClick={() => this.handleSortSelect(sortOption.value)}
-                      >
-                        {sortOption.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                {sortOptions.length > 1 && (
+                  <>
+                    <span>Sort by:</span>
+                    <ul className="search-bar-sort-list">
+                      {sortOptions.map((sortOption) => (
+                        <li key={`sort-${sortOption.value}`}>
+                          <button
+                            type="button"
+                            className={[
+                              'search-bar-sort-link',
+                              (sortSelected === sortOption.value
+                                || (!sortSelected && sortOption.default))
+                                && 'active',
+                            ].join(' ')}
+                            onClick={() => this.handleSortSelect(sortOption.value)}
+                          >
+                            {sortOption.name}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </div>
               {blockListing ? (
                 <div
