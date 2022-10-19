@@ -289,7 +289,7 @@
       background-clip: padding-box;
       background-color: $white;
       border: 0;
-      border-radius: .25em;
+      border-radius: 0.25em;
       box-shadow: 0 5px 10px $cigi-light-grey;
       opacity: 0;
       padding: 1em;
@@ -355,15 +355,34 @@
       .search-bar-sort-link {
         color: $cigi-medium-light-grey;
         margin-right: 1em;
+        position: relative;
 
         &:hover {
-          border-bottom: 3px solid $cigi-primary-colour;
           text-decoration: none;
+
+          &::after {
+            background-color: $cigi-primary-colour;
+            bottom: -3px;
+            content: '';
+            display: block;
+            height: 3px;
+            position: absolute;
+            width: 100%;
+          }
         }
 
         &.active {
-          border-bottom: 3px solid $cigi-primary-colour;
           color: $black;
+
+          &::after {
+            background-color: $cigi-primary-colour;
+            bottom: -3px;
+            content: '';
+            display: block;
+            height: 3px;
+            position: absolute;
+            width: 100%;
+          }
         }
       }
     }
