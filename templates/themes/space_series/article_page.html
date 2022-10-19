@@ -20,7 +20,7 @@
 {% block hero %}
   <section class="space-series-article-hero">
     <div class="container">
-      <div class="row justify-content-center align-items-center">
+      <div class="row justify-content-center align-items-lg-center">
         <div class="col-md-6 col-lg-4 hero-content">
           <div>
             <h1>{{ self.title }}</h1>
@@ -29,7 +29,7 @@
             {% include "includes/date.html" with date=self.publishing_date %}
           </div>
         </div>
-        <div class="col-md-6 offset-lg-2 hero-image">
+        <div class="col-md-6 col-lg-7 offset-lg-1 hero-image">
           {% if self.image_hero %}
             {% if self.image_hero.file.url|file_extension == '.gif' %}
               <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
@@ -43,12 +43,12 @@
   </section>
   <section class="in-the-series" id="hero-in-the-series">
     <div class="container">
-      <div class="row justify-content-between">
+      <div class="row justify-content-between justify-content-md-start">
         <div class="col-4 col-md-2 col-lg-1">
           <h2>IN THE SERIES</h2>
         </div>
         <i class="fas fa-plus in-the-series-expand"></i>
-        <div class="col-md-9 col-lg-10">
+        <div class="col-md-9 col-lg-9 offset-lg-1">
           <div class="swiper">
             <div class="swiper-container swiper-container-hero">
               <div class="swiper-wrapper">
