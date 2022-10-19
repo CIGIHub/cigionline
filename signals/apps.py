@@ -40,8 +40,12 @@ def datetime_compare(t1, t2):
 def count_publishes(instance):
     from wagtail.models import PageLogEntry
 
-    latest_unpublish = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.unpublish').order_by('-timestamp')[0].timestamp
-    all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish', timestamp__gt=latest_unpublish)
+    all_unpublishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.unpublish').order_by('-timestamp')
+    if all_unpublishes:
+        latest_unpublish = all_unpublishes[0].timestamp
+        all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish', timestamp__gt=latest_unpublish)    
+    else:
+        all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish')
 
     # for some reason, the PageLogEntry objects are not including the most recent publish that triggered this script
     # so a first-time publish would have a count of 0
