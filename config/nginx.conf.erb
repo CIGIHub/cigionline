@@ -40,7 +40,7 @@ http {
 		add_header Strict-Transport-Security "max-age=31536000";
 		add_header Referrer-Policy "no-referrer, same-origin";
 
-		<% ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
+		<% if ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
 			<% if ENV['PYTHON_ENV'] == 'staging' || ENV['PYTHON_ENV'] == 'admin'%>
 				auth_basic "Restricted";
 				auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
