@@ -4,7 +4,7 @@ from .base import *  # noqa: F403
 
 DEBUG = False
 
-ADMIN_ENABLED = False
+ADMIN_ENABLED = True
 
 try:
     from .local import *  # noqa: F403
