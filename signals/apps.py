@@ -67,13 +67,11 @@ def instance_info(instance):
     publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
     is_first_publish, is_first_publish_since_go_live_at = count_publishes(instance)
     is_scheduled_publish = (datetime_compare(instance.go_live_at, instance.last_published_at) and is_first_publish_since_go_live_at)
-    print(f'first: {is_first_publish}, scheduled: {is_scheduled_publish}')
     relative_url = instance.get_url_parts()[-1]  # last item in the tuple is the relative url to root; e.g. /articles/an-article/
     return title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish, relative_url
 
 
 def notification_user_list(content_type, is_first_publish, is_scheduled_publish):
-    print(f'compiling user list for content type: {content_type}')
     from .models import PublishEmailNotification
 
     user_list = PublishEmailNotification.objects.filter(page_type_permissions__page_type__title__contains=content_type)
@@ -91,8 +89,6 @@ def notification_user_list(content_type, is_first_publish, is_scheduled_publish)
 
 
 def notification_email_list(notification_user_list):
-    print(f'compiling email list for users: {notification_user_list}')
-
     # going through User model because PublishEmailNotification returns UserProfile objects which has no 'email' attribute
     from django.contrib.auth.models import User
 
@@ -138,10 +134,6 @@ def send_email(title, authors, page_owner, content_type, recipients, publisher, 
 
     if notifications_on():
         msg.send()
-    # print email content when notification is off
-    else:
-        print(html_content)
-    print('notification emails are sent to', recipients)
 
 
 def send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label):
@@ -160,8 +152,6 @@ def send_to_slack(title, authors, page_owner, content_type, publisher, publish_p
 
     if notifications_on():
         requests.post(url, json.dumps(values))
-    else:
-        print(values)  # print what would've been sent to Slack
 
 
 # Let everyone know when a new page is published
