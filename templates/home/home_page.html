@@ -12,6 +12,21 @@
 
 {% block content %}
   {% preview_cache_bust as is_preview %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          {% for page in latest_pages %}
+            <div>
+              {{page.title}}
+              {{page.authors}}
+              {{page.short_description}}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
   {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_content_revision_created_at|date:"c" %}
     <section class="featured homepage-featured">
       <div class="container">

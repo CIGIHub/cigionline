@@ -1,6 +1,7 @@
 from distutils.log import error
 from django.db import models
 from modelcluster.fields import ParentalKey
+from core.models import ContentPage
 from publications.models import PublicationPage
 from events.models import EventPage, EventListPage
 from features.models import (
@@ -216,6 +217,14 @@ class HomePage(Page):
 
         return featured_events
 
+    def get_latest_pages(self):
+        latest_pages = ContentPage.objects.prefetch_related(
+            'authors__author',
+            'topics',
+        ).live().public().order_by('-publishing_date')[:10]
+    
+        return latest_pages
+
     def get_promotion_blocks(self):
         promotion_blocks = [block.value['block'] for block in HomePageFeaturedPromotionsList.objects.first().featured_promotions]
 
@@ -272,6 +281,7 @@ class HomePage(Page):
         context['featured_publications'] = self.get_featured_publications()
         context['featured_events'] = self.get_featured_events()
         context['promotion_blocks'] = self.get_promotion_blocks()
+        context['latest_pages'] = self.get_latest_pages()
         return context
 
     max_count = 1
