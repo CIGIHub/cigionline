@@ -30,22 +30,6 @@
       font-weight: 700;
       line-height: 1;
       margin-bottom: 0.5em;
-
-      &::before {
-        @include media-breakpoint-up(md) {
-          left: 3em;
-        }
-        background-image: url('../assets/ai_ethics_doodle_square.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        content: '';
-        display: block;
-        height: 0.3em;
-        left: 0;
-        position: absolute;
-        top: -0.5em;
-        width: 0.3em;
-      }
     }
 
     .banner {
