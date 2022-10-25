@@ -26,6 +26,7 @@ var/
 .env
 secret/
 /venv
+/venv_alt
 webpack-stats.json
 
 # PyInstaller
