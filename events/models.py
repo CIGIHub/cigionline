@@ -13,7 +13,7 @@ from wagtail.admin.panels import (
     MultiFieldPanel,
     PageChooserPanel,
 )
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
@@ -181,6 +181,11 @@ class EventPage(
         blank=True,
         use_json_field=True,
     )
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
     time_zone = models.CharField(
         blank=True,
         max_length=64,
@@ -276,7 +281,14 @@ class EventPage(
 
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('short_description'),
+                FieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible collapsed'
+        ),
         BasicPageAbstract.images_panel,
         FieldPanel('publishing_date', heading='Event start'),
         FieldPanel('event_end'),

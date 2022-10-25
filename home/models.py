@@ -100,10 +100,7 @@ class HomePage(Page):
         except Exception:
             error(traceback.format_exc())
             featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
-        pages = Page.objects.specific().prefetch_related(
-            'authors__author',
-            'topics',
-        ).in_bulk(featured_page_ids)
+        pages = Page.objects.specific().in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
 
     def get_featured_experts(self):

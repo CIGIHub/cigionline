@@ -124,4 +124,18 @@ if (pageType === 'article' || pageType === 'multimedia') {
       }
     });
   }
+} else {
+  const swiperSlides = document.querySelectorAll('article.swiper-slide');
+  swiperSlides.forEach((slide) => {
+    // change src of image to data-src-gif on hover and change back on mouseleave
+    const image = slide.querySelector('img');
+    const gif = image.getAttribute('data-src-gif');
+    const still = image.getAttribute('data-src-static');
+    slide.addEventListener('mouseenter', () => {
+      image.setAttribute('src', gif);
+    });
+    slide.addEventListener('mouseleave', () => {
+      image.setAttribute('src', still);
+    });
+  });
 }

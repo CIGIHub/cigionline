@@ -40,17 +40,21 @@
 
 {% block body_class %}space-series-article-series{% endblock %}
 
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
 {% block content %}
   <section class="space-series-article-series-hero">
     <div class="hero-content">
       <div class="container">
         <div class="opinion-series-label">A CIGI Essay Series</div>
         <div class="row">
-          <div class="col-lg-5">
+          <div class="col-lg-6">
             <div class="title">{{ self.title }}</div>
             <div class="subtitle">{{ self.subtitle|richtext }}</div>
           </div>
-          <div class="col-lg-5">
+          <div class="col-lg-6">
             <div class="short-description">
               {{ self.short_description|richtext }}
             </div>
@@ -67,10 +71,13 @@
             <article class="swiper-slide series-item">
               <a href="{% pageurl series_item.content_page %}" class="series-item-image">
                 {% if series_item.image_override %}
-                  {% if series_item.image_override.src_static %}
-                    <img class="image-static" src="{{ series_item.image_override.src_static }}" alt="{{ series_item.image_override.alt }}" />
-                  {% endif %}
-                  <img class="image-gif" src="{{ series_item.image_override.src }}" alt="{{ series_item.image_override.alt }}" />
+                  <img 
+                    class="image-static"
+                    src="{{ series_item.image_override.src_static }}"
+                    alt="{{ series_item.image_override.alt }}"
+                    data-src-static="{{ series_item.image_override.src_static }}"
+                    data-src-gif="{{ series_item.image_override.src_gif }}"
+                  />
                 {% else %}
                   {% image series_item.content_page.specific.image_hero fill-300x300 %}
                 {% endif %}
