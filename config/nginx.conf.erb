@@ -41,8 +41,20 @@ http {
 		add_header Referrer-Policy "no-referrer, same-origin";
 
 		<% if ENV['BASIC_AUTH_USER'] && ENV['BASIC_AUTH_PASSWORD'] %>
-			auth_basic "Restricted";
-			auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
+			<% if ENV['PYTHON_ENV'] == 'staging' || ENV['PYTHON_ENV'] == 'admin'%>
+				auth_basic "Restricted";
+				auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
+			<% elsif ENV['PYTHON_ENV'] == 'production' %>
+				location /admin {
+					proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+					proxy_set_header Host $http_host;
+					proxy_set_header Authorization "";
+					proxy_redirect off;
+					proxy_pass http://app_server;
+					auth_basic "Restricted";
+					auth_basic_user_file <%= "#{ENV['HOME']}/config/.htpasswd" %>;
+				}
+			<% end %>
 		<% end %>
 
 		location / {
