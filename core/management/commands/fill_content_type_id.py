@@ -26,7 +26,7 @@ class Command(BaseCommand):
         rows_affected = 0
         for content_type_id in unique_content_types_missing():
             rows_affected += update_field(
-                PageRevision.objects.exclude(content__has_key='content_type').select_related('page').filter(page__content_type_id=content_type_id).order_by('id'), 
+                PageRevision.objects.exclude(content__has_key='content_type').select_related('page').filter(page__content_type_id=content_type_id).order_by('id'),
                 content_type_id
             )
         print(f'total rows affected: {rows_affected}')
