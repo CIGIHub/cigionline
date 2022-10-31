@@ -1,0 +1,29 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+<section class="in-the-series">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col essay-series-label">A CIGI Essay Series</div>
+    </div>
+    <div class="row justify-content-around align-items-center">
+      <div class="d-none d-sm-block col ai-ethics-doodle left"><img height="100" src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_left.png"></img></div>
+      <div class="series-info col">
+        <h2>
+          <a href="{{ article_series.url }}">{{ article_series.title }}</a>
+        </h2>
+      </div>
+      <div class="d-none d-sm-block col ai-ethics-doodle right"><img height="100" src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_right.png"></img></div>
+    </div>
+    <div class="series-contributors row justify-content-center">
+      <ul class="contributors col col-md-10 col-lg-8">
+        {% for item in article_series.series_contributors_by_person %}
+        <li>
+          <a href="{{ item.item.url }}">
+            {% for contributor in item.contributors %} {{ contributor.title}} {% endfor %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>

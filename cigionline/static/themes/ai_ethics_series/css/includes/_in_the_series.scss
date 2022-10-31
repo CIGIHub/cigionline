@@ -1,0 +1,82 @@
+.in-the-series {
+  @include link($color: $black, $hover-color: $cigi-primary-colour);
+
+  > .container {
+    border-bottom: 1px $cigi-text-grey solid;
+    border-top: 1px $cigi-text-grey solid;
+    padding-bottom: 2em;
+    padding-top: 2em;
+  }
+
+  .essay-series-label {
+    @include media-breakpoint-up(md) {
+      text-align: center;
+    }
+    font-family: $ai-ethics-bilo;
+    margin-bottom: 0.5em;
+    text-align: left;
+  }
+
+  h2 {
+    @include media-breakpoint-up(md) {
+      text-align: center;
+    }
+    font-family: $ai-ethics-heading;
+    font-size: calc(2vw + 1em);
+    font-weight: 600;
+    line-height: 1;
+    margin: 0;
+    position: relative;
+    text-align: left;
+
+    &::before {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
+      background-image: url('../../assets/ai_ethics_doodle_square.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      content: '';
+      display: none;
+      height: 0.3em;
+      left: -0.3em;
+      position: absolute;
+      top: -0.3em;
+      width: 0.3em;
+    }
+  }
+
+  ul {
+    @include media-breakpoint-up(sm) {
+      columns: 3;
+      margin-top: 2em;
+    }
+    @include media-breakpoint-up(xl) {
+      columns: 4;
+      margin-top: 2em;
+    }
+    columns: 2;
+    list-style: none;
+    margin-top: 1em;
+  }
+
+  .ai-ethics-doodle {
+    max-width: 20%;
+
+    &.left {
+      text-align: right;
+
+      img {
+        width: 7.5vw;
+      }
+    }
+
+    &.right {
+      text-align: left;
+
+      img {
+        width: 7.5vw;
+      }
+    }
+  }
+}

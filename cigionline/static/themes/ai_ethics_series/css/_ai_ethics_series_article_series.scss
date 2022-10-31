@@ -1,0 +1,151 @@
+@import '../../../css/global/animations/bounce';
+
+.ai-ethics-series-article-series {
+  @include top-bar($color: $black, $background-color: transparent);
+
+  hr {
+    background-color: $cigi-medium-grey;
+    margin: 0;
+    opacity: 42%;
+    position: relative;
+  }
+
+  .ai-ethics-series-article-series-hero {
+    padding-top: calc(5vw + 2em);
+
+    h1,
+    .opinion-series-label {
+      @include media-breakpoint-up(md) {
+        text-align: center;
+      }
+      text-align: left;
+    }
+
+    h1 {
+      @include media-breakpoint-up(xl) {
+        font-size: 5em;
+      }
+      font-family: $ai-ethics-heading;
+      font-size: calc(4.5vw + 1em);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.5em;
+    }
+
+    .banner {
+      margin-bottom: 2em;
+    }
+
+    .opinion-series-label {
+      @include media-breakpoint-up(md) {
+        margin-bottom: 1.5em;
+      }
+      font-family: $ai-ethics-bilo;
+      font-size: 1em;
+      font-weight: 500;
+      margin-bottom: 1em;
+    }
+
+    .series-title {
+      padding: 0;
+    }
+
+    .short-description {
+      @include media-breakpoint-up(md) {
+        margin-bottom: 4em;
+      }
+      margin-bottom: 2em;
+    }
+  }
+
+  .article-series-in-the-series {
+    font-family: $ai-ethics-bilo;
+    margin-bottom: 1em;
+
+    h2 {
+      font-size: 1em;
+      font-weight: 500;
+    }
+
+    article {
+      padding: 1em 2em;
+      position: relative;
+
+      h3 {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        @include media-breakpoint-up(md) {
+          font-size: 1.5em;
+        }
+        font-weight: 500;
+      }
+
+      ul {
+        display: flex;
+        margin-top: 0.5em;
+
+        li {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+          @include comma-separated;
+          list-style: none;
+
+          &::after {
+            color: $cigi-text-grey;
+          }
+        }
+      }
+
+      .article-short-description {
+        color: $cigi-text-grey;
+
+        p {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .credits {
+    @include media-breakpoint-up(md) {
+      margin-bottom: 4em;
+    }
+    font-family: $ai-ethics-bilo;
+    margin-bottom: 2em;
+
+    hr {
+      background-color: $cigi-medium-grey;
+      margin-bottom: 1em;
+    }
+
+    .ai-ethics-doodle {
+      text-align: center;
+
+      img {
+        width: 100px;
+      }
+    }
+
+    .credits-content {
+      @include media-breakpoint-up(sm) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      @include media-breakpoint-up(md) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      -ms-grid-columns: 1fr 0.5em 1fr;
+      display: -ms-grid;
+      display: grid; // sass-lint:disable-line no-duplicate-properties
+      font-size: 0.75em;
+      grid-column-gap: 0.5em;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 4em;
+      margin-left: 2em;
+      margin-top: 1em;
+
+      .name {
+        font-size: 1.25em;
+      }
+    }
+  }
+}
