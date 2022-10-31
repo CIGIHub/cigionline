@@ -1,4 +1,6 @@
 from distutils.log import error
+from pydoc import classname
+from turtle import heading
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
@@ -28,8 +30,18 @@ import traceback
 
 class HomePage(Page):
     """Singleton model for the home page."""
+    class LayoutChoices(models.TextChoices):
+        ONE_COLUMN = 'one_column', 'One Column'
+        TWO_COLUMN = 'two_column', 'Two Column'
+
+    feature_layout = models.CharField(
+        choices=LayoutChoices.choices,
+        default=LayoutChoices.ONE_COLUMN,
+        max_length=20
+    )
 
     content_panels = Page.content_panels + [
+        FieldPanel('feature_layout', heading='Feature Layout', classname='collapsible collapsed'),
         MultiFieldPanel(
             [
                 InlinePanel(
