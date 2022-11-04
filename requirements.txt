@@ -65,7 +65,6 @@ soupsieve==2.2.1
 sqlparse==0.4.2
 starkbank-ecdsa==2.0.3
 tablib==3.0.0
-typed-ast==1.5.4
 Unidecode==1.2.0
 urllib3==1.26.5
 wagtail==4.1
