@@ -21,9 +21,11 @@
         </div>
 
         {% if event_format_string and location_string %}
-          <a href="{{ location_map_url }}" target="_blank">  
-            <div class="meta location-string"><i class="fas fa-map-marker-alt"></i>{{ location_string }}</div>
-          </a>
+          <div class="meta location-string">
+            <a href="{{ location_map_url }}" target="_blank">  
+              <i class="fas fa-map-marker-alt"></i>{{ location_string }}
+            </a>
+          </div>
         {% endif %}
 
         {% if event_access|length > 1 or type|length > 1 %}

@@ -231,13 +231,10 @@ class EventPage(
 
     def event_format_string(self):
         # Show event format if it is not virtual only
-        print('self.event_format:', self.event_format)
-        print(self.EventFormats.HYBRID, self.EventFormats.IN_PERSON)
         if self.event_format in [
             self.EventFormats.HYBRID,
             self.EventFormats.IN_PERSON,
         ]:
-            print('display', self.get_event_format_display())
             return self.get_event_format_display()
         return ''
 
