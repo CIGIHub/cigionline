@@ -216,27 +216,24 @@ class EventPage(
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
     def location_string(self):
-        location_strings = [
-            self.location_address1,
-            self.location_address2,
-            self.location_city,
-            self.location_province,
-            self.location_postal_code,
-            self.location_country
-        ]
-        return ', '.join([x for x in location_strings if x])
+        # Show event format if it is not virtual only
+        if self.event_format in [self.EventFormats.HYBRID, self.EventFormats.IN_PERSON]:
+            location_strings = [
+                self.location_address1,
+                self.location_address2,
+                self.location_city,
+                self.location_province,
+                self.location_postal_code,
+                self.location_country
+            ]
+            return ', '.join([x for x in location_strings if x])
+        return ''
 
     def location_map_url(self):
         return f'https://www.google.com/maps/search/?api=1&query={urllib.parse.quote(self.location_string())}'
 
     def event_format_string(self):
-        # Show event format if it is not virtual only
-        if self.event_format in [
-            self.EventFormats.HYBRID,
-            self.EventFormats.IN_PERSON,
-        ]:
-            return self.get_event_format_display()
-        return ''
+        return self.get_event_format_display()
 
     @ property
     def multimedia_url(self):
@@ -317,7 +314,7 @@ class EventPage(
     def get_context(self, request):
         context = super().get_context(request)
         context['location_string'] = self.location_string()
-        context['event_format_string'] = self.event_format_string()
+        context['event_format_string'] = self.get_event_format_display()
         context['location_map_url'] = self.location_map_url()
         return context
 
