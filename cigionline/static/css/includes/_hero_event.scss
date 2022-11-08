@@ -62,6 +62,12 @@ section {
             }
           }
         }
+
+        .location-string {
+          i {
+            color: $cigi-primary-colour;
+          }
+        }
       }
 
       .event-date-circle {
