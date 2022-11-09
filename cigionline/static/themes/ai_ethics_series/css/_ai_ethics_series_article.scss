@@ -88,7 +88,7 @@
     }
     font-family: $ai-ethics-heading;
     font-weight: 700;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     position: relative;
 
     blockquote {
@@ -97,6 +97,11 @@
       font-size: 1.6em;
       line-height: 1.1;
       margin: 0;
+
+      p {
+        margin-bottom: 0;
+        margin-top: 0.5em;
+      }
     }
 
     &.right {
@@ -115,7 +120,7 @@
         display: block;
         height: 0.7em;
         position: absolute;
-        top: -0.5em;
+        top: 0.15em;
         width: 0.7em;
       }
     }
@@ -138,17 +143,21 @@
         height: 0.7em;
         left: -0.7em;
         position: absolute;
-        top: -0.5em;
+        top: 0.15em;
         width: 0.7em;
       }
     }
   }
 
-  .footnotes {
-    ol {
-      padding-left: 1.75em;
+  .article-footnotes,
+  .article-works-cited {
+    h2 {
+      margin-bottom: 0.5em;
+      padding-bottom: 0;
+
+      &::after {
+        content: none;
+      }
     }
   }
 }
-
-// comment to force deploy
