@@ -125,9 +125,6 @@ updates:
     - 1.20.7
     - 1.20.8
     - 1.20.9
-  - dependency-name: astroid
-    versions:
-    - 2.5.3
   - dependency-name: s3transfer
     versions:
     - 0.3.7
