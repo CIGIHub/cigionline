@@ -132,8 +132,7 @@ def send_email(title, authors, page_owner, content_type, recipients, publisher, 
     )
     msg.attach_alternative(html_content, "text/html")
 
-    if notifications_on():
-        msg.send()
+    msg.send()
 
 
 def send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label):
@@ -150,8 +149,7 @@ def send_to_slack(title, authors, page_owner, content_type, publisher, publish_p
     }
     url = os.environ['SLACK_WEBHOOK_URL']  # hardcoded placeholder test channel
 
-    if notifications_on():
-        requests.post(url, json.dumps(values))
+    requests.post(url, json.dumps(values))
 
 
 # Let everyone know when a new page is published
@@ -199,11 +197,12 @@ class SignalsConfig(AppConfig):
             HomePageFeaturedExpertsList,
         )
 
-        page_published.connect(send_notifications, sender=ArticlePage)
-        page_published.connect(send_notifications, sender=ArticleSeriesPage)
-        page_published.connect(send_notifications, sender=PublicationPage)
-        page_published.connect(send_notifications, sender=MultimediaPage)
-        page_published.connect(send_notifications, sender=EventPage)
+        if notifications_on():
+            page_published.connect(send_notifications, sender=ArticlePage)
+            page_published.connect(send_notifications, sender=ArticleSeriesPage)
+            page_published.connect(send_notifications, sender=PublicationPage)
+            page_published.connect(send_notifications, sender=MultimediaPage)
+            page_published.connect(send_notifications, sender=EventPage)
 
         if 'CLOUDFLARE_EMAIL' in os.environ \
                 and 'CLOUDFLARE_API_KEY' in os.environ \
