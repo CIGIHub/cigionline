@@ -93,7 +93,7 @@
               </div>
               <ul class="authors">
                 {% for item in article.authors.all %}
-                  <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
+                  <li><a href="{% pageurl item.author %}"> {{ item.author.title }}</a></li>
                 {% endfor %}
               </ul>
               {% endwith %}

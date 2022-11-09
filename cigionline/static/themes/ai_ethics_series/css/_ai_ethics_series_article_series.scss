@@ -90,6 +90,7 @@
 
           &::after {
             color: $cigi-text-grey;
+            margin-right: 0.3em !important;
           }
         }
       }
@@ -125,11 +126,11 @@
     }
 
     .credits-content {
-      @include media-breakpoint-up(sm) {
+      @include media-breakpoint-up(md) {
         -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
         grid-template-columns: 1fr 1fr 1fr;
       }
-      @include media-breakpoint-up(md) {
+      @include media-breakpoint-up(xl) {
         -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }
@@ -139,6 +140,7 @@
       font-size: 0.75em;
       grid-column-gap: 0.5em;
       grid-template-columns: 1fr 1fr;
+      grid-template-rows: 8em 6em;
       margin-bottom: 4em;
       margin-left: 2em;
       margin-top: 1em;
