@@ -31,8 +31,7 @@
         {% if event_access|length > 1 or type|length > 1 %}
           <div class="meta">
             {{ event_access }} 
-            Event
-            {% if event_type|length > 1 %}: {{ event_type }}{% endif %}
+            Event{% if event_type|length > 1 %}: {{ event_type }}{% endif %}
             {% if event_format_string %}({{ event_format_string }}){% endif %}
           </div>
         {% endif %}
