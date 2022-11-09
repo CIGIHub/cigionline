@@ -182,11 +182,19 @@ def clear_cloudflare_home_page_cache(sender, **kwargs):
 
 
 def clear_experts_page_cache(sender, **kwargs):
-    # clear experts landing page cache if a person gains or loses the 'expert' role, or if an expert's expertise field is updated
+    # clear experts landing page search table cache if a person gains or loses the 'expert' role, or if an expert's expertise field is updated
+    from wagtail.models import PageRevision
+
+    revision = kwargs['revision']
+
     try:
-        revision = kwargs['revision']
         revision_previous = revision.get_previous()
-        if (revision.content['person_types'] != revision_previous.content['person_types']) \
+    except PageRevision.DoesNotExist:
+        revision_previous = None
+
+    try:
+        if (not revision_previous and 4 in revision.content['person_types']) \
+                or (revision.content['person_types'] != revision_previous.content['person_types']) \
                 or (4 in revision.content['person_types'] and revision.content['expertise'] != revision_previous.content['expertise']):
             cache.delete_pattern('*all_experts*')
             purge_url_from_cache('https://www.cigionline.org/experts/')
