@@ -4,6 +4,7 @@ import os
 import datetime
 import pytz
 import traceback
+from django.core.cache import cache
 from distutils.log import error
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
@@ -180,6 +181,21 @@ def clear_cloudflare_home_page_cache(sender, **kwargs):
         error(traceback.format_exc())
 
 
+def clear_cloudflare_experts_page_cache(sender, **kwargs):
+    from people.models import PersonListPage
+    try:
+        instance = kwargs['instance']
+        person_types = [person.name for person in instance.person_types.all()]
+        expert_page = PersonListPage.objects.get(slug='experts')
+        expert_page.save_revision().publish()
+        cache.delete_pattern('*all_experts*')
+        if 'Expert' in person_types:
+            purge_url_from_cache('https://www.cigionline.org/experts/')
+            
+    except Exception:
+        error(traceback.format_exc())
+
+
 class SignalsConfig(AppConfig):
     name = 'signals'
     verbose_name = "Signals"
@@ -189,6 +205,7 @@ class SignalsConfig(AppConfig):
         from publications.models import PublicationPage
         from multimedia.models import MultimediaPage
         from events.models import EventPage
+        from people.models import PersonPage
         from features.models import (
             HomePageFeaturedContentList,
             HomePageFeaturedPublicationsList,
@@ -204,8 +221,11 @@ class SignalsConfig(AppConfig):
         page_published.connect(send_notifications, sender=PublicationPage)
         page_published.connect(send_notifications, sender=MultimediaPage)
         page_published.connect(send_notifications, sender=EventPage)
+        page_published.connect(clear_cloudflare_experts_page_cache, sender=PersonPage)
 
-        if 'CLOUDFLARE_EMAIL' in os.environ \
+        if 'PYTHON_ENV' in os.environ \
+                and os.environ.get('PYTHON_ENV') == 'production' \
+                and 'CLOUDFLARE_EMAIL' in os.environ \
                 and 'CLOUDFLARE_API_KEY' in os.environ \
                 and 'CLOUDFLARE_ZONEID' in os.environ:
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedContentList)
