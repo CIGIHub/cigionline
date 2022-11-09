@@ -1,9 +1,6 @@
 anyascii==0.2.0
 asgiref==3.4.1
-<<<<<<< HEAD
-=======
 astroid==2.12.12
->>>>>>> master
 beautifulsoup4==4.9.3
 boto3==1.22.2
 botocore==1.25.2

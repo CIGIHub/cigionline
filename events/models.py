@@ -235,7 +235,7 @@ class EventPage(
     def event_format_string(self):
         return self.get_event_format_display()
 
-    @ property
+    @property
     def multimedia_url(self):
         if self.multimedia_page:
             return self.multimedia_page.url
@@ -248,7 +248,7 @@ class EventPage(
         else:
             return self.publishing_date < now
 
-    @ property
+    @property
     def event_start_time_utc(self):
         '''
         returns UTC datetime object
@@ -273,7 +273,7 @@ class EventPage(
                 )
             )
 
-    @ property
+    @property
     def event_end_time_utc(self):
         if self.time_zone == '' or not self.time_zone:
             return self.event_end
@@ -286,7 +286,7 @@ class EventPage(
                 )
             )
 
-    @ property
+    @property
     def time_zone_label(self):
         # timezone could have been assigned in freeform (previous version), or from a list of options (post change)
         # if it's from a list of options post change:
