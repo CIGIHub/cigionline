@@ -182,7 +182,7 @@ def clear_cloudflare_home_page_cache(sender, **kwargs):
 
 
 def clear_experts_page_cache(sender, **kwargs):
-    # clear experts landing page search table cache if a person gains or loses the 'expert' role, or if an expert's expertise field is updated
+    # clear experts landing page search table cache if a new expert is added or a person gains or loses the 'expert' role, or if an expert's expertise field is updated
     from wagtail.models import PageRevision
 
     revision = kwargs['revision']
@@ -228,7 +228,6 @@ class SignalsConfig(AppConfig):
         page_published.connect(send_notifications, sender=PublicationPage)
         page_published.connect(send_notifications, sender=MultimediaPage)
         page_published.connect(send_notifications, sender=EventPage)
-        page_published.connect(clear_experts_page_cache, sender=PersonPage)
 
         if 'PYTHON_ENV' in os.environ \
                 and os.environ.get('PYTHON_ENV') == 'production' \
@@ -242,3 +241,4 @@ class SignalsConfig(AppConfig):
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedHighlightsList)
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPromotionsList)
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedExpertsList)
+            page_published.connect(clear_experts_page_cache, sender=PersonPage)
