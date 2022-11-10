@@ -84,11 +84,14 @@
 
   .stream-block-pull-quote {
     @include media-breakpoint-up(md) {
+      margin-bottom: 0.5em;
+      margin-top: 0em;
       width: 30%;
     }
     font-family: $ai-ethics-heading;
     font-weight: 700;
-    margin-bottom: 0.5em;
+    margin-bottom: 2em;
+    margin-top: 2.5em;
     position: relative;
 
     blockquote {
@@ -111,7 +114,10 @@
       }
 
       blockquote {
-        padding: 0 0 0 0.5em;
+        @include media-breakpoint-up(md) {
+          padding: 0 0 0 0.5em;
+        }
+        padding: 0 0.5em 0 0.5em;
       }
 
       &::before {
@@ -141,7 +147,7 @@
           padding: 0 0.5em 0 0;
         }
         border-left: 0;
-        padding: 0 0 0 0.5em;
+        padding: 0 0.5em 0 0.5em;
       }
 
       &::before {
