@@ -1,7 +1,7 @@
 @import '../../../css/global/animations/bounce';
 
 .ai-ethics-series-article-series {
-  @include top-bar($color: $black, $background-color: transparent);
+  @include top-bar($color: $black, $background-color: $white);
 
   hr {
     background-color: $cigi-medium-grey;
@@ -68,7 +68,10 @@
     }
 
     article {
-      padding: 1em 2em;
+      @include media-breakpoint-up(md) {
+        padding: 1em 2em;
+      }
+      padding: 1em 0;      
       position: relative;
 
       h3 {
@@ -113,8 +116,9 @@
     margin-bottom: 2em;
 
     h2 {
-      text-align: center;
+      font-size: 1em;
       margin-bottom: 1em;
+      text-align: center;
     }
 
     hr {
@@ -123,8 +127,8 @@
     }
 
     .ai-ethics-doodle {
-      text-align: center;
       padding-bottom: 1em;
+      text-align: center;
 
       img {
         width: 100px;

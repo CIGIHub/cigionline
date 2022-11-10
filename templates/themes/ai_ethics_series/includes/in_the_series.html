@@ -16,10 +16,12 @@
     </div>
     <div class="series-contributors row justify-content-center">
       <ul class="contributors col col-md-10 col-lg-8">
-        {% for item in article_series.series_contributors %}
-        <li>
-          <a href="{{ item.url }}">{{ item.title }}</a>
-        </li>
+        {% for item in article_series.series_contributors_by_article %}
+          {% for contributor in item.contributors %}
+            <li>
+              <a href="{{ item.item.url }}">{{ contributor.author.title }}</a>
+            </li>
+          {% endfor %}
         {% endfor %}
       </ul>
     </div>
