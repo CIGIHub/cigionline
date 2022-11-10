@@ -141,19 +141,26 @@
 
       .ai-ethics-logo {
         img {
+          @include media-breakpoint-up(md) {
+            height: 2em;
+          }
           @include media-breakpoint-up(xl) {
             height: 3em;
           }
-          height: 2em;
+          height: 1.75em;
           width: auto;
         }
   
         .cigi-logo {
           .large-logo {
+            @include media-breakpoint-up(md) {
+              height: 2em;
+            }
             @include media-breakpoint-up(xl) {
               height: 3em;
             }
-            height: 2em;
+            height: 1.75em;
+            width: auto;
           }
         }
       }
@@ -165,6 +172,8 @@
       @include media-breakpoint-up(md) {
         -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
         grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 8em 6em 6em;
+        margin: 1em 0 4em 2em;
       }
       @include media-breakpoint-up(xl) {
         -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
@@ -176,13 +185,21 @@
       font-size: 0.75em;
       grid-column-gap: 0.5em;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: 8em 6em;
-      margin-bottom: 4em;
-      margin-left: 2em;
-      margin-top: 1em;
+      grid-template-rows: 8em 6em 4em 6em;
+      margin: 1em 0 4em 0;
 
       .name {
-        font-size: 1.25em;
+        @include media-breakpoint-up(md) {
+          font-size: 1.25em;
+        }
+        font-size: 1.1em;
+      }
+
+      .title {
+        @include media-breakpoint-up(md) {
+          font-size: 1em;
+        }
+        font-size: 0.85em;
       }
     }
   }
