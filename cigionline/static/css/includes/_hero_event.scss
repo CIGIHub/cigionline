@@ -62,6 +62,15 @@ section {
             }
           }
         }
+
+        .location-string {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+
+          i {
+            color: $cigi-primary-colour;
+            margin-right: 0.25em;
+          }
+        }
       }
 
       .event-date-circle {
