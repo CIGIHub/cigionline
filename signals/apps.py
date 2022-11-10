@@ -230,7 +230,7 @@ class SignalsConfig(AppConfig):
         page_published.connect(send_notifications, sender=EventPage)
 
         if 'PYTHON_ENV' in os.environ \
-                and os.environ.get('PYTHON_ENV') == 'production' or os.environ.get('PYTHON_ENV') == 'admin' \
+                and (os.environ.get('PYTHON_ENV') == 'production' or os.environ.get('PYTHON_ENV') == 'admin') \
                 and 'CLOUDFLARE_EMAIL' in os.environ \
                 and 'CLOUDFLARE_API_KEY' in os.environ \
                 and 'CLOUDFLARE_ZONEID' in os.environ:
