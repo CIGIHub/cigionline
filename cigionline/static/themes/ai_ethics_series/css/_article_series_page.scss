@@ -68,7 +68,7 @@
       @include media-breakpoint-up(md) {
         padding: 1em 2em;
       }
-      padding: 1em 0;      
+      padding: 1em 0;
       position: relative;
 
       h3 {
@@ -147,8 +147,9 @@
           height: 1.75em;
           width: auto;
         }
-  
+
         .cigi-logo {
+
           .large-logo {
             @include media-breakpoint-up(md) {
               height: 2em;
@@ -162,8 +163,6 @@
         }
       }
     }
-
-    
 
     .credits-content {
       @include media-breakpoint-up(md) {
@@ -183,7 +182,7 @@
       grid-column-gap: 0.5em;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 8em 6em 4em 6em;
-      margin: 1em 0 4em 0;
+      margin: 1em 0 4em;
 
       .name {
         @include media-breakpoint-up(md) {

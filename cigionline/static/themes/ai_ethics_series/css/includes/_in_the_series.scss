@@ -9,25 +9,19 @@
   }
 
   .essay-series-label {
-    @include media-breakpoint-up(md) {
-      text-align: center;
-    }
     font-family: $ai-ethics-bilo;
     margin-bottom: 0.5em;
-    text-align: left;
+    text-align: center;
   }
 
   h2 {
-    @include media-breakpoint-up(md) {
-      text-align: center;
-    }
     font-family: $ai-ethics-heading;
     font-size: calc(2vw + 1em);
     font-weight: 600;
     line-height: 1;
     margin: 0;
     position: relative;
-    text-align: left;
+    text-align: center;
 
     &::before {
       @include media-breakpoint-up(md) {
