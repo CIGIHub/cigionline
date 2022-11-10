@@ -15,10 +15,7 @@
 
     h1,
     .opinion-series-label {
-      @include media-breakpoint-up(md) {
-        text-align: center;
-      }
-      text-align: left;
+      text-align: center;
     }
 
     h1 {
