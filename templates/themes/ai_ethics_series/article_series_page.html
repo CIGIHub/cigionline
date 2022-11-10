@@ -108,8 +108,10 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
+            <div class="ai-ethics-doodle">
+              <img src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_credits.png" />
+            </div>
             <hr>
-            <h2>Credits</h2>
             <div class="credits-content">
               {% for title in self.credits_stream_field %}
                 <div class="title-container">
@@ -120,10 +122,22 @@
                 </div>
               {% endfor %}
             </div>
-            <div class="ai-ethics-doodle">
-              <img src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_credits.png" />
-            </div>
           </div>
+          <div class="col col-md-8 col-lg-6">
+            <h2>Series presented in partnership with:</h2>
+            <div class="ai-ethics-logo-wrapper">
+              <div class="ai-ethics-logo">
+                <a class="cigi-logo" href="/">
+                  {% include './header_cigi_logo_large.svg' %}
+                </a>
+              </div>
+              <div class="ai-ethics-logo">
+                <a href="https://uwaterloo.ca/artificial-intelligence-institute/events/webinar-series">
+                  <img src="/static/themes/ai_ethics_series/assets/WaterlooAI-Logo-RGB-Medium.png">
+                </a>
+              </div>
+            </div>
+          </div
         </div>
       </div>
     </section>

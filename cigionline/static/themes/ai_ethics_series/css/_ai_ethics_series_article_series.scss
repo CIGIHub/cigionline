@@ -112,6 +112,11 @@
     font-family: $ai-ethics-bilo;
     margin-bottom: 2em;
 
+    h2 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
     hr {
       background-color: $cigi-medium-grey;
       margin-bottom: 1em;
@@ -119,11 +124,38 @@
 
     .ai-ethics-doodle {
       text-align: center;
+      padding-bottom: 1em;
 
       img {
         width: 100px;
       }
     }
+
+    .ai-ethics-logo-wrapper {
+      display: flex;
+      justify-content: space-between;
+
+      .ai-ethics-logo {
+        img {
+          @include media-breakpoint-up(xl) {
+            height: 3em;
+          }
+          height: 2em;
+          width: auto;
+        }
+  
+        .cigi-logo {
+          .large-logo {
+            @include media-breakpoint-up(xl) {
+              height: 3em;
+            }
+            height: 2em;
+          }
+        }
+      }
+    }
+
+    
 
     .credits-content {
       @include media-breakpoint-up(md) {
