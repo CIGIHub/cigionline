@@ -41,15 +41,14 @@
   .article-series-description {
     @include media-breakpoint-up(md) {
       margin-bottom: 2em;
-      width: 75%;
+      width: 80%;
+    }
+    @include media-breakpoint-up(lg) {
+      width: 87%;
     }
     border: 0;
     color: $cigi-medium-grey;
     margin-bottom: 1em;
-
-    a {
-      font-style: italic;
-    }
   }
 
   .body {
@@ -172,5 +171,9 @@
         content: none;
       }
     }
+  }
+
+  .article-footnotes {
+    font-size: 0.8125em;
   }
 }
