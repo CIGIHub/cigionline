@@ -20,6 +20,7 @@ from django.utils import timezone
 from wagtail.search import index
 import pytz
 import re
+import urllib.parse
 
 
 class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -100,6 +101,11 @@ class EventPage(
         PRIVATE = (0, 'Private')
         PUBLIC = (1, 'Public')
 
+    class EventFormats(models.TextChoices):
+        HYBRID = ('hybrid', 'Hybrid')
+        VIRTUAL = ('virtual', 'Virtual')
+        IN_PERSON = ('in-person', 'In Person')
+
     class EventTypes(models.TextChoices):
         CIGI_SPONSORED = ('cigi_sponsored', 'CIGI Sponsored')
         CINEMA_SERIES = ('cinema_series', 'Cinema Series')
@@ -150,6 +156,12 @@ class EventPage(
     embed_youtube = models.URLField(blank=True)
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
+    event_format = models.CharField(
+        blank=False,
+        max_length=32,
+        null=True,
+        choices=EventFormats.choices,
+    )
     event_type = models.CharField(
         blank=False,
         max_length=32,
@@ -202,6 +214,26 @@ class EventPage(
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    def location_string(self):
+        # Show event format if it is not virtual only
+        if self.event_format in [self.EventFormats.HYBRID, self.EventFormats.IN_PERSON]:
+            location_strings = [
+                self.location_address1,
+                self.location_address2,
+                self.location_city,
+                self.location_province,
+                self.location_postal_code,
+                self.location_country
+            ]
+            return ', '.join([x for x in location_strings if x])
+        return ''
+
+    def location_map_url(self):
+        return f'https://www.google.com/maps/search/?api=1&query={urllib.parse.quote(self.location_string())}'
+
+    def event_format_string(self):
+        return self.get_event_format_display()
 
     @property
     def multimedia_url(self):
@@ -279,6 +311,13 @@ class EventPage(
             label = self.time_zone
         return label
 
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['location_string'] = self.location_string()
+        context['event_format_string'] = self.get_event_format_display()
+        context['location_map_url'] = self.location_map_url()
+        return context
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -295,6 +334,7 @@ class EventPage(
         FieldPanel('time_zone'),
         MultiFieldPanel(
             [
+                FieldPanel('event_format'),
                 FieldPanel('event_type'),
                 FieldPanel('event_access'),
                 FieldPanel('invitation_type'),
