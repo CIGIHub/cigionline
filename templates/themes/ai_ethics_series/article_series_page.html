@@ -47,10 +47,10 @@
       <div class="row justify-content-center">
         <div class="col-8 col-md-6 col-lg-4">
           <div class="banner">
-            {% if self.image_banner.file.url|file_extension == '.gif' %}
-                  <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.caption}}" />
+            {% if self.image_hero.file.url|file_extension == '.gif' %}
+                  <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
             {% else %}
-              {% image self.image_banner width-1000 %}
+              {% image self.image_hero width-1000 %}
             {% endif %}
           </div>
         </div>
