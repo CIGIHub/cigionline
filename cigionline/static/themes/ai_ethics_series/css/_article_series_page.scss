@@ -51,6 +51,7 @@
       @include media-breakpoint-up(md) {
         margin-bottom: 4em;
       }
+      font-family: Helvetica, sans-serif;
       margin-bottom: 2em;
     }
   }
@@ -92,6 +93,19 @@
             color: $cigi-text-grey;
             margin-right: 0.3em !important;
           }
+        }
+      }
+
+      .article-title-wrapper {
+        display: flex;
+
+        .play-icon {
+          @include media-breakpoint-up(md) {
+            display: block;
+            left: 0;
+            position: absolute;
+          }
+          display: none;
         }
       }
 

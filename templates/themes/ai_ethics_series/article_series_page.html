@@ -82,17 +82,28 @@
               <hr>
             {% endif %}
             <article>
-              {% with series_item.content_page.specific as article %}
-              <h3>
-                <a href={{article.url}}>
-                  {{ article.title }}
-                </a>
-              </h3>
+              {% with series_item.content_page.specific as page %}
+              <div class="article-title-wrapper">
+                {% if page|page_type == 'multimedia' %}
+                  <div class="play-icon">
+                    {% include './includes/play-icon.svg' %}
+                  </div>
+                {% endif %}
+                <h3>
+                  <a href={{page.url}}>
+                    {{ page.title }}
+                  </a>
+                </h3>
+              </div>
               <div class="article-short-description">
-                {{ article.short_description|richtext }}
+                {% if page|page_type == 'multimedia' %}
+                  {{ page.subtitle|richtext }}
+                {% else %}
+                  {{ page.short_description|richtext }}
+                {% endif %}
               </div>
               <ul class="authors">
-                {% for item in article.authors.all %}
+                {% for item in page.authors.all %}
                   <li><a href="{% pageurl item.author %}"> {{ item.author.title }}</a></li>
                 {% endfor %}
               </ul>
