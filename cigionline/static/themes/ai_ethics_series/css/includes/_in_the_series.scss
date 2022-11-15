@@ -40,14 +40,20 @@
     }
   }
 
+  li {
+    @include media-breakpoint-up(xl) {
+      font-size: 0.9em;
+    }
+    font-family: Helvetica, sans-serif;
+    font-size: 0.75em;
+  }
+
   ul {
     @include media-breakpoint-up(sm) {
-      columns: 3;
       margin-top: 2em;
     }
-    @include media-breakpoint-up(xl) {
-      columns: 4;
-      margin-top: 2em;
+    @include media-breakpoint-up(lg) {
+      columns: 3;
     }
     columns: 2;
     list-style: none;

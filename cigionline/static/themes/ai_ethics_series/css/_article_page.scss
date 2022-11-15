@@ -20,6 +20,13 @@
       font-size: 1.1em;
       justify-content: center;
       margin: 1em 0 0.25em;
+
+      .block-author {
+        &::after {
+          margin-right: 0.3em !important;
+        }
+        
+      }
     }
 
     .date {
@@ -49,9 +56,19 @@
     border: 0;
     color: $cigi-medium-grey;
     margin-bottom: 1em;
+
+    p {
+      font-family: Helvetica, sans-serif;
+      // font-size: 0.9em;
+      // line-height: 1.6em;
+    }
   }
 
   .body {
+    font-family: Helvetica, sans-serif;
+    // font-size: 0.9em;
+    // line-height: 1.6em;
+
     h2 {
       font-family: $ai-ethics-bilo;
       font-size: 1.5em;
@@ -163,6 +180,8 @@
 
   .article-footnotes,
   .article-works-cited {
+    font-family: Helvetica, sans-serif;
+
     h2 {
       margin-bottom: 0.5em;
       padding-bottom: 0;
@@ -175,5 +194,13 @@
 
   .article-footnotes {
     font-size: 0.8125em;
+  }
+
+  .about-the-author {
+    font-family: Helvetica, sans-serif;
+  }
+
+  .disclaimer {
+    font-family: Helvetica, sans-serif;
   }
 }
