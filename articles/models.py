@@ -879,6 +879,11 @@ class ArticleSeriesPageSeriesItem(Orderable):
         verbose_name='Series Item',
     )
     category_title = models.CharField(blank=True, max_length=255)
+    short_description_override = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
     hide_series_disclaimer = models.BooleanField(default=False)
     additional_fields = StreamField(
         [
@@ -908,6 +913,7 @@ class ArticleSeriesPageSeriesItem(Orderable):
             'content_page',
             ['articles.ArticlePage', 'multimedia.MultimediaPage', 'events.EventPage'],
         ),
+        FieldPanel('short_description_override'),
         FieldPanel('hide_series_disclaimer'),
         FieldPanel('additional_fields'),
     ]

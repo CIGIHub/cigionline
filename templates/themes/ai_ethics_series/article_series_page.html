@@ -96,9 +96,9 @@
                 </h3>
               </div>
               <div class="article-short-description">
-                {% if page|page_type == 'multimedia' %}
-                  {{ page.subtitle|richtext }}
-                {% else %}
+                {% if series_item.short_description_override %}
+                  {{ series_item.short_description_override|richtext }}
+                {% elif page.short_description %}
                   {{ page.short_description|richtext }}
                 {% endif %}
               </div>
