@@ -4,6 +4,7 @@ import os
 import datetime
 import pytz
 import traceback
+from django.core.cache import cache
 from distutils.log import error
 from django.apps import AppConfig
 from django.core.mail import EmailMultiAlternatives
@@ -180,6 +181,28 @@ def clear_cloudflare_home_page_cache(sender, **kwargs):
         error(traceback.format_exc())
 
 
+def clear_experts_page_cache(sender, **kwargs):
+    # clear experts landing page search table cache if a new expert is added or a person gains or loses the 'expert' role, or if an expert's expertise field is updated
+    from wagtail.models import PageRevision
+
+    revision = kwargs['revision']
+
+    try:
+        revision_previous = revision.get_previous()
+    except PageRevision.DoesNotExist:
+        revision_previous = None
+
+    try:
+        if (not revision_previous and 4 in revision.content['person_types']) \
+                or (revision.content['person_types'] != revision_previous.content['person_types']) \
+                or (4 in revision.content['person_types'] and revision.content['expertise'] != revision_previous.content['expertise']):
+            cache.delete_pattern('*all_experts*')
+            purge_url_from_cache('https://www.cigionline.org/experts/')
+
+    except Exception:
+        error(traceback.format_exc())
+
+
 class SignalsConfig(AppConfig):
     name = 'signals'
     verbose_name = "Signals"
@@ -189,6 +212,7 @@ class SignalsConfig(AppConfig):
         from publications.models import PublicationPage
         from multimedia.models import MultimediaPage
         from events.models import EventPage
+        from people.models import PersonPage
         from features.models import (
             HomePageFeaturedContentList,
             HomePageFeaturedPublicationsList,
@@ -205,7 +229,9 @@ class SignalsConfig(AppConfig):
         page_published.connect(send_notifications, sender=MultimediaPage)
         page_published.connect(send_notifications, sender=EventPage)
 
-        if 'CLOUDFLARE_EMAIL' in os.environ \
+        if 'PYTHON_ENV' in os.environ \
+                and (os.environ.get('PYTHON_ENV') == 'production' or os.environ.get('PYTHON_ENV') == 'admin') \
+                and 'CLOUDFLARE_EMAIL' in os.environ \
                 and 'CLOUDFLARE_API_KEY' in os.environ \
                 and 'CLOUDFLARE_ZONEID' in os.environ:
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedContentList)
@@ -215,3 +241,4 @@ class SignalsConfig(AppConfig):
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedHighlightsList)
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPromotionsList)
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedExpertsList)
+            page_published.connect(clear_experts_page_cache, sender=PersonPage)
