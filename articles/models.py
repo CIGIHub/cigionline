@@ -883,6 +883,7 @@ class ArticleSeriesPageSeriesItem(Orderable):
         blank=True,
         null=False,
         features=['bold', 'italic', 'link'],
+        help_text='If specified, this replaces the short description of the page as it appears on the landing page.'
     )
     hide_series_disclaimer = models.BooleanField(default=False)
     additional_fields = StreamField(
