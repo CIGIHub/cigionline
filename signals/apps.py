@@ -33,7 +33,7 @@ def get_site_url():
 
 
 def datetime_compare(t1, t2):
-    if t1:  # if go_live_at field is populated; if not, default False
+    if t1 and t2:  # if go_live_at field is populated; if not, default False
         return ((t2.astimezone(pytz.utc) - t1.astimezone(pytz.utc)) <= datetime.timedelta(hours=1))
     return False
 
@@ -156,20 +156,23 @@ def send_to_slack(title, authors, page_owner, content_type, publisher, publish_p
 # Let everyone know when a new page is published
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
+    revision = kwargs['revision']
 
-    title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish, relative_url = instance_info(instance)
-    publish_phrasing = set_publish_phrasing(is_first_publish)
-    page_url = f'{get_site_url()}{relative_url}'
-    header_label = get_header_label()
+    # first ever scheduled publishes trigger this signal unexpectedly upon scheduling; filter them out
+    if not revision.approved_go_live_at:
+        # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
+        try:
+            title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish, relative_url = instance_info(instance)
+            publish_phrasing = set_publish_phrasing(is_first_publish)
+            page_url = f'{get_site_url()}{relative_url}'
+            header_label = get_header_label()
 
-    # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
-    try:
-        if is_first_publish:
-            send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label)
-        notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
-        send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing, page_url, header_label)
-    except Exception as e:
-        print(e)
+            if is_first_publish:
+                send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label)
+            notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
+            send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing, page_url, header_label)
+        except Exception as e:
+            print(e)
 
 
 def clear_cloudflare_home_page_cache(sender, **kwargs):
