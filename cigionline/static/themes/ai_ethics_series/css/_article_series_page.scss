@@ -97,15 +97,28 @@
       }
 
       .article-title-wrapper {
+        align-items: center;
         display: flex;
 
         .play-icon {
           @include media-breakpoint-up(md) {
-            display: block;
+            display: flex;
             left: 0;
             position: absolute;
           }
+          aspect-ratio: 1 / 1;
           display: none;
+          margin-bottom: 0.7em;
+
+          .fa-play {
+            font-size: 0.525em;
+          }
+
+          .fa-border {
+            background: $black;
+            border-color: $black;
+            padding: 0.6em;
+          }
         }
       }
 
