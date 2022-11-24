@@ -52,7 +52,6 @@ def count_publishes(instance):
     all_unpublishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.unpublish').order_by('-timestamp')
     if all_unpublishes:
         latest_unpublish = all_unpublishes[0].timestamp
-        print(f'unpublish: {latest_unpublish}')
         all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish', timestamp__gt=latest_unpublish)
     else:
         all_publishes = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish')
@@ -158,11 +157,9 @@ def send_to_slack(title, authors, page_owner, content_type, publisher, publish_p
 
 # Let everyone know when a new page is published
 def send_notifications(sender, **kwargs):
-    print('signal triggered!!!')
     instance = kwargs['instance']
     revision = kwargs['revision']
     publish_trigger_type = get_publish_trigger_type(instance, revision)
-    print(f'trigger: {publish_trigger_type}')
 
     # first ever scheduled publishes trigger this signal unexpectedly upon scheduling; filter them out
     if publish_trigger_type != 'scheduling':
@@ -173,8 +170,6 @@ def send_notifications(sender, **kwargs):
             publish_phrasing = set_publish_phrasing(is_first_publish)
             page_url = f'{get_site_url()}{relative_url}'
             header_label = get_header_label()
-
-            print(f'first: {is_first_publish}; scheduled: {is_scheduled_publish}')
 
             if is_first_publish:
                 send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label)
