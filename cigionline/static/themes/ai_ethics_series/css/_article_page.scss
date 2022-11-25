@@ -1,12 +1,9 @@
 .ai-ethics-series-article {
-  @include top-bar($color: $black, $background-color: transparent);
+  @include top-bar($color: $black, $background-color: $white);
 
   .article-hero {
-    @include media-breakpoint-up(md) {
-      text-align: center;
-    }
     padding-top: calc(5vw + 4em);
-    text-align: left;
+    text-align: center;
 
     h1 {
       @include media-breakpoint-up(xl) {
@@ -19,13 +16,16 @@
     }
 
     .authors {
-      @include media-breakpoint-up(md) {
-        justify-content: center;
-      }
       font-family: $ai-ethics-bilo;
       font-size: 1.1em;
-      justify-content: left;
+      justify-content: center;
       margin: 1em 0 0.25em;
+
+      .block-author {
+        &::after {
+          margin-right: 0.3em !important;
+        }
+      }
     }
 
     .date {
@@ -47,18 +47,23 @@
   .article-series-description {
     @include media-breakpoint-up(md) {
       margin-bottom: 2em;
-      width: 75%;
+      width: 80%;
+    }
+    @include media-breakpoint-up(lg) {
+      width: 87%;
     }
     border: 0;
     color: $cigi-medium-grey;
     margin-bottom: 1em;
 
-    a {
-      font-style: italic;
+    p {
+      font-family: Helvetica, sans-serif;
     }
   }
 
   .body {
+    font-family: Helvetica, sans-serif;
+
     h2 {
       font-family: $ai-ethics-bilo;
       font-size: 1.5em;
@@ -84,11 +89,14 @@
 
   .stream-block-pull-quote {
     @include media-breakpoint-up(md) {
+      margin-bottom: 0.5em;
+      margin-top: 0;
       width: 30%;
     }
     font-family: $ai-ethics-heading;
     font-weight: 700;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
+    margin-top: 2.5em;
     position: relative;
 
     blockquote {
@@ -97,17 +105,30 @@
       font-size: 1.6em;
       line-height: 1.1;
       margin: 0;
+
+      p {
+        margin-bottom: 0;
+        margin-top: 0.5em;
+      }
     }
 
     &.right {
-      margin-left: 1em;
-      padding-left: 1em;
+      @include media-breakpoint-up(md) {
+        margin-left: 1em;
+        padding-left: 1em;
+      }
 
       blockquote {
-        padding: 0 0 0 0.5em;
+        @include media-breakpoint-up(md) {
+          padding: 0 0 0 0.5em;
+        }
+        padding: 0 0.5em;
       }
 
       &::before {
+        @include media-breakpoint-up(md) {
+          top: 0.15em;
+        }
         background-image: url('../assets/ai_ethics_doodle_rectangle.png');
         background-repeat: no-repeat;
         background-size: contain;
@@ -115,40 +136,66 @@
         display: block;
         height: 0.7em;
         position: absolute;
-        top: -0.5em;
+        top: -0.7em;
         width: 0.7em;
       }
     }
 
     &.left {
-      margin-right: 1em;
-      padding-right: 1em;
+      @include media-breakpoint-up(md) {
+        margin-right: 1em;
+        padding-right: 1em;
+      }
 
       blockquote {
+        @include media-breakpoint-up(md) {
+          padding: 0 0.5em 0 0;
+        }
         border-left: 0;
-        padding: 0 0.5em 0 0;
+        padding: 0 0.5em;
       }
 
       &::before {
+        @include media-breakpoint-up(md) {
+          left: -0.7em;
+          top: 0.15em;
+        }
         background-image: url('../assets/ai_ethics_doodle_rectangle.png');
         background-repeat: no-repeat;
         background-size: contain;
         content: '';
         display: block;
         height: 0.7em;
-        left: -0.7em;
         position: absolute;
-        top: -0.5em;
+        top: -0.7em;
         width: 0.7em;
       }
     }
   }
 
-  .footnotes {
-    ol {
-      padding-left: 1.75em;
+  .article-footnotes,
+  .article-works-cited {
+    font-family: Helvetica, sans-serif;
+
+    h2 {
+      margin-bottom: 0.5em;
+      padding-bottom: 0;
+
+      &::after {
+        content: none;
+      }
     }
   }
-}
 
-// comment to force deploy
+  .article-footnotes {
+    font-size: 0.8125em;
+  }
+
+  .about-the-author {
+    font-family: Helvetica, sans-serif;
+  }
+
+  .disclaimer {
+    font-family: Helvetica, sans-serif;
+  }
+}

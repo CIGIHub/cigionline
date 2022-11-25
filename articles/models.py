@@ -860,6 +860,32 @@ class ArticleSeriesPage(
                     series_people.add(person.author.title)
         return series_authors
 
+    @property
+    def series_authors_by_article(self):
+        '''
+        Similar to 'series_contribitors_by_article', but only for authors of article pages
+        '''
+        series_authors = []
+        item_people = set()
+
+        for series_item in self.article_series_items:
+            if series_item.content_page.contenttype == 'Opinion':
+                people = series_item.content_page.authors.all()
+                people_string = ''
+
+                for person in people:
+                    person_string = person.author.title
+                    people_string += person_string
+
+                    if len(people) > 1:
+                        item_people.add(person_string)
+
+                if people_string not in item_people:
+                    series_authors.append({'item': series_item.content_page, 'authors': people})
+                    item_people.add(people_string)
+
+        return series_authors
+
     class Meta:
         verbose_name = 'Opinion Series'
         verbose_name_plural = 'Opinion Series'

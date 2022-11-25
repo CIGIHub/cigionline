@@ -2,6 +2,7 @@ $ai-ethics-heading: superior-title, serif;
 $ai-ethics-bilo: bilo, sans-serif;
 
 @import '../../../css/global/mixins';
-@import './ai_ethics_series_article';
-@import './ai_ethics_series_article_series';
+@import './article_page';
+@import './article_series_page';
+@import './multimedia_page';
 @import './includes/in_the_series';

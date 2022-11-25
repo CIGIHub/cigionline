@@ -1,0 +1,41 @@
+.ai-ethics-series-multimedia {
+  @include top-bar($color: $white, $background-color: $black);
+
+  .mm-hero {
+    font-family: Helvetica, sans-serif;
+  }
+
+  .body {
+    font-family: Helvetica, sans-serif;
+
+    h2 {
+      font-family: $ai-ethics-bilo;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-family: $ai-ethics-bilo;
+      font-size: 1.3em;
+      font-weight: 500;
+    }
+
+    hr {
+      background-color: transparent;
+      background-image: url('../assets/ai_ethics_doodle_hr_green.png');
+      background-position: calc(50% - 25px);
+      background-repeat: no-repeat;
+      background-size: contain;
+      height: 50px;
+      margin: 2em 0;
+    }
+  }
+
+  .multimedia-disclaimer {
+    font-family: Helvetica, sans-serif;
+  }
+
+  .opinion-disclaimer {
+    font-family: Helvetica, sans-serif;
+  }
+}
