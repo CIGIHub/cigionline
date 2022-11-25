@@ -106,18 +106,17 @@
             left: 0;
             position: absolute;
           }
-          aspect-ratio: 1;
+          align-items: center;
+          background-color: $black;
           display: none;
+          height: 20px;
+          justify-content: center;
           margin-bottom: 0.7em;
+          width: 20px;
 
           .fa-play {
+            color: white;
             font-size: 0.525em;
-          }
-
-          .fa-border {
-            background: $black;
-            border-color: $black;
-            padding: 0.6em;
           }
         }
       }
