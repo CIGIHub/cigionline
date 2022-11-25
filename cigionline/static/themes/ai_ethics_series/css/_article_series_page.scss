@@ -105,13 +105,13 @@
             display: flex;
             left: 0;
             position: absolute;
+            top: 1.35em;
           }
           align-items: center;
           background-color: $black;
           display: none;
           height: 20px;
           justify-content: center;
-          margin-bottom: 0.7em;
           width: 20px;
 
           .fa-play {
