@@ -10,4 +10,15 @@
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.closing_date_text %}
   {% include "includes/body.html" with body=self.description %}
+  {% if self.related_files %}
+    <section class="related-files">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
