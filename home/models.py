@@ -12,12 +12,14 @@ from features.models import (
     HomePageFeaturedHighlightsList,
     HomePageFeaturedEventsList,
 )
+from streams.blocks import HomePageRow
 from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     FieldPanel
 )
+from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
@@ -29,7 +31,11 @@ import traceback
 class HomePage(Page):
     """Singleton model for the home page."""
 
+    layout = StreamField([
+        ('row', HomePageRow()),
+    ])
     content_panels = Page.content_panels + [
+        FieldPanel('layout'),
         MultiFieldPanel(
             [
                 InlinePanel(

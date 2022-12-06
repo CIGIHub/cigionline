@@ -1115,3 +1115,146 @@ class LineBreakBlock(blocks.StructBlock):
         icon = 'horizontalrule'
         label = 'Line Break'
         template = 'streams/line_break_block.html'
+
+
+class ArticleCard(blocks.StructBlock):
+    class ArticleCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='articles.ArticlePage')
+    size = blocks.ChoiceBlock(choices=ArticleCardTypeChoices.choices, required=True)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Article Card'
+        template = 'streams/article_card_block.html'
+
+
+class PublicationCard(blocks.StructBlock):
+    class PublicationCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')
+    size = blocks.ChoiceBlock(choices=PublicationCardTypeChoices.choices, required=True)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Publication Card'
+        template = 'streams/publication_card_block.html'
+
+
+class ArticleSeriesCard(blocks.StructBlock):
+    class ArticleSeriesCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='articles.ArticleSeriesPage')
+    size = blocks.ChoiceBlock(choices=ArticleSeriesCardTypeChoices.choices, required=True)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Article Series Card'
+        template = 'streams/article_series_card_block.html'
+
+
+class EventCard(blocks.StructBlock):
+    class EventCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='events.EventPage')
+    size = blocks.ChoiceBlock(choices=EventCardTypeChoices.choices, required=True)
+
+    class Meta:
+        icon = 'date'
+        label = 'Event Card'
+        template = 'streams/event_card_block.html'
+
+
+class MultimediaCard(blocks.StructBlock):
+    class MultimediaCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    class MultimediaCardTypeChoices(models.TextChoices):
+        VIDEO = ('video', 'Video')
+        PODCAST = ('podcast', 'Podcast')
+
+    page = blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')
+    size = blocks.ChoiceBlock(choices=MultimediaCardTypeChoices.choices, required=True)
+    multimedia_type = blocks.ChoiceBlock(choices=MultimediaCardTypeChoices.choices, required=True, default=MultimediaCardTypeChoices.VIDEO)
+
+    class Meta:
+        icon = 'media'
+        label = 'Multimedia Card'
+        template = 'streams/multimedia_card_block.html'
+
+
+class ExpertCard(blocks.StructBlock):
+    class ExpertCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+
+    page = blocks.PageChooserBlock(required=True, page_type='people.PersonPage')
+    size = blocks.ChoiceBlock(choices=ExpertCardTypeChoices.choices, required=True)
+
+    class Meta:
+        icon = 'user'
+        label = 'Expert Card'
+        template = 'streams/expert_card_block.html'
+
+
+class TwitterCard(blocks.StructBlock):
+    class TwitterCardTypeChoices(models.TextChoices):
+        SMALL = ('small', 'Small')
+
+    url = blocks.URLBlock(required=True)
+    size = blocks.ChoiceBlock(choices=TwitterCardTypeChoices.choices, required=True, default=TwitterCardTypeChoices.SMALL)
+
+    class Meta:
+        icon = 'site'
+        label = 'Twitter Card'
+        template = 'streams/twitter_card_block.html'
+
+class AdCard(blocks.StructBlock):
+    class AdCardTypeChoices(models.TextChoices):
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    url = blocks.URLBlock(required=True)
+    size = blocks.ChoiceBlock(choices=AdCardTypeChoices.choices, required=True)
+    image = ImageChooserBlock(required=True)
+
+    class Meta:
+        icon = 'site'
+        label = 'Ad Card'
+        template = 'streams/ad_card_block.html'
+
+
+class HomePageRow(blocks.StructBlock):
+    row = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('publication_card', PublicationCard()),
+        ('article_series_card', ArticleSeriesCard()),
+        ('event_card', EventCard()),
+        ('multimedia_card', MultimediaCard()),
+        ('expert_card', ExpertCard()),
+        ('twitter_card', TwitterCard()),
+        ('ad_card', AdCard()),
+    ])
