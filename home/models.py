@@ -31,9 +31,10 @@ import traceback
 class HomePage(Page):
     """Singleton model for the home page."""
 
-    layout = StreamField([
-        ('row', HomePageRow()),
-    ])
+    layout = StreamField(
+        [('row', HomePageRow())],
+        blank=True,
+    )
     content_panels = Page.content_panels + [
         FieldPanel('layout'),
         MultiFieldPanel(

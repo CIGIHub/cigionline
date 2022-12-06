@@ -1,0 +1,49 @@
+$card-title-font: $title-font-family;
+@import './card_large';
+@import './card_medium';
+@import './card_small';
+@import './card_tiny';
+
+.card__container {
+  img {
+    border-radius: 20px;
+  }
+
+  .card__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .card__text__title {
+      @include link($color: $black, $hover-color: $cigi-dark-pink);
+      font-weight: 300;
+    }
+
+    p {
+      font-size: 15px;
+    }
+  }
+  
+  .card__text__meta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    line-height: 1.25;
+
+    .card__text__people {
+      @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      font-size: 0.9em;
+    }
+  
+    .card__text__topics {
+      @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
+      font-size: 0.9em;
+    }
+
+    .card__text__more {
+      @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+      margin-left: 0.5em;
+    }
+  }
+}

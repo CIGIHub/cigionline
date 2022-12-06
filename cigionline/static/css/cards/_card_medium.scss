@@ -1,0 +1,135 @@
+.card__container {
+  &.card--medium {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .card__image {
+      margin-bottom: 1.5em;
+    }
+
+    .card__text {
+      .card__text__title {
+        font-size: 1.25em;
+        font-size: clamp(1.25em, 3vw, 2em);
+        font-family: $card-title-font;
+      }
+    }
+  }
+
+  &.card--medium--event {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .card--medium--event__top {
+      display: flex;
+      justify-content: space-between;
+
+      .card--medium--event__title {
+        font-size: 1.25em;
+        font-size: clamp(1.25em, 3vw, 1.75em);
+      }
+
+      .card--medium--event__calendar-date {
+        text-align: center;
+
+        .card--medium--event__date {
+          @include media-breakpoint-up(lg) {
+            font-size: 10em;
+          }
+          font-size: 8em;
+          font-weight: 400;
+          line-height: 1;
+        }
+
+        .card--medium--event__month {
+          font-size: 1.5em;
+        }
+      }
+    }
+
+    .card--medium--event__bottom {
+      .card__text__meta {
+        width: 100%;
+      }
+
+      .card--medium--event__button--register {
+        @include button(
+          $color: $white,
+          $background-color: $black,
+          $hover-color: $black,
+          $hover-background-color: $white,
+          $border-color: $black,
+          $hover-border-color: $black
+        );
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em 2em;
+        width: 100%;
+        border-radius: 100px;
+        transition: none;
+
+        &:hover {
+          border: 1px solid $black;
+        }
+      }
+    }
+  }
+
+  &.card--medium--expert {
+    .card__expert-info {
+      .card__text {
+        height: auto;
+
+        .card__text__title {
+          font-size: 1.25em;
+          font-size: clamp(1.25em, 3vw, 1.75em);
+        }
+      }
+    }
+
+    .card__latest-activity {
+      h4 {
+        color: $cigi-medium-grey;
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .card--tiny {
+        margin-bottom: 1em;
+
+        .card__text__title {
+          font-family: $card-title-font;
+          font-weight: 300;
+        }
+      }
+    }
+
+    .card__image--portrait {
+      margin-bottom: 1.5em;
+    }
+
+    .card__expert-social {
+      ul {
+        list-style: none;
+
+        li {
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
+          display: flex;
+
+          div {
+            min-width: 5em;
+            color: $cigi-medium-grey;
+          }
+        }
+      }
+    }
+  }
+}

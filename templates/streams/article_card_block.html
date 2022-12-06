@@ -1,0 +1,42 @@
+{% load wagtailcore_tags %}
+<div class="{{ col_class }}">
+  <article class="card__container card--large">
+    <div class="row flex-column-reverse flex-md-row g-3 g-md-5">
+      <div class="col col-md-4">
+        <div class="card__text">
+          <div>
+            <h3 class="card__text__title">
+              <a href="{{ url }}">
+                {{ title }}
+              </a>
+            </h3>
+            {{ short_description|richtext }}
+          </div>
+          <div class="card__text__meta">
+            <div>
+              <ul class="card__text__people custom-text-list">
+                {% include 'includes/features/feature_content_people.html' with authors=authors %}
+              </ul>
+              <ul class="card__text__topics custom-text-list">
+                {% include 'includes/topics.html' with topics=topics %}
+              </ul>
+            </div>
+            <button type="button" class="card__text__more">
+              <a href="{{ url }}"><i class="far fa-ellipsis-h"></i></a>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col col-md-8">
+        <div class="card__image">
+          <a href="{{ url }}"
+            class="feature-content-image">
+            <div class="img-wrapper">
+              <img alt="{{ image_alt }}" src="{{ image_src }}" />
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>

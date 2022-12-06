@@ -92,7 +92,7 @@ header {
           opacity: 0;
         }
 
-        height: 60%;
+        height: 30px;
         opacity: 1;
         position: absolute;
       }
@@ -437,6 +437,71 @@ header {
       .custom-popup-inner {
         opacity: 1;
         transform: translate(0, 0);
+      }
+    }
+  }
+
+  // CIGI 3.0
+  &.header__top-bar {
+    .container {
+      .row {
+        .col {
+          padding-bottom: 0;
+        }
+      }
+    }
+
+    nav {
+      .btn-group {
+        svg {
+          position: absolute;
+          transition: opacity 0.2s ease;
+        }
+
+        .fa-bars {
+          right: 0;
+          opacity: 1;
+        }
+
+        .fa-times {
+          right: 2px;
+          opacity: 0;
+        }
+
+        &.show {
+          .fa-times {
+            opacity: 1;
+          }
+          .fa-bars {
+            opacity: 0;
+          }
+        }
+
+        .dropdown-toggle {
+          border: 0;
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          &:active {
+            border: 0;
+          }
+
+          &::after {
+            content: none;
+          }
+        }
+
+        .dropdown-menu {
+          border: 0;
+          box-shadow: 3px 5px 10px -5px rgba(0, 0, 0, 0.3),
+            -3px 0 10px -5px rgba(0, 0, 0, 0.3);
+
+          .dropdown-item {
+            @include link($color: $cigi-dark-grey, $hover-color: $black);
+            font-weight: 300;
+          }
+        }
       }
     }
   }

@@ -7,182 +7,118 @@
 {% block extra_js %}
   {% render_bundle 'homePage' 'js' attrs='defer' %}
 {% endblock %}
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/ojk6kqj.css">
+{% endblock %}
 
 {% block body_class %}homepage{% endblock %}
 
 {% block content %}
-  {% preview_cache_bust as is_preview %}
-  {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_content_revision_created_at|date:"c" %}
-    <section class="featured homepage-featured">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-md-8">
-            {% if featured_pages|length > 0 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
-            {% endif %}
-          </div>
-          <hr class="has-margin">
-          <div class="col-12 col-md-4 featured-small">
-          {% with featured_pages|slice:"4:" as featured_small %}
-            {% for item in featured_small %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
-            {% endfor %}
-          {% endwith %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <hr>
-          </div>
-        </div>
-        <div class="row featured-medium">
-        {% with featured_pages|slice:"1:4" as featured_medium %}
-          {% for item in featured_medium %}
-            <div class="col-12 col-md-4">
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
-            </div>
-          {% endfor %}
-        {% endwith %}
-        </div>
+<header class="header__topics">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <nav class="border-top border-bottom">
+          <ul>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">War in Ukraine</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Democracy</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Big Data</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Emerging Technology</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Gender</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Digital Currency</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Space</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Intellectual Property</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Competition</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Innovation Economy</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Platform Governance</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Surveillance & Privacy</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Topic 14</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Topic 15</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Topic 16</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Topic 17</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--rounded">
+                <a href="">Topic 18</a>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="button--arrow">
+                <a href=""><i class="far fa-angle-right"></i></a>
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
-    </section>
-  {% endcache %}
-
-  {% cache 86400 homepage_featured_publications self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_publications_revision_created_at|date:"c" %}
-    <section class="homepage-featured-publications">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading">
-              <a href="/publications/">
-                Publications
-              </a>
-            </h2>
-          </div>
-        </div>
-        <div class="row">
-          {% for publication in featured_publications %}
-            <div class="col-12 col-md-3 homepage-featured-publication-row">
-              {% include "includes/features/feature_publication_teaser.html" with publication=publication %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-
-  {% cache 86400 homepage_featured_promotions self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_promotions_revision_created_at|date:"c" %}
-    <section class="homepage-promotion-blocks">
-      <div class="container">
-        <div class="row promotion-blocks-container">
-          {% for promotion_block in promotion_blocks %}
-            <div class="homepage-promotion-block {% if promotion_block.block_type == 'wide' or promotion_block.block_type == 'podcast_player' %}col promotion-block-wide{% else %}col-md-6{% endif %}">
-              {% include "includes/promotion_block.html" with promotion_block=promotion_block %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-
-  {% cache 86400 homepage_featured_highlights self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_highlights_revision_created_at|date:"c" %}
-    <section class="homepage-featured-highlights">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading"><span>Highlights</span></h2>
-            {% include "includes/swiper.html" with swiper_content=highlight_pages type="homepage-highlight" %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-
-  {% cache 86400 homepage_featured_multimedia self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_multimedia_revision_created_at|date:"c" %}
-    <section class="featured homepage-featured-multimedia">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading dark-mode">
-              <a href="/multimedia/">
-                Multimedia
-              </a>
-            </h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 col-md-8">
-            {% if featured_multimedia|length > 0 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_multimedia.0 dark_mode=True %}
-            {% endif %}
-          </div>
-          {% if featured_multimedia|length > 1 %}
-          <hr class="has-margin">
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_multimedia|slice:"1:" as featured_multimedia_small %}
-              {% for item in  featured_multimedia_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item dark_mode=True %}
-              {% endfor %}
-            {% endwith %}
-          </div>
-          {% endif %}
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-
-  {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview self.featured_events_revision_created_at|date:"c" %}
-    <section class="homepage-featured-events">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading">
-              <a href="/events/">
-                Events
-              </a>
-            </h2>
-          </div>
-        </div>
-        <div class="events-container row">
-          {% for event in featured_events %}
-            <div class="col-12 col-md-4 homepage-featured-event-row">
-              {% include "includes/features/feature_event.html" with event=event %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-
-  {% cache 86400 homepage_featured_experts self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_experts_revision_created_at|date:"c" %}
-    <section class="homepage-featured-experts">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading">
-              <a href="/experts/">
-                Experts
-              </a>
-            </h2>
-          </div>
-        </div>
-        <div class="row">
-          {% for expert in featured_experts %}
-            <div class="col-12 col-md-4 homepage-featured-expert-row">
-              {% include "includes/features/feature_expert_short.html" with expert=expert %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endcache %}
+    </div>
+  </div>
+</header>
+<div class="container">
+  {% for block in self.layout %}
+  {% include_block block %}
+  {% endfor %}
+</div>
 {% endblock content %}

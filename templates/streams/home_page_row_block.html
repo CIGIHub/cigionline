@@ -1,0 +1,6 @@
+{% load wagtailcore_tags %}
+<div class="row g-3 g-md-5">
+  {% for block in self.row %}
+    {% include_block block.value %}
+  {% endfor %}
+</div>

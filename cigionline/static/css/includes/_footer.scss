@@ -1,136 +1,84 @@
+// CIGI 3.0
 footer {
-  background: $black;
-  color: $white;
-  font-size: 0.75rem;
-  padding: 5em 0 4em;
-  position: relative;
-  z-index: 10;
-
-  .logo-container {
-    margin: 0 auto 0.7em;
-    width: 6em;
-
-    .cigi-logo {
-      fill: $white;
-    }
+  section {
+    padding: 1.75em 0;
   }
 
-  .footer-bracket {
-    @include media-breakpoint-up(md) {
-      display: block;
-    }
-
-    display: none;
-    width: 100%;
-  }
-
-  .highlighted-topics-list {
-    @include media-breakpoint-up(md) {
-      columns: 3;
-    }
-    @include media-breakpoint-up(lg) {
-      columns: 4;
-    }
-    columns: 2;
-    list-style-type: none;
-    padding: 1.25em 0;
-
-    .topic {
-      @include link($color: $white, $hover-color: $cigi-primary-colour);
-      padding: 0.2em;
-
-      a {
-        font-family: $primary-font-family;
-        font-weight: $sans-regular;
-        text-transform: uppercase;
-      }
-    }
-
-    span {
-      color: $cigi-medium-grey;
-    }
-  }
-
-  .footer-content {
+  h2 {
     font-size: 1rem;
-    text-align: center;
+    color: $cigi-medium-grey;
+  }
 
-    form {
+  .footer__subscribe {
+    border-bottom: 1px solid $cigi-light-grey;
+    border-top: 1px solid $cigi-light-grey;
+
+    .button--rounded {
+      @include button(
+        $color: $black,
+        $background-color: $white,
+        $hover-color: $white,
+        $hover-background-color: $black,
+        $border-color: $black,
+        $hover-border-color: $black
+      );
       display: flex;
-      height: 2em;
-      margin-bottom: 3em;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 2em;
+      width: 100%;
+      border-radius: 100px;
+      transition: none;
     }
 
-    input {
-      &[type='email'] {
-        background: $black;
-        border-bottom: 2px solid $cigi-primary-colour;
-        border-left: 0;
-        border-right: 0;
-        border-top: 0;
-        color: $white;
-        font-size: 1rem;
-        margin: 0;
-        margin-right: 5px;
-        width: calc(100% - 95px);
+    .footer__subscribe__input-wrapper {
+      border-bottom: 1px solid $cigi-light-grey;
 
-        &:focus {
-          outline: none;
+      input {
+        border: 0;
+        padding: 1em 0.5em;
+        width: 100%;
+
+        &::placeholder {
+          color: $cigi-medium-grey;
+          font-weight: 300;
         }
       }
-
-      &::placeholder {
-        color: $white;
-      }
     }
+  }
 
-    button {
-      background: $cigi-primary-colour;
-      border-radius: 2px;
-      color: $white;
-      font-size: 14px;
-      text-transform: uppercase;
-      width: 90px;
-
-      i {
-        margin-right: 0.3em;
-      }
-    }
-
-    li {
-      display: inline-block;
-      list-style: none;
-    }
+  .footer__sitemap {
+    border-bottom: 1px solid $cigi-light-grey;
 
     ul {
-      padding-left: 0;
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      list-style: none;
     }
+  }
 
-    .footer-menu {
-      @include link($color: $cigi-medium-light-grey, $hover-color: $white);
+  .footer__topics {
+    padding-bottom: 10em;
+
+    .footer__topics__container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      list-style: none;
+      position: relative;
 
       li {
-        padding: 0 1em;
-      }
-    }
+        flex-shrink: 0;
+        margin-right: 0.5em;
+        margin-bottom: 0.5em;
 
-    .social-links {
-      li {
-        padding: 0 0.5em;
+        .button--rounded {
+          @include button();
+        }
 
-        a {
-          color: $white;
+        .topic-count {
+          color: $cigi-medium-grey;
         }
       }
-    }
-
-    .copyright {
-      color: $cigi-medium-light-grey;
-    }
-
-    .footer-menu,
-    .copyright {
-      font-size: 0.875em;
     }
   }
 }
