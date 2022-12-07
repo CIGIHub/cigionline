@@ -442,7 +442,7 @@ header {
   }
 
   // CIGI 3.0
-  &.header__top-bar {
+  &.header--top-bar {
     .container {
       .row {
         .col {
@@ -458,25 +458,6 @@ header {
           transition: opacity 0.2s ease;
         }
 
-        .fa-bars {
-          right: 0;
-          opacity: 1;
-        }
-
-        .fa-times {
-          right: 2px;
-          opacity: 0;
-        }
-
-        &.show {
-          .fa-times {
-            opacity: 1;
-          }
-          .fa-bars {
-            opacity: 0;
-          }
-        }
-
         .dropdown-toggle {
           border: 0;
           position: relative;
@@ -489,6 +470,30 @@ header {
 
           &::after {
             content: none;
+          }
+
+          i {
+            position: absolute;
+            transition: opacity 0.2s ease;
+          }
+
+          .fa-bars {
+            right: 0;
+            opacity: 1;
+          }
+  
+          .fa-times {
+            right: 2px;
+            opacity: 0;
+          }
+  
+          &.show {
+            .fa-times {
+              opacity: 1;
+            }
+            .fa-bars {
+              opacity: 0;
+            }
           }
         }
 
