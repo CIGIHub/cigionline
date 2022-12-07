@@ -1136,8 +1136,9 @@ class ArticleCard(blocks.StructBlock):
             context['col_class'] = 'col col-12 col-md-8'
         elif value.get('size') == 'large':
             context['col_class'] = 'col col-12'
-        
+
         page = value.get('page').specific
+        image = None
         if page.image_feature:
             print('image_feature')
             image = page.image_feature
@@ -1151,14 +1152,13 @@ class ArticleCard(blocks.StructBlock):
         else:
             context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
             context['image_alt'] = 'CIGI Logo'
-        
+
         context['title'] = page.title
         context['authors'] = page.authors.all()
         context['date'] = page.publishing_date
         context['short_description'] = page.short_description
         context['url'] = page.url
         context['topics'] = page.specific.topics_sorted
-
 
         return context
 
