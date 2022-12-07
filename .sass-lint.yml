@@ -79,7 +79,6 @@ rules:
   nesting-depth:
     - 1
     - max-depth: 10
-  property-sort-order: 1
   pseudo-element: 1
   quotes: 1
   shorthand-values: 1

@@ -442,7 +442,7 @@ header {
   }
 
   // CIGI 3.0
-  &.header__top-bar {
+  &.header--top-bar {
     .container {
       .row {
         .col {
@@ -458,25 +458,6 @@ header {
           transition: opacity 0.2s ease;
         }
 
-        .fa-bars {
-          right: 0;
-          opacity: 1;
-        }
-
-        .fa-times {
-          right: 2px;
-          opacity: 0;
-        }
-
-        &.show {
-          .fa-times {
-            opacity: 1;
-          }
-          .fa-bars {
-            opacity: 0;
-          }
-        }
-
         .dropdown-toggle {
           border: 0;
           position: relative;
@@ -490,16 +471,65 @@ header {
           &::after {
             content: none;
           }
+
+          i {
+            position: absolute;
+            transition: opacity 0.2s ease;
+          }
+
+          .fa-bars {
+            right: 0;
+            opacity: 1;
+          }
+
+          .fa-times {
+            right: 2px;
+            opacity: 0;
+          }
+
+          &.show {
+            .fa-times {
+              opacity: 1;
+            }
+            .fa-bars {
+              opacity: 0;
+            }
+          }
         }
 
         .dropdown-menu {
           border: 0;
           box-shadow: 3px 5px 10px -5px rgba(0, 0, 0, 0.3),
             -3px 0 10px -5px rgba(0, 0, 0, 0.3);
+          padding: 0;
 
-          .dropdown-item {
+          li {
+            &:first-child {
+              border-radius: 0.375rem 0.375rem 0 0;
+            }
+
+            &:last-child {
+              border-radius: 0 0 0.375rem 0.375rem;
+            }
+
+            &.header--top-bar__menu__social {
+              display: flex;
+              justify-content: space-between;
+
+              i {
+                width: auto;
+              }
+            }
+
             @include link($color: $cigi-dark-grey, $hover-color: $black);
             font-weight: 300;
+            padding: 1em 1.5em;
+            display: flex;
+            align-items: center;
+
+            i {
+              width: 25px;
+            }
           }
         }
       }

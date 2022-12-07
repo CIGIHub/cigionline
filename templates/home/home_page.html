@@ -116,9 +116,11 @@
     </div>
   </div>
 </header>
-<div class="container">
-  {% for block in self.layout %}
-  {% include_block block %}
-  {% endfor %}
+<div class="body">
+  <div class="container">
+    {% for block in self.layout %}
+      {% include_block block %}
+    {% endfor %}
+  </div>
 </div>
 {% endblock content %}

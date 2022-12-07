@@ -1,7 +1,7 @@
 {% load wagtailcore_tags menu_tags cache %}
 
 
-<header class="{% if small %}small scrolled{% endif %}">
+<header class="{% if small %}small scrolled{% endif %} header--top-bar">
   {% cache 86400 top_bar %}
     {% get_menu_items 'main' as main_menu_items %}
     {% get_menu_items 'footer' as footer_menu_items %}
@@ -15,37 +15,52 @@
               {% include './header_cigi_logo_small.svg' %}
             </a>
             <nav aria-label="primary">
-              <ul class="menu desktop-menu">
-                {% for menu_item in main_menu_items %}
-                  {% if menu_item.link_page %}
-                    <li>
-                      <a href="{% pageurl menu_item.link_page %}">
-                        {{ menu_item.title }}
-                      </a>
+              <button type="button"><i class="far fa-search"></i></button>
+              <div class="btn-group">
+                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="far fa-bars"></i>
+                  <i class="far fa-times"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                  {% for menu_item in main_menu_items %}
+                    <li class="dropdown-item">
+                      {% if menu_item.link_page %}
+                        <a href="{% pageurl menu_item.link_page %}">
+                          <i class="fal fa-file-alt"></i>
+                          {{ menu_item.title }}
+                        </a>
+                      {% elif menu_item.link_url %}
+                        <a href="{{ menu_item.link_url }}">
+                          <i class="fal fa-file-alt"></i>
+                          {{ menu_item.title }}
+                        </a>
+                      {% endif %}
                     </li>
-                  {% elif menu_item.link_url %}
-                    <li>
-                      <a href="{{ menu_item.link_url }}">
-                        {{ menu_item.title }}
-                      </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-              <ul>
-                <li class="overlay-controls menu-break">
-                  <button class="custom-nav-popup-btn overlay-controls-button" id="open-search-btn">
-                    <span class="icon-opened"><i class="far fa-times"></i></span>
-                    <span class="icon-closed"><i class="far fa-search"></i></span>
-                  </button>
-                </li>
-                <li class="overlay-controls">
-                  <button class="custom-nav-popup-btn overlay-controls-button" id="open-menu-btn">
-                    <span class="icon-opened"><i class="far fa-times"></i></span>
-                    <span class="icon-closed"><i class="far fa-bars"></i></span>
-                  </button>
-                </li>
-              </ul>
+                  {% endfor %}
+                  <li class="dropdown-item">
+                    <a href="/subscribe/">
+                      <i class="fal fa-envelope"></i>
+                      Sign-up to our Newsletter
+                    </a>
+                  </li>
+                  <li class="dropdown-item header--top-bar__menu__social">
+                    <a href="https://twitter.com/cigionline" target="_blank">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/cigionline/" target="_blank">
+                      <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://www.facebook.com/cigionline" target="_blank">
+                      <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.youtube.com/user/cigivideos" target="_blank">
+                      <i class="fab fa-youtube"></i>
+                    </a>
+                    </a>
+                  </li>
+                </div>
+              </div>
             </nav>
           </div>
         </div>
@@ -71,84 +86,6 @@
                   </div>
                 </div>
               </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="custom-popup-wrapper popup-menu" id="popup-menu">
-      <div class="custom-popup-inner overlay-menu">
-        <div class="container">
-          <div class="overlay-menu-content row row-cols-1 row-cols-md-4 row-eq-height">
-            {% for sub_menu in main_menu_items %}
-              <div class="overlay-menu-submenu col">
-                {% if sub_menu.link_page %}
-                  <a href="{% pageurl sub_menu.link_page %}" class="overlay-menu-submenu-link">
-                    {{ sub_menu.title }}
-                  </a>
-                {% elif sub_menu.link_url %}
-                  <a href="{{ sub_menu.link_url }}" class="overlay-menu-submenu-link">
-                    {{ sub_menu.title }}
-                  </a>
-                {% endif %}
-                {% with sub_menu.submenu.menu_items.all as submenu_items %}
-                  {% if submenu_items %}
-                    <div class="accordion">
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    <ul>
-                      {% for menu_item in submenu_items %}
-                        {% if menu_item.link_page %}
-                        <li>
-                          <a href="{% pageurl menu_item.link_page %}" class="overlay-menu-submenu-item-link">
-                            {{ menu_item.title }}
-                          </a>
-                        </li>
-                        {% elif menu_item.link_url %}
-                        <li>
-                          <a href="{{ menu_item.link_url }}" class="overlay-menu-submenu-item-link">
-                            {{ menu_item.title }}
-                          </a>
-                        </li>
-                        {% endif %}
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                {% endwith %}
-              </div>
-            {% endfor %}
-            <div class="overlay-menu-submenu col">
-              <ul class="overlay-menu-footer-menu">
-                {% for menu_item in footer_menu_items %}
-                  {% if menu_item.link_page %}
-                    <li>
-                      <a href="{% pageurl menu_item.link_page %}">
-                        {{ menu_item.title }}
-                      </a>
-                    </li>
-                  {% elif menu_item.link_url %}
-                    <li>
-                      <a href="{{ menu_item.link_url }}">
-                        {{ menu_item.title }}
-                      </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-              <ul class="overlay-menu-social-links">
-                <li>
-                  <a href="https://www.facebook.com/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
-                </li>
-                <li>
-                  <a href="https://twitter.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
-                </li>
-                <li>
-                  <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
-                </li>
-                <li>
-                  <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
