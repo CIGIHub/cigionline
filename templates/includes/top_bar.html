@@ -24,20 +24,41 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                   {% for menu_item in main_menu_items %}
-                    {% if menu_item.link_page %}
-                      <button class="dropdown-item" type="button">
+                    <li class="dropdown-item">
+                      {% if menu_item.link_page %}
                         <a href="{% pageurl menu_item.link_page %}">
+                          <i class="fal fa-file-alt"></i>
                           {{ menu_item.title }}
                         </a>
-                      </button>
-                    {% elif menu_item.link_url %}
-                      <button class="dropdown-item" type="button">
+                      {% elif menu_item.link_url %}
                         <a href="{{ menu_item.link_url }}">
+                          <i class="fal fa-file-alt"></i>
                           {{ menu_item.title }}
                         </a>
-                      </button>
-                    {% endif %}
+                      {% endif %}
+                    </li>
                   {% endfor %}
+                  <li class="dropdown-item">
+                    <a href="/subscribe/">
+                      <i class="fal fa-envelope"></i>
+                      Sign-up to our Newsletter
+                    </a>
+                  </li>
+                  <li class="dropdown-item header--top-bar__menu__social">
+                    <a href="https://twitter.com/CIGIonline" target="_blank">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/cigi/" target="_blank">
+                      <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://www.facebook.com/CIGIonline" target="_blank">
+                      <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.youtube.com/user/CIGIonline" target="_blank">
+                      <i class="fab fa-youtube"></i>
+                    </a>
+                    </a>
+                  </li>
                 </div>
               </div>
             </nav>
