@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader core_tags cache %}
+{% load wagtailcore_tags webpack_loader core_tags cache topic_tags %}
 
 {% block extra_css %}
   {% render_bundle 'homePage' 'css' %}
@@ -19,98 +19,7 @@
     <div class="row">
       <div class="col">
         <nav class="border-top border-bottom">
-          <ul>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">War in Ukraine</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Democracy</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Big Data</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Emerging Technology</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Gender</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Digital Currency</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Space</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Intellectual Property</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Competition</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Innovation Economy</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Platform Governance</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Surveillance & Privacy</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Topic 14</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Topic 15</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Topic 16</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Topic 17</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--rounded">
-                <a href="">Topic 18</a>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="button--arrow">
-                <a href=""><i class="far fa-angle-right"></i></a>
-              </button>
-            </li>
-          </ul>
+          {% top_topics %}
         </nav>
       </div>
     </div>
@@ -120,6 +29,9 @@
   <div class="container">
     {% for block in self.layout %}
       {% include_block block %}
+      {% if not forloop.last %}
+        <hr />
+      {% endif %}
     {% endfor %}
   </div>
 </div>

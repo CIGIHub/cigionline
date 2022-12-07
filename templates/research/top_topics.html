@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+
+
+<ul class="top-topics-list">
+  {% for topic in topics %}
+    <li>
+      <button type="button" class="button--rounded">
+        <a href="{% pageurl topic %}">{{ topic.title }}</a>
+      </button>
+    </li>
+  {% endfor %}
+  <li>
+    <button type="button" class="button--arrow">
+      <a href="/research/"><i class="far fa-angle-right"></i></a>
+    </button>
+  </li>
+</ul>
