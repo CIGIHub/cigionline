@@ -16,6 +16,17 @@ def highlighted_topics(context):
     return result
 
 
+@register.inclusion_tag('research/highlighted_topics_footer.html', takes_context=True)
+def highlighted_topics_footer(context):
+    highlighted_topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('content_pages'))
+    result = {
+        'highlighted_topics': highlighted_topics,
+    }
+    if context and hasattr(context, 'request'):
+        result['request'] = context['request']
+    return result
+
+
 @register.inclusion_tag('research/topics.html')
 def topics(topics):
     topics = topics.live().order_by('title')

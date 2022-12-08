@@ -4,12 +4,13 @@
   <footer>
     <div class="container">
       <section class="footer__subscribe">
-        <form action="">
+        <form title="Newsletter Sign Up" action="/subscribe/" method="GET">
           <div class="row g-3 g-md-5 align-items-center">
             <div class="col-md-4">Get regular updates on our research and events in your inbox.</div>
             <div class="col-md-4">
               <div class="footer__subscribe__input-wrapper">
-                <input type="email" placeholder="Your e-mail">
+                <input type="email" name="email" size="60" maxlength="128" placeholder="Your e-mail"
+                  required="required" aria-required="true">
               </div>
             </div>
             <div class="col-md-4">
@@ -29,56 +30,58 @@
             <h2>Sitemap</h2>
           </div>
           <div class="col-4 col-md-2">
+            {% get_menu_items 'main' as main_menu_items %}
             <ul class="footer__sitemap__list">
-              <li>
-                <a href="">Research</a>
-              </li>
-              <li>
-                <a href="">Analysis</a>
-              </li>
-              <li>
-                <a href="">Events</a>
-              </li>
-              <li>
-                <a href="">Multimedia</a>
-              </li>
-              <li>
-                <a href="">Experts</a>
-              </li>
+              {% for menu_item in main_menu_items %}
+                {% if menu_item.link_page %}
+                  <li>
+                    <a href="{% pageurl menu_item.link_page %}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% elif menu_item.link_url %}
+                  <li>
+                    <a href="{{ menu_item.link_url }}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
             </ul>
           </div>
           <div class="col-4">
+            {% get_menu_items 'footer' as footer_menu_items %}
             <ul class="footer__sitemap__list">
-              <li>
-                <a href="">About</a>
-              </li>
-              <li>
-                <a href="">Media Relations</a>
-              </li>
-              <li>
-                <a href="">Contact</a>
-              </li>
-              <li>
-                <a href="">Careers</a>
-              </li>
-              <li>
-                <a href="">Privacy Notice</a>
-              </li>
+              {% for menu_item in footer_menu_items %}
+                {% if menu_item.link_page %}
+                  <li>
+                    <a href="{% pageurl menu_item.link_page %}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% elif menu_item.link_url %}
+                  <li>
+                    <a href="{{ menu_item.link_url }}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
             </ul>
           </div>
           <div class="col-4 col-md-3">
             <ul class="footer__sitemap__list">
               <li>
-                <a href="">Facebook</a>
+                <a href="https://www.facebook.com/cigionline/" target="_blank">Facebook</a>
               </li>
               <li>
-                <a href="">Twitter</a>
+                <a href="https://twitter.com/cigionline" target="_blank">Twitter</i></a>
               </li>
               <li>
-                <a href="">LinkedIn</a>
+                <a href="https://www.linkedin.com/company/cigionline/" target="_blank">LinkedIn</a>
               </li>
               <li>
-                <a href="">Youtube</a>
+                <a href="https://www.youtube.com/user/cigivideos" target="_blank">Youtube</a>
               </li>
             </ul>
           </div>
@@ -90,196 +93,17 @@
             <h2>Content Topics</h2>
           </div>
           <div class="col-md-10">
-            <ul class="footer__topics__container">
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Africa</span> <span class="topic-count">(96)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Artificial Intelligence</span> <span
-                      class="topic-count">(115)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Big Data</span> <span class="topic-count">(240)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">China</span> <span class="topic-count">(234)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Competition</span> <span class="topic-count">(20)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Democracy</span> <span class="topic-count">(302)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Digital Currency</span> <span class="topic-count">(47)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Emerging Technology</span> <span class="topic-count">(175)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Financial Systems</span> <span class="topic-count">(612)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Future of Work</span> <span class="topic-count">(34)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">G20/G7</span> <span class="topic-count">(306)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Gender</span> <span class="topic-count">(96)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">India</span> <span class="topic-count">(56)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Innovation</span> <span class="topic-count">(205)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Innovation Economy</span> <span class="topic-count">(202)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Intellectual Property</span> <span class="topic-count">(175)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Internet Governance</span> <span class="topic-count">(210)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Platform Governance</span> <span class="topic-count">(416)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Security</span> <span class="topic-count">(302)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Space</span> <span class="topic-count">(12)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Standards</span> <span class="topic-count">(35)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Surveillance & Privacy</span> <span
-                      class="topic-count">(151)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Systemic Risk</span> <span class="topic-count">(29)</span></a>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="button--rounded">
-                  <a href=""><span class="topic">Trade</span> <span class="topic-count">(713)</span></a>
-                </button>
-              </li>
-            </ul>
+            {% highlighted_topics_footer %}
           </div>
         </div>
       </section>
       <section class="footer__copyright">
         <div class="row g-3 g-md-5">
-          <div class="col-md-2">©2022</div>
+          <div class="col-md-2">&copy; {% now "Y" %}</div>
           <div class="col-md-6">Centre for International Governance Innovation</div>
           <div class="col-md-4">Waterloo, ON, Canada</div>
         </div>
       </section>
-    </div>
-  </footer>
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <div class="logo-container">
-            {% include './footer_cigi_logo.svg' %}
-          </div>
-          {% include "./footer_bracket.svg" %}
-          {% highlighted_topics %}
-        </div>
-      </div>
-      <div class="row justify-content-center footer-content">
-        <div class="col-md-6">
-          <p>Get regular updates on our research and events in your inbox.</p>
-          <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
-            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
-              class="form-email required" required="required" aria-required="true">
-            <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
-          </form>
-          {% get_menu_items 'footer' as footer_menu_items %}
-          <ul class="footer-menu">
-            {% for menu_item in footer_menu_items %}
-              {% if menu_item.link_page %}
-                <li>
-                  <a href="{% pageurl menu_item.link_page %}">
-                    {{ menu_item.title }}
-                  </a>
-                </li>
-              {% elif menu_item.link_url %}
-                <li>
-                  <a href="{{ menu_item.link_url }}">
-                    {{ menu_item.title }}
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-          <ul class="social-links">
-            <li>
-              <a href="https://www.facebook.com/cigionline/" target="_blank"><i class="fab fa-facebook-square"></i></a>
-            </li>
-            <li>
-              <a href="https://twitter.com/cigionline" target="_blank"><i class="fab fa-twitter"></i></a>
-            </li>
-            <li>
-              <a href="https://www.linkedin.com/company/cigionline/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-            </li>
-            <li>
-              <a href="https://www.youtube.com/user/cigivideos" target="_blank"><i class="fab fa-youtube"></i></a>
-            </li>
-          </ul>
-          <div class="copyright">&copy; {% now "Y" %} Centre for International Governance Innovation</div>
-        </div>
-      </div>
     </div>
   </footer>
 {% endcache %}
