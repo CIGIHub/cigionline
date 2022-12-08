@@ -30,7 +30,11 @@
     {% for block in self.layout %}
       {% include_block block %}
       {% if not forloop.last %}
-        <hr />
+        <div class="row">
+          <div class="col">
+            <hr />
+          </div>
+        </div>
       {% endif %}
     {% endfor %}
   </div>

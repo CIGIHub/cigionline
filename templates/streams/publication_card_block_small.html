@@ -1,39 +1,25 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="col-12 col-md-4">
   <article class="card__container card--small card--small--poster">
     <div class="card__image">
-      <a href="/articles/in-iran-women-deploy-social-media-in-the-fight-for-rights/"
+      <a href="{{ url }}"
         class="feature-content-image">
         <div class="img-wrapper">
-          <img alt="no.269 cover" src="https://www.cigionline.org/static/images/COVER.original.png">
+          {% if image_src %}
+            <img alt="{{ image_alt }}" src="{{ image_src }}" />
+          {% else %}
+            {% image image fill-525x700 %}
+          {% endif %}
         </div>
       </a>
     </div>
     <div class="card__text">
-      <h3 class="card__text__title">
-        <a href="/articles/in-iran-women-deploy-social-media-in-the-fight-for-rights/">
-          Data is Divisive
-        </a>
-      </h3>
+      {% include 'includes/cards/card_text_title.html' %}
       <div class="card__text__meta">
         <div>
-          <ul class="card__text__people custom-text-list">
-            <li>
-              <a href="/people/marie-lamensch/">Susan Ariel Aaronson</a>
-            </li>
-            <li>
-              <a href="/people/marie-lamensch/">Thomas Struett</a>
-            </li>
-          </ul>
-          <ul class="card__text__topics custom-text-list">
-            <li>
-              <a href="/topics/democracy/" class="table-content-link">Big Data</a>
-            </li>
-            <li>
-              <a href="/topics/gender/" class="table-content-link">Trade</a>
-            </li>
-          </ul>
+          {% include 'includes/cards/card_text_people.html' %}
+          {% include 'includes/cards/card_text_topics.html' %}
         </div>
         <button type="button" class="card__text__more">
           <a href=""><i class="far fa-ellipsis-h"></i></a>

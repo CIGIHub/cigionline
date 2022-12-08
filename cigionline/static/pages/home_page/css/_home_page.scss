@@ -9,6 +9,14 @@
   );
 
   hr {
+    @include media-breakpoint-up(md) {
+      margin-top: 1.75em;
+      margin-bottom: 1.75em;
+    }
+    margin-top: 1em;
+    margin-bottom: 1em;
+    background-color: $cigi-medium-grey;
+
     &.has-margin {
       @include media-breakpoint-down(sm) {
         margin-left: 15px;
@@ -78,11 +86,10 @@
 
       .container {
         .row {
-          .col {
+          div[class*="col-"] {
             @include media-breakpoint-up(md) {
               border-right: 1px solid $cigi-light-grey;
               border-bottom: 0;
-              padding-bottom: 0;
             }
             border-bottom: 1px solid $cigi-light-grey;
 
