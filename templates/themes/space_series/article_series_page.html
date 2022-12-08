@@ -68,12 +68,10 @@
       <div class="swiper-container-series swiper-container">
         <div class="swiper-wrapper">
           {% for series_item in self.article_series_items %}
-            {% if series_item.category_title %}
-              <div class=category-title-wrapper>
+          <article class="swiper-slide series-item {% if series_item.category_title %}after{% endif %}">
+              {% if series_item.category_title %}
                 <div class=category-title>{{ series_item.category_title }}</div>
-              </div>
-            {% endif %}
-            <article class="swiper-slide series-item">
+              {% endif %}
               <a href="{% pageurl series_item.content_page %}" class="series-item-image">
                 {% if series_item.image_override %}
                   <img 

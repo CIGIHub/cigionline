@@ -54,7 +54,8 @@ body {
             padding: 0;
           }
           border-top: 1px solid $cigi-text-grey;
-          overflow: hidden;
+          overflow-y: visible;
+          overflow-x: clip;
           padding: 1em 0;
 
           .swiper-wrapper {
@@ -65,20 +66,17 @@ body {
             // border-top: 1px solid $cigi-text-grey;
             // padding-top: 1.5em;
 
-            .category-title-wrapper {
-              position: relative;
-
-              .category-title {
-                background-color: $space-series-background-colour;
-                border-left: 1px solid $cigi-text-grey;
-                left: 0;
-                height: 3em;
-                padding: 0 0.5em;
-                position: absolute;
-                text-transform: uppercase;
-                top: -2.25em;
-                white-space: nowrap;
-              }
+            .category-title {
+              background-color: $space-series-background-colour;
+              border-left: 1px solid $cigi-text-grey;
+              font-size: 0.9em;
+              left: -1px;
+              height: 3em;
+              padding: 0 0.5em;
+              position: absolute;
+              text-transform: uppercase;
+              top: -1.85em;
+              white-space: nowrap;
             }
           }
         }
@@ -107,6 +105,18 @@ body {
             transition: box-shadow 0.2s ease;
             width: 100%;
             z-index: -1;
+          }
+
+          &.after {
+            &::after {
+              content: '';
+              background-color: $space-series-background-colour;
+              height: 20px;
+              left: -16px;
+              position: absolute;
+              top: -25px;
+              width: 15px;
+            }
           }
 
           &:hover {
