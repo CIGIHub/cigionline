@@ -1162,6 +1162,11 @@ class ArticleCard(blocks.StructBlock):
 
         return context
 
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
     class Meta:
         icon = 'doc-full'
         label = 'Article Card'
@@ -1178,6 +1183,11 @@ class PublicationCard(blocks.StructBlock):
 
     page = blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')
     size = blocks.ChoiceBlock(choices=PublicationCardTypeChoices.choices, required=True)
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
 
     class Meta:
         icon = 'doc-full'
@@ -1196,6 +1206,11 @@ class ArticleSeriesCard(blocks.StructBlock):
     page = blocks.PageChooserBlock(required=True, page_type='articles.ArticleSeriesPage')
     size = blocks.ChoiceBlock(choices=ArticleSeriesCardTypeChoices.choices, required=True)
 
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
     class Meta:
         icon = 'doc-full'
         label = 'Article Series Card'
@@ -1212,6 +1227,11 @@ class EventCard(blocks.StructBlock):
     page = blocks.PageChooserBlock(required=True, page_type='events.EventPage')
     size = blocks.ChoiceBlock(choices=EventCardTypeChoices.choices, required=True)
 
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
     class Meta:
         icon = 'date'
         label = 'Event Card'
@@ -1225,13 +1245,18 @@ class MultimediaCard(blocks.StructBlock):
         MEDIUM = ('medium', 'Medium')
         LARGE = ('large', 'Large')
 
-    class MultimediaCardTypeChoices(models.TextChoices):
+    class MultimediaCardMediaTypeChoices(models.TextChoices):
         VIDEO = ('video', 'Video')
         PODCAST = ('podcast', 'Podcast')
 
     page = blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')
     size = blocks.ChoiceBlock(choices=MultimediaCardTypeChoices.choices, required=True)
-    multimedia_type = blocks.ChoiceBlock(choices=MultimediaCardTypeChoices.choices, required=True, default=MultimediaCardTypeChoices.VIDEO)
+    multimedia_type = blocks.ChoiceBlock(choices=MultimediaCardMediaTypeChoices.choices, required=True, default=MultimediaCardMediaTypeChoices.VIDEO)
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
 
     class Meta:
         icon = 'media'
@@ -1248,6 +1273,11 @@ class ExpertCard(blocks.StructBlock):
     page = blocks.PageChooserBlock(required=True, page_type='people.PersonPage')
     size = blocks.ChoiceBlock(choices=ExpertCardTypeChoices.choices, required=True)
 
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
     class Meta:
         icon = 'user'
         label = 'Expert Card'
@@ -1260,6 +1290,11 @@ class TwitterCard(blocks.StructBlock):
 
     url = blocks.URLBlock(required=True)
     size = blocks.ChoiceBlock(choices=TwitterCardTypeChoices.choices, required=True, default=TwitterCardTypeChoices.SMALL)
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
 
     class Meta:
         icon = 'site'
