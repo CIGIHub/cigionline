@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="col">
   <article class="card__container card--large">
@@ -15,12 +15,8 @@
           </div>
           <div class="card__text__meta">
             <div>
-              <ul class="card__text__people custom-text-list">
-                {% include 'includes/features/feature_content_people.html' with authors=authors %}
-              </ul>
-              <ul class="card__text__topics custom-text-list">
-                {% include 'includes/topics.html' with topics=topics %}
-              </ul>
+              {% include 'includes/cards/card_text_people.html' with authors=authors %}
+              {% include 'includes/topics.html' with topics=topics %}
             </div>
             <button type="button" class="card__text__more">
               <a href="{{ url }}"><i class="far fa-ellipsis-h"></i></a>
@@ -32,7 +28,11 @@
         <div class="card__image">
           <a href="{{ url }}" class="feature-content-image">
             <div class="img-wrapper">
-              <img alt="{{ image_alt }}" src="{{ image_src }}" />
+              {% if image_src %}
+                <img alt="{{ image_alt }}" src="{{ image_src }}" />
+              {% else %}
+                {% image image fill-1440x990 %}
+              {% endif %}
             </div>
           </a>
         </div>

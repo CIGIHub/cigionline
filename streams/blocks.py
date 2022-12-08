@@ -1130,25 +1130,19 @@ class ArticleCard(blocks.StructBlock):
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
 
-        if value.get('size') == 'small':
-            context['col_class'] = 'col col-12 col-md-4'
-        elif value.get('size') == 'medium':
-            context['col_class'] = 'col col-12 col-md-8'
-        elif value.get('size') == 'large':
-            context['col_class'] = 'col col-12'
-
         page = value.get('page').specific
         image = None
         if page.image_feature:
-            print('image_feature')
             image = page.image_feature
         elif page.image_hero:
-            print('image_hero')
             image = page.image_hero
 
         if image:
-            context['image_src'] = image.get_rendition('fill-1440x990').file.url
-            context['image_alt'] = image.title
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
         else:
             context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
             context['image_alt'] = 'CIGI Logo'
@@ -1158,7 +1152,7 @@ class ArticleCard(blocks.StructBlock):
         context['date'] = page.publishing_date
         context['short_description'] = page.short_description
         context['url'] = page.url
-        context['topics'] = page.specific.topics_sorted
+        context['topics'] = page.topics_sorted
 
         return context
 
