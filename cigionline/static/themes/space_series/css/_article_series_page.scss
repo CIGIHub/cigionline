@@ -53,12 +53,32 @@ body {
           @include media-breakpoint-down(md) {
             padding: 0;
           }
+          border-top: 1px solid $cigi-text-grey;
           overflow: hidden;
-          padding: 1em 0.5em;
+          padding: 1em 0;
 
           .swiper-wrapper {
             @include media-breakpoint-down(md) {
               flex-direction: column;
+            }
+
+            // border-top: 1px solid $cigi-text-grey;
+            // padding-top: 1.5em;
+
+            .category-title-wrapper {
+              position: relative;
+
+              .category-title {
+                background-color: $space-series-background-colour;
+                border-left: 1px solid $cigi-text-grey;
+                left: 0;
+                height: 3em;
+                padding: 0 0.5em;
+                position: absolute;
+                text-transform: uppercase;
+                top: -2.25em;
+                white-space: nowrap;
+              }
             }
           }
         }
