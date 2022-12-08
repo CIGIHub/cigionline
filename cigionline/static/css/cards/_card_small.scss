@@ -1,24 +1,27 @@
 .card__container {
   &.card--small {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
 
     &.card--small--poster {
-      display: grid;
-      grid-template-rows: 3fr 1fr;
-      justify-content: inherit;
-      height: 100%;
+      @include media-breakpoint-up(md) {
+        display: grid;
+        grid-template-rows: 1.7fr 1fr;
+        height: 100%;
+      }
+      @include media-breakpoint-up(lg) {
+        grid-template-rows: 3fr 1fr;
+      }
 
       .card__image {
         @include media-breakpoint-up(sm) {
           padding: 0 3em 1em 0;
         }
         @include media-breakpoint-up(md) {
-          padding: 0 1em 2em;
+          padding: 0 1.5em 2em;
         }
         @include media-breakpoint-up(lg) {
-          padding: 0 2em 2em;
+          padding: 0 2.25em 2em;
         }
         @include media-breakpoint-up(xl) {
           padding: 0 3em 2em;

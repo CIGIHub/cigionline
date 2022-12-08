@@ -1,4 +1,8 @@
 .card--large {
+  div[class*='col'] {
+    border: 0 !important;
+  }
+
   .card__text {
     .card__text__title {
       font-size: 1.25em;
