@@ -1341,6 +1341,22 @@ class AdCard(blocks.StructBlock):
         template = 'streams/ad_card_block.html'
 
 
+class HomePageRowMostPopular(blocks.StructBlock):
+    most_popular_cards = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('publication_card', PublicationCard()),
+        ('article_series_card', ArticleSeriesCard()),
+        ('event_card', EventCard()),
+        ('multimedia_card', MultimediaCard()),
+        ('expert_card', ExpertCard()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Most Popular Block'
+        template = 'streams/home_page_row_most_popular_block.html'
+
+
 class HomePageRow(blocks.StructBlock):
     row = blocks.StreamBlock([
         ('article_card', ArticleCard()),
@@ -1351,6 +1367,7 @@ class HomePageRow(blocks.StructBlock):
         ('expert_card', ExpertCard()),
         ('twitter_card', TwitterCard()),
         ('ad_card', AdCard()),
+        ('most_popular', HomePageRowMostPopular()),
     ])
 
     class Meta:

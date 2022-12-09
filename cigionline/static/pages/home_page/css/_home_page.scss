@@ -86,15 +86,28 @@
 
       .container {
         .row {
-          div[class*="col-"] {
-            @include media-breakpoint-up(md) {
-              border-right: 1px solid $cigi-light-grey;
-              border-bottom: 0;
-            }
-            border-bottom: 1px solid $cigi-light-grey;
+          div {
+            &[class*='col-'] {
+              @include media-breakpoint-up(md) {
+                border-right: 1px solid $cigi-light-grey;
+                border-bottom: 0;
+              }
+              border-bottom: 1px solid $cigi-light-grey;
 
-            &:last-child {
-              border: 0;
+              &:last-child {
+                border: 0;
+              }
+
+              &[class*='2-col'] {
+                @include media-breakpoint-up(lg) {
+                  border-right: 1px solid $cigi-light-grey;
+                  border-bottom: 0;
+                  padding-bottom: 0;
+                }
+                border-right: 0;
+                border-bottom: 1px solid $cigi-light-grey;
+                padding-bottom: 1rem;
+              }
             }
           }
         }
@@ -120,7 +133,7 @@
             margin: 0;
           }
 
-          svg {
+          i {
             margin-right: 1em;
           }
         }
