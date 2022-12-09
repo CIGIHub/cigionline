@@ -1,13 +1,16 @@
 article {
   &.card__container {
     &.card--medium {
+      @include media-breakpoint-only(md) {
+        flex-direction: row;
+      }
       @include media-breakpoint-up(lg) {
-        flex-direction: column;
         justify-content: space-between;
       }
       display: flex;
+      flex-direction: column;
       height: 100%;
-  
+
       &.row {
         div {
           &[class*='col-'] {
@@ -15,18 +18,26 @@ article {
           }
         }
       }
-  
+
       .card__image {
-        @include media-breakpoint-up(md) {
+        @include media-breakpoint-only(md) {
           margin-bottom: 0;
+          padding-right: 1.5rem;
+          flex: 0 0 auto;
+          width: 66.66666666%;
         }
         @include media-breakpoint-up(lg) {
           margin-bottom: 1.5rem;
         }
         margin-bottom: 1rem;
       }
-  
+
       .card__text {
+        @include media-breakpoint-only(md) {
+          padding-left: 1.5rem;
+          flex: 0 0 auto;
+          width: 33.33333333%;
+        }
         .card__text__title {
           font-size: 1.25em;
           font-size: clamp(1.25em, 3vw, 2em);
@@ -34,25 +45,25 @@ article {
         }
       }
     }
-  
+
     &.card--medium--event {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-  
+
       .card--medium--event__top {
         display: flex;
         justify-content: space-between;
-  
+
         .card--medium--event__title {
           font-size: 1.25em;
           font-size: clamp(1.25em, 3vw, 1.75em);
         }
-  
+
         .card--medium--event__calendar-date {
           text-align: center;
-  
+
           .card--medium--event__date {
             @include media-breakpoint-up(lg) {
               font-size: 10em;
@@ -61,18 +72,18 @@ article {
             font-weight: 400;
             line-height: 1;
           }
-  
+
           .card--medium--event__month {
             font-size: 1.5em;
           }
         }
       }
-  
+
       .card--medium--event__bottom {
         .card__text__meta {
           width: 100%;
         }
-  
+
         .card--medium--event__button--register {
           @include button(
             $color: $white,
@@ -89,58 +100,58 @@ article {
           width: 100%;
           border-radius: 100px;
           transition: none;
-  
+
           &:hover {
             border: 1px solid $black;
           }
         }
       }
     }
-  
+
     &.card--medium--expert {
       .card__expert-info {
         .card__text {
           height: auto;
-  
+
           .card__text__title {
             font-size: 1.25em;
             font-size: clamp(1.25em, 3vw, 1.75em);
           }
         }
       }
-  
+
       .card__latest-activity {
         h4 {
           color: $cigi-medium-grey;
           margin-bottom: 1.5rem;
           margin-top: 1.5rem;
         }
-  
+
         .card--tiny {
           margin-bottom: 1em;
-  
+
           .card__text__title {
             font-family: $card-title-font;
             font-weight: 300;
           }
         }
       }
-  
+
       .card__image--portrait {
         margin-bottom: 1.5em;
       }
-  
+
       .card__expert-social {
         ul {
           list-style: none;
-  
+
           li {
             @include link(
               $color: $cigi-text-grey,
               $hover-color: $cigi-primary-colour
             );
             display: flex;
-  
+
             div {
               min-width: 5em;
               color: $cigi-medium-grey;
