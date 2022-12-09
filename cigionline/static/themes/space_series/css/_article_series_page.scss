@@ -63,9 +63,6 @@ body {
               flex-direction: column;
             }
 
-            // border-top: 1px solid $cigi-text-grey;
-            // padding-top: 1.5em;
-
             .category-title {
               background-color: $space-series-background-colour;
               border-left: 1px solid $cigi-text-grey;
@@ -174,41 +171,6 @@ body {
             justify-content: center;
             position: relative;
             width: 100px;
-
-            .play-icon {
-              align-items: center;
-              color: $black;
-              display: flex;
-              justify-content: center;
-              position: absolute;
-              transition: color 0.2s ease;
-
-              * {
-                position: absolute;
-                transition: background-color 0.2s ease;
-              }
-
-              .inner-circle {
-                background-color: $white;
-                border-radius: 50%;
-                border-width: 2px;
-                height: 45px;
-                width: 45px;
-                z-index: 3;
-              }
-
-              .outer-circle {
-                border: 2px solid $white;
-                border-radius: 50%;
-                height: 58px;
-                width: 58px;
-                z-index: 1;
-              }
-
-              i {
-                z-index: 4;
-              }
-            }
           }
 
           .series-item-content {
@@ -251,6 +213,43 @@ body {
                     position: absolute;
                     width: 100%;
                   }
+                }
+              }
+
+              .play-icon {
+                align-items: center;
+                color: $white;
+                display: flex;
+                justify-content: center;
+                margin-bottom: 10px;
+                transition: color 0.2s ease;
+                width: 20px;
+  
+                * {
+                  position: absolute;
+                  transition: background-color 0.2s ease;
+                }
+  
+                .inner-circle {
+                  background-color: $black;
+                  border-radius: 50%;
+                  border-width: 2px;
+                  height: 15px;
+                  width: 15px;
+                  z-index: 3;
+                }
+  
+                .outer-circle {
+                  border: 2px solid $white;
+                  border-radius: 50%;
+                  height: 20px;
+                  width: 20px;
+                  z-index: 1;
+                }
+
+                i {
+                  font-size: 0.5em;
+                  z-index: 4;
                 }
               }
             }
