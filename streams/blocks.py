@@ -1355,6 +1355,7 @@ class HomePageRowMostPopular(blocks.StructBlock):
         icon = 'list-ul'
         label = 'Most Popular Block'
         template = 'streams/home_page_row_most_popular_block.html'
+        form_classname = 'most-popular-block'
 
 
 class HomePageRow(blocks.StructBlock):
@@ -1374,3 +1375,4 @@ class HomePageRow(blocks.StructBlock):
         icon = 'list-ul'
         label = 'Row'
         template = 'streams/home_page_row_block.html'
+        form_classname = 'row-block'

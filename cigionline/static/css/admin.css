@@ -33,7 +33,22 @@
 
 #id_featured_articles-FORMS [id^='inline_child_featured_articles']::before,
 #id_featured_pages-FORMS [id^='inline_child_featured_pages']::before,
-#id_featured_multimedia-FORMS [id^='inline_child_featured_multimedia']::before  {
+#id_featured_multimedia-FORMS [id^='inline_child_featured_multimedia']::before {
   counter-increment: featured-item;
   content: 'Item ' counter(featured-item) ': ';
+}
+
+.row-block > .field > .c-sf-container > div[data-streamfield-stream-container] {
+  display: flex;
+  overflow-x: scroll;
+  align-items: stretch;
+}
+
+.row-block > .field > .c-sf-container > div[data-streamfield-stream-container] > div {
+  height: 100%;
+}
+
+.row-block > .field > .c-sf-container > div[data-streamfield-stream-container] > :not(div[data-contentpath]) {
+  flex: 0 0 30px;
+  align-self: center;
 }
