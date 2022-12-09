@@ -1,6 +1,14 @@
 .card--tiny {
   display: flex;
 
+  &.card--tiny--article {
+    .card__text {
+      .card__text__title {
+        font-family: $card-title-font;
+      }
+    }
+  }
+
   i {
     margin-right: 1em;
     margin-top: 0.25em;

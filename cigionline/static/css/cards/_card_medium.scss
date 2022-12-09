@@ -20,6 +20,9 @@ article {
         @include media-breakpoint-up(md) {
           margin-bottom: 0;
         }
+        @include media-breakpoint-up(lg) {
+          margin-bottom: 1.5rem;
+        }
         margin-bottom: 1rem;
       }
   
