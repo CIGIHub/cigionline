@@ -1,14 +1,14 @@
 {% load wagtailimages_tags %}
 
-<div class="col-12 col-lg-8 2-col">
-  <article class="card__container card--medium">
+<div class="col col-12 col-md-4">
+  <article class="card__container card--small card--small--landscape">
     <div class="card__image">
       <a href="{{ url }}">
         <div class="img-wrapper">
           {% if image_src %}
             <img alt="{{ image_alt }}" src="{{ image_src }}" />
           {% else %}
-            {% image image fill-1440x990 %}
+            {% image image fill-520x390 %}
           {% endif %}
         </div>
       </a>

@@ -36,14 +36,21 @@
 
     &.card--small--landscape {
       @include media-breakpoint-up(md) {
-        min-height: 24em;
+        display: grid;
+        grid-template-rows: 1fr 1.5fr;
+        align-items: baseline;
       }
-      @include media-breakpoint-up(xl) {
-        min-height: 26em;
+      @include media-breakpoint-up(lg) {
+        grid-template-rows: 1.5fr 1.1fr;
       }
 
       .card__image {
-        margin-bottom: 1.25em;
+        @include media-breakpoint-up(md) {
+          padding-bottom: 1em;
+          padding-right: 1.5em;
+        }
+        padding-right: 1em;
+        flex: 0 0 50%;
       }
 
       .card__text__title {
@@ -51,6 +58,7 @@
         font-size: clamp(1.1em, 3vw, 1.5em);
         font-family: $card-title-font;
         line-height: 1;
+        flex: 0 0 50%;
       }
     }
 
