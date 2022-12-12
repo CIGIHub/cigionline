@@ -52,8 +52,10 @@
           <div class="swiper">
             <div class="swiper-container swiper-container-hero">
               <div class="swiper-wrapper">
+                {% define 0 as counter %}
                 {% for series_item in self.article_series.specific.article_series_items %}
                   {% if series_item.content_page.url == self.url %}
+                    {% define counter|add:1 as counter %}
                     <article class="swiper-slide series-item disabled">
                       <a href="{% pageurl series_item.content_page %}" class="series-item-image">
                         {% image series_item.content_page.specific.image_hero fill-100x100 %}
@@ -62,7 +64,7 @@
                         <div>
                           <div class="series-item-counter">
                             <span></span>
-                            <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                            <span>{% if counter < 10 %}0{% endif %}{{ counter }}</span>
                           </div>
                           <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
                         </div>
@@ -78,7 +80,12 @@
                         <a href="{% pageurl series_item.content_page %}">
                           <div class="series-item-counter">
                             <span></span>
-                            <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                            {% if series_item.content_page.contenttype == "Opinion" %}
+                              {% define counter|add:1 as counter %}
+                              <span>{% if counter < 10 %}0{% endif %}{{ counter }}</span>
+                            {% else %}
+                              <span class="multimedia-counter-container"></span>
+                            {% endif %}
                           </div>
                           <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
                         </a>
