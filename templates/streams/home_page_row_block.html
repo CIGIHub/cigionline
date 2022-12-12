@@ -1,5 +1,5 @@
 {% load wagtailcore_tags %}
-<div class="row g-3 g-md-5">
+<div class="row g-3 g-md-5 row-items-{{self.row|length}}">
   {% for block in self.row %}
     {% include_block block.value %}
   {% endfor %}
