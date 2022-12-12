@@ -43,6 +43,7 @@
       @include media-breakpoint-up(lg) {
         grid-template-rows: 1.5fr 1.1fr;
       }
+      height: 100%;
 
       .card__image {
         @include media-breakpoint-up(md) {
