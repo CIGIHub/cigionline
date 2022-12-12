@@ -8,7 +8,7 @@
           {% if image_src %}
             <img alt="{{ image_alt }}" src="{{ image_src }}" />
           {% else %}
-            {% image image fill-520x390 %}
+            {% image image fill-520x347 %}
           {% endif %}
         </div>
       </a>
@@ -21,7 +21,7 @@
           {% include 'includes/cards/card_text_topics.html' %}
         </div>
         <button type="button" class="card__text__more">
-          <a href=""><i class="far fa-ellipsis-h"></i></a>
+          <a href="{{ url }}"><i class="far fa-ellipsis-h"></i></a>
         </button>
       </div>
     </div>

@@ -168,6 +168,12 @@ class MultimediaPage(
         related_name='+',
         verbose_name='Square image',
     )
+    length = models.CharField(
+        blank=True,
+        max_length=8,
+        verbose_name='Length',
+        help_text='The length of the multimedia source in minutes and seconds (e.g. 1:23).',
+    )
     multimedia_series = models.ForeignKey(
         'multimedia.MultimediaSeriesPage',
         null=True,
@@ -273,6 +279,7 @@ class MultimediaPage(
                 FieldPanel('multimedia_type'),
                 FieldPanel('publishing_date'),
                 FieldPanel('multimedia_url'),
+                FieldPanel('length'),
             ],
             heading='General Information',
             classname='collapsible collapsed',

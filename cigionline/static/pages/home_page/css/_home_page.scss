@@ -123,14 +123,6 @@
 
               &:last-child {
                 padding-bottom: 0;
-
-                // &:not(.card--small--poster) {
-                //   .card__image {
-                //     @include media-breakpoint-up(lg) {
-                //       padding-bottom: 0;
-                //     }
-                //   }
-                // }
               }
             }
           }
