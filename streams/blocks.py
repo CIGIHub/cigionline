@@ -1326,6 +1326,38 @@ class ExpertCard(blocks.StructBlock):
     page = blocks.PageChooserBlock(required=True, page_type='people.PersonPage')
     size = blocks.ChoiceBlock(choices=ExpertCardTypeChoices.choices, required=True)
 
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_square:
+            image = page.image_square
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.title
+        context['description'] = page.short_bio
+        context['url'] = page.url
+        context['latest_activity'] = [{
+            'title': activity.title,
+            'url': activity.url,
+            'topics': activity.topics_sorted,
+            'type': activity.contenttype
+        } for activity in page.latest_activity]
+        context['twitter'] = page.twitter_username
+        context['linkedin_username'] = page.linkedin_username()
+
+        return context
+
     def get_template(self, context=None):
         if context:
             return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
