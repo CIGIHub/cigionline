@@ -1,0 +1,13 @@
+{% load wagtailimages_tags %}
+
+<div class="col">
+  <article class="card__container">
+    <a href="{{ url }}">
+      {% if image_src %}
+        <img alt="{{ image_alt }}" src="{{ image_src }}" />
+      {% else %}
+        {% image image width-1440 %}
+      {% endif %}
+    </a>
+  </article>
+</div>

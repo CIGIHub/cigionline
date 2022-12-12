@@ -1397,6 +1397,19 @@ class AdCard(blocks.StructBlock):
     size = blocks.ChoiceBlock(choices=AdCardTypeChoices.choices, required=True)
     image = ImageChooserBlock(required=True)
 
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        image = value.get('image')
+        if image.file.url.endswith('.gif'):
+            context['image_src'] = image.file.url
+            context['image_alt'] = image.title
+        else:
+            context['image'] = image
+        context['url'] = value.get('url')
+
+        return context
+
     class Meta:
         icon = 'site'
         label = 'Ad Card'
