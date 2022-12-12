@@ -126,6 +126,21 @@
               }
             }
           }
+
+          &[class*='row-items-2'] {
+            & > div {
+              @include media-breakpoint-up(lg) {
+                border-right: 1px solid $cigi-light-grey;
+              }
+              border-right: 0;
+
+              &.hr {
+                @include media-breakpoint-up(lg) {
+                  display: none;
+                }
+              }
+            }
+          }
         }
 
         article {

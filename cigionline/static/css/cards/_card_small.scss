@@ -137,6 +137,9 @@
 
       .card__text__title {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
+        @include media-breakpoint-only(md) {
+          padding-bottom: 0;
+        }
         padding-bottom: 2em;
         font-size: clamp(1.1em, 3vw, 1.5em);
       }
