@@ -86,15 +86,52 @@
 
       .container {
         .row {
-          div[class*="col-"] {
-            @include media-breakpoint-up(md) {
-              border-right: 1px solid $cigi-light-grey;
-              border-bottom: 0;
-            }
-            border-bottom: 1px solid $cigi-light-grey;
+          div {
+            &[class*='col-'] {
+              @include media-breakpoint-up(md) {
+                border-right: 1px solid $cigi-light-grey;
+                border-bottom: 0;
+              }
+              border-bottom: 1px solid $cigi-light-grey;
 
-            &:last-child {
-              border: 0;
+              &:last-child {
+                border: 0;
+              }
+
+              &[class*='2-col'] {
+                @include media-breakpoint-up(md) {
+                  padding-bottom: 1.5rem;
+                }
+                @include media-breakpoint-up(lg) {
+                  border-right: 1px solid $cigi-light-grey;
+                  border-bottom: 0;
+                  padding-bottom: 0;
+                }
+                border-right: 0;
+                border-bottom: 1px solid $cigi-light-grey;
+                padding-bottom: 1rem;
+              }
+            }
+          }
+
+          &[class*='row-items-'] {
+            & > div {
+              @include media-breakpoint-up(md) {
+                padding-bottom: 0;
+              }
+              padding-bottom: 1em;
+
+              &:last-child {
+                padding-bottom: 0;
+
+                // &:not(.card--small--poster) {
+                //   .card__image {
+                //     @include media-breakpoint-up(lg) {
+                //       padding-bottom: 0;
+                //     }
+                //   }
+                // }
+              }
             }
           }
         }
@@ -120,7 +157,7 @@
             margin: 0;
           }
 
-          svg {
+          i {
             margin-right: 1em;
           }
         }

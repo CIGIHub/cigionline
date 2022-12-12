@@ -1,0 +1,29 @@
+{% load wagtailimages_tags %}
+
+<div class="col-12 col-lg-8 2-col">
+  <article class="card__container card--medium">
+    <div class="card__image">
+      <a href="{{ url }}">
+        <div class="img-wrapper">
+          {% if image_src %}
+            <img alt="{{ image_alt }}" src="{{ image_src }}" />
+          {% else %}
+            {% image image fill-1440x990 %}
+          {% endif %}
+        </div>
+      </a>
+    </div>
+    <div class="card__text">
+      {% include 'includes/cards/card_text_title.html' %}
+      <div class="card__text__meta">
+        <div>
+          {% include 'includes/cards/card_text_people.html' %}
+          {% include 'includes/cards/card_text_topics.html' %}
+        </div>
+        <button type="button" class="card__text__more">
+          <a href=""><i class="far fa-ellipsis-h"></i></a>
+        </button>
+      </div>
+    </div>
+  </article>
+</div>

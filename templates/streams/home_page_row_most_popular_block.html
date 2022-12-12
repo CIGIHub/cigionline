@@ -1,0 +1,16 @@
+{% load wagtailcore_tags %}
+
+<div class="col-12 col-lg-4">
+  <div class="most-popular">
+    <div class="most-popular__label d-flex">
+      <i class="fas fa-angle-down"></i>
+      <h2>Most Popular</h2>
+    </div>
+    <hr />
+    <div class="most-popular__container">
+      {% for block in self.most_popular_cards %}
+        {% include_block block.value %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

@@ -1,8 +1,16 @@
 .card--tiny {
   display: flex;
 
-  svg {
-    margin-right: 1em;
+  &.card--tiny--article {
+    .card__text {
+      .card__text__title {
+        font-family: $card-title-font;
+      }
+    }
+  }
+
+  i {
+    width: 35px;
     margin-top: 0.25em;
   }
 }
