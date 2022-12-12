@@ -52,13 +52,23 @@ article {
       justify-content: space-between;
       height: 100%;
 
+      div {
+        &[class*='col-'] {
+          border: 0 !important;
+        }
+      }
+
       .card--medium--event__top {
         display: flex;
         justify-content: space-between;
 
         .card--medium--event__title {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
           font-size: 1.25em;
           font-size: clamp(1.25em, 3vw, 1.75em);
+          margin-top: 0;
+          margin-bottom: 1em;
+          line-height: 1;
         }
 
         .card--medium--event__calendar-date {
