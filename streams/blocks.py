@@ -1276,6 +1276,36 @@ class MultimediaCard(blocks.StructBlock):
     size = blocks.ChoiceBlock(choices=MultimediaCardTypeChoices.choices, required=True)
     multimedia_type = blocks.ChoiceBlock(choices=MultimediaCardMediaTypeChoices.choices, required=True, default=MultimediaCardMediaTypeChoices.VIDEO)
 
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_feature:
+            image = page.image_feature
+        elif page.image_hero:
+            image = page.image_hero
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.feature_title if page.feature_title else page.title
+        context['authors'] = page.authors.all()
+        context['date'] = page.publishing_date
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['url'] = page.feature_url if page.feature_url else page.url
+        context['topics'] = page.topics_sorted
+        context['length'] = page.length
+
+        return context
+
     def get_template(self, context=None):
         if context:
             return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
@@ -1295,6 +1325,38 @@ class ExpertCard(blocks.StructBlock):
 
     page = blocks.PageChooserBlock(required=True, page_type='people.PersonPage')
     size = blocks.ChoiceBlock(choices=ExpertCardTypeChoices.choices, required=True)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_square:
+            image = page.image_square
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.title
+        context['description'] = page.short_bio
+        context['url'] = page.url
+        context['latest_activity'] = [{
+            'title': activity.title,
+            'url': activity.url,
+            'topics': activity.topics_sorted,
+            'type': activity.contenttype
+        } for activity in page.latest_activity]
+        context['twitter'] = page.twitter_username
+        context['linkedin_username'] = page.linkedin_username()
+
+        return context
 
     def get_template(self, context=None):
         if context:

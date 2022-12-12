@@ -68,6 +68,9 @@
   }
 
   &.card--small--multimedia {
+    @include media-breakpoint-only(md) {
+      flex-direction: row-reverse;
+    }
     border-radius: 20px;
     background-color: $black;
     display: flex;
@@ -75,10 +78,19 @@
     height: 100%;
 
     img {
+      @include media-breakpoint-only(md) {
+        border-radius: 0 20px 20px 0;
+      }
       border-radius: 20px 20px 0 0;
     }
 
     .card__image {
+      @include media-breakpoint-up(lg) {
+        flex: auto;
+      }
+      @include media-breakpoint-only(md) {
+        flex: 0 0 66.66666667%;
+      }
       position: relative;
 
       .card__image__play-icon {
@@ -95,7 +107,7 @@
         height: 30px;
         font-size: 0.8em;
 
-        svg {
+        i {
           margin-left: 0.15em;
         }
       }
@@ -114,8 +126,22 @@
     .card__text {
       padding: 1em;
 
+      p {
+        @include media-breakpoint-only(md) {
+          display: block;
+        }
+        display: none;
+        line-height: 1.25;
+        color: $cigi-text-grey;
+      }
+
       .card__text__title {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
+        @include media-breakpoint-only(md) {
+          padding-bottom: 0;
+        }
+        padding-bottom: 2em;
+        font-size: clamp(1.1em, 3vw, 1.5em);
       }
 
       .card__text__meta {

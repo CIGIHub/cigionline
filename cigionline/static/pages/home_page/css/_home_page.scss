@@ -123,14 +123,21 @@
 
               &:last-child {
                 padding-bottom: 0;
+              }
+            }
+          }
 
-                // &:not(.card--small--poster) {
-                //   .card__image {
-                //     @include media-breakpoint-up(lg) {
-                //       padding-bottom: 0;
-                //     }
-                //   }
-                // }
+          &[class*='row-items-2'] {
+            & > div {
+              @include media-breakpoint-up(lg) {
+                border-right: 1px solid $cigi-light-grey;
+              }
+              border-right: 0;
+
+              &.hr {
+                @include media-breakpoint-up(lg) {
+                  display: none;
+                }
               }
             }
           }
