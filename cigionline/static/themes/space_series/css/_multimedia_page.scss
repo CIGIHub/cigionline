@@ -237,7 +237,6 @@
                 border-radius: 50%;
                 border-width: 3px;
                 height: 13px;
-                margin-top: 5px;
                 width: 13px;
                 z-index: 3;
               }
@@ -246,14 +245,12 @@
                 border: 3px solid $white;
                 border-radius: 50%;
                 height: 18px;
-                margin-top: 5px;
                 width: 18px;
                 z-index: 1;
               }
 
               i {
                 font-size: 0.5em;
-                margin-top: 5px;
                 z-index: 4;
               }
             }
