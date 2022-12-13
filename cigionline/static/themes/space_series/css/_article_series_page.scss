@@ -54,7 +54,7 @@ body {
             padding: 0;
           }
           border-top: 1px solid $cigi-text-grey;
-          overflow-x: clip;
+          overflow-x: visible;
           overflow-y: visible;
           padding: 1em 0;
 
@@ -69,7 +69,7 @@ body {
               font-size: 0.9em;
               font-weight: 600;
               height: 3em;
-              left: -1px;
+              left: 0;
               padding: 0 0.5em;
               position: absolute;
               text-transform: uppercase;
@@ -81,17 +81,13 @@ body {
 
         article {
           @include media-breakpoint-up(lg) {
-            border-right: 1px solid $cigi-text-grey;
-            border-top: 0;
             flex-direction: column;
           }
           align-items: center;
           background-color: $space-series-background-colour;
-          border-top: 1px solid $cigi-text-grey;
           display: flex;
           height: auto;
           position: relative;
-          transition: transform 0.2s ease, opacity 0.3s ease;
           z-index: 0;
 
           &::before {
@@ -117,6 +113,10 @@ body {
             }
           }
 
+          &:hover {
+            z-index: 1;
+          }
+
           &:last-child {
             @include media-breakpoint-up(lg) {
               border-bottom: 0;
@@ -131,22 +131,19 @@ body {
             }
           }
 
-          &.swiper-slide-visible {
+          .article-content {
             @include media-breakpoint-up(lg) {
               border-left: 1px solid $cigi-text-grey;
+              border-top: 0;
             }
+            background-color: $space-series-background-colour;
+            border-top: 1px solid $cigi-text-grey;
+            height: 100%;
+            transition: transform 0.2s ease, opacity 0.3s ease;
 
-            & ~ .swiper-slide-visible {
-              @include media-breakpoint-up(lg) {
-                border-left: 0;
-              }
-            }
-          }
-
-          .article-content {
             &:hover {
+              border-right: 1px solid $cigi-text-grey;
               transform: scale(1.025);
-              z-index: 1;
   
               .series-item-image {
                 .play-icon {
