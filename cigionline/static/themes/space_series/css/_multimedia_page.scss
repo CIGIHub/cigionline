@@ -217,8 +217,45 @@
               }
             }
 
-            .multimedia-counter-container {
-              height: 20px;
+            .play-icon {
+              align-items: center;
+              color: $white;
+              display: flex;
+              height: 1.5em;
+              justify-content: center;
+              margin-left: 5px;
+              transition: color 0.2s ease;
+              width: 15px;
+
+              * {
+                position: absolute;
+                transition: background-color 0.2s ease;
+              }
+
+              .inner-circle {
+                background-color: $black;
+                border-radius: 50%;
+                border-width: 3px;
+                height: 13px;
+                margin-top: 5px;
+                width: 13px;
+                z-index: 3;
+              }
+
+              .outer-circle {
+                border: 3px solid $white;
+                border-radius: 50%;
+                height: 18px;
+                margin-top: 5px;
+                width: 18px;
+                z-index: 1;
+              }
+
+              i {
+                font-size: 0.5em;
+                margin-top: 5px;
+                z-index: 4;
+              }
             }
           }
 
