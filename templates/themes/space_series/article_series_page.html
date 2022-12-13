@@ -73,20 +73,20 @@
               {% if series_item.category_title %}
                 <div class=category-title>{{ series_item.category_title }}</div>
               {% endif %}
+              <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                {% if series_item.image_override %}
+                  <img 
+                    class="image-static"
+                    src="{{ series_item.image_override.src_static }}"
+                    alt="{{ series_item.image_override.alt }}"
+                    data-src-static="{{ series_item.image_override.src_static }}"
+                    data-src-gif="{{ series_item.image_override.src_gif }}"
+                  />
+                {% else %}
+                  {% image series_item.content_page.specific.image_hero fill-300x300 %}
+                {% endif %}
+              </a>
               <div class="article-content">
-                <a href="{% pageurl series_item.content_page %}" class="series-item-image">
-                  {% if series_item.image_override %}
-                    <img 
-                      class="image-static"
-                      src="{{ series_item.image_override.src_static }}"
-                      alt="{{ series_item.image_override.alt }}"
-                      data-src-static="{{ series_item.image_override.src_static }}"
-                      data-src-gif="{{ series_item.image_override.src_gif }}"
-                    />
-                  {% else %}
-                    {% image series_item.content_page.specific.image_hero fill-300x300 %}
-                  {% endif %}
-                </a>
                 <div class="series-item-content">
                   <div>
                     <div class="series-item-counter">

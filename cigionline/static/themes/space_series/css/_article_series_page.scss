@@ -147,11 +147,11 @@ body {
             &:hover {
               transform: scale(1.025);
               z-index: 1;
-  
+
               .series-item-image {
                 .play-icon {
                   color: $white;
-  
+
                   .inner-circle {
                     background-color: transparent;
                   }
