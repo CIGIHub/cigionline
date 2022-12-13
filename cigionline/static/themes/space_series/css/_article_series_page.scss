@@ -54,8 +54,8 @@ body {
             padding: 0;
           }
           border-top: 1px solid $cigi-text-grey;
-          overflow-y: visible;
           overflow-x: clip;
+          overflow-y: visible;
           padding: 1em 0;
 
           .swiper-wrapper {
@@ -68,8 +68,8 @@ body {
               border-left: 1px solid $cigi-text-grey;
               font-size: 0.9em;
               font-weight: 600;
-              left: -1px;
               height: 3em;
+              left: -1px;
               padding: 0 0.5em;
               position: absolute;
               text-transform: uppercase;
@@ -107,8 +107,8 @@ body {
 
           &.after {
             &::after {
-              content: '';
               background-color: $space-series-background-colour;
+              content: '';
               height: 20px;
               left: -16px;
               position: absolute;
@@ -226,12 +226,12 @@ body {
                 margin-left: 5px;
                 transition: color 0.2s ease;
                 width: 23px;
-  
+
                 * {
                   position: absolute;
                   transition: background-color 0.2s ease;
                 }
-  
+
                 .inner-circle {
                   background-color: $black;
                   border-radius: 50%;
@@ -240,7 +240,7 @@ body {
                   width: 18px;
                   z-index: 3;
                 }
-  
+
                 .outer-circle {
                   border: 3px solid $white;
                   border-radius: 50%;
