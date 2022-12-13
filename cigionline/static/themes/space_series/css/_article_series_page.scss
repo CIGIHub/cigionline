@@ -144,6 +144,9 @@ body {
           }
 
           .article-content {
+            display: flex;
+            flex-direction: column;
+
             &:hover {
               transform: scale(1.025);
               z-index: 1;
