@@ -117,21 +117,6 @@ body {
             }
           }
 
-          // &:hover {
-          //   transform: scale(1.025);
-          //   z-index: 1;
-
-          //   .series-item-image {
-          //     .play-icon {
-          //       color: $white;
-
-          //       .inner-circle {
-          //         background-color: transparent;
-          //       }
-          //     }
-          //   }
-          // }
-
           &:last-child {
             @include media-breakpoint-up(lg) {
               border-bottom: 0;
@@ -154,10 +139,6 @@ body {
             & ~ .swiper-slide-visible {
               @include media-breakpoint-up(lg) {
                 border-left: 0;
-              }
-
-              &:hover {
-                border-left: 1px solid $cigi-text-grey;
               }
             }
           }
