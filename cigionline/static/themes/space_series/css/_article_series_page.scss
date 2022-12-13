@@ -117,20 +117,20 @@ body {
             }
           }
 
-          &:hover {
-            transform: scale(1.025);
-            z-index: 1;
+          // &:hover {
+          //   transform: scale(1.025);
+          //   z-index: 1;
 
-            .series-item-image {
-              .play-icon {
-                color: $white;
+          //   .series-item-image {
+          //     .play-icon {
+          //       color: $white;
 
-                .inner-circle {
-                  background-color: transparent;
-                }
-              }
-            }
-          }
+          //       .inner-circle {
+          //         background-color: transparent;
+          //       }
+          //     }
+          //   }
+          // }
 
           &:last-child {
             @include media-breakpoint-up(lg) {
@@ -158,6 +158,23 @@ body {
 
               &:hover {
                 border-left: 1px solid $cigi-text-grey;
+              }
+            }
+          }
+
+          .article-content {
+            &:hover {
+              transform: scale(1.025);
+              z-index: 1;
+  
+              .series-item-image {
+                .play-icon {
+                  color: $white;
+  
+                  .inner-circle {
+                    background-color: transparent;
+                  }
+                }
               }
             }
           }
