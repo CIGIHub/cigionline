@@ -1,9 +1,9 @@
-{% load menu_tags %}
+{% load menu_tags wagtailcore_tags %}
 
 {% if submenu %}
   {% get_menu_items submenu.slug as submenu_items %}
   {% if submenu_items %}
-    <header class="header__about">
+    <header class="header--submenu">
       <div class="container">
         <nav class="border-top">
           <ul class="row g-1 justify-content-between">

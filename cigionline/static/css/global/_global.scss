@@ -36,7 +36,7 @@ button {
 
 //HR
 hr {
-  background: $cigi-light-grey;
+  background: $cigi-medium-grey;
   border: 0;
   height: 1px;
   margin: 1em 0;
@@ -46,6 +46,7 @@ hr {
 img {
   height: auto;
   line-break: anywhere;
+  border-radius: 20px;
   width: 100%;
 }
 

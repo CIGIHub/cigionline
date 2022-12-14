@@ -6,45 +6,6 @@ body {
       $position: sticky
     );
 
-    .header__about {
-      position: static;
-      background-color: $white;
-
-      nav {
-        padding: 1em 0;
-        margin-top: 1em;
-      }
-
-      ul {
-        @include link(
-          $color: $cigi-text-grey,
-          $hover-color: $cigi-primary-colour
-        );
-        list-style: none;
-        display: flex;
-        gap: 1em;
-
-        li {
-          white-space: nowrap;
-          position: relative;
-
-          &.active {
-            @include link($color: $black, $hover-color: $cigi-primary-colour);
-
-            &::before {
-              content: '';
-              display: block;
-              width: 100%;
-              height: 0;
-              position: absolute;
-              top: -1.05em;
-              border-top: 1px solid $black;
-            }
-          }
-        }
-      }
-    }
-
     main {
       margin-bottom: 4em;
 
