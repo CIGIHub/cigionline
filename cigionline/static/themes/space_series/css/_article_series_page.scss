@@ -90,6 +90,7 @@ body {
           border-top: 1px solid $cigi-text-grey;
           display: flex;
           height: auto;
+          overflow: hidden;
           position: relative;
           transition: transform 0.2s ease, opacity 0.3s ease;
           z-index: 0;
