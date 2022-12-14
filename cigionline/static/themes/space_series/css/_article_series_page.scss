@@ -52,6 +52,7 @@ body {
         .swiper-container-series {
           @include media-breakpoint-down(md) {
             padding: 0;
+            border-top: 0;
           }
           border-top: 1px solid $cigi-text-grey;
           overflow-x: clip;
@@ -64,17 +65,23 @@ body {
             }
 
             .category-title {
-              background-color: $space-series-background-colour;
-              border-left: 1px solid $cigi-text-grey;
-              font-size: 0.9em;
-              font-weight: 600;
-              height: 3em;
-              left: -1px;
-              padding: 0 0.5em;
-              position: absolute;
-              text-transform: uppercase;
-              top: -1.85em;
-              white-space: nowrap;
+              @include media-breakpoint-up(lg) {
+                background-color: $space-series-background-colour;
+                border-left: 1px solid $cigi-text-grey;
+                border-bottom: 0;
+                font-size: 0.9em;
+                font-weight: 600;
+                height: 3em;
+                left: -1px;
+                padding: 0 0.5em;
+                position: absolute;
+                text-transform: uppercase;
+                top: -1.85em;
+                white-space: nowrap;
+              }
+
+              padding-top: 2em;
+              border-bottom: 1px solid $cigi-text-grey;
             }
           }
         }
@@ -88,9 +95,7 @@ body {
           align-items: center;
           background-color: $space-series-background-colour;
           border-top: 1px solid $cigi-text-grey;
-          display: flex;
           height: auto;
-          overflow: hidden;
           position: relative;
           transition: transform 0.2s ease, opacity 0.3s ease;
           z-index: 0;
@@ -116,6 +121,10 @@ body {
               top: -25px;
               width: 15px;
             }
+          }
+
+          &:first-child {
+            border-top: 0;
           }
 
           &:last-child {
@@ -144,20 +153,27 @@ body {
             }
           }
 
-          .article-content {
-            display: flex;
-            flex-direction: column;
+          .article-content-wrapper {
+            overflow: hidden;
 
-            &:hover {
-              transform: scale(1.025);
-              z-index: 1;
+            .article-content {
+              @include media-breakpoint-up(lg) {
+                flex-direction: column;
+              }
+              align-items: center;
+              display: flex;
 
-              .series-item-image {
-                .play-icon {
-                  color: $white;
+              &:hover {
+                transform: scale(1.025);
+                z-index: 1;
 
-                  .inner-circle {
-                    background-color: transparent;
+                .series-item-image {
+                  .play-icon {
+                    color: $white;
+  
+                    .inner-circle {
+                      background-color: transparent;
+                    }
                   }
                 }
               }
