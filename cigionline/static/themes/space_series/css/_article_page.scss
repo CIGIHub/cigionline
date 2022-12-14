@@ -162,6 +162,7 @@
           overflow-y: auto;
 
           .swiper-wrapper {
+            flex-direction: column;
             height: 100%;
             padding: 2em 0;
 
@@ -183,6 +184,9 @@
               }
 
               .series-item-content {
+                @include media-breakpoint-up(md){
+                  white-space: nowrap;
+                }
                 display: flex;
                 flex-direction: column;
                 height: 100%;
