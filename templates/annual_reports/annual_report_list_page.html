@@ -9,8 +9,14 @@
   {% render_bundle 'annualReportListPage' 'js' attrs='defer' %}
 {% endblock %}
 
+{% block header %}
+  {% include "includes/top_bar.html" %}
+  {% if self.submenu %}
+    {% include "includes/top_bar_menu.html" with submenu=self.submenu %}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% cache 86400 annual_reports_swiper self.latest_revision_created_at|date:"c" %}
     <section class="featured">
       <div class="container">

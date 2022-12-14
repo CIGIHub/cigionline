@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% load wagtailimages_tags %}
 
+{% block header %}
+  {% include "includes/top_bar.html" %}
+  {% if self.submenu %}
+    {% include "includes/top_bar_menu.html" with submenu=self.submenu %}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% if self.image_hero %}
     <div class="container">
       <div class="row justify-content-center">

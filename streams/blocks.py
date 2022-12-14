@@ -388,6 +388,22 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/image_block.html'
 
 
+class ImageFullWidthBlock(blocks.StructBlock, ThemeableBlock):
+    """Full width image"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ImageFullWidthBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'image_full_width_block')
+
+    class Meta:
+        icon = 'image'
+        label = 'Image Full-width'
+        template = 'streams/image_full_width_block.html'
+
+
 class ImageScrollBlock(blocks.StructBlock, ThemeableBlock):
     """Image Scroll"""
 
@@ -484,6 +500,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'hr',
             'image',
             'italic',
+            'large_text',
             'link',
             'ol',
             'subscript',

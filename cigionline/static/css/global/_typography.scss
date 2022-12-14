@@ -1,12 +1,18 @@
 body {
+  font-weight: 300;
+
   a {
+    color: $black;
     transition: color 0.2s ease;
+
+    &:hover {
+      color: $cigi-primary-colour;
+    }
   }
 
   h2,
   h3,
   h4 {
-    font-weight: 400;
     margin-bottom: 0.5em;
   }
 
@@ -23,7 +29,7 @@ body {
   h2,
   h3,
   h4 {
-    margin-top: 1.5em;
+    margin: 1.5em 0;
   }
 
   h4 {
@@ -39,5 +45,10 @@ body {
 
   .topics {
     padding-left: 0;
+  }
+
+  .large-text {
+    font-size: 2.5rem;
+    line-height: 1.2;
   }
 }
