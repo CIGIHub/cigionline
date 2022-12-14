@@ -51,8 +51,8 @@ body {
 
         .swiper-container-series {
           @include media-breakpoint-down(md) {
-            padding: 0;
             border-top: 0;
+            padding: 0;
           }
           border-top: 1px solid $cigi-text-grey;
           overflow-x: clip;
@@ -67,8 +67,8 @@ body {
             .category-title {
               @include media-breakpoint-up(lg) {
                 background-color: $space-series-background-colour;
-                border-left: 1px solid $cigi-text-grey;
                 border-bottom: 0;
+                border-left: 1px solid $cigi-text-grey;
                 font-size: 0.9em;
                 font-weight: 600;
                 height: 3em;
@@ -80,8 +80,8 @@ body {
                 white-space: nowrap;
               }
 
-              padding-top: 2em;
               border-bottom: 1px solid $cigi-text-grey;
+              padding-top: 2em;
             }
           }
         }
@@ -170,7 +170,7 @@ body {
                 .series-item-image {
                   .play-icon {
                     color: $white;
-  
+
                     .inner-circle {
                       background-color: transparent;
                     }
