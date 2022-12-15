@@ -13,7 +13,7 @@ if (document.querySelector('.space-series-article')) {
 }
 const breakpoint = pageType === 'article series'
   ? window.matchMedia('(max-width:992px)')
-  : window.matchMedia('(max-width:768px)');
+  : window.matchMedia('(max-width:767px)');
 const swipers = {};
 
 const enableSwiper = function(articleType) {
@@ -45,7 +45,7 @@ const enableSwiper = function(articleType) {
       },
 
       breakpoints: {
-        768: {
+        767: {
           slidesPerGroup: slidesPerViewMd,
           slidesPerView: slidesPerViewMd,
         },
