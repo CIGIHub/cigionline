@@ -105,9 +105,15 @@
                           <span>{% if counter < 10 %}0{% endif %}{{ counter }}</span>
                         {% endif %}
                       </div>
-                      <h3 class="series-item-title">
-                        <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
-                      </h3>
+                      {% if series_item.content_page.contenttype == "Multimedia" %}
+                        <h3 class="series-item-title multimedia-title">
+                          <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                        </h3>
+                      {% else %}
+                        <h3 class="series-item-title">
+                          <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                        </h3>
+                      {% endif %}
                     </div>
                     {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
                   </div>

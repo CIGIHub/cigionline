@@ -243,7 +243,7 @@ body {
                 justify-content: center;
                 margin-bottom: 9px;
                 margin-left: 5px;
-                padding-top: 9px;
+                padding-top: 12px;
                 transition: color 0.2s ease;
                 width: 23px;
 
@@ -278,6 +278,10 @@ body {
 
             .series-item-title {
               font-size: 1em;
+
+              &.multimedia-title {
+                width: 85%;
+              }
             }
 
             .authors {
