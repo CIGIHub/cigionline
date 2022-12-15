@@ -71,7 +71,7 @@ body {
                 border-left: 1px solid $cigi-text-grey;
                 font-size: 0.9em;
                 font-weight: 600;
-                height: 3em;
+                height: 30px;
                 left: -1px;
                 padding: 0 0.5em;
                 position: absolute;
@@ -97,7 +97,6 @@ body {
           border-top: 1px solid $cigi-text-grey;
           height: auto;
           position: relative;
-          transition: transform 0.2s ease, opacity 0.3s ease;
           z-index: 0;
 
           &::before {
@@ -162,12 +161,15 @@ body {
               }
               align-items: center;
               display: flex;
+              transition: transform 0.2s ease, opacity 0.3s ease;
 
               &:hover {
                 transform: scale(1.025);
                 z-index: 1;
 
                 .series-item-image {
+                  transform: scale(1.1);
+
                   .play-icon {
                     color: $white;
 
@@ -253,7 +255,7 @@ body {
                 }
 
                 .inner-circle {
-                  background-color: $black;
+                  background-color: $space-series-background-colour;
                   border-radius: 50%;
                   border-width: 3px;
                   height: 18px;
