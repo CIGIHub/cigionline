@@ -51,14 +51,37 @@ body {
 
         .swiper-container-series {
           @include media-breakpoint-down(md) {
+            border-top: 0;
             padding: 0;
           }
-          overflow: hidden;
-          padding: 1em 0.5em;
+          border-top: 1px solid $cigi-text-grey;
+          overflow-x: clip;
+          overflow-y: visible;
+          padding: 1em 0;
 
           .swiper-wrapper {
             @include media-breakpoint-down(md) {
               flex-direction: column;
+            }
+
+            .category-title {
+              @include media-breakpoint-up(lg) {
+                background-color: $space-series-background-colour;
+                border-bottom: 0;
+                border-left: 1px solid $cigi-text-grey;
+                font-size: 0.9em;
+                font-weight: 600;
+                height: 30px;
+                left: -1px;
+                padding: 0 0.5em;
+                position: absolute;
+                text-transform: uppercase;
+                top: -1.85em;
+                white-space: nowrap;
+              }
+
+              border-bottom: 1px solid $cigi-text-grey;
+              padding-top: 2em;
             }
           }
         }
@@ -72,10 +95,8 @@ body {
           align-items: center;
           background-color: $space-series-background-colour;
           border-top: 1px solid $cigi-text-grey;
-          display: flex;
           height: auto;
           position: relative;
-          transition: transform 0.2s ease, opacity 0.3s ease;
           z-index: 0;
 
           &::before {
@@ -89,19 +110,20 @@ body {
             z-index: -1;
           }
 
-          &:hover {
-            transform: scale(1.025);
-            z-index: 1;
-
-            .series-item-image {
-              .play-icon {
-                color: $white;
-
-                .inner-circle {
-                  background-color: transparent;
-                }
-              }
+          &.after {
+            &::after {
+              background-color: $space-series-background-colour;
+              content: '';
+              height: 20px;
+              left: -16px;
+              position: absolute;
+              top: -25px;
+              width: 15px;
             }
+          }
+
+          &:first-child {
+            border-top: 0;
           }
 
           &:last-child {
@@ -127,9 +149,27 @@ body {
               @include media-breakpoint-up(lg) {
                 border-left: 0;
               }
+            }
+          }
+
+          .article-content-wrapper {
+            overflow: hidden;
+
+            .article-content {
+              @include media-breakpoint-up(lg) {
+                flex-direction: column;
+              }
+              align-items: center;
+              display: flex;
+              transition: transform 0.2s ease, opacity 0.3s ease;
 
               &:hover {
-                border-left: 1px solid $cigi-text-grey;
+                transform: scale(1.025);
+                z-index: 1;
+
+                .series-item-image {
+                  transform: scale(1.1);
+                }
               }
             }
           }
@@ -144,41 +184,6 @@ body {
             justify-content: center;
             position: relative;
             width: 100px;
-
-            .play-icon {
-              align-items: center;
-              color: $black;
-              display: flex;
-              justify-content: center;
-              position: absolute;
-              transition: color 0.2s ease;
-
-              * {
-                position: absolute;
-                transition: background-color 0.2s ease;
-              }
-
-              .inner-circle {
-                background-color: $white;
-                border-radius: 50%;
-                border-width: 2px;
-                height: 45px;
-                width: 45px;
-                z-index: 3;
-              }
-
-              .outer-circle {
-                border: 2px solid $white;
-                border-radius: 50%;
-                height: 58px;
-                width: 58px;
-                z-index: 1;
-              }
-
-              i {
-                z-index: 4;
-              }
-            }
           }
 
           .series-item-content {
@@ -209,7 +214,7 @@ body {
                 font-weight: 600;
 
                 &:first-child {
-                  margin-right: 0.25em;
+                  margin-right: 0.5em;
                   position: relative;
                   width: 100%;
 
@@ -217,16 +222,60 @@ body {
                     background-color: $white;
                     bottom: 7px;
                     content: '';
-                    height: 5px;
+                    height: 3px;
                     position: absolute;
                     width: 100%;
                   }
+                }
+              }
+
+              .play-icon {
+                align-items: center;
+                color: $white;
+                display: flex;
+                height: 12px;
+                justify-content: center;
+                margin-bottom: 9px;
+                margin-left: 5px;
+                padding-top: 12px;
+                transition: color 0.2s ease;
+                width: 23px;
+
+                * {
+                  position: absolute;
+                  transition: background-color 0.2s ease;
+                }
+
+                .inner-circle {
+                  background-color: $space-series-background-colour;
+                  border-radius: 50%;
+                  border-width: 3px;
+                  height: 18px;
+                  width: 18px;
+                  z-index: 3;
+                }
+
+                .outer-circle {
+                  border: 3px solid $white;
+                  border-radius: 50%;
+                  height: 23px;
+                  width: 23px;
+                  z-index: 1;
+                }
+
+                i {
+                  font-size: 0.7em;
+                  z-index: 4;
                 }
               }
             }
 
             .series-item-title {
               font-size: 1em;
+
+              &.multimedia-title {
+                width: 85%;
+              }
             }
 
             .authors {
