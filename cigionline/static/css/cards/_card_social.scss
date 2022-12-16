@@ -11,6 +11,10 @@
     margin: 0;
     padding: 0 1em;
 
+    &.swiper-slide {
+      height: 100%;
+    }
+
     &.social--media__first {
       display: block;
     }

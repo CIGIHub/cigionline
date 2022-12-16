@@ -60,23 +60,34 @@ class Tweet(models.Model):
         response = client.get_tweet(self.tweet_id, expansions=expansions, tweet_fields=tweet_fields, media_fields=media_fields, user_fields=user_fields)
         tweet = response.data
 
-        public_metrics = tweet['public_metrics']
-        user = response.includes['users'][0]
-        media = response.includes['media'][0]
+        try:
+            public_metrics = tweet['public_metrics']
+            user = response.includes['users'][0]
+            media = response.includes['media'][0]
+        except:
+            public_metrics = None
+            user = None
+            media = None
 
         self.tweet_text = tweet['text']
         self.tweet_created_at = tweet['created_at']
-        self.tweet_user_id = user['id']
-        self.tweet_user_name = user['name']
-        self.tweet_user_profile_image_url = user['profile_image_url']
-        self.tweet_user_url = user['url']
-        self.tweet_user_username = user['username']
-        self.tweet_likes = public_metrics['like_count']
-        self.tweet_replies = public_metrics['reply_count']
-        self.tweet_media_url = media['url']
-        self.tweet_media_key = media['media_key']
-        self.tweet_media_alt_text = media['alt_text']
-        self.tweet_media_preview_image_url = media['preview_image_url']
+        
+        if user:
+            self.tweet_user_id = user['id']
+            self.tweet_user_name = user['name']
+            self.tweet_user_profile_image_url = user['profile_image_url']
+            self.tweet_user_url = user['url']
+            self.tweet_user_username = user['username']
+        
+        if public_metrics:
+            self.tweet_likes = public_metrics['like_count'] if public_metrics['like_count'] else 0
+            self.tweet_replies = public_metrics['reply_count'] if public_metrics['reply_count'] else 0
+        
+        if media:    
+            self.tweet_media_url = media['url']
+            self.tweet_media_key = media['media_key']
+            self.tweet_media_alt_text = media['alt_text']
+            self.tweet_media_preview_image_url = media['preview_image_url']
 
         super().save(force_insert, force_update, using, update_fields)
 

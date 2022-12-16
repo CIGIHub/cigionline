@@ -38,10 +38,6 @@ if (swiperContainer) {
         slidesPerView: 3,
         slidesPerGroup: 3,
       },
-      992: {
-        slidesPerView: 4,
-        slidesPerGroup: 4,
-      },
     },
   });
 }
@@ -54,7 +50,6 @@ if (swiperSocialRowContainer) {
     slidesPerGroup: 1,
     spaceBetween: 20,
     speed: 800,
-    autoHeight: true,
     grabCursor: true,
 
     navigation: {
