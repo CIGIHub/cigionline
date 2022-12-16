@@ -216,6 +216,7 @@
       }
       margin-right: 1em;
       transition: transform 0.2s ease;
+      z-index: 1;
 
       &.expanded {
         transform: rotate(45deg);
@@ -393,10 +394,16 @@
         }
 
         &.swiper-button-prev {
+          @include media-breakpoint-down(lg) {
+            left: -4em;
+          }
           left: -5em;
         }
 
         &.swiper-button-next {
+          @include media-breakpoint-down(lg) {
+            right: -4em;
+          }
           right: -5em;
         }
 
@@ -432,6 +439,25 @@
         display: block;
         height: 8px;
         margin: 1rem auto;
+        width: 30%;
+      }
+    }
+
+    .stream-block-blockquote-content {
+      @include media-breakpoint-up(md) {
+        margin-left: -0.5em;
+        margin-right: -5em;
+      }
+      @include media-breakpoint-up(lg) {
+        margin-right: -7em;
+      }
+      @include media-breakpoint-up(lg) {
+        margin-right: -10em;
+      }
+      padding: 1em 0 0;
+
+      &::before {
+        border-bottom: 5px solid $black;
         width: 30%;
       }
     }
