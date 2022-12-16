@@ -12,7 +12,7 @@ from features.models import (
     HomePageFeaturedHighlightsList,
     HomePageFeaturedEventsList,
 )
-from streams.blocks import HomePageRow
+from streams.blocks import HomePageRow, SocialSwiperRow
 from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
@@ -31,8 +31,10 @@ import traceback
 class HomePage(Page):
     """Singleton model for the home page."""
 
-    layout = StreamField(
-        [('row', HomePageRow())],
+    layout = StreamField([
+            ('row', HomePageRow()),
+            ('social_swiper_row', SocialSwiperRow()),
+        ],
         blank=True,
     )
     content_panels = Page.content_panels + [
