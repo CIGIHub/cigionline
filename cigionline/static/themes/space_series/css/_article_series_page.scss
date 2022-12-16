@@ -42,46 +42,51 @@ body {
       overflow: hidden;
 
       .swiper {
-        @include media-breakpoint-down(xs) {
-          padding-left: 0;
-          padding-right: 0;
+        @include media-breakpoint-down(md) {
+          margin-top: 0;
         }
         margin-top: 2em;
         position: relative;
 
         .swiper-container-series {
           @include media-breakpoint-down(md) {
-            border-top: 0;
             padding: 0;
           }
-          border-top: 1px solid $cigi-text-grey;
-          overflow-x: clip;
-          overflow-y: visible;
-          padding: 1em 0;
+          overflow: hidden;
+          padding: 0.5em 0;
 
-          .swiper-wrapper {
+          .swiper-wrapper-container {
             @include media-breakpoint-down(md) {
-              flex-direction: column;
+              border-top: 0;
+              padding: 0;
             }
+            border-top: 1px solid $cigi-text-grey;
+            padding: 1em 0;
 
-            .category-title {
-              @include media-breakpoint-up(lg) {
-                background-color: $space-series-background-colour;
-                border-bottom: 0;
-                border-left: 1px solid $cigi-text-grey;
-                font-size: 0.9em;
-                font-weight: 600;
-                height: 30px;
-                left: -1px;
-                padding: 0 0.5em;
-                position: absolute;
-                text-transform: uppercase;
-                top: -1.85em;
-                white-space: nowrap;
+            .swiper-wrapper {
+              @include media-breakpoint-down(md) {
+                flex-direction: column;
               }
 
-              border-bottom: 1px solid $cigi-text-grey;
-              padding-top: 2em;
+              .category-title {
+                @include media-breakpoint-up(lg) {
+                  background-color: $space-series-background-colour;
+                  border-bottom: 0;
+                  border-left: 1px solid $cigi-text-grey;
+                  font-size: 0.9em;
+                  font-weight: 600;
+                  height: 30px;
+                  left: -1px;
+                  padding: 0 0.5em;
+                  position: absolute;
+                  text-transform: uppercase;
+                  top: -1.85em;
+                  white-space: nowrap;
+                }
+
+                border-bottom: 1px solid $cigi-text-grey;
+                padding-top: 2em;
+              }
             }
           }
         }
