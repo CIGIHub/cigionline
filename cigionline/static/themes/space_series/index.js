@@ -22,7 +22,7 @@ const enableSwiper = function(articleType) {
   const slidesPerViewXl = 6;
   let swiperIds;
   if (articleType === 'article series') {
-    swiperIds = ['.swiper-container-series'];
+    swiperIds = ['.swiper-container-series-content'];
   } else if (articleType === 'article') {
     swiperIds = ['.swiper-container-sticky', '.swiper-container-hero'];
   } else if (articleType === 'multimedia') {
