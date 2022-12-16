@@ -9,8 +9,10 @@ from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
+import os
 
 
 class ThemeableBlock:
@@ -1421,21 +1423,21 @@ class ExpertCard(blocks.StructBlock):
 
 
 class TwitterCard(blocks.StructBlock):
-    class TwitterCardTypeChoices(models.TextChoices):
-        SMALL = ('small', 'Small')
-
-    url = blocks.URLBlock(required=True)
-    size = blocks.ChoiceBlock(choices=TwitterCardTypeChoices.choices, required=True, default=TwitterCardTypeChoices.SMALL)
-
-    def get_template(self, context=None):
-        if context:
-            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
-        return super().get_template(context)
+    tweet = SnippetChooserBlock(required=True, target_model='twitter.Tweet')
 
     class Meta:
         icon = 'site'
         label = 'Twitter Card'
         template = 'streams/twitter_card_block.html'
+
+
+class LinkedInCard(blocks.StructBlock):
+    post = SnippetChooserBlock(required=True, target_model='linkedin.LinkedinPost')
+
+    class Meta:
+        icon = 'site'
+        label = 'LinkedIn Card'
+        template = 'streams/linkedin_card_block.html'
 
 
 class AdCard(blocks.StructBlock):
@@ -1484,6 +1486,23 @@ class HomePageRowMostPopular(blocks.StructBlock):
         form_classname = 'most-popular-block'
 
 
+class SocialSwiperRow(blocks.StructBlock):
+    social_swiper_cards = blocks.StreamBlock([
+        ('twitter_card', TwitterCard()),
+    ])
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        context['bearer_token'] = os.environ['TWITTER_BEARER_TOKEN']
+        return context
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Social Swiper'
+        template = 'streams/social_swiper_block.html'
+        form_classname = 'social-swiper-block'
+
+
 class HomePageRow(blocks.StructBlock):
     row = blocks.StreamBlock([
         ('article_card', ArticleCard()),
@@ -1492,7 +1511,6 @@ class HomePageRow(blocks.StructBlock):
         ('event_card', EventCard()),
         ('multimedia_card', MultimediaCard()),
         ('expert_card', ExpertCard()),
-        ('twitter_card', TwitterCard()),
         ('ad_card', AdCard()),
         ('most_popular', HomePageRowMostPopular()),
     ])

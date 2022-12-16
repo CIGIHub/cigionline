@@ -1,0 +1,14 @@
+{% load wagtailcore_tags %}
+
+<div class="swiper-container-social-row swiper-container">
+  <div class="row g-3 g-md-5 social--media__wrapper swiper-wrapper">
+    {% for block in self.social_swiper_cards %}
+      {% include_block block.value %}
+    {% endfor %}
+  </div>
+  <div class="swiper-controls">
+    <div class="swiper-button-prev"><i class="fal fa-long-arrow-left"></i></div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next"><i class="fal fa-long-arrow-right"></i></div>
+  </div>
+</div>
