@@ -66,65 +66,67 @@
   <section class="in-the-series">
     <div class="container swiper">
       <div class="swiper-container-series swiper-container">
-        <div class="swiper-wrapper">
-          {% define 0 as counter %}
-          {% for series_item in self.article_series_items %}
-            <article class="swiper-slide series-item {% if series_item.category_title %}after{% endif %}">
-              {% if series_item.category_title %}
-                <div class=category-title>{{ series_item.category_title }}</div>
-              {% endif %}
-              <div class="article-content-wrapper">
-                <div class="article-content">
-                  <a href="{% pageurl series_item.content_page %}" class="series-item-image">
-                    {% if series_item.image_override %}
-                      <img 
-                        class="image-static"
-                        src="{{ series_item.image_override.src_static }}"
-                        alt="{{ series_item.image_override.alt }}"
-                        data-src-static="{{ series_item.image_override.src_static }}"
-                        data-src-gif="{{ series_item.image_override.src_gif }}"
-                      />
-                    {% else %}
-                      {% image series_item.content_page.specific.image_hero fill-300x300 %}
-                    {% endif %}
-                  </a>
-                  <div class="series-item-content">
-                    <div>
-                      <div class="series-item-counter">
-                        <span></span>
+        <div class="swiper-container-series-content">
+          <div class="swiper-wrapper">
+            {% define 0 as counter %}
+            {% for series_item in self.article_series_items %}
+              <article class="swiper-slide series-item {% if series_item.category_title %}after{% endif %}">
+                {% if series_item.category_title %}
+                  <div class=category-title>{{ series_item.category_title }}</div>
+                {% endif %}
+                <div class="article-content-wrapper">
+                  <div class="article-content">
+                    <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                      {% if series_item.image_override %}
+                        <img 
+                          class="image-static"
+                          src="{{ series_item.image_override.src_static }}"
+                          alt="{{ series_item.image_override.alt }}"
+                          data-src-static="{{ series_item.image_override.src_static }}"
+                          data-src-gif="{{ series_item.image_override.src_gif }}"
+                        />
+                      {% else %}
+                        {% image series_item.content_page.specific.image_hero fill-300x300 %}
+                      {% endif %}
+                    </a>
+                    <div class="series-item-content">
+                      <div>
+                        <div class="series-item-counter">
+                          <span></span>
+                          {% if series_item.content_page.contenttype == "Multimedia" %}
+                            <span>
+                              <div class="play-icon">
+                                <div class="outer-circle"></div>
+                                <div class="inner-circle"></div>
+                                <i class="fas fa-play"></i>
+                              </div>
+                            </span>
+                          {% else %}
+                            {% define counter|add:1 as counter %}
+                            <span>{% if counter < 10 %}0{% endif %}{{ counter }}</span>
+                          {% endif %}
+                        </div>
                         {% if series_item.content_page.contenttype == "Multimedia" %}
-                          <span>
-                            <div class="play-icon">
-                              <div class="outer-circle"></div>
-                              <div class="inner-circle"></div>
-                              <i class="fas fa-play"></i>
-                            </div>
-                          </span>
+                          <h3 class="series-item-title multimedia-title">
+                            <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                          </h3>
                         {% else %}
-                          {% define counter|add:1 as counter %}
-                          <span>{% if counter < 10 %}0{% endif %}{{ counter }}</span>
+                          <h3 class="series-item-title">
+                            <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                          </h3>
                         {% endif %}
                       </div>
-                      {% if series_item.content_page.contenttype == "Multimedia" %}
-                        <h3 class="series-item-title multimedia-title">
-                          <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
-                        </h3>
-                      {% else %}
-                        <h3 class="series-item-title">
-                          <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
-                        </h3>
-                      {% endif %}
+                      {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
                     </div>
-                    {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
                   </div>
                 </div>
-              </div>
-            </article>
-          {% endfor %}
+              </article>
+            {% endfor %}
+          </div>
         </div>
       </div>
-      <div class="swiper-button-prev swiper-button-prev-series swiper-button"></div>
-      <div class="swiper-button-next swiper-button-next-series swiper-button"></div>
+      <div class="swiper-button-prev swiper-button-prev-series-content swiper-button"></div>
+      <div class="swiper-button-next swiper-button-next-series-content swiper-button"></div>
     </div>
   </section>
 {% endblock %}
