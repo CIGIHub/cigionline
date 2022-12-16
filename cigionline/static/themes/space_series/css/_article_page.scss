@@ -435,6 +435,26 @@
         width: 30%;
       }
     }
+
+    .stream-block-blockquote-content {
+      @include media-breakpoint-up(md) {
+        margin-right: -5em;
+      }
+      @include media-breakpoint-up(lg) {
+        margin-right: -7em;
+      }
+      @include media-breakpoint-up(lg) {
+        margin-right: -10em;
+      }
+      margin-left: -0.5em;
+      margin-right: -0.5em;
+      padding: 1em 0 0;
+
+      &::before {
+        border-bottom: 5px solid $black;
+        width: 30%;
+      }
+    }
   }
 
   footer {
