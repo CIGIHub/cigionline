@@ -57,4 +57,5 @@ INTERNAL_IPS = ('127.0.0.1')
 try:
     from .local import *  # noqa: F401,F403
 except ImportError:
+    print('import error')
     pass

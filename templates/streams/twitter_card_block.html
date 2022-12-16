@@ -1,0 +1,45 @@
+<div class="col col-12 col-md-6 col-xl-4 social--media social--media__first swiper-slide">
+  <article class="card__container card--small card--small__social--media card--twitter">
+    <div class="social--media__profile--bar">
+      <div class="profile--image">
+        <img src="{{ self.tweet.tweet_user_profile_image_url }}">
+      </div>
+      <div class="row">
+        <h6 class="profile--name">
+          {{ self.tweet.tweet_user_name }}
+        </h6>
+        <div class="profile--handle">
+          <span class="twitter-id">@{{ self.tweet.tweet_user_username }}</span> ∙ <span class="date">{{ self.tweet.tweet_created_at|date:"M j" }}</span>
+        </div>
+      </div>
+    </div>
+    <p class="card__text">
+      {{ self.tweet.tweet_text }}
+    </p>
+    <div class="card__image">
+      <a href=""
+        class="feature-content-image">
+        <div class="img-wrapper">
+          <img alt=""
+            src="{{ self.tweet.tweet_media_url }}">
+        </div>
+      </a>
+    </div>
+    <div class="social--media__status--bar">
+      <div class="social--media__status--wrapper">
+        <div class="social--media__upvotes">
+          <i class="far fa-thumbs-up"></i><span class="upvotes">{{ self.tweet.tweet_likes }}</span>
+        </div>
+        <div class="social--media__comments">
+          <i class="far fa-comment-alt"></i><span class="comments">{{ self.tweet.tweet_replies }}</span>
+        </div>
+      </div>
+      <div class="social--media__link--wrapper">
+        <i class="fab fa-twitter"></i>
+        <button type="button" class="social--media__link--button">
+          <a href="{{ self.tweet.tweet_url }}">Visit Twitter</a>
+        </button>
+      </div>
+    </div>
+  </article>
+</div>
