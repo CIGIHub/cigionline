@@ -162,4 +162,13 @@
       }
     }
   }
+
+  &.card--small__social--media {
+    background-color: $social-media-background-light-grey;
+    align-items: initial;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 20px;
+    padding: 2em;
+  }
 }

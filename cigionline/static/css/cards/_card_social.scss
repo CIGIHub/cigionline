@@ -1,0 +1,134 @@
+.social--media__wrapper {
+  margin: 0 1em;
+  flex-wrap: nowrap;
+  padding-right: 2em;
+
+  .social--media {
+    @include media-breakpoint-up(xl) {
+      display: block;
+    }
+    display: none;
+    margin: 0;
+    padding: 0 1em;
+
+    &.social--media__first {
+      display: block;
+    }
+
+    &.social--media__second {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
+    }
+
+    .social--media__profile--bar {
+      align-items: center;
+      display: flex;
+      margin-bottom: 2.5em;
+    
+      h6 {
+        color: $social-media-black;
+        font-size: 15px;
+        margin-bottom: 0;
+      }
+    
+      .profile--handle {
+        p {
+          color: $social-media-medium-grey;
+          font-size: 12px;
+          margin-bottom: 0;
+        }
+      }
+    
+      .profile--image {
+        margin-right: 1em;
+    
+        img {
+          border-radius: 50%;
+          height: auto;
+          width: 50px;
+        }
+      }
+    }
+    
+    .card__text {
+      justify-content: normal;
+      color: $social-media-medium-grey;
+
+      a {
+        color: $social-media-black;
+      }
+
+      a:hover {
+        color: $cigi-dark-pink;
+      }
+    }
+
+    .card__image {
+      .image--source {
+        margin-bottom: 0;
+
+        a {
+          color: $social-media-medium-grey;
+          font-size: 12px;
+        }
+
+        a:hover {
+          color: $cigi-dark-pink;
+        }
+      }
+
+      .image--caption {
+        color: $social-media-black;
+        margin-bottom: 0;
+      }
+    }
+
+    .social--media__status--bar {
+      color: $social-media-light-grey;
+      display: flex;
+      font-size: 15px;
+      justify-content: space-between;
+      margin-top: 1em;
+
+      .fa-thumbs-up {
+        color: $social-media-light-grey;
+      }
+    
+      .social--media__status--wrapper {
+        align-items: center;
+        display: flex;
+
+        p {
+          color: $cigi-medium-light-grey;
+        }
+    
+        .social--media__upvotes {
+          @include media-breakpoint-up(lg) {
+            margin-right: 3em;
+          }
+
+          margin-right: 2em;
+        }
+      }
+    
+      .social--media__link--wrapper {
+        align-items: center;
+        background-color: $social-media-background-dark-grey;
+        border-radius: 20px;
+        color: $white;
+        display: flex;
+        padding: 0.5em 1em;
+
+        .social--media__link--button {
+          margin-left: 0.5em;
+    
+          a {
+            color: $white;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}

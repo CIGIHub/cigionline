@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'research',
     'robots',
     'search',
+    'social',
     'streams',
     'subscribe',
     'wagtailschedules',
