@@ -393,10 +393,16 @@
         }
 
         &.swiper-button-prev {
+          @include media-breakpoint-down(lg) {
+            left: -4em;
+          }
           left: -5em;
         }
 
         &.swiper-button-next {
+          @include media-breakpoint-down(lg) {
+            right: -4em;
+          }
           right: -5em;
         }
 
@@ -438,6 +444,7 @@
 
     .stream-block-blockquote-content {
       @include media-breakpoint-up(md) {
+        margin-left: -0.5em;
         margin-right: -5em;
       }
       @include media-breakpoint-up(lg) {
@@ -446,8 +453,6 @@
       @include media-breakpoint-up(lg) {
         margin-right: -10em;
       }
-      margin-left: -0.5em;
-      margin-right: -0.5em;
       padding: 1em 0 0;
 
       &::before {
