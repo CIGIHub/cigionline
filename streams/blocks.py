@@ -1423,7 +1423,7 @@ class ExpertCard(blocks.StructBlock):
 
 
 class TwitterCard(blocks.StructBlock):
-    tweet = SnippetChooserBlock(required=True, target_model='twitter.Tweet')
+    tweet = SnippetChooserBlock(required=True, target_model='social.Tweet')
 
     class Meta:
         icon = 'site'
@@ -1432,7 +1432,7 @@ class TwitterCard(blocks.StructBlock):
 
 
 class LinkedInCard(blocks.StructBlock):
-    post = SnippetChooserBlock(required=True, target_model='linkedin.LinkedinPost')
+    post = SnippetChooserBlock(required=True, target_model='social.LinkedinPost')
 
     class Meta:
         icon = 'site'
