@@ -55,7 +55,7 @@ body {
           overflow: hidden;
           padding: 0.5em 0;
 
-          .swiper-wrapper-container {
+          .swiper-container-series-content {
             @include media-breakpoint-down(md) {
               border-top: 0;
               padding: 0;

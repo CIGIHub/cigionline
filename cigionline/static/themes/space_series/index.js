@@ -22,7 +22,7 @@ const enableSwiper = function(articleType) {
   const slidesPerViewXl = 6;
   let swiperIds;
   if (articleType === 'article series') {
-    swiperIds = ['.swiper-wrapper-container'];
+    swiperIds = ['.swiper-container-series-content'];
   } else if (articleType === 'article') {
     swiperIds = ['.swiper-container-sticky', '.swiper-container-hero'];
   } else if (articleType === 'multimedia') {
@@ -39,8 +39,8 @@ const enableSwiper = function(articleType) {
       watchSlidesVisibility: true,
 
       navigation: {
-        nextEl: `.swiper-button-next-${id.replace('.swiper-wrapper-container', 'series')}`,
-        prevEl: `.swiper-button-prev-${id.replace('.swiper-wrapper-container', 'series')}`,
+        nextEl: `.swiper-button-next-${id.replace('.swiper-container-', '')}`,
+        prevEl: `.swiper-button-prev-${id.replace('.swiper-container-', '')}`,
         hiddenClass: 'swiper-button-hidden',
       },
 

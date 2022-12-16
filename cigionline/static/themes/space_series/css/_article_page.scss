@@ -216,6 +216,7 @@
       }
       margin-right: 1em;
       transition: transform 0.2s ease;
+      z-index: 1;
 
       &.expanded {
         transform: rotate(45deg);
