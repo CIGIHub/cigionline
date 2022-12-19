@@ -10,21 +10,13 @@
             <div class="col">
               <span class="active" href="{% pageurl self %}">{{ self.title }}</span>            
             </div>
-            <div class="col-6 col-lg-8">
-              <div class="row justify-content-between">
-                {% define 0 as counter %}
+            <div class="col-8">
+              <div class="header--submenu__right">
                 {% for submenu_item in submenu_items %}
                   {% if submenu_item.link_page.url_path != self.url_path %}
-                    {% define counter|add:1 as counter %}
-                    {% if not counter|divisibleby:2 %}
-                      <div class="col-auto">
-                    {% endif %}
-                    <div class="col-6 col-md-4 col-lg-2 menu-item">
+                    <div class="header--submenu__right__menu-item">
                       <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
                     </div>
-                    {% if counter|divisibleby:2 %}
-                      </div>
-                    {% endif %}
                   {% endif %}
                 {% endfor %}
               </div>

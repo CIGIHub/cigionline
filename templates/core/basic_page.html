@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags wagtailcore_tags %}
 
 {% block header %}
   {% include "includes/top_bar.html" %}
@@ -8,12 +8,23 @@
   {% endif %}
 {% endblock %}
 
+{% block body_class %}basic-page{% endblock %}
+
 {% block content %}
-  {% if self.image_hero %}
+  {% if self.subtitle %}
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
-          <figure>
+          <h1 class="subtitle">{{ self.subtitle|richtext }}</h2>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col">
+          <figure class="image-hero">
             {% image self.image_hero width-1280 %}
             {% if self.image_hero.caption %}
               <figcaption>

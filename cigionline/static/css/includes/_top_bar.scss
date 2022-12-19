@@ -568,21 +568,31 @@ header {
       }
     }
 
-    .row {
-      @include link(
-        $color: $cigi-medium-grey,
-        $hover-color: $black
-      );
-      list-style: none;
-      display: flex;
-      gap: 1em;
+    @include link(
+      $color: $cigi-medium-grey,
+      $hover-color: $black
+    );
+    list-style: none;
+    display: flex;
+    gap: 1em;
 
-      .menu-item {
-        @include media-breakpoint-up(lg) {
-          width: 20%;
-        }
-        white-space: nowrap;
+    .menu-item {
+      @include media-breakpoint-up(lg) {
+        width: 20%;
       }
+      white-space: nowrap;
+    }
+
+    .header--submenu__right {
+      @include media-breakpoint-up(lg) {
+        grid-template-columns: repeat(4, auto);
+      }
+      @include media-breakpoint-up(xl) {
+        grid-template-columns: repeat(5, auto);
+      }
+      display: grid;
+      gap: 0.5em;
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 }
