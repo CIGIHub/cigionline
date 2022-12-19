@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load webpack_loader cache %}
+{% load webpack_loader wagtailcore_tags %}
 
 {% block extra_css %}
   {% render_bundle 'annualReportListPage' 'css' %}
@@ -16,24 +16,72 @@
   {% endif %}
 {% endblock %}
 
+{% block body_class %}basic-page{% endblock %}
+
 {% block content %}
-  {% cache 86400 annual_reports_swiper self.latest_revision_created_at|date:"c" %}
-    <section class="featured">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <h2 class="paragraph-heading">Featured</h2>
-            {% include "includes/swiper.html" with swiper_content=self.featured_reports type="annual-reports" %}
-          </div>
+  {% if self.subtitle %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="subtitle">{{ self.subtitle|richtext }}</h2>
         </div>
       </div>
-    </section>
-  {% endcache %}
+    </div>
+  {% endif %}
+  {% include "includes/body.html" with body=self.body %}
+
   <section class="search">
     <div class="container">
-      <div class="row">
-        <div class="col">
-          <div id="annual-reports-search-table"></div>
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <table>
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>English</th>
+                <th>French</th>
+                <th>Financial Statement</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for report in self.annual_reports_list %}
+                <tr>
+                  <td>
+                    <a href="{% pageurl report %}">{{ report.year }}</a>
+                  </td>
+                  <td>
+                    {% if report.report_interactive %}
+                      <a href="{{ report.report_interactive }}" target="_blank">
+                        <i class="fal fa-eye"></i> Explore (EN)
+                      </a>
+                    {% elif report.report_english %}
+                      <a href="{{ report.report_english.url }}" target="_blank">
+                        <i class="fal fa-arrow-to-bottom"></i> PDF (EN)
+                      </a>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if report.report_interactive_fr %}
+                      <a href="{{ report.report_interactive_fr }}" target="_blank">
+                        <i class="fal fa-eye"></i> Explore (FR)
+                      </a>
+                    {% elif report.report_french %}
+                      <a href="{{ report.report_french.url }}" target="_blank">
+                        <i class="fal fa-arrow-to-bottom"></i> PDF (FR)
+                      </a>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if report.report_financial %}
+                      <a href="{{ report.report_financial.url }}" target="_blank">
+                        <i class="fal fa-arrow-to-bottom"></i> PDF
+                      </a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

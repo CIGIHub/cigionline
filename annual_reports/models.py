@@ -20,29 +20,11 @@ class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
     subpage_types = ['annual_reports.AnnualReportPage']
     templates = 'annual_reports/annual_report_list_page.html'
 
-    featured_reports = StreamField(
-        [
-            ('featured_report', PageChooserBlock(
-                required=True,
-                page_type=['annual_reports.AnnualReportPage'],
-            )),
-        ],
-        blank=True,
-        use_json_field=True,
-    )
-
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.hero_link_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
-        MultiFieldPanel(
-            [
-                FieldPanel('featured_reports'),
-            ],
-            heading='Featured Annual Reports',
-            classname='collapsible collapsed',
-        ),
     ]
     promote_panels = Page.promote_panels + [
         SearchablePageAbstract.search_panel
@@ -51,6 +33,9 @@ class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
         BasicPageAbstract.submenu_panel,
     ]
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    def annual_reports_list(self):
+        return AnnualReportPage.objects.live().order_by('-year')
 
     class Meta:
         verbose_name = 'Annual Report List Page'
@@ -94,6 +79,11 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         max_length=255,
         help_text='Internal path to the interactive report. Example: /interactives/2019annualreport',
     )
+    report_interactive_fr = models.CharField(
+        blank=True,
+        max_length=255,
+        help_text='Internal path to the FR version of the interactive report. Example: /interactives/2019annualreport/fr',
+    )
     year = models.IntegerField(validators=[MinValueValidator(2005), MaxValueValidator(2050)])
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -113,6 +103,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
                 FieldPanel('report_french'),
                 FieldPanel('report_financial'),
                 FieldPanel('report_interactive'),
+                FieldPanel('report_interactive_fr'),
             ],
             heading='Reports',
             classname='collapsible',
