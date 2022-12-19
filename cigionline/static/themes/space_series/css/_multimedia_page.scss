@@ -69,10 +69,14 @@
           overflow-y: auto;
 
           .swiper-wrapper {
+            flex-direction: column;
             height: 100%;
             padding: 2em 0;
 
             article {
+              @include media-breakpoint-up(md) {
+                width: 100% !important;
+              }
               align-items: center;
               border-right: 0;
               border-top: 1px solid $cigi-text-grey;
@@ -90,6 +94,9 @@
               }
 
               .series-item-content {
+                @include media-breakpoint-up(md) {
+                  white-space: nowrap;
+                }
                 display: flex;
                 flex-direction: column;
                 height: 100%;
