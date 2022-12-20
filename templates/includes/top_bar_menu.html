@@ -1,4 +1,4 @@
-{% load menu_tags wagtailcore_tags %}
+{% load menu_tags wagtailcore_tags core_tags %}
 
 {% if submenu %}
   {% get_menu_items submenu.slug as submenu_items %}
@@ -6,13 +6,22 @@
     <header class="header--submenu">
       <div class="container">
         <nav class="border-top">
-          <ul class="row g-1 justify-content-between">
-            {% for submenu_item in submenu_items %}
-              <li class="col-auto {% if submenu_item.link_page.url_path == self.url_path %}active{% endif %}">
-                <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
-              </li>
-            {% endfor %}
-          </ul>
+          <div class="row g-1 justify-content-between">
+            <div class="col">
+              <span class="active" href="{% pageurl self %}">{{ self.title }}</span>            
+            </div>
+            <div class="col-8">
+              <div class="header--submenu__right">
+                {% for submenu_item in submenu_items %}
+                  {% if submenu_item.link_page.url_path != self.url_path %}
+                    <div class="header--submenu__right__menu-item">
+                      <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
         </nav>
       </div>
     </header>
