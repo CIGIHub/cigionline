@@ -78,6 +78,7 @@
 
   .people-person-leadership-list {
     list-style: none;
+    margin-bottom: 3em;
 
     li {
       border-bottom: 1px solid $cigi-light-grey;
@@ -100,6 +101,9 @@
 
     .people-person-leadership-list-photo {
       @include aspect-ratio(1, 1);
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
       flex: 0 0 25%;
       margin-left: 2em;
       border-radius: 20px;

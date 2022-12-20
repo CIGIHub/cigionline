@@ -12,6 +12,8 @@
   {% endif %}
 {% endblock %}
 
+{% block body_class %}basic-page{% endblock %}
+
 {% block content %}
   {% include "includes/body.html" with body=self.body %}
 {% endblock content %}

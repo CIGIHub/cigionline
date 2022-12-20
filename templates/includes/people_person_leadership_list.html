@@ -10,9 +10,7 @@
         <div class="people-person-leadership-list-function">
           {{ person.position }}
         </div>
-        <p class="people-person-leadership-list-description">
-          {{ person.short_bio|safe }}
-        </p>
+        {{ person.short_bio|safe }}
       </div>
       <a href="{{ person.url }}" class="people-person-leadership-list-photo">
         {% image person.image_square width-300 as image_square %}
