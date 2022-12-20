@@ -20,6 +20,7 @@ $card-title-font: $title-font-family;
       @include link($color: $black, $hover-color: $cigi-dark-pink);
       font-weight: 300;
       margin-top: 0;
+      margin-bottom: 1rem;
       line-height: 1;
     }
 

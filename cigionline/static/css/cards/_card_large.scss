@@ -6,9 +6,10 @@
   .card__text {
     .card__text__title {
       font-size: 1.25em;
-      font-size: clamp(1.25em, 3vw, 2em);
+      font-size: clamp(1.25em, 3vw, 2.4em);
       font-family: $card-title-font;
       letter-spacing: -0.5px;
+      margin-bottom: 1.5rem;
     }
 
     p {
