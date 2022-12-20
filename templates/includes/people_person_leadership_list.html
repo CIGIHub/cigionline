@@ -2,24 +2,22 @@
 
 <ul class="people-person-leadership-list">
   {% for person in people %}
-    <li>
-      <div class="people-person-leadership-list-info">
-        <a href="{{ person.url }}" class="people-person-leadership-list-photo">
-          {% image person.image_square width-300 as image_square %}
-          <div class="img-wrapper" style="background-image: url('{{ image_square.url }}');"></div>
-        </a>
-
-        <div>
+    <li class="people-person-leadership-list-info">
+      <div>
+        <h3>
           <a href="{{ person.url }}" class="people-person-leadership-list-name">{{ person.title }}</a>
-          <div class="people-person-leadership-list-function">
-            {{ person.position }}
-          </div>
+        </h3>
+        <div class="people-person-leadership-list-function">
+          {{ person.position }}
         </div>
+        <p class="people-person-leadership-list-description">
+          {{ person.short_bio|safe }}
+        </p>
       </div>
-
-      <p class="people-person-leadership-list-description">
-        {{ person.short_bio|safe }}
-      </p>
+      <a href="{{ person.url }}" class="people-person-leadership-list-photo">
+        {% image person.image_square width-300 as image_square %}
+        <div class="img-wrapper" style="background-image: url('{{ image_square.url }}');"></div>
+      </a>
     </li>
   {% endfor %}
 </ul>

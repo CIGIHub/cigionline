@@ -8,7 +8,18 @@
   {% endif %}
 {% endblock %}
 
+{% block body_class %}basic-page{% endblock %}
+
 {% block content %}
+  {% if self.subtitle %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="subtitle">{{ self.subtitle|richtext }}</h2>
+        </div>
+      </div>
+    </div>
+  {% endif %}
   {% include "includes/body.html" with body=self.body %}
   <section>
     <div class="container">
