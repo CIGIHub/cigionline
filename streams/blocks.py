@@ -1400,12 +1400,13 @@ class ExpertCard(blocks.StructBlock):
         context['title'] = page.title
         context['description'] = page.short_bio
         context['url'] = page.url
-        context['latest_activity'] = [{
-            'title': activity.title,
-            'url': activity.url,
-            'topics': activity.topics_sorted,
-            'type': activity.contenttype
-        } for activity in page.latest_activity]
+        if page.latest_activity:
+            context['latest_activity'] = [{
+                'title': activity.title,
+                'url': activity.url,
+                'topics': activity.topics_sorted,
+                'type': activity.contenttype
+            } for activity in page.latest_activity]
         context['twitter'] = page.twitter_username
         context['linkedin_username'] = page.linkedin_username()
 

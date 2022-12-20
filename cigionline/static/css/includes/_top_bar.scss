@@ -587,9 +587,6 @@ header {
       @include media-breakpoint-up(lg) {
         grid-template-columns: repeat(4, auto);
       }
-      @include media-breakpoint-up(xl) {
-        grid-template-columns: repeat(5, auto);
-      }
       display: grid;
       gap: 0.5em;
       grid-template-columns: repeat(2, 1fr);
