@@ -1,7 +1,5 @@
 .social--media__wrapper {
-  margin: 0 1em;
   flex-wrap: nowrap;
-  padding-right: 2em;
 
   .social--media {
     @include media-breakpoint-up(xl) {

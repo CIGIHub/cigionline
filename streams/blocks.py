@@ -1515,6 +1515,7 @@ class HomePageRow(blocks.StructBlock):
         ('ad_card', AdCard()),
         ('most_popular', HomePageRowMostPopular()),
     ])
+    grouped = blocks.BooleanBlock(required=False, default=False, help_text='Group cards into rows with a grey background.')
 
     class Meta:
         icon = 'list-ul'

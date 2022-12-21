@@ -39,11 +39,11 @@
         display: grid;
         grid-template-rows: 1fr 1.5fr;
         align-items: baseline;
+        height: 100%;
       }
       @include media-breakpoint-up(lg) {
         grid-template-rows: 1.5fr 1.1fr;
       }
-      height: 100%;
 
       .card__image {
         @include media-breakpoint-up(md) {
@@ -55,11 +55,15 @@
       }
 
       .card__text__title {
+        @include media-breakpoint-up(md) {
+          height: 100%;
+        }
         font-size: 1.1em;
         font-size: clamp(1.1em, 3vw, 1.5em);
         font-family: $card-title-font;
         line-height: 1;
         flex: 0 0 50%;
+        height: auto;
       }
     }
 

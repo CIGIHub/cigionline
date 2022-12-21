@@ -1,7 +1,7 @@
 {% load wagtailcore_tags %}
 
 <div class="swiper-container-social-row swiper-container">
-  <div class="row g-3 g-md-5 social--media__wrapper swiper-wrapper">
+  <div class="social--media__wrapper swiper-wrapper">
     {% for block in self.social_swiper_cards %}
       {% include_block block.value %}
     {% endfor %}

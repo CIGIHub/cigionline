@@ -147,6 +147,20 @@
           }
         }
 
+        .row-grouped {
+          background-color: $social-media-background-light-grey;
+          border-radius: 20px;
+          padding: 1.5em;
+
+          .row {
+            div {
+              &[class*='col-'] {
+                border: 0;
+              }
+            }
+          }
+        }
+
         article {
           .row {
             .col {
@@ -198,7 +212,7 @@
               }
             }
             border-bottom: 1px solid $cigi-light-grey;
-            padding: 1em 1.5em 1em 0;
+            padding: 1em 0;
 
             &:last-child {
               border: 0;
