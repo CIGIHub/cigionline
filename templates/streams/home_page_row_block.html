@@ -1,6 +1,17 @@
 {% load wagtailcore_tags %}
-<div class="row g-3 g-md-5 row-items-{{self.row|length}}">
-  {% for block in self.row %}
-    {% include_block block.value %}
-  {% endfor %}
-</div>
+
+{% if self.grouped %}
+  <div class="row-grouped">
+    <div class="row g-3 g-md-5">
+      {% for block in self.row %}
+        {% include_block block.value %}
+      {% endfor %}
+    </div>
+  </div>
+{% else %}
+  <div class="row g-3 g-md-5 row-items-{{self.row|length}}">
+    {% for block in self.row %}
+      {% include_block block.value %}
+    {% endfor %}
+  </div>
+{% endif %}
