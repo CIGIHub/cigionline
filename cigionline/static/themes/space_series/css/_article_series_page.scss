@@ -206,6 +206,7 @@ body {
                 justify-content: space-between;
                 margin-left: 2em;
                 padding: 0.5em;
+                width: 100%;
 
                 .series-item-counter {
                   @include media-breakpoint-up(lg) {
@@ -237,13 +238,12 @@ body {
                     align-items: center;
                     color: $white;
                     display: flex;
-                    height: 12px;
+                    height: 1em;
                     justify-content: center;
-                    margin-bottom: 9px;
-                    margin-left: 5px;
-                    padding-top: 12px;
+                    margin-bottom: 0.5em;
+                    padding-top: 0.3em;
                     transition: color 0.2s ease;
-                    width: 23px;
+                    width: 1em;
 
                     * {
                       position: absolute;
@@ -253,22 +253,22 @@ body {
                     .inner-circle {
                       background-color: $space-series-background-colour;
                       border-radius: 50%;
-                      border-width: 3px;
-                      height: 18px;
-                      width: 18px;
+                      border-width: 0.25em;
+                      height: 0.7em;
+                      width: 0.7em;
                       z-index: 3;
                     }
 
                     .outer-circle {
-                      border: 3px solid $white;
+                      border: 0.25em solid $white;
                       border-radius: 50%;
-                      height: 23px;
-                      width: 23px;
+                      height: 1em;
+                      width: 1em;
                       z-index: 1;
                     }
 
                     i {
-                      font-size: 0.7em;
+                      font-size: 0.4em;
                       z-index: 4;
                     }
                   }
