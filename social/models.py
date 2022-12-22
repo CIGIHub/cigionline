@@ -78,6 +78,7 @@ class Tweet(models.Model):
             self.tweet_user_profile_image_url = user['profile_image_url']
             self.tweet_user_url = user['url']
             self.tweet_user_username = user['username']
+            self.tweet_url = f'https://twitter.com/{user["username"]}/status/{self.tweet_id}'
         
         if public_metrics:
             self.tweet_likes = public_metrics['like_count'] if public_metrics['like_count'] else 0

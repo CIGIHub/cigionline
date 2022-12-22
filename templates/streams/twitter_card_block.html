@@ -27,19 +27,19 @@
     </div>
     <div class="social--media__status--bar">
       <div class="social--media__status--wrapper">
-        <div class="social--media__upvotes">
+        <a href="https://twitter.com/intent/like?tweet_id={{ self.tweet.tweet_id }}" class="social--media__upvotes" target="_blank">
           <i class="far fa-thumbs-up"></i><span class="upvotes">{{ self.tweet.tweet_likes }}</span>
-        </div>
-        <div class="social--media__comments">
+        </a>
+        <a href="https://twitter.com/intent/tweet?in_reply_to={{ self.tweet.tweet_id }}" class="social--media__comments" target="_blank">
           <i class="far fa-comment-alt"></i><span class="comments">{{ self.tweet.tweet_replies }}</span>
-        </div>
+        </a>
       </div>
-      <div class="social--media__link--wrapper">
-        <i class="fab fa-twitter"></i>
+      <a href="{{ self.tweet.tweet_url }}" class="social-media__link" target="_blank">
         <button type="button" class="social--media__link--button">
-          <a href="{{ self.tweet.tweet_url }}">Visit Twitter</a>
+          <i class="fab fa-twitter"></i>
+          Visit Twitter
         </button>
-      </div>
+      </a>
     </div>
   </article>
 </div>

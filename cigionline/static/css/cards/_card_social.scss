@@ -93,7 +93,7 @@
       margin-top: 1em;
 
       .social--media__status--wrapper {
-        color: $cigi-medium-grey;
+        @include link($color: $cigi-medium-grey, $hover-color: $black);
         align-items: center;
         display: flex;
 
@@ -109,20 +109,26 @@
         }
       }
 
-      .social--media__link--wrapper {
-        align-items: center;
-        background-color: $social-media-background-dark-grey;
-        border-radius: 20px;
-        color: $white;
-        display: flex;
-        padding: 0.5em 1em;
+      .social-media__link {
+        button {
+          align-items: center;
+          background-color: $cigi-medium-grey;
+          border: 1px solid $cigi-medium-grey;
+          border-radius: 20px;
+          font-size: 12px;
+          color: $white;
+          display: flex;
+          padding: 0.5em 1em;
+          transition: background-color 0.3s ease;
 
-        .social--media__link--button {
-          margin-left: 0.5em;
+          &:hover {
+            background-color: transparent;
+            color: $black;
+            border: 1px solid $cigi-medium-grey;
+          }
 
-          a {
-            color: $white;
-            font-size: 12px;
+          i {
+            margin-right: 0.5em;
           }
         }
       }
