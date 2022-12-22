@@ -230,9 +230,8 @@
               display: flex;
               height: 1.5em;
               justify-content: center;
-              margin-left: 5px;
               transition: color 0.2s ease;
-              width: 15px;
+              width: 1em;
 
               * {
                 position: absolute;
@@ -242,22 +241,22 @@
               .inner-circle {
                 background-color: $black;
                 border-radius: 50%;
-                border-width: 3px;
-                height: 13px;
-                width: 13px;
+                border-width: 0.25em;
+                height: 0.7em;
+                width: 0.7em;
                 z-index: 3;
               }
 
               .outer-circle {
-                border: 3px solid $white;
+                border: 0.25em solid $white;
                 border-radius: 50%;
-                height: 18px;
-                width: 18px;
+                height: 1em;
+                width: 1em;
                 z-index: 1;
               }
 
               i {
-                font-size: 0.5em;
+                font-size: 0.4em;
                 z-index: 4;
               }
             }
