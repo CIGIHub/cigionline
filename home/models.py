@@ -32,9 +32,9 @@ class HomePage(Page):
     """Singleton model for the home page."""
 
     layout = StreamField([
-            ('row', HomePageRow()),
-            ('social_swiper_row', SocialSwiperRow()),
-        ],
+        ('row', HomePageRow()),
+        ('social_swiper_row', SocialSwiperRow()),
+    ],
         blank=True,
     )
     content_panels = Page.content_panels + [

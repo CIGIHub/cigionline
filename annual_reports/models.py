@@ -9,8 +9,6 @@ from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
 )
-from wagtail.blocks import PageChooserBlock
-from wagtail.fields import StreamField
 from wagtail.models import Page
 
 
