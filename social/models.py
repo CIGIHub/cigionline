@@ -64,14 +64,14 @@ class Tweet(models.Model):
             public_metrics = tweet['public_metrics']
             user = response.includes['users'][0]
             media = response.includes['media'][0]
-        except:
+        except Exception:
             public_metrics = None
             user = None
             media = None
 
         self.tweet_text = tweet['text']
         self.tweet_created_at = tweet['created_at']
-        
+
         if user:
             self.tweet_user_id = user['id']
             self.tweet_user_name = user['name']
@@ -79,12 +79,12 @@ class Tweet(models.Model):
             self.tweet_user_url = user['url']
             self.tweet_user_username = user['username']
             self.tweet_url = f'https://twitter.com/{user["username"]}/status/{self.tweet_id}'
-        
+
         if public_metrics:
             self.tweet_likes = public_metrics['like_count'] if public_metrics['like_count'] else 0
             self.tweet_replies = public_metrics['reply_count'] if public_metrics['reply_count'] else 0
-        
-        if media:    
+
+        if media:
             self.tweet_media_url = media['url']
             self.tweet_media_key = media['media_key']
             self.tweet_media_alt_text = media['alt_text']
