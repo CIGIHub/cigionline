@@ -1490,6 +1490,7 @@ class HomePageRowMostPopular(blocks.StructBlock):
 class SocialSwiperRow(blocks.StructBlock):
     social_swiper_cards = blocks.StreamBlock([
         ('twitter_card', TwitterCard()),
+        ('linkedin_card', LinkedInCard()),
     ])
 
     def get_context(self, value, parent_context=None):
