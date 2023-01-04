@@ -1,6 +1,7 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.models import register_snippet
+from wagtail.fields import RichTextField
 import os
 import tweepy
 
@@ -90,12 +91,21 @@ class Tweet(models.Model):
             self.tweet_media_alt_text = media['alt_text']
             self.tweet_media_preview_image_url = media['preview_image_url']
 
-        super().save(force_insert, force_update, using, update_fields)
+        return super().save(force_insert, force_update, using, update_fields)
 
 
 @register_snippet
 class LinkedInPost(models.Model):
     title = models.CharField(max_length=255)
+    user_name = models.CharField(max_length=255, blank=True, null=True)
+    user_username = models.CharField(max_length=255, blank=True, null=True)
+    user_profile_image_url = models.CharField(max_length=255, blank=True, null=True)
+    post_url = models.CharField(max_length=255, blank=True, null=True)
+    post_text = RichTextField(blank=True, null=True)
+    post_media_url = models.CharField(max_length=255, blank=True, null=True)
+    post_created_at = models.DateTimeField(blank=True, null=True)
+    post_likes = models.IntegerField(blank=True, null=True)
+    post_comments = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.title
