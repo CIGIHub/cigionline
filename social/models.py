@@ -4,7 +4,6 @@ from wagtail.snippets.models import register_snippet
 from wagtail.fields import RichTextField
 import os
 import tweepy
-import requests
 
 
 @register_snippet
