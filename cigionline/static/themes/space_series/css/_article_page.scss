@@ -1,5 +1,6 @@
 .space-series-article {
   @include top-bar($background-color: transparent);
+  @include link($color: $black !important, $hover-color: $cigi-dark-pink !important);
 
   &.no-scroll {
     overflow: hidden;
@@ -458,6 +459,25 @@
       &::before {
         border-bottom: 5px solid $black;
         width: 30%;
+      }
+    }
+  }
+
+  .article-footnotes,
+  .article-works-cited {
+    a {
+      font-size: 1em !important;
+      font-weight: 400 !important;
+      padding-right: 0 !important;
+      vertical-align: baseline !important;
+    }
+    
+    h2 {
+      margin-bottom: 0.5em;
+      padding-bottom: 0;
+
+      &::after {
+        content: none;
       }
     }
   }
