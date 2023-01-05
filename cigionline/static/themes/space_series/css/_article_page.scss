@@ -1,6 +1,5 @@
 .space-series-article {
   @include top-bar($background-color: transparent);
-  @include link($color: $black !important, $hover-color: $cigi-dark-pink !important);
 
   &.no-scroll {
     overflow: hidden;
@@ -415,6 +414,7 @@
   }
 
   .body {
+    @include link($color: $black !important, $hover-color: $cigi-dark-pink !important);
     margin-top: 2em;
 
     h2 {
@@ -465,6 +465,8 @@
 
   .article-footnotes,
   .article-works-cited {
+    @include link($color: $black !important, $hover-color: $cigi-dark-pink !important);
+
     a {
       font-size: 1em !important;
       font-weight: 400 !important;
