@@ -14,9 +14,8 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div class="highlighted-topics-container">
-            <h2>RESEARCH TOPICS</h2>
-            {% highlighted_topics %}
+          <h2>RESEARCH TOPICS</h2>
+          <div id="topics-container" data-tree="{{ self.topics_data }}">
           </div>
         </div>
       </div>

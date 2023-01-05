@@ -8,6 +8,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
+from django.db.models import Count
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.panels import (
     FieldPanel,
@@ -276,6 +277,21 @@ class ResearchLandingPage(BasicPageAbstract, Page):
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    def topics_data(self):
+        """Get the topics data for the research landing page"""
+        topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('content_pages'))
+        return {
+            "name": "root",
+            "children": [
+                {
+                    "name": topic.title,
+                    "value": topic.count,
+                    "url": topic.url,
+                }
+                for topic in topics
+            ]
+        }
 
     class Meta:
         verbose_name = 'Research Landing Page'

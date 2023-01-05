@@ -15,32 +15,9 @@
       margin-bottom: 0.5em;
     }
 
-    .highlighted-topics-list {
-      @include media-breakpoint-up(md) {
-        columns: 3;
-      }
-      @include media-breakpoint-up(lg) {
-        columns: 4;
-      }
-      columns: 2;
-      font-size: 0.75em;
-      font-weight: 500;
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-
-      .topic {
-        @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
-        padding: 0.2em 0;
-
-        a {
-          text-transform: uppercase;
-        }
-      }
-
-      span {
-        color: $cigi-text-grey;
-      }
-    }
+  }
+  .topic-label {
+    text-overflow: ellipsis;
   }
 }
+
