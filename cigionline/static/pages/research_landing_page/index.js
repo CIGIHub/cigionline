@@ -38,8 +38,19 @@ function drawTreeMap() {
   // Then d3.treemap computes the position of each element of the hierarchy
   d3.treemap().size([width, height]).padding(2)(root);
 
+  const tooltip = svg
+    .append('div')
+    .style('position', 'absolute')
+    .style('z-index', '10')
+    .style('visibility', 'hidden')
+    .style('background-color', 'white')
+    .style('border', 'solid')
+    .style('border-width', '2px')
+    .style('border-radius', '5px')
+    .style('padding', '5px');
+
   // use this information to add rectangles:
-  svg
+  const rects = svg
     .selectAll('rect')
     .data(root.leaves())
     .join('rect')
@@ -57,10 +68,28 @@ function drawTreeMap() {
     })
     .attr('rx', '15')
     .style('padding', '10px')
-    .style('fill', '#f6f6f6');
+    .style('fill', '#f6f6f6')
+    .on('mouseover', function (d, i) {
+      let text;
+      texts.each(function (c, i2) {
+        if (c === i) {
+          text = d3.select(this);
+        }
+      });
+      text.attr('fill', '#f6f6f6');
+    })
+    .on('mouseout', function (d, i) {
+      let text;
+      texts.each(function (c, i2) {
+        if (c === i) {
+          text = d3.select(this);
+        }
+      });
+      text.attr('fill', 'black');
+    });
 
   // and to add the text labels
-  svg
+  const texts = svg
     .selectAll('text')
     .data(root.leaves())
     .join('text')
@@ -83,7 +112,7 @@ function drawTreeMap() {
     .attr('class', 'topic-label')
     .attr('fill', 'black');
 
-  svg
+  const vals = svg
     .selectAll('vals')
     .data(root.leaves())
     .enter()

@@ -280,7 +280,7 @@ class ResearchLandingPage(BasicPageAbstract, Page):
 
     def topics_data(self):
         """Get the topics data for the research landing page"""
-        topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('content_pages'))
+        topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('content_pages'), opinion_count=Count('content_pages__articlepage'), publication_count=Count('content_pages__publicationpage'), multimedia_count=Count('content_pages__multimediapage'), event_count=Count('content_pages__eventpage'))
         return {
             "name": "root",
             "children": [
@@ -288,6 +288,11 @@ class ResearchLandingPage(BasicPageAbstract, Page):
                     "name": topic.title,
                     "value": topic.count,
                     "url": topic.url,
+                    "opinions": topic.opinion_count,
+                    "publications": topic.publication_count,
+                    "multimedia": topic.multimedia_count,
+                    "events": topic.event_count,
+                    "remainder": topic.count - topic.opinion_count - topic.publication_count - topic.multimedia_count - topic.event_count,
                 }
                 for topic in topics
             ]

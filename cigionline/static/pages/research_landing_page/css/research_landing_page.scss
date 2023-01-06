@@ -19,5 +19,14 @@
   .topic-label {
     text-overflow: ellipsis;
   }
+
+  svg {
+    rect {
+      fill: $cigi-light-grey;
+      &.hover {
+        fill: $black;
+      }
+    }
+  }
 }
 
