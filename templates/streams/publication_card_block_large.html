@@ -1,9 +1,22 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="col">
-  <article class="card__container card--large">
+  <article class="card__container card--large--publication">
     <div class="row flex-column-reverse flex-md-row g-3 g-md-5">
       <div class="col-md-4">
+        <div class="card__image">
+          <a href="{{ url }}" class="feature-content-image">
+            <div class="img-wrapper">
+              {% if image_src %}
+                <img alt="{{ image_alt }}" src="{{ image_src }}" />
+              {% else %}
+                {% image image fill-1440x990 %}
+              {% endif %}
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-8">
         <div class="card__text">
           <div>
             {% include 'includes/cards/card_text_title.html' %}
@@ -18,19 +31,6 @@
               <a href="{{ url }}"><i class="far fa-ellipsis-h"></i></a>
             </button>
           </div>
-        </div>
-      </div>
-      <div class="col-md-8">
-        <div class="card__image">
-          <a href="{{ url }}" class="feature-content-image">
-            <div class="img-wrapper">
-              {% if image_src %}
-                <img alt="{{ image_alt }}" src="{{ image_src }}" />
-              {% else %}
-                {% image image fill-1440x990 %}
-              {% endif %}
-            </div>
-          </a>
         </div>
       </div>
     </div>

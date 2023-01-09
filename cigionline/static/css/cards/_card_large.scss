@@ -1,19 +1,27 @@
-.card--large {
-  div[class*='col'] {
-    border: 0 !important;
-  }
-
-  .card__text {
-    .card__text__title {
-      font-size: 1.25em;
-      font-size: clamp(1.25em, 3vw, 2.4em);
-      font-family: $card-title-font;
-      letter-spacing: -0.5px;
-      margin-bottom: 1.5rem;
+.card__container {
+  &.card--large {
+    div[class*='col'] {
+      border: 0 !important;
     }
 
-    p {
-      color: $cigi-text-grey;
+    .card__text {
+      .card__text__title {
+        font-size: 1.25em;
+        font-size: clamp(1.25em, 3vw, 2.4em);
+        font-family: $card-title-font;
+        letter-spacing: -0.5px;
+        margin-bottom: 1.5rem;
+      }
+
+      p {
+        color: $cigi-text-grey;
+      }
+    }
+  }
+
+  &.card--large--publication {
+    div[class*='col'] {
+      border: 0 !important;
     }
   }
 }
