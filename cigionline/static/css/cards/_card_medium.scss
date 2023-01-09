@@ -170,5 +170,29 @@ article {
         }
       }
     }
+
+    &.card--medium--publication {
+      @include media-breakpoint-only(md) {
+        flex-direction: row;
+      }
+      @include media-breakpoint-up(lg) {
+        justify-content: space-between;
+      }
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+
+      &.row {
+        div {
+          &[class*='col-'] {
+            border: 0 !important;
+          }
+        }
+      }
+
+      .card__text {
+        justify-content: flex-end;
+      }
+    }
   }
 }
