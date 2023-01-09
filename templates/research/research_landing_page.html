@@ -43,7 +43,7 @@
   <section class="body">
     <div class="container">
       <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-4">
           <div class="body__title">
             A Think Tank for the Digital Era
           </div>
@@ -51,7 +51,7 @@
         <div class="col-lg-7 offset-lg-1">
           <div class="body__content">
             {% for block in self.body %}
-              {% include_block block %}
+              {{ block.value|richtext }}
             {% endfor %}
           </div>
         </div>

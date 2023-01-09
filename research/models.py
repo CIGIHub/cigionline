@@ -24,7 +24,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.search import index
-from streams.blocks import IgcTimelineBlock
+from streams.blocks import IgcTimelineBlock, PublicationCard
 
 
 class ProjectListPage(Page):
@@ -267,10 +267,18 @@ class ResearchLandingPage(BasicPageAbstract, Page):
     parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'research/research_landing_page.html'
+    featured_publications = StreamField(
+        [
+            ('publication', PublicationCard()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
 
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
+        FieldPanel('featured_publications'),
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,

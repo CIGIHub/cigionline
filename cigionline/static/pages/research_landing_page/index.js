@@ -15,7 +15,7 @@ function drawTreeMap() {
   const svg = d3
     .select('#topics-container')
     .append('svg')
-    .attr('width', width + margin.left + margin.right)
+    .attr('width', '100%')
     .attr('height', height + margin.top + margin.bottom)
     .append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
