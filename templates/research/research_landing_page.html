@@ -37,8 +37,18 @@
       </div>
     </div>
   </section>
-  <section class="featured-publications">
-
+  <section class="featured-publications" id="featured-publications">
+    <div class="container">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          {% for block in self.featured_publications %}
+            <div class="swiper-slide">
+              {% include_block block.value %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </section>
   <section class="body">
     <div class="container">
