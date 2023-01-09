@@ -4,29 +4,19 @@
   margin-bottom: 3em;
 
   .highlighted-topics-container {
-    border: 1px solid $cigi-light-grey;
-    padding: 1.25em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid $cigi-light-grey;
 
     h2 {
-      color: $cigi-text-grey;
-      font-size: 0.75em;
-      font-weight: 500;
-      letter-spacing: 1px;
-      margin-bottom: 0.5em;
-    }
-
-  }
-  .topic-label {
-    text-overflow: ellipsis;
-  }
-
-  svg {
-    rect {
-      fill: $cigi-light-grey;
-      &.hover {
-        fill: $black;
-      }
+      font-size: 1rem;
+      font-weight: 300;
+      margin-bottom: 1em;
     }
   }
 }
 
+.body {
+  .body__title {
+    font-size: clamp(1.5em, 5vw, 2.5em);
+  }
+}
