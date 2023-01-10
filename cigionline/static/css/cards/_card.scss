@@ -17,7 +17,10 @@ $card-title-font: $title-font-family;
     flex-direction: column;
 
     .card__text {
-      justify-content: flex-end;
+      @include media-breakpoint-up(lg) {
+        justify-content: flex-end;
+      }
+      justify-content: space-between;
     }
   }
 
