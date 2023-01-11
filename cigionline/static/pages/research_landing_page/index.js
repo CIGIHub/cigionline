@@ -168,6 +168,7 @@ ReactDOM.render(
       'authors',
       'contentsubtype',
       'contenttype',
+      'image_poster_url',
       'pdf_download',
       'publishing_date',
       'topics',

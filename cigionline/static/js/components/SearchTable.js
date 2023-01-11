@@ -730,8 +730,8 @@ class SearchTable extends React.Component {
       isSearchPage,
     } = this.props;
     return (
-      <div className="search-bar row">
-        <div className="col-md-8">
+      <div className="search-bar row gy-2 gx-5 g-lg-4 g-xl-5">
+        <div className="col-lg-8">
           <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
             <button className="btn-search" type="submit">
               <i className="far fa-search" />
@@ -746,7 +746,7 @@ class SearchTable extends React.Component {
             />
           </form>
         </div>
-        <div className="search-filters col-md-4 search-filters-below-search-bar d-flex">
+        <div className="search-bar__filters search-filters col-lg-3 search-filters-below-search-bar d-flex">
           {/* {showExpertDropDown && (
             <div className="dropdown custom-dropdown dropdown-experts keep-open">
               <button
@@ -1086,12 +1086,22 @@ class SearchTable extends React.Component {
               )}
             </div>
           </div> */}
-          <div className="dropdown custom-dropdown keep-open">
+          <button type="button" className="search-bar__filters__dropdown dropdown custom-dropdown keep-open">
             <div>
               <i className="fal fa-sort-amount-down" />
-              <button type="button">Filters</button>
+              <span>Filters</span>
             </div>
             <i className="fal fa-angle-down" />
+          </button>
+        </div>
+        <div className="col-lg-1">
+          <div className="search-bar__display-mode">
+            <button type="button" className="search-bar__display-mode__button active" onClick={() => this.changeDisplayMode('list')}>
+              <i className="fas fa-th" />
+            </button>
+            <button type="button" className="search-bar__display-mode__button" onClick={() => this.changeDisplayMode('grid')}>
+              <i className="fal fa-list" />
+            </button>
           </div>
         </div>
       </div>
