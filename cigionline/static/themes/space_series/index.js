@@ -129,6 +129,7 @@ if (pageType === 'article' || pageType === 'multimedia') {
   swiperSlides.forEach((slide) => {
     // change src of image to data-src-gif on hover and change back on mouseleave
     const image = slide.querySelector('img');
+<<<<<<< Updated upstream
     const gif = image.getAttribute('data-src-gif');
     const still = image.getAttribute('data-src-static');
     slide.addEventListener('mouseenter', () => {
@@ -137,5 +138,19 @@ if (pageType === 'article' || pageType === 'multimedia') {
     slide.addEventListener('mouseleave', () => {
       image.setAttribute('src', still);
     });
+=======
+    if (image != null) {
+      const gif = image.getAttribute('data-src-gif');
+      const still = image.getAttribute('data-src-static');
+      if (gif !== '' && gif != null) {
+        slide.addEventListener('mouseenter', () => {
+          image.setAttribute('src', gif);
+        });
+        slide.addEventListener('mouseleave', () => {
+          image.setAttribute('src', still);
+        });
+      }
+    }
+>>>>>>> Stashed changes
   });
 }
