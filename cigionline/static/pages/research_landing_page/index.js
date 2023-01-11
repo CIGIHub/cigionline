@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
+import Swiper, { Navigation, Pagination } from 'swiper';
 import ResearchContentListing from '../../js/components/ResearchContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/research_landing_page.scss';
+import 'swiper/swiper-bundle.css';
 
 function drawTreeMap() {
   // set the dimensions and margins of the graph
@@ -134,6 +136,30 @@ function drawTreeMap() {
 
 drawTreeMap();
 
+Swiper.use([Navigation, Pagination]);
+const swiperContainer = document.querySelector('.swiper-container');
+
+if (swiperContainer) {
+  const researchLandingPageSwiper = new Swiper('.swiper-container', {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+    spaceBetween: 20,
+    speed: 800,
+    autoHeight: true,
+    grabCursor: true,
+
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+}
+
 ReactDOM.render(
   <SearchTable
     showSearch
@@ -250,6 +276,7 @@ ReactDOM.render(
         colTitle: 'PDF',
       },
     ]}
+    searchPlaceholder="Search Research by Keyword"
   />,
   document.getElementById('research-search-table')
 );

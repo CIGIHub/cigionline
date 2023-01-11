@@ -64,7 +64,6 @@ img {
   background-clip: padding-box;
   background-color: transparent;
   border: 0;
-  border-bottom: 2px solid $black;
   border-radius: 0;
   color: $black;
   display: flex;
@@ -78,7 +77,7 @@ img {
 
   &::-webkit-input-placeholder,
   &::placeholder {
-    color: $black;
+    color: $cigi-text-grey;
   }
 
   &:focus {

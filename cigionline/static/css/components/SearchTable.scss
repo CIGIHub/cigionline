@@ -263,25 +263,22 @@
   .search-bar {
     margin-bottom: 0.5em;
 
+    .col-md-8 {
+      border-right: 1px $cigi-light-grey solid;
+    }
+
     form {
-      margin-bottom: 0.5em;
+      background-color: $cigi-light-grey;
+      border-radius: 50px;
+      padding: 1em;
+      margin-right: 1em;
+      display: flex;
+      align-items: center;
 
-      .input-group-search {
-        &.large {
-          height: 2.2em;
-
-          input {
-            color: $color--blue;
-            font-size: 1.5em;
-            font-style: italic;
-          }
-        }
-      }
-
-      .form-row {
-        > * {
-          margin-top: 0.5em;
-        }
+      .btn-search {
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+        color: $cigi-medium-grey;
       }
     }
 
