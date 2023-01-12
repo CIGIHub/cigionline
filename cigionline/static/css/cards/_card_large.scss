@@ -24,9 +24,12 @@
       border: 0 !important;
     }
 
-    img {
-      border: 1px solid $cigi-light-grey;
+    .card__image {
+      img {
+        border: 1px solid $cigi-light-grey;
+      }
     }
+
   }
 
   &.card--large__multimedia {
