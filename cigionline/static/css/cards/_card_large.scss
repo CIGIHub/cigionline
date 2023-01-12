@@ -25,7 +25,7 @@
     }
   }
 
-  &.card--large--multimedia {
+  &.card--large__multimedia {
     @include media-breakpoint-only(md) {
       flex-direction: row-reverse;
     }
@@ -39,6 +39,7 @@
       @include media-breakpoint-up(md) {
         border-radius: 0 20px 20px 0;
       }
+      border: 1px solid $cigi-light-grey;
       border-radius: 20px 20px 0 0;
     }
 
