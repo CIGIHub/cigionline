@@ -183,10 +183,6 @@ article {
           border: 0 !important;
         }
       }
-
-      img {
-        border: 1px solid $cigi-light-grey;
-      }
     }
 
     &.card--medium--multimedia {
@@ -203,7 +199,6 @@ article {
         @include media-breakpoint-only(md) {
           border-radius: 0 20px 20px 0;
         }
-        border: 1px solid $cigi-light-grey;
         border-radius: 20px 20px 0 0;
       }
 
