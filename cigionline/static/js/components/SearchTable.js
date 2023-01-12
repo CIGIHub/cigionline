@@ -3,6 +3,7 @@ import React from 'react';
 
 import Paginator from './Paginator';
 import SearchTableSkeleton from './SearchTableSkeleton';
+import SearchResultListingRow from './SearchResultListingRow';
 import '../../css/components/SearchTable.scss';
 
 import fixtures from '../../../../fixtures';
@@ -27,6 +28,7 @@ class SearchTable extends React.Component {
     const { filterTypes } = props;
     this.state = {
       currentPage: 1,
+      displayMode: 'grid',
       emptyQuery: false,
       expertsFilter: '',
       expertSelectValues: [],
@@ -339,44 +341,44 @@ class SearchTable extends React.Component {
       uri += '&searchpage=true';
     }
 
-    fetch(encodeURI(uri))
-      .then((res) => res.json())
-      .then((data) => {
-        const rows = data.items.filter(
-          (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-        );
-        const aggregations = data.meta.aggregations;
-        aggregations.topics = mergeObjects([
-          aggregations.topics_contentpage,
-          aggregations.topics_personpage,
-        ]);
+    // fetch(encodeURI(uri))
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     const rows = data.items.filter(
+    //       (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
+    //     );
+    //     const aggregations = data.meta.aggregations;
+    //     aggregations.topics = mergeObjects([
+    //       aggregations.topics_contentpage,
+    //       aggregations.topics_personpage,
+    //     ]);
 
-        this.setState(() => ({
-          loading: false,
-          loadingInitial: false,
-          rows,
-          aggregations: data.meta.aggregations,
-          totalRows: data.meta.total_count,
-        }));
-      });
+    //     this.setState(() => ({
+    //       loading: false,
+    //       loadingInitial: false,
+    //       rows,
+    //       aggregations: data.meta.aggregations,
+    //       totalRows: data.meta.total_count,
+    //     }));
+    //   });
 
     // using fixtures to test
-    // const rows = fixtures.items.filter(
-    //   (v, i, a) => a.findIndex((t) => t.id === v.id) === i
-    // );
-    // const aggregations = fixtures.meta.aggregations;
-    // aggregations.topics = mergeObjects([
-    //   aggregations.topics_contentpage,
-    //   aggregations.topics_personpage,
-    // ]);
+    const rows = fixtures.items.filter(
+      (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+    );
+    const aggregations = fixtures.meta.aggregations;
+    aggregations.topics = mergeObjects([
+      aggregations.topics_contentpage,
+      aggregations.topics_personpage,
+    ]);
 
-    // this.setState(() => ({
-    //   loading: false,
-    //   loadingInitial: false,
-    //   rows,
-    //   aggregations: fixtures.meta.aggregations,
-    //   totalRows: fixtures.meta.total_count,
-    // }));
+    this.setState(() => ({
+      loading: false,
+      loadingInitial: false,
+      rows,
+      aggregations: fixtures.meta.aggregations,
+      totalRows: fixtures.meta.total_count,
+    }));
   }
 
   getAggregationCount(filterType) {
@@ -501,6 +503,12 @@ class SearchTable extends React.Component {
     const { limit } = this.props;
     const { totalRows } = this.state;
     return Math.ceil(totalRows / limit);
+  }
+
+  changeDisplayMode(mode) {
+    this.setState(() => ({
+      displayMode: mode,
+    }));
   }
 
   updateQueryParams() {
@@ -736,6 +744,7 @@ class SearchTable extends React.Component {
 
   renderSearchBar(showSidebar) {
     const {
+      displayMode,
       expertsFilter,
       loadingExperts,
       loadingTopics,
@@ -1129,15 +1138,19 @@ class SearchTable extends React.Component {
           <div className="search-bar__display-mode">
             <button
               type="button"
-              className="search-bar__display-mode__button active"
-              onClick={() => this.changeDisplayMode('list')}
+              className={`search-bar__display-mode__button ${
+                displayMode === 'grid' ? 'active' : ''
+              }`}
+              onClick={() => this.changeDisplayMode('grid')}
             >
               <i className="fas fa-th" />
             </button>
             <button
               type="button"
-              className="search-bar__display-mode__button"
-              onClick={() => this.changeDisplayMode('grid')}
+              className={`search-bar__display-mode__button ${
+                displayMode === 'grid' ? '' : 'active'
+              }`}
+              onClick={() => this.changeDisplayMode('list')}
             >
               <i className="fal fa-list" />
             </button>
@@ -1147,9 +1160,73 @@ class SearchTable extends React.Component {
     );
   }
 
+  renderResults(RowComponent, containerClass) {
+    const { rows, displayMode, loading } = this.state;
+    return (
+      <div
+        className={[
+          ...containerClass,
+          'search-table__results',
+          `search-table__results--${displayMode}`,
+          loading && 'loading',
+        ].join(' ')}
+      >
+        {displayMode === 'grid' &&
+          rows.map((row) => (
+            <div
+              className="article-container"
+              key={`${row.id}-${row.elevated}`}
+            >
+              <RowComponent row={row} displayMode={displayMode} />
+            </div>
+          ))}
+
+        {displayMode === 'list' && (
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Content Type</th>
+                <th>Author</th>
+                <th>Topic</th>
+                <th> </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <SearchResultListingRow
+                  key={`${row.id}-${row.elevated}`}
+                  row={row}
+                />
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
+  }
+
+  renderBlockListing(RowComponent, containerClass) {
+    const { rows, loading } = this.state;
+    return (
+      <div
+        className={[
+          ...containerClass,
+          'search-results',
+          loading && 'loading',
+        ].join(' ')}
+      >
+        {rows.map((row) => (
+          <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
+        ))}
+      </div>
+    );
+  }
+
   render() {
     const {
       currentPage,
+      displayMode,
       emptyQuery,
       expertsFilter,
       loading,
@@ -1558,9 +1635,7 @@ class SearchTable extends React.Component {
             </div>
           </div>
         )}
-        <div
-          className={`search-table ${isSearchPage ? 'col-md-9' : 'col-md-12'}`}
-        >
+        <div className="search-table">
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {showSearch && <>{this.renderSearchBar(showSidebar)}</>}
           {loadingInitial ? (
@@ -1601,36 +1676,9 @@ class SearchTable extends React.Component {
                   </>
                 )}
               </div>
-              {blockListing ? (
-                <div
-                  className={[
-                    ...containerClass,
-                    'search-results',
-                    loading && 'loading',
-                  ].join(' ')}
-                >
-                  {rows.map((row) => (
-                    <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
-                  ))}
-                </div>
-              ) : (
-                <div
-                  className={[
-                    ...containerClass,
-                    'search-table__results',
-                    loading && 'loading',
-                  ].join(' ')}
-                >
-                  {rows.map((row) => (
-                    <div className="article-container">
-                      <RowComponent
-                        key={`${row.id}-${row.elevated}`}
-                        row={row}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+              {blockListing
+                ? this.renderBlockListing(RowComponent, containerClass)
+                : this.renderResults(RowComponent, containerClass)}
             </>
           ) : emptyQuery ? (
             <p>
