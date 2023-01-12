@@ -204,6 +204,34 @@
   }
 }
 
+//3.0 styling
+
+.search-table {
+  .search-table__results {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: 0 -1.5em;
+
+    .article-container {
+      padding: 2em 0;
+      
+      &:not(:nth-last-child(-n+3)) {
+        border-bottom: 1px solid $cigi-light-grey;
+      }
+
+      &:not(:nth-child(3n)) {
+        article {
+          border-right: 1px solid $cigi-light-grey;
+        }
+      }
+
+      article {
+        padding: 1.5em;
+      }
+    }
+  }
+}
+
 .search-bar {
   margin-bottom: 3em;
 

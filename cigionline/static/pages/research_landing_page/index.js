@@ -163,7 +163,7 @@ if (swiperContainer) {
 ReactDOM.render(
   <SearchTable
     showSearch
-    contenttypes={['Publication', 'Opinion', 'Event', 'Multimedia', 'Activity']}
+    contenttypes={['Publication']}
     fields={[
       'authors',
       'contentsubtype',
