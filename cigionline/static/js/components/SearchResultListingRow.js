@@ -6,14 +6,6 @@ import '../../css/components/SearchResultListingRow.scss';
 
 function SearchResultListingRow(props) {
   const { row } = props;
-  const highlights = row.highlights.reduce((acc, curr, i, arr) => {
-    const accLength = [...acc, curr].reduce((a, b) => a + b.length, 0);
-    if (accLength > 350) {
-      arr.splice(1);
-      return [...acc, curr.substring(0, accLength - 350)];
-    }
-    return [...acc, curr];
-  }, []);
   const contentTypes = [
     'Opinion',
     'Opinion Series',
@@ -62,10 +54,10 @@ function SearchResultListingRow(props) {
     },
   };
 
-  /* eslint-disable react/no-danger */
   return (
     <tr className="search-result-listing">
       <td className="search-table__results__row__title">
+        <div className="search-table__results__row__title--mobile">Title</div>
         <div>
           <i
             className={`fal ${
@@ -88,6 +80,7 @@ function SearchResultListingRow(props) {
         </div>
       </td>
       <td className="search-table__results__row__content-type">
+        <div className="search-table__results__row__title--mobile">Content Type</div>
         {row.contentsubtype && (
           <>{row.contentsubtype}</>
         )}
@@ -96,6 +89,7 @@ function SearchResultListingRow(props) {
         )}
       </td>
       <td className="search-table__results__row__authors">
+        <div className="search-table__results__row__title--mobile">Author</div>
         {row.authors && (
           <ul className="custom-text-list">
             {row.authors.map((author) => (
@@ -107,6 +101,7 @@ function SearchResultListingRow(props) {
         )}
       </td>
       <td className="search-table__results__row__topics">
+        <div className="search-table__results__row__title--mobile">Topic</div>
         <ul className="topics custom-text-list feature-content-topic-list">
           {row.topics &&
             row.topics.map((topic) => (
@@ -120,9 +115,12 @@ function SearchResultListingRow(props) {
       </td>
       <td className="search-table__results__row__download">
         {row.pdf_download && (
-          <a href={row.pdf_download} className="download">
-            <i className="fal fa-arrow-to-bottom" />
-          </a>
+          <>
+            <div className="search-table__results__row__title--mobile">PDF</div>
+            <a href={row.pdf_download} className="download">
+              <i className="fal fa-arrow-to-bottom" />
+            </a>
+          </>
         )}
       </td>
     </tr>

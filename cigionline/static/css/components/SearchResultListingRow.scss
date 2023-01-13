@@ -15,20 +15,36 @@
       vertical-align: top;
     }
 
+    .search-table__results__row__title--mobile {
+      @include media-breakpoint-up(sm) {
+        display: none;
+      }
+      flex: 0 0 40%;
+      color: $cigi-medium-grey;
+    }
+
     .search-table__results__row__title {
-      width: 33.33333%;
+      @include media-breakpoint-up(md) {
+        width: 33.33333%;
+      }
 
       &td {
         font-size: 1.1em;
       }
 
       i {
+        @include media-breakpoint-up(md) {
+          display: block;
+        }
+        display: none;
         margin-right: 1em;
         margin-top: 0.25em;
       }
 
       & > div {
-        display: flex;
+        &:not(.search-table__results__row__title--mobile) {
+          display: flex;
+        }
       }
     }
 
@@ -38,21 +54,32 @@
     }
 
     .search-table__results__row__content-type {
+      @include media-breakpoint-up(md) {
+        width: 16.66666%;
+      }
       color: $cigi-medium-grey;
-      width: 16.66666%;
     }
 
     .search-table__results__row__authors {
-      @include link($color: $cigi-medium-grey, $hover-color: $cigi-primary-colour);
-      width: 16.66666%;
+      @include link(
+        $color: $cigi-medium-grey,
+        $hover-color: $cigi-primary-colour
+      );
+      @include media-breakpoint-up(md) {
+        width: 16.66666%;
+      }
     }
 
     .search-table__results__row__topics {
-      width: 28.33333%;
+      @include media-breakpoint-up(md) {
+        width: 28.33333%;
+      }
     }
 
     .search-table__results__row__download {
-      width: 5%;
+      @include media-breakpoint-up(md) {
+        width: 5%;
+      }
       text-align: right;
     }
   }
