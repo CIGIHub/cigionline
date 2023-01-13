@@ -2,7 +2,9 @@
 
 .search-table__results--list {
   tr {
-    border-bottom: 1px solid $cigi-light-grey;
+    &:not(:last-child) {
+      border-bottom: 1px solid $cigi-light-grey;
+    }
 
     th,
     td {

@@ -101,23 +101,6 @@ table {
           }
         }
 
-        .table-content-link {
-          font-size: 0.75em;
-          text-transform: uppercase;
-
-          &:hover {
-            text-decoration: none;
-          }
-
-          &.table-content-link-black {
-            color: $cigi-text-grey;
-
-            &:hover {
-              color: $cigi-primary-colour;
-            }
-          }
-        }
-
         .table-btn-icon {
           align-items: center;
           border: 1px solid $cigi-primary-colour;
