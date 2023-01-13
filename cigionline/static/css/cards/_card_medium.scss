@@ -183,6 +183,22 @@ article {
           border: 0 !important;
         }
       }
+
+      .card__image {
+        @include media-breakpoint-up(lg) {
+          padding: 0 1em 1em;
+        }
+        @include media-breakpoint-up(xl) {
+          padding: 0 2em 1em;
+        }
+        padding: 0 3em;
+      }
+
+      .card__text {
+        .card__text__title {
+          font-size: clamp(1.1em, 3vw, 1.5em);
+        }
+      }
     }
 
     &.card--medium--multimedia {
