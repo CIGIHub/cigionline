@@ -203,7 +203,7 @@ const data = {
       ],
       "contentsubtype": "Cinema Series",
       "contenttype": "Event",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-12-22T15:47:00Z",
       "topics": [
         
@@ -238,7 +238,7 @@ const data = {
       "contentsubtype": "Opinion",
       "contenttype": "Opinion",
       "image_poster_url": "https://staging.cigionline.org/static/images/no.269_cover.width-700.jpg",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-12-07T14:00:00Z",
       "topics": [
         {
@@ -272,7 +272,7 @@ const data = {
       "contentsubtype": "Opinion",
       "contenttype": "Opinion",
       "image_poster_url": "https://staging.cigionline.org/static/images/no.269_cover.width-700.jpg",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-12-05T14:00:00Z",
       "topics": [
         {
@@ -301,7 +301,7 @@ const data = {
       ],
       "contentsubtype": "Workshop",
       "contenttype": "Event",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-12-05T14:00:00Z",
       "topics": [
         {
@@ -335,7 +335,7 @@ const data = {
       "contentsubtype": "Op-Eds",
       "contenttype": "Opinion",
       "image_poster_url": "https://staging.cigionline.org/static/images/no.269_cover.width-700.jpg",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-11-30T14:00:00Z",
       "topics": [
         {
@@ -374,7 +374,7 @@ const data = {
       "contentsubtype": "Opinion",
       "contenttype": "Opinion",
       "image_poster_url": "https://staging.cigionline.org/static/images/no.269_cover.width-700.jpg",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-11-28T14:00:00Z",
       "topics": [
         {
@@ -408,7 +408,7 @@ const data = {
       "contentsubtype": "Opinion",
       "contenttype": "Opinion",
       "image_poster_url": "https://staging.cigionline.org/static/images/no.269_cover.width-700.jpg",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-11-28T14:00:00Z",
       "topics": [
         {
@@ -442,7 +442,7 @@ const data = {
       "contentsubtype": "Opinion",
       "contenttype": "Opinion",
       "image_poster_url": "https://staging.cigionline.org/static/images/no.269_cover.width-700.jpg",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-11-28T14:00:00Z",
       "topics": [
         {
@@ -471,7 +471,7 @@ const data = {
       "contentsubtype": "Opinion",
       "contenttype": "Opinion",
       "image_poster_url": "https://staging.cigionline.org/static/images/no.269_cover.width-700.jpg",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-11-28T14:00:00Z",
       "topics": [
         {
@@ -500,7 +500,7 @@ const data = {
       ],
       "contentsubtype": "Workshop",
       "contenttype": "Event",
-      "pdf_download": "",
+      "pdf_download": "www.cigionline.org",
       "publishing_date": "2022-11-28T14:00:00Z",
       "topics": [
         {

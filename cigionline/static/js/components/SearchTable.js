@@ -28,7 +28,7 @@ class SearchTable extends React.Component {
     const { filterTypes } = props;
     this.state = {
       currentPage: 1,
-      displayMode: 'grid',
+      displayMode: 'list',
       emptyQuery: false,
       expertsFilter: '',
       expertSelectValues: [],
@@ -341,37 +341,36 @@ class SearchTable extends React.Component {
       uri += '&searchpage=true';
     }
 
-    fetch(encodeURI(uri))
-      .then((res) => res.json())
-      .then((data) => {
-        const rows = data.items.filter(
-          (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-        );
-        const aggregations = data.meta.aggregations;
-        aggregations.topics = mergeObjects([
-          aggregations.topics_contentpage,
-          aggregations.topics_personpage,
-        ]);
+    // fetch(encodeURI(uri))
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     const rows = data.items.filter(
+    //       (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
+    //     );
+    //     const aggregations = data.meta.aggregations;
+    //     aggregations.topics = mergeObjects([
+    //       aggregations.topics_contentpage,
+    //       aggregations.topics_personpage,
+    //     ]);
 
-        this.setState(() => ({
-          loading: false,
-          loadingInitial: false,
-          rows,
-          aggregations: data.meta.aggregations,
-          totalRows: data.meta.total_count,
-        }));
-      });
+    //     this.setState(() => ({
+    //       loading: false,
+    //       loadingInitial: false,
+    //       rows,
+    //       aggregations: data.meta.aggregations,
+    //       totalRows: data.meta.total_count,
+    //     }));
+    //   });
 
     // using fixtures to test
-    // const rows = fixtures.items.filter(
-    //   (v, i, a) => a.findIndex((t) => t.id === v.id) === i
-    // );
-    // const aggregations = fixtures.meta.aggregations;
-    // aggregations.topics = mergeObjects([
-    //   aggregations.topics_contentpage,
-    //   aggregations.topics_personpage,
-    // ]);
-
+    const rows = fixtures.items.filter(
+      (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+    );
+    const aggregations = fixtures.meta.aggregations;
+    aggregations.topics = mergeObjects([
+      aggregations.topics_contentpage,
+      aggregations.topics_personpage,
+    ]);
     this.setState(() => ({
       loading: false,
       loadingInitial: false,
@@ -1185,11 +1184,11 @@ class SearchTable extends React.Component {
           <table>
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Content Type</th>
-                <th>Author</th>
-                <th>Topic</th>
-                <th> </th>
+                <th className="search-table__results__row__title">Title</th>
+                <th className="search-table__results__row__content-type">Content Type</th>
+                <th className="search-table__results__row__authors">Author</th>
+                <th className="search-table__results__row__topics">Topic</th>
+                <th className="search-table__results__row__download"> </th>
               </tr>
             </thead>
             <tbody>

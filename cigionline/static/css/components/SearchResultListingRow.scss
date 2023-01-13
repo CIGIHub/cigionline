@@ -1,7 +1,57 @@
 @import '../global/mixins';
 
-article {
-  &.search-result-listing {
-    
+.search-table__results--list {
+  tr {
+    border-bottom: 1px solid $cigi-light-grey;
+
+    th,
+    td {
+      padding: 1.5em 0.625em;
+    }
+
+    td {
+      vertical-align: top;
+    }
+
+    .search-table__results__row__title {
+      width: 33.33333%;
+
+      &td {
+        font-size: 1.1em;
+      }
+
+      i {
+        margin-right: 1em;
+        margin-top: 0.25em;
+      }
+
+      & > div {
+        display: flex;
+      }
+    }
+
+    .search-table__results__row__date {
+      color: $cigi-medium-grey;
+      font-size: 0.75em;
+    }
+
+    .search-table__results__row__content-type {
+      color: $cigi-medium-grey;
+      width: 16.66666%;
+    }
+
+    .search-table__results__row__authors {
+      @include link($color: $cigi-medium-grey, $hover-color: $cigi-primary-colour);
+      width: 16.66666%;
+    }
+
+    .search-table__results__row__topics {
+      width: 28.33333%;
+    }
+
+    .search-table__results__row__download {
+      width: 5%;
+      text-align: right;
+    }
   }
 }

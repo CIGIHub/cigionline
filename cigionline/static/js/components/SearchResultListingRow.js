@@ -29,61 +29,44 @@ function SearchResultListingRow(props) {
   const iconClasses = {
     Event: {
       icon: 'fa-calendar-alt',
-      className: 'icon-event',
     },
     Multimedia: {
       icon: 'fa-play',
-      className: 'icon-multimedia',
     },
     'Multimedia Series': {
       icon: 'fa-play',
-      className: 'icon-multimedia',
     },
     Audio: {
       icon: 'fa-headphones',
-      className: 'icon-multimedia',
     },
     Publication: {
       icon: 'fa-file-alt',
-      className: 'icon-publication',
     },
     'Publication Series': {
       icon: 'fa-file-alt',
-      className: 'icon-publication',
     },
     Person: {
       icon: 'fa-user',
-      className: 'icon-person',
     },
     Topic: {
       icon: 'fa-tag',
-      className: 'icon-topic',
     },
     Activity: {
       icon: 'fa-clipboard-list',
-      className: 'icon-activity',
     },
     Opinion: {
       icon: 'fa-comment-alt',
-      className: 'icon-opinion',
     },
     'Opinion Series': {
       icon: 'fa-comment-alt',
-      className: 'icon-opinion',
     },
   };
 
   /* eslint-disable react/no-danger */
   return (
     <tr className="search-result-listing">
-      <td>
-        <span
-          className={`table-icon ${
-            contentTypes.includes(row.contenttype)
-              ? iconClasses[row.contenttype]?.className
-              : 'icon-basic-page'
-          }`}
-        >
+      <td className="search-table__results__row__title">
+        <div>
           <i
             className={`fal ${
               contentTypes.includes(row.contenttype)
@@ -91,23 +74,30 @@ function SearchResultListingRow(props) {
                 : 'fa-file'
             }`}
           />
-        </span>
-        <a href={row.url}>
-          {row.title}
-          {row.elevated && <i className="fal fa-bookmark elevate-bookmark" />}
-        </a>
+          <div>
+            <a href={row.url}>
+              {row.title}
+              {row.elevated && <i className="fal fa-bookmark elevate-bookmark" />}
+            </a>
+            {row.publishing_date && (
+              <div className="search-table__results__row__date">
+                {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_MED)}
+              </div>
+            )}
+          </div>
+        </div>
       </td>
-      <td>
+      <td className="search-table__results__row__content-type">
         {row.contentsubtype && (
-          <div className="search-result-meta">{row.contentsubtype}</div>
+          <>{row.contentsubtype}</>
         )}
         {!row.contentsubtype && row.contenttype && (
-          <div className="search-result-meta">{row.contenttype}</div>
+          <>{row.contenttype}</>
         )}
       </td>
-      <td>
+      <td className="search-table__results__row__authors">
         {row.authors && (
-          <ul className="custom-text-list search-result-meta">
+          <ul className="custom-text-list">
             {row.authors.map((author) => (
               <li key={`${row.id}-author-${author.id}`}>
                 <a href={author.url}>{author.title}</a>
@@ -116,7 +106,7 @@ function SearchResultListingRow(props) {
           </ul>
         )}
       </td>
-      <td>
+      <td className="search-table__results__row__topics">
         <ul className="topics custom-text-list feature-content-topic-list">
           {row.topics &&
             row.topics.map((topic) => (
@@ -127,6 +117,13 @@ function SearchResultListingRow(props) {
               </li>
             ))}
         </ul>
+      </td>
+      <td className="search-table__results__row__download">
+        {row.pdf_download && (
+          <a href={row.pdf_download} className="download">
+            <i className="fal fa-arrow-to-bottom" />
+          </a>
+        )}
       </td>
     </tr>
   );
@@ -147,6 +144,7 @@ SearchResultListingRow.propTypes = {
     elevated: PropTypes.bool,
     highlights: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
+    pdf_download: PropTypes.string,
     publishing_date: PropTypes.string,
     search_result_description: PropTypes.string,
     title: PropTypes.string,
