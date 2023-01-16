@@ -234,67 +234,153 @@
       }
     }
   }
-}
 
-.search-bar {
-  margin-bottom: 3em;
+  .search-bar {
+    &.show-filters {
+      .search-bar__input-container {
+        &::after {
+          @include media-breakpoint-up(lg) {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 1.5em;
+            background-color: $cigi-light-grey;
+            height: 1px;
+            width: calc(100% - 1.5em);
+          }
+        }
+      }
 
-  & > div {
-    &:not(:last-child) {
-      @include media-breakpoint-up(lg) {
-        border-right: 1px $cigi-light-grey solid;
+      .search-bar__display-mode-container {
+        &::after {
+          @include media-breakpoint-up(lg) {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 1.5em;
+            background-color: $cigi-light-grey;
+            height: 1px;
+            width: calc(100% - 1.5em);
+          }
+        }
+      }
+
+      .search-bar__input-container,
+      .search-bar__filters-button,
+      .search-bar__display-mode {
+        @include media-breakpoint-up(lg) {
+          padding-bottom: 1em;
+        }
       }
     }
-  }
 
-  form {
-    background-color: $cigi-light-grey;
-    border-radius: 50px;
-    padding: 1em;
-    display: flex;
-    align-items: center;
-
-    .btn-search {
-      margin-left: 0.5em;
-      margin-right: 0.5em;
-      color: $cigi-medium-grey;
+    & > div {
+      &:not(:last-child) {
+        @include media-breakpoint-up(lg) {
+          border-right: 1px $cigi-light-grey solid;
+        }
+      }
     }
-  }
 
-  .search-bar__filters {
-    .search-bar__filters__dropdown {
-      border: 1px solid $black;
+    .search-bar__input-container,
+    .search-bar__display-mode-container {
+      position: relative;
+    }
+
+    form {
+      background-color: $cigi-light-grey;
       border-radius: 50px;
-      position: static;
+      padding: 1em;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 1em;
-      width: 100%;
 
-      span {
+      .btn-search {
         margin-left: 0.5em;
+        margin-right: 0.5em;
+        color: $cigi-medium-grey;
+      }
+    }
+
+    .search-bar__filters-button {
+      .search-bar__filters__dropdown {
+        border: 1px solid $black;
+        border-radius: 50px;
+        position: static;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1em;
+        width: 100%;
+
+        span {
+          margin-left: 0.5em;
+        }
+      }
+    }
+
+    .search-bar__display-mode {
+      @include media-breakpoint-up(lg) {
+        display: flex;
+      }
+      @include media-breakpoint-up(xl) {
+        justify-content: space-between;
+      }
+      display: none;
+      align-items: center;
+      justify-content: space-evenly;
+      height: 100%;
+
+      button {
+        color: $cigi-medium-grey;
+
+        &.active {
+          color: $cigi-dark-grey;
+        }
       }
     }
   }
 
-  .search-bar__display-mode {
-    @include media-breakpoint-up(lg) {
+  .search-table__filters {
+    border-bottom: 1px solid $cigi-light-grey;
+
+    .col {
+      margin-top: 1.5em;
+
+      &:not(:last-child) {
+        border-right: 1px solid $cigi-light-grey;
+      }
+    }
+
+    .search-table__filters__dropdown-toggle {
+      padding-top: 1.5em;
+      padding-bottom: 2em;
+      align-items: center;
+      color: $black;
       display: flex;
-    }
-    @include media-breakpoint-up(xl) {
+      font-size: 1em;
+      font-weight: 300;
       justify-content: space-between;
-    }
-    display: none;
-    align-items: center;
-    justify-content: space-evenly;
-    height: 100%;
+      width: 100%;
 
-    button {
-      color: $cigi-medium-grey;
+      &::after {
+        align-items: center;
+        border: 0;
+        color: $cigi-light-grey;
+        content: '\f078';
+        display: inline-flex;
+        font-family: 'Font Awesome 5 Pro';
+        font-size: 0.75em;
+        height: 100%;
+        margin-left: 0;
+        transform: rotate(0deg);
+        transition: transform 0.25s ease;
+        vertical-align: 0.255em;
+      }
 
-      &.active {
-        color: $cigi-dark-grey;
+      &[aria-expanded='true'] {
+        &::after {
+          transform: rotate(180deg);
+        }
       }
     }
   }
