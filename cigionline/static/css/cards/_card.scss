@@ -10,20 +10,6 @@ $card-title-font: $title-font-family;
     border-radius: 20px;
   }
 
-  &.card--vertical {
-    @include media-breakpoint-only(md) {
-      flex-direction: row;
-    }
-    flex-direction: column;
-
-    .card__text {
-      @include media-breakpoint-up(lg) {
-        justify-content: flex-end;
-      }
-      justify-content: space-between;
-    }
-  }
-
   .card__text {
     display: flex;
     flex-direction: column;
