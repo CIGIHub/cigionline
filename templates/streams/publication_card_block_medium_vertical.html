@@ -1,7 +1,7 @@
 {% load wagtailimages_tags %}
 
 <div class="col-12 col-lg-8 2-col">
-  <article class="card__container card--medium__publication card--vertical">
+  <article class="card__container card--medium__publication card--vertical__publication">
     <div class="card__image">
       <a href="{{ url }}">
         <div class="img-wrapper">
@@ -15,6 +15,7 @@
     </div>
     <div class="card__text">
       {% include 'includes/cards/card_text_title.html' %}
+      {% include 'includes/cards/card_text_description.html' %}
       <div class="card__text__meta">
         <div>
           {% include 'includes/cards/card_text_people.html' %}
