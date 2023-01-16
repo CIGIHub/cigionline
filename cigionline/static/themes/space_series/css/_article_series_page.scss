@@ -1,6 +1,6 @@
 body {
   &.space-series-article-series {
-    @include top-bar($background-color: transparent, $color: $white);
+    @include top-bar($background-color: $space-series-background-colour, $color: $white);
     background-color: $space-series-background-colour;
     color: $white;
     font-family: $space-series-font-secondary;
