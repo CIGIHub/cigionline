@@ -1,8 +1,5 @@
 body {
   &.space-series-article-series {
-    @include media-breakpoint-up(lg) {
-      height: 100vh;
-    }
     @include top-bar($background-color: transparent, $color: $white);
     background-color: $space-series-background-colour;
     color: $white;
@@ -42,10 +39,6 @@ body {
       overflow: hidden;
 
       .swiper {
-        @include media-breakpoint-down(md) {
-          margin-top: 0;
-        }
-        margin-top: 2em;
         position: relative;
 
         .swiper-container-series {
@@ -57,30 +50,14 @@ body {
 
           .swiper-container-series-content {
             @include media-breakpoint-down(md) {
-              border-top: 0;
               padding: 0;
             }
-            border-top: 1px solid $cigi-text-grey;
             padding: 1em 0;
 
             .swiper-wrapper {
               flex-direction: column;
 
               .category-title {
-                @include media-breakpoint-up(lg) {
-                  background-color: $space-series-background-colour;
-                  border-bottom: 0;
-                  border-left: 1px solid $cigi-text-grey;
-                  font-size: 0.9em;
-                  font-weight: 600;
-                  height: 30px;
-                  left: -1px;
-                  padding: 0 0.5em;
-                  position: absolute;
-                  top: -1.85em;
-                  white-space: nowrap;
-                }
-
                 border-bottom: 1px solid $cigi-text-grey;
                 padding-top: 2em;
               }
