@@ -92,18 +92,16 @@
                     <div class="series-item-content">
                       <div>
                         <div class="series-item-counter">
-                          <span></span>
                           {% if series_item.content_page.contenttype == "Multimedia" %}
-                            <span>
+                            <div class="play-icon-wrapper">
                               <div class="play-icon">
                                 <div class="outer-circle"></div>
-                                <div class="inner-circle"></div>
                                 <i class="fas fa-play"></i>
                               </div>
-                            </span>
+                            </div>
                           {% else %}
                             {% define counter|add:1 as counter %}
-                            <span>{% if counter < 10 %}0{% endif %}{{ counter }}</span>
+                            {% if counter < 10 %}0{% endif %}{{ counter }}
                           {% endif %}
                         </div>
                         {% if series_item.content_page.contenttype == "Multimedia" %}
