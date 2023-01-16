@@ -18,8 +18,8 @@ const swipers = {};
 
 const enableSwiper = function(articleType) {
   const slidesPerViewMd = 4;
-  const slidesPerViewLg = articleType === 'article series' ? 5 : 6;
-  const slidesPerViewXl = 6;
+  const slidesPerViewLg = articleType === 'article series' ? 1 : 6;
+  const slidesPerViewXl = articleType === 'article series' ? 1 : 6;
   let swiperIds;
   if (articleType === 'article series') {
     swiperIds = ['.swiper-container-series-content'];
