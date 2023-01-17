@@ -16,7 +16,6 @@ body {
 
         .title {
           @include media-breakpoint-up(lg) {
-            font-size: 2.25em;
             padding-bottom: 0;
           }
           font-family: $space-series-font-primary;
@@ -60,6 +59,7 @@ body {
 
               .category-title {
                 border-bottom: 1px solid $cigi-text-grey;
+                font-weight: 600;
                 padding-top: 2em;
               }
             }
@@ -189,6 +189,7 @@ body {
                     text-transform: uppercase;
   
                     a {
+                      color: $cigi-medium-grey;
                       margin-right: 0.2em;
                     }
                   }
