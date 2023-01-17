@@ -1,3 +1,21 @@
+* {
+  scrollbar-color: $cigi-medium-light-grey $white;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $white;
+    border: 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $cigi-medium-light-grey;
+    border-radius: 5px;
+  }
+}
+
 html {
   font-size: 17px;
   scroll-behavior: smooth;
@@ -178,10 +196,10 @@ img {
       background-color: $white;
       border: 0;
       border-radius: 0.25em;
-      box-shadow: 0 5px 10px $cigi-light-grey;
+      box-shadow: 0 10px 10px $cigi-light-grey;
       color: $black;
       font-size: 1em;
-      height: 500px;
+      max-height: 500px;
       overflow-y: scroll;
       list-style: none;
       margin: 0.125em 0 0;

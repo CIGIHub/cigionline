@@ -361,7 +361,7 @@
       display: flex;
       position: relative;
 
-      .search-table__filters__col {
+      .dropdown {
         @include media-breakpoint-up(lg) {
           position: relative;
         }
@@ -372,7 +372,7 @@
           border-right: 1px solid $cigi-light-grey;
         }
 
-        &.search-table__filters__col-year {
+        &.dropdown-year {
           @include media-breakpoint-up(lg) {
             flex: 0 0 20%;
           }

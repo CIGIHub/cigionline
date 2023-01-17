@@ -342,43 +342,43 @@ class SearchTable extends React.Component {
       uri += '&searchpage=true';
     }
 
-    // fetch(encodeURI(uri))
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     const rows = data.items.filter(
-    //       (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-    //     );
-    //     const aggregations = data.meta.aggregations;
-    //     aggregations.topics = mergeObjects([
-    //       aggregations.topics_contentpage,
-    //       aggregations.topics_personpage,
-    //     ]);
+    fetch(encodeURI(uri))
+      .then((res) => res.json())
+      .then((data) => {
+        const rows = data.items.filter(
+          (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
+        );
+        const aggregations = data.meta.aggregations;
+        aggregations.topics = mergeObjects([
+          aggregations.topics_contentpage,
+          aggregations.topics_personpage,
+        ]);
 
-    //     this.setState(() => ({
-    //       loading: false,
-    //       loadingInitial: false,
-    //       rows,
-    //       aggregations: data.meta.aggregations,
-    //       totalRows: data.meta.total_count,
-    //     }));
-    //   });
+        this.setState(() => ({
+          loading: false,
+          loadingInitial: false,
+          rows,
+          aggregations: data.meta.aggregations,
+          totalRows: data.meta.total_count,
+        }));
+      });
 
     // using fixtures to test
-    const rows = fixtures.items.filter(
-      (v, i, a) => a.findIndex((t) => t.id === v.id) === i
-    );
-    const aggregations = fixtures.meta.aggregations;
-    aggregations.topics = mergeObjects([
-      aggregations.topics_contentpage,
-      aggregations.topics_personpage,
-    ]);
-    this.setState(() => ({
-      loading: false,
-      loadingInitial: false,
-      rows,
-      aggregations: fixtures.meta.aggregations,
-      totalRows: fixtures.meta.total_count,
-    }));
+    // const rows = fixtures.items.filter(
+    //   (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+    // );
+    // const aggregations = fixtures.meta.aggregations;
+    // aggregations.topics = mergeObjects([
+    //   aggregations.topics_contentpage,
+    //   aggregations.topics_personpage,
+    // ]);
+    // this.setState(() => ({
+    //   loading: false,
+    //   loadingInitial: false,
+    //   rows,
+    //   aggregations: fixtures.meta.aggregations,
+    //   totalRows: fixtures.meta.total_count,
+    // }));
   }
 
   getAggregationCount(filterType) {
@@ -603,11 +603,10 @@ class SearchTable extends React.Component {
     const targetButton = e.target;
     const targetMenu = targetButton.nextSibling;
     const siblings = Array.from(
-      targetButton.parentNode.parentNode.querySelectorAll('.dropdown-menu.show')
+      targetButton.parentNode.parentNode.querySelectorAll('.dropdown')
     ).filter((s) => s !== targetMenu);
     for (let i = 0; i < siblings.length; i += 1) {
-      siblings[i].classList.remove('show');
-      siblings[i].previousSibling.setAttribute('aria-expanded', false);
+      siblings[i].querySelector('.dropdown-menu').classList.remove('show');
     }
     targetMenu.classList.toggle('show');
     if (targetButton.getAttribute('aria-expanded') === 'true') {
@@ -934,352 +933,326 @@ class SearchTable extends React.Component {
       <div className="search-table__filters">
         <div className="search-table__filters__row">
           {showExpertDropDown && (
-            <div className="search-table__filters__col">
-              <div className="dropdown custom-dropdown keep-open">
-                <button
-                  className="search-table__filters__dropdown-toggle"
-                  type="button"
-                  id="search-bar-experts"
-                  onClick={(e) => this.toggleDropdown(e)}
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Experts
-                </button>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="search-bar-experts"
-                >
-                  {!loadingExperts && (
-                    <ul>
-                      {this.dropdownExperts
-                        .filter(
-                          (expert) =>
-                            aggregations.experts[expert.id] > 0 &&
-                            (expertsFilter === '' ||
-                              expert.title
-                                .toLowerCase()
-                                .includes(expertsFilter.toLowerCase()))
-                        )
-                        .sort(
-                          (a, b) =>
-                            aggregations.experts[b.id] -
-                            aggregations.experts[a.id]
-                        )
-                        .map((expert) => (
-                          <li
-                            className="dropdown-item"
-                            key={`expert-${expert.id}`}
-                          >
-                            <label
-                              htmlFor={`expert-${expert.id}`}
-                              className={`keep-open ${
-                                !aggregations.experts[expert.id]
-                                  ? 'inactive'
-                                  : ''
-                              }`}
-                            >
-                              <input
-                                id={`expert-${expert.id}`}
-                                type="checkbox"
-                                checked={
-                                  expertSelectValues.includes(expert.id)
-                                    ? 'checked'
-                                    : ''
-                                }
-                                onChange={(e) =>
-                                  this.handleExpertSelect(e, expert.id)
-                                }
-                              />
-                              <span>{expert.title}</span>
-                              <span className="dropdown-item__count">
-                                {aggregations.experts[expert.id] ? (
-                                  <>{aggregations.experts[expert.id]}</>
-                                ) : (
-                                  <>0</>
-                                )}
-                              </span>
-                            </label>
-                          </li>
-                        ))}
-                      {this.dropdownExperts.filter(
+            <div className="dropdown custom-dropdown">
+              <button
+                className="search-table__filters__dropdown-toggle"
+                type="button"
+                id="search-bar-experts"
+                onClick={(e) => this.toggleDropdown(e)}
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Experts
+              </button>
+              <div
+                className="dropdown-menu"
+                aria-labelledby="search-bar-experts"
+              >
+                {!loadingExperts && (
+                  <ul>
+                    {this.dropdownExperts
+                      .filter(
                         (expert) =>
-                          expertsFilter === '' ||
-                          expert.title
-                            .toLowerCase()
-                            .includes(expertsFilter.toLowerCase())
-                      ).length === 0 && (
-                        <li className="dropdown-item" key="noresults">
-                          No results matching &quot;
-                          {expertsFilter}
-                          &quot;
+                          aggregations.experts[expert.id] > 0 &&
+                          (expertsFilter === '' ||
+                            expert.title
+                              .toLowerCase()
+                              .includes(expertsFilter.toLowerCase()))
+                      )
+                      .sort(
+                        (a, b) =>
+                          aggregations.experts[b.id] -
+                          aggregations.experts[a.id]
+                      )
+                      .map((expert) => (
+                        <li
+                          className="dropdown-item"
+                          key={`expert-${expert.id}`}
+                        >
+                          <label
+                            htmlFor={`expert-${expert.id}`}
+                            className={`keep-open ${
+                              !aggregations.experts[expert.id] ? 'inactive' : ''
+                            }`}
+                          >
+                            <input
+                              id={`expert-${expert.id}`}
+                              type="checkbox"
+                              checked={
+                                expertSelectValues.includes(expert.id)
+                                  ? 'checked'
+                                  : ''
+                              }
+                              onChange={(e) =>
+                                this.handleExpertSelect(e, expert.id)
+                              }
+                            />
+                            <span>{expert.title}</span>
+                            <span className="dropdown-item__count">
+                              {aggregations.experts[expert.id] ? (
+                                <>{aggregations.experts[expert.id]}</>
+                              ) : (
+                                <>0</>
+                              )}
+                            </span>
+                          </label>
                         </li>
-                      )}
-                    </ul>
-                  )}
-                </div>
+                      ))}
+                    {this.dropdownExperts.filter(
+                      (expert) =>
+                        expertsFilter === '' ||
+                        expert.title
+                          .toLowerCase()
+                          .includes(expertsFilter.toLowerCase())
+                    ).length === 0 && (
+                      <li className="dropdown-item" key="noresults">
+                        No results matching &quot;
+                        {expertsFilter}
+                        &quot;
+                      </li>
+                    )}
+                  </ul>
+                )}
               </div>
             </div>
           )}
           {!hideTopicDropdown && (
-            <div className="search-table__filters__col">
-              <div className="dropdown custom-dropdown dropdown-topics keep-open">
-                <button
-                  className="search-table__filters__dropdown-toggle"
-                  type="button"
-                  id="search-bar-topics"
-                  onClick={(e) => this.toggleDropdown(e)}
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Topics
-                </button>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="search-bar-topics"
-                >
-                  {!loadingTopics && (
-                    <ul>
-                      {this.dropdownTopics
-                        .filter(
-                          (topic) =>
-                            topicsFilter === '' ||
-                            topic.title
-                              .toLowerCase()
-                              .includes(topicsFilter.toLowerCase())
-                        )
-                        .map((topic) => (
-                          <li
-                            className="dropdown-item"
-                            key={`topic-${topic.id}`}
-                          >
-                            <label
-                              htmlFor={`topic-${topic.id}`}
-                              className={`keep-open ${
-                                !aggregations.topics[topic.id] ? 'inactive' : ''
-                              }`}
-                            >
-                              <input
-                                id={`topic-${topic.id}`}
-                                type="checkbox"
-                                checked={
-                                  topicSelectValues.includes(topic.id)
-                                    ? 'checked'
-                                    : ''
-                                }
-                                onChange={(e) =>
-                                  this.handleTopicSelect(e, topic.id)
-                                }
-                              />
-                              <span>{topic.title}</span>
-                              <span className="dropdown-item__count">
-                                {aggregations.topics[topic.id] ? (
-                                  <>{aggregations.topics[topic.id]}</>
-                                ) : (
-                                  <>0</>
-                                )}
-                              </span>
-                            </label>
-                          </li>
-                        ))}
-                      {this.dropdownTopics.filter(
+            <div className="dropdown custom-dropdown dropdown-topics">
+              <button
+                className="search-table__filters__dropdown-toggle"
+                type="button"
+                id="search-bar-topics"
+                onClick={(e) => this.toggleDropdown(e)}
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Topics
+              </button>
+              <div
+                className="dropdown-menu"
+                aria-labelledby="search-bar-topics"
+              >
+                {!loadingTopics && (
+                  <ul>
+                    {this.dropdownTopics
+                      .filter(
                         (topic) =>
                           topicsFilter === '' ||
                           topic.title
                             .toLowerCase()
                             .includes(topicsFilter.toLowerCase())
-                      ).length === 0 && (
-                        <li className="dropdown-item" key="noresults">
-                          No results matching &quot;
-                          {topicsFilter}
-                          &quot;
+                      )
+                      .map((topic) => (
+                        <li className="dropdown-item" key={`topic-${topic.id}`}>
+                          <label
+                            htmlFor={`topic-${topic.id}`}
+                            className={`keep-open ${
+                              !aggregations.topics[topic.id] ? 'inactive' : ''
+                            }`}
+                          >
+                            <input
+                              id={`topic-${topic.id}`}
+                              type="checkbox"
+                              checked={
+                                topicSelectValues.includes(topic.id)
+                                  ? 'checked'
+                                  : ''
+                              }
+                              onChange={(e) =>
+                                this.handleTopicSelect(e, topic.id)
+                              }
+                            />
+                            <span>{topic.title}</span>
+                            <span className="dropdown-item__count">
+                              {aggregations.topics[topic.id] ? (
+                                <>{aggregations.topics[topic.id]}</>
+                              ) : (
+                                <>0</>
+                              )}
+                            </span>
+                          </label>
                         </li>
-                      )}
-                    </ul>
-                  )}
-                </div>
+                      ))}
+                    {this.dropdownTopics.filter(
+                      (topic) =>
+                        topicsFilter === '' ||
+                        topic.title
+                          .toLowerCase()
+                          .includes(topicsFilter.toLowerCase())
+                    ).length === 0 && (
+                      <li className="dropdown-item" key="noresults">
+                        No results matching &quot;
+                        {topicsFilter}
+                        &quot;
+                      </li>
+                    )}
+                  </ul>
+                )}
               </div>
             </div>
           )}
           {!loadingTypes && filterTypes.length > 0 && (
-            <div className="search-table__filters__col">
-              <div className="dropdown custom-dropdown keep-open">
-                <button
-                  className="search-table__filters__dropdown-toggle"
-                  type="button"
-                  id="search-bar-types"
-                  onClick={(e) => this.toggleDropdown(e)}
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Types
-                </button>
-                <div
-                  className="dropdown-menu w-100"
-                  aria-labelledby="search-bar-types"
-                >
-                  <ul>
-                    {this.dropdownTypes.map(function (type) {
-                      if (!Object.keys(type).includes('parent')) {
-                        return (
-                          <li
-                            className="dropdown-item"
-                            key={`type-${type.name.replace(' ', '_')}`}
-                          >
-                            <label
-                              htmlFor={`input_type_${type.name}`}
-                              className={`keep-open ${
-                                !this.getAggregationCount(type)
-                                  ? 'inactive'
-                                  : ''
-                              }`}
-                            >
-                              <input
-                                id={`input_type_${type.name}`}
-                                type="checkbox"
-                                onChange={(e) =>
-                                  this.handleTypeSelect(e, type.name)
-                                }
-                                className={`${
-                                  typeSelectValues.some(
-                                    (t) => t.split('_')[0] === type.name
-                                  )
-                                    ? 'partial'
-                                    : ''
-                                }`}
-                                checked={
-                                  typeSelectValues.includes(type.name)
-                                    ? 'checked'
-                                    : ''
-                                }
-                              />
-                              <span>{type.name}</span>
-                              <span>
-                                {this.getAggregationCount(type) ? (
-                                  <>({this.getAggregationCount(type)})</>
-                                ) : (
-                                  <>(0)</>
-                                )}
-                              </span>
-                            </label>
-                            {this.getSubTypes(type.name) &&
-                              this.getSubTypes(type.name).length > 0 && (
-                                <ul>
-                                  {this.getSubTypes(type.name).map(
-                                    (subtype) => (
-                                      <li
-                                        className="dropdown-item"
-                                        key={`subtype-${subtype.name.replace(
-                                          ' ',
-                                          '_'
-                                        )}`}
-                                      >
-                                        <label
-                                          htmlFor={`input_${type.name}_${subtype.name}`}
-                                          className={`keep-open ${
-                                            !this.getAggregationCount(subtype)
-                                              ? 'inactive'
-                                              : ''
-                                          }`}
-                                        >
-                                          <input
-                                            id={`input_${type.name}_${subtype.name}`}
-                                            type="checkbox"
-                                            onChange={(e) =>
-                                              this.handleTypeSelect(
-                                                e,
-                                                subtype.name
-                                              )
-                                            }
-                                            checked={
-                                              typeSelectValues.includes(
-                                                subtype.name
-                                              )
-                                                ? 'checked'
-                                                : ''
-                                            }
-                                            className={`${type.name} ${type.name}_${subtype.name}`}
-                                          />
-                                          <span>{subtype.name}</span>
-                                          <span>
-                                            {this.getAggregationCount(
-                                              subtype
-                                            ) ? (
-                                              <>
-                                                (
-                                                {this.getAggregationCount(
-                                                  subtype
-                                                )}
-                                                )
-                                              </>
-                                            ) : (
-                                              <>(0)</>
-                                            )}
-                                          </span>
-                                        </label>
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              )}
-                          </li>
-                        );
-                      }
-                      return null;
-                    }, this)}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="search-table__filters__col search-table__filters__col-year">
-            <div className="dropdown custom-dropdown keep-open">
+            <div className="dropdown custom-dropdown">
               <button
                 className="search-table__filters__dropdown-toggle"
                 type="button"
-                id="search-bar-years"
+                id="search-bar-types"
                 onClick={(e) => this.toggleDropdown(e)}
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Years
+                Types
               </button>
               <div
-                className="dropdown-menu dropdown-menu-years"
-                aria-labelledby="search-bar-years"
+                className="dropdown-menu w-100"
+                aria-labelledby="search-bar-types"
               >
-                {!loadingYears && (
-                  <ul className="columns-2">
-                    {years.map((year) => (
-                      <li className="dropdown-item" key={`year-${year}`}>
-                        <label
-                          htmlFor={`year-${year}`}
-                          className={`keep-open ${
-                            !aggregations.years[year] ? 'inactive' : ''
-                          }`}
+                <ul>
+                  {this.dropdownTypes.map(function (type) {
+                    if (!Object.keys(type).includes('parent')) {
+                      return (
+                        <li
+                          className="dropdown-item"
+                          key={`type-${type.name.replace(' ', '_')}`}
                         >
-                          <input
-                            type="checkbox"
-                            id={`year-${year}`}
-                            checked={
-                              yearSelectValues.includes(year) ? 'checked' : ''
-                            }
-                            onChange={(e) => this.handleYearSelect(e, year)}
-                          />
-                          <span>{year}</span>
-                          <span className="dropdown-item__count">
-                            {aggregations.years[year] ? (
-                              <>{aggregations.years[year]}</>
-                            ) : (
-                              <>0</>
+                          <label
+                            htmlFor={`input_type_${type.name}`}
+                            className={`keep-open ${
+                              !this.getAggregationCount(type) ? 'inactive' : ''
+                            }`}
+                          >
+                            <input
+                              id={`input_type_${type.name}`}
+                              type="checkbox"
+                              onChange={(e) =>
+                                this.handleTypeSelect(e, type.name)
+                              }
+                              className={`${
+                                typeSelectValues.some(
+                                  (t) => t.split('_')[0] === type.name
+                                )
+                                  ? 'partial'
+                                  : ''
+                              }`}
+                              checked={
+                                typeSelectValues.includes(type.name)
+                                  ? 'checked'
+                                  : ''
+                              }
+                            />
+                            <span>{type.name}</span>
+                            <span className="dropdown-item__count">
+                              {this.getAggregationCount(type) ? (
+                                <>{this.getAggregationCount(type)}</>
+                              ) : (
+                                <>0</>
+                              )}
+                            </span>
+                          </label>
+                          {this.getSubTypes(type.name) &&
+                            this.getSubTypes(type.name).length > 0 && (
+                              <ul>
+                                {this.getSubTypes(type.name).map((subtype) => (
+                                  <li
+                                    className="dropdown-item"
+                                    key={`subtype-${subtype.name.replace(
+                                      ' ',
+                                      '_'
+                                    )}`}
+                                  >
+                                    <label
+                                      htmlFor={`input_${type.name}_${subtype.name}`}
+                                      className={`keep-open ${
+                                        !this.getAggregationCount(subtype)
+                                          ? 'inactive'
+                                          : ''
+                                      }`}
+                                    >
+                                      <input
+                                        id={`input_${type.name}_${subtype.name}`}
+                                        type="checkbox"
+                                        onChange={(e) =>
+                                          this.handleTypeSelect(e, subtype.name)
+                                        }
+                                        checked={
+                                          typeSelectValues.includes(
+                                            subtype.name
+                                          )
+                                            ? 'checked'
+                                            : ''
+                                        }
+                                        className={`${type.name} ${type.name}_${subtype.name}`}
+                                      />
+                                      <span>{subtype.name}</span>
+                                      <span className="dropdown-item__count">
+                                        {this.getAggregationCount(subtype) ? (
+                                          <>
+                                            {this.getAggregationCount(subtype)}
+                                          </>
+                                        ) : (
+                                          <>0</>
+                                        )}
+                                      </span>
+                                    </label>
+                                  </li>
+                                ))}
+                              </ul>
                             )}
-                          </span>
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                        </li>
+                      );
+                    }
+                    return null;
+                  }, this)}
+                </ul>
               </div>
+            </div>
+          )}
+          <div className="dropdown dropdown-year custom-dropdown">
+            <button
+              className="search-table__filters__dropdown-toggle"
+              type="button"
+              id="search-bar-years"
+              onClick={(e) => this.toggleDropdown(e)}
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Years
+            </button>
+            <div
+              className="dropdown-menu dropdown-menu-years"
+              aria-labelledby="search-bar-years"
+            >
+              {!loadingYears && (
+                <ul className="columns-2">
+                  {years.map((year) => (
+                    <li className="dropdown-item" key={`year-${year}`}>
+                      <label
+                        htmlFor={`year-${year}`}
+                        className={`keep-open ${
+                          !aggregations.years[year] ? 'inactive' : ''
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          id={`year-${year}`}
+                          checked={
+                            yearSelectValues.includes(year) ? 'checked' : ''
+                          }
+                          onChange={(e) => this.handleYearSelect(e, year)}
+                        />
+                        <span>{year}</span>
+                        <span className="dropdown-item__count">
+                          {aggregations.years[year] ? (
+                            <>{aggregations.years[year]}</>
+                          ) : (
+                            <>0</>
+                          )}
+                        </span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>
@@ -1331,7 +1304,7 @@ class SearchTable extends React.Component {
         {isSearchPage && showSidebar && (
           <div className="search-filters search-filters-search-page col-md-3">
             {showExpertDropDown && (
-              <div className="dropdown custom-dropdown dropdown-experts keep-open">
+              <div className="dropdown custom-dropdown dropdown-experts">
                 <button
                   className="search-table__filters__dropdown-toggle"
                   type="button"
@@ -1432,7 +1405,7 @@ class SearchTable extends React.Component {
               </div>
             )}
             {!hideTopicDropdown && (
-              <div className="dropdown custom-dropdown dropdown-topics keep-open">
+              <div className="dropdown custom-dropdown dropdown-topics">
                 <button
                   className="search-table__filters__dropdown-toggle"
                   type="button"
@@ -1525,7 +1498,7 @@ class SearchTable extends React.Component {
               </div>
             )}
             {!loadingTypes && filterTypes.length > 0 && (
-              <div className="dropdown custom-dropdown keep-open">
+              <div className="dropdown custom-dropdown">
                 <button
                   className="search-table__filters__dropdown-toggle"
                   type="button"
@@ -1623,19 +1596,17 @@ class SearchTable extends React.Component {
                                             className={`${type.name} ${type.name}_${subtype.name}`}
                                           />
                                           <span>{subtype.name}</span>
-                                          <span>
+                                          <span className="dropdown-item__count">
                                             {this.getAggregationCount(
                                               subtype
                                             ) ? (
                                               <>
-                                                (
                                                 {this.getAggregationCount(
                                                   subtype
                                                 )}
-                                                )
                                               </>
                                             ) : (
-                                              <>(0)</>
+                                              <>0</>
                                             )}
                                           </span>
                                         </label>
@@ -1654,7 +1625,7 @@ class SearchTable extends React.Component {
               </div>
             )}
 
-            <div className="dropdown custom-dropdown keep-open">
+            <div className="dropdown custom-dropdown">
               <button
                 className="search-table__filters__dropdown-toggle"
                 type="button"
