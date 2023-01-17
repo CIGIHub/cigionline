@@ -20,6 +20,11 @@
   }
 
   &.card--large__publication {
+    @include media-breakpoint-up(lg) {
+      justify-content: space-between;
+    }
+    display: flex;
+
     div[class*='col'] {
       border: 0 !important;
     }
@@ -41,6 +46,10 @@
       .card__text__title {
         font-size: clamp(1.25em, 3vw, 2.4em);
         letter-spacing: -0.5px;
+      }
+
+      .card__text__description {
+        color: $cigi-text-grey;
       }
     }
   }
