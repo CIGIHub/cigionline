@@ -81,114 +81,120 @@ body {
             border-bottom: 1px solid $cigi-text-grey;
           }
 
-          .article-content-wrapper {
-            .article-content {
-              align-items: center;
-              display: flex;
-              position: relative;
-              transition: transform 0.2s ease, opacity 0.3s ease;
+          .article-wrapper {
+            position: relative;
 
-              &:hover {
-                transform: scale(1.025);
-                z-index: 1;
+            .series-item-counter {
+              @include media-breakpoint-down(md) {
+                display:none;
+              }
+              background-color: $space-series-background-colour;
+              font-family: $space-series-font-primary;
+              font-weight: 600;
+              position: absolute;
+              right: 0;
+              text-align: right;
+              top: -1em;
+              width: 2.5em;
 
-                .series-item-image {
-                  transform: scale(1.1);
+              .play-icon-wrapper {
+                display: flex;
+                justify-content: flex-end;
+
+                .play-icon {
+                  align-items: center;
+                  color: $white;
+                  display: flex;
+                  height: 1em;
+                  justify-content: center;
+                  transition: color 0.2s ease;
+                  width: 1.5em;
+
+                  * {
+                    position: absolute;
+                    transition: background-color 0.2s ease;
+                  }
+
+                  .outer-circle {
+                    border: 0.25em solid $white;
+                    border-radius: 50%;
+                    height: 1.5em;
+                    width: 1.5em;
+                    z-index: 1;
+                  }
+
+                  i {
+                    font-size: 0.5em;
+                    z-index: 4;
+                  }
                 }
               }
+            }
 
-              .series-item-image {
-                @include media-breakpoint-up(lg) {
-                  width: 200px;
-                }
+            .article-content-wrapper {
+              overflow: hidden;
+
+              .article-content {
                 align-items: center;
                 display: flex;
-                flex-shrink: 0;
-                justify-content: center;
                 position: relative;
                 transition: transform 0.2s ease, opacity 0.3s ease;
-                width: 100px;
-              }
-
-              .series-item-content {
-                @include link($color: $white, $hover-color: $cigi-primary-colour);
-                @include media-breakpoint-up(sm) {
-                  margin-left: 3em;
-                }
-                display: flex;
-                flex-direction: column;
-                font-size: 0.8em;
-                height: 100%;
-                justify-content: space-between;
-                margin-left: 2em;
-                padding: 0.5em;
-                width: 100%;
-
-                .series-item-counter {
-                  @include media-breakpoint-down(md) {
-                    display:none;
+  
+                &:hover {
+                  transform: scale(1.025);
+                  z-index: 1;
+  
+                  .series-item-image {
+                    transform: scale(1.1);
                   }
-                  background-color: $space-series-background-colour;
-                  font-family: $space-series-font-primary;
-                  font-weight: 600;
-                  position: absolute;
-                  right: 0;
-                  text-align: right;
-                  top: -1em;
-                  width: 2.5em;
-
-                  .play-icon-wrapper {
-                    display: flex;
-                    justify-content: flex-end;
-
-                    .play-icon {
-                      align-items: center;
-                      color: $white;
-                      display: flex;
-                      height: 1em;
-                      justify-content: center;
-                      transition: color 0.2s ease;
-                      width: 1.5em;
-
-                      * {
-                        position: absolute;
-                        transition: background-color 0.2s ease;
-                      }
-
-                      .outer-circle {
-                        border: 0.25em solid $white;
-                        border-radius: 50%;
-                        height: 1.5em;
-                        width: 1.5em;
-                        z-index: 1;
-                      }
-
-                      i {
-                        font-size: 0.5em;
-                        z-index: 4;
-                      }
+                }
+  
+                .series-item-image {
+                  @include media-breakpoint-up(lg) {
+                    width: 200px;
+                  }
+                  align-items: center;
+                  display: flex;
+                  flex-shrink: 0;
+                  justify-content: center;
+                  position: relative;
+                  transition: transform 0.2s ease, opacity 0.3s ease;
+                  width: 100px;
+                }
+  
+                .series-item-content {
+                  @include link($color: $white, $hover-color: $cigi-primary-colour);
+                  @include media-breakpoint-up(sm) {
+                    margin-left: 3em;
+                  }
+                  display: flex;
+                  flex-direction: column;
+                  font-size: 0.8em;
+                  height: 100%;
+                  justify-content: space-between;
+                  margin-left: 2em;
+                  padding: 0.5em;
+                  width: 100%;
+  
+                  .series-item-title {
+                    font-size: 1em;
+  
+                    &.multimedia-title {
+                      width: 85%;
+                    }
+                  }
+  
+                  .authors {
+                    font-size: 0.8em;
+                    margin: 1em 0 0;
+                    text-transform: uppercase;
+  
+                    a {
+                      margin-right: 0.2em;
                     }
                   }
                 }
-
-                .series-item-title {
-                  font-size: 1em;
-
-                  &.multimedia-title {
-                    width: 85%;
-                  }
-                }
-
-                .authors {
-                  font-size: 0.8em;
-                  margin: 1em 0 0;
-                  text-transform: uppercase;
-
-                  a {
-                    margin-right: 0.2em;
-                  }
-                }
-              }
+              }  
             }
           }
         }
