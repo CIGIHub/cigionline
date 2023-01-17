@@ -68,6 +68,12 @@
       @include media-breakpoint-up(md) {
         width: 16.66666%;
       }
+
+      li {
+        &::after {
+          color: $cigi-medium-grey;
+        }
+      }
     }
 
     .search-table__results__row__topics {

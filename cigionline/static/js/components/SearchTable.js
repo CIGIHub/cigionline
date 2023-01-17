@@ -932,9 +932,9 @@ class SearchTable extends React.Component {
     } = this.props;
     return (
       <div className="search-table__filters">
-        <div className="row">
+        <div className="search-table__filters__row">
           {showExpertDropDown && (
-            <div className="col">
+            <div className="search-table__filters__col">
               <div className="dropdown custom-dropdown keep-open">
                 <button
                   className="search-table__filters__dropdown-toggle"
@@ -991,14 +991,14 @@ class SearchTable extends React.Component {
                                   this.handleExpertSelect(e, expert.id)
                                 }
                               />
-                              <span />
-                              {expert.title}
-                              &nbsp;
-                              {aggregations.experts[expert.id] ? (
-                                <>({aggregations.experts[expert.id]})</>
-                              ) : (
-                                <>(0)</>
-                              )}
+                              <span>{expert.title}</span>
+                              <span className="dropdown-item__count">
+                                {aggregations.experts[expert.id] ? (
+                                  <>{aggregations.experts[expert.id]}</>
+                                ) : (
+                                  <>0</>
+                                )}
+                              </span>
                             </label>
                           </li>
                         ))}
@@ -1022,7 +1022,7 @@ class SearchTable extends React.Component {
             </div>
           )}
           {!hideTopicDropdown && (
-            <div className="col">
+            <div className="search-table__filters__col">
               <div className="dropdown custom-dropdown dropdown-topics keep-open">
                 <button
                   className="search-table__filters__dropdown-toggle"
@@ -1071,14 +1071,14 @@ class SearchTable extends React.Component {
                                   this.handleTopicSelect(e, topic.id)
                                 }
                               />
-                              <span />
-                              {topic.title}
-                              &nbsp;
-                              {aggregations.topics[topic.id] ? (
-                                <>({aggregations.topics[topic.id]})</>
-                              ) : (
-                                <>(0)</>
-                              )}
+                              <span>{topic.title}</span>
+                              <span className="dropdown-item__count">
+                                {aggregations.topics[topic.id] ? (
+                                  <>{aggregations.topics[topic.id]}</>
+                                ) : (
+                                  <>0</>
+                                )}
+                              </span>
                             </label>
                           </li>
                         ))}
@@ -1102,7 +1102,7 @@ class SearchTable extends React.Component {
             </div>
           )}
           {!loadingTypes && filterTypes.length > 0 && (
-            <div className="col">
+            <div className="search-table__filters__col">
               <div className="dropdown custom-dropdown keep-open">
                 <button
                   className="search-table__filters__dropdown-toggle"
@@ -1153,14 +1153,14 @@ class SearchTable extends React.Component {
                                     : ''
                                 }
                               />
-                              <span />
-                              {type.name}
-                              &nbsp;
-                              {this.getAggregationCount(type) ? (
-                                <>({this.getAggregationCount(type)})</>
-                              ) : (
-                                <>(0)</>
-                              )}
+                              <span>{type.name}</span>
+                              <span>
+                                {this.getAggregationCount(type) ? (
+                                  <>({this.getAggregationCount(type)})</>
+                                ) : (
+                                  <>(0)</>
+                                )}
+                              </span>
                             </label>
                             {this.getSubTypes(type.name) &&
                               this.getSubTypes(type.name).length > 0 && (
@@ -1200,20 +1200,22 @@ class SearchTable extends React.Component {
                                             }
                                             className={`${type.name} ${type.name}_${subtype.name}`}
                                           />
-                                          <span />
-                                          {subtype.name}
-                                          &nbsp;
-                                          {this.getAggregationCount(subtype) ? (
-                                            <>
-                                              (
-                                              {this.getAggregationCount(
-                                                subtype
-                                              )}
-                                              )
-                                            </>
-                                          ) : (
-                                            <>(0)</>
-                                          )}
+                                          <span>{subtype.name}</span>
+                                          <span>
+                                            {this.getAggregationCount(
+                                              subtype
+                                            ) ? (
+                                              <>
+                                                (
+                                                {this.getAggregationCount(
+                                                  subtype
+                                                )}
+                                                )
+                                              </>
+                                            ) : (
+                                              <>(0)</>
+                                            )}
+                                          </span>
                                         </label>
                                       </li>
                                     )
@@ -1230,7 +1232,7 @@ class SearchTable extends React.Component {
               </div>
             </div>
           )}
-          <div className="col col-md-2">
+          <div className="search-table__filters__col search-table__filters__col-year">
             <div className="dropdown custom-dropdown keep-open">
               <button
                 className="search-table__filters__dropdown-toggle"
@@ -1264,14 +1266,14 @@ class SearchTable extends React.Component {
                             }
                             onChange={(e) => this.handleYearSelect(e, year)}
                           />
-                          <span />
-                          {year}
-                          &nbsp;
-                          {aggregations.years[year] ? (
-                            <>({aggregations.years[year]})</>
-                          ) : (
-                            <>(0)</>
-                          )}
+                          <span>{year}</span>
+                          <span className="dropdown-item__count">
+                            {aggregations.years[year] ? (
+                              <>{aggregations.years[year]}</>
+                            ) : (
+                              <>0</>
+                            )}
+                          </span>
                         </label>
                       </li>
                     ))}
@@ -1400,14 +1402,14 @@ class SearchTable extends React.Component {
                                   this.handleExpertSelect(e, expert.id)
                                 }
                               />
-                              <span />
-                              {expert.title}
-                              &nbsp;
-                              {aggregations.experts[expert.id] ? (
-                                <>({aggregations.experts[expert.id]})</>
-                              ) : (
-                                <>(0)</>
-                              )}
+                              <span>{expert.title}</span>
+                              <span className="dropdown-item__count">
+                                {aggregations.experts[expert.id] ? (
+                                  <>{aggregations.experts[expert.id]}</>
+                                ) : (
+                                  <>0</>
+                                )}
+                              </span>
                             </label>
                           </li>
                         ))}
@@ -1493,14 +1495,14 @@ class SearchTable extends React.Component {
                                   this.handleTopicSelect(e, topic.id)
                                 }
                               />
-                              <span />
-                              {topic.title}
-                              &nbsp;
-                              {aggregations.topics[topic.id] ? (
-                                <>({aggregations.topics[topic.id]})</>
-                              ) : (
-                                <>(0)</>
-                              )}
+                              <span>{topic.title}</span>
+                              <span className="dropdown-item__count">
+                                {aggregations.topics[topic.id] ? (
+                                  <>{aggregations.topics[topic.id]}</>
+                                ) : (
+                                  <>0</>
+                                )}
+                              </span>
                             </label>
                           </li>
                         ))}
@@ -1573,14 +1575,14 @@ class SearchTable extends React.Component {
                                     : ''
                                 }
                               />
-                              <span />
-                              {type.name}
-                              &nbsp;
-                              {this.getAggregationCount(type) ? (
-                                <>({this.getAggregationCount(type)})</>
-                              ) : (
-                                <>(0)</>
-                              )}
+                              <span>{type.name}</span>
+                              <span>
+                                {this.getAggregationCount(type) ? (
+                                  <>({this.getAggregationCount(type)})</>
+                                ) : (
+                                  <>(0)</>
+                                )}
+                              </span>
                             </label>
                             {this.getSubTypes(type.name) &&
                               this.getSubTypes(type.name).length > 0 && (
@@ -1620,20 +1622,22 @@ class SearchTable extends React.Component {
                                             }
                                             className={`${type.name} ${type.name}_${subtype.name}`}
                                           />
-                                          <span />
-                                          {subtype.name}
-                                          &nbsp;
-                                          {this.getAggregationCount(subtype) ? (
-                                            <>
-                                              (
-                                              {this.getAggregationCount(
-                                                subtype
-                                              )}
-                                              )
-                                            </>
-                                          ) : (
-                                            <>(0)</>
-                                          )}
+                                          <span>{subtype.name}</span>
+                                          <span>
+                                            {this.getAggregationCount(
+                                              subtype
+                                            ) ? (
+                                              <>
+                                                (
+                                                {this.getAggregationCount(
+                                                  subtype
+                                                )}
+                                                )
+                                              </>
+                                            ) : (
+                                              <>(0)</>
+                                            )}
+                                          </span>
                                         </label>
                                       </li>
                                     )
@@ -1680,14 +1684,14 @@ class SearchTable extends React.Component {
                             }
                             onChange={(e) => this.handleYearSelect(e, year)}
                           />
-                          <span />
-                          {year}
-                          &nbsp;
-                          {aggregations.years[year] ? (
-                            <>({aggregations.years[year]})</>
-                          ) : (
-                            <>(0)</>
-                          )}
+                          <span>{year}</span>
+                          <span className="dropdown-item__count">
+                            {aggregations.years[year] ? (
+                              <>{aggregations.years[year]}</>
+                            ) : (
+                              <>0</>
+                            )}
+                          </span>
                         </label>
                       </li>
                     ))}
