@@ -198,6 +198,10 @@ article {
         .card__text__title {
           font-size: clamp(1.1em, 3vw, 1.5em);
         }
+
+        .card__text__description {
+          color: $cigi-text-grey;
+        }
       }
     }
 
