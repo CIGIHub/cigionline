@@ -54,6 +54,41 @@
     }
   }
 
+  &.card--large__article-series {
+    @include media-breakpoint-up(lg) {
+      justify-content: space-between;
+    }
+    display: flex;
+
+    div[class*='col'] {
+      border: 0 !important;
+    }
+
+    .card__image {
+      @include media-breakpoint-up(md) {
+        padding: 0 4em 1em;
+      }
+      @include media-breakpoint-up(lg) {
+        padding: 0 6em 1em;
+      }
+      @include media-breakpoint-up(xl) {
+        padding: 0 8em 1em;
+      }
+      padding: 0 3em;
+    }
+
+    .card__text {
+      .card__text__title {
+        font-size: clamp(1.25em, 3vw, 2.4em);
+        letter-spacing: -0.5px;
+      }
+
+      .card__text__description {
+        color: $cigi-text-grey;
+      }
+    }
+  }
+
   &.card--large__multimedia {
     @include media-breakpoint-only(md) {
       flex-direction: row-reverse;
