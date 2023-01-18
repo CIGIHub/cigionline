@@ -159,7 +159,9 @@
     <div class="container">
       <div class="row justify-content-between justify-content-md-start">
         <div class="col-4 col-md-2 col-lg-1">
-          <a href="{{ self.article_series.url }}"><h2>IN THE SERIES</h2></a>
+          <a href="{{ self.article_series.url }}">
+            <h2>{{ self.article_series.title }}</h2>
+          </a>
         </div>
         <i class="fas fa-plus in-the-series-expand" id="in-the-series-expand-sticky"></i>
         <div class="col-md-9 col-lg-9 offset-lg-1">

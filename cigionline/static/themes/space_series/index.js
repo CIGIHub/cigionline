@@ -110,7 +110,7 @@ if (pageType === 'article' || pageType === 'multimedia') {
       stickyInTheSeries.classList.add('sticky');
     });
     document.addEventListener('scroll', () => {
-      if (window.scrollY > (heroHeight - 50)) {
+      if (window.scrollY > (heroHeight)) {
         stickyInTheSeries.classList.remove('hidden');
         stickyInTheSeries.classList.add('sticky');
         heroInTheSeries.classList.add('hidden');
