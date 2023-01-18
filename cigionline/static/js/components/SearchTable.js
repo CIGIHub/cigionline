@@ -604,7 +604,7 @@ class SearchTable extends React.Component {
     const targetMenu = targetButton.nextSibling;
     const siblings = Array.from(
       targetButton.parentNode.parentNode.querySelectorAll('.dropdown')
-    ).filter((s) => s !== targetMenu);
+    ).filter((s) => s !== targetMenu.parentNode);
     for (let i = 0; i < siblings.length; i += 1) {
       siblings[i].querySelector('.dropdown-menu').classList.remove('show');
     }
