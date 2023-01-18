@@ -9,27 +9,77 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section class="highlighted-topics">
+  <section class="hero">
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div class="highlighted-topics-container">
-            <h2>RESEARCH TOPICS</h2>
-            {% highlighted_topics %}
+          <div class="hero__content">
+            <div class="hero__title">
+              <i class="fal fa-file-alt"></i>
+              <h1>{{ self.title }}</h1>
+            </div>
+            <p>{{ self.subtitle|richtext }}</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-  {% include "includes/body.html" with body=self.body %}
-  <section>
+  <section class="highlighted-topics">
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div id="research-search-table">
+          <div class="highlighted-topics-container">
+            <h2>Research Topics</h2>
+            <div id="topics-container" data-tree="{{ self.topics_data }}">
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+  <section class="featured-publications" id="featured-publications">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="featured-publications-container">
+            <h2>Featured Publications</h2>
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                {% for block in self.featured_publications %}
+                  <div class="swiper-slide">
+                    {% include_block block.value %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="body">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="body__title">
+            A Think Tank for the Digital Era
+          </div>
+        </div>
+        <div class="col-lg-7 offset-lg-1">
+          <div class="body__content">
+            {% for block in self.body %}
+              {{ block.value|richtext }}
+            {% endfor %}
+          </div>
+        </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div id="research-search-table">
       </div>
     </div>
   </section>

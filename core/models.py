@@ -158,6 +158,12 @@ class BasicPageAbstract(models.Model):
         if self.image_hero:
             return self.image_hero.get_rendition('fill-520x390').url
         return ''
+    
+    @property
+    def image_poster_url(self):
+        if self.specific.image_poster:
+            return self.specific.image_poster.get_rendition('fill-360x720').url
+        return ''
 
     @property
     def word_count(self):
