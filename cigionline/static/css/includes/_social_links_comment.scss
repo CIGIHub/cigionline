@@ -1,0 +1,15 @@
+.social-share-list-comment {
+  @include link($color: $white, $hover-color: $cigi-primary-colour);
+  display: flex;
+  list-style: none;
+  padding-top: 1em;
+
+  li {
+    display: inline-block;
+    margin-right: 0.3em;
+
+    .fa-comment-alt {
+      padding-top: 0.1em;
+    }
+  }
+}

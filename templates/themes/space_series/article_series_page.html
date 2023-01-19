@@ -52,6 +52,7 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="title">{{ self.title }}</div>
+            {% include "includes/social_links_comment.html" with title=self.title %}
             <div class="subtitle">{{ self.subtitle|richtext }}</div>
           </div>
           <div class="col-lg-6">

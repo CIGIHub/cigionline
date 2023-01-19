@@ -23,7 +23,45 @@ body {
           font-size: calc(3vw + 1em);
           font-weight: 600;
           line-height: 1;
-          padding-bottom: 1em;
+        }
+
+        .social-share-list-comment {
+          @include media-breakpoint-up(md) {
+            padding-top: 1em;
+          }
+          padding-top: 0;
+
+          .fa-stack {
+            @include media-breakpoint-up(md) {
+              width: 2em;
+            }
+            @include media-breakpoint-up(lg) {
+              width: 2.5em;
+            }
+            display: flex;
+            align-items: center;
+            width: 1.5em;
+
+            .fab {
+              @include media-breakpoint-up(md) {
+                font-size: 0.8rem;
+              }
+              @include media-breakpoint-up(lg) {
+                font-size: 1rem;
+              }
+              font-size: 0.6rem;
+            }
+
+            .fa-comment-alt {
+              @include media-breakpoint-up(md) {
+                font-size: 1.6em;
+              }
+              @include media-breakpoint-up(lg) {
+                font-size: 2em;
+              }
+              font-size: 1.2em;
+            }
+          }
         }
 
         .subtitle {

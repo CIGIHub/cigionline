@@ -23,6 +23,7 @@
       <div class="row justify-content-center align-items-lg-center">
         <div class="col-md-6 col-lg-4 hero-content">
           <div>
+            {% include "includes/social_links_comment.html" with title=self.title %}
             <h1>{{ self.title }}</h1>
             {{ self.subtitle|richtext }}
             {% include "includes/authors.html" with authors=self.authors.all %}
