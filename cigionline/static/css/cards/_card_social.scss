@@ -29,13 +29,13 @@
       margin-bottom: 2em;
 
       h6 {
-        color: $social-media-black;
+        color: $cigi-text-black;
         font-size: 15px;
         margin-bottom: 0;
       }
 
       .profile--handle {
-        color: $social-media-medium-grey;
+        color: $cigi-medium-text-grey;
         font-size: 12px;
         margin-bottom: 0;
       }
@@ -57,7 +57,7 @@
       line-height: 1.25;
 
       a {
-        color: $social-media-black;
+        color: $cigi-text-black;
       }
 
       a:hover {
@@ -70,7 +70,7 @@
         margin-bottom: 0;
 
         a {
-          color: $social-media-medium-grey;
+          color: $cigi-medium-text-grey;
           font-size: 12px;
         }
 
@@ -80,13 +80,13 @@
       }
 
       .image--caption {
-        color: $social-media-black;
+        color: $cigi-text-black;
         margin-bottom: 0;
       }
     }
 
     .social--media__status--bar {
-      color: $social-media-light-grey;
+      color: $cigi-text-grey-dark;
       display: flex;
       font-size: 15px;
       justify-content: space-between;

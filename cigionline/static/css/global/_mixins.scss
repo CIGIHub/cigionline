@@ -386,3 +386,24 @@
     }
   }
 }
+
+@mixin dark-footer {
+  footer {
+    .footer__subscribe {
+      border-bottom: 1px solid $border-grey-dark;
+      border-top: 1px solid $border-grey-dark;
+
+      input[type='email'],
+      textarea {
+        background-color: $background-dark;
+        -webkit-box-shadow: 0 0 0 30px $background-dark inset;
+      }
+    }
+  }
+}
+
+@mixin dark-theme {
+  background-color: $background-dark;
+  color: $cigi-text-grey-dark;
+  @include dark-footer;
+}
