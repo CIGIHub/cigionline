@@ -68,7 +68,9 @@ const breakpointChecker = function() {
       if (swipers[swiper] !== undefined) swipers[swiper].destroy(true, true);
     }
   } else if (breakpoint.matches === false) {
-    enableSwiper(pageType);
+    if (pageType !== 'article series') {
+      enableSwiper(pageType);
+    }
   }
 };
 
