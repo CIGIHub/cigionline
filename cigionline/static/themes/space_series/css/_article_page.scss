@@ -138,6 +138,10 @@
                   opacity: 0;
                 }
               }
+
+              &:first-child {
+                border: 0;
+              }
             }
           }
         }
@@ -245,6 +249,8 @@
       position: relative;
 
       .swiper-container {
+        padding-left: 1px;
+        
         .swiper-wrapper {
           @include media-breakpoint-down(sm) {
             flex-direction: column;
@@ -274,11 +280,8 @@
           }
         }
 
-        &:last-child {
-          @include media-breakpoint-up(lg) {
-            border-bottom: 0;
-            border-right: 1px solid $cigi-text-grey;
-          }
+        &:first-child {
+          border-left: 1px solid $cigi-text-grey;
         }
 
         .series-item-image {
