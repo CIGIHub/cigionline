@@ -50,6 +50,12 @@
     font-family: $space-series-font-secondary;
   }
 
+  .in-the-series {
+    .authors {
+      @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+    }
+  }
+
   .space-series-article-hero {
     @include media-breakpoint-down(md) {
       padding-top: 6em;
@@ -125,6 +131,8 @@
               border: 0;
 
               .series-item-content {
+                padding-top: 0.5em;
+
                 h3,
                 .authors {
                   opacity: 0;
@@ -136,7 +144,8 @@
 
         .swiper-button {
           height: 50%;
-          --swiper-navigation-size: 30px;
+          padding-top: 0.6em;
+          --swiper-navigation-size: 20px;
 
           &::before {
             bottom: 0;

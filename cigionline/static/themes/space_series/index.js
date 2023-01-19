@@ -18,7 +18,7 @@ const swipers = {};
 
 const enableSwiper = function(articleType) {
   const slidesPerViewMd = 4;
-  const slidesPerViewLg = articleType === 'article series' ? 1 : 6;
+  const slidesPerViewLg = articleType === 'article series' ? 1 : 5;
   const slidesPerViewXl = articleType === 'article series' ? 1 : 6;
   let swiperIds;
   if (articleType === 'article series') {
@@ -110,11 +110,11 @@ if (pageType === 'article' || pageType === 'multimedia') {
       stickyInTheSeries.classList.add('sticky');
     });
     document.addEventListener('scroll', () => {
-      if (window.scrollY > (heroHeight)) {
+      if (window.scrollY > (heroHeight - 50)) {
         stickyInTheSeries.classList.remove('hidden');
         stickyInTheSeries.classList.add('sticky');
         heroInTheSeries.classList.add('hidden');
-        body.style.marginTop = '200px';
+        body.style.marginTop = '80px';
         header.classList.add('dark');
       } else {
         stickyInTheSeries.classList.add('hidden');

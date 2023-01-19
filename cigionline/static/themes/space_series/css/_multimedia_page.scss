@@ -32,6 +32,8 @@
               border: 0;
 
               .series-item-content {
+                padding-top: 0.5em;
+
                 h3,
                 .authors {
                   opacity: 0;
@@ -43,7 +45,8 @@
 
         .swiper-button {
           height: 50%;
-          --swiper-navigation-size: 30px;
+          padding-top: 0.6em;
+          --swiper-navigation-size: 20px;
 
           &::before {
             bottom: 0;
