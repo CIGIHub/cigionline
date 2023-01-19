@@ -48,53 +48,100 @@
     {% include "includes/heroes/hero_multimedia.html" %}
   {% endblock %}
 
-  {% if self.from_the_archives and self.from_the_archives_blurb %}
-    {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
-  {% endif %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <section class="multimedia-page__meta">
+          <h1>{{ self.title }}</h1>
+          <div>{{ self.publishing_date }}</div>
 
-  {% if self.article_series_description %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <div class="article-series-description">
-            {{self.article_series_description|richtext}}
+          <div class="multimedia-page__meta__speakers">
+            {% for speaker in self.speakers.all %}
+              <div class="multimedia-page__meta__speakers__speaker">
+                {% image speaker.image_square fill-100x100 %}
+                <a href="{{ speaker.url }}">{{ speaker.title }}</a>
+              </div>
+            {% endfor %}
           </div>
-        </div>
+
+          <div class="multimedia-page__meta__topics">
+            {% for topic in self.topics_sorted %}
+              <a href="{{ topic.url }}">
+                <button>{{ topic.title }}</button>
+              </a>  
+            {% endfor %}
+          </div>
+
+          <div class="multimedia-page__meta__social">
+            <a>
+              <i class="fab fa-twitter"></i>
+              Share on Twitter
+            </a>
+            <a>
+              <i class="fab fa-linked-in"></i>
+              Share on Linkedin
+            </a>
+            <a>
+              <i class="fab fa-facebook-f"></i>
+              Share on Facebook
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-lg-8">
+        <section class="body">
+          {% if self.from_the_archives and self.from_the_archives_blurb %}
+            <div class="from-the-archives-blurb">
+              {{ self.from_the_archives_blurb }}
+            </div>
+          {% endif %}
+          {% if self.article_series_description %}
+            <div class="article-series-description">
+              {{self.article_series_description|richtext}}
+            </div>
+          {% endif %}
+          <div class="body__content">
+            {% for block in self.body %}
+              {{ block.value|richtext }}
+            {% endfor %}
+          </div>
+        </section>
+
+        {% if self.transcript %}
+          <section>
+            {% for block in self.transcript %}
+              {% include_block block with id=block.id %}
+            {% endfor %}
+          </section>
+        {% endif %}
+
+        {% if self.multimedia_series %}
+          <section class="multimedia-series-block">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col col-md-10 col-lg-8">
+                  <article>
+                    <h2>
+                      Series:
+                      <a href="{{self.multimedia_series.url}}">
+                        {{ self.multimedia_series.title }}
+                      </a>
+                    </h2>
+                    <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+        {% endif %}
+
+        {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
       </div>
     </div>
-  {% endif %}
+  </div>
 
-  {% include "includes/body.html" with body=self.body %}
 
-  {% if self.transcript %}
-    <section>
-      {% for block in self.transcript %}
-        {% include_block block with id=block.id %}
-      {% endfor %}
-    </section>
-  {% endif %}
-
-  {% if self.multimedia_series %}
-    <section class="multimedia-series-block">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <article>
-              <h2>
-                Series:
-                <a href="{{self.multimedia_series.url}}">
-                  {{ self.multimedia_series.title }}
-                </a>
-              </h2>
-              <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
 
   {% block recommended %}
     {% if request.is_preview and self.recommended_content_preview %}

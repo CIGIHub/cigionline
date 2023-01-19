@@ -1,18 +1,12 @@
 {% load wagtailcore_tags %}
 
-<div class="container">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      <div class="stream-accordion-block">
-        <button type="button" data-toggle="collapse" data-target="#accordion-block-{{ id }}" aria-expanded="false" aria-controls="accordion-block-{{ id }}">
-          {{ self.title }}
-        </button>
-        <div class="collapse" id="accordion-block-{{ id }}">
-          <div class="card card-body">
-            {{ self.text|richtext }}
-          </div>
-        </div>
-      </div>
+<div class="stream-accordion-block">
+  <button type="button" data-toggle="collapse" data-target="#accordion-block-{{ id }}" aria-expanded="false" aria-controls="accordion-block-{{ id }}">
+    {{ self.title }}
+  </button>
+  <div class="collapse" id="accordion-block-{{ id }}">
+    <div class="card card-body">
+      {{ self.text|richtext }}
     </div>
   </div>
 </div>
