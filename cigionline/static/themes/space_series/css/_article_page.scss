@@ -152,7 +152,7 @@
   }
 
   .in-the-series {
-    padding: 0.5em 0;
+    padding: 2em 0;
     z-index: 1;
 
     &.hidden {
@@ -162,6 +162,8 @@
     }
 
     &.sticky {
+      padding: 0.5em 0;
+      
       .swiper {
         .swiper-container {
           .swiper-wrapper {
