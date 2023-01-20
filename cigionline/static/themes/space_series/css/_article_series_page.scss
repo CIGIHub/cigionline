@@ -72,17 +72,11 @@ body {
         position: relative;
 
         .swiper-container-series {
-          @include media-breakpoint-down(md) {
-            padding: 0;
-          }
           overflow: hidden;
-          padding: 0.5em 0;
+          padding: 0;
 
           .swiper-container-series-content {
-            @include media-breakpoint-down(md) {
-              padding: 0;
-            }
-            padding: 1em 0;
+            padding: 0;
 
             .swiper-wrapper {
               flex-direction: column;
@@ -90,7 +84,7 @@ body {
               .category-title {
                 border-bottom: 1px solid $cigi-text-grey;
                 font-weight: 600;
-                padding-top: 2em;
+                padding-top: 4.5em;
               }
             }
           }
@@ -106,6 +100,10 @@ body {
 
           &:first-child {
             border-top: 0;
+
+            .category-title {
+              padding-top: 2.5em !important;
+            }
           }
 
           &:last-child {
