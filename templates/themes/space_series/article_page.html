@@ -23,7 +23,28 @@
       <div class="row justify-content-center align-items-lg-center">
         <div class="col-md-5 col-lg-4 hero-content">
           <div>
-            {% include "includes/social_links_comment.html" with title=self.title %}
+            <ul class="social-share-list-space">
+              <li class="facebook">
+                <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
+                  rel="noopener noreferrer">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+              </li>
+              <li class="twitter">
+                <a class="twitter-share-link"
+                  href="https://twitter.com/share?text={{ title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
+                  target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              </li>
+              <li class="linkedin">
+                <a class="linkedin-share-link"
+                  href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{ self.title|social_string }}"
+                  target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+              </li>
+            </ul>
             <h1>{{ self.title }}</h1>
             {{ self.subtitle|richtext }}
             {% include "includes/authors.html" with authors=self.authors.all %}
