@@ -1,15 +1,24 @@
 .space-series-multimedia {
+  header {
+    background-color: $space-series-background-colour;
+  }
+
   &.no-scroll {
     overflow: hidden;
   }
 
   .mm-hero {
+    background-color: $space-series-background-colour;
     margin-bottom: 0;
+
+    .mm-video-header {
+      background-color: $space-series-background-colour !important;
+    }
   }
 
   .in-the-series {
     @include link($color: $white, $hover-color: $cigi-primary-colour);
-    background-color: $black;
+    background-color: $space-series-background-colour;
     color: $white;
     font-family: $space-series-font-secondary;
     margin-bottom: 4em;
