@@ -66,6 +66,12 @@ img {
   line-break: anywhere;
   border-radius: 20px;
   width: 100%;
+
+  &.image--circle--tiny {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+  }
 }
 
 //LAYOUTS

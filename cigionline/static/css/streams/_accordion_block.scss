@@ -10,8 +10,7 @@
     font-size: 12px;
     font-weight: 500;
     justify-content: space-between;
-    padding: 1em 0;
-    text-transform: uppercase;
+    padding: 1.5em 0;
     width: 100%;
 
     &:hover {
@@ -39,7 +38,7 @@
     }
   }
 
-  .card {
+  .accordion-content {
     border: 0;
   }
 }
