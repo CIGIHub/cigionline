@@ -9,6 +9,7 @@
 
   .mm-hero {
     background-color: $space-series-background-colour;
+    padding-bottom: 0;
     margin-bottom: 0;
 
     .mm-video-header {
@@ -131,9 +132,6 @@
     }
 
     h2 {
-      @include media-breakpoint-up(lg) {
-        font-size: 1em;
-      }
       font-family: $space-series-font-primary;
       font-size: 0.75em;
       font-weight: 600;

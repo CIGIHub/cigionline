@@ -1,6 +1,9 @@
 {% extends "multimedia/multimedia_page.html" %}
 {% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/rwn6tvm.css">
+{% endblock %}
 {% block theme_css %}
   {% render_bundle 'themeSpaceSeries' 'css' %}
 {% endblock %}
