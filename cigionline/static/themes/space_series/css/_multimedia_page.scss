@@ -131,14 +131,24 @@
       }
     }
 
+    .in-the-series-label {
+      @include media-breakpoint-up(md) {
+        margin-top: 0.5em;
+      }
+      color: $cigi-medium-grey;
+    }
+
     h2 {
       font-family: $space-series-font-primary;
-      font-size: 0.75em;
+      font-size: clamp(1em, 3vw, 1.17em);
       font-weight: 600;
     }
 
     .authors {
-      @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+      @include link(
+        $color: $cigi-text-grey,
+        $hover-color: $cigi-primary-colour
+      );
     }
 
     .in-the-series-expand {
@@ -186,6 +196,14 @@
                     background-color: $cigi-text-grey;
                   }
                 }
+
+                .play-icon {
+                  color: $cigi-text-grey;
+
+                  .outer-circle {
+                    border-color: $cigi-text-grey;
+                  }
+                }
               }
             }
           }
@@ -223,6 +241,8 @@
 
           .series-item-counter {
             display: flex;
+            font-family: $space-series-font-primary;
+            font-weight: 600;
 
             span {
               &:first-child {
@@ -232,7 +252,7 @@
 
                 &::before {
                   background-color: $white;
-                  bottom: 9px;
+                  bottom: 6px;
                   content: '';
                   height: 5px;
                   position: absolute;
