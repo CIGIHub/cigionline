@@ -52,7 +52,10 @@
 
   .in-the-series {
     .authors {
-      @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+      @include link(
+        $color: $cigi-text-grey,
+        $hover-color: $cigi-primary-colour
+      );
     }
   }
 
@@ -256,9 +259,16 @@
       }
     }
 
+    .in-the-series-label {
+      @include media-breakpoint-up(md) {
+        margin-top: 0.5em;
+      }
+      color: $cigi-medium-grey;
+    }
+
     h2 {
       font-family: $space-series-font-primary;
-      font-size: 0.75em;
+      font-size: clamp(1em, 3vw, 1.17em);
       font-weight: 600;
     }
 
@@ -462,7 +472,10 @@
   }
 
   .body {
-    @include link($color: $black !important, $hover-color: $cigi-dark-pink !important);
+    @include link(
+      $color: $black !important,
+      $hover-color: $cigi-dark-pink !important
+    );
     margin-top: 2em;
 
     h2 {
@@ -513,7 +526,10 @@
 
   .article-footnotes,
   .article-works-cited {
-    @include link($color: $black !important, $hover-color: $cigi-dark-pink !important);
+    @include link(
+      $color: $black !important,
+      $hover-color: $cigi-dark-pink !important
+    );
 
     a {
       font-size: 1em !important;
