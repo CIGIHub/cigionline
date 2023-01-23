@@ -149,7 +149,29 @@
       </div>
     </div>
   </section>
-{% endblock %}
-
-{% block footer %}
+  {% if self.credits or self.credits_stream_field %}
+    <section class="credits">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Credits</h2>
+            <div class="credits-content">
+              {% if self.credits_stream_field %}
+                {% for title in self.credits_stream_field %}
+                  <div class="title-container">
+                    <div class="title">{{ title.value.title }}</div>
+                    {% for person in title.value.people %}
+                      <div class="name">{{ person }}</div>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                {{ self.credits|richtext }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}
