@@ -105,11 +105,15 @@ if (pageType === 'article' || pageType === 'multimedia') {
 
   if (pageType === 'article') {
     const stickyInTheSeries = document.getElementById('sticky-in-the-series');
-    stickyInTheSeries.addEventListener('mouseenter', () => {
-      stickyInTheSeries.classList.remove('sticky');
+    header.addEventListener('mouseenter', () => {
+      if (!stickyInTheSeries.classList.contains('hidden')) {
+        stickyInTheSeries.classList.remove('sticky');
+      }
     });
-    stickyInTheSeries.addEventListener('mouseleave', () => {
-      stickyInTheSeries.classList.add('sticky');
+    header.addEventListener('mouseleave', () => {
+      if (!stickyInTheSeries.classList.contains('hidden')) {
+        stickyInTheSeries.classList.add('sticky');
+      }
     });
     document.addEventListener('scroll', () => {
       if (window.scrollY > (heroHeight - 50)) {
