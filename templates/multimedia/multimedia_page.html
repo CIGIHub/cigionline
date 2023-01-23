@@ -170,18 +170,13 @@
 {% if recommended_content %}
 <section class="recommended">
   <div class="container">
+    <h2>Recommended</h2>
     <div class="row justify-content-center">
-      <div class="col col-md-10 col-lg-8">
-        <div class="flex-column align-items-center">
-          <div class="recommended-dot"></div>
-          <div class="recommended-vertical-line"></div>
-          <h2>Recommended</h2>
-          {% include "includes/footer_bracket.svg" %}
+      {% for page in recommended_content|slice:":3" %}
+        <div class="col">
+          {% include "includes/recommended_article.html" with article=page.specific %}
         </div>
-        {% for page in recommended_content|slice:":3" %}
-        {% include "includes/recommended_article.html" with article=page.specific %}
-        {% endfor %}
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
