@@ -83,28 +83,28 @@ if (pageType === 'article' || pageType === 'multimedia') {
   const hero = document.querySelector('.space-series-article-hero') || document.querySelector('.mm-hero');
   const heroHeight = hero.offsetHeight;
 
-  const expandButtons = document.querySelectorAll('.in-the-series-expand');
   const body = document.querySelector('body');
   const header = document.querySelector('header');
-  expandButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      heroInTheSeries.classList.toggle('expanded');
-      button.classList.toggle('expanded');
-      body.classList.toggle('no-scroll');
-      if (heroInTheSeries.classList.contains('expanded') && !header.classList.contains('dark')) {
-        header.classList.add('dark');
-      } else if (window.scrollY < (heroHeight - 50)) {
-        header.classList.remove('dark');
-      }
-
-      if (button.id === 'in-the-series-expand-sticky') {
-        heroInTheSeries.classList.toggle('hidden');
-      }
-    });
-  });
 
   if (pageType === 'article') {
     const stickyInTheSeries = document.getElementById('sticky-in-the-series');
+    const $expandButtons = $('.in-the-series-expand');
+    const dropdown = document.getElementById('dropdown-in-the-series');
+
+    $expandButtons.on('click', function() {
+      $expandButtons.toggleClass('expanded');
+      dropdown.classList.toggle('open');
+      if (dropdown.classList.contains('open')) {
+        body.classList.add('disable-scroll');
+        header.classList.add('dark');
+      } else {
+        body.classList.remove('disable-scroll');
+        if (!stickyInTheSeries.classList.contains('sticky')) {
+          header.classList.remove('dark');
+        }
+      }
+    });
+
     header.addEventListener('mouseenter', () => {
       if (!stickyInTheSeries.classList.contains('hidden')) {
         stickyInTheSeries.classList.remove('sticky');
@@ -120,11 +120,13 @@ if (pageType === 'article' || pageType === 'multimedia') {
         stickyInTheSeries.classList.remove('hidden');
         stickyInTheSeries.classList.add('sticky');
         heroInTheSeries.classList.add('hidden');
+        heroInTheSeries.style.display = 'none';
         body.style.marginTop = '80px';
         header.classList.add('dark');
       } else {
         stickyInTheSeries.classList.add('hidden');
         heroInTheSeries.classList.remove('hidden');
+        heroInTheSeries.style.display = 'block';
         body.style.marginTop = '0';
         header.classList.remove('dark');
       }

@@ -21,7 +21,7 @@
   <section class="space-series-article-hero">
     <div class="container">
       <div class="row justify-content-center align-items-lg-center">
-        <div class="col-md-5 col-lg-4 hero-content">
+        <div class="col-md-6 col-lg-4 hero-content">
           <div>
             <ul class="social-share-list-space">
               <li class="facebook">
@@ -51,7 +51,7 @@
             {% include "includes/date.html" with date=self.publishing_date %}
           </div>
         </div>
-        <div class="col-md-6 col-lg-7 offset-md-1 hero-image">
+        <div class="col-md-6 col-lg-7 offset-lg-1 hero-image">
           {% if self.image_hero %}
             {% if self.image_hero.file.url|file_extension == '.gif' %}
               <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
@@ -65,7 +65,7 @@
   </section>
   <section class="in-the-series" id="hero-in-the-series">
     <div class="container">
-      <div class="row justify-content-between justify-content-md-start">
+      <div class="row justify-content-between justify-content-md-start series-title">
         <div class="col-6 col-md-3">
           <div class="in-the-series-label">
             A CIGI Essay Series
@@ -74,7 +74,11 @@
             <h2>{{ self.article_series.title }}</h2>
           </a>
         </div>
-        <i class="fas fa-plus in-the-series-expand"></i>
+        <div class="col-2">
+          <button type="button">
+            <i class="fas fa-plus in-the-series-expand"></i>
+          </button>
+        </div>
         <div class="col-md-8 offset-md-1">
           <div class="swiper">
             <div class="swiper-container swiper-container-hero">

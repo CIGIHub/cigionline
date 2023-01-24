@@ -18,7 +18,7 @@
     {% include "includes/heroes/hero_multimedia.html" %}
     <section class="in-the-series" id="hero-in-the-series">
       <div class="container">
-        <div class="row justify-content-between justify-content-md-start">
+        <div class="row justify-content-between justify-content-md-start series-title">
           <div class="col-6 col-md-3">
             <div class="in-the-series-label">
               A CIGI Essay Series
@@ -27,7 +27,11 @@
               <h2>{{ self.article_series.title }}</h2>
             </a>
           </div>
-          <i class="fas fa-plus in-the-series-expand"></i>
+          <div class="col-2">
+            <button type="button">
+              <i class="fas fa-plus in-the-series-expand"></i>
+            </button>
+          </div>
           <div class="col-md-8 offset-md-1">
             <div class="swiper">
               <div class="swiper-container swiper-container-hero">
