@@ -107,6 +107,15 @@ if (pageType === 'article' || pageType === 'multimedia') {
     }
   });
 
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 767) {
+      $expandButtons.removeClass('expanded');
+      dropdown.classList.remove('open');
+      body.classList.remove('disable-scroll');
+      header.classList.remove('dark');
+    }
+  });
+
   header.addEventListener('mouseenter', () => {
     if (!stickyInTheSeries.classList.contains('hidden')) {
       stickyInTheSeries.classList.remove('sticky');
@@ -136,7 +145,7 @@ if (pageType === 'article' || pageType === 'multimedia') {
     });
   }
 } else {
-  const swiperSlides = document.querySelectorAll('article.swiper-slide');
+  const swiperSlides = document.querySelectorAll('article.series-item');
   swiperSlides.forEach((slide) => {
     // change src of image to data-src-gif on hover and change back on mouseleave
     const image = slide.querySelector('img');
