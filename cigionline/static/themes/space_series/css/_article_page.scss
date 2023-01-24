@@ -164,6 +164,13 @@
     &.sticky {
       padding: 0.5em 0;
 
+      h2 {
+        @include media-breakpoint-up(lg) {
+          font-size: 1.17em;
+        }
+        font-size: 0.8em;
+      }
+
       .swiper {
         .swiper-container {
           .swiper-wrapper {
@@ -212,7 +219,7 @@
 
     h2 {
       font-family: $space-series-font-primary;
-      font-size: clamp(1em, 3vw, 1.17em);
+      font-size: clamp(0.8em, 3vw, 1.17em);
       font-weight: 600;
     }
 
@@ -415,15 +422,15 @@
     }
 
     &.dropdown-in-the-series {
-      position: absolute;
-      top: 50px;
-      left: 0;
-      right: 0;
-      bottom: 0;
       background-color: $space-series-background-colour;
-      overflow-y: scroll;
+      bottom: 0;
       height: 0;
+      left: 0;
+      overflow-y: scroll;
       padding: 0;
+      position: absolute;
+      right: 0;
+      top: 50px;
       z-index: -1;
 
       .in-the-series-expand {
@@ -443,18 +450,18 @@
           border-right: 0;
           border-top: 1px solid $cigi-text-grey;
           display: flex;
-  
+
           &:last-child {
             border-bottom: 1px solid $cigi-text-grey;
           }
-  
+
           .series-item-image {
             display: block;
             flex-grow: 0;
             flex-shrink: 0;
             width: 100px;
           }
-  
+
           .series-item-content {
             @include media-breakpoint-up(md) {
               white-space: nowrap;
@@ -465,7 +472,7 @@
             justify-content: center;
             margin-left: 1em;
             padding: 0.5em;
-  
+
             .series-item-counter {
               display: none;
             }

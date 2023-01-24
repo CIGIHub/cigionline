@@ -74,7 +74,7 @@
             <h2>{{ self.article_series.title }}</h2>
           </a>
         </div>
-        <div class="col-2">
+        <div class="col-2 d-md-none">
           <button type="button">
             <i class="fas fa-plus in-the-series-expand"></i>
           </button>
@@ -88,9 +88,6 @@
                   {% if series_item.content_page.url == self.url %}
                     {% define counter|add:1 as counter %}
                     <article class="swiper-slide series-item disabled">
-                      <a href="{% pageurl series_item.content_page %}" class="series-item-image">
-                        {% image series_item.content_page.specific.image_hero fill-100x100 %}
-                      </a>
                       <div class="series-item-content">
                         <div>
                           <div class="series-item-counter">
@@ -104,9 +101,6 @@
                     </article>
                   {% else %}
                     <article class="swiper-slide series-item">
-                      <a href="{% pageurl series_item.content_page %}" class="series-item-image">
-                        {% image series_item.content_page.specific.image_hero fill-100x100 %}
-                      </a>
                       <div class="series-item-content">
                         <a href="{% pageurl series_item.content_page %}">
                           <div class="series-item-counter">
