@@ -299,6 +299,14 @@
                       background-color: $cigi-primary-colour;
                     }
                   }
+
+                  .play-icon {
+                    color: $cigi-primary-colour;
+
+                    .outer-circle {
+                      border: 0.25em solid $cigi-primary-colour;
+                    }
+                  }
                 }
               }
             }
@@ -354,6 +362,7 @@
                 border: 0.25em solid $white;
                 border-radius: 50%;
                 height: 1em;
+                transition: border 0.2s ease;
                 width: 1em;
                 z-index: 1;
               }

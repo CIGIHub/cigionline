@@ -101,7 +101,7 @@ if (pageType === 'article' || pageType === 'multimedia') {
       header.classList.add('dark');
     } else {
       body.classList.remove('disable-scroll');
-      if (!stickyInTheSeries.classList.contains('sticky')) {
+      if (!stickyInTheSeries.classList.contains('sticky') && window.scrollY < heroHeight - 50) {
         header.classList.remove('dark');
       }
     }
