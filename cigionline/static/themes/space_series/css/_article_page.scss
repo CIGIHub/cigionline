@@ -547,7 +547,7 @@
   .article-footnotes,
   .article-works-cited {
     @include link(
-      $color: $black !important,
+      $color: $cigi-primary-colour,
       $hover-color: $cigi-dark-pink !important
     );
 
