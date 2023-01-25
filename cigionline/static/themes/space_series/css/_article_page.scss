@@ -546,11 +546,6 @@
 
   .article-footnotes,
   .article-works-cited {
-    @include link(
-      $color: $cigi-primary-colour,
-      $hover-color: $cigi-dark-pink !important
-    );
-
     a {
       font-size: 1em !important;
       font-weight: 400 !important;
