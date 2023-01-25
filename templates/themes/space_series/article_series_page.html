@@ -149,6 +149,18 @@
       </div>
     </div>
   </section>
+  <section class="acknowledgement">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h2>Acknowledgement</h2>
+          <div class="acknowledgements-content">
+            {{ self.acknowledgements|richtext }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   {% if self.credits or self.credits_stream_field %}
     <section class="credits">
       <div class="container">

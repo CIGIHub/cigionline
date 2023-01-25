@@ -235,6 +235,18 @@ body {
       }
     }
 
+    .acknowledgement {
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
+      @include media-breakpoint-up(md) {
+        margin-top: 4em;
+      }
+      margin-top: 2em;
+
+      p {
+        margin: 0;
+      }
+    }
+
     .credits {
       @include media-breakpoint-up(md) {
         padding: 4em 0;
