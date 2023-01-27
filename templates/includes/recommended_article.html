@@ -1,35 +1,27 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags static %}
 
-<article class="recommended-article">
-  <div class="recommended-image">
+<article class="card__container card--small card--small--landscape">
+  <div class="card__image">
     <a href="{% pageurl article %}">
       {% if article.image_feature and not article.expired_image %}
-        {% image article.image_feature width-300 %}
+        {% image article.image_feature width-300 %}v 
       {% elif article.image_hero and not article.expired_image %}
         {% image article.image_hero width-300 %}
       {% else %}
         <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
       {% endif %}
-      {% if article|page_type == 'multimedia' %}
-        <div class="play-icon">
-          <i class="fas fa-play"></i>
-        </div>
-      {% endif %}
     </a>
   </div>
-  <div class="recommended-content">
-    {% if article.topics %}
-      {% include "includes/topics.html" with topics=article.topics %}
-    {% endif %}
-    <h3><a href="{% pageurl article %}">{{ article.title }}</a></h3>
-    {% if article.authors %}
-      {% include "includes/authors.html" with authors=article.authors.all %}
-    {% endif %}
-    {% if article.editors %}
-      {% include "includes/authors.html" with authors=article.editors.all %}
-    {% endif %}
-    {% if article.publishing_date %}
-      {% include "includes/date.html" with date=article.publishing_date %}
-    {% endif %}
+  <div class="card__text">
+    {% include 'includes/cards/card_text_title.html' with url=article.url title=article.title %}
+    <div class="card__text__meta">
+      <div>
+        {% include 'includes/cards/card_text_people.html' with authors=article.authors.all %}
+        {% include 'includes/cards/card_text_topics.html' with topics=article.topics_sorted %}
+      </div>
+      <button type="button" class="card__text__more">
+        <a href="{{ article.url }}"><i class="far fa-ellipsis-h"></i></a>
+      </button>
+    </div>
   </div>
 </article>
