@@ -45,6 +45,12 @@
       }
 
       nav {
+        button {
+          i {
+            color: $color;
+          }
+        }
+
         ul {
           a,
           button {
@@ -364,7 +370,7 @@
   $hover-color: $white,
   $hover-background-color: $black,
   $border-color: none,
-  $hover-border-color: none,
+  $hover-border-color: none
 ) {
   color: $color;
   background-color: $background-color;
@@ -393,10 +399,26 @@
       border-bottom: 1px solid $border-grey-dark;
       border-top: 1px solid $border-grey-dark;
 
-      input[type='email'],
-      textarea {
-        background-color: $background-dark;
-        -webkit-box-shadow: 0 0 0 30px $background-dark inset;
+      .footer__subscribe__input-wrapper {
+        border-bottom: 1px solid $cigi-text-grey;
+
+        input {
+          color: $white;
+          background-color: $background-dark;
+          -webkit-box-shadow: 0 0 0 30px $background-dark inset;
+
+          &::placeholder {
+            color: $cigi-text-grey;
+          }
+        }
+      }
+    }
+
+    .footer__sitemap {
+      border-bottom: 1px solid $border-grey-dark;
+
+      ul {
+        @include link($color: $white, $hover-color: $cigi-dark-pink);
       }
     }
   }
@@ -406,4 +428,5 @@
   background-color: $background-dark;
   color: $cigi-text-grey-dark;
   @include dark-footer;
+  @include top-bar($background-color: $black, $color: $white);
 }
