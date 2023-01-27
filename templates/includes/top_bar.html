@@ -21,8 +21,22 @@
                   <i class="far fa-search"></i>
                   <i class="far fa-times"></i>
                 </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                  
+                <div class="dropdown-menu dropdown-menu-end dropdown-search">
+                  <form action="{% url 'search' %}" method="get" autocomplete="off">
+                    <div class="input-group input-group-search">
+                      <input type="text" class="form-control" id="nav-search-input" name="query" placeholder="Keyword Search" aria-label="search-bar"
+                        aria-describedby="search-bar" required>
+                      <div class="nav-search-input-dropdown" id="nav-search-input-dropdown">
+                        <div id="nav-search-input-dropdown-count"></div>
+                        <ul class="nav-search-input-dropdown-list" id="nav-search-input-dropdown-list"></ul>
+                      </div>
+                      <div class="input-group-append">
+                        <button class="btn-search" type="submit" id="search-bar">
+                          <i class="far fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
               <div class="btn-group">

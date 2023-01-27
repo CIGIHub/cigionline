@@ -112,44 +112,6 @@ img {
   }
 }
 
-.input-group {
-  &.input-group-search {
-    border-bottom: 2px solid $black;
-    height: 1.5em;
-    line-height: 1;
-    padding: 0 0 0.25em;
-
-    .form-control {
-      background-color: transparent;
-      border: 0;
-      height: 100%;
-      padding: 0;
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    .input-group-append {
-      .btn-search {
-        align-items: center;
-        background-color: transparent;
-        border: 0;
-        color: $cigi-primary-colour;
-        display: flex;
-        font-weight: 400;
-        height: 100%;
-        line-height: 1;
-        margin-bottom: 0;
-        padding: 0;
-        text-align: center;
-        white-space: nowrap;
-        width: 1em;
-      }
-    }
-  }
-}
-
 // DROPDOWNS
 .dropdown {
   position: static;
