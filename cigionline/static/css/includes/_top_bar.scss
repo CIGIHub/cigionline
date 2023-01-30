@@ -301,11 +301,11 @@ header {
                 position: absolute;
                 right: 0;
                 top: 0.5em;
+
                 .btn-search {
                   align-items: center;
                   background-color: transparent;
                   border: 0;
-                  color: $cigi-primary-colour;
                   display: flex;
                   font-weight: 400;
                   height: 100%;
@@ -315,6 +315,10 @@ header {
                   text-align: center;
                   white-space: nowrap;
                   width: 1em;
+
+                  i {
+                    color: $black;
+                  }
                 }
               }
             }
