@@ -1196,13 +1196,16 @@ class PublicationCard(blocks.StructBlock):
 
     page = blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')
     size = blocks.ChoiceBlock(choices=PublicationCardTypeChoices.choices, required=True)
+    use_hero_image = blocks.BooleanBlock(required=False)
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
 
         page = value.get('page').specific
         image = None
-        if page.image_feature:
+        if value.get('use_hero_image'):
+            image = page.image_hero
+        elif page.image_feature:
             image = page.image_feature
         elif page.image_cover:
             image = page.image_cover

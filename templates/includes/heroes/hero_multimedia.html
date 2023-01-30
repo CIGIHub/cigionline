@@ -6,34 +6,6 @@
   {% endif %}
 >
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col col-lg-10 mm-hero-content">
-        {% include "includes/topics.html" with topics=self.topics_sorted %}
-        <h1>{{ self.title }}</h1>
-        {% if self.author_count > 0 %}
-          <p class="mm-meta">
-            Speaker{{ self.author_count|pluralize }}:
-            {% for item in self.authors.all %}
-              {% if item.hide_link %}
-                <span>{{ item.author.title }}</span>
-              {% else %}
-                <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
-              {% endif %}
-            {% endfor %}
-          </p>
-        {% endif %}
-        {% if self.multimedia_series %}
-          <p class="mm-meta">
-            Series:
-            <a href="{{ self.multimedia_series.url }}">
-              {{ self.multimedia_series.title }}
-            </a>
-          </p>
-        {% endif %}
-        {% include "includes/date.html" with date=self.publishing_date %}
-        {% include "includes/social_links.html" with title=self.title %}
-      </div>
-    </div>
     {% if self.multimedia_url %}
       <div class="row">
         <div class="col mm-video-container">
