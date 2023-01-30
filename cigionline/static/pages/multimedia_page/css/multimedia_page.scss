@@ -2,152 +2,143 @@
 @import '../../../css/global/animations/slide_down';
 @import '../../../css/includes/hero_multimedia';
 
-.multimedia-series-block {
-  margin: 3em 0;
+body {
+  @include dark-theme;
 
-  article {
-    border-top: 1px solid $cigi-dark-grey;
-    padding-top: 1em;
+  .multimedia-page__meta {
+    h1 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+    }
 
-    h2 {
-      font-size: 1em;
-      font-weight: 700;
+    ul {
+      list-style: none;
+    }
+
+    .multimedia-page__meta__speakers {
+      @include link($color: $cigi-light-grey, $hover-color: $white);
+      @include media-breakpoint-up(lg) {
+        margin-top: 1.5em;
+        padding: 1.5em 0;
+      }
+      margin-top: 0.75em;
+      padding: 0.75em 0;
+      border-top: 1px solid $cigi-dark-grey;
+      border-bottom: 1px solid $cigi-dark-grey;
+
+      li {
+        &:not(:last-child) {
+          margin-bottom: 0.5em;
+        }
+
+        .icon-container {
+          height: 30px;
+          width: 30px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+
+    .multimedia-page__meta__topics {
+      @include media-breakpoint-up(lg) {
+        margin-top: 1.5em;
+        padding-bottom: 1.5em;
+      }
+      display: flex;
+      border-bottom: 1px solid $cigi-dark-grey;
+      gap: 0.5em;
+      margin-top: 1em;
+      padding-bottom: 1em;
+
+      button {
+        background-color: $cigi-dark-grey;
+        color: $cigi-light-grey;
+        transition: background-color 0.2s ease, color 0.2s ease;
+
+        &:hover {
+          background-color: $cigi-light-grey;
+          color: $black;
+        }
+      }
+    }
+
+    .multimedia-page__meta__social {
+      li {
+        @include media-breakpoint-up(lg) {
+          padding: 1.5em 0;
+        }
+        @include link($color: $cigi-medium-text-grey, $hover-color: $white);
+        border-bottom: 1px solid $cigi-dark-grey;
+        padding: 0.75em 0;
+
+        i {
+          width: 50px;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .body {
+    @include media-breakpoint-up(lg) {
       margin-top: 0;
     }
 
-    p {
-      line-height: 1.25em;
-      margin-bottom: 0;
+    .article-series-description {
+      @include link($color: $cigi-medium-text-grey, $hover-color: $white);
     }
   }
-}
 
-section {
-  &.recommended {
-    margin-top: 2em;
+  .multimedia-page__transcript {
+    .stream-accordion-block {
+      border-bottom: 1px solid $cigi-dark-grey;
+      border-top: 1px solid $cigi-dark-grey;
 
-    h2 {
-      font-size: 1.25em;
-      font-weight: 600;
-      letter-spacing: 1px;
-      margin-top: 0.8em;
+      button {
+        color: $cigi-light-grey;
+
+        &:hover {
+          color: $white;
+        }
+
+        &::after {
+          color: $cigi-dark-grey;
+        }
+      }
     }
+  }
 
-    .recommended-dot {
-      @include media-breakpoint-up(sm) {
-        display: block;
-      }
-      background-color: $black;
-      border-radius: 50%;
-      display: none;
-      height: 0.4rem;
-      width: 0.4rem;
-    }
+  .disclaimer {
+    @include link($color: $white, $hover-color: $cigi-primary-colour);
+  }
 
-    .recommended-vertical-line {
-      @include media-breakpoint-up(sm) {
-        display: block;
-      }
-      border-left: 1px solid $cigi-medium-light-grey;
-      display: none;
-      height: 100px;
-    }
+  .recommended {
+    @include link($color: $cigi-medium-text-grey, $hover-color: $white);
+    padding: 4em 0;
 
-    .footer-bracket {
-      @include media-breakpoint-up(sm) {
-        display: block;
-      }
-      display: none;
-      margin-bottom: 1em;
-      width: 100%;
-    }
-
-    .recommended-article {
-      @include media-breakpoint-up(sm) {
-        display: grid;
-        grid-template-columns: 65% 10% 25%;
-      }
-      margin: 1em 0 2em;
-
-      .recommended-content {
-        grid-column: 1;
-        grid-row: 1;
-
-        h3 {
-          @include link($color: $black, $hover-color: $cigi-primary-colour);
-          font-size: 1.0625em;
+    .card__container {
+      .card__text {
+        .card__text__title {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          font-family: $primary-font-family;
+          font-size: 1.25rem;
         }
 
-        .authors {
-          @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
-          font-size: 0.75em;
-          margin: 0;
-          text-transform: uppercase;
-        }
+        .card__text__meta {
+          .card__text__people {
+            @include link($color: $cigi-text-grey, $hover-color: $white);
 
-        .date {
-          color: $cigi-text-grey;
-          font-size: 0.75em;
-          text-transform: uppercase;
-        }
-
-        .topics {
-          margin-bottom: 0.5em;
-          margin-top: 0;
-        }
-      }
-
-      .recommended-image {
-        @include media-breakpoint-up(sm) {
-          display: block;
-        }
-        display: none;
-        grid-column: 3;
-        grid-row: 1;
-
-        a {
-          background-color: $black;
-          display: block;
-          position: relative;
-
-          &:hover {
-            img {
-              opacity: 0.8;
+            li {
+              color: $cigi-text-grey;
             }
           }
 
-          img {
-            opacity: 1;
-            transition: opacity 0.3s ease;
-          }
-
-          .play-icon {
-            align-items: center;
-            background-color: $cigi-primary-colour;
-            bottom: 0;
-            color: $white;
-            display: flex;
-            height: 40px;
-            justify-content: center;
-            position: absolute;
-            right: 0;
-            width: 40px;
+          .card__text__topics {
+            @include link($color: $cigi-medium-text-grey, $hover-color: $white);
           }
         }
       }
     }
-  }
-}
-
-.article-series-description {
-  align-items: center;
-  border-bottom: 1px solid $cigi-light-grey;
-  display: flex;
-  margin-bottom: 2em;
-  padding-bottom: 1em;
-
-  p {
-    display: inline-block;
-    margin-bottom: 0;
   }
 }
