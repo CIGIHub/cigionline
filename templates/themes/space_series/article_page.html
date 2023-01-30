@@ -23,6 +23,28 @@
       <div class="row justify-content-center align-items-lg-center">
         <div class="col-md-6 col-lg-4 hero-content">
           <div>
+            <ul class="social-share-list-space">
+              <li class="facebook">
+                <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
+                  rel="noopener noreferrer">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+              </li>
+              <li class="twitter">
+                <a class="twitter-share-link"
+                  href="https://twitter.com/share?text={{ title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
+                  target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              </li>
+              <li class="linkedin">
+                <a class="linkedin-share-link"
+                  href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{ self.title|social_string }}"
+                  target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+              </li>
+            </ul>
             <h1>{{ self.title }}</h1>
             {{ self.subtitle|richtext }}
             {% include "includes/authors.html" with authors=self.authors.all %}
@@ -43,12 +65,21 @@
   </section>
   <section class="in-the-series" id="hero-in-the-series">
     <div class="container">
-      <div class="row justify-content-between justify-content-md-start">
-        <div class="col-4 col-md-2 col-lg-1">
-          <a href="{{ self.article_series.url }}"><h2>IN THE SERIES</h2></a>
+      <div class="row justify-content-between justify-content-md-start series-title">
+        <div class="col-6 col-md-3">
+          <div class="in-the-series-label">
+            A CIGI Essay Series
+          </div>
+          <a href="{{ self.article_series.url }}">
+            <h2>{{ self.article_series.title }}</h2>
+          </a>
         </div>
-        <i class="fas fa-plus in-the-series-expand"></i>
-        <div class="col-md-9 col-lg-9 offset-lg-1">
+        <div class="col-2 d-md-none">
+          <button type="button">
+            <i class="fas fa-plus in-the-series-expand"></i>
+          </button>
+        </div>
+        <div class="col-md-8 offset-md-1">
           <div class="swiper">
             <div class="swiper-container swiper-container-hero">
               <div class="swiper-wrapper">
@@ -57,9 +88,6 @@
                   {% if series_item.content_page.url == self.url %}
                     {% define counter|add:1 as counter %}
                     <article class="swiper-slide series-item disabled">
-                      <a href="{% pageurl series_item.content_page %}" class="series-item-image">
-                        {% image series_item.content_page.specific.image_hero fill-100x100 %}
-                      </a>
                       <div class="series-item-content">
                         <div>
                           <div class="series-item-counter">
@@ -73,9 +101,6 @@
                     </article>
                   {% else %}
                     <article class="swiper-slide series-item">
-                      <a href="{% pageurl series_item.content_page %}" class="series-item-image">
-                        {% image series_item.content_page.specific.image_hero fill-100x100 %}
-                      </a>
                       <div class="series-item-content">
                         <a href="{% pageurl series_item.content_page %}">
                           <div class="series-item-counter">

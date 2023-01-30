@@ -562,6 +562,14 @@ class ArticleSeriesPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    acknowledgements = RichTextField(
+        blank=True,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+    )
     credits = RichTextField(
         blank=True,
         features=[
@@ -720,7 +728,7 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('credits'),
+                FieldPanel('acknowledgements'),
                 FieldPanel('credits_artwork'),
                 FieldPanel('credits_stream_field'),
             ],

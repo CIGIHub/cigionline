@@ -1,6 +1,9 @@
 {% extends "multimedia/multimedia_page.html" %}
 {% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
 
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/rwn6tvm.css">
+{% endblock %}
 {% block theme_css %}
   {% render_bundle 'themeSpaceSeries' 'css' %}
 {% endblock %}
@@ -10,17 +13,30 @@
 
 {% block body_class %}space-series-multimedia{% endblock %}
 
+{% block header %}
+  {% include './includes/top_bar.html' with small=True %}
+{% endblock %}
+
 {% block content %}
   {% block hero %}
     {% include "includes/heroes/hero_multimedia.html" %}
     <section class="in-the-series" id="hero-in-the-series">
       <div class="container">
-        <div class="row justify-content-between justify-content-md-start">
-          <div class="col-4 col-md-2 col-lg-1">
-            <a href="{{ self.article_series.url }}"><h2>IN THE SERIES</h2></a>
+        <div class="row justify-content-between justify-content-md-start series-title">
+          <div class="col-6 col-md-3">
+            <div class="in-the-series-label">
+              A CIGI Essay Series
+            </div>
+            <a href="{{ self.article_series.url }}">
+              <h2>{{ self.article_series.title }}</h2>
+            </a>
           </div>
-          <i class="fas fa-plus in-the-series-expand"></i>
-          <div class="col-md-9 col-lg-9 offset-lg-1">
+          <div class="col-2 d-md-none">
+            <button type="button">
+              <i class="fas fa-plus in-the-series-expand"></i>
+            </button>
+          </div>
+          <div class="col-md-8 offset-md-1">
             <div class="swiper">
               <div class="swiper-container swiper-container-hero">
                 <div class="swiper-wrapper">
