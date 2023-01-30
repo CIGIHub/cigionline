@@ -10,7 +10,27 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  <header class="header--submenu">
+    <div class="container">
+      <nav class="border-top">
+        <div class="row g-1 justify-content-between">
+          <div class="col">
+            <span class="active">Multimedia<span>            
+          </div>
+          <div class="col-8">
+            <div class="header--submenu__right">
+              <button class="header--submenu__right__menu-item">
+                All Multimedia
+              </button>
+              <button class="header--submenu__right__menu-item">
+                Big Tech Podcast
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
   <section class="featured">
     <div class="container">
       <div class="row">
