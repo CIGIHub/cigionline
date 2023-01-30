@@ -1,7 +1,7 @@
 {% load wagtailcore_tags %}
 
-<ul class="topics custom-text-list feature-content-topic-list {{ additional_class_names }}">
+<ul class="card__text__topics custom-text-list {{ additional_class_names }}">
   {% for topic in topics.all %}
-    <li><a href="{% pageurl topic %}" class="table-content-link">{{ topic.title }}</a></li>
+    <li><a href="{% pageurl topic %}">{{ topic.title }}</a></li>
   {% endfor %}
 </ul>

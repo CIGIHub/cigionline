@@ -201,6 +201,15 @@ class PublicationPage(
         verbose_name='Poster image',
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
+    image_hero = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Hero image',
+        help_text='A landscape image that will be used on some card formats.',
+    )
     isbn = models.CharField(
         blank=True,
         max_length=32,
@@ -332,6 +341,7 @@ class PublicationPage(
             [
                 FieldPanel('image_cover'),
                 FieldPanel('image_poster'),
+                FieldPanel('image_hero'),
             ],
             heading='Images',
             classname='collapsible collapsed',

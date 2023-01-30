@@ -16,7 +16,7 @@
       </p>
     </div>
   </div>
-  {% with expert.latest_activity as latest_activity %}
+  {% with expert.latest_activity.0 as latest_activity %}
     {% if latest_activity %}
       <div class="feature-expert-latest-activity">
         <h4>Latest Activity</h4>

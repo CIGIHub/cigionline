@@ -1,0 +1,26 @@
+{% load wagtailcore_tags core_tags %}
+
+<ul class="custom-text-list card__text__people">
+  {% with 3 as people_limit %}
+    {% for item in authors %}
+      {% if forloop.counter <= people_limit %}
+        {% if item.author %}
+          {% define item.author as person %}
+        {% elif item.editor %}
+          {% define item.editor as person %}
+        {% elif item.title %}
+          {% define item as person %}
+        {% endif %}
+        {% if person %}
+          {% if item.hide_link %}
+            <li>{{ person.title }}</li>
+          {% else %}
+            <li><a href="{% pageurl person %}">{{ person.title }}</a></li>
+          {% endif %}
+        {% endif %}
+      {% elif forloop.counter == people_limit|add:1 %}
+        <li>and more</li>
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
+</ul>

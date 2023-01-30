@@ -1,0 +1,20 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+<div class="container">
+  <div class="row d-block">
+    <div class="col">
+      <figure class="stream-image-block">
+        {% if self.image.file.url|file_extension == '.gif' %}
+          <img src="{{self.image.file.url}}" alt="{{self.image.caption}}" />
+        {% else %}
+          {% image self.image width-640 %}
+        {% endif %}
+        {% if not self.hide_image_caption %}
+          <figcaption>
+            {{ self.image.caption }}
+          </figcaption>
+        {% endif %}
+      </figure>
+    </div>
+  </div>
+</div>

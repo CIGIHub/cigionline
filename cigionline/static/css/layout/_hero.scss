@@ -1,13 +1,31 @@
 section {
   &.hero {
-    @include media-breakpoint-up(md) {
-      padding-top: 10em;
+    .hero__content {
+      margin-top: 1em;
+      margin-bottom: 0;
+      padding-top: 1em;
+      padding-bottom: 2em;
+      border-top: 1px solid $cigi-light-grey;
+      border-bottom: 1px solid $cigi-light-grey;
+
+      .hero__title {
+        display: flex;
+        align-items: center;
+
+        h1 {
+          font-size: 1rem;
+          font-weight: 300;
+          margin-left: 1em;
+          margin-bottom: 0;
+        }
+      }
+
+      p {
+        margin-top: 1em;
+        font-size: clamp(1.5em, 5vw, 2.5em);
+        line-height: 1;
+      }
     }
-    background-color: $black;
-    font-size: 1rem;
-    padding-bottom: 3em;
-    padding-top: 5em;
-    position: relative;
 
     .hero-container {
       .hero-main {

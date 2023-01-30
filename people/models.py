@@ -286,9 +286,9 @@ class PersonPage(
     @property
     def latest_activity(self):
         # @todo test
-        latest_activity_query = expert_latest_activity_search(expert_id=self.id)[:1]
+        latest_activity_query = expert_latest_activity_search(expert_id=self.id)[:2]
         if latest_activity_query.count() > 0:
-            return latest_activity_query[0]
+            return latest_activity_query[:2]
         return False
 
     @property
@@ -315,6 +315,13 @@ class PersonPage(
             return snippet[:350] if len(snippet) > 350 else snippet
         else:
             return snippet
+
+    def linkedin_username(self):
+        url = self.linkedin_url
+        if not url or not url.startswith("https://www.linkedin.com/"):
+            return None
+        url = url.replace("https://www.linkedin.com/", "").rstrip("/")
+        return url
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(

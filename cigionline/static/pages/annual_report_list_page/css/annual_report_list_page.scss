@@ -1,74 +1,34 @@
 @import '../../../css/global/mixins';
 @import '../../../css/includes/swiper';
 
-section {
-  margin: 4em 0;
-}
+table {
+  th,
+  td {
+    padding-top: 2em;
+    padding-bottom: 2em;
+    padding-right: 1em;
 
-.search {
-  .search-table {
-    margin-bottom: 0;
-
-    td {
-      align-items: center;
-
-      &:first-child {
-        @include link($color: $black, $hover-color: $cigi-primary-colour);
-        font-size: 0.875em;
-        font-weight: 500;
-      }
-
-      &:not(:first-child) {
-        .table-content {
-          justify-content: center;
-        }
-      }
-
-      .button-action {
-        text-transform: capitalize;
-      }
+    &:last-child {
+      padding-right: 0;
     }
+  }
 
-    .search-bar {
-      margin-bottom: 2em;
-
-      .search-bar-form {
-        .input-group-search {
-          margin-bottom: 0.5em;
-        }
+  thead {
+    tr {
+      th {
+        font-weight: 300;
+        color: $cigi-medium-grey;
       }
     }
   }
 }
 
-.featured {
-  article {
-    @include hover-darken;
+section {
+  &.body {
+    margin-top: 0;
+  }
 
-    .img-wrapper {
-      color: transparent;
-      display: block;
-      margin-bottom: 1em;
-
-      img {
-        border: 1px solid $cigi-light-grey;
-        box-shadow: -5px 5px 10px $cigi-light-grey;
-
-        &:hover {
-          border: 1px solid $white;
-        }
-      }
-    }
-
-    h3 {
-      @include link($color: $black, $hover-color: $cigi-primary-colour);
-      font-size: 1.0625em;
-      line-height: 1.45em;
-      margin: 0 0 0.5em;
-    }
-
-    .button-action {
-      text-transform: capitalize;
-    }
+  &.annual-reports-list {
+    margin: 4em 0;
   }
 }

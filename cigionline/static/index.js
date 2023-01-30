@@ -1,5 +1,5 @@
 /* global FB */
-import 'bootstrap/dist/js/bootstrap.bundle';
+import 'bootstrap/dist/js/bootstrap.min';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import CookieConsent from './js/components/CookieConsent';
@@ -8,79 +8,6 @@ import './css/cigionline.scss';
 import addInlineVideoActions from './js/inline_video_block';
 
 $(function() {
-  // MAIN NAVIGATION SCROLL
-  let scrollTop = 0;
-  const header = $('header:not(.small)');
-  const globalNav = header.find('#global-nav');
-
-  $(window).on('scroll', function() {
-    scrollTop = $(window).scrollTop();
-    if (scrollTop >= 66) {
-      header.addClass('scrolled');
-      globalNav.addClass('scrolled-nav');
-    } else {
-      header.removeClass('scrolled');
-      globalNav.removeClass('scrolled-nav');
-    }
-  });
-
-  // MAIN DROPDOWN MENU ACCORDIONS
-  const accordions = document.getElementsByClassName('accordion');
-  for (let i = 0; i < accordions.length; i += 1) {
-    accordions[i].addEventListener('click', function() {
-      this.classList.toggle('active');
-      const panel = this.nextElementSibling;
-      if (panel.style.maxHeight) {
-        panel.style.maxHeight = null;
-      } else {
-        panel.style.maxHeight = `${panel.scrollHeight}px`;
-      }
-    });
-  }
-
-  // SEARCH BAR AND MENU OPEN
-  const $openSearchBtn = $('#open-search-btn');
-  const $openMenuBtn = $('#open-menu-btn');
-  const openMenuClass = 'opened-popup';
-
-  $openSearchBtn.on('click', function() {
-    $(this).toggleClass('open');
-    $openMenuBtn.removeClass('open');
-    if ($('#popup-menu').hasClass(openMenuClass)) {
-      $('body').addClass('disable-scroll');
-    } else {
-      $('body').toggleClass('disable-scroll');
-    }
-    $('#popup-menu').removeClass(openMenuClass);
-    $('#popup-search').toggleClass(openMenuClass);
-    setTimeout(function() {
-      document.getElementById('nav-search-input').focus();
-    }, 100);
-  });
-
-  $openMenuBtn.on('click', function() {
-    $(this).toggleClass('open');
-    $openSearchBtn.removeClass('open');
-    if ($('#popup-search').hasClass(openMenuClass)) {
-      $('body').addClass('disable-scroll');
-    } else {
-      $('body').toggleClass('disable-scroll');
-    }
-    $('#popup-search').removeClass(openMenuClass);
-    $('#popup-menu').toggleClass(openMenuClass);
-  });
-
-  $(document).on('click', `.${openMenuClass}`, function() {
-    $(this).removeClass(openMenuClass);
-    $openSearchBtn.removeClass('open');
-    $openMenuBtn.removeClass('open');
-    $('body').removeClass('disable-scroll');
-  });
-
-  $('.custom-popup-inner').on('click', function(e) {
-    e.stopPropagation();
-  });
-
   // Facebook Share buttons
   $('.facebook-share-link').on('click', function() {
     const href = $(this).data('url');
@@ -88,16 +15,6 @@ $(function() {
       method: 'share',
       href,
     }, function(/* response */) {});
-  });
-
-  $('.dropdown.custom-dropdown.keep-open').on('hide.bs.dropdown', function(e) {
-    if (e.clickEvent !== undefined) {
-      const target = $(e.clickEvent.target);
-      if (target.hasClass('keep-open') || target.parents('.keep-open').length) {
-        return false; // returning false should stop the dropdown from hiding.
-      }
-    }
-    return true;
   });
 
   const $navSearchInput = $('#nav-search-input');

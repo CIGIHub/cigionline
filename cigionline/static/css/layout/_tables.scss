@@ -10,9 +10,9 @@ table {
     tr {
       th {
         border-bottom: 1px solid $cigi-light-grey;
-        color: $cigi-text-grey;
+        color: $cigi-medium-grey;
         font-size: 0.875em;
-        font-weight: 500;
+        font-weight: 300;
         text-align: left;
       }
     }
@@ -21,9 +21,7 @@ table {
   tbody {
     tr {
       td {
-        border-bottom: 1px solid $cigi-light-grey;
         text-align: left;
-        vertical-align: middle;
       }
     }
   }
@@ -35,16 +33,11 @@ table {
   thead {
     tr {
       th {
-        border-right: 1px solid $cigi-light-grey;
         font-size: 0.75em;
         line-height: 1.25em;
 
-        &:last-of-type {
-          border-right: 0;
-        }
-
-        &:not(:first-of-type) {
-          padding: 0 1em;
+        &:first-child {
+          padding-left: 0;
         }
       }
     }
@@ -53,8 +46,6 @@ table {
   tbody {
     tr {
       td {
-        padding: 1em 0.625em;
-
         &:first-child {
           padding-left: 0;
         }
@@ -107,23 +98,6 @@ table {
 
           &.author-list {
             color: $cigi-text-grey;
-          }
-        }
-
-        .table-content-link {
-          font-size: 0.75em;
-          text-transform: uppercase;
-
-          &:hover {
-            text-decoration: none;
-          }
-
-          &.table-content-link-black {
-            color: $cigi-text-grey;
-
-            &:hover {
-              color: $cigi-primary-colour;
-            }
           }
         }
 

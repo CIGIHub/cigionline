@@ -9,8 +9,10 @@ from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
+import os
 
 
 class ThemeableBlock:
@@ -388,6 +390,22 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/image_block.html'
 
 
+class ImageFullWidthBlock(blocks.StructBlock, ThemeableBlock):
+    """Full width image"""
+
+    image = ImageChooserBlock(required=True)
+    hide_image_caption = blocks.BooleanBlock(required=False)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(ImageFullWidthBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'image_full_width_block')
+
+    class Meta:
+        icon = 'image'
+        label = 'Image Full-width'
+        template = 'streams/image_full_width_block.html'
+
+
 class ImageScrollBlock(blocks.StructBlock, ThemeableBlock):
     """Image Scroll"""
 
@@ -484,6 +502,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'hr',
             'image',
             'italic',
+            'large_text',
             'link',
             'ol',
             'subscript',
@@ -1115,3 +1134,395 @@ class LineBreakBlock(blocks.StructBlock):
         icon = 'horizontalrule'
         label = 'Line Break'
         template = 'streams/line_break_block.html'
+
+
+class ArticleCard(blocks.StructBlock):
+    class ArticleCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='articles.ArticlePage')
+    size = blocks.ChoiceBlock(choices=ArticleCardTypeChoices.choices, required=True)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_feature:
+            image = page.image_feature
+        elif page.image_hero:
+            image = page.image_hero
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.feature_title if page.feature_title else page.title
+        context['authors'] = page.authors.all()
+        context['date'] = page.publishing_date
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['url'] = page.feature_url if page.feature_url else page.url
+        context['topics'] = page.topics_sorted
+
+        return context
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Article Card'
+        template = 'streams/article_card_block.html'
+
+
+class PublicationCard(blocks.StructBlock):
+    class PublicationCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='publications.PublicationPage')
+    size = blocks.ChoiceBlock(choices=PublicationCardTypeChoices.choices, required=True)
+    use_hero_image = blocks.BooleanBlock(required=False)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if value.get('use_hero_image'):
+            image = page.image_hero
+        elif page.image_feature:
+            image = page.image_feature
+        elif page.image_cover:
+            image = page.image_cover
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.feature_title if page.feature_title else page.title
+        context['authors'] = page.authors.all()
+        context['date'] = page.publishing_date
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['url'] = page.feature_url if page.feature_url else page.url
+        context['topics'] = page.topics_sorted
+
+        return context
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Publication Card'
+        template = 'streams/publication_card_block.html'
+
+
+class ArticleSeriesCard(blocks.StructBlock):
+    class ArticleSeriesCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='articles.ArticleSeriesPage')
+    size = blocks.ChoiceBlock(choices=ArticleSeriesCardTypeChoices.choices, required=True)
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Article Series Card'
+        template = 'streams/article_series_card_block.html'
+
+
+class EventCard(blocks.StructBlock):
+    class EventCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    page = blocks.PageChooserBlock(required=True, page_type='events.EventPage')
+    size = blocks.ChoiceBlock(choices=EventCardTypeChoices.choices, required=True)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_feature:
+            image = page.image_feature
+        elif page.image_hero:
+            image = page.image_hero
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.feature_title if page.feature_title else page.title
+        context['authors'] = page.authors.all()
+        context['date'] = page.publishing_date
+        context['end_date'] = page.event_end
+        context['event_type'] = page.get_event_type_display()
+        context['event_access'] = page.get_event_access_display()
+        context['event_format'] = page.event_format_string()
+        context['time_zone_label'] = page.time_zone_label
+        context['url'] = page.feature_url if page.feature_url else page.url
+        context['topics'] = page.topics_sorted
+        context['registration_url'] = page.registration_url
+
+        return context
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
+    class Meta:
+        icon = 'date'
+        label = 'Event Card'
+        template = 'streams/event_card_block.html'
+
+
+class MultimediaCard(blocks.StructBlock):
+    class MultimediaCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    class MultimediaCardMediaTypeChoices(models.TextChoices):
+        VIDEO = ('video', 'Video')
+        PODCAST = ('podcast', 'Podcast')
+
+    page = blocks.PageChooserBlock(required=True, page_type='multimedia.MultimediaPage')
+    size = blocks.ChoiceBlock(choices=MultimediaCardTypeChoices.choices, required=True)
+    multimedia_type = blocks.ChoiceBlock(choices=MultimediaCardMediaTypeChoices.choices, required=True, default=MultimediaCardMediaTypeChoices.VIDEO)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_feature:
+            image = page.image_feature
+        elif page.image_hero:
+            image = page.image_hero
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.feature_title if page.feature_title else page.title
+        context['authors'] = page.authors.all()
+        context['date'] = page.publishing_date
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['url'] = page.feature_url if page.feature_url else page.url
+        context['topics'] = page.topics_sorted
+        context['length'] = page.length
+
+        return context
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
+    class Meta:
+        icon = 'media'
+        label = 'Multimedia Card'
+        template = 'streams/multimedia_card_block.html'
+
+
+class ExpertCard(blocks.StructBlock):
+    class ExpertCardTypeChoices(models.TextChoices):
+        TINY = ('tiny', 'Tiny')
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+
+    page = blocks.PageChooserBlock(required=True, page_type='people.PersonPage')
+    size = blocks.ChoiceBlock(choices=ExpertCardTypeChoices.choices, required=True)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_square:
+            image = page.image_square
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.title
+        context['description'] = page.short_bio
+        context['url'] = page.url
+        if page.latest_activity:
+            context['latest_activity'] = [{
+                'title': activity.title,
+                'url': activity.url,
+                'topics': activity.topics_sorted,
+                'type': activity.contenttype
+            } for activity in page.latest_activity]
+        context['twitter'] = page.twitter_username
+        context['linkedin_username'] = page.linkedin_username()
+
+        return context
+
+    def get_template(self, context=None):
+        if context:
+            return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
+        return super().get_template(context)
+
+    class Meta:
+        icon = 'user'
+        label = 'Expert Card'
+        template = 'streams/expert_card_block.html'
+
+
+class TwitterCard(blocks.StructBlock):
+    tweet = SnippetChooserBlock(required=True, target_model='social.Tweet')
+
+    class Meta:
+        icon = 'site'
+        label = 'Twitter Card'
+        template = 'streams/twitter_card_block.html'
+
+
+class LinkedInCard(blocks.StructBlock):
+    post = SnippetChooserBlock(required=True, target_model='social.LinkedinPost')
+
+    class Meta:
+        icon = 'site'
+        label = 'LinkedIn Card'
+        template = 'streams/linkedin_card_block.html'
+
+
+class AdCard(blocks.StructBlock):
+    class AdCardTypeChoices(models.TextChoices):
+        SMALL = ('small', 'Small')
+        MEDIUM = ('medium', 'Medium')
+        LARGE = ('large', 'Large')
+
+    url = blocks.URLBlock(required=True)
+    size = blocks.ChoiceBlock(choices=AdCardTypeChoices.choices, required=True)
+    image = ImageChooserBlock(required=True)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        image = value.get('image')
+        if image.file.url.endswith('.gif'):
+            context['image_src'] = image.file.url
+            context['image_alt'] = image.title
+        else:
+            context['image'] = image
+        context['url'] = value.get('url')
+
+        return context
+
+    class Meta:
+        icon = 'site'
+        label = 'Ad Card'
+        template = 'streams/ad_card_block.html'
+
+
+class HomePageRowMostPopular(blocks.StructBlock):
+    most_popular_cards = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('publication_card', PublicationCard()),
+        ('article_series_card', ArticleSeriesCard()),
+        ('event_card', EventCard()),
+        ('multimedia_card', MultimediaCard()),
+        ('expert_card', ExpertCard()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Most Popular Block'
+        template = 'streams/home_page_row_most_popular_block.html'
+        form_classname = 'most-popular-block'
+
+
+class SocialSwiperRow(blocks.StructBlock):
+    social_swiper_cards = blocks.StreamBlock([
+        ('twitter_card', TwitterCard()),
+        ('linkedin_card', LinkedInCard()),
+    ])
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        context['bearer_token'] = os.environ['TWITTER_BEARER_TOKEN']
+        return context
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Social Swiper'
+        template = 'streams/social_swiper_block.html'
+        form_classname = 'social-swiper-block'
+
+
+class HomePageRow(blocks.StructBlock):
+    row = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('publication_card', PublicationCard()),
+        ('article_series_card', ArticleSeriesCard()),
+        ('event_card', EventCard()),
+        ('multimedia_card', MultimediaCard()),
+        ('expert_card', ExpertCard()),
+        ('ad_card', AdCard()),
+        ('most_popular', HomePageRowMostPopular()),
+    ])
+    grouped = blocks.BooleanBlock(required=False, default=False, help_text='Group cards into rows with a grey background.')
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Row'
+        template = 'streams/home_page_row_block.html'
+        form_classname = 'row-block'

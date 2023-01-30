@@ -1,0 +1,47 @@
+{% load wagtailcore_tags %}
+
+<div class="col col-12 col-md-6 col-xl-4 social--media social--media__first swiper-slide">
+  <article class="card__container card--small card--small__social--media card--linkedin">
+    <div class="social--media__profile--bar">
+      <div class="profile--image">
+        <img src="{{ self.post.user_profile_image_url }}">
+      </div>
+      <div class="row">
+        <h6 class="profile--name">
+          {{ self.post.user_name }}
+        </h6>
+        <div class="profile--handle">
+          <span class="twitter-id">@{{ self.post.user_username }}</span> ∙ <span class="date">{{ self.post.post_created_at|date:"M j" }}</span>
+        </div>
+      </div>
+    </div>
+    <p class="card__text">
+      {{ self.post.post_text|richtext }}
+    </p>
+    <div class="card__image">
+      <a href=""
+        class="feature-content-image">
+        <div class="img-wrapper">
+          <img alt=""
+            src="{{ self.post.post_media_url }}">
+        </div>
+      </a>
+    </div>
+    <div class="social--media__status--bar">
+      <div class="social--media__status--wrapper">
+        <a href="{{ self.post.post_url }}" class="social--media__upvotes" target="_blank">
+          <i class="far fa-thumbs-up"></i><span class="upvotes">{{ self.post.post_likes }}</span>
+        </a>
+        <a href="{{ self.post.post_url }}" class="social--media__comments" target="_blank">
+          <i class="far fa-comment-alt"></i><span class="comments">{{ self.post.post_comments }}</span>
+        </a>
+      </div>
+      <a href="{{ self.post.post_url }}" class="social-media__link" target="_blank">
+        <button type="button" class="social--media__link--button">
+          <i class="fab fa-linkedin"></i>
+          Visit Linkedin
+        </button>
+      </a>
+    </div>
+  </article>
+</div>

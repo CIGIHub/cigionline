@@ -3,58 +3,107 @@
 {% cache 86400 footer %}
   <footer>
     <div class="container">
-      <div class="row">
-        <div class="col">
-          <div class="logo-container">
-            {% include './footer_cigi_logo.svg' %}
+      <section class="footer__subscribe">
+        <form title="Newsletter Sign Up" action="/subscribe/" method="GET">
+          <div class="row g-3 g-md-5 align-items-center">
+            <div class="col-md-4">Get regular updates on our research and events in your inbox.</div>
+            <div class="col-md-4">
+              <div class="footer__subscribe__input-wrapper">
+                <input type="email" name="email" size="60" maxlength="128" placeholder="Your e-mail"
+                  required="required" aria-required="true">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <a href="">
+                <button type="submit" class="button--rounded">
+                  Sign-up
+                  <i class="fas fa-angle-right"></i>
+                </button>
+              </a>
+            </div>
           </div>
-          {% include "./footer_bracket.svg" %}
-          {% highlighted_topics %}
+        </form>
+      </section>
+      <section class="footer__sitemap">
+        <div class="row g-3 g-md-5">
+          <div class="col-12 col-md-2">
+            <h2>Sitemap</h2>
+          </div>
+          <div class="col-4 col-md-2">
+            {% get_menu_items 'main' as main_menu_items %}
+            <ul class="footer__sitemap__list">
+              {% for menu_item in main_menu_items %}
+                {% if menu_item.link_page %}
+                  <li>
+                    <a href="{% pageurl menu_item.link_page %}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% elif menu_item.link_url %}
+                  <li>
+                    <a href="{{ menu_item.link_url }}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col-4">
+            {% get_menu_items 'footer' as footer_menu_items %}
+            <ul class="footer__sitemap__list">
+              {% for menu_item in footer_menu_items %}
+                {% if menu_item.link_page %}
+                  <li>
+                    <a href="{% pageurl menu_item.link_page %}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% elif menu_item.link_url %}
+                  <li>
+                    <a href="{{ menu_item.link_url }}">
+                      {{ menu_item.title }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col-4 col-md-3">
+            <ul class="footer__sitemap__list">
+              <li>
+                <a href="https://www.facebook.com/cigionline/" target="_blank">Facebook</a>
+              </li>
+              <li>
+                <a href="https://twitter.com/cigionline" target="_blank">Twitter</i></a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/company/cigionline/" target="_blank">LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/user/cigivideos" target="_blank">Youtube</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div class="row justify-content-center footer-content">
-        <div class="col-md-6">
-          <p>Get regular updates on our research and events in your inbox.</p>
-          <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
-            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
-              class="form-email required" required="required" aria-required="true">
-            <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
-          </form>
-          {% get_menu_items 'footer' as footer_menu_items %}
-          <ul class="footer-menu">
-            {% for menu_item in footer_menu_items %}
-              {% if menu_item.link_page %}
-                <li>
-                  <a href="{% pageurl menu_item.link_page %}">
-                    {{ menu_item.title }}
-                  </a>
-                </li>
-              {% elif menu_item.link_url %}
-                <li>
-                  <a href="{{ menu_item.link_url }}">
-                    {{ menu_item.title }}
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-          <ul class="social-links">
-            <li>
-              <a href="https://www.facebook.com/cigionline/" target="_blank"><i class="fab fa-facebook-square"></i></a>
-            </li>
-            <li>
-              <a href="https://twitter.com/cigionline" target="_blank"><i class="fab fa-twitter"></i></a>
-            </li>
-            <li>
-              <a href="https://www.linkedin.com/company/cigionline/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-            </li>
-            <li>
-              <a href="https://www.youtube.com/user/cigivideos" target="_blank"><i class="fab fa-youtube"></i></a>
-            </li>
-          </ul>
-          <div class="copyright">&copy; {% now "Y" %} Centre for International Governance Innovation</div>
+      </section>
+      <section class="footer__topics">
+        <div class="row">
+          <div class="col-md-2">
+            <h2>Content Topics</h2>
+          </div>
+          <div class="col-md-10">
+            {% highlighted_topics_footer %}
+          </div>
         </div>
-      </div>
+      </section>
+      <section class="footer__copyright">
+        <div class="row gx-3 gx-md-5">
+          <div class="col-md-2">&copy; {% now "Y" %}</div>
+          <div class="col-md-6">Centre for International Governance Innovation</div>
+          <div class="col-md-4">Waterloo, ON, Canada</div>
+        </div>
+      </section>
     </div>
   </footer>
 {% endcache %}

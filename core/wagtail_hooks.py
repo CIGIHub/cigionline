@@ -139,6 +139,30 @@ def register_rich_text_paragraph_heading(features):
     })
 
 
+@hooks.register('register_rich_text_features')
+def register_rich_text_large_text(features):
+    feature_name = 'large_text'
+    type_ = 'LARGE_TEXT'
+
+    control = {
+        'type': type_,
+        'label': 'Large Text',
+        'description': 'Large Text',
+        'element': 'div',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.InlineStyleFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'div[class=large-text]': InlineStyleElementHandler(type_)},
+        'to_database_format': {'style_map': {type_: {'element': 'div', 'props': {'class': 'large-text'}}}},
+    })
+
+
 class ThemeModelAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = Theme

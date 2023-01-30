@@ -1,9 +1,6 @@
 .topics {
-  font-size: 0.75em;
-  font-weight: 500;
   list-style-type: none;
   margin: 0;
-  text-transform: uppercase;
 
   .topic {
     @include comma-separated;

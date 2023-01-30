@@ -23,6 +23,7 @@ from streams.blocks import (
     HeroLinkBlock,
     HeroDocumentBlock,
     ImageBlock,
+    ImageFullWidthBlock,
     ImageScrollBlock,
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
@@ -66,6 +67,7 @@ class BasicPageAbstract(models.Model):
         ('embedded_multimedia', EmbeddedMultimediaBlock()),
         ('embedded_video', EmbeddedVideoBlock()),
         ('image', ImageBlock()),
+        ('image_full_width', ImageFullWidthBlock()),
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
         ('paragraph', ParagraphBlock()),
         ('table', TableStreamBlock()),
@@ -155,6 +157,12 @@ class BasicPageAbstract(models.Model):
             return self.specific.image_feature.get_rendition('fill-520x390').url
         if self.image_hero:
             return self.image_hero.get_rendition('fill-520x390').url
+        return ''
+    
+    @property
+    def image_poster_url(self):
+        if self.specific.image_poster:
+            return self.specific.image_poster.get_rendition('fill-360x720').url
         return ''
 
     @property

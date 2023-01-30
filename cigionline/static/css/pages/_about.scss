@@ -1,0 +1,47 @@
+body {
+  &.about-page {
+    @include top_bar(
+      $background-color: $white,
+      $color: $black,
+      $position: sticky
+    );
+
+    main {
+      margin-bottom: 4em;
+
+      .about__intro {
+        @include media-breakpoint-up(md) {
+          font-size: 2em;
+        }
+        font-size: 1.25em;
+        font-weight: 400;
+        line-height: 1;
+        margin-top: 3rem;
+      }
+
+      img {
+        border-radius: 25px;
+        margin-top: 2em;
+      }
+
+      figcaption {
+        color: $cigi-text-grey;
+        margin-top: 1em;
+      }
+
+      .about__content {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        margin-top: 2em;
+
+        h2 {
+          font-weight: 300;
+          color: $black;
+        }
+
+        hr {
+          margin-top: 2.5em;
+        }
+      }
+    }
+  }
+}
