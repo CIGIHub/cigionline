@@ -60,9 +60,11 @@
           <li class="multimedia-page__meta__speakers__speaker">
             <a href="{% pageurl speaker.author %}">
               {% if speaker.author.image_square %}
-              {% image speaker.author.image_square fill-100x100 class="image--circle--tiny" %}
+                {% image speaker.author.image_square fill-100x100 class="image--circle--tiny" %}
               {% else %}
-              <i class="far fa-user"></i>
+                <div class="icon-container">
+                  <i class="far fa-user"></i>
+                </div>
               {% endif %}
               <img src="" alt="">
               {{ speaker.author.title }}
