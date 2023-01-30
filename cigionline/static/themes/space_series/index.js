@@ -11,13 +11,12 @@ if (document.querySelector('.space-series-article')) {
 } else if (document.querySelector('.space-series-multimedia')) {
   pageType = 'multimedia';
 }
-const breakpoint =
-  pageType === 'article series'
-    ? window.matchMedia('(max-width:992px)')
-    : window.matchMedia('(max-width:767px)');
+const breakpoint = pageType === 'article series'
+  ? window.matchMedia('(max-width:992px)')
+  : window.matchMedia('(max-width:767px)');
 const swipers = {};
 
-const enableSwiper = function (articleType) {
+const enableSwiper = function(articleType) {
   const slidesPerViewMd = 4;
   const slidesPerViewLg = articleType === 'article series' ? 1 : 5;
   const slidesPerViewXl = articleType === 'article series' ? 1 : 6;
@@ -63,7 +62,7 @@ const enableSwiper = function (articleType) {
   });
 };
 
-const breakpointChecker = function () {
+const breakpointChecker = function() {
   if (breakpoint.matches === true) {
     for (const swiper in swipers) {
       if (swipers[swiper] !== undefined) swipers[swiper].destroy(true, true);
@@ -81,9 +80,8 @@ breakpointChecker();
 
 if (pageType === 'article' || pageType === 'multimedia') {
   const heroInTheSeries = document.getElementById('hero-in-the-series');
-  const hero =
-    document.querySelector('.space-series-article-hero') ||
-    document.querySelector('.mm-hero');
+  const hero = document.querySelector('.space-series-article-hero')
+    || document.querySelector('.mm-hero');
   const heroHeight = hero.offsetHeight;
 
   const body = document.querySelector('body');
@@ -93,7 +91,7 @@ if (pageType === 'article' || pageType === 'multimedia') {
   const $expandButtons = $('.in-the-series-expand');
   const dropdown = document.getElementById('dropdown-in-the-series');
 
-  $expandButtons.on('click', function () {
+  $expandButtons.on('click', function() {
     $expandButtons.toggleClass('expanded');
     dropdown.classList.toggle('open');
     if (dropdown.classList.contains('open')) {
