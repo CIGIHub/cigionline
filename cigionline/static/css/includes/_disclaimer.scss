@@ -1,6 +1,7 @@
 section {
   &.disclaimer {
     margin-bottom: 2em;
+    line-height: 2;
 
     .additional-opinion-disclaimer {
       color: $cigi-text-grey;
@@ -10,13 +11,12 @@ section {
     }
 
     .multimedia-disclaimer {
-      margin-bottom: 0.25em;
+      margin-bottom: 0;
     }
 
     .opinion-disclaimer {
       color: $cigi-text-grey;
       font-size: 0.85em;
-      font-style: italic;
       margin-bottom: 0;
 
       &.with-multimedia {

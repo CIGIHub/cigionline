@@ -1,23 +1,27 @@
 <section class="disclaimer">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col col-md-10 col-lg-8">
-        {% if multimedia_disclaimer %}
-          <p class="multimedia-disclaimer">
-            For media inquiries, usage rights or other questions please <a href="/contact">contact CIGI</a>.
-          </p>
-        {% endif %}
-        {% if additional_disclaimers %}
-          {% for block in additional_disclaimers %}
-            <p class="additional-opinion-disclaimer">
-              {{ block.disclaimer }}
-            </p>
-          {% endfor %}
-        {% endif %}
-        <p class="opinion-disclaimer{% if multimedia_disclaimer %} with-multimedia{% endif %}">
-          The opinions expressed in this article/multimedia are those of the author(s) and do not necessarily reflect the views of CIGI or its Board of Directors.
-        </p>
+  {% if not no_container %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+  {% endif %}
+  {% if multimedia_disclaimer %}
+    <p class="multimedia-disclaimer">
+      For media inquiries, usage rights or other questions please <a href="/contact">contact CIGI</a>.
+    </p>
+  {% endif %}
+  {% if additional_disclaimers %}
+    {% for block in additional_disclaimers %}
+      <p class="additional-opinion-disclaimer">
+        {{ block.disclaimer }}
+      </p>
+    {% endfor %}
+  {% endif %}
+  <p class="opinion-disclaimer{% if multimedia_disclaimer %} with-multimedia{% endif %}">
+    The opinions expressed in this article/multimedia are those of the author(s) and do not necessarily reflect the views of CIGI or its Board of Directors.
+  </p>
+  {% if not no_container %}
+        </div>
       </div>
     </div>
-  </div>
+  {% endif %}
 </section>

@@ -15,7 +15,30 @@
               {% include './header_cigi_logo_small.svg' %}
             </a>
             <nav aria-label="primary">
-              <button type="button"><i class="far fa-search"></i></button>
+              <div class="btn-group">
+                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="far fa-search"></i>
+                  <i class="far fa-times"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end dropdown-search">
+                  <form action="{% url 'search' %}" method="get" autocomplete="off">
+                    <div class="input-group input-group-search">
+                      <input type="text" class="form-control" id="nav-search-input" name="query" placeholder="Keyword Search" aria-label="search-bar"
+                        aria-describedby="search-bar" required>
+                      <div class="nav-search-input-dropdown" id="nav-search-input-dropdown">
+                        <div id="nav-search-input-dropdown-count"></div>
+                        <ul class="nav-search-input-dropdown-list" id="nav-search-input-dropdown-list"></ul>
+                      </div>
+                      <div class="input-group-append">
+                        <button class="btn-search" type="submit" id="search-bar">
+                          <i class="far fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
               <div class="btn-group">
                 <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
@@ -62,31 +85,6 @@
                 </div>
               </div>
             </nav>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="custom-popup-wrapper popup-search" id="popup-search">
-      <div class="custom-popup-inner">
-        <div class="container">
-          <div class="row">
-            <div class="col custom-popup-content custom-popup-nav-search">
-              <form action="{% url 'search' %}" method="get" autocomplete="off">
-                <div class="input-group input-group-search">
-                  <input type="text" class="form-control" id="nav-search-input" name="query" placeholder="Keyword Search" aria-label="search-bar"
-                    aria-describedby="search-bar" required>
-                  <div class="nav-search-input-dropdown" id="nav-search-input-dropdown">
-                    <div id="nav-search-input-dropdown-count"></div>
-                    <ul class="nav-search-input-dropdown-list" id="nav-search-input-dropdown-list"></ul>
-                  </div>
-                  <div class="input-group-append">
-                    <button class="btn-search" type="submit" id="search-bar">
-                      <i class="far fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
           </div>
         </div>
       </div>

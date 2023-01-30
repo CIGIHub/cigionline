@@ -8,6 +8,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
+from django.db.models import Count
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.panels import (
     FieldPanel,
@@ -23,7 +24,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.search import index
-from streams.blocks import IgcTimelineBlock
+from streams.blocks import IgcTimelineBlock, PublicationCard
 
 
 class ProjectListPage(Page):
@@ -266,16 +267,44 @@ class ResearchLandingPage(BasicPageAbstract, Page):
     parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'research/research_landing_page.html'
+    featured_publications = StreamField(
+        [
+            ('publication', PublicationCard()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
 
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
+        FieldPanel('featured_publications'),
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    def topics_data(self):
+        """Get the topics data for the research landing page"""
+        topics = TopicPage.objects.live().filter(archive=0).order_by('title').annotate(count=Count('content_pages'), opinion_count=Count('content_pages__articlepage'), publication_count=Count('content_pages__publicationpage'), multimedia_count=Count('content_pages__multimediapage'), event_count=Count('content_pages__eventpage'))
+        return {
+            "name": "root",
+            "children": [
+                {
+                    "name": topic.title,
+                    "value": topic.count,
+                    "url": topic.url,
+                    "opinions": topic.opinion_count,
+                    "publications": topic.publication_count,
+                    "multimedia": topic.multimedia_count,
+                    "events": topic.event_count,
+                    "remainder": topic.count - topic.opinion_count - topic.publication_count - topic.multimedia_count - topic.event_count,
+                }
+                for topic in topics
+            ]
+        }
 
     class Meta:
         verbose_name = 'Research Landing Page'
