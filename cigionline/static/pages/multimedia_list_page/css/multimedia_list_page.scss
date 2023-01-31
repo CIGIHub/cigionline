@@ -1,0 +1,47 @@
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/slide_down';
+@import '../../../css/includes/hero_multimedia';
+
+body {
+  .header--submenu {
+    i {
+      margin-right: 1em;
+    }
+
+    .header--submenu__right {
+      display: flex;
+      font-size: 0.9em;
+
+      .header--submenu__right__menu-item {
+        font-weight: 300;
+        color: $cigi-medium-grey;
+        text-align: left;
+        flex-basis: 33%;
+
+        &.active {
+          color: $black;
+
+          &::before {
+            content: '';
+            display: block;
+            width: 90%;
+            height: 0;
+            position: absolute;
+            top: -1.15em;
+            border-top: 1px solid $black;
+          }
+        }
+      }
+    }
+  }
+
+  .multimedia-list-section {
+    .search-table-container {
+      margin: 0;
+
+      .search-results {
+        margin-top: 2em;
+      }
+    }
+  }
+}
