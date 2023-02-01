@@ -187,6 +187,12 @@ class BasicPageAbstract(models.Model):
         if self.word_count > 0:
             read_time = int(math.ceil(self.word_count / 325))
         return read_time
+    
+    @property
+    def multimedia_length(self):
+        if self.specific.length:
+            return self.specific.length
+        return ''
 
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(

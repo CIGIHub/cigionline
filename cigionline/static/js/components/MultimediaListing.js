@@ -23,7 +23,7 @@ function MultimediaListing(props) {
               <i className="fas fa-play" />
             )}
           </div>
-          <div className="card__image__mm-length">{row.length}</div>
+          <div className="card__image__mm-length">{row.multimedia_length}</div>
         </div>
         <div className="card__text">
           <h3 className="card__text__title {{ additional_classes }}">
@@ -84,7 +84,7 @@ MultimediaListing.propTypes = {
         url: PropTypes.string,
       }),
     ),
-    length: PropTypes.string,
+    multimedia_length: PropTypes.string,
     url: PropTypes.string.isRequired,
   }).isRequired,
 };

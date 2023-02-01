@@ -84,7 +84,7 @@ ReactDOM.render(
       'image_hero_wide_url',
       'publishing_date',
       'topics',
-      'length',
+      'multimedia_length',
     ]}
     filterTypes={[{
       name: 'Video',
