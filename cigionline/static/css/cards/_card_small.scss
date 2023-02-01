@@ -97,35 +97,6 @@
         flex: 0 0 66.66666667%;
       }
       position: relative;
-
-      .card__image__play-icon {
-        position: absolute;
-        background-color: $black;
-        top: 15px;
-        right: 15px;
-        border-radius: 50%;
-        color: $white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        font-size: 0.8em;
-
-        i {
-          margin-left: 0.15em;
-        }
-      }
-
-      .card__image__mm-length {
-        color: $white;
-        background-color: $black;
-        position: absolute;
-        padding: 0.1em 0.25em;
-        font-size: 0.8em;
-        right: 15px;
-        bottom: 15px;
-      }
     }
 
     .card__text {
@@ -155,11 +126,50 @@
             $color: $cigi-medium-grey,
             $hover-color: $cigi-primary-colour
           );
+
+          li {
+            color: $cigi-medium-grey;
+
+            &::after {
+              color: $cigi-medium-grey;
+            }
+          }
         }
 
         .card__text__topics {
           @include link(
             $color: $cigi-light-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+      }
+    }
+
+    &.card--small--multimedia--wide {
+      @include media-breakpoint-only(md) {
+        flex-direction: column;
+      }
+      background-color: transparent;
+
+      img {
+        border-radius: 20px;
+      }
+
+      .card__text {
+        padding: 1em 0;
+
+        .card__text__title {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+          @include media-breakpoint-only(md) {
+            padding-bottom: 1em;
+          }
+          padding-bottom: 1em;
+          font-size: 1.1em;
+        }
+
+        .card__text__topics {
+          @include link(
+            $color: $cigi-dark-grey,
             $hover-color: $cigi-primary-colour
           );
         }

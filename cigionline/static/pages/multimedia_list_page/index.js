@@ -104,7 +104,6 @@ ReactDOM.render(
       'row',
       'row-cols-1',
       'row-cols-sm-2',
-      'row-cols-md-3',
       'multimedia-list-row',
     ]}
     RowComponent={MultimediaListing}
