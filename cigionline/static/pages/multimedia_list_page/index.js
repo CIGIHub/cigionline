@@ -81,7 +81,7 @@ ReactDOM.render(
     fields={[
       'authors',
       'contentsubtype',
-      'image_hero_url',
+      'image_hero_wide_url',
       'publishing_date',
       'topics',
     ]}

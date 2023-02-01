@@ -158,6 +158,14 @@ class BasicPageAbstract(models.Model):
         if self.image_hero:
             return self.image_hero.get_rendition('fill-520x390').url
         return ''
+
+    @property
+    def image_hero_wide_url(self):
+        if self.specific.image_feature:
+            return self.specific.image_feature.get_rendition('fill-600x300').url
+        if self.image_hero:
+            return self.image_hero.get_rendition('fill-600x300').url
+        return ''
     
     @property
     def image_poster_url(self):

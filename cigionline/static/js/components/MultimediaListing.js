@@ -13,7 +13,7 @@ function MultimediaListing(props) {
         <div className="card__image">
           <a href={row.url} className="feature-content-image">
             <div className="img-wrapper">
-              <img src={row.image_hero_url} alt={row.title} />
+              <img src={row.image_hero_wide_url} alt={row.title} />
             </div>
           </a>
           <div className="card__image__play-icon">
@@ -74,7 +74,7 @@ MultimediaListing.propTypes = {
     ),
     contentsubtype: PropTypes.string,
     id: PropTypes.number,
-    image_hero_url: PropTypes.string,
+    image_hero_wide_url: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(
