@@ -16,4 +16,69 @@
       color: $cigi-text-grey;
     }
   }
+
+  &.card--large--multimedia {
+    @include media-breakpoint-up(md) {
+      flex-direction: row-reverse;
+    }
+    border-radius: 20px;
+    background-color: $black;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    img {
+      @include media-breakpoint-up(md) {
+        border-radius: 0 20px 20px 0;
+      }
+      border-radius: 20px 20px 0 0;
+    }
+
+    .card__image {
+      @include media-breakpoint-up(md) {
+        flex: 0 0 66.66666667%;
+      }
+      flex: auto;
+      position: relative;
+    }
+
+    .card__text {
+      padding: 1em;
+      height: auto;
+
+      .card__text__description {
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+        display: none;
+        line-height: 1.75;
+        margin-bottom: 0.5em;
+        font-size: 0.8em;
+        color: $cigi-medium-grey;
+      }
+
+      .card__text__title {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+        font-family: $primary-font-family;
+        padding-bottom: 1em;
+        font-size: clamp(1.1em, 3vw, 1.5em);
+      }
+
+      .card__text__meta {
+        .card__text__people {
+          @include link(
+            $color: $cigi-medium-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+
+        .card__text__topics {
+          @include link(
+            $color: $cigi-light-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+      }
+    }
+  }
 }
