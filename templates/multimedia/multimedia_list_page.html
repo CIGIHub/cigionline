@@ -20,10 +20,10 @@
           </div>
           <div class="col-8">
             <div class="header--submenu__right">
-              <button type="button" class="header--submenu__right__menu-item active">
+              <button type="button" class="header--submenu__right__menu-item active" data-swiper-id="swiper--featured">
                 All Multimedia
               </button>
-              <button type="button" class="header--submenu__right__menu-item">
+              <button type="button" class="header--submenu__right__menu-item" data-swiper-id="swiper--big-tech">
                 Big Tech Podcast
               </button>
             </div>
@@ -36,34 +36,40 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <div id="slider--featured">
-            <div class="swiper-container--featured swiper-container">
-              <div class="swiper-wrapper">
-                {% for block in self.featured_multimedia %}
-                  <div class="swiper-slide">
-                    {% include_block block.value %}
+          <div class="multimedia-landing-page__swiper__container">
+            <div class="multimedia-landing-page__swiper" id="swiper--featured">
+              <div class="navigation-container">
+                <div class="swiper-container--featured swiper-container">
+                  <div class="swiper-wrapper">
+                    {% for block in self.featured_multimedia %}
+                      <div class="swiper-slide">
+                        {% include_block block.value %}
+                      </div>
+                    {% endfor %}
                   </div>
-                {% endfor %}
-              </div>
-            </div>
-            <div class="swiper-pagination swiper-pagination-featured"></div>
-            <div class="swiper-button-prev swiper-button-prev-featured"></div>
-            <div class="swiper-button-next swiper-button-next-featured"></div>
-          </div>
-        </div>
-        <div id="slider--big-tech">
-          <div class="swiper-container--big-tech swiper-container">
-            <div class="swiper-wrapper">
-              {% for block in self.big_tech_episodes %}
-                <div class="swiper-slide">
-                  {% include_block block.value %}
                 </div>
-              {% endfor %}
+                <div class="swiper-button-prev swiper-button-prev-featured"></div>
+                <div class="swiper-button-next swiper-button-next-featured"></div>
+              </div>
+              <div class="swiper-pagination swiper-pagination-featured"></div>
+            </div>
+            <div class="multimedia-landing-page__swiper hidden" id="swiper--big-tech">
+              <div class="navigation-container">
+                <div class="swiper-container--big-tech swiper-container">
+                  <div class="swiper-wrapper">
+                    {% for block in self.big_tech_episodes %}
+                      <div class="swiper-slide">
+                        {% include_block block.value %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="swiper-button-prev swiper-button-prev-big-tech"></div>
+                <div class="swiper-button-next swiper-button-next-big-tech"></div>
+              </div>
+              <div class="swiper-pagination swiper-pagination-big-tech"></div>
             </div>
           </div>
-          <div class="swiper-pagination swiper-pagination-big-tech"></div>
-          <div class="swiper-button-prev swiper-button-prev-big-tech"></div>
-          <div class="swiper-button-next swiper-button-next-big-tech"></div>
         </div>
       </div>
     </div>
