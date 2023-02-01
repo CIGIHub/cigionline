@@ -18,12 +18,12 @@ function MultimediaListing(props) {
           </a>
           <div className="card__image__play-icon">
             {row.contentsubtype === 'Audio' ? (
-              <i className="fas fa-volume-up" />
+              <i className="fal fa-microphone" />
             ) : (
               <i className="fas fa-play" />
             )}
           </div>
-          <div className="card__image__mm-length">1:00</div>
+          <div className="card__image__mm-length">{row.length}</div>
         </div>
         <div className="card__text">
           <h3 className="card__text__title {{ additional_classes }}">
@@ -70,7 +70,7 @@ MultimediaListing.propTypes = {
         id: PropTypes.number,
         type: PropTypes.string,
         value: PropTypes.any,
-      })
+      }),
     ),
     contentsubtype: PropTypes.string,
     id: PropTypes.number,
@@ -82,8 +82,9 @@ MultimediaListing.propTypes = {
         id: PropTypes.number,
         title: PropTypes.string,
         url: PropTypes.string,
-      })
+      }),
     ),
+    length: PropTypes.string,
     url: PropTypes.string.isRequired,
   }).isRequired,
 };

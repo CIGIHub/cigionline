@@ -13,7 +13,11 @@
         </div>
       </a>
       <div class="card__image__play-icon">
-        <i class="fas fa-play"></i>
+        {% if multimedia_type == 'video' %}
+          <i class="fas fa-play"></i>
+        {% elif multimedia_type == 'audio' %}
+          <i class="fal fa-microphone"></i>
+        {% endif %}
       </div>
       {% if length %}
         <div class="card__image__mm-length">{{ length }}</div>
