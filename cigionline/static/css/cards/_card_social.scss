@@ -7,10 +7,11 @@
     }
     display: none;
     margin: 0;
-    padding: 0 1em;
 
     &.swiper-slide {
-      height: 100%;
+      @include media-breakpoint-up(md) {
+        height: 100%;
+      }
     }
 
     &.social--media__first {
@@ -55,6 +56,7 @@
       justify-content: normal;
       color: $cigi-text-grey;
       line-height: 1.25;
+      flex-grow: 0;
 
       a {
         color: $cigi-text-black;

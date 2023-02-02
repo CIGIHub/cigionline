@@ -42,10 +42,10 @@ if (swiperContainer) {
   });
 }
 
-const swiperSocialRowContainer = document.querySelector('.swiper-container-social-row');
+const swiperSocialRowContainer = document.querySelector('.swiper-container-social');
 if (swiperSocialRowContainer) {
-  const swiperControls = swiperSocialRowContainer.querySelector('.swiper-controls');
-  const socialSwiper = new Swiper('.swiper-container-social-row', {
+  const socialSwiper = new Swiper('.swiper-container-social', {
+    autoHeight: true,
     slidesPerView: 1,
     slidesPerGroup: 1,
     spaceBetween: 20,
@@ -53,12 +53,12 @@ if (swiperSocialRowContainer) {
     grabCursor: true,
 
     navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
+      nextEl: '.swiper-button-next-social',
+      prevEl: '.swiper-button-prev-social',
     },
 
     pagination: {
-      el: '.swiper-pagination',
+      el: '.swiper-pagination-social',
       clickable: true,
     },
 
