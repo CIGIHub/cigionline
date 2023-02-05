@@ -1251,6 +1251,35 @@ class ArticleSeriesCard(blocks.StructBlock):
     page = blocks.PageChooserBlock(required=True, page_type='articles.ArticleSeriesPage')
     size = blocks.ChoiceBlock(choices=ArticleSeriesCardTypeChoices.choices, required=True)
 
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_feature:
+            image = page.image_feature
+        elif page.image_cover:
+            image = page.image_cover
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.feature_title if page.feature_title else page.title
+        context['authors'] = page.authors.all()
+        context['date'] = page.publishing_date
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['url'] = page.feature_url if page.feature_url else page.url
+        context['topics'] = page.topics_sorted
+
+        return context
+
     def get_template(self, context=None):
         if context:
             return f'streams/{self.meta.label.lower().replace(" ", "_")}_block_{context.get("block").value.get("size")}.html'
