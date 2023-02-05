@@ -9,6 +9,23 @@
     }
   }
 
+  &.card--tiny--article-series {
+    .fa-stack {
+      display: flex;
+
+      .front {
+        background-color: $white;
+        position: absolute;
+        top: 0.2em;
+        width: auto;
+      }
+
+      .back {
+        margin-left: 0.2em;
+      }
+    }
+  }
+
   i {
     width: 35px;
     margin-top: 0.25em;
