@@ -1,27 +1,33 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="col col-12 col-md-4">
-  <article class="card__container card--small--multimedia">
+<div class="col-12">
+  <article class="card__container card--large card--large--multimedia">
     <div class="card__image">
       <a href="{{ url }}" class="feature-content-image">
         <div class="img-wrapper">
           {% if image_src %}
             <img alt="{{ image_alt }}" src="{{ image_src }}" />
           {% else %}
-            {% image image fill-520x347 %}
+            {% image image fill-1440x990 %}
           {% endif %}
         </div>
       </a>
       <div class="card__image__play-icon">
-        <i class="fas fa-play"></i>
+        {% if multimedia_type == 'video' %}
+          <i class="fas fa-play"></i>
+        {% elif multimedia_type == 'audio' %}
+          <i class="fal fa-microphone"></i>
+        {% endif %}
       </div>
       {% if length %}
         <div class="card__image__mm-length">{{ length }}</div>
       {% endif %}
     </div>
     <div class="card__text">
-      {% include 'includes/cards/card_text_title.html' %}
-      {% include 'includes/cards/card_text_description.html' %}
+      <div>
+        {% include 'includes/cards/card_text_title.html' %}
+        {% include 'includes/cards/card_text_description.html' %}
+      </div>
       <div class="card__text__meta">
         <div>
           {% include 'includes/cards/card_text_people.html' %}

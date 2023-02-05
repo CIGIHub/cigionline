@@ -6,8 +6,51 @@ $card-title-font: $title-font-family;
 @import './card_social';
 
 .card__container {
-  img {
-    border-radius: 20px;
+  .card__image {
+    .img-wrapper {
+      height: 100%;
+      width: 100%;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+
+    img {
+      border-radius: 20px;
+    }
+
+    .card__image__play-icon {
+      position: absolute;
+      background-color: $black;
+      top: 15px;
+      right: 15px;
+      border-radius: 50%;
+      color: $white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      font-size: 0.8em;
+
+      i {
+        margin-left: 0.15em;
+      }
+    }
+
+    .card__image__mm-length {
+      color: $white;
+      background-color: $black;
+      position: absolute;
+      padding: 0.1em 0.25em;
+      border-radius: 5px;
+      font-size: 0.8em;
+      right: 15px;
+      bottom: 15px;
+    }
   }
 
   .card__text {
@@ -15,6 +58,8 @@ $card-title-font: $title-font-family;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    width: 100%;
+    width: 1;
 
     .card__text__title {
       @include link($color: $black, $hover-color: $cigi-dark-pink);

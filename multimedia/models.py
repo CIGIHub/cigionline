@@ -10,7 +10,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import PodcastSubscribeButtonBlock
+from streams.blocks import PodcastSubscribeButtonBlock, MultimediaCard
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -29,6 +29,22 @@ from wagtail.search import index
 
 
 class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
+    featured_multimedia = StreamField(
+        [
+            ('multimedia', MultimediaCard()),
+        ],
+        blank=True,
+        null=True,
+        verbose_name='Featured Multimedia',
+    )
+    big_tech_episodes = StreamField(
+        [
+            ('multimedia', MultimediaCard()),
+        ],
+        blank=True,
+        null=True,
+        verbose_name='Big Tech Episodes',
+    )
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['multimedia.MultimediaPage']
@@ -41,16 +57,11 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
-                InlinePanel(
-                    'featured_multimedia',
-                    max_num=6,
-                    min_num=0,
-                    label='Multimedia',
-                ),
+                FieldPanel('featured_multimedia'),
+                FieldPanel('big_tech_episodes'),
             ],
             heading='Featured Multimedia',
-            classname='collapsible collapsed',
-        ),
+            classname='collapsible collapsed',),
         MultiFieldPanel(
             [
                 InlinePanel(
@@ -70,14 +81,6 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
-    def get_featured_multimedia(self):
-        featured_multimedia_ids = self.featured_multimedia.order_by('sort_order').values_list('multimedia_page', flat=True)
-        pages = Page.objects.specific().prefetch_related(
-            'authors__author',
-            'topics',
-        ).in_bulk(featured_multimedia_ids)
-        return [pages[x] for x in featured_multimedia_ids]
-
     def get_promotion_blocks(self):
         return self.promotion_blocks.prefetch_related(
             'promotion_block',
@@ -85,34 +88,12 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_multimedia'] = self.get_featured_multimedia()
         context['promotion_blocks'] = self.get_promotion_blocks()
+
         return context
 
     class Meta:
         verbose_name = 'Multimedia List Page'
-
-
-class MultimediaListPageFeaturedMultimedia(Orderable):
-    multimedia_list_page = ParentalKey(
-        'multimedia.MultimediaListPage',
-        related_name='featured_multimedia',
-    )
-    multimedia_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Multimedia',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'multimedia_page',
-            ['multimedia.MultimediaPage'],
-        )
-    ]
 
 
 class MultimediaPage(

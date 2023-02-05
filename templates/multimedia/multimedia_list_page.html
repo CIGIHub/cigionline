@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load static webpack_loader %}
+{% load static webpack_loader wagtailcore_tags %}
 
 {% block extra_css %}
   {% render_bundle 'multimediaListPage' 'css' %}
@@ -10,45 +10,78 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  <header class="header--submenu">
+    <div class="container">
+      <nav class="border-top">
+        <div class="row g-1 justify-content-between">
+          <div class="col-4">
+            <i class="fas fa-th-large"></i>
+            <span>Multimedia<span>            
+          </div>
+          <div class="col-8">
+            <div class="header--submenu__right">
+              <button type="button" class="header--submenu__right__menu-item active" data-swiper-id="swiper--featured">
+                All Multimedia
+              </button>
+              <button type="button" class="header--submenu__right__menu-item" data-swiper-id="swiper--big-tech">
+                Big Tech Podcast
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
   <section class="featured">
     <div class="container">
       <div class="row">
-        <div class="col-12 mb-3">
-          <h2 class="paragraph-heading">Featured</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-8">
-          {% if featured_multimedia|length > 0 %}
-            {% include "includes/features/feature_content_large.html" with content=featured_multimedia.0 %}
-          {% endif %}
-        </div>
-        <hr>
-        <div class="col-12 col-md-4 featured-small">
-          {% with featured_multimedia|slice:"1:" as featured_small %}
-            {% for item in featured_small %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item %}
-            {% endfor %}
-          {% endwith %}
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="multimedia-promotion-blocks">
-    <div class="container">
-      <div class="row">
-        {% for promotion_block in promotion_blocks %}
-          <div class="col">
-            {% include "includes/promotion_block.html" with promotion_block=promotion_block.promotion_block %}
+        <div class="col">
+          <div class="multimedia-landing-page__swiper__container">
+            <div class="multimedia-landing-page__swiper" id="swiper--featured">
+              <div class="navigation-container">
+                <div class="swiper-container--featured swiper-container">
+                  <div class="swiper-wrapper">
+                    {% for block in self.featured_multimedia %}
+                      <div class="swiper-slide">
+                        {% include_block block.value %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="swiper-button-prev swiper-button-prev-featured"></div>
+                <div class="swiper-button-next swiper-button-next-featured"></div>
+              </div>
+              <div class="swiper-pagination swiper-pagination-featured"></div>
+            </div>
+            <div class="multimedia-landing-page__swiper hidden" id="swiper--big-tech">
+              <div class="navigation-container">
+                <div class="swiper-container--big-tech swiper-container">
+                  <div class="swiper-wrapper">
+                    {% for block in self.big_tech_episodes %}
+                      <div class="swiper-slide">
+                        {% include_block block.value %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="swiper-button-prev swiper-button-prev-big-tech"></div>
+                <div class="swiper-button-next swiper-button-next-big-tech"></div>
+              </div>
+              <div class="swiper-pagination swiper-pagination-big-tech"></div>
+            </div>
           </div>
-        {% endfor %}
+        </div>
       </div>
     </div>
+  </div>
   </section>
+  <div class=container>
+    <div class="row">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+  </div>
   <section>
     <div class="container">
       <div class="row">

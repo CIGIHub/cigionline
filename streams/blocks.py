@@ -1388,6 +1388,7 @@ class MultimediaCard(blocks.StructBlock):
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
         context['length'] = page.length
+        context['multimedia_type'] = page.multimedia_type
 
         return context
 

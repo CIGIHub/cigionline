@@ -160,6 +160,14 @@ class BasicPageAbstract(models.Model):
         return ''
 
     @property
+    def image_hero_wide_url(self):
+        if self.specific.image_feature:
+            return self.specific.image_feature.get_rendition('fill-600x300').url
+        if self.image_hero:
+            return self.image_hero.get_rendition('fill-600x300').url
+        return ''
+
+    @property
     def image_poster_url(self):
         if self.specific.image_poster:
             return self.specific.image_poster.get_rendition('fill-360x720').url
@@ -179,6 +187,12 @@ class BasicPageAbstract(models.Model):
         if self.word_count > 0:
             read_time = int(math.ceil(self.word_count / 325))
         return read_time
+    
+    @property
+    def multimedia_length(self):
+        if self.specific.length:
+            return self.specific.length
+        return ''
 
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
