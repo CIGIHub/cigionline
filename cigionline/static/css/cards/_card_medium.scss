@@ -251,7 +251,12 @@ article {
         @include media-breakpoint-only(md) {
           flex-direction: row;
         }
+        @include media-breakpoint-up(lg) {
+          justify-content: space-between;
+        }
+        display: flex;
         flex-direction: column;
+        height: 100%;
   
         .card__image {
           @include media-breakpoint-up(md) {
