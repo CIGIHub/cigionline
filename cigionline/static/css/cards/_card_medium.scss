@@ -243,6 +243,10 @@ article {
         }
       }
 
+      .card__label {
+        padding-bottom: 1em;
+      }
+
       &.card--vertical__article-series {
         @include media-breakpoint-only(md) {
           flex-direction: row;
