@@ -166,7 +166,7 @@ class BasicPageAbstract(models.Model):
         if self.image_hero:
             return self.image_hero.get_rendition('fill-600x300').url
         return ''
-    
+
     @property
     def image_poster_url(self):
         if self.specific.image_poster:
@@ -187,7 +187,7 @@ class BasicPageAbstract(models.Model):
         if self.word_count > 0:
             read_time = int(math.ceil(self.word_count / 325))
         return read_time
-    
+
     @property
     def multimedia_length(self):
         if self.specific.length:

@@ -13,6 +13,22 @@
         grid-template-rows: 3fr 1fr;
       }
 
+      &.card__article-series {
+        @include media-breakpoint-up(md) {
+          display: grid;
+          grid-template-rows: 0.3fr 1.7fr 1fr;
+          height: 100%;
+        }
+        @include media-breakpoint-up(lg) {
+          grid-template-rows: 0.3fr 3fr 1fr;
+        }
+        flex-direction: column;
+
+        .card__label {
+          margin: 0;
+        }
+      }
+
       .card__image {
         @include media-breakpoint-up(sm) {
           padding: 0 3em 0 0;

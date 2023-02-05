@@ -1,11 +1,11 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailimages_tags %}
 
-<div class="col">
-  <article class="card__container card--large__publication">
+<div class="col col-12 col-md-8">
+  <article class="card__container card--medium__publication">
     <div class="row flex-column flex-md-row g-3 g-md-5">
       <div class="col-md-6">
         <div class="card__image">
-          <a href="{{ url }}" class="feature-content-image">
+          <a href="{{ url }}">
             <div class="img-wrapper">
               {% if image_src %}
                 <img alt="{{ image_alt }}" src="{{ image_src }}" />

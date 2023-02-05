@@ -1,11 +1,12 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailimages_tags %}
 
-<div class="col">
-  <article class="card__container card--large__publication">
-    <div class="row flex-column flex-md-row g-3 g-md-5">
-      <div class="col-md-6">
+<div class="col col-12 col-lg-8">
+  <article class="card__container card--medium__article-series">
+    {% include 'includes/cards/card_label.html' %}
+    <div class="d-block d-md-flex card__content">
+      <div class="col col-md-6">
         <div class="card__image">
-          <a href="{{ url }}" class="feature-content-image">
+          <a href="{{ url }}">
             <div class="img-wrapper">
               {% if image_src %}
                 <img alt="{{ image_alt }}" src="{{ image_src }}" />
@@ -16,7 +17,7 @@
           </a>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col col-md-6">
         <div class="card__text">
           <div>
             {% include 'includes/cards/card_text_title.html' %}
