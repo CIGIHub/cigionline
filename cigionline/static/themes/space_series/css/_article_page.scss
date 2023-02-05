@@ -162,7 +162,6 @@
           overflow-y: auto;
 
           .swiper-wrapper {
-            flex-direction: column;
             height: 100%;
             padding: 2em 0;
 
@@ -184,9 +183,6 @@
               }
 
               .series-item-content {
-                @include media-breakpoint-up(md) {
-                  white-space: nowrap;
-                }
                 display: flex;
                 flex-direction: column;
                 height: 100%;
@@ -216,7 +212,6 @@
       }
       margin-right: 1em;
       transition: transform 0.2s ease;
-      z-index: 1;
 
       &.expanded {
         transform: rotate(45deg);
@@ -314,47 +309,6 @@
                 }
               }
             }
-
-            .play-icon {
-              align-items: center;
-              color: $white;
-              display: flex;
-              height: 1.5em;
-              justify-content: center;
-              margin-left: 5px;
-              transition: color 0.2s ease;
-              width: 15px;
-
-              * {
-                position: absolute;
-                transition: background-color 0.2s ease;
-              }
-
-              .inner-circle {
-                background-color: $black;
-                border-radius: 50%;
-                border-width: 3px;
-                height: 13px;
-                margin-top: 5px;
-                width: 13px;
-                z-index: 3;
-              }
-
-              .outer-circle {
-                border: 3px solid $white;
-                border-radius: 50%;
-                height: 18px;
-                margin-top: 5px;
-                width: 18px;
-                z-index: 1;
-              }
-
-              i {
-                font-size: 0.5em;
-                margin-top: 5px;
-                z-index: 4;
-              }
-            }
           }
 
           .series-item-title {
@@ -394,16 +348,10 @@
         }
 
         &.swiper-button-prev {
-          @include media-breakpoint-down(lg) {
-            left: -4em;
-          }
           left: -5em;
         }
 
         &.swiper-button-next {
-          @include media-breakpoint-down(lg) {
-            right: -4em;
-          }
           right: -5em;
         }
 
@@ -439,25 +387,6 @@
         display: block;
         height: 8px;
         margin: 1rem auto;
-        width: 30%;
-      }
-    }
-
-    .stream-block-blockquote-content {
-      @include media-breakpoint-up(md) {
-        margin-left: -0.5em;
-        margin-right: -5em;
-      }
-      @include media-breakpoint-up(lg) {
-        margin-right: -7em;
-      }
-      @include media-breakpoint-up(lg) {
-        margin-right: -10em;
-      }
-      padding: 1em 0 0;
-
-      &::before {
-        border-bottom: 5px solid $black;
         width: 30%;
       }
     }

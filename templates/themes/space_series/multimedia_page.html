@@ -1,5 +1,5 @@
 {% extends "multimedia/multimedia_page.html" %}
-{% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block theme_css %}
   {% render_bundle 'themeSpaceSeries' 'css' %}
@@ -15,16 +15,15 @@
     {% include "includes/heroes/hero_multimedia.html" %}
     <section class="in-the-series" id="hero-in-the-series">
       <div class="container">
-        <div class="row justify-content-between justify-content-md-start">
+        <div class="row justify-content-between">
           <div class="col-4 col-md-2 col-lg-1">
-            <a href="{{ self.article_series.url }}"><h2>IN THE SERIES</h2></a>
+            <h2>IN THE SERIES</h2>
           </div>
           <i class="fas fa-plus in-the-series-expand"></i>
-          <div class="col-md-9 col-lg-9 offset-lg-1">
+          <div class="col-md-9 col-lg-10">
             <div class="swiper">
               <div class="swiper-container swiper-container-hero">
                 <div class="swiper-wrapper">
-                  {% define 0 as counter %}
                   {% for series_item in self.article_series.specific.article_series_items %}
                     {% if series_item.content_page.url == self.url %}
                       <article class="swiper-slide series-item disabled">
@@ -35,13 +34,7 @@
                           <div>
                             <div class="series-item-counter">
                               <span></span>
-                              <span>
-                                <div class="play-icon">
-                                  <div class="outer-circle"></div>
-                                  <div class="inner-circle"></div>
-                                  <i class="fas fa-play"></i>
-                                </div>
-                              </span>
+                              <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
                             </div>
                             <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
                           </div>
@@ -57,18 +50,7 @@
                           <a href="{% pageurl series_item.content_page %}">
                             <div class="series-item-counter">
                               <span></span>
-                              {% if series_item.content_page.contenttype == "Opinion" %}
-                                {% define counter|add:1 as counter %}
-                                <span>{% if counter < 10 %}0{% endif %}{{ counter }}</span>
-                              {% else %}
-                                <span>
-                                  <div class="play-icon">
-                                    <div class="outer-circle"></div>
-                                    <div class="inner-circle"></div>
-                                    <i class="fas fa-play"></i>
-                                  </div>
-                                </span>
-                              {% endif %}
+                              <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
                             </div>
                             <h3 class="series-item-title">{{ series_item.content_page.title }}</h3>
                           </a>
