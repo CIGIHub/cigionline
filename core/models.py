@@ -187,7 +187,7 @@ class BasicPageAbstract(models.Model):
         if self.word_count > 0:
             read_time = int(math.ceil(self.word_count / 325))
         return read_time
-    
+
     @property
     def multimedia_length(self):
         if self.specific.length:
