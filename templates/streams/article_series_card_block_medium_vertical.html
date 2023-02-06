@@ -3,7 +3,7 @@
 <div class="col-12 col-lg-8 2-col">
   <article class="card__container card--medium__article-series card--vertical__article-series">
     {% include 'includes/cards/card_label.html' %}
-    <div class="card__content d-flex">
+    <div class="d-flex card__content">
       <div class="col-6 col-lg-12">
         <div class="card__image">
           <a href="{{ url }}">
@@ -19,7 +19,10 @@
       </div>
       <div class="col-6 col-lg-12">
         <div class="card__text">
-          {% include 'includes/cards/card_text_title.html' %}
+          <div>
+            {% include 'includes/cards/card_text_title.html' %}
+            {% include 'includes/cards/card_text_description.html' %}
+          </div>
           <div class="card__text__meta">
             <div>
               {% include 'includes/cards/card_text_people.html' %}

@@ -196,6 +196,9 @@ article {
           @include media-breakpoint-up(md) {
             padding: 0 6em 1em;
           }
+          @include media-breakpoint-up(lg) {
+            padding: 0 10em 1em;
+          }
           @include media-breakpoint-up(xl) {
             padding: 0 14em 1em;
           }
@@ -210,9 +213,9 @@ article {
 
           .card__text__description {
             @include media-breakpoint-up(lg) {
-              display: block;
+              display: none;
             }
-            display: none;
+            display: block;
           }
         }
       }
@@ -252,6 +255,7 @@ article {
           display: flex;
           flex-direction: column;
         }
+        height: 100%;
 
         .card__content {
           @include media-breakpoint-up(lg) {
@@ -262,6 +266,9 @@ article {
           .card__image {
             @include media-breakpoint-up(md) {
               padding: 0 4em 1em;
+            }
+            @include media-breakpoint-up(lg) {
+              padding: 0 10em 1em;
             }
             @include media-breakpoint-up(xl) {
               padding: 0 14em 1em;
@@ -276,10 +283,10 @@ article {
             justify-content: space-between;
 
             .card__text__description {
-              @include media-breakpoint-only(md) {
-                display: block;
+              @include media-breakpoint-up(lg) {
+                display: none;
               }
-              display: none;
+              display: block;
             }
           }
         }
@@ -305,11 +312,7 @@ article {
           }
 
           .card__text__description {
-            @include media-breakpoint-up(md) {
-              display: block;
-            }
             color: $cigi-text-grey;
-            display: none;
           }
         }
       }
