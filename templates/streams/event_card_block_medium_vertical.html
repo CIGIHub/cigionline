@@ -1,7 +1,20 @@
 {% load wagtailimages_tags %}
 
 <div class="col col-12 col-md-8">
-  <article class="card__container card--medium card--medium--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
+  <article class="card__container card--medium card--medium--event card--event card--medium--event--vertical {% if event_access == 'Private' %}is_private{% endif %}">
+    <div class="row card--event__image">
+      <div class="col col-12">
+        <a href="{{ url }}">
+          <div class="img-wrapper">
+            {% if image_src %}
+              <img alt="{{ image_alt }}" src="{{ image_src }}" />
+            {% else %}
+              {% image image fill-1440x720 %}
+            {% endif %}
+          </div>
+        </a>
+      </div>
+    </div>
     <div class="row card--event__top">
       <div class="col-md-8">
         <div class="card--event--upcoming-label">Upcoming Event</div>
@@ -35,7 +48,7 @@
         <div class="card--event__month">{{ date|date:"F" }}</div>
       </div>
     </div>
-    <div class="row g-3 g-md-5 card--event__bottom">
+    <div class="row gx-3 gx-md-5 card--event__bottom">
       <div class="col-md-6 d-flex align-items-end">
         <div class="card__text__meta">
           <div>

@@ -1296,6 +1296,7 @@ class EventCard(blocks.StructBlock):
         TINY = ('tiny', 'Tiny')
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
+        MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
         LARGE = ('large', 'Large')
 
     page = blocks.PageChooserBlock(required=True, page_type='events.EventPage')
@@ -1328,10 +1329,12 @@ class EventCard(blocks.StructBlock):
         context['event_type'] = page.get_event_type_display()
         context['event_access'] = page.get_event_access_display()
         context['event_format'] = page.event_format_string()
+        context['is_past'] = page.is_past()
         context['time_zone_label'] = page.time_zone_label
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
         context['registration_url'] = page.registration_url
+        context['id'] = page.id
 
         return context
 
