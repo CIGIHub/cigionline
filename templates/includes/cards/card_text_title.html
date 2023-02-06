@@ -4,4 +4,7 @@
   <a href="{{ url }}">
     {{ title }}
   </a>
+  {% if display_date and date %}
+    ({{ date|date:"M n" }})
+  {% endif %}
 </h3>

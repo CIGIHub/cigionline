@@ -1,9 +1,10 @@
 {% load wagtailimages_tags %}
 
 <div class="col col-12 col-md-8">
-  <article class="card__container card--medium card--medium--event">
+  <article class="card__container card--medium card--medium--event card--event {% if is_past %}past_event{% endif %}">
     <div class="row card--medium--event__top">
       <div class="col-md-8">
+        <div class="card--event--upcoming-label">Upcoming Event</div>
         {% include 'includes/cards/card_text_title.html' with additional_classes='card--medium--event__title' %}
         <div class="card--medium--event__info">
           <time datetime="" class="card--medium--event__time">
