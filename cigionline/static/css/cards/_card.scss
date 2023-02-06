@@ -59,7 +59,6 @@ $card-title-font: $title-font-family;
     justify-content: space-between;
     height: 100%;
     width: 100%;
-    width: 1;
 
     .card__text__title {
       @include link($color: $black, $hover-color: $cigi-dark-pink);

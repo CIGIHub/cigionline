@@ -15,17 +15,26 @@
 
       &.card__article-series {
         @include media-breakpoint-up(md) {
-          display: grid;
+          // display: grid;
           grid-template-rows: 0.3fr 1.7fr 1fr;
           height: 100%;
         }
-        @include media-breakpoint-up(lg) {
+        @include media-breakpoint-up(xl) {
           grid-template-rows: 0.3fr 3fr 1fr;
         }
         flex-direction: column;
+        display: block;
 
-        .card__label {
-          margin: 0;
+        .card__content {
+          @include media-breakpoint-up(lg) {
+            display: block;
+          }
+          display: flex;
+
+          .card__image {
+            flex: 0 0 50%;
+            padding: 0 3em 1em;
+          }
         }
       }
 
