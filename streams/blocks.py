@@ -1333,6 +1333,7 @@ class EventCard(blocks.StructBlock):
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
         context['registration_url'] = page.registration_url
+        context['id'] = page.id
 
         return context
 

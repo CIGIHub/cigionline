@@ -155,4 +155,55 @@
       }
     }
   }
+
+  &.card--large--event {
+    .card--event__buttons {
+      display: flex;
+      justify-content: flex-end;
+
+      a {
+        @include media-breakpoint-up(lg) {
+          width: 50%;
+        }
+        width: 100%;
+
+        &:first-child {
+          @include media-breakpoint-up(lg) {
+            display: flex;
+          }
+          display: none;
+          margin-right: 1em;
+        }
+      }
+      
+      button {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em 2em;
+        width: 100%;
+        border-radius: 100px;
+        transition: none;
+      }
+
+      .card--event__button--calendar {
+        @include button(
+          $color: $black,
+          $background-color: $white,
+          $hover-color: $white,
+          $hover-background-color: $black,
+          $border-color: $black,
+          $hover-border-color: $black
+        );
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em 2em;
+        width: 100%;
+        border-radius: 100px;
+        transition: none;
+      }
+    }
+  }
 }

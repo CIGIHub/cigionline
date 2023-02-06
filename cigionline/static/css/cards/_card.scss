@@ -151,7 +151,7 @@ $card-title-font: $title-font-family;
       }
 
       .card--event__calendar-date {
-        text-align: center;
+        text-align: right;
 
         .card--event__date {
           @include media-breakpoint-up(lg) {
@@ -164,12 +164,14 @@ $card-title-font: $title-font-family;
 
         .card--event__month {
           font-size: 1.5em;
+          margin-right: 3%;
         }
       }
     }
 
     .card--event__bottom {
       align-items: flex-end;
+      margin-top: 5%;
 
       .card__text__meta {
         width: 100%;
@@ -184,6 +186,7 @@ $card-title-font: $title-font-family;
           $border-color: $black,
           $hover-border-color: $black
         );
+
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -191,10 +194,6 @@ $card-title-font: $title-font-family;
         width: 100%;
         border-radius: 100px;
         transition: none;
-
-        &:hover {
-          border: 1px solid $black;
-        }
 
         &.is_private {
           @include button(
