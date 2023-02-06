@@ -343,6 +343,13 @@ article {
       @include media-breakpoint-only(md) {
         flex-direction: column;
       }
+
+      &.card--medium--event--vertical {
+        .card--event__image {
+          margin-bottom: 1em;
+        }
+      }
     }
+
   }
 }

@@ -1,0 +1,78 @@
+{% load wagtailimages_tags %}
+
+<div class="col col-12 col-md-8">
+  <article class="card__container card--medium card--medium--event card--event card--medium--event--vertical {% if event_access == 'Private' %}is_private{% endif %}">
+    <div class="row card--event__image">
+      <div class="col col-12">
+        <a href="{{ url }}">
+          <div class="img-wrapper">
+            {% if image_src %}
+              <img alt="{{ image_alt }}" src="{{ image_src }}" />
+            {% else %}
+              {% image image fill-1440x720 %}
+            {% endif %}
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row card--event__top">
+      <div class="col-md-8">
+        <div class="card--event--upcoming-label">Upcoming Event</div>
+        {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
+        <div class="card--event__info">
+          <time datetime="" class="card--event__time">
+            <div>{{ date|date:"l, F j, Y" }}</div>
+            <div>
+              {{ date|date:"g:i A"}}
+              {% if end_date != None %} -
+                {% if date|date:"U" < end_date|date:"U" %}
+                  {% if date|date:"l F j" == end_date|date:"l F j" %}
+                    {{ end_date|date:"g:i A" }}
+                  {% else %}
+                    {{ end_date|date:"l, F j, Y g:i A" }}
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+              {{ time_zone_label }}
+            </div>
+          </time>
+          <div class="card--event__type">
+            {{ event_access }} 
+            Event{% if event_type|length > 1 %}: {{ event_type }}{% endif %}
+            {{ event_format }}
+          </div>
+        </div>
+      </div>
+      <div class="d-none d-md-block col-md-4 card--event__calendar-date">
+        <div class="card--event__date">{{ date|date:"j" }}</div>
+        <div class="card--event__month">{{ date|date:"F" }}</div>
+      </div>
+    </div>
+    <div class="row gx-3 gx-md-5 card--event__bottom">
+      <div class="col-md-6 d-flex align-items-end">
+        <div class="card__text__meta">
+          <div>
+            {% include 'includes/cards/card_text_people.html' %}
+            {% include 'includes/cards/card_text_topics.html' %}
+          </div>
+          <button type="button" class="card__text__more">
+            <a href="{{ url }}"><i class="far fa-ellipsis-h"></i></a>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6 text-center">
+        {% if event_access == 'Private' %}
+          <button type="button" class="card--event__button--register button--rounded is_private" disabled>
+            Private Event
+          </button>
+        {% else %}
+          <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+            <button type="button" class="card--event__button--register button--rounded">
+              Register Now
+              <i class="fas fa-angle-right"></i>
+            </button>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+</div>

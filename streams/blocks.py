@@ -1296,6 +1296,7 @@ class EventCard(blocks.StructBlock):
         TINY = ('tiny', 'Tiny')
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
+        MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
         LARGE = ('large', 'Large')
 
     page = blocks.PageChooserBlock(required=True, page_type='events.EventPage')
