@@ -90,6 +90,8 @@ article {
       }
 
       .card--medium--event__bottom {
+        align-items: flex-end;
+
         .card__text__meta {
           width: 100%;
         }
@@ -207,7 +209,7 @@ article {
           justify-content: space-between;
 
           .card__text__description {
-            @include media-breakpoint-only(md) {
+            @include media-breakpoint-up(lg) {
               display: block;
             }
             display: none;
@@ -262,7 +264,7 @@ article {
 
           .card__image {
             @include media-breakpoint-up(md) {
-              padding: 0 6em 1em;
+              padding: 0 4em 1em;
             }
             @include media-breakpoint-up(xl) {
               padding: 0 14em 1em;
@@ -294,9 +296,6 @@ article {
         height: 100%;
 
         .card__image {
-          @include media-breakpoint-up(md) {
-            padding: 3em 5em;
-          }
           @include media-breakpoint-up(xl) {
             padding: 3em 6em;
           }
@@ -309,7 +308,11 @@ article {
           }
 
           .card__text__description {
+            @include media-breakpoint-up(md) {
+              display: block;
+            }
             color: $cigi-text-grey;
+            display: none;
           }
         }
       }

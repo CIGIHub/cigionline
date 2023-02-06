@@ -23,13 +23,15 @@
           grid-template-rows: 0.3fr 3fr 1fr;
         }
         flex-direction: column;
-        display: block;
+        display: flex;
+        align-items: flex-start;
 
         .card__content {
-          @include media-breakpoint-up(lg) {
-            display: block;
+          @include media-breakpoint-up(md) {
+            flex-direction: column;
           }
           display: flex;
+          height: 100%;
 
           .card__image {
             flex: 0 0 50%;

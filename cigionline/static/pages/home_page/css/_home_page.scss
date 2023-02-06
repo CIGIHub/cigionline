@@ -133,10 +133,10 @@
 
           &[class*='row-items-2'] {
             & > div {
-              @include media-breakpoint-up(lg) {
+              @include media-breakpoint-up(md) {
                 border-right: 1px solid $cigi-light-grey;
               }
-              @include media-breakpoint-down(lg) {
+              @include media-breakpoint-down(md) {
                 width: 100%;
               }
               border-right: 0;
