@@ -338,5 +338,11 @@ article {
         }
       }
     }
+
+    &.card--medium--event {
+      @include media-breakpoint-only(md) {
+        flex-direction: column;
+      }
+    }
   }
 }

@@ -82,6 +82,10 @@ $card-title-font: $title-font-family;
     .card__text__people {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.9em;
+
+      li {
+        color: $cigi-text-grey;
+      }
     }
 
     .card__text__topics {
@@ -117,14 +121,14 @@ $card-title-font: $title-font-family;
     justify-content: space-between;
     height: 100%;
 
-    &.past_event {
-      .card--event--upcoming-label {
-        display: none;
-      }
-
-      .card--medium--event__calendar-date {
+    &.is_private {
+      .card--event__calendar-date {
         color: $cigi-medium-grey;
       }
+    }
+
+    .card--event--upcoming-label {
+      margin-bottom: 1em;
     }
 
     div {
@@ -133,11 +137,11 @@ $card-title-font: $title-font-family;
       }
     }
 
-    .card--medium--event__top {
+    .card--event__top {
       display: flex;
       justify-content: space-between;
 
-      .card--medium--event__title {
+      .card--event__title {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
         font-size: 1.25em;
         font-size: clamp(1.25em, 3vw, 1.75em);
@@ -146,10 +150,10 @@ $card-title-font: $title-font-family;
         line-height: 1;
       }
 
-      .card--medium--event__calendar-date {
+      .card--event__calendar-date {
         text-align: center;
 
-        .card--medium--event__date {
+        .card--event__date {
           @include media-breakpoint-up(lg) {
             font-size: 10em;
           }
@@ -158,20 +162,20 @@ $card-title-font: $title-font-family;
           line-height: 1;
         }
 
-        .card--medium--event__month {
+        .card--event__month {
           font-size: 1.5em;
         }
       }
     }
 
-    .card--medium--event__bottom {
+    .card--event__bottom {
       align-items: flex-end;
 
       .card__text__meta {
         width: 100%;
       }
 
-      .card--medium--event__button--register {
+      .card--event__button--register {
         @include button(
           $color: $white,
           $background-color: $black,
@@ -190,6 +194,18 @@ $card-title-font: $title-font-family;
 
         &:hover {
           border: 1px solid $black;
+        }
+
+        &.is_private {
+          @include button(
+            $color: $cigi-medium-grey,
+            $hover-color: $cigi-medium-grey,
+            $background-color: $white,
+            $hover-background-color: $white,
+            $border-color: $cigi-medium-grey,
+            $hover-border-color: $cigi-medium-grey
+          );
+          cursor: default;
         }
       }
     }
