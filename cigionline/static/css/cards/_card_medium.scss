@@ -218,11 +218,8 @@ article {
       }
 
       .card__image {
-        @include media-breakpoint-up(md) {
-          padding: 0 1em 1em;
-        }
         @include media-breakpoint-up(xl) {
-          padding: 0 2em 1em;
+          padding: 3em 6em;
         }
         padding: 0 3em;
       }
