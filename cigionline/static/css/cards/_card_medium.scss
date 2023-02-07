@@ -218,19 +218,38 @@ article {
       }
 
       .card__image {
+        @include media-breakpoint-up(md) {
+          display: flex;
+          align-items: center;
+          padding: 0 1.5em;
+        }
+        @include media-breakpoint-up(lg) {
+          padding: 0 3em;
+        }
         @include media-breakpoint-up(xl) {
           padding: 3em 6em;
         }
-        padding: 0 3em;
+        display: block;
+        padding: 0 1em 0 0;
+        flex: 0 0 50%;
       }
 
       .card__text {
+        @include media-breakpoint-up(md) {
+          justify-content: space-between;
+        }
+        justify-content: center;
+
         .card__text__title {
           font-size: clamp(1.1em, 3vw, 1.5em);
         }
 
         .card__text__description {
+          @include media-breakpoint-up(md) {
+            display: block;
+          }
           color: $cigi-text-grey;
+          display: none;
         }
       }
     }

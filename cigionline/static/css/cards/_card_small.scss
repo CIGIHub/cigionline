@@ -15,7 +15,6 @@
 
       &.card__article-series {
         @include media-breakpoint-up(md) {
-          // display: grid;
           grid-template-rows: 0.3fr 1.7fr 1fr;
           height: 100%;
         }
