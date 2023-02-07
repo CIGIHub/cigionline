@@ -191,10 +191,11 @@ article {
           flex-direction: column;
         }
         flex-direction: row;
+        height: 100%;
 
         .card__image {
           @include media-breakpoint-up(md) {
-            padding: 0 4em 1em;
+            padding: 0 5.5em 1em 4em;
           }
           @include media-breakpoint-up(lg) {
             padding: 0 10em 1em;
@@ -202,17 +203,31 @@ article {
           @include media-breakpoint-up(xl) {
             padding: 0 14em 1em;
           }
-          padding: 0 3em 1em;
+          padding: 0 1em 0 0;
+          flex: 0 0 50%;
         }
 
         .card__text {
-          justify-content: space-between;
+          @include media-breakpoint-only(md) {
+            padding-left: 1.5em;
+          }
+          @include media-breakpoint-up(md) {
+            justify-content: space-between;
+          }
+          justify-content: center;
+
+          .card__text__title {
+            @include media-breakpoint-only(md) {
+              font-size: clamp(1.25em, 3vw, 2.4em);
+              letter-spacing: -0.5px;
+            }
+          }
 
           .card__text__description {
-            @include media-breakpoint-up(lg) {
-              display: none;
+            @include media-breakpoint-only(md) {
+              display: block;
             }
-            display: block;
+            display: none;
           }
         }
       }
