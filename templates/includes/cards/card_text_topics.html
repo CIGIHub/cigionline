@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<ul class="card__text__topics custom-text-list {{ additional_class_names }} {% if topics|length > 2 %}hide-topics{% endif %}">
+<ul class="card__text__topics custom-text-list {{ additional_class_names }}">
   {% for topic in topics %}
     <li><a href="{% pageurl topic %}">{{ topic.title }}</a></li>
   {% endfor %}
