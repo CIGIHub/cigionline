@@ -349,6 +349,121 @@ article {
       }
     }
 
+    &.card--medium--article-series {
+      @include media-breakpoint-up(lg) {
+        flex-direction: row;
+      }
+      background-color: $black;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+  
+      img {
+        @include media-breakpoint-up(lg) {
+          border-radius: 20px 0 0 20px;
+        }
+        border-radius: 20px 20px 0 0;
+      }
+  
+      .card__image {
+        @include media-breakpoint-only(md) {
+          height: auto;
+          padding-right: 0;
+          width: 100%;
+        }
+        @include media-breakpoint-up(lg) {
+          flex: 0 0 50%;
+        }
+        height: 100%;
+        position: relative;
+
+        .card__label {
+          align-items: center;
+          background-color: $black;
+          border-radius: 1em;
+          color: $white;
+          font-size: 0.8em;
+          display: flex;
+          height: 2.5em;
+          justify-content: center;
+          left: 1em;
+          position: absolute;
+          top: 1em;
+          width: 8em;
+
+          .fa-stack {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+      
+            .front {
+              background-color: $black;
+              position: absolute;
+              width: auto;
+            }
+      
+            .back {
+              margin-left: 0.3em;
+              margin-bottom: 0.3em;
+            }
+          }
+    
+          i {
+            margin-left: 0.15em;
+          }
+
+          p {
+            margin: 0;
+            padding-right: 0.7em;
+            white-space: nowrap;
+          }
+        }
+      }
+  
+      .card__text {
+        @include media-breakpoint-only(md) {
+          width: auto;
+        }
+        padding: 1em;
+        height: auto;
+  
+        .card__text__description {
+          @include media-breakpoint-up(lg) {
+            display: block;
+          }
+          display: none;
+          line-height: 1.75;
+          margin-bottom: 0.5em;
+          font-size: 0.8em;
+          color: $cigi-medium-grey;
+        }
+  
+        .card__text__title {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          font-family: $primary-font-family;
+          padding-bottom: 1em;
+          font-size: clamp(1.1em, 3vw, 1.5em);
+        }
+  
+        .card__text__meta {
+          .card__text__people {
+            @include link(
+              $color: $cigi-medium-grey,
+              $hover-color: $cigi-primary-colour
+            );
+          }
+  
+          .card__text__topics {
+            @include link(
+              $color: $cigi-light-grey,
+              $hover-color: $cigi-primary-colour
+            );
+          }
+        }
+      }
+    }
+
     &.card--medium--multimedia {
       @include media-breakpoint-only(md) {
         flex-direction: row-reverse;
