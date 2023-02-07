@@ -125,6 +125,7 @@ $card-title-font: $title-font-family;
 
       .dropdown-menu {
         padding: 0;
+        overflow: hidden;
 
         input {
           display: none;

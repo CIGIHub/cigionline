@@ -35,5 +35,11 @@
         Register
       </a>
     {% endif %}
+    {% if type == 'publication' and pdf_download %}
+      <a class="dropdown-item" href="{{ pdf_download }}" target="_blank" rel="noopener noreferrer">
+        <i class="fal fa-file-pdf"></i>
+        Download PDF
+      </a>
+    {% endif %}
   </div>
 </div>

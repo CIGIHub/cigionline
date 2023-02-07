@@ -219,6 +219,7 @@ header {
           box-shadow: 3px 5px 10px -5px rgba(0, 0, 0, 0.3),
             -3px 0 10px -5px rgba(0, 0, 0, 0.3);
           padding: 0;
+          overflow: hidden;
 
           li {
             @include link($color: $cigi-dark-grey, $hover-color: $black);
