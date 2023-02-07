@@ -109,9 +109,40 @@ $card-title-font: $title-font-family;
       }
     }
 
-    .card__text__more {
-      @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
-      margin-left: 0.5em;
+    .card__text__more__container {
+      .card__text__more {
+        @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+        margin-left: 0.5em;
+  
+        &::after {
+          content: none;
+        }
+  
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+
+      .dropdown-menu {
+        padding: 0;
+
+        input {
+          display: none;
+        }
+
+        .dropdown-item {
+          padding: 1em 1.5em;
+          cursor: pointer;
+
+          &:active {
+            background-color: $cigi-light-grey;
+          }
+
+          i {
+            width: 1.5em;
+          }
+        }
+      }
     }
   }
 

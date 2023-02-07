@@ -1,0 +1,39 @@
+{% load core_tags %}
+
+<div class="card__text__more__container dropup">
+  <button type="button" class="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
+    <i class="far fa-ellipsis-h"></i>
+  </button>
+  <div class="dropdown-menu dropdown-menu-end">
+    <button class="dropdown-item copy-text-button" type="button">
+      <i class="fas fa-link"></i>
+      Copy Link
+    </button>
+    <input type="text" value="{{ url }}" class="copyText">
+    <a class="dropdown-item" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ url|slice:':-1' }}" target="_blank"
+    rel="noopener noreferrer">
+      <i class="fab fa-twitter"></i>
+      Share on Twitter
+    </a>
+    <a class="dropdown-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ url|slice:':-1' }}&amp;title={{ title|social_string }}" target="_blank"
+    rel="noopener noreferrer">
+      <i class="fab fa-linkedin-in"></i>
+      Share on Linkedin
+    </a>
+    <a class="dropdown-item" data-url="url={{ url|slice:':-1' }}" target="_blank"
+    rel="noopener noreferrer">
+      <i class="fab fa-facebook-f"></i>
+      Share on Facebook
+    </a>
+    <button type="button" class="dropdown-item bookmark-button" type="button" data-bookmark-title="{{title}}" data-bookmark-url="{{url}}">
+      <i class="fas fa-bookmark"></i>
+      Bookmark
+    </button>
+    {% if type == "event" and event_access == 'Public' %}
+      <a class="dropdown-item" href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+        <i class="fal fa-check-square"></i>
+        Register
+      </a>
+    {% endif %}
+  </div>
+</div>
