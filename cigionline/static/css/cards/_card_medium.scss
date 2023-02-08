@@ -299,6 +299,19 @@ article {
         margin-bottom: 0;
         position: relative;
 
+        .landscape {
+          @include media-breakpoint-up(lg) {
+            display: none;
+          }
+        }
+
+        .poster {
+          @include media-breakpoint-up(lg) {
+            display: block;
+          }
+          display: none;
+        }
+
         .card__label {
           align-items: center;
           background-color: $black;
@@ -401,6 +414,16 @@ article {
           }
           height: 66.66666667%;
           margin-bottom: 0;
+
+          .landscape {
+            @include media-breakpoint-up(lg) {
+              display: block;
+            }
+          }
+  
+          .poster {
+            display: none;
+          }
         }
 
         .card__text {

@@ -4,11 +4,18 @@
   <article class="card__container card--medium card--medium--article-series card--vertical--article-series">
     <div class="card__image">
       <a href="{{ url }}" class="feature-content-image">
-        <div class="img-wrapper">
-          {% if image_src %}
-            <img alt="{{ image_alt }}" src="{{ image_src }}" />
+        <div class="img-wrapper landscape">
+          {% if landscape_image_src %}
+            <img alt="{{ landscape_image_alt }}" src="{{ landscape_image_src }}" />
           {% else %}
-            {% image image fill-1440x990 %}
+            {% image landscape_image fill-1440x990 %}
+          {% endif %}
+        </div>
+        <div class="img-wrapper poster">
+          {% if poster_image_src %}
+            <img alt="{{ poster_image_alt }}" src="{{ poster_image_src }}" />
+          {% else %}
+            {% image poster_image fill-990x1440 %}
           {% endif %}
         </div>
       </a>
