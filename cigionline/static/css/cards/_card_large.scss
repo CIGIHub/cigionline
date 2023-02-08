@@ -178,6 +178,10 @@
               $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour
             );
+
+            li {
+              color: $cigi-light-grey;
+            }
           }
   
           .card__text__topics {

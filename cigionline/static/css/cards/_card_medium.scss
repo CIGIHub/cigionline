@@ -373,6 +373,10 @@ article {
               $color: $cigi-medium-grey,
               $hover-color: $cigi-primary-colour
             );
+
+            li {
+              color: $cigi-medium-grey;
+            }
           }
   
           .card__text__topics {

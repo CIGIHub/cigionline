@@ -27,7 +27,7 @@
       </div>
       <div class="card__text__meta">
         <div>
-          {% include 'includes/cards/card_text_people.html' %}
+          {% include 'includes/cards/card_text_people.html' with authors=self.page.series_authors people_limit=1 %}
           {% include 'includes/cards/card_text_topics.html' %}
         </div>
         <button type="button" class="card__text__more">
