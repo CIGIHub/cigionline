@@ -37,7 +37,9 @@ $card-title-font: $title-font-family;
       font-size: 0.8em;
 
       i {
-        margin-left: 0.15em;
+        &:not(.icon-audio) {
+          margin-left: 0.15em;
+        }
       }
     }
 
@@ -187,7 +189,6 @@ $card-title-font: $title-font-family;
 
     .card--event__bottom {
       align-items: flex-end;
-      margin-top: 5%;
 
       .card__text__meta {
         width: 100%;

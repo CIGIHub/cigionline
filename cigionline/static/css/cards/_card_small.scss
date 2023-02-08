@@ -63,19 +63,16 @@
 
     &.card--small--landscape {
       @include media-breakpoint-up(md) {
-        display: grid;
-        grid-template-rows: 1fr 1.5fr;
-        align-items: baseline;
+        display: flex;
+        flex-direction: column;
         height: 100%;
-      }
-      @include media-breakpoint-up(lg) {
-        grid-template-rows: 1.5fr 1.1fr;
       }
 
       .card__image {
         @include media-breakpoint-up(md) {
           padding-bottom: 1em;
           padding-right: 0;
+          flex-basis: auto;
         }
         padding-right: 1em;
         flex: 0 0 50%;

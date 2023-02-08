@@ -18,7 +18,7 @@ function MultimediaListing(props) {
           </a>
           <div className="card__image__play-icon">
             {row.contentsubtype === 'Audio' ? (
-              <i className="fal fa-microphone" />
+              <i className="fal fa-microphone icon-audio" />
             ) : (
               <i className="fas fa-play" />
             )}
