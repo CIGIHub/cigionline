@@ -1,0 +1,41 @@
+{% load wagtailimages_tags %}
+
+<div class="col col-12 col-md-4">
+  <article class="card__container card--small card--small--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
+    <div class="card--event--small__top">
+      <div class="card--event--upcoming-label">Upcoming Event - {{ date|date:"M n" }}</div>
+      {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
+      <div class="card--event__info">
+        <time datetime="" class="card--event__time">
+          <div>{{ date|date:"l, F j, Y" }}</div>
+          <div>
+            {{ date|date:"g:i A"}}
+            {% if end_date != None %} -
+              {% if date|date:"U" < end_date|date:"U" %}
+                {% if date|date:"l F j" == end_date|date:"l F j" %}
+                  {{ end_date|date:"g:i A" }}
+                {% else %}
+                  {{ end_date|date:"l, F j, Y g:i A" }}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+            {{ time_zone_label }}
+          </div>
+        </time>
+        <div class="card--event__type">
+          {{ event_access }} 
+          Event{% if event_type|length > 1 %}: {{ event_type }}{% endif %}
+          {{ event_format }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card__text__meta">
+      <div>
+        {% include 'includes/cards/card_text_people.html' %}
+        {% include 'includes/cards/card_text_topics.html' %}
+      </div>
+      {% include 'includes/cards/card_text_more.html' with type='event' %}
+    </div>
+  </article>
+</div>

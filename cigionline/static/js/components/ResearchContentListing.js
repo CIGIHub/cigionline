@@ -14,7 +14,7 @@ function ResearchContentListing(props) {
         </a>
       </div>
       <div className="card__text">
-        <h3 className="card__text__title {{ additional_classes }}">
+        <h3 className="card__text__title">
           <a href={row.url}>{row.title}</a>
         </h3>
         <div className="card__text__meta">
@@ -26,7 +26,7 @@ function ResearchContentListing(props) {
                 </li>
               ))}
             </ul>
-            <ul className="card__text__topics custom-text-list {{ additional_class_names }} {% if topics|length > 2 %}hide-topics{% endif %}">
+            <ul className="card__text__topics custom-text-list">
               {row.topics &&
                 row.topics.map((topic) => (
                   <li key={`${row.id}-topic-${topic.id}`}>
@@ -36,7 +36,7 @@ function ResearchContentListing(props) {
             </ul>
           </div>
           <button type="button" className="card__text__more">
-            <a href="{{ url }}">
+            <a href={row.url}>
               <i className="far fa-ellipsis-h" />
             </a>
           </button>

@@ -36,19 +36,16 @@
 
     &.card--small--landscape {
       @include media-breakpoint-up(md) {
-        display: grid;
-        grid-template-rows: 1fr 1.5fr;
-        align-items: baseline;
+        display: flex;
+        flex-direction: column;
         height: 100%;
-      }
-      @include media-breakpoint-up(lg) {
-        grid-template-rows: 1.5fr 1.1fr;
       }
 
       .card__image {
         @include media-breakpoint-up(md) {
           padding-bottom: 1em;
           padding-right: 0;
+          flex-basis: auto;
         }
         padding-right: 1em;
         flex: 0 0 50%;
@@ -132,6 +129,10 @@
             $color: $cigi-light-grey,
             $hover-color: $cigi-primary-colour
           );
+        }
+
+        .card__text__more {
+          color: $white;
         }
       }
     }
@@ -273,5 +274,11 @@
     height: 100%;
     border-radius: 20px;
     padding: 1em 1.5em 0.5em;
+  }
+
+  &.card--small--event {
+    .card__text__title {
+      margin-top: 0;
+    }
   }
 }

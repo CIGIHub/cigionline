@@ -13,7 +13,11 @@
         </div>
       </a>
       <div class="card__image__play-icon">
-        <i class="fas fa-play"></i>
+        {% if multimedia_type == 'video' %}
+          <i class="fas fa-play"></i>
+        {% elif multimedia_type == 'audio' %}
+          <i class="fal fa-microphone icon-audio"></i>
+        {% endif %}
       </div>
       {% if length %}
         <div class="card__image__mm-length">{{ length }}</div>
@@ -27,9 +31,7 @@
           {% include 'includes/cards/card_text_people.html' %}
           {% include 'includes/cards/card_text_topics.html' %}
         </div>
-        <button type="button" class="card__text__more">
-          <a href="{{ url }}"><i class="far fa-ellipsis-h"></i></a>
-        </button>
+        {% include 'includes/cards/card_text_more.html' %}
       </div>
     </div>
   </article>

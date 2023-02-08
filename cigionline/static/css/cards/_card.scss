@@ -37,7 +37,9 @@ $card-title-font: $title-font-family;
       font-size: 0.8em;
 
       i {
-        margin-left: 0.15em;
+        &:not(.icon-audio) {
+          margin-left: 0.15em;
+        }
       }
     }
 
@@ -82,32 +84,146 @@ $card-title-font: $title-font-family;
     .card__text__people {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.9em;
+
+      li {
+        color: $cigi-text-grey;
+      }
     }
 
     .card__text__topics {
       @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.9em;
+    }
 
-      &.hide-topics {
+    .card__text__more__container {
+      .card__text__more {
+        @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+        margin-left: 0.5em;
+
         &::after {
-          @include media-breakpoint-down(sm) {
-            content: '...';
-          }
+          content: none;
         }
 
-        li {
-          &:nth-child(n + 2) {
-            @include media-breakpoint-down(sm) {
-              display: none;
-            }
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+
+      .dropdown-menu {
+        padding: 0;
+        overflow: hidden;
+
+        input {
+          display: none;
+        }
+
+        .dropdown-item {
+          padding: 1em 1.5em;
+          cursor: pointer;
+
+          &:active {
+            background-color: $cigi-light-grey;
+          }
+
+          i {
+            width: 1.5em;
           }
         }
       }
     }
+  }
 
-    .card__text__more {
-      @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
-      margin-left: 0.5em;
+  &.card--event {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    &.is_private {
+      .card--event__calendar-date {
+        color: $cigi-medium-grey;
+      }
+    }
+
+    .card--event--upcoming-label {
+      margin-bottom: 1em;
+    }
+
+    div {
+      &[class*='col-'] {
+        border: 0 !important;
+      }
+    }
+
+    .card--event__top {
+      display: flex;
+      justify-content: space-between;
+
+      .card--event__title {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        font-size: 1.25em;
+        font-size: clamp(1.25em, 3vw, 1.75em);
+        margin-top: 0;
+        margin-bottom: 1em;
+        line-height: 1;
+      }
+
+      .card--event__calendar-date {
+        text-align: right;
+
+        .card--event__date {
+          @include media-breakpoint-up(lg) {
+            font-size: 10em;
+          }
+          font-size: 8em;
+          font-weight: 400;
+          line-height: 1;
+        }
+
+        .card--event__month {
+          font-size: 1.5em;
+          margin-right: 3%;
+        }
+      }
+    }
+
+    .card--event__bottom {
+      align-items: flex-end;
+
+      .card__text__meta {
+        width: 100%;
+      }
+
+      .card--event__button--register {
+        @include button(
+          $color: $white,
+          $background-color: $black,
+          $hover-color: $black,
+          $hover-background-color: $white,
+          $border-color: $black,
+          $hover-border-color: $black
+        );
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em 2em;
+        width: 100%;
+        border-radius: 100px;
+        transition: none;
+
+        &.is_private {
+          @include button(
+            $color: $cigi-medium-grey,
+            $hover-color: $cigi-medium-grey,
+            $background-color: $white,
+            $hover-background-color: $white,
+            $border-color: $cigi-medium-grey,
+            $hover-border-color: $cigi-medium-grey
+          );
+          cursor: default;
+        }
+      }
     }
   }
 }

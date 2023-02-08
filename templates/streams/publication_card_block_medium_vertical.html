@@ -2,31 +2,26 @@
 
 <div class="col-12 col-lg-8 2-col">
   <article class="card__container card--medium__publication card--vertical__publication">
-      <div class="card__image">
-        <a href="{{ url }}">
-          <div class="img-wrapper">
-            {% if image_src %}
-              <img alt="{{ image_alt }}" src="{{ image_src }}" />
-            {% else %}
-              {% image image fill-990x1440 %}
-            {% endif %}
-          </div>
-        </a>
-      </div>
-      <div class="card__text">
+    <div class="card__image">
+      <a href="{{ url }}">
+        <div class="img-wrapper">
+          {% if image_src %}
+            <img alt="{{ image_alt }}" src="{{ image_src }}" />
+          {% else %}
+            {% image image fill-990x1440 %}
+          {% endif %}
+        </div>
+      </a>
+    </div>
+    <div class="card__text">
+      {% include 'includes/cards/card_text_title.html' %}
+      {% include 'includes/cards/card_text_description.html' %}
+      <div class="card__text__meta">
         <div>
-          {% include 'includes/cards/card_text_title.html' %}
-          {% include 'includes/cards/card_text_description.html' %}
+          {% include 'includes/cards/card_text_people.html' %}
+          {% include 'includes/cards/card_text_topics.html' %}
         </div>
-        <div class="card__text__meta">
-          <div>
-            {% include 'includes/cards/card_text_people.html' %}
-            {% include 'includes/cards/card_text_topics.html' %}
-          </div>
-          <button type="button" class="card__text__more">
-            <a href="{{ url }}"><i class="far fa-ellipsis-h"></i></a>
-          </button>
-        </div>
+        {% include 'includes/cards/card_text_more.html' with type='publication' %}
       </div>
   </article>
 </div>
