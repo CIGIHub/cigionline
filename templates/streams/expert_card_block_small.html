@@ -1,0 +1,40 @@
+{% load wagtailimages_tags %}
+
+<div class="col col-12 col-md-4">
+  <article class="card__container card--small card--small--expert card--expert">
+    <div class="card--small--expert__top">
+      <div class="d-flex">
+        <div class="card__image card__image--portrait--circle">
+          <a href="{{ url }}">
+            <div class="img-wrapper">
+              {% if image_src %}
+                <img alt="{{ image_alt }}" src="{{ image_src }}" />
+              {% else %}
+                {% image image fill-300x300 %}
+              {% endif %}
+            </div>
+          </a>
+        </div>
+        <div>
+          <a href="{{ url }}">
+            <h3>{{ title }}</h3>
+          </a>
+          {% if board_position %}
+            <div class="card--expert__board-position">
+              {{ board_position }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card__expert-info">
+        <div class="card__text">
+          {% include 'includes/cards/card_text_description.html' %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card--small--expert__bottom">
+
+    </div>
+  </article>
+</div>

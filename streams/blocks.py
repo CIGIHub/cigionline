@@ -1446,6 +1446,7 @@ class ExpertCard(blocks.StructBlock):
             } for activity in page.latest_activity]
         context['twitter'] = page.twitter_username
         context['linkedin_username'] = page.linkedin_username()
+        context['board_position'] = page.board_position
 
         return context
 
