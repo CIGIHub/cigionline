@@ -307,6 +307,10 @@ article {
         }
   
         .card__text__meta {
+          button {
+            color: $white;
+          }
+
           .card__text__people {
             @include link(
               $color: $cigi-medium-grey,
@@ -440,6 +444,10 @@ article {
         }
 
         .card__text__meta {
+          button {
+            color: $white;
+          }
+
           .card__text__people {
             @include link(
               $color: $cigi-medium-grey,
