@@ -1284,11 +1284,12 @@ class ArticleSeriesCard(blocks.StructBlock):
             context['landscape_image_alt'] = 'CIGI Logo'
 
         context['title'] = page.feature_title if page.feature_title else page.title
-        context['authors'] = page.authors.all()
+        context['authors'] = page.series_authors
         context['date'] = page.publishing_date
         context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
+        # context['']
 
         return context
 
