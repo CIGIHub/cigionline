@@ -186,7 +186,7 @@ article {
         }
 
         .card__text__description {
-          @include media-breakpoint-up(md) {
+          @include media-breakpoint-up(lg) {
             display: block;
           }
           color: $cigi-text-grey;

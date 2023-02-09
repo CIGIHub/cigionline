@@ -91,9 +91,6 @@
       padding: 1em;
 
       p {
-        @include media-breakpoint-only(md) {
-          display: block;
-        }
         display: none;
         line-height: 1.25;
         color: $cigi-text-grey;
