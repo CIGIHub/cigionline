@@ -1273,6 +1273,12 @@ class ArticleSeriesCard(blocks.StructBlock):
                 context['landscape_image_alt'] = page.image_feature.title
             else:
                 context['landscape_image'] = page.image_feature
+        elif page.image_hero:
+            if page.image_hero.file.url.endswith('.gif'):
+                context['landscape_image_src'] = page.image_hero.file.url
+                context['landscape_image_alt'] = page.image_hero.title
+            else:
+                context['landscape_image'] = page.image_hero
         else:
             context['landscape_image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
             context['landscape_image_alt'] = 'CIGI Logo'
