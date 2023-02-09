@@ -24,6 +24,14 @@
         margin-left: 0.2em;
       }
     }
+
+    .card__text {
+      .card__text__people {
+        li {
+          color: $cigi-medium-grey;
+        }
+      }
+    }
   }
 
   i {

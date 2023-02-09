@@ -13,33 +13,6 @@
         grid-template-rows: 3fr 1fr;
       }
 
-      &.card__article-series {
-        @include media-breakpoint-up(md) {
-          // display: grid;
-          grid-template-rows: 0.3fr 1.7fr 1fr;
-          height: 100%;
-        }
-        @include media-breakpoint-up(xl) {
-          grid-template-rows: 0.3fr 3fr 1fr;
-        }
-        flex-direction: column;
-        display: flex;
-        align-items: flex-start;
-
-        .card__content {
-          @include media-breakpoint-up(md) {
-            flex-direction: column;
-          }
-          display: flex;
-          height: 100%;
-
-          .card__image {
-            flex: 0 0 50%;
-            padding: 0 3em 1em;
-          }
-        }
-      }
-
       .card__image {
         @include media-breakpoint-up(sm) {
           padding: 0 3em 0 0;
@@ -118,9 +91,6 @@
       padding: 1em;
 
       p {
-        @include media-breakpoint-only(md) {
-          display: block;
-        }
         display: none;
         line-height: 1.25;
         color: $cigi-text-grey;
@@ -136,6 +106,10 @@
       }
 
       .card__text__meta {
+        button {
+          color: $white;
+        }
+
         .card__text__people {
           @include link(
             $color: $cigi-medium-grey,
@@ -193,6 +167,137 @@
           );
         }
       }
+    }
+  }
+
+  &.card--small--article-series {
+    background-color: $black;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .card__image {
+      @include media-breakpoint-only(md) {
+        height: auto;
+        padding-right: 0;
+        width: 100%;
+      }
+      @include media-breakpoint-up(lg) {
+        flex: 0 0 50%;
+      }
+      height: 100%;
+      margin-bottom: 0;
+      position: relative;
+
+      img {
+        border-radius: 20px 20px 0 0;
+      }
+
+      .card__label {
+        align-items: center;
+        background-color: $black;
+        border-radius: 1em;
+        color: $white;
+        font-size: 0.8em;
+        display: flex;
+        height: 2.5em;
+        justify-content: center;
+        left: 1em;
+        position: absolute;
+        top: 1em;
+        width: 8em;
+
+        .fa-stack {
+          align-items: center;
+          display: flex;
+          justify-content: center;
+    
+          .front {
+            background-color: $black;
+            position: absolute;
+            width: auto;
+          }
+    
+          .back {
+            margin-left: 0.3em;
+            margin-bottom: 0.3em;
+          }
+        }
+  
+        i {
+          margin-left: 0.15em;
+        }
+
+        p {
+          margin: 0;
+          padding-right: 0.7em;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .card__text {
+      padding: 1em;
+
+      .card__text__title {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+        font-family: $primary-font-family;
+        padding-bottom: 1em;
+      }
+
+      .card__text__meta {
+        button {
+          color: $white;
+        }
+
+        .card__text__people {
+          @include link(
+            $color: $cigi-medium-grey,
+            $hover-color: $cigi-primary-colour
+          );
+
+          li {
+            color: $cigi-medium-grey;
+          }
+        }
+
+        .card__text__topics {
+          @include link(
+            $color: $cigi-light-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+      }
+    }
+  }
+
+  &.card--small--publication {
+    @include media-breakpoint-up(md) {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .card__image {
+      @include media-breakpoint-up(sm) {
+        padding: 0 3em 0 0;
+      }
+      @include media-breakpoint-up(md) {
+        flex: none;
+        padding: 0 2em 2em;
+      }
+      @include media-breakpoint-up(lg) {
+        padding: 0 3.25em 2em;
+      }
+      @include media-breakpoint-up(xl) {
+        padding: 2em 4em 3em;
+      }
+      @include media-breakpoint-up(xxl) {
+        padding: 2em 6em 3em;
+      }
+      padding: 0 1em 0 0;
+      flex: 0 0 50%;
     }
   }
 

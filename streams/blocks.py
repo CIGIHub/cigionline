@@ -1256,21 +1256,32 @@ class ArticleSeriesCard(blocks.StructBlock):
         context = super().get_context(value, parent_context=parent_context)
 
         page = value.get('page').specific
-        image = None
-        if page.image_feature:
-            image = page.image_feature
-        elif page.image_cover:
-            image = page.image_cover
 
-        if image:
-            if image.file.url.endswith('.gif'):
-                context['image_src'] = image.file.url
-                context['image_alt'] = image.title
+        if page.image_poster:
+            if page.image_poster.file.url.endswith('.gif'):
+                context['poster_image_src'] = page.image_poster.file.url
+                context['poster_image_alt'] = page.image_poster.title
             else:
-                context['image'] = image
+                context['poster_image'] = page.image_poster
         else:
-            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
-            context['image_alt'] = 'CIGI Logo'
+            context['poster_image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['poster_image_alt'] = 'CIGI Logo'
+
+        if page.image_feature:
+            if page.image_feature.file.url.endswith('.gif'):
+                context['landscape_image_src'] = page.image_feature.file.url
+                context['landscape_image_alt'] = page.image_feature.title
+            else:
+                context['landscape_image'] = page.image_feature
+        elif page.image_hero:
+            if page.image_hero.file.url.endswith('.gif'):
+                context['landscape_image_src'] = page.image_hero.file.url
+                context['landscape_image_alt'] = page.image_hero.title
+            else:
+                context['landscape_image'] = page.image_hero
+        else:
+            context['landscape_image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['landscape_image_alt'] = 'CIGI Logo'
 
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.authors.all()
