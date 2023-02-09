@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="col col-12 col-md-4">
-  <article class="card__container card--small--article-series">
+  <article class="card__container card--small--article-series {{ theme|slugify }}">
     <div class="card__image">
       <a href="{{ url }}" class="feature-content-image">
         <div class="img-wrapper landscape">
