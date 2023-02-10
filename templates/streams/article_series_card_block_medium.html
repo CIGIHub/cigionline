@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="col-12 col-md-8">
-  <article class="card__container card--medium card--medium--article-series">
+  <article class="card__container card--medium card--medium--article-series {{ theme|slugify }}">
     <div class="card__image">
       <a href="{{ url }}" class="feature-content-image">
         <div class="img-wrapper landscape">
@@ -34,7 +34,7 @@
       </div>
       <div class="card__text__meta">
         <div>
-          {% include 'includes/cards/card_text_people.html' with authors=self.page.series_authors people_limit=1 %}
+          {% include 'includes/cards/card_text_people.html' with people_limit=1 %}
           {% include 'includes/cards/card_text_topics.html' %}
         </div>
         {% include 'includes/cards/card_text_more.html' %}

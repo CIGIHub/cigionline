@@ -307,10 +307,6 @@ article {
         }
   
         .card__text__meta {
-          button {
-            color: $white;
-          }
-
           .card__text__people {
             @include link(
               $color: $cigi-medium-grey,
@@ -327,6 +323,12 @@ article {
               $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour
             );
+          }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
           }
         }
       }
@@ -444,10 +446,6 @@ article {
         }
 
         .card__text__meta {
-          button {
-            color: $white;
-          }
-
           .card__text__people {
             @include link(
               $color: $cigi-medium-grey,
@@ -460,6 +458,12 @@ article {
               $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour
             );
+          }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
           }
         }
       }

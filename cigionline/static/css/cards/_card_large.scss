@@ -66,10 +66,6 @@
         }
   
         .card__text__meta {
-          button {
-            color: $white;
-          }
-
           .card__text__people {
             @include link(
               $color: $cigi-medium-grey,
@@ -83,6 +79,12 @@
               $hover-color: $cigi-primary-colour
             );
           }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
+          }
         }
       }
     }
@@ -91,8 +93,8 @@
       @include media-breakpoint-up(md) {
         flex-direction: row;
       }
-      border-radius: 20px;
       background-color: $black;
+      border-radius: 20px;
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -177,10 +179,6 @@
         }
   
         .card__text__meta {
-          button {
-            color: $white;
-          }
-
           .card__text__people {
             @include link(
               $color: $cigi-light-grey,
@@ -197,6 +195,12 @@
               $color: $cigi-medium-grey,
               $hover-color: $cigi-primary-colour
             );
+          }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
           }
         }
       }
