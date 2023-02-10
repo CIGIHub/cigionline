@@ -3,14 +3,14 @@
 <div class="col col-12 col-md-4">
   <article class="card__container card--small card--small--expert card--expert">
     <div class="card--small--expert__top">
-      <div class="d-flex">
+      <div class="d-flex pb-2">
         <div class="card__image card__image--portrait--circle">
           <a href="{{ url }}">
             <div class="img-wrapper">
               {% if image_src %}
                 <img alt="{{ image_alt }}" src="{{ image_src }}" />
               {% else %}
-                {% image image fill-300x300 %}
+                {% image image fill-100x100 %}
               {% endif %}
             </div>
           </a>
@@ -34,7 +34,32 @@
     </div>
 
     <div class="card--small--expert__bottom">
-
+      <h4>Expertise</h4>
+      <ul class="card--expert__bottom__expertise-list">
+        {% for expertise in expertise_list %}
+          <li>{{ expertise }}</li>
+        {% endfor %}
+      </ul>
+      <div class="card--expert__social">
+        <ul>
+          {% if twitter %}
+            <li>
+              <div>Twitter</div>
+              <a href="https://twitter.com/{{twitter}}" target="_blank">
+                {{twitter}}
+              </a>
+            </li>
+          {% endif %}
+          {% if linkedin_username %}
+            <li>
+              <div>Linkedin</div>
+              <a href="https://www.linkedin.com/{{linkedin_username}}" target="_blank">
+                {{linkedin_username}}
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
   </article>
 </div>

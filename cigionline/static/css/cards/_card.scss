@@ -158,6 +158,7 @@ $card-title-font: $title-font-family;
     .card--event__top {
       display: flex;
       justify-content: space-between;
+      margin-bottom: 1em;
 
       .card--event__title {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
@@ -222,6 +223,29 @@ $card-title-font: $title-font-family;
             $hover-border-color: $cigi-medium-grey
           );
           cursor: default;
+        }
+      }
+    }
+  }
+
+  &.card--expert {
+    .card--expert__social {
+      margin-top: 1em;
+
+      ul {
+        list-style: none;
+
+        li {
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
+          display: flex;
+
+          div {
+            min-width: 5em;
+            color: $cigi-medium-grey;
+          }
         }
       }
     }

@@ -47,7 +47,25 @@ article {
     }
 
     &.card--medium--expert {
+      @include media-breakpoint-up(md) {
+        display: grid;
+        grid-gap: 2em;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          'a b'
+          'c c';
+      }
+      @include media-breakpoint-up(lg) {
+        grid-template-areas:
+          'a c'
+          'b c';
+      }
+
       .card__expert-info {
+        @include media-breakpoint-up(md) {
+          grid-area: a;
+        }
+
         .card__text {
           height: auto;
 
@@ -59,10 +77,17 @@ article {
       }
 
       .card__latest-activity {
+        @include media-breakpoint-up(md) {
+          grid-area: c;
+        }
+        @include media-breakpoint-up(lg) {
+          grid-area: b;
+        }
+
         h4 {
           color: $cigi-medium-grey;
           margin-bottom: 1.5rem;
-          margin-top: 1.5rem;
+          margin-top: 0;
         }
 
         .card--tiny {
@@ -75,27 +100,17 @@ article {
         }
       }
 
-      .card__image--portrait {
-        margin-bottom: 1.5em;
+      .card--medium--expert--right {
+        @include media-breakpoint-up(md) {
+          grid-area: b;
+        }
+        @include media-breakpoint-up(lg) {
+          grid-area: c;
+        }
       }
 
-      .card__expert-social {
-        ul {
-          list-style: none;
-
-          li {
-            @include link(
-              $color: $cigi-text-grey,
-              $hover-color: $cigi-primary-colour
-            );
-            display: flex;
-
-            div {
-              min-width: 5em;
-              color: $cigi-medium-grey;
-            }
-          }
-        }
+      .card__image--portrait {
+        margin-bottom: 1.5em;
       }
     }
 
@@ -350,6 +365,5 @@ article {
         }
       }
     }
-
   }
 }
