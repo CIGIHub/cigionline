@@ -1,50 +1,66 @@
 {% load wagtailimages_tags %}
 
 <div class="col col-12 col-md-8">
-  <article class="card__container card--medium--expert">
-    <div class="row g-3 g-md-5">
-      <div class="col col-12 col-md-6">
-        <div class="card__expert-info">
-          <div class="card__text">
-            {% include 'includes/cards/card_text_title.html' %}
-            {% include 'includes/cards/card_text_description.html' %}
+  <article class="card__container card--expert card--medium--expert">
+    <div class="card__expert-info">
+      <div class="card__text">
+        <div class="d-flex align-items-center pb-3">
+          <div class="card__image card__image--portrait--circle d-md-none">
+            <a href="{{ url }}">
+              <div class="img-wrapper">
+                {% image image fill-100x100 %}
+              </div>
+            </a>
           </div>
-        </div>
-        <div class="card__latest-activity">
-          <h4>Latest Activity</h4>
-          {% for activity in latest_activity %}
-            {% include 'streams/card_block_tiny.html' with title=activity.title url=activity.url topics=activity.topics type=activity.type %}
-          {% endfor %}
-        </div>
-      </div>
-      <div class="d-none d-md-block col col-12 col-md-6">
-        <div class="card__image card__image--portrait">
-          <a href="{{ url }}" class="feature-content-image">
-            <div class="img-wrapper">
-              {% if image_src %}
-                <img alt="{{ image_alt }}" src="{{ image_src }}" />
-              {% else %}
-                {% image image fill-900x900 %}
-              {% endif %}
+          <div>
+            {% include 'includes/cards/card_text_title.html' %}
+            {% if board_position %}
+            <div class="card--expert__board-position">
+              {{ board_position }}
             </div>
-          </a>
+          </div>
+        {% endif %}
         </div>
-        <div class="card__expert-social">
-          <ul>
+        {% include 'includes/cards/card_text_description.html' %}
+      </div>
+    </div>
+    <div class="card__latest-activity">
+      <h4>Latest Activity</h4>
+      {% for activity in latest_activity %}
+        {% include 'streams/card_block_tiny.html' with title=activity.title url=activity.url topics=activity.topics type=activity.type %}
+      {% endfor %}
+    </div>
+    <div class="card--medium--expert--right">
+      <div class="card__image card__image--portrait">
+        <a href="{{ url }}">
+          <div class="img-wrapper">
+            {% if image_src %}
+              <img alt="{{ image_alt }}" src="{{ image_src }}" />
+            {% else %}
+              {% image image fill-900x900 %}
+            {% endif %}
+          </div>
+        </a>
+      </div>
+      <div class="card--expert__social">
+        <ul>
+          {% if twitter %}
             <li>
               <div>Twitter</div>
               <a href="https://twitter.com/{{twitter}}" target="_blank">
                 {{twitter}}
               </a>
             </li>
+          {% endif %}
+          {% if linkedin_username %}
             <li>
               <div>Linkedin</div>
               <a href="https://www.linkedin.com/{{linkedin_username}}" target="_blank">
                 {{linkedin_username}}
               </a>
             </li>
-          </ul>
-        </div>
+          {% endif %}
+        </ul>
       </div>
     </div>
   </article>
