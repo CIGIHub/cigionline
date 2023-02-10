@@ -26,6 +26,34 @@
     }
   }
 
+  &.card--tiny--expert {
+    display: block;
+
+    .card--expert--tiny__text {
+      width: 100%;
+
+      h3 {
+        margin: 0;
+      }
+
+      .card__text__meta {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+    }
+
+    .card__text__more__container {
+      text-align: right;
+
+      button {
+        &::after {
+          content: none;
+        }
+      }
+    }
+  }
+
   i {
     width: 35px;
     margin-top: 0.25em;
