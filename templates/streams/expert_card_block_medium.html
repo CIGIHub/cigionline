@@ -4,7 +4,16 @@
   <article class="card__container card--expert card--medium--expert">
     <div class="card__expert-info">
       <div class="card__text">
-        {% include 'includes/cards/card_text_title.html' %}
+        <div class="d-flex align-items-center pb-2">
+          <div class="card__image card__image--portrait--circle d-md-none">
+            <a href="{{ url }}" class="feature-content-image">
+              <div class="img-wrapper">
+                {% image image fill-100x100 %}
+              </div>
+            </a>
+          </div>
+          {% include 'includes/cards/card_text_title.html' %}
+        </div>
         {% include 'includes/cards/card_text_description.html' %}
       </div>
     </div>

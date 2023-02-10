@@ -110,6 +110,10 @@ article {
       }
 
       .card__image--portrait {
+        @include media-breakpoint-up(md) {
+          display: block;
+        }
+        display: none;
         margin-bottom: 1.5em;
       }
     }
