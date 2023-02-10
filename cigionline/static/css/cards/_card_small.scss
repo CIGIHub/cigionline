@@ -183,9 +183,6 @@
         padding-right: 0;
         width: 100%;
       }
-      @include media-breakpoint-up(lg) {
-        flex: 0 0 50%;
-      }
       height: 100%;
       margin-bottom: 0;
       position: relative;
