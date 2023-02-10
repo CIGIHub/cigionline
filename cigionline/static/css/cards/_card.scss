@@ -265,4 +265,48 @@ $card-title-font: $title-font-family;
       }
     }
   }
+
+  &.john-holmes-series {
+    background-color: #f3f3f3 !important;
+
+    .card__text__title {
+      @include link($color: $black !important);
+    }
+
+    .card__text__meta {
+      .card__text__topics {
+        @include link($color: $black !important);
+      }
+
+      .card__text__more {
+        i {
+          color: $black !important;
+        }
+      }
+    }
+  }
+
+  &.four-domains-series {
+    background-color: #e5e5d9 !important;
+
+    .card__text__title {
+      @include link($color: $black !important);
+    }
+
+    .card__text__meta {
+      .card__text__topics {
+        @include link($color: $black !important);
+      }
+
+      .card__text__more {
+        i {
+          color: $black !important;
+        }
+      }
+    }
+  }
+
+  &.cyber-series {
+    background-color: #1f2024 !important;
+  }
 }

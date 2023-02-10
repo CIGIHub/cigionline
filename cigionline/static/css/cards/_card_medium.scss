@@ -135,29 +135,44 @@ article {
       }
 
       &.card--vertical__publication {
-        @include media-breakpoint-only(md) {
-          flex-direction: row;
+        @include media-breakpoint-up(lg) {
+          flex-direction: column;
         }
-        flex-direction: column;
+        flex-direction: row;
+        height: 100%;
 
         .card__image {
           @include media-breakpoint-up(md) {
-            padding: 0 6em 1em;
+            padding: 0 5.5em 1em 4em;
+          }
+          @include media-breakpoint-up(lg) {
+            padding: 0 10em 1em;
           }
           @include media-breakpoint-up(xl) {
             padding: 0 14em 1em;
           }
-          padding: 0 3em 1em;
+          padding: 0 1em 0 0;
+          flex: 0 0 50%;
         }
 
         .card__text {
-          @include media-breakpoint-up(lg) {
-            justify-content: flex-end;
+          @include media-breakpoint-only(md) {
+            padding-left: 1.5em;
           }
-          justify-content: space-between;
+          @include media-breakpoint-up(md) {
+            justify-content: space-between;
+          }
+          justify-content: center;
+
+          .card__text__title {
+            @include media-breakpoint-only(md) {
+              font-size: clamp(1.25em, 3vw, 2.4em);
+              letter-spacing: -0.5px;
+            }
+          }
 
           .card__text__description {
-            @include media-breakpoint-up(lg) {
+            @include media-breakpoint-only(md) {
               display: block;
             }
             display: none;
@@ -167,101 +182,210 @@ article {
 
       .card__image {
         @include media-breakpoint-up(md) {
-          padding: 0 1em 1em;
+          display: flex;
+          align-items: center;
+          padding: 0 1.5em;
+        }
+        @include media-breakpoint-up(lg) {
+          padding: 0 3em;
         }
         @include media-breakpoint-up(xl) {
-          padding: 0 2em 1em;
+          padding: 3em 6em;
         }
-        padding: 0 3em;
+        display: block;
+        padding: 0 1em 0 0;
+        flex: 0 0 50%;
       }
 
       .card__text {
+        @include media-breakpoint-up(md) {
+          justify-content: space-between;
+        }
+        justify-content: center;
+
         .card__text__title {
           font-size: clamp(1.1em, 3vw, 1.5em);
         }
 
         .card__text__description {
+          @include media-breakpoint-up(lg) {
+            display: block;
+          }
           color: $cigi-text-grey;
+          display: none;
         }
       }
     }
 
-    &.card--medium__article-series {
-      div {
-        &[class*='col-'] {
-          border: 0 !important;
-        }
+    &.card--medium--article-series {
+      @include media-breakpoint-up(lg) {
+        flex-direction: row;
       }
-
-      .card__label {
-        padding-bottom: 1em;
-      }
-
-      &.card--vertical__article-series {
+      background-color: $black;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+  
+      img {
         @include media-breakpoint-up(lg) {
-          justify-content: space-between;
-          display: flex;
-          flex-direction: column;
+          border-radius: 20px 0 0 20px;
         }
-
-        .card__content {
-          @include media-breakpoint-up(lg) {
-            justify-content: space-between;
-            flex-direction: column;
-          }
-
-          .card__image {
-            @include media-breakpoint-up(md) {
-              padding: 0 4em 1em;
-            }
-            @include media-breakpoint-up(xl) {
-              padding: 0 14em 1em;
-            }
-            padding: 0 3em 1em;
-          }
-
-          .card__text {
-            @include media-breakpoint-up(lg) {
-              justify-content: flex-end;
-            }
-            justify-content: space-between;
-
-            .card__text__description {
-              @include media-breakpoint-only(md) {
-                display: block;
-              }
-              display: none;
-            }
-          }
+        border-radius: 20px 20px 0 0;
+      }
+  
+      .card__image {
+        @include media-breakpoint-only(md) {
+          height: auto;
+          padding-right: 0;
+          width: 100%;
         }
-      }
-
-      .card__label {
-        margin: 0;
-      }
-
-      .card__content {
+        @include media-breakpoint-up(lg) {
+          flex: 0 0 50%;
+        }
         height: 100%;
+        margin-bottom: 0;
+        position: relative;
+
+        .landscape {
+          @include media-breakpoint-up(lg) {
+            display: none;
+          }
+        }
+
+        .poster {
+          @include media-breakpoint-up(lg) {
+            display: block;
+          }
+          display: none;
+        }
+
+        .card__label {
+          align-items: center;
+          background-color: $black;
+          border-radius: 1em;
+          color: $white;
+          font-size: 0.8em;
+          display: flex;
+          height: 2.5em;
+          justify-content: center;
+          left: 1em;
+          position: absolute;
+          top: 1em;
+          width: 8em;
+
+          .fa-stack {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+      
+            .front {
+              background-color: $black;
+              position: absolute;
+              width: auto;
+            }
+      
+            .back {
+              margin-left: 0.3em;
+              margin-bottom: 0.3em;
+            }
+          }
+    
+          i {
+            margin-left: 0.15em;
+          }
+
+          p {
+            margin: 0;
+            padding-right: 0.7em;
+            white-space: nowrap;
+          }
+        }
+      }
+  
+      .card__text {
+        @include media-breakpoint-only(md) {
+          width: auto;
+        }
+        padding: 1em;
+        height: auto;
+  
+        .card__text__description {
+          @include media-breakpoint-up(lg) {
+            display: block;
+          }
+          display: none;
+          line-height: 1.75;
+          margin-bottom: 0.5em;
+          font-size: 0.8em;
+          color: $cigi-medium-grey;
+        }
+  
+        .card__text__title {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          font-family: $primary-font-family;
+          padding-bottom: 1em;
+          font-size: clamp(1.1em, 3vw, 1.5em);
+        }
+  
+        .card__text__meta {
+          .card__text__people {
+            @include link(
+              $color: $cigi-medium-grey,
+              $hover-color: $cigi-primary-colour
+            );
+
+            li {
+              color: $cigi-medium-grey;
+            }
+          }
+  
+          .card__text__topics {
+            @include link(
+              $color: $cigi-light-grey,
+              $hover-color: $cigi-primary-colour
+            );
+          }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
+          }
+        }
+      }
+
+      &.card--vertical--article-series {
+        flex-direction: column;
+
+        img {
+          border-radius: 20px 20px 0 0;
+        }
 
         .card__image {
-          @include media-breakpoint-up(xl) {
-            padding: 3em 6em;
+          @include media-breakpoint-up(lg) {
+            height: auto;
           }
-          padding: 0 3em;
+          height: 66.66666667%;
+          margin-bottom: 0;
+
+          .landscape {
+            @include media-breakpoint-up(lg) {
+              display: block;
+            }
+          }
+  
+          .poster {
+            display: none;
+          }
         }
 
         .card__text {
-          .card__text__title {
-            font-size: clamp(1.1em, 3vw, 1.5em);
+          @include media-breakpoint-up(lg) {
+            height: 100%;
           }
-
-          .card__text__description {
-            @include media-breakpoint-up(md) {
-              display: block;
-            }
-            color: $cigi-text-grey;
-            display: none;
-          }
+          height: 33.33333333%;
+          justify-content: space-between;
         }
       }
     }
@@ -356,6 +480,12 @@ article {
               $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour
             );
+          }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
           }
         }
       }
