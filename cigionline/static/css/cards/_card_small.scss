@@ -214,12 +214,21 @@
   &.card--small--expert {
     display: block;
 
+    .card--small--expert__top {
+      h3 {
+        margin: 0;
+      }
+    }
+
     .card--small--expert__bottom {
       margin-top: 1em;
 
       h4 {
         margin-bottom: 0;
+        font-size: 15px;
         text-transform: none;
+        color: $cigi-medium-grey;
+        font-weight: 300;
       }
 
       .card--expert__bottom__expertise-list {

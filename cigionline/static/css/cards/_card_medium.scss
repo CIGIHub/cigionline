@@ -70,6 +70,9 @@ article {
           height: auto;
 
           .card__text__title {
+            @include media-breakpoint-down(md) {
+              margin-bottom: 0;
+            }
             font-size: 1.25em;
             font-size: clamp(1.25em, 3vw, 1.75em);
           }
