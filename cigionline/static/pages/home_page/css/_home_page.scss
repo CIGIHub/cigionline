@@ -282,6 +282,40 @@
           }
         }
       }
+
+      .column__container {
+        @include media-breakpoint-only(md) {
+          grid-template-columns: 1fr 1fr;
+        }
+        display: grid;
+        grid-template-rows: 1fr;
+
+        article {
+          @include media-breakpoint-up(lg) {
+            padding: 1em 0;
+
+            &:first-child {
+              padding-top: 0;
+            }
+          }
+          &:nth-child(even) {
+            @include media-breakpoint-only(md) {
+              padding-right: 0;
+            }
+          }
+          border-bottom: 1px solid $cigi-light-grey;
+          padding: 1em 0;
+
+          &:last-child {
+            border: 0;
+            padding-bottom: 0;
+          }
+
+          .card__text {
+            width: 100%;
+          }
+        }
+      }
     }
   }
 }
