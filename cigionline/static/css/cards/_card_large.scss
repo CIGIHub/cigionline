@@ -66,10 +66,6 @@
         }
   
         .card__text__meta {
-          button {
-            color: $white;
-          }
-
           .card__text__people {
             @include link(
               $color: $cigi-medium-grey,
@@ -82,6 +78,12 @@
               $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour
             );
+          }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
           }
         }
       }
@@ -177,10 +179,6 @@
         }
   
         .card__text__meta {
-          button {
-            color: $white;
-          }
-
           .card__text__people {
             @include link(
               $color: $cigi-light-grey,
@@ -197,6 +195,12 @@
               $color: $cigi-medium-grey,
               $hover-color: $cigi-primary-colour
             );
+          }
+
+          .card__text__more {
+            i {
+              color: $white;
+            }
           }
         }
       }

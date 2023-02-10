@@ -241,7 +241,7 @@ $card-title-font: $title-font-family;
       
       .card__text__more {
         i {
-          color: $black;
+          color: $black !important;
         }
       }
     }
@@ -261,7 +261,7 @@ $card-title-font: $title-font-family;
       
       .card__text__more {
         i {
-          color: $black;
+          color: $black !important;
         }
       }
     }
