@@ -15,11 +15,11 @@
           <div>
             {% include 'includes/cards/card_text_title.html' %}
             {% if board_position %}
-            <div class="card--expert__board-position">
-              {{ board_position }}
-            </div>
+              <div class="card--expert__board-position">
+                {{ board_position }}
+              </div>
+            {% endif %}
           </div>
-        {% endif %}
         </div>
         {% include 'includes/cards/card_text_description.html' %}
       </div>
