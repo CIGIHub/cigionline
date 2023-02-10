@@ -313,14 +313,17 @@
           }
           &:nth-child(even) {
             @include media-breakpoint-only(md) {
+              border-bottom: 0 !important;
               padding-left: 1em;
               padding-right: 0;
             }
+            border-bottom: 1px solid $cigi-light-grey !important;
+            border-right: 0 !important;
           }
           padding: 1em 0;
 
           &:last-child {
-            border: 0;
+            border: 0 !important;
           }
 
           .card__text {
