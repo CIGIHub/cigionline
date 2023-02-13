@@ -176,7 +176,20 @@
 
                 &.card--small--publication {
                   @include media-breakpoint-only(md) {
-                    flex: 0 0 32.15%;
+                    flex-direction: row;
+                  }
+
+                  .card__image {
+                    @include media-breakpoint-only(md) {
+                      flex: 0 0 32.15%;
+                      padding: 0 1.5em 0 0;
+                    }
+                  }
+
+                  .card__text {
+                    @include media-breakpoint-only(md) {
+                      padding: 0 0 0 1.5em;
+                    }
                   }
                 }
               }
