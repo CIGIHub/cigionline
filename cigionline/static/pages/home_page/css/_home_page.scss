@@ -175,6 +175,10 @@
                 }
 
                 &.card--small--publication {
+                  @include media-breakpoint-only(md) {
+                    flex-direction: row;
+                  }
+
                   .card__image {
                     @include media-breakpoint-only(md) {
                       flex: 0 0 32.15%;
