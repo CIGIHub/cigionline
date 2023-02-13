@@ -289,8 +289,10 @@
           &.even {
             article {
               &:nth-last-child(-n + 2) {
-                border: 0;
-                padding-bottom: 0;
+                @include media-breakpoint-only(md) {
+                  border: 0;
+                  padding-bottom: 0;
+                }
               }
             }
           }
@@ -306,13 +308,6 @@
             &:nth-child(even) {
               @include media-breakpoint-only(md) {
                 padding-right: 0;
-              }
-            }
-            &:nth-child(odd) {
-              &:nth-last-child(2) {
-                @include media-breakpoint-only(md) {
-                  border-bottom: 0;
-                }
               }
             }
             border-bottom: 1px solid $cigi-light-grey;
