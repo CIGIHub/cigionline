@@ -43,9 +43,11 @@
 
       .card__image {
         @include media-breakpoint-up(md) {
-          padding-bottom: 1em;
           padding-right: 0;
           flex-basis: auto;
+        }
+        @include media-breakpoint-up(lg) {
+          padding-bottom: 1em;
         }
         padding-right: 1em;
         flex: 0 0 50%;
@@ -209,19 +211,19 @@
           align-items: center;
           display: flex;
           justify-content: center;
-    
+
           .front {
             background-color: $black;
             position: absolute;
             width: auto;
           }
-    
+
           .back {
             margin-left: 0.3em;
             margin-bottom: 0.3em;
           }
         }
-  
+
         i {
           margin-left: 0.15em;
         }

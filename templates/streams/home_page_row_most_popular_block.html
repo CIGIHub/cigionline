@@ -6,7 +6,7 @@
       <h2>Most Popular</h2>
     </div>
     <hr />
-    <div class="most-popular__container">
+    <div class="most-popular__container {% if self.most_popular_cards|length|divisibleby:2 %}even{% else %}odd{% endif %}">
       {% for block in self.most_popular_cards %}
         {% include_block block.value %}
       {% endfor %}
