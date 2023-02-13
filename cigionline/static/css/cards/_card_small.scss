@@ -46,9 +46,7 @@
           padding-right: 0;
           flex-basis: auto;
         }
-        @include media-breakpoint-up(lg) {
-          padding-bottom: 1em;
-        }
+        padding-bottom: 1em;
         padding-right: 1em;
         flex: 0 0 50%;
       }
@@ -68,6 +66,13 @@
 
     .card__text {
       flex-grow: 1;
+    }
+
+    &.card--small--event {
+      @include media-breakpoint-up(md) {
+        display: flex;
+      }
+      display: block;
     }
   }
 

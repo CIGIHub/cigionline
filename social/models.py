@@ -63,11 +63,15 @@ class Tweet(models.Model):
 
         try:
             public_metrics = tweet['public_metrics']
-            user = response.includes['users'][0]
-            media = response.includes['media'][0]
         except Exception:
             public_metrics = None
+        try:
+            user = response.includes['users'][0]
+        except Exception:
             user = None
+        try:
+            media = response.includes['media'][0]
+        except Exception:
             media = None
 
         self.tweet_text = tweet['text']
