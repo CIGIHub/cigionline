@@ -1539,6 +1539,23 @@ class HomePageRowMostPopular(blocks.StructBlock):
         form_classname = 'most-popular-block'
 
 
+class HomePageColumnBlock(blocks.StructBlock):
+    column_cards = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('publication_card', PublicationCard()),
+        ('article_series_card', ArticleSeriesCard()),
+        ('event_card', EventCard()),
+        ('multimedia_card', MultimediaCard()),
+        ('expert_card', ExpertCard()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Column Block'
+        template = 'streams/home_page_column_block.html'
+        form_classname = 'column-block'
+
+
 class SocialSwiperRow(blocks.StructBlock):
     social_swiper_cards = blocks.StreamBlock([
         ('twitter_card', TwitterCard()),
@@ -1567,6 +1584,7 @@ class HomePageRow(blocks.StructBlock):
         ('expert_card', ExpertCard()),
         ('ad_card', AdCard()),
         ('most_popular', HomePageRowMostPopular()),
+        ('column_block', HomePageColumnBlock())
     ])
     grouped = blocks.BooleanBlock(required=False, default=False, help_text='Group cards into rows with a grey background.')
 
