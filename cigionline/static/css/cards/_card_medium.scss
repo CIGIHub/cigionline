@@ -134,9 +134,43 @@ article {
         }
       }
 
+      .card__image {
+        @include media-breakpoint-up(md) {
+          display: flex;
+          align-items: center;
+          padding-right: 1.5em;
+        }
+        display: block;
+        padding: 0 3em 0 0;
+        flex: 0 0 50%;
+      }
+
       .card__text {
-        @include media-breakpoint-only(md) {
+        @include media-breakpoint-up(md) {
+          justify-content: space-between;
           padding-left: 1.5em;
+        }
+        justify-content: center;
+
+        .card__text__title {
+          @include media-breakpoint-up(xl) {
+            font-size: clamp(1.25em, 4vw, 2.5em);
+          }
+          font-size: clamp(1.1em, 3vw, 1.5em);
+        }
+
+        .card__text__description {
+          @include media-breakpoint-up(md) {
+            display: block;
+          }
+          color: $cigi-text-grey;
+          display: none;
+
+          p {
+            @include media-breakpoint-up(xl) {
+              font-size: clamp(1em, 1.5vw, 2.4em);
+            }
+          }
         }
       }
 
@@ -148,11 +182,11 @@ article {
         height: 100%;
 
         .card__image {
-          @include media-breakpoint-up(md) {
-            padding: 0 5.5em 1em 4em;
+          @include media-breakpoint-only(md) {
+            padding: 0 1.5em 0 0;
           }
           @include media-breakpoint-up(lg) {
-            padding: 0 10em 1em;
+            padding: 0 6em 1em;
           }
           @include media-breakpoint-up(xl) {
             padding: 0 14em 1em;
@@ -183,42 +217,6 @@ article {
             }
             display: none;
           }
-        }
-      }
-
-      .card__image {
-        @include media-breakpoint-up(md) {
-          display: flex;
-          align-items: center;
-          padding: 0 1.5em;
-        }
-        @include media-breakpoint-up(lg) {
-          padding: 0 3em;
-        }
-        @include media-breakpoint-up(xl) {
-          padding: 3em 6em;
-        }
-        display: block;
-        padding: 0 1em 0 0;
-        flex: 0 0 50%;
-      }
-
-      .card__text {
-        @include media-breakpoint-up(md) {
-          justify-content: space-between;
-        }
-        justify-content: center;
-
-        .card__text__title {
-          font-size: clamp(1.1em, 3vw, 1.5em);
-        }
-
-        .card__text__description {
-          @include media-breakpoint-up(lg) {
-            display: block;
-          }
-          color: $cigi-text-grey;
-          display: none;
         }
       }
     }
