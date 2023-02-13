@@ -302,6 +302,13 @@
                 padding-right: 0;
               }
             }
+            &:nth-child(odd) {
+              &:nth-last-child(2) {
+                @include media-breakpoint-only(md) {
+                  border-bottom: 0;
+                }
+              }
+            }
             border-bottom: 1px solid $cigi-light-grey;
             padding: 1em 0;
 
