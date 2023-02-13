@@ -275,6 +275,13 @@
               border: 0;
               padding-bottom: 0;
             }
+            &:nth-child(odd) {
+              &:nth-last-child(2) {
+                @include media-breakpoint-only(md) {
+                  border-bottom: 0;
+                }
+              }
+            }
 
             .card__text {
               width: 100%;
@@ -296,12 +303,12 @@
 
         &>div {
           @include media-breakpoint-up(lg) {
-            padding: 1em 0;
-
             &:first-child {
               padding-top: 0;
             }
           }
+          padding: 1em 0;
+
           &:nth-child(odd) {
             @include media-breakpoint-only(md) {
               border-bottom: 0 !important;
@@ -311,6 +318,7 @@
             border-bottom: 1px solid $cigi-light-grey !important;
             border-right: 0 !important;
           }
+
           &:nth-child(even) {
             @include media-breakpoint-only(md) {
               border-bottom: 0 !important;
@@ -320,7 +328,6 @@
             border-bottom: 1px solid $cigi-light-grey !important;
             border-right: 0 !important;
           }
-          padding: 1em 0;
 
           &:last-child {
             border: 0 !important;
