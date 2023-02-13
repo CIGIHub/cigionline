@@ -110,9 +110,10 @@ article {
       }
     }
 
-    &.card--medium__publication {
+    &.card--medium--publication {
       @include media-breakpoint-up(lg) {
         justify-content: space-between;
+        flex-direction: row;
       }
       display: flex;
       height: 100%;
@@ -147,10 +148,6 @@ article {
         }
         justify-content: center;
 
-        .card__text__title {
-          font-size: clamp(1.1em, 3vw, 1.5em);
-        }
-
         .card__text__description {
           @include media-breakpoint-up(md) {
             display: block;
@@ -160,7 +157,7 @@ article {
         }
       }
 
-      &.card--vertical__publication {
+      &.card--vertical--publication {
         @include media-breakpoint-up(lg) {
           flex-direction: column;
         }
@@ -192,13 +189,6 @@ article {
             justify-content: space-between;
           }
           justify-content: center;
-
-          .card__text__title {
-            @include media-breakpoint-only(md) {
-              font-size: clamp(1.25em, 3vw, 2.4em);
-              letter-spacing: -0.5px;
-            }
-          }
 
           .card__text__description {
             @include media-breakpoint-only(md) {
@@ -310,7 +300,6 @@ article {
           display: none;
           line-height: 1.75;
           margin-bottom: 0.5em;
-          font-size: 0.8em;
           color: $cigi-medium-grey;
         }
 
@@ -318,7 +307,6 @@ article {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
           font-family: $primary-font-family;
           padding-bottom: 1em;
-          font-size: clamp(1.1em, 3vw, 1.5em);
         }
 
         .card__text__meta {
@@ -407,6 +395,7 @@ article {
         @include media-breakpoint-only(md) {
           flex: 0 0 66.66666667%;
         }
+        margin-bottom: 0;
         position: relative;
 
         .card__image__play-icon {
@@ -457,7 +446,6 @@ article {
             padding-bottom: 0;
           }
           padding-bottom: 2em;
-          font-size: clamp(1.1em, 3vw, 1.5em);
         }
 
         .card__text__meta {

@@ -55,8 +55,6 @@
         @include media-breakpoint-up(md) {
           height: 100%;
         }
-        font-size: 1.1em;
-        font-size: clamp(1.1em, 3vw, 1.5em);
         font-family: $card-title-font;
         line-height: 1;
         flex: 0 0 50%;
@@ -66,6 +64,11 @@
 
     .card__text {
       flex-grow: 1;
+      
+      .card__text__title {
+        font-size: 1.1em;
+        font-size: clamp(1.1em, 3vw, 1.5em);
+      }
     }
 
     &.card--small--event {
