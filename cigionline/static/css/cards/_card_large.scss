@@ -231,7 +231,7 @@
 
         p {
           @include media-breakpoint-up(lg) {
-            font-size: clamp(1em, 1.5vw, 2.4em);
+            font-size: clamp(1em, 1.5vw, 1.2em);
           }
         }
       }
