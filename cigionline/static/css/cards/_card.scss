@@ -273,6 +273,10 @@ $card-title-font: $title-font-family;
       @include link($color: $black !important);
     }
 
+    .card__text__description {
+      color: $black !important;
+    }
+
     .card__text__meta {
       .card__text__topics {
         @include link($color: $black !important);
@@ -291,6 +295,10 @@ $card-title-font: $title-font-family;
 
     .card__text__title {
       @include link($color: $black !important);
+    }
+
+    .card__text__description {
+      color: $black !important;
     }
 
     .card__text__meta {
