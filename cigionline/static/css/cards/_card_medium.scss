@@ -52,11 +52,6 @@ article {
         grid-gap: 2em;
         grid-template-columns: 1fr 1fr;
         grid-template-areas:
-          'a b'
-          'c c';
-      }
-      @include media-breakpoint-up(lg) {
-        grid-template-areas:
           'a c'
           'b c';
       }
@@ -81,9 +76,6 @@ article {
 
       .card__latest-activity {
         @include media-breakpoint-up(md) {
-          grid-area: c;
-        }
-        @include media-breakpoint-up(lg) {
           grid-area: b;
         }
 
@@ -105,9 +97,6 @@ article {
 
       .card--medium--expert--right {
         @include media-breakpoint-up(md) {
-          grid-area: b;
-        }
-        @include media-breakpoint-up(lg) {
           grid-area: c;
         }
       }
@@ -232,14 +221,14 @@ article {
       display: flex;
       flex-direction: column;
       height: 100%;
-  
+
       img {
         @include media-breakpoint-up(lg) {
           border-radius: 20px 0 0 20px;
         }
         border-radius: 20px 20px 0 0;
       }
-  
+
       .card__image {
         @include media-breakpoint-only(md) {
           height: auto;
@@ -284,19 +273,19 @@ article {
             align-items: center;
             display: flex;
             justify-content: center;
-      
+
             .front {
               background-color: $black;
               position: absolute;
               width: auto;
             }
-      
+
             .back {
               margin-left: 0.3em;
               margin-bottom: 0.3em;
             }
           }
-    
+
           i {
             margin-left: 0.15em;
           }
@@ -308,14 +297,14 @@ article {
           }
         }
       }
-  
+
       .card__text {
         @include media-breakpoint-only(md) {
           width: auto;
         }
         padding: 1em;
         height: auto;
-  
+
         .card__text__description {
           @include media-breakpoint-up(lg) {
             display: block;
@@ -326,14 +315,14 @@ article {
           font-size: 0.8em;
           color: $cigi-medium-grey;
         }
-  
+
         .card__text__title {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
           font-family: $primary-font-family;
           padding-bottom: 1em;
           font-size: clamp(1.1em, 3vw, 1.5em);
         }
-  
+
         .card__text__meta {
           .card__text__people {
             @include link(
@@ -345,7 +334,7 @@ article {
               color: $cigi-medium-grey;
             }
           }
-  
+
           .card__text__topics {
             @include link(
               $color: $cigi-light-grey,
@@ -380,7 +369,7 @@ article {
               display: block;
             }
           }
-  
+
           .poster {
             display: none;
           }
