@@ -132,6 +132,9 @@ article {
           align-items: flex-start;
           padding-right: 1.5em;
         }
+        @include media-breakpoint-only(md) {
+          flex: 0 0 32.15%;
+        }
         display: block;
         padding: 0 1em 0 0;
         flex: 0 0 50%;

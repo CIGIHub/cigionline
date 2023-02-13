@@ -173,6 +173,12 @@
                     }
                   }
                 }
+
+                &.card--small--publication {
+                  @include media-breakpoint-only(md) {
+                    flex: 0 0 32.15%;
+                  }
+                }
               }
             }
           }
