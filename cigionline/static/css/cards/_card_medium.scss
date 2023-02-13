@@ -126,7 +126,7 @@ article {
       .card__image {
         @include media-breakpoint-up(md) {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           padding-right: 1.5em;
         }
         display: block;
