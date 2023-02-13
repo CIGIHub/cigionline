@@ -297,10 +297,10 @@
         padding: 0 3.25em 2em;
       }
       @include media-breakpoint-up(xl) {
-        padding: 2em 4em 3em;
+        padding: 0 4em 3em;
       }
       @include media-breakpoint-up(xxl) {
-        padding: 2em 6em 3em;
+        padding: 0 6em 3em;
       }
       padding: 0 1em 0 0;
       flex: 0 0 50%;
