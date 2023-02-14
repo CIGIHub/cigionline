@@ -19,24 +19,59 @@
               <h1>{{ self.title }}</h1>
             </div>
             <p>{{ self.subtitle|richtext }}</p>
+            <button class="read-more" id="read-more">
+              <a>
+                <i class="fal fa-plus"></i>
+                <u>Read more</u>
+              </a>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <section class="highlighted-topics">
+  <section class="body hidden" id="body">
     <div class="container">
       <div class="row">
-        <div class="col-12">
-          <div class="highlighted-topics-container">
-            <h2>Research Topics</h2>
-            <div id="topics-container" data-tree="{{ self.topics_data }}">
-            </div>
+        <div class="col-lg-4">
+          <div class="body__title">
+            A Think Tank for the Digital Era
           </div>
+        </div>
+        <div class="col-lg-7 offset-lg-1">
+          <div class="body__content">
+            {% for block in self.body %}
+              {{ block.value|richtext }}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <hr>
         </div>
       </div>
     </div>
   </section>
+  <section class="research-topics all-topics">
+    <div class="container all-topics__contianer">
+      <div class="row">
+        <div class="col-md-2">
+          <h2>Research Topics</h2>
+        </div>
+        <div class="col-md-10">
+          {% highlighted_topics_footer %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <hr />
+      </div>
+    </div>
+  </div>
   <section class="featured-publications" id="featured-publications">
     <div class="container">
       <div class="row">
@@ -58,23 +93,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  <section class="body">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="body__title">
-            A Think Tank for the Digital Era
-          </div>
-        </div>
-        <div class="col-lg-7 offset-lg-1">
-          <div class="body__content">
-            {% for block in self.body %}
-              {{ block.value|richtext }}
-            {% endfor %}
-          </div>
-        </div>
     </div>
   </section>
   <section>

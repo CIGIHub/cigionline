@@ -6,16 +6,35 @@ h2 {
   margin-bottom: 1em;
 }
 
-.highlighted-topics {
-  margin-bottom: 3em;
+.hero {
+  .hero__content {
+    .read-more {
+      a {
+        display: flex;
+        align-items: center;
+        font-weight: 300;
 
-  .highlighted-topics-container {
-    padding-bottom: 2em;
-    border-bottom: 1px solid $cigi-light-grey;
+        i {
+          margin-right: 1em;
+          font-size: 0.75em;
+        }
+      }
+    }
+  }
+}
+
+.research-topics {
+  margin-bottom: 3em;
+  padding-bottom: 0;
+
+  h2 {
+    margin-bottom: 2em;
   }
 }
 
 .featured-publications {
+  margin-top: 2em;
+
   .container {
     position: relative;
   }
@@ -77,6 +96,16 @@ h2 {
 }
 
 .body {
+  opacity: 1;
+  max-height: 2000px;
+  transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+
+  &.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+  }
+
   .body__title {
     font-size: clamp(1.5em, 5vw, 2.5em);
     font-weight: 400;
