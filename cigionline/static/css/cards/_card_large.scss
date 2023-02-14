@@ -235,6 +235,21 @@
   }
 
   &.card--large--event {
+    .card--event__top {
+      .card--event__title {
+        &.card__text__title {
+          @include media-breakpoint-up(md) {
+            font-size: 1.25em;
+            font-size: clamp(1.25em, 3vw, 2.4em);
+          }
+          font-size: 1.1em;
+          font-size: clamp(1.1em, 3vw, 1.5em);
+          font-weight: 300;
+          letter-spacing: -0.5px;
+          line-height: 1.1;
+        }
+      }
+    }
     .card--event__buttons {
       display: flex;
       justify-content: flex-end;
