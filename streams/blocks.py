@@ -1,10 +1,11 @@
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 from django.conf import settings
 from django.db import models
 from django.forms.utils import flatatt
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
+from distutils.log import error
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -14,6 +15,7 @@ from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
 import os
 import re
+import traceback
 
 
 class ThemeableBlock:
@@ -1483,8 +1485,17 @@ class TwitterCard(blocks.StructBlock):
         context = super().get_context(value, parent_context=parent_context)
         urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)
         tweet_text = urls.sub(r'<a href="\1" target="_blank">\1</a>', value.get('tweet').tweet_text)
-
+        
+        if value.get('tweet').tweet_media_link:
+            tweet_media_link = value.get('tweet').tweet_media_link
+        else:
+            try:
+                tweet_media_link = BeautifulSoup(tweet_text, parse_only=SoupStrainer('a')).find('a', href=True).get('href')
+            except Exception:
+                tweet_media_link = value.get('tweet').tweet_url
+                error(traceback.format_exc())
         context['tweet_text'] = tweet_text
+        context['tweet_media_link'] = tweet_media_link
         return context
 
     class Meta:

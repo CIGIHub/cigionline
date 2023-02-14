@@ -25,6 +25,7 @@ class Tweet(models.Model):
     tweet_media_key = models.CharField(max_length=255, blank=True, null=True)
     tweet_media_alt_text = models.CharField(max_length=255, blank=True, null=True)
     tweet_media_preview_image_url = models.CharField(max_length=255, blank=True, null=True)
+    tweet_media_link = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -46,6 +47,7 @@ class Tweet(models.Model):
         FieldPanel('tweet_media_key'),
         FieldPanel('tweet_media_alt_text'),
         FieldPanel('tweet_media_preview_image_url'),
+        FieldPanel('tweet_media_link'),
     ]
 
     def save(self, force_insert=False, force_update=False, using=None,
