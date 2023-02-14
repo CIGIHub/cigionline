@@ -724,7 +724,7 @@ class SearchTable extends React.Component {
     if (filter.length > 0) {
       filter.push(
         <span
-          className="filter red"
+          className="filter grey"
           onClick={this.removeAllFilters}
           onKeyDown={this.removeAllFilters}
           role="button"
