@@ -58,30 +58,4 @@ footer {
       list-style: none;
     }
   }
-
-  .footer__topics {
-    padding-bottom: 10em;
-
-    .footer__topics__container {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      list-style: none;
-      position: relative;
-
-      li {
-        flex-shrink: 0;
-        margin-right: 0.5em;
-        margin-bottom: 0.5em;
-
-        .button--rounded {
-          @include button();
-        }
-
-        .topic-count {
-          color: $cigi-medium-grey;
-        }
-      }
-    }
-  }
 }
