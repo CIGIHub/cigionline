@@ -9,7 +9,11 @@ function ResearchContentListing(props) {
       <div className="card__image">
         <a href={row.url}>
           <div className="img-wrapper">
-            <img alt={row.image_alt} src={row.image_poster_url} />
+            {row.image_poster_url && (
+              <img alt={row.image_alt} src={row.image_poster_url} />
+            ) || (
+              <img alt={row.image_alt} src="/static/images/CIGI-default-recommended-thumb.2e16d0ba.fill-525x700.png" />
+            )}
           </div>
         </a>
       </div>
