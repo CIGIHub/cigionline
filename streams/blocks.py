@@ -13,6 +13,7 @@ from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
 import os
+import re
 
 
 class ThemeableBlock:
@@ -1477,6 +1478,14 @@ class ExpertCard(blocks.StructBlock):
 
 class TwitterCard(blocks.StructBlock):
     tweet = SnippetChooserBlock(required=True, target_model='social.Tweet')
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)
+        tweet_text = urls.sub(r'<a href="\1" target="_blank">\1</a>', value.get('tweet').tweet_text)
+
+        context['tweet_text'] = tweet_text
+        return context
 
     class Meta:
         icon = 'site'

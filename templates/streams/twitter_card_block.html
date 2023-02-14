@@ -1,3 +1,4 @@
+{% load wagtailcore_tags %}
 <div class="social--media social--media__first swiper-slide">
   <article class="card__container card--small card--small__social--media card--twitter">
     <div class="social--media__profile--bar">
@@ -6,7 +7,7 @@
       </div>
       <div class="row">
         <h6 class="profile--name">
-          <a href="https://twitter.com/{{ self.tweet.tweet_user_name }}">{{ self.tweet.tweet_user_name }}</a>
+          <a href="https://twitter.com/{{ self.tweet.tweet_user_username }}" target="_blank">{{ self.tweet.tweet_user_name }}</a>
         </h6>
         <div class="profile--handle">
           <span class="twitter-id">@{{ self.tweet.tweet_user_username }}</span> ∙ <span class="date">{{ self.tweet.tweet_created_at|date:"M j" }}</span>
@@ -14,7 +15,7 @@
       </div>
     </div>
     <p class="card__text">
-      {{ self.tweet.tweet_text }}
+      {{ tweet_text|richtext }}
     </p>
     <div class="card__image">
       <a href=""
