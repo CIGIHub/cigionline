@@ -170,7 +170,7 @@ class BasicPageAbstract(models.Model):
     @property
     def image_poster_url(self):
         if self.specific.image_poster:
-            return self.specific.image_poster.get_rendition('fill-360x720').url
+            return self.specific.image_poster.get_rendition('fill-672x895').url
         return ''
 
     @property

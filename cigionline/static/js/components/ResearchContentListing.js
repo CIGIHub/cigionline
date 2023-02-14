@@ -5,9 +5,9 @@ function ResearchContentListing(props) {
   const { row } = props;
 
   return (
-    <article className="card__container card--small card--small--poster">
+    <article className="card__container card--small card--small--publication">
       <div className="card__image">
-        <a href={row.url} className="feature-content-image">
+        <a href={row.url}>
           <div className="img-wrapper">
             <img alt={row.image_alt} src={row.image_poster_url} />
           </div>
