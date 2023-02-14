@@ -55,7 +55,6 @@
         @include media-breakpoint-up(md) {
           height: 100%;
         }
-        font-family: $card-title-font;
         line-height: 1;
         flex: 0 0 50%;
         height: auto;
@@ -249,7 +248,7 @@
 
       .card__text__title {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
-        font-family: $primary-font-family;
+        margin: 0;
         padding-bottom: 1em;
       }
 
@@ -361,6 +360,14 @@
         font-size: 15px;
         line-height: 1.25;
         margin-top: 1.5em;
+      }
+    }
+  }
+
+  &.card--small--article {
+    .card__text {
+      .card__text__title {
+        font-family: $card-title-font;
       }
     }
   }

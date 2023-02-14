@@ -6,9 +6,12 @@
   
     .card__text {
       .card__text__title {
-        font-size: 1.25em;
-        font-size: clamp(1.25em, 3vw, 2.4em);
-        font-family: $card-title-font;
+        @include media-breakpoint-up(md) {
+          font-size: 1.25em;
+          font-size: clamp(1.25em, 3vw, 2.4em);
+        }
+        font-size: 1.1em;
+        font-size: clamp(1.1em, 3vw, 1.5em);
         letter-spacing: -0.5px;
         margin-bottom: 1.5rem;
       }
@@ -60,7 +63,6 @@
 
       .card__text__title {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
-        font-family: $primary-font-family;
         padding-bottom: 1em;
       }
 
@@ -171,14 +173,13 @@
 
       .card__text__title {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
-        font-family: $primary-font-family;
         padding-bottom: 1em;
       }
 
       .card__text__meta {
         .card__text__people {
           @include link(
-            $color: $cigi-light-grey,
+            $color: $cigi-medium-grey,
             $hover-color: $cigi-primary-colour
           );
 
@@ -189,7 +190,7 @@
 
         .card__text__topics {
           @include link(
-            $color: $cigi-medium-grey,
+            $color: $cigi-light-grey,
             $hover-color: $cigi-primary-colour
           );
         }
@@ -280,6 +281,14 @@
         width: 100%;
         border-radius: 100px;
         transition: none;
+      }
+    }
+  }
+
+  &.card--large--article {
+    .card__text {
+      .card__text__title {
+        font-family: $card-title-font;
       }
     }
   }
