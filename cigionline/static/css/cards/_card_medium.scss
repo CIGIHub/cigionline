@@ -39,9 +39,12 @@ article {
           width: 33.33333333%;
         }
         .card__text__title {
-          font-size: 1.25em;
-          font-size: clamp(1.25em, 3vw, 2em);
-          font-family: $card-title-font;
+          @include media-breakpoint-up(md) {
+            font-size: 1.25em;
+            font-size: clamp(1.25em, 3vw, 2em);
+          }
+          font-size: 1.1em;
+          font-size: clamp(1.1em, 3vw, 1.5em);
         }
       }
     }
@@ -110,11 +113,12 @@ article {
       }
     }
 
-    &.card--medium__publication {
+    &.card--medium--publication {
       @include media-breakpoint-up(lg) {
         justify-content: space-between;
       }
       display: flex;
+      flex-direction: row;
       height: 100%;
 
       div {
@@ -136,6 +140,7 @@ article {
           flex: 0 0 32.15%;
         }
         display: block;
+        margin: 0;
         padding: 0 1em 0 0;
         flex: 0 0 50%;
       }
@@ -144,12 +149,9 @@ article {
         @include media-breakpoint-up(md) {
           justify-content: space-between;
           padding-left: 1.5em;
+          flex-grow: 1;
         }
         justify-content: center;
-
-        .card__text__title {
-          font-size: clamp(1.1em, 3vw, 1.5em);
-        }
 
         .card__text__description {
           @include media-breakpoint-up(md) {
@@ -160,7 +162,7 @@ article {
         }
       }
 
-      &.card--vertical__publication {
+      &.card--vertical--publication {
         @include media-breakpoint-up(lg) {
           flex-direction: column;
         }
@@ -192,13 +194,6 @@ article {
             justify-content: space-between;
           }
           justify-content: center;
-
-          .card__text__title {
-            @include media-breakpoint-only(md) {
-              font-size: clamp(1.25em, 3vw, 2.4em);
-              letter-spacing: -0.5px;
-            }
-          }
 
           .card__text__description {
             @include media-breakpoint-only(md) {
@@ -310,15 +305,12 @@ article {
           display: none;
           line-height: 1.75;
           margin-bottom: 0.5em;
-          font-size: 0.8em;
           color: $cigi-medium-grey;
         }
 
         .card__text__title {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
-          font-family: $primary-font-family;
           padding-bottom: 1em;
-          font-size: clamp(1.1em, 3vw, 1.5em);
         }
 
         .card__text__meta {
@@ -407,6 +399,8 @@ article {
         @include media-breakpoint-only(md) {
           flex: 0 0 66.66666667%;
         }
+        margin-bottom: 0;
+        padding-right: 0;
         position: relative;
 
         .card__image__play-icon {
@@ -457,7 +451,6 @@ article {
             padding-bottom: 0;
           }
           padding-bottom: 2em;
-          font-size: clamp(1.1em, 3vw, 1.5em);
         }
 
         .card__text__meta {
@@ -492,6 +485,14 @@ article {
       &.card--medium--event--vertical {
         .card--event__image {
           margin-bottom: 1em;
+        }
+      }
+    }
+
+    &.card--medium--article {
+      .card__text {
+        .card__text__title {
+          font-family: $card-title-font;
         }
       }
     }
