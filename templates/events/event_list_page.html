@@ -11,26 +11,31 @@
 {% block content %}
   {% include "includes/heroes/hero_event_list.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 
-  <section class="events-page-featured-events">
-    <div class="container">
-      <h2>Featured</h2>
-      <div class="row featured-event-row">
-        {% for item in featured_events %}
-          <div class="col-md-4 featured-event-col">
-            {% include "includes/features/feature_event.html" with event=item %}
+  <div class="container">
+    <div class="row calendar-tab">
+      <section class="col-lg-4 calender">CALENDAR</section>
+      <div class="col-lg-8 events-listing">
+      {% comment %} <section class="events-page-featured-events"> {% endcomment %}
+        <div class="container">
+          <h2>Featured</h2>
+          <div class="row featured-event-row">
+            {% for item in featured_events %}
+              <div class="col-md-4 featured-event-col">
+                {% include "includes/features/feature_event.html" with event=item %}
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <div id="events-search-table">
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div id="events-search-table">
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+    <div class="archive-tab">
+  </div>
 {% endblock content %}
