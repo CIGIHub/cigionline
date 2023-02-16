@@ -10,32 +10,51 @@
 
 {% block content %}
   {% include "includes/heroes/hero_event_list.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-
   <div class="container">
+    <div class="row">
+      <div class="col-lg-4 d-flex events-page-label">
+        <div>
+          (fa-icon here)
+        </div>
+        <div>
+          Events
+        </div>
+      </div>
+      <div class="col-lg-8 d-flex events-page-tabs">
+        <div>Calendar</div>
+        <div>Archive</div>
+      </div>
+    </div>
     <div class="row calendar-tab">
-      <section class="col-lg-4 calender">CALENDAR</section>
-      <div class="col-lg-8 events-listing">
+      <section class="col-lg-4 calender">
+        (Calendar here)
+      </section>
+      <section class="col-lg-8 events-listing">
       {% comment %} <section class="events-page-featured-events"> {% endcomment %}
         <div class="container">
-          <h2>Featured</h2>
           <div class="row featured-event-row">
             {% for item in featured_events %}
-              <div class="col-md-4 featured-event-col">
+              <div class="featured-event-col">
                 {% include "includes/features/feature_event.html" with event=item %}
               </div>
             {% endfor %}
           </div>
         </div>
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <div id="events-search-table">
-              </div>
-            </div>
-          </div>
-        </div>
+      </section>
+      <div class="container">
+        1 2 3 4...
       </div>
     </div>
     <div class="archive-tab">
+      <section class="highlights-slider">
+        (Slider here)
+      </section>
+      <section class="row search-table">
+        <div class="col">
+          <div id="events-search-table">
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 {% endblock content %}
