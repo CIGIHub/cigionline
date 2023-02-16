@@ -11,45 +11,56 @@
 {% block content %}
   <div class="container">
     <div class="row">
-      <div class="col-lg-4 d-flex events-page-label">
+      <div class="col-lg-4 d-flex events-landing-page-label">
         <div>(fa-icon here)</div>
         <div>Events</div>
       </div>
-      <div class="col-lg-8 d-flex events-page-tabs">
-        <div>Calendar</div>
-        <div>Archive</div>
+      <div class="col-lg-8 d-flex events-landing-page-tabs">
+        <ul class="nav nav-tabs events-landing-page-nav" id="events-landing-page-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="calendar-tab" data-bs-toggle="tab" href="#calendar" role="tab"
+              aria-controls="calendar" aria-selected="true">Calendar</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="archive-tab" data-bs-toggle="tab" href="#archive" role="tab"
+              aria-controls="archive" aria-selected="false">Archive</a>
+          </li>
+        </ul>
       </div>
     </div>
-    <div class="row calendar-tab">
-      <section class="col-lg-4 calender">
-        {% include "includes/events_calendar.html" %}
-      </section>
-      <section class="col-lg-8 events-listing">
-      {% comment %} <section class="events-page-featured-events"> {% endcomment %}
-        <div class="container">
-          <div class="row featured-event-row">
-            {% for item in featured_events %}
-              <div class="featured-event-col">
-                {% include "includes/features/feature_event.html" with event=item %}
+    <div class="tab-content" id="person-leadership-tab-content">
+      <div class="tab-pane fade show active" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
+        <div class="row">
+          <section class="col-lg-4 events-calender">
+            {% include "includes/events_calendar.html" %}
+          </section>
+          <section class="col-lg-8 events-listing">
+            <div class="container">
+              <div class="row featured-event-row">
+                {% for item in featured_events %}
+                  <div class="featured-event-col">
+                    {% include "../streams/event_card_block_medium.html" with title=item.title %}
+                  </div>
+                {% endfor %}
               </div>
-            {% endfor %}
-          </div>
+            </div>
+          </section>
         </div>
-      </section>
-      <div class="container">
-        <div class="col-lg-5">1 2 3 4... Last</div>
+        <div class="container">
+          <div class="col-lg-5">1 2 3 4... Last</div>
+        </div>
       </div>
-    </div>
-    <div class="archive-tab">
-      <section class="highlights-slider">
-        (Slider here)
-      </section>
-      <section class="row search-table">
-        <div class="col">
-          <div id="events-search-table">
+      <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive-tab">
+        <section class="highlights-slider">
+          (Slider here)
+        </section>
+        <section class="row search-table">
+          <div class="col">
+            <div id="events-search-table">
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   </div>
 {% endblock content %}
