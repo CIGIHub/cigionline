@@ -9,16 +9,11 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_event_list.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   <div class="container">
     <div class="row">
       <div class="col-lg-4 d-flex events-page-label">
-        <div>
-          (fa-icon here)
-        </div>
-        <div>
-          Events
-        </div>
+        <div>(fa-icon here)</div>
+        <div>Events</div>
       </div>
       <div class="col-lg-8 d-flex events-page-tabs">
         <div>Calendar</div>
@@ -27,7 +22,7 @@
     </div>
     <div class="row calendar-tab">
       <section class="col-lg-4 calender">
-        (Calendar here)
+        {% include "includes/events_calendar.html" %}
       </section>
       <section class="col-lg-8 events-listing">
       {% comment %} <section class="events-page-featured-events"> {% endcomment %}
@@ -42,7 +37,7 @@
         </div>
       </section>
       <div class="container">
-        1 2 3 4...
+        <div class="col-lg-5">1 2 3 4... Last</div>
       </div>
     </div>
     <div class="archive-tab">
