@@ -311,6 +311,10 @@ class EventPage(
             label = self.time_zone
         return label
 
+    @property
+    def card_url(self):
+        return self.feature_url if self.feature_url else self.url
+
     def get_context(self, request):
         context = super().get_context(request)
         context['location_string'] = self.location_string()
