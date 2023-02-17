@@ -4,6 +4,7 @@ import SearchResultListing from '../../js/components/SearchResultListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/search_page.scss';
 
+const livePageCount = Number(document.getElementById('search-table').dataset.livePageCount).toLocaleString('en-US');
 ReactDOM.render(
   <SearchTable
     blockListing
@@ -11,6 +12,7 @@ ReactDOM.render(
     showCount
     showSearch
     showExpertDropDown
+    searchPlaceholder={`Explore ${livePageCount} pages of CIGI research and analysis`}
     sortOptions={[{
       default: true,
       name: 'Relevance',

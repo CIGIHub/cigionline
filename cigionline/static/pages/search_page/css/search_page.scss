@@ -1,5 +1,29 @@
-.template-searchresults {
+@import '../../../css/global/mixins';
+
+.search-page {
   h1 {
     margin-bottom: 0;
+  }
+
+  .search-table-container {
+    margin-top: 2em;
+    padding-top: 1.5em;
+    border-top: 1px solid $cigi-light-grey;
+
+    .search-bar__advanced-search-label {
+      margin-bottom: 2em;
+
+      i {
+        margin-right: 0.5em;
+      }
+    }
+
+    .search-bar__filter-by-label {
+      margin-top: 2em;
+    }
+
+    .search-table-count {
+      margin-top: 2em;
+    }
   }
 }

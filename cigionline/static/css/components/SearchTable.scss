@@ -206,6 +206,10 @@
 //3.0 styling
 
 .search-table {
+  .empty-query-prompt {
+    margin: 2em 0;
+  }
+
   .search-table__results--grid {
     @include media-breakpoint-up(lg) {
       grid-template-columns: 1fr 1fr 1fr;
@@ -349,6 +353,17 @@
         &.active {
           color: $cigi-dark-grey;
         }
+      }
+    }
+
+    &.search-page__search-bar {
+      & > div {
+        border: 0;
+      }
+      
+      .search-bar__display-mode-container {
+        display: flex;
+        justify-content: space-between;
       }
     }
   }
