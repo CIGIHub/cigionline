@@ -36,9 +36,9 @@
           </section>
           <section class="col-lg-8 events-listing">
             <div class="container">
-              <div class="row featured-event-row">
+              <div class="row events-wrapper">
                 {% for item in featured_events %}
-                  <div class="featured-event-col">
+                  <div class="events-item">
                     {% include "../streams/event_card_block_medium.html" with title=item.title authors=item.all_authors.all date=item.publishing_date end_date=item.event_end event_type=item.get_event_type_display event_access=item.get_event_access_display event_format=item.event_format_string is_past=item.is_past time_zone_label=item.time_zone_label url=item.card_url topics=item.topics_sorted registration_url=item.registration_url id=item.id %}
                   </div>
                 {% endfor %}
