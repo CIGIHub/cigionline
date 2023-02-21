@@ -22,8 +22,24 @@
     }
 
     .card--event__top {
+      margin-bottom: 5em;
+      
       .card--event--upcoming-label {
         display: none;
+      }
+
+      .card--event__calendar-date {
+        .card--event__date {
+          display: flex;
+          justify-content: center;
+          line-height: 70%;
+        }
+
+        .card--event__month {
+          display: flex;
+          justify-content: center;
+          padding-top: 0.5em;
+        }
       }
     }
   }
