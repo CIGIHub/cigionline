@@ -630,17 +630,17 @@ class SearchTable extends React.Component {
       expertSelectValues.map((t) => {
         const expert = experts.filter((to) => to.id === t)[0];
         filter.push(
-          <span
-            className="filter"
+          <button
+            className="filter button--rounded"
             onClick={(e) => this.handleExpertSelect(e, t, false)}
             onKeyDown={(e) => this.handleExpertSelect(e, t, false)}
-            role="button"
+            type="button"
             tabIndex="0"
             key={`expert-filter-${expert.id}`}
           >
             {expert.title}
-            <i className="fa fa-times" />
-          </span>,
+            <i className="fal fa-times" />
+          </button>,
         );
         return true;
       });
@@ -649,17 +649,17 @@ class SearchTable extends React.Component {
       topicSelectValues.map((t) => {
         const topic = topics.filter((to) => to.id === t)[0];
         filter.push(
-          <span
-            className="filter"
+          <button
+            className="filter button--rounded"
             onClick={(e) => this.handleTopicSelect(e, t, false)}
             onKeyDown={(e) => this.handleTopicSelect(e, t, false)}
-            role="button"
+            type="button"
             tabIndex="0"
             key={`topic-filter-${topic.id}`}
           >
             {topic.title}
-            <i className="fa fa-times" />
-          </span>,
+            <i className="fal fa-times" />
+          </button>,
         );
         return true;
       });
@@ -669,35 +669,35 @@ class SearchTable extends React.Component {
         const parts = s.split('_');
         if (parts.length > 1) {
           filter.push(
-            <span
-              className="filter"
+            <button
+              className="filter button--rounded"
               onClick={(e) =>
                 this.handleTypeSelect(e, parts[0], parts[1], false)
               }
               onKeyDown={(e) =>
                 this.handleTypeSelect(e, parts[0], parts[1], false)
               }
-              role="button"
+              type="button"
               tabIndex="0"
               key={parts[1]}
             >
               {parts[1]}
-              <i className="fa fa-times" />
-            </span>,
+              <i className="fal fa-times" />
+            </button>,
           );
         } else {
           filter.push(
-            <span
-              className="filter"
+            <button
+              className="filter button--rounded"
               onClick={(e) => this.handleTypeSelect(e, s, undefined, false)}
               onKeyDown={(e) => this.handleTypeSelect(e, s, undefined, false)}
-              role="button"
+              type="button"
               tabIndex="0"
               key={s}
             >
               {s}
-              <i className="fa fa-times" />
-            </span>,
+              <i className="fal fa-times" />
+            </button>,
           );
         }
         return true;
@@ -715,7 +715,7 @@ class SearchTable extends React.Component {
             key={y}
           >
             {y}
-            <i className="fa fa-times" />
+            <i className="fal fa-times" />
           </span>,
         );
         return true;
@@ -723,16 +723,16 @@ class SearchTable extends React.Component {
     }
     if (filter.length > 0) {
       filter.push(
-        <span
-          className="filter grey"
+        <button
+          className="filter button--rounded button--clear"
           onClick={this.removeAllFilters}
           onKeyDown={this.removeAllFilters}
-          role="button"
+          type="button"
           tabIndex="0"
           key="clear-all"
         >
           Clear All
-        </span>,
+        </button>,
       );
     }
 
