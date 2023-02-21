@@ -105,7 +105,9 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             events_dict[str(batch)] = list(batched_list[batch])
 
         return json.dumps({
-            'meta': {'total_count': len(events_list)},
+            'meta': {
+                'total_events_count': len(events_list),
+                'total_page_count': len(batched_list)},
             'items': events_dict,
         })
 
