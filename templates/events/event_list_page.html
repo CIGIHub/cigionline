@@ -36,7 +36,7 @@
           <section class="col-lg-4 events-calender">
             {% include "includes/events_calendar.html" %}
           </section>
-          <section class="col-lg-8 events-listing">
+          <section class="col-lg-8 events-listing" id="all-events" data-all-events="{{ all_events }}">
             <div class="container">
               <div class="row events-wrapper">
                 {% for item in featured_events %}

@@ -21,6 +21,7 @@ from wagtail.search import index
 import pytz
 import re
 import urllib.parse
+import json
 
 
 class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -60,9 +61,58 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         ).in_bulk(featured_event_ids)
         return [pages[x] for x in featured_event_ids]
 
+    def get_all_events(self):
+        from .models import EventPage
+
+        event_pages = EventPage.objects.live().specific().prefetch_related(
+            'authors__author', 'topics'
+        ).order_by('-publishing_date')
+
+        events_list = []
+        for item in event_pages:
+            item_dict = {}
+
+            item_dict['title'] = item.feature_title if item.feature_title else item.title
+            item_dict['authors'] = [{
+                'title': author.author.title,
+                'url': author.author.url
+            } for author in item.authors.all()]
+            item_dict['date'] = item.publishing_date.strftime('%Y-%m-%d')
+            item_dict['time'] = item.publishing_date.strftime('%-I:%M:%S %p')
+            item_dict['end_date'] = item.event_end.strftime('%Y-%m-%d') if item.event_end else ''
+            item_dict['end_time'] = item.event_end.strftime('%-I:%M:%S %p') if item.event_end else ''
+            item_dict['event_type'] = item.get_event_type_display()
+            item_dict['event_access'] = item.get_event_access_display()
+            item_dict['event_format'] = item.event_format_string()
+            item_dict['is_past'] = item.is_past()
+            item_dict['time_zone_label'] = item.time_zone_label
+            item_dict['url'] = item.feature_url if item.feature_url else item.url
+            item_dict['topics'] = [{
+                'title': topic.title,
+                'url': topic.url
+            } for topic in item.topics_sorted]
+            item_dict['registration_url'] = item.registration_url
+            item_dict['id'] = item.id
+
+            events_list.append(item_dict)
+
+        def batched(lst, batch_size):
+            return [lst[i: i + batch_size] for i in range(0, len(lst), batch_size)]
+
+        batched_list = batched(events_list, 4)
+        events_dict = {}
+        for batch in range(len(batched_list)):
+            events_dict[str(batch)] = list(batched_list[batch])
+
+        return json.dumps({
+            'meta': {'total_count': len(events_list)},
+            'items': events_dict,
+        })
+
     def get_context(self, request):
         context = super().get_context(request)
         context['featured_events'] = self.get_featured_events()
+        context['all_events'] = self.get_all_events()
         return context
 
     class Meta:

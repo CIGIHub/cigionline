@@ -138,3 +138,6 @@ ReactDOM.render(
   <EventCalendar />,
   document.getElementById('event-list-calendar'),
 );
+
+const allEvents = JSON.parse(document.getElementById('all-events').dataset.allEvents);
+console.log(allEvents);
