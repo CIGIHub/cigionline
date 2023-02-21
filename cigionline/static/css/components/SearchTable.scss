@@ -127,7 +127,7 @@
 }
 
 .filterlist {
-  margin: 1em 0;
+  margin-bottom: 1em;
 
   .filtertitle {
     color: $cigi-text-grey;
@@ -371,10 +371,29 @@
       & > div {
         border: 0;
       }
-      
+
       .search-bar__display-mode-container {
         display: flex;
         justify-content: space-between;
+      }
+    }
+  }
+
+  .search-bar-sort-wrapper {
+    width: 20%;
+    padding: 0 2em;
+    position: relative;
+
+    .search-bar__sort__label {
+      color: $cigi-text-grey;
+      font-size: 0.875em;
+      font-weight: 300;
+      margin-bottom: 0.5em;
+    }
+
+    .dropdown-menu {
+      .dropdown-item {
+        font-weight: 300;
       }
     }
   }
@@ -436,5 +455,10 @@
         }
       }
     }
+  }
+
+  .search-table__filters__container {
+    display: flex;
+    justify-content: space-between;
   }
 }

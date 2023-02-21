@@ -119,10 +119,10 @@ img {
   &.custom-dropdown {
     .dropdown-toggle {
       align-items: center;
-      border-bottom: 2px solid $black;
       color: $black;
       display: flex;
       font-size: 1em;
+      font-weight: 300;
       height: 1.5em;
       justify-content: space-between;
       padding-bottom: 0.25em;
@@ -131,7 +131,7 @@ img {
       &::after {
         align-items: center;
         border: 0;
-        color: $cigi-primary-colour;
+        color: $cigi-medium-grey;
         content: '\f078';
         display: inline-flex;
         font-family: 'Font Awesome 5 Pro';
