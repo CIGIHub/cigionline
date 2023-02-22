@@ -25,7 +25,7 @@ class SearchTable extends React.Component {
   constructor(props) {
     super(props);
     this.searchTableRef = React.createRef();
-    const { filterTypes } = props;
+    const { filterTypes, isSearchPage } = props;
     this.state = {
       currentPage: 1,
       displayMode: 'list',
@@ -33,6 +33,7 @@ class SearchTable extends React.Component {
       expertsFilter: '',
       expertSelectValues: [],
       filterTypes,
+      isSearchPage,
       loading: true,
       loadingInitial: true,
       loadingExperts: true,
@@ -42,7 +43,7 @@ class SearchTable extends React.Component {
       rows: [],
       searchValue: '',
       showFilters: false,
-      sortSelected: null,
+      sortSelected: 'Date',
       topics: [],
       topicSelectValues: [],
       topicsFilter: '',
@@ -124,6 +125,16 @@ class SearchTable extends React.Component {
       this.getTopics();
       this.getYears();
       this.getTypes();
+    }
+    window.addEventListener('resize', this.handleResize.bind(this));
+    this.handleResize();
+  }
+
+  handleResize() {
+    if (window.innerWidth < 992) {
+      this.setState({
+        displayMode: 'list',
+      });
     }
   }
 
@@ -365,7 +376,7 @@ class SearchTable extends React.Component {
 
     // using fixtures to test
     const rows = fixtures.items.filter(
-      (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+      (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
     );
     const aggregations = fixtures.meta.aggregations;
     aggregations.topics = mergeObjects([
@@ -737,14 +748,12 @@ class SearchTable extends React.Component {
     }
 
     return (
-      <div className="filterlist">
-        {filter.length > 0 ? (
+      filter.length > 0 && (
+        <div className="filterlist">
           <div className="filtertitle">Selected Filters:</div>
-        ) : (
-          ''
-        )}
-        {filter}
-      </div>
+          {filter}
+        </div>
+      )
     );
   }
 
@@ -827,9 +836,7 @@ class SearchTable extends React.Component {
                 </form>
               </div>
             </div>
-            <div className="search-bar__filter-by-label">
-              Filter by:
-            </div>
+            <div className="search-bar__filter-by-label">Filter by:</div>
             {this.renderFilters()}
           </>
         ) : (
@@ -1361,7 +1368,7 @@ class SearchTable extends React.Component {
     } = this.props;
 
     return (
-      <div className="search-table-container">
+      <div className="search-table-container custom-theme-table">
         <div className="search-table">
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {showSearch && <>{this.renderSearchBar(showSidebar)}</>}
@@ -1374,34 +1381,49 @@ class SearchTable extends React.Component {
                   {`${totalRows} results for ${searchValue}. For exact matches, enclose search terms in double quotation marks (e.g. "platform governance").`}
                 </div>
               )}
-              {this.renderSelectedFilters()}
+              <div className="search-table__filters__container">
+                {this.renderSelectedFilters()}
 
-              <div className="search-bar-sort-wrapper">
-                {sortOptions.length > 1 && (
-                  <>
-                    <span>Sort by:</span>
-                    <ul className="search-bar-sort-list">
-                      {sortOptions.map((sortOption) => (
-                        <li key={`sort-${sortOption.value}`}>
-                          <button
-                            type="button"
-                            className={[
-                              'search-bar-sort-link',
-                              (sortSelected === sortOption.value ||
-                                (!sortSelected && sortOption.default)) &&
-                                'active',
-                            ].join(' ')}
-                            onClick={() =>
-                              this.handleSortSelect(sortOption.value)
-                            }
-                          >
-                            {sortOption.name}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+                <div className="search-bar-sort-wrapper">
+                  {sortOptions.length > 1 && (
+                    <>
+                      <div className="search-bar__sort__label">Sort by:</div>
+                      <div className="search-bar-sort-list dropdown custom-dropdown">
+                        <button
+                          type="button"
+                          className="dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {sortSelected}
+                        </button>
+                        <ul className="dropdown-menu">
+                          {sortOptions.map((sortOption) => (
+                            <li
+                              key={`sort-${sortOption.value}`}
+                              className="dropdown-item"
+                            >
+                              <button
+                                type="button"
+                                className={[
+                                  'search-bar-sort-link',
+                                  (sortSelected === sortOption.value ||
+                                    (!sortSelected && sortOption.default)) &&
+                                    'active',
+                                ].join(' ')}
+                                onClick={() =>
+                                  this.handleSortSelect(sortOption.value)
+                                }
+                              >
+                                {sortOption.name}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
               {blockListing
                 ? this.renderBlockListing(RowComponent, containerClass)
