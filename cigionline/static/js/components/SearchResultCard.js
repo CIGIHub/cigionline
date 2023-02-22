@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ArticleSearchResultCard from './ArticleSearchResultCard';
 import MultimediaSearchResultCard from './MultimediaSearchResultCard';
+import PublicationSearchResultCard from './PublicationSearchResultCard';
 
 const SearchResultCard = (props) => {
   const { row } = props;
@@ -12,6 +13,7 @@ const SearchResultCard = (props) => {
         <MultimediaSearchResultCard row={row} />
       )}
       {row.contenttype === 'Opinion' && <ArticleSearchResultCard row={row} />}
+      {row.contenttype === 'Publication' && <PublicationSearchResultCard row={row} />}
     </div>
   );
 };
