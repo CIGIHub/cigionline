@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SearchResultCard from '../../js/components/SearchResultCard';
 import SearchResultListing from '../../js/components/SearchResultListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/search_page.scss';
@@ -7,7 +8,6 @@ import './css/search_page.scss';
 const livePageCount = Number(document.getElementById('search-table').dataset.livePageCount).toLocaleString('en-US');
 ReactDOM.render(
   <SearchTable
-    blockListing
     isSearchPage
     showCount
     showSearch
@@ -25,6 +25,8 @@ ReactDOM.render(
       'authors',
       'contenttype',
       'contentsubtype',
+      'image_poster_url',
+      'image_hero_url',
       'publishing_date',
       'search_result_description',
       'topics',
@@ -160,7 +162,7 @@ ReactDOM.render(
         value: 'research.ProjectPage',
       }],
     }].sort((a, b) => a.name.localeCompare(b.name))}
-    RowComponent={SearchResultListing}
+    RowComponent={SearchResultCard}
   />,
   document.getElementById('search-table'),
 );

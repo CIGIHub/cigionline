@@ -39,6 +39,12 @@
         display: none;
         margin-right: 1em;
         margin-top: 0.25em;
+
+        &.elevate-bookmark {
+          font-size: 15px;
+          margin-left: 5px;
+          display: inline-block;
+        }
       }
 
       & > div {
