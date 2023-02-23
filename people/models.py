@@ -316,6 +316,7 @@ class PersonPage(
         else:
             return snippet
 
+    @property
     def linkedin_username(self):
         url = self.linkedin_url
         if not url or not url.startswith("https://www.linkedin.com/"):

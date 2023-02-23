@@ -153,24 +153,33 @@ class BasicPageAbstract(models.Model):
 
     @property
     def image_hero_url(self):
-        if self.specific.image_feature:
-            return self.specific.image_feature.get_rendition('fill-520x390').url
-        if self.image_hero:
-            return self.image_hero.get_rendition('fill-520x390').url
+        try:
+            if self.specific.image_feature:
+                return self.specific.image_feature.get_rendition('fill-520x390').url
+            if self.image_hero:
+                return self.image_hero.get_rendition('fill-520x390').url
+        except Exception:
+            print('Error: image_hero_url')
         return ''
 
     @property
     def image_hero_wide_url(self):
-        if self.specific.image_feature:
-            return self.specific.image_feature.get_rendition('fill-600x300').url
-        if self.image_hero:
-            return self.image_hero.get_rendition('fill-600x300').url
+        try:
+            if self.specific.image_feature:
+                return self.specific.image_feature.get_rendition('fill-600x300').url
+            if self.image_hero:
+                return self.image_hero.get_rendition('fill-600x300').url
+        except Exception:
+            print('Error: image_hero_wide_url')
         return ''
 
     @property
     def image_poster_url(self):
-        if self.specific.image_poster:
-            return self.specific.image_poster.get_rendition('fill-672x895').url
+        try:
+            if self.specific.image_poster:
+                return self.specific.image_poster.get_rendition('fill-672x895').url
+        except Exception:
+            print('Error: image_poster_url')
         return ''
 
     @property
@@ -352,6 +361,12 @@ class ThemeablePageAbstract(models.Model):
     def get_theme_dir(self):
         if self.theme:
             return self.theme.name.lower().replace(' ', '_').replace("-", '_')
+        return ''
+    
+    @property
+    def theme_name(self):
+        if self.theme:
+            return self.theme.name
         return ''
 
     class Meta:
