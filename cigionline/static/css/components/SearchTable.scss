@@ -380,11 +380,16 @@
   }
 
   .search-bar-sort-wrapper {
-    width: 20%;
+    @include media-breakpoint-up(md) {
+      width: 20%;
+    }
+    width: 25%;
     position: relative;
     
     &:nth-child(2) {
-      padding: 0 2em;
+      @include media-breakpoint-up(md) {
+        padding: 0 2em;
+      }
     }
 
     .search-bar__sort__label {
@@ -466,6 +471,6 @@
   .search-table__filters__container {
     display: flex;
     justify-content: space-between;
-    margin: 1em 0;
+    margin: 2em 0;
   }
 }

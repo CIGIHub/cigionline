@@ -84,6 +84,7 @@ $card-title-font: $title-font-family;
     align-items: flex-end;
     justify-content: space-between;
     line-height: 1.25;
+    width: 100%;
 
     .card__text__people {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);

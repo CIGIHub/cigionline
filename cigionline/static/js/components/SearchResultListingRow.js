@@ -72,9 +72,9 @@ function SearchResultListingRow(props) {
               {row.elevated && <i className="fal fa-bookmark elevate-bookmark" />}
             </a>
             {row.publishing_date && (
-              <div className="search-table__results__row__date">
+              <time dateTime={row.publishing_date} className="search-table__results__row__date">
                 {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_MED)}
-              </div>
+              </time>
             )}
           </div>
         </div>

@@ -28,7 +28,7 @@ class SearchTable extends React.Component {
     const { filterTypes, isSearchPage } = props;
     this.state = {
       currentPage: 1,
-      displayMode: 'list',
+      displayMode: 'grid',
       emptyQuery: false,
       expertsFilter: '',
       expertSelectValues: [],
@@ -1448,11 +1448,13 @@ class SearchTable extends React.Component {
               </p>
             </>
           )}
-          <Paginator
-            currentPage={currentPage}
-            totalPages={this.totalPages}
-            setPage={(page) => this.setPage(page)}
-          />
+          {this.totalPages > 1 && (
+            <Paginator
+              currentPage={currentPage}
+              totalPages={this.totalPages}
+              setPage={(page) => this.setPage(page)}
+            />
+          )}
           {loading && (
             <img
               src="/static/assets/loader_spinner.gif"

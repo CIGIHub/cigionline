@@ -1,29 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DateTime } from 'luxon';
 
-const ArticleSearchResultCard = (props) => {
+const ArticleSeriesSearchResultCard = (props) => {
   const { row } = props;
   return (
-    <article className="card__container card--small card--small--landscape card--small--article">
+    <article className="card__container card--small card--small--article-series {{ theme|slugify }}">
       <div className="card__image">
         <a href={row.url}>
           <div className="img-wrapper">
             <img alt="" src={row.image_hero_url} />
           </div>
         </a>
+        <div className="card__label">
+          <span className="fa-stack">
+            <i className="fal fa-file-alt front" />
+            <i className="fal fa-file-alt back" />
+          </span>
+          <p>Essay Series</p>
+        </div>
       </div>
       <div className="card__text">
-        <div>
-          {row.publishing_date && (
-            <time dateTime={row.publishing_date} className="card__text__date">
-              {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_MED)}
-            </time>
-          )}
-          <h3 className="card__text__title">
-            <a href={row.url}>{row.title}</a>
-          </h3>
-        </div>
+        <h3 className="card__text__title">
+          <a href={row.url}>{row.title}</a>
+        </h3>
         <div className="card__text__meta">
           <div>
             <ul className="custom-text-list card__text__people">
@@ -57,7 +56,7 @@ const ArticleSearchResultCard = (props) => {
   );
 };
 
-ArticleSearchResultCard.propTypes = {
+ArticleSeriesSearchResultCard.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(
       PropTypes.shape({
@@ -82,4 +81,4 @@ ArticleSearchResultCard.propTypes = {
   }).isRequired,
 };
 
-export default ArticleSearchResultCard;
+export default ArticleSeriesSearchResultCard;

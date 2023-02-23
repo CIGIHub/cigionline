@@ -92,6 +92,22 @@
           }
         }
       }
+
+      .card--small--publication {
+        .card__image {
+          padding: 0 2em 1em;
+        }
+
+        .card__text {
+          .card__text__title {
+            font-size: 1em;
+          }
+        }
+      }
     }
+  }
+
+  footer {
+    margin-top: 4em;
   }
 }

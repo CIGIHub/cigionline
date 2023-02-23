@@ -23,13 +23,23 @@ ReactDOM.render(
     }]}
     fields={[
       'authors',
+      'board_position',
       'contenttype',
       'contentsubtype',
+      'expertise_list',
       'image_poster_url',
       'image_hero_url',
+      'image_square_url',
       'publishing_date',
       'search_result_description',
+      'theme_name',
+      'linkedin_username',
+      'twitter_username',
       'topics',
+      'event_access',
+      'time_zone_label',
+      'event_format',
+      'event_type',
     ]}
     containerClass={[
       'search-result-row',

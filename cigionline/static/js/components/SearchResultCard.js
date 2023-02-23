@@ -3,17 +3,27 @@ import PropTypes from 'prop-types';
 import ArticleSearchResultCard from './ArticleSearchResultCard';
 import MultimediaSearchResultCard from './MultimediaSearchResultCard';
 import PublicationSearchResultCard from './PublicationSearchResultCard';
+import ArticleSeriesSearchResultCard from './ArticleSeriesSearchResultCard';
+import ExpertSearchResultCard from './ExpertSearchResultCard';
+import EventSearchResultCard from './EventSearchResultCard';
 
 const SearchResultCard = (props) => {
   const { row } = props;
-  console.log(row);
+
   return (
     <div className="article-container__border">
       {row.contenttype === 'Multimedia' && (
         <MultimediaSearchResultCard row={row} />
       )}
       {row.contenttype === 'Opinion' && <ArticleSearchResultCard row={row} />}
-      {row.contenttype === 'Publication' && <PublicationSearchResultCard row={row} />}
+      {row.contenttype === 'Publication' && (
+        <PublicationSearchResultCard row={row} />
+      )}
+      {row.contenttype === 'Opinion Series' && (
+        <ArticleSeriesSearchResultCard row={row} />
+      )}
+      {row.contenttype === 'Person' && <ExpertSearchResultCard row={row} />}
+      {row.contenttype === 'Event' && <EventSearchResultCard row={row} />}
     </div>
   );
 };
