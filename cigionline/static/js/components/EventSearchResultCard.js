@@ -19,8 +19,8 @@ const EventSearchResultCard = (props) => {
             </div>
           </time>
           <div className="card--event__type">
-            {row.event_access}
-            Event
+            {row.event_access ? ('Public ') : ('Private ')}
+            Event:
             {' '}
             {row.event_type}
             {row.event_format}
