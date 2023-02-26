@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags webpack_loader %}
+{% load static cache wagtailcore_tags webpack_loader search_tags %}
 
 {% block extra_css %}
   {% render_bundle 'searchPage' 'css' %}
@@ -8,29 +8,21 @@
   {% render_bundle 'searchPage' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}template-searchresults{% endblock %}
+{% block body_class %}search-page{% endblock %}
 
 {% block title %}Search{% endblock %}
 
 {% block content %}
-    <section class="hero-plain">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Search</h1>
-          </div>
-        </div>
-      </div>
-    </section>
-
+  {% cache 604800 request.path request.user.username self.pk self.latest_revision_created_at request.GET.urlencode is_preview %}
     <section>
       <div class="container">
         <div class="row">
           <div class="col-12">
-            <div id="search-table">
+            <div id="search-table" data-live-page-count="{% live_page_count %}">
             </div>
           </div>
         </div>
       </div>
     </section>
+  {% endcache %}
 {% endblock %}

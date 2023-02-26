@@ -658,7 +658,11 @@ class ArticleSeriesPage(
 
     @property
     def image_poster_url(self):
-        return self.image_poster.get_rendition('fill-672x895').url
+        try:
+            return self.image_poster.get_rendition('fill-525x700').url
+        except Exception:
+            print('Error: image_poster_url')
+        return '/static/images/CIGI-default-recommended-thumb.2e16d0ba.fill-525x700.png' 
 
     @property
     def article_series_items(self):
