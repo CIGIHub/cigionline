@@ -1,8 +1,8 @@
 /* global topicId */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SearchResultCard from '../../js/components/SearchResultCard';
 import SearchTable from '../../js/components/SearchTable';
-import TopicContentListing from '../../js/components/TopicContentListing';
 
 import './css/topic_page.scss';
 
@@ -23,8 +23,15 @@ ReactDOM.render(
       'authors',
       'contentsubtype',
       'contenttype',
+      'image_poster_url',
+      'image_hero_url',
       'pdf_download',
       'publishing_date',
+      'topics',
+      'event_access',
+      'time_zone_label',
+      'event_format_string',
+      'event_end',
     ]}
     containerClass={[
       'custom-theme-table',
@@ -76,7 +83,7 @@ ReactDOM.render(
         value: 'News Releases',
       }],
     }]}
-    RowComponent={TopicContentListing}
+    RowComponent={SearchResultCard}
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',
