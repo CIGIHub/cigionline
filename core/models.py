@@ -160,7 +160,7 @@ class BasicPageAbstract(models.Model):
                 return self.image_hero.get_rendition('fill-520x390').url
         except Exception:
             print('Error: image_hero_url')
-        return ''
+        return '/static/assets/CIGI-default-recommended-thumb-1440x990.png'
 
     @property
     def image_hero_wide_url(self):

@@ -12,18 +12,28 @@ const SearchResultCard = (props) => {
 
   return (
     <div className="article-container__border">
-      {row.contenttype === 'Multimedia' && (
-        <MultimediaSearchResultCard row={row} />
+      {row.contenttype && (
+        <>
+          {row.contenttype === 'Multimedia' && (
+            <MultimediaSearchResultCard row={row} />
+          )}
+          {row.contenttype === 'Opinion' && <ArticleSearchResultCard row={row} />}
+          {row.contenttype === 'Publication' && (
+            <PublicationSearchResultCard row={row} />
+          )}
+          {row.contenttype === 'Opinion Series' && (
+            <ArticleSeriesSearchResultCard row={row} />
+          )}
+          {row.contenttype === 'Person' && <ExpertSearchResultCard row={row} />}
+          {row.contenttype === 'Event' && <EventSearchResultCard row={row} />}
+          {row.contenttype === 'Activity' && <PublicationSearchResultCard row={row} />}
+          {row.contenttype === 'Essay Series' && <PublicationSearchResultCard row={row} />}
+          {row.contenttype === 'Topic' && <ArticleSearchResultCard row={row} />}
+        </>
       )}
-      {row.contenttype === 'Opinion' && <ArticleSearchResultCard row={row} />}
-      {row.contenttype === 'Publication' && (
-        <PublicationSearchResultCard row={row} />
+      {!row.contenttype && (
+        <ArticleSearchResultCard row={row} />
       )}
-      {row.contenttype === 'Opinion Series' && (
-        <ArticleSeriesSearchResultCard row={row} />
-      )}
-      {row.contenttype === 'Person' && <ExpertSearchResultCard row={row} />}
-      {row.contenttype === 'Event' && <EventSearchResultCard row={row} />}
     </div>
   );
 };
