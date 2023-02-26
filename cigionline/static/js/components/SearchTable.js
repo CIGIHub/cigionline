@@ -766,6 +766,7 @@ class SearchTable extends React.Component {
       loadingYears,
       loadingTypes,
       aggregations,
+      rows,
       searchValue,
       showFilters,
       topicsFilter,
@@ -836,8 +837,12 @@ class SearchTable extends React.Component {
                 </form>
               </div>
             </div>
-            <div className="search-bar__filter-by-label">Filter by:</div>
-            {this.renderFilters()}
+            {rows.length > 0 && (
+              <>
+                <div className="search-bar__filter-by-label">Filter by:</div>
+                {this.renderFilters()}
+              </>
+            )}
           </>
         ) : (
           <>
