@@ -1344,7 +1344,7 @@ class EventCard(blocks.StructBlock):
         context['end_date'] = page.event_end
         context['event_type'] = page.get_event_type_display()
         context['event_access'] = page.get_event_access_display()
-        context['event_format'] = page.event_format_string()
+        context['event_format'] = page.event_format_string
         context['is_past'] = page.is_past()
         context['time_zone_label'] = page.time_zone_label
         context['url'] = page.feature_url if page.feature_url else page.url

@@ -38,8 +38,8 @@ ReactDOM.render(
       'topics',
       'event_access',
       'time_zone_label',
-      'event_format',
-      'event_type',
+      'event_format_string',
+      'event_end',
     ]}
     containerClass={[
       'search-result-row',

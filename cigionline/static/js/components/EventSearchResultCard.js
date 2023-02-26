@@ -1,29 +1,64 @@
+import { DateTime } from 'luxon';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// Wednesday, March 30,
+// 2022 9:00 AM - 10:00 AM EDT (UTC–04:00)
 const EventSearchResultCard = (props) => {
   const { row } = props;
+  const today = DateTime.now();
+  const startDate = DateTime.fromISO(row.publishing_date);
+  const startDayDayOfWeek = startDate.weekdayLong;
+  const startDateDay = startDate.day;
+  const startDateMonth = startDate.monthLong;
+  const startDateYear = startDate.year;
+  const startDateHour = startDate.hour;
+  const startDateAmPm = startDate.toFormat('a');
+  const endDate = DateTime.fromISO(row.event_end) || null;
+  const endDateHour = endDate.hour;
+  const endDateAmPm = endDate.toFormat('a');
+
   return (
     <article className="card__container card--small card--small--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
       <div className="card--event--small__top">
-        <div className="card--event--upcoming-label">{row.publishing_date}</div>
+        {today < startDate && (
+          <div className="card--event--upcoming-label">
+            Upcoming Event -
+            {' '}
+            {`${startDateMonth} ${startDateDay}`}
+          </div>
+        )}
         <h3 className="card__text__title">
           <a href={row.url}>{row.title}</a>
         </h3>
         <div className="card--event__info">
           <time dateTime="" className="card--event__time">
-            <div>{row.publishing_date}</div>
+            <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
             <div>
-              {row.publishing_date}
+              {`${startDateHour} ${startDateAmPm}`}
+              {endDate && ` - ${endDateHour} ${endDateAmPm}`}
+              {' '}
               {row.time_zone_label}
             </div>
           </time>
           <div className="card--event__type">
-            {row.event_access ? ('Public ') : ('Private ')}
-            Event:
-            {' '}
-            {row.event_type}
-            {row.event_format}
+            {row.event_access ? 'Public ' : 'Private '}
+            Event
+            {row.contentsubtype && (
+              <span>
+                :
+                {' '}
+                {row.contentsubtype}
+              </span>
+            )}
+            {row.event_format_string && (
+              <span>
+                {' '}
+                (
+                {row.event_format_string}
+                )
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -83,8 +118,9 @@ EventSearchResultCard.propTypes = {
     ),
     url: PropTypes.string.isRequired,
     event_access: PropTypes.string,
+    event_end: PropTypes.string,
     event_type: PropTypes.string,
-    event_format: PropTypes.string,
+    event_format_string: PropTypes.string,
     time_zone_label: PropTypes.string,
   }).isRequired,
 };
