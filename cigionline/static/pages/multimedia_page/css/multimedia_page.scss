@@ -138,6 +138,10 @@ body {
             @include link($color: $cigi-medium-text-grey, $hover-color: $white);
           }
         }
+
+        .card__text__more {
+          color: $cigi-text-grey;
+        }
       }
     }
   }
