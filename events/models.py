@@ -77,13 +77,15 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
                 'title': author.author.title,
                 'url': author.author.url
             } for author in item.authors.all()]
-            item_dict['date'] = item.publishing_date.strftime('%Y-%m-%d')
-            item_dict['time'] = item.publishing_date.strftime('%-I:%M:%S %p')
+            item_dict['date'] = item.publishing_date.strftime('%A, %B %-d, %Y')
+            item_dict['date_singular'] = item.publishing_date.strftime('%-d')
+            item_dict['month'] = item.publishing_date.strftime('%B')
+            item_dict['time'] = item.publishing_date.strftime('%-I:%M %p')
             item_dict['end_date'] = item.event_end.strftime('%Y-%m-%d') if item.event_end else ''
-            item_dict['end_time'] = item.event_end.strftime('%-I:%M:%S %p') if item.event_end else ''
+            item_dict['end_time'] = item.event_end.strftime('%-I:%M %p') if item.event_end else ''
             item_dict['event_type'] = item.get_event_type_display()
             item_dict['event_access'] = item.get_event_access_display()
-            item_dict['event_format'] = item.event_format_string()
+            item_dict['event_format'] = item.event_format_string
             item_dict['is_past'] = item.is_past()
             item_dict['time_zone_label'] = item.time_zone_label
             item_dict['url'] = item.feature_url if item.feature_url else item.url
