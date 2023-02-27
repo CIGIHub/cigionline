@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import EventListing from '../../js/components/EventListing';
+import EventList from '../../js/components/EventList';
 import SearchTable from '../../js/components/SearchTable';
 import EventCalendar from '../../js/components/EventCalendar';
 import './css/_event_list_page.scss';
@@ -141,3 +142,8 @@ ReactDOM.render(
 
 const allEvents = JSON.parse(document.getElementById('all-events').dataset.allEvents);
 console.log(allEvents);
+
+ReactDOM.render(
+  <EventList meta={allEvents.meta} items={allEvents.items} />,
+  document.getElementById('event-list'),
+);
