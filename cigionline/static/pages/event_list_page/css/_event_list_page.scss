@@ -1,76 +1,96 @@
 @import '../../../css/global/mixins';
 
-.events-page-featured-events {
-  h2 {
-    border-top-color: $black;
-    border-top-style: solid;
-    border-top-width: 3px;
-    display: inline-block;
-    font-size: 0.75em;
-    margin-bottom: 1.5em;
-    text-transform: uppercase;
+.border-top {
+  border-top: 1px solid $cigi-light-grey;
+  margin-top: 1em;
+  // padding: 1em 0;
+
+  .events-landing-page-label {
+    padding-top: 1em;
+    padding-bottom: 2em;
+  
+    .events-icon {
+      padding-right: 1em;
+    }
   }
+  
+  .events-landing-page-tabs {
+    padding-bottom: 2em;
 
-  .featured-event-row {
-    margin: 0;
+    .nav-tabs {
+      border: 0;
 
-    .featured-event-col {
-      @include media-breakpoint-up(md) {
-        padding: 1em 0;
-      }
+      .nav-item {
+        padding: 0 calc(var(--bs-gutter-x)*.5);
 
-      @include media-breakpoint-down(sm) {
-        padding-left: 0;
-      }
+        .nav-link {
+          border: 0;
+          border-radius: 0;
+          color: $cigi-medium-grey;
+          padding: 1em 5em 0 0;
 
-      &:nth-child(-n + 3) {
-        @include media-breakpoint-up(md) {
-          border-bottom: 1px solid $cigi-light-grey;
-        }
-      }
+          &.active {
+            color: $black;
+            border-top: 1px solid $black;
+          }
 
-      &:first-child {
-        article {
-          @include media-breakpoint-down(sm) {
-            border-top: 0;
-            padding-top: 0;
+          &:hover {
+            color: $cigi-primary-colour;
           }
         }
-      }
-
-      &:nth-child(3),
-      &:nth-child(6) {
-        article {
-          @include media-breakpoint-up(md) {
-            border-right: 0;
-          }
-        }
-      }
-
-      &:nth-child(1),
-      &:nth-child(4) {
-        article {
-          @include media-breakpoint-up(md) {
-            padding-left: 0;
-          }
-        }
-      }
-
-      article {
-        @include media-breakpoint-down(sm) {
-          border-top: 1px solid $cigi-light-grey;
-          padding: 1em 0;
-        }
-
-        @include media-breakpoint-up(md) {
-          border-right: 1px solid $cigi-light-grey;
-          padding: 0 1em;
-        }
-
-        height: 100%;
       }
     }
   }
+}
+
+.events-wrapper {
+  #event-list {
+    padding-right: 0;
+
+    .event-items {
+      >div[class*='col'] {
+        width: 100%;
+        border-bottom: 1px solid $cigi-light-grey;
+        padding: 3em 0;
+  
+        &:first-child {
+          @include media-breakpoint-up(lg) {
+            border-top: 0;
+            padding-top: 0;
+          }
+    
+          border-top: 1px solid $cigi-light-grey;
+        }
+      }
+  
+      .card--event__top {
+        margin-bottom: 5em;
+  
+        .card--event--upcoming-label {
+          display: none;
+        }
+  
+        .card--event__calendar-date {
+          .card--event__date {
+            display: flex;
+            justify-content: center;
+            line-height: 70%;
+          }
+  
+          .card--event__month {
+            display: flex;
+            justify-content: center;
+            padding-top: 0.5em;
+          }
+        }
+      }
+    }
+
+    .pagination-links-numbered {
+      margin: 5em 0;
+    }
+  }
+  
 }
 
 .events-calendar {
@@ -91,7 +111,7 @@
   // sass-lint:disable-block class-name-format
   .react-calendar__navigation__label,
   .react-calendar__month-view__days__day {
-    color: $white;
+    color: $cigi-text-grey;
   }
 
   .react-calendar__month-view__weekdays__weekday {
@@ -104,17 +124,14 @@
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
-    color: $cigi-text-grey;
+    color: $cigi-light-grey;
   }
 
   .react-calendar__navigation {
-    border-bottom: 1px solid $white;
-    border-top: 2px solid $white;
-    padding: 0.5rem 0;
+    padding: 0 0 0.5rem 0;
   }
 
   .react-calendar__viewContainer {
-    border-bottom: 2px solid $white;
     margin: 0.5rem 0;
   }
 
@@ -155,15 +172,15 @@
 
   .react-calendar__tile--has-event {
     cursor: pointer;
-
-    .react-calendar__tile__overlay {
-      border: 2px solid $cigi-primary-colour;
+    abbr {
+      background: $cigi-light-grey;
     }
   }
 
   .react-calendar__tile--now {
     abbr {
-      background: $cigi-medium-grey;
+      background: $black;
+      color: $white;
     }
   }
 
@@ -172,10 +189,11 @@
   }
 
   .react-calendar__navigation__arrow {
-    color: $cigi-primary-colour;
+    color: $cigi-light-grey;
+    font-size: 1.75em;
 
     &:hover {
-      color: $cigi-dark-pink;
+      color: $cigi-primary-colour;
     }
   }
 }
