@@ -87,17 +87,21 @@ const EventListCard = (props) => {
               </button>
             </div>
           </div>
-          {/* <div className="col-md-6 text-center">
+          <div className="col-md-6 text-center">
             {row.event_access === 'Private' 
-              ? (<button type="button" className="card--event__button--register button--rounded is_private" disabled>
+              ? (
+                <button type="button" className="card--event__button--register button--rounded is_private" disabled>
                   Private Event
-                </button>)
-              : (<button type="button" className="card--event__button--register button--rounded">
+                </button>
+              )
+              : (
+                <button type="button" className="card--event__button--register button--rounded">
                   Register Now
                   <i className="fas fa-angle-right"></i>
-                </button>)
+                </button>
+              )
             }
-          </div> */}
+          </div>
         </div>
       </article>
     </div>
