@@ -33,6 +33,10 @@
             color: $black;
             border-top: 1px solid $black;
           }
+
+          &:hover {
+            color: $cigi-primary-colour;
+          }
         }
       }
     }
@@ -168,9 +172,8 @@
 
   .react-calendar__tile--has-event {
     cursor: pointer;
-
-    .react-calendar__tile__overlay {
-      border: 2px solid $cigi-primary-colour;
+    abbr {
+      background: $cigi-light-grey;
     }
   }
 
@@ -186,10 +189,11 @@
   }
 
   .react-calendar__navigation__arrow {
-    color: $cigi-primary-colour;
+    color: $cigi-light-grey;
+    font-size: 1.75em;
 
     &:hover {
-      color: $cigi-dark-pink;
+      color: $cigi-primary-colour;
     }
   }
 }

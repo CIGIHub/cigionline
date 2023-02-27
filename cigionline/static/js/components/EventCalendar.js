@@ -126,8 +126,8 @@ export default class EventCalendar extends React.Component {
           calendarType="US"
           minDetail="month"
           maxDetail="month"
-          nextLabel="››"
-          prevLabel="‹‹"
+          nextLabel="›"
+          prevLabel="‹"
           next2Label={null}
           prev2Label={null}
           formatShortWeekday={this.formatShortWeekday}
