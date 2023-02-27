@@ -1,9 +1,7 @@
 from datetime import datetime
-from pathlib import Path
-
 from django import template
-
 from django.template.defaultfilters import stringfilter
+from pathlib import Path
 
 register = template.Library()
 

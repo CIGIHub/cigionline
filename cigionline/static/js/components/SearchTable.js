@@ -25,14 +25,15 @@ class SearchTable extends React.Component {
   constructor(props) {
     super(props);
     this.searchTableRef = React.createRef();
-    const { filterTypes } = props;
+    const { filterTypes, isSearchPage } = props;
     this.state = {
       currentPage: 1,
-      displayMode: 'list',
+      displayMode: 'grid',
       emptyQuery: false,
       expertsFilter: '',
       expertSelectValues: [],
       filterTypes,
+      isSearchPage,
       loading: true,
       loadingInitial: true,
       loadingExperts: true,
@@ -42,7 +43,7 @@ class SearchTable extends React.Component {
       rows: [],
       searchValue: '',
       showFilters: false,
-      sortSelected: null,
+      sortSelected: 'Date',
       topics: [],
       topicSelectValues: [],
       topicsFilter: '',
@@ -125,6 +126,16 @@ class SearchTable extends React.Component {
       this.getYears();
       this.getTypes();
     }
+    window.addEventListener('resize', this.handleResize.bind(this));
+    this.handleResize();
+  }
+
+  handleResize() {
+    if (window.innerWidth < 992) {
+      this.setState({
+        displayMode: 'list',
+      });
+    }
   }
 
   handleSearchSubmit(e) {
@@ -143,7 +154,7 @@ class SearchTable extends React.Component {
       {
         searchValue: e.target.value,
       },
-      this.setPage(1)
+      this.setPage(1),
     );
   }
 
@@ -152,7 +163,7 @@ class SearchTable extends React.Component {
       {
         sortSelected: sortValue,
       },
-      this.getRows
+      this.getRows,
     );
   }
 
@@ -168,7 +179,7 @@ class SearchTable extends React.Component {
       {
         expertSelectValues: experts,
       },
-      this.getRows
+      this.getRows,
     );
   }
 
@@ -184,7 +195,7 @@ class SearchTable extends React.Component {
       {
         topicSelectValues: topics,
       },
-      this.getRows
+      this.getRows,
     );
   }
 
@@ -200,7 +211,7 @@ class SearchTable extends React.Component {
       {
         yearSelectValues: years,
       },
-      this.getRows
+      this.getRows,
     );
   }
 
@@ -230,7 +241,7 @@ class SearchTable extends React.Component {
       {
         typeSelectValues: [...new Set(types)],
       },
-      this.getRows
+      this.getRows,
     );
   }
 
@@ -364,21 +375,21 @@ class SearchTable extends React.Component {
       });
 
     // using fixtures to test
-    // const rows = fixtures.items.filter(
-    //   (v, i, a) => a.findIndex((t) => t.id === v.id) === i
-    // );
-    // const aggregations = fixtures.meta.aggregations;
-    // aggregations.topics = mergeObjects([
-    //   aggregations.topics_contentpage,
-    //   aggregations.topics_personpage,
-    // ]);
-    // this.setState(() => ({
-    //   loading: false,
-    //   loadingInitial: false,
-    //   rows,
-    //   aggregations: fixtures.meta.aggregations,
-    //   totalRows: fixtures.meta.total_count,
-    // }));
+    const rows = fixtures.items.filter(
+      (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
+    );
+    const aggregations = fixtures.meta.aggregations;
+    aggregations.topics = mergeObjects([
+      aggregations.topics_contentpage,
+      aggregations.topics_personpage,
+    ]);
+    this.setState(() => ({
+      loading: false,
+      loadingInitial: false,
+      rows,
+      aggregations: fixtures.meta.aggregations,
+      totalRows: fixtures.meta.total_count,
+    }));
   }
 
   getAggregationCount(filterType) {
@@ -441,7 +452,7 @@ class SearchTable extends React.Component {
 
   getSubTypes(parentName) {
     return this.dropdownTypes.filter(
-      (f) => f.parent && f.parent === parentName
+      (f) => f.parent && f.parent === parentName,
     );
   }
 
@@ -450,7 +461,7 @@ class SearchTable extends React.Component {
       () => ({
         currentPage: page,
       }),
-      this.getRows
+      this.getRows,
     );
   }
 
@@ -587,7 +598,7 @@ class SearchTable extends React.Component {
         typeSelectValues: [],
         yearSelectValues: [],
       },
-      this.getRows
+      this.getRows,
     );
   }
 
@@ -603,7 +614,7 @@ class SearchTable extends React.Component {
     const targetButton = e.target;
     const targetMenu = targetButton.nextSibling;
     const siblings = Array.from(
-      targetButton.parentNode.parentNode.querySelectorAll('.dropdown')
+      targetButton.parentNode.parentNode.querySelectorAll('.dropdown'),
     ).filter((s) => s !== targetMenu.parentNode);
     for (let i = 0; i < siblings.length; i += 1) {
       siblings[i].querySelector('.dropdown-menu').classList.remove('show');
@@ -630,17 +641,17 @@ class SearchTable extends React.Component {
       expertSelectValues.map((t) => {
         const expert = experts.filter((to) => to.id === t)[0];
         filter.push(
-          <span
-            className="filter"
+          <button
+            className="filter button--rounded"
             onClick={(e) => this.handleExpertSelect(e, t, false)}
             onKeyDown={(e) => this.handleExpertSelect(e, t, false)}
-            role="button"
+            type="button"
             tabIndex="0"
             key={`expert-filter-${expert.id}`}
           >
             {expert.title}
-            <i className="fa fa-times" />
-          </span>
+            <i className="fal fa-times" />
+          </button>,
         );
         return true;
       });
@@ -649,17 +660,17 @@ class SearchTable extends React.Component {
       topicSelectValues.map((t) => {
         const topic = topics.filter((to) => to.id === t)[0];
         filter.push(
-          <span
-            className="filter"
+          <button
+            className="filter button--rounded"
             onClick={(e) => this.handleTopicSelect(e, t, false)}
             onKeyDown={(e) => this.handleTopicSelect(e, t, false)}
-            role="button"
+            type="button"
             tabIndex="0"
             key={`topic-filter-${topic.id}`}
           >
             {topic.title}
-            <i className="fa fa-times" />
-          </span>
+            <i className="fal fa-times" />
+          </button>,
         );
         return true;
       });
@@ -669,35 +680,35 @@ class SearchTable extends React.Component {
         const parts = s.split('_');
         if (parts.length > 1) {
           filter.push(
-            <span
-              className="filter"
+            <button
+              className="filter button--rounded"
               onClick={(e) =>
                 this.handleTypeSelect(e, parts[0], parts[1], false)
               }
               onKeyDown={(e) =>
                 this.handleTypeSelect(e, parts[0], parts[1], false)
               }
-              role="button"
+              type="button"
               tabIndex="0"
               key={parts[1]}
             >
               {parts[1]}
-              <i className="fa fa-times" />
-            </span>
+              <i className="fal fa-times" />
+            </button>,
           );
         } else {
           filter.push(
-            <span
-              className="filter"
+            <button
+              className="filter button--rounded"
               onClick={(e) => this.handleTypeSelect(e, s, undefined, false)}
               onKeyDown={(e) => this.handleTypeSelect(e, s, undefined, false)}
-              role="button"
+              type="button"
               tabIndex="0"
               key={s}
             >
               {s}
-              <i className="fa fa-times" />
-            </span>
+              <i className="fal fa-times" />
+            </button>,
           );
         }
         return true;
@@ -715,36 +726,34 @@ class SearchTable extends React.Component {
             key={y}
           >
             {y}
-            <i className="fa fa-times" />
-          </span>
+            <i className="fal fa-times" />
+          </span>,
         );
         return true;
       });
     }
     if (filter.length > 0) {
       filter.push(
-        <span
-          className="filter grey"
+        <button
+          className="filter button--rounded button--clear"
           onClick={this.removeAllFilters}
           onKeyDown={this.removeAllFilters}
-          role="button"
+          type="button"
           tabIndex="0"
           key="clear-all"
         >
           Clear All
-        </span>
+        </button>,
       );
     }
 
     return (
-      <div className="filterlist">
-        {filter.length > 0 ? (
+      filter.length > 0 && (
+        <div className="filterlist">
           <div className="filtertitle">Selected Filters:</div>
-        ) : (
-          ''
-        )}
-        {filter}
-      </div>
+          {filter}
+        </div>
+      )
     );
   }
 
@@ -757,6 +766,7 @@ class SearchTable extends React.Component {
       loadingYears,
       loadingTypes,
       aggregations,
+      rows,
       searchValue,
       showFilters,
       topicsFilter,
@@ -775,69 +785,132 @@ class SearchTable extends React.Component {
     } = this.props;
     return (
       <>
-        <div
-          className={`search-bar row gy-2 gx-5 g-lg-4 g-xl-5 ${
-            showFilters ? 'show-filters' : ''
-          }`}
-        >
-          <div className="col-lg-8 search-bar__input-container">
-            <form
-              className="search-bar-form"
-              onSubmit={this.handleSearchSubmit}
+        {isSearchPage ? (
+          <>
+            <div
+              className={`search-bar search-page__search-bar row gy-2 gx-5 g-lg-4 g-xl-5 ${
+                showFilters ? 'show-filters' : ''
+              }`}
             >
-              <button className="btn-search" type="submit">
-                <i className="far fa-search" />
-              </button>
-              <input
-                type="text"
-                className="form-control"
-                value={searchValue}
-                placeholder={searchPlaceholder}
-                onChange={this.handleSearchValueChange}
-                required="required"
-              />
-            </form>
-          </div>
-          <div
-            className="search-bar__filters-button search-filters col-lg-3 d-flex"
-            id="search-bar__filters"
-          >
-            <button
-              type="button"
-              className="search-bar__filters__dropdown"
-              onClick={() => this.toggleFiltersDropdown()}
-            >
-              <div>
-                <i className="fal fa-sort-amount-down" />
-                <span>Filters</span>
+              <div className="col-12 search-bar__display-mode-container">
+                <div className="search-bar__advanced-search-label">
+                  <i className="fal fa-filter" />
+                  Advanced Search
+                </div>
+                <div className="search-bar__display-mode">
+                  <button
+                    type="button"
+                    className={`search-bar__display-mode__button ${
+                      displayMode === 'grid' ? 'active' : ''
+                    }`}
+                    onClick={() => this.changeDisplayMode('grid')}
+                  >
+                    <i className="fas fa-th" />
+                  </button>
+                  <button
+                    type="button"
+                    className={`search-bar__display-mode__button ${
+                      displayMode === 'grid' ? '' : 'active'
+                    }`}
+                    onClick={() => this.changeDisplayMode('list')}
+                  >
+                    <i className="fal fa-list" />
+                  </button>
+                </div>
               </div>
-              <i className="fal fa-angle-down" />
-            </button>
-          </div>
-          <div className="col-lg-1 search-bar__display-mode-container">
-            <div className="search-bar__display-mode">
-              <button
-                type="button"
-                className={`search-bar__display-mode__button ${
-                  displayMode === 'grid' ? 'active' : ''
-                }`}
-                onClick={() => this.changeDisplayMode('grid')}
-              >
-                <i className="fas fa-th" />
-              </button>
-              <button
-                type="button"
-                className={`search-bar__display-mode__button ${
-                  displayMode === 'grid' ? '' : 'active'
-                }`}
-                onClick={() => this.changeDisplayMode('list')}
-              >
-                <i className="fal fa-list" />
-              </button>
+              <div className="col-12 search-bar__input-container">
+                <form
+                  className="search-bar-form"
+                  onSubmit={this.handleSearchSubmit}
+                >
+                  <button className="btn-search" type="submit">
+                    <i className="far fa-search" />
+                  </button>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={searchValue}
+                    placeholder={searchPlaceholder}
+                    onChange={this.handleSearchValueChange}
+                    required="required"
+                  />
+                </form>
+              </div>
             </div>
-          </div>
-        </div>
-        {showFilters && this.renderFilters()}
+            {rows.length > 0 && (
+              <>
+                <div className="search-bar__filter-by-label">Filter by:</div>
+                {this.renderFilters()}
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <div
+              className={`search-bar row gy-2 gx-5 g-lg-4 g-xl-5 ${
+                showFilters ? 'show-filters' : ''
+              }`}
+            >
+              <div className="col-lg-8 search-bar__input-container">
+                <form
+                  className="search-bar-form"
+                  onSubmit={this.handleSearchSubmit}
+                >
+                  <button className="btn-search" type="submit">
+                    <i className="far fa-search" />
+                  </button>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={searchValue}
+                    placeholder={searchPlaceholder}
+                    onChange={this.handleSearchValueChange}
+                    required="required"
+                  />
+                </form>
+              </div>
+              <div
+                className="search-bar__filters-button search-filters col-lg-3 d-flex"
+                id="search-bar__filters"
+              >
+                <button
+                  type="button"
+                  className="search-bar__filters__dropdown"
+                  onClick={() => this.toggleFiltersDropdown()}
+                >
+                  <div>
+                    <i className="fal fa-sort-amount-down" />
+                    <span>Filters</span>
+                  </div>
+                  <i className="fal fa-angle-down" />
+                </button>
+              </div>
+              <div className="col-lg-1 search-bar__display-mode-container">
+                <div className="search-bar__display-mode">
+                  <button
+                    type="button"
+                    className={`search-bar__display-mode__button ${
+                      displayMode === 'grid' ? 'active' : ''
+                    }`}
+                    onClick={() => this.changeDisplayMode('grid')}
+                  >
+                    <i className="fas fa-th" />
+                  </button>
+                  <button
+                    type="button"
+                    className={`search-bar__display-mode__button ${
+                      displayMode === 'grid' ? '' : 'active'
+                    }`}
+                    onClick={() => this.changeDisplayMode('list')}
+                  >
+                    <i className="fal fa-list" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            {showFilters && this.renderFilters()}
+          </>
+        )}
       </>
     );
   }
@@ -957,12 +1030,12 @@ class SearchTable extends React.Component {
                           (expertsFilter === '' ||
                             expert.title
                               .toLowerCase()
-                              .includes(expertsFilter.toLowerCase()))
+                              .includes(expertsFilter.toLowerCase())),
                       )
                       .sort(
                         (a, b) =>
                           aggregations.experts[b.id] -
-                          aggregations.experts[a.id]
+                          aggregations.experts[a.id],
                       )
                       .map((expert) => (
                         <li
@@ -1003,7 +1076,7 @@ class SearchTable extends React.Component {
                         expertsFilter === '' ||
                         expert.title
                           .toLowerCase()
-                          .includes(expertsFilter.toLowerCase())
+                          .includes(expertsFilter.toLowerCase()),
                     ).length === 0 && (
                       <li className="dropdown-item" key="noresults">
                         No results matching &quot;
@@ -1040,7 +1113,7 @@ class SearchTable extends React.Component {
                           topicsFilter === '' ||
                           topic.title
                             .toLowerCase()
-                            .includes(topicsFilter.toLowerCase())
+                            .includes(topicsFilter.toLowerCase()),
                       )
                       .map((topic) => (
                         <li className="dropdown-item" key={`topic-${topic.id}`}>
@@ -1078,7 +1151,7 @@ class SearchTable extends React.Component {
                         topicsFilter === '' ||
                         topic.title
                           .toLowerCase()
-                          .includes(topicsFilter.toLowerCase())
+                          .includes(topicsFilter.toLowerCase()),
                     ).length === 0 && (
                       <li className="dropdown-item" key="noresults">
                         No results matching &quot;
@@ -1129,7 +1202,7 @@ class SearchTable extends React.Component {
                               }
                               className={`${
                                 typeSelectValues.some(
-                                  (t) => t.split('_')[0] === type.name
+                                  (t) => t.split('_')[0] === type.name,
                                 )
                                   ? 'partial'
                                   : ''
@@ -1157,7 +1230,7 @@ class SearchTable extends React.Component {
                                     className="dropdown-item"
                                     key={`subtype-${subtype.name.replace(
                                       ' ',
-                                      '_'
+                                      '_',
                                     )}`}
                                   >
                                     <label
@@ -1176,7 +1249,7 @@ class SearchTable extends React.Component {
                                         }
                                         checked={
                                           typeSelectValues.includes(
-                                            subtype.name
+                                            subtype.name,
                                           )
                                             ? 'checked'
                                             : ''
@@ -1300,378 +1373,7 @@ class SearchTable extends React.Component {
     } = this.props;
 
     return (
-      <div className="search-table-container">
-        {isSearchPage && showSidebar && (
-          <div className="search-filters search-filters-search-page col-md-3">
-            {showExpertDropDown && (
-              <div className="dropdown custom-dropdown dropdown-experts">
-                <button
-                  className="search-table__filters__dropdown-toggle"
-                  type="button"
-                  id="search-bar-experts"
-                  onClick={(e) => this.toggleDropdown(e)}
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Experts
-                </button>
-                <div
-                  className="dropdown-menu pt-0"
-                  aria-labelledby="search-bar-experts"
-                >
-                  <div className="expert-filter">
-                    <div className="input-group input-group-search">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="search experts"
-                        onKeyUp={(e) => this.handleExpertsFilter(e)}
-                      />
-                      <div className="input-group-append">
-                        <button className="btn-search" type="submit">
-                          <i className="far fa-search" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  {!loadingExperts && (
-                    <ul>
-                      {this.dropdownExperts
-                        .filter(
-                          (expert) =>
-                            aggregations.experts[expert.id] > 0 &&
-                            (expertsFilter === '' ||
-                              expert.title
-                                .toLowerCase()
-                                .includes(expertsFilter.toLowerCase()))
-                        )
-                        .sort(
-                          (a, b) =>
-                            aggregations.experts[b.id] -
-                            aggregations.experts[a.id]
-                        )
-                        .map((expert) => (
-                          <li
-                            className="dropdown-item"
-                            key={`expert-${expert.id}`}
-                          >
-                            <label
-                              htmlFor={`expert-${expert.id}`}
-                              className={`keep-open ${
-                                !aggregations.experts[expert.id]
-                                  ? 'inactive'
-                                  : ''
-                              }`}
-                            >
-                              <input
-                                id={`expert-${expert.id}`}
-                                type="checkbox"
-                                checked={
-                                  expertSelectValues.includes(expert.id)
-                                    ? 'checked'
-                                    : ''
-                                }
-                                onChange={(e) =>
-                                  this.handleExpertSelect(e, expert.id)
-                                }
-                              />
-                              <span>{expert.title}</span>
-                              <span className="dropdown-item__count">
-                                {aggregations.experts[expert.id] ? (
-                                  <>{aggregations.experts[expert.id]}</>
-                                ) : (
-                                  <>0</>
-                                )}
-                              </span>
-                            </label>
-                          </li>
-                        ))}
-                      {this.dropdownExperts.filter(
-                        (expert) =>
-                          expertsFilter === '' ||
-                          expert.title
-                            .toLowerCase()
-                            .includes(expertsFilter.toLowerCase())
-                      ).length === 0 && (
-                        <li className="dropdown-item" key="noresults">
-                          No results matching &quot;
-                          {expertsFilter}
-                          &quot;
-                        </li>
-                      )}
-                    </ul>
-                  )}
-                </div>
-              </div>
-            )}
-            {!hideTopicDropdown && (
-              <div className="dropdown custom-dropdown dropdown-topics">
-                <button
-                  className="search-table__filters__dropdown-toggle"
-                  type="button"
-                  id="search-bar-topics"
-                  onClick={(e) => this.toggleDropdown(e)}
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Topics
-                </button>
-                <div
-                  className="dropdown-menu pt-0"
-                  aria-labelledby="search-bar-topics"
-                >
-                  <div className="topic-filter">
-                    <div className="input-group input-group-search">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="search topics"
-                        onKeyUp={(e) => this.handleTopicsFilter(e)}
-                      />
-                      <div className="input-group-append">
-                        <button className="btn-search" type="submit">
-                          <i className="far fa-search" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  {!loadingTopics && (
-                    <ul>
-                      {this.dropdownTopics
-                        .filter(
-                          (topic) =>
-                            topicsFilter === '' ||
-                            topic.title
-                              .toLowerCase()
-                              .includes(topicsFilter.toLowerCase())
-                        )
-                        .map((topic) => (
-                          <li
-                            className="dropdown-item"
-                            key={`topic-${topic.id}`}
-                          >
-                            <label
-                              htmlFor={`topic-${topic.id}`}
-                              className={`keep-open ${
-                                !aggregations.topics[topic.id] ? 'inactive' : ''
-                              }`}
-                            >
-                              <input
-                                id={`topic-${topic.id}`}
-                                type="checkbox"
-                                checked={
-                                  topicSelectValues.includes(topic.id)
-                                    ? 'checked'
-                                    : ''
-                                }
-                                onChange={(e) =>
-                                  this.handleTopicSelect(e, topic.id)
-                                }
-                              />
-                              <span>{topic.title}</span>
-                              <span className="dropdown-item__count">
-                                {aggregations.topics[topic.id] ? (
-                                  <>{aggregations.topics[topic.id]}</>
-                                ) : (
-                                  <>0</>
-                                )}
-                              </span>
-                            </label>
-                          </li>
-                        ))}
-                      {this.dropdownTopics.filter(
-                        (topic) =>
-                          topicsFilter === '' ||
-                          topic.title
-                            .toLowerCase()
-                            .includes(topicsFilter.toLowerCase())
-                      ).length === 0 && (
-                        <li className="dropdown-item" key="noresults">
-                          No results matching &quot;
-                          {topicsFilter}
-                          &quot;
-                        </li>
-                      )}
-                    </ul>
-                  )}
-                </div>
-              </div>
-            )}
-            {!loadingTypes && filterTypes.length > 0 && (
-              <div className="dropdown custom-dropdown">
-                <button
-                  className="search-table__filters__dropdown-toggle"
-                  type="button"
-                  id="search-bar-types"
-                  onClick={(e) => this.toggleDropdown(e)}
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Types
-                </button>
-                <div
-                  className="dropdown-menu w-100"
-                  aria-labelledby="search-bar-types"
-                >
-                  <ul>
-                    {this.dropdownTypes.map(function (type) {
-                      if (!Object.keys(type).includes('parent')) {
-                        return (
-                          <li
-                            className="dropdown-item"
-                            key={`type-${type.name.replace(' ', '_')}`}
-                          >
-                            <label
-                              htmlFor={`input_type_${type.name}`}
-                              className={`keep-open ${
-                                !this.getAggregationCount(type)
-                                  ? 'inactive'
-                                  : ''
-                              }`}
-                            >
-                              <input
-                                id={`input_type_${type.name}`}
-                                type="checkbox"
-                                onChange={(e) =>
-                                  this.handleTypeSelect(e, type.name)
-                                }
-                                className={`${
-                                  typeSelectValues.some(
-                                    (t) => t.split('_')[0] === type.name
-                                  )
-                                    ? 'partial'
-                                    : ''
-                                }`}
-                                checked={
-                                  typeSelectValues.includes(type.name)
-                                    ? 'checked'
-                                    : ''
-                                }
-                              />
-                              <span>{type.name}</span>
-                              <span>
-                                {this.getAggregationCount(type) ? (
-                                  <>({this.getAggregationCount(type)})</>
-                                ) : (
-                                  <>(0)</>
-                                )}
-                              </span>
-                            </label>
-                            {this.getSubTypes(type.name) &&
-                              this.getSubTypes(type.name).length > 0 && (
-                                <ul>
-                                  {this.getSubTypes(type.name).map(
-                                    (subtype) => (
-                                      <li
-                                        className="dropdown-item"
-                                        key={`subtype-${subtype.name.replace(
-                                          ' ',
-                                          '_'
-                                        )}`}
-                                      >
-                                        <label
-                                          htmlFor={`input_${type.name}_${subtype.name}`}
-                                          className={`keep-open ${
-                                            !this.getAggregationCount(subtype)
-                                              ? 'inactive'
-                                              : ''
-                                          }`}
-                                        >
-                                          <input
-                                            id={`input_${type.name}_${subtype.name}`}
-                                            type="checkbox"
-                                            onChange={(e) =>
-                                              this.handleTypeSelect(
-                                                e,
-                                                subtype.name
-                                              )
-                                            }
-                                            checked={
-                                              typeSelectValues.includes(
-                                                subtype.name
-                                              )
-                                                ? 'checked'
-                                                : ''
-                                            }
-                                            className={`${type.name} ${type.name}_${subtype.name}`}
-                                          />
-                                          <span>{subtype.name}</span>
-                                          <span className="dropdown-item__count">
-                                            {this.getAggregationCount(
-                                              subtype
-                                            ) ? (
-                                              <>
-                                                {this.getAggregationCount(
-                                                  subtype
-                                                )}
-                                              </>
-                                            ) : (
-                                              <>0</>
-                                            )}
-                                          </span>
-                                        </label>
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              )}
-                          </li>
-                        );
-                      }
-                      return null;
-                    }, this)}
-                  </ul>
-                </div>
-              </div>
-            )}
-
-            <div className="dropdown custom-dropdown">
-              <button
-                className="search-table__filters__dropdown-toggle"
-                type="button"
-                id="search-bar-years"
-                onClick={(e) => this.toggleDropdown(e)}
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Years
-              </button>
-              <div className="dropdown-menu" aria-labelledby="search-bar-years">
-                {!loadingYears && (
-                  <ul className="columns-2">
-                    {years.map((year) => (
-                      <li className="dropdown-item" key={`year-${year}`}>
-                        <label
-                          htmlFor={`year-${year}`}
-                          className={`keep-open ${
-                            !aggregations.years[year] ? 'inactive' : ''
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            id={`year-${year}`}
-                            checked={
-                              yearSelectValues.includes(year) ? 'checked' : ''
-                            }
-                            onChange={(e) => this.handleYearSelect(e, year)}
-                          />
-                          <span>{year}</span>
-                          <span className="dropdown-item__count">
-                            {aggregations.years[year] ? (
-                              <>{aggregations.years[year]}</>
-                            ) : (
-                              <>0</>
-                            )}
-                          </span>
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+      <div className="search-table-container custom-theme-table">
         <div className="search-table">
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {showSearch && <>{this.renderSearchBar(showSidebar)}</>}
@@ -1684,45 +1386,64 @@ class SearchTable extends React.Component {
                   {`${totalRows} results for ${searchValue}. For exact matches, enclose search terms in double quotation marks (e.g. "platform governance").`}
                 </div>
               )}
-              {this.renderSelectedFilters()}
+              <div className="search-table__filters__container">
+                {this.renderSelectedFilters()}
 
-              <div className="search-bar-sort-wrapper">
-                {sortOptions.length > 1 && (
-                  <>
-                    <span>Sort by:</span>
-                    <ul className="search-bar-sort-list">
-                      {sortOptions.map((sortOption) => (
-                        <li key={`sort-${sortOption.value}`}>
-                          <button
-                            type="button"
-                            className={[
-                              'search-bar-sort-link',
-                              (sortSelected === sortOption.value ||
-                                (!sortSelected && sortOption.default)) &&
-                                'active',
-                            ].join(' ')}
-                            onClick={() =>
-                              this.handleSortSelect(sortOption.value)
-                            }
-                          >
-                            {sortOption.name}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+                <div className="search-bar-sort-wrapper">
+                  {sortOptions.length > 1 && (
+                    <>
+                      <div className="search-bar__sort__label">Sort by:</div>
+                      <div className="search-bar-sort-list dropdown custom-dropdown">
+                        <button
+                          type="button"
+                          className="dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {sortSelected}
+                        </button>
+                        <ul className="dropdown-menu">
+                          {sortOptions.map((sortOption) => (
+                            <li
+                              key={`sort-${sortOption.value}`}
+                              className="dropdown-item"
+                            >
+                              <button
+                                type="button"
+                                className={[
+                                  'search-bar-sort-link',
+                                  (sortSelected === sortOption.value ||
+                                    (!sortSelected && sortOption.default)) &&
+                                    'active',
+                                ].join(' ')}
+                                onClick={() =>
+                                  this.handleSortSelect(sortOption.value)
+                                }
+                              >
+                                {sortOption.name}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
               {blockListing
                 ? this.renderBlockListing(RowComponent, containerClass)
                 : this.renderResults(RowComponent, containerClass)}
             </>
           ) : emptyQuery ? (
-            <p>
-              Please enter your search terms into the Search field. For exact
-              matches, enclose search terms in double quotation marks (e.g.
-              &quot;platform governance&quot;).
-            </p>
+            <div className="row">
+              <div className="col-12">
+                <p className="empty-query-prompt">
+                  Please enter your search terms into the Search field. For
+                  exact matches, enclose search terms in double quotation marks
+                  (e.g. &quot;platform governance&quot;).
+                </p>
+              </div>
+            </div>
           ) : (
             <>
               {this.renderSelectedFilters()}
@@ -1732,11 +1453,13 @@ class SearchTable extends React.Component {
               </p>
             </>
           )}
-          <Paginator
-            currentPage={currentPage}
-            totalPages={this.totalPages}
-            setPage={(page) => this.setPage(page)}
-          />
+          {this.totalPages > 1 && (
+            <Paginator
+              currentPage={currentPage}
+              totalPages={this.totalPages}
+              setPage={(page) => this.setPage(page)}
+            />
+          )}
           {loading && (
             <img
               src="/static/assets/loader_spinner.gif"
@@ -1759,7 +1482,7 @@ SearchTable.propTypes = {
     PropTypes.shape({
       paramName: PropTypes.string,
       paramValue: PropTypes.any,
-    })
+    }),
   ),
   fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   filterTypes: PropTypes.arrayOf(
@@ -1770,9 +1493,9 @@ SearchTable.propTypes = {
         PropTypes.shape({
           name: PropTypes.string,
           value: PropTypes.string,
-        })
+        }),
       ),
-    })
+    }),
   ),
   showExpertDropDown: PropTypes.bool,
   hideTopicDropdown: PropTypes.bool,
@@ -1787,13 +1510,13 @@ SearchTable.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       value: PropTypes.string,
-    })
+    }),
   ),
   tableColumns: PropTypes.arrayOf(
     PropTypes.shape({
       colSpan: PropTypes.number,
       colTitle: PropTypes.string,
-    })
+    }),
   ),
 };
 

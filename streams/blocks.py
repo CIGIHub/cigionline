@@ -1344,7 +1344,7 @@ class EventCard(blocks.StructBlock):
         context['end_date'] = page.event_end
         context['event_type'] = page.get_event_type_display()
         context['event_access'] = page.get_event_access_display()
-        context['event_format'] = page.event_format_string()
+        context['event_format'] = page.event_format_string
         context['is_past'] = page.is_past()
         context['time_zone_label'] = page.time_zone_label
         context['url'] = page.feature_url if page.feature_url else page.url
@@ -1460,7 +1460,7 @@ class ExpertCard(blocks.StructBlock):
                 'type': activity.contenttype
             } for activity in page.latest_activity]
         context['twitter'] = page.twitter_username
-        context['linkedin_username'] = page.linkedin_username()
+        context['linkedin_username'] = page.linkedin_username
         context['board_position'] = page.board_position
         context['expertise_list'] = page.expertise_list
         context['twitter_username'] = page.twitter_username

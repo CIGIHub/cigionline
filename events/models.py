@@ -284,6 +284,7 @@ class EventPage(
     def location_map_url(self):
         return f'https://www.google.com/maps/search/?api=1&query={urllib.parse.quote(self.location_string())}'
 
+    @property
     def event_format_string(self):
         return self.get_event_format_display()
 

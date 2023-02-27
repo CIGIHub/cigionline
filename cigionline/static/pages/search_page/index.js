@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SearchResultCard from '../../js/components/SearchResultCard';
 import SearchResultListing from '../../js/components/SearchResultListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/search_page.scss';
 
+const livePageCount = Number(document.getElementById('search-table').dataset.livePageCount).toLocaleString('en-US');
 ReactDOM.render(
   <SearchTable
-    blockListing
     isSearchPage
     showCount
     showSearch
     showExpertDropDown
+    searchPlaceholder={`Explore ${livePageCount} pages of CIGI research and analysis`}
     sortOptions={[{
       default: true,
       name: 'Relevance',
@@ -21,11 +23,23 @@ ReactDOM.render(
     }]}
     fields={[
       'authors',
+      'board_position',
       'contenttype',
       'contentsubtype',
+      'expertise_list',
+      'image_poster_url',
+      'image_hero_url',
+      'image_square_url',
       'publishing_date',
       'search_result_description',
+      'theme_name',
+      'linkedin_username',
+      'twitter_username',
       'topics',
+      'event_access',
+      'time_zone_label',
+      'event_format_string',
+      'event_end',
     ]}
     containerClass={[
       'search-result-row',
@@ -158,7 +172,7 @@ ReactDOM.render(
         value: 'research.ProjectPage',
       }],
     }].sort((a, b) => a.name.localeCompare(b.name))}
-    RowComponent={SearchResultListing}
+    RowComponent={SearchResultCard}
   />,
   document.getElementById('search-table'),
 );

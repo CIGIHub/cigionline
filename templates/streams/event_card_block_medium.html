@@ -4,7 +4,9 @@
   <article class="card__container card--medium card--medium--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
     <div class="row card--event__top">
       <div class="col-md-8">
-        <div class="card--event--upcoming-label">Upcoming Event</div>
+        {% if not is_past %}
+          <div class="card--event--upcoming-label">Upcoming Event</div>
+        {% endif %}
         {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
         <div class="card--event__info">
           <time datetime="" class="card--event__time">
@@ -26,7 +28,7 @@
           <div class="card--event__type">
             {{ event_access }} 
             Event{% if event_type|length > 1 %}: {{ event_type }}{% endif %}
-            {{ event_format }}
+            ({{ event_format }})
           </div>
         </div>
       </div>
