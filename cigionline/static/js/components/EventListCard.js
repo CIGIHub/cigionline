@@ -7,7 +7,7 @@ const EventListCard = (props) => {
 
   return (
     <div className="col col-12 col-md-8">
-      <article className={`"card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}"`}>
+      <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
         <div className="row card--event__top">
           <div className="col-md-8">
             {today < row.date && (
@@ -88,7 +88,7 @@ const EventListCard = (props) => {
             </div>
           </div>
           <div className="col-md-6 text-center">
-            {row.event_access === 'Private' 
+            {row.event_access === 'Private'
               ? (
                 <button type="button" className="card--event__button--register button--rounded is_private" disabled>
                   Private Event
@@ -97,7 +97,7 @@ const EventListCard = (props) => {
               : (
                 <button type="button" className="card--event__button--register button--rounded">
                   Register Now
-                  <i className="fas fa-angle-right"></i>
+                  <i className="fas fa-angle-right" />
                 </button>
               )
             }

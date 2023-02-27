@@ -35,21 +35,21 @@ class EventList extends React.Component {
     } = this.state;
 
     return (
-      <div className="event-list">
-        {
-          rows
-            && rows.map((row) => (
-              <EventListCard row={row} key={row.id} />
-            ))
-        }
-        {
-          <Paginator
-            currentPage={currentPage}
-            setPage={(page) => this.setPage(page)}
-            totalPages={pageCount}
-          />
-        }
-      </div>
+      <>
+        <div className="event-items">
+          {
+            rows
+              && rows.map((row) => (
+                <EventListCard row={row} key={row.id} />
+              ))
+          }
+        </div>
+        <Paginator
+          currentPage={currentPage}
+          setPage={(page) => this.setPage(page)}
+          totalPages={pageCount}
+        />
+      </>
     );
   }
 }

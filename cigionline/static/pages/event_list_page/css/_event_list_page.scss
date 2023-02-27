@@ -1,57 +1,92 @@
 @import '../../../css/global/mixins';
 
-.events-landing-page-label {
-  padding-bottom: 2em;
+.border-top {
+  border-top: 1px solid $cigi-light-grey;
+  margin-top: 1em;
+  // padding: 1em 0;
 
-  .events-icon {
-    padding-right: 1em;
+  .events-landing-page-label {
+    padding-top: 1em;
+    padding-bottom: 2em;
+  
+    .events-icon {
+      padding-right: 1em;
+    }
   }
-}
+  
+  .events-landing-page-tabs {
+    padding-bottom: 2em;
 
-.events-landing-page-tabs {
-  padding-bottom: 2em;
+    .nav-tabs {
+      border: 0;
+
+      .nav-item {
+        padding: 0 calc(var(--bs-gutter-x)*.5);
+
+        .nav-link {
+          border: 0;
+          border-radius: 0;
+          color: $cigi-medium-grey;
+          padding: 1em 5em 0 0;
+
+          &.active {
+            color: $black;
+            border-top: 1px solid $black;
+          }
+        }
+      }
+    }
+  }
 }
 
 .events-wrapper {
-  .events-item {
-    border-bottom: 1px solid $cigi-light-grey;
-    padding: 3em 0;
+  #event-list {
+    padding-right: 0;
 
-    &:first-child {
-      @include media-breakpoint-up(lg) {
-        border-top: 0;
-        padding-top: 0;
-      }
-
-      border-top: 1px solid $cigi-light-grey;
-    }
-
-    >div[class*='col'] {
-      width: 100%;
-    }
-
-    .card--event__top {
-      margin-bottom: 5em;
-
-      .card--event--upcoming-label {
-        display: none;
-      }
-
-      .card--event__calendar-date {
-        .card--event__date {
-          display: flex;
-          justify-content: center;
-          line-height: 70%;
-        }
-
-        .card--event__month {
-          display: flex;
-          justify-content: center;
-          padding-top: 0.5em;
+    .event-items {
+      >div[class*='col'] {
+        width: 100%;
+        border-bottom: 1px solid $cigi-light-grey;
+        padding: 3em 0;
+  
+        &:first-child {
+          @include media-breakpoint-up(lg) {
+            border-top: 0;
+            padding-top: 0;
+          }
+    
+          border-top: 1px solid $cigi-light-grey;
         }
       }
+  
+      .card--event__top {
+        margin-bottom: 5em;
+  
+        .card--event--upcoming-label {
+          display: none;
+        }
+  
+        .card--event__calendar-date {
+          .card--event__date {
+            display: flex;
+            justify-content: center;
+            line-height: 70%;
+          }
+  
+          .card--event__month {
+            display: flex;
+            justify-content: center;
+            padding-top: 0.5em;
+          }
+        }
+      }
+    }
+
+    .pagination-links-numbered {
+      margin: 5em 0;
     }
   }
+  
 }
 
 .events-calendar {
@@ -89,7 +124,7 @@
   }
 
   .react-calendar__navigation {
-    padding: 0.5rem 0;
+    padding: 0 0 0.5rem 0;
   }
 
   .react-calendar__viewContainer {
