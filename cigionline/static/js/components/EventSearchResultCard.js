@@ -2,8 +2,6 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// Wednesday, March 30,
-// 2022 9:00 AM - 10:00 AM EDT (UTC–04:00)
 const EventSearchResultCard = (props) => {
   const { row } = props;
   const today = DateTime.now();
@@ -19,7 +17,7 @@ const EventSearchResultCard = (props) => {
   const endDateAmPm = endDate.toFormat('a');
 
   return (
-    <article className="card__container card--small card--small--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
+    <article className={`card__container card--small card--small--event card--event ${!row.event_access && 'is_private'}`}>
       <div className="card--event--small__top">
         {today < startDate && (
           <div className="card--event--upcoming-label">
