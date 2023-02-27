@@ -2,8 +2,6 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// Wednesday, March 30,
-// 2022 9:00 AM - 10:00 AM EDT (UTC–04:00)
 const EventSearchResultCard = (props) => {
   const { row } = props;
   const today = DateTime.now();

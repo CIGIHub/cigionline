@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader %}
+{% load webpack_loader wagtailcore_tags %}
 
 {% block extra_css %}
   {% render_bundle 'topicPage' 'css' %}
@@ -12,31 +12,52 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title submenu=self.submenu %}
-  <section>
+  <header class="header--submenu">
+    <div class="container">
+      <nav class="border-top">
+        <div class="row g-1 justify-content-between">
+          <div class="col">
+            <div class="header__title">
+              <i class="fal fa-folder"></i>
+              <h1>{{ self.title }}</h1>
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="header--submenu__right">
+              <div class="header--submenu__right__menu-item active">
+                <a role="button">
+                  All Content
+                </a>
+              </div>
+              <div class="header--submenu__right__menu-item">
+                <a role="button">
+                  Projects
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  
+  <section class="topic-page__description">
     <div class="container">
       <div class="row">
-        <div class="col-12">
-          <h2 class="paragraph-heading">Featured</h2>
-        </div>
-      </div>
-      <div class="row featured-medium">
-        {% for item in self.featured_latest_pages %}
-          <div class="col-12 col-md-4 topic-featured-content">
-            {% if forloop.counter > 1 %}
-              <hr>
-            {% endif %}
-            {% include "includes/features/feature_content_medium.html" with content=item %}
+        <div class="col col-lg-8">
+          <div class="topic-page__description__content">
+            {{ self.description|richtext }}
           </div>
-        {% endfor %}
+        </div>
       </div>
     </div>
   </section>
-  <section>
+
+  <section class="topic-page__search-table">
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div id="topic-search-table">
+          <div class="topic-search-table" id="topic-search-table">
           </div>
         </div>
       </div>
