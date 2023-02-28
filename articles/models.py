@@ -8,6 +8,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
+from images.models import CigionlineImage
 from modelcluster.fields import ParentalKey
 from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.panels import (
@@ -662,7 +663,7 @@ class ArticleSeriesPage(
             return self.image_poster.get_rendition('fill-525x700').url
         except Exception:
             print('Error: image_poster_url')
-        return '/static/images/CIGI-default-recommended-thumb.2e16d0ba.fill-525x700.png' 
+        return CigionlineImage.objects.get(id=1).get_rendition('fill-525x700').url
 
     @property
     def article_series_items(self):

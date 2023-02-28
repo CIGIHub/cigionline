@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.fields import CharField
 from django.http.response import Http404
 from django.utils.functional import cached_property
+from images.models import CigionlineImage
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -160,7 +161,7 @@ class BasicPageAbstract(models.Model):
                 return self.image_hero.get_rendition('fill-520x390').url
         except Exception:
             print('Error: image_hero_url')
-        return '/static/assets/CIGI-default-recommended-thumb-1440x990.png'
+        return CigionlineImage.objects.get(title='CIGI-default-recommended-thumb').get_rendition('fill-520x390').url
 
     @property
     def image_hero_wide_url(self):

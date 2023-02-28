@@ -375,21 +375,21 @@ class SearchTable extends React.Component {
       });
 
     // using fixtures to test
-    const rows = fixtures.items.filter(
-      (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-    );
-    const aggregations = fixtures.meta.aggregations;
-    aggregations.topics = mergeObjects([
-      aggregations.topics_contentpage,
-      aggregations.topics_personpage,
-    ]);
-    this.setState(() => ({
-      loading: false,
-      loadingInitial: false,
-      rows,
-      aggregations: fixtures.meta.aggregations,
-      totalRows: fixtures.meta.total_count,
-    }));
+    // const rows = fixtures.items.filter(
+    //   (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
+    // );
+    // const aggregations = fixtures.meta.aggregations;
+    // aggregations.topics = mergeObjects([
+    //   aggregations.topics_contentpage,
+    //   aggregations.topics_personpage,
+    // ]);
+    // this.setState(() => ({
+    //   loading: false,
+    //   loadingInitial: false,
+    //   rows,
+    //   aggregations: fixtures.meta.aggregations,
+    //   totalRows: fixtures.meta.total_count,
+    // }));
   }
 
   getAggregationCount(filterType) {
