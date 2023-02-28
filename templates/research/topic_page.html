@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader wagtailcore_tags %}
+{% load webpack_loader wagtailcore_tags menu_tags %}
 
 {% block extra_css %}
   {% render_bundle 'topicPage' 'css' %}
@@ -23,18 +23,23 @@
             </div>
           </div>
           <div class="col-8">
-            <div class="header--submenu__right">
-              <div class="header--submenu__right__menu-item active">
-                <a role="button">
-                  All Content
-                </a>
-              </div>
-              <div class="header--submenu__right__menu-item">
-                <a role="button">
-                  Projects
-                </a>
-              </div>
-            </div>
+            {% if self.submenu %}
+              {% get_menu_items self.submenu.slug as submenu_items %}
+              {% if submenu_items %}
+                <div class="header--submenu__right">
+                  <div class="header--submenu__right__menu-item active">
+                    <a role="button">
+                      All Content
+                    </a>
+                  </div>
+                  {% for submenu_item in submenu_items %}
+                    <div class="header--submenu__right__menu-item {% if submenu_item.link_page.url_path == self.url_path %}inactive{% endif %}">
+                      <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endif %}
           </div>
         </div>
       </nav>
