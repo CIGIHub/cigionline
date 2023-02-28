@@ -10,7 +10,7 @@ const EventSearchResultCard = (props) => {
   const startDateDay = startDate.day;
   const startDateMonth = startDate.monthLong;
   const startDateYear = startDate.year;
-  const startDateHour = startDate.hour;
+  const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
   const startDateAmPm = startDate.toFormat('a');
   const endDate = DateTime.fromISO(row.event_end) || null;
   const endDateHour = endDate.hour;

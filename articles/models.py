@@ -660,7 +660,8 @@ class ArticleSeriesPage(
     @property
     def image_poster_url(self):
         try:
-            return self.image_poster.get_rendition('fill-525x700').url
+            if self.specific.image_poster:
+                return self.specific.image_poster.get_rendition('fill-525x700').url
         except Exception:
             print('Error: image_poster_url')
         return CigionlineImage.objects.get(id=1).get_rendition('fill-525x700').url
