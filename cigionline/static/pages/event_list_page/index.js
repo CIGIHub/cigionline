@@ -141,7 +141,6 @@ ReactDOM.render(
 );
 
 const allEvents = JSON.parse(document.getElementById('all-events').dataset.allEvents);
-console.log(allEvents);
 
 ReactDOM.render(
   <EventList meta={allEvents.meta} items={allEvents.items} />,
