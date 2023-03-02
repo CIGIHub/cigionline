@@ -3,6 +3,13 @@ $skeleton-meta-colour: rgba(109, 109, 109, 0.5);
 $skeleton-topic-colour: rgba(230, 32, 59, 0.5);
 
 .search-table-skeleton {
+  margin-top: 3em;
+
+  td,
+  th {
+    padding: 1em 0;
+  }
+
   .skeleton-blur {
     color: transparent !important;
 
