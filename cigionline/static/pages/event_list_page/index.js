@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import EventListing from '../../js/components/EventListing';
+import EventSearchResultCard from '../../js/components/EventSearchResultCard';
 import EventList from '../../js/components/EventList';
 import SearchTable from '../../js/components/SearchTable';
 import EventCalendar from '../../js/components/EventCalendar';
@@ -11,13 +11,18 @@ ReactDOM.render(
     showSearch
     contenttypes={['Event']}
     fields={[
-      'event_access',
-      'location_city',
-      'location_country',
-      'multimedia_url',
+      'authors',
+      'contentsubtype',
+      'image_hero_url',
       'publishing_date',
-      'registration_url',
+      'title',
       'topics',
+      'url',
+      'event_access',
+      'event_end',
+      'event_type',
+      'event_format_string',
+      'time_zone_label',
     ]}
     filterTypes={[{
       name: 'CIGI Sponsored',
@@ -112,7 +117,7 @@ ReactDOM.render(
       }],
     }]}
     containerClass={['custom-theme-table', 'table-events']}
-    RowComponent={EventListing}
+    RowComponent={EventSearchResultCard}
     tableColumns={[
       {
         colSpan: 6,
@@ -141,7 +146,6 @@ ReactDOM.render(
 );
 
 const allEvents = JSON.parse(document.getElementById('all-events').dataset.allEvents);
-console.log(allEvents);
 
 ReactDOM.render(
   <EventList meta={allEvents.meta} items={allEvents.items} />,

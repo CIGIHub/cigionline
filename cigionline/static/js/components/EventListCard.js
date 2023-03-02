@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon';
 import React from 'react';
 
+import '../../css/components/EventListCard.scss';
+
 const EventListCard = (props) => {
   const { row } = props;
   const today = DateTime.now();

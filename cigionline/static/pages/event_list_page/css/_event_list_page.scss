@@ -15,6 +15,10 @@
   }
   
   .events-landing-page-tabs {
+    @include media-breakpoint-up(lg) {
+      justify-content: flex-start;
+    }
+    justify-content: flex-end;
     padding-bottom: 2em;
 
     .nav-tabs {
@@ -24,10 +28,13 @@
         padding: 0 calc(var(--bs-gutter-x)*.5);
 
         .nav-link {
+          @include media-breakpoint-up(lg) {
+            padding: 1em 5em 0 0;
+          }
           border: 0;
           border-radius: 0;
           color: $cigi-medium-grey;
-          padding: 1em 5em 0 0;
+          padding: 1em 0 0;
 
           &.active {
             color: $black;
@@ -46,49 +53,6 @@
 .events-wrapper {
   #event-list {
     padding-right: 0;
-
-    .event-items {
-      >div[class*='col'] {
-        width: 100%;
-        border-bottom: 1px solid $cigi-light-grey;
-        padding: 3em 0;
-  
-        &:first-child {
-          @include media-breakpoint-up(lg) {
-            border-top: 0;
-            padding-top: 0;
-          }
-    
-          border-top: 1px solid $cigi-light-grey;
-        }
-      }
-  
-      .card--event__top {
-        margin-bottom: 5em;
-  
-        .card--event--upcoming-label {
-          display: none;
-        }
-  
-        .card--event__calendar-date {
-          .card--event__date {
-            display: flex;
-            justify-content: center;
-            line-height: 70%;
-          }
-  
-          .card--event__month {
-            display: flex;
-            justify-content: center;
-            padding-top: 0.5em;
-          }
-        }
-      }
-    }
-
-    .pagination-links-numbered {
-      margin: 5em 0;
-    }
   }
   
 }
@@ -189,7 +153,7 @@
   }
 
   .react-calendar__navigation__arrow {
-    color: $cigi-light-grey;
+    color: $cigi-medium-grey;
     font-size: 1.75em;
 
     &:hover {
