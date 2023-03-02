@@ -2,6 +2,8 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import '../../css/components/EventSearchResultCard.scss';
+
 const EventSearchResultCard = (props) => {
   const { row } = props;
   const today = DateTime.now();

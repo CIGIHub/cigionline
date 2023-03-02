@@ -40,11 +40,11 @@ export default class EventCalendar extends React.Component {
         onClick={this.togglePopover}
         onKeyPress={this.togglePopover}
         data-container="body"
-        data-toggle="popover"
-        data-placement="bottom"
-        data-html="true"
-        data-content={popOverHtml}
-        data-trigger="manual"
+        data-bs-toggle="popover"
+        data-bs-placement="bottom"
+        data-bs-html="true"
+        data-bs-content={popOverHtml}
+        data-bs-trigger="manual"
         data-animation="false"
       />
     );
