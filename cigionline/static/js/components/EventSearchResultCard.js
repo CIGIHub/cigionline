@@ -28,7 +28,7 @@ const EventSearchResultCard = (props) => {
             {`${startDateMonth} ${startDateDay}`}
           </div>
         )}
-        <h3 className="card__text__title">
+        <h3 className="card--event__title card__text__title">
           <a href={row.url}>{row.title}</a>
         </h3>
         <div className="card--event__info">

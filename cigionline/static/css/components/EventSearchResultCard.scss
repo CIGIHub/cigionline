@@ -1,1 +1,18 @@
 @import '../global/mixins';
+
+#events-search-table {
+  .card__container {
+    @include media-breakpoint-up(xl) {
+      padding: 0 4em;
+    }
+    padding: 0 2em;
+
+    .card__text__title {
+      min-height: 6em;
+    }
+
+    .card__text__meta {
+      margin-top: 1.5em;
+    }
+  }
+}
