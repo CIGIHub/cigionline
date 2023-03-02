@@ -1447,7 +1447,7 @@ class SearchTable extends React.Component {
           ) : (
             <>
               {this.renderSelectedFilters()}
-              <p>
+              <p className="empty-query-prompt">
                 Your query returned no results. Please check your spelling and
                 try again.
               </p>
