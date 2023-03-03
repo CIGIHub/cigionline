@@ -23,6 +23,10 @@ html {
   @media screen and (prefers-reduced-motion: reduce) {
     scroll-behavior: auto;
   }
+
+  &.disable-scroll {
+    overflow: hidden;
+  }
 }
 
 body {
