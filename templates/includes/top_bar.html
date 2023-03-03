@@ -5,6 +5,45 @@
   {% cache 86400 top_bar %}
     {% get_menu_items 'main' as main_menu_items %}
 
+    <div class="dropdown-menu dropdown-menu-end header--top-bar__dropdown-menu header--top-bar__dropdown-menu--full" id="header--top-bar__dropdown-menu--full">
+      {% for menu_item in main_menu_items %}
+        <li class="dropdown-item">
+          {% if menu_item.link_page %}
+            <a href="{% pageurl menu_item.link_page %}">
+              <i class="fal {{ menu_item.title|menu_icon }}"></i>
+              {{ menu_item.title }}
+            </a>
+          {% elif menu_item.link_url %}
+            <a href="{{ menu_item.link_url }}">
+              <i class="fal {{ menu_item.title|menu_icon }}"></i>
+              {{ menu_item.title }}
+            </a>
+          {% endif %}
+        </li>
+      {% endfor %}
+      <li class="dropdown-item">
+        <a href="/subscribe/">
+          <i class="fal fa-envelope"></i>
+          Sign-up to our Newsletter
+        </a>
+      </li>
+      <li class="dropdown-item header--top-bar__menu__social">
+        <a href="https://twitter.com/cigionline" target="_blank">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://www.linkedin.com/company/cigionline/" target="_blank">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://www.facebook.com/cigionline" target="_blank">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://www.youtube.com/user/cigivideos" target="_blank">
+          <i class="fab fa-youtube"></i>
+        </a>
+        </a>
+      </li>
+    </div>
+
     <div class="main-navigation-wrapper">
       <div class="container">
         <div class="row">
@@ -15,7 +54,7 @@
             </a>
             <nav aria-label="primary">
               <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown"
+                <button type="button" class="btn dropdown-toggle" id="dropdown-search-btn" data-bs-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
                   <i class="far fa-search"></i>
                   <i class="far fa-times"></i>
@@ -38,8 +77,8 @@
                   </form>
                 </div>
               </div>
-              <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,10"
+              <div class="btn-group dropdown-menu-btn-group">
+                <button type="button" id="dropdown-menu-btn" class="btn dropdown-toggle" data-bs-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
                   <i class="far fa-bars"></i>
                   <i class="far fa-times"></i>

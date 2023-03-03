@@ -40,9 +40,11 @@ $(function() {
           $navSearchInputDropdownCount.append(
             `Results <span>(${data.meta.total_count})<span>`,
           );
-          rows.forEach((row) => $navSearchInputDropdownList.append(
-            `<li><a href=${row.url}>${row.title}</a></li>`,
-          ));
+          rows.forEach((row) =>
+            $navSearchInputDropdownList.append(
+              `<li><a href=${row.url}>${row.title}</a></li>`,
+            ),
+          );
         });
     } else {
       $navSearchInputDropdown.removeClass('show');
@@ -56,7 +58,8 @@ const cookieConsentContainer = document.getElementById(
   'cigi-cookie-consent-container',
 );
 if (
-  cookieConsentContainer && !document.cookie
+  cookieConsentContainer &&
+  !document.cookie
     .split(';')
     .some((item) => item.includes('cigionline.accept.privacy.notice=1'))
 ) {
@@ -73,27 +76,34 @@ copyTextButtons.forEach((button) => {
   });
 });
 
-const bookmarkButtons = document.querySelectorAll('.bookmark-button');
-bookmarkButtons.forEach((button) => {
-  button.addEventListener('click', (e) => {
-    const bookmarkTitle = e.target.getAttribute('data-bookmark-title');
-    const url = e.target.getAttribute('data-bookmark-url');
-    if (window.sidebar && window.sidebar.addPanel) {
-      // Mozilla Firefox Bookmark
-      window.sidebar.addPanel(bookmarkTitle, url, '');
-    } else if (window.external && ('AddFavorite' in window.external)) {
-      // IE Favorite
-      window.external.AddFavorite(url, bookmarkTitle);
-    } else if (window.opera && window.print) {
-      // Opera Hotlist
-      this.title = bookmarkTitle;
-      return true;
+const dropdownMenuButton = document.getElementById('dropdown-menu-btn');
+const dropdownSearchButton = document.getElementById('dropdown-search-btn');
+const dropdownMenuFull = document.getElementById(
+  'header--top-bar__dropdown-menu--full',
+);
+const body = document.querySelector('body');
+dropdownMenuButton.addEventListener('click', (e) => {
+  if (window.innerWidth < 576) {
+    if (dropdownMenuButton.getAttribute('aria-expanded') === 'false') {
+      dropdownMenuFull.classList.remove('show');
+      body.classList.remove('disable-scroll');
     } else {
-      // webkit - safari/chrome
-      alert(
-        `Press ${navigator.userAgent.toLowerCase().indexOf('mac') !== -1 ? 'Command/Cmd' : 'CTRL'} + D to bookmark this page.`,
-      );
+      dropdownMenuFull.classList.add('show');
+      body.classList.add('disable-scroll');
     }
-    return false;
-  });
+  }
+});
+dropdownSearchButton.addEventListener('click', (e) => {
+  if (window.innerWidth < 576) {
+    if (dropdownMenuFull.classList.contains('show')) {
+      dropdownMenuFull.classList.remove('show');
+      body.classList.remove('disable-scroll');
+    }
+  }
+});
+window.addEventListener('resize', (e) => {
+  if (window.innerWidth > 576) {
+    dropdownMenuFull.classList.remove('show');
+    body.classList.remove('disable-scroll');
+  }
 });
