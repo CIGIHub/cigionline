@@ -151,12 +151,6 @@ header {
           }
         }
       }
-
-      .dropdown-menu-btn-group {
-        @include media-breakpoint-down(sm) {
-          position: static;
-        }
-      }
     }
   }
 
@@ -372,9 +366,21 @@ header {
       li {
         padding: 0 1em;
 
+        a {
+          padding: 1.5em;
+        }
+
         &:not(:last-child) {
           a {
             border-bottom: 1px solid $cigi-light-grey;
+          }
+        }
+
+        &:last-child {
+          padding-bottom: 2em;
+
+          a {
+            padding: 2em 1.5em;
           }
         }
       }

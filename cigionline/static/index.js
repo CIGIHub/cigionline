@@ -7,16 +7,16 @@ import './css/cigionline.scss';
 
 import addInlineVideoActions from './js/inline_video_block';
 
-$(function () {
+$(function() {
   // Facebook Share buttons
-  $('.facebook-share-link').on('click', function () {
+  $('.facebook-share-link').on('click', function() {
     const href = $(this).data('url');
     FB.ui(
       {
         method: 'share',
         href,
       },
-      function (/* response */) {},
+      function(/* response */) {},
     );
   });
 
@@ -24,7 +24,7 @@ $(function () {
   const $navSearchInputDropdown = $('#nav-search-input-dropdown');
   const $navSearchInputDropdownList = $('#nav-search-input-dropdown-list');
   const $navSearchInputDropdownCount = $('#nav-search-input-dropdown-count');
-  $navSearchInput.on('input', function (e) {
+  $navSearchInput.on('input', function(e) {
     const searchValue = e.target.value;
     if (searchValue) {
       $navSearchInputDropdown.addClass('show');
