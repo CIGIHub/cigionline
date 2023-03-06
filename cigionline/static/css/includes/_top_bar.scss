@@ -352,14 +352,16 @@ header {
       display: block;
       opacity: 0;
       overflow: scroll;
-      height: 100vh;
+      height: 0;
       top: 50px;
       padding-top: 1em;
       transition: opacity 0.2s ease;
-      z-index: 1001;
       width: 100vw;
-
+      z-index: -1;
+      
       &.show {
+        z-index: 1001;
+        height: 100vh;
         opacity: 1;
       }
 
