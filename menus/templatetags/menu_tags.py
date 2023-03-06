@@ -12,6 +12,7 @@ def get_menu_items(slug):
         'menu_items__submenu__menu_items__link_page',
     ).get(slug=slug).menu_items.all()
 
+
 @register.filter
 def menu_icon(menu_item):
     icons = {

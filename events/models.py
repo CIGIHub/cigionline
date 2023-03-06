@@ -6,7 +6,6 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalKey
 from streams.blocks import EventCard
 from wagtail.admin.panels import (
     FieldPanel,
@@ -15,7 +14,7 @@ from wagtail.admin.panels import (
     PageChooserPanel,
 )
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page
+from wagtail.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index

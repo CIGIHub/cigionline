@@ -363,7 +363,7 @@ class ThemeablePageAbstract(models.Model):
         if self.theme:
             return self.theme.name.lower().replace(' ', '_').replace("-", '_')
         return ''
-    
+
     @property
     def theme_name(self):
         if self.theme:
