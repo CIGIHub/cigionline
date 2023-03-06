@@ -2,9 +2,6 @@
 
 #events-search-table {
   .card__container {
-    @include media-breakpoint-up(xl) {
-      padding: 0 4em;
-    }
     padding: 0 2em;
 
     .card__text__title {
