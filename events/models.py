@@ -6,7 +6,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from modelcluster.fields import ParentalKey
+from streams.blocks import EventCard
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -14,7 +14,7 @@ from wagtail.admin.panels import (
     PageChooserPanel,
 )
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page
+from wagtail.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from django.utils import timezone
 from wagtail.search import index
@@ -29,37 +29,26 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     parent_page_types = ['home.HomePage']
     subpage_types = ['events.EventPage']
     templates = 'events/event_list_page.html'
+    featured_events = StreamField(
+        [
+            ('event', EventCard()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
 
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.hero_link_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_events',
-                    max_num=6,
-                    min_num=0,
-                    label='Event',
-                ),
-            ],
-            heading='Featured Events',
-            classname='collapsible collapsed',
-        ),
+        FieldPanel('featured_events'),
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
-
-    def get_featured_events(self):
-        featured_event_ids = self.featured_events.order_by('sort_order').values_list('event_page', flat=True)[:6]
-        pages = Page.objects.specific().prefetch_related(
-            'topics',
-        ).in_bulk(featured_event_ids)
-        return [pages[x] for x in featured_event_ids]
 
     def get_all_events(self):
         from .models import EventPage
@@ -115,34 +104,11 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_events'] = self.get_featured_events()
         context['all_events'] = self.get_all_events()
         return context
 
     class Meta:
         verbose_name = 'Event List Page'
-
-
-class EventListPageFeaturedEvent(Orderable):
-    event_list_page = ParentalKey(
-        'events.EventListPage',
-        related_name='featured_events',
-    )
-    event_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Event',
-    )
-
-    panels = [
-        PageChooserPanel(
-            'event_page',
-            ['events.EventPage'],
-        ),
-    ]
 
 
 class EventPage(

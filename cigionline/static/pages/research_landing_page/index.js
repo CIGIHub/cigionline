@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as d3 from 'd3';
 import Swiper, { Navigation, Pagination } from 'swiper';
 import ResearchContentListing from '../../js/components/ResearchContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/research_landing_page.scss';
 import 'swiper/swiper-bundle.css';
-
 
 const readMoreButton = document.getElementById('read-more');
 const body = document.getElementById('body');
@@ -156,5 +154,5 @@ ReactDOM.render(
     ]}
     searchPlaceholder="Search Research by Keyword"
   />,
-  document.getElementById('research-search-table')
+  document.getElementById('research-search-table'),
 );

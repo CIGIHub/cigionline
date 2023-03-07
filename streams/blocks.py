@@ -1483,9 +1483,9 @@ class TwitterCard(blocks.StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)
+        urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE | re.UNICODE)
         tweet_text = urls.sub(r'<a href="\1" target="_blank">\1</a>', value.get('tweet').tweet_text)
-        
+
         if value.get('tweet').tweet_media_link:
             tweet_media_link = value.get('tweet').tweet_media_link
         else:
