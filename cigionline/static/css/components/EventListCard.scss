@@ -21,6 +21,9 @@
       @include media-breakpoint-up(md) {
         margin-bottom: 5em;  
       }
+      @include media-breakpoint-up(lg) {
+        margin-right: 0;
+      }
       margin-bottom: 2em;
   
       .card--event--upcoming-label {
