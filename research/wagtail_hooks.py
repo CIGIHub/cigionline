@@ -12,6 +12,7 @@ from .models import (
     ProjectPage,
     ResearchLandingPage,
     TopicPage,
+    IssuePage,
 )
 
 
@@ -72,11 +73,23 @@ class TopicPageModelAdmin(ModelAdmin):
     permission_helper_class = CIGIModelAdminPermissionHelper
 
 
+class IssuePageModelAdmin(ModelAdmin):
+    model = IssuePage
+    menu_label = 'Issues'
+    menu_icon = 'folder-open-inverse'
+    menu_order = 103
+    list_display = ('title',)
+    list_filter = ('live',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
 class ResearchModelAdminGroup(ModelAdminGroup):
     menu_label = 'Research'
     menu_icon = 'site'
     menu_order = 106
-    items = (ResearchLandingPageModelAdmin, ProjectPageModelAdmin, TopicPageModelAdmin)
+    items = (ResearchLandingPageModelAdmin, ProjectPageModelAdmin, TopicPageModelAdmin, IssuePageModelAdmin)
 
 
 modeladmin_register(ResearchModelAdminGroup)

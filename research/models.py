@@ -128,6 +128,7 @@ class ProjectPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('issues'),
                 FieldPanel('related_files'),
             ],
             heading='Related',
