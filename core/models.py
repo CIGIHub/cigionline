@@ -570,7 +570,6 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
-        FieldPanel('issues'),
     ]
 
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields + [
@@ -584,6 +583,7 @@ class ContentPage(Page, SearchablePageAbstract):
         index.SearchField('topic_names'),
         index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
+        ParentalManyToManyFilterField('issues'),
     ]
 
     def on_form_bound(self):
