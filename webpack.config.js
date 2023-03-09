@@ -36,6 +36,7 @@ const config = {
     fundingPage: './cigionline/static/pages/funding_page/index.js',
     homePage: './cigionline/static/pages/home_page/index.js',
     igcTimelinePage: './cigionline/static/pages/igc_timeline_page/index.js',
+    issuePage: './cigionline/static/pages/issue_page/index.js',
     jobPostingListPage: './cigionline/static/pages/job_posting_list_page/index.js',
     jobPostingPage: './cigionline/static/pages/job_posting_page/index.js',
     mediaLandingPage: './cigionline/static/pages/media_landing_page/index.js',
