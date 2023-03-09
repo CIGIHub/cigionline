@@ -197,7 +197,7 @@ class HomePage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['trending_issued'] = self.get_trending_issues()
+        context['trending_issues'] = self.get_trending_issues()
         return context
 
     max_count = 1
