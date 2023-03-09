@@ -153,6 +153,7 @@ class CIGIOnlineSearchQueryCompiler:
         years,
         eventaccess,
         experts,
+        issues,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -171,6 +172,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.years = None
         self.eventaccess = None
         self.experts = None
+        self.issues = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -184,6 +186,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.topics = topics
         if experts and len(experts) > 0:
             self.experts = experts
+        if issues and len(issues) > 0:
+            self.issues = issues
         if articletypeid is not None:
             self.articletypeid = articletypeid
         if publicationtypeid is not None:
@@ -367,6 +371,29 @@ class CIGIOnlineSearchQueryCompiler:
                     ]
                 }
             })
+        if self.issues:
+            filters.append({
+                "bool": {
+                    "must": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "terms": {
+                                            "people_personpage__issues_filter": self.issues,
+                                        }
+                                    },
+                                    {
+                                        "terms": {
+                                            "core_contentpage__issues_filter": self.issues,
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            })
         if self.articletypeid:
             filters.append({
                 "term": {
@@ -457,7 +484,8 @@ def cigi_search(content_type=None,
                 multimediaseriesid=None,
                 years=None,
                 eventaccess=None,
-                experts=None,):
+                experts=None,
+                issues=None,):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
         CIGIOnlineSearchQueryCompiler(content_type,
@@ -474,7 +502,8 @@ def cigi_search(content_type=None,
                                       multimediaseriesid,
                                       years,
                                       eventaccess,
-                                      experts,)
+                                      experts,
+                                      issues,)
     )
 
 
