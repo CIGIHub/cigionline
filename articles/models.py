@@ -442,6 +442,7 @@ class ArticlePage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('issues'),
                 PageChooserPanel(
                     'article_series',
                     ['articles.ArticleSeriesPage'],
@@ -760,6 +761,7 @@ class ArticleSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('issues'),
             ],
             heading='Related',
             classname='collapsible collapsed',

@@ -72,6 +72,18 @@
             z-index: 0;
           }
         }
+
+        &.trending-issue {
+          button {
+            @include button(
+              $color: $white,
+              $background-color: $black,
+              $border-color: $black,
+              $hover-color: $black,
+              $hover-background-color: $white
+            );
+          }
+        }
       }
     }
   }

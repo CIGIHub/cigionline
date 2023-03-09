@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load webpack_loader wagtailcore_tags menu_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'issuePage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var issueId = {{ self.id }};
+  </script>
+  {% render_bundle 'issuePage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  <header class="header--submenu">
+    <div class="container">
+      <nav class="border-top">
+        <div class="row g-1 justify-content-between">
+          <div class="col">
+            <div class="header__title">
+              <i class="fal fa-folder"></i>
+              <h1>{{ self.title }}</h1>
+            </div>
+          </div>
+          <div class="col-8">
+            {% if self.submenu %}
+              {% get_menu_items self.submenu.slug as submenu_items %}
+              {% if submenu_items %}
+                <div class="header--submenu__right">
+                  <div class="header--submenu__right__menu-item active">
+                    <a role="button">
+                      All Content
+                    </a>
+                  </div>
+                  {% for submenu_item in submenu_items %}
+                    <div class="header--submenu__right__menu-item {% if submenu_item.link_page.url_path == self.url_path %}inactive{% endif %}">
+                      <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  
+  <section class="issue-page__description">
+    <div class="container">
+      <div class="row">
+        <div class="col col-lg-8">
+          <div class="issue-page__description__content">
+            {{ self.description|richtext }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="issue-page__search-table">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="issue-search-table" id="issue-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

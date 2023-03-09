@@ -19,6 +19,7 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     FieldPanel
 )
+from wagtail.blocks import PageChooserBlock
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 from django.utils import timezone
@@ -37,69 +38,21 @@ class HomePage(Page):
     ],
         blank=True,
     )
+    trending_issues = StreamField(
+        [
+            ('issue', PageChooserBlock(required=False, page_type='research.IssuePage')),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
     content_panels = Page.content_panels + [
-        FieldPanel('layout'),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_pages',
-                    max_num=9,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Featured Content',
-            classname='collapsible collapsed',
-            help_text='1: large | 2-4: medium | 5-9: small'
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'highlight_pages',
-                    max_num=12,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Highlights',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_multimedia',
-                    max_num=12,
-                    min_num=0,
-                    label='Multimedia',
-                ),
-            ],
-            heading='Featured Multimedia',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_experts',
-                    max_num=3,
-                    min_num=0,
-                    label='Expert',
-                ),
-            ],
-            heading='Featured Experts',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'promotion_blocks',
-                    max_num=4,
-                    min_num=0,
-                    label='Promotion Block',
-                ),
-            ],
-            heading='Promotion Blocks',
-            classname='collapsible collapsed',
-        ),
+        MultiFieldPanel([
+            FieldPanel('layout'),
+        ], heading='Layout', classname='collapsible collapsed'),
+        MultiFieldPanel([
+            FieldPanel('trending_issues'),
+        ], heading='Trending Issues', classname='collapsible collapsed'),
     ]
 
     def get_featured_pages(self):
@@ -192,39 +145,6 @@ class HomePage(Page):
 
         return featured_publications
 
-    def get_featured_events(self):
-        featured_events = []
-        try:
-            featured_events_query_set = HomePageFeaturedEventsList.objects.first().featured_events
-            featured_event_ids = [event.value['page'].id for event in featured_events_query_set]
-            featured_events = EventPage.objects.prefetch_related(
-                'authors__author',
-                'topics',
-            ).in_bulk(featured_event_ids)
-            featured_events = [featured_events[x] for x in featured_events]
-        except Exception:
-            error(traceback.format_exc())
-
-        if len(featured_events) == 0:
-            featured_events = EventListPage.objects.first().get_featured_events()[:3]
-            if not featured_events:
-                now = timezone.now()
-                future_events = EventPage.objects.prefetch_related(
-                    'multimedia_page',
-                    'topics',
-                ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
-                if len(future_events) < 3:
-                    Q = models.Q
-                    past_events = EventPage.objects.prefetch_related(
-                        'multimedia_page',
-                        'topics',
-                    ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
-                    featured_events = (list(future_events) + list(past_events))[:3]
-                else:
-                    featured_events = future_events
-
-        return featured_events
-
     def get_promotion_blocks(self):
         promotion_blocks = [block.value['block'] for block in HomePageFeaturedPromotionsList.objects.first().featured_promotions]
 
@@ -272,15 +192,12 @@ class HomePage(Page):
         except Exception:
             return ''
 
+    def get_trending_issues(self):
+        return [issue.value for issue in self.trending_issues]
+
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_pages'] = self.get_featured_pages()
-        context['featured_experts'] = self.get_featured_experts_list()
-        context['highlight_pages'] = self.get_highlight_pages()
-        context['featured_multimedia'] = self.get_featured_multimedia()
-        context['featured_publications'] = self.get_featured_publications()
-        context['featured_events'] = self.get_featured_events()
-        context['promotion_blocks'] = self.get_promotion_blocks()
+        context['trending_issues'] = self.get_trending_issues()
         return context
 
     max_count = 1
@@ -304,6 +221,7 @@ class HomePage(Page):
         'people.PersonListPage',
         'publications.PublicationListPage',
         'publications.PublicationSeriesListPage',
+        'research.IssueListPage',
         'research.ProjectListPage',
         'research.ResearchLandingPage',
         'research.TopicListPage',

@@ -128,6 +128,7 @@ class ProjectPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('issues'),
                 FieldPanel('related_files'),
             ],
             heading='Related',
@@ -430,3 +431,49 @@ class TopicPageFeaturedPage(Orderable):
             ]
         )
     ]
+
+
+class IssueListPage(Page):
+    """Issue list page"""
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = ['research.IssuePage']
+    templates = 'research/issue_list_page.html'
+
+    class Meta:
+        verbose_name = 'Issue List Page'
+
+
+class IssuePage(ArchiveablePageAbstract,
+                BasicPageAbstract,
+                SearchablePageAbstract,
+                Page):
+    """View issue page"""
+    description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+
+    content_panels = Page.content_panels + [
+        FieldPanel('description'),
+    ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + SearchablePageAbstract.search_fields
+
+    parent_page_types = ['research.IssueListPage']
+    subpage_types = []
+    templates = 'research/issue_page.html'
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['archive'])
+        ]
+        verbose_name = 'Issue Page'
+        verbose_name_plural = 'Issue Pages'

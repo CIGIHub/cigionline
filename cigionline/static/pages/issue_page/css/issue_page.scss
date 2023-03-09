@@ -1,0 +1,73 @@
+@import '../../../css/global/mixins';
+
+header {
+  &.header--submenu {
+    nav {
+      border-bottom: 0;
+    }
+
+    .header__title {
+      display: flex;
+
+      i {
+        margin-right: 0.5em;
+        padding-top: 0.1em;
+      }
+
+      h1 {
+        font-size: 1.1rem;
+      }
+    }
+
+    .header--submenu__right__menu-item {
+      color: $cigi-medium-grey;
+
+      &.active {
+        &::before {
+          top: -1.05em;
+        }
+      }
+    }
+  }
+}
+
+.issue-page__description {
+  margin-top: 2em;
+
+  .issue-page__description__content {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.2;
+  }
+}
+
+.issue-page__search-table {
+  .issue-search-table {
+    .search-table-container {
+      border-top: 1px solid $cigi-light-grey;
+      padding-top: 2em;
+    }
+
+    .search-table__results--grid {
+      .article-container {
+        padding: 1.5em 0;
+
+        &:nth-child(3n) {
+          .article-container__border {
+            border-right: 0;
+          }
+        }
+
+        .article-container__border {
+          padding: 0 1.5em;
+          border-right: 1px solid $cigi-light-grey;
+          height: 100%;
+
+          article {
+            border: 0;
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+}

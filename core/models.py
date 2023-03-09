@@ -428,6 +428,7 @@ class ContentPage(Page, SearchablePageAbstract):
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True, related_name='content_pages')
+    issues = ParentalManyToManyField('research.IssuePage', blank=True, related_name='content_pages')
 
     @property
     def topics_sorted(self):
@@ -582,6 +583,7 @@ class ContentPage(Page, SearchablePageAbstract):
         index.SearchField('topic_names'),
         index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
+        ParentalManyToManyFilterField('issues'),
     ]
 
     def on_form_bound(self):

@@ -411,6 +411,7 @@ class EventPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('issues'),
                 PageChooserPanel(
                     'multimedia_page',
                     ['multimedia.MultimediaPage'],
