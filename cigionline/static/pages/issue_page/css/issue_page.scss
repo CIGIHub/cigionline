@@ -31,17 +31,17 @@ header {
   }
 }
 
-.topic-page__description {
+.issue-page__description {
   margin-top: 2em;
 
-  .topic-page__description__content {
+  .issue-page__description__content {
     font-size: clamp(1.5rem, 3vw, 2.5rem);
     line-height: 1.2;
   }
 }
 
-.topic-page__search-table {
-  .topic-search-table {
+.issue-page__search-table {
+  .issue-search-table {
     .search-table-container {
       border-top: 1px solid $cigi-light-grey;
       padding-top: 2em;
