@@ -2,7 +2,7 @@
 {% load webpack_loader wagtailcore_tags menu_tags %}
 
 {% block extra_css %}
-  {% render_bundle 'topicPage' 'css' %}
+  {% render_bundle 'issuePage' 'css' %}
 {% endblock %}
 {% block extra_js %}
   <script type="text/javascript">
@@ -46,12 +46,23 @@
     </div>
   </header>
   
-  <section class="topic-page__description">
+  <section class="issue-page__description">
     <div class="container">
       <div class="row">
         <div class="col col-lg-8">
-          <div class="topic-page__description__content">
+          <div class="issue-page__description__content">
             {{ self.description|richtext }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="issue-page__search-table">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="issue-search-table" id="issue-search-table">
           </div>
         </div>
       </div>
