@@ -115,3 +115,20 @@ class LinkedInPost(models.Model):
 
     def __str__(self):
         return self.title
+
+
+@register_snippet
+class FacebookPost(models.Model):
+    title = models.CharField(max_length=255)
+    user_name = models.CharField(max_length=255, blank=True, null=True)
+    user_username = models.CharField(max_length=255, blank=True, null=True)
+    user_profile_image_url = models.CharField(max_length=255, blank=True, null=True)
+    post_url = models.CharField(max_length=255, blank=True, null=True)
+    post_text = RichTextField(blank=True, null=True)
+    post_media_url = models.CharField(max_length=255, blank=True, null=True)
+    post_created_at = models.DateTimeField(blank=True, null=True)
+    post_likes = models.IntegerField(blank=True, null=True)
+    post_comments = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
