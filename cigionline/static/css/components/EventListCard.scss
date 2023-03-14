@@ -2,6 +2,8 @@
 
 #event-list {
   .event-items {
+    padding-left: 1em;
+    
     >div[class*='col'] {
       width: 100%;
       border-bottom: 1px solid $cigi-light-grey;
