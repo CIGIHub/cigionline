@@ -1520,6 +1520,15 @@ class LinkedInCard(blocks.StructBlock):
         template = 'streams/linkedin_card_block.html'
 
 
+class FacebookCard(blocks.StructBlock):
+    post = SnippetChooserBlock(required=True, target_model='social.FacebookPost')
+
+    class Meta:
+        icon = 'site'
+        label = 'Facebook Card'
+        template = 'streams/facebook_card_block.html'
+
+
 class AdCard(blocks.StructBlock):
     class AdCardTypeChoices(models.TextChoices):
         SMALL = ('small', 'Small')
@@ -1587,6 +1596,7 @@ class SocialSwiperRow(blocks.StructBlock):
     social_swiper_cards = blocks.StreamBlock([
         ('twitter_card', TwitterCard()),
         ('linkedin_card', LinkedInCard()),
+        ('facebook_card', FacebookCard()),
     ])
 
     def get_context(self, value, parent_context=None):
