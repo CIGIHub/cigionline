@@ -66,20 +66,19 @@
   #event-list-calendar {
     padding-right: 1em;
   }
-  
+
   .events-wrapper {
     #event-list {
       padding-left: 0;
       padding-right: 0;
     }
-    
   }
-  
+
   .events-calendar {
     // sass-lint:disable-block class-name-format
     margin-bottom: 2rem;
     position: relative;
-  
+
     .events-calendar__loader {
       left: 50%;
       position: absolute;
@@ -88,35 +87,35 @@
       width: 50px;
     }
   }
-  
+
   .react-calendar {
     // sass-lint:disable-block class-name-format
     .react-calendar__navigation__label,
     .react-calendar__month-view__days__day {
       color: $cigi-text-grey;
     }
-  
+
     .react-calendar__month-view__weekdays__weekday {
       color: $cigi-text-grey;
-  
+
       abbr {
         cursor: auto;
         text-decoration: none;
       }
     }
-  
+
     .react-calendar__month-view__days__day--neighboringMonth {
       color: $cigi-light-grey;
     }
-  
+
     .react-calendar__navigation {
       padding: 0 0 0.5rem 0;
     }
-  
+
     .react-calendar__viewContainer {
       margin: 0.5rem 0;
     }
-  
+
     .react-calendar__tile {
       align-items: center;
       box-sizing: border-box;
@@ -126,13 +125,13 @@
       flex-shrink: 0;
       justify-content: center;
       position: relative;
-  
+
       &::before {
         content: '';
         display: table;
         padding-top: 100%;
       }
-  
+
       abbr {
         align-items: center;
         border-radius: 50%;
@@ -143,7 +142,7 @@
         justify-content: center;
         width: 30px;
       }
-  
+
       .react-calendar__tile__overlay {
         border-radius: 50%;
         height: 30px;
@@ -151,75 +150,75 @@
         width: 30px;
       }
     }
-  
+
     .react-calendar__tile--has-event {
       cursor: pointer;
       abbr {
         background: $cigi-light-grey;
       }
     }
-  
+
     .react-calendar__tile--now {
       abbr {
         background: $black;
         color: $white;
       }
     }
-  
+
     .react-calendar__month-view__weekdays {
       text-align: center;
     }
-  
+
     .react-calendar__navigation__arrow {
       color: $cigi-medium-grey;
       font-size: 1.75em;
-  
+
       &:hover {
         color: $cigi-primary-colour;
       }
     }
   }
-  
+
   .popover {
     border-radius: 0;
-  
+
     .popover-body {
       // sass-lint:disable-block class-name-format
       .react-calendar__tile__popover {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
-  
+
         a {
           display: block;
           font-size: 0.875em;
           padding: 0.5rem 0;
         }
-  
+
         a + a {
           border-top: 1px solid $divider-grey;
         }
       }
     }
   }
-  
+
   .featured-events {
     margin-top: 2em;
-  
+
     .container {
       position: relative;
     }
-  
+
     .featured-events-container {
       border-bottom: 1px solid $cigi-light-grey;
       position: relative;
     }
-  
+
     .swiper-container {
       @include media-breakpoint-up(md) {
         padding-top: 4em;
       }
       padding-top: 2em;
     }
-  
+
     .swiper-button-prev,
     .swiper-button-next {
       @include media-breakpoint-down(sm) {
@@ -227,35 +226,35 @@
         bottom: 1.5em;
       }
       color: $cigi-medium-grey;
-  
+
       &.swiper-button-disabled {
         color: $cigi-medium-light-grey;
       }
-  
+
       &::after {
         font-size: 1em;
       }
     }
-  
+
     .swiper-button-prev {
       @include media-breakpoint-down(sm) {
         left: 0;
       }
       left: -2em;
     }
-  
+
     .swiper-button-next {
       @include media-breakpoint-down(sm) {
         right: 0;
       }
       right: -2em;
     }
-  
+
     .swiper-pagination {
       position: static;
       width: 100%;
       padding: 2em 0;
-  
+
       .swiper-pagination-bullet {
         background-color: $cigi-medium-grey;
         margin: 0 0.5em;
