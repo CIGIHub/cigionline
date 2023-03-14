@@ -1,26 +1,35 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
 
 <div class="col col-12 col-md-4">
-  <article class="card__container card--small--multimedia">
+  <article class="card__container card--small--multimedia card--multimedia">
     <div class="card__image">
-      <a href="{{ url }}" class="feature-content-image">
-        <div class="img-wrapper">
-          {% if image_src %}
-            <img alt="{{ image_alt }}" src="{{ image_src }}" />
-          {% else %}
-            {% image image fill-520x347 %}
-          {% endif %}
-        </div>
-      </a>
+      {% if image_src %}
+        {% define image_src as img_url %}
+      {% else %}
+        {% image image fill-520x347 as image %}
+        {% define image.url as img_url %}
+      {% endif %}
+      <div class="img-wrapper">
+        <video 
+          class="video-js"
+          id="video-js-{{ block_id }}"
+          preload="auto"
+          poster="{{ img_url }}"
+          data-youtube-url="{{ youtube_url }}"
+          data-block-id="{{ block_id }}"
+        >
+        </video>
+      </div>
+
       <div class="card__image__play-icon">
         {% if multimedia_type == 'video' %}
-          <i class="fas fa-play"></i>
+        <i class="fas fa-play"></i>
         {% elif multimedia_type == 'audio' %}
-          <i class="fal fa-microphone icon-audio"></i>
+        <i class="fal fa-microphone icon-audio"></i>
         {% endif %}
       </div>
       {% if length %}
-        <div class="card__image__mm-length">{{ length }}</div>
+      <div class="card__image__mm-length">{{ length }}</div>
       {% endif %}
     </div>
     <div class="card__text">

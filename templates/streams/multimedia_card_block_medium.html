@@ -1,17 +1,25 @@
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags core_tags %}
 
 <div class="col-12 col-md-8">
-  <article class="card__container card--medium card--medium--multimedia">
+  <article class="card__container card--medium card--multimedia card--medium--multimedia">
     <div class="card__image">
-      <a href="{{ url }}">
-        <div class="img-wrapper">
-          {% if image_src %}
-            <img alt="{{ image_alt }}" src="{{ image_src }}" />
-          {% else %}
-            {% image image fill-1440x990 %}
-          {% endif %}
-        </div>
-      </a>
+      <div class="img-wrapper">
+        {% if image_src %}
+          {% define image_src as img_url %}
+        {% else %}
+          {% image image fill-1440x990 as image %}
+          {% define image.url as img_url %}
+        {% endif %}
+        <video 
+          class="video-js"
+          id="video-js-{{ block_id }}"
+          preload="auto"
+          poster="{{ img_url }}"
+          data-youtube-url="{{ youtube_url }}"
+          data-block-id="{{ block_id }}"
+        >
+        </video>
+      </div>
       <div class="card__image__play-icon">
         {% if multimedia_type == 'video' %}
           <i class="fas fa-play"></i>
