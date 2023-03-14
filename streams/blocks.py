@@ -1381,6 +1381,7 @@ class MultimediaCard(blocks.StructBlock):
     multimedia_type = blocks.ChoiceBlock(choices=MultimediaCardMediaTypeChoices.choices, required=True, default=MultimediaCardMediaTypeChoices.VIDEO)
 
     def get_context(self, value, parent_context=None):
+        import uuid
         context = super().get_context(value, parent_context=parent_context)
 
         page = value.get('page').specific
@@ -1400,6 +1401,10 @@ class MultimediaCard(blocks.StructBlock):
             context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
             context['image_alt'] = 'CIGI Logo'
 
+        if page.multimedia_type == 'video':
+            youtube_id = page.multimedia_url.split('https://youtu.be/')[1]
+            context['youtube_url'] = f'https://www.youtube.com/watch?v={youtube_id}'
+
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.authors.all()
         context['date'] = page.publishing_date
@@ -1408,6 +1413,8 @@ class MultimediaCard(blocks.StructBlock):
         context['topics'] = page.topics_sorted
         context['length'] = page.length
         context['multimedia_type'] = page.multimedia_type
+        context['multimedia_url'] = page.multimedia_url
+        context['block_id'] = uuid.uuid4()
 
         return context
 
