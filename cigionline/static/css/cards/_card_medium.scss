@@ -416,6 +416,7 @@ article {
           width: 30px;
           height: 30px;
           font-size: 0.8em;
+          transition: opacity 0.2s ease-in-out;
 
           i {
             margin-left: 0.15em;
@@ -430,6 +431,7 @@ article {
           font-size: 0.8em;
           right: 15px;
           bottom: 15px;
+          transition: opacity 0.2s ease-in-out;
         }
       }
 

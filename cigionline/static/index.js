@@ -2,21 +2,25 @@
 import 'bootstrap/dist/js/bootstrap.min';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import videojs from 'video.js';
 import CookieConsent from './js/components/CookieConsent';
 import './css/cigionline.scss';
+import 'video.js/dist/video-js.min.css';
+import 'video.js/dist/video.min';
+import 'videojs-youtube/dist/Youtube.min';
 
 import addInlineVideoActions from './js/inline_video_block';
 
-$(function() {
+$(function () {
   // Facebook Share buttons
-  $('.facebook-share-link').on('click', function() {
+  $('.facebook-share-link').on('click', function () {
     const href = $(this).data('url');
     FB.ui(
       {
         method: 'share',
         href,
       },
-      function(/* response */) {},
+      function (/* response */) {},
     );
   });
 
@@ -24,7 +28,7 @@ $(function() {
   const $navSearchInputDropdown = $('#nav-search-input-dropdown');
   const $navSearchInputDropdownList = $('#nav-search-input-dropdown-list');
   const $navSearchInputDropdownCount = $('#nav-search-input-dropdown-count');
-  $navSearchInput.on('input', function(e) {
+  $navSearchInput.on('input', function (e) {
     const searchValue = e.target.value;
     if (searchValue) {
       $navSearchInputDropdown.addClass('show');
@@ -106,4 +110,25 @@ window.addEventListener('resize', (e) => {
     dropdownMenuFull.classList.remove('show');
     body.classList.remove('disable-scroll');
   }
+});
+
+// add event listener to all images inside .card--multimedia
+const multimediaCards = document.querySelectorAll('.card--multimedia');
+multimediaCards.forEach((card) => {
+  const playIcon = card.querySelector('.card__image__play-icon');
+  const mmLength = card.querySelector('.card__image__mm-length');
+  const video = card.querySelector('.video-js');
+  const blockId = video.dataset.blockId;
+  const player = videojs(`video-js-${blockId}`, {
+    controls: 'false',
+    autoplay: 'false',
+    techOrder: ['youtube'],
+    sources: [{ type: 'video/youtube', src: video.dataset.youtubeUrl }],
+    enablejsapi: 1,
+    origin: window.location.origin,
+  });
+  player.on('play', () => {
+    playIcon.style.display = 'none';
+    mmLength && (mmLength.style.display = 'none');
+  });
 });
