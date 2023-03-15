@@ -2,13 +2,16 @@
 
 
 <ul class="top-topics-list">
-  {% for issue in issues %}
+  {% if issues %}
     <li class="trending-issue">
+      <div class="trending-issue__scroll__container">
+        <div class="trending-issue__scroll">Happening Now • {{ issues.0.title }}</div>
+      </div>
       <button type="button" class="button--rounded">
-        <a href="{% pageurl issue %}">{{ issue.title }}</a>
+        <a href="{% pageurl issues.0 %}">Watch</a>
       </button>
     </li>
-  {% endfor %}
+  {% endif %}
   {% for topic in topics %}
     <li>
       <button type="button" class="button--rounded">
