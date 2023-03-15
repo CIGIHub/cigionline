@@ -1,3 +1,4 @@
+@import '../../../css/global/animations/scroll';
 @import '../../../css/global/mixins';
 @import '../../../css/includes/swiper';
 
@@ -74,12 +75,31 @@
         }
 
         &.trending-issue {
+          display: flex;
+          color: $cigi-primary-colour;
+          padding-right: 1em;
+          margin-right: 1em;
+          border-right: 1px solid $cigi-light-grey;
+
+          .trending-issue__scroll__container {
+            overflow: hidden;
+            width: 7.5em;
+            display: flex;
+            align-items: center;
+            margin: 0 0.5em;
+
+            .trending-issue__scroll {
+              animation: scroll 7.5s linear infinite;
+              white-space: nowrap;
+            }
+          }
+
           button {
             @include button(
               $color: $white,
-              $background-color: $black,
-              $border-color: $black,
-              $hover-color: $black,
+              $background-color: $cigi-primary-colour,
+              $border-color: $cigi-primary-colour,
+              $hover-color: $cigi-primary-colour,
               $hover-background-color: $white
             );
           }
