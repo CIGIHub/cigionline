@@ -1,24 +1,17 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags %}
 
 <div class="col col-12 col-md-4">
-  <article class="card__container card--small--multimedia card--multimedia">
+  <article class="card__container card--small--multimedia card--multimedia card--multimedia--{{multimedia_type}}">
     <div class="card__image">
-      {% if image_src %}
-        {% define image_src as img_url %}
-      {% else %}
-        {% image image fill-520x347 as image %}
-        {% define image.url as img_url %}
-      {% endif %}
       <div class="img-wrapper">
-        <video 
-          class="video-js"
-          id="video-js-{{ block_id }}"
-          preload="auto"
-          poster="{{ img_url }}"
-          data-youtube-url="{{ youtube_url }}"
-          data-block-id="{{ block_id }}"
-        >
-        </video>
+        {% if image_src %}
+          {% define image_src as img_url %}
+        {% else %}
+          {% image image fill-520x347 %}
+        {% endif %}
+        {% if multimedia_type == 'video' and vimeo_url %}
+          {% include_block vimeo_url %}
+        {% endif %}
       </div>
 
       <div class="card__image__play-icon">
