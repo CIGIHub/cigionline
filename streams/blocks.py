@@ -1381,7 +1381,6 @@ class MultimediaCard(blocks.StructBlock):
     multimedia_type = blocks.ChoiceBlock(choices=MultimediaCardMediaTypeChoices.choices, required=True, default=MultimediaCardMediaTypeChoices.VIDEO)
 
     def get_context(self, value, parent_context=None):
-        import uuid
         context = super().get_context(value, parent_context=parent_context)
 
         page = value.get('page').specific
@@ -1414,7 +1413,7 @@ class MultimediaCard(blocks.StructBlock):
         context['length'] = page.length
         context['multimedia_type'] = page.multimedia_type
         context['multimedia_url'] = page.multimedia_url
-        context['block_id'] = uuid.uuid4()
+        context['vimeo_url'] = page.vimeo_url
 
         return context
 
