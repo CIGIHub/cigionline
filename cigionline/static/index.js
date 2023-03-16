@@ -2,12 +2,8 @@
 import 'bootstrap/dist/js/bootstrap.min';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import videojs from 'video.js';
 import CookieConsent from './js/components/CookieConsent';
 import './css/cigionline.scss';
-import 'video.js/dist/video-js.min.css';
-import 'video.js/dist/video.min';
-import 'videojs-youtube/dist/Youtube.min';
 
 import addInlineVideoActions from './js/inline_video_block';
 
@@ -113,22 +109,23 @@ window.addEventListener('resize', (e) => {
 });
 
 // add event listener to all images inside .card--multimedia
-const multimediaCards = document.querySelectorAll('.card--multimedia');
+const multimediaCards = document.querySelectorAll('.card--multimedia--video');
 multimediaCards.forEach((card) => {
   const playIcon = card.querySelector('.card__image__play-icon');
   const mmLength = card.querySelector('.card__image__mm-length');
-  const video = card.querySelector('.video-js');
-  const blockId = video.dataset.blockId;
-  const player = videojs(`video-js-${blockId}`, {
-    controls: 'false',
-    autoplay: 'false',
-    techOrder: ['youtube'],
-    sources: [{ type: 'video/youtube', src: video.dataset.youtubeUrl }],
-    enablejsapi: 1,
-    origin: window.location.origin,
-  });
-  player.on('play', () => {
-    playIcon.style.display = 'none';
-    mmLength && (mmLength.style.display = 'none');
+  const img = card.querySelector('img');
+  const iframe = card.querySelector('iframe');
+
+  card.addEventListener('click', (e) => {
+    if (!img.classList.contains('hidden')) {
+      playIcon.classList.add('hidden');
+      mmLength.classList.add('hidden');
+      img.classList.add('hidden');
+      iframe.src += '&autoplay=1';
+
+      setTimeout(() => {
+        img.style.display = 'none';
+      }, 1500);
+    }
   });
 });

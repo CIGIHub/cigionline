@@ -403,26 +403,6 @@ article {
         padding-right: 0;
         position: relative;
 
-        .card__image__play-icon {
-          position: absolute;
-          background-color: $black;
-          top: 15px;
-          right: 15px;
-          border-radius: 50%;
-          color: $white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 30px;
-          height: 30px;
-          font-size: 0.8em;
-          transition: opacity 0.2s ease-in-out;
-
-          i {
-            margin-left: 0.15em;
-          }
-        }
-
         .card__image__mm-length {
           color: $white;
           background-color: $black;
