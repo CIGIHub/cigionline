@@ -1400,6 +1400,10 @@ class MultimediaCard(blocks.StructBlock):
             context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
             context['image_alt'] = 'CIGI Logo'
 
+        if page.multimedia_type == 'video':
+            youtube_id = page.multimedia_url.split('https://youtu.be/')[1]
+            context['youtube_url'] = f'https://www.youtube.com/watch?v={youtube_id}'
+
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.authors.all()
         context['date'] = page.publishing_date
@@ -1408,6 +1412,8 @@ class MultimediaCard(blocks.StructBlock):
         context['topics'] = page.topics_sorted
         context['length'] = page.length
         context['multimedia_type'] = page.multimedia_type
+        context['multimedia_url'] = page.multimedia_url
+        context['vimeo_url'] = page.vimeo_url
 
         return context
 

@@ -1,17 +1,18 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
 
 <div class="col-12">
-  <article class="card__container card--large card--large--multimedia">
+  <article class="card__container card--large card--multimedia card--large--multimedia card--multimedia--{{multimedia_type}}">
     <div class="card__image">
-      <a href="{{ url }}" class="feature-content-image">
-        <div class="img-wrapper">
-          {% if image_src %}
-            <img alt="{{ image_alt }}" src="{{ image_src }}" />
-          {% else %}
-            {% image image fill-1440x990 %}
-          {% endif %}
-        </div>
-      </a>
+      <div class="img-wrapper">
+        {% if image_src %}
+          {% define image_src as img_url %}
+        {% else %}
+          {% image image fill-1440x990 %}
+        {% endif %}
+        {% if multimedia_type == 'video' and vimeo_url %}
+          {% include_block vimeo_url %}
+        {% endif %}
+      </div>
       <div class="card__image__play-icon">
         {% if multimedia_type == 'video' %}
           <i class="fas fa-play"></i>
