@@ -34,20 +34,6 @@
     </nav>
     <div class="tab-content" id="events-landing-tab-content">
       <div class="tab-pane fade show active" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
-        <div class="row">
-          <section class="col-lg-4">
-            <div id='event-list-calendar'></div>
-          </section>
-          <section class="col-lg-8 events-listing" id="all-events" data-all-events="{{ all_events }}">
-            <div class="container">
-              <div class="row events-wrapper">
-                <div id="event-list"></div>
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive-tab">
         <section class="featured-events col" id="events-page__featured-events-slider">
           <div class="featured-events-container">
             <div class="swiper-container">
@@ -64,6 +50,20 @@
             <div class="swiper-button-next"></div>
           </div>
         </section>
+        <div class="row">
+          <section class="col-lg-4">
+            <div id='event-list-calendar'></div>
+          </section>
+          <section class="col-lg-8 events-listing" id="all-events" data-all-events="{{ all_events }}">
+            <div class="container">
+              <div class="row events-wrapper">
+                <div id="event-list"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive-tab">
         <section class="row search-table">
           <div class="col">
             <div id="events-search-table">
