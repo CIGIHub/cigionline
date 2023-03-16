@@ -1365,6 +1365,57 @@ class EventCard(blocks.StructBlock):
         template = 'streams/event_card_block.html'
 
 
+class EventsLandingEventCard(blocks.StructBlock):
+    page = blocks.PageChooserBlock(required=True, page_type='events.EventPage')
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        page = value.get('page').specific
+        image = None
+        if page.image_feature:
+            image = page.image_feature
+        elif page.image_hero:
+            image = page.image_hero
+        print(image)
+
+        if image:
+            if image.file.url.endswith('.gif'):
+                context['image_src'] = image.file.url
+                context['image_alt'] = image.title
+            else:
+                context['image'] = image
+        else:
+            context['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+            context['image_alt'] = 'CIGI Logo'
+
+        context['title'] = page.feature_title if page.feature_title else page.title
+        context['authors'] = page.authors.all()
+        context['date'] = page.publishing_date
+        context['end_date'] = page.event_end
+        context['event_type'] = page.get_event_type_display()
+        context['event_access'] = page.get_event_access_display()
+        context['event_format'] = page.event_format_string
+        context['is_past'] = page.is_past()
+        context['time_zone_label'] = page.time_zone_label
+        context['url'] = page.feature_url if page.feature_url else page.url
+        context['topics'] = page.topics_sorted
+        context['registration_url'] = page.registration_url
+        context['id'] = page.id
+
+        return context
+
+    def get_template(self, context=None):
+        if context:
+            return 'streams/events_landing_event_card_block.html'
+        return super().get_template(context)
+
+    class Meta:
+        icon = 'date'
+        label = 'Event Card'
+        template = 'streams/events_landing_event_card_block.html'
+
+
 class MultimediaCard(blocks.StructBlock):
     class MultimediaCardTypeChoices(models.TextChoices):
         TINY = ('tiny', 'Tiny')
