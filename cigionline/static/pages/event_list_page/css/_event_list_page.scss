@@ -201,7 +201,7 @@
   }
 
   .featured-events {
-    margin-top: 2em;
+    margin-top: 4em;
 
     .container {
       position: relative;
@@ -210,13 +210,6 @@
     .featured-events-container {
       border-bottom: 1px solid $cigi-light-grey;
       position: relative;
-    }
-
-    .swiper-container {
-      @include media-breakpoint-up(md) {
-        padding-top: 4em;
-      }
-      padding-top: 2em;
     }
 
     .swiper-button-prev,
@@ -262,5 +255,9 @@
         width: 10px;
       }
     }
+  }
+
+  .events-list-container {
+    margin-top: 2em;
   }
 }

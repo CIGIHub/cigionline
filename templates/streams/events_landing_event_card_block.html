@@ -1,64 +1,70 @@
 {% load wagtailimages_tags %}
 
 <div class="col col-12">
-  <article class="card__container card--large card--large--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
-    <div class="row card--event__top">
+  <article class="card__container card--large card--large--event--landing card--event {% if event_access == 'Private' %}is_private{% endif %}">
+    <div class="row card--event__container">
       <div class="col-4">
         <div class="card__text">
-          {% if not is_past %}
-            <div class="card--event--upcoming-label">Upcoming Event</div>
-          {% endif %}
-          {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
-          <div class="card--event__info">
-            <time datetime="{{ date }}" class="card--event__time">
-              <div>{{ date|date:"l, F j, Y" }}</div>
-              <div>
-                {{ date|date:"g:i A"}}
-                {% if end_date != None %} -
-                  {% if date|date:"U" < end_date|date:"U" %}
-                    {% if date|date:"l F j" == end_date|date:"l F j" %}
-                      {{ end_date|date:"g:i A" }}
-                    {% else %}
-                      {{ end_date|date:"l, F j, Y g:i A" }}
+          <div class="card--event__top">
+            {% if not is_past %}
+              <div class="card--event--upcoming-label">Upcoming Event</div>
+            {% endif %}
+            {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
+            <div class="card--event__info">
+              <time datetime="{{ date }}" class="card--event__time">
+                <div>{{ date|date:"l, F j, Y" }}</div>
+                <div>
+                  {{ date|date:"g:i A"}}
+                  {% if end_date != None %} -
+                    {% if date|date:"U" < end_date|date:"U" %}
+                      {% if date|date:"l F j" == end_date|date:"l F j" %}
+                        {{ end_date|date:"g:i A" }}
+                      {% else %}
+                        {{ end_date|date:"l, F j, Y g:i A" }}
+                      {% endif %}
                     {% endif %}
                   {% endif %}
-                {% endif %}
-                {{ time_zone_label }}
+                  {{ time_zone_label }}
+                </div>
+              </time>
+              <div class="card--event__type">
+                {{ event_access }} 
+                Event{% if event_type|length > 1 %}: {{ event_type }}{% endif %}
+                ({{ event_format }})
               </div>
-            </time>
-            <div class="card--event__type">
-              {{ event_access }} 
-              Event{% if event_type|length > 1 %}: {{ event_type }}{% endif %}
-              ({{ event_format }})
             </div>
           </div>
-          <div class="card__text__meta">
-            <div>
-              {% include 'includes/cards/card_text_people.html' %}
-              {% include 'includes/cards/card_text_topics.html' %}
+          <div class="card--event__bottom">
+            <div class="card__text__meta">
+              <div>
+                {% include 'includes/cards/card_text_people.html' %}
+                {% include 'includes/cards/card_text_topics.html' %}
+              </div>
+              <div class="card__cta">
+                {% if event_access == 'Private' %}
+                  <button type="button" class="card--event__button--register button--rounded is_private" disabled>
+                    Private Event
+                  </button>
+                {% else %}
+                  <div class="card--event__buttons d-flex">
+                    <a href="/events/feed.ics?id={{id}}">
+                      <button type="button" class="card--event__button--calendar button--rounded">
+                        Add to Calendar
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </a>
+                    <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+                      <button type="button" class="card--event__button--register button--rounded">
+                        Register Now
+                        <i class="fas fa-angle-right"></i>
+                      </button>
+                    </a>
+                  </div>
+                {% endif %}
+                {% include 'includes/cards/card_text_more.html' with type='event' %}
+              </div>
             </div>
-            {% include 'includes/cards/card_text_more.html' with type='event' %}
           </div>
-          {% if event_access == 'Private' %}
-            <button type="button" class="card--event__button--register button--rounded is_private" disabled>
-              Private Event
-            </button>
-          {% else %}
-            <div class="card--event__buttons d-flex">
-              <a href="/events/feed.ics?id={{id}}">
-                <button type="button" class="card--event__button--calendar button--rounded">
-                  Add to Calendar
-                  <i class="fas fa-plus"></i>
-                </button>
-              </a>
-              <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
-                <button type="button" class="card--event__button--register button--rounded">
-                  Register Now
-                  <i class="fas fa-angle-right"></i>
-                </button>
-              </a>
-            </div>
-          {% endif %}
         </div>
       </div>
       <div class="col-8">
@@ -74,13 +80,5 @@
           </a>
         </div>
       </div>
-      {% comment %} <div class="row g-3 g-md-5 card--event__bottom">
-        <div class="col-md-6 d-flex align-items-end">
-          
-        </div>
-      </div>
-      <div class="col-md-6 text-center">
-        
-      </div> {% endcomment %}
     </div>
 </div>
