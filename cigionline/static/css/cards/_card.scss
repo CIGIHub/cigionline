@@ -20,21 +20,38 @@ $card-title-font: $title-font-family;
 
     img {
       border-radius: 20px;
+      transition: opacity 1.5s ease-in;
+
+      &.hidden {
+        opacity: 0;
+      }
     }
 
     .card__image__play-icon {
       position: absolute;
+      z-index: 2;
       background-color: $black;
-      top: 15px;
-      right: 15px;
+      top: calc(50% - 1em);
+      right: calc(50% - 1em);
       border-radius: 50%;
       color: $white;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
-      font-size: 0.8em;
+      width: 2em;
+      height: 2em;
+      font-size: 1.5em;
+      transition: opacity 1.5s ease, color 0.2s ease-in-out,
+        background-color 0.2s ease-in-out;
+
+      &.hidden {
+        opacity: 0;
+      }
+
+      &:hover {
+        color: $black;
+        background-color: $white;
+      }
 
       i {
         &:not(.icon-audio) {
@@ -52,6 +69,12 @@ $card-title-font: $title-font-family;
       font-size: 0.8em;
       right: 15px;
       bottom: 15px;
+      z-index: 2;
+      transition: opacity 1.5s ease;
+
+      &.hidden {
+        opacity: 0;
+      }
     }
   }
 
@@ -275,6 +298,57 @@ $card-title-font: $title-font-family;
     }
   }
 
+  &.card--multimedia {
+    &.card--large--multimedia {
+      .card__image {
+        iframe {
+          @include media-breakpoint-up(md) {
+            border-radius: 0 20px 20px 0;
+          }
+        }
+      }
+    }
+
+    &.card--medium--multimedia {
+      .card__image {
+        iframe {
+          @include media-breakpoint-only(md) {
+            border-radius: 0 20px 20px 0;
+          }
+        }
+      }
+    }
+
+    .card__image {
+      cursor: pointer;
+  
+      .img-wrapper {
+        padding-bottom: 56.25%;
+
+        img {
+          z-index: 1;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      iframe {
+        border-radius: 20px 20px 0 0;
+      }
+    }
+  }
+
   &.john-holmes-series {
     background-color: #f3f3f3 !important;
 
@@ -326,4 +400,9 @@ $card-title-font: $title-font-family;
   &.cyber-series {
     background-color: #1f2024 !important;
   }
+}
+
+
+.player {
+  height: 66.67vw;
 }

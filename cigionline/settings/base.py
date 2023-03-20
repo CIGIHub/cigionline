@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from os import path
+from wagtail.embeds.oembed_providers import vimeo
 
 import os
 
@@ -167,7 +168,7 @@ simplecast_provider = {
 
 WAGTAILEMBEDS_FINDERS = [
     {'class': 'embeds.finders.oembed.YouTubeOEmbedFinder'},
-    {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider], },
+    {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider, vimeo], },
     {'class': 'wagtail.embeds.finders.oembed', },
 ]
 

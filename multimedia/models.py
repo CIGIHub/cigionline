@@ -23,6 +23,7 @@ from wagtail.blocks import (
     StructBlock,
     TextBlock,
 )
+from wagtail.embeds.blocks import EmbedBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
@@ -173,6 +174,11 @@ class MultimediaPage(
         verbose_name='Multimedia URL',
         help_text='The URL of the multimedia source from YouTube or Simplecast.',
     )
+    vimeo_url = models.URLField(
+        blank=True,
+        verbose_name='Vimeo URL',
+        help_text='The URL of the multimedia source from Vimeo.',
+    )
     podcast_audio_duration = models.CharField(blank=True, max_length=8)
     podcast_audio_file_size = models.IntegerField(blank=True, null=True)
     podcast_audio_url = models.URLField(blank=True)
@@ -260,6 +266,7 @@ class MultimediaPage(
                 FieldPanel('multimedia_type'),
                 FieldPanel('publishing_date'),
                 FieldPanel('multimedia_url'),
+                FieldPanel('vimeo_url'),
                 FieldPanel('length'),
             ],
             heading='General Information',
