@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags core_tags wagtailembeds_tags %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags core_tags %}
 
 <div class="col col-12 col-md-4">
   <article class="card__container card--small--multimedia card--multimedia card--multimedia--{{multimedia_type}}">
@@ -10,7 +10,7 @@
           {% image image fill-600x338 %}
         {% endif %}
         {% if multimedia_type == 'video' and vimeo_url %}
-          {% include_block vimeo_url %}
+          {% embed vimeo_url %}
         {% endif %}
         {% if multimedia_type == 'audio' and multimedia_url %}
           <iframe height="52px" width="100%" frameborder="no" scrolling="no" seamless src="{{ multimedia_url }}?dark=false"></iframe>

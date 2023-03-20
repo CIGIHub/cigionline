@@ -10,7 +10,7 @@
           {% image image fill-1600x900 %}
         {% endif %}
         {% if multimedia_type == 'video' and vimeo_url %}
-          {% include_block vimeo_url %}
+          {% embed vimeo_url %}
         {% endif %}
         {% if multimedia_type == 'audio' and multimedia_url %}
           <iframe height="52px" width="100%" frameborder="no" scrolling="no" seamless src="{{ multimedia_url }}?dark=false"></iframe>
