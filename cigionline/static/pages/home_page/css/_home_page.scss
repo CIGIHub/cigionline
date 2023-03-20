@@ -80,13 +80,38 @@
           padding-right: 1em;
           margin-right: 1em;
           border-right: 1px solid $cigi-light-grey;
-
+          
           .trending-issue__scroll__container {
             overflow: hidden;
+            position: relative;
             width: 7.5em;
             display: flex;
             align-items: center;
             margin: 0 0.5em;
+
+            &::before {
+              content: '';
+              background: linear-gradient(to left, $white 50%, rgba($white, 0));
+              position: absolute;
+              height: 100%;
+              width: 25px;
+              right: -5px;
+              z-index: 1;
+            }
+
+            &::after {
+              content: '';
+              background: linear-gradient(
+                to right,
+                $white 50%,
+                rgba($white, 0)
+              );
+              position: absolute;
+              height: 100%;
+              width: 25px;
+              left: -5px;
+              z-index: 1;
+            }
 
             .trending-issue__scroll {
               animation: scroll 7.5s linear infinite;
