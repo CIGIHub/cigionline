@@ -56,5 +56,3 @@ jobs:
           node-version: 14.x
       - name: Install dependencies
         run: npm ci
-      - name: Run SASS linter
-        run: npm run lint:sass
