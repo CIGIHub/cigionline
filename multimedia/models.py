@@ -174,11 +174,10 @@ class MultimediaPage(
         verbose_name='Multimedia URL',
         help_text='The URL of the multimedia source from YouTube or Simplecast.',
     )
-    vimeo_url = StreamField(
-        [
-            ('vimeo_embed', EmbedBlock(max_width=1440, max_height=990)),
-        ],
+    vimeo_url = models.URLField(
         blank=True,
+        verbose_name='Vimeo URL',
+        help_text='The URL of the multimedia source from Vimeo.',
     )
     podcast_audio_duration = models.CharField(blank=True, max_length=8)
     podcast_audio_file_size = models.IntegerField(blank=True, null=True)
