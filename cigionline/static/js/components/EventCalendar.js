@@ -1,6 +1,6 @@
 import React from 'react';
 import Calendar from 'react-calendar';
-import 'bootstrap/dist/js/bootstrap.bundle';
+// import 'bootstrap/dist/js/bootstrap.bundle';
 
 export default class EventCalendar extends React.Component {
   constructor(props) {

@@ -409,7 +409,12 @@
       }
 
       .card__image {
-        padding-left: 1em;
+        @include media-breakpoint-up(md) {
+          padding-bottom: 0em;
+          padding-left: 1em;  
+        }
+        padding-bottom: 1em;
+        padding-left: 0;
       }
     }
   }

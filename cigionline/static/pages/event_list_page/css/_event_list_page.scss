@@ -210,6 +210,13 @@
     .featured-events-container {
       border-bottom: 1px solid $cigi-light-grey;
       position: relative;
+
+      .card--event__container {
+        @include media-breakpoint-up(md) {
+          flex-direction: row;
+        }
+        flex-direction: column-reverse;
+      }
     }
 
     .swiper-button-prev,

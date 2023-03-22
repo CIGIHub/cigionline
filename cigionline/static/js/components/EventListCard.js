@@ -82,11 +82,37 @@ const EventListCard = (props) => {
                   ))}
                 </ul>
               </div>
-              <button type="button" className="card__text__more">
-                <a href={row.url}>
-                  <i className="far fa-ellipsis-h" />
-                </a>
-              </button>
+              {/* <div className="card__text__more__container dropup">
+                <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
+                  <i className="far fa-ellipsis-h"></i>
+                </button>
+                <div className="dropdown-menu dropdown-menu-end">
+                  <button className="dropdown-item copy-text-button" type="button">
+                    <i className="fas fa-link"></i>
+                    Copy Link
+                  </button>
+                  <input type="text" value="{{ url }}" className="copyText"></input>
+                  <a className="dropdown-item" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ url|slice:':-1' }}" target="_blank"
+                  rel="noopener noreferrer">
+                    <i className="fab fa-twitter"></i>
+                    Share on Twitter
+                  </a>
+                  <a className="dropdown-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ url|slice:':-1' }}&amp;title={{ title|social_string }}" target="_blank"
+                  rel="noopener noreferrer">
+                    <i className="fab fa-linkedin-in"></i>
+                    Share on Linkedin
+                  </a>
+                  <a className="dropdown-item" data-url="url={{ url|slice:':-1' }}" target="_blank"
+                  rel="noopener noreferrer">
+                    <i className="fab fa-facebook-f"></i>
+                    Share on Facebook
+                  </a>
+                  <a className="dropdown-item" href="{{ registration_url }}" onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                    <i className="fal fa-check-square"></i>
+                    Register
+                  </a>
+                </div>
+              </div> */}
             </div>
           </div>
           <div className="col-md-6 text-center">
