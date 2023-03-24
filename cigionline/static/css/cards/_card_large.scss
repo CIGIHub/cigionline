@@ -307,4 +307,40 @@
       }
     }
   }
+
+  &.card--large--expert {
+    display: flex;
+
+    .card__image {
+      margin-bottom: 2em;
+    }
+
+    .card__text {
+      .card__text__title {
+        margin: 0;
+      }
+      .card__text__description {
+        font-size: 0.9em;
+      }
+    }
+
+    h4 {
+      color: $cigi-medium-grey;
+      font-size: 15px;
+      font-weight: 300;
+      margin-bottom: 0.5em;
+      text-transform: none;
+    }
+
+    .card--expert__expertise-list{
+      list-style: none;
+      line-height: 1.25;
+
+      li {
+        @include comma-separated;
+        display: inline;
+        font-size: 15px;
+      }
+    }
+  }
 }
