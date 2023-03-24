@@ -2,13 +2,15 @@ import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import '../../css/components/ExpertContentListing.scss';
+
 function ExpertContentListing(props) {
   const { row } = props;
 
   return (
     <tr>
-      <td colSpan="6">
-        <div className="table-mobile-text">
+      <td className="search-table__results__row__title">
+        <div className="table-mobile-text search-table__results__row__title--mobile">
           Title
         </div>
         <div className="table-infos-wrapper">
@@ -54,7 +56,7 @@ function ExpertContentListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="3">
+      <td>
         <div className="table-mobile-text">
           Topic
         </div>
@@ -70,7 +72,7 @@ function ExpertContentListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="2">
+      <td>
         <div className="table-mobile-text">
           Type
         </div>
@@ -84,16 +86,12 @@ function ExpertContentListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="1">
+      <td className="search-table__results__row__more">
         <div className="table-mobile-text">
-          PDF
+          {' '}
         </div>
-        <div className="table-content">
-          {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon">
-              <i className="fa fas fa-download" />
-            </a>
-          )}
+        <div>
+          ...
         </div>
       </td>
     </tr>
