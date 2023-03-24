@@ -3,6 +3,7 @@ import React from 'react';
 
 import Paginator from './Paginator';
 import SearchTableSkeleton from './SearchTableSkeleton';
+import SearchResultListingRow from './SearchResultListingRow';
 import '../../css/components/SearchTable.scss';
 
 const mergeObjects = (data) => {
@@ -916,7 +917,7 @@ class SearchTable extends React.Component {
     );
   }
 
-  renderResults(RowComponent, containerClass) {
+  renderResults(RowComponent, RowComponentList, containerClass) {
     const { rows, displayMode, loading } = this.state;
     const { tableColumns } = this.props;
     return (
@@ -934,7 +935,11 @@ class SearchTable extends React.Component {
               className="article-container"
               key={`${row.id}-${row.elevated}`}
             >
-              <RowComponent row={row} displayMode={displayMode} />
+              <RowComponent
+                key={`${row.id}-${row.elevated}`}
+                row={row}
+                displayMode={displayMode}
+              />
             </div>
           ))}
 
@@ -942,21 +947,27 @@ class SearchTable extends React.Component {
           <table>
             <thead>
               <tr>
-                {tableColumns.length > 0 ? tableColumns.map((column) => (
-                  <th
-                    key={column.colTitle}
-                    className={`search-table__results__row__${column.colClass}`}
-                  >
-                    {column.colTitle}
-                  </th>
-                )) : (
+                {tableColumns.length > 0 ? (
+                  tableColumns.map((column) => (
+                    <th
+                      key={column.colTitle}
+                      className={`search-table__results__row__${column.colClass}`}
+                    >
+                      {column.colTitle}
+                    </th>
+                  ))
+                ) : (
                   <>
                     <th className="search-table__results__row__title">Title</th>
                     <th className="search-table__results__row__content-type">
                       Content Type
                     </th>
-                    <th className="search-table__results__row__authors">Author</th>
-                    <th className="search-table__results__row__topics">Topic</th>
+                    <th className="search-table__results__row__authors">
+                      Author
+                    </th>
+                    <th className="search-table__results__row__topics">
+                      Topic
+                    </th>
                     <th className="search-table__results__row__download"> </th>
                   </>
                 )}
@@ -964,9 +975,10 @@ class SearchTable extends React.Component {
             </thead>
             <tbody>
               {rows.map((row) => (
-                <RowComponent
+                <RowComponentList
                   key={`${row.id}-${row.elevated}`}
                   row={row}
+                  displayMode={displayMode}
                 />
               ))}
             </tbody>
@@ -1378,6 +1390,7 @@ class SearchTable extends React.Component {
       hideTopicDropdown,
       isSearchPage,
       RowComponent,
+      RowComponentList,
       showCount,
       showSearch,
       showSidebar,
@@ -1443,8 +1456,8 @@ class SearchTable extends React.Component {
                 </div>
               </div>
               {blockListing
-                ? this.renderBlockListing(RowComponent, containerClass)
-                : this.renderResults(RowComponent, containerClass)}
+                ? this.renderBlockListing(RowComponent, RowComponentList, containerClass)
+                : this.renderResults(RowComponent, RowComponentList, containerClass)}
             </>
           ) : emptyQuery ? (
             <div className="row">
@@ -1516,6 +1529,7 @@ SearchTable.propTypes = {
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
+  RowComponentList: PropTypes.func,
   searchPlaceholder: PropTypes.string,
   showCount: PropTypes.bool,
   showSearch: PropTypes.bool,
@@ -1548,6 +1562,7 @@ SearchTable.defaultProps = {
   hideTopicDropdown: false,
   isSearchPage: false,
   limit: 24,
+  RowComponentList: SearchResultListingRow,
   searchPlaceholder: 'Search',
   showCount: false,
   showSearch: false,

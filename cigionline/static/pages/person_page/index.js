@@ -28,6 +28,7 @@ ReactDOM.render(
     ]}
     limit={14}
     RowComponent={ExpertContentListing}
+    RowComponentList={ExpertContentListing}
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',

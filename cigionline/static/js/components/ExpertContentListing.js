@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
+import CardTextMore from './CardTextMore';
 
 import '../../css/components/ExpertContentListing.scss';
 
@@ -90,9 +91,12 @@ function ExpertContentListing(props) {
         <div className="table-mobile-text">
           {' '}
         </div>
-        <div>
-          ...
-        </div>
+        <CardTextMore
+          title={row.title}
+          type={row.contenttype}
+          url={row.url}
+          pdfDownload={row.pdf_download}
+        />
       </td>
     </tr>
   );
