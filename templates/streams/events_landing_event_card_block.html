@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags wagtailembeds_tags %}
 
 <div class="col col-12">
   <article class="card__container card--large card--large--event--landing card--event {% if event_access == 'Private' %}is_private{% endif %}">
@@ -71,7 +71,9 @@
         <div class="card__image">
           <a href="{{ url }}" class="feature-content-image">
             <div class="img-wrapper">
-              {% if image_src %}
+              {% if vimeo_url %}
+                {% embed vimeo_url %}
+              {% elif image_src %}
                 <img alt="{{ image_alt }}" src="{{ image_src }}" />
               {% else %}
                 {% image image fill-1440x990 %}

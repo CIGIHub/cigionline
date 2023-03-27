@@ -1377,7 +1377,6 @@ class EventsLandingEventCard(blocks.StructBlock):
             image = page.image_feature
         elif page.image_hero:
             image = page.image_hero
-        print(image)
 
         if image:
             if image.file.url.endswith('.gif'):
@@ -1402,6 +1401,9 @@ class EventsLandingEventCard(blocks.StructBlock):
         context['topics'] = page.topics_sorted
         context['registration_url'] = page.registration_url
         context['id'] = page.id
+        if page.multimedia_page:
+            if page.multimedia_page.specific.vimeo_url:
+                context['vimeo_url'] = page.multimedia_page.specific.vimeo_url
 
         return context
 
