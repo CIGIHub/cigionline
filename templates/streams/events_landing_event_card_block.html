@@ -70,15 +70,19 @@
       <div class="col-md-8 card__image__container">
         <div class="card__image">
           <a href="{{ url }}" class="feature-content-image">
-            <div class="img-wrapper">
-              {% if vimeo_url %}
+            {% if vimeo_url %}
+              <div class="video--wrapper">
                 {% embed vimeo_url %}
-              {% elif image_src %}
+              </div>
+            {% elif image_src %}
+              <div class="img-wrapper">
                 <img alt="{{ image_alt }}" src="{{ image_src }}" />
-              {% else %}
+              </div>
+            {% else %}
+              <div class="img-wrapper">
                 {% image image fill-1440x990 %}
-              {% endif %}
-            </div>
+              </div>
+            {% endif %}
           </a>
         </div>
       </div>
