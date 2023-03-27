@@ -6,7 +6,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
-from streams.blocks import EventCard
+from streams.blocks import EventsLandingEventCard
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -31,7 +31,7 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     templates = 'events/event_list_page.html'
     featured_events = StreamField(
         [
-            ('event', EventCard()),
+            ('event', EventsLandingEventCard()),
         ],
         blank=True,
         use_json_field=True,

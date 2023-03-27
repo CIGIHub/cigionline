@@ -114,12 +114,14 @@
                       </div>
                     </div>
                     {% include 'includes/cards/card_text_description.html' with description=self.short_bio %}
-                    <h4>Expertise</h4>
-                    <div class="card--expert__expertise-list">
-                      {% for expertise in page.expertise_list %}
-                        <li class="">{{ expertise }}</li>
-                      {% endfor %}
-                    </div>
+                    {% if page.expertise_list %}
+                      <h4>Expertise</h4>
+                      <div class="card--expert__expertise-list">
+                        {% for expertise in page.expertise_list %}
+                          <li class="">{{ expertise }}</li>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
                   </div>
                 </div>
   
