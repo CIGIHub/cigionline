@@ -408,13 +408,27 @@
         }
       }
 
-      .card__image {
-        @include media-breakpoint-up(md) {
-          padding-bottom: 0em;
-          padding-left: 1em;  
+      .card__image__container {
+        position: relative;
+
+        .card__image {
+          @include media-breakpoint-up(md) {
+            padding-bottom: 0em;
+            padding-left: 1em;  
+          }
+          padding-bottom: 1em;
+          padding-left: 0;
+
+          .img-wrapper {
+            iframe {
+              height: 100%;
+              left: 0;
+              position: absolute;
+              top: 0;
+              width: 100%;
+            }
+          }
         }
-        padding-bottom: 1em;
-        padding-left: 0;
       }
     }
   }
