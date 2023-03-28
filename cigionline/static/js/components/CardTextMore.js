@@ -1,3 +1,4 @@
+/* global FB */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,7 +10,17 @@ const CardTextMore = (props) => {
     return socialString.replace(/ /g, '+');
   };
   const shareTitle = toSocialString(title);
-  const shareUrl = `${window.location.host}${url.slice(0, -1)}`;
+  const shareUrl = `https://${window.location.host}${url.slice(0, -1)}`;
+  const shareOnFacebook = (url) => {
+    const href = url;
+    FB.ui(
+      {
+        method: 'share',
+        href,
+      },
+      function (/* response */) {},
+    );
+  };
 
   return (
     <div className="card__text__more__container dropup">
@@ -21,7 +32,13 @@ const CardTextMore = (props) => {
         <i className="far fa-ellipsis-h" />
       </button>
       <div className="dropdown-menu dropdown-menu-end">
-        <button className="dropdown-item copy-text-button" type="button">
+        <button
+          className="dropdown-item copy-text-button"
+          type="button"
+          onClick={() =>
+            navigator.clipboard.writeText(`${window.location.host}${url}`)
+          }
+        >
           <i className="fas fa-link" />
           Copy Link
         </button>
@@ -44,15 +61,16 @@ const CardTextMore = (props) => {
           <i className="fab fa-linkedin-in" />
           Share on Linkedin
         </a>
-        <a
-          className="dropdown-item"
-          data-url={shareUrl}
+        <button
+          className="dropdown-item facebook-share-link"
+          type="button"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => shareOnFacebook(shareUrl)}
         >
           <i className="fab fa-facebook-f" />
           Share on Facebook
-        </a>
+        </button>
         {type === 'Event' && eventAccess === 'Public' && (
           <a
             className="dropdown-item"

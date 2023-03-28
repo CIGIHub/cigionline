@@ -84,9 +84,7 @@
           .trending-issue__scroll__container {
             overflow: hidden;
             position: relative;
-            width: 7.5em;
-            display: flex;
-            align-items: center;
+            max-width: 7.5em;
             margin: 0 0.5em;
 
             &::before {
@@ -114,8 +112,16 @@
             }
 
             .trending-issue__scroll {
-              animation: scroll 7.5s linear infinite;
+              align-items: center;
+              display: inline-flex;
+              overflow: hidden;
+              animation: scroll 10s linear infinite;
               white-space: nowrap;
+
+              p {
+                display: inline-block;
+                margin: 0 2em;
+              }
             }
           }
 

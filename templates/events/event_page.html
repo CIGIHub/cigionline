@@ -35,7 +35,25 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all author_count=self.author_count registration_url=self.registration_url time_zone=self.time_zone time_zone_label=self.time_zone_label is_past=self.is_past %}
+  <section class="hero{% if page.archive %} archived{% endif %}">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="hero__content">
+            <div class="hero__title">
+              <i class="fal fa-file-alt"></i>
+              <h1>Events</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          {% include 'includes/event_card_block_large.html' with is_past=self.is_past date=self.publishing_date end_date=self.event_end authors=self.authors.all title=self.title event_type=self.get_event_type_display event_access=self.get_event_access_display event_format=self.event_format_string time_zone_label=self.time_zone_label url=self.url topics=self.topics_sorted registration_url=self.registration_url %}
+        </div>
+      </div>
+    </div>
+  </section>
 
   {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
     <section class="event-multimedia-embed-section">
