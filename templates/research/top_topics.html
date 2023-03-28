@@ -5,11 +5,21 @@
   {% if issues %}
     <li class="trending-issue">
       <div class="trending-issue__scroll__container">
-        <div class="trending-issue__scroll">Happening Now • {{ issues.0.title }}</div>
+        <div class="trending-issue__scroll">
+          <p>
+            Happening Now
+            {% for issue in issues %}
+              • {{ issue.title }}
+            {% endfor %}
+          </p>
+          <p>
+            Happening Now
+            {% for issue in issues %}
+              • {{ issue.title }}
+            {% endfor %}
+          </p>
+        </div>
       </div>
-      <button type="button" class="button--rounded">
-        <a href="{% pageurl issues.0 %}">Watch</a>
-      </button>
     </li>
   {% endif %}
   {% for topic in topics %}
