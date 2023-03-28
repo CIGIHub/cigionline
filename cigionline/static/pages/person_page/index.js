@@ -28,20 +28,27 @@ ReactDOM.render(
     ]}
     limit={14}
     RowComponent={ExpertContentListing}
+    RowComponentList={ExpertContentListing}
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',
+      colClass: 'title',
     }, {
       colSpan: 3,
       colTitle: 'Topic',
+      colClass: 'topics',
     }, {
       colSpan: 2,
       colTitle: 'Type',
+      colClass: 'content-type',
     }, {
       colSpan: 1,
-      colTitle: 'PDF',
+      colTitle: 'More',
+      colClass: 'more',
     }]}
     showSidebar={false}
+    allowDisplayToggle={false}
+    displayMode="list"
   />,
   document.getElementById('expert-search-table'),
 );

@@ -2,7 +2,6 @@ from distutils.log import error
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
-from events.models import EventPage, EventListPage
 from features.models import (
     HomePageFeaturedPromotionsList,
     HomePageFeaturedContentList,
@@ -14,7 +13,6 @@ from features.models import (
 )
 from streams.blocks import HomePageRow, SocialSwiperRow
 from wagtail.admin.panels import (
-    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     FieldPanel
@@ -22,7 +20,6 @@ from wagtail.admin.panels import (
 from wagtail.blocks import PageChooserBlock
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
-from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
 import random

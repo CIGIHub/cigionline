@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SearchResultListingRow from '../../js/components/SearchResultListingRow';
 import SearchResultCard from '../../js/components/SearchResultCard';
-import SearchResultListing from '../../js/components/SearchResultListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/search_page.scss';
 
@@ -9,6 +9,8 @@ const livePageCount = Number(document.getElementById('search-table').dataset.liv
 ReactDOM.render(
   <SearchTable
     isSearchPage
+    RowComponent={SearchResultCard}
+    RowComponentList={SearchResultListingRow}
     showCount
     showSearch
     showExpertDropDown
@@ -172,7 +174,6 @@ ReactDOM.render(
         value: 'research.ProjectPage',
       }],
     }].sort((a, b) => a.name.localeCompare(b.name))}
-    RowComponent={SearchResultCard}
   />,
   document.getElementById('search-table'),
 );

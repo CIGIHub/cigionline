@@ -62,8 +62,11 @@ table {
         }
 
         .table-infos-wrapper {
-          align-items: center;
           display: flex;
+
+          i {
+            margin-right: 1.5em;
+          }
         }
 
         .table-infos {
