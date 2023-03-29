@@ -20,12 +20,41 @@
       h3 {
         border-top: 0;
         text-transform: none;
+        font-weight: 300;
+        font-size: 1em;
+      }
+
+      .author-block {
+        border: 0;
+      }
+    }
+
+    &.recommended {
+      padding: 4em 0;
+
+      hr {
+        margin: 1.5em 0;
+      }
+
+      h2 {
+        display: none;
+      }
+
+      .recommended-items {
+        .col {
+          border-right: 1px solid $cigi-light-grey;
+          padding-bottom: 2em;
+  
+          &:last-child {
+            border-right: 0;
+          }
+        }
       }
     }
   }
 
   .event-multimedia-embed-section {
-    margin-bottom: 2em;
+    margin: 2em 0;
 
     .event-multimedia-embed {
       position: relative;
