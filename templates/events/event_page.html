@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
+{% load wagtailimages_tags wagtailembeds_tags webpack_loader core_tags %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -33,6 +33,7 @@
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
+{% block body_class %}event-page{% endblock %}
 
 {% block content %}
   <section class="hero{% if page.archive %} archived{% endif %}">
@@ -49,7 +50,7 @@
       </div>
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
-          {% include 'includes/event_card_block_large.html' with is_past=self.is_past date=self.publishing_date end_date=self.event_end authors=self.authors.all title=self.title event_type=self.get_event_type_display event_access=self.get_event_access_display event_format=self.event_format_string time_zone_label=self.time_zone_label url=self.url topics=self.topics_sorted registration_url=self.registration_url %}
+          {% include 'streams/event_card_block_large.html' with is_past=self.is_past date=self.publishing_date end_date=self.event_end authors=self.authors.all title=self.title event_type=self.get_event_type_display event_access=self.get_event_access_display event_format=self.event_format_string time_zone_label=self.time_zone_label url=self.url topics=self.topics_sorted registration_url=self.registration_url %}
         </div>
       </div>
     </div>
@@ -88,6 +89,13 @@
 
   {% include "includes/body.html" with body=self.body %}
 
+  <div class="container">
+    <div class="row">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <hr>
+      </div>
+    </div>
+  </div>
   {% if self.author_count > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count title_override="Event Speaker"%}
   {% endif %}
@@ -103,9 +111,25 @@
       </div>
     </section>
   {% endif %}
-  {% if request.is_preview and self.recommended_content_preview %}
-    {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
-  {% elif self.recommended_content %}
-    {% include 'includes/recommended.html' with recommended=self.recommended_content %}
-  {% endif %}
+  {% block recommended %}
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% define self.recommended_content_preview as recommended_content %}
+    {% elif self.recommended_content %}
+      {% define self.recommended_content as recommended_content %}
+    {% endif %}
+    {% if recommended_content %}
+    <section class="recommended">
+      <div class="container">
+        <h2>Recommended</h2>
+        <div class="row justify-content-center">
+          {% for page in recommended_content|slice:":3" %}
+            <div class="col">
+              {% include "includes/recommended_article.html" with article=page.specific %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+  {% endblock recommended %}
 {% endblock content %}
