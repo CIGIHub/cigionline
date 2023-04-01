@@ -67,6 +67,7 @@ article {
               margin-bottom: 0;
             }
             font-size: clamp(1.1em, 3vw, 1.5em);
+            margin-bottom: 0.25rem;
           }
         }
       }
@@ -303,7 +304,6 @@ article {
 
         .card__text__title {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
-          padding-bottom: 1em;
         }
 
         .card__text__meta {
