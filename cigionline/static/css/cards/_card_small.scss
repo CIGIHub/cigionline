@@ -115,7 +115,7 @@
         @include media-breakpoint-only(md) {
           padding-bottom: 0;
         }
-        padding-bottom: 2em;
+        padding-bottom: 1em;
         font-size: clamp(1.1em, 3vw, 1.25em);
       }
 
@@ -167,9 +167,6 @@
 
         .card__text__title {
           @include link($color: $black, $hover-color: $cigi-primary-colour);
-          @include media-breakpoint-only(md) {
-            padding-bottom: 1em;
-          }
           padding-bottom: 1em;
           font-size: 1.1em;
         }
