@@ -7,10 +7,8 @@
     .card__text {
       .card__text__title {
         @include media-breakpoint-up(md) {
-          font-size: 1.25em;
-          font-size: clamp(1.25em, 3vw, 2.4em);
+          font-size: clamp(1.25em, 3vw, 2em);
         }
-        font-size: 1.1em;
         font-size: clamp(1.1em, 3vw, 1.5em);
         letter-spacing: -0.5px;
         margin-bottom: 1.5rem;
@@ -100,19 +98,19 @@
     flex-direction: column;
     height: 100%;
 
-    img {
-      @include media-breakpoint-up(md) {
-        border-radius: 20px 0 0 20px;
-      }
-      border-radius: 20px 20px 0 0;
-    }
-
     .card__image {
       @include media-breakpoint-up(md) {
         flex: 0 0 50%;
       }
       flex: auto;
       position: relative;
+
+      img {
+        @include media-breakpoint-up(md) {
+          border-radius: 20px 0 0 20px;
+        }
+        border-radius: 20px 20px 0 0;
+      }
 
       .card__label {
         align-items: center;
@@ -173,7 +171,6 @@
 
       .card__text__title {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
-        padding-bottom: 1em;
       }
 
       .card__text__meta {
@@ -216,8 +213,8 @@
 
     .card__text {
       .card__text__title {
-        @include media-breakpoint-up(lg) {
-          font-size: clamp(1.5em, 4vw, 3em);
+        @include media-breakpoint-up(md) {
+          font-size: clamp(1.25em, 3vw, 2em);
         }
         letter-spacing: -0.5px;
       }
@@ -239,10 +236,8 @@
       .card--event__title {
         &.card__text__title {
           @include media-breakpoint-up(md) {
-            font-size: 1.25em;
-            font-size: clamp(1.25em, 3vw, 2.4em);
+            font-size: clamp(1.25em, 3vw, 2em);
           }
-          font-size: 1.1em;
           font-size: clamp(1.1em, 3vw, 1.5em);
           font-weight: 300;
           letter-spacing: -0.5px;
@@ -319,10 +314,8 @@
           .card--event__title {
             &.card__text__title {
               @include media-breakpoint-up(md) {
-                font-size: 1.25em;
-                font-size: clamp(1.25em, 3vw, 2.4em);
+                font-size: clamp(1.25em, 3vw, 2em);
               }
-              font-size: 1.1em;
               font-size: clamp(1.1em, 3vw, 1.5em);
               font-weight: 300;
               letter-spacing: -0.5px;

@@ -66,7 +66,7 @@
 
       .card__text__title {
         font-size: 1.1em;
-        font-size: clamp(1.1em, 3vw, 1.5em);
+        font-size: clamp(1.1em, 3vw, 1.25em);
       }
 
       .card__text__date {
@@ -115,8 +115,8 @@
         @include media-breakpoint-only(md) {
           padding-bottom: 0;
         }
-        padding-bottom: 2em;
-        font-size: clamp(1.1em, 3vw, 1.5em);
+        padding-bottom: 1em;
+        font-size: clamp(1.1em, 3vw, 1.25em);
       }
 
       .card__text__meta {
@@ -167,9 +167,6 @@
 
         .card__text__title {
           @include link($color: $black, $hover-color: $cigi-primary-colour);
-          @include media-breakpoint-only(md) {
-            padding-bottom: 1em;
-          }
           padding-bottom: 1em;
           font-size: 1.1em;
         }
@@ -304,10 +301,10 @@
         padding: 0 3.25em 2em;
       }
       @include media-breakpoint-up(xl) {
-        padding: 0 4em 3em;
+        padding: 0 4em 2em;
       }
       @include media-breakpoint-up(xxl) {
-        padding: 0 6em 3em;
+        padding: 0 5em 2em;
       }
       padding: 0 1em 0 0;
       flex: 0 0 50%;
@@ -330,7 +327,7 @@
       .card--event__title {
         &.card__text__title {
           font-size: 1.1em;
-          font-size: clamp(1.1em, 3vw, 1.5em);
+          font-size: clamp(1.1em, 3vw, 1.25em);
           font-weight: 300;
           line-height: 1.1;
           margin-top: 0;
