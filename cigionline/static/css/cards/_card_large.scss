@@ -296,6 +296,13 @@
   }
 
   &.card--large--article {
+    .row {
+      @include media-breakpoint-up(md) {
+        flex-direction: row;
+      }
+      flex-direction: column-reverse;
+    }
+
     .card__text {
       .card__text__title {
         font-family: $card-title-font;

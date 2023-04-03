@@ -10,23 +10,24 @@ import 'swiper/swiper-bundle.css';
 import './css/article_landing_page.scss';
 
 Swiper.use([Navigation, Pagination]);
-const swiperContainer = document.querySelector('.swiper-container');
 
-if (swiperContainer) {
-  const articleLandingSwiper = new Swiper('.swiper-container', {
+const swiperContainerOpinions = document.querySelector('.swiper-container--opinions');
+if (swiperContainerOpinions) {
+  const opinionsSwiper = new Swiper(swiperContainerOpinions, {
     slidesPerView: 1,
     slidesPerGroup: 1,
+    spaceBetween: 20,
     speed: 800,
     autoHeight: true,
     grabCursor: true,
 
     navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
+      nextEl: '.swiper-button-next-opinions',
+      prevEl: '.swiper-button-prev-opinions',
     },
 
     pagination: {
-      el: '.swiper-pagination',
+      el: '.swiper-pagination-opinions',
       clickable: true,
     },
   });

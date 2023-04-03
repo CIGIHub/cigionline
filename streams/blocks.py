@@ -1141,6 +1141,7 @@ class LineBreakBlock(blocks.StructBlock):
 
 class ArticleCard(blocks.StructBlock):
     class ArticleCardTypeChoices(models.TextChoices):
+        TINY_WITH_IMAGE = ('tiny_with_image', 'Tiny with Image')
         TINY = ('tiny', 'Tiny')
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')

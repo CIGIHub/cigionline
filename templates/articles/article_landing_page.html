@@ -18,17 +18,76 @@
             <span>Analysis<span>            
           </div>
           <div class="col-8">
-            <div class="header--submenu__right">
-              <button type="button" class="header--submenu__right__menu-item active" data-swiper-id="swiper--featured">
-                Opinions
-              </button>
-              <button type="button" class="header--submenu__right__menu-item" data-swiper-id="swiper--big-tech">
-                Opinion Series
-              </button>
-            </div>
+            <ul class="header--submenu__right nav nav-tabs article-landing-page-nav" id="article-landing-page-tab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="opinion-tab" data-bs-toggle="tab" href="#opinions-tab-pane" role="tab"
+                  aria-controls="opinions" aria-selected="true">Opinions</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="opinion-series-tab" data-bs-toggle="tab" href="#opinion-series-tab-pane" role="tab"
+                  aria-controls="opinion-series" aria-selected="false">Opinion Series</a>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
     </div>
   </header>
+  <div class="tab-content" id="article-landing-tab-content">
+    <section class="article-landing-page__opinions fade show active tab-pane"  id="opinions-tab-pane" role="tabpanel" aria-labelledby="opinions-tab" tabindex="0">
+      <section class="article-landing-page__opinions-swiper">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="article-landing-page__swiper" id="opinions-swiper">
+                <div class="navigation-container">
+                  <div class="swiper-container--opinions swiper-container">
+                    <div class="swiper-wrapper">
+                      {% for block in self.opinions_slider %}
+                        <div class="swiper-slide">
+                          {% include_block block %}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="swiper-button-prev swiper-button-prev-opinions"></div>
+                  <div class="swiper-button-next swiper-button-next-opinions"></div>
+                </div>
+                <div class="swiper-pagination swiper-pagination-opinions"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="article-landing-page__featured-opinions">
+        <div class="container">
+          {% for block in self.featured_opinions %}
+            {% include_block block %}
+            {% if not forloop.last %}
+              <div class="row">
+                <div class="col">
+                  <hr />
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="opinions-list-section" id="opinions-search-table">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+    <section class="article-landing-page__opinion-series fade tab-pane" id="opinion-series-tab-pane" role="tabpanel" aria-labelledby="opinion-series-tab" tabindex="0">
+      Opinion Series Placeholder
+    </section>
+  </div>
 {% endblock content %}
