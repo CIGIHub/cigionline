@@ -1252,6 +1252,7 @@ class ArticleSeriesCard(blocks.StructBlock):
         MEDIUM = ('medium', 'Medium')
         MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
         LARGE = ('large', 'Large')
+        LARGE_FULL = ('large_full', 'Large Full')
 
     page = blocks.PageChooserBlock(required=True, page_type='articles.ArticleSeriesPage')
     size = blocks.ChoiceBlock(choices=ArticleSeriesCardTypeChoices.choices, required=True)

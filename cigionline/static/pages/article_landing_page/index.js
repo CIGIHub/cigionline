@@ -12,6 +12,7 @@ import './css/article_landing_page.scss';
 Swiper.use([Navigation, Pagination]);
 
 const swiperContainerOpinions = document.querySelector('.swiper-container--opinions');
+const swiperContainerOpinionSeries = document.querySelector('.swiper-container--opinion-series');
 if (swiperContainerOpinions) {
   const opinionsSwiper = new Swiper(swiperContainerOpinions, {
     slidesPerView: 1,
@@ -28,6 +29,27 @@ if (swiperContainerOpinions) {
 
     pagination: {
       el: '.swiper-pagination-opinions',
+      clickable: true,
+    },
+  });
+}
+
+if (swiperContainerOpinionSeries) {
+  const opinionSeriesSwiper = new Swiper(swiperContainerOpinionSeries, {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+    spaceBetween: 20,
+    speed: 800,
+    autoHeight: true,
+    grabCursor: true,
+
+    navigation: {
+      nextEl: '.swiper-button-next-opinion-series',
+      prevEl: '.swiper-button-prev-opinion-series',
+    },
+
+    pagination: {
+      el: '.swiper-pagination-opinion-series',
       clickable: true,
     },
   });
