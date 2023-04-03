@@ -126,5 +126,41 @@ body {
         }
       }
     }
+
+    &.article-landing-page__featured-opinions {
+      .article-landing-page__row {
+        .col-md-4 {
+          &:not(:last-child) {
+            @include media-breakpoint-up(md) {
+              border-right: 1px solid $cigi-light-grey;
+            }
+          }
+
+          .card--tiny {
+            &:not(:first-child) {
+              @include media-breakpoint-up(md) {
+                padding-top: 1em;
+              }
+            }
+
+            &:not(:last-child) {
+              @include media-breakpoint-up(md) {
+                padding-bottom: 1em;
+                border-bottom: 1px solid $cigi-light-grey;
+              }
+            }
+
+            .card__image {
+              @include media-breakpoint-up(md) {
+                flex: 0 0 40%;
+              }
+              @include media-breakpoint-up(lg) {
+                flex: 0 0 30%;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
