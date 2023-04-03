@@ -31,6 +31,15 @@
       .card--event--upcoming-label {
         display: none;
       }
+
+      .card--event--live-label {
+        color: $cigi-primary-colour;
+        font-weight: 500;
+
+        i {
+          padding-right: 0.5em;
+        }
+      }
   
       .card--event__calendar-date {
         .card--event__date {

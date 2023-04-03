@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import '../../css/components/EventListCard.scss';
 
@@ -7,8 +7,26 @@ const EventListCard = (props) => {
   const { row } = props;
   const today = DateTime.now();
 
+  const [time, setTime] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(Date.now()), 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const evaluateLive = (start, end) => {
+    return Date.now() >= Date.parse(start) && Date.now() <= Date.parse(end);
+  };
+
+  const isLive = evaluateLive(row.date, row.end_date);
+
   return (
     <div className="col col-12 col-md-8">
+      {/* <div>
+        Current Time: {date().toLocaleString()}
+      </div> */}
       <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
         <div className="row card--event__top">
           <div className="col-md-8">
@@ -19,6 +37,13 @@ const EventListCard = (props) => {
                 {row.date}
               </div>
             )}
+            {
+              isLive && (
+                <div className="card--event--live-label">
+                  <i className="fas fa-podcast"></i>Live
+                </div>
+              )
+            }
             <h3 className="card__text__title card--event__title">
               <a href={row.url}>{row.title}</a>
             </h3>
