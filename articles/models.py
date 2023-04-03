@@ -10,7 +10,12 @@ from core.models import (
 from django.db import models
 from images.models import CigionlineImage
 from modelcluster.fields import ParentalKey
-from streams.blocks import SeriesItemImageBlock
+from streams.blocks import (
+    SeriesItemImageBlock,
+    ArticleCard,
+    ArticleSeriesCard,
+    ArticleLandingPageRow
+)
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -35,21 +40,21 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     opinions_slider = StreamField(
         [
-            ('opinion', PageChooserBlock(required=False, target_model='articles.ArticlePage')),
+            ('opinion', ArticleCard()),
         ],
         blank=True,
         null=True,
     )
     featured_opinions = StreamField(
         [
-            ('opinion', PageChooserBlock(required=False, target_model='articles.ArticlePage')),
+            ('row', ArticleLandingPageRow())
         ],
         blank=True,
         null=True,
     )
     opinion_series_slider = StreamField(
         [
-            ('opinion_series', PageChooserBlock(required=False, target_model='articles.ArticleSeriesPage')),
+            ('opinion_series', ArticleSeriesCard()),
         ],
         blank=True,
         null=True,
