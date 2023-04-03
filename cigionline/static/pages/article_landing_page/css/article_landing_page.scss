@@ -1,87 +1,39 @@
 @import '../../../css/global/mixins';
 @import '../../../css/includes/swiper';
 
-article {
-  &.feature-content {
-    .feature-content-date {
-      display: none;
+body {
+  .header--submenu {
+    nav {
+      border-bottom: 0;
     }
 
-    .feature-content-title {
-      font-family: 'ff-tisa-web-pro', serif;
-      font-weight: 600;
-      line-height: 1.2;
+    i {
+      margin-right: 1em;
     }
-  }
 
-  &.feature-content-medium {
-    .feature-content-text {
-      .feature-content-subtitle,
-      .feature-content-title {
-        text-align: center;
-      }
+    .header--submenu__right {
+      display: flex;
+      font-size: 0.9em;
 
-      .feature-content-title {
-        @include media-breakpoint-up(md) {
-          font-size: 2em;
+      .header--submenu__right__menu-item {
+        font-weight: 300;
+        color: $cigi-medium-grey;
+        text-align: left;
+        flex-basis: 33%;
+
+        &.active {
+          color: $black;
+
+          &::before {
+            content: '';
+            display: block;
+            width: 90%;
+            height: 0;
+            position: absolute;
+            top: -1.15em;
+            border-top: 1px solid $black;
+          }
         }
-        font-size: 1.375em;
-      }
-
-      .feature-content-people-list,
-      .feature-content-topic-list {
-        justify-content: center;
-      }
-    }
-  }
-}
-
-section {
-  &.series {
-    background-color: $cigi-light-grey-bg;
-    margin: 2em 0;
-    padding: 2em 0;
-
-    h3 {
-      @include link($color: $black, $hover-color: $cigi-primary-colour);
-      margin-bottom: 1em;
-    }
-
-    p,
-    h4 {
-      color: $cigi-text-grey;
-    }
-
-    h4 {
-      margin-bottom: 1em;
-    }
-
-    .paragraph-heading {
-      @include media-breakpoint-up(md) {
-        margin-bottom: 2.67em;
-      }
-      margin-bottom: 1em;
-    }
-
-    .topics {
-      margin-bottom: 0.75em;
-    }
-
-    .contributors {
-      @include link($color: $black, $hover-color: $cigi-primary-colour);
-      @include media-breakpoint-up(sm) {
-        column-count: 4;
-      }
-      column-count: 3;
-
-      li {
-        list-style: none;
-      }
-    }
-
-    .img-wrapper {
-      @include media-breakpoint-down(sm) {
-        margin-bottom: 1em;
       }
     }
   }

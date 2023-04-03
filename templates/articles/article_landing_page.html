@@ -9,97 +9,26 @@
 {% endblock %}
 
 {% block content %}
-  {% preview_cache_bust as is_preview %}
-  {% cache 86400 article_landing_featured_items self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
-    {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-    <section class="featured">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="paragraph-heading">Featured</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            {% if featured_articles|length > 0 %}
-              {% include "includes/features/feature_content_xlarge.html" with content=featured_articles.0 %}
-            {% endif %}
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-12 col-md-8">
-            {% if featured_articles|length > 1 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_articles.1 %}
-            {% endif %}
-          </div>
-          <hr>
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_articles|slice:"2:7" as featured_small %}
-              {% for item in featured_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item %}
-              {% endfor %}
-            {% endwith %}
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          {% with featured_articles|slice:"7:9" as featured_medium %}
-            {% for item in featured_medium %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              <div class="col-12 col-md-6">
-                {% include "includes/features/feature_content_medium.html" with content=item with_subtitle=True %}
-              </div>
-            {% endfor %}
-          {% endwith %}
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_articles|slice:"10:15" as featured_small %}
-              {% for item in featured_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item %}
-              {% endfor %}
-            {% endwith %}
-          </div>
-          <hr>
-          <div class="col-12 col-md-8">
-            {% if featured_articles|length > 9 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_articles.9 %}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-  {% cache 86400 article_series_swiper self.pk self.latest_revision_created_at|date:"c" is_preview %}
-    <section class="series">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="paragraph-heading">Series</h2>
-            {% include "includes/swiper.html" with swiper_content=featured_article_series type="article-landing-series" %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-  <section>
+  <header class="header--submenu">
     <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div id="opinions-search-table">
+      <nav class="border-top">
+        <div class="row g-1 justify-content-between">
+          <div class="col-4">
+            <i class="fas fa-th-large"></i>
+            <span>Analysis<span>            
+          </div>
+          <div class="col-8">
+            <div class="header--submenu__right">
+              <button type="button" class="header--submenu__right__menu-item active" data-swiper-id="swiper--featured">
+                Opinions
+              </button>
+              <button type="button" class="header--submenu__right__menu-item" data-swiper-id="swiper--big-tech">
+                Opinion Series
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </nav>
     </div>
-  </section>
+  </header>
 {% endblock content %}
