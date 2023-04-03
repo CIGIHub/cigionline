@@ -1682,3 +1682,28 @@ class HomePageRow(blocks.StructBlock):
         label = 'Row'
         template = 'streams/home_page_row_block.html'
         form_classname = 'row-block'
+
+
+class ArticleLandingPageColumn(blocks.StructBlock):
+    column = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Column'
+        template = 'streams/article_landing_page_column_block.html'
+        form_classname = 'column-block'
+
+
+class ArticleLandingPageRow(blocks.StructBlock):
+    row = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('column_block', ArticleLandingPageColumn()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Row'
+        template = 'streams/article_landing_page_row_block.html'
+        form_classname = 'row-block'
