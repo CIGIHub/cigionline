@@ -144,12 +144,19 @@ const EventListCard = (props) => {
                   Private Event
                 </button>
               )
-              : (
-                <button type="button" className="card--event__button--register button--rounded">
-                  Register Now
-                  <i className="fas fa-angle-right" />
-                </button>
-              )
+              : isLive
+                ? (
+                  <button type="button" className="card--event__button--register button--rounded">
+                    Watch Now
+                    <i className="fas fa-angle-right" />
+                  </button>
+                )
+                : (
+                  <button type="button" className="card--event__button--register button--rounded">
+                    Register Now
+                    <i className="fas fa-angle-right" />
+                  </button>
+                )
             }
           </div>
         </div>
