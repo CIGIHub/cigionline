@@ -1687,7 +1687,7 @@ class HomePageRow(blocks.StructBlock):
 
 
 class ArticleLandingPageColumn(blocks.StructBlock):
-    column = blocks.StreamBlock([
+    column_cards = blocks.StreamBlock([
         ('article_card', ArticleCard()),
     ])
 
