@@ -33,6 +33,28 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     subpage_types = []
     templates = 'articles/article_landing_page.html'
 
+    opinions_slider = StreamField(
+        [
+            ('opinion', PageChooserBlock(required=False, target_model='articles.ArticlePage')),
+        ],
+        blank=True,
+        null=True,
+    )
+    featured_opinions = StreamField(
+        [
+            ('opinion', PageChooserBlock(required=False, target_model='articles.ArticlePage')),
+        ],
+        blank=True,
+        null=True,
+    )
+    opinion_series_slider = StreamField(
+        [
+            ('opinion_series', PageChooserBlock(required=False, target_model='articles.ArticleSeriesPage')),
+        ],
+        blank=True,
+        null=True,
+    )
+
     def get_featured_articles(self):
         featured_article_ids = self.featured_articles.order_by('sort_order').values_list('article_page', flat=True)
         pages = Page.objects.specific().prefetch_related(
@@ -55,17 +77,25 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
-                InlinePanel(
-                    'featured_articles',
-                    max_num=15,
-                    min_num=13,
-                    label='Article',
-                )
+                FieldPanel('opinions_slider'),
+            ],
+            heading='Opinions Slider',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('featured_opinions'),
             ],
             heading='Featured Opinions',
             classname='collapsible collapsed',
-            help_text='1: xlarge | 2: large | 3-7: small | 8-9: medium | 10-14: small | 15: large',
-        )
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('opinion_series_slider'),
+            ],
+            heading='Opinion Series Slider',
+            classname='collapsible collapsed',
+        ),
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
