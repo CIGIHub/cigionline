@@ -151,7 +151,7 @@ SearchResultListingRow.propTypes = {
         id: PropTypes.number,
         title: PropTypes.string,
         url: PropTypes.string,
-      })
+      }),
     ),
     url: PropTypes.string,
   }).isRequired,

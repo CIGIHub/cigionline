@@ -122,43 +122,6 @@ $card-title-font: $title-font-family;
       @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.9em;
     }
-
-    .card__text__more__container {
-      .card__text__more {
-        @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
-        margin-left: 0.5em;
-
-        &::after {
-          content: none;
-        }
-
-        &:hover {
-          color: $cigi-primary-colour;
-        }
-      }
-
-      .dropdown-menu {
-        padding: 0;
-        overflow: hidden;
-
-        input {
-          display: none;
-        }
-
-        .dropdown-item {
-          padding: 1em 1.5em;
-          cursor: pointer;
-
-          &:active {
-            background-color: $cigi-light-grey;
-          }
-
-          i {
-            width: 1.5em;
-          }
-        }
-      }
-    }
   }
 
   &.card--event {
@@ -321,7 +284,7 @@ $card-title-font: $title-font-family;
 
     .card__image {
       cursor: pointer;
-  
+
       .img-wrapper {
         padding-bottom: 56.25%;
 
@@ -402,7 +365,39 @@ $card-title-font: $title-font-family;
   }
 }
 
+.card__text__more__container {
+  .card__text__more {
+    @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
+    margin-left: 0.5em;
 
-.player {
-  height: 66.67vw;
+    &::after {
+      content: none;
+    }
+
+    &:hover {
+      color: $cigi-primary-colour;
+    }
+  }
+
+  .dropdown-menu {
+    padding: 0;
+    overflow: hidden;
+
+    input {
+      display: none;
+    }
+
+    .dropdown-item {
+      padding: 1em 1.5em;
+      cursor: pointer;
+
+      &:active {
+        background-color: $cigi-light-grey;
+      }
+
+      i {
+        width: 1.5em;
+      }
+    }
+  }
 }

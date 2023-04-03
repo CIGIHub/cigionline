@@ -23,7 +23,6 @@ from wagtail.blocks import (
     StructBlock,
     TextBlock,
 )
-from wagtail.embeds.blocks import EmbedBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index

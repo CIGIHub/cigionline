@@ -59,8 +59,18 @@
   <article>
     <section class="hero{% if page.archive %} archived{% endif %}">
       <div class="container">
-        <div class="row hero-container">
-          <div class="col-md-8 col-lg-6 hero-main">
+        <div class="row">
+          <div class="col-12">
+            <div class="hero__content">
+              <div class="hero__title">
+                <i class="fal fa-file-alt"></i>
+                <h1>Experts</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row hero-container d-none">
+          <div class="col-md-10 col-lg-8 hero-main">
             <h1>{{page.title}}</h1>
             {% if page.position and page.archive %}
               <div class="position">
@@ -78,109 +88,101 @@
             </div>
           {% endif %}
         </div>
-      </div>
-    </section>
-
-    {% if not page.archive %}
-      {% if page.expertise or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
-        <section class="expertise">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col col-md-10 col-lg-8">
-                <div class="expertise-container">
-                  {% if page.expertise %}
-                    <div class="meta">Expertise</div>
-                    <div class="meta">
-                      {% for expertise in page.expertise %}
-                        <span class="expertise-item">{{ expertise }}</span>
-                      {% endfor %}
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <article class="row card__container card--expert card--large--expert">
+              <div class="col-12 col-sm-6 col-md-5">
+                <div class="card__image card__image--portrait">
+                  <a href="{{ url }}">
+                    <div class="img-wrapper">
+                      {% image self.image_square fill-900x900 %}
                     </div>
-                    {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
-                      <hr>
-                    {% endif %}
-                  {% endif %}
-
-                  <div class="contact">
-                    {% if page.phone_number_clean %}
-                      <div class="contact-item">
-                        <i class="fa fa-phone" aria-hidden="true"></i>
-                        {{ page.phone_number_clean }}
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-md-7 card--medium--expert--right">
+                <div class="card__expert-info">
+                  <div class="card__text">
+                    <div class="d-flex align-items-center pb-3">
+                      <div>
+                        {% include 'includes/cards/card_text_title.html' with title=self.title url=self.url %}
+                        {% if self.board_position %}
+                          <div class="card--expert__board-position">
+                            {{ self.board_position }}
+                          </div>
+                        {% endif %}
                       </div>
-                    {% endif %}
-
-                    {% if page.email %}
-                      <div class="contact-item">
-                        <i class="fas fa-envelope" aria-hidden="true"></i>
-                        <a href="mailto:{{ page.email }}">{{ page.email }}</a>
-                      </div>
-                    {% endif %}
-
-                    {% if page.twitter_username %}
-                      <div class="contact-item">
-                        <i class="fab fa-twitter" aria-hidden="true"></i>
-                        <a href="https://twitter.com/{{ page.twitter_username }}" target="_blank">{{ page.twitter_username }}</a>
-                      </div>
-                    {% endif %}
-
-                    {% if page.linkedin_url %}
-                      <div class="contact-item">
-                        <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-                        <a href="{{ page.linkedin_url }}" target="_blank">{{ page.linkedin_url|no_protocol }}</a>
-                      </div>
-                    {% endif %}
-
-                    {% if page.website %}
-                      <div class="contact-item">
-                        <i class="fas fa-link" aria-hidden="true"></i>
-                        <a href="{{ page.website }}" target="_blank">{{ page.website|no_protocol }}</a>
-                      </div>
-                    {% endif %}
-
-                    {% if page.curriculum_vitae %}
-                      <div class="contact-item">
-                        <i class="far fa-newspaper" aria-hidden="true"></i>
-                        <a href="{{ page.curriculum_vitae.url }}" target="_blank">Curriculum Vitae</a>
-                      </div>
-                    {% endif %}
-
-                    {% if page.image_media and page.person_types.all|any_in_list:'Expert,Board Member,Media Contact' %}
-                      {% image page.image_media original as high_res %}
-                      <div class="contact-item">
-                        <i class="fas fa-download" aria-hidden="true"></i>
-                        <a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a>
+                    </div>
+                    {% include 'includes/cards/card_text_description.html' with description=self.short_bio %}
+                    {% if page.expertise_list %}
+                      <h4>Expertise</h4>
+                      <div class="card--expert__expertise-list">
+                        {% for expertise in page.expertise_list %}
+                          <li class="">{{ expertise }}</li>
+                        {% endfor %}
                       </div>
                     {% endif %}
                   </div>
                 </div>
+  
+                <div class="card--expert__social">
+                  <ul>
+                    {% if self.twitter_username %}
+                      <li>
+                        <div>Twitter</div>
+                        <a href="https://twitter.com/{{self.twitter_username}}" target="_blank">
+                          {{self.twitter_username}}
+                        </a>
+                      </li>
+                    {% endif %}
+                    {% if self.linkedin_username %}
+                      <li>
+                        <div>Linkedin</div>
+                        <a href="https://www.linkedin.com/{{self.linkedin_username}}" target="_blank">
+                          {{self.linkedin_username}}
+                        </a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </article>
+            <div class="row">
+              <div class="col">
+                <hr>
               </div>
             </div>
           </div>
-        </section>
-      {% endif %}
+        </div>
+      </div>
+    </section>
 
-      {% include "includes/body.html" with body=self.body heading="Bio" %}
+    {% if not page.archive %}
+      {% include "includes/body.html" with body=self.body %}
 
       {% if self.latest_cigi_in_the_news %}
-        <section>
+        <section class="person-page__in-the-news">
           <div class="container">
             <div class="row justify-content-center">
               <div class="col-12 col-md-10 col-lg-8">
-                <h2 class="paragraph-heading">
+                <hr>
+                <h2>
                   In the News
                 </h2>
                 <div class="person-in-the-news">
                   {% for article in self.latest_cigi_in_the_news %}
                     <article>
-                      <p class="meta">{{ article.contentsubtype }}</p>
-                      <h3>
-                        <a href="{% pageurl article %}">
-                          {{ article.title }}
-                        </a>
-                      </h3>
-                      <p class="meta">
-                        {{ article.publishing_date|date:"F j, Y" }}
-                      </p>
-                      {% include "includes/authors.html" with authors=article.authors.all %}
+                      <i class="fal fa-bullhorn"></i>
+                      <div>
+                        <h3>
+                          <a href="{% pageurl article %}">
+                            {{ article.title }}
+                          </a>
+                        </h3>
+                        <p class="meta">
+                          {{ article.publishing_date|date:"F j, Y" }}
+                        </p>
+                      </div>
                     </article>
                   {% endfor %}
                 </div>
@@ -192,14 +194,15 @@
 
       {% if page.external_publications %}
       {% with publication.value.publication_type|lower as type %}
-        <section class="external-publications">
+        <section class="person-page__external-publications">
           <div class="container">
             <div class="row justify-content-center">
               <div class="col col-md-10 col-lg-8">
-                <h2 class="paragraph-heading">Select Publications</h2>
+                <hr>
+                <h2>Select Publications</h2>
                 {% for publication in page.external_publications %}
                   <article>
-                    <div class="counter">{{ forloop.counter }}.</div>
+                    <i class="fal fa-file-alt"></i>
                     <div>
                       {% if publication.value.author %}
                         <span>{{publication.value.author}}</span>.
@@ -265,7 +268,7 @@
       {% endif %}
     {% endif %}
     {% if self.has_authored_content %}
-      <section>
+      <section class="person-page__search-table">
         <div class="container">
           <div class="row">
             <div class="col-12">

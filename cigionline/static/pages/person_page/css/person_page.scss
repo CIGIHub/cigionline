@@ -1,43 +1,96 @@
 @import '../../../css/global/mixins';
 
-.expert-search-table {
-  .search-table-container {
-    margin-top: 0;
-
-    .search-table {
-      margin-top: 1em;
-    }
-  }
-}
-
 .person-page {
-  .person-in-the-news {
-    margin-bottom: 2em;
-    margin-top: 1em;
-
-    article {
+  section {
+    h2 {
+      margin-top: 1.5em;
       margin-bottom: 1.5em;
+      font-weight: 300;
+      font-size: 1em;
+      color: $cigi-medium-grey;
+    }
 
-      &:last-child {
-        margin-bottom: 0;
+    &.hero {
+      margin-bottom: 1em;
+
+      .hero__content {
+        border-bottom: 0;
+      }
+    }
+
+    &.body {
+      @include media-breakpoint-up(md) {
+        margin-top: 1em;
+      }
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
+    &.person-page__in-the-news {
+      article {
+        display: flex;
+        margin-bottom: 1.5em;
+
+        h3 {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+          font-size: 1.1em;
+          margin-bottom: 0.3em;
+          font-weight: 300;
+        }
+
+        i {
+          margin-right: 1.5em;
+          margin-top: 0.3em;
+        }
+
+        p {
+          margin-bottom: 0;
+        }
       }
 
-      h3 {
-        @include link($color: $black, $hover-color: $cigi-primary-colour);
-        font-size: 1.0625em;
-        margin-bottom: 0.3em;
+      .person-in-the-news {
+        margin-top: 1em;
+      }
+    }
+
+    &.person-page__external-publications {
+      article {
+        @include link(
+          $color: $cigi-primary-colour,
+          $hover-color: $cigi-dark-pink
+        );
+        display: flex;
+        margin-bottom: 1.25em;
+
+        i {
+          margin-right: 1.5em;
+          margin-top: 0.3em;
+        }
+      }
+    }
+
+    &.person-page__search-table {
+      margin-top: 2em;
+
+      h2 {
+        width: 100%;
+        margin-bottom: 0;
+        padding-bottom: 1em;
+        border-bottom: 1px solid $cigi-light-grey;
       }
 
-      .authors {
-        color: $cigi-text-grey;
-        font-size: 0.75em;
-        margin-bottom: 0;
-        margin-top: 0;
-        text-transform: uppercase;
+      .search-table__filters__container {
+        display: none;
       }
 
-      .meta {
-        margin-bottom: 0;
+      .expert-search-table {
+        .search-table-container {
+          margin-top: 0;
+
+          .search-table {
+            margin-top: 1em;
+          }
+        }
       }
     }
   }
