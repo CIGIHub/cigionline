@@ -87,28 +87,28 @@ const EventSearchResultCard = (props) => {
         </div>
         <div className="card__text__more__container dropup">
           <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
-            <i className="far fa-ellipsis-h"></i>
+            <i className="far fa-ellipsis-h" />
           </button>
           <div className="dropdown-menu dropdown-menu-end">
             <button className="dropdown-item copy-text-button" type="button">
-              <i className="fas fa-link"></i>
+              <i className="fas fa-link" />
               Copy Link
             </button>
-            <input type="text" value={row.url} className="copyText"></input>
+            <input type="text" value={row.url} className="copyText" />
             <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-twitter"></i>
+              <i className="fab fa-twitter" />
               Share on Twitter
             </a>
             <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-linkedin-in"></i>
+              <i className="fab fa-linkedin-in" />
               Share on Linkedin
             </a>
-            <a className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-facebook-f"></i>
+            <button className="dropdown-item" type="button" data-url={row.url} target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-facebook-f" />
               Share on Facebook
-            </a>
+            </button>
             <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
-              <i className="fal fa-check-square"></i>
+              <i className="fal fa-check-square" />
               Register
             </a>
           </div>
@@ -144,6 +144,7 @@ EventSearchResultCard.propTypes = {
     event_end: PropTypes.string,
     event_type: PropTypes.string,
     event_format_string: PropTypes.string,
+    registration_url: PropTypes.string,
     time_zone_label: PropTypes.string,
   }).isRequired,
 };

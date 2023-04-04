@@ -268,3 +268,32 @@
     margin-top: 2em;
   }
 }
+
+.search-table {
+  table {
+    tr {
+      th {
+        .search-table__results__row__more {
+          color: transparent;
+        }
+      }
+      .search-table__results__row__title {
+        @include media-breakpoint-up(md) {
+          width: 40%;
+          padding-right: 2em;
+        }
+      }
+
+      .search-table__results__row__content-type {
+        @include media-breakpoint-up(md) {
+          width: 20%;
+        }
+      }
+      .search-table__results__row__topics {
+        @include media-breakpoint-up(md) {
+          width: 15%;
+        }
+      }
+    }
+  }
+}

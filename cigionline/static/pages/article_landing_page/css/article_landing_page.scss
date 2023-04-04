@@ -162,5 +162,33 @@ body {
         }
       }
     }
+
+    &.article-landing-page__search-table {
+      table {
+        tr {
+          th {
+            &.search-table__results__row__more {
+              color: transparent;
+            }
+          }
+
+          td {
+            &.search-table__results__row__more {
+              text-align: right;
+            }
+          }
+
+          .search-table__results__row__title {
+            @include media-breakpoint-up(md) {
+              width: 40%;
+            }
+          }
+
+          .search-table__results__row__authors {
+            width: 25%;
+          }
+        }
+      }
+    }
   }
 }

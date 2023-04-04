@@ -76,16 +76,24 @@ ReactDOM.render(
       'table-opinions',
     ]}
     RowComponent={OpinionListing}
+    RowComponentList={OpinionListing}
     searchPlaceholder="Search all opinions"
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',
+      colClass: 'title',
     }, {
       colSpan: 3,
       colTitle: 'Author',
+      colClass: 'authors',
     }, {
       colSpan: 3,
       colTitle: 'Topic',
+      colClass: 'topics',
+    }, {
+      colSpan: 1,
+      colTitle: 'More',
+      colClass: 'more',
     }]}
   />,
   document.getElementById('opinions-search-table'),

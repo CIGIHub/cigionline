@@ -166,18 +166,27 @@ ReactDOM.render(
       {
         colSpan: 6,
         colTitle: 'Title',
+        colClass: 'title',
       },
       {
         colSpan: 3,
-        colTitle: 'Topic',
+        colTitle: 'Type',
+        colClass: 'type',
+      },
+      {
+        colSpan: 3,
+        colTitle: 'Speaker',
+        colClass: 'authors',
       },
       {
         colSpan: 2,
-        colTitle: 'Location',
+        colTitle: 'Topic',
+        colClass: 'topics',
       },
       {
         colSpan: 1,
-        colTitle: '',
+        colTitle: 'More',
+        colClass: 'more',
       },
     ]}
   />,
