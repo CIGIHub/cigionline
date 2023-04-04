@@ -50,6 +50,7 @@ const ArticleSearchResultCard = (props) => {
           <CardTextMore
             title={row.title}
             url={row.url}
+            type="Opinion"
           />
         </div>
       </div>

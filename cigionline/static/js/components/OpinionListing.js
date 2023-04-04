@@ -66,9 +66,8 @@ function OpinionListing(props) {
         </div>
         <CardTextMore
           title={row.title}
-          type={row.contenttype}
+          type="Opinion"
           url={row.url}
-          pdfDownload={row.pdf_download}
         />
       </td>
     </tr>
