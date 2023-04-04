@@ -6,6 +6,7 @@ import PublicationSearchResultCard from './PublicationSearchResultCard';
 import ArticleSeriesSearchResultCard from './ArticleSeriesSearchResultCard';
 import ExpertSearchResultCard from './ExpertSearchResultCard';
 import EventSearchResultCard from './EventSearchResultCard';
+import '../../css/components/SearchResultCard.scss';
 
 const SearchResultCard = (props) => {
   const { row } = props;
