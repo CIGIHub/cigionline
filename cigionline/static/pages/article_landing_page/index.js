@@ -8,6 +8,7 @@ import SearchTable from '../../js/components/SearchTable';
 
 import 'swiper/swiper-bundle.css';
 import './css/article_landing_page.scss';
+import SearchResultCard from '../../js/components/SearchResultCard';
 
 Swiper.use([Navigation, Pagination]);
 
@@ -68,6 +69,7 @@ ReactDOM.render(
     ]}
     fields={[
       'authors',
+      'image_hero_url',
       'publishing_date',
       'topics',
     ]}
@@ -75,7 +77,7 @@ ReactDOM.render(
       'custom-theme-table',
       'table-opinions',
     ]}
-    RowComponent={OpinionListing}
+    RowComponent={SearchResultCard}
     RowComponentList={OpinionListing}
     searchPlaceholder="Search all opinions"
     tableColumns={[{

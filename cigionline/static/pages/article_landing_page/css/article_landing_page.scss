@@ -22,8 +22,6 @@ body {
   }
 
   section {
-    margin: 2em 0;
-
     &.article-landing-page__opinions-swiper,
     &.article-landing-page__opinion-series-swiper {
       .navigation-container {
@@ -58,9 +56,6 @@ body {
       }
 
       .swiper-pagination {
-        @include media-breakpoint-up(md) {
-          padding: 2em 0;
-        }
         position: static;
         width: 100%;
         padding: 1em 0;
@@ -129,33 +124,35 @@ body {
 
     &.article-landing-page__featured-opinions {
       .article-landing-page__row {
-        .col-md-4 {
-          &:not(:last-child) {
-            @include media-breakpoint-up(md) {
-              border-right: 1px solid $cigi-light-grey;
-            }
-          }
-
-          .card--tiny {
-            &:not(:first-child) {
-              @include media-breakpoint-up(md) {
-                padding-top: 1em;
-              }
-            }
-
+        div {
+          &[class*='col-'] {
             &:not(:last-child) {
               @include media-breakpoint-up(md) {
-                padding-bottom: 1em;
-                border-bottom: 1px solid $cigi-light-grey;
+                border-right: 1px solid $cigi-light-grey;
               }
             }
-
-            .card__image {
-              @include media-breakpoint-up(md) {
-                flex: 0 0 40%;
+    
+            .card--tiny {
+              &:not(:first-child) {
+                @include media-breakpoint-up(md) {
+                  padding-top: 1em;
+                }
               }
-              @include media-breakpoint-up(lg) {
-                flex: 0 0 30%;
+    
+              &:not(:last-child) {
+                @include media-breakpoint-up(md) {
+                  padding-bottom: 1em;
+                  border-bottom: 1px solid $cigi-light-grey;
+                }
+              }
+    
+              .card__image {
+                @include media-breakpoint-up(md) {
+                  flex: 0 0 40%;
+                }
+                @include media-breakpoint-up(lg) {
+                  flex: 0 0 30%;
+                }
               }
             }
           }
