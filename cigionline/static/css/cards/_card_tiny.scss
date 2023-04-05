@@ -9,6 +9,19 @@
     }
   }
 
+  &.card--tiny--article--with-image {
+    .card__image {
+      @include media-breakpoint-down(lg) {
+        display: none;
+      }
+      padding-right: 1em;
+
+      .img-wrapper {
+        height: auto;
+      }
+    }
+  }
+
   &.card--tiny--article-series {
     .fa-stack {
       display: flex;

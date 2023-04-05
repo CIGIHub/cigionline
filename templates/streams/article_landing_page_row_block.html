@@ -1,0 +1,7 @@
+{% load wagtailcore_tags %}
+
+<div class="article-landing-page__row row g-4 row-items-{{self.row|length}}">
+  {% for block in self.row %}
+    {% include_block block.value %}
+  {% endfor %}
+</div>

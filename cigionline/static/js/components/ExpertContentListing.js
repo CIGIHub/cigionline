@@ -37,7 +37,7 @@ function ExpertContentListing(props) {
           )}
           {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
             <span className="table-icon icon-opinion">
-              <i className="fal fa-comment-dots" />
+              <i className="fal fa-comment-alt-lines" />
             </span>
           )}
           {row.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
@@ -57,7 +57,7 @@ function ExpertContentListing(props) {
           </div>
         </div>
       </td>
-      <td>
+      <td className="search-table__results__row__topics">
         <div className="table-mobile-text">
           Topic
         </div>
@@ -73,7 +73,7 @@ function ExpertContentListing(props) {
           </ul>
         </div>
       </td>
-      <td>
+      <td className="search-table__results__row__content-type">
         <div className="table-mobile-text">
           Type
         </div>

@@ -11,10 +11,6 @@
       padding: 1.5em 0.625em;
     }
 
-    td {
-      vertical-align: top;
-    }
-
     .search-table__results__row__title--mobile {
       @include media-breakpoint-up(sm) {
         display: none;
@@ -77,6 +73,8 @@
       }
 
       li {
+        font-size: 0.75em;
+
         &::after {
           color: $cigi-medium-grey;
         }
@@ -86,6 +84,10 @@
     .search-table__results__row__topics {
       @include media-breakpoint-up(md) {
         width: 28.33333%;
+      }
+
+      li {
+        font-size: 0.75em;
       }
     }
 

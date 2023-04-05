@@ -1141,6 +1141,7 @@ class LineBreakBlock(blocks.StructBlock):
 
 class ArticleCard(blocks.StructBlock):
     class ArticleCardTypeChoices(models.TextChoices):
+        TINY_WITH_IMAGE = ('tiny_with_image', 'Tiny with Image')
         TINY = ('tiny', 'Tiny')
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
@@ -1251,6 +1252,7 @@ class ArticleSeriesCard(blocks.StructBlock):
         MEDIUM = ('medium', 'Medium')
         MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
         LARGE = ('large', 'Large')
+        LARGE_FULL = ('large_full', 'Large Full')
 
     page = blocks.PageChooserBlock(required=True, page_type='articles.ArticleSeriesPage')
     size = blocks.ChoiceBlock(choices=ArticleSeriesCardTypeChoices.choices, required=True)
@@ -1681,4 +1683,29 @@ class HomePageRow(blocks.StructBlock):
         icon = 'list-ul'
         label = 'Row'
         template = 'streams/home_page_row_block.html'
+        form_classname = 'row-block'
+
+
+class ArticleLandingPageColumn(blocks.StructBlock):
+    column_cards = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Column'
+        template = 'streams/article_landing_page_column_block.html'
+        form_classname = 'column-block'
+
+
+class ArticleLandingPageRow(blocks.StructBlock):
+    row = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('column_block', ArticleLandingPageColumn()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Row'
+        template = 'streams/article_landing_page_row_block.html'
         form_classname = 'row-block'

@@ -181,7 +181,7 @@
           );
 
           li {
-            color: $cigi-light-grey;
+            color: $cigi-medium-grey;
           }
         }
 
@@ -195,6 +195,66 @@
         .card__text__more {
           i {
             color: $white;
+          }
+        }
+      }
+    }
+  }
+
+  &.card--large--article-series--full {
+    .card__image {
+      @include media-breakpoint-up(md) {
+        flex: 1 0 33%;
+      }
+      @include media-breakpoint-up(lg) {
+        flex: 1 0 25%;
+      }
+
+      .landscape {
+        @include media-breakpoint-up(md) {
+          display: none;
+        }
+        display: block;
+      }
+
+      .poster {
+        @include media-breakpoint-up(md) {
+          display: block;
+        }
+        display: none;
+      }
+    }
+
+    .card__text {
+      @include media-breakpoint-up(lg) {
+        padding: 1.5em;
+      }
+      .card__text__description {
+        @include media-breakpoint-down(md) {
+          display: block;
+        }
+        @include media-breakpoint-up(md) {
+          display: block;
+        }
+      }
+  
+      .card__text__contributors {
+        @include media-breakpoint-down(md) {
+          display: none;
+        }
+        margin-bottom: 2em;
+  
+        ul {
+          list-style: none;
+          columns: 4;
+          font-size: 14px;
+        }
+      }
+  
+      .card__text__meta {
+        .card__text__people {
+          @include media-breakpoint-up(md) {
+            display: none;
           }
         }
       }
@@ -296,6 +356,13 @@
   }
 
   &.card--large--article {
+    .row {
+      @include media-breakpoint-up(md) {
+        flex-direction: row;
+      }
+      flex-direction: column-reverse;
+    }
+
     .card__text {
       .card__text__title {
         font-family: $card-title-font;

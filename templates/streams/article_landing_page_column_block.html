@@ -1,0 +1,9 @@
+{% load wagtailcore_tags %}
+
+<div class="col-12 col-md-4">
+  <div class="column__container">
+    {% for block in self.column_cards %}
+      {% include_block block %}
+    {% endfor %}
+  </div>
+</div>

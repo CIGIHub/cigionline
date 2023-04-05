@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DateTime } from 'luxon';
+import CardTextMore from './CardTextMore';
 
 const ArticleSearchResultCard = (props) => {
   const { row } = props;
@@ -46,11 +47,11 @@ const ArticleSearchResultCard = (props) => {
               ))}
             </ul>
           </div>
-          <button type="button" className="card__text__more">
-            <a href={row.url}>
-              <i className="far fa-ellipsis-h" />
-            </a>
-          </button>
+          <CardTextMore
+            title={row.title}
+            url={row.url}
+            type="Opinion"
+          />
         </div>
       </div>
     </article>

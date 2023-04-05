@@ -34,7 +34,7 @@ function TopicContentListing(props) {
           )}
           {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
             <span className="table-icon icon-opinion">
-              <i className="fal fa-comment-dots" />
+              <i className="fal fa-comment-alt-lines" />
             </span>
           )}
           {row.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (

@@ -10,7 +10,12 @@ from core.models import (
 from django.db import models
 from images.models import CigionlineImage
 from modelcluster.fields import ParentalKey
-from streams.blocks import SeriesItemImageBlock
+from streams.blocks import (
+    SeriesItemImageBlock,
+    ArticleCard,
+    ArticleSeriesCard,
+    ArticleLandingPageRow
+)
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -32,6 +37,28 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     parent_page_types = ['home.HomePage']
     subpage_types = []
     templates = 'articles/article_landing_page.html'
+
+    opinions_slider = StreamField(
+        [
+            ('opinion', ArticleCard()),
+        ],
+        blank=True,
+        null=True,
+    )
+    featured_opinions = StreamField(
+        [
+            ('row', ArticleLandingPageRow())
+        ],
+        blank=True,
+        null=True,
+    )
+    opinion_series_slider = StreamField(
+        [
+            ('opinion_series', ArticleSeriesCard()),
+        ],
+        blank=True,
+        null=True,
+    )
 
     def get_featured_articles(self):
         featured_article_ids = self.featured_articles.order_by('sort_order').values_list('article_page', flat=True)
@@ -55,17 +82,25 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
-                InlinePanel(
-                    'featured_articles',
-                    max_num=15,
-                    min_num=13,
-                    label='Article',
-                )
+                FieldPanel('opinions_slider'),
+            ],
+            heading='Opinions Slider',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('featured_opinions'),
             ],
             heading='Featured Opinions',
             classname='collapsible collapsed',
-            help_text='1: xlarge | 2: large | 3-7: small | 8-9: medium | 10-14: small | 15: large',
-        )
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('opinion_series_slider'),
+            ],
+            heading='Opinion Series Slider',
+            classname='collapsible collapsed',
+        ),
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields

@@ -8,25 +8,49 @@ import SearchTable from '../../js/components/SearchTable';
 
 import 'swiper/swiper-bundle.css';
 import './css/article_landing_page.scss';
+import SearchResultCard from '../../js/components/SearchResultCard';
 
 Swiper.use([Navigation, Pagination]);
-const swiperContainer = document.querySelector('.swiper-container');
 
-if (swiperContainer) {
-  const articleLandingSwiper = new Swiper('.swiper-container', {
+const swiperContainerOpinions = document.querySelector('.swiper-container--opinions');
+const swiperContainerOpinionSeries = document.querySelector('.swiper-container--opinion-series');
+if (swiperContainerOpinions) {
+  const opinionsSwiper = new Swiper(swiperContainerOpinions, {
     slidesPerView: 1,
     slidesPerGroup: 1,
+    spaceBetween: 20,
     speed: 800,
     autoHeight: true,
     grabCursor: true,
 
     navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
+      nextEl: '.swiper-button-next-opinions',
+      prevEl: '.swiper-button-prev-opinions',
     },
 
     pagination: {
-      el: '.swiper-pagination',
+      el: '.swiper-pagination-opinions',
+      clickable: true,
+    },
+  });
+}
+
+if (swiperContainerOpinionSeries) {
+  const opinionSeriesSwiper = new Swiper(swiperContainerOpinionSeries, {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+    spaceBetween: 20,
+    speed: 800,
+    autoHeight: true,
+    grabCursor: true,
+
+    navigation: {
+      nextEl: '.swiper-button-next-opinion-series',
+      prevEl: '.swiper-button-prev-opinion-series',
+    },
+
+    pagination: {
+      el: '.swiper-pagination-opinion-series',
       clickable: true,
     },
   });
@@ -45,6 +69,7 @@ ReactDOM.render(
     ]}
     fields={[
       'authors',
+      'image_hero_url',
       'publishing_date',
       'topics',
     ]}
@@ -52,17 +77,25 @@ ReactDOM.render(
       'custom-theme-table',
       'table-opinions',
     ]}
-    RowComponent={OpinionListing}
+    RowComponent={SearchResultCard}
+    RowComponentList={OpinionListing}
     searchPlaceholder="Search all opinions"
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',
+      colClass: 'title',
     }, {
       colSpan: 3,
       colTitle: 'Author',
+      colClass: 'authors',
     }, {
       colSpan: 3,
       colTitle: 'Topic',
+      colClass: 'topics',
+    }, {
+      colSpan: 1,
+      colTitle: 'More',
+      colClass: 'more',
     }]}
   />,
   document.getElementById('opinions-search-table'),

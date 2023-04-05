@@ -111,7 +111,7 @@ $card-title-font: $title-font-family;
 
     .card__text__people {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
-      font-size: 0.9em;
+      font-size: 0.8em;
 
       li {
         color: $cigi-text-grey;
@@ -120,7 +120,7 @@ $card-title-font: $title-font-family;
 
     .card__text__topics {
       @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
-      font-size: 0.9em;
+      font-size: 0.8em;
     }
   }
 
