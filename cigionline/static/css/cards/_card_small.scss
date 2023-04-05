@@ -288,6 +288,7 @@
       flex-direction: column;
       height: 100%;
     }
+    align-items: normal;
 
     .card__image {
       @include media-breakpoint-up(sm) {

@@ -100,7 +100,7 @@
 
     .card__image {
       @include media-breakpoint-up(md) {
-        flex: 0 0 50%;
+        flex: 0 0 33.33%;
       }
       flex: auto;
       position: relative;
@@ -164,7 +164,7 @@
           display: block;
         }
         display: none;
-        line-height: 1.75;
+        line-height: 1.25;
         margin-bottom: 0.5em;
         color: $cigi-medium-grey;
       }

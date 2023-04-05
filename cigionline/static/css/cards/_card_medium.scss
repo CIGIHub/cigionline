@@ -123,31 +123,18 @@ article {
       }
 
       .card__image {
-        @include media-breakpoint-up(sm) {
-          padding: 0 3em 0 0;
-        }
         @include media-breakpoint-up(md) {
-          display: flex;
-          align-items: flex-start;
-          padding-right: 1.5em;
+          width: auto;
+          padding: 0;
         }
-        @include media-breakpoint-only(md) {
-          flex: 0 0 32.15%;
-        }
-        display: block;
         margin: 0;
-        padding: 0 1em 0 0;
-        flex: 0 0 50%;
       }
 
       .card__text {
         @include media-breakpoint-up(md) {
-          justify-content: space-between;
-          padding-left: 1.5em;
-          flex-grow: 1;
+          width: auto;
+          padding: 0;
         }
-        justify-content: center;
-
         .card__text__description {
           @include media-breakpoint-up(md) {
             display: block;
@@ -178,13 +165,9 @@ article {
             padding: 0 14em 1em;
           }
           padding: 0 1em 0 0;
-          flex: 0 0 50%;
         }
 
         .card__text {
-          @include media-breakpoint-only(md) {
-            padding-left: 1.5em;
-          }
           @include media-breakpoint-up(md) {
             justify-content: space-between;
           }
@@ -201,7 +184,7 @@ article {
     }
 
     &.card--medium--article-series {
-      @include media-breakpoint-up(lg) {
+      @include media-breakpoint-up(md) {
         flex-direction: row;
       }
       background-color: $black;
@@ -211,33 +194,29 @@ article {
       height: 100%;
 
       img {
-        @include media-breakpoint-up(lg) {
+        @include media-breakpoint-up(md) {
           border-radius: 20px 0 0 20px;
         }
         border-radius: 20px 20px 0 0;
       }
 
       .card__image {
-        @include media-breakpoint-only(md) {
-          height: auto;
-          padding-right: 0;
-          width: 100%;
-        }
-        @include media-breakpoint-up(lg) {
-          flex: 0 0 50%;
+        @include media-breakpoint-up(md) {
+          flex: 0 0 33.33%;
+          padding: 0;
         }
         height: 100%;
         margin-bottom: 0;
         position: relative;
 
         .landscape {
-          @include media-breakpoint-up(lg) {
+          @include media-breakpoint-up(md) {
             display: none;
           }
         }
 
         .poster {
-          @include media-breakpoint-up(lg) {
+          @include media-breakpoint-up(md) {
             display: block;
           }
           display: none;
@@ -288,7 +267,7 @@ article {
 
       .card__text {
         @include media-breakpoint-only(md) {
-          width: auto;
+          flex-grow: 1;
         }
         padding: 1em;
         height: auto;
@@ -334,6 +313,9 @@ article {
       }
 
       &.card--vertical--article-series {
+        @include media-breakpoint-only(md) {
+          flex-direction: row;
+        }
         flex-direction: column;
 
         img {
@@ -341,6 +323,10 @@ article {
         }
 
         .card__image {
+          @include media-breakpoint-up(md) {
+            flex: 0 0 33.33%;
+            height: 100%;
+          }
           @include media-breakpoint-up(lg) {
             height: auto;
           }
@@ -354,7 +340,14 @@ article {
           }
 
           .poster {
+            @include media-breakpoint-only(md) {
+              display: block;
+            }
             display: none;
+
+            img {
+              border-radius: 20px 0 0 20px;
+            }
           }
         }
 
