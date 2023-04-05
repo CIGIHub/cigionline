@@ -110,12 +110,6 @@ body {
               padding: 1em;
               background: $cigi-light-grey-bg;
               border-radius: 0 0 20px 20px;
-
-              .card__text__title {
-                @include media-breakpoint-only(md) {
-                  font-size: clamp(1.1em, 3vw, 1.5em);
-                }
-              }
             }
           }
         }

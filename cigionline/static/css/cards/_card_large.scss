@@ -7,7 +7,7 @@
     .card__text {
       .card__text__title {
         @include media-breakpoint-up(md) {
-          font-size: clamp(1.25em, 3vw, 2em);
+          font-size: clamp(1.25em, 3vw, 1.75em);
         }
         font-size: clamp(1.1em, 3vw, 1.5em);
         letter-spacing: -0.5px;
@@ -274,7 +274,7 @@
     .card__text {
       .card__text__title {
         @include media-breakpoint-up(md) {
-          font-size: clamp(1.25em, 3vw, 2em);
+          font-size: clamp(1.25em, 3vw, 1.75em);
         }
         letter-spacing: -0.5px;
       }
@@ -296,7 +296,7 @@
       .card--event__title {
         &.card__text__title {
           @include media-breakpoint-up(md) {
-            font-size: clamp(1.25em, 3vw, 2em);
+            font-size: clamp(1.25em, 3vw, 1.75em);
           }
           font-size: clamp(1.1em, 3vw, 1.5em);
           font-weight: 300;
@@ -381,7 +381,7 @@
           .card--event__title {
             &.card__text__title {
               @include media-breakpoint-up(md) {
-                font-size: clamp(1.25em, 3vw, 2em);
+                font-size: clamp(1.25em, 3vw, 1.75em);
               }
               font-size: clamp(1.1em, 3vw, 1.5em);
               font-weight: 300;
