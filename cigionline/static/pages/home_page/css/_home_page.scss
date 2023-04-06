@@ -502,7 +502,7 @@
           width: 100%;
         }
 
-        article {
+        .col-12 {
           @include media-breakpoint-up(md) {
             padding-top: 0;
             padding-bottom: 0;

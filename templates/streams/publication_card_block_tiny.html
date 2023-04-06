@@ -1,13 +1,15 @@
-<article class="card__container card--tiny">
-  <i class="fal fa-file-alt"></i>
-  <div class="card__text">
-    {% include 'includes/cards/card_text_title.html' %}
-    <div class="card__text__meta">
-      <div>
-        {% include 'includes/cards/card_text_people.html' %}
-        {% include 'includes/cards/card_text_topics.html' %}
+<div class="col-12">
+  <article class="card__container card--tiny">
+    <i class="fal fa-file-alt"></i>
+    <div class="card__text">
+      {% include 'includes/cards/card_text_title.html' %}
+      <div class="card__text__meta">
+        <div>
+          {% include 'includes/cards/card_text_people.html' %}
+          {% include 'includes/cards/card_text_topics.html' %}
+        </div>
+        {% include 'includes/cards/card_text_more.html' with type='publication' %}
       </div>
-      {% include 'includes/cards/card_text_more.html' with type='publication' %}
     </div>
-  </div>
-</article>
+  </article>
+</div>
