@@ -35,23 +35,25 @@ const EventSearchResultCard = (props) => {
   return (
     <article className={`card__container card--small card--small--event card--event ${!row.event_access && 'is_private'}`}>
       <div className="card--event--small__top">
-        {today < startDate && (
-          <div className="card--event--upcoming-label">
-            Upcoming Event -
-            {' '}
-            {`${startDateMonth} ${startDateDay}`}
-          </div>
-        )}
-        {
-          isLive && (
-            <div className="card--event--live-label">
-              <i className="fas fa-podcast"></i>Live
+        <div className="card--event__title card__text__title">
+          {today < startDate && (
+            <div className="card--event--upcoming-label">
+              Upcoming Event -
+              {' '}
+              {`${startDateMonth} ${startDateDay}`}
             </div>
-          )
-        }
-        <h3 className="card--event__title card__text__title">
-          <a href={row.url}>{row.title}</a>
-        </h3>
+          )}
+          {
+            isLive && (
+              <div className="card--event--live-label">
+                <i className="fas fa-podcast"></i>Live
+              </div>
+            )
+          }
+          <h3>
+            <a href={row.url}>{row.title}</a>
+          </h3>
+        </div>
         <div className="card--event__info">
           <time dateTime="" className="card--event__time">
             <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
