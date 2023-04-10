@@ -8,7 +8,6 @@ const EventListCard = (props) => {
   const today = DateTime.now();
 
   const evaluateLive = (start, end) => {
-    // console.log(start, end, Date.now());
     return Date.now() / 1000 >= start && Date.now() / 1000 <= end;
   };
   const [isLive, setIsLive] = useState(evaluateLive(row.start_utc, row.end_utc));
@@ -24,11 +23,11 @@ const EventListCard = (props) => {
 
   return (
     <div className="col col-12 col-md-8">
-      <div>
+      {/* <div>
         Current Time: {Date().toLocaleString()}
         start time: {row.time}
         end time: {row.end_time}
-      </div>
+      </div> */}
       <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
         <div className="row card--event__top">
           <div className="col-md-8">

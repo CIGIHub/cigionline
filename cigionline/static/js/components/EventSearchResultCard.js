@@ -1,22 +1,36 @@
 import { DateTime } from 'luxon';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import '../../css/components/EventSearchResultCard.scss';
 
 const EventSearchResultCard = (props) => {
   const { row } = props;
-  const today = DateTime.now();
-  const startDate = DateTime.fromISO(row.publishing_date);
+  const today = DateTime.now().toLocal();
+  const startDate = DateTime.fromISO(row.publishing_date).toLocal();
   const startDayDayOfWeek = startDate.weekdayLong;
   const startDateDay = startDate.day;
   const startDateMonth = startDate.monthLong;
   const startDateYear = startDate.year;
   const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
   const startDateAmPm = startDate.toFormat('a');
-  const endDate = DateTime.fromISO(row.event_end) || null;
-  const endDateHour = endDate.hour;
+  const endDate = DateTime.fromISO(row.event_end).toLocal() || null;
+  const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
   const endDateAmPm = endDate.toFormat('a');
+
+  const evaluateLive = (start, end) => {
+    return today >= start && today <= end;
+  };
+  const [isLive, setIsLive] = useState(evaluateLive(startDate, endDate));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsLive(evaluateLive(startDate, endDate));
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isLive]);
 
   return (
     <article className={`card__container card--small card--small--event card--event ${!row.event_access && 'is_private'}`}>
@@ -28,6 +42,13 @@ const EventSearchResultCard = (props) => {
             {`${startDateMonth} ${startDateDay}`}
           </div>
         )}
+        {
+          isLive && (
+            <div className="card--event--live-label">
+              <i className="fas fa-podcast"></i>Live
+            </div>
+          )
+        }
         <h3 className="card--event__title card__text__title">
           <a href={row.url}>{row.title}</a>
         </h3>

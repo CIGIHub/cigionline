@@ -4,6 +4,15 @@
   .card__container {
     padding: 0 2em;
 
+    .card--event--live-label {
+      color: $cigi-primary-colour;
+      font-weight: 500;
+
+      i {
+        padding-right: 0.5em;
+      }
+    }
+
     .card__text__title {
       min-height: 6em;
     }
