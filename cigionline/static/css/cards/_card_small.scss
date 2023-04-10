@@ -201,48 +201,6 @@
       img {
         border-radius: 20px 20px 0 0;
       }
-
-      .card__label {
-        align-items: center;
-        background-color: $black;
-        border-radius: 1em;
-        color: $white;
-        font-size: 0.8em;
-        display: flex;
-        height: 2.5em;
-        justify-content: center;
-        left: 1em;
-        position: absolute;
-        top: 1em;
-        width: 8em;
-
-        .fa-stack {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-
-          .front {
-            background-color: $black;
-            position: absolute;
-            width: auto;
-          }
-
-          .back {
-            margin-left: 0.3em;
-            margin-bottom: 0.3em;
-          }
-        }
-
-        i {
-          margin-left: 0.15em;
-        }
-
-        p {
-          margin: 0;
-          padding-right: 0.7em;
-          white-space: nowrap;
-        }
-      }
     }
 
     .card__text {

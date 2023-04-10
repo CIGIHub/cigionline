@@ -487,7 +487,6 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 100%;
 
         .card__container {
           @include media-breakpoint-up(md) {

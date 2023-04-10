@@ -1,15 +1,13 @@
 {% load wagtailcore_tags %}
 
-<div class="col-12 col-lg-4">
-  <div class="most-popular">
-    <div class="most-popular__label">
-      <h2>Most Popular</h2>
-    </div>
-    <hr />
-    <div class="most-popular__container column__container {% if self.most_popular_cards|length|divisibleby:2 %}even{% else %}odd{% endif %}">
-      {% for block in self.most_popular_cards %}
-        {% include_block block.value %}
-      {% endfor %}
-    </div>
+<div class="col-12 col-lg-4 most-popular">
+  <div class="most-popular__label">
+    <h2>Most Popular</h2>
+  </div>
+  <hr />
+  <div class="most-popular__container column__container {% if self.most_popular_cards|length|divisibleby:2 %}even{% else %}odd{% endif %}">
+    {% for block in self.most_popular_cards %}
+      {% include_block block.value %}
+    {% endfor %}
   </div>
 </div>
