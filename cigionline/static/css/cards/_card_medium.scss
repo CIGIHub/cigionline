@@ -148,19 +148,12 @@ article {
         height: 100%;
 
         .card__image {
-          @include media-breakpoint-up(sm) {
-            padding: 0 3em 0 0;
-          }
-          @include media-breakpoint-only(md) {
-            padding: 0 1.5em 0 0;
-          }
           @include media-breakpoint-up(lg) {
-            padding: 0 6em 1em;
+            padding: 0 10em 1em;
           }
           @include media-breakpoint-up(xl) {
             padding: 0 14em 1em;
           }
-          padding: 0 1em 0 0;
         }
 
         .card__text {

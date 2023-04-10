@@ -521,6 +521,12 @@
               padding: 1em 1em 1em 0;
             }
             border-bottom: 1px solid $cigi-light-grey;
+
+            &:nth-last-of-type(2) {
+              @include media-breakpoint-only(md) {
+                border-bottom: 0;
+              }
+            }
           }
 
           &:nth-child(even) {

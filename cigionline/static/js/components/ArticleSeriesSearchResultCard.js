@@ -11,13 +11,6 @@ const ArticleSeriesSearchResultCard = (props) => {
             <img alt="" src={row.image_hero_url} />
           </div>
         </a>
-        <div className="card__label">
-          <span className="fa-stack">
-            <i className="fal fa-file-alt front" />
-            <i className="fal fa-file-alt back" />
-          </span>
-          <p>Essay Series</p>
-        </div>
       </div>
       <div className="card__text">
         <h3 className="card__text__title">
