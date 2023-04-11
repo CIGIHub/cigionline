@@ -104,9 +104,47 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             'items': events_dict,
         })
 
+    def get_featured_events(self):
+        featured_events = [item.value.get('page') for item in self.featured_events]
+        featured_events_content = []
+
+        for item in featured_events:
+            item_dict = {}
+
+            item_dict['title'] = item.feature_title if item.feature_title else item.title
+            item_dict['authors'] = [{
+                'title': author.author.title,
+                'url': author.author.url
+            } for author in item.authors.all()]
+            item_dict['date'] = item.event_start_time_local.strftime('%A, %B %-d, %Y')
+            item_dict['date_singular'] = item.event_start_time_local.strftime('%-d')
+            item_dict['month'] = item.event_start_time_local.strftime('%B')
+            item_dict['time'] = item.event_start_time_local.strftime('%-I:%M %p')
+            item_dict['end_date'] = item.event_end_time_local.strftime('%Y-%m-%d') if item.event_end else ''
+            item_dict['end_time'] = item.event_end_time_local.strftime('%-I:%M %p') if item.event_end else ''
+            item_dict['event_type'] = item.get_event_type_display()
+            item_dict['event_access'] = item.get_event_access_display()
+            item_dict['event_format'] = item.event_format_string
+            item_dict['is_past'] = item.is_past()
+            item_dict['time_zone_label'] = item.time_zone_label
+            item_dict['url'] = item.feature_url if item.feature_url else item.url
+            item_dict['topics'] = [{
+                'title': topic.title,
+                'url': topic.url
+            } for topic in item.topics_sorted]
+            item_dict['registration_url'] = item.registration_url
+            item_dict['id'] = item.id
+            item_dict['start_utc'] = item.event_start_time_utc.timestamp()
+            item_dict['end_utc'] = item.event_end_time_utc.timestamp() if item.event_end else ''
+
+            featured_events_content.append(item_dict)
+
+        return featured_events_content
+
     def get_context(self, request):
         context = super().get_context(request)
         context['all_events'] = self.get_all_events()
+        context['featured_events_content'] = self.get_featured_events()
         return context
 
     class Meta:
