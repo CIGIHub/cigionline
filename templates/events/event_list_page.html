@@ -36,13 +36,14 @@
       <div class="tab-pane fade show active" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
         <section class="col featured-events" id="events-page__featured-events-slider">
           <div class="featured-events-container">
-            <div class="swiper-container">
-              <div class="swiper-wrapper">
+            <div class="swiper-container" id="featured-events-container" data-featured-events-container="{{ featured_events_content }}">
+              <div class="swiper-wrapper" id="featured-events">
+              {% comment %} <div class="swiper-wrapper">
                 {% for block in self.featured_events %}
                   <div class="swiper-slide">
                     {% include_block block.value %}
                   </div>
-                {% endfor %}
+                {% endfor %} {% endcomment %}
               </div>
             </div>
             <div class="swiper-pagination"></div>

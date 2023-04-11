@@ -139,7 +139,12 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
             featured_events_content.append(item_dict)
 
-        return featured_events_content
+        return json.dumps({
+            'meta': {
+                'total_events_count': len(featured_events_content),
+            },
+            'items': featured_events_content,
+        })
 
     def get_context(self, request):
         context = super().get_context(request)

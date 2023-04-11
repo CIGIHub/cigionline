@@ -209,6 +209,16 @@ ReactDOM.render(
   document.getElementById('event-list'),
 );
 
+const featuredEvents = JSON.parse(
+  document.getElementById('featured-events-container').dataset.featuredEventsContainer,
+);
+console.log(featuredEvents);
+
+// ReactDOM.render(
+//   <FeaturedEvents meta={featuredEvents.meta} items={featuredEvents.items} />,
+//   document.getElementById('featured-events'),
+// );
+
 const eventsPageFeaturedEventsSliderContainer = document.getElementById(
   'events-page__featured-events-slider',
 );
