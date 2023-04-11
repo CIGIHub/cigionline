@@ -25,11 +25,14 @@
             </div>
             {% include 'includes/cards/card_text_description.html' %}
           </div>
-          <div class="card__latest-activity">
-            <h4>Latest Activity</h4>
-            {% for activity in latest_activity %}
-              {% include 'streams/card_block_tiny.html' with title=activity.title url=activity.url topics=activity.topics type=activity.type no_container=True %}
-            {% endfor %}
+          <div class="d-flex align-items-end">
+            <div class="card__latest-activity">
+              <h4>Latest Activity</h4>
+              {% for activity in latest_activity %}
+                {% include 'streams/card_block_tiny.html' with title=activity.title url=activity.url topics=activity.topics type=activity.type no_container=True %}
+              {% endfor %}
+            </div>
+            {% include 'includes/cards/card_text_more.html' with type='expert' %}
           </div>
         </div>
       </div>
@@ -44,26 +47,6 @@
               {% endif %}
             </div>
           </a>
-        </div>
-        <div class="card--expert__social">
-          <ul>
-            {% if twitter %}
-              <li>
-                <div>Twitter</div>
-                <a href="https://twitter.com/{{twitter}}" target="_blank">
-                  {{twitter}}
-                </a>
-              </li>
-            {% endif %}
-            {% if linkedin_username %}
-              <li>
-                <div>Linkedin</div>
-                <a href="https://www.linkedin.com/{{linkedin_username}}" target="_blank">
-                  {{linkedin_username}}
-                </a>
-              </li>
-            {% endif %}
-          </ul>
         </div>
       </div>
     </div>

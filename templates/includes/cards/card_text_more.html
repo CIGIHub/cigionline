@@ -37,5 +37,19 @@
         Download PDF
       </a>
     {% endif %}
+    {% if type == 'expert' %}
+      {% if twitter %}
+        <a class="dropdown-item" href="https://twitter.com/{{twitter}}" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-twitter"></i>
+          {{twitter}}
+        </a>
+      {% endif %}
+      {% if linkedin_username %}
+        <a class="dropdown-item" href="https://www.linkedin.com/{{linkedin_username}}" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-linkedin-in"></i>
+          {{linkedin_username}}
+        </a>
+      {% endif %}
+    {% endif %}
   </div>
 </div>

@@ -45,6 +45,7 @@
         @include media-breakpoint-up(md) {
           padding-right: 0;
           flex-basis: auto;
+          padding-bottom: 1em;
         }
         padding-right: 1em;
         flex: 0 0 50%;
@@ -79,6 +80,11 @@
         display: flex;
       }
       display: block;
+
+      .card--event__button--register {
+        margin-top: 2em;
+        margin-bottom: 1.5em;
+      }
     }
   }
 
@@ -191,8 +197,8 @@
       @include media-breakpoint-only(md) {
         height: auto;
         padding-right: 0;
-        width: 100%;
       }
+      width: 100%;
       height: 100%;
       margin-bottom: 0;
       position: relative;

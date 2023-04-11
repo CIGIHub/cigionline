@@ -191,36 +191,36 @@ $card-title-font: $title-font-family;
       .card__text__meta {
         width: 100%;
       }
+    }
 
-      .card--event__button--register {
+    .card--event__button--register {
+      @include button(
+        $color: $white,
+        $background-color: $black,
+        $hover-color: $black,
+        $hover-background-color: $white,
+        $border-color: $black,
+        $hover-border-color: $black
+      );
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 2em;
+      width: 100%;
+      border-radius: 100px;
+      transition: none;
+
+      &.is_private {
         @include button(
-          $color: $white,
-          $background-color: $black,
-          $hover-color: $black,
+          $color: $cigi-medium-grey,
+          $hover-color: $cigi-medium-grey,
+          $background-color: $white,
           $hover-background-color: $white,
-          $border-color: $black,
-          $hover-border-color: $black
+          $border-color: $cigi-medium-grey,
+          $hover-border-color: $cigi-medium-grey
         );
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1em 2em;
-        width: 100%;
-        border-radius: 100px;
-        transition: none;
-
-        &.is_private {
-          @include button(
-            $color: $cigi-medium-grey,
-            $hover-color: $cigi-medium-grey,
-            $background-color: $white,
-            $hover-background-color: $white,
-            $border-color: $cigi-medium-grey,
-            $hover-border-color: $cigi-medium-grey
-          );
-          cursor: default;
-        }
+        cursor: default;
       }
     }
   }
