@@ -220,19 +220,6 @@
           }
         }
 
-        &[class*='row-items-'] {
-          & > div {
-            @include media-breakpoint-up(md) {
-              padding-bottom: 0;
-            }
-            padding-bottom: 1em;
-
-            &:last-child {
-              padding-bottom: 0;
-            }
-          }
-        }
-
         &[class*='row-items-2'] {
           & > div {
             @include media-breakpoint-up(lg) {
