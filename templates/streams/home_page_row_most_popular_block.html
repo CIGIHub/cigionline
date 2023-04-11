@@ -4,10 +4,12 @@
   <div class="row most-popular__label">
     <h2>Most Popular</h2>
   </div>
-  <hr />
-  <div class="row most-popular__container column__container {% if self.most_popular_cards|length|divisibleby:2 %}even{% else %}odd{% endif %}">
-    {% for block in self.most_popular_cards %}
-      {% include_block block.value %}
-    {% endfor %}
+  <hr class="d-block" />
+  <div class="row">
+    <div class="most-popular__container column__container {% if self.most_popular_cards|length|divisibleby:2 %}even{% else %}odd{% endif %}">
+      {% for block in self.most_popular_cards %}
+        {% include_block block.value %}
+      {% endfor %}
+    </div>
   </div>
 </div>

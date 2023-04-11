@@ -238,6 +238,10 @@
       }
 
       .card__text__description {
+        @include media-breakpoint-up(lg) {
+          display: block;
+        }
+        display: none;
         color: $cigi-text-grey;
 
         p {

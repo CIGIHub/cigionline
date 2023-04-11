@@ -1,4 +1,6 @@
+{% if not no_container %}
 <div class="col-12 col-md-6">
+{% endif %}
   <article class="card__container card--tiny">
     {% if type == 'Opinion' %}
       <i class="fal fa-comment-alt-lines"></i>
@@ -14,4 +16,6 @@
       </div>
     </div>
   </article>
+{% if not no_container %}
 </div>
+{% endif %}

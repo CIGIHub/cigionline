@@ -45,19 +45,19 @@ article {
     }
 
     &.card--medium--expert {
-      @include media-breakpoint-up(md) {
-        display: grid;
-        grid-gap: 0 1.5em;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          'a c'
-          'b c';
+      .col-12 {
+        &.col-md-5 {
+          @include media-breakpoint-up(md) {
+            border: 0;
+          }
+        }
       }
 
       .card__expert-info {
-        @include media-breakpoint-up(md) {
-          grid-area: a;
-        }
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
 
         .card__text {
           height: auto;
@@ -70,32 +70,23 @@ article {
             margin-bottom: 0.25rem;
           }
         }
-      }
 
-      .card__latest-activity {
-        @include media-breakpoint-up(md) {
-          grid-area: b;
-        }
-
-        h4 {
-          color: $cigi-medium-grey;
-          margin-bottom: 1.5rem;
-          margin-top: 0;
-        }
-
-        .card--tiny {
-          margin-bottom: 1em;
-
-          .card__text__title {
-            font-family: $card-title-font;
-            font-weight: 300;
+        .card__latest-activity {
+          h4 {
+            color: $cigi-medium-grey;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
           }
-        }
-      }
 
-      .card--medium--expert--right {
-        @include media-breakpoint-up(md) {
-          grid-area: c;
+          .card--tiny {
+            margin-bottom: 1em;
+
+            .card__text__title {
+              font-family: $card-title-font;
+              font-weight: 300;
+              font-size: 1.1em;
+            }
+          }
         }
       }
 

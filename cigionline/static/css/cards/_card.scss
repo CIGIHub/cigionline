@@ -79,9 +79,12 @@ $card-title-font: $title-font-family;
   }
 
   .card__text {
+    @include media-breakpoint-up(md) {
+      justify-content: space-between;
+    }
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     height: 100%;
     width: 100%;
 

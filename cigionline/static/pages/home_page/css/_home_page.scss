@@ -199,9 +199,7 @@
         &[class*='col-'] {
           @include media-breakpoint-up(md) {
             border-right: 1px solid $cigi-light-grey;
-            border-bottom: 0;
           }
-          border-bottom: 1px solid $cigi-light-grey;
 
           &:last-child {
             border: 0;
@@ -209,17 +207,11 @@
 
           &[class*='2-col'] {
             &:not(:last-child) {
-              @include media-breakpoint-up(md) {
-                padding-bottom: 1.5rem;
-              }
-              border-right: 0;
-              border-bottom: 1px solid $cigi-light-grey;
-              padding-bottom: 1rem;
               @include media-breakpoint-up(lg) {
                 border-right: 1px solid $cigi-light-grey;
-                border-bottom: 0;
                 padding-bottom: 0;
               }
+              border-right: 0;
             }
           }
 
@@ -300,6 +292,25 @@
                   }
                 }
               }
+            }
+          }
+        }
+
+        .row-block {
+          &.row-items-3 {
+            .row-block__hr {
+              @include media-breakpoint-up(md) {
+                display: none;
+              }
+            }
+          }
+          .row-block__hr {
+            @include media-breakpoint-up(lg) {
+              display: none;
+            }
+
+            hr {
+              margin: 0;
             }
           }
         }
@@ -434,12 +445,6 @@
         }
 
         .most-popular__container {
-          @include media-breakpoint-only(md) {
-            grid-template-columns: 1fr 1fr;
-          }
-          display: grid;
-          grid-template-rows: 1fr;
-
           &.even {
             article {
               &:nth-last-child(-n + 2) {
@@ -508,13 +513,15 @@
             border-right: 0;
           }
           @include media-breakpoint-up(lg) {
-            padding: 1em 0;
+            padding-top: 1em;
+            padding-bottom: 1em;
 
             &:first-child {
               padding-top: 0;
             }
           }
-          padding: 1em 0;
+          padding-top: 1em;
+          padding-bottom: 1em;
 
           &:nth-child(odd) {
             @include media-breakpoint-only(md) {
