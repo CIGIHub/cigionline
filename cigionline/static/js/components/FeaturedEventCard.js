@@ -163,9 +163,9 @@ const FeaturedEventCard = (props) => {
                           <iframe src={row.vimeo_url}></iframe>
                         </div>
                       )
-                      : row.image_src && (
+                      : row.image_hero_url && (
                         <div className="img-wrapper">
-                          <img alt={row.image_alt} src={`https://www.cigionline.org${row.image_src}`}></img>
+                          <img alt="" src={row.image_hero_url}></img>
                         </div>
                       )
                   }
