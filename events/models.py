@@ -137,6 +137,22 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             item_dict['start_utc'] = item.event_start_time_utc.timestamp()
             item_dict['end_utc'] = item.event_end_time_utc.timestamp() if item.event_end else ''
 
+            image = None
+            if item.image_feature:
+                image = item.image_feature
+            elif item.image_hero:
+                image = item.image_hero
+            if image:
+                item_dict['image_src'] = image.file.url
+                item_dict['image_alt'] = image.title
+            else:
+                item_dict['image_src'] = 'static/assets/CIGI-default-recommended-thumb-1440x990.png'
+                item_dict['image_alt'] = 'CIGI Logo'
+
+            if item.multimedia_page:
+                if item.multimedia_page.specific.vimeo_url:
+                    item_dict['vimeo_url'] = item.multimedia_page.specific.vimeo_url
+
             featured_events_content.append(item_dict)
 
         return json.dumps({
