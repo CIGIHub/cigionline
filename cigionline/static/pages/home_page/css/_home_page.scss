@@ -10,10 +10,6 @@
   );
 
   hr {
-    @include media-breakpoint-up(md) {
-      margin-top: 1.75em;
-      margin-bottom: 1.75em;
-    }
     margin-top: 1em;
     margin-bottom: 1em;
     background-color: $cigi-medium-grey;
@@ -246,7 +242,7 @@
                   @include media-breakpoint-only(md) {
                     flex: 0 0 auto;
                     margin-bottom: 0;
-                    padding-right: 1.5rem;
+                    padding-right: 0.5rem;
                     padding-bottom: 0;
                     width: 66.66666666%;
                   }
@@ -255,7 +251,7 @@
                 .card__text {
                   @include media-breakpoint-only(md) {
                     flex: 0 0 auto;
-                    padding-left: 1.5rem;
+                    padding-left: 0.5rem;
                     width: 33.33333333%;
                   }
                 }
@@ -268,14 +264,14 @@
 
                 .card__image {
                   @include media-breakpoint-only(md) {
-                    flex: 0 0 32.15%;
-                    padding: 0 1.5em 0 0;
+                    flex: 0 0 33.3333%;
+                    padding: 0 0.5em 0 0;
                   }
                 }
 
                 .card__text {
                   @include media-breakpoint-only(md) {
-                    padding: 0 0 0 1.5em;
+                    padding: 0 0 0 0.5em;
                   }
                 }
               }
@@ -467,7 +463,6 @@
             }
             @include media-breakpoint-only(md) {
               border-bottom: 1px solid $cigi-light-grey;
-              padding: 1em 0;
             }
 
             &:last-child {
@@ -493,6 +488,18 @@
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
+
+        &.column-items-2 {
+          .col {
+            &.col-12 {
+              @include media-breakpoint-only(md) {
+                border: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+              }
+            }
+          }
+        }
 
         .column__hr {
           @include media-breakpoint-up(lg) {
@@ -531,6 +538,10 @@
             @include media-breakpoint-only(md) {
               padding: 1em 1em 1em 0;
               border-bottom: 1px solid $cigi-light-grey;
+            }
+
+            &:nth-child(-n + 3) {
+              padding-top: 0;
             }
 
             &:nth-last-of-type(2) {
