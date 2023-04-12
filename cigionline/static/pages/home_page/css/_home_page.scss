@@ -279,6 +279,20 @@
                   }
                 }
               }
+
+              &.card--small--event {
+                .card--event__info {
+                  @include media-breakpoint-only(md) {
+                    line-height: 1.5;
+                  }
+                }
+
+                .card--event__button--register {
+                  @include media-breakpoint-only(md) {
+                    display: block;
+                  }
+                }
+              }
             }
           }
         }

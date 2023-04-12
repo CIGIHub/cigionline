@@ -81,7 +81,16 @@
       }
       display: block;
 
+      .card--event__info {
+        @include media-breakpoint-only(md) {
+          line-height: 1.25;
+        }
+      }
+
       .card--event__button--register {
+        @include media-breakpoint-only(md) {
+          display: none;
+        }
         margin-top: 2em;
         margin-bottom: 1.5em;
       }
