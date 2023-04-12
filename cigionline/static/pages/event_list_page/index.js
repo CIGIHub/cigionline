@@ -211,20 +211,15 @@ ReactDOM.render(
 );
 
 const featuredEvents = JSON.parse(
-  document.getElementById('featured-events-container').dataset.featuredEventsContainer,
-);
-console.log(featuredEvents);
-
-// ReactDOM.render(
-//   <FeaturedEventListing meta={featuredEvents.meta} items={featuredEvents.items} />,
-//   document.getElementById('featured-events'),
-// );
-
-const eventsPageFeaturedEventsSliderContainer = document.getElementById(
-  'events-page__featured-events-slider',
+  document.getElementById('events-page__featured-events-slider').dataset.eventsPageFeaturedEventsSlider,
 );
 
-if (eventsPageFeaturedEventsSliderContainer) {
+ReactDOM.render(
+  <FeaturedEventListing meta={featuredEvents.meta} items={featuredEvents.items} />,
+  document.getElementById('featured-events'),
+);
+
+if (featuredEvents) {
   const eventsPageFeaturedEventsSlider = new Swiper(
     '.swiper-container',
     {
