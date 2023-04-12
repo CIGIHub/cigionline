@@ -17,11 +17,18 @@
     }
 
     &.card--tiny--article--with-image {
+      @include media-breakpoint-up(lg) {
+        align-items: center;
+      }
+
       .card__image {
         @include media-breakpoint-down(lg) {
           display: none;
         }
-        padding-right: 1em;
+        @include media-breakpoint-up(lg) {
+          padding-right: 1em;
+        }
+        padding-right: 0.5em;
 
         .img-wrapper {
           height: auto;

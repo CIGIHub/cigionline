@@ -49,6 +49,22 @@
 }
 
 .row-block > .field > .c-sf-container > div[data-streamfield-stream-container] > :not(div[data-contentpath]) {
-  flex: 0 0 30px;
   align-self: center;
+}
+
+.row-block > .field > .c-sf-container > div[data-streamfield-stream-container] > div[data-contentpath] {
+  flex-grow: 1;
+  flex-basis: 33%;
+}
+
+.home-page-layout.object fieldset {
+  max-width: 100%;
+}
+
+.home-page-layout.object fieldset .field-content {
+  float: none;
+}
+
+.home-page-layout.object fieldset .field-content .c-sf-add-button--visible {
+  padding: 0 1em;
 }
