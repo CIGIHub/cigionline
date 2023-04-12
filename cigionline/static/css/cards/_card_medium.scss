@@ -355,10 +355,6 @@ article {
 
         .card__text__title {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
-          @include media-breakpoint-only(md) {
-            padding-bottom: 0;
-          }
-          padding-bottom: 2em;
         }
 
         .card__text__meta {
