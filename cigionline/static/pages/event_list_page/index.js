@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Swiper, { Navigation, Pagination } from 'swiper';
 import EventSearchResultCard from '../../js/components/EventSearchResultCard';
-import EventList from '../../js/components/EventList';
+import EventListing from '../../js/components/EventListing';
+import FeaturedEventListing from '../../js/components/FeaturedEventListing';
 import SearchTable from '../../js/components/SearchTable';
 import EventCalendar from '../../js/components/EventCalendar';
 import './css/_event_list_page.scss';
@@ -205,7 +206,7 @@ const allEvents = JSON.parse(
 );
 
 ReactDOM.render(
-  <EventList meta={allEvents.meta} items={allEvents.items} />,
+  <EventListing meta={allEvents.meta} items={allEvents.items} />,
   document.getElementById('event-list'),
 );
 
@@ -215,7 +216,7 @@ const featuredEvents = JSON.parse(
 console.log(featuredEvents);
 
 // ReactDOM.render(
-//   <FeaturedEvents meta={featuredEvents.meta} items={featuredEvents.items} />,
+//   <FeaturedEventListing meta={featuredEvents.meta} items={featuredEvents.items} />,
 //   document.getElementById('featured-events'),
 // );
 
