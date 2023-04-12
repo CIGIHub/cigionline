@@ -115,6 +115,18 @@ article {
         }
       }
 
+      .col-xl-5 {
+        @include media-breakpoint-up(xl) {
+          width: 38.16667%;
+        }
+      }
+
+      .col-xl-7 {
+        @include media-breakpoint-up(xl) {
+          width: 61.83333%;
+        }
+      }
+
       .card__image {
         @include media-breakpoint-up(md) {
           width: auto;

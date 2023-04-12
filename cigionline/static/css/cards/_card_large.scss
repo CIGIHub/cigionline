@@ -114,6 +114,9 @@
     }
 
     .card__text {
+      @include media-breakpoint-up(md) {
+        padding: 1.5em;
+      }
       padding: 1em;
       height: auto;
 
@@ -243,12 +246,6 @@
         }
         display: none;
         color: $cigi-text-grey;
-
-        p {
-          @include media-breakpoint-up(lg) {
-            font-size: clamp(1em, 1.5vw, 1.2em);
-          }
-        }
       }
     }
   }
