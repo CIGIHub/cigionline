@@ -37,17 +37,19 @@
       flex: auto;
       position: relative;
 
-      iframe {
-        @include media-breakpoint-up(md) {
-          border-radius: 0 20px 20px 0;
+      .img-wrapper {
+        iframe {
+          @include media-breakpoint-up(md) {
+            border-radius: 0 20px 20px 0;
+          }
         }
-      }
 
-      img {
-        @include media-breakpoint-up(md) {
-          border-radius: 0 20px 20px 0;
+        img {
+          @include media-breakpoint-up(md) {
+            border-radius: 0 20px 20px 0;
+          }
+          border-radius: 20px 20px 0 0;
         }
-        border-radius: 20px 20px 0 0;
       }
     }
 
@@ -204,20 +206,20 @@
           display: block;
         }
       }
-  
+
       .card__text__contributors {
         @include media-breakpoint-down(md) {
           display: none;
         }
         margin-bottom: 1em;
-  
+
         ul {
           list-style: none;
           columns: 4;
           font-size: 14px;
         }
       }
-  
+
       .card__text__meta {
         .card__text__people {
           @include media-breakpoint-up(md) {

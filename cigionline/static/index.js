@@ -152,6 +152,7 @@ multimediaCards.forEach((card) => {
           if (mmLength) {
             mmLength.style.display = 'none';
           }
+          text.style.display = 'none';
         }, 1500);
       }
     });
