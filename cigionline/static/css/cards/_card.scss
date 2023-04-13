@@ -314,6 +314,14 @@ $card-title-font: $title-font-family;
     }
   }
 
+  &.card--ad {
+    height: 100%;
+
+    .card__image {
+      height: 100%;
+    }
+  }
+
   &.john-holmes-series {
     background-color: #f3f3f3 !important;
 
