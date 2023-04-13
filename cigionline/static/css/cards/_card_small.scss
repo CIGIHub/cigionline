@@ -56,7 +56,6 @@
           height: 100%;
         }
         line-height: 1;
-        flex: 0 0 50%;
         height: auto;
       }
     }
@@ -316,16 +315,34 @@
   }
 
   &.card--small--expert {
+    @include media-breakpoint-up(md) {
+      flex-direction: column;
+      justify-content: space-between;
+      display: flex;
+      align-items: flex-start;
+    }
     display: block;
 
     .card--small--expert__top {
       h3 {
         margin: 0;
       }
+
+      .card__image {
+        &.card__image--portrait--circle {
+          img {
+            border-radius: 10px;
+          }
+        }
+      }
     }
 
     .card--small--expert__bottom {
       margin-top: 1em;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      width: 100%;
 
       h4 {
         margin-bottom: 0;

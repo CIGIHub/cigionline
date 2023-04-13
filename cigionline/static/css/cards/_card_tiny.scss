@@ -17,10 +17,6 @@
     }
 
     &.card--tiny--article--with-image {
-      @include media-breakpoint-up(lg) {
-        align-items: center;
-      }
-
       .card__image {
         @include media-breakpoint-down(lg) {
           display: none;

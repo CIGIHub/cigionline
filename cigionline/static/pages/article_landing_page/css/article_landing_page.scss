@@ -22,10 +22,12 @@ body {
   }
 
   .card__container {
+    @include media-breakpoint-up(md) {
+      min-height: 300px;
+    }
     @include media-breakpoint-up(lg) {
       min-height: 366px;
     }
-    min-height: 300px;
   }
 
   section {

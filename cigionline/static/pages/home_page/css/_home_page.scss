@@ -497,6 +497,8 @@
                 padding-top: 0;
                 padding-bottom: 0;
               }
+              padding-bottom: 0;
+              border: 0;
             }
           }
         }
@@ -534,6 +536,13 @@
           padding-top: 1em;
           padding-bottom: 1em;
 
+          &:first-child {
+            @include media-breakpoint-up(md) {
+              padding-top: 1em;
+            }
+            padding-top: 0;
+          }
+
           &:nth-child(odd) {
             @include media-breakpoint-only(md) {
               padding: 1em 1em 1em 0;
@@ -541,12 +550,15 @@
             }
 
             &:nth-child(-n + 3) {
-              padding-top: 0;
+              @include media-breakpoint-up(md) {
+                padding-top: 0;
+              }
             }
 
-            &:nth-last-of-type(2) {
+            &:nth-last-of-type(3) {
               @include media-breakpoint-only(md) {
                 border-bottom: 0;
+                padding-bottom: 0;
               }
             }
           }
