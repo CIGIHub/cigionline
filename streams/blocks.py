@@ -1469,6 +1469,7 @@ class MultimediaCard(blocks.StructBlock):
         context['multimedia_type'] = page.multimedia_type
         context['multimedia_url'] = page.multimedia_url
         context['vimeo_url'] = page.vimeo_url
+        context['theme'] = str(page.theme).lower().replace(' ', '-')
 
         return context
 

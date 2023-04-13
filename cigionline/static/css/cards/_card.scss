@@ -264,23 +264,52 @@ $card-title-font: $title-font-family;
   }
 
   &.card--multimedia {
-    &.card--large--multimedia {
-      .card__image {
-        iframe {
-          @include media-breakpoint-up(md) {
-            border-radius: 0 20px 20px 0;
+    &.card--multimedia--audio {
+      &.theme-big-tech-s3 {
+        &.card--medium--multimedia {
+          .card__text {
+            @include media-breakpoint-up(md) {
+              border-radius: 20px 0 0 20px;
+            }
+            border-radius: 0 0 20px 20px;
+          }
+        }
+
+        &.card--small--multimedia {
+          .card__text {
+            border-radius: 0 0 20px 20px;
+          }
+        }
+
+        .card__text {
+          background-color: $bigtech-s3-red;
+
+          .card__text__title {
+            @include link($color: $black, $hover-color: $white);
+            font-weight: 500;
+          }
+  
+          .card__text__meta {
+            .card__text__people {
+              @include link($color: $cigi-dark-grey, $hover-color: $white);
+            }
+            .card__text__topics {
+              @include link($color: $white, $hover-color: $cigi-light-grey);
+            }
+            .card__text__more {
+              i {
+                color: $cigi-dark-grey;
+              }
+            }
           }
         }
       }
-    }
-
-    &.card--medium--multimedia {
-      .card__image {
-        iframe {
-          @include media-breakpoint-only(md) {
-            border-radius: 0 20px 20px 0;
-          }
-        }
+      .card__image__play-icon {
+        top: 1em;
+        right: 1.5em;
+        width: 1.5em;
+        height: 1.5em;
+        font-size: 1em;
       }
     }
 

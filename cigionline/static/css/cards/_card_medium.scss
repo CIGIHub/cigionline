@@ -322,6 +322,86 @@ article {
       display: flex;
       flex-direction: column;
       height: 100%;
+      position: relative;
+
+      &.card--multimedia--audio {
+        @include media-breakpoint-up(md) {
+          flex-direction: row-reverse;
+        }
+
+        img {
+          @include media-breakpoint-up(md) {
+            border-radius: 0 20px 20px 0;
+          }
+        }
+
+        .card__image {
+          @include media-breakpoint-up(md) {
+            flex: 0 0 66.66666667%;
+          }
+        }
+      }
+
+      &.card--multimedia--video {
+        overflow: hidden;
+
+        .card__image {
+          @include media-breakpoint-only(md) {
+            flex: 0 0 76%;
+          }
+
+          .card__image__play-icon {
+            @include media-breakpoint-up(lg) {
+              top: 30%;
+            }
+          }
+
+          .card__image__mm-length {
+            @include media-breakpoint-up(lg) {
+              top: 60%;
+              bottom: auto;
+            }
+          }
+
+          img {
+            @include media-breakpoint-up(lg) {
+              border-radius: 20px;
+            }
+          }
+
+          iframe {
+            @include media-breakpoint-only(md) {
+              border-radius: 0 20px 20px 0;
+            }
+            @include media-breakpoint-only(lg) {
+              width: 106%;
+              left: -3%;
+            }
+            @include media-breakpoint-up(lg) {
+              border-radius: 20px;
+            }
+          }
+        }
+
+        .card__text {
+          @include media-breakpoint-only(md) {
+            flex: 0 0 24%;
+          }
+          @include media-breakpoint-up(lg) {
+            position: absolute;
+            bottom: 0;
+            background-color: black;
+            border-radius: 0 0 20px 20px;
+            z-index: 1;
+            height: auto;
+          }
+          transition: opacity 0.2s ease;
+
+          &.hidden {
+            opacity: 0;
+          }
+        }
+      }
 
       img {
         @include media-breakpoint-only(md) {

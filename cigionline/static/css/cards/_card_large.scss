@@ -37,6 +37,12 @@
       flex: auto;
       position: relative;
 
+      iframe {
+        @include media-breakpoint-up(md) {
+          border-radius: 0 20px 20px 0;
+        }
+      }
+
       img {
         @include media-breakpoint-up(md) {
           border-radius: 0 20px 20px 0;

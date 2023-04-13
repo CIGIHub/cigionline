@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags core_tags wagtailembeds_tags %}
 
 <div class="col-12 col-md-8">
-  <article class="card__container card--medium card--multimedia card--medium--multimedia card--multimedia--{{multimedia_type}}">
+  <article class="card__container card--medium card--multimedia card--medium--multimedia card--multimedia--{{multimedia_type}} theme-{{theme}}">
     <div class="card__image">
       <div class="img-wrapper">
         {% if image_src %}
@@ -12,15 +12,12 @@
         {% if multimedia_type == 'video' and vimeo_url %}
           {% embed vimeo_url %}
         {% endif %}
-        {% if multimedia_type == 'audio' and multimedia_url %}
-          <iframe height="52px" width="100%" frameborder="no" scrolling="no" seamless src="{{ multimedia_url }}?dark=false"></iframe>
-        {% endif %}
       </div>
       <div class="card__image__play-icon">
         {% if multimedia_type == 'video' %}
           <i class="fas fa-play"></i>
         {% elif multimedia_type == 'audio' %}
-          <i class="fal fa-microphone icon-audio"></i>
+          <i class="fas fa-microphone icon-audio"></i>
         {% endif %}
       </div>
       {% if length %}
@@ -28,7 +25,12 @@
       {% endif %}
     </div>
     <div class="card__text">
-      {% include 'includes/cards/card_text_title.html' %}
+      <div>
+        {% include 'includes/cards/card_text_title.html' %}
+        {% if multimedia_type == 'audio' and multimedia_url %}
+          <iframe height="52px" width="100%" frameborder="no" scrolling="no" seamless src="{{ multimedia_url }}?dark=false&color=D9553E"></iframe>
+        {% endif %}
+      </div>
       {% include 'includes/cards/card_text_description.html' %}
       <div class="card__text__meta">
         <div>
