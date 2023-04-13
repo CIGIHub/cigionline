@@ -7,6 +7,14 @@ const FeaturedEventCard = (props) => {
   const { row } = props;
   const today = DateTime.now();
 
+  function embedUrl(str) {
+    if (str.substr(-1) === '/') {
+      str = str.substr(0, str.length - 1);
+    }
+    const lastIndex = str.lastIndexOf('/');
+    return str.substr(0, lastIndex).concat('/embed', str.substr(lastIndex));
+  }
+
   const evaluateLive = (start, end) => {
     return Date.now() / 1000 >= start && Date.now() / 1000 <= end;
   };
@@ -160,7 +168,7 @@ const FeaturedEventCard = (props) => {
                     row.vimeo_url
                       ? (
                         <div className="video--wrapper">
-                          <iframe src={row.vimeo_url}></iframe>
+                          <iframe src={embedUrl(row.vimeo_url)}></iframe>
                         </div>
                       )
                       : row.image_hero_url && (
