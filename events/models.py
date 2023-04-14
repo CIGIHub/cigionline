@@ -138,6 +138,7 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             item_dict['end_utc'] = item.event_end_time_utc.timestamp() if item.event_end else ''
 
             item_dict['image_hero_url'] = item.image_hero_url
+            item_dict['livestream_url'] = item.livestream_url if item.livestream_url else ''
             if item.multimedia_page:
                 if item.multimedia_page.specific.vimeo_url:
                     item_dict['vimeo_url'] = item.multimedia_page.specific.vimeo_url
@@ -240,6 +241,11 @@ class EventPage(
     )
     flickr_album_url = models.URLField(blank=True)
     invitation_type = models.IntegerField(choices=InvitationTypes.choices, default=InvitationTypes.RSVP_REQUIRED)
+    livestream_url = models.URLField(
+        blank=True,
+        verbose_name='Livestream URL',
+        help_text='The Vimeo URL of the livestream event.',
+    )
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
     location_address2 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 2)')
     location_city = models.CharField(blank=True, max_length=255, verbose_name='City')
@@ -423,6 +429,7 @@ class EventPage(
                 FieldPanel('event_type'),
                 FieldPanel('event_access'),
                 FieldPanel('invitation_type'),
+                FieldPanel('livestream_url'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
                 FieldPanel('registration_url'),

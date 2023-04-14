@@ -11,8 +11,19 @@ const FeaturedEventCard = (props) => {
     if (str.substr(-1) === '/') {
       str = str.substr(0, str.length - 1);
     }
-    const lastIndex = str.lastIndexOf('/');
-    return str.substr(0, lastIndex).concat('/embed', str.substr(lastIndex));
+    const splitArr = str.split('/');
+    return 'https://player.vimeo.com/video/'.concat(splitArr[splitArr.length - 2], '?h=', splitArr[splitArr.length - 1], '&amp;app_id=122963');
+  }
+
+  function livestreamUrl(str) {
+    if (str.includes('/event/')) {
+      if (str.substr(-1) === '/') {
+        str = str.substr(0, str.length - 1);
+      }
+      const lastIndex = str.lastIndexOf('/');
+      return str.substr(0, lastIndex).concat('/embed', str.substr(lastIndex));
+    }
+    return embedUrl(str);
   }
 
   const evaluateLive = (start, end) => {
@@ -165,17 +176,23 @@ const FeaturedEventCard = (props) => {
               <div className="card__image">
                 <a href={row.url} className="feature-content-image">
                   {
-                    row.vimeo_url
+                    row.livestream_url
                       ? (
                         <div className="video--wrapper">
-                          <iframe src={embedUrl(row.vimeo_url)}></iframe>
+                          <iframe src={livestreamUrl(row.livestream_url)}></iframe>
                         </div>
                       )
-                      : row.image_hero_url && (
-                        <div className="img-wrapper">
-                          <img alt="" src={row.image_hero_url}></img>
-                        </div>
-                      )
+                      : row.vimeo_url
+                        ? (
+                          <div className="video--wrapper">
+                            <iframe src={embedUrl(row.vimeo_url)}></iframe>
+                          </div>
+                        )
+                        : row.image_hero_url && (
+                          <div className="img-wrapper">
+                            <img alt="" src={row.image_hero_url}></img>
+                          </div>
+                        )
                   }
                 </a>
               </div>
