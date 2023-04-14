@@ -136,13 +136,14 @@ multimediaCards.forEach((card) => {
 
     card.addEventListener('click', (e) => {
       if (!img.classList.contains('hidden')) {
+        const isLargeBreakpoint = window.matchMedia('(min-width: 991px)').matches;
         playIcon.classList.add('hidden');
         if (mmLength) {
           mmLength.classList.add('hidden');
         }
         img.classList.add('hidden');
         iframe.src += '&autoplay=1';
-        if (window.innerWidth > 991) {
+        if (isLargeBreakpoint) {
           text.classList.add('hidden');
         }
 
@@ -152,7 +153,9 @@ multimediaCards.forEach((card) => {
           if (mmLength) {
             mmLength.style.display = 'none';
           }
-          text.style.display = 'none';
+          if (isLargeBreakpoint) {
+            text.style.display = 'none';
+          }
         }, 1500);
       }
     });

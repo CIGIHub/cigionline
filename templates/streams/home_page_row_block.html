@@ -9,7 +9,7 @@
     </div>
   </div>
 {% else %}
-  <div class="row-block row g-3 g-lg-5 row-items-{{self.row|length}}">
+  <div class="row-block row g-3 gx-md-5 g-lg-5 row-items-{{self.row|length}}">
     {% for block in self.row %}
       {% include_block block.value %}
       {% if self.row|length > 1 and not forloop.last %}

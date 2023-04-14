@@ -337,7 +337,15 @@ article {
 
         .card__image {
           @include media-breakpoint-up(md) {
-            flex: 0 0 66.66666667%;
+            flex: 0 0 50%;
+            height: auto;
+          }
+          height: 50%;
+        }
+
+        .card__text {
+          @include media-breakpoint-up(md) {
+            flex: 0 0 50%;
           }
         }
       }
