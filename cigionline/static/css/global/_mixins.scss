@@ -430,3 +430,86 @@
   @include dark-footer;
   @include top-bar($background-color: $black, $color: $white);
 }
+
+// 3.0 footer mixin
+@mixin footer(
+  $heading-color: $cigi-medium-grey,
+  $border-color: $cigi-light-grey,
+  $button-color: $black,
+  $button-bg-color: $white,
+  $button-hover-color: $white,
+  $button-hover-bg-color: $black,
+  $button-border-color: $black,
+  $button-hover-border-color: $black,
+  $link-color: $black,
+  $link-hover-color: $cigi-primary-colour,
+  $placeholder-color: $cigi-medium-grey,
+  $topic-button-color: $cigi-dark-grey,
+  $topic-button-bg-color: $cigi-light-grey,
+  $topic-button-hover-color: $white,
+  $topic-button-hover-bg-color: $black,
+  $topic-button-border-color: none,
+  $topic-button-hover-border-color: none,
+  $topic-button-count-color: $cigi-medium-grey,
+) {
+  footer {
+    h2 {
+      color: $heading-color;
+    }
+
+    .footer__subscribe {
+      border-bottom: 1px solid $border-color;
+      border-top: 1px solid $border-color;
+
+      .button--rounded {
+        @include button(
+          $color: $button-color,
+          $background-color: $button-bg-color,
+          $hover-color: $button-hover-color,
+          $hover-background-color: $button-hover-bg-color,
+          $border-color: $button-border-color,
+          $hover-border-color: $button-hover-border-color
+        );
+      }
+
+      .footer__subscribe__input-wrapper {
+        border-bottom: 1px solid $border-color;
+
+        input {
+          &::placeholder {
+            color: $placeholder-color;
+          }
+        }
+      }
+    }
+
+    .footer__sitemap {
+      border-bottom: 1px solid $border-color;
+
+      ul {
+        @include link($color: $link-color, $hover-color: $link-hover-color);
+      }
+    }
+
+    .footer__topics {
+      .all-topics__container {
+        li {
+          .button--rounded {
+            @include button(
+              $color: $topic-button-color,
+              $background-color: $topic-button-bg-color,
+              $hover-color: $topic-button-hover-color,
+              $hover-background-color: $topic-button-hover-bg-color,
+              $border-color: $topic-button-border-color,
+              $hover-border-color: $topic-button-hover-border-color
+            );
+          }
+
+          .topic-count {
+            color: $topic-button-count-color;
+          }
+        }
+      }
+    }
+  }
+}

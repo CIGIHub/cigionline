@@ -1,4 +1,6 @@
 // CIGI 3.0
+@include footer();
+
 footer {
   section {
     @include media-breakpoint-up(md) {
@@ -9,22 +11,10 @@ footer {
 
   h2 {
     font-size: 1rem;
-    color: $cigi-medium-grey;
   }
 
   .footer__subscribe {
-    border-bottom: 1px solid $cigi-light-grey;
-    border-top: 1px solid $cigi-light-grey;
-
     .button--rounded {
-      @include button(
-        $color: $black,
-        $background-color: $white,
-        $hover-color: $white,
-        $hover-background-color: $black,
-        $border-color: $black,
-        $hover-border-color: $black
-      );
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -35,15 +25,12 @@ footer {
     }
 
     .footer__subscribe__input-wrapper {
-      border-bottom: 1px solid $cigi-light-grey;
-
       input {
         border: 0;
         padding: 1em 0.5em;
         width: 100%;
 
         &::placeholder {
-          color: $cigi-medium-grey;
           font-weight: 300;
         }
       }
@@ -51,10 +38,7 @@ footer {
   }
 
   .footer__sitemap {
-    border-bottom: 1px solid $cigi-light-grey;
-
     ul {
-      @include link($color: $black, $hover-color: $cigi-primary-colour);
       list-style: none;
     }
   }
