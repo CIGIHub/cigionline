@@ -79,9 +79,12 @@ $card-title-font: $title-font-family;
   }
 
   .card__text {
+    @include media-breakpoint-up(md) {
+      justify-content: space-between;
+    }
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     height: 100%;
     width: 100%;
 
@@ -95,6 +98,7 @@ $card-title-font: $title-font-family;
 
     .card__text__description {
       font-size: 15px;
+      line-height: 1.25;
     }
 
     p {
@@ -153,8 +157,6 @@ $card-title-font: $title-font-family;
 
       .card--event__title {
         @include link($color: $black, $hover-color: $cigi-primary-colour);
-        font-size: 1.25em;
-        font-size: clamp(1.25em, 3vw, 1.75em);
         margin-top: 0;
         margin-bottom: 1em;
         line-height: 1;
@@ -189,36 +191,36 @@ $card-title-font: $title-font-family;
       .card__text__meta {
         width: 100%;
       }
+    }
 
-      .card--event__button--register {
+    .card--event__button--register {
+      @include button(
+        $color: $white,
+        $background-color: $black,
+        $hover-color: $black,
+        $hover-background-color: $white,
+        $border-color: $black,
+        $hover-border-color: $black
+      );
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 2em;
+      width: 100%;
+      border-radius: 100px;
+      transition: none;
+
+      &.is_private {
         @include button(
-          $color: $white,
-          $background-color: $black,
-          $hover-color: $black,
+          $color: $cigi-medium-grey,
+          $hover-color: $cigi-medium-grey,
+          $background-color: $white,
           $hover-background-color: $white,
-          $border-color: $black,
-          $hover-border-color: $black
+          $border-color: $cigi-medium-grey,
+          $hover-border-color: $cigi-medium-grey
         );
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1em 2em;
-        width: 100%;
-        border-radius: 100px;
-        transition: none;
-
-        &.is_private {
-          @include button(
-            $color: $cigi-medium-grey,
-            $hover-color: $cigi-medium-grey,
-            $background-color: $white,
-            $hover-background-color: $white,
-            $border-color: $cigi-medium-grey,
-            $hover-border-color: $cigi-medium-grey
-          );
-          cursor: default;
-        }
+        cursor: default;
       }
     }
   }
@@ -229,7 +231,7 @@ $card-title-font: $title-font-family;
         img {
           height: 75px;
           width: 75px;
-          border-radius: 50%;
+          border-radius: 10px;
           margin-right: 1em;
         }
       }
@@ -262,23 +264,52 @@ $card-title-font: $title-font-family;
   }
 
   &.card--multimedia {
-    &.card--large--multimedia {
-      .card__image {
-        iframe {
-          @include media-breakpoint-up(md) {
-            border-radius: 0 20px 20px 0;
+    &.card--multimedia--audio {
+      &.theme-big-tech-s3 {
+        &.card--medium--multimedia {
+          .card__text {
+            @include media-breakpoint-up(md) {
+              border-radius: 20px 0 0 20px;
+            }
+            border-radius: 0 0 20px 20px;
+          }
+        }
+
+        &.card--small--multimedia {
+          .card__text {
+            border-radius: 0 0 20px 20px;
+          }
+        }
+
+        .card__text {
+          background-color: $bigtech-s3-red;
+
+          .card__text__title {
+            @include link($color: $black, $hover-color: $white);
+            font-weight: 500;
+          }
+  
+          .card__text__meta {
+            .card__text__people {
+              @include link($color: $cigi-dark-grey, $hover-color: $white);
+            }
+            .card__text__topics {
+              @include link($color: $white, $hover-color: $cigi-light-grey);
+            }
+            .card__text__more {
+              i {
+                color: $cigi-dark-grey;
+              }
+            }
           }
         }
       }
-    }
-
-    &.card--medium--multimedia {
-      .card__image {
-        iframe {
-          @include media-breakpoint-only(md) {
-            border-radius: 0 20px 20px 0;
-          }
-        }
+      .card__image__play-icon {
+        top: 1em;
+        right: 1.5em;
+        width: 1.5em;
+        height: 1.5em;
+        font-size: 1em;
       }
     }
 
@@ -309,6 +340,14 @@ $card-title-font: $title-font-family;
       iframe {
         border-radius: 20px 20px 0 0;
       }
+    }
+  }
+
+  &.card--ad {
+    height: 100%;
+
+    .card__image {
+      height: 100%;
     }
   }
 
@@ -369,6 +408,7 @@ $card-title-font: $title-font-family;
   .card__text__more {
     @include link($color: $cigi-medium-grey, $hover-color: $cigi-dark-pink);
     margin-left: 0.5em;
+    display: flex;
 
     &::after {
       content: none;

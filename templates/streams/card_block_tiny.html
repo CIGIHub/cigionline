@@ -1,15 +1,21 @@
-<article class="card__container card--tiny">
-  {% if type == 'Opinion' %}
-    <i class="fal fa-comment-alt-lines"></i>
-  {% elif type == 'Publication' %}
-    <i class="fal fa-file-alt"></i>
-  {% endif %}
-  <div class="card__text">
-    {% include 'includes/cards/card_text_title.html' %}
-    <div class="card__text__meta">
-      <div>
-        {% include 'includes/cards/card_text_topics.html' %}
+{% if not no_container %}
+<div class="col col-12 col-md-6">
+{% endif %}
+  <article class="card__container card--tiny">
+    {% if type == 'Opinion' %}
+      <i class="fal fa-comment-alt-lines"></i>
+    {% elif type == 'Publication' %}
+      <i class="fal fa-file-alt"></i>
+    {% endif %}
+    <div class="card__text">
+      {% include 'includes/cards/card_text_title.html' %}
+      <div class="card__text__meta">
+        <div>
+          {% include 'includes/cards/card_text_topics.html' %}
+        </div>
       </div>
     </div>
-  </div>
-</article>
+  </article>
+{% if not no_container %}
+</div>
+{% endif %}

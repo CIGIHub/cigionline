@@ -2,28 +2,34 @@
 
 <div class="col col-12 col-md-8">
   <article class="card__container card--medium card--medium--publication">
-    <div class="card__image">
-      <a href="{{ url }}">
-        <div class="img-wrapper">
-          {% if image_src %}
-            <img alt="{{ image_alt }}" src="{{ image_src }}" />
-          {% else %}
-            {% image image fill-990x1440 %}
-          {% endif %}
+    <div class="row g-3">
+      <div class="col-4 col-lg-5">
+        <div class="card__image">
+          <a href="{{ url }}">
+            <div class="img-wrapper">
+              {% if image_src %}
+                <img alt="{{ image_alt }}" src="{{ image_src }}" />
+              {% else %}
+                {% image image fill-990x1440 %}
+              {% endif %}
+            </div>
+          </a>
         </div>
-      </a>
-    </div>
-    <div class="card__text">
-      <div>
-        {% include 'includes/cards/card_text_title.html' %}
-        {% include 'includes/cards/card_text_description.html' %}
       </div>
-      <div class="card__text__meta">
-        <div>
-          {% include 'includes/cards/card_text_people.html' %}
-          {% include 'includes/cards/card_text_topics.html' %}
+      <div class="col-8 col-lg-7">
+        <div class="card__text">
+          <div>
+            {% include 'includes/cards/card_text_title.html' %}
+            {% include 'includes/cards/card_text_description.html' %}
+          </div>
+          <div class="card__text__meta">
+            <div>
+              {% include 'includes/cards/card_text_people.html' %}
+              {% include 'includes/cards/card_text_topics.html' %}
+            </div>
+            {% include 'includes/cards/card_text_more.html' with type='publication' %}
+          </div>
         </div>
-        {% include 'includes/cards/card_text_more.html' with type='publication' %}
       </div>
     </div>
   </article>

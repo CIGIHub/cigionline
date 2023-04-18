@@ -21,6 +21,15 @@ body {
     }
   }
 
+  .card__container {
+    @include media-breakpoint-up(md) {
+      min-height: 300px;
+    }
+    @include media-breakpoint-up(lg) {
+      min-height: 366px;
+    }
+  }
+
   section {
     &.article-landing-page__opinions-swiper,
     &.article-landing-page__opinion-series-swiper {
@@ -110,12 +119,6 @@ body {
               padding: 1em;
               background: $cigi-light-grey-bg;
               border-radius: 0 0 20px 20px;
-
-              .card__text__title {
-                @include media-breakpoint-only(md) {
-                  font-size: clamp(1.1em, 3vw, 1.5em);
-                }
-              }
             }
           }
         }
@@ -123,7 +126,44 @@ body {
     }
 
     &.article-landing-page__featured-opinions {
+      hr {
+        margin: 1.5em 0;
+      }
+
       .article-landing-page__row {
+        .row__hr {
+          @include media-breakpoint-up(md) {
+            display: none;
+          }
+
+          hr {
+            margin: 0;
+          }
+        }
+
+        .column__container {
+          @include media-breakpoint-up(md) {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          }
+          height: 100%;
+
+          div {
+            &[class*='col-'] {
+              &:not(:last-child) {
+                @include media-breakpoint-up(md) {
+                  border-right: 0;
+                }
+              }
+            }
+          }
+
+          .card__container {
+            min-height: auto;
+          }
+        }
+
         div {
           &[class*='col-'] {
             &:not(:last-child) {
@@ -131,29 +171,107 @@ body {
                 border-right: 1px solid $cigi-light-grey;
               }
             }
-    
+
             .card--tiny {
               &:not(:first-child) {
                 @include media-breakpoint-up(md) {
                   padding-top: 1em;
                 }
               }
-    
+
               &:not(:last-child) {
                 @include media-breakpoint-up(md) {
                   padding-bottom: 1em;
                   border-bottom: 1px solid $cigi-light-grey;
                 }
               }
-    
+
               .card__image {
                 @include media-breakpoint-up(md) {
-                  flex: 0 0 40%;
-                }
-                @include media-breakpoint-up(lg) {
                   flex: 0 0 30%;
                 }
+                @include media-breakpoint-up(lg) {
+                  flex: 0 0 45%;
+                }
               }
+            }
+          }
+        }
+
+        &.row-items-2 {
+          div {
+            &[class*='col-'] {
+              @include media-breakpoint-down(lg) {
+                border: 0;
+              }
+              @include media-breakpoint-down(lg) {
+                width: 100%;
+              }
+            }
+
+            & > article {
+              &.card--small--landscape {
+                @include media-breakpoint-only(md) {
+                  flex-direction: row;
+                }
+
+                .card__image {
+                  @include media-breakpoint-only(md) {
+                    flex: 0 0 auto;
+                    margin-bottom: 0;
+                    padding-right: 0.5rem;
+                    padding-bottom: 0;
+                    width: 66.66666666%;
+                  }
+                }
+
+                .card__text {
+                  @include media-breakpoint-only(md) {
+                    flex: 0 0 auto;
+                    padding-left: 0.5rem;
+                    width: 33.33333333%;
+                  }
+                }
+              }
+
+              &.card--small--publication {
+                @include media-breakpoint-only(md) {
+                  flex-direction: row;
+                }
+
+                .card__image {
+                  @include media-breakpoint-only(md) {
+                    flex: 0 0 33.3333%;
+                    padding: 0 0.5em 0 0;
+                  }
+                }
+
+                .card__text {
+                  @include media-breakpoint-only(md) {
+                    padding: 0 0 0 0.5em;
+                  }
+                }
+              }
+
+              &.card--small--event {
+                .card--event__info {
+                  @include media-breakpoint-only(md) {
+                    line-height: 1.5;
+                  }
+                }
+
+                .card--event__button--register {
+                  @include media-breakpoint-only(md) {
+                    display: block;
+                  }
+                }
+              }
+            }
+          }
+
+          .row__hr {
+            @include media-breakpoint-down(lg) {
+              display: block;
             }
           }
         }

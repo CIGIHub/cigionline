@@ -35,30 +35,32 @@
   </header>
   <div class="tab-content" id="article-landing-tab-content">
     <section class="article-landing-page__opinions fade show active tab-pane"  id="opinions-tab-pane" role="tabpanel" aria-labelledby="opinions-tab" tabindex="0">
-      <section class="article-landing-page__opinions-swiper">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <div class="article-landing-page__swiper" id="opinions-swiper">
-                <div class="navigation-container">
-                  <div class="swiper-container--opinions swiper-container">
-                    <div class="swiper-wrapper">
-                      {% for block in self.opinions_slider %}
-                        <div class="swiper-slide">
-                          {% include_block block %}
-                        </div>
-                      {% endfor %}
+      {% if self.opinion_slider %}
+        <section class="article-landing-page__opinions-swiper">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <div class="article-landing-page__swiper" id="opinions-swiper">
+                  <div class="navigation-container">
+                    <div class="swiper-container--opinions swiper-container">
+                      <div class="swiper-wrapper">
+                        {% for block in self.opinions_slider %}
+                          <div class="swiper-slide">
+                            {% include_block block %}
+                          </div>
+                        {% endfor %}
+                      </div>
                     </div>
+                    <div class="swiper-button-prev swiper-button-prev-opinions"></div>
+                    <div class="swiper-button-next swiper-button-next-opinions"></div>
                   </div>
-                  <div class="swiper-button-prev swiper-button-prev-opinions"></div>
-                  <div class="swiper-button-next swiper-button-next-opinions"></div>
+                  <div class="swiper-pagination swiper-pagination-opinions"></div>
                 </div>
-                <div class="swiper-pagination swiper-pagination-opinions"></div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      {% endif %}
 
       <div class="container">
         <div class="row">
@@ -91,30 +93,32 @@
         </div>
       </div>
 
-      <section class="article-landing-page__opinion-series-swiper">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <div class="article-landing-page__swiper" id="opinion-series-swiper">
-                <div class="navigation-container">
-                  <div class="swiper-container--opinion-series swiper-container">
-                    <div class="swiper-wrapper">
-                      {% for block in self.opinion_series_slider %}
-                        <div class="swiper-slide">
-                          {% include_block block %}
-                        </div>
-                      {% endfor %}
+      {% if self.opinion_series_slider %}
+        <section class="article-landing-page__opinion-series-swiper">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <div class="article-landing-page__swiper" id="opinion-series-swiper">
+                  <div class="navigation-container">
+                    <div class="swiper-container--opinion-series swiper-container">
+                      <div class="swiper-wrapper">
+                        {% for block in self.opinion_series_slider %}
+                          <div class="swiper-slide">
+                            {% include_block block %}
+                          </div>
+                        {% endfor %}
+                      </div>
                     </div>
+                    <div class="swiper-button-prev swiper-button-prev-opinion-series"></div>
+                    <div class="swiper-button-next swiper-button-next-opinion-series"></div>
                   </div>
-                  <div class="swiper-button-prev swiper-button-prev-opinion-series"></div>
-                  <div class="swiper-button-next swiper-button-next-opinion-series"></div>
+                  <div class="swiper-pagination swiper-pagination-opinion-series"></div>
                 </div>
-                <div class="swiper-pagination swiper-pagination-opinion-series"></div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      {% endif %}
 
       <section class="article-landing-page__search-table">
         <div class="container">
