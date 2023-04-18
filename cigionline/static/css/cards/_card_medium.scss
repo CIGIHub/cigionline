@@ -115,15 +115,21 @@ article {
         }
       }
 
-      .col-xl-5 {
+      .col-lg-5 {
+        @include media-breakpoint-only(lg) {
+          width: 43.66667%;
+        }
         @include media-breakpoint-up(xl) {
-          width: 38.16667%;
+          width: 38.5%;
         }
       }
 
-      .col-xl-7 {
+      .col-lg-7 {
+        @include media-breakpoint-only(lg) {
+          width: 56.33333%;
+        }
         @include media-breakpoint-up(xl) {
-          width: 61.83333%;
+          width: 61.5%;
         }
       }
 
@@ -333,6 +339,18 @@ article {
           @include media-breakpoint-up(md) {
             border-radius: 0 20px 20px 0;
           }
+
+          &.image-landscape {
+            @include media-breakpoint-up(md) {
+              display: none;
+            }
+          }
+
+          &.image-square {
+            @include media-breakpoint-down(md) {
+              display: none;
+            }
+          }
         }
 
         .card__image {
@@ -347,6 +365,7 @@ article {
           @include media-breakpoint-up(md) {
             flex: 0 0 50%;
           }
+          justify-content: space-between;
         }
       }
 

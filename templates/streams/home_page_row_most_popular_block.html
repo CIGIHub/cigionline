@@ -4,7 +4,7 @@
   <div class="most-popular__label">
     <h2>Most Popular</h2>
   </div>
-  <hr class="d-block" />
+  <hr class="d-block my-3" />
   <div class="most-popular__container column__container {% if self.most_popular_cards|length|divisibleby:2 %}even{% else %}odd{% endif %}">
     {% for block in self.most_popular_cards %}
       {% include_block block.value %}

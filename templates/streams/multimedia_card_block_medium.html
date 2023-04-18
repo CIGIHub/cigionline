@@ -7,7 +7,10 @@
         {% if image_src %}
           {% define image_src as img_url %}
         {% else %}
-          {% image image fill-1600x900 %}
+          {% image image fill-1600x900 class="image-landscape" %}
+          {% if multimedia_type == 'audio' %}
+            {% image image fill-900x900 class="image-square" %}
+          {% endif %}
         {% endif %}
         {% if multimedia_type == 'video' and vimeo_url %}
           {% embed vimeo_url %}

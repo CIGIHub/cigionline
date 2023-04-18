@@ -65,7 +65,6 @@
 
       .card__text__title {
         font-size: 1.1em;
-        font-size: clamp(1.1em, 3vw, 1.2em);
       }
 
       .card__text__date {
@@ -129,7 +128,6 @@
           padding-bottom: 0;
         }
         padding-bottom: 1em;
-        font-size: clamp(1.1em, 3vw, 1.2em);
       }
 
       .card__text__meta {
@@ -181,7 +179,6 @@
         .card__text__title {
           @include link($color: $black, $hover-color: $cigi-primary-colour);
           padding-bottom: 1em;
-          font-size: 1.1em;
         }
 
         .card__text__topics {
@@ -304,8 +301,6 @@
     .card--event--small__top {
       .card--event__title {
         &.card__text__title {
-          font-size: 1.1em;
-          font-size: clamp(1.1em, 3vw, 1.2em);
           font-weight: 300;
           line-height: 1.1;
           margin-top: 0;
