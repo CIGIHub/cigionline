@@ -10,7 +10,17 @@ $blockquote-color-infrastructure: #217f50;
 
 .four-domains-series-article {
   @include top-bar($background-color: $four-domains-bg-color, $color: $black);
+  @include footer(
+    $border-color: $cigi-text-grey,
+    $button-color: $black,
+    $topic-button-bg-color: $white,
+    $topic-button-hover-bg-color: $black,
+    $topic-button-border-color: $black,
+    $topic-button-hover-border-color: $black
+  );
   background-color: $four-domains-bg-color;
+  font-family: 'futura-pt', sans-serif;
+  font-weight: 400;
 
   &.content {
     @include top-bar($background-color: $content-bg-color, $color: $black);
@@ -59,6 +69,11 @@ $blockquote-color-infrastructure: #217f50;
     }
   }
 
+  section {
+    margin-top: 0;
+    margin-bottom: 2em;
+  }
+
   .stream-block-blockquote-content {
     &::before {
       border-bottom: 10px solid $cigi-primary-colour;
@@ -101,7 +116,8 @@ $blockquote-color-infrastructure: #217f50;
         opacity: 0;
         position: absolute;
         right: 0;
-        transition: opacity 0.5s ease-in-out, transform 0.25s ease, top 0.25s ease, left 0.25s ease;
+        transition: opacity 0.5s ease-in-out, transform 0.25s ease,
+          top 0.25s ease, left 0.25s ease;
 
         &[data-position='0'] {
           z-index: 0;
@@ -191,6 +207,7 @@ $blockquote-color-infrastructure: #217f50;
   }
 
   .article-series-description {
+    @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
     border-bottom: 0;
     color: $cigi-text-grey;
     font-size: 0.95em;
@@ -198,6 +215,13 @@ $blockquote-color-infrastructure: #217f50;
   }
 
   .body {
+    line-height: 1.5;
+
+    h2 {
+      font-weight: 400;
+      margin-bottom: 0.5em;
+    }
+
     .drop-caps {
       border: 0;
       font-family: $four-domains-font;
