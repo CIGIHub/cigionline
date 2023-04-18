@@ -32,10 +32,6 @@
     &.recommended {
       padding: 4em 0;
 
-      hr {
-        margin: 1.5em 0;
-      }
-
       h2 {
         display: none;
       }
@@ -43,7 +39,6 @@
       .recommended-items {
         .col {
           border-right: 1px solid $cigi-light-grey;
-          padding-bottom: 2em;
   
           &:last-child {
             border-right: 0;

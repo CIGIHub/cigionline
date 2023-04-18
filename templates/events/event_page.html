@@ -133,11 +133,16 @@
             <hr>
           </div>
         </div>
-        <div class="row g-5 justify-content-center recommended-items">
+        <div class="row gx-5 gy-1 justify-content-center recommended-items">
           {% for page in recommended_content|slice:":3" %}
-            <div class="col">
+            <div class="col col-12 col-md-4">
               {% include "includes/recommended_article.html" with article=page.specific %}
             </div>
+            {% if recommended_content|length > 1 and not forloop.last %}
+              <div class="column__hr">
+                <hr>
+              </div>
+            {% endif %}
           {% endfor %}
         </div>
       </div>

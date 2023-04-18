@@ -106,3 +106,18 @@ section {
     }
   }
 }
+
+// CIGIOnline 3.0 styling
+.recommended {
+  .recommended-items {
+    .column__hr {
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
+
+      hr {
+        margin: 0;
+      }
+    }
+  }
+}
