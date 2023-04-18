@@ -291,6 +291,7 @@
       @include media-breakpoint-up(md) {
         display: block;
       }
+      max-height: 150px;
       display: none;
     }
   }
