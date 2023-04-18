@@ -126,12 +126,21 @@ body {
     }
 
     &.article-landing-page__featured-opinions {
+      hr {
+        margin: 1.5em 0;
+      }
+
       .article-landing-page__row {
         .row__hr {
           @include media-breakpoint-up(md) {
             display: none;
           }
+
+          hr {
+            margin: 0;
+          }
         }
+
         .column__container {
           @include media-breakpoint-up(md) {
             display: flex;
@@ -139,7 +148,7 @@ body {
             justify-content: space-between;
           }
           height: 100%;
-          
+
           div {
             &[class*='col-'] {
               &:not(:last-child) {
@@ -185,6 +194,84 @@ body {
                   flex: 0 0 45%;
                 }
               }
+            }
+          }
+        }
+
+        &.row-items-2 {
+          div {
+            &[class*='col-'] {
+              @include media-breakpoint-down(lg) {
+                border: 0;
+              }
+              @include media-breakpoint-down(lg) {
+                width: 100%;
+              }
+            }
+
+            & > article {
+              &.card--small--landscape {
+                @include media-breakpoint-only(md) {
+                  flex-direction: row;
+                }
+
+                .card__image {
+                  @include media-breakpoint-only(md) {
+                    flex: 0 0 auto;
+                    margin-bottom: 0;
+                    padding-right: 0.5rem;
+                    padding-bottom: 0;
+                    width: 66.66666666%;
+                  }
+                }
+
+                .card__text {
+                  @include media-breakpoint-only(md) {
+                    flex: 0 0 auto;
+                    padding-left: 0.5rem;
+                    width: 33.33333333%;
+                  }
+                }
+              }
+
+              &.card--small--publication {
+                @include media-breakpoint-only(md) {
+                  flex-direction: row;
+                }
+
+                .card__image {
+                  @include media-breakpoint-only(md) {
+                    flex: 0 0 33.3333%;
+                    padding: 0 0.5em 0 0;
+                  }
+                }
+
+                .card__text {
+                  @include media-breakpoint-only(md) {
+                    padding: 0 0 0 0.5em;
+                  }
+                }
+              }
+
+              &.card--small--event {
+                .card--event__info {
+                  @include media-breakpoint-only(md) {
+                    line-height: 1.5;
+                  }
+                }
+
+                .card--event__button--register {
+                  @include media-breakpoint-only(md) {
+                    display: block;
+                  }
+                }
+              }
+            }
+          }
+
+          .row__hr {
+            @include media-breakpoint-down(lg) {
+              display: block;
             }
           }
         }
