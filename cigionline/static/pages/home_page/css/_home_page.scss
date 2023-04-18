@@ -569,6 +569,13 @@
                 padding-bottom: 0;
               }
             }
+
+            &:nth-child(-n + 3) {
+              @include media-breakpoint-only (md) {
+                border-bottom: 1px solid $cigi-light-grey;
+                padding-bottom: 1em;
+              };
+            }
           }
 
           &:nth-child(even) {

@@ -1,6 +1,7 @@
 .card__container {
   &.card--tiny {
     display: flex;
+    height: 100%;
 
     .card__text {
       .card__text__title {
