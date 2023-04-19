@@ -481,4 +481,10 @@
       }
     }
   }
+
+  .card__image {
+    &::before {
+      background-color: $background-color;
+    }
+  }
 }

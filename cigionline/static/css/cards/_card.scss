@@ -372,27 +372,9 @@ $card-title-font: $title-font-family;
   }
 
   &.four-domains-series {
-    background-color: #e5e5d9 !important;
-
-    .card__text__title {
-      @include link($color: $black !important);
-    }
-
-    .card__text__description {
-      color: $black !important;
-    }
-
-    .card__text__meta {
-      .card__text__topics {
-        @include link($color: $black !important);
-      }
-
-      .card__text__more {
-        i {
-          color: $black !important;
-        }
-      }
-    }
+    @include article-series-card-theme(
+      $background-color: #e5e5d9,
+    );
   }
 
   &.pfpc-series {
