@@ -20,42 +20,36 @@ function ArticleSeriesListing(props) {
         </a>
       </div>
       <div className="card__text">
-        <div>
-          <h3 className="card__text__title">
-            <a href={row.url}>{row.title}</a>
-          </h3>
-          <div className="card__text__description">
-            <div dangerouslySetInnerHTML={{ __html: row.short_description }} />
-          </div>
-          <hr />
-          <div className="card__text__contributors">
-            <h4>Contributors</h4>
-            <ul>
-              {row.series_contributors.map((person) => (
-                <li key={`${row.id}-contributor-${person.id}`}>
-                  <a href={person.url}>
-                    <span>{person.title}</span>
-                  </a>
+        <h3 className="card__text__title">
+          <a href={row.url}>{row.title}</a>
+        </h3>
+        <div className="card__text__description">
+          <div dangerouslySetInnerHTML={{ __html: row.short_description }} />
+        </div>
+        <hr />
+        <div className="card__text__contributors">
+          <h4>Contributors</h4>
+          <ul>
+            {row.series_contributors.map((person) => (
+              <li key={`${row.id}-contributor-${person.id}`}>
+                <a href={person.url}>
+                  <span>{person.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="card__text__meta">
+          <div>
+            <ul className="card__text__topics custom-text-list">
+              {row.topics.map((topic) => (
+                <li key={`${row.id}-topic-${topic.id}`}>
+                  <a href={topic.url}>{topic.title}</a>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="card__text__meta">
-            <div>
-              <ul className="card__text__topics custom-text-list">
-                {row.topics.map((topic) => (
-                  <li key={`${row.id}-topic-${topic.id}`}>
-                    <a href={topic.url}>{topic.title}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <CardTextMore
-              title={row.title}
-              url={row.url}
-              type="Opinion Series"
-            />
-          </div>
+          <CardTextMore title={row.title} url={row.url} type="Opinion Series" />
         </div>
       </div>
     </article>

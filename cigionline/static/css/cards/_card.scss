@@ -372,9 +372,7 @@ $card-title-font: $title-font-family;
   }
 
   &.four-domains-series {
-    @include article-series-card-theme(
-      $background-color: #e5e5d9,
-    );
+    @include article-series-card-theme($background-color: #e5e5d9);
   }
 
   &.pfpc-series {
@@ -386,7 +384,20 @@ $card-title-font: $title-font-family;
   }
 
   &.cyber-series {
-    background-color: #1f2024 !important;
+    @include article-series-card-theme(
+      $background-color: #1f2024,
+      $color: $white,
+      $link-color: $white
+    );
+  }
+
+  &.health-security-series {
+    @include article-series-card-theme(
+      $background-color: $health-security-series-background-colour,
+      $color: $white,
+      $link-color: $white,
+      $topic-color: $cigi-light-grey
+    );
   }
 }
 

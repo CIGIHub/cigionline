@@ -59,9 +59,11 @@ const ArticleSeriesList = () => {
                   row={row}
                 />
               </div>
-              <div className="col-12">
-                <hr />
-              </div>
+              {row !== rows[rows.length - 1] && (
+                <div className="col-12">
+                  <hr />
+                </div> 
+              )}
             </>
           ))}
       </div>

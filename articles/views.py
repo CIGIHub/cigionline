@@ -30,7 +30,7 @@ def all_article_series(request):
                 'id': series.id,
                 'title': series.title,
                 'url': series.url,
-                'short_description': series.short_description,
+                'short_description': series.feature_subtitle if series.feature_subtitle else series.short_description,
                 'image_poster_url': series.image_poster.get_rendition('fill-672x895').url,
                 'series_contributors': series.series_contributors,
                 'theme': series.theme.name.lower().replace(' ', '-') if series.theme else None,

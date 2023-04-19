@@ -307,6 +307,12 @@ body {
     }
 
     &.article-landing-page__opinion-series {
+      @include media-breakpoint-up(md) {
+        margin-bottom: 6em;
+      }
+      margin-bottom: 4em;
+      margin-top: 2em;
+
       article {
         &.card__container {
           @include media-breakpoint-down(md) {
