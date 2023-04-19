@@ -47,15 +47,22 @@ const ArticleSeriesList = () => {
   }, []);
 
   return (
-    <>
-      <div>
+    <div className="container">
+      <div className="row g-3">
         {loading
           ? <div>Loading...</div>
           : rows.map((row) => (
-            <ArticleSeriesListing
-              key={row.id}
-              row={row}
-            />
+            <>
+              <div className="col-12">
+                <ArticleSeriesListing
+                  key={row.id}
+                  row={row}
+                />
+              </div>
+              <div className="col-12">
+                <hr />
+              </div>
+            </>
           ))}
       </div>
       <Paginator
@@ -63,7 +70,7 @@ const ArticleSeriesList = () => {
         setPage={(page) => setPage(page)}
         totalPages={pageCount}
       />
-    </>
+    </div>
   );
 };
 

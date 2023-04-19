@@ -430,3 +430,55 @@
   @include dark-footer;
   @include top-bar($background-color: $black, $color: $white);
 }
+
+@mixin article-series-card-theme(
+  $background-color: none,
+  $color: $black,
+  $link-color: $black,
+  $link-hover-color: $cigi-primary-colour,
+  $topic-color: $cigi-text-grey,
+  $topic-hover-color: $cigi-primary-colour
+) {
+  background-color: $background-color;
+
+  .card__text {
+    hr {
+      background: $color;
+    }
+
+    .card__text__title {
+      @include link($color: $color, $hover-color: $link-hover-color);
+    }
+
+    .card__text__description {
+      p {
+        @include link($color: $link-color, $hover-color: $link-hover-color);
+        color: $color;
+      }
+    }
+
+    .card__text__contributors {
+      @include link($color: $color, $hover-color: $link-hover-color);
+
+      h4 {
+        color: $color;
+      }
+    }
+
+    .card__text__meta {
+      .card__text__topics {
+        @include link($color: $topic-color, $hover-color: $topic-hover-color);
+      }
+
+      .card__text__more {
+        i {
+          color: $color;
+
+          &:hover {
+            color: $link-hover-color;
+          }
+        }
+      }
+    }
+  }
+}
