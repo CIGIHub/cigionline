@@ -1,11 +1,9 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
 
-import '../../css/components/FeaturedEventCard.scss';
-
 const FeaturedEventCard = (props) => {
   const { row } = props;
-  const today = DateTime.now();
+  const today = DateTime.now().toLocal();
 
   function embedUrl(str) {
     if (str.substr(-1) === '/') {
