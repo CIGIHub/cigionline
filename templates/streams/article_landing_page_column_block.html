@@ -4,6 +4,11 @@
   <div class="column__container">
     {% for block in self.column_cards %}
       {% include_block block %}
+      {% if self.column_cards|length > 1 and not forloop.last %}
+        <div class="column__hr">
+          <hr>
+        </div>
+      {% endif %}
     {% endfor %}
   </div>
 </div>

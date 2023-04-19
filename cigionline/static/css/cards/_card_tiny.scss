@@ -1,83 +1,95 @@
-.card--tiny {
-  display: flex;
+.card__container {
+  &.card--tiny {
+    display: flex;
+    height: 100%;
 
-  &.card--tiny--article {
     .card__text {
       .card__text__title {
-        font-family: $card-title-font;
-      }
-    }
-  }
-
-  &.card--tiny--article--with-image {
-    .card__image {
-      @include media-breakpoint-down(lg) {
-        display: none;
-      }
-      padding-right: 1em;
-
-      .img-wrapper {
-        height: auto;
-      }
-    }
-  }
-
-  &.card--tiny--article-series {
-    .fa-stack {
-      display: flex;
-
-      .front {
-        background-color: $white;
-        position: absolute;
-        top: 0.2em;
-        width: auto;
-      }
-
-      .back {
-        margin-left: 0.2em;
+        margin-bottom: 0.5em;
       }
     }
 
-    .card__text {
-      .card__text__people {
-        li {
-          color: $cigi-medium-grey;
+    &.card--tiny--article {
+      .card__text {
+        .card__text__title {
+          font-family: $card-title-font;
         }
       }
     }
-  }
 
-  &.card--tiny--expert {
-    display: block;
+    &.card--tiny--article--with-image {
+      .card__image {
+        @include media-breakpoint-down(lg) {
+          display: none;
+        }
+        @include media-breakpoint-up(lg) {
+          padding-right: 1em;
+        }
+        padding-right: 0.5em;
 
-    .card--expert--tiny__text {
-      width: 100%;
-
-      h3 {
-        margin: 0;
-      }
-
-      .card__text__meta {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-      }
-    }
-
-    .card__text__more__container {
-      text-align: right;
-
-      button {
-        &::after {
-          content: none;
+        .img-wrapper {
+          height: auto;
         }
       }
     }
-  }
 
-  i {
-    width: 35px;
-    margin-top: 0.25em;
-    flex-shrink: 0;
+    &.card--tiny--article-series {
+      .fa-stack {
+        display: flex;
+
+        .front {
+          background-color: $white;
+          position: absolute;
+          top: 0.2em;
+          width: auto;
+        }
+
+        .back {
+          margin-left: 0.2em;
+        }
+      }
+
+      .card__text {
+        .card__text__people {
+          li {
+            color: $cigi-medium-grey;
+          }
+        }
+      }
+    }
+
+    &.card--tiny--expert {
+      display: block;
+
+      .card--expert--tiny__text {
+        width: 100%;
+
+        h3 {
+          margin: 0;
+        }
+
+        .card__text__meta {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+      }
+
+      .card__text__more__container {
+        text-align: right;
+
+        button {
+          &::after {
+            content: none;
+          }
+        }
+      }
+    }
+
+    i {
+      width: 35px;
+      margin-top: 0.25em;
+      flex-shrink: 0;
+    }
   }
 }

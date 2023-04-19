@@ -1,9 +1,14 @@
 {% load wagtailcore_tags %}
 
 <div class="col-12 col-lg-4">
-  <div class="column__container">
+  <div class="column__container column-items-{{ self.column_cards|length }}">
     {% for block in self.column_cards %}
       {% include_block block.value %}
+      {% if self.column_cards|length > 1 and not forloop.last %}
+        <div class="column__hr">
+          <hr>
+        </div>
+      {% endif %}
     {% endfor %}
   </div>
 </div>

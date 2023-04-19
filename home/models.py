@@ -46,7 +46,7 @@ class HomePage(Page):
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             FieldPanel('layout'),
-        ], heading='Layout', classname='collapsible collapsed'),
+        ], heading='Layout', classname='collapsible collapsed home-page-layout'),
         MultiFieldPanel([
             FieldPanel('trending_issues'),
         ], heading='Trending Issues', classname='collapsible collapsed'),

@@ -2,65 +2,52 @@
 
 <div class="col col-12 col-md-8">
   <article class="card__container card--expert card--medium--expert">
-    <div class="card__expert-info">
-      <div class="card__text">
-        <div class="d-flex align-items-center pb-3">
-          <div class="card__image card__image--portrait--circle d-md-none">
-            <a href="{{ url }}">
-              <div class="img-wrapper">
-                {% image image fill-100x100 %}
+    <div class="row g-3">
+      <div class="col-12 border-0 col-md-7 col-lg-5 col-xl-6">
+        <div class="card__expert-info">
+          <div class="card__text">
+            <div class="d-flex align-items-center pb-3">
+              <div class="card__image card__image--portrait--circle d-md-none">
+                <a href="{{ url }}">
+                  <div class="img-wrapper">
+                    {% image image fill-100x100 %}
+                  </div>
+                </a>
               </div>
-            </a>
+              <div>
+                {% include 'includes/cards/card_text_title.html' %}
+                {% if board_position %}
+                  <div class="card--expert__board-position">
+                    {{ board_position }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            {% include 'includes/cards/card_text_description.html' %}
           </div>
-          <div>
-            {% include 'includes/cards/card_text_title.html' %}
-            {% if board_position %}
-              <div class="card--expert__board-position">
-                {{ board_position }}
-              </div>
-            {% endif %}
+          <div class="d-flex align-items-end">
+            <div class="card__latest-activity">
+              <h4>Latest Activity</h4>
+              {% for activity in latest_activity %}
+                {% include 'streams/card_block_tiny.html' with title=activity.title url=activity.url topics=activity.topics type=activity.type no_container=True %}
+              {% endfor %}
+            </div>
+            {% include 'includes/cards/card_text_more.html' with type='expert' %}
           </div>
         </div>
-        {% include 'includes/cards/card_text_description.html' %}
       </div>
-    </div>
-    <div class="card__latest-activity">
-      <h4>Latest Activity</h4>
-      {% for activity in latest_activity %}
-        {% include 'streams/card_block_tiny.html' with title=activity.title url=activity.url topics=activity.topics type=activity.type %}
-      {% endfor %}
-    </div>
-    <div class="card--medium--expert--right">
-      <div class="card__image card__image--portrait">
-        <a href="{{ url }}">
-          <div class="img-wrapper">
-            {% if image_src %}
-              <img alt="{{ image_alt }}" src="{{ image_src }}" />
-            {% else %}
-              {% image image fill-900x900 %}
-            {% endif %}
-          </div>
-        </a>
-      </div>
-      <div class="card--expert__social">
-        <ul>
-          {% if twitter %}
-            <li>
-              <div>Twitter</div>
-              <a href="https://twitter.com/{{twitter}}" target="_blank">
-                {{twitter}}
-              </a>
-            </li>
-          {% endif %}
-          {% if linkedin_username %}
-            <li>
-              <div>Linkedin</div>
-              <a href="https://www.linkedin.com/{{linkedin_username}}" target="_blank">
-                {{linkedin_username}}
-              </a>
-            </li>
-          {% endif %}
-        </ul>
+      <div class="col-12 col-md-5 col-lg-7 col-xl-6 card--medium--expert--right">
+        <div class="card__image card__image--portrait">
+          <a href="{{ url }}">
+            <div class="img-wrapper">
+              {% if image_src %}
+                <img alt="{{ image_alt }}" src="{{ image_src }}" />
+              {% else %}
+                {% image image fill-900x950 %}
+              {% endif %}
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </article>

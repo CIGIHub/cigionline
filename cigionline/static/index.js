@@ -8,6 +8,22 @@ import './css/cigionline.scss';
 import addInlineVideoActions from './js/inline_video_block';
 
 $(function () {
+  // MAIN NAVIGATION SCROLL
+  let scrollTop = 0;
+  const header = $('header:not(.small)');
+  const globalNav = header.find('#global-nav');
+
+  $(window).on('scroll', function() {
+    scrollTop = $(window).scrollTop();
+    if (scrollTop >= 66) {
+      header.addClass('scrolled');
+      globalNav.addClass('scrolled-nav');
+    } else {
+      header.removeClass('scrolled');
+      globalNav.removeClass('scrolled-nav');
+    }
+  });
+
   // Facebook Share buttons
   $('.facebook-share-link').on('click', function () {
     const href = $(this).data('url');
@@ -111,27 +127,37 @@ window.addEventListener('resize', (e) => {
 // add event listener to all images inside .card--multimedia
 const multimediaCards = document.querySelectorAll('.card--multimedia');
 multimediaCards.forEach((card) => {
-  const playIcon = card.querySelector('.card__image__play-icon');
-  const mmLength = card.querySelector('.card__image__mm-length');
-  const img = card.querySelector('img');
-  const iframe = card.querySelector('iframe');
+  if (!card.classList.contains('card--multimedia--audio')) {
+    const playIcon = card.querySelector('.card__image__play-icon');
+    const mmLength = card.querySelector('.card__image__mm-length');
+    const img = card.querySelector('img');
+    const iframe = card.querySelector('iframe');
+    const text = card.querySelector('.card__text');
 
-  card.addEventListener('click', (e) => {
-    if (!img.classList.contains('hidden')) {
-      playIcon.classList.add('hidden');
-      if (mmLength) {
-        mmLength.classList.add('hidden');
-      }
-      img.classList.add('hidden');
-      iframe.src += '&autoplay=1';
-
-      setTimeout(() => {
-        img.style.display = 'none';
-        playIcon.style.display = 'none';
+    card.addEventListener('click', (e) => {
+      if (!img.classList.contains('hidden')) {
+        const isLargeBreakpoint = window.matchMedia('(min-width: 991px)').matches;
+        playIcon.classList.add('hidden');
         if (mmLength) {
-          mmLength.style.display = 'none';
+          mmLength.classList.add('hidden');
         }
-      }, 1500);
-    }
-  });
+        img.classList.add('hidden');
+        iframe.src += '&autoplay=1';
+        if (isLargeBreakpoint) {
+          text.classList.add('hidden');
+        }
+
+        setTimeout(() => {
+          img.style.display = 'none';
+          playIcon.style.display = 'none';
+          if (mmLength) {
+            mmLength.style.display = 'none';
+          }
+          if (isLargeBreakpoint) {
+            text.style.display = 'none';
+          }
+        }, 1500);
+      }
+    });
+  }
 });

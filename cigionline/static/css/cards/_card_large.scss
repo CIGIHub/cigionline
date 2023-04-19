@@ -7,11 +7,14 @@
     .card__text {
       .card__text__title {
         @include media-breakpoint-up(md) {
-          font-size: clamp(1.25em, 3vw, 2em);
+          font-size: 1.5em;
         }
-        font-size: clamp(1.1em, 3vw, 1.5em);
+        @include media-breakpoint-up(lg) {
+          font-size: 1.75em;
+        }
+        font-size: 1.25em;
         letter-spacing: -0.5px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
       }
 
       p {
@@ -37,11 +40,19 @@
       flex: auto;
       position: relative;
 
-      img {
-        @include media-breakpoint-up(md) {
-          border-radius: 0 20px 20px 0;
+      .img-wrapper {
+        iframe {
+          @include media-breakpoint-up(md) {
+            border-radius: 0 20px 20px 0;
+          }
         }
-        border-radius: 20px 20px 0 0;
+
+        img {
+          @include media-breakpoint-up(md) {
+            border-radius: 0 20px 20px 0;
+          }
+          border-radius: 20px 20px 0 0;
+        }
       }
     }
 
@@ -100,7 +111,7 @@
 
     .card__image {
       @include media-breakpoint-up(md) {
-        flex: 0 0 50%;
+        flex: 0 0 33.33%;
       }
       flex: auto;
       position: relative;
@@ -111,51 +122,12 @@
         }
         border-radius: 20px 20px 0 0;
       }
-
-      .card__label {
-        align-items: center;
-        background-color: $black;
-        border-radius: 1em;
-        color: $white;
-        font-size: 0.8em;
-        display: flex;
-        height: 2.5em;
-        justify-content: center;
-        left: 1em;
-        position: absolute;
-        top: 1em;
-        width: 8em;
-
-        .fa-stack {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-
-          .front {
-            background-color: $black;
-            position: absolute;
-            width: auto;
-          }
-
-          .back {
-            margin-left: 0.3em;
-            margin-bottom: 0.3em;
-          }
-        }
-
-        i {
-          margin-left: 0.15em;
-        }
-
-        p {
-          margin: 0;
-          padding-right: 0.7em;
-          white-space: nowrap;
-        }
-      }
     }
 
     .card__text {
+      @include media-breakpoint-up(md) {
+        padding: 1.5em;
+      }
       padding: 1em;
       height: auto;
 
@@ -164,7 +136,7 @@
           display: block;
         }
         display: none;
-        line-height: 1.75;
+        line-height: 1.25;
         margin-bottom: 0.5em;
         color: $cigi-medium-grey;
       }
@@ -237,20 +209,20 @@
           display: block;
         }
       }
-  
+
       .card__text__contributors {
         @include media-breakpoint-down(md) {
           display: none;
         }
-        margin-bottom: 2em;
-  
+        margin-bottom: 1em;
+
         ul {
           list-style: none;
           columns: 4;
           font-size: 14px;
         }
       }
-  
+
       .card__text__meta {
         .card__text__people {
           @include media-breakpoint-up(md) {
@@ -271,22 +243,32 @@
       border: 0 !important;
     }
 
+    .col-lg-3 {
+      @include media-breakpoint-only(lg) {
+        width: 28.5%
+      }
+    }
+
+    .col-lg-9 {
+      @include media-breakpoint-only(lg) {
+        width: 71.5%
+      }
+    }
+
     .card__text {
       .card__text__title {
         @include media-breakpoint-up(md) {
-          font-size: clamp(1.25em, 3vw, 2em);
+          font-size: clamp(1.25em, 3vw, 1.75em);
         }
         letter-spacing: -0.5px;
       }
 
       .card__text__description {
-        color: $cigi-text-grey;
-
-        p {
-          @include media-breakpoint-up(lg) {
-            font-size: clamp(1em, 1.5vw, 1.2em);
-          }
+        @include media-breakpoint-up(lg) {
+          display: block;
         }
+        display: none;
+        color: $cigi-text-grey;
       }
     }
   }
@@ -296,7 +278,7 @@
       .card--event__title {
         &.card__text__title {
           @include media-breakpoint-up(md) {
-            font-size: clamp(1.25em, 3vw, 2em);
+            font-size: clamp(1.25em, 3vw, 1.75em);
           }
           font-size: clamp(1.1em, 3vw, 1.5em);
           font-weight: 300;
@@ -381,7 +363,7 @@
           .card--event__title {
             &.card__text__title {
               @include media-breakpoint-up(md) {
-                font-size: clamp(1.25em, 3vw, 2em);
+                font-size: clamp(1.25em, 3vw, 1.75em);
               }
               font-size: clamp(1.1em, 3vw, 1.5em);
               font-weight: 300;
