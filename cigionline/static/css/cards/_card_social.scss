@@ -3,7 +3,7 @@
 
   .social--media {
     @include media-breakpoint-up(xl) {
-      display: block;
+      display: table-cell;
     }
     display: none;
     margin: 0;
