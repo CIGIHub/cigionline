@@ -274,8 +274,22 @@
       @include media-breakpoint-up(xxl) {
         padding: 0 5em 1em;
       }
-      padding: 0 1em 0 0;
+      padding: 0 0.5em 0 0;
       flex: 0 0 33.333333%;
+    }
+
+    .card__text {
+      @include media-breakpoint-up(md) {
+        padding-left: 0;
+      }
+      padding-left: 0.5em;
+
+      .card__text__title {
+        @include media-breakpoint-up(lg) {
+          font-size: 1.1em;
+        }
+        font-size: 1.25em;
+      }
     }
   }
 
@@ -356,7 +370,7 @@
         li {
           @include comma-separated;
           display: inline;
-          font-size: 15px;
+          font-size: 0.8em;
         }
       }
 

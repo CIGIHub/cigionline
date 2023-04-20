@@ -259,8 +259,8 @@
 
     .card__text {
       .card__text__title {
-        @include media-breakpoint-up(md) {
-          font-size: clamp(1.25em, 3vw, 1.75em);
+        @include media-breakpoint-up(lg) {
+          font-size: 1.75em;
         }
         letter-spacing: -0.5px;
       }

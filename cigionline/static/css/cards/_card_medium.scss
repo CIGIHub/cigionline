@@ -38,8 +38,12 @@ article {
           flex: 0 0 auto;
           width: 33.33333333%;
         }
+
         .card__text__title {
-          font-size: clamp(1.1em, 3vw, 1.3em);
+          @include media-breakpoint-up(lg) {
+            font-size: 1.3em;
+          }
+          font-size: 1.25em;
         }
       }
     }
