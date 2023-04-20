@@ -1589,9 +1589,14 @@ class AdCard(blocks.StructBlock):
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
         LARGE = ('large', 'Large')
+    
+    class AdCardLayoutChoices(models.TextChoices):
+        SOCIAL = ('social', 'Social')
+        SUBSCRIBE = ('subscribe', 'Subscribe')
 
     url = blocks.URLBlock(required=True)
     size = blocks.ChoiceBlock(choices=AdCardTypeChoices.choices, required=True)
+    type = blocks.ChoiceBlock(choices=AdCardLayoutChoices.choices, required=True)
     image = ImageChooserBlock(required=True)
 
     def get_context(self, value, parent_context=None):
@@ -1604,6 +1609,7 @@ class AdCard(blocks.StructBlock):
         else:
             context['image'] = image
         context['url'] = value.get('url')
+        context['type'] = value.get('type')
 
         return context
 
