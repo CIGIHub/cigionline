@@ -1593,6 +1593,7 @@ class AdCard(blocks.StructBlock):
     class AdCardLayoutChoices(models.TextChoices):
         SOCIAL = ('social', 'Social')
         SUBSCRIBE = ('subscribe', 'Subscribe')
+        GENERIC = ('generic', 'Generic')
 
     url = blocks.URLBlock(required=True)
     size = blocks.ChoiceBlock(choices=AdCardTypeChoices.choices, required=True)
