@@ -283,13 +283,6 @@
         padding-left: 0;
       }
       padding-left: 0.5em;
-
-      .card__text__title {
-        @include media-breakpoint-up(lg) {
-          font-size: 1.1em;
-        }
-        font-size: 1.25em;
-      }
     }
   }
 
