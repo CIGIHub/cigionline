@@ -21,7 +21,7 @@ class JobPostingListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
-            TwoColumnBlock(),
+            ('columns', TwoColumnBlock()),
         ],
         blank=True,
         use_json_field=True,

@@ -46,19 +46,18 @@
       </div>
     </div>
   {% endif %}
-  {% include "includes/body.html" with body=self.body %}
-  <section class="careers-current-openings-section">
+  <section class="careers-page__current-openings">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
-          <h2 class="paragraph-heading">
+          <h2>
             Current Openings
           </h2>
         </div>
       </div>
       {% if job_postings %}
-        {% for job_posting in job_postings %}
-          <div class="row justify-content-center job-posting-row">
+        <div class="row justify-content-center job-posting-row">
+          {% for job_posting in job_postings %}
             <div class="col-12 col-md-10 col-lg-8">
               <article>
                 <h3>
@@ -72,10 +71,20 @@
                 <div class="job-posting-description">
                   {{ job_posting.short_description|richtext }}
                 </div>
+                <a href="{{ job_posting.url }}">
+                  <button class="btn btn-primary">
+                    Learn More
+                  </button>
+                </a>
               </article>
             </div>
-          </div>
-        {% endfor %}
+            {% if job_postings|length > 1 and not forloop.last %}
+              <div class="col-12 col-md-10 col-lg-8">
+                <hr>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
       {% else %}
         <div class="row justify-content-center">
           <div class="col-12 col-md-10 col-lg-8">
@@ -85,4 +94,12 @@
       {% endif %}
     </div>
   </section>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+  </div>
+  {% include "includes/body.html" with body=self.body %}
 {% endblock content %}
