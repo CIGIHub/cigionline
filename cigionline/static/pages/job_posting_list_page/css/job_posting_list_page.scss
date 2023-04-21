@@ -70,3 +70,19 @@
     margin-bottom: 0;
   }
 }
+
+// CIGIOnline 3.0 styling
+.basic-page {
+  main {
+    margin-top: 0;
+  }
+}
+section {
+  &.hero {
+    .hero__content {
+      border-bottom: 0;
+    
+    }
+  }
+
+}

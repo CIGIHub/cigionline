@@ -1717,3 +1717,16 @@ class ArticleLandingPageRow(blocks.StructBlock):
         label = 'Row'
         template = 'streams/article_landing_page_row_block.html'
         form_classname = 'row-block'
+
+class TwoColumnBlock(blocks.StructBlock):
+    left_column = blocks.StreamBlock([
+        ('paragraph', blocks.RichTextBlock()),
+    ])
+    right_column = blocks.StreamBlock([
+        ('paragraph', blocks.RichTextBlock()),
+    ])
+    class Meta:
+        icon = 'list-ul'
+        label = 'Two Column'
+        template = 'streams/two_column_block.html'
+        form_classname = 'two-column-block'
