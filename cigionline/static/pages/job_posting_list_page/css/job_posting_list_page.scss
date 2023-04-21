@@ -118,14 +118,27 @@ section {
   }
 
   &.body {
+    @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
     margin-top: 0.5em;
     margin-bottom: 6em;
 
     .two-column-block {
       h2 {
         font-size: 1.75em;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         margin-top: 0.5rem;
+      }
+
+      h3 {
+        font-size: 1.5em;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+        line-height: 1.5;
       }
 
       .left-column {
