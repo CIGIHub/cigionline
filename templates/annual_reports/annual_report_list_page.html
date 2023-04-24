@@ -28,12 +28,52 @@
       </div>
     </div>
   {% endif %}
-  {% include "includes/body.html" with body=self.body %}
+  
+  <section class="annual-reports__featured">
+    <div class="container">
+      <div class="row">
+        <div class="col col-12 col-lg-8 large-col">
+          {% include 'streams/annual_report_card_block.html' with report=self.annual_reports_list.0 %}
+        </div>
+        <div class="col col-12 d-block d-lg-none">
+          <hr>
+        </div>
+        <div class="col col-12 col-lg-4">
+          <div class="annual-reports-list-page-swiper" id="annual-reports-list-page-swiper">
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                {% for report_set in self.annual_reports_list_swiper %}
+                  <div class="swiper-slide">
+                    <div class="slide-column">
+                      {% for report in report_set %}
+                        {% include 'streams/annual_report_card_block.html' with report=report %}
+                        {% if not forloop.last %}
+                          <hr>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="navigation-container swiper-controls">
+              <div class="swiper-button swiper-button-prev"></div>
+              <div class="swiper-pagination"></div>
+              <div class="swiper-button swiper-button-next"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-12">
+          <hr>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="annual-reports-list">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
+        <div class="col col-12">
           <table>
             <thead>
               <tr>

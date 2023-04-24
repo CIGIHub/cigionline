@@ -28,25 +28,5 @@ if (swiperContainer) {
       el: '.swiper-pagination',
       clickable: true,
     },
-
-    breakpoints: {
-      480: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-      },
-      768: {
-        slidesPerView: 3,
-        slidesPerGroup: 3,
-      },
-      992: {
-        slidesPerView: 4,
-        slidesPerGroup: 4,
-      },
-    },
   });
 }
-
-ReactDOM.render(
-  <SearchTableAnnualReports />,
-  document.getElementById('annual-reports-search-table'),
-);
