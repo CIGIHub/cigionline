@@ -1,31 +1,32 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
 
-import '../../css/components/EventListCard.scss';
+import '../../css/components/EventListingCard.scss';
 
-const EventListCard = (props) => {
+const EventListingCard = (props) => {
   const { row } = props;
   const today = DateTime.now();
 
-  const [time, setTime] = useState(Date.now());
+  const evaluateLive = (start, end) => {
+    return Date.now() / 1000 >= start && Date.now() / 1000 <= end;
+  };
+  const [isLive, setIsLive] = useState(evaluateLive(row.start_utc, row.end_utc));
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(Date.now()), 1000);
+    const interval = setInterval(() => {
+      setIsLive(evaluateLive(row.start_utc, row.end_utc));
+    }, 1000);
     return () => {
       clearInterval(interval);
     };
-  }, []);
-
-  const evaluateLive = (start, end) => {
-    return Date.now() >= Date.parse(start) && Date.now() <= Date.parse(end);
-  };
-
-  const isLive = evaluateLive(row.date, row.end_date);
+  }, [isLive]);
 
   return (
     <div className="col col-12 col-md-8">
       {/* <div>
-        Current Time: {date().toLocaleString()}
+        Current Time: {Date().toLocaleString()}
+        start time: {row.time}
+        end time: {row.end_time}
       </div> */}
       <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
         <div className="row card--event__top">
@@ -165,4 +166,4 @@ const EventListCard = (props) => {
   );
 };
 
-export default EventListCard;
+export default EventListingCard;

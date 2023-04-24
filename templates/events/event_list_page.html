@@ -34,16 +34,10 @@
     </nav>
     <div class="tab-content" id="events-landing-tab-content">
       <div class="tab-pane fade show active" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
-        <section class="col featured-events" id="events-page__featured-events-slider">
+        <section class="col featured-events" id="events-page__featured-events-slider" data-events-page-featured-events-slider="{{ featured_events_content }}">
           <div class="featured-events-container">
             <div class="swiper-container">
-              <div class="swiper-wrapper">
-                {% for block in self.featured_events %}
-                  <div class="swiper-slide">
-                    {% include_block block.value %}
-                  </div>
-                {% endfor %}
-              </div>
+              <div class="swiper-wrapper" id="featured-events"></div>
             </div>
             <div class="swiper-pagination"></div>
             <div class="swiper-button-prev"></div>

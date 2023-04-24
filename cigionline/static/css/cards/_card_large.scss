@@ -371,6 +371,19 @@
               line-height: 1.1;
             }
           }
+
+          .card--event--live-label {
+            color: $cigi-primary-colour;
+            font-weight: 500;
+    
+            i {
+              padding-right: 0.5em;
+            }
+          }
+
+          .card--event--upcoming-label {
+            margin-bottom: 0;
+          }
         }
 
         .card--event__bottom {
@@ -469,7 +482,7 @@
               height: 100%;
               position: absolute;
               top: 0;
-              width: 94%;
+              width: 90%;
             }
           }
         }

@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Swiper, { Navigation, Pagination } from 'swiper';
 import EventSearchResultCard from '../../js/components/EventSearchResultCard';
-import EventList from '../../js/components/EventList';
+import EventListing from '../../js/components/EventListing';
+import FeaturedEventListing from '../../js/components/FeaturedEventListing';
 import SearchTable from '../../js/components/SearchTable';
 import EventCalendar from '../../js/components/EventCalendar';
 import './css/_event_list_page.scss';
@@ -27,6 +28,8 @@ ReactDOM.render(
       'event_type',
       'event_format_string',
       'time_zone_label',
+      'event_start_time_local',
+      'event_end_time_local',
     ]}
     filterTypes={[
       {
@@ -203,15 +206,20 @@ const allEvents = JSON.parse(
 );
 
 ReactDOM.render(
-  <EventList meta={allEvents.meta} items={allEvents.items} />,
+  <EventListing meta={allEvents.meta} items={allEvents.items} />,
   document.getElementById('event-list'),
 );
 
-const eventsPageFeaturedEventsSliderContainer = document.getElementById(
-  'events-page__featured-events-slider',
+const featuredEvents = JSON.parse(
+  document.getElementById('events-page__featured-events-slider').dataset.eventsPageFeaturedEventsSlider,
 );
 
-if (eventsPageFeaturedEventsSliderContainer) {
+ReactDOM.render(
+  <FeaturedEventListing meta={featuredEvents.meta} items={featuredEvents.items} />,
+  document.getElementById('featured-events'),
+);
+
+if (featuredEvents) {
   const eventsPageFeaturedEventsSlider = new Swiper(
     '.swiper-container',
     {

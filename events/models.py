@@ -66,12 +66,12 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
                 'title': author.author.title,
                 'url': author.author.url
             } for author in item.authors.all()]
-            item_dict['date'] = item.publishing_date.strftime('%A, %B %-d, %Y')
-            item_dict['date_singular'] = item.publishing_date.strftime('%-d')
-            item_dict['month'] = item.publishing_date.strftime('%B')
-            item_dict['time'] = item.publishing_date.strftime('%-I:%M %p')
-            item_dict['end_date'] = item.event_end.strftime('%Y-%m-%d') if item.event_end else ''
-            item_dict['end_time'] = item.event_end.strftime('%-I:%M %p') if item.event_end else ''
+            item_dict['date'] = item.event_start_time_local.strftime('%A, %B %-d, %Y')
+            item_dict['date_singular'] = item.event_start_time_local.strftime('%-d')
+            item_dict['month'] = item.event_start_time_local.strftime('%B')
+            item_dict['time'] = item.event_start_time_local.strftime('%-I:%M %p')
+            item_dict['end_date'] = item.event_end_time_local.strftime('%Y-%m-%d') if item.event_end else ''
+            item_dict['end_time'] = item.event_end_time_local.strftime('%-I:%M %p') if item.event_end else ''
             item_dict['event_type'] = item.get_event_type_display()
             item_dict['event_access'] = item.get_event_access_display()
             item_dict['event_format'] = item.event_format_string
@@ -84,6 +84,8 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             } for topic in item.topics_sorted]
             item_dict['registration_url'] = item.registration_url
             item_dict['id'] = item.id
+            item_dict['start_utc'] = item.event_start_time_utc.timestamp()
+            item_dict['end_utc'] = item.event_end_time_utc.timestamp() if item.event_end else ''
 
             events_list.append(item_dict)
 
@@ -102,9 +104,58 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             'items': events_dict,
         })
 
+    def get_featured_events(self):
+        featured_events = [item.value.get('page') for item in self.featured_events]
+        featured_events_content = []
+
+        for item in featured_events:
+            item_dict = {}
+
+            item_dict['title'] = item.feature_title if item.feature_title else item.title
+            item_dict['authors'] = [{
+                'title': author.author.title,
+                'url': author.author.url
+            } for author in item.authors.all()]
+            item_dict['date'] = item.event_start_time_local.strftime('%A, %B %-d, %Y')
+            item_dict['date_singular'] = item.event_start_time_local.strftime('%-d')
+            item_dict['month'] = item.event_start_time_local.strftime('%B')
+            item_dict['time'] = item.event_start_time_local.strftime('%-I:%M %p')
+            item_dict['end_date'] = item.event_end_time_local.strftime('%Y-%m-%d') if item.event_end else ''
+            item_dict['end_time'] = item.event_end_time_local.strftime('%-I:%M %p') if item.event_end else ''
+            item_dict['event_type'] = item.get_event_type_display()
+            item_dict['event_access'] = item.get_event_access_display()
+            item_dict['event_format'] = item.event_format_string
+            item_dict['is_past'] = item.is_past()
+            item_dict['time_zone_label'] = item.time_zone_label
+            item_dict['url'] = item.feature_url if item.feature_url else item.url
+            item_dict['topics'] = [{
+                'title': topic.title,
+                'url': topic.url
+            } for topic in item.topics_sorted]
+            item_dict['registration_url'] = item.registration_url
+            item_dict['id'] = item.id
+            item_dict['start_utc'] = item.event_start_time_utc.timestamp()
+            item_dict['end_utc'] = item.event_end_time_utc.timestamp() if item.event_end else ''
+
+            item_dict['image_hero_url'] = item.image_hero_url
+            item_dict['livestream_url'] = item.livestream_url if item.livestream_url else ''
+            if item.multimedia_page:
+                if item.multimedia_page.specific.vimeo_url:
+                    item_dict['vimeo_url'] = item.multimedia_page.specific.vimeo_url
+
+            featured_events_content.append(item_dict)
+
+        return json.dumps({
+            'meta': {
+                'total_events_count': len(featured_events_content),
+            },
+            'items': featured_events_content,
+        })
+
     def get_context(self, request):
         context = super().get_context(request)
         context['all_events'] = self.get_all_events()
+        context['featured_events_content'] = self.get_featured_events()
         return context
 
     class Meta:
@@ -190,6 +241,11 @@ class EventPage(
     )
     flickr_album_url = models.URLField(blank=True)
     invitation_type = models.IntegerField(choices=InvitationTypes.choices, default=InvitationTypes.RSVP_REQUIRED)
+    livestream_url = models.URLField(
+        blank=True,
+        verbose_name='Livestream URL',
+        help_text='The Vimeo URL of the livestream event.',
+    )
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
     location_address2 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 2)')
     location_city = models.CharField(blank=True, max_length=255, verbose_name='City')
@@ -287,7 +343,7 @@ class EventPage(
             return self.publishing_date
         else:
             default_tz = pytz.timezone('America/Toronto')
-            correct_tz = pytz.timezone(self.time_zone)
+            correct_tz = pytz.timezone(self.time_zone) if self.time_zone in pytz.all_timezones else default_tz
             return pytz.utc.normalize(
                 correct_tz.localize(
                     self.publishing_date.astimezone(default_tz).replace(tzinfo=None)
@@ -295,17 +351,27 @@ class EventPage(
             )
 
     @property
+    def event_start_time_local(self):
+        timezone = pytz.timezone(self.time_zone) if self.time_zone in pytz.all_timezones else pytz.timezone('America/Toronto')
+        return self.event_start_time_utc.astimezone(timezone)
+
+    @property
     def event_end_time_utc(self):
         if self.time_zone == '' or not self.time_zone:
             return self.event_end
         else:
             default_tz = pytz.timezone('America/Toronto')
-            correct_tz = pytz.timezone(self.time_zone)
+            correct_tz = pytz.timezone(self.time_zone) if self.time_zone in pytz.all_timezones else default_tz
             return pytz.utc.normalize(
                 correct_tz.localize(
                     self.event_end.astimezone(default_tz).replace(tzinfo=None)
                 )
             )
+
+    @property
+    def event_end_time_local(self):
+        timezone = pytz.timezone(self.time_zone) if self.time_zone in pytz.all_timezones else pytz.timezone('America/Toronto')
+        return self.event_end_time_utc.astimezone(timezone)
 
     @property
     def time_zone_label(self):
@@ -363,6 +429,7 @@ class EventPage(
                 FieldPanel('event_type'),
                 FieldPanel('event_access'),
                 FieldPanel('invitation_type'),
+                FieldPanel('livestream_url'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
                 FieldPanel('registration_url'),
