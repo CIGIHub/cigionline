@@ -34,6 +34,10 @@ class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
 
     def annual_reports_list(self):
         return AnnualReportPage.objects.live().order_by('-year')
+    
+    def annual_reports_list_swiper(self):
+        reports = AnnualReportPage.objects.live().order_by('-year')[1:]
+        return [[reports[i], reports[i+1]] for i in range(0, len(reports), 2)]
 
     class Meta:
         verbose_name = 'Annual Report List Page'
