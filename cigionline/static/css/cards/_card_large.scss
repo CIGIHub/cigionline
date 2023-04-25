@@ -474,12 +474,18 @@
           padding-bottom: 1em;
           padding-left: 0;
 
+          .img-wrapper {
+            img {
+              height: 390px;
+            }
+          }
+
           .video--wrapper {
             padding-bottom: 54.5%;
 
             iframe {
               border-radius: 20px;
-              height: 100%;
+              height: 390px;
               position: absolute;
               top: 0;
               width: 90%;
