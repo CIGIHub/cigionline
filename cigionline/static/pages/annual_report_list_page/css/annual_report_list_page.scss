@@ -30,6 +30,16 @@ section {
 
   &.annual-reports-list {
     margin: 4em 0;
+
+    .btn {
+      color: $black;
+      border-color: $black;
+
+      &:hover {
+        color: $white;
+        border-color: $cigi-primary-colour;
+      }
+    }
   }
 
   &.annual-reports__featured {
