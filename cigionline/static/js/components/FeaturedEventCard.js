@@ -99,6 +99,27 @@ const FeaturedEventCard = (props) => {
                   </div>
                 </div>
                 <div className="card--event__bottom">
+                  <div className="card__cta">
+                    {row.event_access === 'Private'
+                      ? (
+                        <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                          Private Event
+                        </button>
+                      )
+                      : isLive
+                        ? (
+                          <button type="button" className="card--event__button--register button--rounded">
+                            Watch Now
+                            <i className="fas fa-angle-right" />
+                          </button>
+                        )
+                        : (
+                          <button type="button" className="card--event__button--register button--rounded">
+                            Register Now
+                            <i className="fas fa-angle-right" />
+                          </button>
+                        )}
+                  </div>
                   <div className="card__text__meta">
                     <div>
                       <ul className="custom-text-list card__text__people">
@@ -121,53 +142,32 @@ const FeaturedEventCard = (props) => {
                         ))}
                       </ul>
                     </div>
-                    <div className="card__cta">
-                      {row.event_access === 'Private'
-                        ? (
-                          <button type="button" className="card--event__button--register button--rounded is_private" disabled>
-                            Private Event
-                          </button>
-                        )
-                        : isLive
-                          ? (
-                            <button type="button" className="card--event__button--register button--rounded">
-                              Watch Now
-                              <i className="fas fa-angle-right" />
-                            </button>
-                          )
-                          : (
-                            <button type="button" className="card--event__button--register button--rounded">
-                              Register Now
-                              <i className="fas fa-angle-right" />
-                            </button>
-                          )}
-                      <div className="card__text__more__container dropup">
-                        <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
-                          <i className="far fa-ellipsis-h"></i>
+                    <div className="card__text__more__container dropup">
+                      <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
+                        <i className="far fa-ellipsis-h"></i>
+                      </button>
+                      <div className="dropdown-menu dropdown-menu-end">
+                        <button className="dropdown-item copy-text-button" type="button">
+                          <i className="fas fa-link"></i>
+                          Copy Link
                         </button>
-                        <div className="dropdown-menu dropdown-menu-end">
-                          <button className="dropdown-item copy-text-button" type="button">
-                            <i className="fas fa-link"></i>
-                            Copy Link
-                          </button>
-                          <input type="text" value={row.url} className="copyText"></input>
-                          <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
-                            <i className="fab fa-twitter"></i>
-                            Share on Twitter
-                          </a>
-                          <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
-                            <i className="fab fa-linkedin-in"></i>
-                            Share on Linkedin
-                          </a>
-                          <a className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
-                            <i className="fab fa-facebook-f"></i>
-                            Share on Facebook
-                          </a>
-                          <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
-                            <i className="fal fa-check-square"></i>
-                            Register
-                          </a>
-                        </div>
+                        <input type="text" value={row.url} className="copyText"></input>
+                        <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
+                          <i className="fab fa-twitter"></i>
+                          Share on Twitter
+                        </a>
+                        <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
+                          <i className="fab fa-linkedin-in"></i>
+                          Share on Linkedin
+                        </a>
+                        <a className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
+                          <i className="fab fa-facebook-f"></i>
+                          Share on Facebook
+                        </a>
+                        <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                          <i className="fal fa-check-square"></i>
+                          Register
+                        </a>
                       </div>
                     </div>
                   </div>
