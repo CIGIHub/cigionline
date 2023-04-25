@@ -476,7 +476,12 @@
 
           .img-wrapper {
             img {
-              height: 390px;
+              @include media-breakpoint-up(lg) {
+                height: 325px;
+              }
+              @include media-breakpoint-up(xl) {
+                height: 390px;
+              }
             }
           }
 
@@ -484,8 +489,14 @@
             padding-bottom: 54.5%;
 
             iframe {
+              @include media-breakpoint-up(lg) {
+                height: 325px;
+              }
+              @include media-breakpoint-up(xl) {
+                height: 390px;
+              }
               border-radius: 20px;
-              height: 390px;
+              height: 100%;
               position: absolute;
               top: 0;
               width: 90%;
