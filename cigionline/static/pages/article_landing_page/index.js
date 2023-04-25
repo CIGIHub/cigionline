@@ -9,11 +9,16 @@ import SearchTable from '../../js/components/SearchTable';
 import 'swiper/swiper-bundle.css';
 import './css/article_landing_page.scss';
 import SearchResultCard from '../../js/components/SearchResultCard';
+import ArticleSeriesList from '../../js/components/ArticleSeriesList';
 
 Swiper.use([Navigation, Pagination]);
 
-const swiperContainerOpinions = document.querySelector('.swiper-container--opinions');
-const swiperContainerOpinionSeries = document.querySelector('.swiper-container--opinion-series');
+const swiperContainerOpinions = document.querySelector(
+  '.swiper-container--opinions',
+);
+const swiperContainerOpinionSeries = document.querySelector(
+  '.swiper-container--opinion-series',
+);
 if (swiperContainerOpinions) {
   const opinionsSwiper = new Swiper(swiperContainerOpinions, {
     slidesPerView: 1,
@@ -59,44 +64,40 @@ if (swiperContainerOpinionSeries) {
 ReactDOM.render(
   <SearchTable
     showSearch
-    contenttypes={[
-      'Opinion',
-    ]}
-    contentsubtypes={[
-      'Interviews',
-      'Op-Eds',
-      'Opinion',
-    ]}
-    fields={[
-      'authors',
-      'image_hero_url',
-      'publishing_date',
-      'topics',
-    ]}
-    containerClass={[
-      'custom-theme-table',
-      'table-opinions',
-    ]}
+    contenttypes={['Opinion']}
+    contentsubtypes={['Interviews', 'Op-Eds', 'Opinion']}
+    fields={['authors', 'image_hero_url', 'publishing_date', 'topics']}
+    containerClass={['custom-theme-table', 'table-opinions']}
     RowComponent={SearchResultCard}
     RowComponentList={OpinionListing}
     searchPlaceholder="Search all opinions"
-    tableColumns={[{
-      colSpan: 6,
-      colTitle: 'Title',
-      colClass: 'title',
-    }, {
-      colSpan: 3,
-      colTitle: 'Author',
-      colClass: 'authors',
-    }, {
-      colSpan: 3,
-      colTitle: 'Topic',
-      colClass: 'topics',
-    }, {
-      colSpan: 1,
-      colTitle: 'More',
-      colClass: 'more',
-    }]}
+    tableColumns={[
+      {
+        colSpan: 6,
+        colTitle: 'Title',
+        colClass: 'title',
+      },
+      {
+        colSpan: 3,
+        colTitle: 'Author',
+        colClass: 'authors',
+      },
+      {
+        colSpan: 3,
+        colTitle: 'Topic',
+        colClass: 'topics',
+      },
+      {
+        colSpan: 1,
+        colTitle: 'More',
+        colClass: 'more',
+      },
+    ]}
   />,
   document.getElementById('opinions-search-table'),
+);
+
+ReactDOM.render(
+  <ArticleSeriesList />,
+  document.getElementById('article-landing-page__opinion-series-listing'),
 );

@@ -16,3 +16,30 @@ def ai_ethics(request):
         'image': introduction_page.specific.image_hero.get_rendition('width-1000').url,
         'body': str(introduction_page.body),
     })
+
+
+def all_article_series(request):
+    article_series = ArticleSeriesPage.objects.live().public().order_by('-publishing_date')
+
+    return JsonResponse(
+        {
+            'meta': {
+                'total_count': article_series.count(),
+            },
+            'items': [{
+                'id': series.id,
+                'title': series.title,
+                'url': series.url,
+                'short_description': series.feature_subtitle if series.feature_subtitle else series.short_description,
+                'image_poster_url': series.image_poster.get_rendition('fill-672x895').url,
+                'series_contributors': series.series_contributors,
+                'theme': series.theme.name.lower().replace(' ', '-') if series.theme else None,
+                'topics': [{
+                    'id': topic.id,
+                    'title': topic.title,
+                    'url': topic.url,
+                } for topic in series.topics.all()],
+
+            } for series in article_series]
+        },
+        safe=False)

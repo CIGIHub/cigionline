@@ -1,25 +1,63 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block extra_css %}
   {% render_bundle 'jobPostingListPage' 'css' %}
 {% endblock %}
+{% block body_class %}basic-page{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  {% include "includes/body.html" with body=self.body %}
-  <section class="careers-current-openings-section">
+  <section class="hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="hero__content">
+            <div class="hero__title">
+              <i class="fal fa-user"></i>
+              <h1>{{ self.title }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% if self.subtitle %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2 class="subtitle">{{ self.subtitle|richtext }}</h2>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col">
+          <figure class="image-hero">
+            {% image self.image_hero width-1280 %}
+            {% if self.image_hero.caption %}
+              <figcaption>
+                {{ self.image_hero.caption }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <section class="careers-page__current-openings">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
-          <h2 class="paragraph-heading">
+          <h2>
             Current Openings
           </h2>
         </div>
       </div>
       {% if job_postings %}
-        {% for job_posting in job_postings %}
-          <div class="row justify-content-center job-posting-row">
+        <div class="row justify-content-center job-posting-row">
+          {% for job_posting in job_postings %}
             <div class="col-12 col-md-10 col-lg-8">
               <article>
                 <h3>
@@ -33,10 +71,20 @@
                 <div class="job-posting-description">
                   {{ job_posting.short_description|richtext }}
                 </div>
+                <a href="{{ job_posting.url }}">
+                  <button class="btn btn-primary">
+                    Learn More
+                  </button>
+                </a>
               </article>
             </div>
-          </div>
-        {% endfor %}
+            {% if job_postings|length > 1 and not forloop.last %}
+              <div class="col-12 col-md-10 col-lg-8">
+                <hr>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
       {% else %}
         <div class="row justify-content-center">
           <div class="col-12 col-md-10 col-lg-8">
@@ -46,4 +94,12 @@
       {% endif %}
     </div>
   </section>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <hr>
+      </div>
+    </div>
+  </div>
+  {% include "includes/body.html" with body=self.body %}
 {% endblock content %}

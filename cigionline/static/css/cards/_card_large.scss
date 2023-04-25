@@ -201,6 +201,8 @@
       @include media-breakpoint-up(lg) {
         padding: 1.5em;
       }
+      height: auto;
+
       .card__text__description {
         @include media-breakpoint-down(md) {
           display: block;
@@ -245,21 +247,22 @@
 
     .col-lg-3 {
       @include media-breakpoint-only(lg) {
-        width: 28.5%
+        width: 28.5%;
       }
     }
 
     .col-lg-9 {
       @include media-breakpoint-only(lg) {
-        width: 71.5%
+        width: 71.5%;
       }
     }
 
     .card__text {
       .card__text__title {
-        @include media-breakpoint-up(md) {
-          font-size: clamp(1.25em, 3vw, 1.75em);
+        @include media-breakpoint-up(lg) {
+          font-size: 1.75em;
         }
+        font-size: 1.25em;
         letter-spacing: -0.5px;
       }
 
