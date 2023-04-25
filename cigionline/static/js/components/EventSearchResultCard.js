@@ -44,15 +44,19 @@ const EventSearchResultCard = (props) => {
             </div>
           )}
           {
-            isLive && (
-              <div className="card--event--live-label">
-                <i className="fas fa-podcast"></i>Live
-              </div>
-            )
+            isLive
+              ? (
+                <h3 className="card--event--live-label">
+                  <i className="fas fa-podcast"></i>
+                  <a href={row.url}>{row.title}</a>
+                </h3>
+              )
+              : (
+                <h3>
+                  <a href={row.url}>{row.title}</a>
+                </h3>
+              )
           }
-          <h3>
-            <a href={row.url}>{row.title}</a>
-          </h3>
         </div>
         <div className="card--event__info">
           <time dateTime="" className="card--event__time">

@@ -39,15 +39,19 @@ const EventListingCard = (props) => {
               </div>
             )}
             {
-              isLive && (
-                <div className="card--event--live-label">
-                  <i className="fas fa-podcast"></i>Live
-                </div>
-              )
+              isLive
+                ? (
+                  <div className="card__text__title card--event__title card--event--live-label">
+                    <i className="fas fa-podcast"></i>
+                    <a href={row.url}>{row.title}</a>
+                  </div>
+                )
+                : (
+                  <h3 className="card__text__title card--event__title">
+                    <a href={row.url}>{row.title}</a>
+                  </h3>
+                )
             }
-            <h3 className="card__text__title card--event__title">
-              <a href={row.url}>{row.title}</a>
-            </h3>
             <div className="card--event__info">
               <time dateTime="" className="card--event__time">
                 <div>{ row.date }</div>
