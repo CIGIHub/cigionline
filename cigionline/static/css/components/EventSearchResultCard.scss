@@ -4,6 +4,10 @@
   .card__container {
     padding: 0 2em;
 
+    .card--event--upcoming-label {
+      margin-bottom: 0;
+    }
+
     .card--event--live-label {
       i {
         color: $cigi-primary-colour;
