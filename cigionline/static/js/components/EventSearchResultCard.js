@@ -7,14 +7,14 @@ import '../../css/components/EventSearchResultCard.scss';
 const EventSearchResultCard = (props) => {
   const { row } = props;
   const today = DateTime.now().toLocal();
-  const startDate = DateTime.fromISO(row.publishing_date).toLocal();
+  const startDate = DateTime.fromISO(row.event_start_time_utc).toLocal();
   const startDayDayOfWeek = startDate.weekdayLong;
   const startDateDay = startDate.day;
   const startDateMonth = startDate.monthLong;
   const startDateYear = startDate.year;
   const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
   const startDateAmPm = startDate.toFormat('a');
-  const endDate = DateTime.fromISO(row.event_end).toLocal() || null;
+  const endDate = DateTime.fromISO(row.event_end_time_utc).toLocal() || null;
   const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
   const endDateAmPm = endDate.toFormat('a');
 
@@ -134,10 +134,12 @@ const EventSearchResultCard = (props) => {
               <i className="fab fa-facebook-f" />
               Share on Facebook
             </button>
-            <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
-              <i className="fal fa-check-square" />
-              Register
-            </a>
+            {row.event_access !== 'Private' && (
+              <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                <i className="fal fa-check-square" />
+                Register
+              </a>
+            )}
           </div>
         </div>
       </div>

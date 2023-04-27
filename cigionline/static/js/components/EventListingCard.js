@@ -134,10 +134,12 @@ const EventListingCard = (props) => {
                     <i className="fab fa-facebook-f"></i>
                     Share on Facebook
                   </a>
-                  <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
-                    <i className="fal fa-check-square"></i>
-                    Register
-                  </a>
+                  {row.event_access !== 'Private' && (
+                    <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                      <i className="fal fa-check-square"></i>
+                      Register
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

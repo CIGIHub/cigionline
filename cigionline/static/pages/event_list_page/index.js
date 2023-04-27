@@ -28,8 +28,9 @@ ReactDOM.render(
       'event_type',
       'event_format_string',
       'time_zone_label',
-      'event_start_time_local',
-      'event_end_time_local',
+      'utc_start',
+      'event_start_time_utc',
+      'event_end_time_utc',
     ]}
     filterTypes={[
       {
