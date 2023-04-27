@@ -6,26 +6,28 @@ import '../../css/components/EventSearchResultCard.scss';
 
 const EventSearchResultCard = (props) => {
   const { row } = props;
-  const today = DateTime.now().toLocal();
-  const startDate = DateTime.fromISO(row.event_start_time_utc).toLocal();
+  const today = DateTime.now();
+  const startDate = DateTime.fromISO(row.publishing_date);
+  const startDateTs = row.event_start_time_utc_ts * 1000;
   const startDayDayOfWeek = startDate.weekdayLong;
   const startDateDay = startDate.day;
   const startDateMonth = startDate.monthLong;
   const startDateYear = startDate.year;
   const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
   const startDateAmPm = startDate.toFormat('a');
-  const endDate = DateTime.fromISO(row.event_end_time_utc).toLocal() || null;
+  const endDate = DateTime.fromISO(row.event_end) || null;
+  const endDateTs = row.event_end_time_utc_ts * 1000 || null;
   const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
   const endDateAmPm = endDate.toFormat('a');
 
   const evaluateLive = (start, end) => {
     return today >= start && today <= end;
   };
-  const [isLive, setIsLive] = useState(evaluateLive(startDate, endDate));
+  const [isLive, setIsLive] = useState(evaluateLive(startDateTs, endDateTs));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsLive(evaluateLive(startDate, endDate));
+      setIsLive(evaluateLive(startDateTs, endDateTs));
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -33,10 +35,10 @@ const EventSearchResultCard = (props) => {
   }, [isLive]);
 
   return (
-    <article className={`card__container card--small card--small--event card--event ${!row.event_access && 'is_private'}`}>
+    <article className={`card__container card--small card--small--event card--event ${!row.event_access === 'Private' && 'is_private'}`}>
       <div className="card--event--small__top">
         <div className="card--event__title card__text__title">
-          {today < startDate && (
+          {today < startDateTs && (
             <div className="card--event--upcoming-label">
               Upcoming Event -
               {' '}

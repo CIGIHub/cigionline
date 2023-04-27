@@ -116,12 +116,6 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
                 'title': author.author.title,
                 'url': author.author.url
             } for author in item.authors.all()]
-            item_dict['date'] = item.event_start_time_local.strftime('%A, %B %-d, %Y')
-            item_dict['date_singular'] = item.event_start_time_local.strftime('%-d')
-            item_dict['month'] = item.event_start_time_local.strftime('%B')
-            item_dict['time'] = item.event_start_time_local.strftime('%-I:%M %p')
-            item_dict['end_date'] = item.event_end_time_local.strftime('%Y-%m-%d') if item.event_end else ''
-            item_dict['end_time'] = item.event_end_time_local.strftime('%-I:%M %p') if item.event_end else ''
             item_dict['event_type'] = item.get_event_type_display()
             item_dict['event_access'] = item.get_event_access_display()
             item_dict['event_format'] = item.event_format_string
@@ -134,8 +128,10 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             } for topic in item.topics_sorted]
             item_dict['registration_url'] = item.registration_url
             item_dict['id'] = item.id
-            item_dict['start_utc'] = item.event_start_time_utc.timestamp()
-            item_dict['end_utc'] = item.event_end_time_utc.timestamp() if item.event_end else ''
+            item_dict['start_time'] = item.publishing_date.strftime('%Y-%m-%dT%H:%M:%S%z')
+            item_dict['end_time'] = item.event_end.strftime('%Y-%m-%dT%H:%M:%S%z') if item.event_end else ''
+            item_dict['start_utc_ts'] = item.event_start_time_utc_ts
+            item_dict['end_utc_ts'] = item.event_end_time_utc_ts if item.event_end else ''
 
             item_dict['image_hero_url'] = item.image_hero_url
             item_dict['livestream_url'] = item.livestream_url if item.livestream_url else ''
@@ -351,6 +347,10 @@ class EventPage(
             )
 
     @property
+    def event_start_time_utc_ts(self):
+        return self.event_start_time_utc.timestamp()
+
+    @property
     def event_start_time_local(self):
         timezone = pytz.timezone(self.time_zone) if self.time_zone in pytz.all_timezones else pytz.timezone('America/Toronto')
         return self.event_start_time_utc.astimezone(timezone)
@@ -367,6 +367,10 @@ class EventPage(
                     self.event_end.astimezone(default_tz).replace(tzinfo=None)
                 )
             )
+
+    @property
+    def event_end_time_utc_ts(self):
+        return self.event_end_time_utc.timestamp()
 
     @property
     def event_end_time_local(self):

@@ -3,7 +3,18 @@ import React, { useState, useEffect } from 'react';
 
 const FeaturedEventCard = (props) => {
   const { row } = props;
-  const today = DateTime.now().toLocal();
+  const startDate = DateTime.fromISO(row.start_time);
+  const startDateTs = row.start_utc_ts * 1000;
+  const startDayDayOfWeek = startDate.weekdayLong;
+  const startDateDay = startDate.day;
+  const startDateMonth = startDate.monthLong;
+  const startDateYear = startDate.year;
+  const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
+  const startDateAmPm = startDate.toFormat('a');
+  const endDate = DateTime.fromISO(row.end_time) || null;
+  const endDateTs = row.end_utc_ts * 1000;
+  const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
+  const endDateAmPm = endDate.toFormat('a');
 
   function embedUrl(str) {
     if (str.substr(-1) === '/') {
@@ -25,13 +36,13 @@ const FeaturedEventCard = (props) => {
   }
 
   const evaluateLive = (start, end) => {
-    return Date.now() / 1000 >= start && Date.now() / 1000 <= end;
+    return Date.now() >= start && Date.now() <= end;
   };
-  const [isLive, setIsLive] = useState(evaluateLive(row.start_utc, row.end_utc));
+  const [isLive, setIsLive] = useState(evaluateLive(startDateTs, endDateTs));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsLive(evaluateLive(row.start_utc, row.end_utc));
+      setIsLive(evaluateLive(startDateTs, endDateTs));
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -46,11 +57,11 @@ const FeaturedEventCard = (props) => {
             <div className="col-md-4">
               <div className="card__text">
                 <div className="row card--event__top">
-                  {today < row.date && (
+                  {Date.now() < startDateTs && (
                     <div className="card--event--upcoming-label">
                       Upcoming Event -
                       {' '}
-                      {row.date}
+                      {`${startDateMonth} ${startDateDay}`}
                     </div>
                   )}
                   {
@@ -69,10 +80,10 @@ const FeaturedEventCard = (props) => {
                   }
                   <div className="card--event__info">
                     <time dateTime="" className="card--event__time">
-                      <div>{ row.date }</div>
+                      <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
                       <div>
-                        {row.time }
-                        {row.end_date && ` - ${row.end_time}`}
+                        {`${startDateHour} ${startDateAmPm}`}
+                        {endDate && ` - ${endDateHour} ${endDateAmPm}`}
                         {' '}
                         {row.time_zone_label}
                       </div>

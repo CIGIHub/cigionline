@@ -6,6 +6,7 @@ import '../../css/components/EventListingCard.scss';
 const EventListingCard = (props) => {
   const { row } = props;
   const today = DateTime.now();
+  console.log(row.start_utc * 1000, row.end_utc * 1000, Date.now());
 
   const evaluateLive = (start, end) => {
     return Date.now() / 1000 >= start && Date.now() / 1000 <= end;
@@ -23,11 +24,6 @@ const EventListingCard = (props) => {
 
   return (
     <div className="col col-12 col-md-8">
-      {/* <div>
-        Current Time: {Date().toLocaleString()}
-        start time: {row.time}
-        end time: {row.end_time}
-      </div> */}
       <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
         <div className="row card--event__top">
           <div className="col-md-8">
