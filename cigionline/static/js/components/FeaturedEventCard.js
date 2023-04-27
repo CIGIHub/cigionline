@@ -10,10 +10,12 @@ const FeaturedEventCard = (props) => {
   const startDateMonth = startDate.monthLong;
   const startDateYear = startDate.year;
   const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
+  const startDateMinute = startDate.minute;
   const startDateAmPm = startDate.toFormat('a');
   const endDate = DateTime.fromISO(row.end_time) || null;
   const endDateTs = row.end_utc_ts * 1000;
   const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
+  const endDateMinute = endDate.minute;
   const endDateAmPm = endDate.toFormat('a');
 
   function embedUrl(str) {
@@ -82,8 +84,8 @@ const FeaturedEventCard = (props) => {
                     <time dateTime="" className="card--event__time">
                       <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
                       <div>
-                        {`${startDateHour} ${startDateAmPm}`}
-                        {endDate && ` - ${endDateHour} ${endDateAmPm}`}
+                        {`${startDateHour}:${startDateMinute} ${startDateAmPm}`}
+                        {endDate && ` - ${endDateHour}:${endDateMinute} ${endDateAmPm}`}
                         {' '}
                         {row.time_zone_label}
                       </div>

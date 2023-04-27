@@ -66,12 +66,6 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
                 'title': author.author.title,
                 'url': author.author.url
             } for author in item.authors.all()]
-            item_dict['date'] = item.event_start_time_local.strftime('%A, %B %-d, %Y')
-            item_dict['date_singular'] = item.event_start_time_local.strftime('%-d')
-            item_dict['month'] = item.event_start_time_local.strftime('%B')
-            item_dict['time'] = item.event_start_time_local.strftime('%-I:%M %p')
-            item_dict['end_date'] = item.event_end_time_local.strftime('%Y-%m-%d') if item.event_end else ''
-            item_dict['end_time'] = item.event_end_time_local.strftime('%-I:%M %p') if item.event_end else ''
             item_dict['event_type'] = item.get_event_type_display()
             item_dict['event_access'] = item.get_event_access_display()
             item_dict['event_format'] = item.event_format_string
@@ -84,8 +78,10 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             } for topic in item.topics_sorted]
             item_dict['registration_url'] = item.registration_url
             item_dict['id'] = item.id
-            item_dict['start_utc'] = item.event_start_time_utc.timestamp()
-            item_dict['end_utc'] = item.event_end_time_utc.timestamp() if item.event_end else ''
+            item_dict['start_time'] = item.publishing_date.strftime('%Y-%m-%dT%H:%M:%S%z')
+            item_dict['end_time'] = item.event_end.strftime('%Y-%m-%dT%H:%M:%S%z') if item.event_end else ''
+            item_dict['start_utc_ts'] = item.event_start_time_utc_ts
+            item_dict['end_utc_ts'] = item.event_end_time_utc_ts if item.event_end else ''
 
             events_list.append(item_dict)
 
@@ -195,7 +191,7 @@ class EventPage(
 
     class EventTimeZones(models.TextChoices):
         HAWAII = ('US/Hawaii', '(UTC–10:00) Hawaiian Time')
-        LOS_ANGELES = ('America/Los_Angeles', '(UTC–08:00/09:00) Pacific Time')
+        LOS_ANGELES = ('America/Los_Angeles', '(UTC–07:00/08:00) Pacific Time')
         DENVER = ('America/Denver', '(UTC–06:00/07:00) Mountain Time')
         CHICAGO = ('America/Chicago', '(UTC–05:00/06:00) Central Time')
         TORONTO = ('America/Toronto', '(UTC–04:00/05:00) Eastern Time')
@@ -351,11 +347,6 @@ class EventPage(
         return self.event_start_time_utc.timestamp()
 
     @property
-    def event_start_time_local(self):
-        timezone = pytz.timezone(self.time_zone) if self.time_zone in pytz.all_timezones else pytz.timezone('America/Toronto')
-        return self.event_start_time_utc.astimezone(timezone)
-
-    @property
     def event_end_time_utc(self):
         if self.time_zone == '' or not self.time_zone:
             return self.event_end
@@ -371,11 +362,6 @@ class EventPage(
     @property
     def event_end_time_utc_ts(self):
         return self.event_end_time_utc.timestamp()
-
-    @property
-    def event_end_time_local(self):
-        timezone = pytz.timezone(self.time_zone) if self.time_zone in pytz.all_timezones else pytz.timezone('America/Toronto')
-        return self.event_end_time_utc.astimezone(timezone)
 
     @property
     def time_zone_label(self):
