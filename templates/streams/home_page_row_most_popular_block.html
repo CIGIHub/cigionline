@@ -6,7 +6,7 @@
   </div>
   <hr class="d-block my-3" />
   <div class="most-popular__container column__container {% if self.most_popular_cards|length|divisibleby:2 %}even{% else %}odd{% endif %}">
-    {% for block in self.most_popular_cards %}
+    {% for block in self.most_popular_field %}
       {% include_block block.value %}
       {% if self.most_popular_cards|length > 1 and not forloop.last %}
         <div class="column__hr">

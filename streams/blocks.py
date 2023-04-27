@@ -1621,6 +1621,24 @@ class AdCard(blocks.StructBlock):
 
 
 class HomePageRowMostPopular(blocks.StructBlock):
+    from wagtail.core.fields import StreamField
+    from publications.models import PublicationPage
+    # most_popular = Page.objects.live().specific().prefetch_related(
+    #     'publication_page',
+    # ).all()[:5]
+    most_popular = PublicationPage.objects.live().specific().all()[:5]
+
+    stream_block_data = []
+    for page in most_popular:
+        stream_block_data.append('publication_card', PublicationCard(page=page))
+
+    most_popular_field = StreamField(blocks.StreamBlock(), stream_block_data)
+
+    # max_count = 1
+    # parent_page_types = ['home.HomePage']
+    # subpage_types = ['publications.PublicationPage', 'publications.PublicationTypePage']
+    # templates = 'streams/home_page_row_most_popular_block.html'
+
     most_popular_cards = blocks.StreamBlock([
         ('article_card', ArticleCard()),
         ('publication_card', PublicationCard()),
