@@ -4,11 +4,14 @@
   .card__container {
     padding: 0 2em;
 
-    .card--event--live-label {
-      color: $cigi-primary-colour;
-      font-weight: 500;
+    .card--event--upcoming-label {
+      margin-bottom: 0;
+    }
 
+    .card--event--live-label {
       i {
+        color: $cigi-primary-colour;
+        font-weight: 500;
         padding-right: 0.5em;
       }
     }

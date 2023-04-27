@@ -29,14 +29,13 @@
       margin-bottom: 2em;
   
       .card--event--upcoming-label {
-        display: none;
+        margin-bottom: 0;
       }
 
       .card--event--live-label {
-        color: $cigi-primary-colour;
-        font-weight: 500;
-
         i {
+          color: $cigi-primary-colour;
+          font-weight: 500;
           padding-right: 0.5em;
         }
       }

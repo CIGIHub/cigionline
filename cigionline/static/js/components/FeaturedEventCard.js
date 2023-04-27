@@ -3,7 +3,20 @@ import React, { useState, useEffect } from 'react';
 
 const FeaturedEventCard = (props) => {
   const { row } = props;
-  const today = DateTime.now().toLocal();
+  const startDate = DateTime.fromISO(row.start_time);
+  const startDateTs = row.start_utc_ts * 1000;
+  const startDayDayOfWeek = startDate.weekdayLong;
+  const startDateDay = startDate.day;
+  const startDateMonth = startDate.monthLong;
+  const startDateYear = startDate.year;
+  const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
+  const startDateMinute = startDate.minute;
+  const startDateAmPm = startDate.toFormat('a');
+  const endDate = DateTime.fromISO(row.end_time) || null;
+  const endDateTs = row.end_utc_ts * 1000;
+  const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
+  const endDateMinute = endDate.minute;
+  const endDateAmPm = endDate.toFormat('a');
 
   function embedUrl(str) {
     if (str.substr(-1) === '/') {
@@ -25,13 +38,13 @@ const FeaturedEventCard = (props) => {
   }
 
   const evaluateLive = (start, end) => {
-    return Date.now() / 1000 >= start && Date.now() / 1000 <= end;
+    return Date.now() >= start && Date.now() <= end;
   };
-  const [isLive, setIsLive] = useState(evaluateLive(row.start_utc, row.end_utc));
+  const [isLive, setIsLive] = useState(evaluateLive(startDateTs, endDateTs));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsLive(evaluateLive(row.start_utc, row.end_utc));
+      setIsLive(evaluateLive(startDateTs, endDateTs));
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -46,29 +59,33 @@ const FeaturedEventCard = (props) => {
             <div className="col-md-4">
               <div className="card__text">
                 <div className="row card--event__top">
-                  {today < row.date && (
+                  {Date.now() < startDateTs && (
                     <div className="card--event--upcoming-label">
                       Upcoming Event -
                       {' '}
-                      {row.date}
+                      {`${startDateMonth} ${startDateDay}`}
                     </div>
                   )}
                   {
-                    isLive && (
-                      <div className="card--event--live-label">
-                        <i className="fas fa-podcast"></i>Live
-                      </div>
-                    )
+                    isLive
+                      ? (
+                        <div className="card__text__title card--event__title card--event--live-label">
+                          <i className="fas fa-podcast"></i>
+                          <a href={row.url}>{row.title}</a>
+                        </div>
+                      )
+                      : (
+                        <h3 className="card__text__title card--event__title">
+                          <a href={row.url}>{row.title}</a>
+                        </h3>
+                      )
                   }
-                  <h3 className="card__text__title card--event__title">
-                    <a href={row.url}>{row.title}</a>
-                  </h3>
                   <div className="card--event__info">
                     <time dateTime="" className="card--event__time">
-                      <div>{ row.date }</div>
+                      <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
                       <div>
-                        {row.time }
-                        {row.end_date && ` - ${row.end_time}`}
+                        {`${startDateHour}:${startDateMinute} ${startDateAmPm}`}
+                        {endDate && ` - ${endDateHour}:${endDateMinute} ${endDateAmPm}`}
                         {' '}
                         {row.time_zone_label}
                       </div>
@@ -95,6 +112,27 @@ const FeaturedEventCard = (props) => {
                   </div>
                 </div>
                 <div className="card--event__bottom">
+                  <div className="card__cta">
+                    {row.event_access === 'Private'
+                      ? (
+                        <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                          Private Event
+                        </button>
+                      )
+                      : isLive
+                        ? (
+                          <button type="button" className="card--event__button--register button--rounded">
+                            Watch Now
+                            <i className="fas fa-angle-right" />
+                          </button>
+                        )
+                        : (
+                          <button type="button" className="card--event__button--register button--rounded">
+                            Register Now
+                            <i className="fas fa-angle-right" />
+                          </button>
+                        )}
+                  </div>
                   <div className="card__text__meta">
                     <div>
                       <ul className="custom-text-list card__text__people">
@@ -117,53 +155,34 @@ const FeaturedEventCard = (props) => {
                         ))}
                       </ul>
                     </div>
-                    <div className="card__cta">
-                      {row.event_access === 'Private'
-                        ? (
-                          <button type="button" className="card--event__button--register button--rounded is_private" disabled>
-                            Private Event
-                          </button>
-                        )
-                        : isLive
-                          ? (
-                            <button type="button" className="card--event__button--register button--rounded">
-                              Watch Now
-                              <i className="fas fa-angle-right" />
-                            </button>
-                          )
-                          : (
-                            <button type="button" className="card--event__button--register button--rounded">
-                              Register Now
-                              <i className="fas fa-angle-right" />
-                            </button>
-                          )}
-                      <div className="card__text__more__container dropup">
-                        <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
-                          <i className="far fa-ellipsis-h"></i>
+                    <div className="card__text__more__container dropup">
+                      <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
+                        <i className="far fa-ellipsis-h"></i>
+                      </button>
+                      <div className="dropdown-menu dropdown-menu-end">
+                        <button className="dropdown-item copy-text-button" type="button">
+                          <i className="fas fa-link"></i>
+                          Copy Link
                         </button>
-                        <div className="dropdown-menu dropdown-menu-end">
-                          <button className="dropdown-item copy-text-button" type="button">
-                            <i className="fas fa-link"></i>
-                            Copy Link
-                          </button>
-                          <input type="text" value={row.url} className="copyText"></input>
-                          <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
-                            <i className="fab fa-twitter"></i>
-                            Share on Twitter
-                          </a>
-                          <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
-                            <i className="fab fa-linkedin-in"></i>
-                            Share on Linkedin
-                          </a>
-                          <a className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
-                            <i className="fab fa-facebook-f"></i>
-                            Share on Facebook
-                          </a>
+                        <input type="text" value={row.url} className="copyText"></input>
+                        <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
+                          <i className="fab fa-twitter"></i>
+                          Share on Twitter
+                        </a>
+                        <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
+                          <i className="fab fa-linkedin-in"></i>
+                          Share on Linkedin
+                        </a>
+                        <a className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
+                          <i className="fab fa-facebook-f"></i>
+                          Share on Facebook
+                        </a>
+                        {row.event_access !== 'Private' && (
                           <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
                             <i className="fal fa-check-square"></i>
                             Register
                           </a>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>

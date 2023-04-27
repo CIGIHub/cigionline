@@ -5,16 +5,29 @@ import '../../css/components/EventListingCard.scss';
 
 const EventListingCard = (props) => {
   const { row } = props;
-  const today = DateTime.now();
+  const startDate = DateTime.fromISO(row.start_time);
+  const startDateTs = row.start_utc_ts * 1000;
+  const startDayDayOfWeek = startDate.weekdayLong;
+  const startDateDay = startDate.day;
+  const startDateMonth = startDate.monthLong;
+  const startDateYear = startDate.year;
+  const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
+  const startDateMinute = startDate.minute;
+  const startDateAmPm = startDate.toFormat('a');
+  const endDate = DateTime.fromISO(row.end_time) || null;
+  const endDateTs = row.end_utc_ts * 1000;
+  const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
+  const endDateMinute = endDate.minute;
+  const endDateAmPm = endDate.toFormat('a');
 
   const evaluateLive = (start, end) => {
-    return Date.now() / 1000 >= start && Date.now() / 1000 <= end;
+    return Date.now() >= start && Date.now() <= end;
   };
-  const [isLive, setIsLive] = useState(evaluateLive(row.start_utc, row.end_utc));
+  const [isLive, setIsLive] = useState(evaluateLive(startDateTs, endDateTs));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsLive(evaluateLive(row.start_utc, row.end_utc));
+      setIsLive(evaluateLive(startDateTs, endDateTs));
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -23,37 +36,36 @@ const EventListingCard = (props) => {
 
   return (
     <div className="col col-12 col-md-8">
-      {/* <div>
-        Current Time: {Date().toLocaleString()}
-        start time: {row.time}
-        end time: {row.end_time}
-      </div> */}
       <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
         <div className="row card--event__top">
           <div className="col-md-8">
-            {today < row.date && (
+            {Date.now() < startDateTs && (
               <div className="card--event--upcoming-label">
                 Upcoming Event -
                 {' '}
-                {row.date}
+                {`${startDateMonth} ${startDateDay}`}
               </div>
             )}
             {
-              isLive && (
-                <div className="card--event--live-label">
-                  <i className="fas fa-podcast"></i>Live
-                </div>
-              )
+              isLive
+                ? (
+                  <div className="card__text__title card--event__title card--event--live-label">
+                    <i className="fas fa-podcast"></i>
+                    <a href={row.url}>{row.title}</a>
+                  </div>
+                )
+                : (
+                  <h3 className="card__text__title card--event__title">
+                    <a href={row.url}>{row.title}</a>
+                  </h3>
+                )
             }
-            <h3 className="card__text__title card--event__title">
-              <a href={row.url}>{row.title}</a>
-            </h3>
             <div className="card--event__info">
               <time dateTime="" className="card--event__time">
-                <div>{ row.date }</div>
+                <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
                 <div>
-                  {row.time }
-                  {row.end_date && ` - ${row.end_time}`}
+                  {`${startDateHour}:${startDateMinute} ${startDateAmPm}`}
+                  {endDate && ` - ${endDateHour}:${endDateMinute} ${endDateAmPm}`}
                   {' '}
                   {row.time_zone_label}
                 </div>
@@ -80,8 +92,8 @@ const EventListingCard = (props) => {
             </div>
           </div>
           <div className="d-none d-md-block col-md-4 card--event__calendar-date">
-            <div className="card--event__date">{row.date_singular}</div>
-            <div className="card--event__month">{row.month}</div>
+            <div className="card--event__date">{startDateDay}</div>
+            <div className="card--event__month">{startDateMonth}</div>
           </div>
         </div>
         <div className="row g-3 g-md-5 card--event__bottom">
@@ -130,10 +142,12 @@ const EventListingCard = (props) => {
                     <i className="fab fa-facebook-f"></i>
                     Share on Facebook
                   </a>
-                  <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
-                    <i className="fal fa-check-square"></i>
-                    Register
-                  </a>
+                  {row.event_access !== 'Private' && (
+                    <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                      <i className="fal fa-check-square"></i>
+                      Register
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

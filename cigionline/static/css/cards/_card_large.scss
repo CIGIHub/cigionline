@@ -376,10 +376,9 @@
           }
 
           .card--event--live-label {
-            color: $cigi-primary-colour;
-            font-weight: 500;
-    
             i {
+              color: $cigi-primary-colour;
+              font-weight: 500;
               padding-right: 0.5em;
             }
           }
@@ -391,8 +390,8 @@
 
         .card--event__bottom {
           .card__text__meta {
-            flex-direction: column;
-            align-items: flex-start;
+            flex-direction: row;
+            align-items: flex-end;
           }
 
           .card__cta {
@@ -455,7 +454,8 @@
             }
 
             .card--event__button--register {
-              width: auto;
+              margin-bottom: 1em;
+              width: 66.6667%;
             }
 
             .card__text__more__container {
@@ -477,10 +477,27 @@
           padding-bottom: 1em;
           padding-left: 0;
 
+          .img-wrapper {
+            img {
+              @include media-breakpoint-up(lg) {
+                height: 325px;
+              }
+              @include media-breakpoint-up(xl) {
+                height: 390px;
+              }
+            }
+          }
+
           .video--wrapper {
             padding-bottom: 54.5%;
 
             iframe {
+              @include media-breakpoint-up(lg) {
+                height: 325px;
+              }
+              @include media-breakpoint-up(xl) {
+                height: 390px;
+              }
               border-radius: 20px;
               height: 100%;
               position: absolute;
