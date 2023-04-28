@@ -64,7 +64,19 @@
     </div>
   </div>
   
-  {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
+  {% if self.livestream_url %}
+    <section class="event-multimedia-embed-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="event-multimedia-embed">
+              {% embed self.livestream_url max_width="1080" %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% elif self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
     <section class="event-multimedia-embed-section">
       <div class="container">
         <div class="row justify-content-center">
