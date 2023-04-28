@@ -218,6 +218,7 @@ ReactDOM.render(
   <FeaturedEventListing meta={featuredEvents.meta} items={featuredEvents.items} />,
   document.getElementById('featured-events'),
 );
+console.log(featuredEvents);
 
 if (featuredEvents) {
   const eventsPageFeaturedEventsSlider = new Swiper(

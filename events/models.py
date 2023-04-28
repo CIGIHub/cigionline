@@ -392,11 +392,45 @@ class EventPage(
     def card_url(self):
         return self.feature_url if self.feature_url else self.url
 
+    def get_event_data(self):
+        data_dict = {}
+
+        data_dict['title'] = self.feature_title if self.feature_title else self.title
+        data_dict['authors'] = [{
+            'title': author.author.title,
+            'url': author.author.url
+        } for author in self.authors.all()]
+        data_dict['event_type'] = self.get_event_type_display()
+        data_dict['event_access'] = self.get_event_access_display()
+        data_dict['event_format'] = self.event_format_string
+        data_dict['is_past'] = self.is_past()
+        data_dict['time_zone_label'] = self.time_zone_label
+        data_dict['url'] = self.feature_url if self.feature_url else self.url
+        data_dict['topics'] = [{
+            'title': topic.title,
+            'url': topic.url
+        } for topic in self.topics_sorted]
+        data_dict['registration_url'] = self.registration_url
+        data_dict['id'] = self.id
+        data_dict['start_time'] = self.publishing_date.strftime('%Y-%m-%dT%H:%M:%S%z')
+        data_dict['end_time'] = self.event_end.strftime('%Y-%m-%dT%H:%M:%S%z') if self.event_end else ''
+        data_dict['start_utc_ts'] = self.event_start_time_utc_ts
+        data_dict['end_utc_ts'] = self.event_end_time_utc_ts if self.event_end else ''
+
+        data_dict['image_hero_url'] = self.image_hero_url
+        data_dict['livestream_url'] = self.livestream_url if self.livestream_url else ''
+        if self.multimedia_page:
+            if self.multimedia_page.specific.vimeo_url:
+                data_dict['vimeo_url'] = self.multimedia_page.specific.vimeo_url
+
+        return json.dumps(data_dict)
+
     def get_context(self, request):
         context = super().get_context(request)
         context['location_string'] = self.location_string()
         context['event_format_string'] = self.get_event_format_display()
         context['location_map_url'] = self.location_map_url()
+        context['event_data'] = self.get_event_data()
         return context
 
     content_panels = [
