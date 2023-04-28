@@ -1,13 +1,39 @@
 {% load wagtailimages_tags %}
 
 <div class="col">
-  <article class="card__container">
-    <a href="{{ url }}">
-      {% if image_src %}
-        <img alt="{{ image_alt }}" src="{{ image_src }}" />
-      {% else %}
-        {% image image width-1440 %}
-      {% endif %}
-    </a>
+  <article class="card__container card--ad card--ad--{{ type }}">
+    <div class="card__image">
+    {% if type == 'generic' %}
+      <a href="{{ url }}">
+    {% endif %}
+        <div class="img-wrapper">
+          {% if image_src %}
+            <img alt="{{ image_alt }}" src="{{ image_src }}" />
+          {% else %}
+            {% image image fill-1440x720 %}
+          {% endif %}
+        </div>
+    {% if type == 'generic' %}
+      </a>
+    {% endif %}
+    </div>
+    {% if type != 'generic' %}
+      <div class="card--ad__content">
+        {% if type == 'social' %}
+          <div class='social-text'>Follow us on social media</div>
+          <div class='social-links'>
+            <a class='social-link' href='https://www.facebook.com/cigionline/' target='_blank' rel="noopener noreferrer">
+              <i class='fab fa-facebook-f'></i>
+            </a>
+            <a class='social-link' href='https://twitter.com/cigionline' target='_blank' rel="noopener noreferrer">
+              <i class='fab fa-twitter'></i>
+            </a>
+            <a class='social-link' href='https://www.linkedin.com/company/cigionline/' target='_blank' rel="noopener noreferrer">
+              <i class='fab fa-linkedin-in'></i>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
   </article>
 </div>

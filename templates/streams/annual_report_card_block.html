@@ -1,0 +1,25 @@
+{% load wagtailimages_tags %}
+<div class="card__container card--annual-report">
+  <div class="row g-3">
+    <div class="col-6">
+      <div class="card__image">
+        <div class="img-wrapper">
+          {% image report.image_poster fill-990x1440 %}
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card__text">
+        <div class="card__text__title">
+          {{ report.title }}
+        </div>
+        <div class="card__text__cta">
+          <a href="{{ report.url }}" class="btn btn--primary">
+            <i class="fas fa-mouse-pointer"></i>
+            Explore
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

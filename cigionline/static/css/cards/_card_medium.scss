@@ -38,31 +38,30 @@ article {
           flex: 0 0 auto;
           width: 33.33333333%;
         }
+
         .card__text__title {
-          @include media-breakpoint-up(md) {
-            font-size: 1.25em;
-            font-size: clamp(1.25em, 3vw, 2em);
+          @include media-breakpoint-up(lg) {
+            font-size: 1.3em;
           }
-          font-size: 1.1em;
-          font-size: clamp(1.1em, 3vw, 1.5em);
+          font-size: 1.25em;
         }
       }
     }
 
     &.card--medium--expert {
-      @include media-breakpoint-up(md) {
-        display: grid;
-        grid-gap: 2em;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          'a c'
-          'b c';
+      .col-12 {
+        &.col-md-5 {
+          @include media-breakpoint-up(md) {
+            border: 0;
+          }
+        }
       }
 
       .card__expert-info {
-        @include media-breakpoint-up(md) {
-          grid-area: a;
-        }
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
 
         .card__text {
           height: auto;
@@ -71,36 +70,29 @@ article {
             @include media-breakpoint-down(md) {
               margin-bottom: 0;
             }
-            font-size: 1.25em;
-            font-size: clamp(1.25em, 3vw, 1.75em);
+            font-size: clamp(1.1em, 3vw, 1.3em);
+            margin-bottom: 0.25rem;
           }
         }
-      }
 
-      .card__latest-activity {
-        @include media-breakpoint-up(md) {
-          grid-area: b;
-        }
-
-        h4 {
-          color: $cigi-medium-grey;
-          margin-bottom: 1.5rem;
-          margin-top: 0;
-        }
-
-        .card--tiny {
-          margin-bottom: 1em;
-
-          .card__text__title {
-            font-family: $card-title-font;
-            font-weight: 300;
+        .card__latest-activity {
+          h4 {
+            color: $cigi-medium-grey;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
           }
-        }
-      }
 
-      .card--medium--expert--right {
-        @include media-breakpoint-up(md) {
-          grid-area: c;
+          .card--tiny {
+            &:not(:last-child) {
+              margin-bottom: 1em;
+            }
+
+            .card__text__title {
+              font-family: $card-title-font;
+              font-weight: 300;
+              font-size: 1.1em;
+            }
+          }
         }
       }
 
@@ -127,32 +119,37 @@ article {
         }
       }
 
+      .col-lg-5 {
+        @include media-breakpoint-only(lg) {
+          width: 43.66667%;
+        }
+        @include media-breakpoint-up(xl) {
+          width: 38.5%;
+        }
+      }
+
+      .col-lg-7 {
+        @include media-breakpoint-only(lg) {
+          width: 56.33333%;
+        }
+        @include media-breakpoint-up(xl) {
+          width: 61.5%;
+        }
+      }
+
       .card__image {
-        @include media-breakpoint-up(sm) {
-          padding: 0 3em 0 0;
-        }
         @include media-breakpoint-up(md) {
-          display: flex;
-          align-items: flex-start;
-          padding-right: 1.5em;
+          width: auto;
+          padding: 0;
         }
-        @include media-breakpoint-only(md) {
-          flex: 0 0 32.15%;
-        }
-        display: block;
         margin: 0;
-        padding: 0 1em 0 0;
-        flex: 0 0 50%;
       }
 
       .card__text {
         @include media-breakpoint-up(md) {
-          justify-content: space-between;
-          padding-left: 1.5em;
-          flex-grow: 1;
+          width: auto;
+          padding: 0;
         }
-        justify-content: center;
-
         .card__text__description {
           @include media-breakpoint-up(md) {
             display: block;
@@ -163,33 +160,18 @@ article {
       }
 
       &.card--vertical--publication {
-        @include media-breakpoint-up(lg) {
-          flex-direction: column;
-        }
-        flex-direction: row;
         height: 100%;
 
         .card__image {
-          @include media-breakpoint-up(sm) {
-            padding: 0 3em 0 0;
-          }
-          @include media-breakpoint-only(md) {
-            padding: 0 1.5em 0 0;
-          }
           @include media-breakpoint-up(lg) {
-            padding: 0 6em 1em;
+            padding: 0 10em 1em;
           }
           @include media-breakpoint-up(xl) {
             padding: 0 14em 1em;
           }
-          padding: 0 1em 0 0;
-          flex: 0 0 50%;
         }
 
         .card__text {
-          @include media-breakpoint-only(md) {
-            padding-left: 1.5em;
-          }
           @include media-breakpoint-up(md) {
             justify-content: space-between;
           }
@@ -206,7 +188,7 @@ article {
     }
 
     &.card--medium--article-series {
-      @include media-breakpoint-up(lg) {
+      @include media-breakpoint-up(md) {
         flex-direction: row;
       }
       background-color: $black;
@@ -216,84 +198,38 @@ article {
       height: 100%;
 
       img {
-        @include media-breakpoint-up(lg) {
+        @include media-breakpoint-up(md) {
           border-radius: 20px 0 0 20px;
         }
         border-radius: 20px 20px 0 0;
       }
 
       .card__image {
-        @include media-breakpoint-only(md) {
-          height: auto;
-          padding-right: 0;
-          width: 100%;
-        }
-        @include media-breakpoint-up(lg) {
-          flex: 0 0 50%;
+        @include media-breakpoint-up(md) {
+          flex: 0 0 33.33%;
+          padding: 0;
         }
         height: 100%;
         margin-bottom: 0;
         position: relative;
 
         .landscape {
-          @include media-breakpoint-up(lg) {
+          @include media-breakpoint-up(md) {
             display: none;
           }
         }
 
         .poster {
-          @include media-breakpoint-up(lg) {
+          @include media-breakpoint-up(md) {
             display: block;
           }
           display: none;
-        }
-
-        .card__label {
-          align-items: center;
-          background-color: $black;
-          border-radius: 1em;
-          color: $white;
-          font-size: 0.8em;
-          display: flex;
-          height: 2.5em;
-          justify-content: center;
-          left: 1em;
-          position: absolute;
-          top: 1em;
-          width: 8em;
-
-          .fa-stack {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-
-            .front {
-              background-color: $black;
-              position: absolute;
-              width: auto;
-            }
-
-            .back {
-              margin-left: 0.3em;
-              margin-bottom: 0.3em;
-            }
-          }
-
-          i {
-            margin-left: 0.15em;
-          }
-
-          p {
-            margin: 0;
-            padding-right: 0.7em;
-            white-space: nowrap;
-          }
         }
       }
 
       .card__text {
         @include media-breakpoint-only(md) {
-          width: auto;
+          flex-grow: 1;
         }
         padding: 1em;
         height: auto;
@@ -303,14 +239,12 @@ article {
             display: block;
           }
           display: none;
-          line-height: 1.75;
           margin-bottom: 0.5em;
           color: $cigi-medium-grey;
         }
 
         .card__text__title {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
-          padding-bottom: 1em;
         }
 
         .card__text__meta {
@@ -341,6 +275,9 @@ article {
       }
 
       &.card--vertical--article-series {
+        @include media-breakpoint-only(md) {
+          flex-direction: row;
+        }
         flex-direction: column;
 
         img {
@@ -348,6 +285,10 @@ article {
         }
 
         .card__image {
+          @include media-breakpoint-up(md) {
+            flex: 0 0 33.33%;
+            height: 100%;
+          }
           @include media-breakpoint-up(lg) {
             height: auto;
           }
@@ -361,7 +302,14 @@ article {
           }
 
           .poster {
+            @include media-breakpoint-only(md) {
+              display: block;
+            }
             display: none;
+
+            img {
+              border-radius: 20px 0 0 20px;
+            }
           }
         }
 
@@ -384,6 +332,107 @@ article {
       display: flex;
       flex-direction: column;
       height: 100%;
+      position: relative;
+
+      &.card--multimedia--audio {
+        @include media-breakpoint-up(md) {
+          flex-direction: row-reverse;
+        }
+
+        img {
+          @include media-breakpoint-up(md) {
+            border-radius: 0 20px 20px 0;
+          }
+
+          &.image-landscape {
+            @include media-breakpoint-up(md) {
+              display: none;
+            }
+          }
+
+          &.image-square {
+            @include media-breakpoint-down(md) {
+              display: none;
+            }
+          }
+        }
+
+        .card__image {
+          @include media-breakpoint-up(md) {
+            flex: 0 0 50%;
+            height: auto;
+          }
+          height: 50%;
+        }
+
+        .card__text {
+          @include media-breakpoint-up(md) {
+            flex: 0 0 50%;
+          }
+          justify-content: space-between;
+        }
+      }
+
+      &.card--multimedia--video {
+        overflow: hidden;
+
+        .card__image {
+          @include media-breakpoint-only(md) {
+            flex: 0 0 76%;
+          }
+
+          .card__image__play-icon {
+            @include media-breakpoint-up(lg) {
+              top: 30%;
+            }
+          }
+
+          .card__image__mm-length {
+            @include media-breakpoint-up(lg) {
+              top: 60%;
+              bottom: auto;
+            }
+          }
+
+          img {
+            @include media-breakpoint-up(lg) {
+              border-radius: 20px;
+            }
+          }
+
+          iframe {
+            @include media-breakpoint-only(md) {
+              border-radius: 0 20px 20px 0;
+            }
+            @include media-breakpoint-only(lg) {
+              width: 106%;
+              left: -3%;
+            }
+            @include media-breakpoint-up(lg) {
+              border-radius: 20px;
+            }
+          }
+        }
+
+        .card__text {
+          @include media-breakpoint-only(md) {
+            flex: 0 0 24%;
+          }
+          @include media-breakpoint-up(lg) {
+            position: absolute;
+            bottom: 0;
+            background-color: black;
+            border-radius: 0 0 20px 20px;
+            z-index: 1;
+            height: auto;
+          }
+          transition: opacity 0.2s ease;
+
+          &.hidden {
+            opacity: 0;
+          }
+        }
+      }
 
       img {
         @include media-breakpoint-only(md) {
@@ -429,10 +478,6 @@ article {
 
         .card__text__title {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
-          @include media-breakpoint-only(md) {
-            padding-bottom: 0;
-          }
-          padding-bottom: 2em;
         }
 
         .card__text__meta {
@@ -467,12 +512,7 @@ article {
       .card--event__top {
         .card--event__title {
           &.card__text__title {
-            @include media-breakpoint-up(md) {
-              font-size: 1.25em;
-              font-size: clamp(1.25em, 3vw, 2em);
-            }
-            font-size: 1.1em;
-            font-size: clamp(1.1em, 3vw, 1.5em);
+            font-size: clamp(1.1em, 3vw, 1.3em);
             font-weight: 300;
             line-height: 1.1;
           }
@@ -487,7 +527,30 @@ article {
     }
 
     &.card--medium--article {
+      @include media-breakpoint-up(md) {
+        flex-direction: row-reverse;
+      }
+
+      .card__image {
+        @include media-breakpoint-up(md) {
+          flex: 0 0 66.67%;
+          margin-bottom: 0;
+          margin-left: 1em;
+          padding: 0;
+        }
+        @include media-breakpoint-up(lg) {
+          flex: 0 0 75%;
+        }
+      }
+
       .card__text {
+        @include media-breakpoint-up(md) {
+          flex: 1 1 33.33%;
+          padding-left: 0;
+        }
+        @include media-breakpoint-up(lg) {
+          flex: 1 1 23%;
+        }
         .card__text__title {
           font-family: $card-title-font;
         }

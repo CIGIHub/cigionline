@@ -6,6 +6,7 @@ from core.models import (
 )
 from django.db import models
 from django.template.defaultfilters import date
+from streams.blocks import TwoColumnBlock
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
@@ -17,6 +18,14 @@ class JobPostingListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         context = super().get_context(request)
         context['job_postings'] = JobPostingPage.objects.live().public().order_by(models.F('closing_date').asc(nulls_first=True))
         return context
+
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            ('columns', TwoColumnBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
 
     max_count = 1
     parent_page_types = ['home.HomePage']

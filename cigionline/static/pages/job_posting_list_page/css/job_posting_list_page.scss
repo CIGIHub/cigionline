@@ -70,3 +70,82 @@
     margin-bottom: 0;
   }
 }
+
+// CIGIOnline 3.0 styling
+.basic-page {
+  main {
+    margin-top: 0;
+  }
+}
+
+section {
+  &.hero {
+    .hero__content {
+      border-bottom: 0;
+    }
+  }
+
+  &.careers-page__current-openings {
+    margin-top: 3em;
+    margin-bottom: 3em;
+
+    h2 {
+      width: 100%;
+      font-size: 1.75em;
+      border-bottom: 1px solid $cigi-light-grey;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    article {
+      padding-top: 1em;
+      padding-bottom: 2em;
+
+      button {
+        background-color: $white;
+        color: $cigi-primary-colour;
+        border-color: $cigi-primary-colour;
+        font-weight: 300;
+        font-size: 1rem;
+
+        &:hover {
+          background-color: $cigi-primary-colour;
+          color: $white;
+          border-color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
+  &.body {
+    @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
+    margin-top: 0.5em;
+    margin-bottom: 6em;
+
+    .two-column-block {
+      h2 {
+        font-size: 1.75em;
+        margin-bottom: 1.5rem;
+        margin-top: 0.5rem;
+      }
+
+      h3 {
+        font-size: 1.5em;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+        line-height: 1.5;
+      }
+
+      .left-column {
+        @include media-breakpoint-up(lg) {
+          border-right: 1px solid $cigi-light-grey;
+        }
+      }
+    }
+  }
+}

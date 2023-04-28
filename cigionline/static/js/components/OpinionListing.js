@@ -1,19 +1,20 @@
 import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
+import CardTextMore from './CardTextMore';
 
 function OpinionListing(props) {
   const { row } = props;
 
   return (
     <tr>
-      <td colSpan="6">
-        <div className="table-mobile-text">
+      <td className="search-table__results__row__title">
+        <div className="table-mobile-text search-table__results__row__title--mobile">
           Title
         </div>
         <div className="table-infos-wrapper">
           <span className="table-icon icon-opinion">
-            <i className="fal fa-comment-dots" />
+            <i className="fal fa-comment-alt-lines" />
           </span>
           <div className="table-infos">
             <a href={row.url} className="table-title-link">
@@ -27,7 +28,7 @@ function OpinionListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="3">
+      <td className="search-table__results__row__authors">
         <div className="table-mobile-text">
           Author
         </div>
@@ -43,7 +44,7 @@ function OpinionListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="3">
+      <td className="search-table__results__row__topics">
         <div className="table-mobile-text">
           Topic
         </div>
@@ -58,6 +59,16 @@ function OpinionListing(props) {
             ))}
           </ul>
         </div>
+      </td>
+      <td className="search-table__results__row__more">
+        <div className="table-mobile-text">
+          {' '}
+        </div>
+        <CardTextMore
+          title={row.title}
+          type="Opinion"
+          url={row.url}
+        />
       </td>
     </tr>
   );

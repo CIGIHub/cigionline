@@ -32,12 +32,26 @@
       </div>
     </div>
 
-    <div class="card__text__meta">
-      <div>
-        {% include 'includes/cards/card_text_people.html' %}
-        {% include 'includes/cards/card_text_topics.html' %}
+    <div class="w-100">
+      {% if event_access == 'Private' %}
+        <button type="button" class="card--event__button--register button--rounded is_private" disabled>
+          Private Event
+        </button>
+      {% else %}
+        <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+          <button type="button" class="card--event__button--register button--rounded">
+            Register Now
+            <i class="fas fa-angle-right"></i>
+          </button>
+        </a>
+      {% endif %}
+      <div class="card__text__meta">
+        <div>
+          {% include 'includes/cards/card_text_people.html' %}
+          {% include 'includes/cards/card_text_topics.html' %}
+        </div>
+        {% include 'includes/cards/card_text_more.html' with type='event' %}
       </div>
-      {% include 'includes/cards/card_text_more.html' with type='event' %}
     </div>
   </article>
 </div>

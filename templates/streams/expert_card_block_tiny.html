@@ -1,23 +1,26 @@
 {% load wagtailimages_tags %}
-<article class="card__container card--tiny card--tiny--expert card--expert">
-  <div class="d-flex align-items-center position-relative">
-    <div class="card__image card__image--portrait--circle">
-      <a href="{{ url }}">
-        <div class="img-wrapper">
-          {% image image fill-100x100 %}
+
+<div class="col col-12">
+  <article class="card__container card--tiny card--tiny--expert card--expert">
+    <div class="d-flex align-items-center position-relative">
+      <div class="card__image card__image--portrait--circle">
+        <a href="{{ url }}">
+          <div class="img-wrapper">
+            {% image image fill-100x100 %}
+          </div>
+        </a>
+      </div>
+      <div class="card--expert--tiny__text">
+        {% include 'includes/cards/card_text_title.html' %}
+        {% if board_position %}
+          <div class="card--expert__board-position">
+            {{ board_position }}
+          </div>
+        {% endif %}
+        <div class="card__text__meta">
+          {% include 'includes/cards/card_text_more.html' %}
         </div>
-      </a>
-    </div>
-    <div class="card--expert--tiny__text">
-      {% include 'includes/cards/card_text_title.html' %}
-      {% if board_position %}
-        <div class="card--expert__board-position">
-          {{ board_position }}
-        </div>
-      {% endif %}
-      <div class="card__text__meta">
-        {% include 'includes/cards/card_text_more.html' %}
       </div>
     </div>
-  </div>
-</article>
+  </article>
+</div>

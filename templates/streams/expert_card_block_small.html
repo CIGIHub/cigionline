@@ -3,7 +3,7 @@
 <div class="col col-12 col-md-4">
   <article class="card__container card--small card--small--expert card--expert">
     <div class="card--small--expert__top">
-      <div class="d-flex align-items-center pb-3">
+      <div class="d-flex align-items-center align-items-lg-start pb-3">
         <div class="card__image card__image--portrait--circle">
           <a href="{{ url }}">
             <div class="img-wrapper">
@@ -28,32 +28,15 @@
     </div>
 
     <div class="card--small--expert__bottom">
-      <h4>Expertise</h4>
-      <ul class="card--expert__bottom__expertise-list">
-        {% for expertise in expertise_list %}
-          <li>{{ expertise }}</li>
-        {% endfor %}
-      </ul>
-      <div class="card--expert__social">
-        <ul>
-          {% if twitter %}
-            <li>
-              <div>Twitter</div>
-              <a href="https://twitter.com/{{twitter}}" target="_blank">
-                {{twitter}}
-              </a>
-            </li>
-          {% endif %}
-          {% if linkedin_username %}
-            <li>
-              <div>Linkedin</div>
-              <a href="https://www.linkedin.com/{{linkedin_username}}" target="_blank">
-                {{linkedin_username}}
-              </a>
-            </li>
-          {% endif %}
+      <div>
+        <h4>Expertise</h4>
+        <ul class="card--expert__bottom__expertise-list">
+          {% for expertise in expertise_list %}
+            <li>{{ expertise }}</li>
+          {% endfor %}
         </ul>
       </div>
+      {% include 'includes/cards/card_text_more.html' with type='expert' %}
     </div>
   </article>
 </div>

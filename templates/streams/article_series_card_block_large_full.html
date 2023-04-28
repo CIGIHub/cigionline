@@ -1,0 +1,49 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="col-12">
+  <article class="card__container card--large card--large--article-series card--large--article-series--full {{ theme|slugify }}">
+    <div class="card__image">
+      <a href="{{ url }}" class="feature-content-image">
+        <div class="img-wrapper landscape">
+          {% if landscape_image_src %}
+            <img alt="{{ landscape_image_alt }}" src="{{ landscape_image_src }}" />
+          {% else %}
+            {% image landscape_image fill-1440x990 %}
+          {% endif %}
+        </div>
+        <div class="img-wrapper poster">
+          {% if poster_image_src %}
+            <img alt="{{ poster_image_alt }}" src="{{ poster_image_src }}" />
+          {% else %}
+            {% image poster_image fill-990x1440 %}
+          {% endif %}
+        </div>
+      </a>
+    </div>
+    <div class="card__text">
+      <div>
+        {% include 'includes/cards/card_text_title.html' %}
+        {% include 'includes/cards/card_text_description.html' %}
+      </div>
+      <hr />
+      <div class="card__text__contributors">
+        <ul>
+          {% for contributor in authors %}
+            <li>
+              <a href="{{ contributor.url }}">
+                <span>{{ contributor.title }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="card__text__meta">
+        <div>
+          {% include 'includes/cards/card_text_people.html' %}
+          {% include 'includes/cards/card_text_topics.html' %}
+        </div>
+        {% include 'includes/cards/card_text_more.html' %}
+      </div>
+    </div>
+  </article>
+</div>

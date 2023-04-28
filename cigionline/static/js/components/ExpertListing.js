@@ -67,7 +67,7 @@ function ExpertListing(props) {
               )}
               {row.latest_activity.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.latest_activity.contentsubtype) && (
                 <span className="table-icon icon-opinion">
-                  <i className="fal fa-comment-dots" />
+                  <i className="fal fa-comment-alt-lines" />
                 </span>
               )}
               {row.latest_activity.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.latest_activity.contentsubtype) && (

@@ -1141,6 +1141,7 @@ class LineBreakBlock(blocks.StructBlock):
 
 class ArticleCard(blocks.StructBlock):
     class ArticleCardTypeChoices(models.TextChoices):
+        TINY_WITH_IMAGE = ('tiny_with_image', 'Tiny with Image')
         TINY = ('tiny', 'Tiny')
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
@@ -1251,6 +1252,7 @@ class ArticleSeriesCard(blocks.StructBlock):
         MEDIUM = ('medium', 'Medium')
         MEDIUM_VERTICAL = ('medium_vertical', 'Medium Vertical')
         LARGE = ('large', 'Large')
+        LARGE_FULL = ('large_full', 'Large Full')
 
     page = blocks.PageChooserBlock(required=True, page_type='articles.ArticleSeriesPage')
     size = blocks.ChoiceBlock(choices=ArticleSeriesCardTypeChoices.choices, required=True)
@@ -1467,6 +1469,7 @@ class MultimediaCard(blocks.StructBlock):
         context['multimedia_type'] = page.multimedia_type
         context['multimedia_url'] = page.multimedia_url
         context['vimeo_url'] = page.vimeo_url
+        context['theme'] = str(page.theme).lower().replace(' ', '-')
 
         return context
 
@@ -1586,9 +1589,15 @@ class AdCard(blocks.StructBlock):
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
         LARGE = ('large', 'Large')
+    
+    class AdCardLayoutChoices(models.TextChoices):
+        SOCIAL = ('social', 'Social')
+        SUBSCRIBE = ('subscribe', 'Subscribe')
+        GENERIC = ('generic', 'Generic')
 
     url = blocks.URLBlock(required=True)
     size = blocks.ChoiceBlock(choices=AdCardTypeChoices.choices, required=True)
+    type = blocks.ChoiceBlock(choices=AdCardLayoutChoices.choices, required=True)
     image = ImageChooserBlock(required=True)
 
     def get_context(self, value, parent_context=None):
@@ -1601,6 +1610,7 @@ class AdCard(blocks.StructBlock):
         else:
             context['image'] = image
         context['url'] = value.get('url')
+        context['type'] = value.get('type')
 
         return context
 
@@ -1682,3 +1692,41 @@ class HomePageRow(blocks.StructBlock):
         label = 'Row'
         template = 'streams/home_page_row_block.html'
         form_classname = 'row-block'
+
+
+class ArticleLandingPageColumn(blocks.StructBlock):
+    column_cards = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Column'
+        template = 'streams/article_landing_page_column_block.html'
+        form_classname = 'column-block'
+
+
+class ArticleLandingPageRow(blocks.StructBlock):
+    row = blocks.StreamBlock([
+        ('article_card', ArticleCard()),
+        ('column_block', ArticleLandingPageColumn()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Row'
+        template = 'streams/article_landing_page_row_block.html'
+        form_classname = 'row-block'
+
+class TwoColumnBlock(blocks.StructBlock):
+    left_column = blocks.StreamBlock([
+        ('paragraph', blocks.RichTextBlock()),
+    ])
+    right_column = blocks.StreamBlock([
+        ('paragraph', blocks.RichTextBlock()),
+    ])
+    class Meta:
+        icon = 'list-ul'
+        label = 'Two Column'
+        template = 'streams/two_column_block.html'
+        form_classname = 'two-column-block'

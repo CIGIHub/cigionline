@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+
+<div class="article-landing-page__row row g-3 gx-md-5 g-lg-5 row-items-{{self.row|length}}">
+  {% for block in self.row %}
+    {% include_block block.value %}
+    {% if self.row|length > 1 and not forloop.last %}
+      <div class="row__hr">
+        <hr>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

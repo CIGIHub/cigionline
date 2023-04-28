@@ -11,3 +11,11 @@ $link-color: #e6023b;
 $link-decoration: none;
 $link-hover-color: #bf0332;
 $link-hover-decoration: none;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1140px,
+);

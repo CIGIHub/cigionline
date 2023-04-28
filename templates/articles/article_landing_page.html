@@ -9,97 +9,130 @@
 {% endblock %}
 
 {% block content %}
-  {% preview_cache_bust as is_preview %}
-  {% cache 86400 article_landing_featured_items self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
-    {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-    <section class="featured">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="paragraph-heading">Featured</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            {% if featured_articles|length > 0 %}
-              {% include "includes/features/feature_content_xlarge.html" with content=featured_articles.0 %}
-            {% endif %}
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-12 col-md-8">
-            {% if featured_articles|length > 1 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_articles.1 %}
-            {% endif %}
-          </div>
-          <hr>
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_articles|slice:"2:7" as featured_small %}
-              {% for item in featured_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item %}
-              {% endfor %}
-            {% endwith %}
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          {% with featured_articles|slice:"7:9" as featured_medium %}
-            {% for item in featured_medium %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              <div class="col-12 col-md-6">
-                {% include "includes/features/feature_content_medium.html" with content=item with_subtitle=True %}
-              </div>
-            {% endfor %}
-          {% endwith %}
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_articles|slice:"10:15" as featured_small %}
-              {% for item in featured_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item %}
-              {% endfor %}
-            {% endwith %}
-          </div>
-          <hr>
-          <div class="col-12 col-md-8">
-            {% if featured_articles|length > 9 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_articles.9 %}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-  {% cache 86400 article_series_swiper self.pk self.latest_revision_created_at|date:"c" is_preview %}
-    <section class="series">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="paragraph-heading">Series</h2>
-            {% include "includes/swiper.html" with swiper_content=featured_article_series type="article-landing-series" %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-  <section>
+  <header class="header--submenu">
     <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div id="opinions-search-table">
+      <nav class="border-top">
+        <div class="row g-1 justify-content-between">
+          <div class="col-4">
+            <i class="fas fa-th-large"></i>
+            <span>Analysis<span>            
+          </div>
+          <div class="col-8">
+            <ul class="header--submenu__right nav nav-tabs article-landing-page-nav" id="article-landing-page-tab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="opinion-tab" data-bs-toggle="tab" href="#opinions-tab-pane" role="tab"
+                  aria-controls="opinions" aria-selected="true">Opinions</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="opinion-series-tab" data-bs-toggle="tab" href="#opinion-series-tab-pane" role="tab"
+                  aria-controls="opinion-series" aria-selected="false">Opinion Series</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <div class="tab-content" id="article-landing-tab-content">
+    <section class="article-landing-page__opinions fade show active tab-pane"  id="opinions-tab-pane" role="tabpanel" aria-labelledby="opinions-tab" tabindex="0">
+      {% if self.opinion_slider %}
+        <section class="article-landing-page__opinions-swiper">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <div class="article-landing-page__swiper" id="opinions-swiper">
+                  <div class="navigation-container">
+                    <div class="swiper-container--opinions swiper-container">
+                      <div class="swiper-wrapper">
+                        {% for block in self.opinions_slider %}
+                          <div class="swiper-slide">
+                            {% include_block block %}
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="swiper-button-prev swiper-button-prev-opinions"></div>
+                    <div class="swiper-button-next swiper-button-next-opinions"></div>
+                  </div>
+                  <div class="swiper-pagination swiper-pagination-opinions"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <hr />
           </div>
         </div>
       </div>
-    </div>
-  </section>
+
+      <section class="article-landing-page__featured-opinions">
+        <div class="container">
+          {% for block in self.featured_opinions %}
+            {% include_block block %}
+            {% if not forloop.last %}
+              <div class="row">
+                <div class="col">
+                  <hr />
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <hr />
+          </div>
+        </div>
+      </div>
+
+      {% if self.opinion_series_slider %}
+        <section class="article-landing-page__opinion-series-swiper">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <div class="article-landing-page__swiper" id="opinion-series-swiper">
+                  <div class="navigation-container">
+                    <div class="swiper-container--opinion-series swiper-container">
+                      <div class="swiper-wrapper">
+                        {% for block in self.opinion_series_slider %}
+                          <div class="swiper-slide">
+                            {% include_block block %}
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="swiper-button-prev swiper-button-prev-opinion-series"></div>
+                    <div class="swiper-button-next swiper-button-next-opinion-series"></div>
+                  </div>
+                  <div class="swiper-pagination swiper-pagination-opinion-series"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
+      <section class="article-landing-page__search-table">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="opinions-list-section" id="opinions-search-table">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+    <section class="article-landing-page__opinion-series fade tab-pane" id="opinion-series-tab-pane" role="tabpanel" aria-labelledby="opinion-series-tab" tabindex="0">
+      <div id="article-landing-page__opinion-series-listing"></div>
+    </section>
+  </div>
 {% endblock content %}

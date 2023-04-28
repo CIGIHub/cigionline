@@ -92,6 +92,13 @@
           }
         }
       }
+
+      .search-table__results__row__title {
+        @include media-breakpoint-up(md) {
+          width: 40%;
+          padding-right: 2em;
+        }
+      }
     }
   }
 }

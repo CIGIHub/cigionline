@@ -3,7 +3,7 @@
 
   .social--media {
     @include media-breakpoint-up(xl) {
-      display: block;
+      display: table-cell;
     }
     display: none;
     margin: 0;
@@ -27,7 +27,7 @@
     .social--media__profile--bar {
       align-items: center;
       display: flex;
-      margin-bottom: 2em;
+      margin-bottom: 1em;
 
       h6 {
         color: $cigi-text-black;
