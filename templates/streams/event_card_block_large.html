@@ -4,10 +4,22 @@
   <article class="card__container card--large card--large--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
     <div class="row card--event__top">
       <div class="col-md-8 col-lg-6 col-xl-5">
-        {% if not is_past %}
+        {% now "c" as current_time %}
+        {% if curren_time > end_date|date:"c" %}
           <div class="card--event--upcoming-label">Upcoming Event</div>
         {% endif %}
-        {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
+        <div class="d-flex">
+          {% if current_time >= date|date:"c" and current_time <= end_date|date:"c" %}
+            <div class="card__text__title card--event__title card--event--live-label">
+              <i class="fas fa-podcast"></i>
+          {% else %}
+            <div class="card__text__title card--event__title">
+          {% endif %}
+            <a href="{{ url }}">
+              {{ title }}
+            </a>
+          </div>
+        </div>
         <div class="card--event__info">
           <time datetime="{{ date }}" class="card--event__time">
             <div>{{ date|date:"l, F j, Y" }}</div>

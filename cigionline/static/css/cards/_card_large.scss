@@ -287,6 +287,14 @@
           font-weight: 300;
           letter-spacing: -0.5px;
           line-height: 1.1;
+          
+          &.card--event--live-label {
+            i {
+              color: $cigi-primary-colour;
+              font-weight: 500;
+              padding-right: 0.5em;
+            }
+          }
         }
       }
     }
