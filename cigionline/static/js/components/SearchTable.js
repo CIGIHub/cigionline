@@ -1456,7 +1456,7 @@ class SearchTable extends React.Component {
                 </div>
               </div>
               {blockListing
-                ? this.renderBlockListing(RowComponent, RowComponentList, containerClass)
+                ? this.renderBlockListing(RowComponent, containerClass)
                 : this.renderResults(RowComponent, RowComponentList, containerClass)}
             </>
           ) : emptyQuery ? (

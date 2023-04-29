@@ -137,6 +137,8 @@ multimediaCards.forEach((card) => {
     card.addEventListener('click', (e) => {
       if (!img.classList.contains('hidden')) {
         const isLargeBreakpoint = window.matchMedia('(min-width: 991px)').matches;
+        const isSmallCard = card.classList.contains('card--small--multimedia');
+        const isLargeCard = card.classList.contains('card--large--multimedia');
         playIcon.classList.add('hidden');
         if (mmLength) {
           mmLength.classList.add('hidden');
@@ -148,12 +150,7 @@ multimediaCards.forEach((card) => {
         }
 
         setTimeout(() => {
-          img.style.display = 'none';
-          playIcon.style.display = 'none';
-          if (mmLength) {
-            mmLength.style.display = 'none';
-          }
-          if (isLargeBreakpoint) {
+          if (isLargeBreakpoint && !isSmallCard && !isLargeCard) {
             text.style.display = 'none';
           }
         }, 1500);

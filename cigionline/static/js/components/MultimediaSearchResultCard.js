@@ -1,26 +1,64 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
+const embedUrl = (str) => {
+  if (str.substr(-1) === '/') {
+    str = str.substr(0, str.length - 1);
+  }
+  const splitArr = str.split('/');
+  return 'https://player.vimeo.com/video/'.concat(
+    splitArr[splitArr.length - 2],
+    '?h=',
+    splitArr[splitArr.length - 1],
+    '&app_id=122963',
+  );
+};
 function MultimediaSearchResultCard(props) {
+  const [imgHidden, setImgHidden] = useState(false);
   const { row } = props;
+  const vimeoUrl = imgHidden ? `${embedUrl(row.vimeo_url)}&autoplay=1` : embedUrl(row.vimeo_url);
   const multimediaTypeIconCls =
     row.contentsubtype === 'Video'
       ? 'fas fa-play'
       : 'fal fa-microphone icon-audio';
+  const handleClick = () => {
+    setImgHidden(true);
+  };
 
   return (
-    <article className="card__container card--small--multimedia">
+    <article
+      className={`card__container card--multimedia card--small--multimedia card--multimedia--${row.contentsubtype}`}
+    >
       <div className="card__image">
         <a href={row.url} className="feature-content-image">
           <div className="img-wrapper">
-            <img alt="" src={row.image_hero_url} />
+            {row.image_hero_wide_url && (
+              <img
+                className={`${imgHidden && 'hidden'}`}
+                alt=""
+                src={row.image_hero_wide_url}
+              />
+            )}
+            {row.contentsubtype === 'Video' && row.vimeo_url && (
+              <iframe
+                title={row.title}
+                src={vimeoUrl}
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              />
+            )}
           </div>
         </a>
-        <div className="card__image__play-icon">
+        <div
+          className={`card__image__play-icon ${imgHidden && 'hidden'}`}
+          role="button"
+          tabIndex={0}
+          onClick={() => handleClick()}
+          onKeyDown={() => handleClick()}
+        >
           <i className={multimediaTypeIconCls} />
         </div>
         {row.multimedia_length && (
-          <div className="card__image__mm-length">
+          <div className={`card__image__mm-length ${imgHidden && 'hidden'}`}>
             {row.multimedia_length}
           </div>
         )}
@@ -73,7 +111,7 @@ MultimediaSearchResultCard.propTypes = {
     ),
     contentsubtype: PropTypes.string,
     id: PropTypes.number,
-    image_hero_url: PropTypes.string,
+    image_hero_wide_url: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(
@@ -85,6 +123,7 @@ MultimediaSearchResultCard.propTypes = {
     ),
     multimedia_length: PropTypes.string,
     url: PropTypes.string.isRequired,
+    vimeo_url: PropTypes.string,
   }).isRequired,
 };
 

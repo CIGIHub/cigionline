@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Swiper, { Navigation, Pagination } from 'swiper';
-import MultimediaListing from '../../js/components/MultimediaListing';
-import SearchTable from '../../js/components/SearchTable';
+import SearchTableBlockListing from '../../js/components/SearchTableBlockListing';
 import './css/multimedia_list_page.scss';
 import 'swiper/swiper-bundle.css';
+import MultimediaSearchResultCard from '../../js/components/MultimediaSearchResultCard';
 
 const submenuItems = document.querySelectorAll('.header--submenu__right__menu-item');
 const swipers = {
@@ -71,7 +71,7 @@ if (swiperContainerBigTech) {
 }
 
 ReactDOM.render(
-  <SearchTable
+  <SearchTableBlockListing
     blockListing
     contenttypes={[
       'Multimedia',
@@ -85,6 +85,7 @@ ReactDOM.render(
       'publishing_date',
       'topics',
       'multimedia_length',
+      'vimeo_url',
     ]}
     filterTypes={[{
       name: 'Video',
@@ -103,11 +104,12 @@ ReactDOM.render(
     }]}
     containerClass={[
       'row',
-      'row-cols-1',
-      'row-cols-sm-2',
-      'multimedia-list-row',
+      'row-cols-2',
+      'row-cols-md-3',
+      'row-cols-lg-4',
+      'g-3',
     ]}
-    RowComponent={MultimediaListing}
+    RowComponent={MultimediaSearchResultCard}
     searchPlaceholder="Search Multimedia by Keyword"
   />,
   document.getElementById('multimedia-search-table'),
