@@ -279,6 +279,15 @@ $card-title-font: $title-font-family;
           }
         }
 
+        &.card--large--multimedia {
+          .card__text {
+            @include media-breakpoint-up(md) {
+              border-radius: 20px 0 0 20px;
+            }
+            border-radius: 0 0 20px 20px;
+          }
+        }
+
         .card__text {
           background-color: $bigtech-s3-red;
 
@@ -302,6 +311,7 @@ $card-title-font: $title-font-family;
           }
         }
       }
+
       .card__image__play-icon {
         top: 1em;
         right: 1.5em;
@@ -383,10 +393,10 @@ $card-title-font: $title-font-family;
           margin: 0 auto;
           text-align: center;
         }
-  
+
         .social-links {
           display: flex;
-  
+
           .social-link {
             align-items: center;
             background-color: $white;
@@ -399,11 +409,11 @@ $card-title-font: $title-font-family;
             margin: 1em 0.3em 0;
             transition: background-color 0.2s ease;
             width: 30px;
-  
+
             &:hover {
               background-color: $color--blue;
             }
-  
+
             i {
               font-size: 14px;
             }
