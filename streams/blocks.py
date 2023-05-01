@@ -1324,7 +1324,6 @@ class EventCard(blocks.StructBlock):
         context = super().get_context(value, parent_context=parent_context)
 
         page = value.get('page').specific
-        print(page)
         image = None
         if page.image_feature:
             image = page.image_feature
