@@ -137,6 +137,7 @@ multimediaCards.forEach((card) => {
     card.addEventListener('click', (e) => {
       if (!img.classList.contains('hidden')) {
         const isLargeBreakpoint = window.matchMedia('(min-width: 991px)').matches;
+        const isSmallCard = card.classList.contains('card--small--multimedia');
         playIcon.classList.add('hidden');
         if (mmLength) {
           mmLength.classList.add('hidden');
@@ -153,7 +154,7 @@ multimediaCards.forEach((card) => {
           if (mmLength) {
             mmLength.style.display = 'none';
           }
-          if (isLargeBreakpoint) {
+          if (isLargeBreakpoint && !isSmallCard) {
             text.style.display = 'none';
           }
         }, 1500);

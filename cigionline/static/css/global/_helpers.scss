@@ -217,16 +217,18 @@
 }
 
 .btn {
-  border-color: $cigi-primary-colour;
-  color: $cigi-primary-colour;
-  font-size: 0.9em;
-
-  &:hover {
-    background-color: $cigi-primary-colour;
-    color: $white;
-  }
-
-  span {
-    margin-left: 0.2em;
+  &.btn--cta {
+    border-color: $cigi-primary-colour;
+    color: $cigi-primary-colour;
+    font-size: 0.9em;
+  
+    &:hover {
+      background-color: $cigi-primary-colour;
+      color: $white;
+    }
+  
+    span {
+      margin-left: 0.2em;
+    }
   }
 }

@@ -1,0 +1,20 @@
+{% load core_tags %}
+<section class="recommended">
+  <div class="container">
+    <h2>Recommended</h2>
+    <div class="row justify-content-center">
+      {% for page in recommended_content|slice:":3" %}
+        {% if page.contenttype == "Opinion" %}
+          {% include "streams/article_card_block_small.html" with url=page.url title=page.title image=page.image_hero topics=page.topics_sorted authors=page.authors.all %}
+        {% elif page.contenttype == "Multimedia" %}
+          {% include "streams/multimedia_card_block_small.html" with url=page.url title=page.title image=page.image_hero topics=page.topics_sorted authors=page.authors.all multimedia_type='video' %}
+        {% endif %}
+        {% if not forloop.last %}
+          <div class="col-12 d-md-none">
+            <hr>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>

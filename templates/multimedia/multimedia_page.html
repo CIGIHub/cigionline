@@ -2,190 +2,177 @@
 {% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block meta_description %}
-{% if self.social_description %}
-<meta name="description" content="{{ self.social_description }}" />
-{% elif self.subtitle %}
-<meta name="description" content="{{ self.subtitle|striptags }}" />
-{% endif %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
 {% endblock %}
 {% block og_description %}
-{% if self.social_description %}
-<meta property="og:description" content="{{ self.social_description }}" />
-{% elif self.subtitle %}
-<meta property="og:description" content="{{ self.subtitle|striptags }}" />
-{% endif %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
 {% endblock %}
 {% block og_type %}
-<meta property="og:type" content="video.other" />
+  <meta property="og:type" content="video.other" />
 {% endblock %}
 {% block og_image %}
-{% if self.image_social %}
-{% image self.image_social fill-1600x900 as og_image %}
-{% elif self.image_hero %}
-{% image self.image_hero fill-1600x900 as og_image %}
-{% endif %}
-{% if og_image %}
-<meta property="og:image" content="{{ og_image.url }}" />
-{% else %}
-{% include "includes/og_image_default.html" %}
-{% endif %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
 {% endblock %}
 {% block extra_og_meta %}
-{% if self.publishing_date %}
-<meta property="video:release_date" content="{{ self.publishing_date|date:'c' }}" />
-{% endif %}
+  {% if self.publishing_date %}
+    <meta property="video:release_date" content="{{ self.publishing_date|date:'c' }}" />
+  {% endif %}
 {% endblock %}
 
 {% block extra_css %}
-{% render_bundle 'multimediaPage' 'css' %}
+  {% render_bundle 'multimediaPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-{% render_bundle 'multimediaPage' 'js' attrs='defer' %}
+  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block content %}
-{% block hero %}
-{% include "includes/heroes/hero_multimedia.html" %}
-{% endblock %}
+  {% block hero %}
+    {% include "includes/heroes/hero_multimedia.html" %}
+  {% endblock %}
 
-<div class="container">
-  <div class="row">
-    <div class="col-lg-4">
-      <section class="multimedia-page__meta">
-        <h1>{{ self.title }}</h1>
-        <div>{{ self.publishing_date|date:"F j, Y" }}</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <section class="multimedia-page__meta">
+          <h1>{{ self.title }}</h1>
+          <div>{{ self.publishing_date|date:"F j, Y" }}</div>
 
-        <ul class="multimedia-page__meta__speakers">
-          {% for speaker in self.authors.all %}
-          <li class="multimedia-page__meta__speakers__speaker">
-            <a href="{% pageurl speaker.author %}">
-              {% if speaker.author.image_square %}
-                {% image speaker.author.image_square fill-100x100 class="image--circle--tiny" %}
-              {% else %}
-                <div class="icon-container">
-                  <i class="far fa-user"></i>
-                </div>
-              {% endif %}
-              <img src="" alt="">
-              {{ speaker.author.title }}
-            </a>
-          </li>
+          <ul class="multimedia-page__meta__speakers">
+            {% for speaker in self.authors.all %}
+            <li class="multimedia-page__meta__speakers__speaker">
+              <a href="{% pageurl speaker.author %}">
+                {% if speaker.author.image_square %}
+                  {% image speaker.author.image_square fill-100x100 class="image--circle--tiny" %}
+                {% else %}
+                  <div class="icon-container">
+                    <i class="far fa-user"></i>
+                  </div>
+                {% endif %}
+                <img src="" alt="">
+                {{ speaker.author.title }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <ul class="multimedia-page__meta__topics">
+            {% for topic in self.topics_sorted %}
+            <li>
+              <a href="{{ topic.url }}">
+                <button type="button" class="button--rounded">{{ topic.title }}</button>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <ul class="multimedia-page__meta__social">
+            <li>
+              <a href="https://twitter.com/share?text={{ title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
+                target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-twitter"></i>
+                Share on Twitter
+              </a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{ title|social_string }}"
+                target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-linkedin"></i>
+                Share on Linkedin
+              </a>
+            </li>
+            <li>
+              <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
+                rel="noopener noreferrer">
+                <i class="fab fa-facebook-f"></i>
+                Share on Facebook
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="col-lg-8">
+        <section class="body">
+          {% if self.from_the_archives and self.from_the_archives_blurb %}
+          <div class="from-the-archives-blurb">
+            {{ self.from_the_archives_blurb }}
+          </div>
+          {% endif %}
+          {% if self.article_series_description %}
+          <div class="article-series-description">
+            {{self.article_series_description|richtext}}
+          </div>
+          {% endif %}
+          <div class="body__content">
+            {% for block in self.body %}
+            {{ block.value|richtext }}
+            {% endfor %}
+          </div>
+        </section>
+
+        {% if self.transcript %}
+        <section class="multimedia-page__transcript">
+          {% for block in self.transcript %}
+          {% include_block block with id=block.id no_container=True %}
           {% endfor %}
-        </ul>
-
-        <ul class="multimedia-page__meta__topics">
-          {% for topic in self.topics_sorted %}
-          <li>
-            <a href="{{ topic.url }}">
-              <button type="button" class="button--rounded">{{ topic.title }}</button>
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <ul class="multimedia-page__meta__social">
-          <li>
-            <a href="https://twitter.com/share?text={{ title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
-              target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-twitter"></i>
-              Share on Twitter
-            </a>
-          </li>
-          <li>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{ title|social_string }}"
-              target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-linkedin"></i>
-              Share on Linkedin
-            </a>
-          </li>
-          <li>
-            <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
-              rel="noopener noreferrer">
-              <i class="fab fa-facebook-f"></i>
-              Share on Facebook
-            </a>
-          </li>
-        </ul>
-      </section>
-    </div>
-
-    <div class="col-lg-8">
-      <section class="body">
-        {% if self.from_the_archives and self.from_the_archives_blurb %}
-        <div class="from-the-archives-blurb">
-          {{ self.from_the_archives_blurb }}
-        </div>
+        </section>
         {% endif %}
-        {% if self.article_series_description %}
-        <div class="article-series-description">
-          {{self.article_series_description|richtext}}
-        </div>
-        {% endif %}
-        <div class="body__content">
-          {% for block in self.body %}
-          {{ block.value|richtext }}
-          {% endfor %}
-        </div>
-      </section>
 
-      {% if self.transcript %}
-      <section class="multimedia-page__transcript">
-        {% for block in self.transcript %}
-        {% include_block block with id=block.id no_container=True %}
-        {% endfor %}
-      </section>
-      {% endif %}
-
-      {% if self.multimedia_series %}
-      <section class="multimedia-series-block">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <article>
-                <h2>
-                  Series:
-                  <a href="{{self.multimedia_series.url}}">
-                    {{ self.multimedia_series.title }}
-                  </a>
-                </h2>
-                <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
-              </article>
+        {% if self.multimedia_series %}
+        <section class="multimedia-series-block">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col col-md-10 col-lg-8">
+                <article>
+                  <h2>
+                    Series:
+                    <a href="{{self.multimedia_series.url}}">
+                      {{ self.multimedia_series.title }}
+                    </a>
+                  </h2>
+                  <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
+                </article>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      {% endif %}
+        </section>
+        {% endif %}
 
-      {% include 'includes/disclaimer.html' with multimedia_disclaimer=True no_container=True %}
+        {% include 'includes/disclaimer.html' with multimedia_disclaimer=True no_container=True %}
+      </div>
     </div>
   </div>
-</div>
 
+  {% block recommended %}
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% define self.recommended_content_preview as recommended_content %}
+    {% elif self.recommended_content %}
+      {% define self.recommended_content as recommended_content %}
+    {% endif %}
+    {% if recommended_content %}
+      {% include 'includes/recommended_section.html' with recommended_content=recommended_content %}
+    {% endif %}
+  {% endblock recommended %}
 
-
-{% block recommended %}
-{% if request.is_preview and self.recommended_content_preview %}
-{% define self.recommended_content_preview as recommended_content %}
-{% elif self.recommended_content %}
-{% define self.recommended_content as recommended_content %}
-{% endif %}
-{% if recommended_content %}
-<section class="recommended">
-  <div class="container">
-    <h2>Recommended</h2>
-    <div class="row justify-content-center">
-      {% for page in recommended_content|slice:":3" %}
-        <div class="col">
-          {% include "includes/recommended_article.html" with article=page.specific %}
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-{% endblock recommended %}
-
-{% block in_the_series %}
-{# Override this in templates to add series listing #}
-{% endblock %}
+  {% block in_the_series %}
+    {# Override this in templates to add series listing #}
+  {% endblock %}
 {% endblock content %}

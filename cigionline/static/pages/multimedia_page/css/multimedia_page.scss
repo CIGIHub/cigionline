@@ -142,6 +142,12 @@ body {
         .card__text__more {
           color: $cigi-text-grey;
         }
+
+        .dropdown-menu {
+          a {
+            color: $black;
+          }
+        }
       }
     }
   }

@@ -51,8 +51,6 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     def get_all_events(self):
-        from .models import EventPage
-
         event_pages = EventPage.objects.live().specific().prefetch_related(
             'authors__author', 'topics'
         ).order_by('-publishing_date')
