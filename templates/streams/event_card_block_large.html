@@ -5,11 +5,11 @@
     <div class="row card--event__top">
       <div class="col-md-8 col-lg-6 col-xl-5">
         {% now "c" as current_time %}
-        {% if curren_time > end_date|date:"c" %}
+        {% if current_time > end_utc|date:"c" %}
           <div class="card--event--upcoming-label">Upcoming Event</div>
         {% endif %}
         <div class="d-flex">
-          {% if current_time >= date|date:"c" and current_time <= end_date|date:"c" %}
+          {% if current_time >= start_utc|date:"c" and current_time <= end_utc|date:"c" %}
             <div class="card__text__title card--event__title card--event--live-label">
               <i class="fas fa-podcast"></i>
           {% else %}
