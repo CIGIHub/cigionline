@@ -62,14 +62,14 @@ section {
           position: relative;
           margin-top: 0;
           color: $black;
-          
+
           &.swiper-button-next {
             margin-left: 1em;
           }
           &.swiper-button-prev {
             margin-right: 1em;
           }
-          
+
           &::before,
           &::after {
             font-size: 1em;
@@ -116,6 +116,24 @@ section {
       .card__text__title {
         font-size: 1.25em;
         margin-top: 0.5em;
+        font-weight: 400;
+      }
+
+      .card__text__cta {
+        .btn {
+          border-color: $cigi-primary-colour;
+          color: $cigi-primary-colour;
+
+          &:hover {
+            border-color: $cigi-primary-colour;
+            background-color: $cigi-primary-colour;
+            color: $white;
+          }
+
+          i {
+            margin-right: 0.25em;
+          }
+        }
       }
     }
   }
