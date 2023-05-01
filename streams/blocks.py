@@ -1353,6 +1353,8 @@ class EventCard(blocks.StructBlock):
         context['topics'] = page.topics_sorted
         context['registration_url'] = page.registration_url
         context['id'] = page.id
+        context['start_utc'] = page.event_start_time_utc
+        context['end_utc'] = page.event_end_time_utc
 
         return context
 
@@ -1718,6 +1720,7 @@ class ArticleLandingPageRow(blocks.StructBlock):
         template = 'streams/article_landing_page_row_block.html'
         form_classname = 'row-block'
 
+
 class TwoColumnBlock(blocks.StructBlock):
     left_column = blocks.StreamBlock([
         ('paragraph', blocks.RichTextBlock()),
@@ -1725,6 +1728,7 @@ class TwoColumnBlock(blocks.StructBlock):
     right_column = blocks.StreamBlock([
         ('paragraph', blocks.RichTextBlock()),
     ])
+
     class Meta:
         icon = 'list-ul'
         label = 'Two Column'
