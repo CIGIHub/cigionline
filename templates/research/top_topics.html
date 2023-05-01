@@ -3,7 +3,7 @@
 
 <ul class="top-topics-list">
   {% if live_events %}
-    <li class="live-event hidden" id="live-event" data-event-time="{{live_events.time}}">
+    <li class="live-event hidden" id="live-event" data-event-start="{{live_events.start_time}}" data-event-end="{{live_events.end_time}}">
       <div class="live-event__scroll__container">
         <div class="live-event__scroll">
           <p>

@@ -200,7 +200,8 @@ class HomePage(Page):
         events = EventPage.objects.live().public().filter(livestream_url__isnull=False, publishing_date__date=datetime.date.today(), publishing_date__gte=datetime.datetime.now() - datetime.timedelta(hours=1))
         return {
             'event': events[0],
-            'time': events[0].publishing_date.timestamp(),
+            'start_time': events[0].event_start_time_utc_ts,
+            'end_time': events[0].event_end_time_utc_ts,
         } if events else None
 
     def get_context(self, request):
