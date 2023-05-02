@@ -369,14 +369,14 @@
   $background-color: $cigi-light-grey,
   $hover-color: $white,
   $hover-background-color: $black,
-  $border-color: none,
-  $hover-border-color: none
+  $border-color: $cigi-light-grey,
+  $hover-border-color: $black
 ) {
   color: $color;
   background-color: $background-color;
   border: 1px solid $border-color;
   font-weight: 300;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, border 0.2 ease;
 
   a {
     color: $color;
@@ -385,7 +385,7 @@
   &:hover {
     background-color: $hover-background-color;
     color: $hover-color;
-    border-color: 1px solid $hover-border-color;
+    border: 1px solid $hover-border-color;
 
     a {
       color: $hover-color;

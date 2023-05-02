@@ -150,6 +150,11 @@ multimediaCards.forEach((card) => {
         }
 
         setTimeout(() => {
+          img.style.display = 'none';
+          playIcon.style.display = 'none';
+          if (mmLength) {
+            mmLength.style.display = 'none';
+          }
           if (isLargeBreakpoint && !isSmallCard && !isLargeCard) {
             text.style.display = 'none';
           }

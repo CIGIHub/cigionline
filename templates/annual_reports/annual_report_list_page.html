@@ -91,12 +91,12 @@
                   </td>
                   <td>
                     {% if report.report_interactive %}
-                      <a href="{{ report.report_interactive }}" class="btn" target="_blank">
+                      <a href="{{ report.report_interactive }}" class="btn btn--cta" target="_blank">
                         <i class="fas fa-mouse-pointer"></i>
                         <span>Explore</span>
                       </a>
                     {% elif report.report_english %}
-                      <a href="{{ report.report_english.url }}" class="btn" target="_blank">
+                      <a href="{{ report.report_english.url }}" class="btn btn--cta" target="_blank">
                         <i class="fas fa-download"></i>
                         <span>Download</span>
                       </a>
@@ -104,11 +104,11 @@
                   </td>
                   <td>
                     {% if report.report_interactive_fr %}
-                      <a href="{{ report.report_interactive_fr }}" class="btn" target="_blank">
+                      <a href="{{ report.report_interactive_fr }}" class="btn btn--cta" target="_blank">
                         <i class="fas fa-mouse-pointer"></i>
                       </a>
                     {% elif report.report_french %}
-                      <a href="{{ report.report_french.url }}" class="btn" target="_blank">
+                      <a href="{{ report.report_french.url }}" class="btn btn--cta" target="_blank">
                         <i class="fas fa-download"></i>
                         <span>Download</span>
                       </a>
@@ -116,7 +116,7 @@
                   </td>
                   <td>
                     {% if report.report_financial %}
-                      <a href="{{ report.report_financial.url }}" class="btn" target="_blank">
+                      <a href="{{ report.report_financial.url }}" class="btn btn--cta" target="_blank">
                         <i class="fas fa-download"></i>
                         <span>Download</span>
                       </a>

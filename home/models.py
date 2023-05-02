@@ -1,7 +1,9 @@
+from django.utils.functional import cached_property
 from distutils.log import error
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
+from events.models import EventPage
 from features.models import (
     HomePageFeaturedPromotionsList,
     HomePageFeaturedContentList,
@@ -22,6 +24,7 @@ from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
+import datetime
 import random
 import traceback
 
@@ -192,9 +195,19 @@ class HomePage(Page):
     def get_trending_issues(self):
         return [issue.value for issue in self.trending_issues]
 
+    @cached_property
+    def live_events(self):
+        events = EventPage.objects.live().public().filter(livestream_url__isnull=False, publishing_date__date=datetime.date.today(), publishing_date__gte=datetime.datetime.now() - datetime.timedelta(hours=1))
+        return {
+            'event': events[0],
+            'start_time': events[0].event_start_time_utc_ts,
+            'end_time': events[0].event_end_time_utc_ts,
+        } if events else None
+
     def get_context(self, request):
         context = super().get_context(request)
         context['trending_issues'] = self.get_trending_issues()
+        context['live_events'] = self.live_events
         return context
 
     max_count = 1

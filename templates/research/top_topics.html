@@ -2,31 +2,43 @@
 
 
 <ul class="top-topics-list">
-  {% if issues %}
-    <li class="trending-issue">
-      <div class="trending-issue__scroll__container">
-        <div class="trending-issue__scroll">
+  {% if live_events %}
+    <li class="live-event hidden" id="live-event" data-event-start="{{live_events.start_time}}" data-event-end="{{live_events.end_time}}">
+      <div class="live-event__scroll__container">
+        <div class="live-event__scroll">
           <p>
-            Happening Now
-            {% for issue in issues %}
-              • {{ issue.title }}
-            {% endfor %}
+            Happening Now  • {{ live_events.event.title }}
           </p>
           <p>
-            Happening Now
-            {% for issue in issues %}
-              • {{ issue.title }}
-            {% endfor %}
+            Happening Now  • {{ live_events.event.title }}
           </p>
         </div>
       </div>
     </li>
+    <li class="live-event__button hidden" id="live-event-button-container">
+      <a href="{% pageurl live_events.event %}">
+        <button type="button" class="button--rounded" id="live-event-button">Watch</button>
+      </a>
+    </li>
+  {% endif %}
+  {% if issues %}
+    {% for issue in issues %}
+      <li class="trending-issue">
+        <a href="{% pageurl issue %}">
+          <button type="button" class="button--rounded">
+            {{ issue.title }}
+          </button>
+        </a>
+      </li>
+    {% endfor %}
   {% endif %}
   {% for topic in topics %}
     <li>
-      <button type="button" class="button--rounded">
-        <a href="{% pageurl topic %}">{{ topic.title }}</a>
-      </button>
+      <a href="{% pageurl topic %}">
+        <button type="button" class="button--rounded">
+          {{ topic.title }}
+        </button>
+      </a>
     </li>
   {% endfor %}
   <li>

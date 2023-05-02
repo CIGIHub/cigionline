@@ -1,26 +1,76 @@
 @import '../../../css/global/mixins';
 
-.event-multimedia-embed-section {
-  margin-bottom: 2em;
+.event-page {
+  section {
+    &.hero {
+      margin-bottom: 2em;
 
-  .event-multimedia-embed {
-    position: relative;
-    width: 100%;
-
-    &::after {
-      content: '';
-      display: block;
-      padding-bottom: 56.25%;
+      .hero__content {
+        border-bottom: 0;
+      }
     }
 
-    iframe {
-      height: 100%;
-      left: 0;
-      margin: 0;
-      max-width: 100%;
-      position: absolute;
-      top: 0;
+    &.body {
+      margin: 2em 0 1em;
+    }
+
+    &.about-the-author {
+      margin: 1em 0;
+
+      h3 {
+        border-top: 0;
+        text-transform: none;
+        font-weight: 300;
+        font-size: 1em;
+      }
+
+      .author-block {
+        border: 0;
+      }
+    }
+
+    &.recommended {
+      padding: 4em 0;
+
+      h2 {
+        display: none;
+      }
+
+      .recommended-items {
+        .col {
+          border-right: 1px solid $cigi-light-grey;
+  
+          &:last-child {
+            border-right: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .event-multimedia-embed-section {
+    margin: 2em 0;
+
+    .event-multimedia-embed {
+      position: relative;
       width: 100%;
+
+      &::after {
+        content: '';
+        display: block;
+        padding-bottom: 56.25%;
+      }
+
+      iframe {
+        border-radius: 20px;
+        height: 100%;
+        left: 0;
+        margin: 0;
+        max-width: 100%;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
     }
   }
 }
