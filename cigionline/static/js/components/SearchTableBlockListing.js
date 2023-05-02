@@ -18,12 +18,26 @@ const mergeObjects = (data) => {
   });
   return result;
 };
+
+const breakpointChange = (rows, breakpoint) => {
+  const newRows = [...rows];
+  if (breakpoint === 'lg') {
+    newRows.splice(8, 0, { id: 'featured' });
+  } else if (breakpoint === 'md') {
+    newRows.splice(6, 0, { id: 'featured' });
+  } else {
+    newRows.splice(4, 0, { id: 'featured' });
+  }
+
+  return newRows;
+};
 class SearchTableBlockListing extends React.Component {
   constructor(props) {
     super(props);
     this.searchTableRef = React.createRef();
     this.state = {
       currentPage: 1,
+      breakpoint: '',
       expertSelectValues: [],
       loading: true,
       loadingInitial: true,
@@ -47,6 +61,10 @@ class SearchTableBlockListing extends React.Component {
 
   componentDidMount() {
     this.getRows();
+    this.getBreakpoint();
+    window.addEventListener('resize', () => {
+      this.getBreakpoint();
+    });
   }
 
   getRows() {
@@ -156,6 +174,24 @@ class SearchTableBlockListing extends React.Component {
       });
   }
 
+  getBreakpoint() {
+    const { breakpoint } = this.state;
+    let newBreakpoint;
+    if (window.matchMedia('(min-width: 992px)').matches) {
+      newBreakpoint = 'lg';
+    } else if (window.matchMedia('(min-width: 768px)').matches) {
+      newBreakpoint = 'md';
+    } else {
+      newBreakpoint = 'sm';
+    }
+
+    if (newBreakpoint !== breakpoint) {
+      this.setState(() => ({
+        breakpoint: newBreakpoint,
+      }));
+    }
+  }
+
   getAggregationCount(filterType) {
     const { aggregations } = this.state;
     let key = filterType.name;
@@ -188,7 +224,10 @@ class SearchTableBlockListing extends React.Component {
   }
 
   renderBlockListing(RowComponent, containerClass) {
-    const { rows, loading } = this.state;
+    const { rows, loading, breakpoint } = this.state;
+    const { featuredPage, FeaturedItemComponent, columnClass } = this.props;
+    const newRows = breakpointChange(rows, breakpoint);
+
     return (
       <div
         className={[
@@ -196,11 +235,28 @@ class SearchTableBlockListing extends React.Component {
           loading && 'loading',
         ].join(' ')}
       >
-        {rows.map((row) => (
-          <div className="col">
-            <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
-          </div>
-        ))}
+        {newRows.map((row) => {
+          if (row.id === 'featured') {
+            return (
+              <>
+                <div className="col-12" key="hr-1">
+                  <hr />
+                </div>
+                <div className="col-12" key={`${row.id}`}>
+                  <FeaturedItemComponent row={featuredPage} />
+                </div>
+                <div className="col-12" key="hr-2">
+                  <hr />
+                </div>
+              </>
+            );
+          }
+          return (
+            <div className={columnClass.join(' ')} key={`${row.id}`}>
+              <RowComponent row={row} />
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -251,6 +307,7 @@ class SearchTableBlockListing extends React.Component {
 
 SearchTableBlockListing.propTypes = {
   blockListing: PropTypes.bool,
+  columnClass: PropTypes.arrayOf(PropTypes.string),
   containerClass: PropTypes.arrayOf(PropTypes.string),
   contentsubtypes: PropTypes.arrayOf(PropTypes.string),
   contenttypes: PropTypes.arrayOf(PropTypes.string),
@@ -260,6 +317,26 @@ SearchTableBlockListing.propTypes = {
       paramValue: PropTypes.any,
     }),
   ),
+  featuredPage: PropTypes.shape({
+    id: PropTypes.number,
+    url: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    image: PropTypes.string,
+    imageAlt: PropTypes.string,
+    authors: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        url: PropTypes.string,
+      }),
+    ),
+    topics: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        url: PropTypes.string,
+      }),
+    ),
+  }),
   fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   filterTypes: PropTypes.arrayOf(
     PropTypes.shape({
@@ -276,17 +353,21 @@ SearchTableBlockListing.propTypes = {
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
+  FeaturedItemComponent: PropTypes.func,
 };
 
 SearchTableBlockListing.defaultProps = {
   blockListing: false,
+  columnClass: [],
   containerClass: [],
   contentsubtypes: [],
   contenttypes: [],
   endpointParams: [],
+  featuredPage: null,
   filterTypes: [],
   isSearchPage: false,
   limit: 24,
+  FeaturedItemComponent: null,
 };
 
 export default SearchTableBlockListing;

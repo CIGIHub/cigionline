@@ -22,13 +22,15 @@ body {
 
     .header--submenu__right {
       display: flex;
-      font-size: 0.9em;
 
       .header--submenu__right__menu-item {
+        @include media-breakpoint-up(md) {
+          flex-basis: 33%
+        }
         font-weight: 300;
         color: $cigi-medium-grey;
         text-align: left;
-        flex-basis: 33%;
+        flex-basis: 50%;
 
         &.active {
           color: $white;
@@ -39,7 +41,7 @@ body {
             width: 90%;
             height: 0;
             position: absolute;
-            top: -1.15em;
+            top: -1em;
             border-top: 1.5px solid $white;
           }
         }
@@ -122,6 +124,22 @@ body {
 
       .search-results {
         margin-top: 2em;
+      }
+    }
+
+    .pagination-links-numbered {
+      li {
+        color: $cigi-medium-grey;
+
+        &.active {
+          color: $white;
+          font-weight: 400;
+
+          &::before {
+            border-bottom: 2px solid $white;
+            top: -34px;
+          }
+        }
       }
     }
   }

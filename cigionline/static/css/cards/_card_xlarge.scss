@@ -1,0 +1,120 @@
+.card__container {
+  &.card--xlarge {
+    &.card--xlarge--multimedia {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      .card__image {
+        position: relative;
+        border-radius: 20px;
+
+        .img-wrapper {
+          img {
+            @include media-breakpoint-down(md) {
+              border-radius: 20px 20px 0 0;
+            }
+          }
+
+          iframe {
+            @include media-breakpoint-down(md) {
+              border-radius: 20px 20px 0 0;
+            }
+            border-radius: 20px;
+          }
+        }
+      }
+
+      .card__text {
+        @include media-breakpoint-up(md) {
+          position: absolute;
+        }
+        bottom: 0;
+        z-index: 6;
+        height: auto;
+        padding: 1.5em;
+        color: $white;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.65) 50%,
+          rgba(0, 0, 0, 0.95)
+        );
+
+        .card__text__play-icon {
+          @include media-breakpoint-down(md) {
+            position: absolute;
+            top: calc(30% - 1em);
+            right: calc(50% - 1em);
+            width: 2em;
+            height: 2em;
+            font-size: 1.5em;
+            z-index: 6;
+          }
+          background-color: $black;
+          border-radius: 50%;
+          color: $white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 2.5em;
+          height: 2.5em;
+          font-size: 1.75em;
+          margin-bottom: 1em;
+          transition: opacity 3s ease, color 0.2s ease-in-out,
+            background-color 0.2s ease-in-out, z-index 5s ease;
+          cursor: pointer;
+
+          &.hidden {
+            opacity: 0;
+            z-index: 0;
+          }
+
+          &:hover {
+            color: $black;
+            background-color: $white;
+          }
+
+          i {
+            &:not(.icon-audio) {
+              margin-left: 0.15em;
+            }
+          }
+        }
+
+        .card__text__title {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          @include media-breakpoint-up(md) {
+            font-size: 2em;
+          }
+          font-size: 1.5em;
+          font-weight: 400;
+          margin-bottom: 0.25em;
+        }
+
+        .card__text__people {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+        }
+
+        .card__text__topics {
+          @include link(
+            $color: $cigi-medium-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+
+        .card__text__more {
+          &:hover {
+            i {
+              color: $cigi-primary-colour;
+            }
+          }
+
+          i {
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+}

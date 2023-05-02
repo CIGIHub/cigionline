@@ -128,7 +128,7 @@ window.addEventListener('resize', (e) => {
 const multimediaCards = document.querySelectorAll('.card--multimedia');
 multimediaCards.forEach((card) => {
   if (!card.classList.contains('card--multimedia--audio')) {
-    const playIcon = card.querySelector('.card__image__play-icon');
+    const playIcon = card.querySelector('.card__image__play-icon') || card.querySelector('.card__text__play-icon');
     const mmLength = card.querySelector('.card__image__mm-length');
     const img = card.querySelector('img');
     const iframe = card.querySelector('iframe');
