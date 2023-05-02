@@ -1,7 +1,7 @@
 {% load wagtailimages_tags %}
 
 <div class="col col-12">
-  <article class="card__container card--large card--large--event card--event {% if event_access == 'Private' %}is_private{% endif %}">
+  <article class="card__container card--large card--large--event card--event {{ additional_classes }} {% if event_access == 'Private' %}is_private{% endif %}">
     <div class="row card--event__top">
       <div class="col-md-8 col-lg-6 col-xl-5">
         {% now "c" as current_time %}

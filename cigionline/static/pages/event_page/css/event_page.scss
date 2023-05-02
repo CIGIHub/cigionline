@@ -73,4 +73,16 @@
       }
     }
   }
+
+  .card--event-page {
+    .card--event__buttons {
+      a {
+        &:first-child {
+          display: none;
+        }
+  
+        width: 100%;
+      }
+    }
+  }
 }
