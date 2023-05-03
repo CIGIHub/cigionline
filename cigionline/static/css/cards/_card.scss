@@ -115,6 +115,7 @@ $card-title-font: $title-font-family;
     .card__text__people {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.8em;
+      margin-bottom: 0.25em;
 
       li {
         color: $cigi-text-grey;
@@ -360,6 +361,7 @@ $card-title-font: $title-font-family;
 
     .card__text {
       transition: z-index 8s ease, opacity 3s ease;
+
       &.hidden {
         z-index: 0;
         opacity: 0;
