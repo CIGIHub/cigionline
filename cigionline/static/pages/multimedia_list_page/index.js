@@ -106,7 +106,7 @@ ReactDOM.render(
     }]}
     containerClass={[
       'row',
-      'g-3',
+      'g-4',
     ]}
     columnClass={[
       'col',

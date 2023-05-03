@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import CardTextMore from './CardTextMore';
 
 const embedUrl = (str) => {
   if (str.substr(-1) === '/') {
@@ -27,7 +28,7 @@ function MultimediaSearchResultCard(props) {
 
   return (
     <article
-      className={`card__container card--multimedia card--small--multimedia card--multimedia--${row.contentsubtype}`}
+      className={`card__container card--multimedia card--small card--small--multimedia card--multimedia--${row.contentsubtype}`}
     >
       <div className="card__image">
         <a href={row.url} className="feature-content-image">
@@ -89,11 +90,11 @@ function MultimediaSearchResultCard(props) {
               ))}
             </ul>
           </div>
-          <button type="button" className="card__text__more">
-            <a href={row.url}>
-              <i className="far fa-ellipsis-h" />
-            </a>
-          </button>
+          <CardTextMore
+            title={row.title}
+            url={row.url}
+            type="Multimedia"
+          />
         </div>
       </div>
     </article>

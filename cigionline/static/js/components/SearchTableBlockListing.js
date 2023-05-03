@@ -238,17 +238,17 @@ class SearchTableBlockListing extends React.Component {
         {newRows.map((row) => {
           if (row.id === 'featured') {
             return (
-              <>
-                <div className="col-12" key="hr-1">
+              <React.Fragment key={`${featuredPage.id}-featured`}>
+                <div className="col-12">
                   <hr />
                 </div>
-                <div className="col-12" key={`${row.id}`}>
+                <div className="col-12">
                   <FeaturedItemComponent row={featuredPage} />
                 </div>
-                <div className="col-12" key="hr-2">
+                <div className="col-12">
                   <hr />
                 </div>
-              </>
+              </React.Fragment>
             );
           }
           return (

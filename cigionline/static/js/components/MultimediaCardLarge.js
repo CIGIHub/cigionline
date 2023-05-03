@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import CardTextMore from './CardTextMore';
 
 const embedUrl = (str) => {
   if (str) {
@@ -92,11 +93,11 @@ function MultimediaCardLarge(props) {
               ))}
             </ul>
           </div>
-          <button type="button" className="card__text__more">
-            <a href={row.url}>
-              <i className="far fa-ellipsis-h" />
-            </a>
-          </button>
+          <CardTextMore
+            title={row.title}
+            url={row.url}
+            type="Multimedia"
+          />
         </div>
       </div>
     </article>

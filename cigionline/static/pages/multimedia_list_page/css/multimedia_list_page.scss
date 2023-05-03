@@ -42,7 +42,7 @@ body {
             height: 0;
             position: absolute;
             top: -1em;
-            border-top: 1.5px solid $white;
+            border-top: 1px solid $white;
           }
         }
       }
@@ -122,8 +122,12 @@ body {
     .search-table-container {
       margin: 0;
 
-      .search-results {
-        margin-top: 2em;
+      .card__container {
+        &.card--small--multimedia {
+          .card__text {
+            padding: 1em 0
+          }
+        }
       }
     }
 
@@ -136,7 +140,7 @@ body {
           font-weight: 400;
 
           &::before {
-            border-bottom: 2px solid $white;
+            border-bottom: 1px solid $white;
             top: -34px;
           }
         }

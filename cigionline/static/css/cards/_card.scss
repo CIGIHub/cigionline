@@ -357,6 +357,14 @@ $card-title-font: $title-font-family;
         border-radius: 20px 20px 0 0;
       }
     }
+
+    .card__text {
+      transition: z-index 8s ease, opacity 3s ease;
+      &.hidden {
+        z-index: 0;
+        opacity: 0;
+      }
+    }
   }
 
   &.card--ad {
