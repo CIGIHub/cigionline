@@ -1,4 +1,5 @@
 $card-title-font: $title-font-family;
+@import './card_xlarge';
 @import './card_large';
 @import './card_medium';
 @import './card_small';
@@ -21,15 +22,11 @@ $card-title-font: $title-font-family;
     img {
       border-radius: 20px;
       transition: opacity 1.5s ease-in;
-
-      &.hidden {
-        opacity: 0;
-      }
     }
 
     .card__image__play-icon {
       position: absolute;
-      z-index: 2;
+      z-index: 6;
       background-color: $black;
       top: calc(50% - 1em);
       right: calc(50% - 1em);
@@ -41,11 +38,12 @@ $card-title-font: $title-font-family;
       width: 2em;
       height: 2em;
       font-size: 1.5em;
-      transition: opacity 1.5s ease, color 0.2s ease-in-out,
-        background-color 0.2s ease-in-out;
+      transition: opacity 3s ease, color 0.2s ease-in-out,
+        background-color 0.2s ease-in-out, z-index 5s ease;
 
       &.hidden {
         opacity: 0;
+        z-index: 0;
       }
 
       &:hover {
@@ -69,11 +67,12 @@ $card-title-font: $title-font-family;
       font-size: 0.8em;
       right: 15px;
       bottom: 15px;
-      z-index: 2;
-      transition: opacity 1.5s ease;
+      z-index: 6;
+      transition: opacity 3s ease, z-index 5s ease;
 
       &.hidden {
         opacity: 0;
+        z-index: 0;
       }
     }
   }
@@ -116,6 +115,7 @@ $card-title-font: $title-font-family;
     .card__text__people {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.8em;
+      margin-bottom: 0.25em;
 
       li {
         color: $cigi-text-grey;
@@ -281,6 +281,15 @@ $card-title-font: $title-font-family;
           }
         }
 
+        &.card--large--multimedia {
+          .card__text {
+            @include media-breakpoint-up(md) {
+              border-radius: 20px 0 0 20px;
+            }
+            border-radius: 0 0 20px 20px;
+          }
+        }
+
         .card__text {
           background-color: $bigtech-s3-red;
 
@@ -304,6 +313,7 @@ $card-title-font: $title-font-family;
           }
         }
       }
+
       .card__image__play-icon {
         top: 1em;
         right: 1.5em;
@@ -320,16 +330,23 @@ $card-title-font: $title-font-family;
         padding-bottom: 56.25%;
 
         img {
-          z-index: 1;
+          z-index: 6;
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
+          transition: opacity 3s ease, z-index 5s ease;
+
+          &.hidden {
+            z-index: 0;
+            opacity: 0;
+          }
         }
 
         iframe {
           position: absolute;
+          z-index: 1;
           top: 0;
           left: 0;
           width: 100%;
@@ -339,6 +356,15 @@ $card-title-font: $title-font-family;
 
       iframe {
         border-radius: 20px 20px 0 0;
+      }
+    }
+
+    .card__text {
+      transition: z-index 8s ease, opacity 3s ease;
+
+      &.hidden {
+        z-index: 0;
+        opacity: 0;
       }
     }
   }
@@ -378,10 +404,10 @@ $card-title-font: $title-font-family;
           margin: 0 auto;
           text-align: center;
         }
-  
+
         .social-links {
           display: flex;
-  
+
           .social-link {
             align-items: center;
             background-color: $white;
@@ -394,11 +420,11 @@ $card-title-font: $title-font-family;
             margin: 1em 0.3em 0;
             transition: background-color 0.2s ease;
             width: 30px;
-  
+
             &:hover {
               background-color: $color--blue;
             }
-  
+
             i {
               font-size: 14px;
             }

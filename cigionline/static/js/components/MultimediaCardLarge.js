@@ -3,18 +3,21 @@ import React, { useState } from 'react';
 import CardTextMore from './CardTextMore';
 
 const embedUrl = (str) => {
-  if (str.substr(-1) === '/') {
-    str = str.substr(0, str.length - 1);
+  if (str) {
+    if (str.substr(-1) === '/') {
+      str = str.substr(0, str.length - 1);
+    }
+    const splitArr = str.split('/');
+    return 'https://player.vimeo.com/video/'.concat(
+      splitArr[splitArr.length - 2],
+      '?h=',
+      splitArr[splitArr.length - 1],
+      '&app_id=122963',
+    );
   }
-  const splitArr = str.split('/');
-  return 'https://player.vimeo.com/video/'.concat(
-    splitArr[splitArr.length - 2],
-    '?h=',
-    splitArr[splitArr.length - 1],
-    '&app_id=122963',
-  );
+  return '';
 };
-function MultimediaSearchResultCard(props) {
+function MultimediaCardLarge(props) {
   const [imgHidden, setImgHidden] = useState(false);
   const { row } = props;
   const vimeoUrl = imgHidden ? `${embedUrl(row.vimeo_url)}&autoplay=1` : embedUrl(row.vimeo_url);
@@ -28,16 +31,16 @@ function MultimediaSearchResultCard(props) {
 
   return (
     <article
-      className={`card__container card--multimedia card--small--multimedia card--multimedia--${row.contentsubtype.toLowerCase()}`}
+      className={`card__container card--multimedia card--large--multimedia card--multimedia--${row.contentsubtype}`}
     >
       <div className="card__image">
         <a href={row.url} className="feature-content-image">
           <div className="img-wrapper">
-            {row.image_hero_wide_url && (
+            {row.image_url && (
               <img
                 className={`${imgHidden && 'hidden'}`}
                 alt=""
-                src={row.image_hero_wide_url}
+                src={row.image_url}
               />
             )}
             {row.contentsubtype === 'Video' && row.vimeo_url && (
@@ -101,7 +104,7 @@ function MultimediaSearchResultCard(props) {
   );
 }
 
-MultimediaSearchResultCard.propTypes = {
+MultimediaCardLarge.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(
       PropTypes.shape({
@@ -112,7 +115,7 @@ MultimediaSearchResultCard.propTypes = {
     ),
     contentsubtype: PropTypes.string,
     id: PropTypes.number,
-    image_hero_wide_url: PropTypes.string,
+    image_url: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(
@@ -128,4 +131,4 @@ MultimediaSearchResultCard.propTypes = {
   }).isRequired,
 };
 
-export default MultimediaSearchResultCard;
+export default MultimediaCardLarge;

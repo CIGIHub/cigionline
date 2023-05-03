@@ -167,9 +167,9 @@ class BasicPageAbstract(models.Model):
     def image_hero_wide_url(self):
         try:
             if self.specific.image_feature:
-                return self.specific.image_feature.get_rendition('fill-600x300').url
+                return self.specific.image_feature.get_rendition('fill-600x338').url
             if self.image_hero:
-                return self.image_hero.get_rendition('fill-600x300').url
+                return self.image_hero.get_rendition('fill-600x338').url
         except Exception:
             print('Error: image_hero_wide_url')
         return ''

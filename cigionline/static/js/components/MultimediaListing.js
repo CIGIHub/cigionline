@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
 

@@ -22,10 +22,12 @@ from wagtail.blocks import (
     IntegerBlock,
     StructBlock,
     TextBlock,
+    PageChooserBlock,
 )
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+import json
 
 
 class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -36,6 +38,15 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         blank=True,
         null=True,
         verbose_name='Featured Multimedia',
+    )
+    featured_multimedia_pages = StreamField(
+        [
+            ('multimedia_page', PageChooserBlock('multimedia.MultimediaPage')),
+        ],
+        blank=True,
+        null=True,
+        verbose_name='Featured Multimedia Pages',
+        help_text='Limit 2 items - the first item will appear at the top of the page and the second will appear as the third row in the listing.',
     )
     big_tech_episodes = StreamField(
         [
@@ -57,7 +68,7 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
-                FieldPanel('featured_multimedia'),
+                FieldPanel('featured_multimedia_pages'),
                 FieldPanel('big_tech_episodes'),
             ],
             heading='Featured Multimedia',
@@ -89,6 +100,32 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     def get_context(self, request):
         context = super().get_context(request)
         context['promotion_blocks'] = self.get_promotion_blocks()
+        context['featured_multimedia_1'] = self.featured_multimedia_pages[0].value
+        try:
+            featured_page = self.featured_multimedia_pages[1].value
+            context['featured_multimedia_2'] = json.dumps({
+                'id': featured_page.id,
+                'url': featured_page.url,
+                'title': featured_page.title,
+                'image_url': featured_page.image_hero.get_rendition('fill-1600x900').url,
+                'image_alt': featured_page.image_hero.title,
+                'description': featured_page.subtitle if featured_page.subtitle else featured_page.short_description,
+                'authors': [{
+                    'id': author.author.id,
+                    'title': author.author.title,
+                    'url': author.author.url,
+                } for author in featured_page.authors.all()],
+                'topics': [{
+                    'id': topic.id,
+                    'title': topic.title,
+                    'url': topic.url,
+                } for topic in featured_page.topics_sorted],
+                'vimeo_url': featured_page.vimeo_url,
+                'multimedia_length': featured_page.length,
+                'contentsubtype': featured_page.contentsubtype,
+            })
+        except IndexError:
+            context['featured_multimedia_2'] = None
 
         return context
 

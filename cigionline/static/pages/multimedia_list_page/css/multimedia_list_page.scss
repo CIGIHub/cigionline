@@ -3,7 +3,15 @@
 @import '../../../css/includes/hero_multimedia';
 
 body {
+  @include dark-theme;
+  background-color: $black;
+  color: $white;
+
   .header--submenu {
+    background-color: $black;
+    margin-top: 4em;
+    color: $white;
+
     nav {
       border-bottom: 0;
     }
@@ -14,16 +22,18 @@ body {
 
     .header--submenu__right {
       display: flex;
-      font-size: 0.9em;
 
       .header--submenu__right__menu-item {
+        @include media-breakpoint-up(md) {
+          flex-basis: 33%
+        }
         font-weight: 300;
         color: $cigi-medium-grey;
         text-align: left;
-        flex-basis: 33%;
+        flex-basis: 50%;
 
         &.active {
-          color: $black;
+          color: $white;
 
           &::before {
             content: '';
@@ -31,8 +41,8 @@ body {
             width: 90%;
             height: 0;
             position: absolute;
-            top: -1.15em;
-            border-top: 1px solid $black;
+            top: -1em;
+            border-top: 1px solid $white;
           }
         }
       }
@@ -112,8 +122,28 @@ body {
     .search-table-container {
       margin: 0;
 
-      .search-results {
-        margin-top: 2em;
+      .card__container {
+        &.card--small--multimedia {
+          .card__text {
+            padding: 1em 0
+          }
+        }
+      }
+    }
+
+    .pagination-links-numbered {
+      li {
+        color: $cigi-medium-grey;
+
+        &.active {
+          color: $white;
+          font-weight: 400;
+
+          &::before {
+            border-bottom: 1px solid $white;
+            top: -34px;
+          }
+        }
       }
     }
   }
