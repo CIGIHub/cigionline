@@ -1145,10 +1145,16 @@ class ArticleCard(blocks.StructBlock):
         TINY = ('tiny', 'Tiny')
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
+        MEDIUM_LARGE = ('medium_large', 'Medium Large')
         LARGE = ('large', 'Large')
+    
+    class ArticleCardImageTypeChoices(models.TextChoices):
+        LANDSCAPE = ('landscape', 'Landscape')
+        SQUARE = ('square', 'Square')
 
     page = blocks.PageChooserBlock(required=True, page_type='articles.ArticlePage')
     size = blocks.ChoiceBlock(choices=ArticleCardTypeChoices.choices, required=True)
+    image_type = blocks.ChoiceBlock(choices=ArticleCardImageTypeChoices.choices, default=ArticleCardImageTypeChoices.LANDSCAPE, required=True)
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
