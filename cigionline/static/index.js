@@ -13,7 +13,7 @@ $(function () {
   const header = $('header:not(.small)');
   const globalNav = header.find('#global-nav');
 
-  $(window).on('scroll', function() {
+  $(window).on('scroll', function () {
     scrollTop = $(window).scrollTop();
     if (scrollTop >= 66) {
       header.addClass('scrolled');
@@ -128,7 +128,9 @@ window.addEventListener('resize', (e) => {
 const multimediaCards = document.querySelectorAll('.card--multimedia');
 multimediaCards.forEach((card) => {
   if (!card.classList.contains('card--multimedia--audio')) {
-    const playIcon = card.querySelector('.card__image__play-icon') || card.querySelector('.card__text__play-icon');
+    const playIcon =
+      card.querySelector('.card__image__play-icon') ||
+      card.querySelector('.card__text__play-icon');
     const mmLength = card.querySelector('.card__image__mm-length');
     const img = card.querySelector('img');
     const iframe = card.querySelector('iframe');
@@ -136,16 +138,25 @@ multimediaCards.forEach((card) => {
 
     playIcon.addEventListener('click', (e) => {
       if (!img.classList.contains('hidden')) {
-        const isLargeBreakpoint = window.matchMedia('(min-width: 991px)').matches;
+        const isLargeBreakpoint =
+          window.matchMedia('(min-width: 991px)').matches;
+        const isMediumBreakpoint =
+          window.matchMedia('(min-width: 768px)').matches;
         const isSmallCard = card.classList.contains('card--small--multimedia');
         const isLargeCard = card.classList.contains('card--large--multimedia');
+        const isXLargeCard = card.classList.contains(
+          'card--xlarge--multimedia',
+        );
         playIcon.classList.add('hidden');
         if (mmLength) {
           mmLength.classList.add('hidden');
         }
         img.classList.add('hidden');
         iframe.src += '&autoplay=1';
-        if (isLargeBreakpoint && !isSmallCard && !isLargeCard) {
+        if (
+          (isLargeBreakpoint && !isSmallCard && !isLargeCard) ||
+          (isXLargeCard && isMediumBreakpoint)
+        ) {
           text.classList.add('hidden');
         }
       }
