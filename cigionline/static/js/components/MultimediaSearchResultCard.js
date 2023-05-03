@@ -28,7 +28,7 @@ function MultimediaSearchResultCard(props) {
 
   return (
     <article
-      className={`card__container card--multimedia card--small card--small--multimedia card--multimedia--${row.contentsubtype}`}
+      className={`card__container card--multimedia card--small--multimedia card--multimedia--${row.contentsubtype.toLowerCase()}`}
     >
       <div className="card__image">
         <a href={row.url} className="feature-content-image">
