@@ -232,6 +232,16 @@
             display: none;
           }
         }
+
+        &.card--small--article,
+        &.card--medium--article,
+        &.card--medium-large--article {
+          .card__text {
+            .card__text__description {
+              display: none;
+            }
+          }
+        }
       }
 
       div {
