@@ -19,13 +19,17 @@
         </div>
       </div>
       <div class="col-md-8 col-lg-6">
-        <div class="card__image">
+        <div class="card__image card__image--{{ image_type }}">
           <a href="{{ url }}" class="feature-content-image">
             <div class="img-wrapper">
               {% if image_src %}
                 <img alt="{{ image_alt }}" src="{{ image_src }}" />
               {% else %}
-                {% image image fill-1440x990 %}
+                {% if image_type == 'landscape' %}
+                  {% image image fill-1440x990 %}
+                {% elif image_type == 'square' %}
+                  {% image image fill-990x990 %}
+                {% endif %}
               {% endif %}
             </div>
           </a>

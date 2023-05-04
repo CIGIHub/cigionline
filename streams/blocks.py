@@ -1182,6 +1182,7 @@ class ArticleCard(blocks.StructBlock):
         context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
+        context['image_type'] = value.get('image_type')
 
         return context
 

@@ -75,6 +75,12 @@ $card-title-font: $title-font-family;
         z-index: 0;
       }
     }
+
+    &.card__image--square {
+      @include media-breakpoint-up(md) {
+        flex: 1 0 25%;
+      }
+    }
   }
 
   .card__text {

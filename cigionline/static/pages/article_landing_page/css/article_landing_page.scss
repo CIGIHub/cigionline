@@ -21,12 +21,31 @@ body {
     }
   }
 
-  .card__container {
-    @include media-breakpoint-up(md) {
-      min-height: 300px;
-    }
-    @include media-breakpoint-up(lg) {
-      min-height: 366px;
+  article {
+    &.card__container {
+      @include media-breakpoint-up(md) {
+        min-height: 300px;
+      }
+      @include media-breakpoint-up(xl) {
+        min-height: 366px;
+      }
+  
+      .card__image {
+        &.card__image--square {
+          @include media-breakpoint-up(md) {
+            aspect-ratio: 1;
+          }
+          aspect-ratio: 1.6;
+          flex: 1 0 30%;
+
+          img {
+            @include media-breakpoint-up(md) {
+              aspect-ratio: 1;
+            }
+            aspect-ratio: 1.6;
+          }
+        }
+      }
     }
   }
 
