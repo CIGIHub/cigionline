@@ -146,7 +146,10 @@ body {
 
     &.article-landing-page__featured-opinions {
       hr {
-        margin: 1.5em 0;
+        @include media-breakpoint-up(lg) {
+          margin: 1.5em 0;
+        }
+        margin: 1em 0;
       }
 
       .article-landing-page__row {
