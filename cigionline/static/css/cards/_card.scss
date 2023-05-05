@@ -28,27 +28,22 @@ $card-title-font: $title-font-family;
       position: absolute;
       z-index: 6;
       background-color: $black;
-      top: calc(50% - 1em);
-      right: calc(50% - 1em);
+      top: 1em;
+      right: 1.5em;
+      width: 2em;
+      height: 2em;
+      font-size: 0.75em;
       border-radius: 50%;
       color: $white;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 2em;
-      height: 2em;
-      font-size: 1.5em;
       transition: opacity 3s ease, color 0.2s ease-in-out,
         background-color 0.2s ease-in-out, z-index 5s ease;
 
       &.hidden {
         opacity: 0;
         z-index: 0;
-      }
-
-      &:hover {
-        color: $black;
-        background-color: $white;
       }
 
       i {
@@ -270,6 +265,21 @@ $card-title-font: $title-font-family;
   }
 
   &.card--multimedia {
+    &.has-vimeo {
+      .card__image__play-icon {
+        top: calc(50% - 1em);
+        right: calc(50% - 1em);
+        width: 2em;
+        height: 2em;
+        font-size: 1.5em;
+
+        &:hover {
+          color: $black;
+          background-color: $white;
+        }
+      }
+    }
+
     &.card--multimedia--audio {
       &.theme-big-tech-s3 {
         &.card--medium--multimedia {
@@ -318,14 +328,6 @@ $card-title-font: $title-font-family;
             }
           }
         }
-      }
-
-      .card__image__play-icon {
-        top: 1em;
-        right: 1.5em;
-        width: 1.5em;
-        height: 1.5em;
-        font-size: 1em;
       }
     }
 

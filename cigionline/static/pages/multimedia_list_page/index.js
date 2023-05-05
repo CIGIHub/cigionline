@@ -5,8 +5,9 @@ import './css/multimedia_list_page.scss';
 import 'swiper/swiper-bundle.css';
 import MultimediaSearchResultCard from '../../js/components/MultimediaSearchResultCard';
 import MultimediaCardLarge from '../../js/components/MultimediaCardLarge';
+import MultimediaCardXLarge from '../../js/components/MultimediaCardXLarge';
 
-const featuredPage = JSON.parse(document.getElementById('multimedia-search-table').dataset.featuredPage);
+const featuredPages = JSON.parse(document.getElementById('multimedia-search-table').dataset.featuredPages);
 ReactDOM.render(
   <SearchTableBlockListing
     blockListing
@@ -14,7 +15,7 @@ ReactDOM.render(
       'Multimedia',
     ]}
     showSearch
-    limit={12}
+    limit={18}
     fields={[
       'authors',
       'contentsubtype',
@@ -47,12 +48,12 @@ ReactDOM.render(
       'col',
       'col-6',
       'col-md-4',
-      'col-lg-3',
     ]}
     RowComponent={MultimediaSearchResultCard}
-    FeaturedItemComponent={MultimediaCardLarge}
+    FeaturedItemComponent1={MultimediaCardXLarge}
+    FeaturedItemComponent2={MultimediaCardLarge}
     searchPlaceholder="Search Multimedia by Keyword"
-    featuredPage={featuredPage}
+    featuredPages={featuredPages}
   />,
   document.getElementById('multimedia-search-table'),
 );

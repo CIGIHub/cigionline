@@ -21,9 +21,7 @@ const mergeObjects = (data) => {
 
 const breakpointChange = (rows, breakpoint) => {
   const newRows = [...rows];
-  if (breakpoint === 'lg') {
-    newRows.splice(8, 0, { id: 'featured' });
-  } else if (breakpoint === 'md') {
+  if (breakpoint === 'md') {
     newRows.splice(6, 0, { id: 'featured' });
   } else {
     newRows.splice(4, 0, { id: 'featured' });
@@ -177,9 +175,7 @@ class SearchTableBlockListing extends React.Component {
   getBreakpoint() {
     const { breakpoint } = this.state;
     let newBreakpoint;
-    if (window.matchMedia('(min-width: 992px)').matches) {
-      newBreakpoint = 'lg';
-    } else if (window.matchMedia('(min-width: 768px)').matches) {
+    if (window.matchMedia('(min-width: 768px)').matches) {
       newBreakpoint = 'md';
     } else {
       newBreakpoint = 'sm';
@@ -224,55 +220,67 @@ class SearchTableBlockListing extends React.Component {
   }
 
   renderBlockListing(RowComponent, containerClass) {
-    const { rows, loading, breakpoint } = this.state;
-    const { featuredPage, FeaturedItemComponent, columnClass } = this.props;
+    const { rows, loading, breakpoint, currentPage } = this.state;
+    const {
+      featuredPages,
+      FeaturedItemComponent1,
+      FeaturedItemComponent2,
+      columnClass,
+    } = this.props;
     const newRows = breakpointChange(rows, breakpoint);
 
     return (
-      <div
-        className={[
-          ...containerClass,
-          loading && 'loading',
-        ].join(' ')}
-      >
-        {newRows.map((row) => {
-          if (row.id === 'featured') {
+      <>
+        {featuredPages.length > 0 && currentPage === 1 && (
+          <>
+            <section className="featured">
+              <div className="row">
+                <div className="col">
+                  <FeaturedItemComponent1 row={featuredPages[0]} />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col">
+                  <hr />
+                </div>
+              </div>
+            </section>
+          </>
+        )}
+        <div className={[...containerClass, loading && 'loading'].join(' ')}>
+          {newRows.map((row) => {
+            if (row.id === 'featured') {
+              if (currentPage === 1 && featuredPages.length > 1) {
+                return (
+                  <React.Fragment key={`${featuredPages[1].id}-featured`}>
+                    <div className="col-12">
+                      <hr />
+                    </div>
+                    <div className="col-12">
+                      <FeaturedItemComponent2 row={featuredPages[1]} />
+                    </div>
+                    <div className="col-12">
+                      <hr />
+                    </div>
+                  </React.Fragment>
+                );
+              }
+              return null;
+            }
             return (
-              <React.Fragment key={`${featuredPage.id}-featured`}>
-                <div className="col-12">
-                  <hr />
-                </div>
-                <div className="col-12">
-                  <FeaturedItemComponent row={featuredPage} />
-                </div>
-                <div className="col-12">
-                  <hr />
-                </div>
-              </React.Fragment>
+              <div className={columnClass.join(' ')} key={`${row.id}`}>
+                <RowComponent row={row} />
+              </div>
             );
-          }
-          return (
-            <div className={columnClass.join(' ')} key={`${row.id}`}>
-              <RowComponent row={row} />
-            </div>
-          );
-        })}
-      </div>
+          })}
+        </div>
+      </>
     );
   }
 
   render() {
-    const {
-      currentPage,
-      loading,
-      loadingInitial,
-      rows,
-    } = this.state;
-    const {
-      blockListing,
-      containerClass,
-      RowComponent,
-    } = this.props;
+    const { currentPage, loading, loadingInitial, rows } = this.state;
+    const { blockListing, containerClass, RowComponent } = this.props;
 
     return (
       <div className="search-table-container custom-theme-table">
@@ -280,10 +288,13 @@ class SearchTableBlockListing extends React.Component {
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {loadingInitial ? (
             <SearchTableSkeleton />
-          ) : rows.length && (
-            <>
-              {blockListing && this.renderBlockListing(RowComponent, containerClass)}
-            </>
+          ) : (
+            rows.length && (
+              <>
+                {blockListing &&
+                  this.renderBlockListing(RowComponent, containerClass)}
+              </>
+            )
           )}
           {this.totalPages > 1 && (
             <Paginator
@@ -317,26 +328,28 @@ SearchTableBlockListing.propTypes = {
       paramValue: PropTypes.any,
     }),
   ),
-  featuredPage: PropTypes.shape({
-    id: PropTypes.number,
-    url: PropTypes.string,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    image: PropTypes.string,
-    imageAlt: PropTypes.string,
-    authors: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    ),
-    topics: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    ),
-  }),
+  featuredPages: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      url: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
+      image: PropTypes.string,
+      imageAlt: PropTypes.string,
+      authors: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string,
+          url: PropTypes.string,
+        }),
+      ),
+      topics: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string,
+          url: PropTypes.string,
+        }),
+      ),
+    }),
+  ),
   fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   filterTypes: PropTypes.arrayOf(
     PropTypes.shape({
@@ -353,7 +366,8 @@ SearchTableBlockListing.propTypes = {
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
-  FeaturedItemComponent: PropTypes.func,
+  FeaturedItemComponent1: PropTypes.func,
+  FeaturedItemComponent2: PropTypes.func,
 };
 
 SearchTableBlockListing.defaultProps = {
@@ -363,11 +377,12 @@ SearchTableBlockListing.defaultProps = {
   contentsubtypes: [],
   contenttypes: [],
   endpointParams: [],
-  featuredPage: null,
+  featuredPages: [],
   filterTypes: [],
   isSearchPage: false,
   limit: 24,
-  FeaturedItemComponent: null,
+  FeaturedItemComponent1: null,
+  FeaturedItemComponent2: null,
 };
 
 export default SearchTableBlockListing;

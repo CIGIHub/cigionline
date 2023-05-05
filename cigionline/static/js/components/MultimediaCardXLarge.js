@@ -17,10 +17,12 @@ const embedUrl = (str) => {
   }
   return '';
 };
-function MultimediaCardLarge(props) {
+function MultimediaCardXLarge(props) {
   const [imgHidden, setImgHidden] = useState(false);
   const { row } = props;
-  const vimeoUrl = imgHidden ? `${embedUrl(row.vimeo_url)}&autoplay=1` : embedUrl(row.vimeo_url);
+  const vimeoUrl = imgHidden
+    ? `${embedUrl(row.vimeo_url)}&autoplay=1`
+    : embedUrl(row.vimeo_url);
   const multimediaTypeIconCls =
     row.contentsubtype === 'Video'
       ? 'fas fa-play'
@@ -31,7 +33,9 @@ function MultimediaCardLarge(props) {
 
   return (
     <article
-      className={`card__container card--multimedia card--large--multimedia card--multimedia--${row.contentsubtype} ${row.vimeo_url && 'has-vimeo'}`}
+      className={`card__container card--multimedia card--xlarge card--xlarge--multimedia card--multimedia--${
+        row.contentsubtype
+      } ${row.vimeo_url && 'has-vimeo'}`}
     >
       <div className="card__image">
         <div className="img-wrapper">
@@ -50,8 +54,15 @@ function MultimediaCardLarge(props) {
             />
           )}
         </div>
+        {row.multimedia_length && (
+          <div className={`card__image__mm-length ${imgHidden && 'hidden'}`}>
+            {row.multimedia_length}
+          </div>
+        )}
+      </div>
+      <div className={`card__text ${imgHidden && 'hidden'}`}>
         <div
-          className={`card__image__play-icon ${imgHidden && 'hidden'}`}
+          className={`card__text__play-icon ${imgHidden && 'hidden'}`}
           role="button"
           tabIndex={0}
           onClick={() => handleClick()}
@@ -59,16 +70,15 @@ function MultimediaCardLarge(props) {
         >
           <i className={multimediaTypeIconCls} />
         </div>
-        {row.multimedia_length && (
-          <div className={`card__image__mm-length ${imgHidden && 'hidden'}`}>
-            {row.multimedia_length}
-          </div>
-        )}
-      </div>
-      <div className="card__text">
         <h3 className="card__text__title">
           <a href={row.url}>{row.title}</a>
         </h3>
+        {row.subtitle && (
+          <div
+            className="card__text__description"
+            dangerouslySetInnerHTML={{ __html: row.subtitle }}
+          />
+        )}
         <div className="card__text__meta">
           <div>
             <ul className="custom-text-list card__text__people">
@@ -91,18 +101,14 @@ function MultimediaCardLarge(props) {
               ))}
             </ul>
           </div>
-          <CardTextMore
-            title={row.title}
-            url={row.url}
-            type="Multimedia"
-          />
+          <CardTextMore title={row.title} url={row.url} type="Multimedia" />
         </div>
       </div>
     </article>
   );
 }
 
-MultimediaCardLarge.propTypes = {
+MultimediaCardXLarge.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(
       PropTypes.shape({
@@ -116,6 +122,7 @@ MultimediaCardLarge.propTypes = {
     image_url: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
+    subtitle: PropTypes.string,
     topics: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number,
@@ -129,4 +136,4 @@ MultimediaCardLarge.propTypes = {
   }).isRequired,
 };
 
-export default MultimediaCardLarge;
+export default MultimediaCardXLarge;

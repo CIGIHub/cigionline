@@ -100,32 +100,32 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     def get_context(self, request):
         context = super().get_context(request)
         context['promotion_blocks'] = self.get_promotion_blocks()
-        context['featured_multimedia_1'] = self.featured_multimedia_pages[0].value
+
         try:
-            featured_page = self.featured_multimedia_pages[1].value
-            context['featured_multimedia_2'] = json.dumps({
-                'id': featured_page.id,
-                'url': featured_page.url,
-                'title': featured_page.title,
-                'image_url': featured_page.image_hero.get_rendition('fill-1600x900').url,
-                'image_alt': featured_page.image_hero.title,
-                'description': featured_page.subtitle if featured_page.subtitle else featured_page.short_description,
+            context['featured_multimedia'] = json.dumps([{
+                'id': page.value.id,
+                'url': page.value.url,
+                'title': page.value.title,
+                'subtitle': page.value.subtitle,
+                'image_url': page.value.image_hero.get_rendition('fill-1600x900').url,
+                'image_alt': page.value.image_hero.title,
+                'description': page.value.subtitle if page.value.subtitle else page.value.short_description,
                 'authors': [{
                     'id': author.author.id,
                     'title': author.author.title,
                     'url': author.author.url,
-                } for author in featured_page.authors.all()],
+                } for author in page.value.authors.all()],
                 'topics': [{
                     'id': topic.id,
                     'title': topic.title,
                     'url': topic.url,
-                } for topic in featured_page.topics_sorted],
-                'vimeo_url': featured_page.vimeo_url,
-                'multimedia_length': featured_page.length,
-                'contentsubtype': featured_page.contentsubtype,
-            })
-        except IndexError:
-            context['featured_multimedia_2'] = None
+                } for topic in page.value.topics_sorted],
+                'vimeo_url': page.value.vimeo_url,
+                'multimedia_length': page.value.length,
+                'contentsubtype': page.value.contentsubtype,
+            } for page in self.featured_multimedia_pages])
+        except Exception:
+            context['featured_multimedia'] = None
 
         return context
 

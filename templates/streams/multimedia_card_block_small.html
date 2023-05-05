@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags core_tags %}
 
 <div class="col col-12 col-md-4">
-  <article class="card__container card--small--multimedia card--multimedia card--multimedia--{{multimedia_type}} theme-{{theme}}">
+  <article class="card__container card--small--multimedia card--multimedia card--multimedia--{{multimedia_type}} theme-{{theme}} {% if vimeo_url %}has-vimeo{% endif %}">
     <div class="card__image">
       <div class="img-wrapper">
         {% if image_src %}

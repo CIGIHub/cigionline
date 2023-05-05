@@ -25,7 +25,7 @@ body {
 
       .header--submenu__right__menu-item {
         @include media-breakpoint-up(md) {
-          flex-basis: 33%
+          flex-basis: 33%;
         }
         font-weight: 300;
         color: $cigi-medium-grey;
@@ -51,6 +51,10 @@ body {
 
   .featured {
     margin-top: 3em;
+
+    hr {
+      margin: 2em 0;
+    }
   }
 
   .multimedia-landing-page__swiper__container {
@@ -125,7 +129,7 @@ body {
       .card__container {
         &.card--small--multimedia {
           .card__text {
-            padding: 1em 0
+            padding: 1em 0;
           }
         }
       }
