@@ -221,60 +221,55 @@ class SearchTableBlockListing extends React.Component {
 
   renderBlockListing(RowComponent, containerClass) {
     const { rows, loading, breakpoint, currentPage } = this.state;
-    const {
-      featuredPages,
-      FeaturedItemComponent1,
-      FeaturedItemComponent2,
-      columnClass,
-    } = this.props;
+    const { featuredPage, FeaturedItemComponent, columnClass } = this.props;
     const newRows = breakpointChange(rows, breakpoint);
+    let count = 0;
 
     return (
-      <>
-        {featuredPages.length > 0 && currentPage === 1 && (
-          <>
-            <section className="featured">
-              <div className="row">
-                <div className="col">
-                  <FeaturedItemComponent1 row={featuredPages[0]} />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col">
+      <div className={[...containerClass, loading && 'loading'].join(' ')}>
+        {newRows.map((row) => {
+          let lineBreak = false;
+          if (row.id === 'featured') {
+            if (featuredPage && currentPage === 1) {
+              return (
+                <React.Fragment key={`${featuredPage.id}-featured`}>
+                  <div className="col-12">
+                    <hr />
+                  </div>
+                  <div className="col-12">
+                    <FeaturedItemComponent row={featuredPage} />
+                  </div>
+                </React.Fragment>
+              );
+            }
+            return null;
+          }
+
+          if (
+            (breakpoint === 'md' && count === 3) ||
+            (breakpoint === 'sm' && count === 2)
+          ) {
+            lineBreak = true;
+            count = 0;
+          }
+          if (row.id !== 'featured') {
+            count += 1;
+          }
+
+          return (
+            <React.Fragment key={`${row.id}`}>
+              {lineBreak && (
+                <div className="col-12">
                   <hr />
                 </div>
-              </div>
-            </section>
-          </>
-        )}
-        <div className={[...containerClass, loading && 'loading'].join(' ')}>
-          {newRows.map((row) => {
-            if (row.id === 'featured') {
-              if (currentPage === 1 && featuredPages.length > 1) {
-                return (
-                  <React.Fragment key={`${featuredPages[1].id}-featured`}>
-                    <div className="col-12">
-                      <hr />
-                    </div>
-                    <div className="col-12">
-                      <FeaturedItemComponent2 row={featuredPages[1]} />
-                    </div>
-                    <div className="col-12">
-                      <hr />
-                    </div>
-                  </React.Fragment>
-                );
-              }
-              return null;
-            }
-            return (
-              <div className={columnClass.join(' ')} key={`${row.id}`}>
+              )}
+              <div className={columnClass.join(' ')}>
                 <RowComponent row={row} />
               </div>
-            );
-          })}
-        </div>
-      </>
+            </React.Fragment>
+          );
+        })}
+      </div>
     );
   }
 
@@ -328,28 +323,26 @@ SearchTableBlockListing.propTypes = {
       paramValue: PropTypes.any,
     }),
   ),
-  featuredPages: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      url: PropTypes.string,
-      title: PropTypes.string,
-      description: PropTypes.string,
-      image: PropTypes.string,
-      imageAlt: PropTypes.string,
-      authors: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string,
-          url: PropTypes.string,
-        }),
-      ),
-      topics: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string,
-          url: PropTypes.string,
-        }),
-      ),
-    }),
-  ),
+  featuredPage: PropTypes.shape({
+    id: PropTypes.number,
+    url: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    image: PropTypes.string,
+    imageAlt: PropTypes.string,
+    authors: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        url: PropTypes.string,
+      }),
+    ),
+    topics: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        url: PropTypes.string,
+      }),
+    ),
+  }),
   fields: PropTypes.arrayOf(PropTypes.string).isRequired,
   filterTypes: PropTypes.arrayOf(
     PropTypes.shape({
@@ -366,8 +359,7 @@ SearchTableBlockListing.propTypes = {
   isSearchPage: PropTypes.bool,
   limit: PropTypes.number,
   RowComponent: PropTypes.func.isRequired,
-  FeaturedItemComponent1: PropTypes.func,
-  FeaturedItemComponent2: PropTypes.func,
+  FeaturedItemComponent: PropTypes.func,
 };
 
 SearchTableBlockListing.defaultProps = {
@@ -377,12 +369,11 @@ SearchTableBlockListing.defaultProps = {
   contentsubtypes: [],
   contenttypes: [],
   endpointParams: [],
-  featuredPages: [],
+  featuredPage: null,
   filterTypes: [],
   isSearchPage: false,
   limit: 24,
-  FeaturedItemComponent1: null,
-  FeaturedItemComponent2: null,
+  FeaturedItemComponent: null,
 };
 
 export default SearchTableBlockListing;

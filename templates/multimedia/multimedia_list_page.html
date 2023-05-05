@@ -22,11 +22,64 @@
       </nav>
     </div>
   </header>
+  <section class="featured">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <article class="card__container card--xlarge card--xlarge--multimedia card--multimedia">
+            {% with featured_multimedia_1 as page %}
+              <div class="card__image">
+                <div class="img-wrapper">
+                  {% if page.image_hero %}
+                    {% image page.image_hero fill-1920x1080 %}
+                  {% endif %}
+                  {% if page.vimeo_url %}
+                    {% embed page.vimeo_url %}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="card__text">
+                <div class="card__text__play-icon">
+                  <i class="fas fa-play"></i>
+                </div>
+                <h3 class="card__text__title">
+                  <a href="{% pageurl page %}">
+                    {{ page.title }}
+                  </a>
+                </h3>
+                <div class="card__text__description">
+                  {% if page.subtitle %}
+                    {{ page.subtitle|richtext }}
+                  {% else %}
+                    {{ page.short_description|richtext }}
+                  {% endif %}
+                </div>
+                <div class="card__text__meta">
+                  <div>
+                    {% include 'includes/cards/card_text_people.html' with authors=page.authors.all %}
+                    {% include 'includes/cards/card_text_topics.html' with topics=page.topics_sorted %}
+                  </div>
+                  {% include 'includes/cards/card_text_more.html' with url=page.url %}
+                </div>
+              </div>
+            {% endwith %}
+          </article>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <hr>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
   <section>
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div class="multimedia-list-section" id="multimedia-search-table" data-featured-pages="{{ featured_multimedia }}">
+          <div class="multimedia-list-section" id="multimedia-search-table" data-featured-page="{{ featured_multimedia_2 }}">
           </div>
         </div>
       </div>
