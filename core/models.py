@@ -160,7 +160,7 @@ class BasicPageAbstract(models.Model):
             if self.image_hero:
                 return self.image_hero.get_rendition('fill-520x390').url
         except Exception:
-            print('Error: image_hero_url')
+            print(f'Error: image_hero_url for {self.title} not found')
         return CigionlineImage.objects.get(title='CIGI-default-recommended-thumb').get_rendition('fill-520x390').url
 
     @property
@@ -171,7 +171,7 @@ class BasicPageAbstract(models.Model):
             if self.image_hero:
                 return self.image_hero.get_rendition('fill-600x338').url
         except Exception:
-            print('Error: image_hero_wide_url')
+            print(f'Error: image_hero_wide_url for {self.title} not found')
         return ''
 
     @property
@@ -180,7 +180,7 @@ class BasicPageAbstract(models.Model):
             if self.specific.image_poster:
                 return self.specific.image_poster.get_rendition('fill-525x700').url
         except Exception:
-            print('Error: image_poster_url')
+            print(f'Error: image_poster_url for {self.title} not found')
         return ''
 
     @property

@@ -171,7 +171,7 @@ def send_notifications(sender, **kwargs):
         notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
         send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing, page_url, header_label)
     except Exception as e:
-        print(e)
+        print(f'Notification error: {e}')
 
 
 def clear_cloudflare_home_page_cache(sender, **kwargs):

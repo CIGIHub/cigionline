@@ -699,7 +699,7 @@ class ArticleSeriesPage(
             if self.specific.image_poster:
                 return self.specific.image_poster.get_rendition('fill-525x700').url
         except Exception:
-            print('Error: image_poster_url')
+            print(f'Error: image_poster_url for {self.title} not found')
         return CigionlineImage.objects.get(id=1).get_rendition('fill-525x700').url
 
     @property
