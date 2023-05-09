@@ -1,0 +1,56 @@
+@import '../../../css/global/mixins';
+@import '../../../css/includes/swiper';
+
+section {
+  &.ogbv-survey-findings {
+    margin: 3em 0;
+    padding: 3em 0;
+    background-color: $cigi-light-grey;
+
+    .swiper-container {
+      padding-top: 3em !important;
+    }
+  
+    .survey-findings-country {
+      img {
+        margin-bottom: 1em;
+      }
+      button {
+        margin: 0 0.5em 0 0;
+      }
+  
+      h3 {
+        margin: 0;
+      }
+    }
+  }
+
+  &.ogbv-resources {
+    h2 {
+      margin-bottom: 2em;
+    }
+    
+    article {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1em 0;
+
+      h3 {
+        width: 66%;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &.ogbv-acknowledgements {
+    margin-top: 3em;
+
+    .img-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  }
+}
