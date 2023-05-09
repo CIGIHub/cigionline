@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load webpack_loader wagtailimages_tags wagtailcore_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta property="og:type" content="article" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.publishing_date %}
+    <meta property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
+  {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'themeOGBV' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+  </script>
+  {% render_bundle 'themeOGBV' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
+
+  {% if featured_pages|length > 0 %}
+    <section class="featured">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-8 feature-border-right">
+            {% if featured_pages|length > 0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.0.pdf_download %}
+            {% endif %}
+          </div>
+          <hr class="separator-large">
+          <div class="col-12 col-md-4 featured-small">
+          {% with featured_pages|slice:"1:4" as featured_small %}
+            {% for item in featured_small %}
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+            {% endfor %}
+          {% endwith %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+        <div class="row highlights">
+          {% for block in additional_files %}
+            {% include_block block %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.survey_findings %}
+    <section class="ogbv-survey-findings">
+      <div class="container">
+        <h2 class="paragraph-heading">SURVEY FINDINGS</h2>
+        <div class="swiper-container">
+          <div class="swiper-wrapper">
+            {% for block in self.survey_findings %}
+              <div class="swiper-slide">
+                {% include_block block %}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="swiper-controls">
+            <div class="swiper-button-prev"><i class="fal fa-long-arrow-left"></i></div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"><i class="fal fa-long-arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% include "includes/body.html" with body=self.body heading="about" %}
+
+  <section class="ogbv-resources">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <hr>
+          <h2 class="paragraph-heading">Resources</h2>
+        </div>
+        {% for file in self.related_files %}
+          <div class="col-12 col-md-10 col-lg-8">
+            <article class="ogbv-resource">
+              <h3>{{ file.value.title }}</h2>
+              <a href="{{ file.value.file.url }}" class="button-action" target="_blank">
+                <i class="fas fa-download"></i>
+                Download
+              </a>
+            </article>
+            {% if not forloop.last %}
+              <hr class="separator-large">
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div> 
+  </section> 
+  <section class="ogbv-acknowledgements">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <hr>
+          <p>
+            <em>
+              The Supporting a Safer Internet project has been made possible with a grant from the International Development Research Centre (IDRC)
+            </em>
+          </p>
+          <div class="row justify-content-center">
+            <div class="col-6">
+              <div class="img-container">
+                <img src="/static/assets/idrc-logo.png" alt="IDRC logo">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="img-container">
+                <img src="/static/assets/canada-logo.png" alt="Canada logo">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="project-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

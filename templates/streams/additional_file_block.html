@@ -1,0 +1,38 @@
+{% load wagtailimages_tags wagtailcore_tags core_tags %}
+
+<div class="container">
+  <article class="stream-block-additional-file-block row">
+    {% if self.image %}
+      <div class="col-12 col-md-6 col-lg-4 img-container">
+        <figure>
+          {% if self.image.file.url|file_extension == '.gif' %}
+            <img src="{{self.image.file.url}}" alt="{{self.image.caption}}" />
+          {% else %}
+            {% image self.image width-800 %}
+          {% endif %}
+        </figure>
+      </div>
+    {% endif %}
+    <div class="stream-block-text col-12 col-md-6 col-lg-8">
+      <div>
+        <h3 class="stream-block-title">
+          {{ self.title }}
+        </h3>
+        {% if self.description %}
+          <div class="stream-block-description">
+            {{ self.description|richtext|safe }}
+          </div>
+        {% endif %}
+      </div>
+      {% if self.file %}
+        <div class="stream-block-cta">
+          <a href="{{ self.file.file.url }}">
+            <button class="button-action button-square">
+              <i class="fa fas fa-download"></i>
+            </button>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </article>
+</div>
