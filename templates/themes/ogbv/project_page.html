@@ -48,15 +48,12 @@
 
 {% block content %}
 
-<section class="hero">
+<section class="hero" style="background-image:url('{{self.image_banner.file.url}}')">
   <div class="container">
     <div class="row align-items-center hero-container">
-      <div class="hero-main col-md-8">
+      <div class="hero-main col-8">
         <h1>{{self.title}}</h1>
         <h2>{{self.subtitle|safe}}</h2>
-      </div>
-      <div class="hero-image col-md-4">
-        <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.caption}}" />
       </div>
     </div>
   </div>

@@ -2,11 +2,18 @@
 @import '../../../css/includes/swiper';
 
 body {
-  @include top-bar($background-color: transparent, $color: $black);
+  @include top-bar(
+    $background-color: transparent,
+    $color: $black,
+    $background-color-scrolled: $black,
+    $color-scrolled: $white
+  );
 
   section {
     &.hero {
-      background-color: $ogbv-primary-colour;
+      background-size: cover;
+      background-position: right;
+      background-repeat: no-repeat;
 
       .hero-container {
         .hero-main {
@@ -43,7 +50,7 @@ body {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          
+
           .feature-content-title {
             @include media-breakpoint-up(lg) {
               font-size: 1.5em;
