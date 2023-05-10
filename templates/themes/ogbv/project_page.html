@@ -51,11 +51,11 @@
 <section class="hero">
   <div class="container">
     <div class="row hero-container">
-      <div class="hero-main col-md-7">
-        <h1>{{title}}</h1>
-        <h2>{{subtitle|safe}}</h2>
+      <div class="hero-main col-md-8">
+        <h1>{{self.title}}</h1>
+        <h2>{{self.subtitle|safe}}</h2>
       </div>
-      <div class="hero-image col-md-5">
+      <div class="hero-image col-md-4">
         <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.caption}}" />
       </div>
     </div>
