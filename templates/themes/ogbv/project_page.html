@@ -47,7 +47,21 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
+
+<section class="hero">
+  <div class="container">
+    <div class="row hero-container">
+      <div class="hero-main col-md-7">
+        <h1>{{title}}</h1>
+        <h2>{{subtitle|safe}}</h2>
+      </div>
+      <div class="hero-image col-md-5">
+        <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.caption}}" />
+      </div>
+    </div>
+  </div>
+</section>
+
 
   {% if featured_pages|length > 0 %}
     <section class="featured">
