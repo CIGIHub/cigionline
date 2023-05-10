@@ -31,13 +31,28 @@ body {
       }
 
       .feature-content-large {
-        .feature-content-title {
-          @include media-breakpoint-up(lg) {
-            font-size: 1.5em;
+        &.poster {
+          .feature-content-image {
+            .img-wrapper {
+              margin: 0;
+            }
+          }
+        }
+
+        .feature-content-text {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          
+          .feature-content-title {
+            @include media-breakpoint-up(lg) {
+              font-size: 1.5em;
+            }
           }
         }
       }
     }
+
     &.ogbv-survey-findings {
       margin: 3em 0;
       padding: 3em 0;
