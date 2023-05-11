@@ -428,7 +428,7 @@
   background-color: $background-dark;
   color: $cigi-text-grey-dark;
   @include dark-footer;
-  @include top-bar($background-color: $black, $color: $white);
+  @include top-bar($background-color: $background-dark, $color: $white);
 }
 
 @mixin article-series-card-theme(

@@ -4,11 +4,11 @@
 
 body {
   @include dark-theme;
-  background-color: $black;
+  background-color: $background-dark;
   color: $white;
 
   .header--submenu {
-    background-color: $black;
+    background-color: $background-dark;
     margin-top: 4em;
     color: $white;
 
@@ -126,8 +126,20 @@ body {
     .search-table-container {
       margin: 0;
 
+      .col {
+        &.border-right {
+          border-right: 1px solid $cigi-medium-grey;
+        }
+      }
+
       .card__container {
         &.card--small--multimedia {
+          background-color: transparent;
+
+          img {
+            border-radius: 20px;
+          }
+
           .card__text {
             padding: 1em 0;
           }

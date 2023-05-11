@@ -430,10 +430,11 @@ article {
             z-index: 6;
             height: auto;
           }
-          transition: opacity 0.2s ease;
+          transition: opacity 4s ease, z-index 4s ease;
 
           &.hidden {
             opacity: 0;
+            z-index: 0;
           }
         }
       }

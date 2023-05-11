@@ -224,6 +224,8 @@ class SearchTableBlockListing extends React.Component {
     const { featuredPage, FeaturedItemComponent, columnClass } = this.props;
     const newRows = breakpointChange(rows, breakpoint);
     let count = 0;
+    let rowCount = 0;
+    let borderRight;
 
     return (
       <div className={[...containerClass, loading && 'loading'].join(' ')}>
@@ -252,9 +254,20 @@ class SearchTableBlockListing extends React.Component {
             lineBreak = true;
             count = 0;
           }
+
           if (row.id !== 'featured') {
             count += 1;
+            rowCount += 1;
           }
+
+          if (
+            (breakpoint === 'md' && rowCount === 3) ||
+            (breakpoint === 'sm' && rowCount === 2)
+          ) {
+            rowCount = 0;
+          }
+
+          borderRight = rowCount !== 0;
 
           return (
             <React.Fragment key={`${row.id}`}>
@@ -263,7 +276,11 @@ class SearchTableBlockListing extends React.Component {
                   <hr />
                 </div>
               )}
-              <div className={columnClass.join(' ')}>
+              <div
+                className={`${columnClass.join(' ')} ${
+                  borderRight && 'border-right'
+                }`}
+              >
                 <RowComponent row={row} />
               </div>
             </React.Fragment>
