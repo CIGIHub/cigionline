@@ -1,4 +1,6 @@
 /* global projectId */
+/* eslint-disable no-unused-vars */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Swiper, { Navigation, Pagination } from 'swiper';
