@@ -40,6 +40,7 @@
           rgba(0, 0, 0, 0.65) 50%,
           rgba(0, 0, 0, 0.95)
         );
+        border-radius: 20px;
 
         .card__text__play-icon {
           @include media-breakpoint-down(md) {
