@@ -1,5 +1,6 @@
 import React from 'react';
 import Calendar from 'react-calendar';
+import Popover from 'bootstrap/js/dist/popover';
 // import 'bootstrap/dist/js/bootstrap.bundle';
 
 export default class EventCalendar extends React.Component {
@@ -61,11 +62,17 @@ export default class EventCalendar extends React.Component {
 
   // Prevent popover from abruptly closing when user tries to hover on the event link.
   showPopover = (e) => {
-    $(e.target).popover();
-    $(e.target).popover('show');
-    $('.popover').on('mouseleave', function() {
-      $(e.target).popover('hide');
+    console.log(e.target)
+    const popOver = new Popover(e.target);
+    popOver.show();
+    e.addeventlistener('mouseleave', () => {
+      popOver.hide();
     });
+    // $(e.target).popover();
+    // $(e.target).popover('show');
+    // $('.popover').on('mouseleave', function() {
+    //   $(e.target).popover('hide');
+    // });
   }
 
   hidePopover = (e) => {
