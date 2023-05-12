@@ -128,7 +128,7 @@ body {
 
       .col {
         &.border-right {
-          border-right: 1px solid $cigi-medium-grey;
+          border-right: 1px solid $cigi-darkest-grey;
         }
       }
 
@@ -148,6 +148,8 @@ body {
     }
 
     .pagination-links-numbered {
+      border-top: 1px solid $cigi-medium-grey;
+
       li {
         color: $cigi-medium-grey;
 
@@ -157,7 +159,7 @@ body {
 
           &::before {
             border-bottom: 1px solid $white;
-            top: -34px;
+            top: -35px;
           }
         }
       }

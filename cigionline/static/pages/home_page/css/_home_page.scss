@@ -617,9 +617,6 @@
           padding-bottom: 1em;
 
           &:first-child {
-            @include media-breakpoint-up(md) {
-              padding-top: 1em;
-            }
             padding-top: 0;
           }
 
