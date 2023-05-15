@@ -5,6 +5,7 @@ from core.models import (
     SearchablePageAbstract,
     ShareablePageAbstract,
 )
+from django.core.cache import cache
 from django.db import models
 from streams.blocks import EventsLandingEventCard
 from wagtail.admin.panels import (
@@ -340,6 +341,10 @@ class EventPage(
     @property
     def card_url(self):
         return self.feature_url if self.feature_url else self.url
+
+    def save(self, *args, **kwargs):
+        cache.delete('all_events')
+        super().save(*args, **kwargs)
 
     def get_context(self, request):
         context = super().get_context(request)

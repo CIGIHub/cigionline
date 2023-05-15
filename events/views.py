@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.http import JsonResponse
+from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 
 from .models import EventPage
@@ -27,8 +28,12 @@ def events_api(request):
         })
     return JsonResponse({"meta": {"total_count": len(events)}, "items": events})
 
-@cache_page(60 * 60 * 24)
 def all_events(request):
+    cache_key = 'all_events'
+    cached_result = cache.get(cache_key)
+    if cached_result:
+        return JsonResponse(cached_result)
+    
     event_pages = EventPage.objects.live().specific().prefetch_related(
         'authors__author', 'topics'
     ).order_by('-publishing_date')
@@ -69,9 +74,11 @@ def all_events(request):
     for batch in range(len(batched_list)):
         events_dict[str(batch)] = list(batched_list[batch])
 
-    return JsonResponse({
+    result = {
         'meta': {
             'total_events_count': len(events_list),
             'total_page_count': len(batched_list)},
         'items': events_dict,
-    })
+    }
+    cache.set(cache_key, result, 60 * 60 * 24)
+    return JsonResponse(result)
