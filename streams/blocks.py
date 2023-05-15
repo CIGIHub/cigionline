@@ -1145,10 +1145,16 @@ class ArticleCard(blocks.StructBlock):
         TINY = ('tiny', 'Tiny')
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
+        MEDIUM_LARGE = ('medium_large', 'Medium Large')
         LARGE = ('large', 'Large')
+    
+    class ArticleCardImageTypeChoices(models.TextChoices):
+        LANDSCAPE = ('landscape', 'Landscape')
+        SQUARE = ('square', 'Square')
 
     page = blocks.PageChooserBlock(required=True, page_type='articles.ArticlePage')
     size = blocks.ChoiceBlock(choices=ArticleCardTypeChoices.choices, required=True)
+    image_type = blocks.ChoiceBlock(choices=ArticleCardImageTypeChoices.choices, default=ArticleCardImageTypeChoices.LANDSCAPE, required=True)
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
@@ -1173,9 +1179,10 @@ class ArticleCard(blocks.StructBlock):
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.authors.all()
         context['date'] = page.publishing_date
-        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.subtitle
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
+        context['image_type'] = value.get('image_type')
 
         return context
 
@@ -1227,7 +1234,7 @@ class PublicationCard(blocks.StructBlock):
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.authors.all()
         context['date'] = page.publishing_date
-        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.subtitle
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
         context['pdf_download'] = page.pdf_download
@@ -1291,7 +1298,7 @@ class ArticleSeriesCard(blocks.StructBlock):
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.series_authors
         context['date'] = page.publishing_date
-        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.subtitle
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
         context['theme'] = page.theme
@@ -1464,7 +1471,7 @@ class MultimediaCard(blocks.StructBlock):
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.authors.all()
         context['date'] = page.publishing_date
-        context['description'] = page.feature_subtitle if page.feature_subtitle else page.short_description
+        context['description'] = page.feature_subtitle if page.feature_subtitle else page.subtitle
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
         context['length'] = page.length

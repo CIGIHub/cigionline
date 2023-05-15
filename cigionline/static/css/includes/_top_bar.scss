@@ -435,6 +435,10 @@ header {
       display: grid;
       gap: 0.5em;
       grid-template-columns: repeat(2, 1fr);
+
+      .nav-link {
+        padding: 0 2em;
+      }
     }
   }
 }

@@ -232,6 +232,16 @@
             display: none;
           }
         }
+
+        &.card--small--article,
+        &.card--medium--article,
+        &.card--medium-large--article {
+          .card__text {
+            .card__text__description {
+              display: none;
+            }
+          }
+        }
       }
 
       div {
@@ -607,9 +617,6 @@
           padding-bottom: 1em;
 
           &:first-child {
-            @include media-breakpoint-up(md) {
-              padding-top: 1em;
-            }
             padding-top: 0;
           }
 

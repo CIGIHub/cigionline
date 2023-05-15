@@ -14,7 +14,7 @@ ReactDOM.render(
       'Multimedia',
     ]}
     showSearch
-    limit={12}
+    limit={18}
     fields={[
       'authors',
       'contentsubtype',
@@ -47,7 +47,6 @@ ReactDOM.render(
       'col',
       'col-6',
       'col-md-4',
-      'col-lg-3',
     ]}
     RowComponent={MultimediaSearchResultCard}
     FeaturedItemComponent={MultimediaCardLarge}

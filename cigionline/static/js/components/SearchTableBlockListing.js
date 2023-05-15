@@ -21,9 +21,7 @@ const mergeObjects = (data) => {
 
 const breakpointChange = (rows, breakpoint) => {
   const newRows = [...rows];
-  if (breakpoint === 'lg') {
-    newRows.splice(8, 0, { id: 'featured' });
-  } else if (breakpoint === 'md') {
+  if (breakpoint === 'md') {
     newRows.splice(6, 0, { id: 'featured' });
   } else {
     newRows.splice(4, 0, { id: 'featured' });
@@ -177,9 +175,7 @@ class SearchTableBlockListing extends React.Component {
   getBreakpoint() {
     const { breakpoint } = this.state;
     let newBreakpoint;
-    if (window.matchMedia('(min-width: 992px)').matches) {
-      newBreakpoint = 'lg';
-    } else if (window.matchMedia('(min-width: 768px)').matches) {
+    if (window.matchMedia('(min-width: 768px)').matches) {
       newBreakpoint = 'md';
     } else {
       newBreakpoint = 'sm';
@@ -224,37 +220,70 @@ class SearchTableBlockListing extends React.Component {
   }
 
   renderBlockListing(RowComponent, containerClass) {
-    const { rows, loading, breakpoint } = this.state;
+    const { rows, loading, breakpoint, currentPage } = this.state;
     const { featuredPage, FeaturedItemComponent, columnClass } = this.props;
     const newRows = breakpointChange(rows, breakpoint);
+    let count = 0;
+    let rowCount = 0;
+    let borderRight;
 
     return (
-      <div
-        className={[
-          ...containerClass,
-          loading && 'loading',
-        ].join(' ')}
-      >
+      <div className={[...containerClass, loading && 'loading'].join(' ')}>
         {newRows.map((row) => {
+          let lineBreak = false;
           if (row.id === 'featured') {
-            return (
-              <React.Fragment key={`${featuredPage.id}-featured`}>
-                <div className="col-12">
-                  <hr />
-                </div>
-                <div className="col-12">
-                  <FeaturedItemComponent row={featuredPage} />
-                </div>
-                <div className="col-12">
-                  <hr />
-                </div>
-              </React.Fragment>
-            );
+            if (featuredPage && currentPage === 1) {
+              return (
+                <React.Fragment key={`${featuredPage.id}-featured`}>
+                  <div className="col-12">
+                    <hr />
+                  </div>
+                  <div className="col-12">
+                    <FeaturedItemComponent row={featuredPage} />
+                  </div>
+                </React.Fragment>
+              );
+            }
+            return null;
           }
+
+          if (
+            (breakpoint === 'md' && count === 3) ||
+            (breakpoint === 'sm' && count === 2)
+          ) {
+            lineBreak = true;
+            count = 0;
+          }
+
+          if (row.id !== 'featured') {
+            count += 1;
+            rowCount += 1;
+          }
+
+          if (
+            (breakpoint === 'md' && rowCount === 3) ||
+            (breakpoint === 'sm' && rowCount === 2)
+          ) {
+            rowCount = 0;
+          }
+
+          borderRight = rowCount !== 0;
+
           return (
-            <div className={columnClass.join(' ')} key={`${row.id}`}>
-              <RowComponent row={row} />
-            </div>
+            <React.Fragment key={`${row.id}`}>
+              {lineBreak && (
+                <div className="col-12">
+                  <hr />
+                </div>
+              )}
+              <div
+                className={`${columnClass.join(' ')} ${
+                  borderRight && 'border-right'
+                }`}
+              >
+                <RowComponent row={row} />
+              </div>
+            </React.Fragment>
           );
         })}
       </div>
@@ -262,17 +291,8 @@ class SearchTableBlockListing extends React.Component {
   }
 
   render() {
-    const {
-      currentPage,
-      loading,
-      loadingInitial,
-      rows,
-    } = this.state;
-    const {
-      blockListing,
-      containerClass,
-      RowComponent,
-    } = this.props;
+    const { currentPage, loading, loadingInitial, rows } = this.state;
+    const { blockListing, containerClass, RowComponent } = this.props;
 
     return (
       <div className="search-table-container custom-theme-table">
@@ -280,10 +300,13 @@ class SearchTableBlockListing extends React.Component {
           <div ref={this.searchTableRef} className="search-table-scroll" />
           {loadingInitial ? (
             <SearchTableSkeleton />
-          ) : rows.length && (
-            <>
-              {blockListing && this.renderBlockListing(RowComponent, containerClass)}
-            </>
+          ) : (
+            rows.length && (
+              <>
+                {blockListing &&
+                  this.renderBlockListing(RowComponent, containerClass)}
+              </>
+            )
           )}
           {this.totalPages > 1 && (
             <Paginator

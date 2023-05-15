@@ -28,7 +28,7 @@ function MultimediaSearchResultCard(props) {
 
   return (
     <article
-      className={`card__container card--multimedia card--small--multimedia card--multimedia--${row.contentsubtype.toLowerCase()}`}
+      className={`card__container card--multimedia card--small--multimedia card--multimedia--${row.contentsubtype.toLowerCase()} ${row.vimeo_url && 'has-vimeo'}`}
     >
       <div className="card__image">
         <a href={row.url} className="feature-content-image">

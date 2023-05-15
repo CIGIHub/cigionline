@@ -127,7 +127,7 @@ window.addEventListener('resize', (e) => {
 // add event listener to all images inside .card--multimedia
 const multimediaCards = document.querySelectorAll('.card--multimedia');
 multimediaCards.forEach((card) => {
-  if (!card.classList.contains('card--multimedia--audio')) {
+  if (card.classList.contains('has-vimeo')) {
     const playIcon =
       card.querySelector('.card__image__play-icon') ||
       card.querySelector('.card__text__play-icon');

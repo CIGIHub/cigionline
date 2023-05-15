@@ -376,15 +376,19 @@ article {
       &.card--multimedia--video {
         overflow: hidden;
 
+        &.has-vimeo {
+          .card__image {
+            .card__image__play-icon {
+              @include media-breakpoint-up(lg) {
+                top: 30%;
+              }
+            }
+          }
+        }
+
         .card__image {
           @include media-breakpoint-only(md) {
             flex: 0 0 76%;
-          }
-
-          .card__image__play-icon {
-            @include media-breakpoint-up(lg) {
-              top: 30%;
-            }
           }
 
           .card__image__mm-length {
@@ -426,10 +430,11 @@ article {
             z-index: 6;
             height: auto;
           }
-          transition: opacity 0.2s ease;
+          transition: opacity 4s ease, z-index 4s ease;
 
           &.hidden {
             opacity: 0;
+            z-index: 0;
           }
         }
       }
