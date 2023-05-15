@@ -101,3 +101,11 @@ ReactDOM.render(
   <ArticleSeriesList />,
   document.getElementById('article-landing-page__opinion-series-listing'),
 );
+
+const navItems = document.querySelectorAll('.nav-link');
+const pageLabel = document.getElementById('page-label');
+navItems.forEach((item) => {
+  item.addEventListener('click', () => {
+    pageLabel.innerHTML = item.innerHTML;
+  });
+});

@@ -5,6 +5,10 @@
 body {
   @include dark-theme;
 
+  .header--submenu {
+    margin-top: 4em;
+  }
+
   .multimedia-page__meta {
     h1 {
       font-size: clamp(1.5rem, 3vw, 2.5rem);
@@ -15,7 +19,7 @@ body {
     }
 
     .multimedia-page__meta__speakers {
-      @include link($color: $cigi-light-grey, $hover-color: $white);
+      @include link($color: $cigi-medium-text-grey, $hover-color: $white);
       @include media-breakpoint-up(lg) {
         margin-top: 1.5em;
         padding: 1.5em 0;
@@ -84,6 +88,7 @@ body {
     @include media-breakpoint-up(lg) {
       margin-top: 0;
     }
+    @include link($color: $white, $hover-color: $cigi-primary-colour);
 
     .article-series-description {
       @include link($color: $cigi-medium-text-grey, $hover-color: $white);

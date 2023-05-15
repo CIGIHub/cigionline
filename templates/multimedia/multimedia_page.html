@@ -44,6 +44,17 @@
 {% endblock %}
 
 {% block content %}
+  <header class="header--submenu">
+    <div class="container">
+      <nav class="border-top">
+        <div class="row g-1 justify-content-between">
+          <div class="col-4">
+            <h1>Multimedia<h1>            
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
   {% block hero %}
     {% include "includes/heroes/hero_multimedia.html" %}
   {% endblock %}
@@ -57,29 +68,29 @@
 
           <ul class="multimedia-page__meta__speakers">
             {% for speaker in self.authors.all %}
-            <li class="multimedia-page__meta__speakers__speaker">
-              <a href="{% pageurl speaker.author %}">
-                {% if speaker.author.image_square %}
-                  {% image speaker.author.image_square fill-100x100 class="image--circle--tiny" %}
-                {% else %}
-                  <div class="icon-container">
-                    <i class="far fa-user"></i>
-                  </div>
-                {% endif %}
-                <img src="" alt="">
-                {{ speaker.author.title }}
-              </a>
-            </li>
+              <li class="multimedia-page__meta__speakers__speaker">
+                <a href="{% pageurl speaker.author %}">
+                  {% if speaker.author.image_square %}
+                    {% image speaker.author.image_square fill-100x100 class="image--circle--tiny" %}
+                  {% else %}
+                    <div class="icon-container">
+                      <i class="far fa-user"></i>
+                    </div>
+                  {% endif %}
+                  <img src="" alt="">
+                  {{ speaker.author.title }}
+                </a>
+              </li>
             {% endfor %}
           </ul>
 
           <ul class="multimedia-page__meta__topics">
             {% for topic in self.topics_sorted %}
-            <li>
-              <a href="{{ topic.url }}">
-                <button type="button" class="button--rounded">{{ topic.title }}</button>
-              </a>
-            </li>
+              <li>
+                <a href="{{ topic.url }}">
+                  <button type="button" class="button--rounded">{{ topic.title }}</button>
+                </a>
+              </li>
             {% endfor %}
           </ul>
 
@@ -112,14 +123,14 @@
       <div class="col-lg-8">
         <section class="body">
           {% if self.from_the_archives and self.from_the_archives_blurb %}
-          <div class="from-the-archives-blurb">
-            {{ self.from_the_archives_blurb }}
-          </div>
+            <div class="from-the-archives-blurb">
+              {{ self.from_the_archives_blurb }}
+            </div>
           {% endif %}
           {% if self.article_series_description %}
-          <div class="article-series-description">
-            {{self.article_series_description|richtext}}
-          </div>
+            <div class="article-series-description">
+              {{self.article_series_description|richtext}}
+            </div>
           {% endif %}
           <div class="body__content">
             {% for block in self.body %}
@@ -129,31 +140,31 @@
         </section>
 
         {% if self.transcript %}
-        <section class="multimedia-page__transcript">
-          {% for block in self.transcript %}
-          {% include_block block with id=block.id no_container=True %}
-          {% endfor %}
-        </section>
+          <section class="multimedia-page__transcript">
+            {% for block in self.transcript %}
+            {% include_block block with id=block.id no_container=True %}
+            {% endfor %}
+          </section>
         {% endif %}
 
         {% if self.multimedia_series %}
-        <section class="multimedia-series-block">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col col-md-10 col-lg-8">
-                <article>
-                  <h2>
-                    Series:
-                    <a href="{{self.multimedia_series.url}}">
-                      {{ self.multimedia_series.title }}
-                    </a>
-                  </h2>
-                  <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
-                </article>
+          <section class="multimedia-series-block">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col col-md-10 col-lg-8">
+                  <article>
+                    <h2>
+                      Series:
+                      <a href="{{self.multimedia_series.url}}">
+                        {{ self.multimedia_series.title }}
+                      </a>
+                    </h2>
+                    <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
+                  </article>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
         {% endif %}
 
         {% include 'includes/disclaimer.html' with multimedia_disclaimer=True no_container=True %}

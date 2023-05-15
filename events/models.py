@@ -6,6 +6,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
+from django.core.cache import cache
 from streams.blocks import EventsLandingEventCard
 from wagtail.admin.panels import (
     FieldPanel,
@@ -51,6 +52,11 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     def get_all_events(self):
+        cache_key = 'events_list'
+        cached = cache.get(cache_key)
+        if cached:
+            return json.dumps(cached)
+        
         event_pages = EventPage.objects.live().specific().prefetch_related(
             'authors__author', 'topics'
         ).order_by('-publishing_date')
@@ -91,12 +97,14 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         for batch in range(len(batched_list)):
             events_dict[str(batch)] = list(batched_list[batch])
 
-        return json.dumps({
+        results = {
             'meta': {
                 'total_events_count': len(events_list),
                 'total_page_count': len(batched_list)},
             'items': events_dict,
-        })
+        }
+        cache.set(cache_key, results, 60 * 60 * 24 * 7)
+        return json.dumps(results)
 
     def get_featured_events(self):
         featured_events = [item.value.get('page') for item in self.featured_events]

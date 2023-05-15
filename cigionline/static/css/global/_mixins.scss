@@ -429,6 +429,10 @@
   color: $cigi-text-grey-dark;
   @include dark-footer;
   @include top-bar($background-color: $background-dark, $color: $white);
+
+  .header--submenu {
+    background-color: $background-dark;
+  }
 }
 
 @mixin article-series-card-theme(

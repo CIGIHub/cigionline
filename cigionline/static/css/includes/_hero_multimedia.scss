@@ -1,10 +1,4 @@
 .mm-hero {
-  @include media-breakpoint-up(md) {
-    margin-bottom: 3em;
-    padding-top: 4em;
-  }
-
-  background-color: $black;
   background-position: center;
   background-size: cover;
   margin-bottom: 2em;

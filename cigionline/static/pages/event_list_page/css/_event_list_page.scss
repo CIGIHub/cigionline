@@ -1,297 +1,275 @@
 @import '../../../css/global/mixins';
 
-.border-top {
-  border-top: 1px solid $cigi-light-grey;
-  margin-top: 1em;
+body {
+  .header--submenu {
+    i {
+      margin-right: 1em;
+    }
 
-  .events-landing-page-label {
-    padding-top: 1em;
-    padding-bottom: 2em;
-  
-    .events-icon {
+    .header--submenu__right {
+      display: flex;
+      font-size: 0.9em;
+      border: 0;
+
+      .nav-link {
+        border: 0;
+      }
+    }
+  }
+
+  .border-top {
+    border-top: 1px solid $cigi-light-grey;
+    margin-top: 1em;
+
+    .events-landing-page-label {
+      padding-top: 1em;
+      padding-bottom: 2em;
+
+      .events-icon {
+        padding-right: 1em;
+      }
+    }
+
+    .events-landing-page-tabs {
+      @include media-breakpoint-up(lg) {
+        justify-content: flex-start;
+      }
+      justify-content: flex-end;
+      padding-bottom: 2em;
+    }
+  }
+
+  .tab-content {
+    #event-list-calendar {
       padding-right: 1em;
     }
-  }
-  
-  .events-landing-page-tabs {
-    @include media-breakpoint-up(lg) {
-      justify-content: flex-start;
-    }
-    justify-content: flex-end;
-    padding-bottom: 2em;
 
-    .nav-tabs {
-      border: 0;
-      padding-left: 1em;
-
-      .nav-item {
-        @include media-breakpoint-up(lg) {
-          padding: 0;
-        }
-
-        .nav-link {
-          @include media-breakpoint-up(lg) {
-            padding: 1em 5em 0 0;
-          }
-          border: 0;
-          border-radius: 0;
-          color: $cigi-medium-grey;
-          padding: 1em calc(var(--bs-gutter-x)*.5) 0;
-          position: relative;
-
-          &.active {
-            color: $black;
-
-            &::before {
-              content: '';
-              display: block;
-              width: 100%;
-              height: 0;
-              position: absolute;
-              top: -1px;
-              border-top: 1px solid $black;
-            }
-          }
-
-          // &:hover {
-          //   color: $cigi-primary-colour;
-          // }
-        }
-      }
-    }
-  }
-}
-
-.tab-content {
-  #event-list-calendar {
-    padding-right: 1em;
-  }
-
-  .events-wrapper {
-    #event-list {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
-
-  .events-calendar {
-    // sass-lint:disable-block class-name-format
-    margin-bottom: 2rem;
-    position: relative;
-
-    .events-calendar__loader {
-      left: 50%;
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 50px;
-    }
-  }
-
-  .react-calendar {
-    // sass-lint:disable-block class-name-format
-    .react-calendar__navigation__label,
-    .react-calendar__month-view__days__day {
-      color: $cigi-text-grey;
-    }
-
-    .react-calendar__month-view__weekdays__weekday {
-      color: $cigi-text-grey;
-
-      abbr {
-        cursor: auto;
-        text-decoration: none;
+    .events-wrapper {
+      #event-list {
+        padding-left: 0;
+        padding-right: 0;
       }
     }
 
-    .react-calendar__month-view__days__day--neighboringMonth {
-      color: $cigi-light-grey;
-    }
-
-    .react-calendar__navigation {
-      padding: 0 0 0.5rem 0;
-    }
-
-    .react-calendar__viewContainer {
-      margin: 0.5rem 0;
-    }
-
-    .react-calendar__tile {
-      align-items: center;
-      box-sizing: border-box;
-      cursor: default;
-      display: flex;
-      flex-grow: 0;
-      flex-shrink: 0;
-      justify-content: center;
+    .events-calendar {
+      // sass-lint:disable-block class-name-format
+      margin-bottom: 2rem;
       position: relative;
 
-      &::before {
-        content: '';
-        display: table;
-        padding-top: 100%;
+      .events-calendar__loader {
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+      }
+    }
+
+    .react-calendar {
+      // sass-lint:disable-block class-name-format
+      .react-calendar__navigation__label,
+      .react-calendar__month-view__days__day {
+        color: $cigi-text-grey;
       }
 
-      abbr {
+      .react-calendar__month-view__weekdays__weekday {
+        color: $cigi-text-grey;
+
+        abbr {
+          cursor: auto;
+          text-decoration: none;
+        }
+      }
+
+      .react-calendar__month-view__days__day--neighboringMonth {
+        color: $cigi-light-grey;
+      }
+
+      .react-calendar__navigation {
+        padding: 0 0 0.5rem 0;
+      }
+
+      .react-calendar__viewContainer {
+        margin: 0.5rem 0;
+      }
+
+      .react-calendar__tile {
         align-items: center;
-        border-radius: 50%;
+        box-sizing: border-box;
+        cursor: default;
         display: flex;
         flex-grow: 0;
         flex-shrink: 0;
-        height: 30px;
         justify-content: center;
-        width: 30px;
+        position: relative;
+
+        &::before {
+          content: '';
+          display: table;
+          padding-top: 100%;
+        }
+
+        abbr {
+          align-items: center;
+          border-radius: 50%;
+          display: flex;
+          flex-grow: 0;
+          flex-shrink: 0;
+          height: 30px;
+          justify-content: center;
+          width: 30px;
+        }
+
+        .react-calendar__tile__overlay {
+          border-radius: 50%;
+          height: 30px;
+          position: absolute;
+          width: 30px;
+        }
       }
 
-      .react-calendar__tile__overlay {
-        border-radius: 50%;
-        height: 30px;
-        position: absolute;
-        width: 30px;
+      .react-calendar__tile--has-event {
+        cursor: pointer;
+        abbr {
+          background: $cigi-light-grey;
+        }
+      }
+
+      .react-calendar__tile--now {
+        abbr {
+          background: $black;
+          color: $white;
+        }
+      }
+
+      .react-calendar__month-view__weekdays {
+        text-align: center;
+      }
+
+      .react-calendar__navigation__arrow {
+        color: $cigi-medium-grey;
+        font-size: 1.75em;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
       }
     }
 
-    .react-calendar__tile--has-event {
-      cursor: pointer;
-      abbr {
-        background: $cigi-light-grey;
+    .popover {
+      border-radius: 0;
+
+      .popover-body {
+        // sass-lint:disable-block class-name-format
+        .react-calendar__tile__popover {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+
+          a {
+            display: block;
+            font-size: 0.875em;
+            padding: 0.5rem 0;
+          }
+
+          a + a {
+            border-top: 1px solid $divider-grey;
+          }
+        }
       }
     }
 
-    .react-calendar__tile--now {
-      abbr {
-        background: $black;
-        color: $white;
+    .featured-events {
+      margin-top: 2em;
+
+      .container {
+        position: relative;
+      }
+
+      .featured-events-container {
+        border-bottom: 1px solid $cigi-light-grey;
+        position: relative;
+
+        .card--event__container {
+          @include media-breakpoint-up(md) {
+            flex-direction: row;
+          }
+          flex-direction: column-reverse;
+        }
+      }
+
+      .swiper-button-prev,
+      .swiper-button-next {
+        @include media-breakpoint-down(sm) {
+          top: auto;
+          bottom: 1.5em;
+        }
+        color: $cigi-medium-grey;
+
+        &.swiper-button-disabled {
+          color: $cigi-medium-light-grey;
+        }
+
+        &::after {
+          font-size: 1em;
+        }
+      }
+
+      .swiper-button-prev {
+        @include media-breakpoint-down(sm) {
+          left: 0;
+        }
+        left: -2em;
+      }
+
+      .swiper-button-next {
+        @include media-breakpoint-down(sm) {
+          right: 0;
+        }
+        right: -2em;
+      }
+
+      .swiper-pagination {
+        position: static;
+        width: 100%;
+        padding: 2em 0;
+
+        .swiper-pagination-bullet {
+          background-color: $cigi-medium-grey;
+          margin: 0 0.5em;
+          height: 10px;
+          width: 10px;
+        }
       }
     }
 
-    .react-calendar__month-view__weekdays {
-      text-align: center;
-    }
-
-    .react-calendar__navigation__arrow {
-      color: $cigi-medium-grey;
-      font-size: 1.75em;
-
-      &:hover {
-        color: $cigi-primary-colour;
-      }
+    .events-list-container {
+      margin-top: 2em;
     }
   }
 
-  .popover {
-    border-radius: 0;
-
-    .popover-body {
-      // sass-lint:disable-block class-name-format
-      .react-calendar__tile__popover {
-        @include link($color: $black, $hover-color: $cigi-primary-colour);
-
-        a {
-          display: block;
-          font-size: 0.875em;
-          padding: 0.5rem 0;
+  .search-table {
+    table {
+      tr {
+        th {
+          .search-table__results__row__more {
+            color: transparent;
+          }
+        }
+        .search-table__results__row__title {
+          @include media-breakpoint-up(md) {
+            width: 40%;
+            padding-right: 2em;
+          }
         }
 
-        a + a {
-          border-top: 1px solid $divider-grey;
+        .search-table__results__row__content-type {
+          @include media-breakpoint-up(md) {
+            width: 20%;
+          }
         }
-      }
-    }
-  }
-
-  .featured-events {
-    margin-top: 4em;
-
-    .container {
-      position: relative;
-    }
-
-    .featured-events-container {
-      border-bottom: 1px solid $cigi-light-grey;
-      position: relative;
-
-      .card--event__container {
-        @include media-breakpoint-up(md) {
-          flex-direction: row;
-        }
-        flex-direction: column-reverse;
-      }
-    }
-
-    .swiper-button-prev,
-    .swiper-button-next {
-      @include media-breakpoint-down(sm) {
-        top: auto;
-        bottom: 1.5em;
-      }
-      color: $cigi-medium-grey;
-
-      &.swiper-button-disabled {
-        color: $cigi-medium-light-grey;
-      }
-
-      &::after {
-        font-size: 1em;
-      }
-    }
-
-    .swiper-button-prev {
-      @include media-breakpoint-down(sm) {
-        left: 0;
-      }
-      left: -2em;
-    }
-
-    .swiper-button-next {
-      @include media-breakpoint-down(sm) {
-        right: 0;
-      }
-      right: -2em;
-    }
-
-    .swiper-pagination {
-      position: static;
-      width: 100%;
-      padding: 2em 0;
-
-      .swiper-pagination-bullet {
-        background-color: $cigi-medium-grey;
-        margin: 0 0.5em;
-        height: 10px;
-        width: 10px;
-      }
-    }
-  }
-
-  .events-list-container {
-    margin-top: 2em;
-  }
-}
-
-.search-table {
-  table {
-    tr {
-      th {
-        .search-table__results__row__more {
-          color: transparent;
-        }
-      }
-      .search-table__results__row__title {
-        @include media-breakpoint-up(md) {
-          width: 40%;
-          padding-right: 2em;
-        }
-      }
-
-      .search-table__results__row__content-type {
-        @include media-breakpoint-up(md) {
-          width: 20%;
-        }
-      }
-      .search-table__results__row__topics {
-        @include media-breakpoint-up(md) {
-          width: 15%;
+        .search-table__results__row__topics {
+          @include media-breakpoint-up(md) {
+            width: 15%;
+          }
         }
       }
     }
