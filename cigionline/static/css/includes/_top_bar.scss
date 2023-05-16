@@ -425,6 +425,15 @@ header {
       gap: 0.5em;
       grid-template-columns: repeat(2, 1fr);
 
+      .header--submenu__right__menu-item {
+        &.inactive {
+          a {
+            color: $cigi-medium-grey;
+            pointer-events: none;
+          }
+        }
+      }
+
       .nav-link {
         padding: 0 2em;
 
