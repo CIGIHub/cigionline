@@ -56,6 +56,7 @@
 {% block content %}
   {% preview_cache_bust as is_preview %}
   {% cache 604800 publication_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+    {% include "includes/top_bar_menu.html" with title='Research' %} 
     {% block hero %}
       {% if self.publication_type.title == 'Books' %}
         {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors.all author_count=self.author_count editors=self.editors.all editor_count=self.editor_count %}

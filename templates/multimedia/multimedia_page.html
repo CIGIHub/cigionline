@@ -44,17 +44,7 @@
 {% endblock %}
 
 {% block content %}
-  <header class="header--submenu">
-    <div class="container">
-      <nav class="border-top">
-        <div class="row g-1 justify-content-between">
-          <div class="col-4">
-            <h1>Multimedia<h1>            
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+  {% include "includes/top_bar_menu.html" with title='Multimedia' %} 
   {% block hero %}
     {% include "includes/heroes/hero_multimedia.html" %}
   {% endblock %}
