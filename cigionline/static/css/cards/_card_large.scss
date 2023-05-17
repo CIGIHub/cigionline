@@ -77,7 +77,7 @@
 
       .card__text__topics {
         @include link(
-          $color: $cigi-light-grey,
+          $color: $cigi-text-grey,
           $hover-color: $cigi-primary-colour
         );
       }
@@ -85,7 +85,7 @@
       .card__text__meta {
         .card__text__people {
           @include link(
-            $color: $cigi-medium-grey,
+            $color: $cigi-light-grey,
             $hover-color: $cigi-primary-colour
           );
         }
@@ -147,7 +147,7 @@
 
       .card__text__topics {
         @include link(
-          $color: $cigi-light-grey,
+          $color: $cigi-text-grey,
           $hover-color: $cigi-primary-colour
         );
       }
@@ -155,7 +155,7 @@
       .card__text__meta {
         .card__text__people {
           @include link(
-            $color: $cigi-medium-grey,
+            $color: $cigi-light-grey,
             $hover-color: $cigi-primary-colour
           );
 

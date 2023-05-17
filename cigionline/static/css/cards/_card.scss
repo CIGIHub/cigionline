@@ -317,12 +317,12 @@ $card-title-font: $title-font-family;
           }
 
           .card__text__topics {
-            @include link($color: $white, $hover-color: $cigi-light-grey);
+            @include link($color: $cigi-text-grey, $hover-color: $cigi-light-grey);
           }
 
           .card__text__meta {
             .card__text__people {
-              @include link($color: $cigi-dark-grey, $hover-color: $white);
+              @include link($color: $cigi-light-grey, $hover-color: $white);
             }
 
             .card__text__more {
