@@ -107,7 +107,7 @@ $card-title-font: $title-font-family;
   }
 
   .card__text__topics {
-    @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
+    @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
     font-size: 0.8em;
     margin-bottom: 0.5em;
     line-height: 1.25;
@@ -121,7 +121,7 @@ $card-title-font: $title-font-family;
     width: 100%;
 
     .card__text__people {
-      @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.8em;
       margin-bottom: 0.25em;
 

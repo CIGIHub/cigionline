@@ -20,6 +20,13 @@ function ArticleSeriesListing(props) {
         </a>
       </div>
       <div className="card__text">
+        <ul className="card__text__topics custom-text-list">
+          {row.topics.map((topic) => (
+            <li key={`${row.id}-topic-${topic.id}`}>
+              <a href={topic.url}>{topic.title}</a>
+            </li>
+          ))}
+        </ul>
         <h3 className="card__text__title">
           <a href={row.url}>{row.title}</a>
         </h3>
@@ -40,15 +47,6 @@ function ArticleSeriesListing(props) {
           </ul>
         </div>
         <div className="card__text__meta">
-          <div>
-            <ul className="card__text__topics custom-text-list">
-              {row.topics.map((topic) => (
-                <li key={`${row.id}-topic-${topic.id}`}>
-                  <a href={topic.url}>{topic.title}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
           <CardTextMore title={row.title} url={row.url} type="Opinion Series" />
         </div>
       </div>
