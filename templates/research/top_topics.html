@@ -1,51 +1,50 @@
 {% load wagtailcore_tags %}
 
-
-<ul class="top-topics-list">
-  {% if live_events %}
-    <li class="live-event hidden" id="live-event" data-event-start="{{live_events.start_time}}" data-event-end="{{live_events.end_time}}">
-      <div class="live-event__scroll__container">
-        <div class="live-event__scroll">
-          <p>
-            Happening Now  • {{ live_events.event.title }}
-          </p>
-          <p>
-            Happening Now  • {{ live_events.event.title }}
-          </p>
+<div class="top-topics-list">
+  <ul id="top-topics-list-ul">
+    {% if live_events %}
+      <li class="live-event hidden" id="live-event" data-event-start="{{live_events.start_time}}" data-event-end="{{live_events.end_time}}">
+        <div class="live-event__scroll__container">
+          <div class="live-event__scroll">
+            <p>
+              Happening Now  • {{ live_events.event.title }}
+            </p>
+            <p>
+              Happening Now  • {{ live_events.event.title }}
+            </p>
+          </div>
         </div>
-      </div>
-    </li>
-    <li class="live-event__button hidden" id="live-event-button-container">
-      <a href="{% pageurl live_events.event %}">
-        <button type="button" class="button--rounded" id="live-event-button">Watch</button>
-      </a>
-    </li>
-  {% endif %}
-  {% if issues %}
-    {% for issue in issues %}
-      <li class="trending-issue">
-        <a href="{% pageurl issue %}">
+      </li>
+      <li class="live-event__button hidden" id="live-event-button-container">
+        <a href="{% pageurl live_events.event %}">
+          <button type="button" class="button--rounded" id="live-event-button">Watch</button>
+        </a>
+      </li>
+    {% endif %}
+    {% if issues %}
+      {% for issue in issues %}
+        <li class="trending-issue">
+          <a href="{% pageurl issue %}">
+            <button type="button" class="button--rounded">
+              {{ issue.title }}
+            </button>
+          </a>
+        </li>
+      {% endfor %}
+    {% endif %}
+    {% for topic in topics %}
+      <li>
+        <a href="{% pageurl topic %}">
           <button type="button" class="button--rounded">
-            {{ issue.title }}
+            {{ topic.title }}
           </button>
         </a>
       </li>
     {% endfor %}
-  {% endif %}
-  {% for topic in topics %}
     <li>
-      <a href="{% pageurl topic %}">
-        <button type="button" class="button--rounded">
-          {{ topic.title }}
-        </button>
-      </a>
-    </li>
-  {% endfor %}
-  <li>
-    <a href="/research/">
-      <button type="button" class="button--arrow">
-        <i class="far fa-angle-right"></i>
+      <button type="button" class="button--arrow" id="topics-expand">
+        <i class="far fa-plus"></i>
       </button>
-    </a>
-  </li>
-</ul>
+    </li>
+  </ul>
+</div>

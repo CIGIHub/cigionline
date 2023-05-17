@@ -247,6 +247,13 @@ article {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
         }
 
+        .card__text__topics {
+          @include link(
+            $color: $cigi-light-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+
         .card__text__meta {
           .card__text__people {
             @include link(
@@ -257,13 +264,6 @@ article {
             li {
               color: $cigi-medium-grey;
             }
-          }
-
-          .card__text__topics {
-            @include link(
-              $color: $cigi-light-grey,
-              $hover-color: $cigi-primary-colour
-            );
           }
 
           .card__text__more {
@@ -485,17 +485,17 @@ article {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
         }
 
+        .card__text__topics {
+          @include link(
+            $color: $cigi-light-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+
         .card__text__meta {
           .card__text__people {
             @include link(
               $color: $cigi-medium-grey,
-              $hover-color: $cigi-primary-colour
-            );
-          }
-
-          .card__text__topics {
-            @include link(
-              $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour
             );
           }

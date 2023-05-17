@@ -31,6 +31,7 @@
                 <div class="card__text__play-icon">
                   <i class="fas fa-play"></i>
                 </div>
+                {% include 'includes/cards/card_text_topics.html' with topics=page.topics_sorted %}
                 <h3 class="card__text__title">
                   <a href="{% pageurl page %}">
                     {{ page.title }}
@@ -46,7 +47,6 @@
                 <div class="card__text__meta">
                   <div>
                     {% include 'includes/cards/card_text_people.html' with authors=page.authors.all %}
-                    {% include 'includes/cards/card_text_topics.html' with topics=page.topics_sorted %}
                   </div>
                   {% include 'includes/cards/card_text_more.html' with url=page.url %}
                 </div>

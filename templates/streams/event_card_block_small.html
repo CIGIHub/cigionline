@@ -6,6 +6,7 @@
       {% if not is_past %}
         <div class="card--event--upcoming-label">Upcoming Event - {{ date|date:"M n" }}</div>
       {% endif %}
+      {% include 'includes/cards/card_text_topics.html' %}
       {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
       <div class="card--event__info">
         <time datetime="" class="card--event__time">
@@ -46,10 +47,7 @@
         </a>
       {% endif %}
       <div class="card__text__meta">
-        <div>
-          {% include 'includes/cards/card_text_people.html' %}
-          {% include 'includes/cards/card_text_topics.html' %}
-        </div>
+        {% include 'includes/cards/card_text_people.html' %}
         {% include 'includes/cards/card_text_more.html' with type='event' %}
       </div>
     </div>

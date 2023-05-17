@@ -13,11 +13,11 @@
     </a>
   </div>
   <div class="card__text">
+    {% include 'includes/cards/card_text_topics.html' with topics=article.topics_sorted %}
     {% include 'includes/cards/card_text_title.html' with url=article.url title=article.title %}
     <div class="card__text__meta">
       <div>
         {% include 'includes/cards/card_text_people.html' with authors=article.authors.all %}
-        {% include 'includes/cards/card_text_topics.html' with topics=article.topics_sorted %}
       </div>
       {% include 'includes/cards/card_text_more.html' %}
     </div>

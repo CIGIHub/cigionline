@@ -14,12 +14,12 @@
       </a>
     </div>
     <div class="card__text">
-      {% include 'includes/cards/card_text_title.html' %}
+      <div>
+        {% include 'includes/cards/card_text_topics.html' %}
+        {% include 'includes/cards/card_text_title.html' %}
+      </div>
       <div class="card__text__meta">
-        <div>
-          {% include 'includes/cards/card_text_people.html' with people_limit=1 %}
-          {% include 'includes/cards/card_text_topics.html' %}
-        </div>
+        {% include 'includes/cards/card_text_people.html' with people_limit=1 %}
         {% include 'includes/cards/card_text_more.html' %}
       </div>
     </div>
