@@ -66,15 +66,17 @@ const FeaturedEventCard = (props) => {
                       {`${startDateMonth} ${startDateDay}`}
                     </div>
                   )}
-                  <ul className="card__text__topics custom-text-list">
-                    {row.topics.map((topic) => (
-                      <li key={`${row.id}-topic-${topic.id}`}>
-                        <a href={topic.url} className="table-content-link">
-                          {topic.title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                  {row.topics && (
+                    <ul className="card__text__topics custom-text-list">
+                      {row.topics.map((topic) => (
+                        <li key={`${row.id}-topic-${topic.id}`}>
+                          <a href={topic.url} className="table-content-link">
+                            {topic.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                   {
                     isLive
                       ? (

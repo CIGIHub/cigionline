@@ -40,7 +40,6 @@
 
 .row-block > .field > .c-sf-container > div[data-streamfield-stream-container] {
   display: flex;
-  overflow-x: scroll;
   align-items: stretch;
 }
 
