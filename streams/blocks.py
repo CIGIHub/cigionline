@@ -1147,7 +1147,7 @@ class ArticleCard(blocks.StructBlock):
         MEDIUM = ('medium', 'Medium')
         MEDIUM_LARGE = ('medium_large', 'Medium Large')
         LARGE = ('large', 'Large')
-    
+
     class ArticleCardImageTypeChoices(models.TextChoices):
         LANDSCAPE = ('landscape', 'Landscape')
         SQUARE = ('square', 'Square')

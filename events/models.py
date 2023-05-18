@@ -7,7 +7,6 @@ from core.models import (
 )
 from django.core.cache import cache
 from django.db import models
-from django.core.cache import cache
 from streams.blocks import EventsLandingEventCard
 from wagtail.admin.panels import (
     FieldPanel,
