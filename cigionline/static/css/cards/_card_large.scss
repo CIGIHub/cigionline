@@ -249,11 +249,17 @@
       @include media-breakpoint-only(lg) {
         width: 28.5%;
       }
+      @include media-breakpoint-up(lx) {
+        width: 24%;
+      }
     }
 
     .col-lg-9 {
       @include media-breakpoint-only(lg) {
         width: 71.5%;
+      }
+      @include media-breakpoint-up(lx) {
+        width: 76%;
       }
     }
 

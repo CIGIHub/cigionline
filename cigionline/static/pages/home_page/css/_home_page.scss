@@ -34,7 +34,7 @@
     margin-top: 1em;
 
     .top-topics-list {
-      padding: 1.75em 0;
+      padding: 1em 0;
 
       ul {
         display: flex;
@@ -85,15 +85,26 @@
 
             button {
               width: 2em;
+              position: relative;
 
               &.expanded {
                 i {
-                  transform: rotate(45deg);
+                  &:first-child {
+                    transform: rotate(0deg);
+                  }
+                }
+              }
+
+              i {
+                &:first-child {
+                  transform: rotate(90deg);
                 }
               }
 
               i {
                 transition: 0.25s ease;
+                position: absolute;
+                top: calc(50% - 0.5em);
               }
             }
           }
