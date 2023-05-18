@@ -45,6 +45,7 @@ def all_events(request):
 
         item_dict['title'] = item.feature_title if item.feature_title else item.title
         item_dict['authors'] = [{
+            'id': author.author.id,
             'title': author.author.title,
             'url': author.author.url
         } for author in item.authors.all()]

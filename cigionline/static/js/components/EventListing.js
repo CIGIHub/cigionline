@@ -10,7 +10,7 @@ class EventListing extends React.Component {
     this.state = {
       currentPage: 1,
       pages: [],
-      pageCount: null,
+      pageCount: 0,
       loading: true,
       rows: [],
     };

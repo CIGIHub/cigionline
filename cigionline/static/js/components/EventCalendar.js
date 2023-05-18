@@ -79,13 +79,6 @@ export default class EventCalendar extends React.Component {
     popOverElement.addEventListener('mouseleave', () => {
       popOver.hide();
     });
-    // console.log(e.dataset.eventId);
-
-    // $(e.target).popover();
-    // $(e.target).popover('show');
-    // $('.popover').on('mouseleave', function() {
-    //   $(e.target).popover('hide');
-    // });
   };
 
   hidePopover = (e) => {
