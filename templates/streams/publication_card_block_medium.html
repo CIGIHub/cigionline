@@ -19,14 +19,12 @@
       <div class="col-8 col-lg-7">
         <div class="card__text">
           <div>
+            {% include 'includes/cards/card_text_topics.html' %}
             {% include 'includes/cards/card_text_title.html' %}
             {% include 'includes/cards/card_text_description.html' %}
           </div>
           <div class="card__text__meta">
-            <div>
-              {% include 'includes/cards/card_text_people.html' %}
-              {% include 'includes/cards/card_text_topics.html' %}
-            </div>
+            {% include 'includes/cards/card_text_people.html' %}
             {% include 'includes/cards/card_text_more.html' with type='publication' %}
           </div>
         </div>

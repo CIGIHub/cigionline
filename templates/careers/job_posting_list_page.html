@@ -7,20 +7,7 @@
 {% block body_class %}basic-page{% endblock %}
 
 {% block content %}
-  <section class="hero">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="hero__content">
-            <div class="hero__title">
-              <i class="fal fa-user"></i>
-              <h1>{{ self.title }}</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  {% include "includes/top_bar_menu.html" with title='Careers' %} 
   {% if self.subtitle %}
     <div class="container">
       <div class="row justify-content-center">

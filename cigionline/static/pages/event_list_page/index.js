@@ -207,34 +207,43 @@ ReactDOM.render(
 );
 
 const featuredEvents = JSON.parse(
-  document.getElementById('events-page__featured-events-slider').dataset.eventsPageFeaturedEventsSlider,
+  document.getElementById('events-page__featured-events-slider').dataset
+    .eventsPageFeaturedEventsSlider,
 );
 
 ReactDOM.render(
-  <FeaturedEventListing meta={featuredEvents.meta} items={featuredEvents.items} />,
+  <FeaturedEventListing
+    meta={featuredEvents.meta}
+    items={featuredEvents.items}
+  />,
   document.getElementById('featured-events'),
 );
 
 if (featuredEvents) {
-  const eventsPageFeaturedEventsSlider = new Swiper(
-    '.swiper-container',
-    {
-      slidesPerView: 1,
-      slidesPerGroup: 1,
-      spaceBetween: 20,
-      speed: 800,
-      autoHeight: true,
-      grabCursor: true,
+  const eventsPageFeaturedEventsSlider = new Swiper('.swiper-container', {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+    spaceBetween: 20,
+    speed: 800,
+    autoHeight: true,
+    grabCursor: true,
 
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
     },
-  );
+
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
 }
+
+const navItems = document.querySelectorAll('.nav-link');
+const pageLabel = document.getElementById('page-label');
+navItems.forEach((item) => {
+  item.addEventListener('click', () => {
+    pageLabel.innerHTML = item.innerHTML;
+  });
+});

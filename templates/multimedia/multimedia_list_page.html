@@ -10,18 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <header class="header--submenu">
-    <div class="container">
-      <nav class="border-top">
-        <div class="row g-1 justify-content-between">
-          <div class="col-4">
-            <i class="fas fa-th-large"></i>
-            <span>Multimedia<span>            
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+  {% include "includes/top_bar_menu.html" with title='Multimedia' %} 
   <section class="featured">
     <div class="container">
       <div class="row">
@@ -42,6 +31,7 @@
                 <div class="card__text__play-icon">
                   <i class="fas fa-play"></i>
                 </div>
+                {% include 'includes/cards/card_text_topics.html' with topics=page.topics_sorted %}
                 <h3 class="card__text__title">
                   <a href="{% pageurl page %}">
                     {{ page.title }}
@@ -57,7 +47,6 @@
                 <div class="card__text__meta">
                   <div>
                     {% include 'includes/cards/card_text_people.html' with authors=page.authors.all %}
-                    {% include 'includes/cards/card_text_topics.html' with topics=page.topics_sorted %}
                   </div>
                   {% include 'includes/cards/card_text_more.html' with url=page.url %}
                 </div>

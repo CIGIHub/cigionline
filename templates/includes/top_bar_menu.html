@@ -2,26 +2,28 @@
 
 {% if submenu %}
   {% get_menu_items submenu.slug as submenu_items %}
-  {% if submenu_items %}
-    <header class="header--submenu">
-      <div class="container">
-        <nav class="border-top">
-          <div class="row g-1 justify-content-between">
-            <div class="col">
-              <span class="active" href="{% pageurl self %}">{{ self.title }}</span>            
-            </div>
-            <div class="col-8">
-              <div class="header--submenu__right">
-                {% for submenu_item in submenu_items %}
-                  <div class="header--submenu__right__menu-item {% if submenu_item.link_page.url_path == self.url_path %}inactive{% endif %}">
-                    <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
-                  </div>
-                {% endfor %}
+{% endif %}
+
+<header class="header--submenu">
+  <div class="container">
+    <nav class="border-top border-bottom">
+      <div class="row g-1 justify-content-between">
+        <div class="col-4">
+          <h1>{{ title }}</h1>
+        </div>
+        {% if submenu_items %}
+          <div class="col-8">
+            <div class="header--submenu__right">
+              {% for submenu_item in submenu_items %}
+              <div
+                class="header--submenu__right__menu-item {% if submenu_item.link_page.url_path == self.url_path %}inactive{% endif %}">
+                <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
               </div>
+              {% endfor %}
             </div>
           </div>
-        </nav>
+        {% endif %}
       </div>
-    </header>
-  {% endif %}
-{% endif %}
+    </nav>
+  </div>
+</header>

@@ -2,17 +2,12 @@
 
 body {
   .header--submenu {
-    nav {
-      border-bottom: 0;
-    }
-
     i {
       margin-right: 1em;
     }
 
     .header--submenu__right {
       display: flex;
-      font-size: 0.9em;
       border: 0;
 
       .nav-link {
@@ -29,7 +24,7 @@ body {
       @include media-breakpoint-up(xl) {
         min-height: 366px;
       }
-  
+
       .card__image {
         &.card__image--square {
           @include media-breakpoint-up(md) {
@@ -165,6 +160,8 @@ body {
     }
 
     &.article-landing-page__featured-opinions {
+      margin-top: 2em;
+
       hr {
         @include media-breakpoint-up(lg) {
           margin: 1.5em 0;

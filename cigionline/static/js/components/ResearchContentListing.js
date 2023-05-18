@@ -18,27 +18,27 @@ function ResearchContentListing(props) {
         </a>
       </div>
       <div className="card__text">
+        {row.topics && (
+          <ul className="card__text__topics custom-text-list">
+            {row.topics &&
+              row.topics.map((topic) => (
+                <li key={`${row.id}-topic-${topic.id}`}>
+                  <a href={topic.url}>{topic.title}</a>
+                </li>
+              ))}
+          </ul>
+        )}
         <h3 className="card__text__title">
           <a href={row.url}>{row.title}</a>
         </h3>
         <div className="card__text__meta">
-          <div>
-            <ul className="custom-text-list card__text__people">
-              {row.authors.map((author) => (
-                <li key={`${row.id}-author-${author.id}`}>
-                  <a href={author.url}>{author.title}</a>
-                </li>
-              ))}
-            </ul>
-            <ul className="card__text__topics custom-text-list">
-              {row.topics &&
-                row.topics.map((topic) => (
-                  <li key={`${row.id}-topic-${topic.id}`}>
-                    <a href={topic.url}>{topic.title}</a>
-                  </li>
-                ))}
-            </ul>
-          </div>
+          <ul className="custom-text-list card__text__people">
+            {row.authors.map((author) => (
+              <li key={`${row.id}-author-${author.id}`}>
+                <a href={author.url}>{author.title}</a>
+              </li>
+            ))}
+          </ul>
           <button type="button" className="card__text__more">
             <a href={row.url}>
               <i className="far fa-ellipsis-h" />

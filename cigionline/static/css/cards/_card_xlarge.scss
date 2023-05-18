@@ -94,7 +94,7 @@
         }
 
         .card__text__people {
-          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          @include link($color: $cigi-light-grey, $hover-color: $cigi-primary-colour);
         }
 
         .card__text__topics {

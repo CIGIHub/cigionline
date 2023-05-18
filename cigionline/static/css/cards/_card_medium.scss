@@ -124,7 +124,7 @@ article {
           width: 43.66667%;
         }
         @include media-breakpoint-up(xl) {
-          width: 38.5%;
+          width: 37%;
         }
       }
 
@@ -133,7 +133,7 @@ article {
           width: 56.33333%;
         }
         @include media-breakpoint-up(xl) {
-          width: 61.5%;
+          width: 63%;
         }
       }
 
@@ -247,23 +247,23 @@ article {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
         }
 
+        .card__text__topics {
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+
         .card__text__meta {
           .card__text__people {
             @include link(
-              $color: $cigi-medium-grey,
+              $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour
             );
 
             li {
               color: $cigi-medium-grey;
             }
-          }
-
-          .card__text__topics {
-            @include link(
-              $color: $cigi-light-grey,
-              $hover-color: $cigi-primary-colour
-            );
           }
 
           .card__text__more {
@@ -485,15 +485,15 @@ article {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
         }
 
+        .card__text__topics {
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
+        }
+
         .card__text__meta {
           .card__text__people {
-            @include link(
-              $color: $cigi-medium-grey,
-              $hover-color: $cigi-primary-colour
-            );
-          }
-
-          .card__text__topics {
             @include link(
               $color: $cigi-light-grey,
               $hover-color: $cigi-primary-colour

@@ -6,11 +6,13 @@
   border-top: 1px solid $cigi-light-grey;
   position: relative;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
 
   li {
     cursor: pointer;
     display: inline-block;
-    padding: 0 2em;
+    padding: 0 1em;
     position: relative;
 
     button {
@@ -35,14 +37,6 @@
           width: 100%;
         }
       }
-    }
-
-    &.pagination-link-first {
-      margin-right: 1em;
-    }
-
-    &.pagination-link-last {
-      margin-left: 1em;
     }
 
     &.active {

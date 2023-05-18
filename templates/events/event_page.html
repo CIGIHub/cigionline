@@ -36,18 +36,9 @@
 {% block body_class %}event-page{% endblock %}
 
 {% block content %}
+  {% include "includes/top_bar_menu.html" with title='Events' %} 
   <section class="hero{% if page.archive %} archived{% endif %}">
     <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="hero__content">
-            <div class="hero__title">
-              <i class="fal fa-file-alt"></i>
-              <h1>Events</h1>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
           {% include 'streams/event_card_block_large.html' with is_past=self.is_past date=self.publishing_date end_date=self.event_end authors=self.authors.all title=self.title event_type=self.get_event_type_display event_access=self.get_event_access_display event_format=self.event_format_string time_zone_label=self.time_zone_label url=self.url topics=self.topics_sorted registration_url=self.registration_url start_utc=self.event_start_time_utc end_utc=self.event_end_time_utc %}

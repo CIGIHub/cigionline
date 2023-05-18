@@ -45,6 +45,17 @@ const EventSearchResultCard = (props) => {
               {`${startDateMonth} ${startDateDay}`}
             </div>
           )}
+          {row.topics && (
+            <ul className="card__text__topics custom-text-list">
+              {row.topics.map((topic) => (
+                <li key={`${row.id}-topic-${topic.id}`}>
+                  <a href={topic.url} className="table-content-link">
+                    {topic.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
           {
             isLive
               ? (
@@ -103,15 +114,6 @@ const EventSearchResultCard = (props) => {
             {row.authors.length > 3 && (
               <li key={`${row.id}-author-more`}>And more</li>
             )}
-          </ul>
-          <ul className="card__text__topics custom-text-list">
-            {row.topics.map((topic) => (
-              <li key={`${row.id}-topic-${topic.id}`}>
-                <a href={topic.url} className="table-content-link">
-                  {topic.title}
-                </a>
-              </li>
-            ))}
           </ul>
         </div>
         <div className="card__text__more__container dropup">

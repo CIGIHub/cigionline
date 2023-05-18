@@ -66,9 +66,22 @@ function MultimediaCardLarge(props) {
         )}
       </div>
       <div className="card__text">
-        <h3 className="card__text__title">
-          <a href={row.url}>{row.title}</a>
-        </h3>
+        <div>
+          {row.topics && (
+            <ul className="card__text__topics custom-text-list">
+              {row.topics.map((topic) => (
+                <li key={`${row.id}-topic-${topic.id}`}>
+                  <a href={topic.url} className="table-content-link">
+                    {topic.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          <h3 className="card__text__title">
+            <a href={row.url}>{row.title}</a>
+          </h3>
+        </div>
         <div className="card__text__meta">
           <div>
             <ul className="custom-text-list card__text__people">
@@ -80,15 +93,6 @@ function MultimediaCardLarge(props) {
               {row.authors.length > 3 && (
                 <li key={`${row.id}-author-more`}>and more</li>
               )}
-            </ul>
-            <ul className="card__text__topics custom-text-list">
-              {row.topics.map((topic) => (
-                <li key={`${row.id}-topic-${topic.id}`}>
-                  <a href={topic.url} className="table-content-link">
-                    {topic.title}
-                  </a>
-                </li>
-              ))}
             </ul>
           </div>
           <CardTextMore

@@ -65,6 +65,17 @@ const FeaturedEventCard = (props) => {
                       {`${startDateMonth} ${startDateDay}`}
                     </div>
                   )}
+                  {row.topics && (
+                    <ul className="card__text__topics custom-text-list">
+                      {row.topics.map((topic) => (
+                        <li key={`${row.id}-topic-${topic.id}`}>
+                          <a href={topic.url} className="table-content-link">
+                            {topic.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                   {
                     isLive
                       ? (
@@ -133,27 +144,16 @@ const FeaturedEventCard = (props) => {
                         )}
                   </div>
                   <div className="card__text__meta">
-                    <div>
-                      <ul className="custom-text-list card__text__people">
-                        {row.authors.slice(0, 3).map((author) => (
-                          <li key={`${row.id}-author-${author.id}`}>
-                            <a href={author.url}>{author.title}</a>
-                          </li>
-                        ))}
-                        {row.authors.length > 3 && (
-                          <li key={`${row.id}-author-more`}>And more</li>
-                        )}
-                      </ul>
-                      <ul className="card__text__topics custom-text-list">
-                        {row.topics.map((topic) => (
-                          <li key={`${row.id}-topic-${topic.id}`}>
-                            <a href={topic.url} className="table-content-link">
-                              {topic.title}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <ul className="custom-text-list card__text__people">
+                      {row.authors.slice(0, 3).map((author) => (
+                        <li key={`${row.id}-author-${author.id}`}>
+                          <a href={author.url}>{author.title}</a>
+                        </li>
+                      ))}
+                      {row.authors.length > 3 && (
+                        <li key={`${row.id}-author-more`}>And more</li>
+                      )}
+                    </ul>
                     <div className="card__text__more__container dropup">
                       <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
                         <i className="far fa-ellipsis-h"></i>

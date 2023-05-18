@@ -12,44 +12,13 @@
 {% endblock %}
 
 {% block content %}
-  <header class="header--submenu">
-    <div class="container">
-      <nav class="border-top">
-        <div class="row g-1 justify-content-between">
-          <div class="col">
-            <div class="header__title">
-              <i class="fal fa-folder"></i>
-              <h1>{{ self.title }}</h1>
-            </div>
-          </div>
-          <div class="col-8">
-            {% if self.submenu %}
-              {% get_menu_items self.submenu.slug as submenu_items %}
-              {% if submenu_items %}
-                <div class="header--submenu__right">
-                  <div class="header--submenu__right__menu-item active">
-                    <a role="button">
-                      All Content
-                    </a>
-                  </div>
-                  {% for submenu_item in submenu_items %}
-                    <div class="header--submenu__right__menu-item {% if submenu_item.link_page.url_path == self.url_path %}inactive{% endif %}">
-                      <a href="{% pageurl submenu_item.link_page %}">{{ submenu_item.title }}</a>
-                    </div>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            {% endif %}
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+  {% include "includes/top_bar_menu.html" with title='Research' submenu=self.submenu %} 
   
   <section class="topic-page__description">
     <div class="container">
       <div class="row">
         <div class="col col-lg-8">
+          <h1>{{self.title}}</h1>
           <div class="topic-page__description__content">
             {{ self.description|richtext }}
           </div>

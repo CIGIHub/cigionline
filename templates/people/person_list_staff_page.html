@@ -11,7 +11,7 @@
 {% block header %}
   {% include "includes/top_bar.html" %}
   {% if self.submenu %}
-    {% include "includes/top_bar_menu.html" with submenu=self.submenu %}
+    {% include "includes/top_bar_menu.html" with title=self.title submenu=self.submenu %}
   {% endif %}
 {% endblock %}
 

@@ -9,15 +9,18 @@
           <div class="card--event--upcoming-label">Upcoming Event</div>
         {% endif %}
         <div class="d-flex">
-          {% if current_time >= start_utc|date:"c" and current_time <= end_utc|date:"c" %}
-            <div class="card__text__title card--event__title card--event--live-label">
-              <i class="fas fa-podcast"></i>
-          {% else %}
-            <div class="card__text__title card--event__title">
-          {% endif %}
-            <a href="{{ url }}">
-              {{ title }}
-            </a>
+          <div>
+            {% include 'includes/cards/card_text_topics.html' %}
+            {% if current_time >= start_utc|date:"c" and current_time <= end_utc|date:"c" %}
+              <div class="card__text__title card--event__title card--event--live-label">
+                <i class="fas fa-podcast"></i>
+            {% else %}
+              <div class="card__text__title card--event__title">
+            {% endif %}
+              <a href="{{ url }}">
+                {{ title }}
+              </a>
+            </div>
           </div>
         </div>
         <div class="card--event__info">
@@ -52,10 +55,7 @@
     <div class="row g-3 g-md-5 card--event__bottom">
       <div class="col-md-6 d-flex align-items-end">
         <div class="card__text__meta">
-          <div>
-            {% include 'includes/cards/card_text_people.html' %}
-            {% include 'includes/cards/card_text_topics.html' %}
-          </div>
+          {% include 'includes/cards/card_text_people.html' %}
           {% include 'includes/cards/card_text_more.html' with type='event' %}
         </div>
       </div>

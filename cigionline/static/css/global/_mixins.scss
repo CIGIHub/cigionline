@@ -429,6 +429,10 @@
   color: $cigi-text-grey-dark;
   @include dark-footer;
   @include top-bar($background-color: $background-dark, $color: $white);
+
+  .header--submenu {
+    background-color: $background-dark;
+  }
 }
 
 @mixin article-series-card-theme(
@@ -466,11 +470,11 @@
       }
     }
 
-    .card__text__meta {
-      .card__text__topics {
-        @include link($color: $topic-color, $hover-color: $topic-hover-color);
-      }
+    .card__text__topics {
+      @include link($color: $topic-color, $hover-color: $topic-hover-color);
+    }
 
+    .card__text__meta {
       .card__text__more {
         i {
           color: $color;

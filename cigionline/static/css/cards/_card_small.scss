@@ -127,10 +127,17 @@
         padding-bottom: 1em;
       }
 
+      .card__text__topics {
+        @include link(
+          $color: $cigi-text-grey,
+          $hover-color: $cigi-primary-colour
+        );
+      }
+
       .card__text__meta {
         .card__text__people {
           @include link(
-            $color: $cigi-medium-grey,
+            $color: $cigi-light-grey,
             $hover-color: $cigi-primary-colour
           );
 
@@ -141,13 +148,6 @@
               color: $cigi-medium-grey;
             }
           }
-        }
-
-        .card__text__topics {
-          @include link(
-            $color: $cigi-light-grey,
-            $hover-color: $cigi-primary-colour
-          );
         }
 
         .card__text__more {
@@ -180,7 +180,7 @@
 
         .card__text__topics {
           @include link(
-            $color: $cigi-dark-grey,
+            $color: $cigi-text-grey,
             $hover-color: $cigi-primary-colour
           );
         }
@@ -219,23 +219,23 @@
         padding-bottom: 1em;
       }
 
+      .card__text__topics {
+        @include link(
+          $color: $cigi-text-grey,
+          $hover-color: $cigi-primary-colour
+        );
+      }
+
       .card__text__meta {
         .card__text__people {
           @include link(
-            $color: $cigi-medium-grey,
+            $color: $cigi-dark-grey,
             $hover-color: $cigi-primary-colour
           );
 
           li {
-            color: $cigi-medium-grey;
+            color: $cigi-dark-grey;
           }
-        }
-
-        .card__text__topics {
-          @include link(
-            $color: $cigi-light-grey,
-            $hover-color: $cigi-primary-colour
-          );
         }
 
         .card__text__more {

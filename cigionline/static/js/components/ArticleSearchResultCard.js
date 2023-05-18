@@ -21,6 +21,17 @@ const ArticleSearchResultCard = (props) => {
               {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_MED)}
             </time>
           )}
+          {row.topics && (
+            <ul className="card__text__topics custom-text-list">
+              {row.topics.map((topic) => (
+                <li key={`${row.id}-topic-${topic.id}`}>
+                  <a href={topic.url} className="table-content-link">
+                    {topic.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
           <h3 className="card__text__title">
             <a href={row.url}>{row.title}</a>
           </h3>
@@ -36,15 +47,6 @@ const ArticleSearchResultCard = (props) => {
               {row.authors.length > 3 && (
                 <li key={`${row.id}-author-more`}>And more</li>
               )}
-            </ul>
-            <ul className="card__text__topics custom-text-list">
-              {row.topics.map((topic) => (
-                <li key={`${row.id}-topic-${topic.id}`}>
-                  <a href={topic.url} className="table-content-link">
-                    {topic.title}
-                  </a>
-                </li>
-              ))}
             </ul>
           </div>
           <CardTextMore
