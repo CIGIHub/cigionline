@@ -136,7 +136,7 @@ const EventSearchResultCard = (props) => {
               <i className="fab fa-facebook-f" />
               Share on Facebook
             </button>
-            {row.event_access !== 'Private' && (
+            {row.event_access !== 'Private' && row.registration_url && (
               <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
                 <i className="fal fa-check-square" />
                 Register

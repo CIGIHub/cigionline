@@ -1,7 +1,9 @@
 import React from 'react';
 import Calendar from 'react-calendar';
+import Popover from 'bootstrap/js/dist/popover';
 // import 'bootstrap/dist/js/bootstrap.bundle';
 
+const popOverList = [];
 export default class EventCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -23,11 +25,18 @@ export default class EventCalendar extends React.Component {
    * */
   tileContent = ({ date }) => {
     const eventsOnThisDate = this.filterEvents(date);
+    const eventId = eventsOnThisDate.length ? eventsOnThisDate[0].id : null;
     if (!eventsOnThisDate.length) {
       return null;
     }
-    const borderClass = eventsOnThisDate.length > 4 ? 5 : eventsOnThisDate.length + 1;
-    const eventLinks = eventsOnThisDate.map((eventOnThisDate) => `<a href="${eventOnThisDate.url}">${eventOnThisDate.title}</a>`).join('');
+    const borderClass =
+      eventsOnThisDate.length > 4 ? 5 : eventsOnThisDate.length + 1;
+    const eventLinks = eventsOnThisDate
+      .map(
+        (eventOnThisDate) =>
+          `<a href="${eventOnThisDate.url}">${eventOnThisDate.title}</a>`,
+      )
+      .join('');
     const popOverHtml = `<div class="react-calendar__tile__popover">${eventLinks}</div>`;
     return (
       <div
@@ -46,41 +55,49 @@ export default class EventCalendar extends React.Component {
         data-bs-content={popOverHtml}
         data-bs-trigger="manual"
         data-animation="false"
+        data-event-id={eventId}
       />
     );
-  }
+  };
 
   fetchEvents = (date) => {
     this.setState({ events: [], isLoading: true });
-    fetch(`/api/events/?month=${date.getMonth() + 1}&year=${date.getFullYear()}`)
+    fetch(
+      `/api/events/?month=${date.getMonth() + 1}&year=${date.getFullYear()}`,
+    )
       .then((res) => res.json())
       .then((res) => {
         this.setState({ events: res.items, isLoading: false });
       });
-  }
+  };
 
   // Prevent popover from abruptly closing when user tries to hover on the event link.
   showPopover = (e) => {
-    $(e.target).popover();
-    $(e.target).popover('show');
-    $('.popover').on('mouseleave', function() {
-      $(e.target).popover('hide');
+    const popOver = new Popover(e.target);
+    popOver.show();
+    const popOverElement = document.querySelector('.popover');
+    popOverElement.addEventListener('mouseleave', () => {
+      popOver.hide();
     });
-  }
+  };
 
   hidePopover = (e) => {
-    setTimeout(function() {
+    setTimeout(function () {
       if (!$('.popover:hover').length) {
         $(e.target).popover('hide');
       }
     }, 100);
-  }
+  };
 
   // Toggle popover for mobile devices
   togglePopover = (e) => {
-    $(e.target).popover();
-    $(e.target).popover('toggle');
-  }
+    const eventId = e.target.dataset.eventId;
+    if (!popOverList[eventId]) {
+      popOverList[eventId] = new Popover(e.target);
+    }
+    console.log(popOverList)
+    popOverList[eventId].toggle();
+  };
 
   tileClassName = ({ date }) => {
     const eventsOnThisDate = this.filterEvents(date);
@@ -88,17 +105,18 @@ export default class EventCalendar extends React.Component {
       return 'react-calendar__tile--has-event';
     }
     return null;
-  }
+  };
 
   /**
    * Format weekdays to their initials.
    * E.g. Sunday -> S
    * */
-  formatShortWeekday = (locale, date) => date.toLocaleString(locale, { weekday: 'narrow' })
+  formatShortWeekday = (locale, date) =>
+    date.toLocaleString(locale, { weekday: 'narrow' });
 
   onActiveStartDateChange = ({ activeStartDate }) => {
     this.fetchEvents(activeStartDate);
-  }
+  };
 
   /**
    * Filter event by date
@@ -109,7 +127,10 @@ export default class EventCalendar extends React.Component {
     const { events } = this.state;
     return events.filter((e) => {
       const eventDate = new Date(e.publishing_date);
-      return eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth();
+      return (
+        eventDate.getDate() === date.getDate() &&
+        eventDate.getMonth() === date.getMonth()
+      );
     });
   }
 
@@ -135,17 +156,15 @@ export default class EventCalendar extends React.Component {
           tileContent={tileContent}
           tileClassName={tileClassName}
         />
-        {isLoading
-          ? (
-            <div className="events-calendar__loader">
-              <img
-                src="/static/assets/loader_spinner.gif"
-                alt="Loading..."
-                className="loading-spinner"
-              />
-            </div>
-          )
-          : null}
+        {isLoading ? (
+          <div className="events-calendar__loader">
+            <img
+              src="/static/assets/loader_spinner.gif"
+              alt="Loading..."
+              className="loading-spinner"
+            />
+          </div>
+        ) : null}
       </div>
     );
   }

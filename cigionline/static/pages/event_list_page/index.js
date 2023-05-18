@@ -201,12 +201,8 @@ ReactDOM.render(
   document.getElementById('event-list-calendar'),
 );
 
-const allEvents = JSON.parse(
-  document.getElementById('all-events').dataset.allEvents,
-);
-
 ReactDOM.render(
-  <EventListing meta={allEvents.meta} items={allEvents.items} />,
+  <EventListing />,
   document.getElementById('event-list'),
 );
 
