@@ -22,6 +22,7 @@ def events_api(request):
     queryset = EventPage.objects.live().public().filter(publishing_date__year=year, publishing_date__month=month)
     for event_page in queryset:
         events.append({
+            'id': event_page.id,
             "title": event_page.title,
             "publishing_date": event_page.publishing_date.isoformat(),
             "url": event_page.get_url(request),

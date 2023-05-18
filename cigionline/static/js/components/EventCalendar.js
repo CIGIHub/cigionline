@@ -3,7 +3,7 @@ import Calendar from 'react-calendar';
 import Popover from 'bootstrap/js/dist/popover';
 // import 'bootstrap/dist/js/bootstrap.bundle';
 
-let popoverList = [];
+const popOverList = [];
 export default class EventCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -18,12 +18,6 @@ export default class EventCalendar extends React.Component {
   componentDidMount() {
     // fetch events for current month.
     this.fetchEvents(new Date());
-    const popoverTriggerList = document.querySelectorAll(
-      '[data-bs-toggle="popover"]',
-    );
-    popoverList = [...popoverTriggerList].map(
-      (popoverTriggerEl) => new Popover(popoverTriggerEl),
-    );
   }
 
   /**
@@ -31,6 +25,7 @@ export default class EventCalendar extends React.Component {
    * */
   tileContent = ({ date }) => {
     const eventsOnThisDate = this.filterEvents(date);
+    const eventId = eventsOnThisDate.length ? eventsOnThisDate[0].id : null;
     if (!eventsOnThisDate.length) {
       return null;
     }
@@ -60,6 +55,7 @@ export default class EventCalendar extends React.Component {
         data-bs-content={popOverHtml}
         data-bs-trigger="manual"
         data-animation="false"
+        data-event-id={eventId}
       />
     );
   };
@@ -79,10 +75,12 @@ export default class EventCalendar extends React.Component {
   showPopover = (e) => {
     const popOver = new Popover(e.target);
     popOver.show();
-    console.log(popoverList)
-    e.addEventListener('mouseleave', () => {
+    const popOverElement = document.querySelector('.popover');
+    popOverElement.addEventListener('mouseleave', () => {
       popOver.hide();
     });
+    // console.log(e.dataset.eventId);
+
     // $(e.target).popover();
     // $(e.target).popover('show');
     // $('.popover').on('mouseleave', function() {
@@ -100,8 +98,12 @@ export default class EventCalendar extends React.Component {
 
   // Toggle popover for mobile devices
   togglePopover = (e) => {
-    $(e.target).popover();
-    $(e.target).popover('toggle');
+    const eventId = e.target.dataset.eventId;
+    if (!popOverList[eventId]) {
+      popOverList[eventId] = new Popover(e.target);
+    }
+    console.log(popOverList)
+    popOverList[eventId].toggle();
   };
 
   tileClassName = ({ date }) => {
