@@ -62,6 +62,11 @@ body {
         transform: translate(-50%, -50%);
         width: 50px;
       }
+
+      .react-calendar__navigation {
+        display: flex;
+        padding: 0 0 0.5rem 0;
+      }
     }
 
     .react-calendar {

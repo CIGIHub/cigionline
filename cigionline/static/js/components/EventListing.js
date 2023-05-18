@@ -6,15 +6,18 @@ import EventListingCard from './EventListingCard';
 class EventListing extends React.Component {
   constructor(props) {
     super(props);
-    const { meta, items } = props;
 
     this.state = {
       currentPage: 1,
-      pages: items,
-      pageCount: meta.total_page_count,
+      pages: [],
+      pageCount: 0,
       loading: true,
-      rows: items[0],
+      rows: [],
     };
+  }
+
+  componentDidMount() {
+    this.fetchEvents();
   }
 
   setPage(page) {
@@ -25,24 +28,30 @@ class EventListing extends React.Component {
     }));
   }
 
+  fetchEvents() {
+    const uri = '/api/all_events';
+    fetch(encodeURI(uri))
+      .then((res) => res.json())
+      .then((data) => {
+        const pages = data.meta.total_page_count;
+        const rows = data.items;
+
+        this.setState(() => ({
+          rows: rows[0],
+          pages: rows,
+          pageCount: pages,
+        }));
+      });
+  }
+
   render() {
-    const {
-      rows, 
-      currentPage,
-      pageCount,
-      pages,
-      loading,
-    } = this.state;
+    const { rows, currentPage, pageCount } = this.state;
 
     return (
       <>
         <div className="event-items">
-          {
-            rows
-              && rows.map((row) => (
-                <EventListingCard row={row} key={row.id} />
-              ))
-          }
+          {rows &&
+            rows.map((row) => <EventListingCard row={row} key={row.id} />)}
         </div>
         <Paginator
           currentPage={currentPage}

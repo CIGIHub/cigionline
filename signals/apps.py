@@ -203,6 +203,13 @@ def clear_experts_page_cache(sender, **kwargs):
         error(traceback.format_exc())
 
 
+def clear_all_events_api_cache(sender, **kwargs):
+    try:
+        purge_url_from_cache('https://www.cigionline.org/api/all_events/')
+    except Exception:
+        error(traceback.format_exc())
+
+
 class SignalsConfig(AppConfig):
     name = 'signals'
     verbose_name = "Signals"
@@ -242,3 +249,4 @@ class SignalsConfig(AppConfig):
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedPromotionsList)
             page_published.connect(clear_cloudflare_home_page_cache, sender=HomePageFeaturedExpertsList)
             page_published.connect(clear_experts_page_cache, sender=PersonPage)
+            page_published.connect(clear_all_events_api_cache, sender=EventPage)

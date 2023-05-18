@@ -35,6 +35,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/topics/$', research_views.all_topics),
     re_path(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     re_path(r'^api/events/$', events_views.events_api),
+    re_path(r'^api/all_events/$', events_views.all_events),
     re_path(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
     re_path(r'^api/old_images/$', core_views.old_images),
 

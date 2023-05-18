@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
+import ReactGA from 'react-ga';
 
 const FeaturedEventCard = (props) => {
   const { row } = props;
@@ -37,9 +38,7 @@ const FeaturedEventCard = (props) => {
     return embedUrl(str);
   }
 
-  const evaluateLive = (start, end) => {
-    return Date.now() >= start && Date.now() <= end;
-  };
+  const evaluateLive = (start, end) => Date.now() >= start && Date.now() <= end;
   const [isLive, setIsLive] = useState(evaluateLive(startDateTs, endDateTs));
 
   useEffect(() => {
@@ -177,7 +176,7 @@ const FeaturedEventCard = (props) => {
                           <i className="fab fa-facebook-f"></i>
                           Share on Facebook
                         </a>
-                        {row.event_access !== 'Private' && (
+                        {row.event_access !== 'Private' && row.registration_url && (
                           <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
                             <i className="fal fa-check-square"></i>
                             Register
