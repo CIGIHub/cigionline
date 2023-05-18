@@ -1591,7 +1591,7 @@ class AdCard(blocks.StructBlock):
         SMALL = ('small', 'Small')
         MEDIUM = ('medium', 'Medium')
         LARGE = ('large', 'Large')
-    
+
     class AdCardLayoutChoices(models.TextChoices):
         SOCIAL = ('social', 'Social')
         SUBSCRIBE = ('subscribe', 'Subscribe')
