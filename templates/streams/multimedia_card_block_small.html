@@ -9,9 +9,16 @@
         {% else %}
           {% image image fill-600x338 %}
         {% endif %}
-        {% if multimedia_type == 'video' and vimeo_url %}
-          {% embed vimeo_url %}
-        {% endif %}
+        <!-- {% if multimedia_type == 'video' and vimeo_url %}
+          <div class="vimeo-player">
+            {% embed vimeo_url %}
+          </div>
+        {% endif %} -->
+        
+        <!-- test -->
+        <iframe title="vimeo-player" src="https://player.vimeo.com/video/76979871?pip=1&amp;speed=1" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" data-ready="true"></iframe>
+        <!-- test -->
+        
         {% if multimedia_type == 'audio' and multimedia_url %}
           <iframe height="52px" width="100%" frameborder="no" scrolling="no" seamless src="{{ multimedia_url }}?dark=false"></iframe>
         {% endif %}
@@ -29,6 +36,9 @@
       {% endif %}
     </div>
     <div class="card__text">
+      <!-- test -->
+      <button class="test-button">test button</button>
+      <!-- test -->
       <div>
         {% include 'includes/cards/card_text_topics.html' %}
         {% include 'includes/cards/card_text_title.html' %}
