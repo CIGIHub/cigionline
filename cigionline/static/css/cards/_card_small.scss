@@ -64,7 +64,7 @@
         @include media-breakpoint-up(md) {
           font-size: 1.5em;
         }
-        font-size: 1.1em;
+        font-size: 1.25em;
       }
 
       .card__text__date {
@@ -127,6 +127,10 @@
         @include media-breakpoint-only(md) {
           padding-bottom: 0;
         }
+        @include media-breakpoint-up(md) {
+          font-size: 1.5em;
+        }
+        font-size: 1.25em;
         padding-bottom: 1em;
       }
 
@@ -224,7 +228,7 @@
 
       .card__text__topics {
         @include link(
-          $color: $cigi-text-grey,
+          $color: $cigi-medium-light-grey,
           $hover-color: $cigi-primary-colour
         );
       }
@@ -232,12 +236,12 @@
       .card__text__meta {
         .card__text__people {
           @include link(
-            $color: $cigi-dark-grey,
+            $color: $cigi-light-grey,
             $hover-color: $cigi-primary-colour
           );
 
           li {
-            color: $cigi-dark-grey;
+            color: $cigi-light-grey;
           }
         }
 
@@ -308,7 +312,10 @@
     .card--event--small__top {
       .card--event__title {
         &.card__text__title {
-          font-weight: 300;
+          @include media-breakpoint-up(md) {
+            font-size: 1.5em;
+          }
+          font-size: 1.25em;
           line-height: 1.1;
           margin-top: 0;
         }

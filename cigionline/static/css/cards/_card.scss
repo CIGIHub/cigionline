@@ -316,7 +316,10 @@
           }
 
           .card__text__topics {
-            @include link($color: $cigi-text-grey, $hover-color: $cigi-light-grey);
+            @include link(
+              $color: $cigi-text-grey,
+              $hover-color: $cigi-light-grey
+            );
           }
 
           .card__text__meta {
@@ -454,14 +457,14 @@
       $background-color: $ai-primary-color,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-light-grey
+      $topic-color: $cigi-medium-light-grey
     );
   }
 
   &.john-holmes-series {
     @include article-series-card-theme(
       $background-color: $john-holmes-bg-color,
-      $topic-color: $cigi-medium-grey
+      $topic-color: $cigi-medium-light-grey
     );
   }
 
@@ -473,7 +476,8 @@
     @include article-series-card-theme(
       $background-color: $black,
       $color: $white,
-      $link-color: $white
+      $link-color: $white,
+      $topic-color: $cigi-medium-light-grey
     );
   }
 
@@ -490,7 +494,7 @@
       $background-color: $health-security-series-background-colour,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-light-grey
+      $topic-color: $cigi-medium-light-grey
     );
   }
 }
