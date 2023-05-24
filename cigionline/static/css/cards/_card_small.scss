@@ -61,6 +61,9 @@
       flex-grow: 1;
 
       .card__text__title {
+        @include media-breakpoint-up(md) {
+          font-size: 1.5em;
+        }
         font-size: 1.1em;
       }
 
@@ -129,7 +132,7 @@
 
       .card__text__topics {
         @include link(
-          $color: $cigi-text-grey,
+          $color: $cigi-medium-light-grey,
           $hover-color: $cigi-primary-colour
         );
       }
