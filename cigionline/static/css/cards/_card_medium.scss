@@ -40,8 +40,11 @@ article {
         }
 
         .card__text__title {
+          @include media-breakpoint-up(md) {
+            font-size: 1.5em;
+          }
           @include media-breakpoint-up(lg) {
-            font-size: 1.3em;
+            font-size: 1.75em;
           }
           font-size: 1.25em;
         }
@@ -70,7 +73,6 @@ article {
             @include media-breakpoint-down(md) {
               margin-bottom: 0;
             }
-            font-size: clamp(1.1em, 3vw, 1.3em);
             margin-bottom: 0.25rem;
           }
         }
@@ -517,7 +519,6 @@ article {
       .card--event__top {
         .card--event__title {
           &.card__text__title {
-            font-size: clamp(1.1em, 3vw, 1.3em);
             font-weight: 300;
             line-height: 1.1;
           }
