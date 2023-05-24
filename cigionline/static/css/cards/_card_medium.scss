@@ -228,6 +228,36 @@ article {
         }
       }
 
+      .card__text__title {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+      }
+
+      .card__text__topics {
+        @include link(
+          $color: $cigi-text-grey,
+          $hover-color: $cigi-primary-colour
+        );
+      }
+
+      .card__text__meta {
+        .card__text__people {
+          @include link(
+            $color: $cigi-light-grey,
+            $hover-color: $cigi-primary-colour
+          );
+
+          li {
+            color: $cigi-medium-grey;
+          }
+        }
+
+        .card__text__more {
+          i {
+            color: $white;
+          }
+        }
+      }
+
       .card__text {
         @include media-breakpoint-only(md) {
           flex-grow: 1;
@@ -242,36 +272,6 @@ article {
           display: none;
           margin-bottom: 0.5em;
           color: $cigi-medium-grey;
-        }
-
-        .card__text__title {
-          @include link($color: $white, $hover-color: $cigi-primary-colour);
-        }
-
-        .card__text__topics {
-          @include link(
-            $color: $cigi-text-grey,
-            $hover-color: $cigi-primary-colour
-          );
-        }
-
-        .card__text__meta {
-          .card__text__people {
-            @include link(
-              $color: $cigi-light-grey,
-              $hover-color: $cigi-primary-colour
-            );
-
-            li {
-              color: $cigi-medium-grey;
-            }
-          }
-
-          .card__text__more {
-            i {
-              color: $white;
-            }
-          }
         }
       }
 
@@ -488,7 +488,7 @@ article {
 
         .card__text__topics {
           @include link(
-            $color: $cigi-text-grey,
+            $color: $cigi-medium-light-grey,
             $hover-color: $cigi-primary-colour
           );
         }

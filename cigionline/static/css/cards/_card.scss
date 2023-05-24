@@ -317,14 +317,14 @@
 
           .card__text__topics {
             @include link(
-              $color: $cigi-text-grey,
-              $hover-color: $cigi-light-grey
+              $color: $black,
+              $hover-color: $white
             );
           }
 
           .card__text__meta {
             .card__text__people {
-              @include link($color: $cigi-light-grey, $hover-color: $white);
+              @include link($color: $black, $hover-color: $white);
             }
 
             .card__text__more {
@@ -469,7 +469,12 @@
   }
 
   &.four-domains-series {
-    @include article-series-card-theme($background-color: #e5e5d9);
+    @include article-series-card-theme(
+      $background-color: #e5e5d9,
+      $color: $white,
+      $link-color: $white,
+      $topic-color: $cigi-medium-light-grey
+    );
   }
 
   &.pfpc-series {

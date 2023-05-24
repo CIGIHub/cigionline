@@ -484,6 +484,11 @@
           }
         }
       }
+      .card__text__people {
+        li {
+          color: $link-color;
+        }
+      }
     }
   }
 
