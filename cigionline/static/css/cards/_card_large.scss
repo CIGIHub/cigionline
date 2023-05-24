@@ -356,7 +356,7 @@
 
     .card__text {
       .card__text__title {
-        font-family: $card-title-font;
+        @include card-title-font;
       }
     }
   }

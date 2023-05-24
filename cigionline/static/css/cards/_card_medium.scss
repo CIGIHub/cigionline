@@ -90,8 +90,7 @@ article {
             }
 
             .card__text__title {
-              font-family: $card-title-font;
-              font-weight: 300;
+              @include card-title-font;
               font-size: 1.1em;
             }
           }
@@ -558,7 +557,7 @@ article {
           flex: 1 1 23%;
         }
         .card__text__title {
-          font-family: $card-title-font;
+          @include card-title-font;
         }
       }
     }
