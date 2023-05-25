@@ -60,6 +60,20 @@ article {
         }
       }
 
+      .card__text {
+        @include media-breakpoint-only(md) {
+          width: 100%;
+          padding-left: 0;
+        }
+      }
+
+      .card__image {
+        @include media-breakpoint-only(md) {
+          width: 100%;
+          padding-right: 0;
+        }
+      }
+
       .card__expert-info {
         display: flex;
         flex-direction: column;

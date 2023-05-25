@@ -315,6 +315,12 @@
             font-weight: 500;
           }
 
+          .card__text__description {
+            p {
+              color: $black;
+            }
+          }
+
           .card__text__topics {
             @include link(
               $color: $black,
