@@ -270,12 +270,9 @@
       @include media-breakpoint-up(lg) {
         width: 45%;
       }
-      @include media-breakpoint-up(xl) {
-      }
-      @include media-breakpoint-up(xxl) {
-      }
       align-self: center;
       padding: 0 0.5em 0 0;
+      margin-bottom: 1em;
       flex: 0 0 33.333333%;
     }
 
