@@ -268,11 +268,11 @@
         width: 50%;
       }
       @include media-breakpoint-up(lg) {
+        margin-bottom: 1em;
         width: 45%;
       }
       align-self: center;
       padding: 0 0.5em 0 0;
-      margin-bottom: 1em;
       flex: 0 0 33.333333%;
     }
 
@@ -329,6 +329,10 @@
 
     .card--small--expert__top {
       h3 {
+        @include media-breakpoint-up(md) {
+          font-size: 1.3em;
+        }
+        font-size: 1.1em;
         margin: 0;
       }
 
