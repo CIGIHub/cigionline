@@ -62,9 +62,9 @@
 
       .card__text__title {
         @include media-breakpoint-up(md) {
-          font-size: 1.5em;
+          font-size: 1.3em;
         }
-        font-size: 1.25em;
+        font-size: 1.1em;
       }
 
       .card__text__date {
@@ -128,9 +128,9 @@
           padding-bottom: 0;
         }
         @include media-breakpoint-up(md) {
-          font-size: 1.5em;
+          font-size: 1.3em;
         }
-        font-size: 1.25em;
+        font-size: 1.1em;
         padding-bottom: 1em;
       }
 
@@ -265,19 +265,16 @@
 
     .card__image {
       @include media-breakpoint-up(md) {
-        flex: none;
-        padding: 0 2em 1em;
-        flex: 0 0 50%;
+        width: 50%;
       }
       @include media-breakpoint-up(lg) {
-        padding: 0 3.25em 1em;
+        width: 45%;
       }
       @include media-breakpoint-up(xl) {
-        padding: 0 4em 1em;
       }
       @include media-breakpoint-up(xxl) {
-        padding: 0 5em 1em;
       }
+      align-self: center;
       padding: 0 0.5em 0 0;
       flex: 0 0 33.333333%;
     }
@@ -313,9 +310,9 @@
       .card--event__title {
         &.card__text__title {
           @include media-breakpoint-up(md) {
-            font-size: 1.5em;
+            font-size: 1.3em;
           }
-          font-size: 1.25em;
+          font-size: 1.1em;
           line-height: 1.1;
           margin-top: 0;
         }

@@ -41,10 +41,10 @@ article {
 
         .card__text__title {
           @include media-breakpoint-up(md) {
-            font-size: 1.5em;
+            font-size: 1.35em;
           }
           @include media-breakpoint-up(lg) {
-            font-size: 1.75em;
+            font-size: 1.6em;
           }
           font-size: 1.25em;
         }
@@ -533,10 +533,10 @@ article {
         .card--event__title {
           &.card__text__title {
             @include media-breakpoint-up(md) {
-              font-size: 1.5em;
+              font-size: 1.35em;
             }
             @include media-breakpoint-up(lg) {
-              font-size: 1.75em;
+              font-size: 1.6em;
             }
             font-size: 1.25em;
             line-height: 1.1;
