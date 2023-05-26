@@ -37,6 +37,9 @@
       @include media-breakpoint-up(md) {
         flex: 0 0 66.66666667%;
       }
+      @include media-breakpoint-up(xl) {
+        flex: 0 0 60%;
+      }
       flex: auto;
       position: relative;
 

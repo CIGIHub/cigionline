@@ -226,6 +226,14 @@
         @include media-breakpoint-up(lg) {
           min-height: 375px;
         }
+        @include media-breakpoint-up(xl) {
+          max-height: 375px;
+        }
+
+        &.card--small--social-media,
+        &.card--medium--multimedia {
+          max-height: none;
+        }
 
         .card__container {
           @include media-breakpoint-up(md) {

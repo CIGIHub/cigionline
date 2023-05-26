@@ -61,10 +61,7 @@
       flex-grow: 1;
 
       .card__text__title {
-        @include media-breakpoint-up(md) {
-          font-size: 1.3em;
-        }
-        font-size: 1.1em;
+        font-size: 0.9em;
       }
 
       .card__text__date {
@@ -127,10 +124,7 @@
         @include media-breakpoint-only(md) {
           padding-bottom: 0;
         }
-        @include media-breakpoint-up(md) {
-          font-size: 1.3em;
-        }
-        font-size: 1.1em;
+        font-size: 0.9em;
         padding-bottom: 1em;
       }
 
@@ -306,10 +300,7 @@
     .card--event--small__top {
       .card--event__title {
         &.card__text__title {
-          @include media-breakpoint-up(md) {
-            font-size: 1.3em;
-          }
-          font-size: 1.1em;
+          font-size: 0.9em;
           line-height: 1.1;
           margin-top: 0;
         }
