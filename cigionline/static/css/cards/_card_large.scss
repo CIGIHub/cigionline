@@ -173,6 +173,12 @@
             color: $white;
           }
         }
+
+        .card__text__more__container {
+          button {
+            margin: 0;
+          }
+        }
       }
     }
   }

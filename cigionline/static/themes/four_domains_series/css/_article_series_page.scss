@@ -5,6 +5,7 @@ $four-domains-series-page-bg-color: #e4e4d8;
     $background-color: $four-domains-series-page-bg-color,
     $color: $black
   );
+  @include dark-footer;
   background-color: $four-domains-series-page-bg-color;
 
   .four-domains-series-article-series-hero {

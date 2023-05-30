@@ -1,5 +1,6 @@
 .john-holmes-series-article-series {
-  @include top-bar($background-color: transparent, $color: $black);
+  @include top-bar($background-color: $white, $color: $black);
+  @include light-footer;
 
   .john-holmes-series-article-series-hero {
     @include media-breakpoint-up(xl) {
@@ -213,7 +214,7 @@
 
   .credits {
     background-color: $white;
-    padding: 3em 0 6em;
+    padding: 3em 0;
     position: relative;
     z-index: 1;
 
@@ -255,5 +256,10 @@
         }
       }
     }
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
   }
 }

@@ -394,6 +394,9 @@
 
 @mixin dark-footer {
   footer {
+    color: $white;
+    background-color: $background-dark;
+
     .footer__subscribe {
       border-bottom: 1px solid $border-grey-dark;
       border-top: 1px solid $border-grey-dark;
@@ -411,6 +414,12 @@
           }
         }
       }
+
+      button {
+        &:hover {
+          border: 1px solid $white;
+        }
+      }
     }
 
     .footer__sitemap {
@@ -419,6 +428,10 @@
       ul {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
       }
+    }
+
+    .footer__topics {
+      border-bottom: 1px solid $border-grey-dark;
     }
   }
 }
@@ -505,6 +518,10 @@
 
     .card__text__topics {
       @include link($color: $topic-color, $hover-color: $topic-hover-color);
+
+      li {
+        color: $topic-color;
+      }
     }
 
     .card__text__meta {

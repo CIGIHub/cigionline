@@ -463,23 +463,23 @@
       $background-color: $ai-primary-color,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-medium-light-grey
+      $topic-color: $cigi-light-grey
     );
   }
 
   &.john-holmes-series {
     @include article-series-card-theme(
       $background-color: $john-holmes-bg-color,
-      $topic-color: $cigi-medium-light-grey
+      $topic-color: $cigi-text-grey
     );
   }
 
   &.four-domains-series {
     @include article-series-card-theme(
       $background-color: #e5e5d9,
-      $color: $white,
-      $link-color: $white,
-      $topic-color: $cigi-medium-light-grey
+      $color: $black,
+      $link-color: $black,
+      $topic-color: $cigi-text-grey
     );
   }
 
@@ -505,7 +505,7 @@
       $background-color: $health-security-series-background-colour,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-medium-light-grey
+      $topic-color: $cigi-light-grey
     );
   }
 }
