@@ -304,8 +304,7 @@
     color: $black;
 
     .logo-container,
-    .footer-bracket,
-    .highlighted-topics-list {
+    .footer-bracket {
       display: none;
     }
 
@@ -419,6 +418,40 @@
 
       ul {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
+      }
+    }
+  }
+}
+
+@mixin light-footer-3 {
+  footer {
+    background-color: $white;
+    color: $black;
+
+    .footer__subscribe {
+      border-bottom: 1px solid $cigi-light-grey;
+      border-top: 1px solid $cigi-light-grey;
+
+      .footer__subscribe__input-wrapper {
+        border-bottom: 1px solid $cigi-light-grey;
+
+        input {
+          color: $white;
+          background-color: $white;
+          -webkit-box-shadow: 0 0 0 30px $white inset;
+
+          &::placeholder {
+            color: $cigi-text-grey;
+          }
+        }
+      }
+    }
+
+    .footer__sitemap {
+      border-bottom: 1px solid $cigi-light-grey;
+
+      ul {
+        @include link($color: $black, $hover-color: $cigi-dark-pink);
       }
     }
   }
