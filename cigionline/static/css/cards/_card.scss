@@ -1,4 +1,3 @@
-$card-title-font: $title-font-family;
 @import './card_xlarge';
 @import './card_large';
 @import './card_medium';
@@ -90,7 +89,7 @@ $card-title-font: $title-font-family;
 
     .card__text__title {
       @include link($color: $black, $hover-color: $cigi-dark-pink);
-      font-weight: 300;
+      font-weight: 400;
       margin-top: 0;
       margin-bottom: 1rem;
       line-height: 1.1;
@@ -316,13 +315,22 @@ $card-title-font: $title-font-family;
             font-weight: 500;
           }
 
+          .card__text__description {
+            p {
+              color: $black;
+            }
+          }
+
           .card__text__topics {
-            @include link($color: $cigi-text-grey, $hover-color: $cigi-light-grey);
+            @include link(
+              $color: $black,
+              $hover-color: $white
+            );
           }
 
           .card__text__meta {
             .card__text__people {
-              @include link($color: $cigi-light-grey, $hover-color: $white);
+              @include link($color: $black, $hover-color: $white);
             }
 
             .card__text__more {
@@ -455,26 +463,32 @@ $card-title-font: $title-font-family;
       $background-color: $ai-primary-color,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-light-grey
+      $topic-color: $cigi-medium-light-grey
     );
   }
 
   &.john-holmes-series {
     @include article-series-card-theme(
       $background-color: $john-holmes-bg-color,
-      $topic-color: $cigi-medium-grey
+      $topic-color: $cigi-medium-light-grey
     );
   }
 
   &.four-domains-series {
-    @include article-series-card-theme($background-color: #e5e5d9);
+    @include article-series-card-theme(
+      $background-color: #e5e5d9,
+      $color: $white,
+      $link-color: $white,
+      $topic-color: $cigi-medium-light-grey
+    );
   }
 
   &.pfpc-series {
     @include article-series-card-theme(
       $background-color: $black,
       $color: $white,
-      $link-color: $white
+      $link-color: $white,
+      $topic-color: $cigi-medium-light-grey
     );
   }
 
@@ -491,7 +505,7 @@ $card-title-font: $title-font-family;
       $background-color: $health-security-series-background-colour,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-light-grey
+      $topic-color: $cigi-medium-light-grey
     );
   }
 }

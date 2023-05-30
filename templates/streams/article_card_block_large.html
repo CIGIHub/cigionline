@@ -2,37 +2,31 @@
 
 <div class="col">
   <article class="card__container card--large card--large--article">
-    <div class="row g-3 g-md-4">
-      <div class="col-md-4 col-lg-6">
-        <div class="card__text">
-          <div>
-            {% include 'includes/cards/card_text_topics.html' %}
-            {% include 'includes/cards/card_text_title.html' %}
-            {% include 'includes/cards/card_text_description.html' %}
-          </div>
-          <div class="card__text__meta">
-            {% include 'includes/cards/card_text_people.html' %}
-            {% include 'includes/cards/card_text_more.html' %}
-          </div>
-        </div>
+    <div class="card__text">
+      <div>
+        {% include 'includes/cards/card_text_topics.html' %}
+        {% include 'includes/cards/card_text_title.html' %}
+        {% include 'includes/cards/card_text_description.html' %}
       </div>
-      <div class="col-md-8 col-lg-6">
-        <div class="card__image card__image--{{ image_type }}">
-          <a href="{{ url }}" class="feature-content-image">
-            <div class="img-wrapper">
-              {% if image_src %}
-                <img alt="{{ image_alt }}" src="{{ image_src }}" />
-              {% else %}
-                {% if image_type == 'landscape' %}
-                  {% image image fill-1440x990 %}
-                {% elif image_type == 'square' %}
-                  {% image image fill-990x990 %}
-                {% endif %}
-              {% endif %}
-            </div>
-          </a>
-        </div>
+      <div class="card__text__meta">
+        {% include 'includes/cards/card_text_people.html' %}
+        {% include 'includes/cards/card_text_more.html' %}
       </div>
+    </div>
+    <div class="card__image card__image--{{ image_type }}">
+      <a href="{{ url }}" class="feature-content-image">
+        <div class="img-wrapper">
+          {% if image_src %}
+            <img alt="{{ image_alt }}" src="{{ image_src }}" />
+          {% else %}
+            {% if image_type == 'landscape' %}
+              {% image image fill-1440x990 %}
+            {% elif image_type == 'square' %}
+              {% image image fill-990x990 %}
+            {% endif %}
+          {% endif %}
+        </div>
+      </a>
     </div>
   </article>
 </div>

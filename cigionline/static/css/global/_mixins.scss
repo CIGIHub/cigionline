@@ -484,6 +484,11 @@
           }
         }
       }
+      .card__text__people {
+        li {
+          color: $link-color;
+        }
+      }
     }
   }
 
@@ -492,4 +497,9 @@
       background-color: $background-color;
     }
   }
+}
+
+@mixin card-title-font {
+  font-weight: 300;
+  font-family: $title-font-family;
 }

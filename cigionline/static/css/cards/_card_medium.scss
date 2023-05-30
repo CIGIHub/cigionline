@@ -40,8 +40,11 @@ article {
         }
 
         .card__text__title {
+          @include media-breakpoint-up(md) {
+            font-size: 1.35em;
+          }
           @include media-breakpoint-up(lg) {
-            font-size: 1.3em;
+            font-size: 1.6em;
           }
           font-size: 1.25em;
         }
@@ -54,6 +57,20 @@ article {
           @include media-breakpoint-up(md) {
             border: 0;
           }
+        }
+      }
+
+      .card__text {
+        @include media-breakpoint-only(md) {
+          width: 100%;
+          padding-left: 0;
+        }
+      }
+
+      .card__image {
+        @include media-breakpoint-only(md) {
+          width: 100%;
+          padding-right: 0;
         }
       }
 
@@ -70,7 +87,6 @@ article {
             @include media-breakpoint-down(md) {
               margin-bottom: 0;
             }
-            font-size: clamp(1.1em, 3vw, 1.3em);
             margin-bottom: 0.25rem;
           }
         }
@@ -88,8 +104,7 @@ article {
             }
 
             .card__text__title {
-              font-family: $card-title-font;
-              font-weight: 300;
+              @include card-title-font;
               font-size: 1.1em;
             }
           }
@@ -227,6 +242,36 @@ article {
         }
       }
 
+      .card__text__title {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+      }
+
+      .card__text__topics {
+        @include link(
+          $color: $cigi-text-grey,
+          $hover-color: $cigi-primary-colour
+        );
+      }
+
+      .card__text__meta {
+        .card__text__people {
+          @include link(
+            $color: $cigi-light-grey,
+            $hover-color: $cigi-primary-colour
+          );
+
+          li {
+            color: $cigi-medium-grey;
+          }
+        }
+
+        .card__text__more {
+          i {
+            color: $white;
+          }
+        }
+      }
+
       .card__text {
         @include media-breakpoint-only(md) {
           flex-grow: 1;
@@ -240,37 +285,7 @@ article {
           }
           display: none;
           margin-bottom: 0.5em;
-          color: $cigi-medium-grey;
-        }
-
-        .card__text__title {
-          @include link($color: $white, $hover-color: $cigi-primary-colour);
-        }
-
-        .card__text__topics {
-          @include link(
-            $color: $cigi-text-grey,
-            $hover-color: $cigi-primary-colour
-          );
-        }
-
-        .card__text__meta {
-          .card__text__people {
-            @include link(
-              $color: $cigi-light-grey,
-              $hover-color: $cigi-primary-colour
-            );
-
-            li {
-              color: $cigi-medium-grey;
-            }
-          }
-
-          .card__text__more {
-            i {
-              color: $white;
-            }
-          }
+          color: $cigi-light-grey;
         }
       }
 
@@ -487,7 +502,7 @@ article {
 
         .card__text__topics {
           @include link(
-            $color: $cigi-text-grey,
+            $color: $cigi-medium-light-grey,
             $hover-color: $cigi-primary-colour
           );
         }
@@ -517,8 +532,13 @@ article {
       .card--event__top {
         .card--event__title {
           &.card__text__title {
-            font-size: clamp(1.1em, 3vw, 1.3em);
-            font-weight: 300;
+            @include media-breakpoint-up(md) {
+              font-size: 1.35em;
+            }
+            @include media-breakpoint-up(lg) {
+              font-size: 1.6em;
+            }
+            font-size: 1.25em;
             line-height: 1.1;
           }
         }
@@ -557,7 +577,7 @@ article {
           flex: 1 1 23%;
         }
         .card__text__title {
-          font-family: $card-title-font;
+          @include card-title-font;
         }
       }
     }
