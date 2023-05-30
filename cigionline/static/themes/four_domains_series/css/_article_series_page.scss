@@ -157,4 +157,12 @@ $four-domains-series-page-bg-color: #e4e4d8;
       }
     }
   }
+
+  footer {
+    padding-top: 3em;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
+  }
 }
