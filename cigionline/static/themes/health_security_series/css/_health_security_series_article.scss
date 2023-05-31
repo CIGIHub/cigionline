@@ -1,5 +1,8 @@
 .health-security-series-article {
-  @include top-bar($background-color: transparent, $background-color-scrolled: $black);
+  @include top-bar(
+    $background-color: transparent,
+    $background-color-scrolled: $black
+  );
 
   .health-security-series-article-hero {
     background-position: center;
@@ -22,7 +25,12 @@
 
     &::after {
       @include media-breakpoint-up(md) {
-        background: linear-gradient(to bottom, $health-security-series-gradient-top, $health-security-series-gradient-bottom, transparent);
+        background: linear-gradient(
+          to bottom,
+          $health-security-series-gradient-top,
+          $health-security-series-gradient-bottom,
+          transparent
+        );
         height: 85%;
       }
       background: $health-security-series-hero-background-colour;
@@ -159,6 +167,14 @@
   .stream-block-external-quote {
     blockquote {
       border-left: 5px solid $health-security-series-background-colour;
+    }
+  }
+
+  footer {
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
     }
   }
 }

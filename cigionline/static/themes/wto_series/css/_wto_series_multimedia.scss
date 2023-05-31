@@ -1,3 +1,15 @@
 .wto-series-multimedia {
-  background-color: $wto-series-background-colour;
+  .wto-series-in-the-series {
+    background-color: $wto-series-background-colour;
+    padding-top: 3em;
+    margin: 0;
+  }
+
+  footer {
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
+  }
 }

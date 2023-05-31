@@ -1,3 +1,11 @@
 .after-covid-series-multimedia {
-  @include light-footer;
+  @include dark-footer;
+
+  footer {
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
+  }
 }
