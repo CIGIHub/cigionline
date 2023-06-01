@@ -264,11 +264,15 @@
         text-align: center;
       }
 
-      .topics {
+      .card__text__topics {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
         display: flex;
         justify-content: center;
         margin-bottom: 0.5em;
+
+        li {
+          color: $white;
+        }
       }
     }
   }
@@ -404,6 +408,15 @@
       font-weight: 400;
       margin-bottom: 0.7em;
       text-transform: none;
+    }
+  }
+
+  footer {
+    position: relative;
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
     }
   }
 }

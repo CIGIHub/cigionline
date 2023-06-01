@@ -58,6 +58,7 @@
     article {
       break-inside: avoid;
       margin-bottom: 2em;
+      position: relative;
 
       .article-title {
         color: $cyber-series-text-grey;
