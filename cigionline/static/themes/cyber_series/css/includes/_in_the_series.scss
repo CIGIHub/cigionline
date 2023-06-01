@@ -13,8 +13,13 @@
   }
 
   .cyber-series-in-the-series-title {
+    position: relative;
+
     h3 {
-      @include link($color: $cyber-series-primary-colour, $hover-color: $cyber-series-primary-colour);
+      @include link(
+        $color: $cyber-series-primary-colour,
+        $hover-color: $cyber-series-primary-colour
+      );
       border-top: 0;
       font-family: $cyber-font;
       font-size: 1.5em;
@@ -23,7 +28,11 @@
       width: 60%;
 
       span {
-        background-image: linear-gradient(to right, $cyber-series-in-the-series-title-background 0%, $cyber-series-in-the-series-title-background 100%);
+        background-image: linear-gradient(
+          to right,
+          $cyber-series-in-the-series-title-background 0%,
+          $cyber-series-in-the-series-title-background 100%
+        );
         background-position: 0 260%;
         background-repeat: repeat-x;
         background-size: 100% 1em;
@@ -66,7 +75,10 @@
         font-size: 0.875em;
 
         a {
-          background-image: linear-gradient(transparent calc(100% - 2px), $cyber-series-primary-colour 5px);
+          background-image: linear-gradient(
+            transparent calc(100% - 2px),
+            $cyber-series-primary-colour 5px
+          );
           background-repeat: no-repeat;
           background-size: 0% 100%;
           color: $white;
@@ -104,7 +116,10 @@
         text-transform: uppercase;
 
         span {
-          @include link($color: $cyber-series-primary-colour, $hover-color: $cyber-series-primary-colour);
+          @include link(
+            $color: $cyber-series-primary-colour,
+            $hover-color: $cyber-series-primary-colour
+          );
           @include slash-separated($color: $cyber-series-primary-colour);
         }
       }

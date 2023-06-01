@@ -1,5 +1,9 @@
 .cyber-series-article {
-  @include top-bar($background-color: $cyber-series-background-colour, $color: $black, $position: relative);
+  @include top-bar(
+    $background-color: $cyber-series-background-colour,
+    $color: $black,
+    $position: relative
+  );
   background-color: $cyber-series-background-colour;
 
   main {
@@ -78,10 +82,10 @@
       font-family: 'interstate-mono', sans-serif;
       font-size: 1.5em;
       line-height: 1.325em;
-      margin: .5em 0;
+      margin: 0.5em 0;
 
       span {
-        animation: blink-border .75s step-end infinite;
+        animation: blink-border 0.75s step-end infinite;
         border-right: 1px solid $black;
       }
     }
@@ -145,7 +149,7 @@
     bottom: -3em;
     display: block;
     height: 900px;
-    opacity: .5;
+    opacity: 0.5;
     position: absolute;
     width: 100%;
     z-index: -100;
@@ -184,7 +188,11 @@
 
   .article-works-cited {
     h2 {
-      background-image: linear-gradient(to right, $cyber-series-highlight 0%, $cyber-series-highlight 100%);
+      background-image: linear-gradient(
+        to right,
+        $cyber-series-highlight 0%,
+        $cyber-series-highlight 100%
+      );
       background-position: 0 30%;
       background-repeat: repeat-x;
       background-size: 100% 0.75rem;
@@ -201,7 +209,11 @@
   }
 
   .drop-caps {
-    background-image: linear-gradient(to right, $cyber-series-primary-colour 0%, $cyber-series-primary-colour 100%);
+    background-image: linear-gradient(
+      to right,
+      $cyber-series-primary-colour 0%,
+      $cyber-series-primary-colour 100%
+    );
     background-position: 0 150%;
     background-repeat: repeat-x;
     background-size: 100% 3rem;
@@ -209,9 +221,9 @@
     float: left;
     font-size: 4.25em;
     font-weight: 500;
-    line-height: .95em;
-    margin-right: .1em;
-    padding: 0 .1em .1em;
+    line-height: 0.95em;
+    margin-right: 0.1em;
+    padding: 0 0.1em 0.1em;
     text-decoration: underline;
   }
 
@@ -257,7 +269,11 @@
 
   .about-the-author {
     h3 {
-      background-image: linear-gradient(to right, $cyber-series-highlight 0%, $cyber-series-highlight 100%);
+      background-image: linear-gradient(
+        to right,
+        $cyber-series-highlight 0%,
+        $cyber-series-highlight 100%
+      );
       background-position: 0 70%;
       background-repeat: repeat-x;
       background-size: 100%;
@@ -279,7 +295,11 @@
 
   .highlight-title-block {
     span {
-      background-image: linear-gradient(to right, $cyber-series-primary-colour 0%, $cyber-series-primary-colour 100%);
+      background-image: linear-gradient(
+        to right,
+        $cyber-series-primary-colour 0%,
+        $cyber-series-primary-colour 100%
+      );
       background-position: 0 20%;
       background-repeat: repeat-x;
       background-size: 100% 0.75rem;
@@ -292,6 +312,15 @@
 
     h2 {
       margin: 2em 0 1em;
+    }
+  }
+
+  footer {
+    position: relative;
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
     }
   }
 }

@@ -116,4 +116,13 @@
       }
     }
   }
+
+  footer {
+    position: relative;
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
+  }
 }
