@@ -6,3 +6,13 @@ $longform-series-body-color: #ebe9e5;
 
 @import './longform_article_series';
 @import './longform_article';
+
+footer {
+  background-color: $white;
+  position: relative;
+  padding-top: 2em;
+
+  .footer__subscribe {
+    border-top: 0;
+  }
+}
