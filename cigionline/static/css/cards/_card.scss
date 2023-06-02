@@ -522,7 +522,11 @@
     );
   }
 
-  &.indigenous-lands-series {
+  &.indigenous-lands-series,
+  &.women-and-trade-series,
+  &.longform,
+  &.data-series,
+  &.innovation-series {
     @include article-series-card-theme($background-color: $previous-body-bg);
   }
 
