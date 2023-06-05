@@ -12,11 +12,26 @@ $data-series-background-gradient: #e0ded9;
 @import './includes/in_the_series';
 
 .data-series-theme {
-
   h2,
   h3,
   h4,
   h5 {
     font-family: 'din-condensed', sans-serif;
+  }
+
+  footer {
+    position: relative;
+    padding-top: 2em;
+
+    h2 {
+      font-family: $primary-font-family;
+      font-size: 1em;
+      text-transform: none;
+      font-weight: 500;
+    }
+
+    .footer__subscribe {
+      border-top: 0;
+    }
   }
 }

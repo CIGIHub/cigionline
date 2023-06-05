@@ -3,6 +3,7 @@
     $background-color: transparent,
     $position: absolute,
   );
+  @include dark-footer;
 
   .cyber-series-article-series-hero {
     height: 100vh;
@@ -13,7 +14,7 @@
       margin-right: -50%;
       max-width: 600px;
       position: fixed;
-      top: calc(12vh + 120px);
+      top: calc(12vh + 10em);
       transform: translate(-50%, -50%);
       width: 90vw;
 
@@ -62,6 +63,10 @@
           font-size: 2.65em;
         }
       }
+
+      .card__text__topics {
+        @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
+      }
     }
 
     .cyber-series-article-series-hero-image {
@@ -109,6 +114,15 @@
         cursor: pointer;
         margin-left: 0.5em;
       }
+    }
+  }
+
+  footer {
+    position: relative;
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
     }
   }
 }

@@ -10,6 +10,7 @@ $blockquote-color-infrastructure: #217f50;
 
 .four-domains-series-article {
   @include top-bar($background-color: $four-domains-bg-color, $color: $black);
+  @include dark-footer;
   background-color: $four-domains-bg-color;
 
   &.content {
@@ -254,5 +255,13 @@ $blockquote-color-infrastructure: #217f50;
 
   .in-the-series {
     padding-top: 0;
+  }
+
+  footer {
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
   }
 }

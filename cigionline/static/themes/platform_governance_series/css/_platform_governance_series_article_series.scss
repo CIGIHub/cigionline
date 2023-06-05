@@ -5,6 +5,7 @@
     $background-color: transparent,
     $position: absolute,
   );
+  @include light-footer;
 
   .platform-governance-series-article-series-hero {
     background-position: center;
@@ -111,7 +112,7 @@
             margin-bottom: 1.25em;
           }
 
-          .topics {
+          .card__text__topics {
             @include link($color: $white, $hover-color: $platform-governance-series-accent-colour);
             margin-bottom: 0.5em;
           }
@@ -345,6 +346,15 @@
           margin-top: 9px;
         }
       }
+    }
+  }
+
+  footer {
+    position: relative;
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
     }
   }
 }

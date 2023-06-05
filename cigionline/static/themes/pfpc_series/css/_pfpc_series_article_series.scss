@@ -1,5 +1,6 @@
 .pfpc-series-article-series {
   @include top-bar($background-color: transparent);
+  @include dark-footer;
   background-color: $black;
 
   hr {
@@ -242,5 +243,9 @@
         }
       }
     }
+  }
+
+  footer {
+    background-color: $black;
   }
 }

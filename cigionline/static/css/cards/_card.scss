@@ -322,10 +322,7 @@
           }
 
           .card__text__topics {
-            @include link(
-              $color: $black,
-              $hover-color: $white
-            );
+            @include link($color: $black, $hover-color: $white);
           }
 
           .card__text__meta {
@@ -463,23 +460,23 @@
       $background-color: $ai-primary-color,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-medium-light-grey
+      $topic-color: $cigi-light-grey
     );
   }
 
   &.john-holmes-series {
     @include article-series-card-theme(
       $background-color: $john-holmes-bg-color,
-      $topic-color: $cigi-medium-light-grey
+      $topic-color: $cigi-text-grey
     );
   }
 
   &.four-domains-series {
     @include article-series-card-theme(
       $background-color: #e5e5d9,
-      $color: $white,
-      $link-color: $white,
-      $topic-color: $cigi-medium-light-grey
+      $color: $black,
+      $link-color: $black,
+      $topic-color: $cigi-text-grey
     );
   }
 
@@ -496,7 +493,8 @@
     @include article-series-card-theme(
       $background-color: #1f2024,
       $color: $white,
-      $link-color: $white
+      $link-color: $white,
+      $topic-color: $cigi-light-grey
     );
   }
 
@@ -505,7 +503,40 @@
       $background-color: $health-security-series-background-colour,
       $color: $white,
       $link-color: $white,
-      $topic-color: $cigi-medium-light-grey
+      $topic-color: $cigi-light-grey
+    );
+  }
+
+  &.after-covid-series {
+    @include article-series-card-theme(
+      $background-color: $black,
+      $color: $white,
+      $link-color: $white,
+      $topic-color: $cigi-light-grey
+    );
+  }
+
+  &.wto-series {
+    @include article-series-card-theme(
+      $background-color: $wto-series-background-colour
+    );
+  }
+
+  &.indigenous-lands-series,
+  &.women-and-trade-series,
+  &.longform,
+  &.data-series,
+  &.innovation-series {
+    @include article-series-card-theme($background-color: $previous-body-bg);
+  }
+
+  &.platform-governance-series {
+    @include article-series-card-theme(
+      $background-color: #0d6559,
+      $color: $white,
+      $link-hover-color: #cdb552,
+      $topic-color: $cigi-light-grey,
+      $topic-hover-color: #cdb552
     );
   }
 }

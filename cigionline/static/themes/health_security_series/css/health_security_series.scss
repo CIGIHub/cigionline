@@ -42,7 +42,3 @@ $meta-grey: #c7c7c5;
 @import './health_security_series_multimedia';
 @import './includes/health_security_series_rings';
 @import './includes/in_the_series';
-
-.health-security-series {
-  @include light-footer;
-}
