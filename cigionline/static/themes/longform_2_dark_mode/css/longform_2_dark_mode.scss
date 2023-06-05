@@ -89,6 +89,12 @@
       }
     }
   }
+
+  footer {
+    background-color: $white;
+    position: relative;
+    z-index: 3;
+  }
 }
 
 section {

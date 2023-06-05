@@ -204,6 +204,16 @@ $longform-2-background-color: #f2f0ea;
       }
     }
   }
+
+  footer {
+    background-color: $white;
+    position: relative;
+    z-index: 3;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
+  }
 }
 
 section {
