@@ -1,0 +1,29 @@
+.stream-block-additional-file-block {
+  .img-container {
+    @include media-breakpoint-only(md) {
+      display: flex;
+      align-items: center;
+    }
+  }
+  figure {
+    @include media-breakpoint-down(sm) {
+      margin-bottom: 1em;
+    }
+    margin: 0;
+  }
+
+  .stream-block-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h3 {
+      font-size: 2em;
+    }
+
+    .stream-block-description {
+      line-height: 1.25;
+      color: $cigi-text-grey;
+    }
+  }
+}

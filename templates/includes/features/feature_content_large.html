@@ -4,7 +4,7 @@
   {% define additional_classes|add:" poster" as additional_classes %}
 {% endif %}
 
-<article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %}{{ additional_classes }}">
+<article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %} {{ additional_classes }}">
   <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}" class="feature-content-image">
     <div class="img-wrapper">
       {% if poster %}

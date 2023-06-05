@@ -1080,6 +1080,19 @@ class AdditionalDisclaimerBlock(blocks.StructBlock):
         help_text = 'Additional disclaimer if necessary; placed in order above standard CIGI disclaimer.'
 
 
+class AdditionalFileBlock(blocks.StructBlock):
+    file = DocumentChooserBlock(required=True)
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    image = ImageChooserBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Additional File'
+        help_text = 'Additional files to be used only if the theme requires them.'
+        template = 'streams/additional_file_block.html'
+
+
 class SeriesItemImageBlock(blocks.StructBlock):
     class PositionChoices(models.TextChoices):
         top = ('top', 'Top')
@@ -1115,3 +1128,14 @@ class LineBreakBlock(blocks.StructBlock):
         icon = 'horizontalrule'
         label = 'Line Break'
         template = 'streams/line_break_block.html'
+
+
+class SurveyFindingsCountryBlock(blocks.StructBlock):
+    country = blocks.CharBlock(required=True)
+    image = ImageChooserBlock(required=True)
+    file = DocumentChooserBlock(required=True)
+
+    class Meta:
+        icon = 'link'
+        label = 'Survey Findings Country'
+        template = 'streams/survey_findings_country_block.html'

@@ -1,0 +1,116 @@
+@import '../../../css/global/mixins';
+@import '../../../css/includes/swiper';
+
+body {
+  @include top-bar(
+    $background-color: transparent,
+    $color: $black,
+    $background-color-scrolled: $black,
+    $color-scrolled: $white
+  );
+
+  section {
+    &.hero {
+      background-size: cover;
+      background-position: 80%;
+      background-repeat: no-repeat;
+
+      .hero-container {
+        .hero-main {
+          h1,
+          p {
+            color: $black;
+          }
+
+          h1 {
+            @include media-breakpoint-up(lg) {
+              font-size: 3.5em;
+            }
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    &.featured {
+      .stream-block-title {
+        font-size: 1.5em;
+      }
+
+      .feature-content-large {
+        &.poster {
+          .feature-content-image {
+            .img-wrapper {
+              margin: 0;
+            }
+          }
+        }
+
+        .feature-content-text {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .feature-content-title {
+            @include media-breakpoint-up(lg) {
+              font-size: 1.5em;
+            }
+            font-size: 1.25em;
+          }
+        }
+      }
+    }
+
+    &.ogbv-survey-findings {
+      margin: 3em 0;
+      padding: 3em 0;
+      background-color: $cigi-light-grey-bg;
+
+      .swiper-container {
+        padding-top: 3em !important;
+      }
+
+      .survey-findings-country {
+        img {
+          margin-bottom: 1em;
+        }
+        button {
+          margin: 0 0.5em 0 0;
+        }
+
+        h3 {
+          margin: 0;
+        }
+      }
+    }
+
+    &.ogbv-resources {
+      h2 {
+        margin-bottom: 2em;
+      }
+
+      article {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1em 0;
+
+        h3 {
+          width: 66%;
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    &.ogbv-acknowledgements {
+      margin-top: 3em;
+
+      .img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+    }
+  }
+}

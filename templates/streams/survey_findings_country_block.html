@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}
+<article class="survey-findings-country">
+  {% image self.image width-800 %}
+  <div class="d-flex align-items-center">
+    <a href="{{ self.file.file.url }}">
+      <button class="button-action button-square">
+        <i class="fa fas fa-download"></i>
+      </button>
+    </a>
+    <h3>
+      {{ self.country }}
+    </h3>
+  </div>
+</article>
