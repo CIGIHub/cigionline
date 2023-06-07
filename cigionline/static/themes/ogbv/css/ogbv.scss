@@ -34,6 +34,7 @@ body {
 
     &.featured {
       .stream-block-title {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
         font-size: 1.5em;
       }
 
@@ -79,6 +80,7 @@ body {
         }
 
         h3 {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
           margin: 0;
         }
       }

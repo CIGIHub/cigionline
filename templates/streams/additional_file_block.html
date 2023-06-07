@@ -4,19 +4,31 @@
   <article class="stream-block-additional-file-block row">
     {% if self.image %}
       <div class="col-12 col-md-6 col-lg-4 img-container">
-        <figure>
-          {% if self.image.file.url|file_extension == '.gif' %}
-            <img src="{{self.image.file.url}}" alt="{{self.image.caption}}" />
-          {% else %}
-            {% image self.image width-800 %}
-          {% endif %}
-        </figure>
+        {% if self.page %}
+          <a href="{{ self.page.url }}">
+        {% else %}
+          <a href="{{ self.file.file.url }}">
+        {% endif %}
+          <figure>
+            {% if self.image.file.url|file_extension == '.gif' %}
+              <img src="{{self.image.file.url}}" alt="{{self.image.caption}}" />
+            {% else %}
+              {% image self.image width-800 %}
+            {% endif %}
+          </figure>
+        </a>
       </div>
     {% endif %}
     <div class="stream-block-text col-12 col-md-6 col-lg-8">
       <div>
         <h3 class="stream-block-title">
-          {{ self.title }}
+          {% if self.page %}
+            <a href="{{ self.page.url }}">
+          {% else %}
+            <a href="{{ self.file.file.url }}">
+          {% endif %}
+            {{ self.title }}
+          </a>
         </h3>
         {% if self.description %}
           <div class="stream-block-description">

@@ -1082,6 +1082,7 @@ class AdditionalDisclaimerBlock(blocks.StructBlock):
 
 class AdditionalFileBlock(blocks.StructBlock):
     file = DocumentChooserBlock(required=True)
+    page = blocks.PageChooserBlock(required=False)
     title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)
     image = ImageChooserBlock(required=False)
