@@ -21,6 +21,7 @@
     {% endif %}
     <div class="stream-block-text col-12 col-md-6 col-lg-8">
       <div>
+        {% include 'includes/topics.html' with topics=self.page.specific.topics_sorted %}
         <h3 class="stream-block-title">
           {% if self.page %}
             <a href="{{ self.page.url }}">
