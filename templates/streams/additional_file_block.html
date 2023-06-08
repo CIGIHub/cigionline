@@ -21,7 +21,9 @@
     {% endif %}
     <div class="stream-block-text col-12 col-md-6 col-lg-8">
       <div>
-        {% include 'includes/topics.html' with topics=self.page.specific.topics_sorted %}
+        {% if self.page %}
+          {% include 'includes/topics.html' with topics=self.page.specific.topics_sorted %}
+        {% endif %}
         <h3 class="stream-block-title">
           {% if self.page %}
             <a href="{{ self.page.url }}">
@@ -38,8 +40,10 @@
         {% endif %}
       </div>
       <div>
-        {% include 'includes/features/feature_content_people.html' with authors=self.page.specific.authors.all %}
-        <div class="feature-content-date meta">{{ self.page.specific.publishing_date|date:"F j, Y" }}</div>
+        {% if self.page %}
+          {% include 'includes/features/feature_content_people.html' with authors=self.page.specific.authors.all %}
+          <div class="feature-content-date meta">{{ self.page.specific.publishing_date|date:"F j, Y" }}</div>
+        {% endif %}
         {% if self.file %}
           <div class="stream-block-cta">
             <a href="{{ self.file.file.url }}">
