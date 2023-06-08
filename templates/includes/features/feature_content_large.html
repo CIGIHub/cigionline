@@ -40,8 +40,8 @@
     <div>
       {% include 'includes/topics.html' with topics=content.topics_sorted %}
       {% include 'includes/features/feature_content_title.html' %}
+      {% include 'includes/features/feature_content_subtitle.html' %}
     </div>
-    {% include 'includes/features/feature_content_subtitle.html' %}
     <div>
       {% if content|page_type == 'opinion-series' %}
         {% include 'includes/features/feature_content_people.html' with authors=content.series_authors %}
