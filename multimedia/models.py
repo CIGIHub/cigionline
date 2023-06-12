@@ -168,6 +168,12 @@ class MultimediaPage(
         related_name='+',
         verbose_name='Square image',
     )
+    length = models.CharField(
+        blank=True,
+        max_length=8,
+        verbose_name='Length',
+        help_text='| CIGI 3.0 field | The length of the multimedia source in minutes and seconds (e.g. 1:23).',
+    )
     multimedia_series = models.ForeignKey(
         'multimedia.MultimediaSeriesPage',
         null=True,
@@ -234,6 +240,11 @@ class MultimediaPage(
         blank=True,
         use_json_field=True,
     )
+    vimeo_url = models.URLField(
+        blank=True,
+        verbose_name='Vimeo URL',
+        help_text='| CIGI 3.0 field | The URL of the multimedia source from Vimeo.',
+    )
     youtube_id = models.CharField(
         blank=True,
         max_length=32,
@@ -273,6 +284,8 @@ class MultimediaPage(
                 FieldPanel('multimedia_type'),
                 FieldPanel('publishing_date'),
                 FieldPanel('multimedia_url'),
+                FieldPanel('vimeo_url'),
+                FieldPanel('length'),
             ],
             heading='General Information',
             classname='collapsible collapsed',
