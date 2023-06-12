@@ -172,7 +172,7 @@ class MultimediaPage(
         blank=True,
         max_length=8,
         verbose_name='Length',
-        help_text='The length of the multimedia source in minutes and seconds (e.g. 1:23).',
+        help_text='| CIGI 3.0 field | The length of the multimedia source in minutes and seconds (e.g. 1:23).',
     )
     multimedia_series = models.ForeignKey(
         'multimedia.MultimediaSeriesPage',
@@ -243,7 +243,7 @@ class MultimediaPage(
     vimeo_url = models.URLField(
         blank=True,
         verbose_name='Vimeo URL',
-        help_text='The URL of the multimedia source from Vimeo.',
+        help_text='| CIGI 3.0 field | The URL of the multimedia source from Vimeo.',
     )
     youtube_id = models.CharField(
         blank=True,
