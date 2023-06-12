@@ -12,7 +12,7 @@
       </div>
     {% endif %}
     {% for block in body %}
-      {% if block.block_type != 'additional_disclaimer' %}
+      {% if block.block_type != 'additional_disclaimer' and block.block_type != 'additional_file' %}
         {% include_block block %}
       {% endif %}
     {% endfor %}

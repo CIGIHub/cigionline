@@ -4,7 +4,7 @@
   {% define additional_classes|add:" poster" as additional_classes %}
 {% endif %}
 
-<article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %}{{ additional_classes }}">
+<article class="feature-content feature-content-large{% if dark_mode %} dark-mode{% endif %} {{ additional_classes }}">
   <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}" class="feature-content-image">
     <div class="img-wrapper">
       {% if poster %}
@@ -37,21 +37,25 @@
   </a>
 
   <div class="feature-content-text {% if not poster %}center-text{% endif %}">
-    {% include 'includes/topics.html' with topics=content.topics_sorted %}
-    {% include 'includes/features/feature_content_title.html' %}
-    {% include 'includes/features/feature_content_subtitle.html' %}
-    {% if content|page_type == 'opinion-series' %}
-      {% include 'includes/features/feature_content_people.html' with authors=content.series_authors %}
-    {% else %}
-      {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
-    {% endif %}
-    {% if content.from_the_archives %}
-      <div class="feature-content-from-the-archives">FROM THE ARCHIVES</div>
-    {% else %}
-      <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
-    {% endif %}
-    {% if cta %}
-      {% include 'includes/features/feature_content_cta.html' with cta_pdf=cta_pdf %}
-    {% endif %}
+    <div>
+      {% include 'includes/topics.html' with topics=content.topics_sorted %}
+      {% include 'includes/features/feature_content_title.html' %}
+      {% include 'includes/features/feature_content_subtitle.html' %}
+    </div>
+    <div>
+      {% if content|page_type == 'opinion-series' %}
+        {% include 'includes/features/feature_content_people.html' with authors=content.series_authors %}
+      {% else %}
+        {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+      {% endif %}
+      {% if content.from_the_archives %}
+        <div class="feature-content-from-the-archives">FROM THE ARCHIVES</div>
+      {% else %}
+        <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
+      {% endif %}
+      {% if cta %}
+        {% include 'includes/features/feature_content_cta.html' with cta_pdf=cta_pdf %}
+      {% endif %}
+    </div>
   </div>
 </article>

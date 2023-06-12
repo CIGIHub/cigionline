@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from streams.blocks import AdditionalFileBlock, SurveyFindingsCountryBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -49,6 +50,7 @@ class ProjectPage(
             BasicPageAbstract.body_poster_block,
             BasicPageAbstract.body_recommended_block,
             BasicPageAbstract.body_text_border_block,
+            ('additional_file', AdditionalFileBlock()),
         ],
         blank=True,
         use_json_field=True,
@@ -91,6 +93,14 @@ class ProjectPage(
         ],
         blank=True,
         use_json_field=True,
+    )
+    survey_findings = StreamField(
+        [
+            ('country', SurveyFindingsCountryBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+        help_text='For OGBV theme only',
     )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -144,6 +154,13 @@ class ProjectPage(
             heading='Featured Content',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel('survey_findings'),
+            ],
+            heading='Theme Content',
+            classname='collapsible collapsed',
+        )
     ]
 
     promote_panels = Page.promote_panels + [
@@ -180,10 +197,19 @@ class ProjectPage(
             return f'themes/{self.get_theme_dir()}/project_page.html'
         return standard_template
 
+    def get_additional_files(self):
+        body = self.body
+        additional_files = []
+        for block in body:
+            if block.block_type == 'additional_file':
+                additional_files.append(block.value)
+        return additional_files
+
     def get_context(self, request):
         context = super().get_context(request)
 
         context['featured_pages'] = self.get_featured_pages()
+        context['additional_files'] = self.get_additional_files()
         return context
 
     class Meta:
