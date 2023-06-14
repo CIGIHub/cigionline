@@ -186,11 +186,6 @@ ReactDOM.render(
         colTitle: 'Topic',
         colClass: 'topics',
       },
-      {
-        colSpan: 1,
-        colTitle: 'More',
-        colClass: 'more',
-      },
     ]}
   />,
   document.getElementById('events-search-table'),

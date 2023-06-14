@@ -101,15 +101,14 @@
               }
 
               i {
-                &:first-child {
-                  transform: rotate(90deg);
-                }
-              }
-
-              i {
                 transition: 0.25s ease;
                 position: absolute;
                 top: 0.5em;
+                height: 12px;
+
+                &:first-child {
+                  transform: rotate(90deg);
+                }
               }
             }
           }

@@ -72,12 +72,14 @@
                 <i class="fas fa-plus"></i>
               </button>
             </a>
-            <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
-              <button type="button" class="card--event__button--register button--rounded">
-                Register Now
-                <i class="fas fa-angle-right"></i>
-              </button>
-            </a>
+            {% if registration_url %}
+              <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+                <button type="button" class="card--event__button--register button--rounded">
+                  Register Now
+                  <i class="fas fa-angle-right"></i>
+                </button>
+              </a>
+            {% endif %}
           </div>
         {% endif %}
       </div>

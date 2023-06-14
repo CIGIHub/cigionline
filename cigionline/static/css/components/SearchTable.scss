@@ -203,6 +203,12 @@
     &.loading {
       opacity: 0.5;
     }
+
+    th {
+      &.search-table__results__row__more {
+        text-align: right;
+      }
+    }
   }
 
   .loading-spinner {
@@ -405,6 +411,12 @@
       font-size: 0.875em;
       font-weight: 300;
       margin-bottom: 0.5em;
+    }
+
+    .search-bar-sort-list {
+      button {
+        text-transform: capitalize;
+      }
     }
 
     .dropdown-menu {
