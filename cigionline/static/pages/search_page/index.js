@@ -31,6 +31,7 @@ ReactDOM.render(
       'expertise_list',
       'image_poster_url',
       'image_hero_url',
+      'image_hero_wide_url',
       'image_square_url',
       'publishing_date',
       'search_result_description',

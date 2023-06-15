@@ -38,16 +38,18 @@ const ArticleSearchResultCard = (props) => {
         </div>
         <div className="card__text__meta">
           <div>
-            <ul className="custom-text-list card__text__people">
-              {row.authors.slice(0, 3).map((author) => (
-                <li key={`${row.id}-author-${author.id}`}>
-                  <a href={author.url}>{author.title}</a>
-                </li>
-              ))}
-              {row.authors.length > 3 && (
-                <li key={`${row.id}-author-more`}>And more</li>
-              )}
-            </ul>
+            {row.authors && (
+              <ul className="custom-text-list card__text__people">
+                {row.authors.slice(0, 3).map((author) => (
+                  <li key={`${row.id}-author-${author.id}`}>
+                    <a href={author.url}>{author.title}</a>
+                  </li>
+                ))}
+                {row.authors.length > 3 && (
+                  <li key={`${row.id}-author-more`}>And more</li>
+                )}
+              </ul>
+            )}
           </div>
           <CardTextMore
             title={row.title}
