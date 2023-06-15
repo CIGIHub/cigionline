@@ -15,8 +15,8 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <article class="card__container card--xlarge card--xlarge--multimedia card--multimedia">
-            {% with featured_multimedia_1 as page %}
+          {% with featured_multimedia_1 as page %}
+            <article class="card__container card--xlarge card--xlarge--multimedia card--multimedia {% if page.vimeo_url %}has-vimeo{% endif %}">
               <div class="card__image">
                 <div class="img-wrapper">
                   {% if page.image_hero %}
@@ -51,8 +51,8 @@
                   {% include 'includes/cards/card_text_more.html' with url=page.url %}
                 </div>
               </div>
-            {% endwith %}
-          </article>
+            </article>
+          {% endwith %}
         </div>
       </div>
       <div class="row">
