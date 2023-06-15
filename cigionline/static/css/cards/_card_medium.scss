@@ -206,7 +206,6 @@ article {
       @include media-breakpoint-up(md) {
         flex-direction: row;
       }
-      background-color: $black;
       border-radius: 20px;
       display: flex;
       flex-direction: column;
@@ -285,7 +284,6 @@ article {
           }
           display: none;
           margin-bottom: 0.5em;
-          color: $cigi-light-grey;
         }
       }
 
