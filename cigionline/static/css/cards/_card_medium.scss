@@ -574,5 +574,16 @@ article {
         }
       }
     }
+
+    &.card--medium-small--article {
+      .card__text {
+        .card__text__title {
+          @include media-breakpoint-up(md) {
+            font-size: 1.35em;
+          }
+          font-size: 1.25em;
+        }
+      }
+    }
   }
 }
