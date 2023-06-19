@@ -66,20 +66,18 @@ const EventListingCard = (props) => {
                 ))}
               </ul>
             )}
-            {
-              isLive
-                ? (
-                  <div className="card__text__title card--event__title card--event--live-label">
-                    <i className="fas fa-podcast"></i>
-                    <a href={row.url}>{row.title}</a>
-                  </div>
-                )
-                : (
-                  <h3 className="card__text__title card--event__title">
-                    <a href={row.url}>{row.title}</a>
-                  </h3>
-                )
-            }
+            {isLive
+              ? (
+                <div className="card__text__title card--event__title card--event--live-label">
+                  <i className="fas fa-podcast"></i>
+                  <a href={row.url}>{row.title}</a>
+                </div>
+              )
+              : (
+                <h3 className="card__text__title card--event__title">
+                  <a href={row.url}>{row.title}</a>
+                </h3>
+              )}
             <div className="card--event__info">
               <time dateTime="" className="card--event__time">
                 <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
@@ -153,7 +151,13 @@ const EventListingCard = (props) => {
                     <i className="fab fa-facebook-f"></i>
                     Share on Facebook
                   </a>
-                  {row.event_access !== 'Private' && row.registration_url && (
+                  {row.event_access !== 'Private' && Date.now() < startDateTs && !isLive && (
+                    <a class="dropdown-item" href={`/events/feed.ics?id=${row.id}`}>
+                      <i class="fas fa-plus"></i>
+                      Add to Calendar
+                    </a>
+                  )}
+                  {row.event_access !== 'Private' && row.registration_url && Date.now() < startDateTs && !isLive && (
                     <a className="dropdown-item" href={row.registration_url} onClick={handleClick}>
                       <i className="fal fa-check-square"></i>
                       Register
@@ -189,8 +193,7 @@ const EventListingCard = (props) => {
                       Watch Now
                       <i className="fas fa-angle-right" />
                     </a>
-                  )
-            }
+                  )}
           </div>
         </div>
       </article>

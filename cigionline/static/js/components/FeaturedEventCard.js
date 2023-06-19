@@ -158,8 +158,7 @@ const FeaturedEventCard = (props) => {
                                   Watch Now
                                   <i className="fas fa-angle-right" />
                                 </a>
-                              )
-                        }
+                              )}
                       </div>
                       {row.authors.length > 0 && (
                         <ul className="custom-text-list card__text__people">
@@ -196,7 +195,13 @@ const FeaturedEventCard = (props) => {
                           <i className="fab fa-facebook-f"></i>
                           Share on Facebook
                         </a>
-                        {row.event_access !== 'Private' && row.registration_url && (
+                        {row.event_access !== 'Private' && Date.now() < startDateTs && !isLive && (
+                          <a class="dropdown-item" href={`/events/feed.ics?id=${row.id}`}>
+                            <i class="fas fa-plus"></i>
+                            Add to Calendar
+                          </a>
+                        )}
+                        {row.event_access !== 'Private' && row.registration_url && Date.now() < startDateTs && !isLive && (
                           <a className="dropdown-item" href={row.registration_url} onClick={handleClick}>
                             <i className="fal fa-check-square"></i>
                             Register
@@ -211,25 +216,23 @@ const FeaturedEventCard = (props) => {
             <div className="col-md-8 card__image__container">
               <div className="card__image">
                 <a href={row.url} className="feature-content-image">
-                  {
-                    row.livestream_url
+                  {row.livestream_url
+                    ? (
+                      <div className="video--wrapper">
+                        <iframe src={livestreamUrl(row.livestream_url)}></iframe>
+                      </div>
+                    )
+                    : row.vimeo_url
                       ? (
                         <div className="video--wrapper">
-                          <iframe src={livestreamUrl(row.livestream_url)}></iframe>
+                          <iframe src={embedUrl(row.vimeo_url)}></iframe>
                         </div>
                       )
-                      : row.vimeo_url
-                        ? (
-                          <div className="video--wrapper">
-                            <iframe src={embedUrl(row.vimeo_url)}></iframe>
-                          </div>
-                        )
-                        : row.image_hero_url && (
-                          <div className="img-wrapper">
-                            <img alt="" src={row.image_hero_url}></img>
-                          </div>
-                        )
-                  }
+                      : row.image_hero_url && (
+                        <div className="img-wrapper">
+                          <img alt="" src={row.image_hero_url}></img>
+                        </div>
+                      )}
                 </a>
               </div>
             </div>

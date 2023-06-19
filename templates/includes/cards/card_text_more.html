@@ -26,6 +26,10 @@
       Share on Facebook
     </a>
     {% if type == "event" and event_access == 'Public' %}
+      <a class="dropdown-item" href="/events/feed.ics?id={{id}}">
+        <i class="fas fa-plus"></i>
+        Add to Calendar
+      </a>
       <a class="dropdown-item" href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
         <i class="fal fa-check-square"></i>
         Register
