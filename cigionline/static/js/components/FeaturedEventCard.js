@@ -183,11 +183,11 @@ const FeaturedEventCard = (props) => {
                           Copy Link
                         </button>
                         <input type="text" value={row.url} className="copyText"></input>
-                        <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
+                        <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&url=${row.url}`} target="_blank" rel="noopener noreferrer">
                           <i className="fab fa-twitter"></i>
                           Share on Twitter
                         </a>
-                        <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
+                        <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&url=${row.url}&title=${row.title}`} target="_blank" rel="noopener noreferrer">
                           <i className="fab fa-linkedin-in"></i>
                           Share on Linkedin
                         </a>
