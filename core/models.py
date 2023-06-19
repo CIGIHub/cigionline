@@ -172,7 +172,7 @@ class BasicPageAbstract(models.Model):
                 return self.image_hero.get_rendition('fill-600x338').url
         except Exception:
             print(f'Error: image_hero_wide_url for {self.title} not found')
-        return ''
+        return CigionlineImage.objects.get(title='CIGI-default-recommended-thumb').get_rendition('fill-600x338').url
 
     @property
     def image_poster_url(self):
