@@ -146,14 +146,14 @@ const FeaturedEventCard = (props) => {
                                 <i className="fas fa-angle-right" />
                               </a>
                             )
-                            : isLive && (row.livestream_url !== '')
+                            : isLive && row.livestream_url
                               ? (
                                 <a className="card--event__button--register button--rounded" href={row.livestream_url}>
                                   Watch Now
                                   <i className="fas fa-angle-right" />
                                 </a>
                               )
-                              : row.vimeo_url !== '' && (
+                              : row.vimeo_url && (
                                 <a className="card--event__button--register button--rounded" href={row.vimeo_url}>
                                   Watch Now
                                   <i className="fas fa-angle-right" />

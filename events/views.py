@@ -65,7 +65,6 @@ def all_events(request):
         item_dict['end_time'] = item.event_end.strftime('%Y-%m-%dT%H:%M:%S%z') if item.event_end else ''
         item_dict['start_utc_ts'] = item.event_start_time_utc_ts
         item_dict['end_utc_ts'] = item.event_end_time_utc_ts if item.event_end else ''
-        item_dict['image_hero_url'] = item.image_hero_url
         item_dict['livestream_url'] = item.livestream_url if item.livestream_url else ''
         if item.multimedia_page:
             if item.multimedia_page.specific.vimeo_url:
