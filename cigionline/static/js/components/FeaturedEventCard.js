@@ -50,6 +50,14 @@ const FeaturedEventCard = (props) => {
     };
   }, [isLive]);
 
+  const handleClick = () => {
+    ReactGA.event({
+      category: 'Button',
+      action: 'Click',
+      label: 'Event Registration',
+    });
+  };
+
   return (
     <div className="swiper-slide">
       <div className="col col-12">
@@ -122,38 +130,50 @@ const FeaturedEventCard = (props) => {
                   </div>
                 </div>
                 <div className="card--event__bottom">
-                  <div className="card__cta">
-                    {row.event_access === 'Private'
-                      ? (
-                        <button type="button" className="card--event__button--register button--rounded is_private" disabled>
-                          Private Event
-                        </button>
-                      )
-                      : isLive
-                        ? (
-                          <button type="button" className="card--event__button--register button--rounded">
-                            Watch Now
-                            <i className="fas fa-angle-right" />
-                          </button>
-                        )
-                        : Date.now() < startDateTs && (
-                          <button type="button" className="card--event__button--register button--rounded">
-                            Register Now
-                            <i className="fas fa-angle-right" />
-                          </button>
-                        )}
-                  </div>
                   <div className="card__text__meta">
-                    <ul className="custom-text-list card__text__people">
-                      {row.authors.slice(0, 3).map((author) => (
-                        <li key={`${row.id}-author-${author.id}`}>
-                          <a href={author.url}>{author.title}</a>
-                        </li>
-                      ))}
-                      {row.authors.length > 3 && (
-                        <li key={`${row.id}-author-more`}>And more</li>
+                    <div className="card__text__meta__left">
+                      <div className="card__cta">
+                        {row.event_access === 'Private'
+                          ? (
+                            <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                              Private Event
+                            </button>
+                          )
+                          : (Date.now() < startDateTs) && !isLive
+                            ? (
+                              <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
+                                Register Now
+                                <i className="fas fa-angle-right" />
+                              </a>
+                            )
+                            : isLive && (row.livestream_url !== '')
+                              ? (
+                                <a className="card--event__button--register button--rounded" href={row.livestream_url}>
+                                  Watch Now
+                                  <i className="fas fa-angle-right" />
+                                </a>
+                              )
+                              : row.vimeo_url !== '' && (
+                                <a className="card--event__button--register button--rounded" href={row.vimeo_url}>
+                                  Watch Now
+                                  <i className="fas fa-angle-right" />
+                                </a>
+                              )
+                        }
+                      </div>
+                      {row.authors.length > 0 && (
+                        <ul className="custom-text-list card__text__people">
+                          {row.authors.slice(0, 3).map((author) => (
+                            <li key={`${row.id}-author-${author.id}`}>
+                              <a href={author.url}>{author.title}</a>
+                            </li>
+                          ))}
+                          {row.authors.length > 3 && (
+                            <li key={`${row.id}-author-more`}>And more</li>
+                          )}
+                        </ul>
                       )}
-                    </ul>
+                    </div>
                     <div className="card__text__more__container dropup">
                       <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
                         <i className="far fa-ellipsis-h"></i>
@@ -177,7 +197,7 @@ const FeaturedEventCard = (props) => {
                           Share on Facebook
                         </a>
                         {row.event_access !== 'Private' && row.registration_url && (
-                          <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                          <a className="dropdown-item" href={row.registration_url} onClick={handleClick}>
                             <i className="fal fa-check-square"></i>
                             Register
                           </a>

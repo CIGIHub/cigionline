@@ -424,6 +424,18 @@
           .card__text__meta {
             flex-direction: row;
             align-items: flex-end;
+
+            .card__text__meta__left {
+              width: 100%;
+
+              a {
+                margin-bottom: 0;
+              }
+
+              ul {
+                margin-top: 1em;
+              }
+            }
           }
 
           .card__cta {
@@ -433,7 +445,6 @@
 
             a {
               display: flex;
-              align-items: flex-end;
             }
 
             .card--event__buttons {

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
+import ReactGA from 'react-ga';
 
 import '../../css/components/EventListingCard.scss';
 
@@ -33,6 +34,14 @@ const EventListingCard = (props) => {
       clearInterval(interval);
     };
   }, [isLive]);
+
+  const handleClick = () => {
+    ReactGA.event({
+      category: 'Button',
+      action: 'Click',
+      label: 'Event Registration',
+    });
+  };
 
   return (
     <div className="col col-12 col-md-8">
@@ -145,7 +154,7 @@ const EventListingCard = (props) => {
                     Share on Facebook
                   </a>
                   {row.event_access !== 'Private' && row.registration_url && (
-                    <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                    <a className="dropdown-item" href={row.registration_url} onClick={handleClick}>
                       <i className="fal fa-check-square"></i>
                       Register
                     </a>
@@ -169,10 +178,10 @@ const EventListingCard = (props) => {
                   </button>
                 )
                 : Date.now() < startDateTs && (
-                  <button type="button" className="card--event__button--register button--rounded">
+                  <a className="card--event__button--register button--rounded" onClick={handleClick}>
                     Register Now
                     <i className="fas fa-angle-right" />
-                  </button>
+                  </a>
                 )
             }
           </div>
