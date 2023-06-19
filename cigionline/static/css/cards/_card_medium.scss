@@ -254,11 +254,6 @@ article {
 
       .card__text__meta {
         .card__text__people {
-          @include link(
-            $color: $cigi-light-grey,
-            $hover-color: $cigi-primary-colour
-          );
-
           li {
             color: $cigi-medium-grey;
           }
