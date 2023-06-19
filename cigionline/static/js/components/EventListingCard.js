@@ -168,7 +168,7 @@ const EventListingCard = (props) => {
                     <i className="fas fa-angle-right" />
                   </button>
                 )
-                : (
+                : Date.now() < startDateTs && (
                   <button type="button" className="card--event__button--register button--rounded">
                     Register Now
                     <i className="fas fa-angle-right" />
