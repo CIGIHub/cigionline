@@ -170,19 +170,26 @@ const EventListingCard = (props) => {
                   Private Event
                 </button>
               )
-              : isLive
+              : (Date.now() < startDateTs) && !isLive
                 ? (
-                  <button type="button" className="card--event__button--register button--rounded">
-                    Watch Now
-                    <i className="fas fa-angle-right" />
-                  </button>
-                )
-                : Date.now() < startDateTs && (
-                  <a className="card--event__button--register button--rounded" onClick={handleClick}>
+                  <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
                     Register Now
                     <i className="fas fa-angle-right" />
                   </a>
                 )
+                : isLive && (row.livestream_url !== '')
+                  ? (
+                    <a className="card--event__button--register button--rounded" href={row.livestream_url}>
+                      Watch Now
+                      <i className="fas fa-angle-right" />
+                    </a>
+                  )
+                  : row.vimeo_url !== '' && (
+                    <a className="card--event__button--register button--rounded" href={row.vimeo_url}>
+                      Watch Now
+                      <i className="fas fa-angle-right" />
+                    </a>
+                  )
             }
           </div>
         </div>
