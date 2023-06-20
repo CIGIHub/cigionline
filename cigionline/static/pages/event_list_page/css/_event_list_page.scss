@@ -206,8 +206,10 @@ body {
         @include media-breakpoint-down(sm) {
           top: auto;
           bottom: 1.5em;
+          padding-bottom: 0;
         }
         color: $cigi-medium-grey;
+        padding-bottom: 10%;
 
         &.swiper-button-disabled {
           color: $cigi-medium-light-grey;
