@@ -2,7 +2,9 @@
 
 #event-list {
   .event-items {
-    padding-left: 1em;
+    @include media-breakpoint-up(lg) {
+      padding-left: 1em;
+    }
     
     >div[class*='col'] {
       width: 100%;
