@@ -547,6 +547,7 @@
 
             iframe {
               @include media-breakpoint-up(md) {
+                height: 100%;
                 left: 5%;
                 width: 90%;
               }
@@ -557,7 +558,7 @@
                 height: 390px;
               }
               border-radius: 20px;
-              height: 100%;
+              height: 90%;
               left: 5%;
               position: absolute;
               top: 0;
