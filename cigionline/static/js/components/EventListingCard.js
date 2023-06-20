@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
+import ReactGA from 'react-ga';
 
 import '../../css/components/EventListingCard.scss';
 
@@ -34,6 +35,14 @@ const EventListingCard = (props) => {
     };
   }, [isLive]);
 
+  const handleClick = () => {
+    ReactGA.event({
+      category: 'Button',
+      action: 'Click',
+      label: 'Event Registration',
+    });
+  };
+
   return (
     <div className="col col-12 col-md-8">
       <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
@@ -57,20 +66,18 @@ const EventListingCard = (props) => {
                 ))}
               </ul>
             )}
-            {
-              isLive
-                ? (
-                  <div className="card__text__title card--event__title card--event--live-label">
-                    <i className="fas fa-podcast"></i>
-                    <a href={row.url}>{row.title}</a>
-                  </div>
-                )
-                : (
-                  <h3 className="card__text__title card--event__title">
-                    <a href={row.url}>{row.title}</a>
-                  </h3>
-                )
-            }
+            {isLive
+              ? (
+                <div className="card__text__title card--event__title card--event--live-label">
+                  <i className="fas fa-podcast"></i>
+                  <a href={row.url}>{row.title}</a>
+                </div>
+              )
+              : (
+                <h3 className="card__text__title card--event__title">
+                  <a href={row.url}>{row.title}</a>
+                </h3>
+              )}
             <div className="card--event__info">
               <time dateTime="" className="card--event__time">
                 <div>{`${startDayDayOfWeek}, ${startDateMonth} ${startDateDay}, ${startDateYear}`}</div>
@@ -132,11 +139,11 @@ const EventListingCard = (props) => {
                     Copy Link
                   </button>
                   <input type="text" value={row.url} className="copyText"></input>
-                  <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
+                  <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&url=${row.url}`} target="_blank" rel="noopener noreferrer">
                     <i className="fab fa-twitter"></i>
                     Share on Twitter
                   </a>
-                  <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
+                  <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&url=${row.url}&title=${row.title}`} target="_blank" rel="noopener noreferrer">
                     <i className="fab fa-linkedin-in"></i>
                     Share on Linkedin
                   </a>
@@ -144,8 +151,14 @@ const EventListingCard = (props) => {
                     <i className="fab fa-facebook-f"></i>
                     Share on Facebook
                   </a>
-                  {row.event_access !== 'Private' && row.registration_url && (
-                    <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
+                  {row.event_access !== 'Private' && Date.now() < startDateTs && !isLive && (
+                    <a class="dropdown-item" href={`/events/feed.ics?id=${row.id}`}>
+                      <i class="fas fa-plus"></i>
+                      Add to Calendar
+                    </a>
+                  )}
+                  {row.event_access !== 'Private' && row.registration_url && Date.now() < startDateTs && !isLive && (
+                    <a className="dropdown-item" href={row.registration_url} onClick={handleClick}>
                       <i className="fal fa-check-square"></i>
                       Register
                     </a>
@@ -161,20 +174,26 @@ const EventListingCard = (props) => {
                   Private Event
                 </button>
               )
-              : isLive
+              : (Date.now() < startDateTs) && !isLive
                 ? (
-                  <button type="button" className="card--event__button--register button--rounded">
-                    Watch Now
-                    <i className="fas fa-angle-right" />
-                  </button>
-                )
-                : (
-                  <button type="button" className="card--event__button--register button--rounded">
+                  <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
                     Register Now
                     <i className="fas fa-angle-right" />
-                  </button>
+                  </a>
                 )
-            }
+                : isLive && row.livestream_url
+                  ? (
+                    <a className="card--event__button--register button--rounded" href={row.livestream_url}>
+                      Watch Now
+                      <i className="fas fa-angle-right" />
+                    </a>
+                  )
+                  : row.vimeo_url && (
+                    <a className="card--event__button--register button--rounded" href={row.vimeo_url}>
+                      Watch Now
+                      <i className="fas fa-angle-right" />
+                    </a>
+                  )}
           </div>
         </div>
       </article>

@@ -5,7 +5,7 @@
     <div class="row card--event__top">
       <div class="col-md-8 col-lg-6 col-xl-5">
         {% now "c" as current_time %}
-        {% if current_time > end_utc|date:"c" %}
+        {% if current_time < start_utc|date:"c" %}
           <div class="card--event--upcoming-label">Upcoming Event</div>
         {% endif %}
         <div class="d-flex">
@@ -64,7 +64,7 @@
           <button type="button" class="card--event__button--register button--rounded is_private" disabled>
             Private Event
           </button>
-        {% else %}
+        {% elif now < date %}
           <div class="card--event__buttons d-flex">
             <a href="/events/feed.ics?id={{id}}">
               <button type="button" class="card--event__button--calendar button--rounded">

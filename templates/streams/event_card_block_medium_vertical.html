@@ -17,7 +17,9 @@
     </div>
     <div class="row card--event__top">
       <div class="col-md-8">
-        <div class="card--event--upcoming-label">Upcoming Event</div>
+        {% if not is_past %}
+          <div class="card--event--upcoming-label">Upcoming Event</div>
+        {% endif %}
         {% include 'includes/cards/card_text_topics.html' %}
         {% include 'includes/cards/card_text_title.html' with additional_classes='card--event__title' %}
         <div class="card--event__info">
@@ -61,7 +63,7 @@
           <button type="button" class="card--event__button--register button--rounded is_private" disabled>
             Private Event
           </button>
-        {% else %}
+        {% elif not is_past %}
           <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
             <button type="button" class="card--event__button--register button--rounded">
               Register Now
