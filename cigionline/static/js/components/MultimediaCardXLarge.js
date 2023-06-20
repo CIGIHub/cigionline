@@ -20,9 +20,10 @@ const embedUrl = (str) => {
 function MultimediaCardXLarge(props) {
   const [imgHidden, setImgHidden] = useState(false);
   const { row } = props;
-  const vimeoUrl = imgHidden
-    ? `${embedUrl(row.vimeo_url)}&autoplay=1`
-    : embedUrl(row.vimeo_url);
+  let vimeoUrl = '';
+  if (row.vimeo_url) {
+    vimeoUrl = imgHidden ? `${embedUrl(row.vimeo_url)}&autoplay=1` : embedUrl(row.vimeo_url);
+  }
   const multimediaTypeIconCls =
     row.contentsubtype === 'Video'
       ? 'fas fa-play'

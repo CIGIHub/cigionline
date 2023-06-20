@@ -52,7 +52,7 @@ body {
         }
       }
 
-      &.card--medium-large--article {
+      &.card--medium-small--article {
         .card__text {
           .card__text__description {
             @include media-breakpoint-only(lg) {

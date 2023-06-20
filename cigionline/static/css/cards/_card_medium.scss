@@ -206,7 +206,6 @@ article {
       @include media-breakpoint-up(md) {
         flex-direction: row;
       }
-      background-color: $black;
       border-radius: 20px;
       display: flex;
       flex-direction: column;
@@ -255,11 +254,6 @@ article {
 
       .card__text__meta {
         .card__text__people {
-          @include link(
-            $color: $cigi-light-grey,
-            $hover-color: $cigi-primary-colour
-          );
-
           li {
             color: $cigi-medium-grey;
           }
@@ -285,7 +279,6 @@ article {
           }
           display: none;
           margin-bottom: 0.5em;
-          color: $cigi-light-grey;
         }
       }
 
@@ -578,6 +571,17 @@ article {
         }
         .card__text__title {
           @include card-title-font;
+        }
+      }
+    }
+
+    &.card--medium-small--article {
+      .card__text {
+        .card__text__title {
+          @include media-breakpoint-up(md) {
+            font-size: 1.35em;
+          }
+          font-size: 1.25em;
         }
       }
     }

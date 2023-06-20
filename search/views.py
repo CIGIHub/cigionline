@@ -4,6 +4,8 @@ from wagtail.search.models import Query
 
 from .search import cigi_search, cigi_search_promoted
 
+import datetime
+
 
 def process_item(page, request):
     try:
@@ -78,7 +80,8 @@ def search_api(request):
                     'years': {},
                     'content_types': {},
                     'experts': {},
-                }
+                },
+                'current_year': datetime.now().year,
             },
             'items': [],
         }, safe=False)
@@ -144,7 +147,8 @@ def search_api(request):
     return JsonResponse({
         'meta': {
             'total_count': pages.count(),
-            'aggregations': aggregations
+            'aggregations': aggregations,
+            'current_year': datetime.datetime.now().year,
         },
         'items': items,
     }, safe=False)

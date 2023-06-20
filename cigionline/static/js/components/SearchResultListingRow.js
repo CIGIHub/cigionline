@@ -47,7 +47,7 @@ function SearchResultListingRow(props) {
       icon: 'fa-clipboard-list',
     },
     Opinion: {
-      icon: 'fa-comment-alt',
+      icon: 'fa-comment-alt-lines',
     },
     'Opinion Series': {
       icon: 'fa-comment-alt',
@@ -69,24 +69,29 @@ function SearchResultListingRow(props) {
           <div>
             <a href={row.url}>
               {row.title}
-              {row.elevated && <i className="fal fa-bookmark elevate-bookmark" />}
+              {row.elevated && (
+                <i className="fal fa-bookmark elevate-bookmark" />
+              )}
             </a>
             {row.publishing_date && (
-              <time dateTime={row.publishing_date} className="search-table__results__row__date">
-                {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_MED)}
+              <time
+                dateTime={row.publishing_date}
+                className="search-table__results__row__date"
+              >
+                {DateTime.fromISO(row.publishing_date).toLocaleString(
+                  DateTime.DATE_MED,
+                )}
               </time>
             )}
           </div>
         </div>
       </td>
       <td className="search-table__results__row__content-type">
-        <div className="search-table__results__row__title--mobile">Content Type</div>
-        {row.contentsubtype && (
-          <>{row.contentsubtype}</>
-        )}
-        {!row.contentsubtype && row.contenttype && (
-          <>{row.contenttype}</>
-        )}
+        <div className="search-table__results__row__title--mobile">
+          Content Type
+        </div>
+        {row.contentsubtype && <>{row.contentsubtype}</>}
+        {!row.contentsubtype && row.contenttype && <>{row.contenttype}</>}
       </td>
       <td className="search-table__results__row__authors">
         <div className="search-table__results__row__title--mobile">Author</div>
@@ -113,16 +118,16 @@ function SearchResultListingRow(props) {
             ))}
         </ul>
       </td>
-      <td className="search-table__results__row__download">
-        {row.pdf_download && (
+      {row.pdf_download && (
+        <td className="search-table__results__row__download">
           <>
             <div className="search-table__results__row__title--mobile">PDF</div>
             <a href={row.pdf_download} className="download">
               <i className="fal fa-arrow-to-bottom" />
             </a>
           </>
-        )}
-      </td>
+        </td>
+      )}
     </tr>
   );
 }
@@ -134,7 +139,7 @@ SearchResultListingRow.propTypes = {
         id: PropTypes.number,
         type: PropTypes.string,
         value: PropTypes.any,
-      })
+      }),
     ),
     snippet: PropTypes.string,
     contentsubtype: PropTypes.string,

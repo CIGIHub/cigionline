@@ -95,14 +95,8 @@
               &.expanded {
                 i {
                   &:first-child {
-                    transform: rotate(0deg);
+                    transform: rotate(45deg);
                   }
-                }
-              }
-
-              i {
-                &:first-child {
-                  transform: rotate(90deg);
                 }
               }
 
@@ -110,6 +104,11 @@
                 transition: 0.25s ease;
                 position: absolute;
                 top: 0.5em;
+                height: 12px;
+
+                &:first-child {
+                  transform: rotate(90deg);
+                }
               }
             }
           }
@@ -276,7 +275,7 @@
 
         &.card--small--article,
         &.card--medium--article,
-        &.card--medium-large--article {
+        &.card--medium-small--article {
           .card__text {
             .card__text__description {
               display: none;

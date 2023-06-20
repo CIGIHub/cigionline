@@ -8,7 +8,7 @@
 
     th,
     td {
-      padding: 1.5em 0.625em;
+      padding: 1.5em 0.625rem;
     }
 
     .search-table__results__row__title--mobile {
@@ -18,14 +18,17 @@
       flex: 0 0 40%;
       color: $cigi-medium-grey;
     }
+    td {
+      &.search-table__results__row__title {
+        color: $black;
+        font-size: 0.875em;
+        font-weight: 500;
+      }
+    }
 
     .search-table__results__row__title {
       @include media-breakpoint-up(md) {
         width: 33.33333%;
-      }
-
-      &td {
-        font-size: 1.1em;
       }
 
       i {
@@ -53,14 +56,21 @@
     .search-table__results__row__date {
       display: block;
       color: $cigi-medium-grey;
-      font-size: 0.75em;
+      font-size: 0.9em;
+    }
+
+    .search-table__results__row__type {
+      @include media-breakpoint-up(md) {
+        width: 20%;
+      }
     }
 
     .search-table__results__row__content-type {
       @include media-breakpoint-up(md) {
-        width: 16.66666%;
+        width: 20%;
       }
       color: $cigi-medium-grey;
+      font-size: 0.75em;
     }
 
     .search-table__results__row__authors {
@@ -69,7 +79,7 @@
         $hover-color: $cigi-primary-colour
       );
       @include media-breakpoint-up(md) {
-        width: 16.66666%;
+        width: 20%;
       }
 
       li {
@@ -83,7 +93,7 @@
 
     .search-table__results__row__topics {
       @include media-breakpoint-up(md) {
-        width: 28.33333%;
+        width: 15%;
       }
 
       li {
