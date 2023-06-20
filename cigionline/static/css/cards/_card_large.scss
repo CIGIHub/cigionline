@@ -394,7 +394,14 @@
   &.card--large--event--landing {
     .card--event__container {
       .card__text {
-        padding-right: 1em;
+        @include media-breakpoint-up(lg) {
+          padding: 0 1em 0 0;
+        }
+        @include media-breakpoint-up(md) {
+          padding: 1em 1.5em 0;
+        }
+        padding: 1em 0.5em 0;
+        
 
         .card--event__top {
           display: block;
@@ -539,6 +546,11 @@
             padding-bottom: 54.5%;
 
             iframe {
+              @include media-breakpoint-up(md) {
+                height: 100%;
+                left: 5%;
+                width: 90%;
+              }
               @include media-breakpoint-up(lg) {
                 height: 325px;
               }
@@ -546,7 +558,8 @@
                 height: 390px;
               }
               border-radius: 20px;
-              height: 100%;
+              height: 90%;
+              left: 5%;
               position: absolute;
               top: 0;
               width: 90%;

@@ -194,7 +194,7 @@ body {
         position: relative;
 
         .card--event__container {
-          @include media-breakpoint-up(md) {
+          @include media-breakpoint-up(lg) {
             flex-direction: row;
           }
           flex-direction: column-reverse;

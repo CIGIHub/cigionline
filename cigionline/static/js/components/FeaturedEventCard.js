@@ -63,7 +63,7 @@ const FeaturedEventCard = (props) => {
       <div className="col col-12">
         <article className={`card__container card--large card--large--event--landing card--event ${row.event_access === 'Private' && 'is_private'}`}>
           <div className="row card--event__container">
-            <div className="col-md-4">
+            <div className="col-lg-4">
               <div className="card__text">
                 <div className="row card--event__top">
                   {Date.now() < startDateTs && (
@@ -213,7 +213,7 @@ const FeaturedEventCard = (props) => {
                 </div>
               </div>
             </div>
-            <div className="col-md-8 card__image__container">
+            <div className="col-lg-8 card__image__container">
               <div className="card__image">
                 <a href={row.url} className="feature-content-image">
                   {row.livestream_url
