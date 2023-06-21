@@ -11,12 +11,12 @@ const FeaturedEventCard = (props) => {
   const startDateMonth = startDate.monthLong;
   const startDateYear = startDate.year;
   const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
-  const startDateMinute = startDate.minute;
+  const startDateMinute = startDate.minute.toString().padStart(2, '0');
   const startDateAmPm = startDate.toFormat('a');
   const endDate = DateTime.fromISO(row.end_time) || null;
   const endDateTs = row.end_utc_ts * 1000;
   const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
-  const endDateMinute = endDate.minute;
+  const endDateMinute = endDate.minute.toString().padStart(2, '0');
   const endDateAmPm = endDate.toFormat('a');
 
   function embedUrl(str) {
@@ -139,7 +139,7 @@ const FeaturedEventCard = (props) => {
                               Private Event
                             </button>
                           )
-                          : (Date.now() < startDateTs) && !isLive
+                          : (Date.now() < startDateTs) && !isLive && row.registration_url
                             ? (
                               <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
                                 Register Now
@@ -168,7 +168,7 @@ const FeaturedEventCard = (props) => {
                             </li>
                           ))}
                           {row.authors.length > 3 && (
-                            <li key={`${row.id}-author-more`}>And more</li>
+                            <li key={`${row.id}-author-more`}>and more</li>
                           )}
                         </ul>
                       )}

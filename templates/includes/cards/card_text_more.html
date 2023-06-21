@@ -25,7 +25,7 @@
       <i class="fab fa-facebook-f"></i>
       Share on Facebook
     </a>
-    {% if type == "event" and event_access == 'Public' %}
+    {% if type == "event" and event_access == 'Public' and not is_past %}
       <a class="dropdown-item" href="/events/feed.ics?id={{id}}">
         <i class="fas fa-plus"></i>
         Add to Calendar
