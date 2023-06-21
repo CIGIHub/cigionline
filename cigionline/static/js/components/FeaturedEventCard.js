@@ -109,7 +109,7 @@ const FeaturedEventCard = (props) => {
                       </div>
                     </time>
                     <div className="card--event__type">
-                      {row.event_access ? 'Public ' : 'Private '}
+                      {row.event_access === 'Public' ? 'Public ' : 'Private '}
                       Event
                       {row.event_type && (
                         <span>
