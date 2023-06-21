@@ -43,6 +43,14 @@ const EventListingCard = (props) => {
     });
   };
 
+  const videoUrl = isLive && row.livestream_url
+    ? row.livestream_url
+    : row.vimeo_url
+      ? row.vimeo_url
+      : row.livestream_url
+        ? row.livestream_url
+        : null;
+
   return (
     <div className="col col-12 col-md-8">
       <article className={`card__container card--medium card--medium--event card--event ${row.event_access === 'Private' && 'is_private'}`}>
@@ -89,7 +97,7 @@ const EventListingCard = (props) => {
                 </div>
               </time>
               <div className="card--event__type">
-                {row.event_access ? 'Public ' : 'Private '}
+                {row.event_access === 'Public' ? 'Public ' : 'Private '}
                 Event
                 {row.event_type && (
                   <span>
@@ -168,32 +176,31 @@ const EventListingCard = (props) => {
             </div>
           </div>
           <div className="col-md-6 text-center">
-            {row.event_access === 'Private'
-              ? (
-                <button type="button" className="card--event__button--register button--rounded is_private" disabled>
-                  Private Event
-                </button>
-              )
-              : (Date.now() < startDateTs) && !isLive && row.registration_url
+            {(Date.now() < startDateTs) && !isLive
+              ? (row.event_access === 'Private'
                 ? (
+                  <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                    Private Event
+                  </button>
+                )
+                : row.registration_url && (
                   <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
                     Register Now
                     <i className="fas fa-angle-right" />
                   </a>
+                ))
+              : (videoUrl
+                ? (
+                  <a className="card--event__button--register button--rounded" href={videoUrl}>
+                    Watch Now
+                    <i className="fas fa-angle-right" />
+                  </a>
                 )
-                : isLive && row.livestream_url
-                  ? (
-                    <a className="card--event__button--register button--rounded" href={row.livestream_url}>
-                      Watch Now
-                      <i className="fas fa-angle-right" />
-                    </a>
-                  )
-                  : row.vimeo_url && (
-                    <a className="card--event__button--register button--rounded" href={row.vimeo_url}>
-                      Watch Now
-                      <i className="fas fa-angle-right" />
-                    </a>
-                  )}
+                : (row.event_access === 'Private' && (
+                  <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                    Private Event
+                  </button>
+                )))}
           </div>
         </div>
       </article>
