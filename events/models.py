@@ -86,6 +86,7 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             if item.multimedia_page:
                 if item.multimedia_page.specific.vimeo_url:
                     item_dict['vimeo_url'] = item.multimedia_page.specific.vimeo_url
+                    item_dict['mm_page_url'] = item.multimedia_page.specific.url
 
             featured_events_content.append(item_dict)
 

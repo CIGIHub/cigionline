@@ -69,6 +69,7 @@ def all_events(request):
         if item.multimedia_page:
             if item.multimedia_page.specific.vimeo_url:
                 item_dict['vimeo_url'] = item.multimedia_page.specific.vimeo_url
+                item_dict['mm_page_url'] = item.multimedia_page.specific.url
 
         events_list.append(item_dict)
 

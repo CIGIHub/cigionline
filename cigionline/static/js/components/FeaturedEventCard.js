@@ -58,12 +58,12 @@ const FeaturedEventCard = (props) => {
     });
   };
 
-  const videoUrl = isLive && row.livestream_url
-    ? row.livestream_url
+  const videoPageUrl = isLive && row.livestream_url
+    ? row.url
     : row.vimeo_url
-      ? row.vimeo_url
+      ? row.mm_page_url
       : row.livestream_url
-        ? row.livestream_url
+        ? row.url
         : null;
 
   return (
@@ -154,9 +154,9 @@ const FeaturedEventCard = (props) => {
                                 <i className="fas fa-angle-right" />
                               </a>
                             ))
-                          : (videoUrl
+                          : (videoPageUrl
                             ? (
-                              <a className="card--event__button--register button--rounded" href={videoUrl}>
+                              <a className="card--event__button--register button--rounded" href={videoPageUrl}>
                                 Watch Now
                                 <i className="fas fa-angle-right" />
                               </a>
@@ -223,16 +223,16 @@ const FeaturedEventCard = (props) => {
             <div className="col-lg-8 card__image__container">
               <div className="card__image">
                 <a href={row.url} className="feature-content-image">
-                  {row.livestream_url
+                  {row.vimeo_url
                     ? (
                       <div className="video--wrapper">
-                        <iframe src={livestreamUrl(row.livestream_url)}></iframe>
+                        <iframe src={embedUrl(row.vimeo_url)}></iframe>
                       </div>
                     )
-                    : row.vimeo_url
+                    : row.livestream_url
                       ? (
                         <div className="video--wrapper">
-                          <iframe src={embedUrl(row.vimeo_url)}></iframe>
+                          <iframe src={livestreamUrl(row.livestream_url)}></iframe>
                         </div>
                       )
                       : row.image_hero_url && (
