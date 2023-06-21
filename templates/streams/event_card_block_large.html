@@ -64,7 +64,7 @@
           <button type="button" class="card--event__button--register button--rounded is_private" disabled>
             Private Event
           </button>
-        {% elif now < date %}
+        {% elif not is_past %}
           <div class="card--event__buttons d-flex">
             <a href="/events/feed.ics?id={{id}}">
               <button type="button" class="card--event__button--calendar button--rounded">
