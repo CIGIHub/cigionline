@@ -139,7 +139,7 @@ const FeaturedEventCard = (props) => {
                               Private Event
                             </button>
                           )
-                          : (Date.now() < startDateTs) && !isLive
+                          : (Date.now() < startDateTs) && !isLive && row.registration_url
                             ? (
                               <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
                                 Register Now
@@ -168,7 +168,7 @@ const FeaturedEventCard = (props) => {
                             </li>
                           ))}
                           {row.authors.length > 3 && (
-                            <li key={`${row.id}-author-more`}>And more</li>
+                            <li key={`${row.id}-author-more`}>and more</li>
                           )}
                         </ul>
                       )}
