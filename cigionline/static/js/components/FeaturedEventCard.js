@@ -58,6 +58,14 @@ const FeaturedEventCard = (props) => {
     });
   };
 
+  const videoUrl = isLive && row.livestream_url
+    ? row.livestream_url
+    : row.vimeo_url
+      ? row.vimeo_url
+      : row.livestream_url
+        ? row.livestream_url
+        : null;
+
   return (
     <div className="swiper-slide">
       <div className="col col-12">
@@ -133,32 +141,31 @@ const FeaturedEventCard = (props) => {
                   <div className="card__text__meta">
                     <div className="card__text__meta__left">
                       <div className="card__cta">
-                        {row.event_access === 'Private'
-                          ? (
-                            <button type="button" className="card--event__button--register button--rounded is_private" disabled>
-                              Private Event
-                            </button>
-                          )
-                          : (Date.now() < startDateTs) && !isLive && row.registration_url
+                        {(Date.now() < startDateTs) && !isLive
+                          ? (row.event_access === 'Private'
                             ? (
+                              <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                                Private Event
+                              </button>
+                            )
+                            : row.registration_url && (
                               <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
                                 Register Now
                                 <i className="fas fa-angle-right" />
                               </a>
+                            ))
+                          : (videoUrl
+                            ? (
+                              <a className="card--event__button--register button--rounded" href={videoUrl}>
+                                Watch Now
+                                <i className="fas fa-angle-right" />
+                              </a>
                             )
-                            : isLive && row.livestream_url
-                              ? (
-                                <a className="card--event__button--register button--rounded" href={row.livestream_url}>
-                                  Watch Now
-                                  <i className="fas fa-angle-right" />
-                                </a>
-                              )
-                              : row.vimeo_url && (
-                                <a className="card--event__button--register button--rounded" href={row.vimeo_url}>
-                                  Watch Now
-                                  <i className="fas fa-angle-right" />
-                                </a>
-                              )}
+                            : (row.event_access === 'Private' && (
+                              <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                                Private Event
+                              </button>
+                            )))}
                       </div>
                       {row.authors.length > 0 && (
                         <ul className="custom-text-list card__text__people">
