@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import CardTextMore from './CardTextMore';
 
 import '../../css/components/EventSearchResultCard.scss';
 
@@ -102,60 +103,13 @@ const EventSearchResultCard = (props) => {
             )}
           </ul>
         </div>
-        <div className="card__text__more__container dropup">
-          <button
-            type="button"
-            className="card__text__more dropdown-toggle"
-            data-bs-toggle="dropdown"
-          >
-            <i className="far fa-ellipsis-h" />
-          </button>
-          <div className="dropdown-menu dropdown-menu-end">
-            <button className="dropdown-item copy-text-button" type="button">
-              <i className="fas fa-link" />
-              Copy Link
-            </button>
-            <input type="text" value={row.url} className="copyText" />
-            <a
-              className="dropdown-item"
-              href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fab fa-twitter" />
-              Share on Twitter
-            </a>
-            <a
-              className="dropdown-item"
-              href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fab fa-linkedin-in" />
-              Share on Linkedin
-            </a>
-            <button
-              className="dropdown-item"
-              type="button"
-              data-url={row.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fab fa-facebook-f" />
-              Share on Facebook
-            </button>
-            {row.event_access !== 'Private' && row.registration_url && (
-              <a
-                className="dropdown-item"
-                href={row.registration_url}
-                onClick="ga('send', 'event', 'Event Registration', 'Click' );"
-              >
-                <i className="fal fa-check-square" />
-                Register
-              </a>
-            )}
-          </div>
-        </div>
+        <CardTextMore
+          title={row.title}
+          url={row.url}
+          type="Event"
+          registrationUrl={row.registration_url}
+          eventAccess={row.event_access}
+        />
       </div>
     </article>
   );

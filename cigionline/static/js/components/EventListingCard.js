@@ -77,7 +77,7 @@ const EventListingCard = (props) => {
             {isLive
               ? (
                 <div className="card__text__title card--event__title card--event--live-label">
-                  <i className="fas fa-podcast"></i>
+                  <i className="fas fa-podcast" />
                   <a href={row.url}>{row.title}</a>
                 </div>
               )
@@ -139,35 +139,35 @@ const EventListingCard = (props) => {
               </div>
               <div className="card__text__more__container dropup">
                 <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
-                  <i className="far fa-ellipsis-h"></i>
+                  <i className="far fa-ellipsis-h" />
                 </button>
                 <div className="dropdown-menu dropdown-menu-end">
                   <button className="dropdown-item copy-text-button" type="button">
-                    <i className="fas fa-link"></i>
+                    <i className="fas fa-link" />
                     Copy Link
                   </button>
-                  <input type="text" value={row.url} className="copyText"></input>
+                  <input type="text" value={row.url} className="copyText" />
                   <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&url=${row.url}`} target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-twitter"></i>
+                    <i className="fab fa-twitter" />
                     Share on Twitter
                   </a>
                   <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&url=${row.url}&title=${row.title}`} target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-linkedin-in"></i>
+                    <i className="fab fa-linkedin-in" />
                     Share on Linkedin
                   </a>
-                  <a className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-facebook-f"></i>
+                  <div className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-facebook-f" />
                     Share on Facebook
-                  </a>
+                  </div>
                   {row.event_access !== 'Private' && Date.now() < startDateTs && !isLive && (
-                    <a class="dropdown-item" href={`/events/feed.ics?id=${row.id}`}>
-                      <i class="fas fa-plus"></i>
+                    <a className="dropdown-item" href={`/events/feed.ics?id=${row.id}`}>
+                      <i className="fas fa-plus" />
                       Add to Calendar
                     </a>
                   )}
                   {row.event_access !== 'Private' && row.registration_url && Date.now() < startDateTs && !isLive && (
                     <a className="dropdown-item" href={row.registration_url} onClick={handleClick}>
-                      <i className="fal fa-check-square"></i>
+                      <i className="fal fa-check-square" />
                       Register
                     </a>
                   )}

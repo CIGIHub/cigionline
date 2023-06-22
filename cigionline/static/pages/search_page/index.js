@@ -43,6 +43,8 @@ ReactDOM.render(
       'time_zone_label',
       'event_format_string',
       'event_end',
+      'registration_url',
+      'event_access',
     ]}
     containerClass={[
       'search-result-row',

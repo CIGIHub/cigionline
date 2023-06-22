@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
 import ReactGA from 'react-ga';
+import PropTypes from 'prop-types';
+import CardTextMore from './CardTextMore';
 
 const FeaturedEventCard = (props) => {
   const { row } = props;
@@ -96,7 +98,7 @@ const FeaturedEventCard = (props) => {
                     isLive
                       ? (
                         <div className="card__text__title card--event__title card--event--live-label">
-                          <i className="fas fa-podcast"></i>
+                          <i className="fas fa-podcast" />
                           <a href={row.url}>{row.title}</a>
                         </div>
                       )
@@ -180,42 +182,13 @@ const FeaturedEventCard = (props) => {
                         </ul>
                       )}
                     </div>
-                    <div className="card__text__more__container dropup">
-                      <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
-                        <i className="far fa-ellipsis-h"></i>
-                      </button>
-                      <div className="dropdown-menu dropdown-menu-end">
-                        <button className="dropdown-item copy-text-button" type="button">
-                          <i className="fas fa-link"></i>
-                          Copy Link
-                        </button>
-                        <input type="text" value={row.url} className="copyText"></input>
-                        <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&url=${row.url}`} target="_blank" rel="noopener noreferrer">
-                          <i className="fab fa-twitter"></i>
-                          Share on Twitter
-                        </a>
-                        <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&url=${row.url}&title=${row.title}`} target="_blank" rel="noopener noreferrer">
-                          <i className="fab fa-linkedin-in"></i>
-                          Share on Linkedin
-                        </a>
-                        <a className="dropdown-item" data-url={row.url} target="_blank" rel="noopener noreferrer">
-                          <i className="fab fa-facebook-f"></i>
-                          Share on Facebook
-                        </a>
-                        {row.event_access !== 'Private' && Date.now() < startDateTs && !isLive && (
-                          <a class="dropdown-item" href={`/events/feed.ics?id=${row.id}`}>
-                            <i class="fas fa-plus"></i>
-                            Add to Calendar
-                          </a>
-                        )}
-                        {row.event_access !== 'Private' && row.registration_url && Date.now() < startDateTs && !isLive && (
-                          <a className="dropdown-item" href={row.registration_url} onClick={handleClick}>
-                            <i className="fal fa-check-square"></i>
-                            Register
-                          </a>
-                        )}
-                      </div>
-                    </div>
+                    <CardTextMore
+                      title={row.title}
+                      url={row.url}
+                      type="Event"
+                      registrationUrl={row.registration_url}
+                      eventAccess={row.event_access}
+                    />
                   </div>
                 </div>
               </div>
@@ -226,18 +199,18 @@ const FeaturedEventCard = (props) => {
                   {row.vimeo_url
                     ? (
                       <div className="video--wrapper">
-                        <iframe src={embedUrl(row.vimeo_url)}></iframe>
+                        <iframe src={embedUrl(row.vimeo_url)} title={row.title} />
                       </div>
                     )
                     : row.livestream_url
                       ? (
                         <div className="video--wrapper">
-                          <iframe src={livestreamUrl(row.livestream_url)}></iframe>
+                          <iframe src={livestreamUrl(row.livestream_url)} title={row.title} />
                         </div>
                       )
                       : row.image_hero_url && (
                         <div className="img-wrapper">
-                          <img alt="" src={row.image_hero_url}></img>
+                          <img alt="" src={row.image_hero_url} />
                         </div>
                       )}
                 </a>
@@ -248,6 +221,33 @@ const FeaturedEventCard = (props) => {
       </div>
     </div>
   );
+};
+
+FeaturedEventCard.propTypes = {
+  row: PropTypes.shape({
+    authors: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      url: PropTypes.string,
+    })),
+    event_access: PropTypes.string,
+    event_format: PropTypes.string,
+    event_type: PropTypes.string,
+    id: PropTypes.number,
+    image_hero_url: PropTypes.string,
+    livestream_url: PropTypes.string,
+    mm_page_url: PropTypes.string,
+    registration_url: PropTypes.string,
+    time_zone_label: PropTypes.string,
+    title: PropTypes.string,
+    topics: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      url: PropTypes.string,
+    })),
+    url: PropTypes.string,
+    vimeo_url: PropTypes.string,
+  }).isRequired,
 };
 
 export default FeaturedEventCard;

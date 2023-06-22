@@ -26,7 +26,9 @@ function MultimediaSearchResultCard(props) {
       ? 'fas fa-play'
       : 'fal fa-microphone icon-audio';
   const handleClick = () => {
-    setImgHidden(true);
+    if (row.vimeo_url) {
+      setImgHidden(true);
+    }
   };
 
   return (
