@@ -13,6 +13,7 @@ from search import views as search_views
 from events import views as events_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
+from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
 
@@ -39,6 +40,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
+    re_path(r'^sitemap\.xml$', sitemap),
 ]
 
 
