@@ -508,6 +508,9 @@
             }
 
             .card--event__button--register {
+              @include media-breakpoint-only(lg) {
+                width: 100%;
+              }
               margin-bottom: 1em;
               width: 66.6667%;
             }

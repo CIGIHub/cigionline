@@ -25,6 +25,7 @@ ReactDOM.render(
       'contenttype',
       'image_poster_url',
       'image_hero_url',
+      'image_hero_wide_url',
       'pdf_download',
       'publishing_date',
       'topics',
