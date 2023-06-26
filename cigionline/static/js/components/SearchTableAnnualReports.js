@@ -119,7 +119,7 @@ class SearchTableAnnualReports extends React.Component {
               </div>
               <div className="col-md-3 position-static">
                 <div className="dropdown custom-dropdown dropdown-full-width">
-                  <button className="dropdown-toggle" type="button" id="search-bar-topics" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <button className="dropdown-toggle" type="button" id="search-bar-topics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {yearSelected}
                   </button>
                   <div className="dropdown-menu" aria-labelledby="search-bar-topics">
