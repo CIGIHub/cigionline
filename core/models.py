@@ -172,7 +172,7 @@ class BasicPageAbstract(models.Model):
                 return self.image_hero.get_rendition('fill-600x338').url
         except Exception:
             print(f'Error: image_hero_wide_url for {self.title} not found')
-        return ''
+        return CigionlineImage.objects.get(title='CIGI-default-recommended-thumb').get_rendition('fill-600x338').url
 
     @property
     def image_poster_url(self):
@@ -181,7 +181,7 @@ class BasicPageAbstract(models.Model):
                 return self.specific.image_poster.get_rendition('fill-525x700').url
         except Exception:
             print(f'Error: image_poster_url for {self.title} not found')
-        return ''
+        return CigionlineImage.objects.get(title='CIGI-default-recommended-thumb').get_rendition('fill-525x700').url
 
     @property
     def word_count(self):

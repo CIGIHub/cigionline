@@ -14,9 +14,11 @@
         </div>
       </div>
     </div>
-    <p class="card__text">
-      {{ tweet_text|richtext }}
-    </p>
+    <div class="card__text">
+      <p>
+        {{ tweet_text|richtext }}
+      </p>
+    </div>
     <div class="card__image">
       <a href="{{ tweet_media_link }}"
         class="feature-content-image">

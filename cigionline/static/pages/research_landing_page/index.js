@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Swiper, { Navigation, Pagination } from 'swiper';
 import ResearchContentListing from '../../js/components/ResearchContentListing';
+import SearchResultCard from '../../js/components/SearchResultCard';
 import SearchTable from '../../js/components/SearchTable';
 import './css/research_landing_page.scss';
 import 'swiper/swiper-bundle.css';
@@ -129,27 +130,32 @@ ReactDOM.render(
         ],
       },
     ]}
-    RowComponent={ResearchContentListing}
+    RowComponent={SearchResultCard}
     tableColumns={[
       {
         colSpan: 4,
         colTitle: 'Title',
+        colClass: 'title',
+      },
+      {
+        colSpan: 3,
+        colTitle: 'Type',
+        colClass: 'type',
       },
       {
         colSpan: 3,
         colTitle: 'Expert',
+        colClass: 'authors',
       },
       {
         colSpan: 2,
         colTitle: 'Topic',
-      },
-      {
-        colSpan: 2,
-        colTitle: 'Type',
+        colClass: 'topics',
       },
       {
         colSpan: 1,
         colTitle: 'PDF',
+        colClass: 'more',
       },
     ]}
     searchPlaceholder="Search Research by Keyword"

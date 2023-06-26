@@ -26,6 +26,7 @@ class SearchTable extends React.Component {
     const { filterTypes, isSearchPage, displayMode } = props;
     this.state = {
       currentPage: 1,
+      currentYear: 0,
       displayMode: displayMode || 'grid',
       emptyQuery: false,
       expertsFilter: '',
@@ -121,7 +122,6 @@ class SearchTable extends React.Component {
     if (showSidebar) {
       this.getExperts();
       this.getTopics();
-      this.getYears();
       this.getTypes();
     }
     window.addEventListener('resize', this.handleResize.bind(this));
@@ -370,6 +370,8 @@ class SearchTable extends React.Component {
           rows,
           aggregations: data.meta.aggregations,
           totalRows: data.meta.total_count,
+          loadingYears: false,
+          years: Array.from({ length: 12 }, (_, i) => data.meta.current_year - i),
         }));
       });
 
@@ -433,14 +435,6 @@ class SearchTable extends React.Component {
           })),
         }));
       });
-  }
-
-  getYears() {
-    // Here we need to add fetch code for getting the years
-    this.setState(() => ({
-      loadingYears: false,
-      years: Array.from({ length: 12 }, (_, i) => 2021 - i),
-    }));
   }
 
   getTypes() {

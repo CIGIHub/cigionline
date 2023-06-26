@@ -1,4 +1,5 @@
 .after-covid-series-article {
+  @include top-bar($background-color: transparent, $color: $white);
   header {
     @include media-breakpoint-up(md) {
       background-color: transparent;

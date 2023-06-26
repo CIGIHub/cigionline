@@ -61,13 +61,10 @@ $bigtech-light-grey: #b1b1b1;
   }
 
   .big-tech-hero {
-    @include media-breakpoint-up(sm) {
-      padding-top: 2.2em;
-    }
     background-image: url('../../../assets/bigtech_s3_background.png');
     background-position: top;
     margin-bottom: 3em;
-    padding-top: 2.7em;
+    padding-top: 4.5em;
   }
 
   .body {

@@ -1,5 +1,9 @@
 .women-and-trade-series-article-series {
-  @include top-bar($background-color: transparent, $color: $black, $position: relative);
+  @include top-bar(
+    $background-color: transparent,
+    $color: $black,
+    $position: relative
+  );
   background-color: $women-and-trade-series-background-colour;
 
   .women-and-trade-series-article-series-hero {
@@ -143,18 +147,8 @@
     }
   }
 
-  h2 {
-    border-bottom: 5px solid $cigi-darkest-grey;
-    display: inline-block;
-    font-size: 1.475em;
-    font-weight: 500;
-    line-height: 1.42em;
-    margin-bottom: 0;
-  }
-
   .body {
     background-color: $white;
-    font-size: 1.06em;
     line-height: 1.42em;
     margin-bottom: 0;
     padding-bottom: 3em;
@@ -163,6 +157,18 @@
   .in-the-series {
     background-color: $previous-body-bg;
     padding-top: 2em;
+  }
+
+  .body,
+  .in-the-series {
+    h2 {
+      border-bottom: 5px solid $cigi-darkest-grey;
+      display: inline-block;
+      font-size: 1.475em;
+      font-weight: 500;
+      line-height: 1.42em;
+      margin-bottom: 1em;
+    }
   }
 
   .contributors {

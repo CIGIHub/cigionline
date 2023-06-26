@@ -22,7 +22,7 @@ body {
         min-height: 300px;
       }
       @include media-breakpoint-up(xl) {
-        min-height: 366px;
+        min-height: 375px;
       }
 
       .card__image {
@@ -52,7 +52,7 @@ body {
         }
       }
 
-      &.card--medium-large--article {
+      &.card--medium-small--article {
         .card__text {
           .card__text__description {
             @include media-breakpoint-only(lg) {

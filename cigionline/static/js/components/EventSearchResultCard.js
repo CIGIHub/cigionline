@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import CardTextMore from './CardTextMore';
 
 import '../../css/components/EventSearchResultCard.scss';
 
@@ -13,16 +14,15 @@ const EventSearchResultCard = (props) => {
   const startDateDay = startDate.day;
   const startDateMonth = startDate.monthLong;
   const startDateYear = startDate.year;
-  const startDateHour = startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
+  const startDateHour =
+    startDate.hour > 12 ? startDate.hour - 12 : startDate.hour;
   const startDateAmPm = startDate.toFormat('a');
   const endDate = DateTime.fromISO(row.event_end) || null;
   const endDateTs = row.event_end_time_utc_ts * 1000 || null;
   const endDateHour = endDate.hour > 12 ? endDate.hour - 12 : endDate.hour;
   const endDateAmPm = endDate.toFormat('a');
 
-  const evaluateLive = (start, end) => {
-    return today >= start && today <= end;
-  };
+  const evaluateLive = (start, end) => today >= start && today <= end;
   const [isLive, setIsLive] = useState(evaluateLive(startDateTs, endDateTs));
 
   useEffect(() => {
@@ -35,14 +35,16 @@ const EventSearchResultCard = (props) => {
   }, [isLive]);
 
   return (
-    <article className={`card__container card--small card--small--event card--event ${!row.event_access === 'Private' && 'is_private'}`}>
+    <article
+      className={`card__container card--small card--small--event card--event ${
+        !row.event_access === 'Private' && 'is_private'
+      }`}
+    >
       <div className="card--event--small__top">
         <div className="card--event__title card__text__title">
           {today < startDateTs && (
             <div className="card--event--upcoming-label">
-              Upcoming Event -
-              {' '}
-              {`${startDateMonth} ${startDateDay}`}
+              Upcoming Event - {`${startDateMonth} ${startDateDay}`}
             </div>
           )}
           {row.topics && (
@@ -56,20 +58,16 @@ const EventSearchResultCard = (props) => {
               ))}
             </ul>
           )}
-          {
-            isLive
-              ? (
-                <h3 className="card--event--live-label">
-                  <i className="fas fa-podcast"></i>
-                  <a href={row.url}>{row.title}</a>
-                </h3>
-              )
-              : (
-                <h3>
-                  <a href={row.url}>{row.title}</a>
-                </h3>
-              )
-          }
+          {isLive ? (
+            <h3 className="card--event--live-label">
+              <i className="fas fa-podcast" />
+              <a href={row.url}>{row.title}</a>
+            </h3>
+          ) : (
+            <h3>
+              <a href={row.url}>{row.title}</a>
+            </h3>
+          )}
         </div>
         <div className="card--event__info">
           <time dateTime="" className="card--event__time">
@@ -84,20 +82,9 @@ const EventSearchResultCard = (props) => {
           <div className="card--event__type">
             {row.event_access ? 'Public ' : 'Private '}
             Event
-            {row.contentsubtype && (
-              <span>
-                :
-                {' '}
-                {row.contentsubtype}
-              </span>
-            )}
+            {row.contentsubtype && <span>: {row.contentsubtype}</span>}
             {row.event_format_string && (
-              <span>
-                {' '}
-                (
-                {row.event_format_string}
-                )
-              </span>
+              <span> ({row.event_format_string})</span>
             )}
           </div>
         </div>
@@ -116,36 +103,13 @@ const EventSearchResultCard = (props) => {
             )}
           </ul>
         </div>
-        <div className="card__text__more__container dropup">
-          <button type="button" className="card__text__more dropdown-toggle" data-bs-toggle="dropdown">
-            <i className="far fa-ellipsis-h" />
-          </button>
-          <div className="dropdown-menu dropdown-menu-end">
-            <button className="dropdown-item copy-text-button" type="button">
-              <i className="fas fa-link" />
-              Copy Link
-            </button>
-            <input type="text" value={row.url} className="copyText" />
-            <a className="dropdown-item" href={`https://twitter.com/share?text=${row.title}&amp;url=${row.url}`} target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-twitter" />
-              Share on Twitter
-            </a>
-            <a className="dropdown-item" href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${row.url}&amp;title=${row.title}`} target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-linkedin-in" />
-              Share on Linkedin
-            </a>
-            <button className="dropdown-item" type="button" data-url={row.url} target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-facebook-f" />
-              Share on Facebook
-            </button>
-            {row.event_access !== 'Private' && row.registration_url && (
-              <a className="dropdown-item" href={row.registration_url} onClick="ga('send', 'event', 'Event Registration', 'Click' );">
-                <i className="fal fa-check-square" />
-                Register
-              </a>
-            )}
-          </div>
-        </div>
+        <CardTextMore
+          title={row.title}
+          url={row.url}
+          type="Event"
+          registrationUrl={row.registration_url}
+          eventAccess={row.event_access}
+        />
       </div>
     </article>
   );
@@ -173,10 +137,12 @@ EventSearchResultCard.propTypes = {
       }),
     ),
     url: PropTypes.string.isRequired,
-    event_access: PropTypes.string,
+    event_access: PropTypes.number,
     event_end: PropTypes.string,
     event_type: PropTypes.string,
     event_format_string: PropTypes.string,
+    event_start_time_utc_ts: PropTypes.number,
+    event_end_time_utc_ts: PropTypes.number,
     registration_url: PropTypes.string,
     time_zone_label: PropTypes.string,
   }).isRequired,

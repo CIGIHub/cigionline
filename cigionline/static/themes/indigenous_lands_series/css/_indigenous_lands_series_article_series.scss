@@ -139,4 +139,15 @@
       border-top: 0;
     }
   }
+
+  footer {
+    background-color: $white;
+    position: relative;
+    padding-top: 2em;
+    z-index: 3;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
+  }
 }

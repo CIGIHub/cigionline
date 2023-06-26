@@ -12,6 +12,7 @@ $cyber-font: 'interstate-mono', sans-serif;
 @import './cyber_series_article_series';
 @import './cyber_series_article';
 @import './includes/in_the_series';
+@import './cyber_series_multimedia';
 
 @keyframes blink-background {
   50% {
@@ -30,7 +31,7 @@ $cyber-font: 'interstate-mono', sans-serif;
 
   .arrow {
     animation: draw-arrow 3s infinite;
-    left: -6px;
+    left: 0;
     position: relative;
 
     &::before {
@@ -45,7 +46,6 @@ $cyber-font: 'interstate-mono', sans-serif;
   }
 
   .point2 {
-
     &::before {
       position: absolute;
       top: -15px;
@@ -114,7 +114,6 @@ $cyber-font: 'interstate-mono', sans-serif;
     animation-name: glitch-anim-3;
   }
 }
-
 
 // Image glitch effect
 @keyframes glitch-anim-1 {

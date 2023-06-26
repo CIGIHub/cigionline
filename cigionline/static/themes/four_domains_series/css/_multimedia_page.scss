@@ -1,0 +1,17 @@
+.four-domains-series-multimedia {
+  .in-the-series {
+    background-color: $white;
+
+    .short-description {
+      color: $cigi-text-grey;
+    }
+  }
+
+  footer {
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
+    }
+  }
+}

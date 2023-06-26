@@ -304,8 +304,7 @@
     color: $black;
 
     .logo-container,
-    .footer-bracket,
-    .highlighted-topics-list {
+    .footer-bracket {
       display: none;
     }
 
@@ -395,6 +394,9 @@
 
 @mixin dark-footer {
   footer {
+    color: $white;
+    background-color: $background-dark;
+
     .footer__subscribe {
       border-bottom: 1px solid $border-grey-dark;
       border-top: 1px solid $border-grey-dark;
@@ -412,6 +414,12 @@
           }
         }
       }
+
+      button {
+        &:hover {
+          border: 1px solid $white;
+        }
+      }
     }
 
     .footer__sitemap {
@@ -419,6 +427,44 @@
 
       ul {
         @include link($color: $white, $hover-color: $cigi-dark-pink);
+      }
+    }
+
+    .footer__topics {
+      border-bottom: 1px solid $border-grey-dark;
+    }
+  }
+}
+
+@mixin light-footer-3 {
+  footer {
+    background-color: $white;
+    color: $black;
+
+    .footer__subscribe {
+      border-bottom: 1px solid $cigi-light-grey;
+      border-top: 1px solid $cigi-light-grey;
+
+      .footer__subscribe__input-wrapper {
+        border-bottom: 1px solid $cigi-light-grey;
+
+        input {
+          color: $white;
+          background-color: $white;
+          -webkit-box-shadow: 0 0 0 30px $white inset;
+
+          &::placeholder {
+            color: $cigi-text-grey;
+          }
+        }
+      }
+    }
+
+    .footer__sitemap {
+      border-bottom: 1px solid $cigi-light-grey;
+
+      ul {
+        @include link($color: $black, $hover-color: $cigi-dark-pink);
       }
     }
   }
@@ -472,6 +518,10 @@
 
     .card__text__topics {
       @include link($color: $topic-color, $hover-color: $topic-hover-color);
+
+      li {
+        color: $topic-color;
+      }
     }
 
     .card__text__meta {
@@ -484,6 +534,11 @@
           }
         }
       }
+      .card__text__people {
+        li {
+          color: $link-color;
+        }
+      }
     }
   }
 
@@ -492,4 +547,9 @@
       background-color: $background-color;
     }
   }
+}
+
+@mixin card-title-font {
+  font-weight: 300;
+  font-family: $title-font-family;
 }

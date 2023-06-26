@@ -6,13 +6,14 @@
     .card__text {
       .card__text__title {
         margin-bottom: 0.5em;
+        font-size: 0.9em;
       }
     }
 
     &.card--tiny--article {
       .card__text {
         .card__text__title {
-          font-family: $card-title-font;
+          @include card-title-font;
         }
       }
     }

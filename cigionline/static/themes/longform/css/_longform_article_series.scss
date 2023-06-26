@@ -8,18 +8,8 @@
     $color-medium: $white,
     $hover-color: $black,
     $hover-color-medium: $white,
-    $position: absolute,
+    $position: absolute
   );
-
-  h2 {
-    font-size: 1.5em;
-    font-weight: 500;
-    margin-bottom: 1em;
-
-    span {
-      border-bottom: 5px solid $black;
-    }
-  }
 
   .body {
     background-color: $longform-series-body-color;
@@ -152,7 +142,8 @@
 
           a {
             background-color: $cigi-primary-colour;
-            box-shadow: 5px 0 0 $cigi-primary-colour, -5px 0 0 $cigi-primary-colour;
+            box-shadow: 5px 0 0 $cigi-primary-colour,
+              -5px 0 0 $cigi-primary-colour;
             color: $white;
           }
         }
@@ -193,7 +184,10 @@
         padding-top: 1.25em;
 
         h4 {
-          @include link($color: $cigi-dark-grey, $hover-color: $cigi-medium-grey);
+          @include link(
+            $color: $cigi-dark-grey,
+            $hover-color: $cigi-medium-grey
+          );
           font-size: 1.5em;
           font-weight: 500;
           margin-bottom: 0.25em;
@@ -207,9 +201,25 @@
 
           span {
             @include comma-separated;
-            @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+            @include link(
+              $color: $cigi-text-grey,
+              $hover-color: $cigi-primary-colour
+            );
           }
         }
+      }
+    }
+  }
+
+  .body,
+  .longform-article-series-in-the-series {
+    h2 {
+      font-size: 1.5em;
+      font-weight: 500;
+      margin-bottom: 1em;
+
+      span {
+        border-bottom: 5px solid $black;
       }
     }
   }

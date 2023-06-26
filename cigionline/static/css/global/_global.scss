@@ -27,6 +27,7 @@ html {
 
 body {
   font-family: $primary-font-family;
+  overflow-x: hidden;
 
   &.disable-scroll {
     overflow: hidden;

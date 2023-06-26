@@ -1,5 +1,6 @@
 .ai-series-article-series {
   @include top-bar($background-color: transparent);
+  @include dark-footer;
   background-color: $ai-primary-color;
 
   .ai-series-article-series-hero {
@@ -160,7 +161,7 @@
   }
 
   .credits {
-    margin-bottom: 1.5em;
+    margin-bottom: 3em;
 
     h2 {
       @include ai-heading;
@@ -194,6 +195,14 @@
           text-transform: uppercase;
         }
       }
+    }
+  }
+
+  footer {
+    padding-top: 2em;
+
+    .footer__subscribe {
+      border-top: 0;
     }
   }
 }

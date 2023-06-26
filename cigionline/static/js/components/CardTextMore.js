@@ -11,8 +11,8 @@ const CardTextMore = (props) => {
   };
   const shareTitle = toSocialString(title);
   const shareUrl = `https://${window.location.host}${url.slice(0, -1)}`;
-  const shareOnFacebook = (url) => {
-    const href = url;
+  const shareOnFacebook = (fbShareUrl) => {
+    const href = fbShareUrl;
     FB.ui(
       {
         method: 'share',
@@ -71,7 +71,7 @@ const CardTextMore = (props) => {
           <i className="fab fa-facebook-f" />
           Share on Facebook
         </button>
-        {type === 'Event' && eventAccess === 'Public' && (
+        {type === 'Event' && eventAccess && registrationUrl && (
           <a
             className="dropdown-item"
             href={registrationUrl}

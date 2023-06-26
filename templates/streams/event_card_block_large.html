@@ -5,7 +5,7 @@
     <div class="row card--event__top">
       <div class="col-md-8 col-lg-6 col-xl-5">
         {% now "c" as current_time %}
-        {% if current_time > end_utc|date:"c" %}
+        {% if current_time < start_utc|date:"c" %}
           <div class="card--event--upcoming-label">Upcoming Event</div>
         {% endif %}
         <div class="d-flex">
@@ -64,7 +64,7 @@
           <button type="button" class="card--event__button--register button--rounded is_private" disabled>
             Private Event
           </button>
-        {% else %}
+        {% elif not is_past %}
           <div class="card--event__buttons d-flex">
             <a href="/events/feed.ics?id={{id}}">
               <button type="button" class="card--event__button--calendar button--rounded">
@@ -72,12 +72,14 @@
                 <i class="fas fa-plus"></i>
               </button>
             </a>
-            <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
-              <button type="button" class="card--event__button--register button--rounded">
-                Register Now
-                <i class="fas fa-angle-right"></i>
-              </button>
-            </a>
+            {% if registration_url %}
+              <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+                <button type="button" class="card--event__button--register button--rounded">
+                  Register Now
+                  <i class="fas fa-angle-right"></i>
+                </button>
+              </a>
+            {% endif %}
           </div>
         {% endif %}
       </div>

@@ -17,13 +17,18 @@ const embedUrl = (str) => {
 function MultimediaSearchResultCard(props) {
   const [imgHidden, setImgHidden] = useState(false);
   const { row } = props;
-  const vimeoUrl = imgHidden ? `${embedUrl(row.vimeo_url)}&autoplay=1` : embedUrl(row.vimeo_url);
+  let vimeoUrl = '';
+  if (row.vimeo_url) {
+    vimeoUrl = imgHidden ? `${embedUrl(row.vimeo_url)}&autoplay=1` : embedUrl(row.vimeo_url);
+  }
   const multimediaTypeIconCls =
     row.contentsubtype === 'Video'
       ? 'fas fa-play'
       : 'fal fa-microphone icon-audio';
   const handleClick = () => {
-    setImgHidden(true);
+    if (row.vimeo_url) {
+      setImgHidden(true);
+    }
   };
 
   return (

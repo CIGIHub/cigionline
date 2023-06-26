@@ -50,7 +50,7 @@
           <button type="button" class="card--event__button--register button--rounded is_private" disabled>
             Private Event
           </button>
-        {% else %}
+        {% elif not is_past %}
           <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
             <button type="button" class="card--event__button--register button--rounded">
               Register Now

@@ -20,12 +20,16 @@
       <i class="fab fa-linkedin-in"></i>
       Share on Linkedin
     </a>
-    <a class="dropdown-item" data-url="{{ url|slice:':-1' }}" target="_blank"
+    <a class="dropdown-item facebook-share-link" data-url="{{ url|slice:':-1' }}" target="_blank"
     rel="noopener noreferrer">
       <i class="fab fa-facebook-f"></i>
       Share on Facebook
     </a>
-    {% if type == "event" and event_access == 'Public' %}
+    {% if type == "event" and event_access == 'Public' and not is_past %}
+      <a class="dropdown-item" href="/events/feed.ics?id={{id}}">
+        <i class="fas fa-plus"></i>
+        Add to Calendar
+      </a>
       <a class="dropdown-item" href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
         <i class="fal fa-check-square"></i>
         Register

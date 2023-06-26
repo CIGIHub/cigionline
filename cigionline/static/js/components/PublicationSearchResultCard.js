@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CardTextMore from './CardTextMore';
 
 const PublicationSearchResultCard = (props) => {
   const { row } = props;
@@ -40,11 +41,12 @@ const PublicationSearchResultCard = (props) => {
               )}
             </ul>
           </div>
-          <button type="button" className="card__text__more">
-            <a href={row.url}>
-              <i className="far fa-ellipsis-h" />
-            </a>
-          </button>
+          <CardTextMore
+            title={row.title}
+            url={row.url}
+            type="Publication"
+            pdfDownload={row.pdf_download}
+          />
         </div>
       </div>
     </article>
@@ -63,6 +65,7 @@ PublicationSearchResultCard.propTypes = {
     contentsubtype: PropTypes.string,
     id: PropTypes.number,
     image_poster_url: PropTypes.string,
+    pdf_download: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
     topics: PropTypes.arrayOf(
