@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
@@ -186,7 +187,7 @@
   &::before {
     content: '';
     display: block;
-    padding-top: ($height / $width) * 100%;
+    padding-top: math.div($height, $width) * 100%;
     width: 100%;
   }
 
@@ -237,7 +238,7 @@
       z-index: 1;
 
       i {
-        font-size: ($size / 2);
+        font-size: math.div($size, 2);
       }
     }
   }
@@ -248,7 +249,7 @@
 @mixin video-aspect-ratio($width, $height) {
   .video-wrapper {
     overflow: hidden;
-    padding-top: ($height / $width) * 100%;
+    padding-top: math.div($height, $width) * 100%;
     position: relative;
     width: 100%;
 

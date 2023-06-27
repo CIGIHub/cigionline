@@ -12,7 +12,7 @@
       background-position-y: 200px;
       background-repeat: no-repeat;
     }
-    @media (min-aspect-ratio: 3 / 2) {
+    @media (min-aspect-ratio: calc(3 / 2)) {
       background-position-y: 0;
     }
     @media (max-height: 500px) {
@@ -31,7 +31,7 @@
       @include media-breakpoint-up(md) {
         display: none;
       }
-      @media (max-aspect-ratio: 5 / 8) and (max-height: 750px) {
+      @media (max-aspect-ratio: calc(5 / 8)) and (max-height: 750px) {
         opacity: 0.3;
       }
       @media (max-height: 500px) {
