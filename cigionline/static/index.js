@@ -2,6 +2,7 @@
 import 'bootstrap/dist/js/bootstrap.min';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Player from '@vimeo/player';
 import CookieConsent from './js/components/CookieConsent';
 import './css/cigionline.scss';
 
@@ -66,6 +67,89 @@ $(function () {
       $navSearchInputDropdown.removeClass('show');
     }
   });
+
+  const vimeoPlayersArray = [];
+
+  // add event listener to all images inside .card--multimedia
+  const multimediaCards = document.querySelectorAll('.card--multimedia');
+  multimediaCards.forEach((card) => {
+    if (card.classList.contains('has-vimeo')) {
+      const cardImage = card.querySelector('.card__image');
+      const playIcon =
+        card.querySelector('.card__image__play-icon') ||
+        card.querySelector('.card__text__play-icon');
+      const mmLength = card.querySelector('.card__image__mm-length');
+      const img = card.querySelector('img');
+      const iframe = card.querySelector('iframe');
+      const text = card.querySelector('.card__text');
+      const vimeoPlayer = new Player(iframe, { pip: 1 });
+      vimeoPlayersArray.push({ player: vimeoPlayer, cardImage });
+      playIcon.addEventListener('click', (e) => {
+        if (!img.classList.contains('hidden')) {
+          const isLargeBreakpoint =
+            window.matchMedia('(min-width: 991px)').matches;
+          const isMediumBreakpoint =
+            window.matchMedia('(min-width: 768px)').matches;
+          const isSmallCard = card.classList.contains(
+            'card--small--multimedia',
+          );
+          const isLargeCard = card.classList.contains(
+            'card--large--multimedia',
+          );
+          const isXLargeCard = card.classList.contains(
+            'card--xlarge--multimedia',
+          );
+          playIcon.classList.add('hidden');
+          if (mmLength) {
+            mmLength.classList.add('hidden');
+          }
+          img.classList.add('hidden');
+          vimeoPlayer.play();
+          if (
+            (isLargeBreakpoint && !isSmallCard && !isLargeCard) ||
+            (isXLargeCard && isMediumBreakpoint)
+          ) {
+            text.classList.add('hidden');
+          }
+        }
+      });
+    }
+  });
+
+  function isElementOutOfView(element) {
+    const elementRect = element.getBoundingClientRect();
+    return (
+      elementRect.bottom < 0 ||
+      elementRect.right < 0 ||
+      elementRect.left > window.innerWidth ||
+      elementRect.top > window.innerHeight
+    );
+  }
+
+  let isScrolling = false;
+
+  function debounceScroll() {
+    if (!isScrolling) {
+      isScrolling = true;
+      setTimeout(() => {
+        vimeoPlayersArray.forEach((element) => {
+          if (isElementOutOfView(element.cardImage)) {
+            element.player.getPaused().then((paused) => {
+              if (!paused && !element.cardImage.classList.contains('pop-out')) {
+                element.cardImage.classList.add('pop-out');
+              }
+            });
+          } else {
+            element.cardImage.classList.remove('pop-out');
+          }
+        });
+
+        isScrolling = false;
+      }, 1000);
+    }
+  }
+
+  window.addEventListener('scroll', debounceScroll);
 });
 
 addInlineVideoActions();
@@ -121,45 +205,5 @@ window.addEventListener('resize', (e) => {
   if (window.innerWidth > 576) {
     dropdownMenuFull.classList.remove('show');
     body.classList.remove('disable-scroll');
-  }
-});
-
-// add event listener to all images inside .card--multimedia
-const multimediaCards = document.querySelectorAll('.card--multimedia');
-multimediaCards.forEach((card) => {
-  if (card.classList.contains('has-vimeo')) {
-    const playIcon =
-      card.querySelector('.card__image__play-icon') ||
-      card.querySelector('.card__text__play-icon');
-    const mmLength = card.querySelector('.card__image__mm-length');
-    const img = card.querySelector('img');
-    const iframe = card.querySelector('iframe');
-    const text = card.querySelector('.card__text');
-
-    playIcon.addEventListener('click', (e) => {
-      if (!img.classList.contains('hidden')) {
-        const isLargeBreakpoint =
-          window.matchMedia('(min-width: 991px)').matches;
-        const isMediumBreakpoint =
-          window.matchMedia('(min-width: 768px)').matches;
-        const isSmallCard = card.classList.contains('card--small--multimedia');
-        const isLargeCard = card.classList.contains('card--large--multimedia');
-        const isXLargeCard = card.classList.contains(
-          'card--xlarge--multimedia',
-        );
-        playIcon.classList.add('hidden');
-        if (mmLength) {
-          mmLength.classList.add('hidden');
-        }
-        img.classList.add('hidden');
-        iframe.src += '&autoplay=1';
-        if (
-          (isLargeBreakpoint && !isSmallCard && !isLargeCard) ||
-          (isXLargeCard && isMediumBreakpoint)
-        ) {
-          text.classList.add('hidden');
-        }
-      }
-    });
   }
 });
