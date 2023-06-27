@@ -69,50 +69,12 @@ $(function () {
   });
 
   const vimeoPlayersArray = [];
-  function callback(eventName) {
-    return function (event) {
-      console.log(eventName, event);
-    };
-  }
-  var eventCallbacks = {
-    play: callback('play'),
-    playing: callback('playing'),
-    pause: callback('pause'),
-    ended: callback('ended'),
-    timeupdate: callback('timeupdate'),
-    progress: callback('progress'),
-    seeking: callback('seeking'),
-    seeked: callback('seeked'),
-    volumechange: callback('volumechange'),
-    texttrackchange: callback('texttrackchange'),
-    cuechange: callback('cuechange'),
-    chapterchange: callback('chapterchange'),
-    error: callback('error'),
-    loaded: callback('loaded'),
-    cuepoint: callback('cuepoint'),
-    ratechange: callback('ratechange'),
-    qualitychange: callback('qualitychange'),
-    bufferstart: callback('bufferstart'),
-    bufferend: callback('bufferend'),
-    fullscreenchange: callback('fullscreenchange'),
-    enterpictureinpicture: callback('enterpictureinpicture'),
-    leavepictureinpicture: callback('leavepictureinpicture'),
-    loadedmetadata: callback('loadedmetadata'),
-    durationchange: callback('durationchange'),
-    waiting: callback('waiting'),
-    loadeddata: callback('loadeddata'),
-    loadstart: callback('loadstart'),
-    resize: callback('resize'),
-    interactivehotspotclicked: callback('interactivehotspotclicked'),
-    interactiveoverlaypanelclicked: callback(
-      'interactiveoverlaypanelclicked',
-    ),
-  };
 
   // add event listener to all images inside .card--multimedia
   const multimediaCards = document.querySelectorAll('.card--multimedia');
   multimediaCards.forEach((card) => {
     if (card.classList.contains('has-vimeo')) {
+      const cardImage = card.querySelector('.card__image');
       const playIcon =
         card.querySelector('.card__image__play-icon') ||
         card.querySelector('.card__text__play-icon');
@@ -120,59 +82,38 @@ $(function () {
       const img = card.querySelector('img');
       const iframe = card.querySelector('iframe');
       const text = card.querySelector('.card__text');
-      // iframe.src += '&pip=1';
       const vimeoPlayer = new Player(iframe, { pip: 1 });
-      vimeoPlayer
-        .ready()
-        .then(() => {
-          vimeoPlayersArray.push(vimeoPlayer);
-          const testButton = card.querySelector('.test-button');
-          if (testButton) {
-            testButton.addEventListener('click', (e) => {
-              console.log(vimeoPlayer);
-            });
+      vimeoPlayersArray.push({ player: vimeoPlayer, cardImage });
+      playIcon.addEventListener('click', (e) => {
+        if (!img.classList.contains('hidden')) {
+          const isLargeBreakpoint =
+            window.matchMedia('(min-width: 991px)').matches;
+          const isMediumBreakpoint =
+            window.matchMedia('(min-width: 768px)').matches;
+          const isSmallCard = card.classList.contains(
+            'card--small--multimedia',
+          );
+          const isLargeCard = card.classList.contains(
+            'card--large--multimedia',
+          );
+          const isXLargeCard = card.classList.contains(
+            'card--xlarge--multimedia',
+          );
+          playIcon.classList.add('hidden');
+          if (mmLength) {
+            mmLength.classList.add('hidden');
           }
-
-          playIcon.addEventListener('click', (e) => {
-            if (!img.classList.contains('hidden')) {
-              const isLargeBreakpoint =
-                window.matchMedia('(min-width: 991px)').matches;
-              const isMediumBreakpoint =
-                window.matchMedia('(min-width: 768px)').matches;
-              const isSmallCard = card.classList.contains(
-                'card--small--multimedia',
-              );
-              const isLargeCard = card.classList.contains(
-                'card--large--multimedia',
-              );
-              const isXLargeCard = card.classList.contains(
-                'card--xlarge--multimedia',
-              );
-              playIcon.classList.add('hidden');
-              if (mmLength) {
-                mmLength.classList.add('hidden');
-              }
-              img.classList.add('hidden');
-              vimeoPlayer.play();
-              if (
-                (isLargeBreakpoint && !isSmallCard && !isLargeCard) ||
-                (isXLargeCard && isMediumBreakpoint)
-              ) {
-                text.classList.add('hidden');
-              }
-            }
-            vimeoPlayer.requestPictureInPicture();
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          img.classList.add('hidden');
+          vimeoPlayer.play();
+          if (
+            (isLargeBreakpoint && !isSmallCard && !isLargeCard) ||
+            (isXLargeCard && isMediumBreakpoint)
+          ) {
+            text.classList.add('hidden');
+          }
+        }
+      });
     }
-  });
-
-  console.log(vimeoPlayersArray[0]);
-  Object.keys(eventCallbacks).forEach(function (eventName) {
-    vimeoPlayersArray[0].on(eventName, eventCallbacks[eventName]);
   });
 
   function isElementOutOfView(element) {
@@ -191,15 +132,15 @@ $(function () {
     if (!isScrolling) {
       isScrolling = true;
       setTimeout(() => {
-        vimeoPlayersArray.forEach((player) => {
-          if (isElementOutOfView(player.element)) {
-            player.getPaused().then((paused) => {
-              if (!paused) {
-                player.requestPictureInPicture().then(() => {
-                  console.log('PIP');
-                });
+        vimeoPlayersArray.forEach((element) => {
+          if (isElementOutOfView(element.cardImage)) {
+            element.player.getPaused().then((paused) => {
+              if (!paused && !element.cardImage.classList.contains('pop-out')) {
+                element.cardImage.classList.add('pop-out');
               }
             });
+          } else {
+            element.cardImage.classList.remove('pop-out');
           }
         });
 
