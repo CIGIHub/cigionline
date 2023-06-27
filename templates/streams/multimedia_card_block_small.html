@@ -10,9 +10,7 @@
           {% image image fill-600x338 %}
         {% endif %}
         {% if multimedia_type == 'video' and vimeo_url %}
-          <div class="vimeo-player">
-            {% embed vimeo_url %}
-          </div>
+          {% embed vimeo_url %}
         {% endif %}
         
         {% if multimedia_type == 'audio' and multimedia_url %}
