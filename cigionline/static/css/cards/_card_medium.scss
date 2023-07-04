@@ -577,6 +577,9 @@ article {
           @include media-breakpoint-up(md) {
             font-size: 1.35em;
           }
+          @include media-breakpoint-up(lg) {
+            font-size: 1.1em;
+          }
           font-size: 1.25em;
         }
       }
