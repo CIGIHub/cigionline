@@ -57,10 +57,12 @@ class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         EXPERTS = 1
         STAFF = 2
         LEADERSHIP = 3
+        SENIOR_MANAGEMENT = 4
+        BOARD_MEMBERS = 5
 
     person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
 
-    max_count = 3
+    max_count = 5
     parent_page_types = ['core.BasicPage', 'home.HomePage']
     subpage_types = []
     templates = 'people/person_list_page.html'
@@ -73,6 +75,7 @@ class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        FieldPanel('person_list_page_type'),
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -96,11 +99,12 @@ class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             'archive': ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
         }
 
-        if self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+        if self.person_list_page_type == PersonListPage.PersonListPageType.SENIOR_MANAGEMENT:
             personFilter['person_types__name'] = 'Management Team'
-            context['senior_management'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            context['leadership'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+        if self.person_list_page_type == PersonListPage.PersonListPageType.BOARD_MEMBERS:
             personFilter['person_types__name'] = 'Board Member'
-            context['board_members'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
+            context['leadership'] = PersonPage.objects.live().filter(**personFilter).order_by('-person_weight', Unaccent(Lower('last_name')), Unaccent(Lower('first_name')))
 
         return context
 
@@ -108,9 +112,9 @@ class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         original_template = super(PersonListPage, self).get_template(request, *args, **kwargs)
         if self.person_list_page_type == PersonListPage.PersonListPageType.EXPERTS:
             return 'people/person_list_experts_page.html'
-        elif self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
+        if self.person_list_page_type == PersonListPage.PersonListPageType.STAFF:
             return 'people/person_list_staff_page.html'
-        elif self.person_list_page_type == PersonListPage.PersonListPageType.LEADERSHIP:
+        if self.person_list_page_type == PersonListPage.PersonListPageType.SENIOR_MANAGEMENT or self.person_list_page_type == PersonListPage.PersonListPageType.BOARD_MEMBERS:
             return 'people/person_list_leadership_page.html'
         return original_template
 

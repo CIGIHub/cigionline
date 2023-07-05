@@ -23,7 +23,13 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
-          {% include 'includes/people_person_leadership_tabs.html' %}
+          <section class="people-person-leadership-list-section">
+            <div class="tab-content" id="person-leadership-tab-content">
+              <div class="tab-pane fade show active" id="senior-management" role="tabpanel" aria-labelledby="senior-management-tab">
+                {% include 'includes/people_person_leadership_list.html' with people=leadership %}
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
