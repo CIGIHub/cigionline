@@ -24,7 +24,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.search import index
-from streams.blocks import IgcTimelineBlock, PublicationCard
+from streams.blocks import IgcTimelineBlock, PublicationCard, HomePageRow
 
 
 class ProjectListPage(Page):
@@ -61,6 +61,11 @@ class ProjectPage(
         on_delete=models.SET_NULL,
         related_name='+',
         verbose_name='Banner Image',
+    )
+    layout = StreamField([
+        ('row', HomePageRow()),
+    ],
+        blank=True,
     )
     project_contacts = StreamField(
         [
@@ -100,6 +105,9 @@ class ProjectPage(
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
+        MultiFieldPanel([
+            FieldPanel('layout'),
+        ], heading='Layout', classname='collapsible collapsed home-page-layout'),
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
