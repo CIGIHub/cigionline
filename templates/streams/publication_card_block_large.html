@@ -31,15 +31,15 @@
             {% if pdf_download or book_epub_download %}
               <div class="card__cta">
                 {% if book_epub_download %}
-                  <a href="/events/feed.ics?id={{id}}">
+                  <a href="{{ book_epub_download }}">
                     <button type="button" class="card__button--reverse button--rounded">
-                      <i class="fas fa-plus"></i>
+                      <i class="fas fa-book-open"></i>
                       Download Book
                     </button>
                   </a>
                 {% endif %}
                 {% if pdf_download %}
-                  <a href="/events/feed.ics?id={{id}}">
+                  <a href="{{ pdf_download }}">
                     <button type="button" class="card__button--reverse button--rounded">
                       <i class="fas fa-download"></i>
                       Download PDF

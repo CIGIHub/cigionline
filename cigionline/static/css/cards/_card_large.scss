@@ -292,8 +292,15 @@
         display: flex;
 
         .card__cta {
-          margin-left: 1em;
-          width: 50%;
+          @include media-breakpoint-up(md) {
+            display: block;
+            margin-left: 1em;
+            width: 40%;
+          }
+          @include media-breakpoint-up(lg) {
+            width: 50%
+          }
+          display: none;
 
           .card__button--reverse {
             @include button(
@@ -304,18 +311,22 @@
               $border-color: $white,
               $hover-border-color: $white
             );
-    
+            @include media-breakpoint-up(lg) {
+              padding: 1em 2em;
+            }
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1em 2em;
+            padding: 0.75em 1em;
             width: 100%;
             border-radius: 100px;
             transition: none;
             white-space: nowrap;
 
             i {
-              margin-right: 1em;
+              @include media-breakpoint-up(lg) {
+                margin-right: 1em;
+              }
             }
           }
         }
