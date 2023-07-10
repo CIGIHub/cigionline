@@ -47,22 +47,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
-
-  {% if self.image_hero %}
-    <section class="image-hero">
-      <div class="container">
-        <div class="row">
-          <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-            <figure>
-              {% image self.image_hero width-1760 %}
-            </figure>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
+  {% include "includes/top_bar_menu.html" with title='Research' submenu=self.submenu %}
   {% if featured_pages|length > 0 %}
     <section class="featured">
       <div class="container">
