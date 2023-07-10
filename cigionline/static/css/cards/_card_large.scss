@@ -292,7 +292,8 @@
         display: flex;
 
         .card__cta {
-          width: 40%;
+          margin-left: 1em;
+          width: 50%;
 
           .card__button--reverse {
             @include button(
@@ -311,6 +312,11 @@
             width: 100%;
             border-radius: 100px;
             transition: none;
+            white-space: nowrap;
+
+            i {
+              margin-right: 1em;
+            }
           }
         }
       }
