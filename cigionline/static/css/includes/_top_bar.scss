@@ -406,6 +406,7 @@ header {
       padding: 1em 0;
       margin-top: 1em;
       border-top: 1px solid $cigi-light-grey;
+      border-bottom: 1px solid $cigi-light-grey;
     }
 
     @include link($color: $black, $hover-color: $cigi-primary-colour);

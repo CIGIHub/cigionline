@@ -1,5 +1,46 @@
 @import '../../../css/global/mixins';
 
+section {
+  &.hero {
+    padding-bottom: 4em;
+
+    .hero__main {
+      padding-top: 2em;
+      h1 {
+        font-weight: 400;
+        font-size: 2.2rem;
+      }
+  
+      h2 {
+        font-weight: 300;
+        font-size: 1.8rem;
+      }
+    }
+
+    &.has-banner {
+      background-size: cover;
+      background-position: bottom;
+
+      .header--top-bar {
+        background: transparent;
+        position: fixed;
+
+        &.scrolled {
+          background: $white;
+        }
+      }
+
+      .header--submenu {
+        padding-top: 6em;
+        background-color: transparent;
+        nav {
+          border-top: 1px solid $cigi-dark-grey;
+          border-bottom: 1px solid $cigi-dark-grey;
+        }
+      }
+    }
+  }
+}
 .image-hero {
   margin-bottom: 1em;
 }
