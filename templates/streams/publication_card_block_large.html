@@ -3,29 +3,51 @@
 <div class="col">
   <article class="card__container card--large card--large--publication">
     <div class="row g-3">
-      <div class="col-4 col-lg-3 d-flex">
+      <div class="col-4 col-3-lg d-flex">
         <div class="card__image">
           <a href="{{ url }}" class="feature-content-image">
             <div class="img-wrapper">
               {% if image_src %}
                 <img alt="{{ image_alt }}" src="{{ image_src }}" />
               {% else %}
-                {% image image fill-990x1440 %}
+                {% image image fill-990x990 %}
               {% endif %}
             </div>
           </a>
         </div>
       </div>
-      <div class="col-8 col-lg-9">
+      <div class="col-8 col-9-lg">
         <div class="card__text">
           <div>
             {% include 'includes/cards/card_text_topics.html' %}
             {% include 'includes/cards/card_text_title.html' %}
             {% include 'includes/cards/card_text_description.html' %}
           </div>
-          <div class="card__text__meta">
-            {% include 'includes/cards/card_text_people.html' %}
-            {% include 'includes/cards/card_text_more.html' with type='publication' %}
+          <div class="card__text__bottom">
+            <div class="card__text__meta">
+              {% include 'includes/cards/card_text_people.html' %}
+              {% include 'includes/cards/card_text_more.html' with type='publication' %}
+            </div>
+            {% if pdf_download or book_epub_download %}
+              <div class="card__cta">
+                {% if book_epub_download %}
+                  <a href="/events/feed.ics?id={{id}}">
+                    <button type="button" class="card__button--reverse button--rounded">
+                      Download Book
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </a>
+                {% endif %}
+                {% if pdf_download %}
+                  <a href="/events/feed.ics?id={{id}}">
+                    <button type="button" class="card__button--reverse button--rounded">
+                      <i class="fas fa-download"></i>
+                      Download PDF
+                    </button>
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>

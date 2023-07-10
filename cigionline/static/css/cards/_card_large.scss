@@ -274,6 +274,8 @@
     }
 
     .card__text {
+      padding-left: 0.5em;
+
       .card__text__title {
         letter-spacing: -0.5px;
       }
@@ -284,6 +286,33 @@
         }
         display: none;
         color: $cigi-text-grey;
+      }
+
+      .card__text__bottom {
+        display: flex;
+
+        .card__cta {
+          width: 40%;
+
+          .card__button--reverse {
+            @include button(
+              $color: $white,
+              $background-color: $black,
+              $hover-color: $black,
+              $hover-background-color: $white,
+              $border-color: $white,
+              $hover-border-color: $white
+            );
+    
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 2em;
+            width: 100%;
+            border-radius: 100px;
+            transition: none;
+          }
+        }
       }
     }
   }
