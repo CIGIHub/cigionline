@@ -1239,6 +1239,7 @@ class PublicationCard(blocks.StructBlock):
         context['topics'] = page.topics_sorted
         context['pdf_download'] = page.pdf_download
         context['epub_download'] = page.book_epub_download
+        context['purchase_links'] = page.book_purchase_links
 
         return context
 

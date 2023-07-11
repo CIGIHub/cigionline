@@ -332,6 +332,7 @@ class PublicationPage(
                 FieldPanel('isbn_ebook'),
                 FieldPanel('book_pages'),
                 FieldPanel('book_purchase_links'),
+                FieldPanel('book_epub_download'),
                 FieldPanel('book_excerpt_download'),
                 FieldPanel('book_excerpt'),
             ],
