@@ -161,18 +161,6 @@
       </section>
     {% endif %}
 
-    {% if self.embed_issuu %}
-      <section class="embed-issuu">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              {% embed self.embed_issuu max_width=1110 %}
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
     {% if self.publication_series.live %}
       <section class="publication-part-of-series">
         <div class="container">
