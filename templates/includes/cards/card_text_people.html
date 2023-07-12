@@ -14,10 +14,15 @@
         {% define item as person %}
       {% endif %}
       {% if person %}
-        {% if item.hide_link %}
-          <li>{{ person.title }}</li>
+        {% if type == "editors" and forloop.first %}
+          {% define "Edited by: "|add:person.title as title %}
         {% else %}
-          <li><a href="{% pageurl person %}">{{ person.title }}</a></li>
+          {% define person.title as title %}
+        {% endif %}
+        {% if item.hide_link %}
+          <li>{{ title }}</li>
+        {% else %}
+          <li><a href="{% pageurl person %}">{{ title }}</a></li>
         {% endif %}
       {% endif %}
     {% elif forloop.counter == people_limit|add:1 %}

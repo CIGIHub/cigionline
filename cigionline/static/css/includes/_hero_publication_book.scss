@@ -2,6 +2,40 @@ section {
   &.publication-hero-book {
     color: $white;
 
+    .card--large--publication {
+      background-color: $cigi-light-grey-bg;
+      border: 1px solid $cigi-light-grey-bg;
+      border-radius: 20px;
+      padding: 3em;
+
+      .card__text {
+        .card__text__topics {
+          a {
+            color: $black;
+          }
+        }
+  
+        .card__text__bottom {
+          .card__text__meta {
+            .card__text__date {
+              color: $black;
+              display: block;
+            }
+  
+            .card__text__people {
+              a {
+                color: $black;
+              }
+      
+              li {
+                color: $black;
+              }
+            }
+          }
+        }
+      }
+    }
+
     .topics {
       @include link($color: $white, $hover-color: $cigi-primary-colour);
     }

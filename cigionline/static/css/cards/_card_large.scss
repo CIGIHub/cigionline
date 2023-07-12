@@ -301,6 +301,15 @@
       .card__text__bottom {
         display: flex;
 
+        .card__text__meta {
+          .card__text__date {
+            color: $cigi-text-grey;
+            display: none;
+            font-size: 0.8em;
+            margin-bottom: 0.5em;
+          }
+        }
+
         .card__cta {
           @include media-breakpoint-up(md) {
             display: flex;
