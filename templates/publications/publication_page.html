@@ -59,7 +59,7 @@
     {% include "includes/top_bar_menu.html" with title='Research' %} 
     {% block hero %}
       {% if self.publication_type.title == 'Books' %}
-        {% include "includes/heroes/hero_publication_book.html" with title=self.title subtitle=self.subtitle purchase_links=self.book_purchase_links image_cover=self.image_cover authors=self.authors.all author_count=self.author_count editors=self.editors.all editor_count=self.editor_count %}
+        {% include "includes/heroes/hero_publication_book.html" %}
       {% else %}
         {% include "includes/heroes/hero_publication.html" with title=self.title subtitle=self.subtitle download=self.pdf_downloads ctas=self.ctas %}
       {% endif %}
@@ -155,18 +155,6 @@
                   {{ review }}
                 </div>
               {% endfor %}
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% if self.embed_issuu %}
-      <section class="embed-issuu">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              {% embed self.embed_issuu max_width=1110 %}
             </div>
           </div>
         </div>

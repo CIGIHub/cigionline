@@ -2,6 +2,14 @@
 
 <section class="hero publication-hero-book">
   <div class="container">
+    {% if self.editor_count > 0 %}
+      {% define self.editors.all as people %}
+    {% else %}
+      {% define self.authors.all as people %}
+    {% endif %}
+    {% include 'streams/publication_card_block_large.html' with title=self.title authors=people date=self.publishing_date description=self.subtitle url=self.url topics=self.topics_sorted pdf_download=self.pdf_download book_epub_download=self.book_epub_download purchase_links=self.book_purchase_links image=self.image_cover %}
+  </div>
+    {% comment %} <div class="container">
     <div class="row">
       <div class="col-md-7">
         {% include "includes/topics.html" with topics=self.topics_sorted %}
@@ -26,5 +34,5 @@
         {% image image_cover fill-600x900 %}
       </div>
     </div>
-  </div>
+  </div> {% endcomment %}
 </section>

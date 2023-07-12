@@ -273,6 +273,18 @@
       }
     }
 
+    .card__image {
+      @include media-breakpoint-up(md) {
+        min-height: 300px;
+      }
+      @include media-breakpoint-up(lg) {
+        min-height: 375px;
+      }
+      @include media-breakpoint-up(xl) {
+        max-height: 375px;
+      }
+    }
+
     .card__text {
       .card__text__title {
         letter-spacing: -0.5px;
@@ -284,6 +296,52 @@
         }
         display: none;
         color: $cigi-text-grey;
+      }
+
+      .card__text__bottom {
+        display: flex;
+
+        .card__cta {
+          @include media-breakpoint-up(md) {
+            display: flex;
+            flex-direction: column;
+          }
+          display: none;
+          margin-left: 1em;
+          width: 50%;
+
+          a {
+            &:first-child {
+              margin-top: 0;
+            }
+            margin-top: 1em;
+          }
+
+          .card__button {
+            @include button(
+              $color: $white,
+              $background-color: $black,
+              $hover-color: $black,
+              $hover-background-color: $white,
+              $border-color: $white,
+              $hover-border-color: $black
+            );
+            @include media-breakpoint-up(lg) {
+              padding: 1em 2em;
+            }
+            display: flex;
+            align-items: center;
+            padding: 0.75em 1em;
+            width: 100%;
+            border-radius: 100px;
+            transition: none;
+            white-space: nowrap;
+
+            i {
+              margin-right: 1em;
+            }
+          }
+        }
       }
     }
   }

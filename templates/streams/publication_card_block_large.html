@@ -23,9 +23,31 @@
             {% include 'includes/cards/card_text_title.html' %}
             {% include 'includes/cards/card_text_description.html' %}
           </div>
-          <div class="card__text__meta">
-            {% include 'includes/cards/card_text_people.html' %}
-            {% include 'includes/cards/card_text_more.html' with type='publication' %}
+          <div class="card__text__bottom">
+            <div class="card__text__meta">
+              {% include 'includes/cards/card_text_people.html' %}
+              {% include 'includes/cards/card_text_more.html' with type='publication' %}
+            </div>
+            {% if pdf_download or book_epub_download %}
+              <div class="card__cta">
+                {% if book_epub_download %}
+                  <a href="{{ book_epub_download }}">
+                    <button type="button" class="card__button button--rounded">
+                      <i class="fas fa-book-open"></i>
+                      Download Book
+                    </button>
+                  </a>
+                {% endif %}
+                {% if pdf_download %}
+                  <a href="{{ pdf_download }}">
+                    <button type="button" class="card__button button--rounded">
+                      <i class="fas fa-download"></i>
+                      Download PDF
+                    </button>
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
