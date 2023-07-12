@@ -319,14 +319,14 @@
             margin-top: 1em;
           }
 
-          .card__button--reverse {
+          .card__button {
             @include button(
               $color: $white,
               $background-color: $black,
               $hover-color: $black,
               $hover-background-color: $white,
               $border-color: $white,
-              $hover-border-color: $white
+              $hover-border-color: $black
             );
             @include media-breakpoint-up(lg) {
               padding: 1em 2em;
