@@ -32,6 +32,25 @@ section {
               }
             }
           }
+
+          .card__cta {
+            .card__button {
+              @include media-breakpoint-up(lg) {
+                justify-content: start;
+              }
+              flex-direction: row-reverse;
+
+              .card__button__text {
+                @include media-breakpoint-up(lg) {
+                  margin-left: 1em;
+                }
+                @include media-breakpoint-up(xl) {
+                  margin-left: 3em;
+                }
+                margin-right: 0;
+              }
+            }
+          }
         }
       }
     }
