@@ -40,6 +40,10 @@ section {
       }
     }
   }
+
+  &.resources {
+    margin: 3em 0;
+  }
 }
 .image-hero {
   margin-bottom: 1em;
@@ -61,4 +65,28 @@ section {
     margin-top: 2em;
   }
   margin-top: 0;
+}
+
+.resources {
+  h2 {
+    margin-top: 2em;
+  }
+
+  .resources__resource {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 0;
+
+    .button--rounded {
+      @include button(
+        $color: $black,
+        $background-color: $white,
+        $hover-color: $white,
+        $hover-background-color: $black,
+        $border-color: $black,
+        $hover-border-color: $black
+      )
+    }
+  }
 }

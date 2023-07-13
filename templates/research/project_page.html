@@ -80,6 +80,34 @@
   </section>
 
   {% include "includes/body.html" with body=self.body %}
+
+  {% if self.related_files %}
+    <section class="resources">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <hr />
+            <h2>Resources</h2>
+            {% for file in self.related_files %}
+              <div class="resources__resource">
+                <div>{{ file.value.title }}</div>
+                <a href="{{file.value.file.url}}">
+                  <button type="button" class="button--rounded">
+                    <i class="fas fa-download"></i>
+                    Download
+                  </button>
+                </a>
+              </div>
+              {% if not forloop.last %}
+                <hr />
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
   <section>
     <div class="container">
       <div class="row">

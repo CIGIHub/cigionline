@@ -158,6 +158,7 @@ article {
           padding: 0;
         }
         margin: 0;
+        height: 100%;
       }
 
       .card__text {
@@ -165,6 +166,11 @@ article {
           width: auto;
           padding: 0;
         }
+
+        .card__text__title {
+          font-size: 1.3em;
+        }
+
         .card__text__description {
           @include media-breakpoint-up(md) {
             display: block;
