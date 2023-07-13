@@ -130,6 +130,71 @@
     }
   }
 
+  .card__text__bottom {
+    display: flex;
+
+    .card__cta {
+      @include media-breakpoint-up(md) {
+        display: flex;
+        flex-direction: column;
+      }
+      display: none;
+      margin-left: 1em;
+
+      a {
+        &:first-child {
+          margin-top: 0;
+        }
+        margin-top: 1em;
+      }
+
+      .card__button {
+        @include button(
+          $color: $white,
+          $background-color: $black,
+          $hover-color: $black,
+          $hover-background-color: $white,
+          $border-color: $white,
+          $hover-border-color: $black
+        );
+        @include media-breakpoint-up(lg) {
+          justify-content: space-between;
+          height: auto;
+          width: 100%;
+          padding: 0.75em 1.5em;
+        }
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.75em;
+        width: 2.75em;
+        font-size: 0.9em;
+        white-space: nowrap;
+        border-radius: 100px;
+        padding: 0.75em;
+        transition: none;
+
+        i {
+          @include media-breakpoint-up(lg) {
+            min-width: 1.5em;
+          }
+          margin: 0;
+        }
+
+        .card__button__text {
+          @include media-breakpoint-up(lg) {
+            display: block;
+            margin-right: 1em;
+          }
+          @include media-breakpoint-up(xl) {
+            margin-right: 3em;
+          }
+          display: none;
+        }
+      }
+    }
+  }
+
   &.card--event {
     display: flex;
     flex-direction: column;
