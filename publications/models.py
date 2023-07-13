@@ -141,6 +141,14 @@ class PublicationPage(
         verbose_name='Format',
         help_text='Select the formation of this book/publication.',
     )
+    book_epub_download = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='eBook Download',
+    )
     book_pages = models.IntegerField(
         blank=True,
         null=True,
@@ -324,6 +332,7 @@ class PublicationPage(
                 FieldPanel('isbn_ebook'),
                 FieldPanel('book_pages'),
                 FieldPanel('book_purchase_links'),
+                FieldPanel('book_epub_download'),
                 FieldPanel('book_excerpt_download'),
                 FieldPanel('book_excerpt'),
             ],
