@@ -1,7 +1,7 @@
 {% load wagtailcore_tags %}
 
 {% if url %}<a href="{{ url }}">{% endif %}
-  <button type="button" class="card__button button--rounded">
+  <button type="button" class="card__button button--rounded {{ additional_classes }}">
     <div class="card__button__text">{{ button_text }}</div>
     {% if button_text == "Download Book" %}
       <i class="fas fa-book-open"></i>

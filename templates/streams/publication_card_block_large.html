@@ -39,21 +39,9 @@
               <div class="card__cta">
                 {% if book_epub_download %}
                   {% include 'includes/cards/card_button.html' with url=book_epub_download button_text="Download Book" %}
-                  {% comment %} <a href="{{ book_epub_download }}">
-                    <button type="button" class="card__button button--rounded">
-                      <div class="card__button__text">Download Book</div>
-                      <i class="fas fa-book-open"></i>
-                    </button>
-                  </a> {% endcomment %}
                 {% endif %}
                 {% if pdf_download %}
                   {% include 'includes/cards/card_button.html' with url=pdf_download button_text="Download PDF" %}
-                  {% comment %} <a href="{{ pdf_download }}">
-                    <button type="button" class="card__button button--rounded">
-                      <div class="card__button__text">Download PDF</div>
-                      <i class="fas fa-download"></i>
-                    </button>
-                  </a> {% endcomment %}
                 {% endif %}
               </div>
             {% endif %}
