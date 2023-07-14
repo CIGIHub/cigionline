@@ -439,10 +439,6 @@
       @include media-breakpoint-up(xl) {
         width: 50%;
       }
-
-      .card__text__title {
-        @include card-title-font;
-      }
     }
 
     .card__image {

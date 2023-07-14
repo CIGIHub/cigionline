@@ -10,14 +10,6 @@
       }
     }
 
-    &.card--tiny--article {
-      .card__text {
-        .card__text__title {
-          @include card-title-font;
-        }
-      }
-    }
-
     &.card--tiny--article--with-image {
       .card__image {
         @include media-breakpoint-down(lg) {

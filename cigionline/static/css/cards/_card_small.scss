@@ -370,12 +370,4 @@
       }
     }
   }
-
-  &.card--small--article {
-    .card__text {
-      .card__text__title {
-        @include card-title-font;
-      }
-    }
-  }
 }
