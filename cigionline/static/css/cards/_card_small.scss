@@ -3,6 +3,30 @@
     display: flex;
     align-items: center;
 
+    .card__text__bottom 
+    .card__cta {
+      flex-direction: row;
+
+      .card__button {
+        @include media-breakpoint-up(lg) {
+          padding: 1em;
+        }
+        padding: 0.75em;
+        height: 3em;
+        width: 3em;
+  
+        i {
+          min-width: 0;
+        }
+  
+        .card__button__text {
+          display: none;
+        }
+      }
+    }
+    
+    
+
     &.card--small--poster {
       @include media-breakpoint-up(md) {
         display: grid;

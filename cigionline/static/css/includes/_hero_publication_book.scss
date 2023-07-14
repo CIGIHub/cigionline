@@ -42,10 +42,7 @@ section {
 
               .card__button__text {
                 @include media-breakpoint-up(lg) {
-                  margin-left: 1em;
-                }
-                @include media-breakpoint-up(xl) {
-                  margin-left: 3em;
+                  margin-left: 1.75vw;
                 }
                 margin-right: 0;
               }

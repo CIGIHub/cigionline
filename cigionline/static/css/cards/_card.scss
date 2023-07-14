@@ -133,18 +133,25 @@
   .card__text__bottom {
     display: flex;
 
+    .card__text__meta {
+      .card__text__date {
+        color: $cigi-text-grey;
+        display: none;
+        font-size: 0.8em;
+        margin-bottom: 0.5em;
+      }
+    }
+
     .card__cta {
       @include media-breakpoint-up(md) {
         display: flex;
         flex-direction: column;
       }
       @include media-breakpoint-up(lg) {
-        min-width: 12em;
-      }
-      @include media-breakpoint-up(xl) {
-        min-width: 15em;
+        min-width: min(17.5vw, 12em);
       }
       display: none;
+      justify-content: end;
       margin-left: 1em;
 
       a {
@@ -165,15 +172,14 @@
         );
         @include media-breakpoint-up(lg) {
           justify-content: space-between;
-          height: auto;
           width: 100%;
           padding: 0.75em 1.5em;
         }
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 2.75em;
-        width: 2.75em;
+        height: 3em;
+        width: 3em;
         font-size: 0.9em;
         white-space: nowrap;
         border-radius: 100px;
@@ -190,10 +196,7 @@
         .card__button__text {
           @include media-breakpoint-up(lg) {
             display: block;
-            margin-right: 1em;
-          }
-          @include media-breakpoint-up(xl) {
-            margin-right: 4em;
+            margin-right: 1.75vw;
           }
           display: none;
         }
