@@ -47,26 +47,33 @@
         </div>
       </div>
       <div class="row">
-        {% for article in self.latest_cigi_in_the_news %}
-          {% if forloop.counter == 4 %}
-            <div class="col-12 media-latest-news-hr">
-              <hr>
-            </div>
-          {% endif %}
-          <div class="col-12 col-md-6 col-lg-4 media-latest-news-article">
-            <article>
-              {% include "includes/topics.html" with topics=article.topics_sorted %}
-              <h3><a href="{% pageurl article %}">{{ article.title }}</a></h3>
-              <p class="meta">{{ article.article_type.title }}</p>
-              <p class="cigi-people-mentioned">
-                {% for person in article.cigi_people_mentioned.all %}
-                  <a href="{% pageurl person.person %}">{{ person.person.title }}</a>
-                {% endfor %}
-              </p>
-              {% include "includes/date.html" with date=article.publishing_date %}
-            </article>
+        <div class="col-12">
+          <div class="media-latest-news__container">
+            {% for article in self.latest_cigi_in_the_news %}
+              <div class=media-latest-news__item__container>
+                <article class="card__container card--tiny">
+                  <i class="fal fa-bullhorn"></i>
+                  <div class="card__text">
+                    <div>
+                      {% include 'includes/cards/card_text_topics.html' with topics=article.topics_sorted  %}
+                      {% include 'includes/cards/card_text_title.html' with title=article.title  %}
+                    </div>
+                    <div class="card__text__meta">
+                      <ul class="custom-text-list card__text__people">
+                        {% for person in article.cigi_people_mentioned.all %}
+                          <li>
+                            <a href="{% pageurl person.person %}">{{ person.person.title }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                      {% include 'includes/cards/card_text_more.html' with url=article.url title=article.title %}
+                    </div>
+                  </div>
+                </article>
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
+        </div>
       </div>
       <div class="row">
         <div class="col-12">
@@ -75,7 +82,7 @@
       </div>
     </div>
   </section>
-  <section>
+  <section class="media-search-table">
     <div class="container">
       <div class="row">
         <div class="col-12">
