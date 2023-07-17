@@ -1,89 +1,92 @@
 @import '../../../css/global/mixins';
 
+.hero {
+  margin: 3rem 0;
+
+  .hero__subtitle {
+    @include media-breakpoint-up(md) {
+      font-size: 2em;
+    }
+    font-size: 1.25em;
+    line-height: 1.25;
+
+    p {
+      margin: 0;
+    }
+  }
+}
 .media-latest-news {
   margin-bottom: 3em;
 
   h2 {
-    margin-bottom: 1.5em;
+    font-size: 1.1em;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid $cigi-light-grey;
+    width: 100%;
   }
 
-  .media-latest-news-article {
-    &:nth-child(1),
-    &:nth-child(2),
-    &:nth-child(3),
-    &:nth-child(5) {
+  .media-latest-news__container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -1rem;
+
+    .media-latest-news__item__container {
       @include media-breakpoint-up(md) {
-        border-bottom: 1px solid $cigi-light-grey;
+        width: 33.33333%;
       }
-      @include media-breakpoint-up(lg) {
-        border-bottom: 0;
-      }
-    }
+      padding: 0 1rem;
 
-    &:nth-child(2),
-    &:nth-child(5),
-    &:nth-child(7) {
-      @include media-breakpoint-up(md) {
-        border-left: 1px solid $cigi-light-grey;
-      }
-      @include media-breakpoint-up(lg) {
-        border-left: 0;
-      }
-    }
-
-    &:nth-child(1),
-    &:nth-child(2),
-    &:nth-child(5),
-    &:nth-child(6) {
-      @include media-breakpoint-up(lg) {
-        border-right: 1px solid $cigi-light-grey;
-      }
-    }
-
-    article {
-      @include media-breakpoint-up(lg) {
-        padding-bottom: 0;
-        padding-top: 0;
-      }
-      padding-bottom: 1em;
-      padding-top: 1em;
-
-      h3 {
-        @include link($color: $black, $hover-color: $cigi-primary-colour);
-        font-size: 1.0625em;
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(4),
+      &:nth-child(5) {
+        @include media-breakpoint-up(md) {
+          border-right: 1px solid $cigi-light-grey;
+        }
       }
 
-      .cigi-people-mentioned,
-      .date,
-      .meta {
-        color: $cigi-text-grey;
-        font-size: 0.75em;
-        margin: 0;
-        text-transform: uppercase;
+      &:nth-child(-n + 3) {
+        article {
+          border-bottom: 1px solid $cigi-light-grey;
+        }
       }
 
-      .cigi-people-mentioned {
-        @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
-        margin-bottom: 0;
+      article {
+        padding: 1rem 0;
 
-        a {
-          @include comma-separated;
+        h3 {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+          font-size: 1.0625em;
+        }
+
+        .cigi-people-mentioned,
+        .date,
+        .meta {
+          color: $cigi-text-grey;
+          font-size: 0.75em;
+          margin: 0;
+          text-transform: uppercase;
+        }
+
+        .cigi-people-mentioned {
+          @include link(
+            $color: $cigi-text-grey,
+            $hover-color: $cigi-primary-colour
+          );
+          margin-bottom: 0;
+
+          a {
+            @include comma-separated;
+          }
         }
       }
     }
   }
+}
 
-  .media-latest-news-article + .media-latest-news-article {
-    @include media-breakpoint-up(md) {
-      border-top: 0;
-    }
-    border-top: 1px solid $cigi-light-grey;
-  }
-
-  .media-latest-news-hr {
-    @include media-breakpoint-up(lg) {
-      display: block;
-    }
-    display: none;
+.media-search-table {
+  .search-table-container {
+    margin-top: 0;
   }
 }
