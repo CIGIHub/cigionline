@@ -3,6 +3,27 @@
     display: flex;
     align-items: center;
 
+    .card__text__bottom 
+    .card__cta {
+      flex-direction: row;
+      min-width: 0;
+
+      .card__button {
+        justify-content: center;
+        padding: 0.85em;
+        height: 2.75em;
+        width: 2.75em;
+  
+        i {
+          min-width: 0;
+        }
+  
+        .card__button__text {
+          display: none;
+        }
+      }
+    }
+
     &.card--small--poster {
       @include media-breakpoint-up(md) {
         display: grid;
@@ -86,8 +107,8 @@
         @include media-breakpoint-only(md) {
           display: none;
         }
-        margin-top: 2em;
-        margin-bottom: 1.5em;
+        // margin-top: 2em;
+        // margin-bottom: 1.5em;
       }
     }
   }
