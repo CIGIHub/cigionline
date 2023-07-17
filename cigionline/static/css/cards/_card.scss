@@ -124,8 +124,9 @@
         flex-direction: column;
         align-items: flex-start;
       }
-      flex-direction: row;
       align-items: flex-end;
+      flex-direction: row;
+      height: 100%;
 
       .card__text__more {
         @include media-breakpoint-up(md) {
@@ -148,6 +149,7 @@
 
   .card__text__bottom {
     display: flex;
+    align-items: end;
 
     .card__text__meta {
       .card__text__date {
@@ -162,9 +164,10 @@
       @include media-breakpoint-up(md) {
         display: flex;
         flex-direction: column;
+        min-width: min(25vw, 12em);
       }
       @include media-breakpoint-up(lg) {
-        min-width: min(17.5vw, 12em);
+        min-width: min(22.5vw, 12em);
       }
       display: none;
       justify-content: end;
@@ -174,7 +177,7 @@
         &:first-child {
           margin-top: 0;
         }
-        margin-top: 1em;
+        margin-top: 0.5em;
       }
 
       .card__button {
@@ -186,7 +189,7 @@
           $border-color: $white,
           $hover-border-color: $black
         );
-        @include media-breakpoint-up(lg) {
+        @include media-breakpoint-up(md) {
           justify-content: space-between;
           width: 100%;
           padding: 0.75em 1.5em;
@@ -194,8 +197,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 3em;
-        width: 3em;
+        height: 2.75em;
+        width: 2.75em;
         font-size: 0.9em;
         white-space: nowrap;
         border-radius: 100px;
@@ -203,14 +206,14 @@
         transition: none;
 
         i {
-          @include media-breakpoint-up(lg) {
+          @include media-breakpoint-up(md) {
             min-width: 1.5em;
           }
           margin: 0;
         }
 
         .card__button__text {
-          @include media-breakpoint-up(lg) {
+          @include media-breakpoint-up(md) {
             display: block;
             margin-right: 1.75vw;
           }
@@ -283,25 +286,40 @@
       .card__text__meta {
         width: 100%;
       }
+
+      .card--event__buttons {
+        a {
+          width: 100%;
+        }
+      }
+    }
+
+    .card__text__bottom
+    .card__text__meta
+    .card__cta {
+      @include media-breakpoint-up(md){
+        display: flex;
+      }
+      display: none;
     }
 
     .card--event__button--register {
-      @include button(
-        $color: $white,
-        $background-color: $black,
-        $hover-color: $black,
-        $hover-background-color: $white,
-        $border-color: $black,
-        $hover-border-color: $black
-      );
+      // @include button(
+      //   $color: $white,
+      //   $background-color: $black,
+      //   $hover-color: $black,
+      //   $hover-background-color: $white,
+      //   $border-color: $black,
+      //   $hover-border-color: $black
+      // );
 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1em 2em;
-      width: 100%;
-      border-radius: 100px;
-      transition: none;
+      // display: flex;
+      // justify-content: space-between;
+      // align-items: center;
+      // padding: 1em 2em;
+      // width: 100%;
+      // border-radius: 100px;
+      // transition: none;
 
       &.is_private {
         @include button(

@@ -297,17 +297,6 @@
         display: none;
         color: $cigi-text-grey;
       }
-
-      // .card__text__bottom {
-      //   .card__text__meta {
-      //     .card__text__date {
-      //       color: $cigi-text-grey;
-      //       display: none;
-      //       font-size: 0.8em;
-      //       margin-bottom: 0.5em;
-      //     }
-      //   }
-      // }
     }
   }
 
@@ -331,6 +320,7 @@
     }
     .card--event__buttons {
       display: flex;
+      flex-direction: column;
       justify-content: flex-end;
 
       a {

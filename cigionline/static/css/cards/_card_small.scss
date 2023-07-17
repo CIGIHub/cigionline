@@ -6,14 +6,13 @@
     .card__text__bottom 
     .card__cta {
       flex-direction: row;
+      min-width: 0;
 
       .card__button {
-        @include media-breakpoint-up(lg) {
-          padding: 1em;
-        }
-        padding: 0.75em;
-        height: 3em;
-        width: 3em;
+        justify-content: center;
+        padding: 0.85em;
+        height: 2.75em;
+        width: 2.75em;
   
         i {
           min-width: 0;
@@ -108,8 +107,8 @@
         @include media-breakpoint-only(md) {
           display: none;
         }
-        margin-top: 2em;
-        margin-bottom: 1.5em;
+        // margin-top: 2em;
+        // margin-bottom: 1.5em;
       }
     }
   }
