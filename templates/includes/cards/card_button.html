@@ -3,10 +3,12 @@
 {% if url %}<a href="{{ url }}">{% endif %}
   <button type="button" class="card__button button--rounded {{ additional_classes }}">
     <div class="card__button__text">{{ button_text }}</div>
-    {% if button_text == "Download Book" %}
+    {% if button_text == 'Download Book' %}
       <i class="fas fa-book-open"></i>
-    {% elif button_text == "Download PDF" %}
+    {% elif button_text == 'Download PDF' %}
       <i class="fas fa-download"></i>
+    {% elif button_text == 'Add to Calendar' %}
+      <i class="fas fa-plus"></i>
     {% endif %}
   </button>
 {% if url %}</a>{% endif %}

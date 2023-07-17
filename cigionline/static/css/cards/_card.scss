@@ -119,6 +119,22 @@
     line-height: 1.25;
     width: 100%;
 
+    &.meta--vertical {
+      @include media-breakpoint-up(md) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      flex-direction: row;
+      align-items: flex-end;
+
+      .card__text__more {
+        @include media-breakpoint-up(md) {
+          margin-left: 0;
+        }
+        margin-left: 0.5em;
+      }
+    }
+
     .card__text__people {
       @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
       font-size: 0.8em;

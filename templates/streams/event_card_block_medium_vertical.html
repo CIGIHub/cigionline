@@ -52,24 +52,28 @@
       </div>
     </div>
     <div class="row g-3 g-md-5 card--event__bottom">
-      <div class="col-md-6 d-flex align-items-end">
+      <div class="card__text__bottom">
         <div class="card__text__meta">
           {% include 'includes/cards/card_text_people.html' %}
           {% include 'includes/cards/card_text_more.html' with type='event' %}
         </div>
-      </div>
-      <div class="col-md-6 text-center">
-        {% if event_access == 'Private' %}
-          <button type="button" class="card--event__button--register button--rounded is_private" disabled>
-            Private Event
-          </button>
-        {% elif not is_past %}
-          <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
-            <button type="button" class="card--event__button--register button--rounded">
-              Register Now
-              <i class="fas fa-angle-right"></i>
-            </button>
-          </a>
+        {% if event_access == 'Private' or not is_past %}
+          <div class="card__cta">
+            {% if event_access == 'Private' %}
+              <button type="button" class="card--event__button--register card__button button--rounded is_private" disabled>
+                Private Event
+              </button>
+            {% elif not is_past and registration_url %}
+              <div class="card--event__buttons d-flex">
+                <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+                  <button type="button" class="card--event__button--register card__button button--rounded">
+                    Register Now
+                    <i class="fas fa-angle-right"></i>
+                  </button>
+                </a>
+              </div>
+            {% endif %}
+          </div>
         {% endif %}
       </div>
     </div>
