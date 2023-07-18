@@ -9,22 +9,6 @@ import './css/cigionline.scss';
 import addInlineVideoActions from './js/inline_video_block';
 
 $(function () {
-  // MAIN NAVIGATION SCROLL
-  let scrollTop = 0;
-  const header = $('header:not(.small)');
-  const globalNav = header.find('#global-nav');
-
-  $(window).on('scroll', function () {
-    scrollTop = $(window).scrollTop();
-    if (scrollTop >= 66) {
-      header.addClass('scrolled');
-      globalNav.addClass('scrolled-nav');
-    } else {
-      header.removeClass('scrolled');
-      globalNav.removeClass('scrolled-nav');
-    }
-  });
-
   // Facebook Share buttons
   $('.facebook-share-link').on('click', function () {
     const href = $(this).data('url');
@@ -151,6 +135,23 @@ $(function () {
 
   window.addEventListener('scroll', debounceScroll);
 });
+
+const globalNav = document.getElementById('global-nav');
+const header = document.querySelector('header:not(.small)');
+
+function handleHeaderSize() {
+  const scrollPosition = Math.round(window.scrollY);
+  const scrollPoint = 66;
+  if (scrollPosition > scrollPoint) {
+    header.classList.add('scrolled');
+    globalNav.classList.add('scrolled-nav');
+  } else if (scrollPosition + 20 < scrollPoint) {
+    header.classList.remove('scrolled');
+    globalNav.classList.remove('scrolled-nav');
+  }
+}
+
+window.addEventListener('scroll', handleHeaderSize);
 
 addInlineVideoActions();
 
