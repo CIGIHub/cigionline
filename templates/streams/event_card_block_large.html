@@ -64,54 +64,18 @@
               <button type="button" class="card--event__button--register card__button button--rounded is_private" disabled>
                 <div class="card__button__text">Private Event</div>
               </button>
-            {% elif not is_past %}
+            {% elif registration_url and not is_past %}
               <div class="card--event__buttons">
-                <a href="/events/feed.ics?id={{id}}">
-                  <button type="button" class="card--event__button--calendar card__button button--rounded">
-                    <div class="card__button__text">Add to Calendar</div>
-                    <i class="fas fa-plus"></i>
+                <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+                  <button type="button" class="card--event__button--register card__button button--rounded">
+                    <div class="card__button__text">Register Now</div>
+                    <i class="fas fa-angle-right"></i>
                   </button>
                 </a>
-                {% if registration_url %}
-                  <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
-                    <button type="button" class="card--event__button--register card__button button--rounded">
-                      <div class="card__button__text">Register Now</div>
-                      <i class="fas fa-angle-right"></i>
-                    </button>
-                  </a>
-                {% endif %}
               </div>
             {% endif %}
           </div>
         {% endif %}
       </div>
-      {% comment %} <div class="card__text__meta">
-        {% include 'includes/cards/card_text_people.html' %}
-        {% include 'includes/cards/card_text_more.html' with type='event' %}
-      </div>
-      <div class="col-md-6 text-center">
-        {% if event_access == 'Private' %}
-          <button type="button" class="card--event__button--register button--rounded is_private" disabled>
-            Private Event
-          </button>
-        {% elif not is_past %}
-          <div class="card--event__buttons d-flex">
-            <a href="/events/feed.ics?id={{id}}">
-              <button type="button" class="card--event__button--calendar button--rounded">
-                Add to Calendar
-                <i class="fas fa-plus"></i>
-              </button>
-            </a>
-            {% if registration_url %}
-              <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
-                <button type="button" class="card--event__button--register button--rounded">
-                  Register Now
-                  <i class="fas fa-angle-right"></i>
-                </button>
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div> {% endcomment %}
     </div>
 </div>

@@ -347,25 +347,6 @@
         border-radius: 100px;
         transition: none;
       }
-
-      .card--event__button--calendar {
-        @include button(
-          $color: $black,
-          $background-color: $white,
-          $hover-color: $white,
-          $hover-background-color: $black,
-          $border-color: $black,
-          $hover-border-color: $black
-        );
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1em 2em;
-        width: 100%;
-        border-radius: 100px;
-        transition: none;
-      }
     }
   }
 
@@ -443,6 +424,8 @@
 
             .card__text__meta__left {
               width: 100%;
+              flex-direction: column;
+              align-items: flex-start;
 
               a {
                 margin-bottom: 0;
@@ -455,18 +438,14 @@
               ul {
                 margin-top: 1em;
               }
+
+              .card__cta {
+                margin-left: 0;
+              }
             }
           }
 
           .card__cta {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-
-            a {
-              display: flex;
-            }
-
             .card--event__buttons {
               display: flex;
               justify-content: flex-end;
@@ -495,33 +474,6 @@
                 border-radius: 100px;
                 transition: none;
               }
-
-              .card--event__button--calendar {
-                @include button(
-                  $color: $black,
-                  $background-color: $white,
-                  $hover-color: $white,
-                  $hover-background-color: $black,
-                  $border-color: $black,
-                  $hover-border-color: $black
-                );
-
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1em 2em;
-                width: 100%;
-                border-radius: 100px;
-                transition: none;
-              }
-            }
-
-            .card--event__button--register {
-              @include media-breakpoint-only(lg) {
-                width: 100%;
-              }
-              margin-bottom: 1em;
-              width: 66.6667%;
             }
 
             .card__text__more__container {
