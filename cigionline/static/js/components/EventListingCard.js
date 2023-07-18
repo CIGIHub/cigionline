@@ -123,7 +123,7 @@ const EventListingCard = (props) => {
           </div>
         </div>
         <div className="row g-3 g-md-5 card--event__bottom">
-          <div className="col-md-6 d-flex align-items-end">
+          <div className="card__text__bottom">
             <div className="card__text__meta">
               <div>
                 <ul className="custom-text-list card__text__people">
@@ -174,33 +174,34 @@ const EventListingCard = (props) => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6 text-center">
-            {(Date.now() < startDateTs) && !isLive
-              ? (row.event_access === 'Private'
-                ? (
-                  <button type="button" className="card--event__button--register button--rounded is_private" disabled>
-                    Private Event
-                  </button>
-                )
-                : row.registration_url && (
-                  <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
-                    Register Now
-                    <i className="fas fa-angle-right" />
-                  </a>
-                ))
-              : (videoPageUrl
-                ? (
-                  <a className="card--event__button--register button--rounded" href={videoPageUrl}>
-                    Watch Now
-                    <i className="fas fa-angle-right" />
-                  </a>
-                )
-                : (row.event_access === 'Private' && (
-                  <button type="button" className="card--event__button--register button--rounded is_private" disabled>
-                    Private Event
-                  </button>
-                )))}
+            {(row.event_access === 'Private' || videoPageUrl || (row.registration_url && Date.now() < startDateTs)) && (
+              <div className="card__cta">
+                {(Date.now() < startDateTs) && !isLive
+                  ? (row.event_access === 'Private'
+                    ? (
+                      <button type="button" className="card--event__button--register card__button button--rounded is_private" disabled>
+                        Private Event
+                      </button>
+                    )
+                    : row.registration_url && (
+                      <a className="card--event__button--register card__button button--rounded" href={row.registration_url} onClick={handleClick}>
+                        Register Now
+                        <i className="fas fa-angle-right" />
+                      </a>
+                    ))
+                  : (videoPageUrl
+                    ? (
+                      <a className="card--event__button--register card__button button--rounded" href={videoPageUrl}>
+                        Watch Now
+                        <i className="fas fa-angle-right" />
+                      </a>
+                    )
+                    : (row.event_access === 'Private' && (
+                      <button type="button" className="card--event__button--register card__button button--rounded is_private" disabled>
+                        Private Event
+                      </button>
+                    )))}
+              </div>)}
           </div>
         </div>
       </article>
