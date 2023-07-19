@@ -1,5 +1,33 @@
 @import '../../../css/global/mixins';
 
+.body
+.paragraph-heading {
+  font-size: inherit;
+  font-weight: 400;
+  margin-bottom: 3em;
+}
+
+.about-the-author {
+  h3 {
+    border-top: solid 1px $cigi-light-grey;
+    font-size: inherit;
+    font-weight: 400;
+    margin-bottom: 3em;
+    padding-top: 3em;
+    text-transform: none;
+    width: 100%;
+  }
+
+  .name {
+    font-size: inherit;
+    font-weight: 400;
+  }
+
+  .author-block {
+    border-bottom: 0;
+  }
+}
+
 .publication-book-metadata {
   border-top: 1px solid $cigi-light-grey;
   columns: 2;
