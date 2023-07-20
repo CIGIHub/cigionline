@@ -4,6 +4,8 @@ import MediaListing from '../../js/components/MediaListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/media_landing_page.scss';
 
+import SearchResultCard from '../../js/components/SearchResultCard';
+
 ReactDOM.render(
   <SearchTable
     showSearch
@@ -46,19 +48,29 @@ ReactDOM.render(
         value: 'Op-Eds',
       }],
     }]}
-    RowComponent={MediaListing}
+    RowComponent={SearchResultCard}
+    RowComponentList={MediaListing}
     tableColumns={[{
       colSpan: 6,
       colTitle: 'Title',
+      colClass: 'title',
     }, {
       colSpan: 1,
       colTitle: 'Expert',
+      colClass: 'authors',
     }, {
       colSpan: 1,
       colTitle: 'Type',
+      colClass: 'type',
     }, {
       colSpan: 4,
       colTitle: 'Topic',
+      colClass: 'topics',
+    },
+    {
+      colSpan: 1,
+      colTitle: 'More',
+      colClass: 'more',
     }]}
   />,
   document.getElementById('media-search-table'),
