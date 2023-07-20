@@ -1,18 +1,20 @@
 import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
+import CardTextMore from './CardTextMore';
 
 function MediaListing(props) {
   const { row } = props;
+  console.log(row)
 
   return (
     <tr>
-      <td colSpan="6">
-        <div className="table-mobile-text">
+      <td className="search-table__results__row__title">
+        <div className="table-mobile-text search-table__results__row__title--mobile">
           Title
         </div>
         <div className="table-infos-wrapper">
-          <span className="table-icon icon-media">
+          <span className="table-icon icon-opinion">
             <i className="fal fa-bullhorn" />
           </span>
           <div className="table-infos">
@@ -27,35 +29,31 @@ function MediaListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="1">
+      <td className="search-table__results__row__authors">
         <div className="table-mobile-text">
-          Expert
+          Author
         </div>
         <div className="table-content">
           <ul className="custom-text-list author-list">
-            {row.cigi_people_mentioned.map((person) => (
-              <li key={`${row.id}-person-${person.id}`}>
-                <a href={person.url} className="table-content-link table-content-link-black">
-                  {person.title}
+            {row.cigi_people_mentioned.map((author) => (
+              <li key={`${row.id}-author-${author.id}`}>
+                <a href={author.url} className="table-content-link table-content-link-black">
+                  {author.title}
                 </a>
               </li>
             ))}
           </ul>
         </div>
       </td>
-      <td colSpan="1">
+      <td className="search-table__results__row__type">
         <div className="table-mobile-text">
           Type
         </div>
         <div className="table-content">
-          <ul className="custom-text-list">
-            <li key={`${row.id}-contentsubtype`} className="table-infos-meta">
-              {row.contentsubtype}
-            </li>
-          </ul>
+          {row.contentsubtype}
         </div>
       </td>
-      <td colSpan="4">
+      <td className="search-table__results__row__topics">
         <div className="table-mobile-text">
           Topic
         </div>
@@ -70,6 +68,16 @@ function MediaListing(props) {
             ))}
           </ul>
         </div>
+      </td>
+      <td className="search-table__results__row__more">
+        <div className="table-mobile-text">
+          {' '}
+        </div>
+        <CardTextMore
+          title={row.title}
+          type="Opinion"
+          url={row.url}
+        />
       </td>
     </tr>
   );
