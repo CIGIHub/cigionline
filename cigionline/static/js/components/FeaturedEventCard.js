@@ -146,25 +146,25 @@ const FeaturedEventCard = (props) => {
                         {(Date.now() < startDateTs) && !isLive
                           ? (row.event_access === 'Private'
                             ? (
-                              <button type="button" className="card--event__button--register card__button button--rounded is_private" disabled>
+                              <button type="button" className="card--event__button--register cta__button is_private" disabled>
                                 Private Event
                               </button>
                             )
                             : row.registration_url && (
-                              <a className="card--event__button--register card__button button--rounded" href={row.registration_url} onClick={handleClick}>
+                              <a className="card--event__button--register cta__button" href={row.registration_url} onClick={handleClick}>
                                 Register Now
                                 <i className="fas fa-angle-right" />
                               </a>
                             ))
                           : (videoPageUrl
                             ? (
-                              <a className="card--event__button--register card__button button--rounded" href={videoPageUrl}>
+                              <a className="card--event__button--register cta__button" href={videoPageUrl}>
                                 Watch Now
                                 <i className="fas fa-angle-right" />
                               </a>
                             )
                             : (row.event_access === 'Private' && (
-                              <button type="button" className="card--event__button--register card__button button--rounded is_private" disabled>
+                              <button type="button" className="card--event__button--register cta__button is_private" disabled>
                                 Private Event
                               </button>
                             )))}

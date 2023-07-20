@@ -380,7 +380,7 @@
                       min-width: min(25vw, 12em);
 
                       a 
-                      .card__button {
+                      .cta__button {
                         justify-content: space-between;
                         width: 100%;
                         padding: 0.75em 1.5em;
@@ -389,7 +389,7 @@
                           min-width: 1.5em;
                         }
 
-                        .card__button__text {
+                        .button__text {
                           display: flex;
                         }
                       }

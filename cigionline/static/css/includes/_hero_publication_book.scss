@@ -34,13 +34,13 @@ section {
           }
 
           .card__cta {
-            .card__button {
+            .cta__button {
               @include media-breakpoint-up(lg) {
                 justify-content: start;
               }
               flex-direction: row-reverse;
 
-              .card__button__text {
+              .button__text {
                 @include media-breakpoint-up(lg) {
                   margin-left: 1.75vw;
                 }
