@@ -37,6 +37,46 @@ section {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
       color: $cigi-text-grey;
     }
+
+    .authors {
+      a {
+        color: $black;
+      }
+    }
+
+    .card__text__topics {
+      a {
+        color: $cigi-text-grey
+      }
+    }
+    
+    .publication-download {
+      display: flex;
+      justify-content: center;
+      margin-top: 1em;
+
+      .cta__button {
+        min-width: min(30vw,20em);
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.75em 1.5em;
+
+        i {
+          min-width: 1.5em;
+        }
+
+        .button__text {
+          display: block;
+          margin-right: 1.75vw;
+        }
+      }
+    }
+
+    .social-share-list {
+      @include media-breakpoint-up(lg) {
+        display: none;
+      }
+    }
   }
 }
 

@@ -15,15 +15,18 @@
           </div>
         {% endif %}
         {% include "includes/date.html" with date=self.publishing_date %}
-        {% include "includes/social_links.html" with title=self.title %}
+        {% include "includes/social_links.html" with title=self.title no_circle=True %}
         {% for document in download %}
           {% if document.value.display %}
-            <button class="button">
+            <div class="publication-download">
+              {% include 'includes/cta_button.html' with url=self.pdf_download button_text='Download PDF' %}
+            </div>
+            {% comment %} <button class="button">
               <a href="{{document.value.file.url}}">
                   <i class="fa fas fa-download"></i>
                   {% if document.value.button_text == '' %}Download PDF {% else %} {{ document.value.button_text}} {% endif %}
               </a>
-            </button>
+            </button> {% endcomment %}
           {% endif %}
         {% endfor %}
         {% for cta in ctas %}
