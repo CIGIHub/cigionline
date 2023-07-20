@@ -5,7 +5,6 @@ import SearchTable from '../../js/components/SearchTable';
 import './css/media_landing_page.scss';
 
 import SearchResultCard from '../../js/components/SearchResultCard';
-import OpinionListing from '../../js/components/OpinionListing';
 
 ReactDOM.render(
   <SearchTable
