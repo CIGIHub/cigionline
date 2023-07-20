@@ -48,7 +48,17 @@
 
       &:nth-child(-n + 3) {
         article {
-          border-bottom: 1px solid $cigi-light-grey;
+          @include media-breakpoint-up(md) {
+            border-bottom: 1px solid $cigi-light-grey;
+          }
+        }
+      }
+
+      &:not(:last-child) {
+        article {
+          @include media-breakpoint-down(md) {
+            border-bottom: 1px solid $cigi-light-grey;
+          }
         }
       }
 
