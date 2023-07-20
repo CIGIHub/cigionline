@@ -1,8 +1,14 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags core_tags %}
+
+{% if custom_text %}
+  {% define custom_text as display_text %}
+{% else %}
+  {% define button_text as display_text %}
+{% endif %}
 
 {% if url %}<a href="{{ url }}">{% endif %}
   <button type="button" class="cta__button {{ additional_classes }}">
-    <div class="button__text">{{ button_text }}</div>
+    <div class="button__text">{{ display_text }}</div>
     {% if button_text == 'Download Book' %}
       <i class="fas fa-book-open"></i>
     {% elif button_text == 'Download PDF' %}
