@@ -48,7 +48,6 @@
 
       &:nth-child(-n + 3) {
         article {
-<<<<<<< HEAD
           @include media-breakpoint-up(md) {
             border-bottom: 1px solid $cigi-light-grey;
           }
@@ -100,47 +99,4 @@
   .search-table-container {
     margin-top: 0;
   }
-=======
-          border-bottom: 1px solid $cigi-light-grey;
-        }
-      }
-
-      article {
-        padding: 1rem 0;
-
-        h3 {
-          @include link($color: $black, $hover-color: $cigi-primary-colour);
-          font-size: 1.0625em;
-        }
-
-        .cigi-people-mentioned,
-        .date,
-        .meta {
-          color: $cigi-text-grey;
-          font-size: 0.75em;
-          margin: 0;
-          text-transform: uppercase;
-        }
-
-        .cigi-people-mentioned {
-          @include link(
-            $color: $cigi-text-grey,
-            $hover-color: $cigi-primary-colour
-          );
-          margin-bottom: 0;
-
-          a {
-            @include comma-separated;
-          }
-        }
-      }
-    }
-  }
-}
-
-.media-search-table {
-  .search-table-container {
-    margin-top: 0;
-  }
->>>>>>> cigi-3-0
 }
