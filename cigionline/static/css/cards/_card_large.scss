@@ -297,61 +297,6 @@
         display: none;
         color: $cigi-text-grey;
       }
-
-      .card__text__bottom {
-        display: flex;
-
-        .card__text__meta {
-          .card__text__date {
-            color: $cigi-text-grey;
-            display: none;
-            font-size: 0.8em;
-            margin-bottom: 0.5em;
-          }
-        }
-
-        .card__cta {
-          @include media-breakpoint-up(md) {
-            display: flex;
-            flex-direction: column;
-          }
-          display: none;
-          margin-left: 1em;
-          width: 50%;
-
-          a {
-            &:first-child {
-              margin-top: 0;
-            }
-            margin-top: 1em;
-          }
-
-          .card__button {
-            @include button(
-              $color: $white,
-              $background-color: $black,
-              $hover-color: $black,
-              $hover-background-color: $white,
-              $border-color: $white,
-              $hover-border-color: $black
-            );
-            @include media-breakpoint-up(lg) {
-              padding: 1em 2em;
-            }
-            display: flex;
-            align-items: center;
-            padding: 0.75em 1em;
-            width: 100%;
-            border-radius: 100px;
-            transition: none;
-            white-space: nowrap;
-
-            i {
-              margin-right: 1em;
-            }
-          }
-        }
-      }
     }
   }
 
@@ -375,6 +320,7 @@
     }
     .card--event__buttons {
       display: flex;
+      flex-direction: column;
       justify-content: flex-end;
 
       a {
@@ -393,25 +339,6 @@
       }
 
       button {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1em 2em;
-        width: 100%;
-        border-radius: 100px;
-        transition: none;
-      }
-
-      .card--event__button--calendar {
-        @include button(
-          $color: $black,
-          $background-color: $white,
-          $hover-color: $white,
-          $hover-background-color: $black,
-          $border-color: $black,
-          $hover-border-color: $black
-        );
-
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -497,6 +424,8 @@
 
             .card__text__meta__left {
               width: 100%;
+              flex-direction: column;
+              align-items: flex-start;
 
               a {
                 margin-bottom: 0;
@@ -509,18 +438,14 @@
               ul {
                 margin-top: 1em;
               }
+
+              .card__cta {
+                margin-left: 0;
+              }
             }
           }
 
           .card__cta {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-
-            a {
-              display: flex;
-            }
-
             .card--event__buttons {
               display: flex;
               justify-content: flex-end;
@@ -549,33 +474,6 @@
                 border-radius: 100px;
                 transition: none;
               }
-
-              .card--event__button--calendar {
-                @include button(
-                  $color: $black,
-                  $background-color: $white,
-                  $hover-color: $white,
-                  $hover-background-color: $black,
-                  $border-color: $black,
-                  $hover-border-color: $black
-                );
-
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1em 2em;
-                width: 100%;
-                border-radius: 100px;
-                transition: none;
-              }
-            }
-
-            .card--event__button--register {
-              @include media-breakpoint-only(lg) {
-                width: 100%;
-              }
-              margin-bottom: 1em;
-              width: 66.6667%;
             }
 
             .card__text__more__container {

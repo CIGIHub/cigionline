@@ -141,30 +141,30 @@ const FeaturedEventCard = (props) => {
                 </div>
                 <div className="card--event__bottom">
                   <div className="card__text__meta">
-                    <div className="card__text__meta__left">
+                    <div className="card__text__meta__left card__text__bottom">
                       <div className="card__cta">
                         {(Date.now() < startDateTs) && !isLive
                           ? (row.event_access === 'Private'
                             ? (
-                              <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                              <button type="button" className="card--event__button--register card__button button--rounded is_private" disabled>
                                 Private Event
                               </button>
                             )
                             : row.registration_url && (
-                              <a className="card--event__button--register button--rounded" href={row.registration_url} onClick={handleClick}>
+                              <a className="card--event__button--register card__button button--rounded" href={row.registration_url} onClick={handleClick}>
                                 Register Now
                                 <i className="fas fa-angle-right" />
                               </a>
                             ))
                           : (videoPageUrl
                             ? (
-                              <a className="card--event__button--register button--rounded" href={videoPageUrl}>
+                              <a className="card--event__button--register card__button button--rounded" href={videoPageUrl}>
                                 Watch Now
                                 <i className="fas fa-angle-right" />
                               </a>
                             )
                             : (row.event_access === 'Private' && (
-                              <button type="button" className="card--event__button--register button--rounded is_private" disabled>
+                              <button type="button" className="card--event__button--register card__button button--rounded is_private" disabled>
                                 Private Event
                               </button>
                             )))}
