@@ -15,6 +15,7 @@
     }
   }
 }
+
 .media-latest-news {
   margin-bottom: 3em;
 
@@ -98,5 +99,25 @@
 .media-search-table {
   .search-table-container {
     margin-top: 0;
+
+    .search-table__results--list {
+      .search-table__results__row__type {
+        @include media-breakpoint-up(md) {
+          width: 15%;
+        }
+      }
+
+      .search-table__results__row__authors {
+        @include media-breakpoint-up(md) {
+          width: 15%;
+        }
+      }
+
+      .search-table__results__row__topics {
+        @include media-breakpoint-up(md) {
+          width: 15%;
+        }
+      }
+    }
   }
 }
