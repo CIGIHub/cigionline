@@ -86,7 +86,7 @@ function SearchResultListingRow(props) {
           </div>
         </div>
       </td>
-      <td className="search-table__results__row__content-type">
+      <td className="search-table__results__row__type">
         <div className="search-table__results__row__title--mobile">
           Content Type
         </div>

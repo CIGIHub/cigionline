@@ -1,14 +1,15 @@
 import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
+import CardTextMore from './CardTextMore';
 
 function ProjectContentListing(props) {
   const { row } = props;
 
   return (
     <tr>
-      <td colSpan="4">
-        <div className="table-mobile-text">
+      <td className="search-table__results__row__title">
+        <div className="table-mobile-text search-table__results__row__title--mobile">
           Title
         </div>
         <div className="table-infos-wrapper">
@@ -54,9 +55,9 @@ function ProjectContentListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="3">
+      <td className="search-table__results__row__authors">
         <div className="table-mobile-text">
-          Expert
+          Author
         </div>
         <div className="table-content">
           <ul className="custom-text-list author-list">
@@ -70,7 +71,7 @@ function ProjectContentListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="2">
+      <td className="search-table__results__row__topics">
         <div className="table-mobile-text">
           Topic
         </div>
@@ -86,31 +87,15 @@ function ProjectContentListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="2">
+      <td className="search-table__results__row__more">
         <div className="table-mobile-text">
-          Type
+          {' '}
         </div>
-        <div className="table-content">
-          <ul className="custom-text-list">
-            <li key={`${row.id}-contenttype`} className="table-infos-meta">
-              {row.contenttype === 'Opinion'
-                ? row.contentsubtype
-                : row.contenttype}
-            </li>
-          </ul>
-        </div>
-      </td>
-      <td colSpan="1">
-        <div className="table-mobile-text">
-          PDF
-        </div>
-        <div className="table-content">
-          {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon">
-              <i className="fa fas fa-download" />
-            </a>
-          )}
-        </div>
+        <CardTextMore
+          title={row.title}
+          type="Opinion"
+          url={row.url}
+        />
       </td>
     </tr>
   );

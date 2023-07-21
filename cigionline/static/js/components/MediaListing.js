@@ -30,7 +30,7 @@ function MediaListing(props) {
       </td>
       <td className="search-table__results__row__authors">
         <div className="table-mobile-text">
-          Author
+          Expert
         </div>
         <div className="table-content">
           <ul className="custom-text-list author-list">
