@@ -104,7 +104,6 @@ article {
             }
 
             .card__text__title {
-              @include card-title-font;
               font-size: 1.1em;
             }
           }
@@ -574,9 +573,6 @@ article {
         }
         @include media-breakpoint-up(lg) {
           flex: 1 1 23%;
-        }
-        .card__text__title {
-          @include card-title-font;
         }
       }
     }

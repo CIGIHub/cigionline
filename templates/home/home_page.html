@@ -23,8 +23,8 @@
     </div>
   </div>
 </header>
-<div class="body">
-  <div class="container layout">
+<div class="body layout">
+  <div class="container">
     {% for block in self.layout %}
       {% include_block block %}
       {% if not forloop.last %}

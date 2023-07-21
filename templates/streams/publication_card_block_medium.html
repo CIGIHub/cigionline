@@ -35,9 +35,28 @@
             {% include 'includes/cards/card_text_title.html' %}
             {% include 'includes/cards/card_text_description.html' %}
           </div>
-          <div class="card__text__meta">
-            {% include 'includes/cards/card_text_people.html' %}
-            {% include 'includes/cards/card_text_more.html' with type='publication' %}
+          <div class="card__text__bottom">
+            <div class="card__text__meta {% if pdf_download or book_epub_download %}meta--vertical{% endif %}">
+              <div class="d-flex flex-column">
+                {% include 'includes/cards/card_text_date.html' %}
+                {% if self.editor_count > 0 %}
+                  {% include 'includes/cards/card_text_people.html' with type='editors' %}
+                {% else %}
+                  {% include 'includes/cards/card_text_people.html' %}
+                {% endif %}
+              </div>
+              {% include 'includes/cards/card_text_more.html' with type='publication' %}
+            </div>
+            {% if pdf_download or book_epub_download %}
+              <div class="card__cta">
+                {% if book_epub_download %}
+                  {% include 'includes/cards/card_button.html' with url=book_epub_download button_text='Download Book' %}
+                {% endif %}
+                {% if pdf_download %}
+                  {% include 'includes/cards/card_button.html' with url=pdf_download button_text='Download PDF' %}
+                {% endif %}
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>

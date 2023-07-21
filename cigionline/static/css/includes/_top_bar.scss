@@ -407,6 +407,10 @@ header {
       margin-top: 1em;
       border-top: 1px solid $cigi-light-grey;
       border-bottom: 1px solid $cigi-light-grey;
+
+      li {
+        list-style: none;
+      }
     }
 
     @include link($color: $black, $hover-color: $cigi-primary-colour);

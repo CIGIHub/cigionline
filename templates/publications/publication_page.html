@@ -69,7 +69,11 @@
       {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
     {% endif %}
 
-    {% include "includes/body.html" with body=self.body %}
+    {% if self.publication_type.title == 'Books' %}
+      {% include "includes/body.html" with body=self.body heading="About" %}
+    {% else %}
+      {% include "includes/body.html" with body=self.body %}
+    {% endif %}
 
     {% if self.book_excerpt_download %}
       <section class="book-excerpt-download">
@@ -83,50 +87,6 @@
           </div>
         </div>
       </section>
-    {% endif %}
-
-    {% if self.has_book_metadata %}
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <ul class="publication-book-metadata">
-              {% if self.isbn %}
-                <li>
-                  <span>ISBN:</span> {{ self.isbn }}
-                </li>
-              {% endif %}
-              {% if self.isbn_ebook %}
-                <li>
-                  <span>eBook ISBN:</span> {{ self.isbn_ebook }}
-                </li>
-              {% endif %}
-              {% if self.isbn_hardcover %}
-                <li>
-                  <span>Hardcover ISBN:</span> {{ self.isbn_hardcover }}
-                </li>
-              {% endif %}
-              {% if self.book_publisher %}
-                <li>
-                  <span>Publisher:</span> {{ self.book_publisher }}
-                </li>
-              {% endif %}
-              <li>
-                <span>Published:</span> {{ self.publishing_date|date:"F j, Y" }}
-              </li>
-              {% if self.book_pages %}
-                <li>
-                  <span>Pages:</span> {{ self.book_pages }}
-                </li>
-              {% endif %}
-              {% if self.book_format %}
-                <li>
-                  <span>Format:</span> {{ self.get_book_format_display }}
-                </li>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-      </div>
     {% endif %}
 
     {% if self.publication_type.title == "Books" and self.embed_youtube %}
