@@ -52,27 +52,27 @@
       </div>
     </div>
     <div class="row g-3 g-md-5 card--event__bottom">
-      <div class="card__text__bottom {% if pdf_download or book_epub_download %}meta--vertical{% endif %}">
+      <div class="card__text__bottom {% if event_access == 'Private' or not is_past and registration_url %}meta--vertical{% endif %}">
         <div class="card__text__meta">
           {% include 'includes/cards/card_text_people.html' %}
           {% include 'includes/cards/card_text_more.html' with type='event' %}
         </div>
-        {% if event_access == 'Private' or not is_past %}
+        {% if event_access == 'Private' %}
           <div class="card__cta">
-            {% if event_access == 'Private' %}
-              <button type="button" class="card--event__button--register card__button button--rounded is_private" disabled>
-                <div class="card__button__text">Private Event</div>
-              </button>
-            {% elif not is_past and registration_url %}
-              <div class="card--event__buttons">
-                <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
-                  <button type="button" class="card--event__button--register card__button button--rounded">
-                    <div class="card__button__text">Register Now</div>
-                    <i class="fas fa-angle-right"></i>
-                  </button>
-                </a>
-              </div>
-            {% endif %}
+            <button type="button" class="card--event__button--register cta__button is_private" disabled>
+              <div class="button__text">Private Event</div>
+            </button>
+          </div>
+        {% elif not is_past and registration_url %}
+          <div class="card__cta">
+            <div class="card--event__buttons">
+              <a href="{{ registration_url }}" onclick="ga('send', 'event', 'Event Registration', 'Click' );">
+                <button type="button" class="card--event__button--register cta__button">
+                  <div class="button__text">Register Now</div>
+                  <i class="fas fa-angle-right"></i>
+                </button>
+              </a>
+            </div>
           </div>
         {% endif %}
       </div>

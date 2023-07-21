@@ -37,6 +37,71 @@ section {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
       color: $cigi-text-grey;
     }
+
+    .authors {
+      a {
+        color: $black;
+      }
+    }
+
+    .card__text__topics {
+      a {
+        color: $cigi-text-grey
+      }
+    }
+    
+    .publication-download {
+      display: flex;
+      justify-content: center;
+      margin-top: 1em;
+
+      .cta__button {
+        min-width: min(30vw,20em);
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.75em 1.5em;
+
+        i {
+          min-width: 1.5em;
+        }
+
+        .button__text {
+          display: block;
+          margin-right: 1.75vw;
+        }
+      }
+    }
+
+    .social-share-list {
+      &.no-stack {
+        @include media-breakpoint-up(lg) {
+          position: absolute;
+          left: 0;
+          top: 0;
+          margin-top: 1.5em;
+          margin-left: 0.75rem;  // To match container padding
+          display: block;
+  
+          li
+          a {
+            margin: 0;
+            padding: 0;
+          }
+  
+          i {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+    
+    
+
+    .social-links-anchor {
+      @include media-breakpoint-up(lg) {
+        position: relative;
+      }
+    }
   }
 }
 
