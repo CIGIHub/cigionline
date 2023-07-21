@@ -11,6 +11,7 @@ from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
     PDFDownloadBlock,
+    EPubDownloadBlock,
     CTABlock,
 )
 from wagtail.admin.panels import (
@@ -141,13 +142,13 @@ class PublicationPage(
         verbose_name='Format',
         help_text='Select the formation of this book/publication.',
     )
-    book_epub_download = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
+    book_epub_downloads = StreamField(
+        [
+            ('epub_download', EPubDownloadBlock())
+        ],
         blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='eBook Download',
+        verbose_name='ePub Downloads',
+        use_json_field=True,
     )
     book_pages = models.IntegerField(
         blank=True,
@@ -332,7 +333,7 @@ class PublicationPage(
                 FieldPanel('isbn_ebook'),
                 FieldPanel('book_pages'),
                 FieldPanel('book_purchase_links'),
-                FieldPanel('book_epub_download'),
+                FieldPanel('book_epub_downloads'),
                 FieldPanel('book_excerpt_download'),
                 FieldPanel('book_excerpt'),
             ],

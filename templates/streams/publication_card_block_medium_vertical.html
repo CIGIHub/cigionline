@@ -24,7 +24,7 @@
             {% include 'includes/cards/card_text_description.html' %}
           </div>
           <div class="card__text__bottom">
-            <div class="card__text__meta {% if pdf_download or book_epub_download %}meta--vertical{% endif %}">
+            <div class="card__text__meta {% if pdf_downloads or book_epub_downloads %}meta--vertical{% endif %}">
               <div class="d-flex flex-column">
                 {% include 'includes/cards/card_text_date.html' %}
                 {% if self.editor_count > 0 %}
@@ -35,13 +35,21 @@
               </div>
               {% include 'includes/cards/card_text_more.html' with type='publication' %}
             </div>
-            {% if pdf_download or book_epub_download %}
+            {% if pdf_downloads or book_epub_downloads %}
               <div class="card__cta">
-                {% if book_epub_download %}
-                  {% include 'includes/cta_button.html' with url=book_epub_download button_text='Download Book' %}
+                {% if book_epub_downloads %}
+                  {% for document in book_epub_downloads %}
+                    {% if document.value.display %}
+                      {% include 'includes/cta_button.html' with url=document.value.file.url button_type='Download Book' custom_text=document.value.button_text %}
+                    {% endif %}
+                  {% endfor %}
                 {% endif %}
-                {% if pdf_download %}
-                  {% include 'includes/cta_button.html' with url=pdf_download button_text='Download PDF' %}
+                {% if pdf_downloads %}
+                  {% for document in pdf_downloads %}
+                    {% if document.value.display %}
+                      {% include 'includes/cta_button.html' with url=document.value.file.url button_type='Download PDF' custom_text=document.value.button_text %}
+                    {% endif %}
+                  {% endfor %}
                 {% endif %}
               </div>
             {% endif %}
