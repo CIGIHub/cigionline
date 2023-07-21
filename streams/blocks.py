@@ -611,6 +611,29 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'download-alt'
         label = 'PDF Download'
 
+class EPubDownloadBlock(blocks.StructBlock, ThemeableBlock):
+    file = DocumentChooserBlock(required=True)
+    button_text = blocks.CharBlock(
+        required=False,
+        help_text='Optional text to replace the button text. If left empty, the button will read "Download Book".'
+    )
+    display = blocks.BooleanBlock(default=True)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EPubDownloadBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'epub_download_block')
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'button_text': value.get('button_text'),
+                'url': value.get('file').file.url,
+            }
+
+    class Meta:
+        icon = 'download-alt'
+        label = 'ePub Download'
+
 
 class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
     """Pull quote left side"""
@@ -1238,7 +1261,7 @@ class PublicationCard(blocks.StructBlock):
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
         context['pdf_downloads'] = page.pdf_downloads
-        context['book_epub_download'] = page.book_epub_download
+        context['book_epub_downloads'] = page.book_epub_downloads
         context['book_purchase_links'] = page.book_purchase_links
         context['use_hero_image'] = value.get('use_hero_image')
 

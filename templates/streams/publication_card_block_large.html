@@ -35,10 +35,14 @@
               </div>
               {% include 'includes/cards/card_text_more.html' with type='publication' %}
             </div>
-            {% if pdf_downloads or book_epub_download %}
+            {% if pdf_downloads or book_epub_downloads %}
               <div class="card__cta">
-                {% if book_epub_download %}
-                  {% include 'includes/cta_button.html' with url=book_epub_download button_type='Download Book' %}
+                {% if book_epub_downloads %}
+                  {% for document in book_epub_downloads %}
+                    {% if document.value.display %}
+                      {% include 'includes/cta_button.html' with url=document.value.file.url button_type='Download Book' custom_text=document.value.button_text %}
+                    {% endif %}
+                  {% endfor %}
                 {% endif %}
                 {% if pdf_downloads %}
                   {% for document in pdf_downloads %}
