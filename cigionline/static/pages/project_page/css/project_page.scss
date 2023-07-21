@@ -1,7 +1,60 @@
 @import '../../../css/global/mixins';
 
-@include top-bar($background-color: transparent, $color: $white, $background-color-scrolled: $black);
+section {
+  &.hero {
+    padding-bottom: 4em;
 
+    .hero__main {
+      padding-top: 2rem;
+
+      h1 {
+        @include media-breakpoint-up(md) {
+          font-size: 2.2rem;
+        }
+        font-size: 1.5rem;
+        font-weight: 400;
+      }
+  
+      h2 {
+        @include media-breakpoint-up(md) {
+          font-size: 1.8rem;
+        }
+        font-size: 1.2rem;
+        font-weight: 300;
+      }
+    }
+
+    &.has-banner {
+      @include media-breakpoint-up(md) {
+        background-position-x: 70%;
+      }
+      background-position-x: 80%;
+      background-size: cover;
+
+      .header--top-bar {
+        background: transparent;
+        position: fixed;
+
+        &.scrolled {
+          background: $white;
+        }
+      }
+
+      .header--submenu {
+        padding-top: 6em;
+        background-color: transparent;
+        nav {
+          border-top: 1px solid $cigi-dark-grey;
+          border-bottom: 1px solid $cigi-dark-grey;
+        }
+      }
+    }
+  }
+
+  &.resources {
+    margin: 3em 0;
+  }
+}
 .image-hero {
   margin-bottom: 1em;
 }
@@ -22,4 +75,28 @@
     margin-top: 2em;
   }
   margin-top: 0;
+}
+
+.resources {
+  h2 {
+    margin-top: 2em;
+  }
+
+  .resources__resource {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 0;
+
+    .button--rounded {
+      @include button(
+        $color: $black,
+        $background-color: $white,
+        $hover-color: $white,
+        $hover-background-color: $black,
+        $border-color: $black,
+        $hover-border-color: $black
+      )
+    }
+  }
 }

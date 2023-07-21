@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/project_page.scss';
+import SearchResultCard from '../../js/components/SearchResultCard';
 
 const endpointParams = [];
 if (projectId) {
@@ -75,22 +76,24 @@ ReactDOM.render(
         value: 'News Releases',
       }],
     }]}
-    RowComponent={ProjectContentListing}
+    RowComponent={SearchResultCard}
+    RowComponentList={ProjectContentListing}
     tableColumns={[{
       colSpan: 4,
       colTitle: 'Title',
+      colClass: 'title',
     }, {
       colSpan: 3,
-      colTitle: 'Expert',
+      colTitle: 'Author',
+      colClass: 'authors',
     }, {
       colSpan: 2,
       colTitle: 'Topic',
-    }, {
-      colSpan: 2,
-      colTitle: 'Type',
+      colClass: 'topics',
     }, {
       colSpan: 1,
-      colTitle: 'PDF',
+      colTitle: 'More',
+      colClass: 'more',
     }]}
   />,
   document.getElementById('project-search-table'),
