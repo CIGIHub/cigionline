@@ -1237,7 +1237,7 @@ class PublicationCard(blocks.StructBlock):
         context['description'] = page.feature_subtitle if page.feature_subtitle else page.subtitle
         context['url'] = page.feature_url if page.feature_url else page.url
         context['topics'] = page.topics_sorted
-        context['pdf_download'] = page.pdf_download
+        context['pdf_downloads'] = page.pdf_downloads
         context['book_epub_download'] = page.book_epub_download
         context['book_purchase_links'] = page.book_purchase_links
         context['use_hero_image'] = value.get('use_hero_image')
