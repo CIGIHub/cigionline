@@ -146,30 +146,47 @@ section {
 
         &:nth-child(-n + 3) {
           article {
-            padding-bottom: 15px;
+            @include media-breakpoint-up(md) {
+              padding-bottom: 15px;
+            }
           }
         }
 
         &:not(:nth-child(-n + 3)) {
           article {
-            padding: 15px 0;
+            @include media-breakpoint-up(md) {
+              padding: 15px 0;
+            }
           }
         }
 
         &:not(:nth-last-child(-n + 3)) {
           article {
-            border-bottom: 1px solid $cigi-light-grey;
+            @include media-breakpoint-up(md) {
+              border-bottom: 1px solid $cigi-light-grey;
+            }
           }
         }
 
         &:nth-last-child(-n + 3) {
           article {
-            padding-bottom: 0;
+            @include media-breakpoint-up(md) {
+              padding-bottom: 0;
+            }
+          }
+        }
+
+        &:not(:nth-child(1)) {
+          article {
+            @include media-breakpoint-down(md) {
+              border-top: 1px solid $cigi-light-grey;
+            }
           }
         }
 
         article {
           height: 100%;
+          padding: 15px 0;
         }
       }
     }
