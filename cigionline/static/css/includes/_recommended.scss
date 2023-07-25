@@ -124,7 +124,9 @@ section {
 
 section {
   &.content-page__recommended {
-    margin-bottom: 1rem;
+    @include media-breakpoint-up(md) {
+      margin-bottom: 1rem;
+    }
 
     h2 {
       font-size: 1rem;
@@ -139,6 +141,36 @@ section {
         &:not(:nth-child(3)) {
           @include media-breakpoint-up(md) {
             border-right: 1px solid $cigi-light-grey;
+          }
+        }
+        
+        &:not(:last-child) {
+          article {
+            @include media-breakpoint-down(md) {
+              border-bottom: 1px solid $cigi-light-grey;
+            }
+          }
+        }
+
+        &:first-child {
+          article {
+            @include media-breakpoint-down(md) {
+              padding-bottom: 1rem;
+            }
+          }
+        }
+
+        &:nth-child(2) {
+          article {
+            @include media-breakpoint-down(md) {
+              padding: 1rem 0;
+            }
+          }
+        }
+
+        &:last-child {
+          @include media-breakpoint-down(md) {
+            padding-top: 1rem;
           }
         }
       }
@@ -188,6 +220,14 @@ section {
           article {
             @include media-breakpoint-down(md) {
               border-top: 1px solid $cigi-light-grey;
+            }
+          }
+        }
+
+        &:nth-child(1) {
+          article {
+            @include media-breakpoint-down(md) {
+              padding-top: 0;
             }
           }
         }
