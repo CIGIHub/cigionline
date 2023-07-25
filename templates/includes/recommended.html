@@ -1,21 +1,66 @@
-<section class="recommended-section">
+{% load static core_tags wagtailcore_tags wagtailimages_tags %}
+
+<section class="content-page__recommended">
   <div class="container">
     <div class="row">
-      <div class="col recommended">
-        <div class="recommended-dot"></div>
-        <div class="recommended-vertical-line"></div>
+      <div class="col">
         <h2>Recommended</h2>
-        {% include "includes/footer_bracket.svg" %}
-
-        <div class="recommended-content-medium row">
+        <div class="content-page__recommended__medium row">
           {% for content in recommended|slice:":3" %}
             <div class="col-md-4">
-              {% include 'includes/features/feature_content_medium.html' with content=content %}
+              <article class="card__container card--small card--small--landscape">
+                <div class="card__image card__image--landscape">
+                  <a href="{{ url }}">
+                    <div class="img-wrapper">
+                      {% if content.image_hero.file.url|file_extension == '.gif' %}
+                        <img src="{{content.image_hero.file.url}}" alt="{{content.image_hero.caption}}" />
+                      {% elif content.image_hero %}
+                        {% image content.image_hero fill-520x347 %}
+                      {% else %}
+                        <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
+                      {% endif %}
+                    </div>
+                  </a>
+                </div>
+                <div class="card__text">
+                  <div>
+                    {% include 'includes/cards/card_text_topics.html' with topics=content.specific.topics_sorted %}
+                    {% include 'includes/cards/card_text_title.html' with title=content.title %}
+                  </div>
+                  <div class="card__text__meta">
+                    {% include 'includes/cards/card_text_people.html' with authors=content.authors.all %}
+                    {% include 'includes/cards/card_text_more.html' with type=content.contenttype title=content.title url=contnet.url id=content.id registration_url=content.registration_url pdf_download=content.pdf_download %}
+                  </div>
+                </div>
+              </article>
             </div>
           {% endfor %}
+        </div>
+        <hr />
+        <div class="content-page__recommended__small row">
           {% for content in recommended|slice:"3:" %}
             <div class="col-md-4">
-              {% include 'includes/features/feature_content_small.html' with content=content icon=True %}
+              <article class="card__container card--tiny">
+                {% if content.contenttype == 'Opinion' or content.contenttype == 'Opinion Series' %}
+                  <i class="fal fa-comment-alt-lines"></i>
+                {% elif content.contenttype == 'Publication' %}
+                  <i class="fal fa-file-alt"></i>
+                {% elif content.contenttype == 'Multimedia' %}
+                  <i class="fal fa-play"></i>
+                {% else %}
+                  <i class="fal fa-file-alt"></i>
+                {% endif %}
+                <div class="card__text">
+                  <div>
+                    {% include 'includes/cards/card_text_topics.html' with topics=content.specific.topics_sorted %}
+                    {% include 'includes/cards/card_text_title.html' with title=content.title %}
+                  </div>
+                  <div class="card__text__meta">
+                    {% include 'includes/cards/card_text_people.html' with authors=content.authors.all %}
+                    {% include 'includes/cards/card_text_more.html' with type=content.contenttype title=content.title url=contnet.url id=content.id registration_url=content.registration_url pdf_download=content.pdf_download %}
+                  </div>
+                </div>
+              </article>
             </div>
           {% endfor %}
         </div>
