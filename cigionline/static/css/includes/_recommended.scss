@@ -126,6 +126,14 @@ section {
   &.content-page__recommended {
     margin-bottom: 1rem;
 
+    h2 {
+      font-size: 1rem;
+      color: $cigi-text-grey;
+      border-bottom: 1px solid $cigi-light-grey;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+
     .content-page__recommended__medium {
       .col-md-4 {
         &:not(:nth-child(3)) {
@@ -147,7 +155,7 @@ section {
         &:nth-child(-n + 3) {
           article {
             @include media-breakpoint-up(md) {
-              padding-bottom: 15px;
+              padding-bottom: 1rem;
             }
           }
         }
@@ -155,7 +163,7 @@ section {
         &:not(:nth-child(-n + 3)) {
           article {
             @include media-breakpoint-up(md) {
-              padding: 15px 0;
+              padding: 1rem 0;
             }
           }
         }
@@ -186,7 +194,7 @@ section {
 
         article {
           height: 100%;
-          padding: 15px 0;
+          padding: 1rem 0;
         }
       }
     }
