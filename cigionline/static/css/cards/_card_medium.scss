@@ -52,6 +52,8 @@ article {
     }
 
     &.card--medium--expert {
+      flex-direction: row;
+
       .col-12 {
         &.col-md-5 {
           @include media-breakpoint-up(md) {
@@ -182,7 +184,7 @@ article {
           @include media-breakpoint-up(md) {
             flex-direction: column-reverse;
           }
-          
+
           .card__cta {
             @include media-breakpoint-up(md) {
               min-width: auto;
