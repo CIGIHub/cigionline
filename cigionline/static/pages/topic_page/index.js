@@ -135,3 +135,11 @@ ReactDOM.render(
   />,
   document.getElementById('topic-search-table'),
 );
+
+const topicsExpand = document.getElementById('topics-expand');
+const topTopicsUl = document.getElementById('top-topics-list-ul');
+
+topicsExpand.addEventListener('click', function() {
+  topicsExpand.classList.toggle('expanded');
+  topTopicsUl.classList.toggle('expanded');
+});

@@ -32,6 +32,13 @@
         </li>
       {% endfor %}
     {% endif %}
+    {% if current_topic %}
+      <li>
+        <button type="button" class="button--rounded active">
+          {{ current_topic.title }}
+        </button>
+      </li>
+    {% endif %}
     {% for topic in topics %}
       <li>
         <a href="{% pageurl topic %}">

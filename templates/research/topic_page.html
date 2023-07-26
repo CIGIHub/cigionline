@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader wagtailcore_tags menu_tags %}
+{% load webpack_loader wagtailcore_tags menu_tags topic_tags %}
 
 {% block extra_css %}
   {% render_bundle 'topicPage' 'css' %}
@@ -13,6 +13,17 @@
 
 {% block content %}
   {% include "includes/top_bar_menu.html" with title='Research' submenu=self.submenu %} 
+  <header class="header__topics">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <nav class="border-top border-bottom">
+            {% top_topics current_topic=self %}
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
   
   <section class="topic-page__description">
     <div class="container">

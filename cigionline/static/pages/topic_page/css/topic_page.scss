@@ -2,6 +2,8 @@
 
 header {
   &.header--submenu {
+    margin-bottom: 0;
+
     nav {
       border-bottom: 0;
     }
@@ -25,6 +27,23 @@ header {
       &.active {
         &::before {
           top: -1.05em;
+        }
+      }
+    }
+  }
+
+  &.header__topics {
+    .top-topics-list {
+      ul {
+        li {
+          button {
+            &.active {
+              background-color: $black;
+              border: 1px solid $black;
+              color: $white;
+              cursor: default;
+            }
+          }
         }
       }
     }
