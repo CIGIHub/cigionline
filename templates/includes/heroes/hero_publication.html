@@ -21,12 +21,6 @@
             <div class="publication-download">
               {% include 'includes/cta_button.html' with url=self.pdf_download button_type='Download PDF' custom_text=document.value.button_text %}
             </div>
-            {% comment %} <button class="button">
-              <a href="{{document.value.file.url}}">
-                  <i class="fa fas fa-download"></i>
-                  {% if document.value.button_text == '' %}Download PDF {% else %} {{ document.value.button_text}} {% endif %}
-              </a>
-            </button> {% endcomment %}
           {% endif %}
         {% endfor %}
         {% for cta in ctas %}
