@@ -179,20 +179,6 @@ article {
           color: $cigi-text-grey;
           display: none;
         }
-
-        .card__text__bottom {
-          @include media-breakpoint-up(md) {
-            flex-direction: column-reverse;
-          }
-
-          .card__cta {
-            @include media-breakpoint-up(md) {
-              min-width: auto;
-              width: 100%;
-              margin-bottom: 0.5rem;
-            }
-          }
-        }
       }
 
       &.card--vertical--publication {

@@ -1262,7 +1262,7 @@ class PublicationCard(blocks.StructBlock):
         context['pdf_downloads'] = page.pdf_downloads
         context['book_epub_downloads'] = page.book_epub_downloads
         context['book_purchase_links'] = page.book_purchase_links
-        context['use_hero_image'] = value.get('use_hero_image')
+        context['use_hero_image'] = value.get('use_hero_image') and page.image_hero
 
         return context
 
