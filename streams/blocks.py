@@ -590,6 +590,30 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
         label = 'PDF Download'
 
 
+class EPubDownloadBlock(blocks.StructBlock, ThemeableBlock):
+    file = DocumentChooserBlock(required=True)
+    button_text = blocks.CharBlock(
+        required=False,
+        help_text='Optional text to replace the button text. If left empty, the button will read "Download Book".'
+    )
+    display = blocks.BooleanBlock(default=True)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EPubDownloadBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'epub_download_block')
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'button_text': value.get('button_text'),
+                'url': value.get('file').file.url,
+            }
+
+    class Meta:
+        icon = 'download-alt'
+        label = 'ePub Download'
+
+
 class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
     """Pull quote left side"""
 
