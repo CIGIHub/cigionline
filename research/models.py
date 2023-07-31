@@ -8,7 +8,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
-from django.db.models import Count, Q
+from django.db.models import Count
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from people.models import PersonPage
 from wagtail.admin.panels import (
@@ -372,7 +372,6 @@ class TopicPage(
         return self.title
 
     def topic_authors(self):
-        # find all peoplepage objects tagged with this topic
         return PersonPage.objects.live().filter(topics__id=self.id).order_by('last_name')
 
     def get_admin_display_title(self):

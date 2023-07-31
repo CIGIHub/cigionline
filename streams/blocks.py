@@ -610,6 +610,7 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'download-alt'
         label = 'PDF Download'
 
+
 class EPubDownloadBlock(blocks.StructBlock, ThemeableBlock):
     file = DocumentChooserBlock(required=True)
     button_text = blocks.CharBlock(
