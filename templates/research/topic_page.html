@@ -25,13 +25,51 @@
     </div>
   </header>
   
-  <section class="topic-page__description">
+  <section class="topic-page__title">
     <div class="container">
       <div class="row">
-        <div class="col col-lg-8">
+        <div class="col">
           <h1>{{self.title}}</h1>
-          <div class="topic-page__description__content">
-            {{ self.description|richtext }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if self.layout %}
+    <section class="layout layout--topic">
+      <div class="container layout">
+        <div class="border-container">
+          {% for block in self.layout %}
+            {% include_block block %}
+            {% if not forloop.last %}
+              <div class="row">
+                <div class="col">
+                  <hr />
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="topic-page__authors">
+    <div class="container layout">
+      <div class="border-container">
+        <div class="row">
+          <div class="col">
+            <ul>
+              {% for person in self.topic_authors %}
+                <li>
+                  <a href="{% pageurl person %}">
+                    <button type="button" class="button--rounded">
+                      {{ person.title }}
+                    </button>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
           </div>
         </div>
       </div>
