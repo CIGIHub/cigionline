@@ -9,20 +9,19 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  {% include "includes/body.html" with body=self.body %}
-  {% comment %} <section class="experts-page-featured-experts">
+  {% include "includes/top_bar_menu.html" with title='Research' %}
+  <section class="hero">
     <div class="container">
-      <h2>Featured</h2>
-      <div class="row featured-expert-row">
-        {% for expert in self.featured_experts_random %}
-          <div class="col-md-4 featured-expert-col">
-            {% include "includes/features/feature_expert_short.html" with expert=expert %}
+      <div class="row">
+        <div class="col-12">
+          <div class="hero__content">
+            <p>{{ self.subtitle|richtext }}</p>
           </div>
-        {% endfor %}
+        </div>
       </div>
     </div>
-  </section> {% endcomment %}
+  </section>
+  {% include "includes/body.html" with body=self.body %}
   <section class="layout layout--expert">
     <div class="container layout">
       {% for block in self.layout %}
