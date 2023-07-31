@@ -11,7 +11,7 @@
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
   {% include "includes/body.html" with body=self.body %}
-  <section class="experts-page-featured-experts">
+  {% comment %} <section class="experts-page-featured-experts">
     <div class="container">
       <h2>Featured</h2>
       <div class="row featured-expert-row">
@@ -21,6 +21,20 @@
           </div>
         {% endfor %}
       </div>
+    </div>
+  </section> {% endcomment %}
+  <section class="layout layout--expert">
+    <div class="container layout">
+      {% for block in self.layout %}
+        {% include_block block %}
+        {% if not forloop.last %}
+          <div class="row">
+            <div class="col">
+              <hr />
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </section>
   <section>

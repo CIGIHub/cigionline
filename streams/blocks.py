@@ -610,6 +610,7 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'download-alt'
         label = 'PDF Download'
 
+
 class EPubDownloadBlock(blocks.StructBlock, ThemeableBlock):
     file = DocumentChooserBlock(required=True)
     button_text = blocks.CharBlock(
@@ -1720,6 +1721,18 @@ class HomePageRow(blocks.StructBlock):
         ('column_block', HomePageColumnBlock())
     ])
     grouped = blocks.BooleanBlock(required=False, default=False, help_text='Group cards into rows with a grey background.')
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Row'
+        template = 'streams/home_page_row_block.html'
+        form_classname = 'row-block'
+
+
+class FeatureExpertRow(blocks.StructBlock):
+    row = blocks.StreamBlock([
+        ('expert_card', ExpertCard()),
+    ])
 
     class Meta:
         icon = 'list-ul'
