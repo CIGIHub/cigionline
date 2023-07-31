@@ -2,6 +2,8 @@
 
 header {
   &.header--submenu {
+    margin-bottom: 0;
+
     nav {
       border-bottom: 0;
     }
@@ -29,22 +31,85 @@ header {
       }
     }
   }
+
+  &.header__topics {
+    .top-topics-list {
+      ul {
+        li {
+          button {
+            &.active {
+              background-color: $black;
+              border: 1px solid $black;
+              color: $white;
+              cursor: default;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
-.topic-page__description {
-  margin-top: 2em;
-
-  .topic-page__description__content {
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
-    line-height: 1.2;
+section {
+  &.layout {
+    .border-container {
+      padding: 1rem 0;
+      border-top: 1px solid $cigi-light-grey;
+    }
   }
+
+  &.topic-page__authors {
+    .border-container {
+      padding: 1rem 0;
+      border-top: 1px solid $cigi-light-grey;
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      list-style: none;
+      position: relative;
+      font-size: 0.8em;
+
+      li {
+        flex-shrink: 0;
+        margin-right: 0.5em;
+        margin-top: 0.25em;
+        margin-bottom: 0.25em;
+
+        &.hidden {
+          display: none;
+
+          .live-event__scroll__container {
+            display: none;
+          }
+        }
+
+        .button--rounded {
+          @include button(
+            $background-color: $black,
+            $color: $white,
+            $hover-color: $black,
+            $hover-background-color: $white,
+            $hover-border-color: $black
+          );
+        }
+      }
+    }
+  }
+}
+
+.topic-page__title {
+  margin-top: 2em;
 }
 
 .topic-page__search-table {
   .topic-search-table {
     .search-table-container {
       border-top: 1px solid $cigi-light-grey;
-      padding-top: 2em;
+      padding-top: 4rem;
+      margin-top: 0;
     }
 
     .search-table__results--grid {

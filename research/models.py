@@ -10,6 +10,7 @@ from core.models import (
 from django.db import models
 from django.db.models import Count
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from people.models import PersonPage
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -343,6 +344,14 @@ class TopicPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
 
+    layout = StreamField(
+        [
+            ('row', HomePageRow()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
     @property
     def featured_latest_pages(self):
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
@@ -362,6 +371,9 @@ class TopicPage(
     def topic_name(self):
         return self.title
 
+    def topic_authors(self):
+        return PersonPage.objects.live().filter(topics__id=self.id).order_by('last_name')
+
     def get_admin_display_title(self):
         return f"{self.title} (Archived)" if self.archive == 1 else self.title
 
@@ -372,15 +384,9 @@ class TopicPage(
         FieldPanel('description'),
         MultiFieldPanel(
             [
-                InlinePanel(
-                    'featured_pages',
-                    max_num=3,
-                    min_num=0,
-                    label='Page',
-                ),
+                FieldPanel('layout'),
             ],
-            heading='Featuerd Content',
-            classname='collapsible collapsed',
+            heading='Layout', classname='collapsible collapsed home-page-layout',
         ),
     ]
     promote_panels = Page.promote_panels + [
