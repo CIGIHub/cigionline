@@ -5,12 +5,8 @@ from django.db import models
 from django.forms.utils import flatatt
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
-<<<<<<< Updated upstream
-=======
 from django.utils.safestring import mark_safe
-from distutils.log import error
 import wagtail.core.rich_text as rich_text
->>>>>>> Stashed changes
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
