@@ -1,24 +1,5 @@
 form {
   &.contact-form {
-    margin-bottom: 3em;
-
-    button {
-      background-color: transparent;
-      border: 1px solid $cigi-primary-colour;
-      border-radius: 2px;
-      color: $cigi-primary-colour;
-      font-size: 0.75em;
-      margin: 0;
-      padding: 0.7em 1em;
-      text-decoration: none;
-      transition: background-color 0.25s ease, color 0.25s ease;
-
-      &:hover {
-        background-color: $cigi-primary-colour;
-        color: $white;
-      }
-    }
-
     label {
       display: none;
     }
