@@ -1,8 +1,8 @@
 .contact-email-block {
-  @include link-underline;
+  @include link-underline($underline-color: $black);
 
   i {
-    color: $cigi-primary-colour;
-    padding-right: 5px;
+    color: $black;
+    padding-right: 15px;
   }
 }
