@@ -34,6 +34,9 @@ def topics(topics):
 
 
 @register.inclusion_tag('research/top_topics.html')
-def top_topics(issues=None, live_events=None):
-    topics = TopicPage.objects.live().filter(archive=0).annotate(num_content_pages=Count('content_pages')).order_by('-num_content_pages')
-    return {'topics': topics, 'issues': issues, 'live_events': live_events}
+def top_topics(issues=None, live_events=None, current_topic=None):
+    if current_topic:
+        topics = TopicPage.objects.live().filter(archive=0).exclude(id=current_topic.id).annotate(num_content_pages=Count('content_pages')).order_by('-num_content_pages')
+    else:
+        topics = TopicPage.objects.live().filter(archive=0).annotate(num_content_pages=Count('content_pages')).order_by('-num_content_pages')
+    return {'topics': topics, 'issues': issues, 'live_events': live_events, 'current_topic': current_topic}
