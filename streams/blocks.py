@@ -5,6 +5,8 @@ from django.db import models
 from django.forms.utils import flatatt
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
+import wagtail.core.rich_text as rich_text
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -871,13 +873,13 @@ class NewsletterBlock(blocks.StructBlock):
             if is_str:
                 text_soup = BeautifulSoup(context['text'], 'html.parser')
             else:
-                text_soup = BeautifulSoup(context['text'].source, 'html.parser')
+                text_soup = BeautifulSoup(rich_text.expand_db_html(context['text'].source), 'html.parser')
             for link in text_soup.findAll('a'):
                 link['style'] = 'text-decoration: none; color: #ee1558;'
             if is_str:
                 context['text'] = str(text_soup)
             else:
-                context['text'].source = str(text_soup)
+                context['text'] = mark_safe(str(text_soup))
 
         return context
 
