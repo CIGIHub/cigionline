@@ -16,55 +16,57 @@
   $position: fixed
 ) {
   header {
-    @include media-breakpoint-up(md) {
-      background-color: $background-color-medium;
-    }
-    background-color: $background-color;
-    position: $position;
+    &.header--top-bar {
+      @include media-breakpoint-up(md) {
+        background-color: $background-color-medium;
+      }
+      background-color: $background-color;
+      position: $position;
 
-    &.scrolled {
-      background-color: $background-color-scrolled;
-    }
-
-    .cigi-top-bar {
-      .cigi-logo {
-        svg {
-          @include media-breakpoint-down(md) {
-            * {
-              fill: $color;
-            }
-          }
-          @include media-breakpoint-up(md) {
-            fill: $color-medium;
-
-            * {
-              fill: $color-medium;
-            }
-          }
-          fill: $color;
-        }
+      &.scrolled {
+        background-color: $background-color-scrolled;
       }
 
-      nav {
-        button {
-          i {
-            color: $color;
+      .cigi-top-bar {
+        .cigi-logo {
+          svg {
+            @include media-breakpoint-down(md) {
+              * {
+                fill: $color;
+              }
+            }
+            @include media-breakpoint-up(md) {
+              fill: $color-medium;
+
+              * {
+                fill: $color-medium;
+              }
+            }
+            fill: $color;
           }
         }
 
-        ul {
-          a,
+        nav {
           button {
-            @include media-breakpoint-up(md) {
-              color: $color-medium;
+            i {
+              color: $color;
             }
-            color: $color;
+          }
 
-            &:hover {
+          ul {
+            a,
+            button {
               @include media-breakpoint-up(md) {
-                color: $hover-color-medium;
+                color: $color-medium;
               }
-              color: $hover-color;
+              color: $color;
+
+              &:hover {
+                @include media-breakpoint-up(md) {
+                  color: $hover-color-medium;
+                }
+                color: $hover-color;
+              }
             }
           }
         }

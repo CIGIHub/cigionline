@@ -1,11 +1,14 @@
 .contact-info-section {
-  margin-bottom: 3em;
+  margin: 3rem 0;
 
   h2 {
-    color: $cigi-medium-grey;
-    font-size: 0.75em;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    color: $black;
+    font-size: 1.2rem;
+  }
+
+  i {
+    color: $black;
+    padding-right: 15px;
   }
 
   .contact-info {
@@ -15,19 +18,16 @@
   }
 
   .contact-general-inquiries {
-    @include link-underline;
-
-    i {
-      color: $cigi-primary-colour;
-      padding-right: 5px;
-    }
+    @include link-underline($underline-color: $black);
 
     .contact-address {
       display: flex;
       margin-top: 0.5em;
+      align-items: baseline;
 
       i {
-        width: 25px;
+        padding-right: 15px;
+        width: 32px;
       }
     }
   }

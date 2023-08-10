@@ -1,8 +1,15 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'contactPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'contactPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_plain.html" with title=self.title %}
+  {% include "includes/top_bar_menu.html" with title='Contact' %}
   <section class="contact-form-section">
     <div class="container">
       <div class="row justify-content-center">
@@ -10,7 +17,7 @@
           <form action="{% pageurl page %}" method="POST" class="contact-form">
             {% csrf_token %}
             {{ form }}
-            <button type="submit">
+            <button type="submit" class="button--rounded">
               Send message
             </button>
           </form>

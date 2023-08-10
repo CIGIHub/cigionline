@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchResultCard from '../../js/components/SearchResultCard';
+import SearchResultListingRow from '../../js/components/SearchResultListingRow';
 import SearchTable from '../../js/components/SearchTable';
 
 import './css/topic_page.scss';
@@ -105,6 +106,7 @@ ReactDOM.render(
       },
     ]}
     RowComponent={SearchResultCard}
+    RowComponentList={SearchResultListingRow}
     tableColumns={[
       {
         colSpan: 6,
