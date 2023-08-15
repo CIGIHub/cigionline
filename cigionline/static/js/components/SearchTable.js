@@ -23,15 +23,13 @@ class SearchTable extends React.Component {
   constructor(props) {
     super(props);
     this.searchTableRef = React.createRef();
-    const { filterTypes, isSearchPage } = props;
+    const { filterTypes } = props;
     this.state = {
       currentPage: 1,
-      currentYear: 0,
       emptyQuery: false,
       expertsFilter: '',
       expertSelectValues: [],
       filterTypes,
-      isSearchPage,
       loading: true,
       loadingInitial: true,
       loadingExperts: true,
@@ -362,23 +360,6 @@ class SearchTable extends React.Component {
           years: Array.from({ length: 12 }, (_, i) => data.meta.current_year - i),
         }));
       });
-
-    // using fixtures to test
-    // const rows = fixtures.items.filter(
-    //   (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-    // );
-    // const aggregations = fixtures.meta.aggregations;
-    // aggregations.topics = mergeObjects([
-    //   aggregations.topics_contentpage,
-    //   aggregations.topics_personpage,
-    // ]);
-    // this.setState(() => ({
-    //   loading: false,
-    //   loadingInitial: false,
-    //   rows,
-    //   aggregations: fixtures.meta.aggregations,
-    //   totalRows: fixtures.meta.total_count,
-    // }));
   }
 
   getAggregationCount(filterType) {
@@ -732,29 +713,14 @@ class SearchTable extends React.Component {
     );
   }
 
-  renderSearchBar(showSidebar) {
+  renderSearchBar() {
     const {
-      expertsFilter,
-      loadingExperts,
-      loadingTopics,
-      loadingYears,
-      loadingTypes,
-      aggregations,
       rows,
       searchValue,
       showFilters,
-      topicsFilter,
-      expertSelectValues,
-      topicSelectValues,
-      typeSelectValues,
-      years,
-      yearSelectValues,
     } = this.state;
     const {
       searchPlaceholder,
-      showExpertDropDown,
-      hideTopicDropdown,
-      filterTypes,
       isSearchPage,
     } = this.props;
     return (
@@ -927,11 +893,9 @@ class SearchTable extends React.Component {
       yearSelectValues,
     } = this.state;
     const {
-      searchPlaceholder,
       showExpertDropDown,
       hideTopicDropdown,
       filterTypes,
-      isSearchPage,
     } = this.props;
     return (
       <div className="search-table__filters">
@@ -1155,53 +1119,53 @@ class SearchTable extends React.Component {
                           </label>
                           {this.getSubTypes(type.name) &&
                             this.getSubTypes(type.name).length > 0 && (
-                              <ul>
-                                {this.getSubTypes(type.name).map((subtype) => (
-                                  <li
-                                    className="dropdown-item"
-                                    key={`subtype-${subtype.name.replace(
-                                      ' ',
-                                      '_',
-                                    )}`}
+                            <ul>
+                              {this.getSubTypes(type.name).map((subtype) => (
+                                <li
+                                  className="dropdown-item"
+                                  key={`subtype-${subtype.name.replace(
+                                    ' ',
+                                    '_',
+                                  )}`}
+                                >
+                                  <label
+                                    htmlFor={`input_${type.name}_${subtype.name}`}
+                                    className={`keep-open ${
+                                      !this.getAggregationCount(subtype)
+                                        ? 'inactive'
+                                        : ''
+                                    }`}
                                   >
-                                    <label
-                                      htmlFor={`input_${type.name}_${subtype.name}`}
-                                      className={`keep-open ${
-                                        !this.getAggregationCount(subtype)
-                                          ? 'inactive'
+                                    <input
+                                      id={`input_${type.name}_${subtype.name}`}
+                                      type="checkbox"
+                                      onChange={(e) =>
+                                        this.handleTypeSelect(e, subtype.name)
+                                      }
+                                      checked={
+                                        typeSelectValues.includes(
+                                          subtype.name,
+                                        )
+                                          ? 'checked'
                                           : ''
-                                      }`}
-                                    >
-                                      <input
-                                        id={`input_${type.name}_${subtype.name}`}
-                                        type="checkbox"
-                                        onChange={(e) =>
-                                          this.handleTypeSelect(e, subtype.name)
-                                        }
-                                        checked={
-                                          typeSelectValues.includes(
-                                            subtype.name,
-                                          )
-                                            ? 'checked'
-                                            : ''
-                                        }
-                                        className={`${type.name} ${type.name}_${subtype.name}`}
-                                      />
-                                      <span>{subtype.name}</span>
-                                      <span className="dropdown-item__count">
-                                        {this.getAggregationCount(subtype) ? (
-                                          <>
-                                            {this.getAggregationCount(subtype)}
-                                          </>
-                                        ) : (
-                                          <>0</>
-                                        )}
-                                      </span>
-                                    </label>
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
+                                      }
+                                      className={`${type.name} ${type.name}_${subtype.name}`}
+                                    />
+                                    <span>{subtype.name}</span>
+                                    <span className="dropdown-item__count">
+                                      {this.getAggregationCount(subtype) ? (
+                                        <>
+                                          {this.getAggregationCount(subtype)}
+                                        </>
+                                      ) : (
+                                        <>0</>
+                                      )}
+                                    </span>
+                                  </label>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         </li>
                       );
                     }
@@ -1268,32 +1232,16 @@ class SearchTable extends React.Component {
     const {
       currentPage,
       emptyQuery,
-      expertsFilter,
       loading,
-      loadingExperts,
       loadingInitial,
-      loadingTopics,
-      loadingYears,
-      loadingTypes,
       rows,
-      aggregations,
       searchValue,
       sortSelected,
-      topicsFilter,
-      expertSelectValues,
-      topicSelectValues,
       totalRows,
-      typeSelectValues,
-      years,
-      yearSelectValues,
     } = this.state;
     const {
       blockListing,
       containerClass,
-      filterTypes,
-      showExpertDropDown,
-      hideTopicDropdown,
-      isSearchPage,
       RowComponent,
       RowComponentList,
       showCount,
