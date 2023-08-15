@@ -1,6 +1,6 @@
 @import '../global/mixins';
 
-.search-table__results--list {
+.search-table__results {
   tr {
     &:not(:last-child) {
       border-bottom: 1px solid $cigi-light-grey;

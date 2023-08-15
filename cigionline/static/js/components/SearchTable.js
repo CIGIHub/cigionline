@@ -23,11 +23,10 @@ class SearchTable extends React.Component {
   constructor(props) {
     super(props);
     this.searchTableRef = React.createRef();
-    const { filterTypes, isSearchPage, displayMode } = props;
+    const { filterTypes, isSearchPage } = props;
     this.state = {
       currentPage: 1,
       currentYear: 0,
-      displayMode: displayMode || 'grid',
       emptyQuery: false,
       expertsFilter: '',
       expertSelectValues: [],
@@ -123,17 +122,6 @@ class SearchTable extends React.Component {
       this.getExperts();
       this.getTopics();
       this.getTypes();
-    }
-    window.addEventListener('resize', this.handleResize.bind(this));
-    this.handleResize();
-  }
-
-  handleResize() {
-    const { allowDisplayTogggle } = this.props;
-    if (window.innerWidth < 992 && allowDisplayTogggle) {
-      this.setState({
-        displayMode: 'list',
-      });
     }
   }
 
@@ -509,15 +497,6 @@ class SearchTable extends React.Component {
     return Math.ceil(totalRows / limit);
   }
 
-  changeDisplayMode(mode) {
-    const { allowDisplayTogggle } = this.props;
-    if (allowDisplayTogggle) {
-      this.setState(() => ({
-        displayMode: mode,
-      }));
-    }
-  }
-
   updateQueryParams() {
     const {
       searchValue,
@@ -755,7 +734,6 @@ class SearchTable extends React.Component {
 
   renderSearchBar(showSidebar) {
     const {
-      displayMode,
       expertsFilter,
       loadingExperts,
       loadingTopics,
@@ -788,32 +766,6 @@ class SearchTable extends React.Component {
                 showFilters ? 'show-filters' : ''
               }`}
             >
-              <div className="col-12 search-bar__display-mode-container">
-                <div className="search-bar__advanced-search-label">
-                  <i className="fal fa-filter" />
-                  Advanced Search
-                </div>
-                <div className="search-bar__display-mode">
-                  <button
-                    type="button"
-                    className={`search-bar__display-mode__button ${
-                      displayMode === 'grid' ? 'active' : ''
-                    }`}
-                    onClick={() => this.changeDisplayMode('grid')}
-                  >
-                    <i className="fas fa-th" />
-                  </button>
-                  <button
-                    type="button"
-                    className={`search-bar__display-mode__button ${
-                      displayMode === 'grid' ? '' : 'active'
-                    }`}
-                    onClick={() => this.changeDisplayMode('list')}
-                  >
-                    <i className="fal fa-list" />
-                  </button>
-                </div>
-              </div>
               <div className="col-12 search-bar__input-container">
                 <form
                   className="search-bar-form"
@@ -881,28 +833,6 @@ class SearchTable extends React.Component {
                   <i className="fal fa-angle-down" />
                 </button>
               </div>
-              <div className="col-lg-1 search-bar__display-mode-container">
-                <div className="search-bar__display-mode">
-                  <button
-                    type="button"
-                    className={`search-bar__display-mode__button ${
-                      displayMode === 'grid' ? 'active' : ''
-                    }`}
-                    onClick={() => this.changeDisplayMode('grid')}
-                  >
-                    <i className="fas fa-th" />
-                  </button>
-                  <button
-                    type="button"
-                    className={`search-bar__display-mode__button ${
-                      displayMode === 'grid' ? '' : 'active'
-                    }`}
-                    onClick={() => this.changeDisplayMode('list')}
-                  >
-                    <i className="fal fa-list" />
-                  </button>
-                </div>
-              </div>
             </div>
             {showFilters && this.renderFilters()}
           </>
@@ -912,72 +842,54 @@ class SearchTable extends React.Component {
   }
 
   renderResults(RowComponent, RowComponentList, containerClass) {
-    const { rows, displayMode, loading } = this.state;
+    const { rows, loading } = this.state;
     const { tableColumns } = this.props;
     return (
       <div
         className={[
           ...containerClass,
           'search-table__results',
-          `search-table__results--${displayMode}`,
           loading && 'loading',
         ].join(' ')}
       >
-        {displayMode === 'grid' &&
-          rows.map((row) => (
-            <div
-              className="article-container"
-              key={`${row.id}-${row.elevated}`}
-            >
-              <RowComponent
+        <table>
+          <thead>
+            <tr>
+              {tableColumns.length > 0 ? (
+                tableColumns.map((column) => (
+                  <th
+                    key={column.colTitle}
+                    className={`search-table__results__row__${column.colClass}`}
+                  >
+                    {column.colTitle}
+                  </th>
+                ))
+              ) : (
+                <>
+                  <th className="search-table__results__row__title">Title</th>
+                  <th className="search-table__results__row__content-type">
+                    Content Type
+                  </th>
+                  <th className="search-table__results__row__authors">
+                    Author
+                  </th>
+                  <th className="search-table__results__row__topics">
+                    Topic
+                  </th>
+                  <th className="search-table__results__row__download"> </th>
+                </>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <RowComponentList
                 key={`${row.id}-${row.elevated}`}
                 row={row}
-                displayMode={displayMode}
               />
-            </div>
-          ))}
-
-        {displayMode === 'list' && (
-          <table>
-            <thead>
-              <tr>
-                {tableColumns.length > 0 ? (
-                  tableColumns.map((column) => (
-                    <th
-                      key={column.colTitle}
-                      className={`search-table__results__row__${column.colClass}`}
-                    >
-                      {column.colTitle}
-                    </th>
-                  ))
-                ) : (
-                  <>
-                    <th className="search-table__results__row__title">Title</th>
-                    <th className="search-table__results__row__content-type">
-                      Content Type
-                    </th>
-                    <th className="search-table__results__row__authors">
-                      Author
-                    </th>
-                    <th className="search-table__results__row__topics">
-                      Topic
-                    </th>
-                    <th className="search-table__results__row__download"> </th>
-                  </>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <RowComponentList
-                  key={`${row.id}-${row.elevated}`}
-                  row={row}
-                  displayMode={displayMode}
-                />
-              ))}
-            </tbody>
-          </table>
-        )}
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
@@ -1355,7 +1267,6 @@ class SearchTable extends React.Component {
   render() {
     const {
       currentPage,
-      displayMode,
       emptyQuery,
       expertsFilter,
       loading,
@@ -1493,12 +1404,10 @@ class SearchTable extends React.Component {
 }
 
 SearchTable.propTypes = {
-  allowDisplayTogggle: PropTypes.bool,
   blockListing: PropTypes.bool,
   containerClass: PropTypes.arrayOf(PropTypes.string),
   contentsubtypes: PropTypes.arrayOf(PropTypes.string),
   contenttypes: PropTypes.arrayOf(PropTypes.string),
-  displayMode: PropTypes.string,
   endpointParams: PropTypes.arrayOf(
     PropTypes.shape({
       paramName: PropTypes.string,
@@ -1544,12 +1453,10 @@ SearchTable.propTypes = {
 };
 
 SearchTable.defaultProps = {
-  allowDisplayTogggle: true,
   blockListing: false,
   containerClass: [],
   contentsubtypes: [],
   contenttypes: [],
-  displayMode: 'list',
   endpointParams: [],
   filterTypes: [],
   showExpertDropDown: false,

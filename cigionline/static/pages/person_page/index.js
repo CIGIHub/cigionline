@@ -47,8 +47,6 @@ ReactDOM.render(
       colClass: 'more',
     }]}
     showSidebar={false}
-    allowDisplayToggle={false}
-    displayMode="list"
   />,
   document.getElementById('expert-search-table'),
 );
