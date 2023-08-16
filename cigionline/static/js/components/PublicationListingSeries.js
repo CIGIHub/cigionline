@@ -14,7 +14,9 @@ function PublicationListingSeries(props) {
         {row.topics.map((topic) => (
           <li key={`${row.id}-topic-${topic.id}`}>
             <a href={topic.url} className="table-content-link">
-              {topic.title}
+              <button type="button" className="button--rounded">
+                {topic.title}
+              </button>
             </a>
           </li>
         ))}

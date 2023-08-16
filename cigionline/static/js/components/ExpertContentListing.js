@@ -66,7 +66,9 @@ function ExpertContentListing(props) {
             {row.topics.map((topic) => (
               <li key={`${row.id}-topic-${topic.id}`}>
                 <a href={topic.url} className="table-content-link">
-                  {topic.title}
+                  <button type="button" className="button--topic button--rounded">
+                    {topic.title}
+                  </button>
                 </a>
               </li>
             ))}

@@ -1491,8 +1491,11 @@ class MultimediaCard(blocks.StructBlock):
             context['image_alt'] = 'CIGI Logo'
 
         if page.multimedia_type == 'video':
-            youtube_id = page.multimedia_url.split('https://youtu.be/')[1]
-            context['youtube_url'] = f'https://www.youtube.com/watch?v={youtube_id}'
+            if page.multimedia_url.startswith('https://www.youtube.com/'):
+                context['youtube_url'] = page.multimedia_url
+            if page.multimedia_url.startswith('https://youtu.be/'):
+                youtube_id = page.multimedia_url.split('https://youtu.be/')[1]
+                context['youtube_url'] = f'https://www.youtube.com/watch?v={youtube_id}'
 
         context['title'] = page.feature_title if page.feature_title else page.title
         context['authors'] = page.authors.all()

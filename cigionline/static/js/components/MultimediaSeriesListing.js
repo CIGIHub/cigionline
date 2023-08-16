@@ -2,9 +2,9 @@ import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import '../../css/components/MultimediaListingSeries.scss';
+import '../../css/components/MultimediaSeriesListing.scss';
 
-function MultimediaListingSeries(props) {
+function MultimediaSeriesListing(props) {
   const { row } = props;
 
   /* eslint-disable react/no-danger */
@@ -23,7 +23,9 @@ function MultimediaListingSeries(props) {
           {row.topics.map((topic) => (
             <li key={`${row.id}-topic-${topic.id}`}>
               <a href={topic.url} className="table-content-link">
-                {topic.title}
+                <button type="button" className="button--rounded">
+                  {topic.title}
+                </button>
               </a>
             </li>
           ))}
@@ -49,7 +51,7 @@ function MultimediaListingSeries(props) {
   );
 }
 
-MultimediaListingSeries.propTypes = {
+MultimediaSeriesListing.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
@@ -71,4 +73,4 @@ MultimediaListingSeries.propTypes = {
   }).isRequired,
 };
 
-export default MultimediaListingSeries;
+export default MultimediaSeriesListing;

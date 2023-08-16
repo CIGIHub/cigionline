@@ -48,9 +48,21 @@ button {
 
   // CIGI 3.0
   &.button--rounded {
-    border-radius: 1em;
+    border-radius: 2rem;
     padding: 0.25em 1em;
     font-size: 0.85em;
+
+    &.button--topic {
+      @include button(
+        $background-color: $cigi-light-grey,
+        $color: $black,
+        $hover-color: $white,
+        $hover-background-color: $black,
+        $hover-border-color: $white
+      );
+    
+      padding: 0.2rem 0.75rem
+    }
   }
 }
 

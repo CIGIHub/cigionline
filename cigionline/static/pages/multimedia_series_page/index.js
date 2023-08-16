@@ -3,7 +3,7 @@ import './css/multimedia_series_page.scss';
 /* global multimediaSeriesId */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MultimediaListingSeries from '../../js/components/MultimediaListingSeries';
+import MultimediaSeriesListing from '../../js/components/MultimediaSeriesListing';
 import SearchTable from '../../js/components/SearchTable';
 
 const endpointParams = [];
@@ -27,7 +27,7 @@ ReactDOM.render(
       'subtitle',
       'topics',
     ]}
-    RowComponent={MultimediaListingSeries}
+    RowComponent={MultimediaSeriesListing}
   />,
   document.getElementById('multimedia-list'),
 );
