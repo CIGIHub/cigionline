@@ -155,48 +155,48 @@ class SearchTableExperts extends React.Component {
 
     return (
       <div className="search-table">
-        <div className="search-bar">
-          <form className="search-bar-form" onSubmit={this.handleSearchSubmit}>
-            <div className="form-row position-relative">
-              <div className="col">
-                <div className="input-group input-group-search">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={searchValue}
-                    placeholder="Search Experts"
-                    onChange={this.handleSearchValueChange}
-                  />
-                  <div className="input-group-append">
-                    <button className="btn-search" type="submit">
-                      <i className="far fa-search" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-3 position-static">
-                <div className="dropdown custom-dropdown dropdown-full-width">
-                  <button className="dropdown-toggle" type="button" id="search-bar-topics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {this.dropdownSelectedTopic}
-                  </button>
-                  <div className="dropdown-menu" aria-labelledby="search-bar-topics">
-                    {!loadingTopics && (
-                      this.dropdownTopics.map((topic) => (
-                        <button
-                          key={`topic-${topic.id}`}
-                          className="dropdown-item"
-                          type="button"
-                          onClick={() => this.handleTopicSelect(topic.id)}
-                        >
-                          {topic.title}
-                        </button>
-                      ))
-                    )}
-                  </div>
+        <div className="search-bar search-page__search-bar row gy-2 gx-5 g-lg-4 g-xl-5">
+          <div className="form-row position-relative">
+            <div className="col-12 search-bar__input-container">
+              <form
+                className="search-bar-form"
+                onSubmit={this.handleSearchSubmit}
+              >
+                <button className="btn-search" type="submit">
+                  <i className="far fa-search" />
+                </button>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={searchValue}
+                  placeholder="Search Experts"
+                  onChange={this.handleSearchValueChange}
+                  required="required"
+                />
+              </form>
+            </div>
+            <div className="col-md-3 position-static">
+              <div className="dropdown custom-dropdown dropdown-full-width">
+                <button className="dropdown-toggle" type="button" id="search-bar-topics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {this.dropdownSelectedTopic}
+                </button>
+                <div className="dropdown-menu" aria-labelledby="search-bar-topics">
+                  {!loadingTopics && (
+                    this.dropdownTopics.map((topic) => (
+                      <button
+                        key={`topic-${topic.id}`}
+                        className="dropdown-item"
+                        type="button"
+                        onClick={() => this.handleTopicSelect(topic.id)}
+                      >
+                        {topic.title}
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
-          </form>
+          </div>
           <div className="search-bar-sort-wrapper">
             {sortOptions.length > 1 && (
               <>
