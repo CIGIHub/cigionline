@@ -214,6 +214,11 @@ table {
       align-items: start;
     }
 
+    .table-thumbnail-photo {
+      @include aspect-ratio(1, 1);
+      border-radius: 20px;
+    }
+
     .custom-text-list {
       li {
         color: $cigi-text-grey;
