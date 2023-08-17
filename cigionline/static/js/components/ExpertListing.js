@@ -25,7 +25,7 @@ function ExpertListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="4" className="search-table__results__row__expertise">
+      <td colSpan="3" className="search-table__results__row__expertise">
         <div className="table-mobile-text">
           Expertise
         </div>
@@ -39,7 +39,7 @@ function ExpertListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="4" className="search-table__results__row__activity">
+      <td colSpan="5" className="search-table__results__row__activity">
         <div className="table-mobile-text">
           Recent Activity
         </div>

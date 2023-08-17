@@ -226,8 +226,8 @@ class SearchTableExperts extends React.Component {
                 <thead>
                   <tr>
                     <th className="search-table__results__row__name" colSpan="3">Name</th>
-                    <th className="search-table__results__row__expertise" colSpan="4">Expertise</th>
-                    <th className="search-table__results__row__activity" colSpan="4">Recent activity</th>
+                    <th className="search-table__results__row__expertise" colSpan="3">Expertise</th>
+                    <th className="search-table__results__row__activity" colSpan="5">Recent activity</th>
                     <th className="search-table__results__row__more" colSpan="1"> </th>
                   </tr>
                 </thead>
