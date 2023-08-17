@@ -4,6 +4,8 @@ import React from 'react';
 import ExpertListing from './ExpertListing';
 import SearchTableSkeleton from './SearchTableSkeleton';
 import '../../css/components/SearchTable.scss';
+import '../../css/components/SearchTableExperts.scss';
+import '../../css/components/SearchResultListingRow.scss';
 
 class SearchTableExperts extends React.Component {
   constructor(props) {
@@ -220,12 +222,13 @@ class SearchTableExperts extends React.Component {
           ? <SearchTableSkeleton />
           : rows.length
             ? (
-              <table className={['custom-theme-table', 'table-experts', 'search-results', loading && 'loading'].join(' ')}>
+              <table className={['custom-theme-table', 'table-experts', 'search-table__results', 'search-table__results--list', loading && 'loading'].join(' ')}>
                 <thead>
                   <tr>
-                    <th colSpan="3">Name</th>
-                    <th colSpan="4">Expertise</th>
-                    <th colSpan="4">Recent activity</th>
+                    <th className="search-table__results__row__name" colSpan="3">Name</th>
+                    <th className="search-table__results__row__expertise" colSpan="4">Expertise</th>
+                    <th className="search-table__results__row__activity" colSpan="4">Recent activity</th>
+                    <th className="search-table__results__row__more" colSpan="1"> </th>
                   </tr>
                 </thead>
                 <tbody>

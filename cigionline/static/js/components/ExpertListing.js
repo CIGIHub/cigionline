@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import CardTextMore from './CardTextMore';
 
 function ExpertListing(props) {
   const { row } = props;
 
   return (
     <tr>
-      <td colSpan="3">
+      <td colSpan="3" className="search-table__results__row__name">
         <div className="table-mobile-text">
           Name
         </div>
@@ -24,7 +25,7 @@ function ExpertListing(props) {
           </div>
         </div>
       </td>
-      <td colSpan="4">
+      <td colSpan="4" className="search-table__results__row__expertise">
         <div className="table-mobile-text">
           Expertise
         </div>
@@ -38,7 +39,7 @@ function ExpertListing(props) {
           </ul>
         </div>
       </td>
-      <td colSpan="4">
+      <td colSpan="4" className="search-table__results__row__activity">
         <div className="table-mobile-text">
           Recent Activity
         </div>
@@ -81,6 +82,17 @@ function ExpertListing(props) {
             </div>
           )}
         </div>
+      </td>
+      <td colSpan="1" className="search-table__results__row__more">
+        <div className="table-mobile-text">
+          {' '}
+        </div>
+        <CardTextMore
+          title={row.title}
+          type={row.contenttype}
+          url={row.url}
+          pdfDownload={row.pdf_download}
+        />
       </td>
     </tr>
   );

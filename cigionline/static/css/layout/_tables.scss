@@ -201,6 +201,7 @@ table {
 
   &.table-experts {
     .table-infos-wrapper {
+      align-items: center;
       flex-grow: 1;
 
       .table-title-link {
@@ -209,9 +210,17 @@ table {
       }
     }
 
+    .table-recent-activity {
+      align-items: start;
+    }
+
     .custom-text-list {
       li {
         color: $cigi-text-grey;
+      }
+
+      .table-list-item {
+        text-transform: none;
       }
     }
 
