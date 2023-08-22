@@ -32,10 +32,6 @@ body {
   &.disable-scroll {
     overflow: hidden;
   }
-
-  .meta__text {
-    font-family: $metadata-font-family;
-  }
 }
 
 //BUTTONS

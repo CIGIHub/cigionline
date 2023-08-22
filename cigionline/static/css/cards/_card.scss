@@ -6,6 +6,12 @@
 @import './card_social';
 
 .card__container {
+  .card__text__topics,
+  .card__text__date,
+  .card__text__people {
+    font-family: $metadata-font-family;
+  }
+
   .card__image {
     .img-wrapper {
       height: 100%;
