@@ -156,8 +156,8 @@ class SearchTableExperts extends React.Component {
     return (
       <div className="search-table">
         <div className="search-bar search-page__search-bar row gy-2 gx-5 g-lg-4 g-xl-5">
-          <div className="form-row position-relative">
-            <div className="col-12 search-bar__input-container">
+          <div className="form-row position-relative d-flex">
+            <div className="col-md-9 search-bar__input-container">
               <form
                 className="search-bar-form"
                 onSubmit={this.handleSearchSubmit}
@@ -175,9 +175,9 @@ class SearchTableExperts extends React.Component {
                 />
               </form>
             </div>
-            <div className="col-md-3 position-static">
+            <div className="col-md-3 position-static search-bar__filters search-filters">
               <div className="dropdown custom-dropdown dropdown-full-width">
-                <button className="dropdown-toggle" type="button" id="search-bar-topics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button className="dropdown-toggle search-bar__filters__dropdown" type="button" id="search-bar-topics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {this.dropdownSelectedTopic}
                 </button>
                 <div className="dropdown-menu" aria-labelledby="search-bar-topics">
