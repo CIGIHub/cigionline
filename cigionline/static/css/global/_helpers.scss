@@ -23,6 +23,17 @@
   li {
     @include comma-separated;
   }
+
+  &.authors,
+  &.card__text__topics {
+    font-family: $metadata-font-family;
+    text-transform: uppercase;
+  }
+}
+
+.date {
+  font-family: $metadata-font-family;
+  text-transform: uppercase;
 }
 
 .inline-list {

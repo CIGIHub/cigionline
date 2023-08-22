@@ -114,7 +114,7 @@
 
   .card__text__topics {
     @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
-    font-size: 0.8em;
+    font-size: 0.7em;
     margin-bottom: 0.5em;
     line-height: 1.25;
   }
@@ -144,8 +144,8 @@
     }
 
     .card__text__people {
-      @include link($color: $cigi-dark-grey, $hover-color: $cigi-dark-pink);
-      font-size: 0.8em;
+      @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      font-size: 0.7em;
       margin-bottom: 0.25em;
 
       li {
@@ -162,7 +162,7 @@
       .card__text__date {
         color: $cigi-text-grey;
         display: none;
-        font-size: 0.8em;
+        font-size: 0.7em;
         margin-bottom: 0.5em;
       }
     }
@@ -327,7 +327,7 @@
     }
 
     .card--expert__board-position {
-      font-size: 0.8em;
+      font-size: 0.7em;
     }
 
     .card--expert__social {
