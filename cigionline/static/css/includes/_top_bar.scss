@@ -498,6 +498,8 @@ header {
 
           .button--rounded {
             @include button();
+            font-family: $metadata-font-family;
+            text-transform: uppercase;
           }
 
           .button--arrow {
