@@ -10,7 +10,13 @@
   .card__text__date,
   .card__text__people {
     font-family: $metadata-font-family;
+    font-size: 0.7em;
     text-transform: uppercase;
+  }
+
+  .button__text,
+  .social-text {
+    font-family: $metadata-font-family;
   }
 
   .card__image {
@@ -103,7 +109,7 @@
     }
 
     .card__text__description {
-      font-size: 15px;
+      font-size: 16px;
       line-height: 1.25;
     }
 
@@ -114,7 +120,6 @@
 
   .card__text__topics {
     @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
-    font-size: 0.7em;
     margin-bottom: 0.5em;
     line-height: 1.25;
   }
@@ -145,7 +150,6 @@
 
     .card__text__people {
       @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
-      font-size: 0.7em;
       margin-bottom: 0.25em;
 
       li {
@@ -162,7 +166,6 @@
       .card__text__date {
         color: $cigi-text-grey;
         display: none;
-        font-size: 0.7em;
         margin-bottom: 0.5em;
       }
     }

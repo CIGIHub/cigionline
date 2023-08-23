@@ -4,6 +4,7 @@ footer {
     @include media-breakpoint-up(md) {
       padding: 1.5em 0;
     }
+    font-family: $metadata-font-family;
     padding: 1em 0;
 
     &.footer__topics {
