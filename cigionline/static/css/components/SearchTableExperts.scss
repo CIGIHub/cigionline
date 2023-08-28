@@ -1,0 +1,53 @@
+@import '../global/mixins';
+
+.search-table__results--list {
+  tr {
+    td {
+      &.search-table__results__row__name {
+        color: $black;
+        font-size: 0.875em;
+        font-weight: 500;
+      }
+
+      &.search-table__results__row__activity {
+        color: $black;
+        font-size: 0.875em;
+        font-weight: 500;
+      }
+    }
+
+    .search-table__results__row__name {
+      i {
+        @include media-breakpoint-up(md) {
+          display: block;
+        }
+        display: none;
+        margin-right: 1em;
+        margin-top: 0.25em;
+
+        &.elevate-bookmark {
+          font-size: 15px;
+          margin-left: 5px;
+          display: inline-block;
+        }
+      }
+    }
+
+    .search-table__results__row__activity {
+      i {
+        @include media-breakpoint-up(md) {
+          display: block;
+        }
+        display: none;
+        margin-right: 1em;
+        margin-top: 0.25em;
+
+        &.elevate-bookmark {
+          font-size: 15px;
+          margin-left: 5px;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
