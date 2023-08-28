@@ -293,6 +293,8 @@ img {
 // METADATA TEXT AND HEADERS FONT
 .meta__text,
 .header--submenu,
-.nav-item {
+.nav-item,
+.dropdown-item,
+.cta__button {
   font-family: $metadata-font-family;
 }
