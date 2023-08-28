@@ -13,7 +13,7 @@ from search.filters import (
     ParentalManyToManyFilterField,
     ParentalManyToManyFilterFieldName,
 )
-from streams.blocks import ParagraphBlock
+from streams.blocks import ParagraphBlock, FeatureExpertRow
 from unidecode import unidecode
 from wagtail.admin.panels import (
     FieldPanel,
@@ -59,6 +59,11 @@ class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         LEADERSHIP = 3
 
     person_list_page_type = models.IntegerField(choices=PersonListPageType.choices, default=PersonListPageType.DEFAULT)
+    layout = StreamField([
+        ('row', FeatureExpertRow()),
+    ],
+        blank=True,
+    )
 
     max_count = 3
     parent_page_types = ['core.BasicPage', 'home.HomePage']
@@ -69,6 +74,9 @@ class PersonListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         BasicPageAbstract.title_panel,
         BasicPageAbstract.hero_link_panel,
         BasicPageAbstract.body_panel,
+        MultiFieldPanel([
+            FieldPanel('layout'),
+        ], heading='Layout', classname='collapsible collapsed home-page-layout'),
         BasicPageAbstract.images_panel,
     ]
     settings_panels = Page.settings_panels + [

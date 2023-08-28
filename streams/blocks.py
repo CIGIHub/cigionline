@@ -1729,6 +1729,18 @@ class HomePageRow(blocks.StructBlock):
         form_classname = 'row-block'
 
 
+class FeatureExpertRow(blocks.StructBlock):
+    row = blocks.StreamBlock([
+        ('expert_card', ExpertCard()),
+    ])
+
+    class Meta:
+        icon = 'list-ul'
+        label = 'Row'
+        template = 'streams/home_page_row_block.html'
+        form_classname = 'row-block'
+
+
 class ArticleLandingPageColumn(blocks.StructBlock):
     column_cards = blocks.StreamBlock([
         ('article_card', ArticleCard()),

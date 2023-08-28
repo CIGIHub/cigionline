@@ -9,17 +9,40 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  {% include "includes/body.html" with body=self.body %}
-  <section class="experts-page-featured-experts">
+  {% include "includes/top_bar_menu.html" with title='Research' %}
+  <section class="hero">
     <div class="container">
-      <h2>Featured</h2>
-      <div class="row featured-expert-row">
-        {% for expert in self.featured_experts_random %}
-          <div class="col-md-4 featured-expert-col">
-            {% include "includes/features/feature_expert_short.html" with expert=expert %}
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="hero__content">
+            <p>{{ self.subtitle|richtext }}</p>
           </div>
-        {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% include "includes/body.html" with body=self.body %}
+  <section class="layout layout--expert">
+    <div class="container layout">
+      <div class="row">
+        <div class="col">
+          <hr />
+        </div>
+      </div>
+      {% for block in self.layout %}
+        {% include_block block %}
+        {% if not forloop.last %}
+          <div class="row">
+            <div class="col">
+              <hr />
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+      <div class="row">
+        <div class="col">
+          <hr />
+        </div>
       </div>
     </div>
   </section>
@@ -27,7 +50,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div id="experts-search-table" data-revision-date={{ self.latest_revision_created_at|date:"U" }}>
+          <div id="experts-search-table" class="expert-list-section" data-revision-date={{ self.latest_revision_created_at|date:"U" }}>
           </div>
         </div>
       </div>
