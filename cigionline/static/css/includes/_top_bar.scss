@@ -302,7 +302,6 @@ header {
 
       li {
         @include link($color: $cigi-dark-grey, $hover-color: $black);
-        font-family: $metadata-font-family;
         font-weight: 300;
         display: flex;
         align-items: center;
@@ -398,7 +397,6 @@ header {
     margin-bottom: 2em;
 
     h1 {
-      font-family: $metadata-font-family;
       font-size: 1.25rem;
       font-weight: 300;
       margin: 0;
@@ -434,7 +432,6 @@ header {
       display: grid;
       gap: 0.5em;
       grid-template-columns: repeat(2, 1fr);
-      font-family: $metadata-font-family;
 
       .header--submenu__right__menu-item {
         &.inactive {

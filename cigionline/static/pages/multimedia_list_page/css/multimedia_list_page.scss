@@ -142,6 +142,10 @@ body {
 
           .card__text {
             padding: 1em 0;
+
+            .card__text__title {
+              font-family: $primary-font-family;
+            }
           }
         }
       }

@@ -289,3 +289,10 @@ img {
     }
   }
 }
+
+// METADATA TEXT AND HEADERS FONT
+.meta__text,
+.header--submenu
+.nav-item {
+  font-family: $metadata-font-family;
+}

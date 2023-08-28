@@ -1,7 +1,7 @@
 {% load wagtailcore_tags menu_tags cache %}
 
 
-<header class="{% if small %}small scrolled{% endif %} header--top-bar">
+<header class="{% if small %}small scrolled{% endif %} header--top-bar meta__text">
   {% cache 86400 top_bar %}
     {% get_menu_items 'main' as main_menu_items %}
 

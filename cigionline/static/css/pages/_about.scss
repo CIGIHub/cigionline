@@ -1,4 +1,13 @@
 body {
+  &.basic-page {
+    h2:not(.subtitle),
+    h3,
+    th {
+      font-family: $metadata-font-family;
+      font-weight: 300;
+    }
+  }
+
   &.about-page {
     @include top_bar(
       $background-color: $white,
