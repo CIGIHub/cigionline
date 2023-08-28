@@ -14,23 +14,25 @@ section {
       @include media-breakpoint-up(md) {
         font-size: 2.75em;
       }
-      font-family: ff-tisa-web-pro, sans-serif;
       font-size: 1.75em;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.1em;
     }
 
     h2 {
       color: $black;
-      font-family: ff-tisa-web-pro, sans-serif;
       font-size: 1.1em;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 1.4em;
       margin: 8px 0 0;
     }
 
     .custom-text-list {
       justify-content: center;
+
+      &.card__text__topics {
+        @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      }
     }
 
     .topics {

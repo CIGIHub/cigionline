@@ -4,6 +4,7 @@ footer {
     @include media-breakpoint-up(md) {
       padding: 1.5em 0;
     }
+    font-family: $metadata-font-family;
     padding: 1em 0;
 
     &.footer__topics {
@@ -40,6 +41,7 @@ footer {
       width: 100%;
       border-radius: 100px;
       transition: none;
+      text-transform: none;
     }
 
     .footer__subscribe__input-wrapper {

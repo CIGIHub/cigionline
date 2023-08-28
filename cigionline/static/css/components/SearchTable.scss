@@ -176,6 +176,7 @@
 }
 
 .search-table {
+  font-family: $metadata-font-family;
   margin-bottom: 4em;
   position: relative;
 
@@ -340,6 +341,7 @@
 
     .search-bar__filters-button {
       .search-bar__filters__dropdown {
+        font-weight: 300;
         border: 1px solid $black;
         border-radius: 50px;
         position: static;
