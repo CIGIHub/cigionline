@@ -16,7 +16,7 @@
         <div class="col-12">
           <div class="hero__content">
             <p>{{ self.subtitle|richtext }}</p>
-            <button class="read-more" id="read-more">
+            <button class="read-more meta__text" id="read-more">
               <a>
                 <i class="fal fa-plus"></i>
                 <u>Read more</u>
@@ -50,7 +50,7 @@
       </div>
     </div>
   </section>
-  <section class="research-topics all-topics">
+  <section class="research-topics all-topics meta__text">
     <div class="container all-topics__contianer">
       <div class="row">
         <div class="col-md-2">
@@ -74,7 +74,7 @@
       <div class="row">
         <div class="col">
           <div class="featured-publications-container">
-            <h2>Featured Publications</h2>
+            <h2 class="meta__text">Featured Publications</h2>
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 {% for block in self.featured_publications %}

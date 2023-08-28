@@ -27,7 +27,7 @@ const ExpertSearchResultCard = (props) => {
         </div>
       </div>
 
-      <div className="card--small--expert__bottom">
+      <div className="card--small--expert__bottom meta__text">
         <h4>Expertise</h4>
         <ul className="card--expert__bottom__expertise-list">
           {row.expertise_list.length > 0

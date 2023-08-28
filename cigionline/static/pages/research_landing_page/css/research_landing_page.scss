@@ -2,7 +2,6 @@
 
 body {
   h2 {
-    font-family: $metadata-font-family;
     font-size: 1rem;
     font-weight: 300;
     margin-bottom: 1em;
@@ -22,7 +21,6 @@ body {
         a {
           display: flex;
           align-items: center;
-          font-family: $metadata-font-family;
           font-weight: 300;
 
           i {
@@ -52,10 +50,6 @@ body {
 
     .featured-publications-container {
       border-bottom: 1px solid $cigi-light-grey;
-
-      h2 {
-        font-family: $metadata-font-family;
-      }
     }
 
     .swiper-container {
