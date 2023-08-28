@@ -28,6 +28,7 @@
     td {
       &.search-table__results__row__title {
         color: $black;
+        font-family: $primary-font-family;
         font-size: 0.875em;
         font-weight: 500;
       }
