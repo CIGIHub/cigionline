@@ -12,9 +12,11 @@ body {
   }
 
   .multimedia-page__meta {
+    font-family: $metadata-font-family;
     margin-bottom: 3em;
 
     h1 {
+      font-family: $primary-font-family;
       font-size: clamp(1.5rem, 3vw, 2.5rem);
     }
 
@@ -107,6 +109,7 @@ body {
 
       button {
         color: $cigi-light-grey;
+        font-family: $metadata-font-family;
 
         &:hover {
           color: $white;

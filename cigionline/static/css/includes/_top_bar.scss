@@ -434,6 +434,7 @@ header {
       display: grid;
       gap: 0.5em;
       grid-template-columns: repeat(2, 1fr);
+      font-family: $metadata-font-family;
 
       .header--submenu__right__menu-item {
         &.inactive {
