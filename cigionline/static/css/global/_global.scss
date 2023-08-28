@@ -291,8 +291,18 @@ img {
 }
 
 // METADATA TEXT AND HEADERS FONT
+section {
+  &.body {
+    h1, h2, h3, h4, h5, h6 {
+      font-family: $metadata-font-family;
+    }
+  }
+}
+
 .meta__text,
-.header--submenu
-.nav-item {
+.header--submenu,
+.nav-item,
+.dropdown-item,
+.cta__button {
   font-family: $metadata-font-family;
 }
