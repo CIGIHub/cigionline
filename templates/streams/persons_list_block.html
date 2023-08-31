@@ -1,16 +1,35 @@
-{% load wagtailcore_tags core_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="container">
+<div class="container persons-list-block">
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      {% for block in self.persons %}
-        {% with block.value.specific as person %}
-          {{ person.title }}
-          {{ person.image_square }}
-          {{ person.position }}
-          {{ person.short_bio|richtext }}
-        {% endwith %}
-      {% endfor %}
+      {% if self.title %}
+        <div class="block-title">{{ self.title }}</div>
+      {% endif %}
+      <ul class="persons-list">
+        {% for block in self.persons %}
+          {% with block.value.specific as person %}
+          <li>
+            <div class="person-info">
+              <a href="{{ person.url }}" class="person-photo">
+                {% image person.image_square width-300 as image_square %}
+                <div class="img-wrapper" style="background-image: url('{{ image_square.url }}');"></div>
+              </a>
+      
+              <div>
+                <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
+                <div class="person-function">
+                  {{ person.position }}
+                </div>
+              </div>
+            </div>
+            <p class="person-description">
+              {{ person.short_bio|safe }}
+            </p>
+          </li>
+          {% endwith %}
+        {% endfor %}
+      </ul>
     </div>
   </div>
 </div>

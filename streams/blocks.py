@@ -1169,6 +1169,7 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
 
 
 class PersonsListBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
     persons = blocks.StreamBlock(
         [
             ('person', blocks.PageChooserBlock(page_type='people.PersonPage', required=True)),

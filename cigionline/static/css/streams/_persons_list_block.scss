@@ -1,0 +1,50 @@
+.persons-list-block {
+  .block-title {
+    font-weight: 700;
+    padding: 2em 0 1em;
+  }
+
+  .persons-list {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      border-bottom: 1px solid $cigi-light-grey;
+      padding: 1em 0;
+
+      &:last-of-type {
+        border-bottom: 0;
+      }
+    }
+
+    .person-info {
+      align-items: center;
+      display: flex;
+      margin-bottom: 1em;
+    }
+
+    .person-photo {
+      @include aspect-ratio(1, 1);
+      border-radius: 100%;
+      display: inline-block;
+      flex: 0 0 70px;
+      height: 70px;
+      margin-right: 1em;
+      width: 70px;
+    }
+
+    .person-name {
+      color: $black;
+      font-size: 1.0625em;
+
+      &:hover {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    .person-function {
+      color: $cigi-text-grey;
+      font-size: 0.9em;
+    }
+  }
+}
