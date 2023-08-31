@@ -9,7 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import SeriesItemImageBlock
+from streams.blocks import SeriesItemImageBlock, PersonsListBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -204,6 +204,7 @@ class ArticlePage(
             BasicPageAbstract.additional_image_block,
             BasicPageAbstract.additional_disclaimer_block,
             BasicPageAbstract.line_break_block,
+            ('persons_list_block', PersonsListBlock()),
         ],
         blank=True,
         use_json_field=True,

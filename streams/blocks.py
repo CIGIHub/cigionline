@@ -1166,3 +1166,18 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
         icon = 'link'
         label = 'Survey Findings Country'
         template = 'streams/survey_findings_country_block.html'
+
+
+class PersonsListBlock(blocks.StructBlock):
+    persons = blocks.StreamBlock(
+        [
+            ('person', blocks.PageChooserBlock(page_type='people.PersonPage', required=True)),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'person'
+        label = 'Persons List'
+        help_text = 'Add a list of person profiles.'
+        template = 'streams/persons_list_block.html'
