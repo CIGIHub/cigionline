@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags core_tags wagtailimages_tags %}
 
 <div class="container persons-list-block">
   <div class="row d-block">
@@ -8,7 +8,12 @@
       {% endif %}
       <ul class="persons-list">
         {% for block in self.persons %}
-          {% with block.value.specific as person %}
+          {% with block.value.person.specific as person %}
+          {% if block.value.bio_override %}
+            {% define block.value.bio_override as bio %}
+          {% else %}
+            {% define person.short_bio as bio %}
+          {% endif %}
           <li>
             <div class="person-info">
               <a href="{{ person.url }}" class="person-photo">
@@ -24,7 +29,7 @@
               </div>
             </div>
             <p class="person-description">
-              {{ person.short_bio|safe }}
+              {{ bio|safe }}
             </p>
           </li>
           {% endwith %}

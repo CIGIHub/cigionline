@@ -1168,17 +1168,25 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
         template = 'streams/survey_findings_country_block.html'
 
 
+class PersonPageChooserBlock(blocks.StructBlock):
+    person = blocks.PageChooserBlock(page_type='people.PersonPage', required=True)
+    bio_override = blocks.CharBlock(required=False, help_text="Optional; to be displayed in place of the profile's Short Bio field.")
+
+    class Meta:
+        icon = 'link'
+
+
 class PersonsListBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     persons = blocks.StreamBlock(
         [
-            ('person', blocks.PageChooserBlock(page_type='people.PersonPage', required=True)),
+            ('person', PersonPageChooserBlock()),
         ],
         required=True,
     )
 
     class Meta:
-        icon = 'person'
+        icon = 'group'
         label = 'Persons List'
         help_text = 'Add a list of person profiles.'
         template = 'streams/persons_list_block.html'
