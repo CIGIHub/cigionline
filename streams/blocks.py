@@ -1170,6 +1170,7 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
 
 class PersonsListBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
+    use_short_bio = models.BooleanField(default=False, help_text='Use Short Biography field instead of Short Description field.')
     persons = blocks.StreamBlock(
         [
             ('person', blocks.PageChooserBlock(page_type='people.PersonPage', required=True)),

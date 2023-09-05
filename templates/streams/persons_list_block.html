@@ -8,7 +8,11 @@
       {% endif %}
       <ul class="persons-list">
         {% for block in self.persons %}
-          {% with block.value.specific as person %}
+          {% if self.use_short_bio %}
+            {% with person=block.value.specific bio=block.value.specific.short_bio %}
+          {% else %}
+            {% with person=block.value.specific bio=block.value.specific.short_description %}
+          {% endif %}
           <li>
             <div class="person-info">
               <a href="{{ person.url }}" class="person-photo">
@@ -24,7 +28,7 @@
               </div>
             </div>
             <p class="person-description">
-              {{ person.short_bio|safe }}
+              {{ bio|safe }}
             </p>
           </li>
           {% endwith %}
