@@ -88,3 +88,6 @@ cigionline/static/bundles/*
 
 # redis dump
 *.rdb
+
+# Postgres
+*.dump
