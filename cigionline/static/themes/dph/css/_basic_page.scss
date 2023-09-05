@@ -66,6 +66,19 @@ body {
 }
 
 footer {
+  font-size: 16px;
   background-color: $dph-background;
   text-align: center;
+
+  img {
+    margin: 1rem 0 3rem;
+  }
+
+  .footer__copyright {
+    @include link(
+      $color: $cigi-medium-grey,
+      $hover-color: $cigi-primary-colour
+    );
+    color: $cigi-medium-grey;
+  }
 }
