@@ -1166,3 +1166,31 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
         icon = 'link'
         label = 'Survey Findings Country'
         template = 'streams/survey_findings_country_block.html'
+
+
+class PersonsListBlock(blocks.StructBlock):
+    class BioSourceField(models.TextChoices):
+        SHORT_DESCRIPTION = ('short_description', 'Short Description')
+        SHORT_BIO = ('short_bio', 'Short Biography')
+
+    title = blocks.CharBlock(required=False)
+    bio_source_field = blocks.ChoiceBlock(
+        required=False,
+        choices=BioSourceField.choices,
+        default=BioSourceField.SHORT_DESCRIPTION,
+        max_choices=1,
+        verbose_name='Biography Source Field',
+        help_text="Select the field from the person's page to populate their biography in this block. Default to 'Short Description'.",
+    )
+    persons = blocks.StreamBlock(
+        [
+            ('person', blocks.PageChooserBlock(page_type='people.PersonPage', required=True)),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'group'
+        label = 'Persons List'
+        help_text = 'Add a list of person profiles.'
+        template = 'streams/persons_list_block.html'
