@@ -156,6 +156,11 @@ class PersonPage(
         use_json_field=True,
     )
     byline = RichTextField(blank=True, features=['bold', 'italic', 'link'],)
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
     curriculum_vitae = models.ForeignKey(
         'wagtaildocs.Document',
         null=True,
@@ -331,6 +336,7 @@ class PersonPage(
             [
                 FieldPanel('short_bio'),
                 FieldPanel('body'),
+                FieldPanel('short_description'),
                 FieldPanel('byline'),
             ],
             heading='Biography',
