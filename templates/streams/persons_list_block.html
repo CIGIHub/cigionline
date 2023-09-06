@@ -29,8 +29,12 @@
             <p class="person-description">
               {% if self.bio_source_field and self.bio_source_field == 'short_bio' %}
                 {{ person.short_bio|safe }}
-              {% else %}
+              {% elif person.short_description %}
                 {{ person.short_description|safe }}
+              {% else %}
+                {% for block in person.body %}
+                  {{ block.value }}
+                {% endfor %}
               {% endif %}
             </p>
           </li>
