@@ -26,15 +26,15 @@
                 </div>
               </div>
             </div>
-            <p class="person-description">
+            <div class="person-description">
               {% if self.bio_source_field and self.bio_source_field == 'short_bio' %}
                 {{ person.short_bio|safe }}
               {% else %}
                 {% for block in person.body %}
-                  {{ block.value }}
+                  {{ block.value|safe }}
                 {% endfor %}
               {% endif %}
-            </p>
+            </div>
           </li>
           {% endwith %}
         {% endfor %}
