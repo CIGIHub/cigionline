@@ -37,6 +37,10 @@ body {
       line-height: 1;
     }
 
+    p {
+      color: $cigi-medium-light-grey;
+    }
+
     .scrollanchor-container {
       animation: bounce 2s infinite;
       margin-top: 1rem;
@@ -45,13 +49,14 @@ body {
 
   .body {
     p {
-      font-size: 16px;
+      font-size: 15px;
+      line-height: 1.6;
     }
 
     h2 {
       width: 100%;
       color: $cigi-medium-light-grey;
-      border-top: 1px solid $cigi-medium-light-grey;
+      border-top: 1px solid $cigi-light-line-grey;
       font-size: 1rem;
       font-weight: 500;
       padding-top: 0.3rem;
@@ -68,7 +73,11 @@ body {
         @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
 
         li {
-          border-bottom: 1px solid $cigi-medium-grey;
+          border-bottom: 1px solid $cigi-dark-line-grey;
+
+          .person-name {
+            font-weight: 500;
+          }
 
           &:last-child {
             border-bottom: 0;
