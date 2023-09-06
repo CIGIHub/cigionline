@@ -204,7 +204,6 @@ class ArticlePage(
             BasicPageAbstract.additional_image_block,
             BasicPageAbstract.additional_disclaimer_block,
             BasicPageAbstract.line_break_block,
-            BasicPageAbstract.persons_list_block,
         ],
         blank=True,
         use_json_field=True,

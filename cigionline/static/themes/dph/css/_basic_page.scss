@@ -62,6 +62,35 @@ body {
       font-weight: 500;
       font-size: 1rem;
     }
+
+    .persons-list-block {
+      .persons-list {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+
+        li {
+          border-bottom: 1px solid $cigi-medium-grey;
+
+          &:last-child {
+            border-bottom: 0;
+          }
+        }
+
+        .person-photo {
+          .img-wrapper {
+            border: 2px solid $dph-green;
+            border-radius: 50%;
+            background-color: $cigi-light-grey;
+
+            img {
+              border-radius: 50%;
+            }
+          }
+        }
+        .person-function {
+          color: $cigi-medium-light-grey;
+        }
+      }
+    }
   }
 }
 
@@ -69,6 +98,8 @@ footer {
   font-size: 16px;
   background-color: $dph-background;
   text-align: center;
+  margin-top: 2rem;
+  padding-top: 0;
 
   img {
     margin: 1rem 0 3rem;

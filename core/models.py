@@ -73,6 +73,7 @@ class BasicPageAbstract(models.Model):
         ('text_background_block', TextBackgroundBlock(
             features=['bold', 'italic', 'link'],
         )),
+        ('persons_list_block', PersonsListBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
@@ -99,7 +100,6 @@ class BasicPageAbstract(models.Model):
     additional_image_block = ('additional_image', AdditionalImageBlock())
     additional_disclaimer_block = ('additional_disclaimer', AdditionalDisclaimerBlock())
     line_break_block = ('linebreak', LineBreakBlock())
-    persons_list_block = ('persons_list_block', PersonsListBlock())
 
     body = StreamField(
         body_default_blocks,

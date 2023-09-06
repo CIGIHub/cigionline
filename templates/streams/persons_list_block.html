@@ -12,8 +12,11 @@
           <li>
             <div class="person-info">
               <a href="{{ person.url }}" class="person-photo">
-                {% image person.image_square width-300 as image_square %}
-                <div class="img-wrapper" style="background-image: url('{{ image_square.url }}');"></div>
+                <div class="img-wrapper">
+                  {% if person.image_square %}
+                    {% image person.image_square width-300 %}
+                  {% endif %}
+                </div>
               </a>
       
               <div>
