@@ -2,6 +2,7 @@
 @import '../../../css/global/animations/bounce';
 
 $dph-font: neue-haas-grotesk-text, sans-serif;
+$dph-font-copy: neue-haas-grotesk-display, sans-serif;
 
 body {
   @include top-bar($background-color: $dph-background);
@@ -9,20 +10,20 @@ body {
   font-family: $dph-font;
   color: $white;
 
+  p {
+    font-family: $dph-font-copy;
+    letter-spacing: 0.5px;
+  }
+
   a {
     color: $dph-green;
   }
 
   .hero {
-    @include media-breakpoint-up(md) {
-      text-align: center;
-    }
+    text-align: center;
     background-color: $dph-background;
 
     h1 {
-      @include media-breakpoint-up(sm) {
-        font-size: 2.5rem;
-      }
       @include media-breakpoint-up(md) {
         font-size: 3.5rem;
       }
@@ -32,7 +33,7 @@ body {
       @include media-breakpoint-up(xl) {
         font-size: 5.5rem;
       }
-      font-size: 1.75rem;
+      font-size: 2.5rem;
       font-weight: 500;
       line-height: 1;
     }
@@ -53,11 +54,20 @@ body {
       line-height: 1.6;
     }
 
+    ul {
+      padding-left: 1em;
+    }
+
+    li {
+      font-family: $dph-font-copy;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      padding-left: 1em;
+    }
+
     h2 {
       width: 100%;
-      color: $cigi-medium-light-grey;
-      border-top: 1px solid $cigi-light-line-grey;
-      font-size: 1rem;
+      font-size: 1.125rem;
       font-weight: 500;
       padding-top: 0.3rem;
       margin-top: 3rem;
@@ -66,6 +76,13 @@ body {
     h3 {
       font-weight: 500;
       font-size: 1rem;
+    }
+
+    .stream-image-block {
+      @include media-breakpoint-up(md) {
+        width: 33%;
+      }
+      width: 50%;
     }
 
     .persons-list-block {
