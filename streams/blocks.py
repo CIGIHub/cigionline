@@ -1170,17 +1170,17 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
 
 class PersonsListBlock(blocks.StructBlock):
     class BioSourceField(models.TextChoices):
-        SHORT_DESCRIPTION = ('short_description', 'Short Description')
+        FULL_BIO = ('full_bio', 'Full Biography')
         SHORT_BIO = ('short_bio', 'Short Biography')
 
     title = blocks.CharBlock(required=False)
     bio_source_field = blocks.ChoiceBlock(
         required=False,
         choices=BioSourceField.choices,
-        default=BioSourceField.SHORT_DESCRIPTION,
+        default=BioSourceField.FULL_BIO,
         max_choices=1,
         verbose_name='Biography Source Field',
-        help_text="Select the field from the person's page to populate their biography in this block. Default to 'Short Description'.",
+        help_text="Select the field from the person's page to populate their biography in this block. Default to 'Full Biography'.",
     )
     persons = blocks.StreamBlock(
         [
