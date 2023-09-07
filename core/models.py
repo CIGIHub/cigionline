@@ -27,6 +27,7 @@ from streams.blocks import (
     AutoPlayVideoBlock,
     ImageFullBleedBlock,
     ChartBlock,
+    PersonsListBlock,
     PosterBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
@@ -72,6 +73,7 @@ class BasicPageAbstract(models.Model):
         ('text_background_block', TextBackgroundBlock(
             features=['bold', 'italic', 'link'],
         )),
+        ('persons_list_block', PersonsListBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
