@@ -372,6 +372,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
 
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+    link = blocks.URLBlock(required=False)
 
     implemented_themes = [
         'cyber_series_opinion',
