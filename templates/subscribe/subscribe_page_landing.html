@@ -7,8 +7,15 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_plain.html" with title="Thank you for signing up!" %}
-  {{ self.landing_page_body }}
+  {% if status == 'subscribed' %}
+    {% include "includes/heroes/hero_plain.html" with title="You are already subscribed!" %}
+  {% elif status == 'error' %}
+    {% include "includes/heroes/hero_plain.html" with title="Apologies, an error occurred during the sign up process. Please try again." %}
+  {% else %}
+    {% include "includes/heroes/hero_plain.html" with title="Thank you for signing up!" %}
+    {{ self.landing_page_body }}
+  {% endif %}
+
   <section class="social-links">
     <div class="container">
       <div class="row d-block">

@@ -10,6 +10,7 @@ from streams.blocks import ParagraphBlock
 from mailchimp_marketing.api_client import ApiClientError
 import mailchimp_marketing as MailchimpMarketing
 import logging
+import json
 
 api_key = None
 server = None
@@ -100,6 +101,10 @@ class SubscribePage(
 
             except ApiClientError as error:
                 logger.error('An error occurred with Mailchimp: {}'.format(error.text))
+                if json.loads(error.text)['title'] == 'Member Exists':
+                    context['status'] = 'subscribed'
+                else:
+                    context['status'] = 'error'
 
             return render(request, self.landing_page_template, context)
 
