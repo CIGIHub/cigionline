@@ -1,0 +1,46 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeARTest' 'css' %}
+{% endblock %}
+
+{% block theme_js %}
+  {% render_bundle 'themeARTest' 'js' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row mt-5 pt-5">
+    <div class="col col-md-8 col-lg-6">
+      <h1>AR TEST ARTICLE</h1>
+    </div>
+
+  </div>
+  <div class="row p-5">
+    <div class="col col-md-8 col-lg-6">
+      <img src="https://user-images.githubusercontent.com/178548/57737067-a6552480-7680-11e9-8c3a-f2def8acf4d4.png" alt="">
+    </div>
+
+  </div>
+  <div class="row p-5">
+    <div class="col col-md-8 col-lg-6">
+      <img src="https://user-images.githubusercontent.com/178548/57737068-a6552480-7680-11e9-9959-b0df8cc71cc8.png" alt="">
+    </div>
+
+  </div>
+  <div class="row p-5">
+    <div class="col col-md-8 col-lg-6">
+      <img src="https://user-images.githubusercontent.com/178548/57737069-a6552480-7680-11e9-9498-8663e7a83684.png" alt="">
+    </div>
+
+  </div>
+  <div class="row p-5">
+    <div class="col col-md-8 col-lg-6">
+      <img src="https://user-images.githubusercontent.com/178548/57737070-a6edbb00-7680-11e9-9f93-211812a7e64d.png" alt="">
+    </div>
+
+  </div>
+</div>
+{% endblock %}
