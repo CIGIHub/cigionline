@@ -1,11 +1,3 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import './css/ar_test.scss';
-
-const controls = new OrbitControls(camera, renderer.domElement);
-const loader = new GLTFLoader();
-
 class App {
   init() {
     this.icosahedron = this.getIcosahedron(0xff005c);
