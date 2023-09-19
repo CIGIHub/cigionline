@@ -9,8 +9,16 @@
   {% render_bundle 'themeARTest' 'js' %}
 {% endblock %}
 
-{% block content %}
+{% block extra_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js"></script>
+  <script src="https://Threejs.org/examples/js/controls/OrbitControls.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+  <script src="https://iondrimba.github.io/augmented-reality/public/scripts/ar.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
 <div class="container">
   <div class="row mt-5 pt-5">
     <div class="col col-md-8 col-lg-6">

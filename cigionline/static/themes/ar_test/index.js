@@ -245,4 +245,6 @@ class App {
   }
 }
 
-new App().init();
+$(document).ready(() => {
+  new App().init();
+});
