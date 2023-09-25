@@ -5,6 +5,8 @@ from django.db import models
 from django.forms.utils import flatatt
 from django.utils import timezone
 from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
+import wagtail.core.rich_text as rich_text
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -370,6 +372,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
 
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+    link = blocks.URLBlock(required=False)
 
     implemented_themes = [
         'cyber_series_opinion',
@@ -588,6 +591,30 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
     class Meta:
         icon = 'download-alt'
         label = 'PDF Download'
+
+
+class EPubDownloadBlock(blocks.StructBlock, ThemeableBlock):
+    file = DocumentChooserBlock(required=True)
+    button_text = blocks.CharBlock(
+        required=False,
+        help_text='Optional text to replace the button text. If left empty, the button will read "Download Book".'
+    )
+    display = blocks.BooleanBlock(default=True)
+
+    def get_template(self, context, *args, **kwargs):
+        standard_template = super(EPubDownloadBlock, self).get_template(context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'epub_download_block')
+
+    def get_api_representation(self, value, context=None):
+        if value:
+            return {
+                'button_text': value.get('button_text'),
+                'url': value.get('file').file.url,
+            }
+
+    class Meta:
+        icon = 'download-alt'
+        label = 'ePub Download'
 
 
 class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
@@ -847,13 +874,13 @@ class NewsletterBlock(blocks.StructBlock):
             if is_str:
                 text_soup = BeautifulSoup(context['text'], 'html.parser')
             else:
-                text_soup = BeautifulSoup(context['text'].source, 'html.parser')
+                text_soup = BeautifulSoup(rich_text.expand_db_html(context['text'].source), 'html.parser')
             for link in text_soup.findAll('a'):
                 link['style'] = 'text-decoration: none; color: #ee1558;'
             if is_str:
                 context['text'] = str(text_soup)
             else:
-                context['text'].source = str(text_soup)
+                context['text'] = mark_safe(str(text_soup))
 
         return context
 
@@ -1080,6 +1107,20 @@ class AdditionalDisclaimerBlock(blocks.StructBlock):
         help_text = 'Additional disclaimer if necessary; placed in order above standard CIGI disclaimer.'
 
 
+class AdditionalFileBlock(blocks.StructBlock):
+    file = DocumentChooserBlock(required=True)
+    page = blocks.PageChooserBlock(required=False)
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    image = ImageChooserBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Additional File'
+        help_text = 'Additional files to be used only if the theme requires them.'
+        template = 'streams/additional_file_block.html'
+
+
 class SeriesItemImageBlock(blocks.StructBlock):
     class PositionChoices(models.TextChoices):
         top = ('top', 'Top')
@@ -1115,3 +1156,42 @@ class LineBreakBlock(blocks.StructBlock):
         icon = 'horizontalrule'
         label = 'Line Break'
         template = 'streams/line_break_block.html'
+
+
+class SurveyFindingsCountryBlock(blocks.StructBlock):
+    country = blocks.CharBlock(required=True)
+    image = ImageChooserBlock(required=True)
+    file = DocumentChooserBlock(required=True)
+
+    class Meta:
+        icon = 'link'
+        label = 'Survey Findings Country'
+        template = 'streams/survey_findings_country_block.html'
+
+
+class PersonsListBlock(blocks.StructBlock):
+    class BioSourceField(models.TextChoices):
+        FULL_BIO = ('full_bio', 'Full Biography')
+        SHORT_BIO = ('short_bio', 'Short Biography')
+
+    title = blocks.CharBlock(required=False)
+    bio_source_field = blocks.ChoiceBlock(
+        required=False,
+        choices=BioSourceField.choices,
+        default=BioSourceField.FULL_BIO,
+        max_choices=1,
+        verbose_name='Biography Source Field',
+        help_text="Select the field from the person's page to populate their biography in this block. Default to 'Full Biography'.",
+    )
+    persons = blocks.StreamBlock(
+        [
+            ('person', blocks.PageChooserBlock(page_type='people.PersonPage', required=True)),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'group'
+        label = 'Persons List'
+        help_text = 'Add a list of person profiles.'
+        template = 'streams/persons_list_block.html'

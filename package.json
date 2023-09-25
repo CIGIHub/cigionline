@@ -16,7 +16,6 @@
     "build": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress",
     "heroku-postbuild": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress",
     "lint:js": "eslint . --ext .js",
-    "lint:sass": "sass-lint -c .sass-lint.yml 'cigionline/static/**/*.scss' -v -q --max-warnings 0",
     "start": "cross-env NODE_ENV=development webpack --mode development --progress --watch"
   },
   "dependencies": {
@@ -58,7 +57,6 @@
     "react-dom": "17.0.2",
     "resolve-url-loader": "4.0.0",
     "sass": "1.35.2",
-    "sass-lint": "1.13.1",
     "sass-loader": "12.1.0",
     "scrollreveal": "4.0.9",
     "source-map-loader": "3.0.0",

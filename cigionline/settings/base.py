@@ -74,12 +74,17 @@ INSTALLED_APPS = [
     'webpack_loader',
     'adv_cache_tag',
 
+    'wagtail_2fa',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.postgres',
     'django.contrib.sessions',
+    'django.contrib.sitemaps',
     'django.contrib.staticfiles',
 ]
 
@@ -92,6 +97,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'wagtail_2fa.middleware.VerifyUserMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 

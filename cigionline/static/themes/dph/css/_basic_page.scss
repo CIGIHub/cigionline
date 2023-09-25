@@ -1,0 +1,141 @@
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+
+$dph-font: neue-haas-grotesk-text, sans-serif;
+$dph-font-copy: neue-haas-grotesk-display, sans-serif;
+
+body {
+  @include top-bar($background-color: $dph-background);
+  background-color: $dph-background;
+  font-family: $dph-font;
+  color: $white;
+
+  p {
+    font-family: $dph-font-copy;
+    letter-spacing: 1px;
+  }
+
+  a {
+    color: $dph-green;
+  }
+
+  .hero {
+    text-align: center;
+    background-color: $dph-background;
+
+    h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 3.5rem;
+      }
+      @include media-breakpoint-up(lg) {
+        font-size: 4.5rem;
+      }
+      @include media-breakpoint-up(xl) {
+        font-size: 5.5rem;
+      }
+      font-size: 2.5rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    p {
+      color: $cigi-medium-light-grey;
+    }
+
+    .scrollanchor-container {
+      animation: bounce 2s infinite;
+      margin-top: 1rem;
+    }
+  }
+
+  .body {
+    p {
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1em;
+    }
+
+    li {
+      font-family: $dph-font-copy;
+      font-size: 15px;
+      letter-spacing: 1px;
+      padding-left: 1em;
+    }
+
+    h2 {
+      width: 100%;
+      font-size: 1.125rem;
+      font-weight: 500;
+      padding-top: 0.3rem;
+      margin-top: 3rem;
+    }
+
+    h3 {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .stream-image-block {
+      @include media-breakpoint-up(md) {
+        width: 33%;
+      }
+      width: 50%;
+    }
+
+    .persons-list-block {
+      .persons-list {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+
+        li {
+          border-bottom: 1px solid $cigi-dark-line-grey;
+
+          .person-name {
+            font-weight: 500;
+          }
+
+          &:last-child {
+            border-bottom: 0;
+          }
+        }
+
+        .person-photo {
+          .img-wrapper {
+            border: 2px solid $dph-green;
+            border-radius: 50%;
+            background-color: $cigi-light-grey;
+
+            img {
+              border-radius: 50%;
+            }
+          }
+        }
+        .person-function {
+          color: $cigi-medium-light-grey;
+        }
+      }
+    }
+  }
+}
+
+footer {
+  font-size: 16px;
+  background-color: $dph-background;
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 0;
+
+  img {
+    margin: 1rem 0 3rem;
+  }
+
+  .footer__copyright {
+    @include link(
+      $color: $cigi-medium-grey,
+      $hover-color: $cigi-primary-colour
+    );
+    color: $cigi-medium-grey;
+  }
+}

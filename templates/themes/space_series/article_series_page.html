@@ -52,6 +52,28 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="title">{{ self.title }}</div>
+            <ul class="social-share-list-space">
+              <li class="facebook">
+                <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
+                  rel="noopener noreferrer">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+              </li>
+              <li class="twitter">
+                <a class="twitter-share-link"
+                  href="https://twitter.com/share?text={{ title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
+                  target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              </li>
+              <li class="linkedin">
+                <a class="linkedin-share-link"
+                  href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{ self.title|social_string }}"
+                  target="_blank" rel="noopener noreferrer">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+              </li>
+            </ul>
             <div class="subtitle">{{ self.subtitle|richtext }}</div>
           </div>
           <div class="col-lg-6">
@@ -66,50 +88,104 @@
   <section class="in-the-series">
     <div class="container swiper">
       <div class="swiper-container-series swiper-container">
-        <div class="swiper-wrapper">
-          {% for series_item in self.article_series_items %}
-            <article class="swiper-slide series-item">
-              <a href="{% pageurl series_item.content_page %}" class="series-item-image">
-                {% if series_item.image_override %}
-                  <img 
-                    class="image-static"
-                    src="{{ series_item.image_override.src_static }}"
-                    alt="{{ series_item.image_override.alt }}"
-                    data-src-static="{{ series_item.image_override.src_static }}"
-                    data-src-gif="{{ series_item.image_override.src_gif }}"
-                  />
-                {% else %}
-                  {% image series_item.content_page.specific.image_hero fill-300x300 %}
+        <div class="swiper-container-series-content">
+          <div class="swiper-wrapper">
+            {% define 0 as counter %}
+            {% for series_item in self.article_series_items %}
+              <article class="swiper-slide series-item {% if series_item.category_title %}after{% endif %}">
+                {% if series_item.category_title %}
+                  <div class=category-title>{{ series_item.category_title }}</div>
                 {% endif %}
-                {% if series_item.content_page.contenttype == "Multimedia" %}
-                  <div class="play-icon">
-                    <div class="outer-circle"></div>
-                    <div class="inner-circle"></div>
-                    <i class="fas fa-play"></i>
-                  </div>
-                {% endif %}
-              </a>
-              <div class="series-item-content">
-                <div>
+                <div class="article-wrapper">
                   <div class="series-item-counter">
-                    <span></span>
-                    <span>{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                    {% if series_item.content_page.contenttype == "Multimedia" %}
+                      <div class="play-icon-wrapper">
+                        <div class="play-icon">
+                          <div class="outer-circle"></div>
+                          <i class="fas fa-play"></i>
+                        </div>
+                      </div>
+                    {% else %}
+                      {% define counter|add:1 as counter %}
+                      {% if counter < 10 %}0{% endif %}{{ counter }}
+                    {% endif %}
                   </div>
-                  <h3 class="series-item-title">
-                    <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
-                  </h3>
+                  <div class="article-content-wrapper">
+                    <div class="article-content">
+                      <a href="{% pageurl series_item.content_page %}" class="series-item-image">
+                        {% if series_item.image_override %}
+                          <img 
+                            class="image-static"
+                            src="{{ series_item.image_override.src_static }}"
+                            alt="{{ series_item.image_override.alt }}"
+                            data-src-static="{{ series_item.image_override.src_static }}"
+                            data-src-gif="{{ series_item.image_override.src_gif }}"
+                          />
+                        {% else %}
+                          {% image series_item.content_page.specific.image_hero fill-300x300 %}
+                        {% endif %}
+                      </a>
+                      <div class="series-item-content">
+                        <div>
+                          {% if series_item.content_page.contenttype == "Multimedia" %}
+                            <h3 class="series-item-title multimedia-title">
+                              <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                            </h3>
+                          {% else %}
+                            <h3 class="series-item-title">
+                              <a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a>
+                            </h3>
+                          {% endif %}
+                        </div>
+                        {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                {% include 'includes/authors.html' with authors=series_item.content_page.authors.all %}
-              </div>
-            </article>
-          {% endfor %}
+              </article>
+            {% endfor %}
+          </div>
         </div>
       </div>
-      <div class="swiper-button-prev swiper-button-prev-series swiper-button"></div>
-      <div class="swiper-button-next swiper-button-next-series swiper-button"></div>
     </div>
   </section>
-{% endblock %}
-
-{% block footer %}
+  {% if self.acknowledgements %}
+    <section class="acknowledgement">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Acknowledgement</h2>
+            <div class="acknowledgements-content">
+              {{ self.acknowledgements|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% if self.credits or self.credits_stream_field %}
+    <section class="credits">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Credits</h2>
+            <div class="credits-content">
+              {% if self.credits_stream_field %}
+                {% for title in self.credits_stream_field %}
+                  <div class="title-container">
+                    <div class="title">{{ title.value.title }}</div>
+                    {% for person in title.value.people %}
+                      <div class="name">{{ person }}</div>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                {{ self.credits|richtext }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}

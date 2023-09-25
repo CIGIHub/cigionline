@@ -47,10 +47,10 @@
       <div class="row justify-content-center">
         <div class="col-8 col-md-6 col-lg-4">
           <div class="banner">
-            {% if self.image_banner.file.url|file_extension == '.gif' %}
-                  <img src="{{self.image_banner.file.url}}" alt="{{self.image_banner.caption}}" />
+            {% if self.image_hero.file.url|file_extension == '.gif' %}
+                  <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
             {% else %}
-              {% image self.image_banner width-1000 %}
+              {% image self.image_hero width-1000 %}
             {% endif %}
           </div>
         </div>
@@ -82,18 +82,27 @@
               <hr>
             {% endif %}
             <article>
-              {% with series_item.content_page.specific as article %}
-              <h3>
-                <a href={{article.url}}>
-                  {{ article.title }}
-                </a>
-              </h3>
+              {% with series_item.content_page.specific as page %}
+              <div class="article-title-wrapper">
+                {% if page|page_type == 'multimedia' %}
+                  <div class="play-icon">
+                    <i class="fa fa-inverse fa-play"></i>
+                  </div>
+                {% endif %}
+                <h3>
+                  <a href={{page.url}}>
+                    {{ page.title }}
+                  </a>
+                </h3>
+              </div>
               <div class="article-short-description">
-                {{ article.short_description|richtext }}
+                {% if page.short_description %}
+                  {{ page.short_description|richtext }}
+                {% endif %}
               </div>
               <ul class="authors">
-                {% for item in article.authors.all %}
-                  <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
+                {% for item in page.authors.all %}
+                  <li><a href="{% pageurl item.author %}"> {{ item.author.title }}</a></li>
                 {% endfor %}
               </ul>
               {% endwith %}
@@ -108,8 +117,10 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
+            <div class="ai-ethics-doodle">
+              <img src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_credits.png" />
+            </div>
             <hr>
-            <h2>Credits</h2>
             <div class="credits-content">
               {% for title in self.credits_stream_field %}
                 <div class="title-container">
@@ -120,8 +131,22 @@
                 </div>
               {% endfor %}
             </div>
-            <div class="ai-ethics-doodle">
-              <img src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_credits.png" />
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col col-md-8 col-lg-6">
+            <h2>Series presented in partnership by:</h2>
+            <div class="ai-ethics-logo-wrapper">
+              <div class="ai-ethics-logo">
+                <a class="cigi-logo" href="/">
+                  {% include '../../includes/header_cigi_logo_large.svg' %}
+                </a>
+              </div>
+              <div class="ai-ethics-logo">
+                <a href="https://uwaterloo.ca/artificial-intelligence-institute/events/webinar-series">
+                  <img src="/static/themes/ai_ethics_series/assets/WaterlooAI-Logo-RGB-Medium.png">
+                </a>
+              </div>
             </div>
           </div>
         </div>

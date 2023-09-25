@@ -132,7 +132,7 @@ img {
       font-size: 1em;
       height: 1.5em;
       justify-content: space-between;
-      padding-bottom: .25em;
+      padding-bottom: 0.25em;
       width: 100%;
 
       &::after {
@@ -206,7 +206,7 @@ img {
           column-count: 3;
         }
 
-        @include media-breakpoint-down (sm) {
+        @include media-breakpoint-down(sm) {
           column-count: 2;
         }
         column-count: 4;
@@ -218,7 +218,7 @@ img {
       }
 
       .dropdown-item {
-        padding: 0.25em .6875rem;
+        padding: 0.25em 0.6875rem;
         white-space: normal;
         word-break: break-word;
       }

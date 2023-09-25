@@ -28,10 +28,14 @@
       Purchase Book
     </a>
   {% elif cta_pdf and content.contenttype == 'Publication' %}
-    <button class="button-action button-square">
-      <a href="{{ content.specific.pdf_downloads.0.value.file.url }}">
+    <a href="{{ content.specific.pdf_downloads.0.value.file.url }}">
+      <button class="button-action button-square">
         <i class="fa fas fa-download"></i>
-      </a>
-    </button>
+      </button>
+    </a>
+  {% elif content.contentsubtype == 'News Releases' %}
+    <a href="{{ content.url }}" class="button-action">
+      <i class="fas fa-comment-dots"></i> Read
+    </a>
   {% endif %}
 {% endif %}

@@ -9,7 +9,9 @@
   $background-color-medium: $background-color,
   $background-color-scrolled: $background-color,
   $color: $white,
+  $color-scrolled: $color,
   $color-medium: $color,
+  $color-medium-scrolled: $color-scrolled,
   $hover-color: $cigi-primary-colour,
   $hover-color-medium: $hover-color,
   $position: fixed
@@ -23,6 +25,45 @@
 
     &.scrolled {
       background-color: $background-color-scrolled;
+
+      .cigi-top-bar {
+        .cigi-logo {
+          svg {
+            @include media-breakpoint-down(md) {
+              * {
+                fill: $color-scrolled;
+              }
+            }
+            @include media-breakpoint-up(md) {
+              fill: $color-medium-scrolled;
+  
+              * {
+                fill: $color-medium-scrolled;
+              }
+            }
+            fill: $color-scrolled;
+          }
+        }
+  
+        nav {
+          ul {
+            a,
+            button {
+              @include media-breakpoint-up(md) {
+                color: $color-medium-scrolled;
+              }
+              color: $color-scrolled;
+  
+              &:hover {
+                @include media-breakpoint-up(md) {
+                  color: $hover-color-medium;
+                }
+                color: $hover-color;
+              }
+            }
+          }
+        }
+      }
     }
 
     .cigi-top-bar {

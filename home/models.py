@@ -223,43 +223,43 @@ class HomePage(Page):
 
     def featured_content_revision_created_at(self):
         try:
-            return HomePageFeaturedContentList.objects.first().latest_revision_created_at
+            return HomePageFeaturedContentList.objects.first().last_published_at
         except Exception:
             return ''
 
     def featured_publications_revision_created_at(self):
         try:
-            return f'{HomePageFeaturedPublicationsList.objects.first().latest_revision_created_at}{HomePageFeaturedContentList.objects.first().latest_revision_created_at}'
+            return f'{HomePageFeaturedPublicationsList.objects.first().last_published_at}{HomePageFeaturedContentList.objects.first().last_published_at}'
         except Exception:
             return ''
 
     def featured_events_revision_created_at(self):
         try:
-            return HomePageFeaturedEventsList.objects.first().latest_revision_created_at
+            return HomePageFeaturedEventsList.objects.first().last_published_at
         except Exception:
             return ''
 
     def featured_promotions_revision_created_at(self):
         try:
-            return HomePageFeaturedPromotionsList.objects.first().latest_revision_created_at
+            return HomePageFeaturedPromotionsList.objects.first().last_published_at
         except Exception:
             return ''
 
     def featured_highlights_revision_created_at(self):
         try:
-            return HomePageFeaturedHighlightsList.objects.first().latest_revision_created_at
+            return HomePageFeaturedHighlightsList.objects.first().last_published_at
         except Exception:
             return ''
 
     def featured_multimedia_revision_created_at(self):
         try:
-            return HomePageFeaturedMultimediaList.objects.first().latest_revision_created_at
+            return HomePageFeaturedMultimediaList.objects.first().last_published_at
         except Exception:
             return ''
 
     def featured_experts_revision_created_at(self):
         try:
-            return HomePageFeaturedExpertsList.objects.first().latest_revision_created_at
+            return HomePageFeaturedExpertsList.objects.first().last_published_at
         except Exception:
             return ''
 

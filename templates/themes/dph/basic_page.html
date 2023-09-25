@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeDPH' 'css' %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mks4fbg.css">
+{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
+{% block content %}
+{% endblock content %}
+
+{% block footer %}
+  <section class="hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-8 col-sm-6 col-md-6">
+          <h1>{{ self.title }}</h1>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-10 col-sm-8 col-md-5">
+          <p>{{ self.subtitle|richtext }}</p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="scrollanchor-container">
+            <a href="#article-body">
+              <i class="far fa-arrow-down fa-2x"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% include "includes/body.html" with body=self.body %}
+  <footer>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <hr>
+        </div>
+        <div class="col-md-7">
+          <p>
+            For additional information or inquiries, please contact Reanne Cayenne, Research Coordinator, at <a href="mailto:digitalhub@cigionline.org">digitalhub@cigionline.org</a>
+          </p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col col-sm-8 col-md-6 col-lg-4">
+          <img src="/static/themes/dph/assets/CIGI_DPH_logos.png" alt="">
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="footer__copyright">
+            © 2023 | <a href="/privacy-policy/">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

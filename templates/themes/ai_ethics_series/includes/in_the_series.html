@@ -15,13 +15,13 @@
       <div class="d-none d-sm-block col ai-ethics-doodle right"><img height="100" src="/static/themes/ai_ethics_series/assets/ai_ethics_doodle_right.png"></img></div>
     </div>
     <div class="series-contributors row justify-content-center">
-      <ul class="contributors col col-md-10 col-lg-8">
-        {% for item in article_series.series_contributors_by_person %}
-        <li>
-          <a href="{{ item.item.url }}">
-            {% for contributor in item.contributors %} {{ contributor.title}} {% endfor %}
-          </a>
-        </li>
+      <ul class="contributors col col-md-6">
+        {% for item in article_series.series_authors_by_article %}
+          {% for author in item.authors %}
+            <li>
+              <a href="{{ item.item.url }}">{{ author.author.title }}</a>
+            </li>
+          {% endfor %}
         {% endfor %}
       </ul>
     </div>

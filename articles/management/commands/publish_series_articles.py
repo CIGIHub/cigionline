@@ -14,9 +14,13 @@ class Command(BaseCommand):
             try:
                 page.content_page.specific.get_latest_revision().publish()
                 for author in page.content_page.authors.all():
-                    author.author.get_latest_revision().publish()
-                print(f'Published {page.contenttype} - {page.content_page.title} successfully')
+                    try:
+                        author.author.get_latest_revision().publish()
+                        print(f'Published Author "{author.author.title}" successfully')
+                    except Exception:
+                        print(f'Error: Author "{author.author.title}" was not published')
+                print(f'Published {page.content_page.contenttype} - {page.content_page.title} successfully')
             except Exception:
-                print(f'Error: {page.contenttype} - {page.content_page.title} was not published')
+                print(f'Error: {page.content_page.contenttype} - {page.content_page.title} was not published')
 
         article_series_page.get_latest_revision().publish()

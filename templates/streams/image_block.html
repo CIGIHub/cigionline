@@ -4,10 +4,16 @@
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
       <figure class="stream-image-block">
+        {% if self.link %}
+          <a href="{{ self.link }}" class="stream-image-block-link">
+        {% endif %}
         {% if self.image.file.url|file_extension == '.gif' %}
           <img src="{{self.image.file.url}}" alt="{{self.image.caption}}" />
         {% else %}
           {% image self.image width-640 %}
+        {% endif %}
+        {% if self.link %}
+          </a>
         {% endif %}
         {% if not self.hide_image_caption %}
           <figcaption>

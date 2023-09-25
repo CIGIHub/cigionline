@@ -11,6 +11,7 @@ from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
     PDFDownloadBlock,
+    EPubDownloadBlock,
     CTABlock,
 )
 from wagtail.admin.panels import (
@@ -154,6 +155,14 @@ class PublicationPage(
             ('purchase_link', BookPurchaseLinkBlock())
         ],
         blank=True,
+        use_json_field=True,
+    )
+    book_epub_downloads = StreamField(
+        [
+            ('epub_download', EPubDownloadBlock())
+        ],
+        blank=True,
+        verbose_name='ePub Downloads',
         use_json_field=True,
     )
     ctas = StreamField(
@@ -315,6 +324,7 @@ class PublicationPage(
                 FieldPanel('isbn_ebook'),
                 FieldPanel('book_pages'),
                 FieldPanel('book_purchase_links'),
+                FieldPanel('book_epub_downloads'),
                 FieldPanel('book_excerpt_download'),
                 FieldPanel('book_excerpt'),
             ],

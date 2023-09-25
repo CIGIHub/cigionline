@@ -23,7 +23,7 @@ from wagtail.blocks import (
     StructBlock,
     TextBlock,
 )
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
 
@@ -168,6 +168,12 @@ class MultimediaPage(
         related_name='+',
         verbose_name='Square image',
     )
+    length = models.CharField(
+        blank=True,
+        max_length=8,
+        verbose_name='Length',
+        help_text='| CIGI 3.0 field | The length of the multimedia source in minutes and seconds (e.g. 1:23).',
+    )
     multimedia_series = models.ForeignKey(
         'multimedia.MultimediaSeriesPage',
         null=True,
@@ -210,6 +216,11 @@ class MultimediaPage(
     podcast_video_duration = models.CharField(blank=True, max_length=8)
     podcast_video_file_size = models.IntegerField(blank=True, null=True)
     podcast_video_url = models.URLField(blank=True)
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
     transcript = StreamField(
         [
             BasicPageAbstract.body_accordion_block,
@@ -228,6 +239,11 @@ class MultimediaPage(
         ],
         blank=True,
         use_json_field=True,
+    )
+    vimeo_url = models.URLField(
+        blank=True,
+        verbose_name='Vimeo URL',
+        help_text='| CIGI 3.0 field | The URL of the multimedia source from Vimeo.',
     )
     youtube_id = models.CharField(
         blank=True,
@@ -255,12 +271,21 @@ class MultimediaPage(
 
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('short_description'),
+                FieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible collapsed'
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('multimedia_type'),
                 FieldPanel('publishing_date'),
                 FieldPanel('multimedia_url'),
+                FieldPanel('vimeo_url'),
+                FieldPanel('length'),
             ],
             heading='General Information',
             classname='collapsible collapsed',

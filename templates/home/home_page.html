@@ -162,27 +162,4 @@
       </div>
     </section>
   {% endcache %}
-
-  {% cache 86400 homepage_featured_experts self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_experts_revision_created_at|date:"c" %}
-    <section class="homepage-featured-experts">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading">
-              <a href="/experts/">
-                Experts
-              </a>
-            </h2>
-          </div>
-        </div>
-        <div class="row">
-          {% for expert in featured_experts %}
-            <div class="col-12 col-md-4 homepage-featured-expert-row">
-              {% include "includes/features/feature_expert_short.html" with expert=expert %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-  {% endcache %}
 {% endblock content %}
