@@ -10,7 +10,7 @@
   },
   "homepage": "https://github.com/CIGIHub/cigionline#readme",
   "engines": {
-    "node": "^15"
+    "node": "^16.x"
   },
   "scripts": {
     "build": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress",
@@ -26,6 +26,7 @@
     "bootstrap": "4.6.0",
     "jquery": "3.6.0",
     "normalize.css": "8.0.1",
+    "npm": "^9.8.1",
     "react-calendar": "3.4.0",
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.2",
