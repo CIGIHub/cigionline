@@ -1,0 +1,24 @@
+@import '../../../css/global/mixins';
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#test-ar {
+  font-size: 2rem;
+  padding: 1rem;
+}
+#img-hiro {
+  height: 500px;
+  width: auto;
+}
+#arjs-video {
+  opacity: 0;
+}
+#a-scene {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  z-index: -10;
+}

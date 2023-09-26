@@ -1,5 +1,5 @@
 {% extends "articles/article_page.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader static %}
 
 {% block theme_css %}
   {% render_bundle 'themeARTest' 'css' %}
@@ -8,47 +8,37 @@
 {% block theme_js %}
   {% render_bundle 'themeARTest' 'js' %}
 {% endblock %}
-
-{% block extra_js %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js"></script>
-  <script src="https://Threejs.org/examples/js/controls/OrbitControls.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
-  <script src="https://iondrimba.github.io/augmented-reality/public/scripts/ar.js"></script>
-{% endblock %}
+  
 
 {% block content %}
-<div class="loader"></div>
 <div class="container">
   <div class="row mt-5 pt-5">
     <div class="col col-md-8 col-lg-6">
       <h1>AR TEST ARTICLE</h1>
     </div>
-
+    <button class="button" id="test-ar" type="button">Test AR</button>
   </div>
-  <div class="row p-5">
-    <div class="col col-md-8 col-lg-6">
-      <img src="https://user-images.githubusercontent.com/178548/57737067-a6552480-7680-11e9-8c3a-f2def8acf4d4.png" alt="">
-    </div>
-
-  </div>
-  <div class="row p-5">
-    <div class="col col-md-8 col-lg-6">
-      <img src="https://user-images.githubusercontent.com/178548/57737068-a6552480-7680-11e9-9959-b0df8cc71cc8.png" alt="">
-    </div>
-
-  </div>
-  <div class="row p-5">
-    <div class="col col-md-8 col-lg-6">
-      <img src="https://user-images.githubusercontent.com/178548/57737069-a6552480-7680-11e9-9498-8663e7a83684.png" alt="">
-    </div>
-
-  </div>
-  <div class="row p-5">
-    <div class="col col-md-8 col-lg-6">
-      <img src="https://user-images.githubusercontent.com/178548/57737070-a6edbb00-7680-11e9-9f93-211812a7e64d.png" alt="">
-    </div>
-
+  <div class="row mt-5 pt-5">
+    <img id="img-hiro" src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" alt="">
   </div>
 </div>
 {% endblock %}
+
+{% block additional_body_content %}
+  <a-scene id="a-scene" log="hello" embedded arjs>
+    <a-marker preset="hiro">
+        <!-- we use cors proxy to avoid cross-origin problems ATTENTION! you need to set up your server -->
+        <a-entity
+        position="0 0 0"
+        scale="0.05 0.05 0.05"
+        gltf-model="{% static 'assets/dino.gltf' %}"
+        ></a-entity>
+    </a-marker>
+    <a-entity id="camera" camera></a-entity>
+  </a-scene>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
