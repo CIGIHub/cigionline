@@ -10,7 +10,7 @@
   },
   "homepage": "https://github.com/CIGIHub/cigionline#readme",
   "engines": {
-    "node": "16.13.0"
+    "node": "16.14.0"
   },
   "scripts": {
     "build": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress",
