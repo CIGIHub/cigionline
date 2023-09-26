@@ -19,7 +19,6 @@
     "start": "cross-env NODE_ENV=development webpack --mode development --progress --watch"
   },
   "dependencies": {
-    "@ar-js-org/ar.js": "3.4.3",
     "@fortawesome/fontawesome-pro": "5.15.3",
     "@panzoom/panzoom": "4.4.1",
     "aframe": "^1.4.2",
@@ -31,8 +30,7 @@
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.2",
     "rimraf": "3.0.2",
-    "swiper": "^6.7.5",
-    "three-bmfont-text": "^3.0.1"
+    "swiper": "^6.7.5"
   },
   "devDependencies": {
     "@babel/core": "7.15.0",
