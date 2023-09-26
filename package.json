@@ -22,7 +22,7 @@
     "@ar-js-org/ar.js": "^3.4.5",
     "@fortawesome/fontawesome-pro": "5.15.3",
     "@panzoom/panzoom": "4.4.1",
-    "aframe": "^1.4.2",
+    "aframe": "^1.4.0",
     "bootstrap": "4.6.0",
     "jquery": "3.6.0",
     "normalize.css": "8.0.1",
