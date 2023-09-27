@@ -20,9 +20,8 @@
   },
   "dependencies": {
     "@ar-js-org/ar.js": "3.4.3",
-    "@fortawesome/fontawesome-pro": "5.15.3",
     "@panzoom/panzoom": "4.4.1",
-    "aframe": "git+ssh://git@github.com:aframevr/aframe.git#ac0415de507bbad20caf5888e0230a9725cb8eef",
+    "aframe": "git+ssh://git@github.com:aframevr/aframe.git",
     "bootstrap": "4.6.0",
     "jquery": "3.6.0",
     "normalize.css": "8.0.1",
