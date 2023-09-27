@@ -5,6 +5,12 @@ body {
   overflow: hidden;
 }
 
+main {
+  position: absolute;
+  padding-top: 10em;
+  margin: 0 auto;
+}
+
 #test-ar {
   font-size: 2rem;
   padding: 1rem;
