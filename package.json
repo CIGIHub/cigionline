@@ -22,7 +22,7 @@
     "@ar-js-org/ar.js": "3.4.3",
     "@fortawesome/fontawesome-pro": "5.15.3",
     "@panzoom/panzoom": "4.4.1",
-    "aframe": "^1.4.2",
+    "aframe": "git+ssh://git@github.com:aframevr/aframe.git",
     "bootstrap": "4.6.0",
     "jquery": "3.6.0",
     "normalize.css": "8.0.1",
@@ -31,8 +31,6 @@
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.2",
     "rimraf": "3.0.2",
-    "three-bmfont-text": "3.0.0",
-    "three-buffer-vertex-data": "1.1.0",
     "swiper": "^6.7.5"
   },
   "devDependencies": {
