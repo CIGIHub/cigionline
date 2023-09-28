@@ -16,7 +16,9 @@
     <div class="col col-md-8 col-lg-6">
       <h1>AR TEST ARTICLE</h1>
     </div>
-    <button class="button" id="test-ar" type="button">Test AR</button>
+    <a href="/ar-player">
+      <button class="button" id="test-ar" type="button">Test AR</button>
+    </a>
   </div>
   <div class="row mt-5 pt-5">
     <img id="img-hiro" src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" alt="">
@@ -24,21 +26,4 @@
 </div>
 {% endblock %}
 
-{% block additional_body_content %}
-  <a-scene id="a-scene" log="hello" embedded arjs>
-    <a-marker preset="hiro">
-        <!-- we use cors proxy to avoid cross-origin problems ATTENTION! you need to set up your server -->
-        <a-entity
-        position="0 0 0"
-        scale="0.05 0.05 0.05"
-        gltf-model="/static/assets/dino.gltf"
-        ></a-entity>
-    </a-marker>
-    <a-entity id="camera" camera></a-entity>
-  </a-scene>
-{% endblock %}
-
-{% block footer %}
-
-{% endblock %}
 

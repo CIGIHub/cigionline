@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load webpack_loader static %}
+
+{% block extra_js %}
+  {% render_bundle 'aframePage' 'js' %}
+{% endblock %}
+
+{% block meta_viewport %}
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+{% endblock %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block additional_body_content %}
+  <a-scene id="a-scene" log="hello" embedded arjs>
+    <a-marker preset="hiro" material arjs-anchor arjs-hit-testing>
+        <!-- we use cors proxy to avoid cross-origin problems ATTENTION! you need to set up your server -->
+        <a-entity
+        position="0 0 0"
+        scale="0.05 0.05 0.05"
+        gltf-model="/static/assets/dino.gltf"
+        ></a-entity>
+    </a-marker>
+    <a-entity id="camera" camera></a-entity>
+  </a-scene>
+{% endblock %}

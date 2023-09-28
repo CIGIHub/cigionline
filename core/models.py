@@ -1054,3 +1054,12 @@ class Theme(models.Model):
 
     def __str__(self):
         return self.name
+
+class AframePage(Page):
+    content_panels = Page.content_panels
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    templates = 'core/aframe_page.html'
+    class Meta:
+        verbose_name = 'Aframe Page'
