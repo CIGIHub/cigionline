@@ -188,13 +188,13 @@ def clear_cloudflare_home_page_cache(sender, **kwargs):
 
 def clear_experts_page_cache(sender, **kwargs):
     # clear experts landing page search table cache if a new expert is added or a person gains or loses the 'expert' role, or if an expert's expertise field is updated
-    from wagtail.models import PageRevision
+    from wagtail.models import Revision
 
     revision = kwargs['revision']
 
     try:
         revision_previous = revision.get_previous()
-    except PageRevision.DoesNotExist:
+    except Revision.DoesNotExist:
         revision_previous = None
 
     try:
