@@ -6,6 +6,7 @@ from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
+    TitleFieldPanel,
 )
 from wagtail.models import Orderable
 from wagtail.search import index
@@ -58,7 +59,7 @@ class MenuItem(Orderable):
     )
 
     panels = [
-        FieldPanel('title'),
+        TitleFieldPanel('title'),
         PageChooserPanel('link_page'),
         FieldPanel('link_url'),
         FieldPanel('submenu'),
