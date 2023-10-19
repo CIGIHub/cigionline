@@ -164,9 +164,7 @@ class NotificationContent(NotificationRecipients):
             self.email_list,  # to emails
         )
         msg.attach_alternative(html_content, "text/html")
-
-        if self.is_notifications_on:
-            msg.send()
+        msg.send()
 
     def send_to_slack(self):
         values = {
@@ -180,10 +178,8 @@ class NotificationContent(NotificationRecipients):
                 }
             ]
         }
-        url = os.environ['SLACK_WEBHOOK_URL']  # hardcoded placeholder test channel
-
-        if self.is_notifications_on:
-            requests.post(url, json.dumps(values))
+        url = os.environ['SLACK_WEBHOOK_URL']
+        requests.post(url, json.dumps(values))
 
 
 def send_notifications(sender, **kwargs):
@@ -191,12 +187,13 @@ def send_notifications(sender, **kwargs):
     publish_notification = NotificationContent(instance)
 
     # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
-    try:
-        if publish_notification.is_first_publish:
-            publish_notification.send_to_slack()
-        publish_notification.send_email()
-    except Exception as e:
-        print(e)
+    if publish_notification.is_notifications_on:
+        try:
+            if publish_notification.is_first_publish:
+                publish_notification.send_to_slack()
+            publish_notification.send_email()
+        except Exception as e:
+            print(e)
 
 
 def clear_cloudflare_home_page_cache(sender, **kwargs):
