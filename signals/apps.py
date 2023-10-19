@@ -111,7 +111,7 @@ class NotificationRecipients(NotificationFlags):
 
 class NotificationContent(NotificationRecipients):
 
-    def get_site_url(self):
+    def _get_site_url(self):
         """
         PYTHON_ENV values: 'production', 'admin', 'staging'
 
@@ -131,7 +131,7 @@ class NotificationContent(NotificationRecipients):
 
     @property
     def page_url(self):
-        return f'{self.get_site_url()}{self.relative_url}'
+        return f'{self._get_site_url()}{self.relative_url}'
 
     @property
     def publish_phrasing(self):
@@ -141,7 +141,7 @@ class NotificationContent(NotificationRecipients):
 
     @property
     def header_label(self):
-        site_url = self.get_site_url()
+        site_url = self._get_site_url()
         if site_url == 'http://localhost:8000':
             return 'dev environment'
         return site_url.replace('https://', '')
