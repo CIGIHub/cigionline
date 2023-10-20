@@ -1,12 +1,12 @@
 from core.models import BasicPage
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data, rich_text
 
 from .models import PeoplePage, PersonListPage, PersonPage
 
 
-class PeoplePageTests(WagtailPageTests):
+class PeoplePageTests(WagtailPageTestCase):
     def test_peoplepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PeoplePage,
@@ -42,7 +42,7 @@ class PeoplePageTests(WagtailPageTests):
                 raise ae
 
 
-class PersonListPageBasicTests(WagtailPageTests):
+class PersonListPageBasicTests(WagtailPageTestCase):
     fixtures = ["people.json"]
 
     def test_personlistpage_parent_page_types(self):
@@ -72,7 +72,7 @@ class PersonListPageBasicTests(WagtailPageTests):
                 raise ae
 
 
-class PersonListPageRequestTests(WagtailPageTests):
+class PersonListPageRequestTests(WagtailPageTestCase):
     fixtures = ["people.json"]
 
     def setUp(self):
@@ -106,7 +106,7 @@ class PersonListPageRequestTests(WagtailPageTests):
         self.assertEqual(list(response.context['senior_management']), [management_team_live])
 
 
-class PersonPageTests(WagtailPageTests):
+class PersonPageTests(WagtailPageTestCase):
     fixtures = ["people.json"]
 
     def test_personpage_parent_page_types(self):

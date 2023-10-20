@@ -1,5 +1,5 @@
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
     ArticleLandingPage,
@@ -12,7 +12,7 @@ from .models import (
 )
 
 
-class ArticleLandingPageTests(WagtailPageTests):
+class ArticleLandingPageTests(WagtailPageTestCase):
     def test_articlelandingpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticleLandingPage,
@@ -26,7 +26,7 @@ class ArticleLandingPageTests(WagtailPageTests):
         )
 
 
-class ArticleListPageTests(WagtailPageTests):
+class ArticleListPageTests(WagtailPageTestCase):
     def test_articlelistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticleListPage,
@@ -40,7 +40,7 @@ class ArticleListPageTests(WagtailPageTests):
         )
 
 
-class ArticlePageTests(WagtailPageTests):
+class ArticlePageTests(WagtailPageTestCase):
     def test_articlepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticlePage,
@@ -54,7 +54,7 @@ class ArticlePageTests(WagtailPageTests):
         )
 
 
-class ArticleSeriesListPageTests(WagtailPageTests):
+class ArticleSeriesListPageTests(WagtailPageTestCase):
     def test_articleserieslistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticleSeriesListPage,
@@ -68,7 +68,7 @@ class ArticleSeriesListPageTests(WagtailPageTests):
         )
 
 
-class ArticleSeriesPageTests(WagtailPageTests):
+class ArticleSeriesPageTests(WagtailPageTestCase):
     def test_articleseriespage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticleSeriesPage,
@@ -82,7 +82,7 @@ class ArticleSeriesPageTests(WagtailPageTests):
         )
 
 
-class MediaLandingPageTests(WagtailPageTests):
+class MediaLandingPageTests(WagtailPageTestCase):
     def test_articlelandingpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             MediaLandingPage,
@@ -96,7 +96,7 @@ class MediaLandingPageTests(WagtailPageTests):
         )
 
 
-class ArticleTypePageTests(WagtailPageTests):
+class ArticleTypePageTests(WagtailPageTestCase):
     def test_articletypepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticleTypePage,
@@ -110,7 +110,7 @@ class ArticleTypePageTests(WagtailPageTests):
         )
 
 
-# class OpinionPageViewSetTests(WagtailPageTests):
+# class OpinionPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['opinions_search_table.json']
 #     limit = 24
 #

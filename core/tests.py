@@ -5,7 +5,7 @@ from people.models import PersonListPage
 from research.models import (
     ProjectPage,
 )
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
     BasicPage,
@@ -16,7 +16,7 @@ from .models import (
 )
 
 
-class BasicPageTests(WagtailPageTests):
+class BasicPageTests(WagtailPageTestCase):
     def test_basicpage_parent_page_types(self):
         """
         Verify allowed parent page types.
@@ -36,7 +36,7 @@ class BasicPageTests(WagtailPageTests):
         )
 
 
-class FundingPageTests(WagtailPageTests):
+class FundingPageTests(WagtailPageTestCase):
     def test_fundingpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             FundingPage,
@@ -50,7 +50,7 @@ class FundingPageTests(WagtailPageTests):
         )
 
 
-class PrivacyNoticePageTests(WagtailPageTests):
+class PrivacyNoticePageTests(WagtailPageTestCase):
     def test_privacynoticepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PrivacyNoticePage,
