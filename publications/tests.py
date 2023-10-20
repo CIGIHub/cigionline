@@ -1,5 +1,5 @@
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
     PublicationListPage,
@@ -10,7 +10,7 @@ from .models import (
 )
 
 
-class PublicationListPageTests(WagtailPageTests):
+class PublicationListPageTests(WagtailPageTestCase):
     def test_publicationlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PublicationListPage,
@@ -24,7 +24,7 @@ class PublicationListPageTests(WagtailPageTests):
         )
 
 
-class PublicationPageTests(WagtailPageTests):
+class PublicationPageTests(WagtailPageTestCase):
     def test_publicationpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PublicationPage,
@@ -38,7 +38,7 @@ class PublicationPageTests(WagtailPageTests):
         )
 
 
-class PublicationSeriesListPageTests(WagtailPageTests):
+class PublicationSeriesListPageTests(WagtailPageTestCase):
     def test_publicationserieslistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PublicationSeriesListPage,
@@ -52,7 +52,7 @@ class PublicationSeriesListPageTests(WagtailPageTests):
         )
 
 
-class PublicationSeriesPageTests(WagtailPageTests):
+class PublicationSeriesPageTests(WagtailPageTestCase):
     def test_publicationseriespage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PublicationSeriesPage,
@@ -66,7 +66,7 @@ class PublicationSeriesPageTests(WagtailPageTests):
         )
 
 
-class PublicationTypePageTests(WagtailPageTests):
+class PublicationTypePageTests(WagtailPageTestCase):
     def test_publicationtypepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PublicationTypePage,
@@ -80,7 +80,7 @@ class PublicationTypePageTests(WagtailPageTests):
         )
 
 
-# class PublicationPageViewSetTests(WagtailPageTests):
+# class PublicationPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['publications_search_table.json']
 #     limit = 24
 #

@@ -1,5 +1,5 @@
 from core.models import BasicPage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
     AnnualReportListPage,
@@ -7,7 +7,7 @@ from .models import (
 )
 
 
-class AnnualReportListPageTests(WagtailPageTests):
+class AnnualReportListPageTests(WagtailPageTestCase):
     def test_annualreportlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             AnnualReportListPage,
@@ -21,7 +21,7 @@ class AnnualReportListPageTests(WagtailPageTests):
         )
 
 
-class AnnualReportPageTests(WagtailPageTests):
+class AnnualReportPageTests(WagtailPageTestCase):
     def test_annualreportpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             AnnualReportPage,

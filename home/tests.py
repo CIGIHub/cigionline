@@ -24,13 +24,13 @@ from research.models import (
 )
 from subscribe.models import SubscribePage
 from wagtail.models import Page
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
 
 from .models import HomePage
 
 
-class HomePageTests(WagtailPageTests):
+class HomePageTests(WagtailPageTestCase):
     def test_homepage_child_page_types(self):
         """
         Verify allowed child page types.
