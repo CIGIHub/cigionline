@@ -36,6 +36,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/events/$', events_views.events_api),
     re_path(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
     re_path(r'^api/old_images/$', core_views.old_images),
+    re_path(r'^api/years/$', core_views.years),
 
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),

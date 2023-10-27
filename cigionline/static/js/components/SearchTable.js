@@ -400,11 +400,14 @@ class SearchTable extends React.Component {
   }
 
   getYears() {
-    // Here we need to add fetch code for getting the years
-    this.setState(() => ({
-      loadingYears: false,
-      years: Array.from({ length: 12 }, (_, i) => 2021 - i),
-    }));
+    fetch(encodeURI('/api/years/'))
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState(() => ({
+          loadingYears: false,
+          years: data.years,
+        }));
+      });
   }
 
   getTypes() {
@@ -1064,35 +1067,37 @@ class SearchTable extends React.Component {
                 {!loadingYears && (
                   <ul className="columns-2">
                     {years.map((year) => (
-                      <li className="dropdown-item" key={`year-${year}`}>
-                        <label
-                          htmlFor={`year-${year}`}
-                          className={`keep-open ${
-                            !aggregations.years[year] ? 'inactive' : ''
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            id={`year-${year}`}
-                            checked={
-                              yearSelectValues.includes(year) ? 'checked' : ''
-                            }
-                            onChange={(e) => this.handleYearSelect(e, year)}
-                          />
-                          <span />
-                          {year}
-                          &nbsp;
-                          {aggregations.years[year] ? (
-                            <>
-                              (
-                              {aggregations.years[year]}
-                              )
-                            </>
-                          ) : (
-                            <>(0)</>
-                          )}
-                        </label>
-                      </li>
+                      aggregations.years[year] && (
+                        <li className="dropdown-item" key={`year-${year}`}>
+                          <label
+                            htmlFor={`year-${year}`}
+                            className={`keep-open ${
+                              !aggregations.years[year] ? 'inactive' : ''
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              id={`year-${year}`}
+                              checked={
+                                yearSelectValues.includes(year) ? 'checked' : ''
+                              }
+                              onChange={(e) => this.handleYearSelect(e, year)}
+                            />
+                            <span />
+                            {year}
+                            &nbsp;
+                            {aggregations.years[year] ? (
+                              <>
+                                (
+                                {aggregations.years[year]}
+                                )
+                              </>
+                            ) : (
+                              <>(0)</>
+                            )}
+                          </label>
+                        </li>
+                      )
                     ))}
                   </ul>
                 )}
@@ -1487,35 +1492,37 @@ class SearchTable extends React.Component {
                 {!loadingYears && (
                   <ul className="columns-2">
                     {years.map((year) => (
-                      <li className="dropdown-item" key={`year-${year}`}>
-                        <label
-                          htmlFor={`year-${year}`}
-                          className={`keep-open ${
-                            !aggregations.years[year] ? 'inactive' : ''
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            id={`year-${year}`}
-                            checked={
-                              yearSelectValues.includes(year) ? 'checked' : ''
-                            }
-                            onChange={(e) => this.handleYearSelect(e, year)}
-                          />
-                          <span />
-                          {year}
-                          &nbsp;
-                          {aggregations.years[year] ? (
-                            <>
-                              (
-                              {aggregations.years[year]}
-                              )
-                            </>
-                          ) : (
-                            <>(0)</>
-                          )}
-                        </label>
-                      </li>
+                      aggregations.years[year] && (
+                        <li className="dropdown-item" key={`year-${year}`}>
+                          <label
+                            htmlFor={`year-${year}`}
+                            className={`keep-open ${
+                              !aggregations.years[year] ? 'inactive' : ''
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              id={`year-${year}`}
+                              checked={
+                                yearSelectValues.includes(year) ? 'checked' : ''
+                              }
+                              onChange={(e) => this.handleYearSelect(e, year)}
+                            />
+                            <span />
+                            {year}
+                            &nbsp;
+                            {aggregations.years[year] ? (
+                              <>
+                                (
+                                {aggregations.years[year]}
+                                )
+                              </>
+                            ) : (
+                              <>(0)</>
+                            )}
+                          </label>
+                        </li>
+                      )
                     ))}
                   </ul>
                 )}
