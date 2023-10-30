@@ -3,20 +3,6 @@
 
 {% block content %}
   {% include "includes/heroes/hero_plain.html" with title=self.title %}
-  <section class="contact-form-section">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <form action="{% pageurl page %}" method="POST" class="contact-form">
-            {% csrf_token %}
-            {{ form }}
-            <button type="submit">
-              Send message
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+
   {% include "includes/contact_info.html" with events_contact=self.events_contact human_resources_contact=self.human_resources_contact media_contact=self.media_contact %}
 {% endblock %}
