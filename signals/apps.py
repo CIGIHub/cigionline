@@ -189,18 +189,21 @@ class NotificationContent(NotificationRecipients):
 
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
-    revision = kwargs['revision']
-    print(revision.content)
-    publish_notification = NotificationContent(instance)
 
-    # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
-    if publish_notification.is_notifications_on:
-        try:
-            if publish_notification.is_first_publish:
-                publish_notification.send_to_slack()
-            publish_notification.send_email()
-        except Exception as e:
-            print(e)
+    # istance.approved_schedule is a boolean field that is True if the signal is triggered by a scheduling action;
+    # false when triggered by a manual publish
+    # if the signal is triggered by a scheduling action, do not send notifications
+    if not instance.approved_schedule:
+        publish_notification = NotificationContent(instance)
+
+        # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
+        if publish_notification.is_notifications_on:
+            try:
+                if publish_notification.is_first_publish:
+                    publish_notification.send_to_slack()
+                publish_notification.send_email()
+            except Exception as e:
+                print(e)
 
 
 def clear_cloudflare_home_page_cache(sender, **kwargs):
