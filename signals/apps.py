@@ -21,7 +21,7 @@ class InstanceInfo():
         self.content_type = 'Articles' if instance.contenttype == 'Opinion' else instance.contenttype  # adjust ContentPage.contenttype to match page_type
         self.publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
         self.relative_url = instance.get_url_parts()[-1]  # last item in the tuple is the relative url to root; e.g. /articles/an-article/
-
+    
 
 class NotificationFlags(InstanceInfo):
     def __init__(self, instance):
@@ -32,11 +32,13 @@ class NotificationFlags(InstanceInfo):
         t1: go_live_at field
         t2: last_published_at field
 
-        if go_live_at field is populated, compare last_published_at to go_live_at
+        if go_live_at field is populated, determine whether go_live_at is within 1 hour of last_published_at
         if not, default False
         """
-        if t1:
+        if t1 and t2:
             return ((t2.astimezone(pytz.utc) - t1.astimezone(pytz.utc)) <= datetime.timedelta(hours=1))
+        elif t1:
+            return True
         return False
 
     def _count_publishes(self):
@@ -70,6 +72,9 @@ class NotificationFlags(InstanceInfo):
 
     @property
     def is_scheduled_publish(self):
+        '''
+        loosely defined as a publish that occurs within 1 hour of the go_live_at time
+        '''
         return (self._datetime_compare(self.instance.go_live_at, self.instance.last_published_at) and self.is_first_publish_since_go_live_at)
 
     @property
@@ -184,16 +189,21 @@ class NotificationContent(NotificationRecipients):
 
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
-    publish_notification = NotificationContent(instance)
 
-    # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
-    if publish_notification.is_notifications_on:
-        try:
-            if publish_notification.is_first_publish:
-                publish_notification.send_to_slack()
-            publish_notification.send_email()
-        except Exception as e:
-            print(e)
+    # istance.approved_schedule is a boolean field that is True if the signal is triggered by a scheduling action;
+    # false when triggered by a manual publish
+    # if the signal is triggered by a scheduling action, do not send notifications
+    if not instance.approved_schedule:
+        publish_notification = NotificationContent(instance)
+
+        # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
+        if publish_notification.is_notifications_on:
+            try:
+                if publish_notification.is_first_publish:
+                    publish_notification.send_to_slack()
+                publish_notification.send_email()
+            except Exception as e:
+                print(e)
 
 
 def clear_cloudflare_home_page_cache(sender, **kwargs):
