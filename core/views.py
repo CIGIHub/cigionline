@@ -94,3 +94,10 @@ def old_images(request):
         pages.sort(key=lambda x: x['publishing_date'], reverse=True)
         return TemplateResponse(request, 'core/old_pages_list.html', {'pages': pages, 'count': len(pages)})
     return HttpResponse('Unauthorized', status=401)
+
+
+def years(request):
+    years = ContentPage.objects.filter(publishing_date__year__isnull=False).values_list('publishing_date__year', flat=True).distinct().order_by('-publishing_date__year')
+    return JsonResponse({
+        'years': list(years)
+    })
