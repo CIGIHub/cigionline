@@ -68,7 +68,7 @@ function EventListing(props) {
               </button>
             ) : (
               row.multimedia_url ? (
-                <a href={row.multimedia_url} className="button-action">
+                <a href={row.multimedia_url} className="button-action" data-cta="event-watch">
                   <i className="fas fa-play" />
                   Watch
                 </a>
@@ -76,7 +76,7 @@ function EventListing(props) {
                 !!row.registration_url
                 && DateTime.fromISO(row.publishing_date) > DateTime.local().startOf('day')
                 && (
-                  <a href={row.registration_url} className="button-action">
+                  <a href={row.registration_url} className="button-action" data-cta="event-rsvp">
                     <i className="fal fa-calendar-alt" />
                     RSVP
                   </a>

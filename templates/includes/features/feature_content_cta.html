@@ -10,31 +10,31 @@
   {% endif %}
 {% else %}
   {% if content.contenttype == "Event" and not content.is_past %}
-    <a href="{{ content.url }}" class="button-action">
+    <a href="{{ content.url }}" class="button-action" data-cta="event">
       <i class="fal fa-calendar-alt"></i> RSVP
     </a>
   {% elif content.contenttype == 'Multimedia' %}
     {% if content.contentsubtype == 'Audio' %}
-      <a href="{{ content.url }}" class="button-action">
+      <a href="{{ content.url }}" class="button-action" data-cta="mm-audio">
         <i class="fas fa-headphones"></i> Listen
       </a>
     {% else %}
-      <a href="{{ content.url }}" class="button-action">
+      <a href="{{ content.url }}" class="button-action" data-cta="mm-video">
         <i class="fas fa-play"></i> Watch
       </a>
     {% endif %}
   {% elif content.contentsubtype == "Books" %}
-    <a href="{{ content.url }}" class="button-action">
+    <a href="{{ content.url }}" class="button-action" data-cta="pub-book">
       Purchase Book
     </a>
   {% elif cta_pdf and content.contenttype == 'Publication' %}
     <a href="{{ content.specific.pdf_downloads.0.value.file.url }}">
       <button class="button-action button-square">
-        <i class="fa fas fa-download"></i>
+        <i class="fa fas fa-download" data-cta="pub-pdf"></i>
       </button>
     </a>
   {% elif content.contentsubtype == 'News Releases' %}
-    <a href="{{ content.url }}" class="button-action">
+    <a href="{{ content.url }}" class="button-action" data-cta="article">
       <i class="fas fa-comment-dots"></i> Read
     </a>
   {% endif %}

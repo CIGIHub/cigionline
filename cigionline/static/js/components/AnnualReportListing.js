@@ -23,7 +23,7 @@ function AnnualReportListing(props) {
               Digital Interactive
             </div>
             <div className="table-content">
-              <a className="button-action" href={`https://www.cigionline.org${row.report_interactive}`}>
+              <a className="button-action" data-cta="ar-interactive" href={`https://www.cigionline.org${row.report_interactive}`}>
                 <i className="fas fa-mouse-pointer" />
                 Explore
               </a>
@@ -37,7 +37,7 @@ function AnnualReportListing(props) {
         </div>
         <div className="table-content">
           {(row.report_english && (
-            <a className="table-btn-icon" href={row.report_english}>
+            <a className="button-action table-btn-icon" data-cta="ar-eng" href={row.report_english}>
               <i className="fas fa-download" />
             </a>
           )) || (
@@ -53,11 +53,11 @@ function AnnualReportListing(props) {
         </div>
         <div className="table-content">
           {(row.report_french && (
-            <a className="table-btn-icon" href={row.report_french}>
+            <a className="button-action table-btn-icon" data-cta="ar-fr" href={row.report_french}>
               <i className="fas fa-download" />
             </a>
           )) || (
-            <a className="table-btn-icon" href={`https://www.cigionline.org${row.report_interactive}fr`}>
+            <a className="button-action table-btn-icon" data-cta="ar-interactive" href={`https://www.cigionline.org${row.report_interactive}fr`}>
               <i className="fas fa-mouse-pointer" />
             </a>
           )}
@@ -70,7 +70,7 @@ function AnnualReportListing(props) {
               Financial Statement
             </div>
             <div className="table-content">
-              <a className="table-btn-icon" href={row.report_financial}>
+              <a className="button-action table-btn-icon" data-cta="ar-financial" href={row.report_financial}>
                 <i className="fas fa-download" />
               </a>
             </div>

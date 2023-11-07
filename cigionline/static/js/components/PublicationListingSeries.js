@@ -36,7 +36,7 @@ function PublicationListingSeries(props) {
         </p>
       )}
       {row.pdf_download && (
-        <a href={row.pdf_download} className="button-action button-square">
+        <a href={row.pdf_download} className="button-action button-square" data-cta="pub-pdf">
           <i className="fa fas fa-download" />
         </a>
       )}

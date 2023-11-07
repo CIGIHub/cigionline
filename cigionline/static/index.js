@@ -1,4 +1,5 @@
 /* global FB */
+/* global fbq */
 import 'bootstrap/dist/js/bootstrap.bundle';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -134,4 +135,16 @@ if (cookieConsentContainer && !document.cookie.split(';').some((item) => item.in
     <CookieConsent />,
     cookieConsentContainer,
   );
+}
+
+// Add Meta pixel tracking to all elements with class 'button-action'
+const buttons = document.getElementsByClassName('button-action');
+for (let i = 0; i < buttons.length; i += 1) {
+  buttons[i].addEventListener('click', function() {
+    const cta = this.getAttribute('data-cta');
+    console.log(cta)
+    fbq('track', 'ViewContent', {
+      content_name: cta,
+    });
+  });
 }
