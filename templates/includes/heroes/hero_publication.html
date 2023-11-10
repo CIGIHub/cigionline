@@ -18,12 +18,12 @@
         {% include "includes/social_links.html" with title=self.title %}
         {% for document in download %}
           {% if document.value.display %}
-            <button class="button">
-              <a href="{{document.value.file.url}}">
-                  <i class="fa fas fa-download"></i>
-                  {% if document.value.button_text == '' %}Download PDF {% else %} {{ document.value.button_text}} {% endif %}
-              </a>
-            </button>
+            <a href="{{document.value.file.url}}">
+              <button class="button track-cta" data-cta="pub-pdf">
+                <i class="fa fas fa-download"></i>
+                {% if document.value.button_text == '' %}Download PDF {% else %} {{ document.value.button_text}} {% endif %}
+              </button>
+            </a>
           {% endif %}
         {% endfor %}
         {% for cta in ctas %}

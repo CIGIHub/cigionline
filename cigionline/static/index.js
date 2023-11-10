@@ -137,13 +137,12 @@ if (cookieConsentContainer && !document.cookie.split(';').some((item) => item.in
   );
 }
 
-// Add Meta pixel tracking to all elements with class 'button-action'
-const buttons = document.getElementsByClassName('button-action');
+// Add Meta pixel tracking to all elements with class 'track-cta'
+const buttons = document.getElementsByClassName('track-cta');
 for (let i = 0; i < buttons.length; i += 1) {
   buttons[i].addEventListener('click', function() {
     const cta = this.getAttribute('data-cta');
-    console.log(cta)
-    fbq('track', 'ViewContent', {
+    fbq('track', 'CTA Click', {
       content_name: cta,
     });
   });

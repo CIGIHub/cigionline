@@ -106,7 +106,7 @@ function ProjectContentListing(props) {
         </div>
         <div className="table-content">
           {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon">
+            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="pub-pdf">
               <i className="fa fas fa-download" />
             </a>
           )}

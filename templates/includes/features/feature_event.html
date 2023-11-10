@@ -6,7 +6,7 @@
     {% include "includes/features/feature_content_title.html" with content=event %}
     <div class="meta">{{ event.publishing_date|date:"M j, Y - g:i A" }} {{ event.time_zone_label }}</div>
     {% if event.multimedia_page and event.is_past %}
-      <a href="{% pageurl event.multimedia_page %}" class="button-action" data-cta="event-watch">
+      <a href="{% pageurl event.multimedia_page %}" class="button-action track-cta" data-cta="event-watch">
         <i class="fas fa-play"></i>&nbsp;&nbsp;WATCH
       </a>
     {% elif not event.event_access %}
@@ -14,7 +14,7 @@
         PRIVATE
       </div>
     {% elif not event.is_past and event.registration_url %}
-      <a href="{{ event.registration_url }}" class="button-action" data-cta="event-rsvp">
+      <a href="{{ event.registration_url }}" class="button-action track-cta" data-cta="event-rsvp">
         <i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;RSVP
       </a>
     {% endif %}

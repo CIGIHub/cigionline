@@ -90,7 +90,7 @@ function ExpertContentListing(props) {
         </div>
         <div className="table-content">
           {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon">
+            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="expert-pdf">
               <i className="fa fas fa-download" />
             </a>
           )}
