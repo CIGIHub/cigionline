@@ -1,3 +1,4 @@
+/* global fbq */
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -235,6 +236,17 @@ class SearchTable extends React.Component {
     this.setState(() => ({
       expertsFilter: e.target.value,
     }));
+  }
+
+  handleCTAClick(e) {
+    const { cta } = e.currentTarget.dataset;
+    const ctaArr = cta.split('-');
+    const ctaType = ctaArr[0];
+    const ctaAction = ctaArr.length > 1 ? ctaArr[1] : 'click';
+    fbq('track', 'CTA Click', {
+      cta_type: ctaType,
+      cta_action: ctaAction,
+    });
   }
 
   getRows() {
@@ -1584,7 +1596,7 @@ class SearchTable extends React.Component {
                   ].join(' ')}
                 >
                   {rows.map((row) => (
-                    <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
+                    <RowComponent key={`${row.id}-${row.elevated}`} row={row} handleCTAClick={this.handleCTAClick} />
                   ))}
                 </div>
               ) : (
@@ -1612,6 +1624,7 @@ class SearchTable extends React.Component {
                       <RowComponent
                         key={`${row.id}-${row.elevated}`}
                         row={row}
+                        handleCTAClick={this.handleCTAClick}
                       />
                     ))}
                   </tbody>

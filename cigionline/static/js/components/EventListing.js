@@ -4,6 +4,7 @@ import React from 'react';
 
 function EventListing(props) {
   const { row } = props;
+  const { handleCTAClick } = props;
 
   return (
     <tr>
@@ -68,7 +69,7 @@ function EventListing(props) {
               </button>
             ) : (
               row.multimedia_url ? (
-                <a href={row.multimedia_url} className="button-action track-cta" data-cta="event-watch">
+                <a href={row.multimedia_url} className="button-action track-cta" data-cta="event-watch" onClick={handleCTAClick}>
                   <i className="fas fa-play" />
                   Watch
                 </a>
@@ -76,7 +77,7 @@ function EventListing(props) {
                 !!row.registration_url
                 && DateTime.fromISO(row.publishing_date) > DateTime.local().startOf('day')
                 && (
-                  <a href={row.registration_url} className="button-action track-cta" data-cta="event-rsvp">
+                  <a href={row.registration_url} className="button-action track-cta" data-cta="event-rsvp" onClick={handleCTAClick}>
                     <i className="fal fa-calendar-alt" />
                     RSVP
                   </a>
@@ -106,6 +107,7 @@ EventListing.propTypes = {
     })),
     url: PropTypes.string,
   }).isRequired,
+  handleCTAClick: PropTypes.func.isRequired,
 };
 
 export default EventListing;

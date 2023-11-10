@@ -3,6 +3,7 @@ import React from 'react';
 
 function AnnualReportListing(props) {
   const { row } = props;
+  const { handleCTAClick } = props;
 
   return (
     <tr>
@@ -23,7 +24,7 @@ function AnnualReportListing(props) {
               Digital Interactive
             </div>
             <div className="table-content">
-              <a className="button-action track-cta" data-cta="ar-interactive" href={`https://www.cigionline.org${row.report_interactive}`}>
+              <a className="button-action track-cta" data-cta="ar-interactive" onClick={handleCTAClick} href={`https://www.cigionline.org${row.report_interactive}`}>
                 <i className="fas fa-mouse-pointer" />
                 Explore
               </a>
@@ -37,11 +38,11 @@ function AnnualReportListing(props) {
         </div>
         <div className="table-content">
           {(row.report_english && (
-            <a className="button-action table-btn-icon track-cta" data-cta="ar-eng" href={row.report_english}>
+            <a className="button-action table-btn-icon track-cta" data-cta="ar-eng" onClick={handleCTAClick} href={row.report_english}>
               <i className="fas fa-download" />
             </a>
           )) || (
-            <a className="table-btn-icon" href={`https://www.cigionline.org${row.report_interactive}en`}>
+            <a className="table-btn-icon" data-cta="ar-interactive" onClick={handleCTAClick} href={`https://www.cigionline.org${row.report_interactive}en`}>
               <i className="fas fa-mouse-pointer" />
             </a>
           )}
@@ -53,11 +54,11 @@ function AnnualReportListing(props) {
         </div>
         <div className="table-content">
           {(row.report_french && (
-            <a className="button-action table-btn-icon track-cta" data-cta="ar-fr" href={row.report_french}>
+            <a className="button-action table-btn-icon track-cta" data-cta="ar-fr" onClick={handleCTAClick} href={row.report_french}>
               <i className="fas fa-download" />
             </a>
           )) || (
-            <a className="button-action table-btn-icon track-cta" data-cta="ar-interactive" href={`https://www.cigionline.org${row.report_interactive}fr`}>
+            <a className="button-action table-btn-icon track-cta" data-cta="ar-interactive" onClick={handleCTAClick} href={`https://www.cigionline.org${row.report_interactive}fr`}>
               <i className="fas fa-mouse-pointer" />
             </a>
           )}
@@ -70,7 +71,7 @@ function AnnualReportListing(props) {
               Financial Statement
             </div>
             <div className="table-content">
-              <a className="button-action table-btn-icon track-cta" data-cta="ar-financial" href={row.report_financial}>
+              <a className="button-action table-btn-icon track-cta" data-cta="ar-financial" onClick={handleCTAClick} href={row.report_financial}>
                 <i className="fas fa-download" />
               </a>
             </div>
@@ -90,6 +91,7 @@ AnnualReportListing.propTypes = {
     report_financial: PropTypes.string,
     url: PropTypes.string,
   }).isRequired,
+  handleCTAClick: PropTypes.func.isRequired,
 };
 
 export default AnnualReportListing;

@@ -4,6 +4,7 @@ import React from 'react';
 
 function ExpertContentListing(props) {
   const { row } = props;
+  const { handleCTAClick } = props;
 
   return (
     <tr>
@@ -90,7 +91,7 @@ function ExpertContentListing(props) {
         </div>
         <div className="table-content">
           {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="expert-pdf">
+            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="expert-pdf" onClick={handleCTAClick}>
               <i className="fa fas fa-download" />
             </a>
           )}
@@ -115,6 +116,7 @@ ExpertContentListing.propTypes = {
     })),
     url: PropTypes.string.isRequired,
   }).isRequired,
+  handleCTAClick: PropTypes.func.isRequired,
 };
 
 export default ExpertContentListing;

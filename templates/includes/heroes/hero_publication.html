@@ -19,7 +19,7 @@
         {% for document in download %}
           {% if document.value.display %}
             <a href="{{document.value.file.url}}">
-              <button class="button track-cta" data-cta="pub-pdf">
+              <button class="button track-cta" data-cta="publication-pdf">
                 <i class="fa fas fa-download"></i>
                 {% if document.value.button_text == '' %}Download PDF {% else %} {{ document.value.button_text}} {% endif %}
               </button>

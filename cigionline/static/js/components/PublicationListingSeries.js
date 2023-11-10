@@ -6,6 +6,7 @@ import '../../css/components/PublicationListingSeries.scss';
 
 function PublicationListingSeries(props) {
   const { row } = props;
+  const { handleCTAClick } = props;
 
   /* eslint-disable react/no-danger */
   return (
@@ -36,7 +37,7 @@ function PublicationListingSeries(props) {
         </p>
       )}
       {row.pdf_download && (
-        <a href={row.pdf_download} className="button-action button-square track-cta" data-cta="pub-pdf">
+        <a href={row.pdf_download} className="button-action button-square track-cta" data-cta="publication-pdf" onClick={handleCTAClick}>
           <i className="fa fas fa-download" />
         </a>
       )}
@@ -63,6 +64,7 @@ PublicationListingSeries.propTypes = {
     })),
     url: PropTypes.string,
   }).isRequired,
+  handleCTAClick: PropTypes.func.isRequired,
 };
 
 export default PublicationListingSeries;
