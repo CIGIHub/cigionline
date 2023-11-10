@@ -17,11 +17,11 @@
       {% include "includes/date.html" with date=publication.publishing_date %}
     {% endif %}
     {% if publication.pdf_downloads %}
-      <button class="button-action">
-        <a href="{{ publication.pdf_downloads.0.value.file.url }}">
+      <a href="{{ publication.pdf_downloads.0.value.file.url }}">
+        <button class="button-action track-cta" data-cta="publication-pdf">
           <i class="fa fas fa-download"></i>
-        </a>
-      </button>
+        </button>
+      </a>
     {% endif %}
   </div>
 </article>

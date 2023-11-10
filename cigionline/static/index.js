@@ -1,4 +1,5 @@
 /* global FB */
+/* global fbq */
 import 'bootstrap/dist/js/bootstrap.bundle';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -134,4 +135,18 @@ if (cookieConsentContainer && !document.cookie.split(';').some((item) => item.in
     <CookieConsent />,
     cookieConsentContainer,
   );
+}
+
+// Add Meta pixel tracking to all elements with class 'track-cta'
+const buttons = document.getElementsByClassName('track-cta');
+for (let i = 0; i < buttons.length; i += 1) {
+  buttons[i].addEventListener('click', function() {
+    const dataCTA = this.getAttribute('data-cta').split('-');
+    const cta = dataCTA[0];
+    const action = dataCTA.length > 1 ? dataCTA[1] : 'click';
+    fbq('track', 'CTA Click', {
+      cta_type: cta,
+      cta_action: action,
+    });
+  });
 }
