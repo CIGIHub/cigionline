@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* global fbq */
 import PropTypes from 'prop-types';
 import React from 'react';
