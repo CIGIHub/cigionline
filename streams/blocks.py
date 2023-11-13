@@ -73,8 +73,8 @@ class AccordionBlock(blocks.StructBlock, ThemeableBlock):
         required=True,
     )
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(AccordionBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(AccordionBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'accordion_block')
 
     class Meta:
@@ -85,8 +85,8 @@ class AccordionBlock(blocks.StructBlock, ThemeableBlock):
 
 class PersonBlock(blocks.PageChooserBlock, ThemeableBlock):
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(PersonBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PersonBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'person_block')
 
     def get_api_representation(self, value, context=None):
@@ -106,8 +106,8 @@ class AutoPlayVideoBlock(blocks.StructBlock, ThemeableBlock):
     video = VideoBlock(required=False)
     caption = blocks.CharBlock(required=False)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(AutoPlayVideoBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(AutoPlayVideoBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'autoplay_video_block')
 
     class Meta:
@@ -137,8 +137,8 @@ class BlockQuoteBlock(blocks.StructBlock, ThemeableBlock):
         'john_holmes_series_opinion',
     ]
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(BlockQuoteBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(BlockQuoteBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'block_quote_block')
 
     class Meta:
@@ -158,8 +158,8 @@ class BookPurchaseLinkBlock(blocks.StructBlock, ThemeableBlock):
                 'link_text': value.link_text,
             }
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(BookPurchaseLinkBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(BookPurchaseLinkBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'book_purchase_link_block')
 
     class Meta:
@@ -179,7 +179,7 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
         'pfpc_series_opinion',
     ]
 
-    def get_template(self, context, *args, **kwargs):
+    def get_template(self, value, context, *args, **kwargs):
         standard_template = 'streams/chart_block.html'
         return self.get_theme_template(standard_template, context, 'chart_block')
 
@@ -219,8 +219,8 @@ class CTABlock(blocks.StructBlock, ThemeableBlock):
     button_text = blocks.ChoiceBlock(required=False, choices=CTAText.choices, max_length=32)
     button_icon = blocks.ChoiceBlock(required=False, choices=CTAIcon.choices, default=CTAIcon.NO_ICON, max_length=32)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(CTABlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(CTABlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'cta_block')
 
     class Meta:
@@ -230,8 +230,8 @@ class CTABlock(blocks.StructBlock, ThemeableBlock):
 
 class EditorBlock(blocks.PageChooserBlock, ThemeableBlock):
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(EditorBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(EditorBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'editor_block')
 
     def get_api_representation(self, value, context=None):
@@ -251,8 +251,8 @@ class EmbeddedMultimediaBlock(blocks.StructBlock, ThemeableBlock):
     multimedia_url = blocks.URLBlock(required=True)
     title = blocks.CharBlock(required=False)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(EmbeddedMultimediaBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(EmbeddedMultimediaBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'embedded_multimedia_block')
 
     class Meta:
@@ -271,8 +271,8 @@ class EmbeddedVideoBlock(blocks.StructBlock, ThemeableBlock):
         ('square', 'Square'),
     ])
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(EmbeddedVideoBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(EmbeddedVideoBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'embedded_video_block')
 
     class Meta:
@@ -296,8 +296,8 @@ class ExternalQuoteBlock(blocks.StructBlock, ThemeableBlock):
     )
     source = blocks.CharBlock(required=False)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ExternalQuoteBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ExternalQuoteBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'external_quote_block')
 
     class Meta:
@@ -319,8 +319,8 @@ class ExternalVideoBlock(blocks.ListBlock, ThemeableBlock):
     def __init__(self, *args, **kwargs):
         super(ExternalVideoBlock, self).__init__(ExternalVideoStructBlock, *args, **kwargs)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ExternalVideoBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ExternalVideoBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'external_video_block')
 
     class Meta:
@@ -357,8 +357,8 @@ class ExtractBlock(blocks.RichTextBlock, ThemeableBlock):
         'space_series_opinion',
     ]
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ExtractBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ExtractBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'extract_block')
 
     class Meta:
@@ -381,8 +381,8 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
         'space_series_opinion',
     ]
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ImageBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ImageBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'image_block')
 
     class Meta:
@@ -397,8 +397,8 @@ class ImageScrollBlock(blocks.StructBlock, ThemeableBlock):
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ImageScrollBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ImageScrollBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'image_scroll_block')
 
     class Meta:
@@ -413,8 +413,8 @@ class ImageFullBleedBlock(blocks.StructBlock, ThemeableBlock):
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ImageFullBleedBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ImageFullBleedBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'image_full_bleed_block')
 
     class Meta:
@@ -426,8 +426,8 @@ class ImageFullBleedBlock(blocks.StructBlock, ThemeableBlock):
 class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
     """Inline video"""
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(InlineVideoBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(InlineVideoBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'inline_video_block')
 
     class Meta:
@@ -459,8 +459,8 @@ class HeroDocumentBlock(blocks.StructBlock):
 
 
 class HighlightTitleBlock(blocks.CharBlock, ThemeableBlock):
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(HighlightTitleBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(HighlightTitleBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'highlight_title_block')
 
     class Meta:
@@ -506,8 +506,8 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         'indigenous_lands_series_opinion_series'
     ]
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ParagraphBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ParagraphBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'paragraph_block')
 
     class Meta:
@@ -517,8 +517,8 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
 
 
 class PosterBlock(blocks.PageChooserBlock, ThemeableBlock):
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(PosterBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PosterBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'poster_block')
 
     class Meta:
@@ -542,8 +542,8 @@ class ReadMoreBlock(blocks.StructBlock, ThemeableBlock):
         required=True,
     )
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(ReadMoreBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(ReadMoreBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'read_more_block')
 
     class Meta:
@@ -559,8 +559,8 @@ class RecommendedBlock(blocks.PageChooserBlock, ThemeableBlock):
         'longform_2_opinion',
     ]
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(RecommendedBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(RecommendedBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'recommended_block')
 
     class Meta:
@@ -577,8 +577,8 @@ class PDFDownloadBlock(blocks.StructBlock, ThemeableBlock):
     )
     display = blocks.BooleanBlock(default=True)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(PDFDownloadBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PDFDownloadBlock, self).get_template(context, value, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'pdf_download_block')
 
     def get_api_representation(self, value, context=None):
@@ -601,8 +601,8 @@ class EPubDownloadBlock(blocks.StructBlock, ThemeableBlock):
     )
     display = blocks.BooleanBlock(default=True)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(EPubDownloadBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(EPubDownloadBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'epub_download_block')
 
     def get_api_representation(self, value, context=None):
@@ -633,8 +633,8 @@ class PullQuoteLeftBlock(blocks.StructBlock, ThemeableBlock):
         'ai_ethics_series_opinion',
     ]
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(PullQuoteLeftBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PullQuoteLeftBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'pull_quote_left_block')
 
     class Meta:
@@ -659,8 +659,8 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
         'ai_ethics_series_opinion',
     ]
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(PullQuoteRightBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PullQuoteRightBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'pull_quote_right_block')
 
     class Meta:
@@ -690,8 +690,8 @@ class TableStreamBlock(TableBlock):
 class TextBackgroundBlock(blocks.RichTextBlock, ThemeableBlock):
     """Text box with background colour """
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(TextBackgroundBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(TextBackgroundBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'text_background_block')
 
     class Meta:
@@ -709,8 +709,8 @@ class TextBorderBlock(blocks.StructBlock, ThemeableBlock):
     )
     border_colour = blocks.CharBlock(required=False)
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(TextBorderBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(TextBorderBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'text_border_block')
 
     class Meta:
@@ -746,8 +746,8 @@ class TweetBlock(blocks.StructBlock, ThemeableBlock):
         verbose_name='Tweet URL',
     )
 
-    def get_template(self, context, *args, **kwargs):
-        standard_template = super(TweetBlock, self).get_template(context, *args, **kwargs)
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(TweetBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'tweet_block')
 
     class Meta:
