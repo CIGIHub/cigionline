@@ -220,7 +220,7 @@ class CTABlock(blocks.StructBlock, ThemeableBlock):
     button_icon = blocks.ChoiceBlock(required=False, choices=CTAIcon.choices, default=CTAIcon.NO_ICON, max_length=32)
 
     def get_template(self, value, context, *args, **kwargs):
-        standard_template = super(CTABlock, self).get_template(context, *args, **kwargs)
+        standard_template = super(CTABlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'cta_block')
 
     class Meta:
