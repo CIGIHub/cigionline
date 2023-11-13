@@ -4,6 +4,7 @@ import React from 'react';
 
 function PublicationListing(props) {
   const { row } = props;
+  const { handleCTAClick } = props;
 
   return (
     <tr>
@@ -65,7 +66,7 @@ function PublicationListing(props) {
         </div>
         <div className="table-content">
           {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon">
+            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="publication-pdf" onClick={handleCTAClick}>
               <i className="fa fas fa-download" />
             </a>
           )}
@@ -93,6 +94,7 @@ PublicationListing.propTypes = {
     })),
     url: PropTypes.string.isRequired,
   }).isRequired,
+  handleCTAClick: PropTypes.func.isRequired,
 };
 
 export default PublicationListing;

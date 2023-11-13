@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+/* global fbq */
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -237,6 +239,17 @@ class SearchTable extends React.Component {
     }));
   }
 
+  handleCTAClick(e) {
+    const { cta } = e.currentTarget.dataset;
+    const ctaArr = cta.split('-');
+    const ctaType = ctaArr[0];
+    const ctaAction = ctaArr.length > 1 ? ctaArr[1] : 'click';
+    fbq('track', 'CTA Click', {
+      cta_type: ctaType,
+      cta_action: ctaAction,
+    });
+  }
+
   getRows() {
     const {
       currentPage,
@@ -400,11 +413,14 @@ class SearchTable extends React.Component {
   }
 
   getYears() {
-    // Here we need to add fetch code for getting the years
-    this.setState(() => ({
-      loadingYears: false,
-      years: Array.from({ length: 12 }, (_, i) => 2021 - i),
-    }));
+    fetch(encodeURI('/api/years/'))
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState(() => ({
+          loadingYears: false,
+          years: data.years,
+        }));
+      });
   }
 
   getTypes() {
@@ -1064,35 +1080,37 @@ class SearchTable extends React.Component {
                 {!loadingYears && (
                   <ul className="columns-2">
                     {years.map((year) => (
-                      <li className="dropdown-item" key={`year-${year}`}>
-                        <label
-                          htmlFor={`year-${year}`}
-                          className={`keep-open ${
-                            !aggregations.years[year] ? 'inactive' : ''
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            id={`year-${year}`}
-                            checked={
-                              yearSelectValues.includes(year) ? 'checked' : ''
-                            }
-                            onChange={(e) => this.handleYearSelect(e, year)}
-                          />
-                          <span />
-                          {year}
-                          &nbsp;
-                          {aggregations.years[year] ? (
-                            <>
-                              (
-                              {aggregations.years[year]}
-                              )
-                            </>
-                          ) : (
-                            <>(0)</>
-                          )}
-                        </label>
-                      </li>
+                      aggregations.years[year] && (
+                        <li className="dropdown-item" key={`year-${year}`}>
+                          <label
+                            htmlFor={`year-${year}`}
+                            className={`keep-open ${
+                              !aggregations.years[year] ? 'inactive' : ''
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              id={`year-${year}`}
+                              checked={
+                                yearSelectValues.includes(year) ? 'checked' : ''
+                              }
+                              onChange={(e) => this.handleYearSelect(e, year)}
+                            />
+                            <span />
+                            {year}
+                            &nbsp;
+                            {aggregations.years[year] ? (
+                              <>
+                                (
+                                {aggregations.years[year]}
+                                )
+                              </>
+                            ) : (
+                              <>(0)</>
+                            )}
+                          </label>
+                        </li>
+                      )
                     ))}
                   </ul>
                 )}
@@ -1487,35 +1505,37 @@ class SearchTable extends React.Component {
                 {!loadingYears && (
                   <ul className="columns-2">
                     {years.map((year) => (
-                      <li className="dropdown-item" key={`year-${year}`}>
-                        <label
-                          htmlFor={`year-${year}`}
-                          className={`keep-open ${
-                            !aggregations.years[year] ? 'inactive' : ''
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            id={`year-${year}`}
-                            checked={
-                              yearSelectValues.includes(year) ? 'checked' : ''
-                            }
-                            onChange={(e) => this.handleYearSelect(e, year)}
-                          />
-                          <span />
-                          {year}
-                          &nbsp;
-                          {aggregations.years[year] ? (
-                            <>
-                              (
-                              {aggregations.years[year]}
-                              )
-                            </>
-                          ) : (
-                            <>(0)</>
-                          )}
-                        </label>
-                      </li>
+                      aggregations.years[year] && (
+                        <li className="dropdown-item" key={`year-${year}`}>
+                          <label
+                            htmlFor={`year-${year}`}
+                            className={`keep-open ${
+                              !aggregations.years[year] ? 'inactive' : ''
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              id={`year-${year}`}
+                              checked={
+                                yearSelectValues.includes(year) ? 'checked' : ''
+                              }
+                              onChange={(e) => this.handleYearSelect(e, year)}
+                            />
+                            <span />
+                            {year}
+                            &nbsp;
+                            {aggregations.years[year] ? (
+                              <>
+                                (
+                                {aggregations.years[year]}
+                                )
+                              </>
+                            ) : (
+                              <>(0)</>
+                            )}
+                          </label>
+                        </li>
+                      )
                     ))}
                   </ul>
                 )}
@@ -1577,7 +1597,7 @@ class SearchTable extends React.Component {
                   ].join(' ')}
                 >
                   {rows.map((row) => (
-                    <RowComponent key={`${row.id}-${row.elevated}`} row={row} />
+                    <RowComponent key={`${row.id}-${row.elevated}`} row={row} handleCTAClick={this.handleCTAClick} />
                   ))}
                 </div>
               ) : (
@@ -1605,6 +1625,7 @@ class SearchTable extends React.Component {
                       <RowComponent
                         key={`${row.id}-${row.elevated}`}
                         row={row}
+                        handleCTAClick={this.handleCTAClick}
                       />
                     ))}
                   </tbody>

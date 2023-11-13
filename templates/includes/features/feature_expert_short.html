@@ -24,11 +24,11 @@
         <h5><a href="{% pageurl latest_activity %}">{{ latest_activity.title }}</a></h5>
         {% include "includes/features/feature_content_people.html" with authors=latest_activity.authors.all %}
         {% if latest_activity.specific.pdf_downloads %}
-          <button class="button-action button-square">
-            <a href="{{ latest_activity.specific.pdf_downloads.0.value.file.url }}">
+          <a href="{{ latest_activity.specific.pdf_downloads.0.value.file.url }}">
+            <button class="button-action button-square track-cta" data-cta="publication-pdf">
               <i class="fa fas fa-download"></i>
-            </a>
-          </button>
+            </button>
+          </a>
         {% endif %}
       </div>
     {% endif %}
