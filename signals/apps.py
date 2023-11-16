@@ -33,9 +33,17 @@ def get_site_url():
 
 
 def datetime_compare(t1, t2):
-    if t1:  # if go_live_at field is populated; if not, default False
+    if t1 and t2:  # if go_live_at field is populated; if not, default False
         return ((t2.astimezone(pytz.utc) - t1.astimezone(pytz.utc)) <= datetime.timedelta(hours=1))
     return False
+
+
+def get_publish_trigger_type(instance, revision):
+    if revision.approved_go_live_at:
+        if datetime_compare(instance.go_live_at, instance.last_published_at):
+            return 'scheduled'
+        return 'scheduling'
+    return 'manual'
 
 
 def count_publishes(instance):
@@ -52,12 +60,7 @@ def count_publishes(instance):
     # so a first-time publish would have a count of 0
     is_first_publish = (len(all_publishes) == 0)
 
-    if instance.go_live_at:
-        publishes_since_go_live_at = PageLogEntry.objects.filter(page_id=instance.id, action='wagtail.publish', timestamp__gte=instance.go_live_at)
-        is_first_publish_since_go_live_at = (len(publishes_since_go_live_at) == 0)
-    else:
-        is_first_publish_since_go_live_at = False
-    return is_first_publish, is_first_publish_since_go_live_at
+    return is_first_publish
 
 
 def instance_info(instance):
@@ -66,10 +69,9 @@ def instance_info(instance):
     page_owner = f'{instance.owner.first_name} {instance.owner.last_name}'
     content_type = 'Articles' if instance.contenttype == 'Opinion' else instance.contenttype  # adjust ContentPage.contenttype to match page_type
     publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
-    is_first_publish, is_first_publish_since_go_live_at = count_publishes(instance)
-    is_scheduled_publish = (datetime_compare(instance.go_live_at, instance.last_published_at) and is_first_publish_since_go_live_at)
+    is_first_publish = count_publishes(instance)
     relative_url = instance.get_url_parts()[-1]  # last item in the tuple is the relative url to root; e.g. /articles/an-article/
-    return title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish, relative_url
+    return title, authors, page_owner, content_type, publisher, is_first_publish, relative_url
 
 
 def notification_user_list(content_type, is_first_publish, is_scheduled_publish):
@@ -133,8 +135,7 @@ def send_email(title, authors, page_owner, content_type, recipients, publisher, 
     )
     msg.attach_alternative(html_content, "text/html")
 
-    if notifications_on():
-        msg.send()
+    msg.send()
 
 
 def send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label):
@@ -151,27 +152,31 @@ def send_to_slack(title, authors, page_owner, content_type, publisher, publish_p
     }
     url = os.environ['SLACK_WEBHOOK_URL']  # hardcoded placeholder test channel
 
-    if notifications_on():
-        requests.post(url, json.dumps(values))
+    requests.post(url, json.dumps(values))
 
 
 # Let everyone know when a new page is published
 def send_notifications(sender, **kwargs):
     instance = kwargs['instance']
+    revision = kwargs['revision']
+    publish_trigger_type = get_publish_trigger_type(instance, revision)
 
-    title, authors, page_owner, content_type, publisher, is_first_publish, is_scheduled_publish, relative_url = instance_info(instance)
-    publish_phrasing = set_publish_phrasing(is_first_publish)
-    page_url = f'{get_site_url()}{relative_url}'
-    header_label = get_header_label()
+    # first ever scheduled publishes trigger this signal unexpectedly upon scheduling; filter them out
+    if publish_trigger_type != 'scheduling':
+        # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
+        try:
+            title, authors, page_owner, content_type, publisher, is_first_publish, relative_url = instance_info(instance)
+            is_scheduled_publish = publish_trigger_type == 'scheduled'
+            publish_phrasing = set_publish_phrasing(is_first_publish)
+            page_url = f'{get_site_url()}{relative_url}'
+            header_label = get_header_label()
 
-    # wrap in try/except to not disrupt normal operations if a page is successfully published but email could not be sent
-    try:
-        if is_first_publish:
-            send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label)
-        notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
-        send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing, page_url, header_label)
-    except Exception as e:
-        print(e)
+            if is_first_publish:
+                send_to_slack(title, authors, page_owner, content_type, publisher, publish_phrasing, page_url, header_label)
+            notification_list = notification_email_list(notification_user_list(content_type, is_first_publish, is_scheduled_publish))
+            send_email(title, authors, page_owner, content_type, notification_list, publisher, publish_phrasing, page_url, header_label)
+        except Exception as e:
+            print(e)
 
 
 def clear_cloudflare_home_page_cache(sender, **kwargs):
@@ -223,11 +228,12 @@ class SignalsConfig(AppConfig):
             HomePageFeaturedExpertsList,
         )
 
-        page_published.connect(send_notifications, sender=ArticlePage)
-        page_published.connect(send_notifications, sender=ArticleSeriesPage)
-        page_published.connect(send_notifications, sender=PublicationPage)
-        page_published.connect(send_notifications, sender=MultimediaPage)
-        page_published.connect(send_notifications, sender=EventPage)
+        if notifications_on():
+            page_published.connect(send_notifications, sender=ArticlePage)
+            page_published.connect(send_notifications, sender=ArticleSeriesPage)
+            page_published.connect(send_notifications, sender=PublicationPage)
+            page_published.connect(send_notifications, sender=MultimediaPage)
+            page_published.connect(send_notifications, sender=EventPage)
 
         if 'PYTHON_ENV' in os.environ \
                 and (os.environ.get('PYTHON_ENV') == 'production' or os.environ.get('PYTHON_ENV') == 'admin') \

@@ -1,4 +1,4 @@
-from wagtail.core.blocks import StructBlock, PageChooserBlock
+from wagtail.blocks import StructBlock, PageChooserBlock
 from wagtail.snippets.blocks import SnippetChooserBlock
 from promotions.models import PromotionBlock
 
