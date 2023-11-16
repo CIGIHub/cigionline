@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'search',
     'streams',
     'subscribe',
+    'wagtailschedules',
     'signals',
 
     'wagtail.api.v2',
