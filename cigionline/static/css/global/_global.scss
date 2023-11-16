@@ -246,6 +246,12 @@ img {
   }
 }
 
+// Right-to-left text
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
 .z-index-1 {
   z-index: 1;
 }

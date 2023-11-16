@@ -139,6 +139,30 @@ def register_rich_text_paragraph_heading(features):
     })
 
 
+@hooks.register('register_rich_text_features')
+def register_rich_text_rtl(features):
+    feature_name = 'rtl'
+    type_ = 'RTL'
+
+    control = {
+        'type': type_,
+        'label': 'R',
+        'description': 'Right-to-left language support',
+        'element': 'p',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.BlockFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'p[class=rtl]': BlockElementHandler(type_)},
+        'to_database_format': {'block_map': {type_: {'element': 'p', 'props': {'class': 'rtl'}}}},
+    })
+
+
 class ThemeModelAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = Theme
