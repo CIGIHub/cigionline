@@ -1,5 +1,5 @@
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
     MultimediaListPage,
@@ -9,7 +9,7 @@ from .models import (
 )
 
 
-class MultimediaListPageTests(WagtailPageTests):
+class MultimediaListPageTests(WagtailPageTestCase):
     def test_multimedialistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             MultimediaListPage,
@@ -23,7 +23,7 @@ class MultimediaListPageTests(WagtailPageTests):
         )
 
 
-class MultimediaPageTests(WagtailPageTests):
+class MultimediaPageTests(WagtailPageTestCase):
     def test_multimediapage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             MultimediaPage,
@@ -37,7 +37,7 @@ class MultimediaPageTests(WagtailPageTests):
         )
 
 
-class MultimediaSeriesListPageTests(WagtailPageTests):
+class MultimediaSeriesListPageTests(WagtailPageTestCase):
     def test_multimediaserieslistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             MultimediaSeriesListPage,
@@ -51,7 +51,7 @@ class MultimediaSeriesListPageTests(WagtailPageTests):
         )
 
 
-class MultimediaSeriesPageTests(WagtailPageTests):
+class MultimediaSeriesPageTests(WagtailPageTestCase):
     def test_multimediaseriespage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             MultimediaSeriesPage,
@@ -65,7 +65,7 @@ class MultimediaSeriesPageTests(WagtailPageTests):
         )
 
 
-# class MultimediaPageViewSetTests(WagtailPageTests):
+# class MultimediaPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['multimedia_search_table.json']
 #     limit = 18
 #

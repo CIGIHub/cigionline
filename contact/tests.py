@@ -1,10 +1,10 @@
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import ContactPage
 
 
-class ContactPageTests(WagtailPageTests):
+class ContactPageTests(WagtailPageTestCase):
     def test_contactpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ContactPage,

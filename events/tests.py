@@ -1,13 +1,13 @@
 from datetime import datetime
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import EventListPage, EventPage
 
 from unittest.mock import patch
 
 
-class EventListPageTests(WagtailPageTests):
+class EventListPageTests(WagtailPageTestCase):
     def test_eventlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             EventListPage,
@@ -21,7 +21,7 @@ class EventListPageTests(WagtailPageTests):
         )
 
 
-class EventPageTests(WagtailPageTests):
+class EventPageTests(WagtailPageTestCase):
     def test_eventpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             EventPage,
@@ -35,7 +35,7 @@ class EventPageTests(WagtailPageTests):
         )
 
 
-class EventsAPITests(WagtailPageTests):
+class EventsAPITests(WagtailPageTestCase):
     fixtures = ['events_search_table.json']
 
     @patch('events.views.timezone.now', return_value=datetime(2020, 1, 1))
@@ -83,7 +83,7 @@ class EventsAPITests(WagtailPageTests):
         self.assertEqual(response_3['meta']['total_count'], 0)
         self.assertEqual(len(response_3['items']), 0)
 
-# class EventPageViewSetTests(WagtailPageTests):
+# class EventPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['events_search_table.json']
 #     limit = 24
 #

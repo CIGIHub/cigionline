@@ -1,9 +1,9 @@
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import PromotionBlock
 
 
-class PromotionBlockPageTests(WagtailPageTests):
+class PromotionBlockPageTests(WagtailPageTestCase):
     def test_create_promotion_block(self):
         test_block = PromotionBlock.objects.create(name="test1", block_type=PromotionBlock.PromotionBlockTypes.STANDARD, link_url="https://test.test")
         self.assertTrue(isinstance(test_block, PromotionBlock))

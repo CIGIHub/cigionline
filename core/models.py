@@ -47,6 +47,7 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
+    TitleFieldPanel,
 )
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
@@ -177,7 +178,7 @@ class BasicPageAbstract(models.Model):
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
         [
-            FieldPanel('title'),
+            TitleFieldPanel('title'),
             FieldPanel('subtitle'),
         ],
         heading='Title',

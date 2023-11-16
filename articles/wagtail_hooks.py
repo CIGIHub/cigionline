@@ -105,7 +105,7 @@ class ArticlePageModelAdmin(ModelAdmin):
     # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
     model = ArticlePage
     menu_label = 'Articles'
-    menu_icon = 'duplicate'
+    menu_icon = 'copy'
     menu_order = 102
     list_display = ('title', 'publishing_date', 'article_type', 'article_series', 'theme', 'live', 'id')
     list_filter = ('publishing_date', 'article_type', 'theme', 'live')
@@ -159,7 +159,7 @@ class MediaLandingPageModelAdmin(ModelAdmin):
 
 class ArticleModelAdminGroup(ModelAdminGroup):
     menu_label = 'Articles'
-    menu_icon = 'duplicate'
+    menu_icon = 'copy'
     menu_order = 101
     items = (ArticleLandingPageModelAdmin, MediaLandingPageModelAdmin, ArticlePageModelAdmin, ArticleSeriesPageModelAdmin)
 

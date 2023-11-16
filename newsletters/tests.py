@@ -1,10 +1,10 @@
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import NewsletterListPage, NewsletterPage
 
 
-class NewsletterListPageTests(WagtailPageTests):
+class NewsletterListPageTests(WagtailPageTestCase):
     def test_newsletterlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             NewsletterListPage,
@@ -18,7 +18,7 @@ class NewsletterListPageTests(WagtailPageTests):
         )
 
 
-class NewsletterPageTetss(WagtailPageTests):
+class NewsletterPageTetss(WagtailPageTestCase):
     def test_newsletterpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             NewsletterPage,

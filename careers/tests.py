@@ -1,11 +1,11 @@
 from core.models import BasicPage
 from home.models import HomePage
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import JobPostingListPage, JobPostingPage
 
 
-class JobPostingListPageTests(WagtailPageTests):
+class JobPostingListPageTests(WagtailPageTestCase):
     def test_jobpostinglistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             JobPostingListPage,
@@ -19,7 +19,7 @@ class JobPostingListPageTests(WagtailPageTests):
         )
 
 
-class JobPostingPageTests(WagtailPageTests):
+class JobPostingPageTests(WagtailPageTestCase):
     def test_jobpostingpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             JobPostingPage,

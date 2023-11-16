@@ -1,6 +1,6 @@
 
 from wagtail.admin.panels import FieldPanel
-from wagtail.core.fields import StreamField
+from wagtail.fields import StreamField
 from wagtail.models import Page
 from .blocks import (
     FeaturedExpertBlock,
@@ -58,7 +58,8 @@ class HomePageFeaturedContentList(Page):
             ('featured_page', FeaturedPageBlock()),
         ],
         blank=True,
-        help_text='1: large | 2-4: medium | 5-9: small'
+        help_text='1: large | 2-4: medium | 5-9: small',
+        use_json_field=True,
     )
     content_panels = Page.content_panels + [
         FieldPanel('featured_pages'),

@@ -919,6 +919,7 @@ class ArticleSeriesPageSeriesItem(Orderable):
             ('image', SeriesItemImageBlock()),
         ],
         blank=True,
+        use_json_field=True,
     )
 
     def image_override(self):

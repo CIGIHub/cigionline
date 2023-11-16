@@ -6,7 +6,7 @@ from core.models import (
 )
 from django.db import models
 from django.template.defaultfilters import date
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, TitleFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -72,7 +72,7 @@ class JobPostingPage(
     content_panels = [
         MultiFieldPanel(
             [
-                FieldPanel('title'),
+                TitleFieldPanel('title'),
                 FieldPanel('short_description'),
             ],
             heading='Title',

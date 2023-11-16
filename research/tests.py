@@ -1,7 +1,7 @@
 from core.models import BasicPage
 from home.models import HomePage
 from django.template import Context, Template
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
 
 from .models import (
@@ -13,7 +13,7 @@ from .models import (
 )
 
 
-class ProjectListPageTests(WagtailPageTests):
+class ProjectListPageTests(WagtailPageTestCase):
     def test_projectlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ProjectListPage,
@@ -27,7 +27,7 @@ class ProjectListPageTests(WagtailPageTests):
         )
 
 
-class ProjectPageTests(WagtailPageTests):
+class ProjectPageTests(WagtailPageTestCase):
     def test_projectpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ProjectPage,
@@ -41,7 +41,7 @@ class ProjectPageTests(WagtailPageTests):
         )
 
 
-class ResearchLandingPageTests(WagtailPageTests):
+class ResearchLandingPageTests(WagtailPageTestCase):
     def test_researchlandingpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ResearchLandingPage,
@@ -55,7 +55,7 @@ class ResearchLandingPageTests(WagtailPageTests):
         )
 
 
-class TopicListPageTests(WagtailPageTests):
+class TopicListPageTests(WagtailPageTestCase):
     def test_topiclistpage_parent_page_types(self):
         """
         Verify allowed parent page types.
@@ -105,7 +105,7 @@ class TopicListPageTests(WagtailPageTests):
                 raise ae
 
 
-class TopicPageTests(WagtailPageTests):
+class TopicPageTests(WagtailPageTestCase):
     def test_topicpage_parent_page_types(self):
         """
         Verify allowed parent page types.
@@ -125,7 +125,7 @@ class TopicPageTests(WagtailPageTests):
         )
 
 
-class HighlightedTopicsTests(WagtailPageTests):
+class HighlightedTopicsTests(WagtailPageTestCase):
     TEMPLATE = Template('{% load topic_tags %} {% highlighted_topics %}')
 
     def test_if_no_topics_template_should_be_empty(self):
@@ -154,7 +154,7 @@ class HighlightedTopicsTests(WagtailPageTests):
         self.assertNotIn('topic1', rendered)
 
 
-class TopicsTagTests(WagtailPageTests):
+class TopicsTagTests(WagtailPageTestCase):
     TEMPLATE = Template('{% load topic_tags %} {% topics test_topics %}')
 
     def test_if_no_topics_template_should_be_empty(self):
@@ -187,7 +187,7 @@ class TopicsTagTests(WagtailPageTests):
         self.assertIn('topic1', rendered)
 
 
-# class TopicPageViewSetTests(WagtailPageTests):
+# class TopicPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['topics.json']
 #     limit = 40
 #
