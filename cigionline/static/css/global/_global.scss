@@ -247,8 +247,7 @@ img {
 }
 
 // Right-to-left text
-.rtl {
-  direction: rtl;
+p[dir='rtl'] {
   text-align: right;
 }
 

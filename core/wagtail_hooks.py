@@ -158,8 +158,8 @@ def register_rich_text_rtl(features):
     )
 
     features.register_converter_rule('contentstate', feature_name, {
-        'from_database_format': {'p[class=rtl]': BlockElementHandler(type_)},
-        'to_database_format': {'block_map': {type_: {'element': 'p', 'props': {'class': 'rtl'}}}},
+        'from_database_format': {'p[dir=rtl]': BlockElementHandler(type_)},
+        'to_database_format': {'block_map': {type_: {'element': 'p', 'props': {'dir': 'rtl'}}}},
     })
 
 
