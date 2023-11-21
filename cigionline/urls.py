@@ -16,6 +16,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
+from articles import views as articles_views
 
 
 urlpatterns = []
@@ -26,6 +27,7 @@ if settings.ADMIN_ENABLED:
 urlpatterns = urlpatterns + [
     re_path(r'^documents/', include(wagtaildocs_urls)),
 
+    re_path(r'^api/opinion_pages/$', articles_views.opinion_pages),
     re_path(r'^search/$', search_views.search, name='search'),
     re_path(r'^api/experts/$', people_views.all_experts),
     re_path(r'^api/all_experts_search/$', people_views.all_experts_search),
