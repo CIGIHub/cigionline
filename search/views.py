@@ -33,6 +33,7 @@ def process_item(page, request):
                     'id': person.person.id,
                     'title': person.person.title,
                     'url': person.person.url,
+                    'is_external_profile': person.person.is_external_profile,
                 } for person in page.specific.cigi_people_mentioned.all()]
             elif field == 'topics':
                 item['topics'] = [{

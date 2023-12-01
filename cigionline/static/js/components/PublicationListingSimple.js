@@ -15,7 +15,7 @@ function PublicationListingSimple(props) {
       )}
       <p className="article-authors">
         {row.authors.map((author) => (
-          author.is_external_profile ? (
+          !author.is_external_profile ? (
             <a key={`${row.id}-author-${author.id}`} href={author.url}>
               {author.title}
             </a>

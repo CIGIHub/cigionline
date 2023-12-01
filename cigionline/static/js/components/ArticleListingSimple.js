@@ -15,9 +15,13 @@ function ArticleListingSimple(props) {
       )}
       <p className="article-authors">
         {row.authors.map((author) => (
-          <a key={`${row.id}-author-${author.id}`} href={author.url}>
-            {author.title}
-          </a>
+          !author.is_external_profile ? (
+            <a key={`${row.id}-author-${author.id}`} href={author.url}>
+              {author.title}
+            </a>
+          ) : (
+            <span key={`${row.id}-author-${author.id}`}>{author.title}</span>
+          )
         ))}
       </p>
     </article>
