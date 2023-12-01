@@ -26,6 +26,7 @@ def process_item(page, request):
                     'id': author.author.id,
                     'title': author.author.title,
                     'url': author.author.url,
+                    'is_external_profile': author.author.is_external_profile,
                 } for author in page.specific.authors.all()]
             elif field == 'cigi_people_mentioned':
                 item['cigi_people_mentioned'] = [{
