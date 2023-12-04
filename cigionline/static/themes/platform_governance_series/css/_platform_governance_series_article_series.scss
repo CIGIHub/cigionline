@@ -309,6 +309,7 @@
 
           span {
             @include comma-separated;
+            color: $platform-governance-series-authors-grey;
           }
         }
 
