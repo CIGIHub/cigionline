@@ -24,7 +24,7 @@
               Author{{ self.author_count|pluralize }}:
               {% for item in self.authors.all %}
                 {% if item.hide_link or item.author.is_external_profile %}
-                  <span>{{ item.author.title }}</span>
+                  <span class="author">{{ item.author.title }}</span>
                 {% else %}
                   <span class="author"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
                 {% endif %}
