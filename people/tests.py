@@ -53,7 +53,7 @@ class PeoplePageTests(WagtailPageTestCase):
 
 class PersonListPageBasicTests(WagtailPageTestCase):
     fixtures = ["people.json"]
-    
+
     def setUp(self):
         self.superuser = User.objects.create_superuser(
             username='testsuperuser',
