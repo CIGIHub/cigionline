@@ -15,4 +15,24 @@
 
 {% block hero %}
   {% include './includes/hero_article.html' %}
+  {% if not self.expired_image and self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-lg-10">
+          <figure class="article-image-hero">
+            {% if self.image_hero.file.url|file_extension == '.gif' %}
+              <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
+            {% else %}
+              {% image self.image_hero width-1760 %}
+            {% endif %}
+            {% if self.image_hero.caption %}
+              <figcaption>
+                {{ self.image_hero.caption }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
