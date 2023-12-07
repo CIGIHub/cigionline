@@ -14,11 +14,11 @@
 {% block body_class %}special-theme{% endblock %}
 
 {% block hero %}
-  {% include './includes/hero_article.html' %}
+  {% include './includes/hero_article.html' with title=self.title subtitle=self.subtitle %}
   {% if not self.expired_image and self.image_hero %}
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col col-lg-10">
+        <div class="col col-md-10 col-lg-8">
           <figure class="article-image-hero">
             {% if self.image_hero.file.url|file_extension == '.gif' %}
               <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
