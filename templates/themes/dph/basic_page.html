@@ -40,7 +40,49 @@
       </div>
     </div>
   </section>
-  {% include "includes/body.html" with body=self.body %}
+  {% if self.body %}
+    <section class="body" id="article-body">
+      {% if heading %}
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12{% if full_heading is not True %} col-md-10 col-lg-8{% endif %}">
+              <h2 class="paragraph-heading">{{ heading }}</h2>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      {% for block in self.body %}
+        {% if block.block_type != 'persons_list_block' %}
+          {% include_block block %}
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <section class="cohorts">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <h2>Digital Policy Hub Cohorts</h2>
+          <div class="cohorts-buttons">
+            {% for block in self.body %}
+              {% if block.block_type == 'persons_list_block' %}
+                <span class="cohorts-button">{{ block.value.title }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cohorts-list">
+      {% for block in self.body %}
+        {% if block.block_type == 'persons_list_block' %}
+          {% include_block block with hide_title=True %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <div class="row justify-content-center">
