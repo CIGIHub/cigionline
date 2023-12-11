@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeDPH' 'css' %}
@@ -14,9 +14,6 @@
 {% endblock %}
 
 {% block content %}
-{% endblock content %}
-
-{% block footer %}
   <section class="hero">
     <div class="container">
       <div class="row justify-content-center">
@@ -31,17 +28,18 @@
       </div>
       <div class="row justify-content-center">
         <div class="col">
-          <div class="scrollanchor-container">
-            <a href="#article-body">
-              <i class="far fa-arrow-down fa-2x"></i>
-            </a>
-          </div>
+          <nav>
+            <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
+              <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About the Hub</a>
+              <a class="nav-link" id="papers-tab" data-toggle="tab" href="#papers" role="tab" aria-controls="papers" aria-selected="true">Working Papers</a>
+            </div>
+          </nav>
         </div>
       </div>
     </div>
   </section>
-  {% if self.body %}
-    <section class="body" id="article-body">
+  <section class="tab-content">
+    <section class="tab-about tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
       {% if heading %}
         <div class="container">
           <div class="row justify-content-center">
@@ -56,33 +54,48 @@
           {% include_block block %}
         {% endif %}
       {% endfor %}
-    </section>
-  {% endif %}
-
-  <section class="cohorts">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
-          <h2>Digital Policy Hub Cohorts</h2>
-          <div class="cohorts-buttons">
-            {% for block in self.body %}
-              {% if block.block_type == 'persons_list_block' %}
-                <span class="cohorts-button">{{ block.value.title }}</span>
-              {% endif %}
-            {% endfor %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <h2>Digital Policy Hub Cohorts</h2>
+            <nav class="cohorts-buttons">
+              <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
+                {% for block in self.body %}
+                  {% if block.block_type == 'persons_list_block' %}
+                    {% with block.value.title|first_word as cohort %}
+                    <a class="nav-link {% if cohort == 'winter' %}active{% endif %}" id="{{cohort}}-tab" data-toggle="tab" href="#{{cohort}}" role="tab" aria-controls="{{cohort}}" aria-selected="true">{{ block.value.title }}</a>
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="cohorts-list">
-      {% for block in self.body %}
-        {% if block.block_type == 'persons_list_block' %}
-          {% include_block block with hide_title=True %}
-        {% endif %}
-      {% endfor %}
-    </div>
-  </section>
+      <div class="cohorts-list tab-content">
+        {% for block in self.body %}
+          {% if block.block_type == 'persons_list_block' %}
+            {% with block.value.title|first_word as cohort %}
+              <div class="tab-{{cohort}} tab-pane fade {% if cohort == 'winter' %}show active{% endif %}" id="{{cohort}}" role="tabpabel" aria-labelledby="{{cohort}}-tab">
+                {% include_block block with hide_title=True %}
+              </div>
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  
+    <section class="tab-papers tab-pane fade" id="papers" role="tabpanel" aria-labelledby="papers-tab">
+      tab papers
+    </section>
 
+  </section>
+{% endblock content %}
+
+
+
+  
+{% block footer %}
   <footer>
     <div class="container">
       <div class="row justify-content-center">
@@ -108,5 +121,5 @@
         </div>
       </div>
     </div>
-  </section>
+  </footer>
 {% endblock %}

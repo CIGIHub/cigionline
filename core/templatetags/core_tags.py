@@ -72,3 +72,8 @@ def trim_trailing_slash(value):
     if value.endswith('/'):
         return value[:-1]
     return value
+
+@register.filter
+@stringfilter
+def first_word(value):
+    return value.split(' ')[0].lower()
