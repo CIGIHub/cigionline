@@ -14,6 +14,38 @@ section {
       .topics {
         @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
       }
+
+      .social-links-anchor {
+        @include media-breakpoint-up(lg) {
+          position: relative;
+        }
+
+        .social-share-list {
+          &.no-stack {
+            @include media-breakpoint-up(lg) {
+              position: absolute;
+              left: 0;
+              top: 0;
+              margin-top: 1.5em;
+              margin-left: 0.75rem; // To match container padding
+              display: block;
+    
+              li {
+                padding: 0.25em 0;
+    
+                a {
+                  margin: 0;
+                  padding: 0;
+                }
+              }
+    
+              i {
+                font-size: 1rem;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
