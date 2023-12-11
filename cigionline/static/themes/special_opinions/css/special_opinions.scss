@@ -1,1 +1,27 @@
+@import '../../../css/global/mixins';
 
+section {
+  &.article-hero {
+    &.special-theme {
+      h1 {
+        font-weight: 400;
+      }
+  
+      .authors {
+        margin-bottom: 0;
+      }
+  
+      .topics {
+        @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+      }
+    }
+  }
+
+  &.body {
+    .drop-caps {
+      border: 0;
+      font-size: 3.25em;
+      line-height: 0.7em;
+    }
+  }
+}
