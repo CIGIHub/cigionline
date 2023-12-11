@@ -1,0 +1,20 @@
+@include top_bar($background-color: $white, $color: $black, $position: sticky);
+
+header {
+  background-color: $white;
+
+  .cigi-top-bar {
+    nav {
+      ul {
+        a,
+        button {
+          color: $black;
+        }
+      }
+    }
+
+    .desktop-menu {
+      display: none;
+    }
+  }
+}
