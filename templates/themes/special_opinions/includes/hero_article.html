@@ -1,7 +1,6 @@
 <section class="hero-container article-hero special-theme">
   <div class="container">
     <div class="row justify-content-center social-links-anchor">
-      {% include "includes/social_links.html" with title=self.title no_circle=True %}
       <div class="col col-md-10 col-lg-8">
         {% include "includes/topics.html" with topics=self.topics_sorted %}
         <h1>{{title}}</h1>
@@ -9,6 +8,7 @@
         {% include "includes/authors.html" with authors=self.authors.all %}
         {% include "includes/date.html" with date=self.publishing_date %}
       </div>
+      {% include "includes/social_links.html" with title=self.title no_circle=True %}
     </div>
   </div>
 </section>

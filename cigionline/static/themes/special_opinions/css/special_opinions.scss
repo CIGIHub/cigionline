@@ -3,12 +3,23 @@
 section {
   &.article-hero {
     &.special-theme {
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 3em;
+      }
+
       h1 {
         font-weight: 400;
       }
   
+      .authors, 
+      .date {
+        font-size: 0.75em;
+        text-transform: uppercase;
+      }
+
       .authors {
         margin-bottom: 0;
+        font-weight: 500;
       }
   
       .topics {
@@ -19,7 +30,9 @@ section {
         @include media-breakpoint-up(lg) {
           position: relative;
         }
-
+        align-items: center;
+        flex-direction: column;
+        
         .social-share-list {
           &.no-stack {
             @include media-breakpoint-up(lg) {
