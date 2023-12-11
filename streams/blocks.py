@@ -1196,3 +1196,18 @@ class PersonsListBlock(blocks.StructBlock):
         label = 'Persons List'
         help_text = 'Add a list of person profiles.'
         template = 'streams/persons_list_block.html'
+
+
+class PublicastionsListBlock(blocks.StructBlock):
+    publications = blocks.StreamBlock(
+        [
+            ('publication', blocks.PageChooserBlock(page_type='publications.PublicationPage', required=True)),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Publications List'
+        help_text = 'Add a list of publication profiles.'
+        template = 'streams/publications_list_block.html'

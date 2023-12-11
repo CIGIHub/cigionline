@@ -28,6 +28,7 @@ from streams.blocks import (
     ImageFullBleedBlock,
     ChartBlock,
     PersonsListBlock,
+    PublicastionsListBlock,
     PosterBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
@@ -75,6 +76,7 @@ class BasicPageAbstract(models.Model):
             features=['bold', 'italic', 'link'],
         )),
         ('persons_list_block', PersonsListBlock()),
+        ('publications_list_block', PublicastionsListBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())

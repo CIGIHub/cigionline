@@ -39,7 +39,7 @@
     </div>
   </section>
   <section class="tab-content">
-    <section class="tab-about tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+    <section class="tab-about tab-pane fade show active body" id="about" role="tabpanel" aria-labelledby="about-tab">
       {% if heading %}
         <div class="container">
           <div class="row justify-content-center">
@@ -50,7 +50,7 @@
         </div>
       {% endif %}
       {% for block in self.body %}
-        {% if block.block_type != 'persons_list_block' %}
+        {% if block.block_type != 'persons_list_block' and block.block_type != 'publications_list_block' %}
           {% include_block block %}
         {% endif %}
       {% endfor %}
@@ -60,11 +60,13 @@
             <h2>Digital Policy Hub Cohorts</h2>
             <nav class="cohorts-buttons">
               <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
+                {% define 0 as counter %}
                 {% for block in self.body %}
                   {% if block.block_type == 'persons_list_block' %}
-                    {% with block.value.title|first_word as cohort %}
-                    <a class="nav-link {% if cohort == 'winter' %}active{% endif %}" id="{{cohort}}-tab" data-toggle="tab" href="#{{cohort}}" role="tab" aria-controls="{{cohort}}" aria-selected="true">{{ block.value.title }}</a>
+                    {% with block.value.title|dash_case as cohort %}
+                    <a class="nav-link {% if counter == 0 %}active{% endif %}" id="{{cohort}}-tab" data-toggle="tab" href="#{{cohort}}" role="tab" aria-controls="{{cohort}}" aria-selected="true">{{ block.value.title }}</a>
                     {% endwith %}
+                    {% define 1 as counter %}
                   {% endif %}
                 {% endfor %}
               </div>
@@ -73,20 +75,26 @@
         </div>
       </div>
       <div class="cohorts-list tab-content">
+        {% define 0 as counter %}
         {% for block in self.body %}
           {% if block.block_type == 'persons_list_block' %}
-            {% with block.value.title|first_word as cohort %}
-              <div class="tab-{{cohort}} tab-pane fade {% if cohort == 'winter' %}show active{% endif %}" id="{{cohort}}" role="tabpabel" aria-labelledby="{{cohort}}-tab">
+            {% with block.value.title|dash_case as cohort %}
+              <div class="tab-{{cohort}} tab-pane fade {% if counter == 0 %}show active{% endif %}" id="{{cohort}}" role="tabpabel" aria-labelledby="{{cohort}}-tab">
                 {% include_block block with hide_title=True %}
               </div>
             {% endwith %}
+            {% define 1 as counter %}
           {% endif %}
         {% endfor %}
       </div>
     </section>
   
     <section class="tab-papers tab-pane fade" id="papers" role="tabpanel" aria-labelledby="papers-tab">
-      tab papers
+      {% for block in self.body %}
+        {% if block.block_type == 'publications_list_block' %}
+          {% include_block block %}
+        {% endif %}
+      {% endfor %}
     </section>
 
   </section>

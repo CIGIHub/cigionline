@@ -1,0 +1,41 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="container publications-list-block">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      {% for publication in self.publications %}
+        <article class="publications-list__publication">
+          <div class="publications-list__publication__img">
+            {% image publication.image_cover fill-600x900 %}
+          </div>
+          <div class="publications-list__publication__right">
+            <div>
+              <div class="publications-list__publication__title">
+                <a href="{{ publication.url }}">{{ publication.title }}</a>
+              </div>
+              <div class="publications-list__publication__description">
+                {{ publication.subtitle|safe }}
+              </div>
+            </div>
+            <div>
+              {% image publication.authors.all.0.image_square fill-300x300 %}
+              <div>
+                <div class="publications-list__publication__author">
+                  {% for item in publication.authors.all %}
+                    {% if item.hide_link %}
+                      <h3>{{ item.author.title }}</h3>
+                    {% else %}
+                      <h3 class="author"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></h3>
+                    {% endif %}
+                    <div class="publications-list__publication__author__title">
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</div>

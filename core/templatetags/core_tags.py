@@ -75,5 +75,5 @@ def trim_trailing_slash(value):
 
 @register.filter
 @stringfilter
-def first_word(value):
-    return value.split(' ')[0].lower()
+def dash_case(value):
+    return value.lower().replace(' ', '-')

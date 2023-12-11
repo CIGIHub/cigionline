@@ -19,6 +19,38 @@ body {
     color: $dph-green;
   }
 
+  .nav-tabs {
+    border-bottom: 0;
+
+    .nav-link {
+      border: 0;
+      border-radius: 0;
+      padding: 0.25rem 1rem;
+
+      &.active {
+        background-color: transparent;
+        border: 0;
+        color: $cigi-text-grey;
+      }
+
+      &:hover {
+        border: 0;
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid $cigi-text-grey;
+      }
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+
   .hero {
     text-align: center;
     background-color: $dph-background;
@@ -42,9 +74,8 @@ body {
       color: $cigi-medium-light-grey;
     }
 
-    .scrollanchor-container {
-      animation: bounce 2s infinite;
-      margin-top: 1rem;
+    .nav-tabs {
+      justify-content: center;
     }
   }
 
@@ -112,6 +143,7 @@ body {
             }
           }
         }
+
         .person-function {
           color: $cigi-medium-light-grey;
         }
