@@ -1,3 +1,6 @@
+$special-opinions-font-primary: adobe-garamond-pro, serif;
+$special-opinions-font-secondary: canada-type-gibson, sans-serif; 
+
 @import '../../../css/global/mixins';
 
 section {
@@ -6,20 +9,28 @@ section {
       @include media-breakpoint-up(lg) {
         margin-bottom: 3em;
       }
+      font-family: $special-opinions-font-primary;
 
       h1 {
         font-weight: 400;
       }
+
+      h1,
+      h2 {
+        font-family: $special-opinions-font-primary;
+      }
   
       .authors, 
-      .date {
+      .date,
+      .topics {
+        font-family: $special-opinions-font-secondary;
         font-size: 0.75em;
+        font-weight: 400;
         text-transform: uppercase;
       }
 
       .authors {
         margin-bottom: 0;
-        font-weight: 500;
       }
   
       .topics {
@@ -63,6 +74,12 @@ section {
   }
 
   &.body {
+    font-family: $special-opinions-font-primary;
+
+    h2 {
+      font-weight: 600;
+    }
+
     .drop-caps {
       border: 0;
       font-size: 3.25em;
