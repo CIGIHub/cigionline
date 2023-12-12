@@ -182,21 +182,23 @@ body {
         .publications-list__publication__author {
           display: flex;
           align-items: center;
+          font-size: 15px;
   
           img {
-            width: 75px;
+            width: 70px;
             border-radius: 50%;
-            border: 1px solid $dph-green;
+            border: 2px solid $dph-green;
             margin-right: 1rem;
           }
 
           h3 {
-            font-size: 1rem;
+            font-size: 1.0625em;
+            font-weight: 500;
             margin-bottom: 0;
           }
 
           .publications-list__publication__author__position {
-            font-size: 0.9rem;
+            font-size: 0.9em;
             color: $cigi-medium-light-grey;
           }
         }
