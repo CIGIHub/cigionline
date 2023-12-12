@@ -44,31 +44,38 @@ section {
         align-items: center;
         flex-direction: column;
         
-        .social-share-list {
-          &.no-stack {
-            @include media-breakpoint-up(lg) {
-              position: absolute;
-              left: 0;
-              top: 0;
-              margin-top: 1.5em;
-              margin-left: 0.75rem; // To match container padding
-              display: block;
-    
-              li {
-                padding: 0.25em 0;
-    
-                a {
-                  margin: 0;
-                  padding: 0;
+        ul {
+          &.social-share-list {
+            &.no-stack {
+              @include media-breakpoint-up(lg) {
+                position: absolute;
+                left: 0;
+                top: 0;
+                margin-top: 1.5em;
+                margin-left: 0.75rem; // To match container padding
+                display: block;
+      
+                li {
+                  padding: 0.25em 0;
+      
+                  a {
+                    margin: 0;
+                    padding: 0;
+                  }
+                }
+      
+                i {
+                  font-size: 1rem;
                 }
               }
-    
-              i {
-                font-size: 1rem;
+
+              .fab:hover {
+                color: $cigi-primary-colour
               }
             }
           }
         }
+        
       }
     }
   }
