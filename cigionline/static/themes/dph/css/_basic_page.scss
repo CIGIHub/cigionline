@@ -31,6 +31,7 @@ body {
         background-color: transparent;
         border: 0;
         color: $cigi-text-grey;
+        pointer-events: none;
       }
 
       &:hover {
@@ -146,6 +147,58 @@ body {
 
         .person-function {
           color: $cigi-medium-light-grey;
+        }
+      }
+    }
+  }
+
+  .cohorts-buttons {
+    margin-bottom: 2rem;
+  }
+
+  .publications-list-block {
+    .publications-list__publication {
+      padding: 2rem 0;
+      
+      &:not(:last-child) {
+        border-bottom: 1px solid $cigi-text-grey;
+      }
+
+      .publications-list__publication__right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        h2 {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          font-size: 1.1rem;
+        }
+
+        p {
+          font-size: 0.9rem;
+          color: $cigi-medium-light-grey;
+        }
+  
+        .publications-list__publication__author {
+          display: flex;
+          align-items: center;
+  
+          img {
+            width: 75px;
+            border-radius: 50%;
+            border: 1px solid $dph-green;
+            margin-right: 1rem;
+          }
+
+          h3 {
+            font-size: 1rem;
+            margin-bottom: 0;
+          }
+
+          .publications-list__publication__author__position {
+            font-size: 0.9rem;
+            color: $cigi-medium-light-grey;
+          }
         }
       }
     }

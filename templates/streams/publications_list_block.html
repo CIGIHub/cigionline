@@ -4,33 +4,32 @@
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
       {% for publication in self.publications %}
-        <article class="publications-list__publication">
-          <div class="publications-list__publication__img">
-            {% image publication.image_cover fill-600x900 %}
+        <article class="publications-list__publication row">
+          <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
+            {% image publication.value.image_cover fill-600x900 %}
           </div>
-          <div class="publications-list__publication__right">
+          <div class="publications-list__publication__right col-md-6 col-lg-8">
             <div>
-              <div class="publications-list__publication__title">
-                <a href="{{ publication.url }}">{{ publication.title }}</a>
-              </div>
+              <h2 class="publications-list__publication__title">
+                <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>
+              </h2>
               <div class="publications-list__publication__description">
-                {{ publication.subtitle|safe }}
+                {{ publication.value.short_description|safe }}
               </div>
             </div>
-            <div>
-              {% image publication.authors.all.0.image_square fill-300x300 %}
+            <div class="publications-list__publication__author">
+              {% image publication.value.authors.first.author.image_square fill-300x300 %}
               <div>
-                <div class="publications-list__publication__author">
-                  {% for item in publication.authors.all %}
-                    {% if item.hide_link %}
-                      <h3>{{ item.author.title }}</h3>
-                    {% else %}
-                      <h3 class="author"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></h3>
-                    {% endif %}
-                    <div class="publications-list__publication__author__title">
-                    </div>
-                  {% endfor %}
-                </div>
+                {% with publication.value.authors.first as author %}
+                  {% if author.hide_link or author.author.is_external_profile %}
+                    <h3>{{ author.author.title }}</h3>
+                  {% else %}
+                    <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
+                  {% endif %}
+                  <div class="publications-list__publication__author__position">
+                    {{ author.author.position }}
+                  </div>
+                {% endwith %}
               </div>
             </div>
           </div>
