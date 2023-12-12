@@ -21,10 +21,10 @@
             {% include "includes/topics.html" with topics=self.topics_sorted %}
             <div class="platform-governance-series-article-social">
               <a href="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-                <i class="fab fa-facebook-square fa-lg"></i>
+                <i class="fa-brands fa-facebook-square fa-lg"></i>
               </a>
               <a href="twitter-share-link" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
-                <i class="fab fa-twitter fa-lg"></i>
+                <i class="fa-brands fa-x-twitter fa-lg"></i>
               </a>
             </div>
             <h1>{{ self.title }}</h1>
