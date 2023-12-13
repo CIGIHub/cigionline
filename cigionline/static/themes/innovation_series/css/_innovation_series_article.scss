@@ -41,6 +41,7 @@
 
         .author {
           @include link($color: $cigi-dark-grey, $hover-color: $cigi-primary-colour);
+          color: $cigi-dark-grey;
         }
       }
 

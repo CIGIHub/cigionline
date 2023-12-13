@@ -88,7 +88,7 @@
                       <div class="innovation-series-article-series-featured-item-content">
                         <p class="featured-item-authors">
                           {% for item in featured_item.value.specific.authors.all %}
-                            {% if item.hide_link %}
+                            {% if item.hide_link or item.author.is_external_profile %}
                               <span>{{ item.author.title }}</span>
                             {% else %}
                               <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
@@ -154,7 +154,7 @@
                   <p class="authors">
                     {% if series_item.content_page.specific|page_type == 'multimedia' %}Speaker{% else %}Author{% endif %}{{ block.value.specific.author_count|pluralize }}:
                     {% for item in series_item.content_page.authors.all %}
-                      {% if item.hide_link %}
+                      {% if item.hide_link or item.author.is_external_profile %}
                         <span>{{ item.author.title }}</span>
                       {% else %}
                         <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
