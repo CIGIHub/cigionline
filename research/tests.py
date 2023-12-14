@@ -1,4 +1,5 @@
 from core.models import BasicPage
+from django.contrib.auth.models import User
 from home.models import HomePage
 from django.template import Context, Template
 from wagtail.test.utils import WagtailPageTestCase
@@ -56,6 +57,14 @@ class ResearchLandingPageTests(WagtailPageTestCase):
 
 
 class TopicListPageTests(WagtailPageTestCase):
+    def setUp(self):
+        self.superuser = User.objects.create_superuser(
+            username='testsuperuser',
+            email='testsuperuser@example.com',
+            password='testpassword'
+        )
+        self.client.login(username='testsuperuser', password='testpassword')
+
     def test_topiclistpage_parent_page_types(self):
         """
         Verify allowed parent page types.
@@ -99,7 +108,7 @@ class TopicListPageTests(WagtailPageTestCase):
             }))
             self.fail('Expected to error')
         except AssertionError as ae:
-            if str(ae) == "Creating a page research.topiclistpage didn't redirect the user to the explorer, but to [(\'/admin/\', 302)]":
+            if str(ae) == "Creating a page research.topiclistpage didn't redirect the user to the expected page /admin/pages/3/, but to [(\'/admin/\', 302)]":
                 pass
             else:
                 raise ae

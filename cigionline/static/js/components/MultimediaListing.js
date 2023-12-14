@@ -10,7 +10,10 @@ function MultimediaListing(props) {
   return (
     <div className="col multimedia-list-col">
       <a href={row.url} className="multimedia-card-image">
-        <div className="img-wrapper" style={{ backgroundImage: `url(${row.image_hero_url})` }} />
+        <div
+          className="img-wrapper"
+          style={{ backgroundImage: `url(${row.image_hero_url})` }}
+        />
         <div className="multimedia-image-type">
           {row.contentsubtype === 'Audio' ? (
             <i className="fas fa-volume-up" />
@@ -29,16 +32,16 @@ function MultimediaListing(props) {
         ))}
       </ul>
       <p className="multimedia-card-title">
-        <a href={row.url}>
-          {row.title}
-        </a>
+        <a href={row.url}>{row.title}</a>
       </p>
       <ul className="custom-text-list multimedia-card-speakers-list">
         {row.authors.slice(0, 3).map((author) => (
           <li key={`${row.id}-author-${author.id}`}>
-            <a href={author.url}>
-              {author.title}
-            </a>
+            {!author.is_external_profile ? (
+              <a href={author.url}>{author.title}</a>
+            ) : (
+              <span>{author.title}</span>
+            )}
           </li>
         ))}
         {row.authors.length > 3 && (
@@ -47,7 +50,9 @@ function MultimediaListing(props) {
       </ul>
       {row.publishing_date && (
         <p className="multimedia-card-date">
-          {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
+          {DateTime.fromISO(row.publishing_date).toLocaleString(
+            DateTime.DATE_FULL,
+          )}
         </p>
       )}
     </div>
@@ -56,21 +61,26 @@ function MultimediaListing(props) {
 
 MultimediaListing.propTypes = {
   row: PropTypes.shape({
-    authors: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      type: PropTypes.string,
-      value: PropTypes.any,
-    })),
+    authors: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        type: PropTypes.string,
+        value: PropTypes.any,
+        is_external_profile: PropTypes.bool,
+      }),
+    ),
     contentsubtype: PropTypes.string,
     id: PropTypes.number,
     image_hero_url: PropTypes.string,
     publishing_date: PropTypes.string,
     title: PropTypes.string.isRequired,
-    topics: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      title: PropTypes.string,
-      url: PropTypes.string,
-    })),
+    topics: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        url: PropTypes.string,
+      }),
+    ),
     url: PropTypes.string.isRequired,
   }).isRequired,
 };

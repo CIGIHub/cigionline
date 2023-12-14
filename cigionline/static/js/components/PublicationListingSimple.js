@@ -15,9 +15,13 @@ function PublicationListingSimple(props) {
       )}
       <p className="article-authors">
         {row.authors.map((author) => (
-          <a key={`${row.id}-author-${author.id}`} href={author.url}>
-            {author.title}
-          </a>
+          !author.is_external_profile ? (
+            <a key={`${row.id}-author-${author.id}`} href={author.url}>
+              {author.title}
+            </a>
+          ) : (
+            <span key={`${row.id}-author-${author.id}`}>{author.title}</span>
+          )
         ))}
       </p>
     </article>
@@ -30,6 +34,7 @@ PublicationListingSimple.propTypes = {
       id: PropTypes.number,
       type: PropTypes.string,
       value: PropTypes.any,
+      is_external_profile: PropTypes.bool,
     })),
     id: PropTypes.number,
     publishing_date: PropTypes.string,

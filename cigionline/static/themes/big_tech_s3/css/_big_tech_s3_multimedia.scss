@@ -208,12 +208,12 @@
             margin: 0;
 
             a {
-              .fab {
+              .fa-brands {
                 color: $white;
               }
 
               &:hover {
-                .fab {
+                .fa-brands {
                   color: $bigtech-teal;
                 }
               }
@@ -233,12 +233,12 @@
 
       a {
         &:hover {
-          .fab {
+          .fa-brands {
             color: $bigtech-teal;
           }
         }
 
-        .fab {
+        .fa-brands {
           color: $cigi-dark-grey;
         }
       }

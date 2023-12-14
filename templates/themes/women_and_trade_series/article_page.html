@@ -21,7 +21,7 @@
           <div class="authors"><label>Author{{ self.author_count|pluralize }}:</label>
             <div class="custom-text-list">
               {% for item in self.authors.all %}
-                {% if item.hide_link %}
+                {% if item.hide_link or item.author.is_external_profile %}
                   <span class="block-author">{{ item.author.title }}</span>
                 {% else %}
                   <a class="block-author" href="{% pageurl item.author %}">{{ item.author.title }}</a>
@@ -33,12 +33,12 @@
         <ul class="social-share-list">
           <li>
             <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-              <i class="fab fa-facebook-square icon"></i>
+              <i class="fa-brands fa-facebook-square icon"></i>
             </a>
           </li>
           <li>
             <a href="https://twitter.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
-              <i class="fab fa-twitter"></i>
+              <i class="fa-brands fa-x-twitter"></i>
             </a>
           </li>
           <li>

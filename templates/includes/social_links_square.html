@@ -4,21 +4,21 @@
   <li class="facebook">
     <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
       rel="noopener noreferrer">
-      <i class="fab fa-facebook-square"></i>
+      <i class="fa-brands fa-facebook-square"></i>
     </a>
   </li>
   <li class="twitter">
     <a class="twitter-share-link"
       href="https://twitter.com/share?text={{ title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
       target="_blank" rel="noopener noreferrer">
-      <i class="fab fa-twitter-square"></i>
+      <i class="fa-brands fa-square-x-twitter"></i>
     </a>
   </li>
   <li class="linkedin">
     <a class="linkedin-share-link"
       href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{ title|social_string }}"
       target="_blank" rel="noopener noreferrer">
-      <i class="fab fa-linkedin"></i>
+      <i class="fa-brands fa-linkedin"></i>
     </a>
   </li>
 </ul>

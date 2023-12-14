@@ -167,6 +167,10 @@
         $hover-color: $cigi-primary-colour
       );
       font-family: $font-family-base;
+
+      span {
+        color: $cigi-text-grey;
+      }
     }
 
     .in-the-series-expand {

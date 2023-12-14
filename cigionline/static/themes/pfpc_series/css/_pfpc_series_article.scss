@@ -107,8 +107,10 @@
     .authors {
       @include media-breakpoint-up(md) {
         @include link($color: $white !important, $hover-color: $cigi-dark-pink !important);
+        color: $white;
       }
       @include link($color: $black, $hover-color: $cigi-dark-pink);
+      color: $black;
       font-weight: 600;
       justify-content: center;
       margin-bottom: 0;
