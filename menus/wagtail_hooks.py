@@ -16,7 +16,7 @@ class MenuAdminPermissionHelper(PermissionHelper):
         return True
 
     def user_can_delete_obj(self, user, obj):
-        return False
+        return True
 
 
 class MenuAdmin(ModelAdmin):
