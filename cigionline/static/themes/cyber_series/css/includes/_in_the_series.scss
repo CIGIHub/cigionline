@@ -105,6 +105,7 @@
         span {
           @include link($color: $cyber-series-primary-colour, $hover-color: $cyber-series-primary-colour);
           @include slash-separated($color: $cyber-series-primary-colour);
+          color: $cyber-series-primary-colour;
         }
       }
     }

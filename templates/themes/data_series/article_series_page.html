@@ -80,7 +80,7 @@
                 <h4 class="article-title"><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title}}</a></h4>
                 <p class="authors">
                   {% for item in series_item.content_page.authors.all %}
-                    {% if item.hide_link %}
+                    {% if item.hide_link or item.author.is_external_profile %}
                       <span>{{ item.author.title }}</span>
                     {% else %}
                       <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>

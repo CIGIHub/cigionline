@@ -7,6 +7,7 @@ from wagtail.contrib.modeladmin.options import (
     modeladmin_register,
 )
 from wagtail import hooks
+from wagtail.models import PageViewRestriction
 
 from .models import PersonListPage, PersonPage
 
@@ -54,3 +55,19 @@ class PersonModelAdminGroup(ModelAdminGroup):
 
 
 modeladmin_register(PersonModelAdminGroup)
+
+
+def set_personpage_privacy(request, page):
+    if isinstance(page, PersonPage):
+        if page.person_types.filter(name='External profile').exists():
+            PageViewRestriction.objects.create(page=page, restriction_type=PageViewRestriction.LOGIN)
+
+
+@hooks.register('after_create_page')
+def after_create_page(request, page):
+    set_personpage_privacy(request, page)
+
+
+@hooks.register('after_edit_page')
+def after_edit_page(request, page):
+    set_personpage_privacy(request, page)

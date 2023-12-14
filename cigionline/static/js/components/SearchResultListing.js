@@ -66,12 +66,14 @@ function SearchResultListing(props) {
           <i className="fal fa-copy" />
         </span>
       )}
-      {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
+      {row.contenttype === 'Opinion'
+        && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
         <span className="table-icon icon-opinion">
           <i className="fal fa-comment-dots" />
         </span>
       )}
-      {row.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
+      {row.contenttype === 'Opinion'
+        && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
         <span className="table-icon icon-media">
           <i className="fal fa-bullhorn" />
         </span>
@@ -126,20 +128,23 @@ function SearchResultListing(props) {
           <ul className="custom-text-list search-result-meta">
             {row.authors.map((author) => (
               <li key={`${row.id}-author-${author.id}`}>
-                <a href={author.url}>{author.title}</a>
+                {!author.is_external_profile ? (
+                  <a href={author.url}>{author.title}</a>
+                ) : (
+                  <span>{author.title}</span>
+                )}
               </li>
             ))}
           </ul>
         )}
         {highlights.length > 0 && (
           <p className="search-result-highlight">
-            {row.highlights
-              .map((highlight, index) => (
-                <span
-                  key={`${row.id}-highlight-${index}`}
-                  dangerouslySetInnerHTML={{ __html: highlight }}
-                />
-              ))}
+            {row.highlights.map((highlight, index) => (
+              <span
+                key={`${row.id}-highlight-${index}`}
+                dangerouslySetInnerHTML={{ __html: highlight }}
+              />
+            ))}
           </p>
         )}
         {row.highlights.length === 0 && row.snippet && (
@@ -155,7 +160,9 @@ function SearchResultListing(props) {
           <p className="search-result-highlight">
             View results related to this topic.
           </p>
-        ) : ''}
+        ) : (
+          ''
+        )}
       </div>
     </article>
   );
@@ -168,6 +175,7 @@ SearchResultListing.propTypes = {
         id: PropTypes.number,
         type: PropTypes.string,
         value: PropTypes.any,
+        is_external_profile: PropTypes.bool,
       }),
     ),
     snippet: PropTypes.string,

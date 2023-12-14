@@ -8,7 +8,7 @@
       {% elif item.editor %}
         {% define item.editor as person %}
       {% endif %}
-      {% if item.hide_link or hide_link %}
+      {% if item.hide_link or hide_link or person.is_external_profile %}
         <span class="block-author">{{ person.title }}</span>
       {% else %}
         <a class="block-author" href="{% pageurl person %}">{{ person.title }}</a>

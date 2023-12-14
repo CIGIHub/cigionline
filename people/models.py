@@ -316,6 +316,10 @@ class PersonPage(
         else:
             return snippet
 
+    @property
+    def is_external_profile(self):
+        return self.person_types.filter(name='External profile').exists()
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
