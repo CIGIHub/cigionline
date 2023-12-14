@@ -6,7 +6,6 @@ from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
-    FieldPanel,
 )
 from wagtail.models import Orderable
 from wagtail.search import index
