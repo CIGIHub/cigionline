@@ -1,4 +1,5 @@
 from core.models import BasicPage
+from django.contrib.auth.models import User
 from home.models import HomePage
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data, rich_text
@@ -7,6 +8,14 @@ from .models import PeoplePage, PersonListPage, PersonPage
 
 
 class PeoplePageTests(WagtailPageTestCase):
+    def setUp(self):
+        self.superuser = User.objects.create_superuser(
+            username='testsuperuser',
+            email='testsuperuser@example.com',
+            password='testpassword'
+        )
+        self.client.login(username='testsuperuser', password='testpassword')
+
     def test_peoplepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PeoplePage,
@@ -36,7 +45,7 @@ class PeoplePageTests(WagtailPageTestCase):
             }))
             self.fail('Expected to error')
         except AssertionError as ae:
-            if str(ae) == "Creating a page people.peoplepage didn't redirect the user to the explorer, but to [(\'/admin/\', 302)]":
+            if str(ae) == "Creating a page people.peoplepage didn't redirect the user to the expected page /admin/pages/3/, but to [(\'/admin/\', 302)]":
                 pass
             else:
                 raise ae
@@ -44,6 +53,14 @@ class PeoplePageTests(WagtailPageTestCase):
 
 class PersonListPageBasicTests(WagtailPageTestCase):
     fixtures = ["people.json"]
+
+    def setUp(self):
+        self.superuser = User.objects.create_superuser(
+            username='testsuperuser',
+            email='testsuperuser@example.com',
+            password='testpassword'
+        )
+        self.client.login(username='testsuperuser', password='testpassword')
 
     def test_personlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
@@ -66,7 +83,7 @@ class PersonListPageBasicTests(WagtailPageTestCase):
             }))
             self.fail('Expected to error')
         except AssertionError as ae:
-            if str(ae) == "Creating a page people.personlistpage didn't redirect the user to the explorer, but to [(\'/admin/\', 302)]":
+            if str(ae) == "Creating a page people.personlistpage didn't redirect the user to the expected page /admin/pages/3/, but to [(\'/admin/\', 302)]":
                 pass
             else:
                 raise ae

@@ -49,7 +49,7 @@ body {
               width: 1em;
             }
 
-            .fab {
+            .fa-brands {
               @include media-breakpoint-up(md) {
                 font-size: 1.2em;
               }
@@ -226,6 +226,10 @@ body {
                     a {
                       color: $cigi-medium-grey;
                       margin-right: 0.2em;
+                    }
+
+                    span {
+                      color: $cigi-medium-grey;
                     }
                   }
                 }

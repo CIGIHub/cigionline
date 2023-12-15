@@ -13,7 +13,7 @@
         <div class="authors">
           <label>Author{{ series_item.content_page.author_count|pluralize }}:</label>
           {% for item in series_item.content_page.authors.all %}
-            {% if item.hide_link %}
+            {% if item.hide_link or item.author.is_external_profile %}
               <span>{{ item.author.title }}</span>
             {% else %}
               <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>

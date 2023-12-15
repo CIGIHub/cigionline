@@ -53,10 +53,10 @@
                 {% include "includes/topics.html" with topics=self.topics_sorted %}
                 <div class="platform-governance-series-article-series-social">
                   <a href="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-                    <i class="fab fa-facebook-square fa-lg"></i>
+                    <i class="fa-brands fa-facebook-square fa-lg"></i>
                   </a>
                   <a href="twitter-share-link" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
-                    <i class="fab fa-twitter fa-lg"></i>
+                    <i class="fa-brands fa-x-twitter fa-lg"></i>
                   </a>
                 </div>
                 <h1>{{ self.title }}</h1>
@@ -114,7 +114,7 @@
                 </h3>
                 <p class="authors">
                   {% for item in series_item.content_page.authors.all %}
-                    {% if item.hide_link %}
+                    {% if item.hide_link or item.author.is_external_profile %}
                       <span>{{ item.author.title }}</span>
                     {% else %}
                       <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>

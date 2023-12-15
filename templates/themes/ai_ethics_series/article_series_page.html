@@ -102,7 +102,13 @@
               </div>
               <ul class="authors">
                 {% for item in page.authors.all %}
-                  <li><a href="{% pageurl item.author %}"> {{ item.author.title }}</a></li>
+                  <li>
+                    {% if item.hide_link or item.author.is_external_profile %}
+                      <span> {{ item.author.title }}</span>
+                    {% else %}
+                      <a href="{% pageurl item.author %}"> {{ item.author.title }}</a>
+                    {% endif %}
+                  </li>
                 {% endfor %}
               </ul>
               {% endwith %}
