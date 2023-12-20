@@ -17,6 +17,7 @@ class Menu(index.Indexed, ClusterableModel):
 
     panels = [
         FieldPanel('name'),
+        FieldPanel('slug'),
         MultiFieldPanel(
             [
                 InlinePanel('menu_items'),
