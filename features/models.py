@@ -1,4 +1,8 @@
 
+from distutils.log import error
+from django.db import models
+from django.utils import timezone
+from events.models import EventPage, EventListPage
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Page
@@ -11,6 +15,7 @@ from .blocks import (
     FeaturedEventBlock,
     FeaturedPromotionBlock,
 )
+import traceback
 
 
 class FeaturesListPage(Page):
@@ -158,6 +163,42 @@ class HomePageFeaturedEventsList(Page):
 
     def __str__(self):
         return 'Home Page Featured Events List'
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        featured_events = []
+        try:
+            featured_events_query_set = self.featured_events
+            featured_event_ids = [event.value['page'].id for event in featured_events_query_set]
+            featured_events = EventPage.objects.prefetch_related(
+                'authors__author',
+                'topics',
+            ).in_bulk(featured_event_ids)
+            featured_events = [featured_events[x] for x in featured_events]
+        except Exception:
+            error(traceback.format_exc())
+
+        if len(featured_events) == 0:
+            featured_events = EventListPage.objects.first().get_featured_events()[:3]
+            if not featured_events:
+                now = timezone.now()
+                future_events = EventPage.objects.prefetch_related(
+                    'multimedia_page',
+                    'topics',
+                ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+                if len(future_events) < 3:
+                    Q = models.Q
+                    past_events = EventPage.objects.prefetch_related(
+                        'multimedia_page',
+                        'topics',
+                    ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+                    featured_events = (list(future_events) + list(past_events))[:3]
+                else:
+                    featured_events = future_events
+
+        context['featured_events'] = featured_events
+        return context
 
 
 class HomePageFeaturedExpertsList(Page):
