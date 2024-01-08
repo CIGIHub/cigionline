@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader core_tags cache %}
+
+{% block extra_css %}
+  {% render_bundle 'homePage' 'css' %}
+{% endblock %}
+
+{% block body_class %}homepage{% endblock %}
+
+{% block content %}
+
+  <section class="featured homepage-featured">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          {% if self.featured_pages|length > 0 %}
+            {% include "includes/features/feature_content_large.html" with content=self.featured_pages.0.value.page.specific %}
+          {% endif %}
+        </div>
+        <hr class="has-margin">
+        <div class="col-12 col-md-4 featured-small">
+        {% with self.featured_pages|slice:"4:" as featured_small %}
+          {% for item in featured_small %}
+            {% if forloop.counter > 1 %}
+              <hr>
+            {% endif %}
+            {% include "includes/features/feature_content_small.html" with content=item.value.page.specific cta=True %}
+          {% endfor %}
+        {% endwith %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <hr>
+        </div>
+      </div>
+      <div class="row featured-medium">
+      {% with self.featured_pages|slice:"1:4" as featured_medium %}
+        {% for item in featured_medium %}
+          <div class="col-12 col-md-4">
+            {% if forloop.counter > 1 %}
+              <hr>
+            {% endif %}
+            {% include "includes/features/feature_content_medium.html" with content=item.value.page.specific cta=True %}
+          </div>
+        {% endfor %}
+      {% endwith %}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
