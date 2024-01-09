@@ -30,4 +30,4 @@ postgresql:
     disk: 256
 
 nodejs:
-    type: nodejs:14.18.2
+    type: nodejs:14
