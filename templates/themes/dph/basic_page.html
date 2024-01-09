@@ -26,16 +26,18 @@
           <p>{{ self.subtitle|richtext }}</p>
         </div>
       </div>
-      <div class="row justify-content-center">
-        <div class="col">
-          <nav>
-            <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
-              <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About the Hub</a>
-              <a class="nav-link" id="papers-tab" data-toggle="tab" href="#papers" role="tab" aria-controls="papers" aria-selected="true">Working Papers</a>
-            </div>
-          </nav>
+      {% if self.has_publications_list_block %}
+        <div class="row justify-content-center">
+          <div class="col">
+            <nav>
+              <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
+                <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About the Hub</a>
+                <a class="nav-link" id="papers-tab" data-toggle="tab" href="#papers" role="tab" aria-controls="papers" aria-selected="true">Working Papers</a>
+              </div>
+            </nav>
+          </div>
         </div>
-      </div>
+      {% endif %}
     </div>
   </section>
   <section class="tab-content">
@@ -89,20 +91,18 @@
       </div>
     </section>
   
-    <section class="tab-papers tab-pane fade" id="papers" role="tabpanel" aria-labelledby="papers-tab">
-      {% for block in self.body %}
-        {% if block.block_type == 'publications_list_block' %}
-          {% include_block block %}
-        {% endif %}
-      {% endfor %}
-    </section>
-
+    {% if self.has_publications_list_block %}
+      <section class="tab-papers tab-pane fade" id="papers" role="tabpanel" aria-labelledby="papers-tab">
+        {% for block in self.body %}
+          {% if block.block_type == 'publications_list_block' %}
+            {% include_block block %}
+          {% endif %}
+        {% endfor %}
+      </section>
+    {% endif %}
   </section>
 {% endblock content %}
 
-
-
-  
 {% block footer %}
   <footer>
     <div class="container">

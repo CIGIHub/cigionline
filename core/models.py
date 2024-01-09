@@ -177,6 +177,13 @@ class BasicPageAbstract(models.Model):
             read_time = int(math.ceil(self.word_count / 325))
         return read_time
 
+    @property
+    def has_publications_list_block(self):
+        for block in self.body:
+            if block.block_type == 'publications_list_block':
+                return True
+        return False
+
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(
         [
