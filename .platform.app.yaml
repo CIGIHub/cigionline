@@ -9,7 +9,6 @@ name: cigionline
 # to find the supported versions for the 'python' type.
 type: 'python:3.12'
 
-type: 'nodejs:14'
 dependencies:
     nodejs:
         sharp: "*"
