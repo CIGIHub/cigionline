@@ -1,5 +1,5 @@
 # The name of this app. Must be unique within a project.
-name: app
+name: cigionline
 
 # The runtime the application uses. The 'type' key defines the base container
 # image that will be used to run the application. There is a separate base
@@ -35,8 +35,14 @@ relationships:
 
 hooks:
     build: |
-      pipenv install --system --deploy
+      pip install -r requirements.txt
+      npm install
+      npm run build
 
 web:
   commands: 
-    start: "python manage.py runserver"
+    start: "gunicorn cigionline.wsgi:application --bind 0.0.0.0:$PORT"
+
+runtime:
+  extensions:
+    - nodejs
