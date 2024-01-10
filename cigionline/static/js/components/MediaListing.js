@@ -8,7 +8,9 @@ function MediaListing(props) {
   return (
     <tr>
       <td colSpan="6">
-        <div className="table-mobile-text">Title</div>
+        <div className="table-mobile-text">
+          Title
+        </div>
         <div className="table-infos-wrapper">
           <span className="table-icon icon-media">
             <i className="fal fa-bullhorn" />
@@ -19,39 +21,32 @@ function MediaListing(props) {
             </a>
             {row.publishing_date && (
               <div className="table-infos-meta">
-                {DateTime.fromISO(row.publishing_date).toLocaleString(
-                  DateTime.DATE_FULL,
-                )}
+                {DateTime.fromISO(row.publishing_date).toLocaleString(DateTime.DATE_FULL)}
               </div>
             )}
           </div>
         </div>
       </td>
       <td colSpan="1">
-        <div className="table-mobile-text">Expert</div>
+        <div className="table-mobile-text">
+          Expert
+        </div>
         <div className="table-content">
           <ul className="custom-text-list author-list">
             {row.cigi_people_mentioned.map((person) => (
               <li key={`${row.id}-person-${person.id}`}>
-                {!person.is_external_profile ? (
-                  <a
-                    href={person.url}
-                    className="table-content-link table-content-link-black"
-                  >
-                    {person.title}
-                  </a>
-                ) : (
-                  <span className="table-content-link table-content-link-black">
-                    {person.title}
-                  </span>
-                )}
+                <a href={person.url} className="table-content-link table-content-link-black">
+                  {person.title}
+                </a>
               </li>
             ))}
           </ul>
         </div>
       </td>
       <td colSpan="1">
-        <div className="table-mobile-text">Type</div>
+        <div className="table-mobile-text">
+          Type
+        </div>
         <div className="table-content">
           <ul className="custom-text-list">
             <li key={`${row.id}-contentsubtype`} className="table-infos-meta">
@@ -61,7 +56,9 @@ function MediaListing(props) {
         </div>
       </td>
       <td colSpan="4">
-        <div className="table-mobile-text">Topic</div>
+        <div className="table-mobile-text">
+          Topic
+        </div>
         <div className="table-content">
           <ul className="custom-text-list">
             {row.topics.map((topic) => (
@@ -80,25 +77,20 @@ function MediaListing(props) {
 
 MediaListing.propTypes = {
   row: PropTypes.shape({
-    cigi_people_mentioned: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        title: PropTypes.string,
-        url: PropTypes.string,
-        is_external_profile: PropTypes.bool,
-      }),
-    ),
+    cigi_people_mentioned: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      url: PropTypes.string,
+    })),
     contentsubtype: PropTypes.string,
     id: PropTypes.number,
     publishing_date: PropTypes.string,
     title: PropTypes.string,
-    topics: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        title: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    ),
+    topics: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      url: PropTypes.string,
+    })),
     url: PropTypes.string,
   }).isRequired,
 };

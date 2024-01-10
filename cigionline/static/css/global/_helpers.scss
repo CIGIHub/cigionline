@@ -188,8 +188,7 @@
   .article-authors {
     @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
 
-    a,
-    span {
+    a {
       @include comma-separated;
 
       &:not(:only-child) {
