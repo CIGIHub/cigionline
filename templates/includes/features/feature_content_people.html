@@ -12,7 +12,7 @@
           {% define item as person %}
         {% endif %}
         {% if person %}
-          {% if item.hide_link or item.author.is_external_profile %}
+          {% if item.hide_link %}
             <li>{{ person.title }}</li>
           {% else %}
             <li><a href="{% pageurl person %}">{{ person.title }}</a></li>

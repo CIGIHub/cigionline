@@ -43,7 +43,6 @@
 
     .authors {
       @include link($color: $black, $hover-color: $black);
-      color: $black;
       font-size: 0.8em;
       margin: 0;
       text-transform: uppercase;

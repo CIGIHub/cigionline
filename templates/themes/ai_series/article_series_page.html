@@ -101,7 +101,7 @@
                 {% endif %}
                 <ul class="authors">
                   {% for item in series_item.content_page.authors.all %}
-                    {% if item.hide_link or item.author.is_external_profile %}
+                    {% if item.hide_link %}
                       <li>{{ item.author.title }}</li>
                     {% else %}
                       <li><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>

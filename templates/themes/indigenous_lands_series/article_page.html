@@ -22,7 +22,7 @@
             <div class="authors"><label>Author{{ self.author_count|pluralize }}:</label>
               <div class="custom-text-list">
                 {% for item in self.authors.all %}
-                  {% if item.hide_link or item.author.is_external_profile %}
+                  {% if item.hide_link %}
                     <span class="block-author">{{ item.author.title }}</span>
                   {% else %}
                     <a class="block-author" href="{% pageurl item.author %}">{{ item.author.title }}</a>

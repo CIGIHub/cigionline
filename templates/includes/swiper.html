@@ -22,13 +22,7 @@
               <h4>CONTRIBUTORS</h4>
               <ul class="contributors">
                 {% for contributor in item.series_authors %}
-                  <li>
-                    {% if contributor.is_external_profile %}
-                      <span>{{ contributor.title }}</span>
-                    {% else %}
-                      <a href="{% pageurl contributor %}">{{ contributor.title }}</a>
-                    {% endif %}
-                  </li>
+                  <li><a href="{% pageurl contributor %}">{{ contributor.title }}</a></li>
                 {% endfor %}
               </ul>
             </div>

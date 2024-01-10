@@ -13,11 +13,7 @@
           {% endif %}
           <div class="author-block">
             <div class="name">
-              {% if person.is_external_profile %}
-                {{ person.title }}
-              {% else %}
-                <a href="{% pageurl person %}">{{ person.title }}</a>
-              {% endif %}
+              <a href="{% pageurl person %}">{{ person.title }}</a>
             </div>
             {% if not item.hide_link and person.short_bio|length > 1 and not person.archive %}
               {{ person.short_bio|richtext }}

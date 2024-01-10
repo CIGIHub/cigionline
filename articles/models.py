@@ -825,7 +825,6 @@ class ArticleSeriesPage(
                         'id': person.author.id,
                         'title': person.author.title,
                         'url': person.author.url,
-                        'is_external_profile': person.author.is_external_profile,
                     })
                     item_people.add(person.author.title)
         return series_contributors
