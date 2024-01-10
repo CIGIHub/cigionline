@@ -159,7 +159,7 @@ body {
   .publications-list-block {
     .publications-list__publication {
       padding: 2rem 0;
-      
+
       &:not(:last-child) {
         border-bottom: 1px solid $cigi-text-grey;
       }
@@ -178,12 +178,12 @@ body {
           font-size: 0.9rem;
           color: $cigi-medium-light-grey;
         }
-  
+
         .publications-list__publication__author {
           display: flex;
           align-items: center;
           font-size: 15px;
-  
+
           img {
             width: 70px;
             border-radius: 50%;
@@ -203,6 +203,21 @@ body {
           }
         }
       }
+    }
+  }
+
+  .announcement-block {
+    padding-bottom: 2rem;
+
+    .block-title {
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    li {
+      font-size: 1.125rem;
+      line-height: 1.5;
     }
   }
 }

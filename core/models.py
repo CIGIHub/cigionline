@@ -12,6 +12,7 @@ from streams.blocks import (
     AccordionBlock,
     AdditionalDisclaimerBlock,
     AdditionalImageBlock,
+    AnnouncementBlock,
     ExtractBlock,
     ParagraphBlock,
     ReadMoreBlock,
@@ -65,6 +66,7 @@ class BasicPageAbstract(models.Model):
 
     # Body StreamField blocks
     body_default_blocks = [
+        ('announcement_block', AnnouncementBlock()),
         ('block_quote', BlockQuoteBlock()),
         ('embedded_multimedia', EmbeddedMultimediaBlock()),
         ('embedded_video', EmbeddedVideoBlock()),

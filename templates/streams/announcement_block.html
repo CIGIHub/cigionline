@@ -1,0 +1,14 @@
+{% load wagtailcore_tags %}
+
+<div class="container announcement-block">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      {% if self.title and not hide_title %}
+        <div class="block-title">{{ self.title }}</div>
+      {% endif %}
+      <div class="announcement-block__content">
+        {{ self.text|richtext }}
+      </div>
+    </div>
+  </div>
+</div>

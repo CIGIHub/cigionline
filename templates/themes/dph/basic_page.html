@@ -26,18 +26,19 @@
           <p>{{ self.subtitle|richtext }}</p>
         </div>
       </div>
-      {% if self.has_publications_list_block %}
-        <div class="row justify-content-center">
-          <div class="col">
-            <nav>
-              <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
-                <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About the Hub</a>
+      <div class="row justify-content-center">
+        <div class="col">
+          <nav>
+            <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
+              <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About the Hub</a>
+              {% if self.has_publications_list_block %}
                 <a class="nav-link" id="papers-tab" data-toggle="tab" href="#papers" role="tab" aria-controls="papers" aria-selected="true">Working Papers</a>
-              </div>
-            </nav>
-          </div>
+              {% endif %}
+              <a class="nav-link" id="announcements-tab" data-toggle="tab" href="#announcements" role="tab" aria-controls="announcements" aria-selected="true">News</a>
+            </div>
+          </nav>
         </div>
-      {% endif %}
+      </div>
     </div>
   </section>
   <section class="tab-content">
@@ -52,7 +53,7 @@
         </div>
       {% endif %}
       {% for block in self.body %}
-        {% if block.block_type != 'persons_list_block' and block.block_type != 'publications_list_block' %}
+        {% if block.block_type != 'persons_list_block' and block.block_type != 'publications_list_block' and block.block_type != 'announcement_block' %}
           {% include_block block %}
         {% endif %}
       {% endfor %}
@@ -100,6 +101,13 @@
         {% endfor %}
       </section>
     {% endif %}
+    <section class="tab-announcements tab-pane fade show active body" id="announcements">
+      {% for block in self.body %}
+        {% if block.block_type == 'announcement_block' %}
+          {% include_block block with hide_title=True %}
+        {% endif %}
+      {% endfor %}
+    </section>
   </section>
 {% endblock content %}
 
