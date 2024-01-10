@@ -9,9 +9,6 @@ name: cigionline
 # to find the supported versions for the 'python' type.
 type: 'python:3.12'
 
-dependencies:
-    nodejs:
-        npm: '6.14.15'
 
 # The following block defines a single writable directory, 'web/uploads'
 # The 'source' specifies where the writable mount is. The 'local' source
