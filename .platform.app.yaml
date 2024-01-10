@@ -46,7 +46,3 @@ hooks:
 web:
   commands: 
     start: "gunicorn cigionline.wsgi:application --bind 0.0.0.0:$PORT"
-
-runtime:
-  extensions:
-    - nodejs
