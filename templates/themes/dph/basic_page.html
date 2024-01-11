@@ -103,7 +103,7 @@
     {% endif %}
     <section class="tab-announcements tab-pane fade show active body" id="announcements">
       {% for block in self.body %}
-        {% if block.block_type == 'announcement_block' %}
+        {% if block.block_type == 'additional_pages_block' %}
           {% include_block block with hide_title=True %}
         {% endif %}
       {% endfor %}

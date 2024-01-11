@@ -1212,27 +1212,16 @@ class PublicastionsListBlock(blocks.StructBlock):
         template = 'streams/publications_list_block.html'
 
 
-class AnnouncementBlock(blocks.StructBlock):
-    title = blocks.CharBlock(required=False)
-    text = blocks.RichTextBlock(
-        features=[
-            'bold',
-            'h2',
-            'h3',
-            'h4',
-            'hr',
-            'italic',
-            'link',
-            'ol',
-            'subscript',
-            'superscript',
-            'ul',
+class AddtionalPagesBlock(blocks.StructBlock):
+    pages = blocks.StreamBlock(
+        [
+            ('page', blocks.PageChooserBlock(required=True)),
         ],
         required=True,
     )
 
     class Meta:
         icon = 'doc-full'
-        label = 'Announcement'
-        help_text = 'Add an announcement.'
-        template = 'streams/announcement_block.html'
+        label = 'Additional Pages'
+        help_text = 'Add a list of additional pages.'
+        template = 'streams/additional_pages_block.html'

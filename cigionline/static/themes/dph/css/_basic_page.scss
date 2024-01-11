@@ -206,18 +206,25 @@ body {
     }
   }
 
-  .announcement-block {
-    padding-bottom: 2rem;
+  .additional-pages-block {
+    padding-bottom: 3rem;
 
-    .block-title {
-      font-size: 1.125rem;
-      font-weight: 500;
-      margin-bottom: 1rem;
-    }
+    .feature-content {
+      border-bottom: 1px solid $cigi-text-grey;
+      padding: 2rem 0;
 
-    li {
-      font-size: 1.125rem;
-      line-height: 1.5;
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      h3 {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+        margin-top: 0;
+      }
+
+      .feature-content-date {
+        color: $cigi-medium-light-grey;
+      }
     }
   }
 }
