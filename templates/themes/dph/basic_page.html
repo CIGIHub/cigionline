@@ -53,7 +53,7 @@
         </div>
       {% endif %}
       {% for block in self.body %}
-        {% if block.block_type != 'persons_list_block' and block.block_type != 'publications_list_block' and block.block_type != 'announcement_block' %}
+        {% if block.block_type != 'persons_list_block' and block.block_type != 'publications_list_block' and block.block_type != 'additional_pages_block' %}
           {% include_block block %}
         {% endif %}
       {% endfor %}
