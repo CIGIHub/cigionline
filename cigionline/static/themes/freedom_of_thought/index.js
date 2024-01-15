@@ -1,3 +1,5 @@
+/* global projectId */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProjectContentListing from '../../js/components/ProjectContentListing';
