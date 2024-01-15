@@ -12,6 +12,7 @@ from streams.blocks import (
     AccordionBlock,
     AdditionalDisclaimerBlock,
     AdditionalImageBlock,
+    AddtionalPagesBlock,
     ExtractBlock,
     ParagraphBlock,
     ReadMoreBlock,
@@ -28,6 +29,7 @@ from streams.blocks import (
     ImageFullBleedBlock,
     ChartBlock,
     PersonsListBlock,
+    PublicastionsListBlock,
     PosterBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
@@ -75,6 +77,8 @@ class BasicPageAbstract(models.Model):
             features=['bold', 'italic', 'link'],
         )),
         ('persons_list_block', PersonsListBlock()),
+        ('publications_list_block', PublicastionsListBlock()),
+        ('additional_pages_block', AddtionalPagesBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
@@ -174,6 +178,13 @@ class BasicPageAbstract(models.Model):
         if self.word_count > 0:
             read_time = int(math.ceil(self.word_count / 325))
         return read_time
+
+    @property
+    def has_publications_list_block(self):
+        for block in self.body:
+            if block.block_type == 'publications_list_block':
+                return True
+        return False
 
     # Override content_panels to put the title panel within a MultiFieldPanel
     title_panel = MultiFieldPanel(

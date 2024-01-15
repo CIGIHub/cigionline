@@ -72,3 +72,8 @@ def trim_trailing_slash(value):
     if value.endswith('/'):
         return value[:-1]
     return value
+
+@register.filter
+@stringfilter
+def dash_case(value):
+    return value.lower().replace(' ', '-')

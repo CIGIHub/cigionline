@@ -19,6 +19,39 @@ body {
     color: $dph-green;
   }
 
+  .nav-tabs {
+    border-bottom: 0;
+
+    .nav-link {
+      border: 0;
+      border-radius: 0;
+      padding: 0.25rem 1rem;
+
+      &.active {
+        background-color: transparent;
+        border: 0;
+        color: $cigi-text-grey;
+        pointer-events: none;
+      }
+
+      &:hover {
+        border: 0;
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid $cigi-text-grey;
+      }
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+
   .hero {
     text-align: center;
     background-color: $dph-background;
@@ -42,9 +75,8 @@ body {
       color: $cigi-medium-light-grey;
     }
 
-    .scrollanchor-container {
-      animation: bounce 2s infinite;
-      margin-top: 1rem;
+    .nav-tabs {
+      justify-content: center;
     }
   }
 
@@ -112,9 +144,86 @@ body {
             }
           }
         }
+
         .person-function {
           color: $cigi-medium-light-grey;
         }
+      }
+    }
+  }
+
+  .cohorts-buttons {
+    margin-bottom: 2rem;
+  }
+
+  .publications-list-block {
+    .publications-list__publication {
+      padding: 2rem 0;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $cigi-text-grey;
+      }
+
+      .publications-list__publication__right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        h2 {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          font-size: 1.1rem;
+        }
+
+        p {
+          font-size: 0.9rem;
+          color: $cigi-medium-light-grey;
+        }
+
+        .publications-list__publication__author {
+          display: flex;
+          align-items: center;
+          font-size: 15px;
+
+          img {
+            width: 70px;
+            border-radius: 50%;
+            border: 2px solid $dph-green;
+            margin-right: 1rem;
+          }
+
+          h3 {
+            font-size: 1.0625em;
+            font-weight: 500;
+            margin-bottom: 0;
+          }
+
+          .publications-list__publication__author__position {
+            font-size: 0.9em;
+            color: $cigi-medium-light-grey;
+          }
+        }
+      }
+    }
+  }
+
+  .additional-pages-block {
+    padding-bottom: 3rem;
+
+    .feature-content {
+      border-bottom: 1px solid $cigi-text-grey;
+      padding: 2rem 0;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      h3 {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+        margin-top: 0;
+      }
+
+      .feature-content-date {
+        color: $cigi-medium-light-grey;
       }
     }
   }
