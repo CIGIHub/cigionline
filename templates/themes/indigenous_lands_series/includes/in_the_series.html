@@ -14,8 +14,8 @@
           <p class="authors meta">
             Author{{ series_item.content_page.author_count|pluralize }}:
             {% for item in series_item.content_page.authors.all %}
-              {% if item.hide_link or item.author.is_external_profile %}
-                <span>{{ item.author.title.strip }}</span>
+              {% if item.hide_link %}
+                <span>{{ item.author.title }}</span>
               {% else %}
                 <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
               {% endif %}

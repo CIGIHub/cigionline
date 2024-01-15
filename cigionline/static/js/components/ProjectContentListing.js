@@ -63,18 +63,9 @@ function ProjectContentListing(props) {
           <ul className="custom-text-list author-list">
             {row.authors.map((author) => (
               <li key={`${row.id}-author-${author.id}`}>
-                {!author.is_external_profile ? (
-                  <a
-                    href={author.url}
-                    className="table-content-link table-content-link-black"
-                  >
-                    {author.title}
-                  </a>
-                ) : (
-                  <span className="table-content-link table-content-link-black">
-                    {author.title}
-                  </span>
-                )}
+                <a href={author.url} className="table-content-link table-content-link-black">
+                  {author.title}
+                </a>
               </li>
             ))}
           </ul>

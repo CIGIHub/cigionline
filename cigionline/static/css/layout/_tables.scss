@@ -99,7 +99,7 @@ table {
 
         .table-infos-function {
           color: $cigi-text-grey;
-          font-size: 0.9em;
+          font-size: .9em;
         }
 
         .custom-text-list {
@@ -107,16 +107,6 @@ table {
 
           &.author-list {
             color: $cigi-text-grey;
-          }
-        }
-
-        a {
-          &.table-content-link {
-            &.table-content-link-black {
-              &:hover {
-                color: $cigi-primary-colour;
-              }
-            }
           }
         }
 
@@ -130,6 +120,10 @@ table {
 
           &.table-content-link-black {
             color: $cigi-text-grey;
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
           }
         }
 
@@ -280,6 +274,7 @@ table {
 
 //CORE RELATED FILES TABLE
 
+
 .table-related-files {
   margin-bottom: 3em;
 
@@ -287,8 +282,8 @@ table {
     tr {
       th {
         border-bottom-color: $border-box;
-        padding-bottom: 0.5em;
-        padding-top: 0.5em;
+        padding-bottom: .5em;
+        padding-top: .5em;
       }
     }
   }
@@ -302,9 +297,9 @@ table {
       }
 
       td {
-        font-size: 0.9em;
-        padding-bottom: 0.5em;
-        padding-top: 0.5em;
+        font-size: .9em;
+        padding-bottom: .5em;
+        padding-top: .5em;
       }
     }
   }
@@ -313,7 +308,7 @@ table {
     @include media-breakpoint-down(sm) {
       width: 80%;
     }
-    padding-right: 0.5em;
+    padding-right: .5em;
     width: 85%;
   }
 }

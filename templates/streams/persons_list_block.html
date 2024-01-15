@@ -3,7 +3,7 @@
 <div class="container persons-list-block">
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      {% if self.title %}
+      {% if self.title and not hide_title %}
         <div class="block-title">{{ self.title }}</div>
       {% endif %}
       <ul class="persons-list">

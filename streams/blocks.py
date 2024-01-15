@@ -1179,7 +1179,6 @@ class PersonsListBlock(blocks.StructBlock):
     bio_source_field = blocks.ChoiceBlock(
         required=False,
         choices=BioSourceField.choices,
-        default=BioSourceField.FULL_BIO,
         max_choices=1,
         verbose_name='Biography Source Field',
         help_text="Select the field from the person's page to populate their biography in this block. Default to 'Full Biography'.",
@@ -1196,3 +1195,33 @@ class PersonsListBlock(blocks.StructBlock):
         label = 'Persons List'
         help_text = 'Add a list of person profiles.'
         template = 'streams/persons_list_block.html'
+
+
+class PublicastionsListBlock(blocks.StructBlock):
+    publications = blocks.StreamBlock(
+        [
+            ('publication', blocks.PageChooserBlock(page_type='publications.PublicationPage', required=True)),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Publications List'
+        help_text = 'Add a list of publication profiles.'
+        template = 'streams/publications_list_block.html'
+
+
+class AddtionalPagesBlock(blocks.StructBlock):
+    pages = blocks.StreamBlock(
+        [
+            ('page', blocks.PageChooserBlock(required=True)),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Additional Pages'
+        help_text = 'Add a list of additional pages.'
+        template = 'streams/additional_pages_block.html'

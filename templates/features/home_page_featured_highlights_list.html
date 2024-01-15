@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'homePage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'homePage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}homepage{% endblock %}
+
+{% block content %}
+  <div class="pt-5"></div>
+  <section class="homepage-featured-highlights pt-5 mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="homepage-subheading"><span>Highlights</span></h2>
+          <div class="swiper-container homepage-highlight">
+            <div class="swiper-wrapper">
+              {% for item in self.featured_highlights %}
+                <div class="swiper-slide">
+                  {% include "includes/features/feature_poster_teaser.html" with content=item.value.page.specific %}
+                </div>
+              {% endfor %}
+            </div>
+            <div class="swiper-controls">
+              <div class="swiper-button-prev"><i class="fal fa-long-arrow-left"></i></div>
+              <div class="swiper-pagination"></div>
+              <div class="swiper-button-next"><i class="fal fa-long-arrow-right"></i></div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

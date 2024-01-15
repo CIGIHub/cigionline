@@ -89,7 +89,7 @@
                         <h3><a href="{{ featured_item.value.url }}">{{ featured_item.value.title }}</a></h3>
                         <p class="featured-item-authors">
                           {% for item in featured_item.value.specific.authors.all %}
-                            {% if item.hide_link or item.author.is_external_profile %}
+                            {% if item.hide_link %}
                               <span>{{ item.author.title }}</span>
                             {% else %}
                               <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
@@ -140,7 +140,7 @@
                 <p class="authors">
                   Author{{ series_item.content_page.author_count|pluralize }}:
                   {% for item in series_item.content_page.authors.all %}
-                    {% if item.hide_link or item.author.is_external_profile %}
+                    {% if item.hide_link %}
                       <span>{{ item.author.title }}</span>
                     {% else %}
                       <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
