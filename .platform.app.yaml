@@ -37,6 +37,7 @@ relationships:
 hooks:
     build: |
       pip install -r requirements.txt
+      echo "using npm token: $FONTAWESOME_NPM_AUTH_TOKEN"
       npm install
       npm start
     deploy: |
