@@ -9,6 +9,14 @@ name: cigionline
 # to find the supported versions for the 'python' type.
 type: 'python:3.12'
 
+dependencies:
+  nodejs:
+    n: "*"
+
+variables:
+  env:
+    N_PREFIX: /app/.global
+
 
 # The following block defines a single writable directory, 'web/uploads'
 # The 'source' specifies where the writable mount is. The 'local' source
@@ -37,7 +45,8 @@ relationships:
 hooks:
     build: |
       pip install -r requirements.txt
-      echo "using npm token: $FONTAWESOME_NPM_AUTH_TOKEN"
+      n auto
+      hash -r
       npm install
       npm start
     deploy: |
