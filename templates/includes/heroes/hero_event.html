@@ -41,7 +41,7 @@
             Speaker{{ author_count|pluralize }}:
             <ul class="custom-text-list">
               {% for item in authors %}
-                {% if item.hide_link or item.author.is_external_profile %}
+                {% if item.hide_link %}
                   <li class="block-speaker">{{ item.author.title }}</li>
                 {% else %}
                   <li class="block-speaker"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>

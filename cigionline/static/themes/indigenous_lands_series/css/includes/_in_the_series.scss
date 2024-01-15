@@ -30,7 +30,6 @@
         span {
           @include comma-separated;
           @include link($color: $cigi-medium-grey, $hover-color: $cigi-primary-colour);
-          color: $cigi-medium-grey;
         }
       }
     }

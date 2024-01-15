@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader core_tags cache %}
+
+{% block extra_css %}
+  {% render_bundle 'homePage' 'css' %}
+{% endblock %}
+
+{% block body_class %}homepage{% endblock %}
+
+{% block content %}
+  <div class="pt-5"></div>
+  <div class="pt-5"></div>
+  <section class="homepage-featured-events">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="homepage-subheading">
+            <a href="/events/">
+              Events
+            </a>
+          </h2>
+        </div>
+      </div>
+      <div class="events-container row">
+        {% for event in featured_events %}
+          <div class="col-12 col-md-4 homepage-featured-event-row">
+            {% include "includes/features/feature_event.html" with event=event %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

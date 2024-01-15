@@ -1,0 +1,26 @@
+@import '../../../css/global/mixins';
+
+body {
+  @include top-bar(
+    $background-color: transparent,
+    $color: $white,
+    $background-color-scrolled: $black,
+    $color-scrolled: $white
+  );
+
+  section {
+    &.hero {
+      background-size: cover;
+      background-position: 80%;
+      background-repeat: no-repeat;
+      
+      .hero-container {
+        .hero-main {
+          p {
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+}

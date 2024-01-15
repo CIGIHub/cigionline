@@ -62,6 +62,7 @@ const config = {
     themeCyberSeries: './cigionline/static/themes/cyber_series/index.js',
     themeDataSeries: './cigionline/static/themes/data_series/index.js',
     themeDPH: './cigionline/static/themes/dph/index.js',
+    themeFreedomOfThought: './cigionline/static/themes/freedom_of_thought/index.js',
     themeFourDomainsSeries: './cigionline/static/themes/four_domains_series/index.js',
     themeHealthSecuritySeries: './cigionline/static/themes/health_security_series/index.js',
     themeIgc: './cigionline/static/themes/igc/index.js',
