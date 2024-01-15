@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
 
 {% block theme_css %}
   {% render_bundle 'themeDPH' 'css' %}
@@ -14,9 +14,6 @@
 {% endblock %}
 
 {% block content %}
-{% endblock content %}
-
-{% block footer %}
   <section class="hero">
     <div class="container">
       <div class="row justify-content-center">
@@ -31,16 +28,90 @@
       </div>
       <div class="row justify-content-center">
         <div class="col">
-          <div class="scrollanchor-container">
-            <a href="#article-body">
-              <i class="far fa-arrow-down fa-2x"></i>
-            </a>
-          </div>
+          <nav>
+            <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
+              <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About the Hub</a>
+              {% if self.has_publications_list_block %}
+                <a class="nav-link" id="papers-tab" data-toggle="tab" href="#papers" role="tab" aria-controls="papers" aria-selected="true">Working Papers</a>
+              {% endif %}
+              <a class="nav-link" id="announcements-tab" data-toggle="tab" href="#announcements" role="tab" aria-controls="announcements" aria-selected="true">News</a>
+            </div>
+          </nav>
         </div>
       </div>
     </div>
   </section>
-  {% include "includes/body.html" with body=self.body %}
+  <section class="tab-content">
+    <section class="tab-about tab-pane fade show active body" id="about" role="tabpanel" aria-labelledby="about-tab">
+      {% if heading %}
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12{% if full_heading is not True %} col-md-10 col-lg-8{% endif %}">
+              <h2 class="paragraph-heading">{{ heading }}</h2>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      {% for block in self.body %}
+        {% if block.block_type != 'persons_list_block' and block.block_type != 'publications_list_block' and block.block_type != 'additional_pages_block' %}
+          {% include_block block %}
+        {% endif %}
+      {% endfor %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <h2>Digital Policy Hub Cohorts</h2>
+            <nav class="cohorts-buttons">
+              <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
+                {% define 0 as counter %}
+                {% for block in self.body %}
+                  {% if block.block_type == 'persons_list_block' %}
+                    {% with block.value.title|dash_case as cohort %}
+                    <a class="nav-link {% if counter == 0 %}active{% endif %}" id="{{cohort}}-tab" data-toggle="tab" href="#{{cohort}}" role="tab" aria-controls="{{cohort}}" aria-selected="true">{{ block.value.title }}</a>
+                    {% endwith %}
+                    {% define 1 as counter %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cohorts-list tab-content">
+        {% define 0 as counter %}
+        {% for block in self.body %}
+          {% if block.block_type == 'persons_list_block' %}
+            {% with block.value.title|dash_case as cohort %}
+              <div class="tab-{{cohort}} tab-pane fade {% if counter == 0 %}show active{% endif %}" id="{{cohort}}" role="tabpabel" aria-labelledby="{{cohort}}-tab">
+                {% include_block block with hide_title=True %}
+              </div>
+            {% endwith %}
+            {% define 1 as counter %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  
+    {% if self.has_publications_list_block %}
+      <section class="tab-papers tab-pane fade" id="papers" role="tabpanel" aria-labelledby="papers-tab">
+        {% for block in self.body %}
+          {% if block.block_type == 'publications_list_block' %}
+            {% include_block block %}
+          {% endif %}
+        {% endfor %}
+      </section>
+    {% endif %}
+    <section class="tab-announcements tab-pane fade" id="announcements">
+      {% for block in self.body %}
+        {% if block.block_type == 'additional_pages_block' %}
+          {% include_block block with hide_title=True %}
+        {% endif %}
+      {% endfor %}
+    </section>
+  </section>
+{% endblock content %}
+
+{% block footer %}
   <footer>
     <div class="container">
       <div class="row justify-content-center">
@@ -66,5 +137,5 @@
         </div>
       </div>
     </div>
-  </section>
+  </footer>
 {% endblock %}
