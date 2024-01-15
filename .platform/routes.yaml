@@ -1,6 +1,6 @@
 "https://{default}/":
     type: upstream
-    upstream: "app:http"
+    upstream: "cigionline:http"
 
 "https://www.{default}/":
     type: redirect
