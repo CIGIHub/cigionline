@@ -17,7 +17,7 @@ if 'SECRET_KEY' in os.environ:
 if 'ALLOWED_HOSTS' in os.environ:
     ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
 
-if 'DATABASE_URL' in os.environ:
+if 'DATABASE_URL' in os.environ | 'PLATFORMSH_RELATIONSHIPS' in os.environ:
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
     }
@@ -27,6 +27,18 @@ if 'BONSAI_URL' in os.environ:
         'default': {
             'BACKEND': 'wagtail.search.backends.elasticsearch7',
             'URLS': [os.environ['BONSAI_URL']],
+            'INDEX': 'wagtail',
+            'TIMEOUT': 30,
+            'OPTIONS': {},
+            'INDEX_SETTINGS': {},
+        },
+    }
+
+if 'PLATFORMSH_ELASTICSEARCH_URL' in os.environ:
+    WAGTAILSEARCH_BACKENDS = {
+        'default': {
+            'BACKEND': 'wagtail.search.backends.elasticsearch7',
+            'URLS': [os.environ['PLATFORMSH_ELASTICSEARCH_URL']],
             'INDEX': 'wagtail',
             'TIMEOUT': 30,
             'OPTIONS': {},
