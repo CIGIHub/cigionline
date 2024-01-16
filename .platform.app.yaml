@@ -11,18 +11,17 @@ type: 'python:3.12'
 
 dependencies:
   nodejs:
-    n: "*"
+    n: '*'
 
 variables:
   env:
     N_PREFIX: /app/.global
 
-
 # The following block defines a single writable directory, 'web/uploads'
 # The 'source' specifies where the writable mount is. The 'local' source
 # indicates that the mount point will point to a local directory on the
 # application container. The 'source_path' specifies the subdirectory
-# from within the source that the mount should point at. 
+# from within the source that the mount should point at.
 mounts:
   'web/uploads':
     source: local
@@ -37,22 +36,22 @@ disk: 256
 # to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
 # side is in the form '<service name>:<endpoint name>'.
 relationships:
-    elasticsearch: 'elasticsearch:elasticsearch'
-    redis: 'redis:redis'
-    postgresql: 'postgresql:postgresql'
-
+  elasticsearch: 'elasticsearch:elasticsearch'
+  redis: 'redis:redis'
+  postgresql: 'postgresql:postgresql'
 
 hooks:
-    build: |
-      pip install -r requirements.txt
-      n auto
-      hash -r
-      npm install
-      npm start
-    deploy: |
-      python manage.py migrate
-      python manage.py collectstatic --noinput
+  build: |
+    pip install -r requirements.txt
+  # npm commands:
+  # n auto
+  # hash -r
+  # npm install
+  # npm start
+  deploy: |
+    python manage.py migrate
+    python manage.py collectstatic --noinput
 
 web:
-  commands: 
-    start: "gunicorn cigionline.wsgi:application --bind 0.0.0.0:$PORT"
+  commands:
+    start: 'gunicorn cigionline.wsgi:application --bind 0.0.0.0:$PORT'
