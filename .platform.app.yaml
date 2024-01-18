@@ -42,8 +42,9 @@ relationships:
 
 hooks:
   build: |
+    python -m pip install --upgrade pip
     pip install -r requirements.txt
-    python manage.py collectstatic --noinput
+    python manage.py collectstatic
   # npm commands:
   # n auto
   # hash -r
