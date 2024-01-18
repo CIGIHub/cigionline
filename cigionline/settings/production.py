@@ -1,5 +1,7 @@
 import dj_database_url
 import os
+import json
+import base64
 from .base import *  # noqa: F403
 
 DEBUG = False
@@ -22,10 +24,23 @@ if 'DATABASE_URL' in os.environ:
         'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
     }
 
-if 'PLATFORMSH_RELATIONSHIPS' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
-    }
+PLATFORMSH_DB_RELATIONSHIP="postgresql"
+
+if 'PLATFORM_RELATIONSHIPS' in os.environ:
+    PLATFORM_RELATIONSHIPS = json.loads(base64.b64decode(os.environ['PLATFORM_RELATIONSHIPS']))
+
+    if 'database' in PLATFORM_RELATIONSHIPS:
+        default_database = PLATFORM_RELATIONSHIPS['database'][0]
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': default_database['path'],
+                'USER': default_database['username'],
+                'PASSWORD': default_database['password'],
+                'HOST': default_database['host'],
+                'PORT': default_database['port'],
+            }
+        }
 
 if 'BONSAI_URL' in os.environ:
     WAGTAILSEARCH_BACKENDS = {
