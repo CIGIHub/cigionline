@@ -36,16 +36,60 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
     PLATFORM_RELATIONSHIPS = json.loads(base64.b64decode(os.environ['PLATFORM_RELATIONSHIPS']))
 
     if 'database' in PLATFORM_RELATIONSHIPS:
-        default_database = PLATFORM_RELATIONSHIPS['database'][0]
+        db_settings = PLATFORM_RELATIONSHIPS[PLATFORMSH_DB_RELATIONSHIP][0]
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'NAME': default_database['path'],
-                'USER': default_database['username'],
-                'PASSWORD': default_database['password'],
-                'HOST': default_database['host'],
-                'PORT': default_database['port'],
+                'NAME': db_settings['path'],
+                'USER': db_settings['username'],
+                'PASSWORD': db_settings['password'],
+                'HOST': db_settings['host'],
+                'PORT': db_settings['port'],
             }
+        }
+    
+    if 'redis' in PLATFORM_RELATIONSHIPS:
+        redis_info = PLATFORM_RELATIONSHIPS['redis'][0]
+        redis_url = f"redis://{redis_info['host']}:{redis_info['port']}"
+        CACHES = {
+            'default': {
+                'BACKEND': 'django_redis.cache.RedisCache',
+                'LOCATION': redis_url,
+                'OPTIONS': {
+                    'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                    'CONNECTION_POOL_KWARGS': {
+                        'ssl_cert_reqs': False,
+                    },
+                },
+            },
+            'renditions': {
+                'BACKEND': 'django_redis.cache.RedisCache',
+                'LOCATION': redis_url,
+                'TIMEOUT': 31536000,
+                'OPTIONS': {
+                    'MAX_RETRIES': 200,
+                    'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                    'CONNECTION_POOL_KWARGS': {
+                        'ssl_cert_reqs': False,
+                    },
+                },
+            },
+        }
+    
+    if 'elasticsearch' in PLATFORM_RELATIONSHIPS:
+        es_info = PLATFORM_RELATIONSHIPS['elasticsearch'][0]
+        es_host = es_info['host']
+        es_port = es_info['port']
+        
+        WAGTAILSEARCH_BACKENDS = {
+            'default': {
+                'BACKEND': 'wagtail.search.backends.elasticsearch7',
+                'URLS': [f'http://{es_host}:{es_port}'],
+                'INDEX': 'wagtail',
+                'TIMEOUT': 30,
+                'OPTIONS': {},
+                'INDEX_SETTINGS': {},
+            },
         }
 
 if 'BONSAI_URL' in os.environ:
@@ -53,18 +97,6 @@ if 'BONSAI_URL' in os.environ:
         'default': {
             'BACKEND': 'wagtail.search.backends.elasticsearch7',
             'URLS': [os.environ['BONSAI_URL']],
-            'INDEX': 'wagtail',
-            'TIMEOUT': 30,
-            'OPTIONS': {},
-            'INDEX_SETTINGS': {},
-        },
-    }
-
-if 'PLATFORMSH_ELASTICSEARCH_URL' in os.environ:
-    WAGTAILSEARCH_BACKENDS = {
-        'default': {
-            'BACKEND': 'wagtail.search.backends.elasticsearch7',
-            'URLS': [os.environ['PLATFORMSH_ELASTICSEARCH_URL']],
             'INDEX': 'wagtail',
             'TIMEOUT': 30,
             'OPTIONS': {},
