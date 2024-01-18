@@ -35,7 +35,7 @@ if (os.getenv('PLATFORM_PROJECT_ENTROPY') is not None):
 if 'PLATFORM_RELATIONSHIPS' in os.environ:
     PLATFORM_RELATIONSHIPS = json.loads(base64.b64decode(os.environ['PLATFORM_RELATIONSHIPS']))
 
-    if 'database' in PLATFORM_RELATIONSHIPS:
+    if 'postgresql' in PLATFORM_RELATIONSHIPS:
         db_settings = PLATFORM_RELATIONSHIPS[PLATFORMSH_DB_RELATIONSHIP][0]
         DATABASES = {
             'default': {
