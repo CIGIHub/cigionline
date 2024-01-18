@@ -38,7 +38,7 @@ disk: 256
 relationships:
   elasticsearch: 'elasticsearch:elasticsearch'
   redis: 'redis:redis'
-  postgresql: 'postgresql:postgresql'
+  # postgresql: 'postgresql:postgresql'
 
 hooks:
   build: |
