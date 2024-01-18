@@ -57,9 +57,6 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
                 'LOCATION': redis_url,
                 'OPTIONS': {
                     'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                    'CONNECTION_POOL_KWARGS': {
-                        'ssl_cert_reqs': False,
-                    },
                 },
             },
             'renditions': {
@@ -69,9 +66,6 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
                 'OPTIONS': {
                     'MAX_RETRIES': 200,
                     'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                    'CONNECTION_POOL_KWARGS': {
-                        'ssl_cert_reqs': False,
-                    },
                 },
             },
         }
@@ -116,6 +110,9 @@ if 'REDIS_URL' in os.environ:
             'LOCATION': os.environ['REDIS_URL'],
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'CONNECTION_POOL_KWARGS': {
+                    'ssl_cert_reqs': False,
+                },
             },
         },
         'renditions': {
@@ -125,6 +122,9 @@ if 'REDIS_URL' in os.environ:
             'OPTIONS': {
                 'MAX_RETRIES': 200,
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'CONNECTION_POOL_KWARGS': {
+                    'ssl_cert_reqs': False,
+                },
             },
         },
     }
