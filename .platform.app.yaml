@@ -47,7 +47,7 @@ hooks:
     n auto
     hash -r
     npm install
-    npm start
+    npm run-script build
     python manage.py collectstatic --noinput
   deploy: |
     python manage.py migrate
