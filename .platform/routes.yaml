@@ -8,4 +8,4 @@
 
 "https://{default}/static/":
     type: proxy
-    to: "https://{STATIC_PROXY}/static/"
+    to: "https://{variables.env:STATIC_PROXY}/static/"
