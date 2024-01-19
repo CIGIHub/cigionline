@@ -56,3 +56,7 @@ hooks:
 web:
   commands:
     start: 'gunicorn cigionline.wsgi:application --bind 0.0.0.0:$PORT'
+  locations:
+    '/static/':
+      passthru: true
+      root: 'https://{variable.env:STATIC_PROXY}/static'
