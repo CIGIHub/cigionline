@@ -46,7 +46,6 @@ hooks:
     pip install -r requirements.txt
     n auto
     hash -r
-    nvm use 14
     npm install
     npm start
     python manage.py collectstatic --noinput
