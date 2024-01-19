@@ -5,3 +5,7 @@
 "https://www.{default}/":
     type: redirect
     to: "https://{default}/"
+
+"https://{default}/static/":
+    type: proxy
+    to: "https://{STATIC_PROXY}/static/"
