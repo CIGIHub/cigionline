@@ -19,6 +19,8 @@ const plugins = [
   }),
 ];
 
+const publicPath = process.env.AWS_S3_CUSTOM_DOMAIN ? `https://${process.env.AWS_S3_CUSTOM_DOMAIN}/static/bundles/` : '/static/bundles/';
+
 const config = {
   context: __dirname,
 
@@ -85,7 +87,7 @@ const config = {
   devtool: 'source-map',
   output: {
     path: path.resolve('./cigionline/static/bundles/'),
-    publicPath: '/static/bundles/',
+    publicPath,
     filename: '[name].[contenthash].js',
   },
   plugins,
