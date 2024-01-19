@@ -59,4 +59,4 @@ web:
   locations:
     '/static/':
       passthru: true
-      root: 'https://{variable.env:STATIC_PROXY}/static'
+      root: 'https://{STATIC_PROXY}/static'
