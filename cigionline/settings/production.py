@@ -161,8 +161,8 @@ AWS_S3_OBJECT_PARAMETERS = {
     "ACL": "public-read"
 }
 AWS_LOCATION = 'static'
-if 'STATIC_URL' in os.environ:
-    STATIC_URL = os.environ['STATIC_URL']
+if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
+    STATIC_URL = os.environ['AWS_S3_CUSTOM_DOMAIN']
 
 if 'WAGTAILADMIN_NOTIFICATION_FROM_EMAIL' in os.environ:
     WAGTAILADMIN_NOTIFICATION_FROM_EMAIL = os.environ['WAGTAILADMIN_NOTIFICATION_FROM_EMAIL']

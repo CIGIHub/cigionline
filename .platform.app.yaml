@@ -42,12 +42,12 @@ relationships:
 
 hooks:
   build: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
     n auto
     hash -r
     npm install
     npm run-script build
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
     python manage.py collectstatic --noinput
   deploy: |
     python manage.py migrate
