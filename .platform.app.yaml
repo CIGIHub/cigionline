@@ -9,6 +9,10 @@ name: cigionline
 # to find the supported versions for the 'python' type.
 type: 'python:3.9'
 
+runtime:
+  extensions:
+    - nodejs:14
+
 dependencies:
   nodejs:
     n: '*'
@@ -44,12 +48,12 @@ hooks:
   build: |
     python -m pip install --upgrade pip
     pip install -r requirements.txt
+    npm commands:
+    n auto
+    hash -r
+    npm install
+    npm start
     python manage.py collectstatic --noinput
-  # npm commands:
-  # n auto
-  # hash -r
-  # npm install
-  # npm start
   deploy: |
     python manage.py migrate
 
