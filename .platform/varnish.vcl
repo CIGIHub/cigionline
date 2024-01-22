@@ -6,7 +6,7 @@ backend static_files {
 sub vcl_recv {
     # Redirect requests for static files
     if (req.url ~ "^/static/") {
-        set req.backend_hint = static_files;
+        set req.backend_hint = static_files();
     } else {
         set req.backend_hint = application.backend();
     }
