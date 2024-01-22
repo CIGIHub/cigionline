@@ -1,8 +1,15 @@
 "https://{default}/":
     type: upstream
-    upstream: "varnish:http"
+    upstream: "cigionline:http"
 
 "https://www.{default}/":
     type: redirect
     to: "https://{default}/"
+
+"https://{default}/static/":
+    type: upstream
+    upstream: "varnish:http"
     
+"https://www.{default}/static/":
+    type: upstream
+    upstream: "varnish:http"
