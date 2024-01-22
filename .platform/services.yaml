@@ -28,3 +28,12 @@ postgresql:
     type: postgresql:16
     # The disk attribute is the size of the persistent disk (in MB) allocated to the service.
     disk: 2048
+
+varnish:
+    type: varnish:7.3
+    relationships:
+        backend: 'cigionline:http'
+    configuration:
+        vcl: !include
+            type: string
+            path: varnish.vcl
