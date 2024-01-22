@@ -32,8 +32,8 @@ postgresql:
 varnish:
     type: varnish:7.3
     relationships:
-        backend: 'cigionline:http'
+        application: 'cigionline:http'
     configuration:
         vcl: !include
             type: string
-            path: .platform/varnish.vcl
+            path: varnish.vcl
