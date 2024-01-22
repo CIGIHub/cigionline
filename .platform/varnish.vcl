@@ -1,3 +1,13 @@
+backend static_files {
+    .host = "cigionline-static-staging.s3.amazonaws.com";
+    .port = "443";
+}
+
 sub vcl_recv {
-    set req.backend_hint = application.backend();
+    # Redirect requests for static files
+    if (req.url ~ "^/static/") {
+        set req.backend_hint = static_files();
+    } else {
+        set req.backend_hint = application.backend();
+    }
 }
