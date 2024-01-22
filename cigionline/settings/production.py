@@ -69,7 +69,7 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
     
     if 'elasticsearch' in PLATFORM_RELATIONSHIPS:
         es_info = PLATFORM_RELATIONSHIPS['elasticsearch'][0]
-        es_host = es_info['host_name']
+        es_host = es_info['host']
         es_port = es_info['port']
         print("Elasticsearch found")
         print(PLATFORM_RELATIONSHIPS['elasticsearch'])
@@ -79,7 +79,7 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
         WAGTAILSEARCH_BACKENDS = {
             'default': {
                 'BACKEND': 'wagtail.search.backends.elasticsearch7',
-                'URLS': [f'https://{es_host}:{es_port}'],
+                'URLS': [f'http://{es_host}:{es_port}'],
                 'INDEX': 'wagtail',
                 'TIMEOUT': 30,
                 'OPTIONS': {},
