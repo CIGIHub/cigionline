@@ -168,6 +168,8 @@ AWS_LOCATION = 'static'
 # if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
 #     STATIC_URL = f'https://{os.environ["AWS_S3_CUSTOM_DOMAIN"]}/static/'
 
+STATIC_URL = '/static/'
+
 if 'WAGTAILADMIN_NOTIFICATION_FROM_EMAIL' in os.environ:
     WAGTAILADMIN_NOTIFICATION_FROM_EMAIL = os.environ['WAGTAILADMIN_NOTIFICATION_FROM_EMAIL']
 
