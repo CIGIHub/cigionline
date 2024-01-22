@@ -1,6 +1,6 @@
 backend static_files {
     .host = "cigionline-static-staging.s3.amazonaws.com";
-    .port = "80";
+    .port = "443";
 }
 
 sub vcl_recv {
