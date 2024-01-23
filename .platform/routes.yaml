@@ -4,7 +4,7 @@
 
 "https://{default}/static/":
     type: proxy
-    to: "{env:STATIC_PROXY}/static/"
+    to: "https://cigionline-static-staging.s3.amazonaws.com/static/"
 
 "https://www.{default}/":
     type: redirect
