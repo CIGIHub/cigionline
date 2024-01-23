@@ -71,10 +71,6 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
         es_info = PLATFORM_RELATIONSHIPS['elasticsearch'][0]
         es_host = es_info['host']
         es_port = es_info['port']
-        print("Elasticsearch found")
-        print(PLATFORM_RELATIONSHIPS['elasticsearch'])
-        print(es_host)
-        print(es_port)
         
         WAGTAILSEARCH_BACKENDS = {
             'default': {
@@ -165,8 +161,6 @@ AWS_S3_OBJECT_PARAMETERS = {
     "ACL": "public-read"
 }
 AWS_LOCATION = 'static'
-# if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
-#     STATIC_URL = f'https://{os.environ["AWS_S3_CUSTOM_DOMAIN"]}/static/'
 
 STATIC_URL = '/static/'
 
