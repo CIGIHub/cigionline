@@ -1,8 +1,11 @@
 "https://{default}/":
     type: upstream
-    upstream: "varnish:http"
+    upstream: "cigionline:http"
+
+"https://{default}/static/":
+    type: proxy
+    to: "{env:STATIC_PROXY}/static/"
 
 "https://www.{default}/":
     type: redirect
     to: "https://{default}/"
-    
