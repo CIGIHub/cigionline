@@ -40,7 +40,7 @@
       &.newsletter {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
         @include media-breakpoint-up(md) {
-          font-size: 0.85em;
+          font-size: 0.875rem;
         }
         font-size: 1.0625em;
 
