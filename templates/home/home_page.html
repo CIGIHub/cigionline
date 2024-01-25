@@ -10,6 +10,28 @@
 
 {% block body_class %}homepage{% endblock %}
 
+{% block header %}
+  {% include "includes/top_bar.html" %}
+  <section class="homepage-header-newsletter">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
+          <p class="summary">
+            CIGI is an independent, non-partisan think tank whose peer-reviewed research and trusted analysis influence policy makers to innovate.
+          </p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+          <p class="newsletter">
+            Stay up to date by subscribing to the <a href="/subscribe/">CIGI Newsletter</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
 {% block content %}
   {% preview_cache_bust as is_preview %}
   {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_content_revision_created_at|date:"c" %}
@@ -17,6 +39,11 @@
       <div class="container">
         <div class="row">
           <div class="col-12 col-md-8">
+            <h2 class="homepage-subheading">
+              <span>
+                LATEST RESEARCH AND ANALYSIS
+              </span>
+            </h2>
             {% if featured_pages|length > 0 %}
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
             {% endif %}

@@ -11,12 +11,42 @@
     }
   }
 
-  .homepage-featured {
+  .homepage-header-newsletter {
     @include media-breakpoint-up(lg) {
-      padding-top: 7em;
+      padding-top: 5em;
     }
+    line-height: 1.25;
+    margin-bottom: 2em;
+    padding-top: 4em;
+    padding-bottom: 1em;
+    background: $black;
+
+    p {
+      @include media-breakpoint-up(md) {
+        text-align: center;
+      }
+      color: $white;
+      margin-bottom: 0;
+
+      &.summary {
+        font-size: 1.0625em;
+        padding-bottom: 1em;
+      }
+
+      &.newsletter {
+        @include media-breakpoint-up(md) {
+          font-size: 0.85em;
+        }
+
+        a {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .homepage-featured {
     margin-bottom: 3em;
-    padding-top: 5em;
   }
 
   .homepage-featured-experts,
