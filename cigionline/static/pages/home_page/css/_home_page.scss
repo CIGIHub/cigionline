@@ -38,11 +38,13 @@
       }
 
       &.newsletter {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
         @include media-breakpoint-up(md) {
           font-size: 0.85em;
         }
 
         a {
+          font-weight: 600;
           text-decoration: underline;
         }
       }
