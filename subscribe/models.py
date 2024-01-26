@@ -111,7 +111,7 @@ class SubscribePage(
 
 
 class SubscribeForm(forms.Form):
-    confirmation = forms.BooleanField(label='CIGI Newsletter - A weekly newsletter featuring highlights of major CIGI announcements, publications, events, videos and other news.', initial=True)
+    confirmation = forms.BooleanField(label='The CIGI Newsletter is a weekly update on CIGI’s research and activities.', initial=True)
     first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'First Name*'}))
     last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name*'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email Address*'}))
