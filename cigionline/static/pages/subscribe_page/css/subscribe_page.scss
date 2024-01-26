@@ -12,11 +12,12 @@ hr {
 
 .cigi-subscribe-form {
   p {
-    margin-bottom: 0;
+    margin-bottom: 2em;
 
     &:first-of-type {
       display: flex;
       flex-direction: row-reverse;
+      justify-content: flex-end;
 
       label {
         display: block;
@@ -29,7 +30,7 @@ hr {
 
     &[for='id_confirmation'] {
       display: block;
-      margin: 0 0 2em 0.5em;
+      margin: 0 0 0 0.5em;
 
       &::after {
         color: $cigi-primary-colour;
@@ -48,10 +49,6 @@ hr {
       outline: none;
       padding: 0.5em 1em;
       width: 100%;
-    }
-
-    &[type='checkbox'] {
-      margin-top: 0.3em;
     }
   }
 
