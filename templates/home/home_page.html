@@ -37,13 +37,13 @@
   {% cache 86400 homepage_featured_content self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_content_revision_created_at|date:"c" %}
     <section class="featured homepage-featured">
       <div class="container">
+        <h2 class="homepage-subheading">
+          <span>
+            LATEST RESEARCH AND ANALYSIS
+          </span>
+        </h2>
         <div class="row">
           <div class="col-12 col-md-8">
-            <h2 class="homepage-subheading">
-              <span>
-                LATEST RESEARCH AND ANALYSIS
-              </span>
-            </h2>
             {% if featured_pages|length > 0 %}
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
             {% endif %}
