@@ -14,9 +14,7 @@ const swiperContainer = document.querySelector('.swiper-container');
 
 if (swiperContainer) {
   const gesPageSwiper = new Swiper('.swiper-container', {
-    slidesPerView: 2,
-    slidesPerGroup: 2,
-    spaceBetween: 40,
+    slidesPerView: 1,
     speed: 800,
     autoHeight: true,
     grabCursor: true,
@@ -29,17 +27,6 @@ if (swiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
-    },
-
-    breakpoints: {
-      480: {
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-      },
-      768: {
-        slidesPerView: 3,
-        slidesPerGroup: 3,
-      },
     },
   });
 }

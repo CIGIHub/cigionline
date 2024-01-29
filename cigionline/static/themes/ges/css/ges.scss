@@ -1,2 +1,34 @@
 @import '../../../css/global/mixins';
+@import '../../../css/includes/swiper';
 
+section {
+  &.hero {
+    margin-bottom: 1.5em;
+  }
+}
+
+.ges-highlights-block {
+  background-color: $cigi-light-grey-bg;
+  margin-top: 2em;
+  padding-top: 1em;
+
+  .swiper-container {
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    .swiper-slide {
+      .slide {
+        position: relative;
+
+        .label {
+          position: absolute;
+          top: -2em;
+        }
+
+        .caption {
+          margin-top: 1em;
+        }
+      }
+    }
+  }
+}
