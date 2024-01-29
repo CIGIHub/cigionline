@@ -1255,14 +1255,11 @@ class GESHighlightsBlock(blocks.StructBlock):
 class GESEventsBlock(blocks.StructBlock):
     project = blocks.PageChooserBlock(page_type='research.ProjectPage', required=True)
 
-    def get_events(self):
-        from events.models import EventPage
-
-        return EventPage.objects.live().filter(projects=self.project.value).order_by('publishing_date')
-
     def get_context(self, value, parent_context=None):
+        from events.models import EventPage
         context = super().get_context(value, parent_context)
-        context['events'] = self.get_events()
+        events = EventPage.objects.live().filter(projects=value.get('project')).order_by('publishing_date')
+        context['events'] = events
 
         return context
 
