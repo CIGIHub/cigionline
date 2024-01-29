@@ -1,0 +1,41 @@
+{% load wagtailcore_tags %}
+<div class="ges-highlights-block">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {% if self.title %}
+          <h2 class="paragraph-heading">
+            {{ self.title }}
+          </h2>
+        {% endif %}
+
+        {% if self.description %}
+          {{ self.description|richtext }}
+        {% endif %}
+
+        {% if self.pdf %}
+          <button class="button-action">
+            <a href="{{ self.pdf.url }}" target="_blank">
+              <i class="fas fa-download"></i> Download PDF
+            </a>
+          </button>
+        {% endif %}
+
+        {% if self.slides %}
+          <div class="swiper-container">
+            <div class="swiper-controls">
+              <div class="swiper-button-prev"><i class="fal fa-long-arrow-left"></i></div>
+              <div class="swiper-pagination"></div>
+              <div class="swiper-button-next"><i class="fal fa-long-arrow-right"></i></div>
+            </div>
+            <div class="swiper-wrapper">
+              {% for block in self.slides %}
+                {% include_block block %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif%}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+{% load wagtailimages_tags %}
+
+<article class="swiper-slide">
+  <figure class="slide">
+    <figcaption class="label">
+      {{ self.label }}
+    </figcaption>
+    {% image self.image width-1440 %}
+    <figcaption class="caption">
+      {{ self.caption }}
+    </figcaption>
+  </figure>
+</article>
