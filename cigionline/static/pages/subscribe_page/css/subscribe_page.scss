@@ -6,6 +6,28 @@
   }
 }
 
+main {
+  img {
+    max-width: 100%;
+    width: unset;
+  }
+
+  table {
+    &.cta-button {
+      width: auto;
+    }
+
+    tbody {
+      tr {
+        td {
+          border-bottom: 0;
+          text-align: unset;
+        }
+      }
+    }
+  }
+}
+
 hr {
   margin: 2em 0;
 }
@@ -24,6 +46,7 @@ hr {
 
     p {
       font-style: italic;
+      margin-top: 0;
     }
   }
 
