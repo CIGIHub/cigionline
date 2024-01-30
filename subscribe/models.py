@@ -6,6 +6,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from streams.blocks import ParagraphBlock
+from newsletters.models import NewsletterPage
 
 from mailchimp_marketing.api_client import ApiClientError
 import mailchimp_marketing as MailchimpMarketing
@@ -58,6 +59,9 @@ class SubscribePage(
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
+    def latest_newsletter(self):
+        return NewsletterPage.objects.live().order_by('-first_published_at').first()
+
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = []
@@ -66,9 +70,8 @@ class SubscribePage(
 
     def serve(self, request):
         form = SubscribeForm()
-        context = {
-            'self': self,
-        }
+        context = super().get_context(request)
+        context['self'] = self
         member_info = {}
 
         if request.GET:
@@ -111,9 +114,8 @@ class SubscribePage(
 
 
 class SubscribeForm(forms.Form):
-    confirmation = forms.BooleanField(label='The CIGI Newsletter is a weekly update on CIGI’s research and activities.', initial=True)
-    first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'First Name*'}))
-    last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name*'}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email Address*'}))
-    organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization'}))
-    country = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Country'}))
+    first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
+    last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email Address'}))
+    organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization*'}))
+    country = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Country*'}))

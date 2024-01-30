@@ -19,6 +19,7 @@
           <form class="cigi-subscribe-form" action="/subscribe/" method="POST" id="subscribe-form" accept-charset="UTF-8">
             {% csrf_token %}
             {{form.as_p}}
+            <div><p>*Optional fields</p></div>
             <button class="button-action" type="submit">Sign Up</button>
           </form>
         </div>
@@ -30,6 +31,17 @@
       <div class="row d-block">
         <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
           {{self.privacy_note|richtext}}
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="current-newsletter">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <div class="newsletter">
+            {% include "newsletters/newsletter_html.html" with newsletter=self.latest_newsletter%}
+          </div>
         </div>
       </div>
     </div>
