@@ -1,1 +1,45 @@
-{{ self }}
+{% load wagtailcore_tags %}
+
+<div class="ges-slide-deck-block">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {% if self.title %}
+          <h2 class="paragraph-heading">
+            {{ self.title }}
+          </h2>
+        {% endif %}
+  
+        {% if self.description %}
+          {{ self.description|richtext }}
+        {% endif %}
+  
+        <div class="downloads">
+          {% if self.download_deck %}
+            <a href="{{ self.download_deck.url }}" target="_blank">
+              <button class="button-action">
+                <i class="fas fa-download"></i> Download Slides
+              </button>
+            </a>
+          {% endif %}
+  
+          {% if self.download_data %}
+            <a href="{{ self.download_data.url }}" target="_blank">
+              <button class="button-action">
+                <i class="fas fa-download"></i> Download Data
+              </button>
+            </a>
+          {% endif %}
+        </div>
+        
+        {% if self.last_updated %}
+          <div class="last-updated">
+            <em>
+              *Last updated: {{ self.last_updated|date:"d\/m\/y" }}
+            </em>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

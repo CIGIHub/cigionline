@@ -14,7 +14,7 @@ section {
 
   .swiper-container {
     margin-top: 2em;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
 
     .swiper-slide {
       .slide {
@@ -22,13 +22,66 @@ section {
 
         .label {
           position: absolute;
-          top: -2em;
+          top: -2.5em;
         }
 
         .caption {
           margin-top: 1em;
         }
+
+        figcaption {
+          color: $black;
+        }
       }
+    }
+  }
+}
+
+.ges-events-block {
+  margin-bottom: 2em;
+
+  article {
+    border-bottom: 1px solid $cigi-light-grey;
+    padding-top: 1em;
+    padding-bottom: 1em;
+
+    &:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  h3 {
+    margin-top: 0;
+  }
+
+  .description {
+    margin-top: 1em;
+  }
+}
+
+.ges-slide-deck-block {
+  margin-bottom: 2em;
+
+  .last-updated {
+    margin-top: 1em;
+    font-size: 0.75em;
+    color: $cigi-text-grey;
+  }
+}
+
+.search-table-container {
+  margin-top: 0;
+}
+
+.persons-list-block {
+  p {
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }

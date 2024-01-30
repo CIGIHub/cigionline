@@ -1,6 +1,19 @@
-<div>
-  events block
-  {{ self }}
+<div class="ges-events-block">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {% if self.title %}
+          <h2 class="paragraph-heading">
+            {{ self.title }}
+          </h2>
+        {% endif %}
   
-  {{ events }}
+        {% if self.project %}
+          {% for event in events %}
+            {% include 'includes/features/feature_event.html' with event=event description=True hide_cta=True %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>

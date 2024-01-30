@@ -1170,7 +1170,7 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
         template = 'streams/survey_findings_country_block.html'
 
 
-class PersonsListBlock(blocks.StructBlock):
+class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
     class BioSourceField(models.TextChoices):
         FULL_BIO = ('full_bio', 'Full Biography')
         SHORT_BIO = ('short_bio', 'Short Biography')
@@ -1189,6 +1189,15 @@ class PersonsListBlock(blocks.StructBlock):
         ],
         required=True,
     )
+    
+    implemented_themes = [
+        'ges_activity',
+    ]
+    
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PersonsListBlock, self).get_template(value, context, *args, **kwargs)
+        print(self.get_theme_template(standard_template, context, 'persons_list_block'))
+        return self.get_theme_template(standard_template, context, 'persons_list_block')
 
     class Meta:
         icon = 'group'
@@ -1253,6 +1262,7 @@ class GESHighlightsBlock(blocks.StructBlock):
 
 
 class GESEventsBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
     project = blocks.PageChooserBlock(page_type='research.ProjectPage', required=True)
 
     def get_context(self, value, parent_context=None):
@@ -1274,6 +1284,7 @@ class GESSlideDeckBlock(blocks.StructBlock):
     description = blocks.RichTextBlock(required=False)
     download_deck = DocumentChooserBlock(required=False)
     download_data = DocumentChooserBlock(required=False)
+    last_updated = blocks.DateBlock(required=False)
     
 
     class Meta:

@@ -9,7 +9,7 @@
       <a href="{% pageurl event.multimedia_page %}" class="button-action track-cta" data-cta="event-watch">
         <i class="fas fa-play"></i>&nbsp;&nbsp;WATCH
       </a>
-    {% elif not event.event_access %}
+    {% elif not event.event_access and not hide_cta %}
       <div class="button-action button-private-event">
         PRIVATE
       </div>
@@ -17,6 +17,9 @@
       <a href="{{ event.registration_url }}" class="button-action track-cta" data-cta="event-rsvp">
         <i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;RSVP
       </a>
+    {% endif %}
+    {% if description %}
+      <div class="description">{{ event.short_description|richtext }}</div>
     {% endif %}
   </div>
   <div class="event-date-circle">

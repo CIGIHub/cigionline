@@ -14,11 +14,11 @@
         {% endif %}
 
         {% if self.pdf %}
-          <button class="button-action">
-            <a href="{{ self.pdf.url }}" target="_blank">
+          <a href="{{ self.pdf.url }}" target="_blank">
+            <button class="button-action">
               <i class="fas fa-download"></i> Download PDF
-            </a>
-          </button>
+            </button>
+          </a>
         {% endif %}
 
         {% if self.slides %}
