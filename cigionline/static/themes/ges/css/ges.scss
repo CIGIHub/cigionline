@@ -1,9 +1,31 @@
 @import '../../../css/global/mixins';
 @import '../../../css/includes/swiper';
 
+@include top-bar($background-color: transparent, $background-color-scrolled: $black);
+
 section {
   &.hero {
     margin-bottom: 1.5em;
+    background-size: cover;
+
+    .hero-main {
+      position: relative;
+      z-index: 1;
+    }
+
+    p {
+      color: $white;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $black-alpha-30;
+    }
   }
 }
 
