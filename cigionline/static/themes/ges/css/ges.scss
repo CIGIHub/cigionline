@@ -3,6 +3,12 @@
 
 @include top-bar($background-color: transparent, $background-color-scrolled: $black);
 
+button {
+  &.button-action {
+    text-transform: capitalize;
+  }
+}
+
 section {
   &.hero {
     margin-bottom: 1.5em;
@@ -41,11 +47,6 @@ section {
     .swiper-slide {
       .slide {
         position: relative;
-
-        .label {
-          position: absolute;
-          top: -2.5em;
-        }
 
         .caption {
           margin-top: 1em;

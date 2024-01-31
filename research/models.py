@@ -73,6 +73,14 @@ class ProjectPage(
         related_name='+',
         verbose_name='Banner Image',
     )
+    video_banner = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Video',
+    )
     project_contacts = StreamField(
         [
             ('contact', PageChooserBlock(required=True, page_type='people.PersonPage')),
@@ -140,6 +148,7 @@ class ProjectPage(
             [
                 FieldPanel('image_hero'),
                 FieldPanel('image_banner'),
+                FieldPanel('video_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',

@@ -4,13 +4,13 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper, { Navigation, Pagination, EffectFade } from 'swiper';
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/ges.scss';
 import 'swiper/swiper-bundle.css';
 
-Swiper.use([Navigation, Pagination]);
+Swiper.use([Navigation, Pagination, EffectFade]);
 const swiperContainer = document.querySelector('.swiper-container');
 
 if (swiperContainer) {
@@ -19,6 +19,10 @@ if (swiperContainer) {
     speed: 800,
     autoHeight: true,
     grabCursor: true,
+    effect: 'fade',
+    fadeEffect: {
+      crossFade: false,
+    },
 
     navigation: {
       nextEl: '.swiper-button-next',
