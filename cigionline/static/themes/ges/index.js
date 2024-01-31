@@ -21,7 +21,7 @@ if (swiperContainer) {
     grabCursor: true,
     effect: 'fade',
     fadeEffect: {
-      crossFade: false,
+      crossFade: true,
     },
 
     navigation: {
