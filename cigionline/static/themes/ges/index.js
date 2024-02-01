@@ -18,7 +18,7 @@ if (swiperContainer) {
     slidesPerView: 1,
     speed: 800,
     autoHeight: true,
-    grabCursor: true,
+    grabCursor: false,
     effect: 'fade',
     fadeEffect: {
       crossFade: true,
@@ -128,3 +128,8 @@ if (hasTaggedPages) {
     document.getElementById('project-search-table'),
   );
 }
+
+const video = document.querySelector('.banner-bg');
+
+video.playbackRate = 0.75;
+video.play();
