@@ -8,7 +8,7 @@
 
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title %}
-  {% include "./newsletter_html.html" with newsletter=self %}
+  {% include "./newsletter_html.html" %}
   {% if request.user.is_authenticated and not self.html_file %}
     <section class="newsletter-html-string">
       <div class="container">

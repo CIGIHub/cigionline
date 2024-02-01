@@ -214,7 +214,7 @@
     </div>
 
     <!--BODY SECTION-->
-    {% for block in newsletter.body %}
+    {% for block in self.body %}
       {% include_block block %}
     {% endfor %}
 
