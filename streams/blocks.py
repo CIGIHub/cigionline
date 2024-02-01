@@ -861,7 +861,7 @@ class NewsletterBlock(blocks.StructBlock):
                     date_delta = (content_page.event_end - content_page.publishing_date).days if content_page.event_end else 0
                     start = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d")
                     end = timezone.localtime(content_page.event_end, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d") if date_delta > 0 else ''
-                    connective_string = ' through ' if date_delta > 0 else ''
+                    connective_string = ' to ' if date_delta > 0 else ''
                     date_string = f'{start}{connective_string}{end}'
                     time_string = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime(" – %-I:%M %p")
                     return f'{date_string}{time_string}'.replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
