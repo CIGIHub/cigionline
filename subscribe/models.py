@@ -116,6 +116,6 @@ class SubscribePage(
 class SubscribeForm(forms.Form):
     first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
     last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email Address'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization*'}))
     country = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Country*'}))
