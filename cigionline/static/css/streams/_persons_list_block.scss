@@ -15,6 +15,12 @@
       &:last-of-type {
         border-bottom: 0;
       }
+
+      p {
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
     }
 
     .person-info {
