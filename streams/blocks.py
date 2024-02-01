@@ -857,7 +857,15 @@ class NewsletterBlock(blocks.StructBlock):
                 context['url'] = content_page.full_url
 
             if content_type == 'Event' and context.get('text'):
-                event_time = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
+                def construct_event_time():
+                    date_delta = (content_page.event_end - content_page.publishing_date).days if content_page.event_end else 0
+                    start = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d")
+                    end = timezone.localtime(content_page.event_end, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d") if date_delta > 0 else ''
+                    connective_string = ' through ' if date_delta > 0 else ''
+                    date_string = f'{start}{connective_string}{end}'
+                    time_string = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime(" – %-I:%M %p")
+                    return f'{date_string}{time_string}'.replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
+                event_time = construct_event_time()
                 event_time_zone = f' {content_page.time_zone_label}' if content_page.time_zone_label else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
