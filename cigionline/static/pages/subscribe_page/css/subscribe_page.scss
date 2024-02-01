@@ -12,31 +12,24 @@ hr {
 
 .cigi-subscribe-form {
   p {
+    margin-bottom: 0;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  div {
     margin-bottom: 2em;
 
-    &:first-of-type {
-      display: flex;
-      flex-direction: row-reverse;
-      justify-content: flex-end;
-
-      label {
-        display: block;
-      }
+    p {
+      font-style: italic;
+      margin-top: 0;
     }
   }
 
   label {
     display: none;
-
-    &[for='id_confirmation'] {
-      display: block;
-      margin: 0 0 0 0.5em;
-
-      &::after {
-        color: $cigi-primary-colour;
-        content: '*';
-      }
-    }
   }
 
   input {
