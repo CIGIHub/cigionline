@@ -85,7 +85,7 @@ if 'CLOUDFLARE_EMAIL' in os.environ \
 PLATFORMSH_DB_RELATIONSHIP="postgresql"
 
 if (os.getenv('PLATFORM_PROJECT_ENTROPY') is not None):
-        SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
+    SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
 
 if 'PLATFORM_RELATIONSHIPS' in os.environ:
     PLATFORM_RELATIONSHIPS = json.loads(base64.b64decode(os.environ['PLATFORM_RELATIONSHIPS']))

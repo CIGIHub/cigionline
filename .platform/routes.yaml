@@ -65,4 +65,3 @@
 "https://{default}/interactives/2023annualreport/static/":
     type: proxy
     to: "https://d334fruegp77ju.cloudfront.net/"
-    
