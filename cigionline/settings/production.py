@@ -1,5 +1,7 @@
 import dj_database_url
 import os
+import json
+import base64
 from .base import *  # noqa: F403
 
 DEBUG = False
@@ -79,6 +81,65 @@ if 'CLOUDFLARE_EMAIL' in os.environ \
             'ZONEID': os.environ['CLOUDFLARE_ZONEID'],
         },
     }
+
+PLATFORMSH_DB_RELATIONSHIP="postgresql"
+
+if (os.getenv('PLATFORM_PROJECT_ENTROPY') is not None):
+    SECRET_KEY = os.getenv('PLATFORM_PROJECT_ENTROPY')
+
+if 'PLATFORM_RELATIONSHIPS' in os.environ:
+    PLATFORM_RELATIONSHIPS = json.loads(base64.b64decode(os.environ['PLATFORM_RELATIONSHIPS']))
+
+    if 'postgresql' in PLATFORM_RELATIONSHIPS:
+        db_settings = PLATFORM_RELATIONSHIPS[PLATFORMSH_DB_RELATIONSHIP][0]
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': db_settings['path'],
+                'USER': db_settings['username'],
+                'PASSWORD': db_settings['password'],
+                'HOST': db_settings['host'],
+                'PORT': db_settings['port'],
+            }
+        }
+
+    if 'redis' in PLATFORM_RELATIONSHIPS:
+        redis_info = PLATFORM_RELATIONSHIPS['redis'][0]
+        redis_url = f"redis://{redis_info['host']}:{redis_info['port']}"
+        CACHES = {
+            'default': {
+                'BACKEND': 'django_redis.cache.RedisCache',
+                'LOCATION': redis_url,
+                'OPTIONS': {
+                    'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                },
+            },
+            'renditions': {
+                'BACKEND': 'django_redis.cache.RedisCache',
+                'LOCATION': redis_url,
+                'TIMEOUT': 31536000,
+                'OPTIONS': {
+                    'MAX_RETRIES': 200,
+                    'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                },
+            },
+        }
+
+    if 'elasticsearch' in PLATFORM_RELATIONSHIPS:
+        es_info = PLATFORM_RELATIONSHIPS['elasticsearch'][0]
+        es_host = es_info['host']
+        es_port = es_info['port']
+
+        WAGTAILSEARCH_BACKENDS = {
+            'default': {
+                'BACKEND': 'wagtail.search.backends.elasticsearch7',
+                'URLS': [f'http://{es_host}:{es_port}'],
+                'INDEX': 'wagtail',
+                'TIMEOUT': 30,
+                'OPTIONS': {},
+                'INDEX_SETTINGS': {},
+            },
+        }
 
 # Use AWS S3 for file storage
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html

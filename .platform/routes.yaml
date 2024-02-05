@@ -1,0 +1,67 @@
+"https://{default}/":
+    type: upstream
+    upstream: "cigionline:http"
+
+"https://{default}/static/":
+    type: proxy
+    to: "https://cigionline-static-production-2.s3.amazonaws.com/static/"
+
+"https://www.{default}/":
+    type: redirect
+    to: "https://{default}/"
+
+"https://www.{default}/sites/default/files/":
+    type: redirect
+    to: "https://cigionline-static-legacy.s3-website-us-east-1.amazonaws.com/"
+
+"https://{default}/interactives/2017annualreport/":
+    type: proxy
+    to: "https://cigionline-interactives-2017annualreport.s3-website.ca-central-1.amazonaws.com/"
+
+"https://{default}/interactives/2018annualreport/":
+    type: proxy
+    to: "https://cigi-ar2018.herokuapp.com/"
+
+"https://{default}/interactives/2018annualreport/static/":
+    type: proxy
+    to: "https://d5dj8rbahyb1z.cloudfront.net/"
+
+"https://{default}/interactives/2019annualreport/":
+    type: proxy
+    to: "https://cigi-ar2019.herokuapp.com/"
+
+"https://{default}/interactives/2019annualreport/static/":
+    type: proxy
+    to: "https://d3qt2nvlaf724m.cloudfront.net/"
+
+"https://{default}/interactives/2020annualreport/":
+    type: proxy
+    to: "https://cigi-ar2020.herokuapp.com/"
+
+"https://{default}/interactives/2020annualreport/static/":
+    type: proxy
+    to: "https://dfwe7eulpplcy.cloudfront.net/"
+
+"https://{default}/interactives/2021annualreport/":
+    type: proxy
+    to: "https://cigi-ar2021.herokuapp.com/"
+
+"https://{default}/interactives/2021annualreport/static/":
+    type: proxy
+    to: "https://d11pseqgj6gu3i.cloudfront.net/"
+
+"https://{default}/interactives/2022annualreport/":
+    type: proxy
+    to: "https://cigi-ar2022.herokuapp.com/"
+
+"https://{default}/interactives/2022annualreport/static/":
+    type: proxy
+    to: "https://dqkabpbei5bo6.cloudfront.net/"
+
+"https://{default}/interactives/2023annualreport/":
+    type: proxy
+    to: "https://cigi-ar2023.herokuapp.com/"
+
+"https://{default}/interactives/2023annualreport/static/":
+    type: proxy
+    to: "https://d334fruegp77ju.cloudfront.net/"

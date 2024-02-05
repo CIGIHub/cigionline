@@ -1,0 +1,30 @@
+# The name given to the Elasticsearch service (lowercase alphanumeric only).
+elasticsearch:
+    # The type of your service (elasticsearch), which uses the format
+    # 'type:version'. Be sure to consult the Elasticsearch documentation
+    # (https://docs.platform.sh/add-services/elasticsearch.html#supported-versions)
+    # when choosing a version. If you specify a version number which is not available,
+    # the CLI will return an error.
+    type: elasticsearch:7.2
+    # The disk attribute is the size of the persistent disk (in MB) allocated to the service.
+    disk: 1024
+
+# The name given to the Redis service (lowercase alphanumeric only).
+redis:
+    # The type of your service (redis), which uses the format
+    # 'type:version'. Be sure to consult the Redis documentation
+    # (https://docs.platform.sh/add-services/redis.html#supported-versions)
+    # when choosing a version. If you specify a version number which is not available,
+    # the CLI will return an error.
+    type: redis:7.0
+
+# The name given to the PostgreSQL service (lowercase alphanumeric only).
+postgresql:
+    # The type of your service (postgresql), which uses the format
+    # 'type:version'. Be sure to consult the PostgreSQL documentation
+    # (https://docs.platform.sh/add-services/postgresql.html#supported-versions)
+    # when choosing a version. If you specify a version number which is not available,
+    # the CLI will return an error.
+    type: postgresql:16
+    # The disk attribute is the size of the persistent disk (in MB) allocated to the service.
+    disk: 2048
