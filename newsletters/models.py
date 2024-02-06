@@ -1,6 +1,7 @@
 from core.models import (
     BasicPageAbstract,
     SearchablePageAbstract,
+    ThemeablePageAbstract,
 )
 from django.db import models
 from django.template.loader import render_to_string
@@ -33,7 +34,7 @@ class NewsletterListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         verbose_name = 'Newsletter List Page'
 
 
-class NewsletterPage(Page):
+class NewsletterPage(ThemeablePageAbstract, Page):
     body = StreamField(
         [
             ('advertisement_block', AdvertisementBlock()),
@@ -56,6 +57,12 @@ class NewsletterPage(Page):
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(NewsletterPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/newsletter_page.html'
+        return standard_template
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -71,6 +78,10 @@ class NewsletterPage(Page):
             heading='HTML File',
             classname='collapsible collapsed',
         ),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
     ]
 
     def html_string(self):
