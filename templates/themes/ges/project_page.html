@@ -50,7 +50,57 @@
 {% block content %}
   {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner video_banner=self.video_banner %}
 
-  {% include "includes/body.html" with body=self.body %}
+  {% include "includes/body.html" with body=self.body heading="About" %}
+
+  {% if self.project_members %}
+    <div class="container persons-list-block">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2 class="block-title">Team Members</h2>
+          <ul class="persons-list">
+            {% for member in self.project_members %}
+              <li>
+                <div class="person-info">
+                  <a href="{{ member.value.url }}" class="person-photo">
+                    <div class="img-wrapper">
+                      {% if member.value.image_square %}
+                        {% image member.value.image_square fill-300x300 %}
+                      {% endif %}
+                    </div>
+                  </a>
+          
+                  <div>
+                    <a href="{{ member.value.url }}" class="person-name">{{ member.value.title }}</a>
+                    <div class="person-function">
+                      {{ member.value.position }}
+                    </div>
+                  </div>
+                </div>
+                <div class="person-description">
+                  {{ member.value.short_bio|safe }}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if self.contact %}
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <h2 class="block-title">Contact Us</h2>
+            <div class="contact-info">
+              {{ self.contact|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
   <section>
     <div class="container">
