@@ -14,28 +14,22 @@ hr {
   p {
     margin-bottom: 0;
 
-    &:first-of-type {
-      display: flex;
-      flex-direction: row-reverse;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 
-      label {
-        display: block;
-      }
+  div {
+    margin-bottom: 2em;
+
+    p {
+      font-style: italic;
+      margin-top: 0;
     }
   }
 
   label {
     display: none;
-
-    &[for='id_confirmation'] {
-      display: block;
-      margin: 0 0 2em 0.5em;
-
-      &::after {
-        color: $cigi-primary-colour;
-        content: '*';
-      }
-    }
   }
 
   input {
@@ -48,10 +42,6 @@ hr {
       outline: none;
       padding: 0.5em 1em;
       width: 100%;
-    }
-
-    &[type='checkbox'] {
-      margin-top: 0.3em;
     }
   }
 
