@@ -1,0 +1,84 @@
+section {
+  &.article-hero {
+    &.special-theme {
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 3em;
+      }
+      font-family: $special-opinions-font-primary;
+
+      h1 {
+        font-size: 3.2em;
+        font-weight: 400;
+      }
+
+      h2 {
+        font-size: 1.4em;
+        line-height: 1.1em;
+        margin: auto 5%;
+      }
+
+      h1,
+      h2 {
+        font-family: $special-opinions-font-primary;
+      }
+  
+      .authors, 
+      .date,
+      .topics {
+        font-family: $special-opinions-font-secondary;
+        font-size: 0.75em;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+
+      .authors {
+        margin-bottom: 0;
+      }
+  
+      .topics {
+        @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
+      }
+
+      .social-links-anchor {
+        @include media-breakpoint-up(lg) {
+          position: relative;
+        }
+        align-items: center;
+        flex-direction: column;
+        
+        ul {
+          &.social-share-list {
+            &.no-stack {
+              @include media-breakpoint-up(lg) {
+                position: absolute;
+                left: 0;
+                top: 0;
+                margin-top: 1.5em;
+                margin-left: 0.75rem; // To match container padding
+                display: block;
+      
+                li {
+                  padding: 0.25em 0;
+      
+                  a {
+                    margin: 0;
+                    padding: 0;
+                  }
+                }
+      
+                i {
+                  font-size: 1rem;
+                }
+              }
+
+              .fab:hover {
+                color: $cigi-primary-colour
+              }
+            }
+          }
+        }
+        
+      }
+    }
+  }
+}
