@@ -110,3 +110,11 @@ section {
     }
   }
 }
+
+.persons-list-block {
+  h2 {
+    &.block-title {
+      padding: 0;
+    }
+  }
+}
