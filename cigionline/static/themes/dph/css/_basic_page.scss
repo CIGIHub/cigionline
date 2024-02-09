@@ -164,6 +164,18 @@ body {
         border-bottom: 1px solid $cigi-text-grey;
       }
 
+      .publications-list__publication__img {
+        &:hover {
+          img {
+            scale: 1.025;
+          }
+        }
+        img {
+          border: 1px solid $cigi-medium-grey;
+          transition: scale 0.2s ease;
+        }
+      }
+
       .publications-list__publication__right {
         display: flex;
         flex-direction: column;
