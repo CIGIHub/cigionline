@@ -104,6 +104,10 @@ section {
 }
 
 .persons-list-block {
+  h2 {
+    margin-top: 1.5em;
+  }
+
   p {
     &:last-child {
       margin-bottom: 0;
