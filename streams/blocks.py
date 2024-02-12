@@ -1198,12 +1198,23 @@ class PersonsListBlock(blocks.StructBlock):
 
 
 class PublicastionsListBlock(blocks.StructBlock):
+    publication_type = blocks.PageChooserBlock(page_type='publications.PublicationTypePage', required=False, help_text='Select a publication type to automatically populate with this type of publications.')
     publications = blocks.StreamBlock(
         [
             ('publication', blocks.PageChooserBlock(page_type='publications.PublicationPage', required=True)),
         ],
-        required=True,
+        required=False,
     )
+
+    def get_publications_by_type(self, publication_type):
+        from publications.models import PublicationPage
+        return PublicationPage.objects.live().public().filter(publication_type__title=publication_type)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        if value.get('publication_type'):
+            context['publications_by_type'] = self.get_publications_by_type(value.get('publication_type').specific.title)
+        return context
 
     class Meta:
         icon = 'doc-full'
