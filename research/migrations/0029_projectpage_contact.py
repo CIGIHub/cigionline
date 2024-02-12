@@ -7,7 +7,7 @@ import wagtail.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('research', '0026_auto_20240111_0946'),
+        ('research', '0028_auto_20240209_1333'),
     ]
 
     operations = [
