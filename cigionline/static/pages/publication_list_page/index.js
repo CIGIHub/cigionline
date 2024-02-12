@@ -13,6 +13,15 @@ ReactDOM.render(
     contenttypes={[
       'Publication',
     ]}
+    contentsubtypes={[
+      'Books',
+      'CIGI Papers',
+      'Conference Reports',
+      'Essay Series',
+      'Policy Briefs',
+      'Policy Memos',
+      'Special Reports',
+    ]}
     fields={[
       'authors',
       'pdf_download',
