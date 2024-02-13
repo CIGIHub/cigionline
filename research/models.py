@@ -186,7 +186,7 @@ class ProjectPage(
     parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
     subpage_types = []
     templates = 'research/project_page.html'
-    
+
     @property
     def has_tagged_pages(self):
         return ContentPage.objects.live().filter(projects=self).exists()
