@@ -1,4 +1,3 @@
-/* global FB */
 /* global fbq */
 import 'bootstrap/dist/js/bootstrap.bundle';
 import React from 'react';
