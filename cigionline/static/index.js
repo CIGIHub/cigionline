@@ -82,15 +82,6 @@ $(function() {
     e.stopPropagation();
   });
 
-  // Facebook Share buttons
-  $('.facebook-share-link').on('click', function() {
-    const href = $(this).data('url');
-    FB.ui({
-      method: 'share',
-      href,
-    }, function(/* response */) {});
-  });
-
   $('.dropdown.custom-dropdown.keep-open').on('hide.bs.dropdown', function(e) {
     if (e.clickEvent !== undefined) {
       const target = $(e.clickEvent.target);
