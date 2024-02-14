@@ -1,9 +1,9 @@
-{% load wagtailimages_tags %}
+{% load core_tags %}
 
 {% if self.image_override %}
-  {% image self.image_override fill-600x238 as image %}
+  {% define self.image_override as image %}
 {% else %}
-  {% image self.content.specific.image_hero fill-600x238 as image %}
+  {% define self.content.specific.image_hero as image %}
 {% endif %}
 {% if image %}
 <!--[if mso | IE]>

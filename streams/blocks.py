@@ -822,7 +822,7 @@ class NewsletterBlock(blocks.StructBlock):
             if value.get('image').file.url.endswith('.gif'):
                 context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").file.name}'
             else:
-                context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-600x238").file.name}'
+                context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-1200x595").file.name}'
 
         if value.get('content'):
             content_page = value.get('content').specific
@@ -842,12 +842,12 @@ class NewsletterBlock(blocks.StructBlock):
                 if value.get('image_override').file.url.endswith('.gif'):
                     context['image_url'] = value.get("image_override").file.name
                 else:
-                    context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
+                    context['image_url'] = value.get("image_override").get_rendition("fill-1200x595").file.name
             elif content_type != 'other' and content_page.image_hero:
                 if content_page.image_hero.file.url.endswith('.gif'):
                     context['image_url'] = content_page.image_hero.file.name
                 else:
-                    context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").file.name
+                    context['image_url'] = content_page.image_hero.get_rendition("fill-1200x595").file.name
                 context['image_alt'] = content_page.image_hero.caption
 
             if context.get('image_url'):
