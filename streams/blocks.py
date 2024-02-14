@@ -857,7 +857,20 @@ class NewsletterBlock(blocks.StructBlock):
                 context['url'] = content_page.full_url
 
             if content_type == 'Event' and context.get('text'):
-                event_time = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d – %-I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
+                def construct_event_time():
+                    date_delta = (content_page.event_end - content_page.publishing_date).days if content_page.event_end else 0
+                    start = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d")
+                    end = timezone.localtime(content_page.event_end, pytz.timezone(settings.TIME_ZONE)).strftime("%b. %-d") if date_delta > 0 else ''
+                    if date_delta > 1:
+                        connective_string = ' to '
+                    elif date_delta > 0:
+                        connective_string = ' and '
+                    else:
+                        connective_string = ''
+                    date_string = f'{start}{connective_string}{end}'
+                    time_string = timezone.localtime(content_page.publishing_date, pytz.timezone(settings.TIME_ZONE)).strftime(" – %-I:%M %p")
+                    return f'{date_string}{time_string}'.replace('AM', 'a.m.').replace('PM', 'p.m.').replace('May.', 'May')
+                event_time = construct_event_time()
                 event_time_zone = f' {content_page.time_zone_label}' if content_page.time_zone_label else ''
                 event_location = f' – {content_page.location_city}' if content_page.location_city else ''
                 event_country = f', {content_page.location_country}' if content_page.location_country else ''
@@ -1198,12 +1211,23 @@ class PersonsListBlock(blocks.StructBlock):
 
 
 class PublicastionsListBlock(blocks.StructBlock):
+    publication_type = blocks.PageChooserBlock(page_type='publications.PublicationTypePage', required=False, help_text='Select a publication type to automatically populate with this type of publications.')
     publications = blocks.StreamBlock(
         [
             ('publication', blocks.PageChooserBlock(page_type='publications.PublicationPage', required=True)),
         ],
-        required=True,
+        required=False,
     )
+
+    def get_publications_by_type(self, publication_type):
+        from publications.models import PublicationPage
+        return PublicationPage.objects.live().public().filter(publication_type__title=publication_type)
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        if value.get('publication_type'):
+            context['publications_by_type'] = self.get_publications_by_type(value.get('publication_type').specific.title)
+        return context
 
     class Meta:
         icon = 'doc-full'

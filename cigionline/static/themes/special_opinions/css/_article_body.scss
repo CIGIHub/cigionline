@@ -1,0 +1,15 @@
+section {
+  &.body {
+    font-family: $special-opinions-font-primary;
+
+    h2 {
+      font-weight: 600;
+    }
+
+    .drop-caps {
+      border: 0;
+      font-size: 3.25em;
+      line-height: 0.7em;
+    }
+  }
+}

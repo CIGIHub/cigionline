@@ -179,7 +179,7 @@ class HomePage(Page):
             featured_publications = PublicationPage.objects.prefetch_related(
                 'authors__author',
                 'topics',
-            ).live().public().exclude(id__in=featured_page_ids).order_by('-publishing_date')[:4]
+            ).live().public().exclude(id__in=featured_page_ids).exclude(publication_type__title='Working Paper').order_by('-publishing_date')[:4]
 
         return featured_publications
 

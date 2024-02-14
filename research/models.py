@@ -45,6 +45,11 @@ class ProjectPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    contact = RichTextField(
+        blank=True,
+        null=True,
+        features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'],
+    )
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             BasicPageAbstract.body_poster_block,
@@ -113,15 +118,14 @@ class ProjectPage(
             [
                 FieldPanel('publishing_date'),
                 FieldPanel('project_types'),
+                FieldPanel('contact'),
             ],
             heading='General Information',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                FieldPanel('project_leads'),
                 FieldPanel('project_members'),
-                FieldPanel('project_contacts'),
             ],
             heading='People',
             classname='collapsible collapsed',

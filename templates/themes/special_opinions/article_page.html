@@ -1,0 +1,38 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags core_tags webpack_loader %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/rwn6tvm.css">
+{% endblock %}
+{% block theme_css %}
+  {% render_bundle 'themeSpecialOpinions' 'css' %}
+{% endblock %}
+{% block theme_js %}
+  {% render_bundle 'themeSpecialOpinions' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}special-theme{% endblock %}
+
+{% block hero %}
+  {% include './includes/hero_article.html' with title=self.title subtitle=self.subtitle %}
+  {% if not self.expired_image and self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <figure class="article-image-hero">
+            {% if self.image_hero.file.url|file_extension == '.gif' %}
+              <img src="{{self.image_hero.file.url}}" alt="{{self.image_hero.caption}}" />
+            {% else %}
+              {% image self.image_hero width-1760 %}
+            {% endif %}
+            {% if self.image_hero.caption %}
+              <figcaption>
+                {{ self.image_hero.caption }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
