@@ -1,11 +1,18 @@
 from core.models import (
     BasicPageAbstract,
     SearchablePageAbstract,
-    ThemeablePageAbstract,
 )
 from django.db import models
 from django.template.loader import render_to_string
-from streams.blocks import (AdvertisementBlock, ContentBlock, FeaturedContentBlock, SocialBlock, TextBlock)
+from streams.blocks import (
+    AdvertisementBlock,
+    ContentBlock,
+    FeaturedContentBlock,
+    SocialBlock,
+    TextBlock,
+    AdvertisementBlockLarge,
+    FeaturedContentBlockLarge,
+)
 from wagtail.admin.panels import MultiFieldPanel, FieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Page
@@ -34,12 +41,14 @@ class NewsletterListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         verbose_name = 'Newsletter List Page'
 
 
-class NewsletterPage(ThemeablePageAbstract, Page):
+class NewsletterPage(Page):
     body = StreamField(
         [
-            ('advertisement_block', AdvertisementBlock()),
+            ('advertisement_block', AdvertisementBlock(label='Advertisement Block (Old)', classname='hidden')),
+            ('advertisement_block_large', AdvertisementBlockLarge()),
             ('content_block', ContentBlock()),
-            ('featured_content_block', FeaturedContentBlock()),
+            ('featured_content_block', FeaturedContentBlock(label='Featured Content Block (Old)', classname='hidden')),
+            ('featured_content_block_large', FeaturedContentBlockLarge()),
             ('social_block', SocialBlock()),
             ('text_block', TextBlock()),
         ],
@@ -57,12 +66,6 @@ class NewsletterPage(ThemeablePageAbstract, Page):
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
-    def get_template(self, request, *args, **kwargs):
-        standard_template = super(NewsletterPage, self).get_template(request, *args, **kwargs)
-        if self.theme:
-            return f'themes/{self.get_theme_dir()}/newsletter_page.html'
-        return standard_template
-
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -78,10 +81,6 @@ class NewsletterPage(ThemeablePageAbstract, Page):
             heading='HTML File',
             classname='collapsible collapsed',
         ),
-    ]
-
-    settings_panels = Page.settings_panels + [
-        ThemeablePageAbstract.theme_panel,
     ]
 
     def html_string(self):
