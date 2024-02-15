@@ -44,10 +44,10 @@ class NewsletterListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 class NewsletterPage(Page):
     body = StreamField(
         [
-            ('advertisement_block', AdvertisementBlock(label='Advertisement Block (Old)', classname='hidden')),
+            ('advertisement_block', AdvertisementBlock(label='Advertisement Block (Old)')),
+            ('featured_content_block', FeaturedContentBlock(label='Featured Content Block (Old)')),
             ('advertisement_block_large', AdvertisementBlockLarge()),
             ('content_block', ContentBlock()),
-            ('featured_content_block', FeaturedContentBlock(label='Featured Content Block (Old)', classname='hidden')),
             ('featured_content_block_large', FeaturedContentBlockLarge()),
             ('social_block', SocialBlock()),
             ('text_block', TextBlock()),
@@ -72,7 +72,7 @@ class NewsletterPage(Page):
                 FieldPanel('body'),
             ],
             heading='Body',
-            classname='collapsible collapsed',
+            classname='collapsible collapsed newsletter-streamfield',
         ),
         MultiFieldPanel(
             [

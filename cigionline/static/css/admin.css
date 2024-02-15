@@ -37,3 +37,12 @@
   counter-increment: featured-item;
   content: 'Item ' counter(featured-item) ': ';
 }
+
+.newsletter-streamfield {
+  .w-combobox__optgroup {
+    [id$="item-0"],
+    [id$="item-1"] {
+      display: none;
+    }
+  }
+}
