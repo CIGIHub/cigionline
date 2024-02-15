@@ -859,6 +859,9 @@ class NewsletterBlock(blocks.StructBlock):
             if context.get('image_url'):
                 context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url"]}'
 
+            if context.get('image_url_large'):
+                context['image_url_large'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url_large"]}'
+
             if not value.get('url'):
                 context['url'] = content_page.full_url
 
