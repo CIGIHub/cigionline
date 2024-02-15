@@ -38,7 +38,7 @@
   content: 'Item ' counter(featured-item) ': ';
 }
 
-.newsletter-streamfield {
+.newsletter-streamfield-menu {
   .w-combobox__optgroup {
     [id$="item-0"],
     [id$="item-1"] {

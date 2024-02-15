@@ -72,7 +72,7 @@ class NewsletterPage(Page):
                 FieldPanel('body'),
             ],
             heading='Body',
-            classname='collapsible collapsed newsletter-streamfield',
+            classname='collapsible collapsed newsletter-streamfield-menu',
         ),
         MultiFieldPanel(
             [
