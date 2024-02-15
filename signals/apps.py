@@ -21,7 +21,7 @@ class InstanceInfo():
         self.content_type = 'Articles' if instance.contenttype == 'Opinion' else instance.contenttype  # adjust ContentPage.contenttype to match page_type
         self.publisher = f'{instance.get_latest_revision().user.first_name} {instance.get_latest_revision().user.last_name}'
         self.relative_url = instance.get_url_parts()[-1]  # last item in the tuple is the relative url to root; e.g. /articles/an-article/
-    
+
 
 class NotificationFlags(InstanceInfo):
     def __init__(self, instance):

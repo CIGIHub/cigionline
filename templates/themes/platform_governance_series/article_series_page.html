@@ -52,8 +52,8 @@
               <div class="hero-content">
                 {% include "includes/topics.html" with topics=self.topics_sorted %}
                 <div class="platform-governance-series-article-series-social">
-                  <a href="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-                    <i class="fa-brands fa-facebook-square fa-lg"></i>
+                  <a class="linkedin-share-link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin-in icon"></i>
                   </a>
                   <a href="twitter-share-link" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
                     <i class="fa-brands fa-x-twitter fa-lg"></i>

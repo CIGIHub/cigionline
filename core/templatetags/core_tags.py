@@ -73,6 +73,7 @@ def trim_trailing_slash(value):
         return value[:-1]
     return value
 
+
 @register.filter
 @stringfilter
 def dash_case(value):

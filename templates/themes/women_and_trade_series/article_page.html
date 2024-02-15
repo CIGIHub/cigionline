@@ -31,9 +31,9 @@
           </div>
         </div>
         <ul class="social-share-list">
-          <li>
-            <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}">
-              <i class="fa-brands fa-facebook-square icon"></i>
+          <li class="linkedin">
+            <a class="linkedin-share-link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-linkedin-in icon"></i>
             </a>
           </li>
           <li>

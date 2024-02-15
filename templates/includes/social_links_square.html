@@ -1,12 +1,6 @@
 {% load core_tags %}
 
 <ul class="social-share-list-square">
-  <li class="facebook">
-    <a class="facebook-share-link" data-url="{{ request.build_absolute_uri|slice:':-1' }}" target="_blank"
-      rel="noopener noreferrer">
-      <i class="fa-brands fa-facebook-square"></i>
-    </a>
-  </li>
   <li class="twitter">
     <a class="twitter-share-link"
       href="https://twitter.com/share?text={{ title|social_string }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}"
