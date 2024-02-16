@@ -89,68 +89,81 @@
               <div class="col col-md-10 col-lg-8">
                 <div class="expertise-container">
                   {% if page.expertise %}
-                    <div class="meta">Expertise</div>
-                    <div class="meta">
-                      {% for expertise in page.expertise %}
-                        <span class="expertise-item">{{ expertise }}</span>
-                      {% endfor %}
+                    <div class="related-container">
+                      <div class="meta meta-title">Expertise</div>
+                      <div class="meta">
+                        {% for expertise in page.expertise %}
+                          <span class="expertise-item">{{ expertise }}</span>
+                        {% endfor %}
+                      </div>
                     </div>
-                    {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
-                      <hr>
-                    {% endif %}
                   {% endif %}
 
-                  <div class="contact">
-                    {% if page.phone_number_clean %}
-                      <div class="contact-item">
-                        <i class="fa fa-phone" aria-hidden="true"></i>
-                        {{ page.phone_number_clean }}
+                  {% if page.projects %}
+                    <div class="related-container">
+                      <div class="meta meta-title">Programs</div>
+                      <div class="meta">
+                        {% for project in page.projects.all %}
+                          <span class="expertise-item">{{ project.title }}</span>
+                        {% endfor %}
                       </div>
-                    {% endif %}
+                    </div>
+                  {% endif %}
 
-                    {% if page.email %}
-                      <div class="contact-item">
-                        <i class="fas fa-envelope" aria-hidden="true"></i>
-                        <a href="mailto:{{ page.email }}">{{ page.email }}</a>
-                      </div>
-                    {% endif %}
+                  {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
+                    <hr>
+                    <div class="contact">
+                      {% if page.phone_number_clean %}
+                        <div class="contact-item">
+                          <i class="fa fa-phone" aria-hidden="true"></i>
+                          {{ page.phone_number_clean }}
+                        </div>
+                      {% endif %}
 
-                    {% if page.twitter_username %}
-                      <div class="contact-item">
-                        <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
-                        <a href="https://twitter.com/{{ page.twitter_username }}" target="_blank">{{ page.twitter_username }}</a>
-                      </div>
-                    {% endif %}
+                      {% if page.email %}
+                        <div class="contact-item">
+                          <i class="fas fa-envelope" aria-hidden="true"></i>
+                          <a href="mailto:{{ page.email }}">{{ page.email }}</a>
+                        </div>
+                      {% endif %}
 
-                    {% if page.linkedin_url %}
-                      <div class="contact-item">
-                        <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
-                        <a href="{{ page.linkedin_url }}" target="_blank">{{ page.linkedin_url|no_protocol }}</a>
-                      </div>
-                    {% endif %}
+                      {% if page.twitter_username %}
+                        <div class="contact-item">
+                          <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+                          <a href="https://twitter.com/{{ page.twitter_username }}" target="_blank">{{ page.twitter_username }}</a>
+                        </div>
+                      {% endif %}
 
-                    {% if page.website %}
-                      <div class="contact-item">
-                        <i class="fas fa-link" aria-hidden="true"></i>
-                        <a href="{{ page.website }}" target="_blank">{{ page.website|no_protocol }}</a>
-                      </div>
-                    {% endif %}
+                      {% if page.linkedin_url %}
+                        <div class="contact-item">
+                          <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                          <a href="{{ page.linkedin_url }}" target="_blank">{{ page.linkedin_url|no_protocol }}</a>
+                        </div>
+                      {% endif %}
 
-                    {% if page.curriculum_vitae %}
-                      <div class="contact-item">
-                        <i class="far fa-newspaper" aria-hidden="true"></i>
-                        <a href="{{ page.curriculum_vitae.url }}" target="_blank">Curriculum Vitae</a>
-                      </div>
-                    {% endif %}
+                      {% if page.website %}
+                        <div class="contact-item">
+                          <i class="fas fa-link" aria-hidden="true"></i>
+                          <a href="{{ page.website }}" target="_blank">{{ page.website|no_protocol }}</a>
+                        </div>
+                      {% endif %}
 
-                    {% if page.image_media and page.person_types.all|any_in_list:'Expert,Board Member,Media Contact' %}
-                      {% image page.image_media original as high_res %}
-                      <div class="contact-item">
-                        <i class="fas fa-download" aria-hidden="true"></i>
-                        <a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a>
-                      </div>
-                    {% endif %}
-                  </div>
+                      {% if page.curriculum_vitae %}
+                        <div class="contact-item">
+                          <i class="far fa-newspaper" aria-hidden="true"></i>
+                          <a href="{{ page.curriculum_vitae.url }}" target="_blank">Curriculum Vitae</a>
+                        </div>
+                      {% endif %}
+
+                      {% if page.image_media and page.person_types.all|any_in_list:'Expert,Board Member,Media Contact' %}
+                        {% image page.image_media original as high_res %}
+                        <div class="contact-item">
+                          <i class="fas fa-download" aria-hidden="true"></i>
+                          <a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
