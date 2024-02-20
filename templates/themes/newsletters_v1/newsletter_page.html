@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'newsletterPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title %}
+  {% include "newsletters/newsletter_html.html" %}
+  {% if request.user.is_authenticated and not self.html_file %}
+    <section class="newsletter-html-string">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <textarea rows="10" readonly>{{ self.html_string }}</textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock content %}
