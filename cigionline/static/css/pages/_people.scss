@@ -40,6 +40,12 @@
         border: 1px solid $cigi-light-grey;
         padding: 1em;
 
+        .related-container {
+          &:not(:last-child) {
+            margin-bottom: 1em;
+          }
+        }
+
         .expertise-item {
           @include comma-separated;
 
