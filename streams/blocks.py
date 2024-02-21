@@ -821,8 +821,10 @@ class NewsletterBlock(blocks.StructBlock):
         if value.get('image'):
             if value.get('image').file.url.endswith('.gif'):
                 context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").file.name}'
+                context['image_url_large'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").file.name}'
             else:
-                context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-600x238").file.name}'
+                context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-1200x476").file.name}'
+                context['image_url_large'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{value.get("image").get_rendition("fill-1200x595").file.name}'
 
         if value.get('content'):
             content_page = value.get('content').specific
@@ -841,17 +843,24 @@ class NewsletterBlock(blocks.StructBlock):
             if value.get('image_override'):
                 if value.get('image_override').file.url.endswith('.gif'):
                     context['image_url'] = value.get("image_override").file.name
+                    context['image_url_large'] = value.get("image_override").file.name
                 else:
-                    context['image_url'] = value.get("image_override").get_rendition("fill-600x238").file.name
+                    context['image_url'] = value.get("image_override").get_rendition("fill-1200x476").file.name
+                    context['image_url_large'] = value.get("image_override").get_rendition("fill-1200x595").file.name
             elif content_type != 'other' and content_page.image_hero:
                 if content_page.image_hero.file.url.endswith('.gif'):
                     context['image_url'] = content_page.image_hero.file.name
+                    context['image_url_large'] = content_page.image_hero.file.name
                 else:
-                    context['image_url'] = content_page.image_hero.get_rendition("fill-600x238").file.name
+                    context['image_url'] = content_page.image_hero.get_rendition("fill-1200x476").file.name
+                    context['image_url_large'] = content_page.image_hero.get_rendition("fill-1200x595").file.name
                 context['image_alt'] = content_page.image_hero.caption
 
             if context.get('image_url'):
                 context['image_url'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url"]}'
+
+            if context.get('image_url_large'):
+                context['image_url_large'] = f'{context["page"].get_site().root_url}{settings.STATIC_URL}{context["image_url_large"]}'
 
             if not value.get('url'):
                 context['url'] = content_page.full_url
@@ -919,6 +928,14 @@ class AdvertisementBlock(NewsletterBlock):
         template = 'streams/newsletter/advertisement_block.html'
 
 
+class AdvertisementBlockLarge(AdvertisementBlock):
+
+    class Meta:
+        icon = 'image'
+        label = 'Advertisement'
+        template = 'streams/newsletter/advertisement_block_large.html'
+
+
 class ContentBlock(NewsletterBlock):
     content = blocks.PageChooserBlock(required=False)
     url = blocks.URLBlock(required=False)
@@ -962,6 +979,14 @@ class FeaturedContentBlock(NewsletterBlock):
         icon = 'doc-full'
         label = 'Featured Content'
         template = 'streams/newsletter/featured_content_block.html'
+
+
+class FeaturedContentBlockLarge(FeaturedContentBlock):
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Featured Content'
+        template = 'streams/newsletter/featured_content_block_large.html'
 
 
 class SocialBlock(NewsletterBlock):
