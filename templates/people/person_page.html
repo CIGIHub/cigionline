@@ -88,27 +88,29 @@
             <div class="row justify-content-center">
               <div class="col col-md-10 col-lg-8">
                 <div class="expertise-container">
-                  {% if page.expertise %}
-                    <div class="related-container">
-                      <div class="meta meta-title">Expertise</div>
-                      <div class="meta">
-                        {% for expertise in page.expertise %}
-                          <span class="expertise-item">{{ expertise }}</span>
-                        {% endfor %}
+                  <div>
+                    {% if page.expertise %}
+                      <div class="related-container">
+                        <div class="meta meta-title">Expertise</div>
+                        <div class="meta">
+                          {% for expertise in page.expertise %}
+                            <span class="expertise-item">{{ expertise }}</span>
+                          {% endfor %}
+                        </div>
                       </div>
-                    </div>
-                  {% endif %}
-
-                  {% if page.projects %}
-                    <div class="related-container">
-                      <div class="meta meta-title">Programs</div>
-                      <div class="meta">
-                        {% for project in page.projects.all %}
-                          <span class="expertise-item">{{ project.title }}</span>
-                        {% endfor %}
+                    {% endif %}
+  
+                    {% if page.projects.all|length > 0 %}
+                      <div class="related-container">
+                        <div class="meta meta-title">Programs</div>
+                        <div class="meta">
+                          {% for project in page.projects.all %}
+                            <a class="expertise-item" href="{% pageurl project %}">{{ project.title }}</a>
+                          {% endfor %}
+                        </div>
                       </div>
-                    </div>
-                  {% endif %}
+                    {% endif %}
+                  </div>
 
                   {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
                     <hr>
