@@ -1246,7 +1246,7 @@ class PublicastionsListBlock(blocks.StructBlock):
 
     def get_publications_by_type(self, publication_type):
         from publications.models import PublicationPage
-        return PublicationPage.objects.live().public().filter(publication_type__title=publication_type)
+        return PublicationPage.objects.live().public().filter(publication_type__title=publication_type).order_by('-publishing_date')
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
