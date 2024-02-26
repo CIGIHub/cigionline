@@ -2,10 +2,7 @@ $accents-font-family: Helvetica, sans-serif;
 
 section {
   &.hero-container {
-    .date {
-      font-family: $accents-font-family;
-    }
-
+    .date, 
     .authors {
       font-family: $accents-font-family;
     }
