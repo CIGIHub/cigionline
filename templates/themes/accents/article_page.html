@@ -1,0 +1,8 @@
+{% extends "articles/article_page.html" %}
+{% load webpack_loader %}
+
+{% block theme_css %}
+  {% render_bundle 'themeAccents' 'css' %}
+{% endblock %}
+
+{% block body_class %}accents{% endblock %}

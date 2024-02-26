@@ -1,0 +1,23 @@
+$accents-font-family: Helvetica, sans-serif;
+
+section {
+  &.hero-container {
+    .date {
+      font-family: $accents-font-family;
+    }
+
+    .authors {
+      font-family: $accents-font-family;
+    }
+  }
+
+  &.body {
+    font-family: $accents-font-family;
+  }
+}
+
+.article-image-hero {
+  figcaption {
+    font-family: $accents-font-family;
+  }
+}
