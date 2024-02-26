@@ -1,0 +1,142 @@
+{% load core_tags %}
+
+{% if self.image_override or self.content.specific.image_hero %}
+<!--[if mso | IE]>
+  <table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600">
+    <tr>
+      <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+<![endif]-->
+<div style="margin:0px auto;max-width:600px;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+    <tbody>
+      <tr>
+        <td style="direction:ltr;font-size:0px;padding:20px 0;padding-bottom:0;text-align:center;">
+          <!--[if mso | IE]>
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="" style="vertical-align:top;width:600px;">
+          <![endif]-->
+          <div class="mj-column-per-100 outlook-group-fix"
+            style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;"
+              width="100%">
+              <tr>
+                <td align="center" style="font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break-word;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                    style="border-collapse:collapse;border-spacing:0px;">
+                    <tbody>
+                      <tr>
+                        <td style="width:550px;">
+                          <a href="{{ url|slice:':-1' }}" target="_blank">
+                            <img alt="{{ image_alt }}" height="auto" src="{{ image_url_large }}"
+                              style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
+                              width="550" />
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!--[if mso | IE]>
+                </td>
+              </tr>
+            </table>
+          <![endif]-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--[if mso | IE]>
+    </td>
+  </tr>
+</table>
+<![endif]-->
+{% endif %}
+
+<!--[if mso | IE]>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600">
+  <tr>
+    <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+<![endif]-->
+<div style="margin:0px auto;max-width:600px;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+    <tbody>
+      <tr>
+        <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
+          <!--[if mso | IE]>
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0">   
+              <tr>
+                <td class="" style="vertical-align:middle;width:450px;">
+          <![endif]-->
+          <div class="mj-column-per-75 outlook-group-fix"
+            style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;"
+              width="100%">
+              <tr>
+                <td align="left" style="font-size:0px;padding:10px 25px;padding-bottom:0;word-break:break-word;">
+                  <div
+                    style="font-family:Helvetica, Arial, sans-serif;font-size:21px;font-style:normal;font-weight:400;line-height:21px;text-align:left;color:#000000;">
+                    <a href="{{ url|slice:':-1' }}" style="color: #000000; text-decoration: none;">{{ title }}</a>
+                  </div>
+                </td>
+              </tr>
+              <tr class="text-block">
+                <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                  <div
+                    style="font-family:Helvetica, Arial, sans-serif;font-size:16px;font-style:normal;font-weight:400;line-height:21px;text-align:left;color:#696969;">
+                    {{ text }}</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!--[if mso | IE]>
+            </td>
+            <td class="" style="vertical-align:middle;width:150px;">
+          <![endif]-->
+          <div class="mj-column-per-25 outlook-group-fix"
+            style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;"
+              width="100%">
+              <tr>
+                <td align="center" vertical-align="middle"
+                  style="font-size:0px;padding:10px 14px;word-break:break-word;">
+                  <table class="cta-button" border="0" cellpadding="0" cellspacing="0" role="presentation"
+                    style="border-collapse:separate;line-height:100%;">
+                    <tr>
+                      {% if cta_text %}
+                      <td align="center" bgcolor="transparent" role="presentation"
+                        style="border:1px solid #e71b3e;border-radius:2px;cursor:auto;font-style:normal;mso-padding-alt:8px 16px;background:transparent;"
+                        valign="middle">
+                        <a href="{{ url|slice:':-1' }}"
+                          style="display:inline-block;background:transparent;color:#e71b3e;font-family:Helvetica, Arial, sans-serif;font-size:10px;font-style:normal;font-weight:400;line-height:1;margin:0;text-decoration:none;text-transform:none;padding:8px 12px;mso-padding-alt:0px;border-radius:2px;"
+                          target="_blank">
+                          {% if cta_image_link %}<img src="{{ cta_image_link }}" width="13" height="13"
+                            style="display:inline;padding:0;vertical-align:middle;" />{% endif %}&nbsp;&nbsp;{{ cta_text }}
+                        </a>
+                      </td>
+                      {% endif %}
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!--[if mso | IE]>
+                </td>
+              </tr>
+            </table>
+          <![endif]-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--[if mso | IE]>
+      </td>
+    </tr>
+  </table>
+<![endif]-->

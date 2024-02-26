@@ -1,7 +1,6 @@
-{% load wagtailimages_tags core_tags %}
+{% load core_tags %}
 
-{% image self.image fill-600x238 as image %}
-{% if image %}
+{% if self.image %}
   <!--[if mso | IE]>
       <table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600">
         <tr>

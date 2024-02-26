@@ -164,6 +164,19 @@ body {
         border-bottom: 1px solid $cigi-text-grey;
       }
 
+      .publications-list__publication__img {
+        &:hover {
+          img {
+            scale: 1.025;
+          }
+        }
+
+        img {
+          border: 1px solid $cigi-medium-grey;
+          transition: scale 0.2s ease;
+        }
+      }
+
       .publications-list__publication__right {
         display: flex;
         flex-direction: column;
@@ -172,6 +185,7 @@ body {
         h2 {
           @include link($color: $white, $hover-color: $cigi-primary-colour);
           font-size: 1.1rem;
+          margin-top: 0;
         }
 
         p {
@@ -227,6 +241,11 @@ body {
       }
     }
   }
+}
+
+.fellows-disclaimer {
+  font-size: 15px;
+  margin-bottom: 0;
 }
 
 footer {

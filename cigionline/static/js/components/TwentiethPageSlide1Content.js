@@ -49,11 +49,6 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                   className={`social-share-list ${showShare ? 'open' : ''}`}
                   id="social-share-list-bottom"
                 >
-                  <li className="facebook">
-                    <a className="facebook-share-link" data-url={absoluteUrl}>
-                      <i className="fab fa-facebook-f fa-sm icon" />
-                    </a>
-                  </li>
                   <li className="twitter">
                     <a
                       className="twitter-share-link"

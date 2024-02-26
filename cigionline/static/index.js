@@ -1,4 +1,3 @@
-/* global FB */
 /* global fbq */
 import 'bootstrap/dist/js/bootstrap.bundle';
 import React from 'react';
@@ -80,15 +79,6 @@ $(function() {
 
   $('.custom-popup-inner').on('click', function(e) {
     e.stopPropagation();
-  });
-
-  // Facebook Share buttons
-  $('.facebook-share-link').on('click', function() {
-    const href = $(this).data('url');
-    FB.ui({
-      method: 'share',
-      href,
-    }, function(/* response */) {});
   });
 
   $('.dropdown.custom-dropdown.keep-open').on('hide.bs.dropdown', function(e) {
