@@ -1,0 +1,22 @@
+@import '../../../css/global/variables';
+
+section {
+  &.hero-container {
+    .date, 
+    .authors {
+      font-family: $accents-font-family;
+    }
+  }
+
+  &.body,
+  &.disclaimer,
+  &.about-the-author {
+    font-family: $accents-font-family;
+  }
+}
+
+.article-image-hero {
+  figcaption {
+    font-family: $accents-font-family;
+  }
+}
