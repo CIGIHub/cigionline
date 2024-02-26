@@ -11,7 +11,9 @@ section {
     }
   }
 
-  &.body {
+  &.body,
+  &.disclaimer,
+  &.about-the-author {
     font-family: $accents-font-family;
   }
 }
