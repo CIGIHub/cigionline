@@ -19,6 +19,9 @@ if 'SECRET_KEY' in os.environ:
 if 'ALLOWED_HOSTS' in os.environ:
     ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
 
+if 'WAGTAILADMIN_BASE_URL' in os.environ:
+    WAGTAILADMIN_BASE_URL = [os.environ['WAGTAILADMIN_BASE_URL']]
+
 if 'DATABASE_URL' in os.environ:
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
