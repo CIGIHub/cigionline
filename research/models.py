@@ -145,8 +145,6 @@ class ProjectPage(
             [
                 InlinePanel(
                     'members',
-                    max_num=9,
-                    min_num=0,
                     label='Person',
                 ),
             ],
