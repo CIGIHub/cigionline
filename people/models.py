@@ -9,6 +9,7 @@ from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from research.models import ProjectPage
 from search.filters import (
     ParentalManyToManyFilterField,
     ParentalManyToManyFilterFieldName,
@@ -315,6 +316,10 @@ class PersonPage(
             return snippet[:350] if len(snippet) > 350 else snippet
         else:
             return snippet
+
+    @property
+    def programs_as_team_member(self):
+        return ProjectPage.objects.filter(members__member=self).order_by('-publishing_date')
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
