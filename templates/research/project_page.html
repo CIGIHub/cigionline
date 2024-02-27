@@ -109,33 +109,33 @@
 
   {% include "includes/body.html" with body=self.body heading="About" %}
 
-  {% if self.project_members %}
+  {% if self.members.all %}
     <section class="persons-list-block">
       <div class="container">
         <div class="row d-block">
           <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
             <h2 class="paragraph-heading">Team Members</h2>
             <ul class="persons-list">
-              {% for member in self.project_members %}
+              {% for member in self.members.all %}
                 <li>
                   <div class="person-info">
-                    <a href="{{ member.value.url }}" class="person-photo">
+                    <a href="{{ member.url }}" class="person-photo">
                       <div class="img-wrapper">
-                        {% if member.value.image_square %}
-                          {% image member.value.image_square fill-300x300 %}
+                        {% if member.member.image_square %}
+                          {% image member.member.image_square fill-300x300 %}
                         {% endif %}
                       </div>
                     </a>
             
                     <div>
-                      <a href="{{ member.value.url }}" class="person-name">{{ member.value.title }}</a>
+                      <a href="{{ member.member.url }}" class="person-name">{{ member.member.title }}</a>
                       <div class="person-function">
-                        {{ member.value.position }}
+                        {{ member.member.position }}
                       </div>
                     </div>
                   </div>
                   <div class="person-description">
-                    {{ member.value.short_bio|safe }}
+                    {{ member.member.short_bio|safe }}
                   </div>
                 </li>
               {% endfor %}
