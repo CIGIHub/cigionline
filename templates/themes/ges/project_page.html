@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load webpack_loader wagtailimages_tags wagtailcore_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta property="og:type" content="article" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.publishing_date %}
+    <meta property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
+  {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'themeGES' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+    var hasTaggedPages = {{ self.has_tagged_pages|lower }};
+  </script>
+  {% render_bundle 'themeGES' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner video_banner=self.video_banner %}
+
+  {% include "includes/body.html" with body=self.body heading="About" %}
+
+  {% if self.project_members %}
+    <div class="container persons-list-block">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2 class="paragraph-heading">Team Members</h2>
+          <ul class="persons-list">
+            {% for member in self.project_members %}
+              <li>
+                <div class="person-info">
+                  <a href="{{ member.value.url }}" class="person-photo">
+                    <div class="img-wrapper">
+                      {% if member.value.image_square %}
+                        {% image member.value.image_square fill-300x300 %}
+                      {% endif %}
+                    </div>
+                  </a>
+          
+                  <div>
+                    <a href="{{ member.value.url }}" class="person-name">{{ member.value.title }}</a>
+                    <div class="person-function">
+                      {{ member.value.position }}
+                    </div>
+                  </div>
+                </div>
+                <div class="person-description">
+                  {{ member.value.short_bio|safe }}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if self.contact %}
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <h2 class="block-title">Contact Us</h2>
+            <div class="contact-info">
+              {{ self.contact|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="project-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

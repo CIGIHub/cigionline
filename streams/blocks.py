@@ -1208,7 +1208,7 @@ class SurveyFindingsCountryBlock(blocks.StructBlock):
         template = 'streams/survey_findings_country_block.html'
 
 
-class PersonsListBlock(blocks.StructBlock):
+class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
     class BioSourceField(models.TextChoices):
         FULL_BIO = ('full_bio', 'Full Biography')
         SHORT_BIO = ('short_bio', 'Short Biography')
@@ -1227,6 +1227,15 @@ class PersonsListBlock(blocks.StructBlock):
         ],
         required=True,
     )
+
+    implemented_themes = [
+        'ges_activity',
+    ]
+
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PersonsListBlock, self).get_template(value, context, *args, **kwargs)
+        print(self.get_theme_template(standard_template, context, 'persons_list_block'))
+        return self.get_theme_template(standard_template, context, 'persons_list_block')
 
     class Meta:
         icon = 'group'
@@ -1274,3 +1283,59 @@ class AddtionalPagesBlock(blocks.StructBlock):
         label = 'Additional Pages'
         help_text = 'Add a list of additional pages.'
         template = 'streams/additional_pages_block.html'
+
+
+class GESSlideBlock(blocks.StructBlock):
+    label = blocks.CharBlock(required=False)
+    image = ImageChooserBlock(required=True)
+    caption = blocks.RichTextBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'Slide'
+        template = 'streams/ges_slide_block.html'
+
+
+class GESHighlightsBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    pdf = DocumentChooserBlock(required=False)
+    slides = blocks.StreamBlock([
+        ('slide', GESSlideBlock()),
+    ])
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'GES Highlights'
+        template = 'streams/ges_highlights_block.html'
+
+
+class GESEventsBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    project = blocks.PageChooserBlock(page_type='research.ProjectPage', required=True)
+
+    def get_context(self, value, parent_context=None):
+        from events.models import EventPage
+        context = super().get_context(value, parent_context)
+        events = EventPage.objects.live().filter(projects=value.get('project')).order_by('publishing_date')
+        context['events'] = events
+
+        return context
+
+    class Meta:
+        icon = 'date'
+        label = 'GES Events'
+        template = 'streams/ges_events_block.html'
+
+
+class GESSlideDeckBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    download_deck = DocumentChooserBlock(required=False)
+    download_data = DocumentChooserBlock(required=False)
+    last_updated = blocks.DateBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'GES Slide Deck'
+        template = 'streams/ges_slide_deck_block.html'

@@ -65,6 +65,7 @@ const config = {
     themeDPH: './cigionline/static/themes/dph/index.js',
     themeFreedomOfThought: './cigionline/static/themes/freedom_of_thought/index.js',
     themeFourDomainsSeries: './cigionline/static/themes/four_domains_series/index.js',
+    themeGES: './cigionline/static/themes/ges/index.js',
     themeHealthSecuritySeries: './cigionline/static/themes/health_security_series/index.js',
     themeIgc: './cigionline/static/themes/igc/index.js',
     themeIndigenousLandsSeries: './cigionline/static/themes/indigenous_lands_series/index.js',

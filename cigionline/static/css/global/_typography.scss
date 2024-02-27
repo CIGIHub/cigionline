@@ -23,7 +23,11 @@ body {
   h2,
   h3,
   h4 {
-    margin-top: 1.5em;
+    margin-top: 1.25rem;
+
+    &:first-child {
+      margin-top: 1rem;
+    }
   }
 
   h4 {

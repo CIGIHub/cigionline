@@ -24,7 +24,13 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.search import index
-from streams.blocks import IgcTimelineBlock
+from streams.blocks import (
+    IgcTimelineBlock,
+    GESEventsBlock,
+    GESHighlightsBlock,
+    GESSlideBlock,
+    GESSlideDeckBlock,
+)
 
 
 class ProjectListPage(Page):
@@ -56,6 +62,10 @@ class ProjectPage(
             BasicPageAbstract.body_recommended_block,
             BasicPageAbstract.body_text_border_block,
             ('additional_file', AdditionalFileBlock()),
+            ('ges_events', GESEventsBlock()),
+            ('ges_highlights', GESHighlightsBlock()),
+            ('ges_slide', GESSlideBlock()),
+            ('ges_slide_deck', GESSlideDeckBlock()),
         ],
         blank=True,
         use_json_field=True,
@@ -67,6 +77,14 @@ class ProjectPage(
         on_delete=models.SET_NULL,
         related_name='+',
         verbose_name='Banner Image',
+    )
+    video_banner = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Video',
     )
     project_contacts = StreamField(
         [
@@ -134,6 +152,7 @@ class ProjectPage(
             [
                 FieldPanel('image_hero'),
                 FieldPanel('image_banner'),
+                FieldPanel('video_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',

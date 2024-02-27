@@ -1,7 +1,7 @@
 .persons-list-block {
   .block-title {
     font-weight: 700;
-    padding: 2em 0 1em;
+    padding: 2rem 0 1rem;
   }
 
   .persons-list {
@@ -10,7 +10,7 @@
 
     li {
       border-bottom: 1px solid $cigi-light-grey;
-      padding: 1em 0;
+      padding: 1.5em 0;
 
       &:last-of-type {
         border-bottom: 0;
