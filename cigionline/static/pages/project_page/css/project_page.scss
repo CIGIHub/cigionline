@@ -38,6 +38,8 @@ h2 {
 }
 
 .persons-list-block {
+  margin: 2em 0;
+
   .block-title {
     font-weight: 700;
     padding: 0;
@@ -94,4 +96,12 @@ h2 {
       font-size: 0.9em;
     }
   }
+}
+
+.contact-info {
+  margin: 2em 0;
+}
+
+.search-table-container {
+  margin-top: 0;
 }

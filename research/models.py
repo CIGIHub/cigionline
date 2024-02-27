@@ -143,7 +143,12 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('project_members'),
+                InlinePanel(
+                    'members',
+                    max_num=9,
+                    min_num=0,
+                    label='Person',
+                ),
             ],
             heading='People',
             classname='collapsible collapsed',
@@ -453,4 +458,17 @@ class TopicPageFeaturedPage(Orderable):
                 'research.ProjectPage',
             ]
         )
+    ]
+
+
+class ProjectPageMember(Orderable):
+    project_page = ParentalKey('research.ProjectPage', related_name='members')
+    member = models.ForeignKey(
+        'people.PersonPage',
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    panels = [
+        PageChooserPanel('member', ['people.PersonPage']),
     ]
