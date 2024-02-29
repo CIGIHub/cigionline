@@ -98,6 +98,10 @@
   .ges-slide-deck-block {
     margin-bottom: 2em;
 
+    .slide-deck__right {
+      justify-content: space-between;
+    }
+
     .last-updated {
       margin-top: 1em;
       font-size: 0.75em;

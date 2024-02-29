@@ -1329,10 +1329,10 @@ class GESEventsBlock(blocks.StructBlock):
 
 
 class GESSlideDeckBlock(blocks.StructBlock):
+    image = ImageChooserBlock(required=True)
     title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)
-    download_deck = DocumentChooserBlock(required=False)
-    download_data = DocumentChooserBlock(required=False)
+    download = DocumentChooserBlock(required=False)
     last_updated = blocks.DateBlock(required=False)
 
     class Meta:
