@@ -1,24 +1,14 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 <div class="ges-highlights-block">
   <div class="container">
     <div class="row d-block">
       <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-        {% if self.title %}
-          <h2 class="paragraph-heading">
-            {{ self.title }}
-          </h2>
-        {% endif %}
+        <h2 class="paragraph-heading">
+          Highlights
+        </h2>
 
         {% if self.description %}
           {{ self.description|richtext }}
-        {% endif %}
-
-        {% if self.pdf %}
-          <a href="{{ self.pdf.url }}" target="_blank">
-            <button class="button-action">
-              <i class="fas fa-download"></i> Download PDF
-            </button>
-          </a>
         {% endif %}
 
         {% if self.slides %}
@@ -37,5 +27,30 @@
         {% endif%}
       </div>
     </div>
+    {% if self.pdf %}
+      <div class="highlights__download">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-5 col-lg-4">
+            {% image self.image width-1920 %}
+          </div>
+          <div class="col-12 col-md-5 col-lg-4 slide-deck__right">
+            <div>
+              {% if self.title %}
+                <h3>{{ self.title }}</h3>
+              {% endif %}
+          
+              {% if self.description %}
+                {{ self.description|richtext }}
+              {% endif %}
+            </div>
+            <a href="{{ self.pdf.url }}" target="_blank">
+              <button class="button-action">
+                <i class="fas fa-download"></i> Download PDF
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
   </div>
 </div>

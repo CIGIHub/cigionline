@@ -68,6 +68,28 @@
         }
       }
     }
+
+    .highlights__download {
+      margin-top: 1em;
+
+      .slide-deck__right {
+        @include media-breakpoint-up(md) {
+          display: flex;
+          flex-direction: column;
+        }
+        justify-content: space-between;
+
+        h3 {
+          @include media-breakpoint-up(md) {
+            margin-top: 0;
+          }
+        }
+
+        p {
+          line-height: 1.25;
+        }
+      }
+    }
   }
 
   .ges-events-block {

@@ -1297,12 +1297,13 @@ class GESSlideBlock(blocks.StructBlock):
 
 
 class GESHighlightsBlock(blocks.StructBlock):
-    title = blocks.CharBlock(required=False)
-    description = blocks.RichTextBlock(required=False)
-    pdf = DocumentChooserBlock(required=False)
     slides = blocks.StreamBlock([
         ('slide', GESSlideBlock()),
     ])
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    pdf = DocumentChooserBlock(required=False)
+    image = ImageChooserBlock(required=False)
 
     class Meta:
         icon = 'doc-full'
