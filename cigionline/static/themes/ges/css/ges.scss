@@ -121,6 +121,7 @@
 
   .ges-slide-deck-block {
     margin: 2em 0;
+    padding-bottom: 2em;
 
     h2 {
       margin-top: 0;
@@ -164,10 +165,6 @@
     }
   }
 
-  .search-table-container {
-    margin-top: 0;
-  }
-
   .persons-list-block {
     h2 {
       margin-top: 1.5em;
@@ -179,4 +176,8 @@
       }
     }
   }
+}
+
+.search-table-container {
+  margin-top: 2em;
 }

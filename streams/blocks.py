@@ -1340,3 +1340,15 @@ class GESSlideDeckBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'GES Slide Deck'
         template = 'streams/ges_slide_deck_block.html'
+
+
+class GESDataBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    image = ImageChooserBlock(required=False)
+    download = DocumentChooserBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'GES Data'
+        template = 'streams/ges_data_block.html'
