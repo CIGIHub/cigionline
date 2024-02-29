@@ -49,7 +49,9 @@
     }
 
     .swiper-container {
-      margin-top: 2em;
+      .swiper-controls {
+        top: -0.2em;
+      }
 
       .swiper-slide {
         .slide {
@@ -96,16 +98,47 @@
   }
 
   .ges-slide-deck-block {
-    margin-bottom: 2em;
+    margin: 2em 0;
 
-    .slide-deck__right {
-      justify-content: space-between;
+    h2 {
+      margin-top: 0;
     }
 
-    .last-updated {
-      margin-top: 1em;
-      font-size: 0.75em;
-      color: $cigi-text-grey;
+    .slide-deck__right {
+      @include media-breakpoint-up(md) {
+        display: flex;
+        flex-direction: column;
+      }
+      justify-content: space-between;
+
+      h3 {
+        @include media-breakpoint-up(md) {
+          margin-top: 0;
+        }
+      }
+
+      p {
+        line-height: 1.25;
+      }
+
+      .downloads {
+        display: flex;
+        align-items: center;
+
+        button {
+          margin: 0;
+        }
+
+        span {
+          margin: 0 0 0 0.5em;
+        }
+      }
+
+      .last-updated {
+        margin-top: 1em;
+        font-size: 0.75em;
+        color: $cigi-text-grey;
+      }
     }
   }
 

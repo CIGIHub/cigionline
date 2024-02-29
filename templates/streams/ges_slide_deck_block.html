@@ -9,11 +9,11 @@
         </h2>
       </div>
     </div>
-    <div class="row">
-      <div class="col col-md-6">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-5 col-lg-4">
         {% image self.image width-1920 %}
       </div>
-      <div class="col col-md-6 slide-deck__right">
+      <div class="col-12 col-md-5 col-lg-4 slide-deck__right">
         <div>
           {% if self.title %}
             <h3>{{ self.title }}</h3>
@@ -27,18 +27,18 @@
         {% if self.download %}
           <div class="downloads">
             <a href="{{ self.download.url }}" target="_blank">
-              <button class="button-action">
-                <i class="fas fa-download"></i> Download Slides
+              <button class="button-action button-square">
+                <i class="fas fa-download"></i>
               </button>
             </a>
+            {% if self.last_updated %}
+              <span class="last-updated">
+                <em>
+                  *Last updated: {{ self.last_updated|date:"d\/m\/y" }}
+                </em>
+              </span>
+            {% endif %}
           </div>
-          {% if self.last_updated %}
-            <span class="last-updated">
-              <em>
-                *Last updated: {{ self.last_updated|date:"d\/m\/y" }}
-              </em>
-            </span>
-          {% endif %}
         {% endif %}
       </div>
     </div>
