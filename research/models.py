@@ -30,6 +30,7 @@ from streams.blocks import (
     GESHighlightsBlock,
     GESSlideBlock,
     GESSlideDeckBlock,
+    GESDataBlock,
 )
 
 
@@ -66,6 +67,7 @@ class ProjectPage(
             ('ges_highlights', GESHighlightsBlock()),
             ('ges_slide', GESSlideBlock()),
             ('ges_slide_deck', GESSlideDeckBlock()),
+            ('ges_data', GESDataBlock()),
         ],
         blank=True,
         use_json_field=True,
