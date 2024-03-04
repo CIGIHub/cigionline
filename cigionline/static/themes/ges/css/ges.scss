@@ -70,6 +70,7 @@
     }
 
     .highlights__download {
+      @include hover-darken;
       margin-top: 1em;
 
       .slide-deck__right {
@@ -120,6 +121,7 @@
   }
 
   .ges-slide-deck-block {
+    @include hover-darken;
     margin: 2em 0;
     padding-bottom: 2em;
 
