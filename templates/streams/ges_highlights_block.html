@@ -27,7 +27,11 @@
       <div class="highlights__download">
         <div class="row justify-content-center">
           <div class="col-12 col-md-5 col-lg-4">
-            {% image self.image width-1920 %}
+            <a href="{{ self.pdf.url }}">
+              <div class="img-wrapper">
+                {% image self.image width-1920 %}
+              </div>
+            </a>
           </div>
           <div class="col-12 col-md-5 col-lg-4 slide-deck__right">
             <div>

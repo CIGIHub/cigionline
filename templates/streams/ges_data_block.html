@@ -9,7 +9,11 @@
         </h2>
         <div class="row justify-content-center">
           <div class="col-12 col-sm-4">
-            {% image self.image width-1440 %}
+            <a href="{{ self.download.url }}">
+              <div class="img-wrapper">
+                {% image self.image width-1440 %}
+              </div>
+            </a>
           </div>
           <div class="col-12 col-sm-8 slide-deck__right">
             <div>
