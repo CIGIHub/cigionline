@@ -84,6 +84,7 @@ const config = {
     topicPage: './cigionline/static/pages/topic_page/index.js',
     twentiethPage: './cigionline/static/pages/twentieth_page/index.js',
     twentiethPageSingleton: './cigionline/static/pages/twentieth_page_singleton/index.js',
+    themeProgramTheme: './cigionline/static/themes/program_theme/index.js',
   },
 
   devtool: 'source-map',
