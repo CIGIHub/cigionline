@@ -32,9 +32,6 @@ const ProgramThemeRow = (props) => {
   if (rowIndex === 0 || rowIndex === 4 || rowIndex === 7 || rowIndex === 11) {
     cellBeforeTopSize = 'cell-before-top-none';
   }
-  if (rowIndex === 0) {
-    rowPaddingY = 'py-0';
-  }
 
   if (primaryTheme === 'Data, Economy and Society') {
     cellBgColour = ['lightest-grey', 'light-grey', 'grey', 'dark-grey'];

@@ -8,21 +8,25 @@ const ProgramTheme = (props) => {
       title: 'Data, Economy and Society',
       backgroundColour: 'lightest-grey',
       fontColour: 'black',
+      programs: [0, 1, 2, 3, 6, 8, 9, 12, 13],
     },
     {
       title: 'AI and Transformative Technology',
       backgroundColour: 'light-grey',
       fontColour: 'black',
+      programs: [3, 4, 5, 6],
     },
     {
       title: 'Digitalization, Security and Democracy',
       backgroundColour: 'grey',
       fontColour: 'white',
+      programs: [3, 5, 7, 8, 9, 10],
     },
     {
       title: 'Global Cooperation and Governance',
       backgroundColour: 'dark-grey',
       fontColour: 'white',
+      programs: [0, 1, 2, 3, 8, 11, 12, 13, 14],
     },
   ];
   const rows = [
@@ -144,11 +148,20 @@ const ProgramTheme = (props) => {
 
   const handleMouseEnter = (program) => {
     setActiveProgram(program);
-    console.log(program)
+    console.log(program);
   };
 
   const handleMouseLeave = () => {
     setActiveProgram(null);
+  };
+
+  const themeInactive = (theme) => {
+    if (activeProgram !== null) {
+      if (!theme.programs.includes(activeProgram)) {
+        return 'inactive';
+      }
+    }
+    return '';
   };
 
   return (
@@ -158,7 +171,7 @@ const ProgramTheme = (props) => {
         <div className="col-1" />
         {themes.map((theme) => (
           <div className="col-2 px-1" key={theme.title}>
-            <div className={`theme-title-wrapper bg-${theme.backgroundColour}`}>
+            <div className={`theme-title-wrapper bg-${theme.backgroundColour} ${themeInactive(theme)}`}>
               <h3
                 className={`cell cell-title theme-cell theme-title bg-${theme.backgroundColour} fc-${theme.fontColour}`}
               >

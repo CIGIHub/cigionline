@@ -20,6 +20,9 @@ const ProgramThemeCol = (props) => {
   ) {
     cellBeforeTopSize = 'cell-before-top-none';
   }
+  if (rowIndex === 0) {
+    cellBeforeTopSize = 'cell-before-top-extra';
+  }
   if (
     (rowIndex === 3 && colIndex > 0) ||
     (rowIndex === 6 && colIndex > 1) ||
