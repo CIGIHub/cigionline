@@ -30,6 +30,7 @@ from streams.blocks import (
     GESHighlightsBlock,
     GESSlideBlock,
     GESSlideDeckBlock,
+    GESDataBlock,
 )
 
 
@@ -66,6 +67,7 @@ class ProjectPage(
             ('ges_highlights', GESHighlightsBlock()),
             ('ges_slide', GESSlideBlock()),
             ('ges_slide_deck', GESSlideDeckBlock()),
+            ('ges_data', GESDataBlock()),
         ],
         blank=True,
         use_json_field=True,
@@ -143,7 +145,10 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('project_members'),
+                InlinePanel(
+                    'members',
+                    label='Person',
+                ),
             ],
             heading='People',
             classname='collapsible collapsed',
@@ -453,4 +458,17 @@ class TopicPageFeaturedPage(Orderable):
                 'research.ProjectPage',
             ]
         )
+    ]
+
+
+class ProjectPageMember(Orderable):
+    project_page = ParentalKey('research.ProjectPage', related_name='members')
+    member = models.ForeignKey(
+        'people.PersonPage',
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    panels = [
+        PageChooserPanel('member', ['people.PersonPage']),
     ]

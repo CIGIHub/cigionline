@@ -1,116 +1,185 @@
 @import '../../../css/global/mixins';
 @import '../../../css/includes/swiper';
 
-@include top-bar($background-color: transparent, $background-color-scrolled: $black);
+@include top-bar(
+  $background-color: transparent,
+  $background-color-scrolled: $black
+);
 
-button {
-  &.button-action {
-    text-transform: capitalize;
+.body {
+  button {
+    &.button-action {
+      text-transform: capitalize;
+    }
   }
-}
 
-section {
-  &.hero {
-    margin-bottom: 1.5em;
-    background-size: cover;
+  section {
+    &.hero {
+      margin-bottom: 1.5em;
+      background-size: cover;
 
-    .hero-main {
-      position: relative;
-      z-index: 1;
+      .hero-main {
+        position: relative;
+        z-index: 1;
+      }
+
+      p {
+        color: $white;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: $black-alpha-30;
+      }
+    }
+  }
+
+  .ges-highlights-block {
+    background-color: $cigi-light-grey-bg;
+    margin-top: 2em;
+    padding: 2em 0;
+
+    .paragraph-heading {
+      margin-top: 0;
+    }
+
+    .swiper-container {
+      .swiper-controls {
+        top: -0.2em;
+      }
+
+      .swiper-slide {
+        .slide {
+          position: relative;
+
+          .label {
+            font-size: 1.125rem;
+            color: $black;
+          }
+
+          .caption {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .highlights__download {
+      @include hover-darken;
+      margin-top: 1em;
+
+      .slide-deck__right {
+        @include media-breakpoint-up(md) {
+          display: flex;
+          flex-direction: column;
+        }
+        justify-content: space-between;
+
+        h3 {
+          @include media-breakpoint-up(md) {
+            margin-top: 0;
+          }
+        }
+
+        p {
+          line-height: 1.25;
+        }
+      }
+    }
+  }
+
+  .ges-events-block {
+    margin-bottom: 2em;
+
+    article {
+      border-bottom: 1px solid $cigi-light-grey;
+      padding-top: 1em;
+      padding-bottom: 1em;
+
+      &:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    .description {
+      margin-top: 1em;
+    }
+  }
+
+  .ges-slide-deck-block {
+    @include hover-darken;
+    margin: 2em 0;
+    padding-bottom: 2em;
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .slide-deck__right {
+      @include media-breakpoint-up(md) {
+        display: flex;
+        flex-direction: column;
+      }
+      justify-content: space-between;
+
+      h3 {
+        @include media-breakpoint-up(md) {
+          margin-top: 0;
+        }
+      }
+
+      p {
+        line-height: 1.25;
+      }
+
+      .downloads {
+        display: flex;
+        align-items: center;
+
+        button {
+          margin: 0;
+        }
+
+        span {
+          margin: 0 0 0 0.5em;
+        }
+      }
+
+      .last-updated {
+        margin-top: 1em;
+        font-size: 0.75em;
+        color: $cigi-text-grey;
+      }
+    }
+  }
+
+  .persons-list-block {
+    h2 {
+      margin-top: 1.5em;
     }
 
     p {
-      color: $white;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: $black-alpha-30;
-    }
-  }
-}
-
-.ges-highlights-block {
-  background-color: $cigi-light-grey-bg;
-  margin-top: 2em;
-  padding-top: 1em;
-
-  .swiper-container {
-    margin-top: 2em;
-    margin-bottom: 1em;
-
-    .swiper-slide {
-      .slide {
-        position: relative;
-
-        .label {
-          font-size: 1.125rem;
-          margin-bottom: 0.5em;
-          color: $black;
-        }
-
-        .caption {
-          margin-top: 1em;
-        }
+      &:last-child {
+        margin-bottom: 0;
       }
     }
   }
 }
 
-.ges-events-block {
-  margin-bottom: 2em;
-
-  article {
-    border-bottom: 1px solid $cigi-light-grey;
-    padding-top: 1em;
-    padding-bottom: 1em;
-
-    &:last-child {
-      border-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    p {
-      margin-bottom: 0;
-    }
-  }
-
-  h3 {
-    margin-top: 0;
-  }
-
-  .description {
-    margin-top: 1em;
-  }
-}
-
-.ges-slide-deck-block {
-  margin-bottom: 2em;
-
-  .last-updated {
-    margin-top: 1em;
-    font-size: 0.75em;
-    color: $cigi-text-grey;
-  }
-}
-
 .search-table-container {
-  margin-top: 0;
-}
-
-.persons-list-block {
-  h2 {
-    margin-top: 1.5em;
-  }
-
-  p {
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+  margin-top: 2em;
 }

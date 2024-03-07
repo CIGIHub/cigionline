@@ -82,35 +82,37 @@
     </section>
 
     {% if not page.archive %}
-      {% if page.expertise or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
+      {% if page.expertise or page.programs_as_team_member.all|length > 0 or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
         <section class="expertise">
           <div class="container">
             <div class="row justify-content-center">
               <div class="col col-md-10 col-lg-8">
                 <div class="expertise-container">
-                  <div>
-                    {% if page.expertise %}
-                      <div class="related-container">
-                        <div class="meta meta-title">Expertise</div>
-                        <div class="meta">
-                          {% for expertise in page.expertise %}
-                            <span class="expertise-item">{{ expertise }}</span>
-                          {% endfor %}
+                  {% if page.expertise or page.programs_as_team_member.all|length > 0 %}
+                    <div>
+                      {% if page.expertise %}
+                        <div class="related-container">
+                          <div class="meta meta-title">Expertise</div>
+                          <div class="meta">
+                            {% for expertise in page.expertise %}
+                              <span class="expertise-item">{{ expertise }}</span>
+                            {% endfor %}
+                          </div>
                         </div>
-                      </div>
-                    {% endif %}
-  
-                    {% if page.projects.all|length > 0 %}
-                      <div class="related-container">
-                        <div class="meta meta-title">Programs</div>
-                        <div class="meta">
-                          {% for project in page.projects.all %}
-                            <a class="expertise-item" href="{% pageurl project %}">{{ project.title }}</a>
-                          {% endfor %}
+                      {% endif %}
+    
+                      {% if page.programs_as_team_member.all|length > 0 %}
+                        <div class="related-container">
+                          <div class="meta meta-title">Programs</div>
+                          <div class="meta">
+                            {% for project in page.programs_as_team_member.all %}
+                              <a class="expertise-item" href="{% pageurl project %}">{{ project.title }}</a>
+                            {% endfor %}
+                          </div>
                         </div>
-                      </div>
-                    {% endif %}
-                  </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
 
                   {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
                     <hr>

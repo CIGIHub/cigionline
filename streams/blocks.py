@@ -1297,12 +1297,13 @@ class GESSlideBlock(blocks.StructBlock):
 
 
 class GESHighlightsBlock(blocks.StructBlock):
-    title = blocks.CharBlock(required=False)
-    description = blocks.RichTextBlock(required=False)
-    pdf = DocumentChooserBlock(required=False)
     slides = blocks.StreamBlock([
         ('slide', GESSlideBlock()),
     ])
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    pdf = DocumentChooserBlock(required=False)
+    image = ImageChooserBlock(required=False)
 
     class Meta:
         icon = 'doc-full'
@@ -1329,13 +1330,25 @@ class GESEventsBlock(blocks.StructBlock):
 
 
 class GESSlideDeckBlock(blocks.StructBlock):
+    image = ImageChooserBlock(required=True)
     title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)
-    download_deck = DocumentChooserBlock(required=False)
-    download_data = DocumentChooserBlock(required=False)
+    download = DocumentChooserBlock(required=False)
     last_updated = blocks.DateBlock(required=False)
 
     class Meta:
         icon = 'doc-full'
         label = 'GES Slide Deck'
         template = 'streams/ges_slide_deck_block.html'
+
+
+class GESDataBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    image = ImageChooserBlock(required=False)
+    download = DocumentChooserBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'GES Data'
+        template = 'streams/ges_data_block.html'

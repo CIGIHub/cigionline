@@ -1,0 +1,43 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="ges-slide-deck-block">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <h2 class="paragraph-heading">
+          Data and Method
+        </h2>
+        <div class="row justify-content-center">
+          <div class="col-12 col-sm-4">
+            <a href="{{ self.download.url }}">
+              <div class="img-wrapper">
+                {% image self.image width-1440 %}
+              </div>
+            </a>
+          </div>
+          <div class="col-12 col-sm-8 slide-deck__right">
+            <div>
+              {% if self.title %}
+                <h3>{{ self.title }}</h3>
+              {% endif %}
+          
+              {% if self.description %}
+                {{ self.description|richtext }}
+              {% endif %}
+            </div>
+        
+            {% if self.download %}
+              <div class="downloads">
+                <a href="{{ self.download.url }}" target="_blank">
+                  <button class="button-action button-square">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
