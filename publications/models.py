@@ -42,7 +42,7 @@ class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = ['publications.PublicationPage', 'publications.PublicationTypePage']
+    subpage_types = ['publications.PublicationPage', 'publications.PublicationTypePage', 'publications.PublicationSeriesListPage']
     templates = 'publications/publication_list_page.html'
 
     content_panels = [
@@ -419,7 +419,7 @@ class PublicationTypePage(BasicPageAbstract, Page):
 
 class PublicationSeriesListPage(BasicPageAbstract, Page):
     max_count = 1
-    parent_page_types = ['home.HomePage']
+    parent_page_types = ['home.HomePage', 'publications.PublicationListPage']
     subpage_types = ['publications.PublicationSeriesPage']
     templates = 'publications/publication_series_list_page.html'
 
