@@ -433,6 +433,7 @@ class PublicationSeriesListPage(BasicPageAbstract, Page):
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
+    templates = 'publications/publication_series_list_page.html'
 
     class Meta:
         verbose_name = 'Publication Series List Page'
@@ -445,6 +446,17 @@ class PublicationSeriesPage(
 ):
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
+
+    @property
+    def series_authors(self):
+        authors = set()
+        publications = PublicationPage.objects.live().public().filter(publication_series=self)
+        for publication in publications:
+            for author in publication.authors.all():
+                authors.add(author.author)
+        authors_list = list(authors)
+        authors_list.sort(key=lambda x: x.last_name)
+        return authors_list
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -471,7 +483,10 @@ class PublicationSeriesPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields
+    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields + [
+        index.FilterField('series_authors'),
+        index.FilterField('publishing_date'),
+    ]
 
     parent_page_types = ['publications.PublicationSeriesListPage']
     subpage_types = []
