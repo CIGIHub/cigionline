@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from publications.models import PublicationSeriesListPage
+from publications.models import PublicationSeriesListPage, PublicationListPage
 from wagtail.models import Page
 from wagtail.contrib.redirects.models import Redirect
 
@@ -10,8 +10,8 @@ class Command(BaseCommand):
         # Step 1: Identify the pages
         try:
             publication_series_list_page = PublicationSeriesListPage.objects.first()
-            new_parent = Page.objects.get(url_path='/publications/')
-        except (PublicationSeriesListPage.DoesNotExist, Page.DoesNotExist):
+            new_parent = PublicationListPage.objects.get(url_path='/home/publications/')
+        except (Exception):
             self.stdout.write(self.style.ERROR('Required pages not found.'))
             return
 
