@@ -35,7 +35,7 @@ class Command(BaseCommand):
         # Step 3: Redirect all child pages
         for child_page in child_pages:
             old_child_url = child_page.full_url  # URL before the move
-            child_page.save_revision()  # Save a new revision to update the url_path
+            child_page.specific.save_revision()  # Save a new revision to update the url_path
             new_child_url = child_page.full_url  # URL after the move
 
             # Create a redirect from the old URL to the new URL
