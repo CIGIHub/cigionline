@@ -14,7 +14,12 @@ function PublicationListingSimple(props) {
         </p>
       )}
       <p className="article-authors">
-        {row.authors.map((author) => (
+        {row.authors && row.authors.map((author) => (
+          <a key={`${row.id}-author-${author.id}`} href={author.url}>
+            {author.title}
+          </a>
+        ))}
+        {row.series_authors && row.series_authors.map((author) => (
           <a key={`${row.id}-author-${author.id}`} href={author.url}>
             {author.title}
           </a>
@@ -27,6 +32,11 @@ function PublicationListingSimple(props) {
 PublicationListingSimple.propTypes = {
   row: PropTypes.shape({
     authors: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      type: PropTypes.string,
+      value: PropTypes.any,
+    })),
+    series_authors: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       type: PropTypes.string,
       value: PropTypes.any,

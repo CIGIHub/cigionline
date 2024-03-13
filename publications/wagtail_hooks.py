@@ -12,6 +12,7 @@ from .models import (
     PublicationListPage,
     PublicationPage,
     PublicationSeriesPage,
+    PublicationSeriesListPage
 )
 
 
@@ -32,6 +33,17 @@ class PublicationListPageModelAdmin(ModelAdmin):
     permission_helper_class = CIGIModelAdminPermissionHelper
 
 
+class PublicationSeriesListPageModelAdmin(ModelAdmin):
+    model = PublicationSeriesListPage
+    menu_label = 'Publications Series Landing Page'
+    menu_icon = 'home'
+    menu_order = 200
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
 @hooks.register('register_permissions')
 def register_publication_page_permissions():
     publication_content_type = ContentType.objects.get(app_label='publications', model='publicationpage')
@@ -43,7 +55,7 @@ class PublicationPageModelAdmin(ModelAdmin):
     model = PublicationPage
     menu_label = 'Publications'
     menu_icon = 'doc-full'
-    menu_order = 101
+    menu_order = 300
     list_display = ('title', 'publishing_date', 'publication_type', 'live', 'publication_series')
     list_filter = ('publishing_date', 'publication_type', 'live', 'publication_series')
     search_fields = ('title',)
@@ -59,7 +71,7 @@ class PublicationSeriesPageModelAdmin(ModelAdmin):
     model = PublicationSeriesPage
     menu_label = 'Publication Series'
     menu_icon = 'list-ul'
-    menu_order = 102
+    menu_order = 400
     list_display = ('title', 'publishing_date', 'live')
     list_filter = ('publishing_date', 'live')
     search_fields = ('title',)
@@ -75,7 +87,7 @@ class PublicationModelAdminGroup(ModelAdminGroup):
     menu_label = 'Publications'
     menu_icon = 'doc-full'
     menu_order = 103
-    items = (PublicationListPageModelAdmin, PublicationPageModelAdmin, PublicationSeriesPageModelAdmin)
+    items = (PublicationListPageModelAdmin, PublicationPageModelAdmin, PublicationSeriesPageModelAdmin, PublicationSeriesListPageModelAdmin)
 
 
 modeladmin_register(PublicationModelAdminGroup)
