@@ -17,7 +17,7 @@ if 'SECRET_KEY' in os.environ:
     SECRET_KEY = os.environ['SECRET_KEY']
 
 if 'ALLOWED_HOSTS' in os.environ:
-    ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
+    ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
 
 if 'WAGTAILADMIN_BASE_URL' in os.environ:
     WAGTAILADMIN_BASE_URL = [os.environ['WAGTAILADMIN_BASE_URL']]

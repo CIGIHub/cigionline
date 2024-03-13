@@ -1234,7 +1234,6 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
 
     def get_template(self, value, context, *args, **kwargs):
         standard_template = super(PersonsListBlock, self).get_template(value, context, *args, **kwargs)
-        print(self.get_theme_template(standard_template, context, 'persons_list_block'))
         return self.get_theme_template(standard_template, context, 'persons_list_block')
 
     class Meta:

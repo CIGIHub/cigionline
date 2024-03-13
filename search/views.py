@@ -27,6 +27,12 @@ def process_item(page, request):
                     'title': author.author.title,
                     'url': author.author.url,
                 } for author in page.specific.authors.all()]
+            elif field == 'series_authors':
+                item['series_authors'] = [{
+                    'id': author.id,
+                    'title': author.title,
+                    'url': author.url,
+                } for author in page.specific.series_authors]
             elif field == 'cigi_people_mentioned':
                 item['cigi_people_mentioned'] = [{
                     'id': person.person.id,
