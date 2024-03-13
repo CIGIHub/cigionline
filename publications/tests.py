@@ -20,7 +20,7 @@ class PublicationListPageTests(WagtailPageTestCase):
     def test_publicationlistpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             PublicationListPage,
-            {PublicationPage, PublicationTypePage},
+            {PublicationPage, PublicationTypePage, PublicationSeriesListPage},
         )
 
 
@@ -42,7 +42,7 @@ class PublicationSeriesListPageTests(WagtailPageTestCase):
     def test_publicationserieslistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PublicationSeriesListPage,
-            {HomePage},
+            {HomePage, PublicationListPage},
         )
 
     def test_publicationserieslistpage_child_page_types(self):
