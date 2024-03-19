@@ -292,6 +292,13 @@ class ArticlePage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
+    opinion_series = models.ForeignKey(
+        'articles.OpinionSeriesPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -448,6 +455,10 @@ class ArticlePage(
                 PageChooserPanel(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
+                ),
+                PageChooserPanel(
+                    'opinion_series',
+                    ['articles.OpinionSeriesPage'],
                 ),
                 InlinePanel('cigi_people_mentioned', label='People Mentioned'),
                 FieldPanel('interviewers'),
@@ -946,3 +957,69 @@ class ArticleSeriesPageSeriesItem(Orderable):
         FieldPanel('hide_series_disclaimer'),
         FieldPanel('additional_fields'),
     ]
+
+
+class OpinionSeriesPage(
+    BasicPageAbstract,
+    ContentPage,
+    FeatureablePageAbstract
+):
+
+    @property
+    def series_authors(self):
+        authors = set()
+        opinions = ArticlePage.objects.live().public().filter(opinion_series=self)
+        for opinion in opinions:
+            for author in opinion.authors.all():
+                authors.add(author.author)
+        authors_list = list(authors)
+        authors_list.sort(key=lambda x: x.last_name)
+        return authors_list
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed',
+        ),
+        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+                FieldPanel('projects'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
+    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields + [
+        index.FilterField('series_authors'),
+        index.FilterField('publishing_date'),
+    ]
+
+    parent_page_types = ['articles.OpinionSeriesListPage']
+    subpage_types = []
+    templates = 'articles/opinion_series_page.html'
+
+    class Meta:
+        verbose_name = 'Opinion Series'
+        verbose_name_plural = 'Opinion Series'
+
+
+class OpinionSeriesListPage(Page):
+    max_count = 1
+    parent_page_types = ['home.HomePage', 'articles.ArticleListPage']
+    subpage_types = ['articles.OpinionSeriesPage']
+    templates = 'articles/opinion_series_list_page.html'
+
+    class Meta:
+        verbose_name = 'Opinion Series List Page'
