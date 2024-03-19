@@ -1,0 +1,30 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="ges-slide-deck-block">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <h2 class="paragraph-heading">
+          Economic Growth and Fiscal Capacity Projections: Data Set
+        </h2>
+        <div class="row justify-content-center">
+          <div class="col-12">
+            {% if self.description %}
+              {{ self.description|richtext }}
+            {% endif %}
+        
+            {% if self.download %}
+              <div class="downloads">
+                <a href="{{ self.download.url }}" target="_blank">
+                  <button class="button-action button-square">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
