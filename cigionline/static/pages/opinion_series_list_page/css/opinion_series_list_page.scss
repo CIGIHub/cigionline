@@ -1,0 +1,27 @@
+h2 {
+  &.paragraph-heading {
+    margin-bottom: 2em;
+  }
+}
+
+section {
+  margin: 3em 0;
+
+  &.in-the-series {
+    .search-table {
+      margin-top: 0;
+    }
+  }
+}
+
+.in-the-series {
+  .search-table-container {
+    margin-top: 0;
+
+    .search-table {
+      .search-bar-sort-wrapper {
+        display: none;
+      }
+    }
+  }
+}
