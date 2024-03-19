@@ -1351,3 +1351,12 @@ class GESDataBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'GES Data'
         template = 'streams/ges_data_block.html'
+
+class GESRawDataBlock(blocks.StructBlock):
+    description = blocks.RichTextBlock(required=False)
+    download = DocumentChooserBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'GES Raw Data'
+        template = 'streams/ges_raw_data_block.html'
