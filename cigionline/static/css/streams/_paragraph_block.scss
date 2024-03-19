@@ -1,0 +1,9 @@
+.paragraph-block {
+  &:nth-child(2) {
+    h3 {
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}
