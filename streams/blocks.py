@@ -1353,6 +1353,7 @@ class GESDataBlock(blocks.StructBlock):
         template = 'streams/ges_data_block.html'
 
 class GESRawDataBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)
     download = DocumentChooserBlock(required=False)
 

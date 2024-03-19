@@ -5,10 +5,14 @@
     <div class="row d-block">
       <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
         <h2 class="paragraph-heading">
-          Economic Growth and Fiscal Capacity Projections: Data Set
+          Data Set
         </h2>
         <div class="row justify-content-center">
           <div class="col-12">
+            {% if self.title %}
+              <h3>{{ self.title }}</h3>
+            {% endif %}
+        
             {% if self.description %}
               {{ self.description|richtext }}
             {% endif %}
