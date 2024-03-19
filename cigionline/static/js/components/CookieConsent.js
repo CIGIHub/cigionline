@@ -13,8 +13,17 @@ class CookieConsent extends React.Component {
     this.handleConsent = this.handleConsent.bind(this);
   }
 
-  handleConsent() {
-    document.cookie = `cigionline.accept.privacy.notice=1; path=/; expires=${new Date(2147483647 * 1000).toUTCString()}`;
+  handleConsent(choice) {
+    if (choice === 'none') {
+      document.cookie = `cigionline.accept.privacy.notice=2; path=/; expires=${new Date(
+        2147483647 * 1000,
+      ).toUTCString()}`;
+    }
+    if (choice === 'all') {
+      document.cookie = `cigionline.accept.privacy.notice=1; path=/; expires=${new Date(
+        2147483647 * 1000,
+      ).toUTCString()}`;
+    }
     this.setState({
       consentClicked: true,
     });
@@ -42,18 +51,44 @@ class CookieConsent extends React.Component {
 
     /* eslint-disable react/no-danger */
     return (
-      <div className={['cigi-cookie-consent', consentFade && 'consent-fade', consentComplete && 'consent-complete'].join(' ')}>
+      <div
+        className={[
+          'cigi-cookie-consent',
+          consentFade && 'consent-fade',
+          consentComplete && 'consent-complete',
+        ].join(' ')}
+      >
         <div className="container">
           <div className="row">
             <div className="col-12">
               <div className="cigi-cookie-consent-content">
-                <p className={['cigi-cookie-consent-notice', consentClicked && 'accepted-consent'].join(' ')} dangerouslySetInnerHTML={{ __html: consentCopy }} />
+                <p
+                  className={[
+                    'cigi-cookie-consent-notice',
+                    consentClicked && 'accepted-consent',
+                  ].join(' ')}
+                  dangerouslySetInnerHTML={{ __html: consentCopy }}
+                />
                 <button
                   type="button"
-                  className={['cigi-cookie-consent-notice', consentClicked && 'accepted-consent'].join(' ')}
-                  onClick={() => this.handleConsent()}
+                  className={[
+                    'cigi-cookie-consent-notice',
+                    consentClicked && 'accepted-consent',
+                  ].join(' ')}
+                  onClick={() => this.handleConsent('all')}
                 >
                   <span>OK</span>
+                  <i className="fa fa-check" />
+                </button>
+                <button
+                  type="button"
+                  className={[
+                    'cigi-cookie-consent-notice',
+                    consentClicked && 'accepted-consent',
+                  ].join(' ')}
+                  onClick={() => this.handleConsent('none')}
+                >
+                  <span>none</span>
                   <i className="fa fa-check" />
                 </button>
                 {consentClicked && (
