@@ -64,7 +64,7 @@ class TopicListPageTests(WagtailPageTestCase):
             password='testpassword'
         )
         self.client.login(username='testsuperuser', password='testpassword')
-        
+
     def test_topiclistpage_parent_page_types(self):
         """
         Verify allowed parent page types.

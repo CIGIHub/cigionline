@@ -1352,6 +1352,7 @@ class GESDataBlock(blocks.StructBlock):
         label = 'GES Data'
         template = 'streams/ges_data_block.html'
 
+
 class GESRawDataBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)
