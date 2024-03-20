@@ -962,7 +962,10 @@ class ArticleSeriesPageSeriesItem(Orderable):
 class OpinionSeriesPage(
     BasicPageAbstract,
     ContentPage,
-    FeatureablePageAbstract
+    FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
 
     @property
@@ -1015,9 +1018,37 @@ class OpinionSeriesPage(
         verbose_name_plural = 'Opinion Series'
 
 
-class OpinionSeriesListPage(Page):
+class OpinionSeriesListPage(
+        BasicPageAbstract,
+        ContentPage,
+        FeatureablePageAbstract,
+        FromTheArchivesPageAbstract,
+        ShareablePageAbstract,
+        ThemeablePageAbstract
+):
+    
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed',
+        ),
+        BasicPageAbstract.images_panel,
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
+    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields
+
     max_count = 1
-    parent_page_types = ['home.HomePage', 'articles.ArticleListPage']
+    parent_page_types = ['home.HomePage', 'articles.ArticleListPage', 'articles.ArticleLandingPage']
     subpage_types = ['articles.OpinionSeriesPage']
     templates = 'articles/opinion_series_list_page.html'
 
