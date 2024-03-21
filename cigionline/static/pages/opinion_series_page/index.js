@@ -9,7 +9,7 @@ import SearchTable from '../../js/components/SearchTable';
 const endpointParams = [];
 if (opinionSeriesId) {
   endpointParams.push({
-    paramName: 'opinionSeriesId',
+    paramName: 'opinionseriesid',
     paramValue: opinionSeriesId,
   });
 }
