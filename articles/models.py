@@ -368,6 +368,18 @@ class ArticlePage(
                     return self.article_series.specific.series_items_disclaimer
         return None
 
+    @property
+    def opinion_series_pages(self):
+        if self.opinion_series:
+            return ArticlePage.objects.live().public().filter(opinion_series=self.opinion_series).exclude(id=self.id)
+        return None
+
+    @property
+    def opinion_series_description(self):
+        if self.opinion_series:
+            return self.opinion_series.specific.series_items_description
+        return None
+
     def is_opinion(self):
         return self.article_type.title in [
             'Op-Eds',
@@ -969,6 +981,18 @@ class OpinionSeriesPage(
     ThemeablePageAbstract,
 ):
 
+    series_items_description = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
+
+    series_items_disclaimer = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
+
     @property
     def series_authors(self):
         authors = set()
@@ -991,6 +1015,14 @@ class OpinionSeriesPage(
             classname='collapsible collapsed',
         ),
         BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('series_items_description'),
+                FieldPanel('series_items_disclaimer'),
+            ],
+            heading='Series Items',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
@@ -1027,7 +1059,7 @@ class OpinionSeriesListPage(
         ShareablePageAbstract,
         ThemeablePageAbstract
 ):
-    
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
