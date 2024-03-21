@@ -29,7 +29,7 @@ import pytz
 class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = []
+    subpage_types = ['articles.OpinionSeriesListPage']
     templates = 'articles/article_landing_page.html'
 
     def get_featured_articles(self):
@@ -173,7 +173,7 @@ class ArticlePage(
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Opinion series',
+        verbose_name='Essay series',
     )
     article_type = models.ForeignKey(
         'articles.ArticleTypePage',
@@ -484,6 +484,7 @@ class ArticlePage(
             index.FilterField('article_type'),
             index.FilterField('cigi_people_mentioned_ids'),
             index.FilterField('publishing_date'),
+            index.FilterField('opinion_series'),
         ]
 
     parent_page_types = ['articles.ArticleListPage']
@@ -906,8 +907,8 @@ class ArticleSeriesPage(
         return series_authors
 
     class Meta:
-        verbose_name = 'Opinion Series'
-        verbose_name_plural = 'Opinion Series'
+        verbose_name = 'Essay Series'
+        verbose_name_plural = 'Essay Series'
 
 
 class ArticleSeriesPageSeriesItem(Orderable):
