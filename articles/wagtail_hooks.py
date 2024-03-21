@@ -16,7 +16,6 @@ from .models import (
     ArticleSeriesPage,
     MediaLandingPage,
     OpinionSeriesPage,
-    OpinionSeriesListPage,
 )
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
