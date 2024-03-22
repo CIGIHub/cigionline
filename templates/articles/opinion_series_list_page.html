@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'opinionSeriesListPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'opinionSeriesListPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/body.html" with body=self.body %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div id="opinion-series-list">
+      </div>
+    </div>
+  </div>
+{% endblock content %}

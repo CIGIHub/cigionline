@@ -118,3 +118,68 @@
   font-style: italic;
   margin-bottom: 0;
 }
+
+.opinion-series-description {
+  @include link($color: $white, $hover-color: $cigi-dark-pink);
+  border-radius: 5px;
+  background: $color--blue;
+  color: $white;
+  font-weight: 300;
+  padding: 0.75em 1.25em;
+  line-height: 1.25;
+  margin-bottom: 1.5em;
+  font-size: 0.9em;
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.in-the-series-opinion-series__content {
+  border-radius: 5px;
+  border: 1px solid $color--blue;
+  padding: 1.5em 1.25em;
+
+  h2 {
+    color: $cigi-text-grey;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  ul {
+    &.series-items-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        &.series-item {
+          padding: 1em 0;
+          border-top: 1px solid $cigi-light-grey;
+
+          &:first-child {
+            border-top: none;
+            padding-top: 0;
+          }
+
+          h3 {
+            @include link($color: $black, $hover-color: $cigi-dark-pink);
+            margin-bottom: 0.5rem;
+            font-size: 1.0625rem;
+          }
+
+          li {
+            @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+  }
+}

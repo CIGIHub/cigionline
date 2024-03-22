@@ -88,7 +88,6 @@ def search_api(request):
             },
             'items': [],
         }, safe=False)
-
     pages = cigi_search(
         articletypeid=request.GET.get('articletypeid', None),
         authors=request.GET.getlist('author', None),
@@ -96,6 +95,7 @@ def search_api(request):
         contenttypes=request.GET.getlist('contenttype', None),
         contentsubtypes=request.GET.getlist('contentsubtype', None),
         multimediaseriesid=request.GET.get('multimediaseriesid', None),
+        opinionseriesid=request.GET.get('opinionseriesid', None),
         projects=request.GET.getlist('project', None),
         publicationseriesid=request.GET.get('publicationseriesid', None),
         publicationtypeid=request.GET.get('publicationtypeid', None),
@@ -115,6 +115,7 @@ def search_api(request):
             contenttypes=request.GET.getlist('contenttype', None),
             contentsubtypes=request.GET.getlist('contentsubtype', None),
             multimediaseriesid=request.GET.get('multimediaseriesid', None),
+            opinionseriesid=request.GET.get('opinionseriesid', None),
             projects=request.GET.getlist('project', None),
             publicationseriesid=request.GET.get('publicationseriesid', None),
             publicationtypeid=request.GET.get('publicationtypeid', None),

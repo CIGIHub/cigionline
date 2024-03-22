@@ -15,6 +15,7 @@ from .models import (
     ArticlePage,
     ArticleSeriesPage,
     MediaLandingPage,
+    OpinionSeriesPage,
 )
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 
@@ -157,11 +158,23 @@ class MediaLandingPageModelAdmin(ModelAdmin):
     permission_helper_class = CIGIModelAdminPermissionHelper
 
 
+class OpinionSeriesPageModelAdmin(ModelAdmin):
+    model = OpinionSeriesPage
+    menu_label = 'Opinion Series'
+    menu_icon = 'list-ul'
+    menu_order = 104
+    list_display = ('title', 'publishing_date', 'live', 'id')
+    list_filter = ('publishing_date', 'live')
+    search_fields = ('title',)
+    ordering = ['-publishing_date']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
 class ArticleModelAdminGroup(ModelAdminGroup):
     menu_label = 'Articles'
     menu_icon = 'copy'
     menu_order = 101
-    items = (ArticleLandingPageModelAdmin, MediaLandingPageModelAdmin, ArticlePageModelAdmin, ArticleSeriesPageModelAdmin)
+    items = (ArticleLandingPageModelAdmin, MediaLandingPageModelAdmin, ArticlePageModelAdmin, ArticleSeriesPageModelAdmin, OpinionSeriesPageModelAdmin)
 
 
 modeladmin_register(ArticleModelAdminGroup)

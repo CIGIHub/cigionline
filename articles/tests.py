@@ -9,6 +9,7 @@ from .models import (
     ArticleSeriesPage,
     ArticleTypePage,
     MediaLandingPage,
+    OpinionSeriesListPage,
 )
 
 
@@ -22,7 +23,7 @@ class ArticleLandingPageTests(WagtailPageTestCase):
     def test_articlelandingpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             ArticleLandingPage,
-            {},
+            {OpinionSeriesListPage},
         )
 
 

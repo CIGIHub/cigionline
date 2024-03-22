@@ -86,6 +86,17 @@
           </div>
         </div>
       {% endif %}
+      {% if self.opinion_series_description %}
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <div class="opinion-series-description">
+                {{self.opinion_series_description|richtext}}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
       {% if self.from_the_archives and self.from_the_archives_blurb %}
         {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
       {% endif %}
@@ -182,6 +193,36 @@
         {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
       {% endif %}
 
+    {% endblock %}
+
+    {% block in_the_series_opinion_series %}
+      {% if self.opinion_series_pages %}
+        <section class="in-the-series-opinion-series">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col col-md-10 col-lg-8">
+                <div class="in-the-series-opinion-series__content">
+                  <h2>More from this Opinion Series</h2>
+                  <ul class="series-items-list">
+                    {% for article in self.opinion_series_pages %}
+                      <li class="series-item">
+                        <article>
+                          <h3>
+                            <a href="{% pageurl article %}">
+                              {{ article.title }}
+                            </a>
+                          </h3>
+                          {% include 'includes/features/feature_content_people.html' with authors=article.authors.all %}
+                        </article>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
     {% endblock %}
 
     {% block in_the_series %}

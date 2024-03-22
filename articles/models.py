@@ -29,7 +29,7 @@ import pytz
 class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = []
+    subpage_types = ['articles.OpinionSeriesListPage']
     templates = 'articles/article_landing_page.html'
 
     def get_featured_articles(self):
@@ -173,7 +173,7 @@ class ArticlePage(
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Opinion series',
+        verbose_name='Essay series',
     )
     article_type = models.ForeignKey(
         'articles.ArticleTypePage',
@@ -292,6 +292,13 @@ class ArticlePage(
         on_delete=models.SET_NULL,
         related_name='+',
     )
+    opinion_series = models.ForeignKey(
+        'articles.OpinionSeriesPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -359,6 +366,18 @@ class ArticlePage(
             for series_item in self.article_series.specific.article_series_items:
                 if series_item.content_page.specific == self and not series_item.hide_series_disclaimer:
                     return self.article_series.specific.series_items_disclaimer
+        return None
+
+    @property
+    def opinion_series_pages(self):
+        if self.opinion_series:
+            return ArticlePage.objects.live().public().filter(opinion_series=self.opinion_series).exclude(id=self.id)
+        return None
+
+    @property
+    def opinion_series_description(self):
+        if self.opinion_series:
+            return self.opinion_series.specific.series_items_description
         return None
 
     def is_opinion(self):
@@ -449,6 +468,10 @@ class ArticlePage(
                     'multimedia_series',
                     ['multimedia.MultimediaSeriesPage'],
                 ),
+                PageChooserPanel(
+                    'opinion_series',
+                    ['articles.OpinionSeriesPage'],
+                ),
                 InlinePanel('cigi_people_mentioned', label='People Mentioned'),
                 FieldPanel('interviewers'),
                 FieldPanel('related_files'),
@@ -473,6 +496,7 @@ class ArticlePage(
             index.FilterField('article_type'),
             index.FilterField('cigi_people_mentioned_ids'),
             index.FilterField('publishing_date'),
+            index.FilterField('opinion_series'),
         ]
 
     parent_page_types = ['articles.ArticleListPage']
@@ -895,8 +919,8 @@ class ArticleSeriesPage(
         return series_authors
 
     class Meta:
-        verbose_name = 'Opinion Series'
-        verbose_name_plural = 'Opinion Series'
+        verbose_name = 'Essay Series'
+        verbose_name_plural = 'Essay Series'
 
 
 class ArticleSeriesPageSeriesItem(Orderable):
@@ -946,3 +970,120 @@ class ArticleSeriesPageSeriesItem(Orderable):
         FieldPanel('hide_series_disclaimer'),
         FieldPanel('additional_fields'),
     ]
+
+
+class OpinionSeriesPage(
+    BasicPageAbstract,
+    ContentPage,
+    FeatureablePageAbstract,
+    FromTheArchivesPageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+
+    series_items_description = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
+
+    series_items_disclaimer = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic', 'link'],
+    )
+
+    @property
+    def series_authors(self):
+        authors = set()
+        opinions = ArticlePage.objects.live().public().filter(opinion_series=self)
+        for opinion in opinions:
+            for author in opinion.authors.all():
+                authors.add(author.author)
+        authors_list = list(authors)
+        authors_list.sort(key=lambda x: x.last_name)
+        return authors_list
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed',
+        ),
+        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('series_items_description'),
+                FieldPanel('series_items_disclaimer'),
+            ],
+            heading='Series Items',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+                FieldPanel('projects'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
+    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields + [
+        index.FilterField('series_authors'),
+        index.FilterField('publishing_date'),
+    ]
+
+    parent_page_types = ['articles.OpinionSeriesListPage']
+    subpage_types = []
+    templates = 'articles/opinion_series_page.html'
+
+    class Meta:
+        verbose_name = 'Opinion Series'
+        verbose_name_plural = 'Opinion Series'
+
+
+class OpinionSeriesListPage(
+        BasicPageAbstract,
+        ContentPage,
+        FeatureablePageAbstract,
+        FromTheArchivesPageAbstract,
+        ShareablePageAbstract,
+        ThemeablePageAbstract
+):
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed',
+        ),
+        BasicPageAbstract.images_panel,
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
+    search_fields = ContentPage.search_fields + BasicPageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['home.HomePage', 'articles.ArticleListPage', 'articles.ArticleLandingPage']
+    subpage_types = ['articles.OpinionSeriesPage']
+    templates = 'articles/opinion_series_list_page.html'
+
+    class Meta:
+        verbose_name = 'Opinion Series List Page'

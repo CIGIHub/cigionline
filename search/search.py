@@ -147,6 +147,7 @@ class CIGIOnlineSearchQueryCompiler:
         topics,
         searchtext,
         articletypeid,
+        opinionseriesid,
         publicationtypeid,
         publicationseriesid,
         multimediaseriesid,
@@ -165,6 +166,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.topics = None
         self.searchtext = searchtext
         self.articletypeid = None
+        self.opinionseriesid = None
         self.publicationtypeid = None
         self.publicationseriesid = None
         self.multimediaseriesid = None
@@ -186,6 +188,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.experts = experts
         if articletypeid is not None:
             self.articletypeid = articletypeid
+        if opinionseriesid is not None:
+            self.opinionseriesid = opinionseriesid
         if publicationtypeid is not None:
             self.publicationtypeid = publicationtypeid
         if publicationseriesid is not None:
@@ -373,6 +377,12 @@ class CIGIOnlineSearchQueryCompiler:
                     "articles_articlepage__article_type_id_filter": self.articletypeid,
                 },
             })
+        if self.opinionseriesid:
+            filters.append({
+                "term": {
+                    "articles_articlepage__opinion_series_id_filter": self.opinionseriesid,
+                },
+            })
         if self.publicationtypeid:
             filters.append({
                 "term": {
@@ -452,6 +462,7 @@ def cigi_search(content_type=None,
                 topics=None,
                 searchtext=None,
                 articletypeid=None,
+                opinionseriesid=None,
                 publicationtypeid=None,
                 publicationseriesid=None,
                 multimediaseriesid=None,
@@ -469,6 +480,7 @@ def cigi_search(content_type=None,
                                       topics,
                                       searchtext,
                                       articletypeid,
+                                      opinionseriesid,
                                       publicationtypeid,
                                       publicationseriesid,
                                       multimediaseriesid,
@@ -544,6 +556,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         topics,
         searchtext,
         articletypeid,
+        opinionseriesid,
         publicationtypeid,
         publicationseriesid,
         multimediaseriesid,
@@ -560,6 +573,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         self.topics = None
         self.searchtext = searchtext
         self.articletypeid = None
+        self.opinionseriesid = None
         self.publicationtypeid = None
         self.publicationseriesid = None
         self.multimediaseriesid = None
@@ -580,6 +594,8 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             self.topics = topics
         if articletypeid is not None:
             self.articletypeid = articletypeid
+        if opinionseriesid is not None:
+            self.opinionseriesid = opinionseriesid
         if publicationtypeid is not None:
             self.publicationtypeid = publicationtypeid
         if publicationseriesid is not None:
@@ -670,6 +686,12 @@ class CIGIOnlineElevatedSearchQueryCompiler:
                     "articles_articlepage__article_type_id_filter": self.articletypeid,
                 },
             })
+        if self.opinionseriesid:
+            filters.append({
+                "term": {
+                    "articles_articlepage__opinion_series_id_filter": self.opinionseriesid,
+                },
+            })
         if self.publicationtypeid:
             filters.append({
                 "term": {
@@ -709,6 +731,7 @@ def cigi_search_promoted(content_type=None,
                          topics=None,
                          searchtext=None,
                          articletypeid=None,
+                         opinionseriesid=None,
                          publicationtypeid=None,
                          publicationseriesid=None,
                          multimediaseriesid=None,
@@ -724,6 +747,7 @@ def cigi_search_promoted(content_type=None,
                                               topics,
                                               searchtext,
                                               articletypeid,
+                                              opinionseriesid,
                                               publicationtypeid,
                                               publicationseriesid,
                                               multimediaseriesid,

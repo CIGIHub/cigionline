@@ -7,7 +7,7 @@ ReactDOM.render(
   <SearchTable
     blockListing
     contenttypes={[
-      'Opinion Series',
+      'Essay Series',
     ]}
     limit={5}
     fields={[
