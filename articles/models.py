@@ -563,11 +563,23 @@ class ArticleTypePage(BasicPageAbstract, Page):
         verbose_name_plural = 'Article Types'
 
 
-class ArticleSeriesListPage(Page):
+class ArticleSeriesListPage(BasicPageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage', 'publications.PublicationListPage']
     subpage_types = ['articles.ArticleSeriesPage']
     templates = 'articles/article_series_list_page.html'
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     class Meta:
         verbose_name = 'Article Series List Page'
