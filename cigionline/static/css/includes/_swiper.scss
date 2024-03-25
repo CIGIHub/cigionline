@@ -51,9 +51,26 @@
     }
   }
 
-  &.article-landing-series {
+  &.essay-series {
     article {
       display: flex;
+    }
+
+    .essay-series-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .article-series-pdf {
+        ul {
+          list-style: none;
+          display: flex;
+
+          li {
+            margin-right: 0.5em;
+          }
+        }
+      }
     }
   }
 }

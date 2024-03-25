@@ -41,15 +41,9 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
         ).in_bulk(featured_article_ids)
         return [pages[x] for x in featured_article_ids]
 
-    def get_featured_article_series(self):
-        return ArticleSeriesPage.objects.prefetch_related(
-            'topics',
-        ).live().public().order_by('-publishing_date')[:10]
-
     def get_context(self, request):
         context = super().get_context(request)
         context['featured_articles'] = self.get_featured_articles()
-        context['featured_article_series'] = self.get_featured_article_series()
         return context
 
     content_panels = Page.content_panels + [
@@ -703,14 +697,17 @@ class ArticleSeriesPage(
     @property
     def series_pdf(self):
         publication_page = PublicationPage.objects.filter(title=self.title).first()
-        pdf_downloads = [
-            {
-                'type': pdf.value['button_text'] if pdf.value['button_text'] else 'Download PDF',
-                'url': pdf.value['file'].url
-            }
-            for pdf in publication_page.pdf_downloads
-        ]
-        return pdf_downloads
+        try:
+            pdf_downloads = [
+                {
+                    'type': pdf.value['button_text'] if pdf.value['button_text'] else 'Download PDF',
+                    'url': pdf.value['file'].url
+                }
+                for pdf in publication_page.pdf_downloads
+            ]
+            return pdf_downloads
+        except AttributeError:
+            return []
 
     def series_items_by_category(self):
         series_items = self.article_series_items

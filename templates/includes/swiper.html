@@ -6,7 +6,7 @@
       <div class="swiper-slide">
         {% if type == "homepage-highlight" or type == "publication-list-page-featured" %}
           {% include "includes/features/feature_poster_teaser.html" with content=item %}
-        {% elif type == "article-landing-series" %}
+        {% elif type == "essay-series" %}
           <article class="row">
             <div class="img-wrapper col-md-3">
               {% if item.image_poster.file.url|file_extension == '.gif' %}
@@ -16,15 +16,35 @@
               {% endif %}
             </div>
             <div class="col-md-9">
-              {% include "includes/topics.html" with topics=item.topics %}
-              <h3><a href="{% pageurl item %}">{{ item.title }}</a></h3>
-              {{ item.short_description|richtext }}
-              <h4>CONTRIBUTORS</h4>
-              <ul class="contributors">
-                {% for contributor in item.series_authors %}
-                  <li><a href="{% pageurl contributor %}">{{ contributor.title }}</a></li>
-                {% endfor %}
-              </ul>
+              <div class="essay-series-content">
+                <div>
+                  {% include "includes/topics.html" with topics=item.topics %}
+                  <h3><a href="{% pageurl item %}">{{ item.title }}</a></h3>
+                  {{ item.short_description|richtext }}
+                  <h4>CONTRIBUTORS</h4>
+                  <ul class="contributors">
+                    {% for contributor in item.series_authors %}
+                      <li><a href="{% pageurl contributor %}">{{ contributor.title }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% if item.specific.series_pdf %}
+                  <div class="article-series-pdf">
+                    <ul>
+                      {% for pdf in item.series_pdf %}
+                        <li>
+                          <a href="{{ pdf.url }}" target="_blank">
+                            <button class="button button-action" type="button">
+                              <i class="fa fas fa-download"></i>
+                              {{ pdf.type }}
+                            </button>
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+              </div>
             </div>
           </article>
         {% elif type == "annual-reports" %}

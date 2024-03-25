@@ -80,18 +80,6 @@
       </div>
     </section>
   {% endcache %}
-  {% cache 86400 article_series_swiper self.pk self.latest_revision_created_at|date:"c" is_preview %}
-    <section class="series">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="paragraph-heading">Series</h2>
-            {% include "includes/swiper.html" with swiper_content=featured_article_series type="article-landing-series" %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
   <section>
     <div class="container">
       <div class="row">

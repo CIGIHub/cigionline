@@ -10,31 +10,33 @@ function ArticleSeriesListing(props) {
   return (
     <article className="article-series-row">
       <div className="article-series-content">
-        <ul className="custom-text-list article-series-topic-list">
-          {row.topics.map((topic) => (
-            <li key={`${row.id}-topic-${topic.id}`}>
-              <a href={topic.url} className="table-content-link">
-                {topic.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <h2 className="article-series-title">
-          <a href={row.url}>{row.title}</a>
-        </h2>
-        <div
-          className="article-series-short-description"
-          dangerouslySetInnerHTML={{ __html: row.short_description }}
-        />
-        <div className="article-series-contributors">
-          <h3>Contributors</h3>
-          <ul>
-            {row.series_contributors.map((person) => (
-              <li key={`${row.id}-contributor-${person.id}`}>
-                <a href={person.url}>{person.title}</a>
+        <div>
+          <ul className="custom-text-list article-series-topic-list">
+            {row.topics.map((topic) => (
+              <li key={`${row.id}-topic-${topic.id}`}>
+                <a href={topic.url} className="table-content-link">
+                  {topic.title}
+                </a>
               </li>
             ))}
           </ul>
+          <h2 className="article-series-title">
+            <a href={row.url}>{row.title}</a>
+          </h2>
+          <div
+            className="article-series-short-description"
+            dangerouslySetInnerHTML={{ __html: row.short_description }}
+          />
+          <div className="article-series-contributors">
+            <h3>Contributors</h3>
+            <ul>
+              {row.series_contributors.map((person) => (
+                <li key={`${row.id}-contributor-${person.id}`}>
+                  <a href={person.url}>{person.title}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
         {row.series_pdf && row.series_pdf.length > 0 && (
           <div className="article-series-pdf">

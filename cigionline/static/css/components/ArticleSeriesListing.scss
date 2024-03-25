@@ -12,6 +12,10 @@
   padding-bottom: 2em;
 
   .article-series-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     .article-series-contributors {
       h3 {
         color: $cigi-text-grey;
@@ -48,7 +52,10 @@
       margin-bottom: 0.5em;
 
       li {
-        @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
+        @include link(
+          $color: $cigi-primary-colour,
+          $hover-color: $cigi-dark-pink
+        );
         font-size: 0.75em;
         font-weight: 500;
         line-height: 1.25em;

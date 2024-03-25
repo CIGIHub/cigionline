@@ -40,6 +40,12 @@ class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             featured_publications.append(item.publication_page)
         return featured_publications
 
+    def featured_essay_series(self):
+        from articles.models import ArticleSeriesPage
+        return ArticleSeriesPage.objects.prefetch_related(
+            'topics',
+        ).live().public().order_by('-publishing_date')[:10]
+
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['articles.ArticleSeriesListPage', 'publications.PublicationPage', 'publications.PublicationTypePage', 'publications.PublicationSeriesListPage']
