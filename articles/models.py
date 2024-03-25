@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
+from publications.models import PublicationPage
 from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.panels import (
     FieldPanel,
@@ -570,8 +571,8 @@ class ArticleTypePage(BasicPageAbstract, Page):
 
 class ArticleSeriesListPage(Page):
     max_count = 1
-    parent_page_types = ['home.HomePage']
-    subpage_types = []
+    parent_page_types = ['home.HomePage', 'publications.PublicationListPage']
+    subpage_types = ['articles.ArticleSeriesPage']
     templates = 'articles/article_series_list_page.html'
 
     class Meta:
@@ -698,6 +699,18 @@ class ArticleSeriesPage(
             'content_page',
             'content_page__authors__author',
         ).all()
+
+    @property
+    def series_pdf(self):
+        publication_page = PublicationPage.objects.filter(title=self.title).first()
+        pdf_downloads = [
+            {
+                'type': pdf.value['button_text'] if pdf.value['button_text'] else 'Download PDF',
+                'url': pdf.value['file'].url
+            }
+            for pdf in publication_page.pdf_downloads
+        ]
+        return pdf_downloads
 
     def series_items_by_category(self):
         series_items = self.article_series_items
