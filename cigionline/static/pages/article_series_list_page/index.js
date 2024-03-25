@@ -13,7 +13,6 @@ ReactDOM.render(
     fields={[
       'image_poster_caption',
       'image_poster_url',
-      'series_pdf',
       'series_contributors',
       'short_description',
       'topics',

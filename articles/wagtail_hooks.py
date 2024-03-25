@@ -127,7 +127,7 @@ def register_article_series_page_permissions():
 
 class ArticleSeriesPageModelAdmin(ModelAdmin):
     model = ArticleSeriesPage
-    menu_label = 'Essay Series'
+    menu_label = 'Article Series'
     menu_icon = 'list-ul'
     menu_order = 103
     list_display = ('title', 'publishing_date', 'live', 'id')

@@ -22,44 +22,22 @@ function ArticleSeriesListing(props) {
         <h2 className="article-series-title">
           <a href={row.url}>{row.title}</a>
         </h2>
-        <div
-          className="article-series-short-description"
-          dangerouslySetInnerHTML={{ __html: row.short_description }}
-        />
+        <div className="article-series-short-description" dangerouslySetInnerHTML={{ __html: row.short_description }} />
         <div className="article-series-contributors">
           <h3>Contributors</h3>
           <ul>
             {row.series_contributors.map((person) => (
               <li key={`${row.id}-contributor-${person.id}`}>
-                <a href={person.url}>{person.title}</a>
+                <a href={person.url}>
+                  {person.title}
+                </a>
               </li>
             ))}
           </ul>
         </div>
-        {row.series_pdf && row.series_pdf.length > 0 && (
-          <div className="article-series-pdf">
-            <ul>
-              {row.series_pdf.map((pdf) => (
-                <li key={`${row.id}-pdf-${pdf.type}`}>
-                  <a href={pdf.url}>
-                    <button className="button button-action" type="button">
-                      <i className="fa fas fa-download" />
-                      {pdf.type}
-                    </button>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
       <a href={row.url} className="article-series-image">
-        <img
-          src={row.image_poster_url}
-          alt={row.image_poster_caption}
-          width="672"
-          height="895"
-        />
+        <img src={row.image_poster_url} alt={row.image_poster_caption} width="672" height="895" />
       </a>
     </article>
   );
@@ -70,26 +48,18 @@ ArticleSeriesListing.propTypes = {
     id: PropTypes.number,
     image_poster_caption: PropTypes.string,
     image_poster_url: PropTypes.string,
-    series_pdf: PropTypes.arrayOf(PropTypes.shape({
+    series_contributors: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
       url: PropTypes.string,
-      type: PropTypes.string,
     })),
-    series_contributors: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        title: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    ),
     short_description: PropTypes.string,
     title: PropTypes.string,
-    topics: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        title: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    ),
+    topics: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      url: PropTypes.string,
+    })),
     url: PropTypes.string,
   }).isRequired,
 };
