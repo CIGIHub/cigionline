@@ -12,6 +12,10 @@
   padding-bottom: 2em;
 
   .article-series-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     .article-series-contributors {
       h3 {
         color: $cigi-text-grey;
@@ -48,11 +52,26 @@
       margin-bottom: 0.5em;
 
       li {
-        @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
+        @include link(
+          $color: $cigi-primary-colour,
+          $hover-color: $cigi-dark-pink
+        );
         font-size: 0.75em;
         font-weight: 500;
         line-height: 1.25em;
         text-transform: uppercase;
+      }
+    }
+  }
+
+  .article-series-pdf {
+    ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+
+      li {
+        margin-right: 0.5em;
       }
     }
   }
