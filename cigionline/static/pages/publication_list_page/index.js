@@ -125,8 +125,7 @@ const featuredPublicationsSwiperContainer = document.querySelector(
 );
 
 if (featuredPublicationsSwiperContainer) {
-  const swiperControls =
-    featuredPublicationsSwiperContainer.querySelector('.swiper-controls');
+  const swiperControls = featuredPublicationsSwiperContainer.querySelector('.swiper-controls');
   const publicationListPageSwiper = new Swiper(
     '.publication-list-page-featured',
     {
