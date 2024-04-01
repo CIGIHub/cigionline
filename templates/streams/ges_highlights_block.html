@@ -7,6 +7,23 @@
           Highlights
         </h2>
 
+        {% if self.pdf %}
+          <div class="highlights__download">
+            <div class="row justify-content-center">
+              <div class="col-12 slide-deck__right">
+                {% if self.description %}
+                  {{ self.description|richtext }}
+                {% endif %}
+                <a href="{{ self.pdf.url }}" target="_blank">
+                  <button class="button-action">
+                    <i class="fas fa-download"></i> Download PDF
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
         {% if self.slides %}
           <div class="swiper-container">
             <div class="swiper-controls">
@@ -23,34 +40,5 @@
         {% endif%}
       </div>
     </div>
-    {% if self.pdf %}
-      <div class="highlights__download">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-5 col-lg-4">
-            <a href="{{ self.pdf.url }}">
-              <div class="img-wrapper">
-                {% image self.image width-1920 %}
-              </div>
-            </a>
-          </div>
-          <div class="col-12 col-md-5 col-lg-4 slide-deck__right">
-            <div>
-              {% if self.title %}
-                <h3>{{ self.title }}</h3>
-              {% endif %}
-          
-              {% if self.description %}
-                {{ self.description|richtext }}
-              {% endif %}
-            </div>
-            <a href="{{ self.pdf.url }}" target="_blank">
-              <button class="button-action">
-                <i class="fas fa-download"></i> Download PDF
-              </button>
-            </a>
-          </div>
-        </div>
-      </div>
-    {% endif %}
   </div>
 </div>

@@ -9,6 +9,8 @@ from .models import (
     PublicationTypePage,
 )
 
+from articles.models import ArticleSeriesListPage
+
 
 class PublicationListPageTests(WagtailPageTestCase):
     def test_publicationlistpage_parent_page_types(self):
@@ -20,7 +22,7 @@ class PublicationListPageTests(WagtailPageTestCase):
     def test_publicationlistpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             PublicationListPage,
-            {PublicationPage, PublicationTypePage, PublicationSeriesListPage},
+            {PublicationPage, PublicationTypePage, PublicationSeriesListPage, ArticleSeriesListPage},
         )
 
 
