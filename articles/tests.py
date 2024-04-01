@@ -11,6 +11,7 @@ from .models import (
     MediaLandingPage,
     OpinionSeriesListPage,
 )
+from publications.models import PublicationListPage
 
 
 class ArticleLandingPageTests(WagtailPageTestCase):
@@ -59,7 +60,7 @@ class ArticleSeriesListPageTests(WagtailPageTestCase):
     def test_articleserieslistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticleSeriesListPage,
-            {HomePage},
+            {HomePage, PublicationListPage},
         )
 
     def test_articleserieslistpage_child_page_types(self):
