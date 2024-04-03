@@ -1,6 +1,6 @@
 {% load wagtailcore_tags menu_tags core_tags wagtailimages_tags %}
 
-<section class="hero{{ additional_classes }}">
+<section class="hero {{ additional_classes }}">
   {% if video_banner %}
     <video class="banner-bg" autoplay muted loop playsinline>
       <source src="{{ video_banner.url }}" type="video/mp4">
