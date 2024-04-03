@@ -1003,6 +1003,14 @@ class OpinionSeriesPage(
     ThemeablePageAbstract,
 ):
 
+    image_banner = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+    )
     series_items_description = RichTextField(
         blank=True,
         null=True,
@@ -1036,7 +1044,14 @@ class OpinionSeriesPage(
             heading='General Information',
             classname='collapsible collapsed',
         ),
-        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+        [
+            FieldPanel('image_hero'),
+            FieldPanel('image_banner'),
+        ],
+        heading='Images',
+        classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('series_items_description'),
