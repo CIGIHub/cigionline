@@ -1,26 +1,39 @@
-h2 {
-  &.paragraph-heading {
-    margin-bottom: 2em;
-  }
-}
+@import '../../../css/global/mixins';
 
-section {
-  margin: 3em 0;
+body {
+  @include top-bar(
+    $background-color: transparent,
+    $background-color-scrolled: $black
+  );
 
-  &.in-the-series {
-    .search-table {
-      margin-top: 0;
+  h2 {
+    &.paragraph-heading {
+      margin-bottom: 2em;
     }
   }
-}
 
-.in-the-series {
-  .search-table-container {
-    margin-top: 0;
+  section {
+    margin: 3em 0;
 
-    .search-table {
-      .search-bar-sort-wrapper {
-        display: none;
+    &.hero {
+      margin-top: 0;
+    }
+
+    &.in-the-series {
+      .search-table {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .in-the-series {
+    .search-table-container {
+      margin-top: 0;
+
+      .search-table {
+        .search-bar-sort-wrapper {
+          display: none;
+        }
       }
     }
   }
