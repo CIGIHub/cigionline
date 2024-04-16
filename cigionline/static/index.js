@@ -10,7 +10,7 @@ import addInlineVideoActions from './js/inline_video_block';
 $(function() {
   // MAIN NAVIGATION SCROLL
   let scrollTop = 0;
-  const header = $('header:not(.small)');
+  const header = $('header');
   const globalNav = header.find('#global-nav');
 
   $(window).on('scroll', function() {

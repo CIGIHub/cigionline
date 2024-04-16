@@ -30,8 +30,12 @@
   {% endif %}
 {% endblock %}
 
+{% block header %}
+  {% include "includes/top_bar.html" with small=True banner=True %}
+{% endblock %}
+
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title topics=self.topics image_banner=self.image_banner additional_classes="gradient" %}
   {% include "includes/body.html" with body=self.body heading="About the Series" %}
   <section class="in-the-series">
     <div class="container">

@@ -119,5 +119,37 @@ section {
         width: 100%;
       }
     }
+
+    &.gradient {
+      .banner-bg {
+        &::after {
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.65) 0%,
+            rgba(0, 0, 0, 0.1) 50%
+          );
+          content: '';
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+        }
+
+        &::before {
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.1) 50%,
+            rgba(0, 0, 0, 0.65) 100%
+          );
+          content: '';
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+        }
+      }
+    }
   }
 }
