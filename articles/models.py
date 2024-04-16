@@ -1045,12 +1045,12 @@ class OpinionSeriesPage(
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
-        [
-            FieldPanel('image_hero'),
-            FieldPanel('image_banner'),
-        ],
-        heading='Images',
-        classname='collapsible collapsed',
+            [
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+            ],
+            heading='Images',
+            classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
