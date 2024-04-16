@@ -24,6 +24,13 @@ class CookieConsent extends React.Component {
         2147483647 * 1000,
       ).toUTCString()}`;
     }
+    if (choice === 'google') {
+      const consentMode = {
+        'analytics_storage': 'granted',
+      };
+      window.gtag('consent', 'update', consentMode);
+      localStorage.setItem('consentMode', JSON.stringify(consentMode));
+    }
     this.setState({
       consentClicked: true,
     });
@@ -89,6 +96,17 @@ class CookieConsent extends React.Component {
                   onClick={() => this.handleConsent('none')}
                 >
                   <span>none</span>
+                  <i className="fa fa-check" />
+                </button>
+                <button
+                  type="button"
+                  className={[
+                    'cigi-cookie-consent-notice',
+                    consentClicked && 'accepted-consent',
+                  ].join(' ')}
+                  onClick={() => this.handleConsent('google')}
+                >
+                  <span>google</span>
                   <i className="fa fa-check" />
                 </button>
                 {consentClicked && (
