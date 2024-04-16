@@ -21,6 +21,16 @@
     padding-bottom: 1.5rem;
     background: $black;
 
+    .summary {
+      p {
+        @include media-breakpoint-up(md) {
+          font-size: 1.25em;
+        }
+        font-size: 1.0625em;
+        padding-bottom: 1rem;
+      }
+    }
+
     p {
       @include media-breakpoint-up(md) {
         text-align: center;
@@ -28,14 +38,6 @@
       color: $white;
       margin-bottom: 0;
       font-weight: 300;
-
-      &.summary {
-        @include media-breakpoint-up(md) {
-          font-size: 1.25em;
-        }
-        font-size: 1.0625em;
-        padding-bottom: 1rem;
-      }
 
       &.newsletter {
         @include link($color: $white, $hover-color: $cigi-primary-colour);

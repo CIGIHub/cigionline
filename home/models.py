@@ -18,6 +18,7 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     FieldPanel
 )
+from wagtail.fields import RichTextField
 from wagtail.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
@@ -29,7 +30,22 @@ import traceback
 class HomePage(Page):
     """Singleton model for the home page."""
 
+    banner_text = RichTextField(
+        blank=True,
+        null=True,
+        verbose_name='Banner Text',
+    )
+
     content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel(
+                    'banner_text',
+                ),
+            ],
+            heading='Banner',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 InlinePanel(
