@@ -1,4 +1,5 @@
 @import '../global/variables';
+@import '../global/mixins';
 
 @keyframes bannerFadeIn {
   0% {
@@ -33,59 +34,119 @@
   }
 
   .cigi-cookie-consent-content {
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+    }
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding-bottom: 1em;
-    padding-top: 1em;
+    padding: 2em 0;
+    color: $white;
 
-    button {
-      align-items: center;
-      border: 1px solid $white;
-      color: $white;
-      display: flex;
-      font-size: 1.2em;
-      justify-content: space-between;
-      margin-left: 2em;
-      margin-right: 2em;
-      outline: none;
-      padding: 0.4em 1em;
-      text-decoration: none;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: $cigi-darkest-grey;
-      }
-
-      i {
-        margin-left: 0.5em;
+    &.accepted-consent {
+      .cigi-cookie-consent-notice {
+        opacity: 0;
       }
     }
 
-    p {
-      color: $white;
-      font-size: 0.9em;
+    & > p {
       margin-bottom: 0;
+    }
+
+    .cigi-cookie-consent-content-buttons {
+      @include media-breakpoint-down(sm) {
+        margin-top: 1em;
+        justify-content: space-around;
+      }
+      @include media-breakpoint-up(md) {
+        flex-direction: column;
+        margin-left: 2em;
+        width: 25%;
+      }
+      display: flex;
+      width: 100%;
+      flex: 1 0 25%;
+
+      button {
+        @include media-breakpoint-down(sm) {
+          width: 40%;
+        }
+        align-items: center;
+        border: 1px solid $white;
+        color: $white;
+        display: flex;
+        font-size: 1.2em;
+        justify-content: space-between;
+        outline: none;
+        padding: 0.4em 1em;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+        width: 100%;
+
+        &:hover {
+          background-color: $cigi-darkest-grey;
+        }
+
+        &:first-child {
+          @include media-breakpoint-up(md) {
+            margin-bottom: 1em;
+          }
+        }
+
+        span {
+          white-space: nowrap;
+        }
+
+        i {
+          margin-left: 0.5em;
+        }
+      }
+    }
+
+    p,
+    span {
+      font-size: 0.9em;
     }
 
     .cigi-cookie-consent-notice {
       opacity: 1;
       transition: opacity 0.2s ease;
+    }
 
-      &.accepted-consent {
-        opacity: 0;
+    .cigi-cookie-consent-choices {
+      margin-bottom: 0;
+
+      li {
+        display: flex;
+        align-items: flex-start;
+
+        input {
+          margin-right: 0.5em;
+          margin-top: 0.25em;
+        }
+
+        p {
+          margin-bottom: 0.5em;
+        }
+
+        &:last-of-type {
+          p {
+            margin-bottom: 0;
+          }
+        }
       }
     }
+  }
 
-    .cigi-cookie-consent-thank-you {
-      align-items: center;
-      display: flex;
-      height: 100%;
-      justify-content: center;
-      left: 0;
-      position: absolute;
-      top: 0;
-      width: 100%;
-    }
+  .cigi-cookie-consent-thank-you {
+    color: $white;
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 }
