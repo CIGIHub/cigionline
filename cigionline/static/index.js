@@ -120,7 +120,7 @@ $(function() {
 addInlineVideoActions();
 
 const cookieConsentContainer = document.getElementById('cigi-cookie-consent-container');
-if (cookieConsentContainer && !document.cookie.split(';').some((item) => item.includes('cigionline.accept.privacy.notice=1'))) {
+if (cookieConsentContainer && localStorage.getItem('consentMode') === null) {
   ReactDOM.render(
     <CookieConsent />,
     cookieConsentContainer,
