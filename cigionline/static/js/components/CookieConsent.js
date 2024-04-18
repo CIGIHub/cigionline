@@ -1,5 +1,7 @@
 import React from 'react';
 import '../../css/components/CookieConsent.scss';
+import CookieConsentContent from './CookieConsentContent';
+import CookieConsentChoices from './CookieConsentChoices';
 
 class CookieConsent extends React.Component {
   constructor(props) {
@@ -8,28 +10,43 @@ class CookieConsent extends React.Component {
       consentClicked: false,
       consentComplete: false,
       consentFade: false,
+      consentPage: 'content',
+      consentState: {
+        analytics_storage: 'granted',
+        ad_storage: 'granted',
+      },
     };
 
     this.handleConsent = this.handleConsent.bind(this);
+    this.pageChange = this.pageChange.bind(this);
   }
 
   handleConsent(choice) {
-    if (choice === 'none') {
-      document.cookie = `cigionline.accept.privacy.notice=2; path=/; expires=${new Date(
-        2147483647 * 1000,
-      ).toUTCString()}`;
-    }
     if (choice === 'all') {
-      document.cookie = `cigionline.accept.privacy.notice=1; path=/; expires=${new Date(
-        2147483647 * 1000,
-      ).toUTCString()}`;
-    }
-    if (choice === 'google') {
-      const consentMode = {
-        'analytics_storage': 'granted',
-      };
-      window.gtag('consent', 'update', consentMode);
-      localStorage.setItem('consentMode', JSON.stringify(consentMode));
+      this.setState(
+        {
+          consentState: {
+            analytics_storage: 'granted',
+            ad_storage: 'granted',
+          },
+        },
+        () => {
+          const { consentState } = this.state;
+          window.gtag('consent', 'update', consentState);
+          localStorage.setItem('consentMode', JSON.stringify(consentState));
+        },
+      );
+    } else {
+      this.setState(
+        {
+          consentState: choice,
+        },
+        () => {
+          const { consentState } = this.state;
+          window.gtag('consent', 'update', consentState);
+          localStorage.setItem('consentMode', JSON.stringify(consentState));
+        },
+      );
     }
     this.setState({
       consentClicked: true,
@@ -38,16 +55,28 @@ class CookieConsent extends React.Component {
       this.setState({
         consentFade: true,
       });
-    }, 1500);
+    }, 3000);
     setTimeout(() => {
       this.setState({
         consentComplete: true,
       });
-    }, 2000);
+    }, 4000);
+  }
+
+  pageChange(page) {
+    this.setState({
+      consentPage: page,
+    });
   }
 
   render() {
-    const { consentClicked, consentFade, consentComplete } = this.state;
+    const {
+      consentClicked,
+      consentFade,
+      consentComplete,
+      consentPage,
+      consentState,
+    } = this.state;
 
     const consentCopy = `
       This site uses cookies to provide the best online experience. By using
@@ -68,53 +97,27 @@ class CookieConsent extends React.Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <div className="cigi-cookie-consent-content">
-                <p
-                  className={[
-                    'cigi-cookie-consent-notice',
-                    consentClicked && 'accepted-consent',
-                  ].join(' ')}
-                  dangerouslySetInnerHTML={{ __html: consentCopy }}
+              {consentPage === 'content' && (
+                <CookieConsentContent
+                  consentClicked={consentClicked}
+                  consentCopy={consentCopy}
+                  handleConsent={this.handleConsent}
+                  pageChange={this.pageChange}
                 />
-                <button
-                  type="button"
-                  className={[
-                    'cigi-cookie-consent-notice',
-                    consentClicked && 'accepted-consent',
-                  ].join(' ')}
-                  onClick={() => this.handleConsent('all')}
-                >
-                  <span>OK</span>
-                  <i className="fa fa-check" />
-                </button>
-                <button
-                  type="button"
-                  className={[
-                    'cigi-cookie-consent-notice',
-                    consentClicked && 'accepted-consent',
-                  ].join(' ')}
-                  onClick={() => this.handleConsent('none')}
-                >
-                  <span>none</span>
-                  <i className="fa fa-check" />
-                </button>
-                <button
-                  type="button"
-                  className={[
-                    'cigi-cookie-consent-notice',
-                    consentClicked && 'accepted-consent',
-                  ].join(' ')}
-                  onClick={() => this.handleConsent('google')}
-                >
-                  <span>google</span>
-                  <i className="fa fa-check" />
-                </button>
-                {consentClicked && (
-                  <div className="cigi-cookie-consent-thank-you">
-                    <p>Thank You</p>
-                  </div>
-                )}
-              </div>
+              )}
+              {consentPage === 'choices' && (
+                <CookieConsentChoices
+                  consentClicked={consentClicked}
+                  pageChange={this.pageChange}
+                  handleConsent={this.handleConsent}
+                  consentState={consentState}
+                />
+              )}
+              {consentClicked && (
+                <div className="cigi-cookie-consent-thank-you">
+                  <p>Thank You</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
