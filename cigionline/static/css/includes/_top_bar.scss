@@ -316,7 +316,7 @@ header {
 
             ul {
               @include link(
-                $color: $cigi-text-grey,
+                $color: $cigi-medium-grey,
                 $hover-color: $cigi-dark-pink
               );
               @include media-breakpoint-up(md) {
