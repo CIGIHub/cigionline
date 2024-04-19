@@ -43,16 +43,16 @@ class Paginator extends React.Component {
     const { currentPage, setPage, totalPages } = this.props;
 
     return (
-      <div className="pagination-links-numbered">
+      <ul className="pagination-links-numbered">
         {this.hasPrevPage && (
           <>
             <li key="first" className="pagination-link-first pagination-underline">
-              <button type="button" onClick={() => setPage(1)}>
+              <button type="button" onClick={() => setPage(1)} aria-label="First search results page">
                 first page
               </button>
             </li>
             <li key="previous" className="pagination-underline pagination-underline-centred">
-              <button type="button" onClick={() => setPage(currentPage - 1)}>
+              <button type="button" onClick={() => setPage(currentPage - 1)} aria-label="Previous search results page">
                 <i className="fa fa-chevron-left" />
               </button>
             </li>
@@ -68,7 +68,7 @@ class Paginator extends React.Component {
               </li>
             ) : (
               <li key={`page-${pageNumber.page}`}>
-                <button type="button" onClick={() => setPage(pageNumber.page)}>
+                <button type="button" onClick={() => setPage(pageNumber.page)} aria-label={`Search results page ${pageNumber.page}`}>
                   {pageNumber.page}
                 </button>
               </li>
@@ -77,18 +77,18 @@ class Paginator extends React.Component {
         {this.hasNextPage && (
           <>
             <li key="next" className="pagination-underline pagination-underline-centred">
-              <button type="button" onClick={() => setPage(currentPage + 1)}>
+              <button type="button" onClick={() => setPage(currentPage + 1)} aria-label="Next search results page">
                 <i className="fa fa-chevron-right" />
               </button>
             </li>
             <li key="last" className="pagination-link-last pagination-underline">
-              <button type="button" onClick={() => setPage(totalPages)}>
+              <button type="button" onClick={() => setPage(totalPages)} aria-label="Last search results page">
                 last page
               </button>
             </li>
           </>
         )}
-      </div>
+      </ul>
     );
   }
 }
