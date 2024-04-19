@@ -4,7 +4,7 @@
       <i class="fas fa-mouse-pointer track-cta" data-cta="ar-interactive"></i> Explore
     </a>
   {% elif content.report_english %}
-    <a class="button-action" href="{{ content.report_english }}">
+    <a class="button-action" href="{{ content.report_english }}" aria-label="Download English version of annual report">
       <i class="fa fas fa-download track-cta" data-cta="ar-en"></i>
     </a>
   {% endif %}
@@ -28,7 +28,7 @@
       Purchase Book
     </a>
   {% elif cta_pdf and content.contenttype == 'Publication' %}
-    <a href="{{ content.specific.pdf_downloads.0.value.file.url }}">
+    <a href="{{ content.specific.pdf_downloads.0.value.file.url }}" aria-label="Download PDF">
       <button class="button-action button-square">
         <i class="fa fas fa-download track-cta" data-cta="publication-pdf"></i>
       </button>

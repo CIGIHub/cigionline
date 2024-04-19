@@ -25,7 +25,7 @@
     {% endwith %}
   {% else %}
     {% if promotion_block.link_url %}
-      <a href="{{ promotion_block.link_url }}">
+      <a href="{{ promotion_block.link_url }}" aria-label="Link to {{ promotion_block.link_url }}">
     {% endif %}
       <div class="promotion-block-background" style="background-image: url('{{ image_promotion_url }}');">
         {% if promotion_block.block_type == "social" %}
