@@ -54,6 +54,14 @@
   &.essay-series {
     article {
       display: flex;
+
+      .feature-content-topic-list {
+        @include link($color: $cigi-primary-colour-grey-bg, $hover-color: $cigi-dark-pink);
+      }
+
+      p {
+        @include link($color: $cigi-primary-colour-grey-bg, $hover-color: $cigi-dark-pink);
+      }
     }
 
     .essay-series-content {
