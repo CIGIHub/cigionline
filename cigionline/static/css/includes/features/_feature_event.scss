@@ -5,8 +5,8 @@
 
     &.past-event {
       .event-date-circle {
-        border-color: $cigi-medium-grey;
-        color: $cigi-medium-grey;
+        border-color: $cigi-text-grey;
+        color: $cigi-text-grey;
       }
     }
 
@@ -25,8 +25,8 @@
       margin-top: 1em;
 
       &.button-private-event {
-        border: 1px solid $cigi-medium-grey;
-        color: $cigi-medium-grey;
+        border: 1px solid $cigi-text-grey;
+        color: $cigi-text-grey;
 
         &:hover {
           background-color: transparent;
