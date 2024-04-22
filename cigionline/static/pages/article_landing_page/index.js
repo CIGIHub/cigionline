@@ -11,7 +11,7 @@ ReactDOM.render(
   <SearchTable
     showSearch
     contenttypes={['Opinion']}
-    contentsubtypes={['Interviews', 'Op-Eds', 'Opinion']}
+    contentsubtypes={['Interviews', 'Op-Eds', 'Opinion', 'Essay']}
     fields={['authors', 'publishing_date', 'topics']}
     containerClass={['custom-theme-table', 'table-opinions']}
     RowComponent={OpinionListing}
