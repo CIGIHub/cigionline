@@ -83,11 +83,11 @@
           <div class="col-12 col-md-6">
             <h2>LATEST EPISODE</h2>
             <article class="episode">
-              <a href="{% pageurl episode %}">
-                <h3 class="episode-title">
+              <h3 class="episode-title">
+                <a href="{% pageurl episode %}">
                   {{ episode.title }}
-                </h3>
-              </a>
+                </a>
+              </h3>
               {% include "includes/simplecast_embed.html" with simplecast_url=episode.multimedia_url %}
               <div class="episode-subtitle">{{ episode.subtitle|richtext }}</div>
               <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
@@ -99,41 +99,65 @@
     {% endwith %}
   {% endif %}
 
-  {% if self.episodes %}
-    <section class="episodes">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-8">
-            {% for season in self.series_seasons %}
-              <div class="season">
-                {% for episode in season.unpublished %}
-                  <article class="episode">
-                    <div>
-                      <div class="episode-number">
-                        {{ episode.podcast_episode }}
-                      </div>
-                      <a href="{% pageurl episode %}">
+  {% with series_seasons=self.series_seasons %}
+    {% if series_seasons %}
+      <section class="episodes">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-8">
+              {% for season, episodes in self.series_seasons.items %}
+                <div class="season">
+                  {% for episode in episodes.unpublished %}
+                    <article class="episode">
+                      <div>
+                        <div class="episode-number">
+                          {{ episode.podcast_episode }}
+                        </div>
                         <h3 class="episode-title">
-                          {{ episode.title }}
+                          <a href="{% pageurl episode %}">
+                            {{ episode.title }}
+                          </a>
                         </h3>
-                      </a>
-                      <div class="episode-description">{{ episode.description|richtext }}</div>
-                      <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
-                    </div>
-                  </article>
-                {% endfor %}
+                        <div class="episode-description">{{ episode.description|richtext }}</div>
+                        <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
+                      </div>
+                    </article>
+                  {% endfor %}
 
-                {% for episode in season.published %}
-
-                {% endfor%}
-              </div>
-            {% endfor %}
+                  {% for episode in episodes.published %}
+                    <article class="episode">
+                      <div class="episode-info">
+                        <div class="episode-number">
+                          EPISODE {{ episode.podcast_episode }}
+                        </div>
+                        <h3>
+                          <a href="{% pageurl episode %}">
+                            {{ episode.title }}
+                          </a>
+                        </h3>
+                        <div class="episode-description">
+                          {{ episode.subtitle|richtext }}
+                        </div>
+                        <div class="episode-publishing-date">
+                          {{ episode.publishing_date|date:"F j, Y" }}
+                        </div>
+                      </div>
+                      <div class="circle">
+                        <a href="{{ episode.url }}">
+                          <span><i class="fa fa-headphones" aria-hidden="true"></i></span>
+                        </a>
+                      </div>
+                    </article>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-  {% endif %}
+    {% endif %}
+  {% endwith %}
 
   <section class="about">
 

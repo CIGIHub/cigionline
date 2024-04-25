@@ -58,12 +58,11 @@ body {
       }
 
       article {
-        @include link($color: $black, $hover-color: $cigi-dark-pink);
-
         h3 {
+          @include link($color: $black, $hover-color: $cigi-dark-pink);
           font-size: 1.5rem;
           font-weight: 500;
-          margin-bottom: 0.5em;
+          margin-bottom: 1em;
         }
 
         .episode-subtitle {
@@ -75,8 +74,91 @@ body {
           color: $policy-prompt-blue;
           font-size: 0.8rem;
           font-weight: 500;
-          letter-spacing: 1.5px;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
+        }
+      }
+    }
+
+    &.episodes {
+      padding: 3em 0;
+
+      .episode {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2em 0;
+        border-bottom: 1px solid $cigi-medium-light-grey;
+
+        &:last-child {
+          padding-bottom: 0;
+          border-bottom: 0;
+        }
+
+        &:first-child {
+          padding-top: 0;
+        }
+
+        .episode-info {
+          .episode-number {
+            color: $cigi-text-grey;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25em;
+          }
+
+          h3 {
+            @include link($color: $black, $hover-color: $cigi-dark-pink);
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 0.25em;
+          }
+
+          .episode-description {
+            line-height: 1.1;
+            font-size: 1rem;
+            color: $cigi-text-grey;
+          }
+
+          .episode-publishing-date {
+            color: $policy-prompt-blue;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+          }
+        }
+
+        .circle {
+          @include media-breakpoint-up(md) {
+            display: flex;
+          }
+          align-items: center;
+          display: none;
+          justify-content: center;
+          width: 20%;
+          padding: 0 3em;
+
+          a {
+            color: $policy-prompt-blue;
+          }
+
+          span {
+            border: solid 1.75px $policy-prompt-blue;
+            border-radius: 2.5rem;
+            display: inline-block;
+            font-size: 1.5em;
+            line-height: 100%;
+            padding: 1.3rem;
+            transition: color ease 0.5s, background-color ease 0.5s;
+
+            &:hover {
+              background-color: $policy-prompt-blue;
+              border-color: transparent;
+              color: $white;
+            }
+          }
         }
       }
     }

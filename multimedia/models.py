@@ -485,6 +485,7 @@ class MultimediaSeriesPage(
 
         return series_seasons
     
+    @property
     def series_seasons(self):
         episode_filter = {
             'multimedia_series': self,
@@ -499,7 +500,6 @@ class MultimediaSeriesPage(
                 series_seasons[episode_season]['published'].append(episode)
             else:
                 series_seasons[episode_season]['unpublished'].append(episode)
-
         return series_seasons
 
     @property
