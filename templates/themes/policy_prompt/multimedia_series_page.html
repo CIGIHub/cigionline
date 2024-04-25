@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.short_description %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.short_description %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+
+{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'themePolicyPrompt' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themePolicyPrompt' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock header %}
+
+
+{% block content %}
+  <section class="hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="label">A CIGI PODCAST</div>
+          <h1>
+            <img src="{{ self.image_banner.file.url  }}" alt="{{ self.title }}">
+          </h1>
+          <div class="subtitle">
+            {{ self.subtitle|richtext }}
+          </div>
+          <div class="subscribe-container">
+            {% for item in self.podcast_subscribe_buttons %}
+              <a href="{{ item.value.url }}" target="_blank" rel="noopener noreferrer">
+                <div class="subscribe-button">
+                  {% image item.value.image width-100 %}
+                  {{ item.value.label }}
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% if self.latest_episode %}
+    {% with episode=self.latest_episode %}
+    <div class="divider">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="latest-episode">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-6">
+            <h2>LATEST EPISODE</h2>
+            <article class="episode">
+              <a href="{% pageurl episode %}">
+                <h3 class="episode-title">
+                  {{ episode.title }}
+                </h3>
+              </a>
+              {% include "includes/simplecast_embed.html" with simplecast_url=episode.multimedia_url %}
+              <div class="episode-subtitle">{{ episode.subtitle|richtext }}</div>
+              <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
+            </article>            
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endwith %}
+  {% endif %}
+
+  {% if self.episodes %}
+    <section class="episodes">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8">
+            {% for season in self.series_seasons %}
+              <div class="season">
+                {% for episode in season.unpublished %}
+                  <article class="episode">
+                    <div>
+                      <div class="episode-number">
+                        {{ episode.podcast_episode }}
+                      </div>
+                      <a href="{% pageurl episode %}">
+                        <h3 class="episode-title">
+                          {{ episode.title }}
+                        </h3>
+                      </a>
+                      <div class="episode-description">{{ episode.description|richtext }}</div>
+                      <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
+                    </div>
+                  </article>
+                {% endfor %}
+
+                {% for episode in season.published %}
+
+                {% endfor%}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+  {% endif %}
+
+  <section class="about">
+
+  </section>
+{% endblock content %}
