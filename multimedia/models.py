@@ -10,7 +10,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import PodcastSubscribeButtonBlock
+from streams.blocks import PodcastSubscribeButtonBlock, FeaturedEpisodeBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -420,6 +420,13 @@ class MultimediaSeriesPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    featured_episodes = StreamField(
+        [
+            ('featured_episode', FeaturedEpisodeBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )   
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -457,7 +464,7 @@ class MultimediaSeriesPage(
     )
 
     @property
-    def series_seasons(self):
+    def series_seasons_big_tech(self):
         episode_filter = {
             'multimedia_series': self,
             'theme__name__in': [
@@ -469,6 +476,23 @@ class MultimediaSeriesPage(
         series_seasons = {}
         for episode in series_episodes:
             episode_season = episode.specific.podcast_season
+            if episode_season not in series_seasons:
+                series_seasons.update({episode_season: {'published': [], 'unpublished': []}})
+            if episode.live:
+                series_seasons[episode_season]['published'].append(episode)
+            else:
+                series_seasons[episode_season]['unpublished'].append(episode)
+
+        return series_seasons
+    
+    def series_seasons(self):
+        episode_filter = {
+            'multimedia_series': self,
+        }
+        series_episodes = MultimediaPage.objects.filter(**episode_filter).order_by('-publishing_date')
+        series_seasons = {}
+        for episode in series_episodes:
+            episode_season = episode.specific.podcast_season if episode.specific.podcast_season else 0
             if episode_season not in series_seasons:
                 series_seasons.update({episode_season: {'published': [], 'unpublished': []}})
             if episode.live:
