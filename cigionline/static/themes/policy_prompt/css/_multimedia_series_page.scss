@@ -1,0 +1,84 @@
+body {
+  .divider {
+    background-color: $policy-prompt-bg;
+
+    hr {
+      width: 100%;
+      background-color: $cigi-medium-light-grey;
+    }
+  }
+
+  section {
+    &.hero {
+      background-color: $policy-prompt-bg;
+      text-align: center;
+      margin-bottom: 0;
+      padding-bottom: 1em;
+
+      .label {
+        font-size: 0.8rem;
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        font-weight: 300;
+        margin-bottom: 1em;
+      }
+
+      .subscribe-container {
+        @include link($color: $black, $hover-color: $cigi-dark-pink);
+        display: flex;
+        justify-content: center;
+
+        .subscribe-button {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          padding: 0 0.5em;
+
+          img {
+            width: 25px;
+            margin-right: 0.5em;
+          }
+        }
+      }
+    }
+
+    &.latest-episode {
+      background-color: $policy-prompt-bg;
+      text-align: center;
+      padding: 1em 0 3em;
+
+      h2 {
+        color: $policy-prompt-blue;
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        margin-bottom: 1em;
+      }
+
+      article {
+        @include link($color: $black, $hover-color: $cigi-dark-pink);
+
+        h3 {
+          font-size: 1.5rem;
+          font-weight: 500;
+          margin-bottom: 0.5em;
+        }
+
+        .episode-subtitle {
+          line-height: 1.1;
+          margin-top: 1em;
+        }
+
+        .episode-publishing-date {
+          color: $policy-prompt-blue;
+          font-size: 0.8rem;
+          font-weight: 500;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
