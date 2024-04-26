@@ -462,6 +462,8 @@ class MultimediaSeriesPage(
         help_text='A list of subscribe links to various podcast providers',
         use_json_field=True,
     )
+    
+    podcast_live = models.BooleanField(default=False)
 
     @property
     def series_seasons_big_tech(self):
@@ -533,6 +535,7 @@ class MultimediaSeriesPage(
                 FieldPanel('image_logo'),
                 FieldPanel('podcast_season_tagline'),
                 FieldPanel('podcast_subscribe_buttons'),
+                FieldPanel('podcast_live'),
             ],
             heading='Podcast Details',
             classname='collapsible collapsed',
