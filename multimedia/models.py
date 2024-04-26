@@ -10,7 +10,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import PodcastSubscribeButtonBlock, FeaturedEpisodeBlock
+from streams.blocks import PodcastSubscribeButtonBlock, FeaturedEpisodeBlock, PodcastHostBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -426,7 +426,7 @@ class MultimediaSeriesPage(
         ],
         blank=True,
         use_json_field=True,
-    )   
+    )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -453,7 +453,6 @@ class MultimediaSeriesPage(
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
     podcast_season_tagline = CharField(blank=True, null=True, max_length=256)
-
     podcast_subscribe_buttons = StreamField([
         ('podcast_subscribe_button', PodcastSubscribeButtonBlock())
     ],
@@ -462,7 +461,14 @@ class MultimediaSeriesPage(
         help_text='A list of subscribe links to various podcast providers',
         use_json_field=True,
     )
-    
+    podcast_hosts = StreamField([
+        ('podcast_host', PodcastHostBlock())
+    ],
+        blank=True,
+        verbose_name='Podcast Hosts',
+        help_text='A list of hosts for the podcast series',
+        use_json_field=True
+    )
     podcast_live = models.BooleanField(default=False)
 
     @property
@@ -486,7 +492,7 @@ class MultimediaSeriesPage(
                 series_seasons[episode_season]['unpublished'].append(episode)
 
         return series_seasons
-    
+
     @property
     def series_seasons(self):
         episode_filter = {
