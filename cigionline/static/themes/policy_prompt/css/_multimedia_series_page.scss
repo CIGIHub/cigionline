@@ -39,6 +39,9 @@ body {
 
       .subscribe-container {
         @include link($color: $black, $hover-color: $cigi-dark-pink);
+        @include media-breakpoint-down(md) {
+          flex-wrap: wrap;
+        }
         display: flex;
         justify-content: center;
         align-items: center;
@@ -119,7 +122,7 @@ body {
         font-weight: 600;
         font-family: $policy-prompt-heading-font;
         letter-spacing: 0.2em;
-        margin-bottom: 1em;
+        margin: 0 0 2rem;
         border: 0;
       }
 
@@ -127,6 +130,66 @@ body {
         line-height: 1.35;
         font-family: $policy-prompt-font;
         font-size: 0.9rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    &.hosts {
+      background-color: $policy-prompt-bg;
+      padding: 3em 0;
+
+      h2 {
+        color: $policy-prompt-blue;
+        font-size: 0.9rem;
+        font-weight: 600;
+        font-family: $policy-prompt-heading-font;
+        letter-spacing: 0.2em;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+      }
+
+      .hosts-list {
+        @include media-breakpoint-down(md) {
+          flex-direction: column;
+        }
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .host {
+        @include media-breakpoint-down(md) {
+          margin-bottom: 2em;
+        }
+        flex: 0 1 47.5%;
+        display: flex;
+
+        .host-image {
+          width: 200px;
+          margin-right: 1em;
+
+          img {
+            border-radius: 50%;
+          }
+        }
+
+        .host-details {
+          font-family: $policy-prompt-font;
+
+          h3 {
+            @include link($color: $black, $hover-color: $cigi-dark-pink);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0.25em 0 0.4em;
+          }
+
+          .host-bio {
+            line-height: 1.4;
+            font-size: 0.8rem;
+          }
+        }
       }
     }
 

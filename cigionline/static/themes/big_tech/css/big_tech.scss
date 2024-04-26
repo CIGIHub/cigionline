@@ -1,14 +1,6 @@
 $bigtech-teal: #38bf8e;
 $bigtech-light-grey: #b1b1b1;
 
-@mixin slash($width: 5px, $height: 60px, $color: $black-alpha-40) {
-  border-right: 1px solid $color;
-  height: $height;
-  margin: 0 25px 0 28px;
-  transform: rotate(15deg);
-  width: $width;
-}
-
 @import '../../../css/global/mixins';
 @import '../../../css/global/animations/slide_down';
 @import './big_tech_article';
