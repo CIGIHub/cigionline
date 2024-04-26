@@ -5,6 +5,7 @@ body {
     hr {
       width: 100%;
       background-color: $cigi-medium-light-grey;
+      margin: 0;
     }
   }
 
@@ -13,32 +14,59 @@ body {
       background-color: $policy-prompt-bg;
       text-align: center;
       margin-bottom: 0;
-      padding-bottom: 1em;
+      padding-bottom: 3em;
 
       .label {
         font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        margin-bottom: 1.5rem;
+
+        img {
+          width: 50%;
+        }
       }
 
       .subtitle {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         font-weight: 300;
-        margin-bottom: 1em;
+        font-family: $policy-prompt-font;
+        margin-bottom: 3rem;
       }
 
       .subscribe-container {
         @include link($color: $black, $hover-color: $cigi-dark-pink);
         display: flex;
         justify-content: center;
+        align-items: center;
+        font-family: $policy-prompt-heading-font;
+
+        .subscribe-coming-soon {
+          font-weight: 600;
+          margin-right: 0.5em;
+        }
 
         .subscribe-button {
           display: flex;
           align-items: center;
           height: 100%;
-          padding: 0 0.5em;
+          padding: 0 0.75em;
 
-          img {
-            width: 25px;
-            margin-right: 0.5em;
+          i {
+            margin-right: 1rem;
+            font-size: 1.5em;
+          }
+        }
+
+        .subscribe-more {
+          padding-left: 1.25em;
+
+          button {
+            display: flex;
+            align-items: center;
           }
         }
       }
@@ -53,7 +81,7 @@ body {
         color: $policy-prompt-blue;
         font-size: 1rem;
         font-weight: 500;
-        letter-spacing: 1.5px;
+        letter-spacing: 0.1em;
         margin-bottom: 1em;
       }
 
@@ -77,6 +105,28 @@ body {
           letter-spacing: 0.1em;
           text-transform: uppercase;
         }
+      }
+    }
+
+    &.body {
+      background-color: $policy-prompt-bg;
+      padding: 3em 0;
+      margin: 0;
+
+      .paragraph-heading {
+        color: $policy-prompt-blue;
+        font-size: 0.9rem;
+        font-weight: 600;
+        font-family: $policy-prompt-heading-font;
+        letter-spacing: 0.2em;
+        margin-bottom: 1em;
+        border: 0;
+      }
+
+      p {
+        line-height: 1.35;
+        font-family: $policy-prompt-font;
+        font-size: 0.9rem;
       }
     }
 

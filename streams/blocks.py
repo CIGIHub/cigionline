@@ -1095,11 +1095,20 @@ class TimelineGalleryBlock(blocks.StructBlock):
 class PodcastSubscribeButtonBlock(blocks.StructBlock):
     label = blocks.CharBlock(required=True)
     url = blocks.URLBlock(required=True)
-    image = ImageChooserBlock(required=False)
 
     class Meta:
         icon = 'link'
         label = 'Podcast Subscribe Button'
+
+
+class PodcastHostBlock(blocks.StructBlock):
+    host = blocks.PageChooserBlock(page_type='people.PersonPage', required=True)
+    bio = blocks.RichTextBlock(required=False)
+
+    class Meta:
+        icon = 'user'
+        label = 'Podcast Host'
+        template = 'streams/podcast_host_block.html'
 
 
 class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
@@ -1363,6 +1372,7 @@ class GESRawDataBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'GES Raw Data'
         template = 'streams/ges_raw_data_block.html'
+
 
 class FeaturedEpisodeBlock(blocks.StructBlock):
     episode = blocks.PageChooserBlock(page_type='multimedia.MultimediaPage', required=True)

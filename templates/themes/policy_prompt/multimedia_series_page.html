@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block extra_fonts %}
-
+  <link rel="stylesheet" href="https://use.typekit.net/nyt4kej.css">
 {% endblock %}
 {% block extra_css %}
   {% render_bundle 'themePolicyPrompt' 'css' %}
@@ -53,20 +53,40 @@
             {{ self.subtitle|richtext }}
           </div>
           <div class="subscribe-container">
-            {% for item in self.podcast_subscribe_buttons %}
+            {% if not self.podcast_live %}
+              <div class="subscribe-coming-soon">coming soon on:</div>
+            {% endif %}
+            {% for item in self.podcast_subscribe_buttons|slice:":2" %}
               <a href="{{ item.value.url }}" target="_blank" rel="noopener noreferrer">
                 <div class="subscribe-button">
-                  {% image item.value.image width-100 %}
-                  {{ item.value.label }}
+                  {% if item.value.label == 'Apple Podcasts' %}
+                    <i class="fa-solid fa-podcast"></i>
+                  {% elif item.value.label == 'Spotify' %}
+                    <i class="fa-brands fa-spotify"></i>
+                  {% endif %}
+                  <span>
+                    {{ item.value.label }}
+                  </span>
                 </div>
               </a>
             {% endfor %}
+            {% if self.podcast_subscribe_buttons|length > 2 %}
+              <div class="subscribe-button subscribe-more">
+                <button role="expand">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                  <span>
+                    More
+                  </span>
+                </button>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
   </section>
-  {% if self.latest_episode %}
+
+  {% if self.podcast_live and self.latest_episode %}
     {% with episode=self.latest_episode %}
     <div class="divider">
       <div class="container">
@@ -99,67 +119,149 @@
     {% endwith %}
   {% endif %}
 
-  {% with series_seasons=self.series_seasons %}
-    {% if series_seasons %}
-      <section class="episodes">
+  {% if self.podcast_live %}
+    {% with series_seasons=self.series_seasons %}
+      {% if series_seasons %}
+        <section class="episodes">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-8">
+                {% for season, episodes in self.series_seasons.items %}
+                  <div class="season">
+                    {% for episode in episodes.unpublished %}
+                      <article class="episode">
+                        <div>
+                          <div class="episode-number">
+                            {{ episode.podcast_episode }}
+                          </div>
+                          <h3 class="episode-title">
+                            <a href="{% pageurl episode %}">
+                              {{ episode.title }}
+                            </a>
+                          </h3>
+                          <div class="episode-description">{{ episode.description|richtext }}</div>
+                          <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
+                        </div>
+                      </article>
+                    {% endfor %}
+
+                    {% for episode in episodes.published %}
+                      <article class="episode">
+                        <div class="episode-info">
+                          <div class="episode-number">
+                            EPISODE {{ episode.podcast_episode }}
+                          </div>
+                          <h3>
+                            <a href="{% pageurl episode %}">
+                              {{ episode.title }}
+                            </a>
+                          </h3>
+                          <div class="episode-description">
+                            {{ episode.subtitle|richtext }}
+                          </div>
+                          <div class="episode-publishing-date">
+                            {{ episode.publishing_date|date:"F j, Y" }}
+                          </div>
+                        </div>
+                        <div class="circle">
+                          <a href="{{ episode.url }}">
+                            <span><i class="fa fa-headphones" aria-hidden="true"></i></span>
+                          </a>
+                        </div>
+                      </article>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+
+  {% with featured_episodes=self.featured_episodes %}
+    {% if featured_episodes %}
+      <section class="featured-episodes">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-12 col-md-8">
-              {% for season, episodes in self.series_seasons.items %}
-                <div class="season">
-                  {% for episode in episodes.unpublished %}
-                    <article class="episode">
-                      <div>
-                        <div class="episode-number">
-                          {{ episode.podcast_episode }}
-                        </div>
-                        <h3 class="episode-title">
-                          <a href="{% pageurl episode %}">
-                            {{ episode.title }}
-                          </a>
-                        </h3>
-                        <div class="episode-description">{{ episode.description|richtext }}</div>
-                        <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
-                      </div>
-                    </article>
-                  {% endfor %}
-
-                  {% for episode in episodes.published %}
-                    <article class="episode">
-                      <div class="episode-info">
-                        <div class="episode-number">
-                          EPISODE {{ episode.podcast_episode }}
-                        </div>
-                        <h3>
-                          <a href="{% pageurl episode %}">
-                            {{ episode.title }}
-                          </a>
-                        </h3>
-                        <div class="episode-description">
-                          {{ episode.subtitle|richtext }}
-                        </div>
-                        <div class="episode-publishing-date">
-                          {{ episode.publishing_date|date:"F j, Y" }}
-                        </div>
-                      </div>
-                      <div class="circle">
-                        <a href="{{ episode.url }}">
-                          <span><i class="fa fa-headphones" aria-hidden="true"></i></span>
-                        </a>
-                      </div>
-                    </article>
-                  {% endfor %}
-                </div>
-              {% endfor %}
+            <div class="col-12 col-md-10">
+              <h2>FEATURED EPISODES</h2>
+              <div class="episodes">
+                {% for episode in featured_episodes|slice:":3" %}
+                  <article class="episode">
+                    <div class="episode-number">
+                      EPISODE {{ episode.podcast_episode }}
+                    </div>
+                    <h3>
+                      <a href="{% pageurl episode %}">
+                        {{ episode.title }}
+                      </a>
+                    </h3>
+                    <div class="episode-description">
+                      {{ episode.subtitle|richtext }}
+                    </div>
+                    <div class="episode-publishing-date">
+                      {{ episode.publishing_date|date:"F j, Y" }}
+                    </div>
+                  </article>
+                {% endfor %}
+              </div>
             </div>
           </div>
         </div>
       </section>
-
     {% endif %}
   {% endwith %}
 
-  <section class="about">
+  {% if not self.podcast_live %}
+    <div class="divider">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
-  </section>
+  {% include "includes/body.html" with body=self.body heading="About the podcast" %}
+
+  {% with podcast_hosts=self.podcast_hosts %}
+    {% if podcast_hosts %}
+      <div class="divider">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <hr>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="hosts">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+              <h2>About the hosts</h2>
+              <div class="hosts-list">
+                {% for host in podcast_hosts %}
+                  <div class="host">
+                    <div class="host-image">
+                      {% image host.image_square width-200 %}
+                    </div>
+                    <div class="host-details">
+                      <h3>{{ host.name }}</h3>
+                      <div class="host-bio">{{ host.bio|richtext }}</div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
 {% endblock content %}
