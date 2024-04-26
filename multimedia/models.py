@@ -466,7 +466,7 @@ class MultimediaSeriesPage(
     ],
         blank=True,
         verbose_name='Podcast Hosts',
-        help_text='A list of hosts for the podcast series',
+        help_text='Hosts of the podcast',
         use_json_field=True
     )
     podcast_live = models.BooleanField(default=False)
@@ -539,6 +539,7 @@ class MultimediaSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('image_logo'),
+                FieldPanel('podcast_hosts'),
                 FieldPanel('podcast_season_tagline'),
                 FieldPanel('podcast_subscribe_buttons'),
                 FieldPanel('podcast_live'),
