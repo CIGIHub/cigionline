@@ -10,7 +10,12 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import PodcastSubscribeButtonBlock, FeaturedEpisodeBlock, PodcastHostBlock
+from streams.blocks import (
+    PodcastSubscribeButtonBlock,
+    FeaturedEpisodeBlock,
+    PodcastHostBlock,
+    PodcastChapterBlock,
+)
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -220,6 +225,15 @@ class MultimediaPage(
         blank=True,
         null=False,
         features=['bold', 'italic', 'link'],
+    )
+    podcast_chapters = StreamField(
+        [
+            ('podcast_chapter', PodcastChapterBlock())
+        ],
+        blank=True,
+        verbose_name='Podcast Chapters',
+        help_text='A list of chapters for the podcast',
+        use_json_field=True,
     )
     transcript = StreamField(
         [

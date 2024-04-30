@@ -1381,3 +1381,20 @@ class FeaturedEpisodeBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Featured Episode'
         template = 'streams/featured_episode_block.html'
+
+
+class PodcastChapterBlock(blocks.StructBlock):
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    timestamp = blocks.StructBlock([
+        ('hours', blocks.IntegerBlock(required=False)),
+        ('minutes', blocks.IntegerBlock(required=False)),
+        ('seconds', blocks.IntegerBlock(required=False)),
+    ])
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Podcast Chapter'
+        template = 'streams/podcast_chapter_block.html'
