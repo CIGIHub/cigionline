@@ -251,43 +251,5 @@
 {% endblock content %}
 
 {% block footer %}
-  <footer class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col footer-content">
-          <a href="/" class="cigi-logo">
-            {% include "includes/header_cigi_logo_large.svg" %}
-          </a>
-          <div class="spacer">
-            <div class="slash"></div>
-          </div>
-          <div class="about">
-            <div class="subscribe">
-              <p>Subscribe:</p>
-              <a href="{{ podcast_subscribe_buttons.0.value.url }}" target="_blank" rel="noopener noreferrer">
-                {% include 'includes/apple_podcasts_sm.svg' %}
-              </a>
-              <a href="{{ podcast_subscribe_buttons.1.value.url }}" target="_blank" rel="noopener noreferrer">
-                {% include 'includes/spotify_podcasts_sm.svg' %}
-              </a>
-              <a href="{{ podcast_subscribe_buttons.2.value.url }}" target="_blank" rel="noopener noreferrer">
-                {% include 'includes/google_podcasts_sm.svg' %}
-              </a>
-            </div>
-            <p>
-              <em>Policy Prompt is produced by the Centre for International Governance Innovation.</em>
-            </p>
-            <p class="copyright">
-              &copy; {% now "Y" %}
-              /
-              <a href="/privacy-policy">Privacy Policy</a>
-              /
-              <a href="/terms-of-use">Terms of Use</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
+  {% include "./includes/footer.html" %}
 {% endblock footer %}

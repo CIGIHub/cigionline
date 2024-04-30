@@ -45,108 +45,14 @@
 
 {% block header %}
   {% include "includes/top_bar.html" with small=True %}
-  <div class="big-tech-hero">
-    <div class="container">
-      <div class="row">
-        <div class="col big-tech-mm-hero">
-          <div>
-            {% include "includes/topics.html" with topics=self.topics_sorted %}
-            <h1>
-              {% if self.podcast_guests and self.podcast_subtitle %}
-                {% for guest in self.podcast_guests %}
-                  <span class="podcast-guest">{{ guest }}</span>
-                {% endfor %}
-                <span class="podcast-subtitle">{{ self.podcast_subtitle }}</span>
-              {% else %}
-                {{ self.title }}
-              {% endif %}
-            </h1>
-            {% if self.multimedia_url and self.multimedia_type == 'audio' and 'player.simplecast.com' in self.multimedia_url %}
-              <div class="simplecast-container">
-                <div class="simplecast-header">
-                  <div class="simplecast-header-content">
-                    <div>
-                      <div class="simplecast-header-meta">
-                        {% if self.podcast_season %}
-                          <span class="season">Season {{ self.podcast_season }}</span>
-                        {% endif %}
-                        {% if self.podcast_episode %}
-                          <span class="episode">Episode {{ self.podcast_episode }}</span>
-                        {% endif %}
-                      </div>
-                      <div class="simplecast-header-title">
-                        {{ self.title }}
-                      </div>
-                    </div>
-                    {% include "includes/social_links.html" with title=self.title no_circle=True %}
-                  </div>
-                  <div class="simplecast-embed">
-                    {% include "includes/simplecast_embed.html" with simplecast_url=self.multimedia_url %}
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-            <div class="subtitle">
-              {{ self.subtitle|richtext }}
-            </div>
-            <p class="meta">
-              {% if self.podcast_season and self.podcast_episode %}
-                S{{ self.podcast_season }}E{{ self.podcast_episode }} /
-              {% endif %}
-              {{ self.publishing_date|date:"F j, Y" }}
-            </p>
-            {% include "includes/social_links.html" with title=self.title no_circle=True %}
-          </div>
-          {% image self.image_square width-600 class="big-tech-headshot" %}
-        </div>
-      </div>
-    </div>
-  </div>
 {% endblock header %}
 
 {% block content %}
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
-  {% if self.companion_essay %}
-    <section class="big-tech-s3-companion-essay">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8 companion-essay">
-            <div class="essay-details">
-              <h2>Opinion</h2>
-              <article>
-                <h3><a href="{{ self.companion_essay.url }}">{{ self.companion_essay.title }}</a></h3>
-                {% for item in self.companion_essay.specific.authors.all %}
-                  <a href="{% pageurl item.author %}" class="author">
-                    <div class="author-image-wrapper">
-                      {% image item.author.image_square fill-100x100 %}
-                    </div>
-                    <div>
-                      {{ item.author.byline|richtext }}
-                    </div>
-                  </a>
-                {% endfor %}
-              </article>
-            </div>
-            <a class="read-btn" href="{{ self.companion_essay.url }}">
-              <i class="far fa-arrow-right"></i>
-              <span>Read</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-  {% if self.transcript %}
-    <section>
-      {% for block in self.transcript %}
-        {% include_block block with id=block.id %}
-      {% endfor %}
-    </section>
-  {% endif %}
-  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
+  
   {% block recommended %}
     {% if self.recommended_content %}
-      <section class="big-tech-recommended">
+      <section class="recommended">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
