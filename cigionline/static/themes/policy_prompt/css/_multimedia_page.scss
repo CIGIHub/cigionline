@@ -4,4 +4,15 @@ body {
       padding-top: 6rem;
     }
   }
+
+  .podcast-player {
+    .mejs__container {
+      .mejs__controls {
+        .mejs__rewind-button,
+        .mejs__fast-forward-button {
+          color: $white;
+        }
+      }
+    }
+  }
 }

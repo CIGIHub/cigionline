@@ -47,7 +47,15 @@
         <div class="col col-md-10 col-lg-8">
           <div class="label">A CIGI PODCAST</div>
           <h1>
-            <img src="{{ self.image_banner.file.url  }}" alt="{{ self.title }}">
+            <div class="logo-animation" id="logo-animation">
+              <div class="line-1">
+                <span class="logo-animation-cursor" id="logo-animation-cursor"></span>
+                <span class="logo-animation-text text-1" id="logo-animation-text-1"></span>
+              </div>
+              <div>
+                <span class="logo-animation-text text-2" id="logo-animation-text-2"></span>
+              </div>
+            </div>
           </h1>
           <div class="subtitle">
             {{ self.subtitle|richtext }}
@@ -227,6 +235,7 @@
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
               <hr>
+              <button id="test-animation">Test animation</button>
             </div>
           </div>
         </div>
