@@ -309,9 +309,10 @@ section {
         display: inline-block;
 
         &.logo-animation-cursor {
+          margin-bottom: 0.7rem;
           background-color: $policy-prompt-green;
           border-radius: 0.5rem;
-          height: 0.75rem;
+          height: 0.65rem;
           width: 4rem;
           position: relative;
           transition: opacity 1s ease;

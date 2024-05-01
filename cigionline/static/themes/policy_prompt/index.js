@@ -101,7 +101,7 @@ function startTyping() {
   }, 2000);
 }
 
-document.getElementById('test-animation').addEventListener('click', startTyping);
-// setTimeout(() => {
-//   startTyping();
-// }, 2000);
+// document.getElementById('test-animation').addEventListener('click', startTyping);
+setTimeout(() => {
+  startTyping();
+}, 2000);
