@@ -34,10 +34,11 @@
 {% endblock %}
 
 {% block extra_fonts %}
-
+  <link rel="stylesheet" href="https://use.typekit.net/nyt4kej.css">
 {% endblock %}
 {% block extra_css %}
   {% render_bundle 'themePolicyPrompt' 'css' %}
+  {% render_bundle 'themePolicyPrompt' 'svg' %}
 {% endblock %}
 {% block extra_js %}
   {% render_bundle 'themePolicyPrompt' 'js' attrs='defer' %}
@@ -48,21 +49,37 @@
 {% endblock header %}
 
 {% block content %}
+  <section class="podcast-player">
+    <audio id="podcast-player" src="http://thepodcastexchange.ca/s/Porsche-Macan-July-5-2018-1.mp3"></audio>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+        </div>
+      </div>
+    </div>
+  </section>
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
-  
-  {% block recommended %}
-    {% if self.recommended_content %}
-      <section class="recommended">
+
+  {% with podcast_chapters=self.podcast_chapters %}
+    {% if podcast_chapters %}
+      <section class="podcast-chapters">
         <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <h2>Recommended</h2>
-              {% for recommended_content in self.recommended_content|slice:":3" %}
-                {% include "./includes/recommended_article.html" with article=recommended_content.specific %}
+          <div class="row">
+            <div class="col">
+              <h2>Chapters</h2>
+              {% for chapter in podcast_chapters %}
+                {% include_block chapter with chapter_num=forloop.counter %}
               {% endfor %}
             </div>
           </div>
         </div>
+      </section>
+    {% endif %}
+  {% endwith %}
+
+  {% block recommended %}
+    {% if self.recommended_content %}
+      <section class="recommended">
       </section>
     {% endif %}
   {% endblock recommended %}
