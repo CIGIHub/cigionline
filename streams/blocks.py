@@ -1389,10 +1389,17 @@ class PodcastChapterBlock(blocks.StructBlock):
         required=False,
     )
     timestamp = blocks.StructBlock([
-        ('hours', blocks.IntegerBlock(required=False)),
-        ('minutes', blocks.IntegerBlock(required=False)),
-        ('seconds', blocks.IntegerBlock(required=False)),
+        ('hours', blocks.IntegerBlock(required=True, min_value=0)),
+        ('minutes', blocks.IntegerBlock(required=True, min_value=0, max_value=59)),
+        ('seconds', blocks.IntegerBlock(required=True, min_value=0, max_value=59)),
     ])
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        timestamp_string = f"{value.get('timestamp').get('hours'):02d}:{value.get('timestamp').get('minutes'):02d}:{value.get('timestamp').get('seconds'):02d}"
+        context['timestamp_string'] = timestamp_string
+
+        return context
 
     class Meta:
         icon = 'doc-full'

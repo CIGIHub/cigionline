@@ -332,6 +332,7 @@ class MultimediaPage(
                 FieldPanel('podcast_season'),
                 FieldPanel('podcast_episode'),
                 FieldPanel('podcast_guests'),
+                FieldPanel('podcast_chapters'),
                 MultiFieldPanel(
                     [
                         FieldPanel('podcast_audio_url'),
