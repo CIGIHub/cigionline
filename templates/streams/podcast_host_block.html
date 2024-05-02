@@ -3,7 +3,11 @@
   <div class="host-image">
     <a href="{% pageurl self.host %}">
       <div class="img-wrapper">
-        {% image self.host.image_square fill-400x400 %}
+        {% if self.image %}
+          {% image self.image fill-400x400 %}
+        {% else %}
+          {% image self.host.image_square fill-400x400 %}
+        {% endif %}
       </div>
     </a>
   </div>

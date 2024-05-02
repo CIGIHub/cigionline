@@ -265,5 +265,5 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" %}
+  {% include "./includes/footer.html" with live=self.podcast_live|lower %}
 {% endblock footer %}

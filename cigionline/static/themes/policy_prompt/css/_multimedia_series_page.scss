@@ -311,6 +311,7 @@ body {
             position: relative;
             transition: opacity 1s ease;
             animation: blink 5s infinite;
+            transform: rotate(5deg);
           }
 
           h3 {

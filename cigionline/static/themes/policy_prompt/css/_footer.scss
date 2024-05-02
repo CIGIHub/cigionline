@@ -5,6 +5,23 @@ footer {
   background-color: $policy-prompt-blue;
   padding: 2rem 0;
 
+  &.live-false {
+    .footer-content {
+      .subscribe {
+        a {
+          color: $white;
+          pointer-events: none;
+
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+        }
+      }
+    }
+  }
+
   .footer-content {
     @include media-breakpoint-up(md) {
       flex-direction: row;

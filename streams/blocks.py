@@ -1103,6 +1103,7 @@ class PodcastSubscribeButtonBlock(blocks.StructBlock):
 
 class PodcastHostBlock(blocks.StructBlock):
     host = blocks.PageChooserBlock(page_type='people.PersonPage', required=True)
+    image = ImageChooserBlock(required=False)
     bio = blocks.RichTextBlock(required=False)
 
     class Meta:
