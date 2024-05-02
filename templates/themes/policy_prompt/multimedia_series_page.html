@@ -70,22 +70,24 @@
             {% if not self.podcast_live %}
               <div class="subscribe-coming-soon">coming soon on:</div>
             {% endif %}
-            {% for item in self.podcast_subscribe_buttons %}
-              <a href="{{ item.value.url }}" target="_blank" rel="noopener noreferrer">
-                <div class="subscribe-button">
-                  {% if item.value.label == 'Apple Podcasts' %}
-                    <i class="fa-solid fa-podcast"></i>
-                  {% elif item.value.label == 'Spotify' %}
-                    <i class="fa-brands fa-spotify"></i>
-                  {% elif item.value.label == 'Google Podcasts' %}
-                    {% include 'includes/google_podcasts_sm.svg' %}
-                  {% endif %}
-                  <span>
-                    {{ item.value.label }}
-                  </span>
-                </div>
-              </a>
-            {% endfor %}
+            <div class="subscribe-buttons">
+              {% for item in self.podcast_subscribe_buttons %}
+                <a href="{{ item.value.url }}" target="_blank" rel="noopener noreferrer">
+                  <div class="subscribe-button">
+                    {% if item.value.label == 'Apple Podcasts' %}
+                      <i class="fa-solid fa-podcast"></i>
+                    {% elif item.value.label == 'Spotify' %}
+                      <i class="fa-brands fa-spotify"></i>
+                    {% elif item.value.label == 'Google Podcasts' %}
+                      {% include 'includes/google_podcasts_sm.svg' %}
+                    {% endif %}
+                    <span>
+                      {{ item.value.label }}
+                    </span>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
