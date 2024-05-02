@@ -107,6 +107,14 @@ body {
               color: $black;
             }
           }
+
+          .subscribe-button {
+            color: $cigi-text-grey;
+            svg {
+              fill: $cigi-text-grey;
+            }
+
+          }
         }
 
         .subscribe-coming-soon {
