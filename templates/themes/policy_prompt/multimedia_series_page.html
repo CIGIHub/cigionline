@@ -48,12 +48,18 @@
           <div class="label">A CIGI PODCAST</div>
           <h1>
             <div class="logo-animation" id="logo-animation">
-              <div class="line-1">
-                <span class="logo-animation-cursor" id="logo-animation-cursor"></span>
-                <span class="logo-animation-text text-1" id="logo-animation-text-1"></span>
+              <div class="line-1-container">
+                <div>
+                  <span class="logo-animation-cursor hidden" id="logo-animation-cursor-end"></span>
+                </div>
+                <div class="line-1" id="line-1">
+                  <span class="logo-animation-text text-1" id="logo-animation-text-1"></span>
+                  <span class="logo-animation-cursor offset-left" id="logo-animation-cursor-1"></span>
+                </div>
               </div>
-              <div class="line-2">
+              <div class="line-2" id="line-2">
                 <span class="logo-animation-text text-2" id="logo-animation-text-2"></span>
+                <span class="logo-animation-cursor hidden" id="logo-animation-cursor-2"></span>
               </div>
             </div>
           </h1>
@@ -244,7 +250,7 @@
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-8">
-              <h2>About the hosts</h2>
+              <h2>The Hosts</h2>
               <div class="hosts-list">
                 {% for host in podcast_hosts %}
                   {% include_block host %}

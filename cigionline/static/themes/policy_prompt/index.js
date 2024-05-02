@@ -4,7 +4,6 @@ import 'mediaelement/src/css/mejs-controls.svg';
 import 'mediaelement/full';
 
 $(document).ready(function () {
-  // Add a class to the body to indicate that JS is enabled
   const podcastPlayer = $('#podcast-player').mediaelementplayer({
     alwaysShowControls: true,
     defaultAudioWidth: '100%',
@@ -61,7 +60,6 @@ $(document).ready(function () {
     chapterTime.addEventListener('click', function (event) {
       event.preventDefault();
       const time = chapterTime.getAttribute('data-timestamp');
-      // the time is in the format of hh:mm:ss. convert this time into seconds
       const timeArray = time.split(':');
       const seconds =
         parseInt(timeArray[0], 10) * 3600 +
@@ -73,37 +71,49 @@ $(document).ready(function () {
   });
 });
 
-const text = ['prompt', 'policy'];
+const texts = ['policy', 'prompt'];
 const speed = 75;
-const textElement1 = document.getElementById('logo-animation-text-1');
-const textElement2 = document.getElementById('logo-animation-text-2');
 
-function typeText(word, element, index, callback) {
-  if (index < word.length) {
-    element.textContent += word[index];
-    setTimeout(() => {
-      typeText(word, element, index + 1, callback);
-    }, speed);
-  } else if (callback) {
-    callback();
+function typeText(text, elementId, callback) {
+  const line = document.getElementById(elementId);
+  const textElement = line.children[0];
+  let index = 0;
+
+  function type() {
+    if (index < text.length) {
+      textElement.textContent += text.charAt(index);
+      index += 1;
+      setTimeout(type, speed);
+    } else if (callback) {
+      callback();
+    }
   }
+
+  type();
 }
 
 function startTyping() {
-  typeText(text[0], textElement1, 0, () => {
+  document.getElementById('logo-animation-cursor-1').classList.remove('offset-left');
+  typeText(texts[0], 'line-1', () => {
+    document.getElementById('logo-animation-cursor-1').remove();
+    document
+      .getElementById('logo-animation-cursor-2')
+      .classList.remove('hidden');
+
     setTimeout(() => {
-      textElement2.textContent = textElement1.textContent;
-      textElement1.textContent = '';
-      typeText(text[1], textElement1, 0, null);
+      typeText(texts[1], 'line-2', () => {
+        document.getElementById('logo-animation-cursor-2').remove();
+      });
     }, 250);
   });
 
   setTimeout(() => {
-    document.getElementById('logo-animation-cursor').classList.add('wobble');
-  }, 2000);
+    const cursorEnd = document.getElementById('logo-animation-cursor-end');
+    cursorEnd.classList.remove('hidden');
+    cursorEnd.classList.add('wobble');
+  }, 1250);
 }
 
-// document.getElementById('test-animation').addEventListener('click', startTyping);
 setTimeout(() => {
   startTyping();
-}, 3000);
+}, 2000);

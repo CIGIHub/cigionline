@@ -21,7 +21,7 @@ body {
           font-size: 5rem;
         }
         @include media-breakpoint-up(lg) {
-          font-size: 7.5rem;
+          font-size: 6.75rem;
         }
         width: 100%;
         text-align: center;
@@ -29,6 +29,7 @@ body {
         height: 2.3333em;
         font-size: 3rem;
         margin-bottom: 0.1em;
+        letter-spacing: -0.03em;
       }
 
       .logo-animation {
@@ -36,12 +37,23 @@ body {
         flex-direction: column;
         align-items: center;
 
+        .line-1-container {
+          display: flex;
+          align-items: end;
+          height: 1em;
+          div {
+            &:first-child {
+              flex-shrink: 0;
+              width: 0.8em;
+            }
+          }
+        }
+
         .line-1 {
           white-space: pre-wrap;
           display: flex;
           align-items: end;
           justify-content: center;
-          height: 1em;
           padding-right: 0.2em;
         }
 
@@ -54,7 +66,6 @@ body {
 
           &.logo-animation-cursor {
             flex-shrink: 0;
-            margin-bottom: 0.7rem;
             background-color: $policy-prompt-green;
             border-radius: 0.5rem;
             height: 0.13333em;
@@ -63,15 +74,23 @@ body {
             transition: opacity 1s ease;
             animation: blink 5s step-end infinite;
 
+            &.hidden {
+              display: none;
+            }
+
             &.wobble {
               animation: wobble 5s infinite;
+            }
+
+            &.offset-left {
+              margin-left: -0.6em;
             }
           }
 
           &.logo-animation-text {
             color: $policy-prompt-blue;
             font-size: 1em;
-            font-weight: 600;
+            font-weight: 700;
           }
         }
       }
@@ -108,12 +127,16 @@ body {
             }
           }
 
+          .subscribe-coming-soon {
+            color: $cigi-text-grey;
+            white-space: nowrap;
+          }
+
           .subscribe-button {
             color: $cigi-text-grey;
             svg {
               fill: $cigi-text-grey;
             }
-
           }
         }
 
@@ -246,11 +269,29 @@ body {
           overflow: hidden;
           border-radius: 50%;
 
+          .img-wrapper {
+            position: relative;
+
+            &:before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: rgba(20, 92, 173, 0.55);
+              mix-blend-mode: overlay;
+              pointer-events: none;
+              z-index: 1;
+            }
+          }
+
           img {
             transition: filter 0.2s ease;
+            filter: grayscale(100%);
 
             &:hover {
-              filter: brightness(80%);
+              filter: grayscale(100%), brightness(80%);
             }
           }
         }
@@ -259,6 +300,18 @@ body {
           font-family: $policy-prompt-font;
           display: flex;
           align-items: center;
+
+          span {
+            display: inline-block;
+            background-color: $policy-prompt-green;
+            border-radius: 0.5em;
+            height: 0.3em;
+            width: 1.25em;
+            margin-right: -0.2em;
+            position: relative;
+            transition: opacity 1s ease;
+            animation: blink 5s infinite;
+          }
 
           h3 {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
