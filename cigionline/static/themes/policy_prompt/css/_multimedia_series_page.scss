@@ -271,27 +271,13 @@ body {
 
           .img-wrapper {
             position: relative;
-
-            &:before {
-              content: '';
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              background-color: rgba(20, 92, 173, 0.55);
-              mix-blend-mode: overlay;
-              pointer-events: none;
-              z-index: 1;
-            }
           }
 
           img {
             transition: filter 0.2s ease;
-            filter: grayscale(100%);
 
             &:hover {
-              filter: grayscale(100%), brightness(80%);
+              filter: brightness(80%);
             }
           }
         }
