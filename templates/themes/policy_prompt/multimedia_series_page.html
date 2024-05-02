@@ -52,7 +52,7 @@
                 <span class="logo-animation-cursor" id="logo-animation-cursor"></span>
                 <span class="logo-animation-text text-1" id="logo-animation-text-1"></span>
               </div>
-              <div>
+              <div class="line-2">
                 <span class="logo-animation-text text-2" id="logo-animation-text-2"></span>
               </div>
             </div>
@@ -60,7 +60,7 @@
           <div class="subtitle">
             {{ self.subtitle|richtext }}
           </div>
-          <div class="subscribe-container">
+          <div class="subscribe-container live-{{self.podcast_live|lower}}">
             {% if not self.podcast_live %}
               <div class="subscribe-coming-soon">coming soon on:</div>
             {% endif %}
@@ -235,7 +235,6 @@
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
               <hr>
-              <!-- <button id="test-animation">Test animation</button> -->
             </div>
           </div>
         </div>

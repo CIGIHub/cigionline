@@ -1,7 +1,11 @@
 {% load wagtailimages_tags wagtailcore_tags %}
 <div class="host">
   <div class="host-image">
-    {% image self.host.image_square width-200 %}
+    <a href="{% pageurl self.host %}">
+      <div class="img-wrapper">
+        {% image self.host.image_square fill-400x400 %}
+      </div>
+    </a>
   </div>
   <div class="host-details">
     <h3>
@@ -9,6 +13,5 @@
         {{ self.host.title }}
       </a>
     </h3>
-    <div class="host-bio">{{ self.bio|richtext }}</div>
   </div>
 </div>

@@ -74,7 +74,7 @@ $(document).ready(function () {
 });
 
 const text = ['prompt', 'policy'];
-const speed = 125;
+const speed = 75;
 const textElement1 = document.getElementById('logo-animation-text-1');
 const textElement2 = document.getElementById('logo-animation-text-2');
 
@@ -91,9 +91,11 @@ function typeText(word, element, index, callback) {
 
 function startTyping() {
   typeText(text[0], textElement1, 0, () => {
-    textElement2.textContent = textElement1.textContent;
-    textElement1.textContent = '';
-    typeText(text[1], textElement1, 0, null);
+    setTimeout(() => {
+      textElement2.textContent = textElement1.textContent;
+      textElement1.textContent = '';
+      typeText(text[1], textElement1, 0, null);
+    }, 250);
   });
 
   setTimeout(() => {
@@ -104,4 +106,4 @@ function startTyping() {
 // document.getElementById('test-animation').addEventListener('click', startTyping);
 setTimeout(() => {
   startTyping();
-}, 2000);
+}, 3000);

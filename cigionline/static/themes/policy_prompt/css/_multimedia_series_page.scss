@@ -16,18 +16,70 @@ body {
       margin-bottom: 0;
       padding-bottom: 3em;
 
+      h1 {
+        @include media-breakpoint-up(md) {
+          font-size: 5rem;
+        }
+        @include media-breakpoint-up(lg) {
+          font-size: 7.5rem;
+        }
+        width: 100%;
+        text-align: center;
+        font-family: $policy-prompt-font;
+        height: 2.3333em;
+        font-size: 3rem;
+        margin-bottom: 0.1em;
+      }
+
+      .logo-animation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .line-1 {
+          white-space: pre-wrap;
+          display: flex;
+          align-items: end;
+          justify-content: center;
+          height: 1em;
+          padding-right: 0.2em;
+        }
+
+        .line-2 {
+          margin-top: -0.2em;
+        }
+
+        span {
+          display: inline-block;
+
+          &.logo-animation-cursor {
+            flex-shrink: 0;
+            margin-bottom: 0.7rem;
+            background-color: $policy-prompt-green;
+            border-radius: 0.5rem;
+            height: 0.13333em;
+            width: 0.8em;
+            position: relative;
+            transition: opacity 1s ease;
+            animation: blink 5s step-end infinite;
+
+            &.wobble {
+              animation: wobble 5s infinite;
+            }
+          }
+
+          &.logo-animation-text {
+            color: $policy-prompt-blue;
+            font-size: 1em;
+            font-weight: 600;
+          }
+        }
+      }
+
       .label {
         font-size: 0.8rem;
         letter-spacing: 0.1em;
         margin-bottom: 1rem;
-      }
-
-      h1 {
-        margin-bottom: 1.5rem;
-
-        img {
-          width: 50%;
-        }
       }
 
       .subtitle {
@@ -46,6 +98,16 @@ body {
         justify-content: center;
         align-items: center;
         font-family: $policy-prompt-heading-font;
+
+        &.live-false {
+          a {
+            pointer-events: none;
+
+            &:hover {
+              color: $black;
+            }
+          }
+        }
 
         .subscribe-coming-soon {
           font-weight: 600;
@@ -171,16 +233,24 @@ body {
         display: flex;
 
         .host-image {
-          width: 200px;
+          width: 100px;
           margin-right: 1em;
+          overflow: hidden;
+          border-radius: 50%;
 
           img {
-            border-radius: 50%;
+            transition: filter 0.2s ease;
+
+            &:hover {
+              filter: brightness(80%);
+            }
           }
         }
 
         .host-details {
           font-family: $policy-prompt-font;
+          display: flex;
+          align-items: center;
 
           h3 {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
@@ -283,67 +353,18 @@ body {
   }
 }
 
-section {
-  &.hero {
-    h1 {
-      width: 100%;
-      text-align: center;
-      font-family: $policy-prompt-font;
-      height: 200px;
-    }
-    .logo-animation {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .line-1 {
-        white-space: pre-wrap;
-        display: flex;
-        align-items: end;
-        justify-content: center;
-        width: 400px;
-        height: 5rem;
-      }
-
-      span {
-        display: inline-block;
-
-        &.logo-animation-cursor {
-          margin-bottom: 0.7rem;
-          background-color: $policy-prompt-green;
-          border-radius: 0.5rem;
-          height: 0.65rem;
-          width: 4rem;
-          position: relative;
-          transition: opacity 1s ease;
-          animation: blink 1.5s step-end infinite;
-
-          &.wobble {
-            animation: wobble 5s infinite;
-          }
-        }
-
-        &.logo-animation-text {
-          color: $policy-prompt-blue;
-          font-size: 5rem;
-          font-weight: 600;
-
-          &.text-2 {
-            margin-top: -0.2em;
-          }
-        }
-      }
-    }
-  }
-}
-
 @keyframes blink {
-  25%,
-  75% {
+  7%,
+  26%,
+  40%,
+  59%,
+  74%,
+  93% {
     opacity: 1;
   }
-
-  50% {
+  33%,
+  66%,
+  100% {
     opacity: 0;
   }
 }
@@ -358,18 +379,19 @@ section {
     opacity: 1;
   }
   0%,
+  10%,
   40%,
   50%,
   100% {
     transform: rotate(5deg);
   }
-  42.5% {
+  2.5% {
     transform: rotate(10deg);
   }
-  45% {
+  5% {
     transform: rotate(0deg);
   }
-  47.5% {
+  7.5% {
     transform: rotate(10deg);
   }
   33%,
