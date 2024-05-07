@@ -5,7 +5,9 @@ from wagtail.models import Page
 
 def rename_topics(apps, schema_editor):
     to_rename = {
+        'Big Data': 'Data Governance',
         'Emerging Technology': 'Transformative Technologies',
+        'Financial Systems': 'Financial Governance',
         'Security': 'National Security',
         'Space': 'Space Governance',
     }
@@ -20,11 +22,9 @@ def rename_topics(apps, schema_editor):
 def create_topics(apps, schema_editor):
     new_topics = [
         'Cybersecurity',
-        'Data Governance',
         'Digital Economy',
         'Digital Governance',
         'Digital Rights',
-        'Financial Governance',
         'Foreign Interference',
         'Freedom of Thought',
         'Geopolitics',
@@ -63,28 +63,6 @@ def archive_topics(apps, schema_editor):
             if topic.archive == TopicPage.ArchiveStatus.UNARCHIVED:
                 topic.archive = TopicPage.ArchiveStatus.ARCHIVED
                 topic.save()
-
-
-def migrate_topics(apps, schema_editor):
-    many_to_one_migrations = {
-        'Big Data': 'Data Governance',
-        'Central Banking': 'Digital Economy',
-        'Digital Currency': 'Digital Economy',
-        'Financial Systems': 'Financial Governance',
-        'Africa': 'Geopolitics',
-        'China': 'Geopolitics',
-        'India': 'Geopolitics',
-        'IMF': 'Multilateral Institutions',
-        'NAFTA/CUSMA': 'Multilateral Institutions',
-        'WTO': 'Multilateral Institutions',
-        'Internet Governance': 'Platform Governance',
-        'Innovation': 'Transformative Technologies',
-        'Innovation Economy': 'Transformative Technologies',
-    }
-
-    one_to_many_migrations = [
-        {'Surveillance & Privacy': ['Privacy', 'Surveillance']},
-    ]
 
 
 class Migration(migrations.Migration):
