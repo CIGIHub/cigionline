@@ -48,7 +48,13 @@ class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = ['articles.ArticleSeriesListPage', 'publications.PublicationPage', 'publications.PublicationTypePage', 'publications.PublicationSeriesListPage']
+    subpage_types = [
+        'articles.ArticleSeriesListPage',
+        'articles.ArticleTypePage',
+        'publications.PublicationPage',
+        'publications.PublicationTypePage',
+        'publications.PublicationSeriesListPage'
+    ]
     templates = 'publications/publication_list_page.html'
 
     content_panels = [
