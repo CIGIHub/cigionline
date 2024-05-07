@@ -75,5 +75,4 @@ class Migration(migrations.Migration):
         migrations.RunPython(rename_topics),
         migrations.RunPython(create_topics),
         migrations.RunPython(archive_topics),
-        # migrations.RunPython(migrate_topics),
     ]

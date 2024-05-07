@@ -1,6 +1,7 @@
 from django.db import migrations
 from research.models import TopicPage
-from wagtail.models import Page
+from django.db import models
+from core.models import ContentPage
 
 
 def migrate_topics(apps, schema_editor):
@@ -17,6 +18,9 @@ def migrate_topics(apps, schema_editor):
         'Innovation': 'Transformative Technologies',
         'Innovation Economy': 'Transformative Technologies',
     }
+
+    for old_topic, new_topic in many_to_one_migrations.items():
+        ContentPage.objects.filter(topics__contains=[old_topic]).update(topics=models.F('topics').remove(old_topic).add(new_topic))
 
     one_to_many_migrations = [
         {'Surveillance & Privacy': ['Privacy', 'Surveillance']},
