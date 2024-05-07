@@ -7,8 +7,16 @@ def update_article_pages(apps, schema_editor):
 
     if not ArticleTypePage.objects.filter(title='Essay').exists():
         from wagtail.models import Page
+        from articles.models import ArticleListPage
 
-        parent_page = Page.objects.get(title='Articles').specific
+        try:
+            parent_page = Page.objects.get(title='Articles').specific
+        except Page.DoesNotExist:
+            home = Page.objects.get(slug='Home')
+            parent_page = ArticleListPage(title='Articles')
+            home.add_child(instance=parent_page)
+            parent_page.save_revision().publish()
+
         new_page = ArticleTypePage(title='Essay')
         parent_page.add_child(instance=new_page)
 
