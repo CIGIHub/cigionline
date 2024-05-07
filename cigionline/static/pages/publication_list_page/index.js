@@ -56,6 +56,7 @@ ReactDOM.render(
       },
       {
         name: 'Essays',
+        alias: 'Essay',
         aggregationField: 'contentsubtypes',
         params: [
           {

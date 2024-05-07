@@ -86,6 +86,7 @@ ReactDOM.render(
       }],
     }, {
       name: 'Essays',
+      alias: 'Essay',
       parent: 'Publication',
       params: [{
         name: 'contentsubtype',
