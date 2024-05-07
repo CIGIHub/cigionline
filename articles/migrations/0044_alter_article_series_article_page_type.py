@@ -4,14 +4,9 @@ from wagtail.models import Page
 
 
 def update_article_pages(apps, schema_editor):
-    series_pages = ArticleSeriesPage.objects.all()
-
     try:
-        parent_page = Page.objects.get(title='Articles').specific
-        new_page = ArticleTypePage(title='Essay')
-        parent_page.add_child(instance=new_page)
-
         essay_type = ArticleTypePage.objects.get(title='Essay')
+        series_pages = ArticleSeriesPage.objects.all()
 
         for series_page in series_pages:
             for series_item in series_page.series_items.all():
