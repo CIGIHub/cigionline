@@ -1,4 +1,4 @@
-from articles.models import ArticleSeriesPage, ArticleTypePage
+from articles.models import ArticleSeriesPage
 from django.http import JsonResponse
 
 

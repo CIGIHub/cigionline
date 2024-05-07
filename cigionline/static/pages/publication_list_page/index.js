@@ -55,6 +55,16 @@ ReactDOM.render(
         ],
       },
       {
+        name: 'Essays',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Essay',
+          },
+        ],
+      },
+      {
         name: 'Essay Series',
         aggregationField: 'contentsubtypes',
         params: [
