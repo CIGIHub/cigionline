@@ -1,5 +1,6 @@
 from django.db import migrations
 from research.models import TopicPage
+from wagtail.models import Page
 
 
 def rename_topics(apps, schema_editor):
@@ -18,36 +19,39 @@ def rename_topics(apps, schema_editor):
 
 def create_topics(apps, schema_editor):
     new_topics = [
-        'Quantum Technology',
-        'Digital Governance',
+        'Cybersecurity',
         'Data Governance',
         'Digital Economy',
-        'Financial Governance',
-        'Human Rights',
-        'Rights of Society',
-        'Cybersecurity',
+        'Digital Governance',
         'Digital Rights',
+        'Financial Governance',
         'Foreign Interference',
         'Freedom of Thought',
-        'Privacy',
-        'Surveillance',
         'Geopolitics',
         'Global Cooperation',
+        'Human Rights',  # This topic already exists; unarchive it
         'Multilateral Institutions',
+        'Privacy',
+        'Quantum Technology',
+        'Rights of Society',
+        'Surveillance',
     ]
 
     for title in new_topics:
         if not TopicPage.objects.filter(title=title).exists():
-            from wagtail.models import Page
-
             parent_page = Page.objects.get(title='Topics').specific
             new_page = TopicPage(title=title)
             parent_page.add_child(instance=new_page)
+        else:  # Unarchive existing topics
+            topic = TopicPage.objects.get(title=title)
+            if topic.archive == TopicPage.ArchiveStatus.ARCHIVED:
+                topic.archive = TopicPage.ArchiveStatus.UNARCHIVED
+                topic.save()
 
 
 def archive_topics(apps, schema_editor):
     to_archive = [
-        'Future Of Work',
+        'Future of Work',
         'Standards',
         'Systemic Risk',
     ]
@@ -93,5 +97,5 @@ class Migration(migrations.Migration):
         migrations.RunPython(rename_topics),
         migrations.RunPython(create_topics),
         migrations.RunPython(archive_topics),
-        migrations.RunPython(migrate_topics),
+        # migrations.RunPython(migrate_topics),
     ]
