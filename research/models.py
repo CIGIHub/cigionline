@@ -474,3 +474,55 @@ class ProjectPageMember(Orderable):
     panels = [
         PageChooserPanel('member', ['people.PersonPage']),
     ]
+
+
+class ThemeListPage(Page):
+    """Theme list page"""
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = ['research.ThemePage']
+
+    class Meta:
+        verbose_name = 'Theme List Page'
+
+
+class ThemePage(
+    ArchiveablePageAbstract,
+    BasicPageAbstract,
+    SearchablePageAbstract,
+    Page,
+):
+    description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+
+    @property
+    def theme_name(self):
+        return self.title
+
+    content_panels = Page.content_panels + [
+        FieldPanel('description'),
+    ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + SearchablePageAbstract.search_fields \
+        + [
+            index.SearchField('theme_name')
+        ]
+
+    parent_page_types = ['research.ThemeListPage']
+    subpage_types = []
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['archive'])
+        ]
+        verbose_name = 'Theme Page'
+        verbose_name_plural = 'Theme Pages'
