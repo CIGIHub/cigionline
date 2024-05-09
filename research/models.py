@@ -114,6 +114,14 @@ class ProjectPage(
         use_json_field=True,
     )
     project_types = ParentalManyToManyField('research.ProjectType', blank=True)
+    primary_theme = models.ForeignKey(
+        'research.ThemePage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Primary Theme',
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -121,6 +129,7 @@ class ProjectPage(
         blank=True,
         use_json_field=True,
     )
+    secondary_themes = ParentalManyToManyField('research.ThemePage', blank=True)
     survey_findings = StreamField(
         [
             ('country', SurveyFindingsCountryBlock()),
@@ -361,6 +370,14 @@ class TopicPage(
 ):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    theme = models.ForeignKey(
+        'research.ThemePage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Theme',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)

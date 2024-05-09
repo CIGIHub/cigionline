@@ -68,7 +68,7 @@ def archive_topics(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('research', '0036_alter_projectpage_body'),
+        ('research', '0037_auto_20240508_1546'),
     ]
 
     operations = [

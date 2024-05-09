@@ -63,7 +63,7 @@ def one_to_many(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('research', '0037_update_topics'),
+        ('research', '0038_update_topics'),
     ]
 
     operations = [
