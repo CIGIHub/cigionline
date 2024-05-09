@@ -8,6 +8,8 @@ from publications.models import PublicationPage
 from multimedia.models import MultimediaPage
 from events.models import EventPage
 
+from core.models import ContentPage
+
 
 def all_topics(request):
     topics = TopicPage.objects.public().live().filter(archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED).order_by('title')
@@ -53,5 +55,41 @@ def topic_contentpages(request):
 
     return JsonResponse({
         "name": "Topics",
+        "children": results,
+    })
+
+
+def overlapping_topics_verification(request):
+    topics = {
+        'Digital Economy': ['Central Banking', 'Digital Currency'],
+        'Geopolitics': ['Africa', 'China', 'India'],
+        'Multilateral Institutions': ['IMF', 'NAFTA/CUSMA', 'WTO'],
+        'Platform Governance': ['Platform Governance', 'Internet Governance'],
+        'Transformative Technologies': ['Emerging Technology', 'Innovation', 'Innovation Economy'],
+    }
+
+    results = []
+
+    for new_topic_title, old_topic_titles in topics.items():
+        old_topics = []
+        no_longer_exists = []
+
+        for old_topic_title in old_topic_titles:
+            if TopicPage.objects.filter(title=old_topic_title).exists():
+                old_topics.append(TopicPage.objects.get(title=old_topic_title))
+            else:
+                no_longer_exists.append(old_topic_title)
+
+        content_pages = list(set(ContentPage.objects.filter(topics__in=old_topics)))
+
+        results.append({
+            "new_topic": new_topic_title,
+            "targeted_old_topics": ', '.join(old_topic_titles),
+            "topic_no_longer_exists": ', '.join(no_longer_exists),
+            "content_pages": len(content_pages),
+        })
+
+    return JsonResponse({
+        "name": "Overlapping Topics",
         "children": results,
     })

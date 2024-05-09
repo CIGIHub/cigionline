@@ -34,6 +34,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/staff/$', people_views.all_staff),
     re_path(r'^api/topics/$', research_views.all_topics),
     re_path(r'^api/topic-contentpages/$', research_views.topic_contentpages),
+    re_path(r'^api/overlapping-topics/$', research_views.overlapping_topics_verification),
     re_path(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     re_path(r'^api/events/$', events_views.events_api),
     re_path(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
