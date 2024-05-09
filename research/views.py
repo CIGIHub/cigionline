@@ -100,7 +100,7 @@ def themes(request):
     results = []
 
     for theme in themes:
-        topic_pages = TopicPage.objects.filter(theme=theme)
+        topic_pages = TopicPage.objects.filter(program_theme=theme)
         content_pages = []
 
         for topic in topic_pages:

@@ -63,8 +63,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='topicpage',
-            name='theme',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='research.themepage', verbose_name='Theme'),
+            name='program_theme',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='research.themepage', verbose_name='Program Theme'),
         ),
         migrations.AddIndex(
             model_name='themepage',

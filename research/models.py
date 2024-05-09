@@ -175,6 +175,11 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
+                PageChooserPanel(
+                    'primary_theme',
+                    ['research.ThemePage'],
+                ),
+                FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
                 FieldPanel('related_files'),
             ],
@@ -370,13 +375,13 @@ class TopicPage(
 ):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
-    theme = models.ForeignKey(
+    program_theme = models.ForeignKey(
         'research.ThemePage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        verbose_name='Theme',
+        verbose_name='Program Theme',
     )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -409,6 +414,10 @@ class TopicPage(
 
     content_panels = Page.content_panels + [
         FieldPanel('description'),
+        PageChooserPanel(
+            'program_theme',
+            ['research.ThemePage'],
+        ),
         MultiFieldPanel(
             [
                 InlinePanel(

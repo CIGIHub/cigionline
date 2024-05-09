@@ -70,8 +70,8 @@ def update_topics(apps, schema_editor):
         for topic_title in topic_titles:
             if TopicPage.objects.filter(title=topic_title).exists():
                 topic = TopicPage.objects.get(title=topic_title)
-                if not topic.theme:
-                    topic.theme = theme
+                if not topic.program_theme:
+                    topic.program_theme = theme
                     topic.save()
                 else:
                     print(f'{topic_title} already has theme - {theme_title}')
