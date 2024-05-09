@@ -1,7 +1,7 @@
 from core.models import ArchiveablePageAbstract
 from django.http import JsonResponse
 
-from .models import TopicPage
+from .models import TopicPage, ThemePage
 
 from articles.models import ArticlePage
 from publications.models import PublicationPage
@@ -91,5 +91,27 @@ def overlapping_topics_verification(request):
 
     return JsonResponse({
         "name": "Overlapping Topics",
+        "children": results,
+    })
+
+
+def themes(request):
+    themes = ThemePage.objects.live().filter(archive=0).order_by('title')
+    results = []
+
+    for theme in themes:
+        topic_pages = TopicPage.objects.filter(theme=theme)
+        content_pages = []
+
+        for topic in topic_pages:
+            content_pages += topic.content_pages.all()
+
+        results.append({
+            "name": theme.title,
+            "content_pages": len(list(set(content_pages))),
+        })
+
+    return JsonResponse({
+        "name": "Themes",
         "children": results,
     })

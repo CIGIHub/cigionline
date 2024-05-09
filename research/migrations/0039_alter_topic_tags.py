@@ -20,9 +20,6 @@ def many_to_one(apps, schema_editor):
         # convert to set to dedup
         content_pages = list(set(ContentPage.objects.filter(topics__in=old_topics)))
 
-        print(f'Now processing:{new_topic_title}...')
-        print(f'{len(content_pages)} pages were tagged by any of {old_topic_titles}.')
-
         for page in content_pages:
             for old_topic in old_topics:
                 page.topics.remove(old_topic)
@@ -45,8 +42,6 @@ def one_to_many(apps, schema_editor):
         old_topic = TopicPage.objects.get(title=old_topic_title)
         new_topics = [TopicPage.objects.get(title=new_topic_title) for new_topic_title in new_topic_titles]
         content_pages = ContentPage.objects.filter(topics__in=[old_topic])
-        print(f'Now processing:{old_topic_title}...')
-        print(f'{content_pages.count()} pages were tagged with {old_topic_title}.')
 
         for page in content_pages:
             page.topics.remove(old_topic)
