@@ -554,7 +554,7 @@ class ArticleTypePage(BasicPageAbstract, Page):
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
-    parent_page_types = ['articles.ArticleListPage']
+    parent_page_types = ['articles.ArticleListPage', 'publications.PublicationListPage']
     subpage_types = []
     templates = 'articles/article_type_page.html'
 
