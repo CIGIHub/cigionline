@@ -34,7 +34,6 @@ def update_topics(apps, schema_editor):
             'Digital Economy',
             'Financial Governance',
             'Human Rights',
-            'Rights of Society',
         ],
         'Digitalization, Security and Democracy': [
             'Democracy',

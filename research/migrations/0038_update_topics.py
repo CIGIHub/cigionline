@@ -33,7 +33,6 @@ def create_topics(apps, schema_editor):
         'Multilateral Institutions',
         'Privacy',
         'Quantum Technology',
-        'Rights of Society',
         'Surveillance',
     ]
 
