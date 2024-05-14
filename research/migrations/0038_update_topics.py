@@ -1,6 +1,7 @@
 from django.db import migrations
 from research.models import TopicPage
 from wagtail.models import Page
+from django.utils.text import slugify
 
 
 def rename_topics(apps, schema_editor):
@@ -17,6 +18,7 @@ def rename_topics(apps, schema_editor):
             if TopicPage.objects.filter(title=old_title).exists() and not TopicPage.objects.filter(title=new_title).exists():
                 topic = TopicPage.objects.get(title=old_title)
                 topic.title = new_title
+                topic.slug = slugify(new_title)
                 topic.save()
 
 
@@ -24,7 +26,6 @@ def create_topics(apps, schema_editor):
     new_topics = [
         'Cybersecurity',
         'Digital Economy',
-        'Digital Governance',
         'Digital Rights',
         'Foreign Interference',
         'Freedom of Thought',
