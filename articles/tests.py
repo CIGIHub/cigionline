@@ -102,7 +102,7 @@ class ArticleTypePageTests(WagtailPageTestCase):
     def test_articletypepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ArticleTypePage,
-            {ArticleListPage},
+            {ArticleListPage, PublicationListPage},
         )
 
     def test_articletypepage_child_page_types(self):

@@ -11,6 +11,7 @@ from research import views as research_views
 from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
+from articles import views as article_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.contrib.sitemaps.views import sitemap
@@ -37,6 +38,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
     re_path(r'^api/old_images/$', core_views.old_images),
     re_path(r'^api/years/$', core_views.years),
+    re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
 
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),
