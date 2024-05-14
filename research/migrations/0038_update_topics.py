@@ -1,7 +1,6 @@
 from django.db import migrations
 from research.models import TopicPage
 from wagtail.models import Page
-from django.utils.text import slugify
 
 
 def rename_topics(apps, schema_editor):
@@ -13,13 +12,11 @@ def rename_topics(apps, schema_editor):
         'Space': 'Space Governance',
     }
 
-    if Page.objects.filter(title='Home').exists():
-        for old_title, new_title in to_rename.items():
-            if TopicPage.objects.filter(title=old_title).exists() and not TopicPage.objects.filter(title=new_title).exists():
-                topic = TopicPage.objects.get(title=old_title)
-                topic.title = new_title
-                topic.slug = slugify(new_title)
-                topic.save()
+    for old_title, new_title in to_rename.items():
+        if TopicPage.objects.filter(title=old_title).exists() and not TopicPage.objects.filter(title=new_title).exists():
+            topic = TopicPage.objects.get(title=old_title)
+            topic.title = new_title
+            topic.save()
 
 
 def create_topics(apps, schema_editor):
@@ -40,17 +37,17 @@ def create_topics(apps, schema_editor):
         'Surveillance',
     ]
 
-    if Page.objects.filter(title='Home').exists():
-        for title in new_topics:
-            if not TopicPage.objects.filter(title=title).exists():
+    for title in new_topics:
+        if not TopicPage.objects.filter(title=title).exists():
+            if Page.objects.filter(title='Topics').exists():
                 parent_page = Page.objects.get(title='Topics').specific
                 new_page = TopicPage(title=title)
                 parent_page.add_child(instance=new_page)
-            else:  # Unarchive existing topics
-                topic = TopicPage.objects.get(title=title)
-                if topic.archive == TopicPage.ArchiveStatus.ARCHIVED:
-                    topic.archive = TopicPage.ArchiveStatus.UNARCHIVED
-                    topic.save()
+        else:  # Unarchive existing topics
+            topic = TopicPage.objects.get(title=title)
+            if topic.archive == TopicPage.ArchiveStatus.ARCHIVED:
+                topic.archive = TopicPage.ArchiveStatus.UNARCHIVED
+                topic.save()
 
 
 def archive_topics(apps, schema_editor):
@@ -60,14 +57,13 @@ def archive_topics(apps, schema_editor):
         'Systemic Risk',
     ]
 
-    if Page.objects.filter(title='Home').exists():
-        for title in to_archive:
-            if TopicPage.objects.filter(title=title).exists():
-                topic = TopicPage.objects.get(title=title)
+    for title in to_archive:
+        if TopicPage.objects.filter(title=title).exists():
+            topic = TopicPage.objects.get(title=title)
 
-                if topic.archive == TopicPage.ArchiveStatus.UNARCHIVED:
-                    topic.archive = TopicPage.ArchiveStatus.ARCHIVED
-                    topic.save()
+            if topic.archive == TopicPage.ArchiveStatus.UNARCHIVED:
+                topic.archive = TopicPage.ArchiveStatus.ARCHIVED
+                topic.save()
 
 
 class Migration(migrations.Migration):
