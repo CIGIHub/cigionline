@@ -27,6 +27,7 @@ def create_topics(apps, schema_editor):
         'Cybersecurity',
         'Digital Economy',
         'Digital Rights',
+        'Digital Governance',
         'Foreign Interference',
         'Freedom of Thought',
         'Geopolitics',
