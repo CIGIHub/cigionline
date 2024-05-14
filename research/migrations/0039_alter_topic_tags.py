@@ -17,6 +17,8 @@ def many_to_one(apps, schema_editor):
         print(f'Updating {new_topic_title} from {old_topic_titles}')
         if TopicPage.objects.filter(title=new_topic_title).exists():
             new_topic = TopicPage.objects.get(title=new_topic_title)
+        else:
+            new_topic = None
 
         old_topics = [
             TopicPage.objects.get(title=old_topic_title)
@@ -48,6 +50,8 @@ def one_to_many(apps, schema_editor):
     for old_topic_title, new_topic_titles in one_to_many_migrations.items():
         if TopicPage.objects.filter(title=old_topic_title).exists():
             old_topic = TopicPage.objects.get(title=old_topic_title)
+        else:
+            old_topic = None
 
         new_topics = [
             TopicPage.objects.get(title=new_topic_title)
