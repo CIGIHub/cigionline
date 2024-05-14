@@ -508,6 +508,7 @@ class ThemeListPage(Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['research.ThemePage']
+    templates = 'research/theme_list_page.html'
 
     class Meta:
         verbose_name = 'Theme List Page'
@@ -545,6 +546,7 @@ class ThemePage(
 
     parent_page_types = ['research.ThemeListPage']
     subpage_types = []
+    templates = 'research/theme_page.html'
 
     class Meta:
         indexes = [
