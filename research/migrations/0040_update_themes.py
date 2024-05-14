@@ -11,11 +11,12 @@ def create_page(page_model, page_title, parent_page_title):
 
 
 def create_theme_list_page(apps, schema_editor):
-    create_page(
-        page_model=ThemeListPage,
-        page_title='Themes',
-        parent_page_title='Home'
-    )
+    if Page.objects.filter(title='Home').exists():
+        create_page(
+            page_model=ThemeListPage,
+            page_title='Themes',
+            parent_page_title='Home'
+        )
 
 
 def update_topics(apps, schema_editor):
@@ -57,26 +58,27 @@ def update_topics(apps, schema_editor):
         ],
     }
 
-    for theme_title, topic_titles in themes_topics.items():
-        # create theme page
-        create_page(
-            page_model=ThemePage,
-            page_title=theme_title,
-            parent_page_title='Themes'
-        )
-        theme = ThemePage.objects.get(title=theme_title)
+    if Page.objects.filter(title='Home').exists():
+        for theme_title, topic_titles in themes_topics.items():
+            # create theme page
+            create_page(
+                page_model=ThemePage,
+                page_title=theme_title,
+                parent_page_title='Themes'
+            )
+            theme = ThemePage.objects.get(title=theme_title)
 
-        # add theme to topic pages
-        for topic_title in topic_titles:
-            if TopicPage.objects.filter(title=topic_title).exists():
-                topic = TopicPage.objects.get(title=topic_title)
-                if not topic.program_theme:
-                    topic.program_theme = theme
-                    topic.save()
+            # add theme to topic pages
+            for topic_title in topic_titles:
+                if TopicPage.objects.filter(title=topic_title).exists():
+                    topic = TopicPage.objects.get(title=topic_title)
+                    if not topic.program_theme:
+                        topic.program_theme = theme
+                        topic.save()
+                    else:
+                        print(f'{topic_title} already has theme - {theme_title}')
                 else:
-                    print(f'{topic_title} already has theme - {theme_title}')
-            else:
-                print(f'{topic_title} does not exist')
+                    print(f'{topic_title} does not exist')
 
 
 class Migration(migrations.Migration):
