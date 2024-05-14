@@ -30,7 +30,7 @@ def update_topics(apps, schema_editor):
         'Data, Economy, Society': [
             'Competition',
             'Intellectual Property',
-            'Data Governance'
+            'Data Governance',
             'Digital Economy',
             'Financial Governance',
             'Human Rights',
