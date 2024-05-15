@@ -59,6 +59,46 @@
     </div>
   </section>
 
+  {% if featured_pages|length > 0 %}
+    <section class="featured">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-8 feature-border-right">
+            {% if featured_pages|length > 0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.0.pdf_download %}
+            {% endif %}
+          </div>
+          <hr class="separator-large">
+          <div class="col-12 col-md-4 featured-small">
+          {% with featured_pages|slice:"1:4" as featured_small %}
+            {% for item in featured_small %}
+              {% if forloop.counter > 1 %}
+                <hr>
+              {% endif %}
+              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+            {% endfor %}
+          {% endwith %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+        <div class="row highlights">
+          {% for block in additional_files %}
+            {% include_block block %}
+          {% endfor %}
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
   {% include "includes/body.html" with body=self.body heading="about" %}
 
   <section>
