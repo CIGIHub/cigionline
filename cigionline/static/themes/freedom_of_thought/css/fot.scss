@@ -66,8 +66,9 @@ body {
 
       .highlights {
         .stream-block-additional-file-block {
-          .topics {
-            display: none;
+          .img-container {
+            display: flex;
+            align-items: center;
           }
         }
       }
