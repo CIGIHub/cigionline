@@ -76,7 +76,7 @@ function SearchResultListing(props) {
           <i className="fal fa-bullhorn" />
         </span>
       )}
-      {row.contenttype === 'Opinion' && ['Essay'].includes(row.contentsubtype) && (
+      {row.contenttype === 'Opinion' && ['Essays'].includes(row.contentsubtype) && (
         <span className="table-icon icon-publication">
           <i className="fal fa-file-alt" />
         </span>
