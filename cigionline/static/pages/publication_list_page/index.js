@@ -19,7 +19,7 @@ ReactDOM.render(
       'Policy Briefs',
       'Policy Memos',
       'Special Reports',
-      'Essay',
+      'Essays',
     ]}
     fields={['authors', 'pdf_download', 'publishing_date', 'topics']}
     filterTypes={[
@@ -56,12 +56,11 @@ ReactDOM.render(
       },
       {
         name: 'Essays',
-        alias: 'Essay',
         aggregationField: 'contentsubtypes',
         params: [
           {
             name: 'contentsubtype',
-            value: 'Essay',
+            value: 'Essays',
           },
         ],
       },
