@@ -115,3 +115,49 @@ def themes(request):
         "name": "Themes",
         "children": results,
     })
+
+
+def theme_contentpages(request):
+    themes = ThemePage.objects.live().filter(archive=0).order_by('title')
+    theme_results = []
+
+    for theme in themes:
+        topics = TopicPage.objects.filter(program_theme=theme)
+        topic_results = []
+        content_pages = []
+
+        for topic in topics:
+            topic_results.append({
+                "name": topic.title,
+                "content_pages": topic.content_pages.count(),
+                "children": [
+                    {
+                        "name": "Articles",
+                        "value": ArticlePage.objects.filter(topics__in=[topic.id]).count(),
+                    },
+                    {
+                        "name": "Publications",
+                        "value": PublicationPage.objects.filter(topics__in=[topic.id]).count(),
+                    },
+                    {
+                        "name": "Multimedia",
+                        "value": MultimediaPage.objects.filter(topics__in=[topic.id]).count(),
+                    },
+                    {
+                        "name": "Events",
+                        "value": EventPage.objects.filter(topics__in=[topic.id]).count(),
+                    },
+                ],
+            })
+            content_pages += topic.content_pages.all()
+
+        theme_results.append({
+            "name": theme.title,
+            "content_pages": len(list(set(content_pages))),
+            "children": topic_results,
+        })
+
+    return JsonResponse({
+        "name": "Themes",
+        "children": theme_results,
+    })
