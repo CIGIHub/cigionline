@@ -1,9 +1,12 @@
 from core.models import BasicPage
+from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
 from home.models import HomePage
 from django.template import Context, Template
+from django.utils.text import slugify
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
+from datetime import date
 
 from .models import (
     ProjectListPage,
@@ -12,8 +15,6 @@ from .models import (
     TopicListPage,
     TopicPage,
 )
-
-from articles.models import ArticlePage
 
 
 class ProjectListPageTests(WagtailPageTestCase):
@@ -140,9 +141,15 @@ class HighlightedTopicsTests(WagtailPageTestCase):
     TEMPLATE = Template('{% load topic_tags %} {% highlighted_topics %}')
 
     def _tag_topic(self, topic_title, article_title):
-        topic = TopicPage.objects.get(title=topic_title)
-        article = ArticlePage.objects.create(title=article_title)
-        article.topics.add(topic)
+        ArticlePage.objects.create(
+            path='/{0}'.format(slugify(article_title)),
+            depth=1,
+            title=article_title,
+            slug=slugify(article_title),
+            publishing_date=date.today().strftime("%Y-%m-%d"),
+            article_type=ArticleTypePage(title='Test Article Type'),
+            topics=[TopicPage.objects.get(title=topic_title)],
+            live=True)
 
     def test_if_no_topics_template_should_be_empty(self):
         rendered = self.TEMPLATE.render(Context({}))
