@@ -10,7 +10,7 @@ import 'swiper/swiper-bundle.css';
 ReactDOM.render(
   <SearchTable
     showSearch
-    contenttypes={['Publication']}
+    contenttypes={['Publication', 'Opinion']}
     contentsubtypes={[
       'Books',
       'CIGI Papers',
@@ -19,6 +19,7 @@ ReactDOM.render(
       'Policy Briefs',
       'Policy Memos',
       'Special Reports',
+      'Essays',
     ]}
     fields={['authors', 'pdf_download', 'publishing_date', 'topics']}
     filterTypes={[
@@ -50,6 +51,16 @@ ReactDOM.render(
           {
             name: 'contentsubtype',
             value: 'Conference Reports',
+          },
+        ],
+      },
+      {
+        name: 'Essays',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Essays',
           },
         ],
       },

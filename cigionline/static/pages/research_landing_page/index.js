@@ -32,6 +32,13 @@ ReactDOM.render(
         value: 'Event',
       }],
     }, {
+      name: 'Essays',
+      aggregationField: 'contentsubtypes',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Essays',
+      }],
+    }, {
       name: 'Publication',
       params: [{
         name: 'contenttype',

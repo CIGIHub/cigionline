@@ -28,7 +28,7 @@ function ResearchContentListing(props) {
               <i className="fal fa-headphones" />
             </span>
           )}
-          {row.contenttype === 'Publication' && (
+          {(row.contenttype === 'Publication' || (row.contenttype === 'Opinion' && ['Essays'].includes(row.contentsubtype))) && (
             <span className="table-icon icon-publication">
               <i className="fal fa-file-alt" />
             </span>
@@ -110,7 +110,7 @@ function ResearchContentListing(props) {
         </div>
         <div className="table-content">
           {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="publication-pdf" onClick={handleCTAClick}>
+            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="publication-pdf" onClick={handleCTAClick} aria-label="Download PDF">
               <i className="fa fas fa-download" />
             </a>
           )}

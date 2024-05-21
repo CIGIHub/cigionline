@@ -85,6 +85,14 @@ ReactDOM.render(
         value: 'Essay Series',
       }],
     }, {
+      name: 'Essays',
+      parent: 'Publication',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Essays',
+      }],
+    },
+    {
       name: 'Papers',
       alias: 'CIGI Papers',
       parent: 'Publication',

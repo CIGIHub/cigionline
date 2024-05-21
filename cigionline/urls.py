@@ -11,6 +11,7 @@ from research import views as research_views
 from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
+from articles import views as article_views
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.contrib.sitemaps.views import sitemap
@@ -32,12 +33,19 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/search/$', search_views.search_api),
     re_path(r'^api/staff/$', people_views.all_staff),
     re_path(r'^api/topics/$', research_views.all_topics),
+<<<<<<< HEAD
     re_path(r'^api/topic_items/$', research_views.topic_items),
+=======
+    re_path(r'^api/topic-contentpages/$', research_views.topic_contentpages),
+    re_path(r'^api/overlapping-topics/$', research_views.overlapping_topics_verification),
+    re_path(r'^api/themes/$', research_views.themes),
+>>>>>>> master
     re_path(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     re_path(r'^api/events/$', events_views.events_api),
     re_path(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
     re_path(r'^api/old_images/$', core_views.old_images),
     re_path(r'^api/years/$', core_views.years),
+    re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
 
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),

@@ -12,6 +12,7 @@ from .models import (
     ProjectPage,
     ResearchLandingPage,
     TopicPage,
+    ThemePage,
 )
 
 
@@ -72,11 +73,28 @@ class TopicPageModelAdmin(ModelAdmin):
     permission_helper_class = CIGIModelAdminPermissionHelper
 
 
+@hooks.register('register_permissions')
+def register_theme_page_permissions():
+    theme_content_type = ContentType.objects.get(app_label='research', model='themepage')
+    return Permission.objects.filter(content_type=theme_content_type)
+
+
+class ThemePageModelAdmin(ModelAdmin):
+    model = ThemePage
+    menu_label = 'Themes'
+    menu_icon = 'tag'
+    menu_order = 103
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
 class ResearchModelAdminGroup(ModelAdminGroup):
     menu_label = 'Research'
     menu_icon = 'site'
     menu_order = 106
-    items = (ResearchLandingPageModelAdmin, ProjectPageModelAdmin, TopicPageModelAdmin)
+    items = (ResearchLandingPageModelAdmin, ThemePageModelAdmin, TopicPageModelAdmin, ProjectPageModelAdmin)
 
 
 modeladmin_register(ResearchModelAdminGroup)
