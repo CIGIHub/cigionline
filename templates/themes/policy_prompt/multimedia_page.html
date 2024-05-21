@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader static %}
 
 {% block meta_description %}
   {% if self.subtitle %}
@@ -44,11 +44,56 @@
   {% render_bundle 'themePolicyPrompt' 'js' attrs='defer' %}
 {% endblock %}
 
+{% block body_class %}policy-prompt-multimedia{% endblock %}
+
 {% block header %}
   {% include "includes/top_bar.html" with small=True %}
 {% endblock header %}
 
 {% block content %}
+  <section class="hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-6 col-md-3 offset-md-1 offset-lg-2">
+          <div class="policy-prompt-logo">
+            <a href="/policy-prompt-podcast">
+              <img src="{% static 'assets/policy_prompt_logo.png' %}" alt="Policy Prompt Logo" />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5 col-lg-4 offset-md-1 offset-lg-2">
+          {% image self.image_hero width-1920 %}
+        </div>
+        <div class="col-md-5 col-lg-4">
+          <div class="hero-content">
+            <div class="episode-number">Episode {{ self.podcast_episode }}</div>
+            <h1><span class="logo-animation-cursor"></span>{{ self.title }}</h1>
+            <div class="subtitle">
+              {{ self.subtitle|richtext}}
+            </div>
+            <audio id="podcast-player" src="{{ self.multimedia_url }}"></audio>
+            <div class="subscribe-share">
+              <a href="" target="_blank" rel="noopener noreferrer">
+                SUBSCRIBE
+                <i class="fa fa-headphones"></i>
+              </a>
+              <a href="" target="_blank" rel="noopener noreferrer">
+                SHARE
+                <i class="fa-solid fa-share"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-2">
+          <hr>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="podcast-player">
     <audio id="podcast-player" src="http://thepodcastexchange.ca/s/Porsche-Macan-July-5-2018-1.mp3"></audio>
     <div class="container">
@@ -59,6 +104,29 @@
     </div>
   </section>
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
+  <section class="episode-info">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="episode-info-container">
+          <div class="episode-info-item">
+            <div class="episode-length">{{ self.podcast_episode_minutes| }}</div>
+          </div>
+          <div class="episode-info-item">
+            <div class="episode-info-label">Guest</div>
+            <div class="episode-info-value">{{ self.episode_guest }}</div>
+          </div>
+          <div class="episode-info-item">
+            <div class="episode-info-label">Duration</div>
+            <div class="episode-info-value">{{ self.episode_duration }}</div>
+          </div>
+          <div class="episode-info-item">
+            <div class="episode-info-label">Published</div>
+            <div class="episode-info-value">{{ self.publishing_date|date:"F j, Y" }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   {% with podcast_chapters=self.podcast_chapters %}
     {% if podcast_chapters %}

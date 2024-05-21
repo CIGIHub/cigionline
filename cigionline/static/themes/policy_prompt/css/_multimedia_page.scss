@@ -1,16 +1,187 @@
 body {
-  section {
-    &.podcast-player {
-      padding-top: 6rem;
-    }
-  }
+  &.policy-prompt-multimedia {
+    section {
+      &.hero {
+        background-color: $policy-prompt-bg;
+        margin-bottom: 0;
+        padding-bottom: 0;
 
-  .podcast-player {
-    .mejs__container {
-      .mejs__controls {
-        .mejs__rewind-button,
-        .mejs__fast-forward-button {
-          color: $white;
+        .policy-prompt-logo {
+          text-align: left;
+          margin-bottom: 3rem;
+        }
+
+        .hero-content {
+          text-align: left;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
+
+          .episode-number {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+          }
+
+          h1 {
+            font-size: 1.75rem;
+            font-family: $policy-prompt-font;
+            color: $policy-prompt-blue;
+            font-weight: 600;
+            text-align: left;
+            margin-bottom: 0.75rem;
+
+            span {
+              display: inline-block;
+              background-color: $policy-prompt-green;
+              border-radius: 0.5em;
+              height: 0.25em;
+              width: 1em;
+              position: relative;
+              transition: opacity 1s ease;
+              animation: blink 5s infinite;
+              transform: rotate(5deg);
+            }
+          }
+
+          .subtitle {
+            font-family: $policy-prompt-font;
+            font-size: 0.8rem;
+            line-height: 1.25;
+            margin-bottom: 0.5rem;
+
+            p {
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+          }
+
+          .mejs__container {
+            background: transparent;
+            color: $black;
+            margin: 0;
+
+            .mejs__controls {
+              background: transparent;
+              padding: 0;
+            }
+
+            .mejs__playpause-button {
+              width: 1.5rem;
+
+              button {
+                margin-left: 0;
+                margin-right: 0;
+              }
+            }
+
+            .mejs__button {
+              button {
+                color: $black;
+              }
+            }
+
+            .mejs__rewind-button,
+            .mejs__fast-forward-button,
+            .mejs__currenttime-container {
+              display: none;
+            }
+
+            .mejs__time-total {
+              margin-top: 0;
+              background: $white;
+            }
+
+            .mejs__time-rail {
+              display: flex;
+              padding-top: 0;
+              align-items: center;
+            }
+
+            .mejs__time-current {
+              background-color: $policy-prompt-blue;
+            }
+
+            .mejs__time-buffering,
+            .mejs__time-current,
+            .mejs__time-float-current,
+            .mejs__time-hovered,
+            .mejs__time-loaded,
+            .mejs__time-marker,
+            .mejs__time-total {
+              height: 0.3rem;
+            }
+            .mejs__time-handle-content {
+              top: -0.4rem;
+              border: 1px solid $black;
+            }
+
+            .mejs__duration {
+              font-size: 0.75rem;
+              font-weight: 400;
+              color: $black;
+            }
+
+            .mejs__time-float-corner {
+              border-top-color: $black;
+            }
+
+            .mejs__horizontal-volume-slider {
+              display: none !important;
+            }
+
+            svg {
+              fill: $black;
+            }
+          }
+
+          .subscribe-share {
+            @include link($color: $cigi-dark-grey, $hover-color: $policy-prompt-blue);
+            display: flex;
+            font-size: 0.8rem;
+
+            a {
+              margin-right: 2rem;
+
+              i {
+                margin-left: 0.5rem;
+              }
+            }
+          }
+        }
+
+        hr {
+          background-color: $cigi-medium-grey;
+          height: 1px;
+          margin: 2rem 0;
+        }
+      }
+
+      &.body {
+        background-color: $policy-prompt-bg;
+
+        h2 {
+          font-size: 0.9rem;
+          color: $policy-prompt-blue;
+          letter-spacing: 3px;
+          font-weight: 600;
+          margin: 0 0 1.5rem;
+          border: 0;
+        
+        }
+      }
+    }
+
+    .podcast-player {
+      .mejs__container {
+        .mejs__controls {
+          .mejs__rewind-button,
+          .mejs__fast-forward-button {
+            color: $white;
+          }
         }
       }
     }

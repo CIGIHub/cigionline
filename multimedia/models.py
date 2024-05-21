@@ -200,6 +200,11 @@ class MultimediaPage(
     podcast_audio_duration = models.CharField(blank=True, max_length=8)
     podcast_audio_file_size = models.IntegerField(blank=True, null=True)
     podcast_audio_url = models.URLField(blank=True)
+    podcast_recording_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Recording Date',
+    )
     podcast_episode = models.IntegerField(
         blank=True,
         null=True,
@@ -282,6 +287,9 @@ class MultimediaPage(
         if self.theme:
             return f'themes/{self.get_theme_dir()}/multimedia_page.html'
         return standard_template
+    
+    def podcast_episode_minutes(self):
+        return int(self.podcast_audio_duration.split(':')[0])
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -338,6 +346,7 @@ class MultimediaPage(
                         FieldPanel('podcast_audio_url'),
                         FieldPanel('podcast_audio_duration'),
                         FieldPanel('podcast_audio_file_size'),
+                        FieldPanel('podcast_recording_date'),
                     ],
                     heading='Audio',
                     classname='collapsible collapsed',
