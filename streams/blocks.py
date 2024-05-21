@@ -1111,6 +1111,17 @@ class PodcastHostBlock(blocks.StructBlock):
         label = 'Podcast Host'
         template = 'streams/podcast_host_block.html'
 
+class PodcastGuestBlock(blocks.StructBlock):
+    guest = blocks.CharBlock(required=False)
+    guest_page = blocks.PageChooserBlock(page_type='people.PersonPage', required=False)
+    image = ImageChooserBlock(required=False)
+    bio = blocks.RichTextBlock(required=False)
+
+    class Meta:
+        icon = 'user'
+        label = 'Podcast Guest'
+        template = 'streams/podcast_guest_block.html'
+
 
 class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
     class PositionChoices(models.TextChoices):
@@ -1397,7 +1408,7 @@ class PodcastChapterBlock(blocks.StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        timestamp_string = f"{value.get('timestamp').get('hours'):02d}:{value.get('timestamp').get('minutes'):02d}:{value.get('timestamp').get('seconds'):02d}"
+        timestamp_string = f"{value.get('timestamp').get('minutes'):02d}:{value.get('timestamp').get('seconds'):02d}"
         context['timestamp_string'] = timestamp_string
 
         return context

@@ -1,8 +1,9 @@
 {% load wagtailcore_tags %}
 
 <div class="chapter">
-  <div class="chapter-title">{{ self.text|richtext }}</div>
+  <span>{{ chapter_num }}</span>
   <a href="#{{chapter_num}}" class="chapter-time" data-timestamp="{{timestamp_string}}">
     {{ timestamp_string|slice:"1:" }}
   </a>
+  <div class="chapter-title">{{ self.text|richtext }}</div>
 </div>

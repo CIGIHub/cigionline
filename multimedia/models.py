@@ -15,6 +15,7 @@ from streams.blocks import (
     FeaturedEpisodeBlock,
     PodcastHostBlock,
     PodcastChapterBlock,
+    PodcastGuestBlock,
 )
 from wagtail.admin.panels import (
     FieldPanel,
@@ -213,9 +214,11 @@ class MultimediaPage(
     podcast_guests = StreamField(
         [
             ('guest', CharBlock(required=True)),
+            ('guest_page', PodcastGuestBlock()),
         ],
         blank=True,
         use_json_field=True,
+        help_text='A list of guests for the podcast. If the guest has a page on the site, you can link to it here.',
     )
     podcast_season = models.IntegerField(
         blank=True,
@@ -287,7 +290,7 @@ class MultimediaPage(
         if self.theme:
             return f'themes/{self.get_theme_dir()}/multimedia_page.html'
         return standard_template
-    
+
     def podcast_episode_minutes(self):
         return int(self.podcast_audio_duration.split(':')[0])
 

@@ -105,24 +105,48 @@
   </section>
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
   <section class="episode-info">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-8">
-        <div class="episode-info-container">
-          <div class="episode-info-item">
-            <div class="episode-length">{{ self.podcast_episode_minutes| }}</div>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="episode-info-container">
+            <div class="episode-info-item">
+              <div class="episode-length">{{ self.podcast_episode_minutes }} Minutes</div>
+            </div>
+            <span>\</span>
+            <div class="episode-info-item">
+              <div class="episode-info-value">Recorded {{ self.podcast_recording_date|date:"F j, Y" }}</div>
+            </div>
+            <span>\</span>
+            <div class="episode-info-item">
+              <div class="episode-info-value">Published {{ self.publishing_date|date:"F j, Y" }}</div>
+            </div>
+            <span>\</span>
+            <div class="episode-info-item">
+              <a href="#chapters">Chapters</a>
+            </div>
+            <span>\</span>
+            <div class="episode-info-item">
+              <a href="#transcript">Transcript</a>
+            </div>
           </div>
-          <div class="episode-info-item">
-            <div class="episode-info-label">Guest</div>
-            <div class="episode-info-value">{{ self.episode_guest }}</div>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="episode-guests">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <h2>Featuring</h2>
+          <div class="episode-guests-list">
+            {% for guest in self.podcast_guests %}
+              {% if guest.block_type == 'guest_page' %}
+                {% include_block guest %}
+              {% endif %}
+            {% endfor %}
           </div>
-          <div class="episode-info-item">
-            <div class="episode-info-label">Duration</div>
-            <div class="episode-info-value">{{ self.episode_duration }}</div>
-          </div>
-          <div class="episode-info-item">
-            <div class="episode-info-label">Published</div>
-            <div class="episode-info-value">{{ self.publishing_date|date:"F j, Y" }}</div>
-          </div>
+          <hr>
         </div>
       </div>
     </div>
@@ -130,10 +154,10 @@
 
   {% with podcast_chapters=self.podcast_chapters %}
     {% if podcast_chapters %}
-      <section class="podcast-chapters">
+      <section class="episode-chapters">
         <div class="container">
-          <div class="row">
-            <div class="col">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
               <h2>Chapters</h2>
               {% for chapter in podcast_chapters %}
                 {% include_block chapter with chapter_num=forloop.counter %}

@@ -157,7 +157,9 @@
                         {% if not episode.specific.podcast_subtitle %}
                           <div class="block-guest title-case">{{ episode.title }}</div>
                         {% else %}
-                          {{ episode.specific.podcast_guests }}
+                          <div class="block-guest">
+                            {{ episode.specific.podcast_guests.0 }}
+                          </div>
                           <div>{{ episode.specific.podcast_subtitle }}</div>
                         {% endif %}
                       </a>
