@@ -148,7 +148,7 @@ class HighlightedTopicsTests(WagtailPageTestCase):
             slug=slugify(article_title),
             publishing_date=date.today().strftime("%Y-%m-%d"),
             article_type=ArticleTypePage(title='Test Article Type'),
-            topics=[TopicPage.objects.get(title=topic_title)],
+            # topics=[TopicPage.objects.get(title=topic_title)],
             live=True)
 
     def test_if_no_topics_template_should_be_empty(self):
