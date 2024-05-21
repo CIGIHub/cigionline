@@ -94,15 +94,6 @@
       </div>
     </div>
   </section>
-  <section class="podcast-player">
-    <audio id="podcast-player" src="http://thepodcastexchange.ca/s/Porsche-Macan-July-5-2018-1.mp3"></audio>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-        </div>
-      </div>
-    </div>
-  </section>
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
   <section class="episode-info">
     <div class="container">
@@ -162,6 +153,25 @@
               {% for chapter in podcast_chapters %}
                 {% include_block chapter with chapter_num=forloop.counter %}
               {% endfor %}
+              <hr>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
+
+  {% with transcript=self.transcript %}
+    {% if transcript %}
+      <section class="episode-transcript">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <h2>Transcript</h2>
+              <div class="transcript">
+                {{ transcript }}
+              </div>
+              <hr>
             </div>
           </div>
         </div>

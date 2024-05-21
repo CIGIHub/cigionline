@@ -60,11 +60,11 @@ $(document).ready(function () {
     chapterTime.addEventListener('click', function (event) {
       event.preventDefault();
       const time = chapterTime.getAttribute('data-timestamp');
+      console.log(time)
       const timeArray = time.split(':');
       const seconds =
-        parseInt(timeArray[0], 10) * 3600 +
-        parseInt(timeArray[1], 10) * 60 +
-        parseInt(timeArray[2], 10);
+        parseInt(timeArray[0], 10) * 60 +
+        parseInt(timeArray[1], 10);
       podcastPlayer[0].setCurrentTime(seconds);
       podcastPlayer[0].play();
     });
@@ -114,6 +114,8 @@ function startTyping() {
   }, 1250);
 }
 
-setTimeout(() => {
-  startTyping();
-}, 2000);
+if (document.getElementsByClassName('policy-prompt-multimedia-series').length) {
+  setTimeout(() => {
+    startTyping();
+  }, 2000);
+}

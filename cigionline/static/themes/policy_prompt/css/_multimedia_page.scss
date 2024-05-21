@@ -222,6 +222,7 @@ body {
             display: flex;
             align-items: center;
             margin-bottom: 1rem;
+            font-family: $policy-prompt-font;
 
             .guest-image {
               width: 7.5rem;
@@ -237,15 +238,14 @@ body {
 
             h3 {
               @include link($color: $black, $hover-color: $policy-prompt-blue);
-              font-size: 1rem;
-              font-weight: 500;
+              font-size: 1.2rem;
+              font-weight: 600;
               margin: 0 0 0.5rem;
             }
 
             .bio {
               font-size: 0.9rem;
               line-height: 1.25;
-              font-family: $policy-prompt-font;
 
               p {
                 &:last-child {
@@ -280,7 +280,6 @@ body {
 
           p {
             margin: 0;
-
           }
         }
       }

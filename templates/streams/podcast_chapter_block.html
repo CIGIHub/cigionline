@@ -3,7 +3,7 @@
 <div class="chapter">
   <span>{{ chapter_num }}</span>
   <a href="#{{chapter_num}}" class="chapter-time" data-timestamp="{{timestamp_string}}">
-    {{ timestamp_string|slice:"1:" }}
+    {{ timestamp_string }}
   </a>
   <div class="chapter-title">{{ self.text|richtext }}</div>
 </div>
