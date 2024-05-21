@@ -114,6 +114,14 @@ class ProjectPage(
         use_json_field=True,
     )
     project_types = ParentalManyToManyField('research.ProjectType', blank=True)
+    primary_theme = models.ForeignKey(
+        'research.ThemePage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Primary Theme',
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -121,6 +129,7 @@ class ProjectPage(
         blank=True,
         use_json_field=True,
     )
+    secondary_themes = ParentalManyToManyField('research.ThemePage', blank=True)
     survey_findings = StreamField(
         [
             ('country', SurveyFindingsCountryBlock()),
@@ -166,6 +175,11 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
+                PageChooserPanel(
+                    'primary_theme',
+                    ['research.ThemePage'],
+                ),
+                FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
                 FieldPanel('related_files'),
             ],
@@ -361,6 +375,14 @@ class TopicPage(
 ):
     """View topic page"""
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    program_theme = models.ForeignKey(
+        'research.ThemePage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Program Theme',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_taxonomy_id = models.IntegerField(blank=True, null=True)
@@ -392,6 +414,10 @@ class TopicPage(
 
     content_panels = Page.content_panels + [
         FieldPanel('description'),
+        PageChooserPanel(
+            'program_theme',
+            ['research.ThemePage'],
+        ),
         MultiFieldPanel(
             [
                 InlinePanel(
@@ -474,3 +500,57 @@ class ProjectPageMember(Orderable):
     panels = [
         PageChooserPanel('member', ['people.PersonPage']),
     ]
+
+
+class ThemeListPage(Page):
+    """Theme list page"""
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = ['research.ThemePage']
+    templates = 'research/theme_list_page.html'
+
+    class Meta:
+        verbose_name = 'Theme List Page'
+
+
+class ThemePage(
+    ArchiveablePageAbstract,
+    BasicPageAbstract,
+    SearchablePageAbstract,
+    Page,
+):
+    description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+
+    @property
+    def theme_name(self):
+        return self.title
+
+    content_panels = Page.content_panels + [
+        FieldPanel('description'),
+    ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + SearchablePageAbstract.search_fields \
+        + [
+            index.SearchField('theme_name')
+        ]
+
+    parent_page_types = ['research.ThemeListPage']
+    subpage_types = []
+    templates = 'research/theme_page.html'
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['archive'])
+        ]
+        verbose_name = 'Theme Page'
+        verbose_name_plural = 'Theme Pages'
