@@ -13,6 +13,8 @@ from .models import (
     TopicPage,
 )
 
+from articles.models import ArticlePage
+
 
 class ProjectListPageTests(WagtailPageTestCase):
     def test_projectlistpage_parent_page_types(self):
@@ -137,6 +139,11 @@ class TopicPageTests(WagtailPageTestCase):
 class HighlightedTopicsTests(WagtailPageTestCase):
     TEMPLATE = Template('{% load topic_tags %} {% highlighted_topics %}')
 
+    def _tag_topic(self, topic_title, article_title):
+        topic = TopicPage.objects.get(title=topic_title)
+        article = ArticlePage.objects.create(title=article_title)
+        article.topics.add(topic)
+
     def test_if_no_topics_template_should_be_empty(self):
         rendered = self.TEMPLATE.render(Context({}))
 
@@ -145,19 +152,28 @@ class HighlightedTopicsTests(WagtailPageTestCase):
     def test_correct_number_of_topics_render(self):
         for n in range(5):
             TopicPage.objects.create(path='/topic{0}'.format(n), depth=1, title='topic{0}'.format(n), slug='topic{0}'.format(n), archive=0, live=True)
+            self._tag_topic('topic{0}'.format(n), 'article{0}'.format(n))
         rendered = self.TEMPLATE.render(Context({}))
 
         self.assertIn('topic4', rendered)
         self.assertNotIn('topic5', rendered)
 
+    def test_topics_untagged_do_not_render(self):
+        TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=0, live=True)
+        rendered = self.TEMPLATE.render(Context({}))
+
+        self.assertNotIn('topic1', rendered)
+
     def test_topics_not_live_do_not_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=0, live=False)
+        self._tag_topic('topic1', 'article1')
         rendered = self.TEMPLATE.render(Context({}))
 
         self.assertNotIn('topic1', rendered)
 
     def test_topics_archived_do_not_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=True)
+        self._tag_topic('topic1', 'article1')
         rendered = self.TEMPLATE.render(Context({}))
 
         self.assertNotIn('topic1', rendered)
