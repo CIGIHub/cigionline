@@ -162,8 +162,8 @@ class HighlightedTopicsTests(WagtailPageTestCase):
             print('Topic exists: {0}'.format(topic_title))
 
         ArticlePage.objects.create(
-            path='/{0}'.format(slugify(article_title)),
-            depth=1,
+            path='articles/{0}'.format(slugify(article_title)),
+            depth=2,
             title=article_title,
             slug=slugify(article_title),
             publishing_date=date.today().strftime("%Y-%m-%d"),
