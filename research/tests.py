@@ -4,7 +4,7 @@ from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
 from home.models import HomePage
 from django.template import Context, Template
-from django.utils.text import slugify
+# from django.utils.text import slugify
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
 from datetime import date
@@ -147,12 +147,17 @@ class HighlightedTopicsTests(WagtailPageTestCase):
             if not page_model.objects.filter(title=page_title).exists():
                 if Page.objects.filter(title=parent_page_title).exists():
                     if is_article_page:
+                        print('using article page model..')
+                        today_date = date.today().strftime("%Y-%m-%d")
+                        test_article_type = ArticleTypePage.objects.get(title='Test')
+                        print('with article type: {0}, and publishing date: {1}'.format(test_article_type, today_date))
                         new_page = page_model(
                             title=page_title,
-                            publishing_date=date.today().strftime("%Y-%m-%d"),
-                            article_type=ArticleTypePage.objects.get(title='Test'),
+                            publishing_date=today_date,
+                            article_type=test_article_type,
                         )
                     else:
+                        print('using regular page model..')
                         new_page = page_model(title=page_title)
                     parent_page = Page.objects.get(title=parent_page_title).specific
                     parent_page.add_child(instance=new_page)
@@ -177,7 +182,7 @@ class HighlightedTopicsTests(WagtailPageTestCase):
         #     article_type=ArticleTypePage.objects.get(title='Test'),
         #     topics=[TopicPage.objects.get(title=topic_title)],
         #     live=True)
-        create_page(ArticlePage, article_title, 'Articles')
+        create_page(ArticlePage, article_title, 'Articles', True)
         article_page = ArticlePage.objects.get(title=article_title)
         article_page.topics.add(TopicPage.objects.get(title=topic_title))
         article_page.save()
