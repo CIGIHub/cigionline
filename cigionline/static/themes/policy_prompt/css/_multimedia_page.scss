@@ -262,7 +262,6 @@ body {
       }
 
       &.episode-chapters {
-        font-family: $policy-prompt-font;
         font-size: 0.9rem;
 
         .chapter {
@@ -270,6 +269,7 @@ body {
             $color: $policy-prompt-blue,
             $hover-color: $cigi-dark-pink
           );
+          font-family: $policy-prompt-font;
           display: flex;
           margin-bottom: 0.25rem;
 
