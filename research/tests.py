@@ -146,41 +146,20 @@ class HighlightedTopicsTests(WagtailPageTestCase):
             if not page_model.objects.filter(title=page_title).exists():
                 if Page.objects.filter(title=parent_page_title).exists():
                     if is_article_page:
-                        print('using article page model..')
                         today_date = date.today().strftime("%Y-%m-%d")
                         test_article_type = ArticleTypePage.objects.get(title='Test')
-                        print('with article type: {0}, and publishing date: {1}'.format(test_article_type, today_date))
                         new_page = page_model(
                             title=page_title,
                             publishing_date=today_date,
                             article_type=test_article_type,
                         )
                     else:
-                        print('using regular page model..')
                         new_page = page_model(title=page_title)
                     parent_page = Page.objects.get(title=parent_page_title).specific
                     parent_page.add_child(instance=new_page)
-                    print('Page created: {0}'.format(page_title))
-                else:
-                    print('Parent page does not exist: {0}'.format(parent_page_title))
-            else:
-                print('Page already exists: {0}'.format(page_title))
 
         create_page(Page, 'Articles', 'Home')
         create_page(ArticleTypePage, 'Test', 'Articles')
-
-        if TopicPage.objects.filter(title=topic_title).exists():
-            print('Topic exists: {0}'.format(topic_title))
-
-        # ArticlePage.objects.create(
-        #     path='articles/{0}'.format(slugify(article_title)),
-        #     depth=2,
-        #     title=article_title,
-        #     slug=slugify(article_title),
-        #     publishing_date=date.today().strftime("%Y-%m-%d"),
-        #     article_type=ArticleTypePage.objects.get(title='Test'),
-        #     topics=[TopicPage.objects.get(title=topic_title)],
-        #     live=True)
         create_page(ArticlePage, article_title, 'Articles', True)
         article_page = ArticlePage.objects.get(title=article_title)
         article_page.topics.add(TopicPage.objects.get(title=topic_title))
