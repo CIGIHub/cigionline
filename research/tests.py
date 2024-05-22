@@ -1,5 +1,5 @@
 from core.models import BasicPage
-from articles.models import ArticlePage, ArticleTypePage
+from articles.models import ArticleListPage, ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
 from home.models import HomePage
 from django.template import Context, Template
@@ -147,11 +147,12 @@ class HighlightedTopicsTests(WagtailPageTestCase):
     def test_correct_number_of_topics_render(self):
         for n in range(5):
             TopicPage.objects.create(path='/topic{0}'.format(n), depth=1, title='topic{0}'.format(n), slug='topic{0}'.format(n), archive=0, live=True)
-            ArticleTypePage.objects.create(title='Test Type', path='/test-type', depth=1)
+            ArticleListPage.objects.create(path='/test-list-page', depth=1, title='test-list-page')
+            ArticleTypePage.objects.create(path='/test-type', depth=1, title='Test Type')
             ArticlePage.objects.create(
-                title='article{0}'.format(n),
                 path='/article{0}'.format(n),
                 depth=1,
+                title='article{0}'.format(n),
                 article_type=ArticleTypePage.objects.get(title='Test Type'),
                 publishing_date=date.today().strftime("%Y-%m-%d"),
                 topics=[TopicPage.objects.get(title='topic{0}'.format(n))]
@@ -169,6 +170,7 @@ class HighlightedTopicsTests(WagtailPageTestCase):
 
     def test_topics_not_live_do_not_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=0, live=False)
+        ArticleListPage.objects.create(path='/test-list-page', depth=1, title='test-list-page')
         ArticleTypePage.objects.create(title='Test Type', path='/test-type', depth=1)
         ArticlePage.objects.create(
             title='article1',
@@ -184,6 +186,7 @@ class HighlightedTopicsTests(WagtailPageTestCase):
 
     def test_topics_archived_do_not_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=True)
+        ArticleListPage.objects.create(path='/test-list-page', depth=1, title='test-list-page')
         ArticleTypePage.objects.create(title='Test Type', path='/test-type', depth=1)
         ArticlePage.objects.create(
             title='article1',
