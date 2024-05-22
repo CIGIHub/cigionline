@@ -1,9 +1,12 @@
 from core.models import BasicPage
+from wagtail.models import Page
+from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
 from home.models import HomePage
 from django.template import Context, Template
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
+from datetime import date
 
 from .models import (
     ProjectListPage,
@@ -137,6 +140,52 @@ class TopicPageTests(WagtailPageTestCase):
 class HighlightedTopicsTests(WagtailPageTestCase):
     TEMPLATE = Template('{% load topic_tags %} {% highlighted_topics %}')
 
+    def _tag_topic(self, topic_title, article_title):
+        def create_page(page_model, page_title, parent_page_title, is_article_page=False):
+            print('Creating page: {0} under {1}'.format(page_title, parent_page_title))
+            if not page_model.objects.filter(title=page_title).exists():
+                if Page.objects.filter(title=parent_page_title).exists():
+                    if is_article_page:
+                        print('using article page model..')
+                        today_date = date.today().strftime("%Y-%m-%d")
+                        test_article_type = ArticleTypePage.objects.get(title='Test')
+                        print('with article type: {0}, and publishing date: {1}'.format(test_article_type, today_date))
+                        new_page = page_model(
+                            title=page_title,
+                            publishing_date=today_date,
+                            article_type=test_article_type,
+                        )
+                    else:
+                        print('using regular page model..')
+                        new_page = page_model(title=page_title)
+                    parent_page = Page.objects.get(title=parent_page_title).specific
+                    parent_page.add_child(instance=new_page)
+                    print('Page created: {0}'.format(page_title))
+                else:
+                    print('Parent page does not exist: {0}'.format(parent_page_title))
+            else:
+                print('Page already exists: {0}'.format(page_title))
+
+        create_page(Page, 'Articles', 'Home')
+        create_page(ArticleTypePage, 'Test', 'Articles')
+
+        if TopicPage.objects.filter(title=topic_title).exists():
+            print('Topic exists: {0}'.format(topic_title))
+
+        # ArticlePage.objects.create(
+        #     path='articles/{0}'.format(slugify(article_title)),
+        #     depth=2,
+        #     title=article_title,
+        #     slug=slugify(article_title),
+        #     publishing_date=date.today().strftime("%Y-%m-%d"),
+        #     article_type=ArticleTypePage.objects.get(title='Test'),
+        #     topics=[TopicPage.objects.get(title=topic_title)],
+        #     live=True)
+        create_page(ArticlePage, article_title, 'Articles', True)
+        article_page = ArticlePage.objects.get(title=article_title)
+        article_page.topics.add(TopicPage.objects.get(title=topic_title))
+        article_page.save()
+
     def test_if_no_topics_template_should_be_empty(self):
         rendered = self.TEMPLATE.render(Context({}))
 
@@ -145,19 +194,28 @@ class HighlightedTopicsTests(WagtailPageTestCase):
     def test_correct_number_of_topics_render(self):
         for n in range(5):
             TopicPage.objects.create(path='/topic{0}'.format(n), depth=1, title='topic{0}'.format(n), slug='topic{0}'.format(n), archive=0, live=True)
+            self._tag_topic('topic{0}'.format(n), 'article{0}'.format(n))
         rendered = self.TEMPLATE.render(Context({}))
 
         self.assertIn('topic4', rendered)
         self.assertNotIn('topic5', rendered)
 
+    def test_topics_untagged_do_not_render(self):
+        TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=0, live=True)
+        rendered = self.TEMPLATE.render(Context({}))
+
+        self.assertNotIn('topic1', rendered)
+
     def test_topics_not_live_do_not_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=0, live=False)
+        self._tag_topic('topic1', 'article1')
         rendered = self.TEMPLATE.render(Context({}))
 
         self.assertNotIn('topic1', rendered)
 
     def test_topics_archived_do_not_render(self):
         TopicPage.objects.create(path='/topic1', depth=1, title='topic1', slug='topic1', archive=1, live=True)
+        self._tag_topic('topic1', 'article1')
         rendered = self.TEMPLATE.render(Context({}))
 
         self.assertNotIn('topic1', rendered)
