@@ -228,6 +228,7 @@ body {
               width: 7.5rem;
               border-radius: 50%;
               margin-right: 1rem;
+              flex-shrink: 0.3;
 
               img {
                 width: 100%;
@@ -238,7 +239,10 @@ body {
 
             h3 {
               @include link($color: $black, $hover-color: $policy-prompt-blue);
-              font-size: 1.2rem;
+              @include media-breakpoint-up(md) {
+                font-size: 1.2rem;
+              }
+              font-size: 1.1rem;
               font-weight: 600;
               margin: 0 0 0.5rem;
             }
@@ -272,14 +276,77 @@ body {
           span {
             margin-right: 1rem;
             flex-basis: 1rem;
+            flex-shrink: 0;
           }
 
           a {
             flex-basis: 3.5rem;
+            flex-shrink: 0;
           }
 
           p {
             margin: 0;
+          }
+        }
+      }
+
+      &.episode-transcript {
+        .transcript {
+          display: flex;
+
+          &:hover {
+            .transcript-text {
+              p {
+                color: $black;
+              }
+            }
+          }
+
+          &:last-of-type {
+            .transcript-line {
+              border-left: 3px solid transparent;
+            }
+          }
+
+          .transcript-line {
+            border-left: 3px solid $white;
+            position: relative;
+            width: 2rem;
+            flex-shrink: 0;
+
+            span {
+              position: absolute;
+              width: 10px;
+              height: 10px;
+              background-color: $policy-prompt-blue;
+              border-radius: 50%;
+              top: 0;
+              left: -6px;
+            }
+          }
+
+          .transcript-text {
+            line-height: 1.25;
+            font-family: $policy-prompt-font;
+            font-size: 0.9rem;
+
+            &.has-timestamp {
+              cursor: pointer;
+            }
+
+            figcaption {
+              padding: 0;
+              margin-bottom: 0.5rem;
+              font-size: 0.7rem;
+              text-transform: uppercase;
+              font-weight: 600;
+              color: $black;
+            }
+
+            p {
+              color: $cigi-text-grey;
+              transition: color 0.2s ease;
+            }
           }
         }
       }

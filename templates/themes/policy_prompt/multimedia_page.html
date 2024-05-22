@@ -168,10 +168,28 @@
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
               <h2>Transcript</h2>
-              <div class="transcript">
-                {{ transcript }}
-              </div>
+              {% for block in transcript %}
+                {% if block.block_type == 'transcript_block' %}
+                  {% include_block block %}
+                {% endif %}
+              {% endfor %}
               <hr>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
+
+  {% with next_episode = self.next_episode %}
+    {% if next_episode %}
+      <section class="next-episode">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+              <a href="{{ next_episode }}">
+                VIEW NEXT EPISODE >
+              </a>
             </div>
           </div>
         </div>

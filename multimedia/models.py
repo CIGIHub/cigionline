@@ -16,6 +16,7 @@ from streams.blocks import (
     PodcastHostBlock,
     PodcastChapterBlock,
     PodcastGuestBlock,
+    PodcastTranscriptBlock,
 )
 from wagtail.admin.panels import (
     FieldPanel,
@@ -247,6 +248,7 @@ class MultimediaPage(
         [
             BasicPageAbstract.body_accordion_block,
             BasicPageAbstract.body_read_more_block,
+            ('transcript_block', PodcastTranscriptBlock()),
         ],
         blank=True,
         use_json_field=True,

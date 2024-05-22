@@ -55,20 +55,35 @@ $(document).ready(function () {
     use.setAttribute('xlink:href', `/static/assets/${currentHref}`);
   });
 
+  function navigateToChapter(chapter) {
+    const time = chapter.getAttribute('data-timestamp');
+    const timeArray = time.split(':');
+    const seconds =
+      parseInt(timeArray[0], 10) * 60 +
+      parseInt(timeArray[1], 10);
+    podcastPlayer[0].setCurrentTime(seconds);
+    podcastPlayer[0].play();
+  }
+
   const chapterTimes = document.querySelectorAll('.chapter-time');
-  chapterTimes.forEach(function (chapterTime) {
-    chapterTime.addEventListener('click', function (event) {
-      event.preventDefault();
-      const time = chapterTime.getAttribute('data-timestamp');
-      console.log(time)
-      const timeArray = time.split(':');
-      const seconds =
-        parseInt(timeArray[0], 10) * 60 +
-        parseInt(timeArray[1], 10);
-      podcastPlayer[0].setCurrentTime(seconds);
-      podcastPlayer[0].play();
+  if (chapterTimes.length) {
+    chapterTimes.forEach(function (chapterTime) {
+      chapterTime.addEventListener('click', function (event) {
+        event.preventDefault();
+        navigateToChapter(chapterTime);
+      });
     });
-  });
+  }
+
+  const transcriptTimes = document.querySelectorAll('.transcript-text');
+  if (transcriptTimes.length) {
+    transcriptTimes.forEach(function (transcriptTime) {
+      transcriptTime.addEventListener('click', function (event) {
+        event.preventDefault();
+        navigateToChapter(transcriptTime);
+      });
+    });
+  }
 });
 
 const texts = ['policy', 'prompt'];

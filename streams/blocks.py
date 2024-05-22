@@ -1111,6 +1111,7 @@ class PodcastHostBlock(blocks.StructBlock):
         label = 'Podcast Host'
         template = 'streams/podcast_host_block.html'
 
+
 class PodcastGuestBlock(blocks.StructBlock):
     guest = blocks.CharBlock(required=False)
     guest_page = blocks.PageChooserBlock(page_type='people.PersonPage', required=False)
@@ -1417,3 +1418,34 @@ class PodcastChapterBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Podcast Chapter'
         template = 'streams/podcast_chapter_block.html'
+
+
+class PodcastTranscriptBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    timestamp = blocks.StructBlock(
+        [
+            ('hours', blocks.IntegerBlock(required=False, min_value=0)),
+            ('minutes', blocks.IntegerBlock(required=False, min_value=0, max_value=59)),
+            ('seconds', blocks.IntegerBlock(required=False, min_value=0, max_value=59)),
+        ],
+        required=False,
+        help_text='Enter the timestamp of the transcript if it corresponds to a specific time in the podcast.',
+    )
+    
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        try:
+            timestamp_string = f"{value.get('timestamp').get('minutes'):02d}:{value.get('timestamp').get('seconds'):02d}"
+            context['timestamp_string'] = timestamp_string
+        except TypeError:
+            pass
+        return context
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Podcast Transcript'
+        template = 'streams/podcast_transcript_block.html'
