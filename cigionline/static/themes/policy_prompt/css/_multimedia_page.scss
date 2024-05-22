@@ -306,6 +306,10 @@ body {
             .transcript-line {
               border-left: 3px solid transparent;
             }
+
+            .transcript-text {
+              margin-bottom: 0;
+            }
           }
 
           .transcript-line {
@@ -346,6 +350,83 @@ body {
             p {
               color: $cigi-text-grey;
               transition: color 0.2s ease;
+            }
+          }
+        }
+      }
+
+      &.next-episode {
+        @include link(
+          $color: $policy-prompt-blue,
+          $hover-color: $cigi-dark-pink
+        );
+        font-size: 0.9rem;
+        color: $policy-prompt-blue;
+        letter-spacing: 3px;
+        font-weight: 600;
+        text-transform: uppercase;
+        text-align: right;
+        padding-bottom: 3rem;
+      }
+
+      &.related {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        background-color: $white;
+
+        article {
+          display: flex;
+          margin-bottom: 1.5rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .image {
+            @include hover-darken;
+
+            .img-wrapper {
+              @include media-breakpoint-up(md) {
+                margin-bottom: 0;
+              }
+              margin-bottom: 1rem;
+            }
+          }
+
+          .recommended-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+
+            .episode-number,
+            .date {
+              text-transform: uppercase;
+              font-size: 0.7rem;
+              font-weight: 500;
+              letter-spacing: 1px;
+              margin-bottom: 0.5rem;
+              color: $policy-prompt-blue;
+            }
+
+            h3 {
+              @include link($color: $black, $hover-color: $policy-prompt-blue);
+              font-size: 1.1rem;
+              font-family: $policy-prompt-font;
+              font-weight: 600;
+              margin-bottom: 0.5rem;
+            }
+
+            p {
+              font-family: $policy-prompt-font;
+              font-size: 0.9rem;
+              line-height: 1.25;
+              margin-bottom: 0.5rem;
+              color: $cigi-text-grey;
+            }
+
+            .date {
+              margin-bottom: 0;
             }
           }
         }

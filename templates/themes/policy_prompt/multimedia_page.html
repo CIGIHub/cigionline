@@ -181,13 +181,13 @@
     {% endif %}
   {% endwith %}
 
-  {% with next_episode = self.next_episode %}
+  {% with next_episode=self.next_episode %}
     {% if next_episode %}
       <section class="next-episode">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-8">
-              <a href="{{ next_episode }}">
+              <a href="{% pageurl next_episode %}">
                 VIEW NEXT EPISODE >
               </a>
             </div>
@@ -196,6 +196,41 @@
       </section>
     {% endif %}
   {% endwith %}
+
+  <section class="related">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <h2>Related</h2>
+          <div class="recommended-list">
+            {% for recommended_content in self.recommended_content|slice:":3" %}
+              {% with recommended_content.specific as recommended_content %}
+                <article>
+                  <div class="row">
+                    <div class="col-12 col-md-4">
+                      <a href="{% pageurl recommended_content %}" class="image">
+                        <div class="img-wrapper">
+                          {% image recommended_content.image_hero fill-780x585 %}
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      <div class="recommended-text">
+                        <div class="episode-number">Episode {{ recommended_content.podcast_episode }}</div>
+                        <h3><a href="{% pageurl recommended_content %}">{{ recommended_content.title }}</a></h3>
+                        <div class="subtitle">{{ recommended_content.subtitle|richtext }}</div>
+                        <div class="date">{{ recommended_content.publishing_date|date:"F j, Y" }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              {% endwith %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   {% block recommended %}
     {% if self.recommended_content %}

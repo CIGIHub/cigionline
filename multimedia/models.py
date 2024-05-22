@@ -295,6 +295,12 @@ class MultimediaPage(
 
     def podcast_episode_minutes(self):
         return int(self.podcast_audio_duration.split(':')[0])
+    
+    def next_episode(self):
+        if self.podcast_episode is None:
+            return None
+        next_episode_number = self.podcast_episode + 1
+        return MultimediaPage.objects.filter(multimedia_series=self.multimedia_series, podcast_episode=next_episode_number).first()
 
     content_panels = [
         BasicPageAbstract.title_panel,
