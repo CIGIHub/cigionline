@@ -142,11 +142,18 @@ class HighlightedTopicsTests(WagtailPageTestCase):
     TEMPLATE = Template('{% load topic_tags %} {% highlighted_topics %}')
 
     def _tag_topic(self, topic_title, article_title):
-        def create_page(page_model, page_title, parent_page_title):
+        def create_page(page_model, page_title, parent_page_title, is_article_page=False):
             print('Creating page: {0} under {1}'.format(page_title, parent_page_title))
             if not page_model.objects.filter(title=page_title).exists():
                 if Page.objects.filter(title=parent_page_title).exists():
-                    new_page = page_model(title=page_title)
+                    if is_article_page:
+                        new_page = page_model(
+                            title=page_title,
+                            publishing_date=date.today().strftime("%Y-%m-%d"),
+                            article_type=ArticleTypePage.objects.get(title='Test'),
+                        )
+                    else:
+                        new_page = page_model(title=page_title)
                     parent_page = Page.objects.get(title=parent_page_title).specific
                     parent_page.add_child(instance=new_page)
                     print('Page created: {0}'.format(page_title))
@@ -156,7 +163,7 @@ class HighlightedTopicsTests(WagtailPageTestCase):
                 print('Page already exists: {0}'.format(page_title))
 
         create_page(Page, 'Articles', 'Home')
-        # create_page(ArticleTypePage, 'Test', 'Articles')
+        create_page(ArticleTypePage, 'Test', 'Articles')
 
         if TopicPage.objects.filter(title=topic_title).exists():
             print('Topic exists: {0}'.format(topic_title))
