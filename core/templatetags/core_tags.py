@@ -78,3 +78,10 @@ def trim_trailing_slash(value):
 @stringfilter
 def dash_case(value):
     return value.lower().replace(' ', '-')
+
+
+@register.filter(name='split_to_spans')
+def split_to_spans(value):
+    if not isinstance(value, str):
+        return value
+    return ''.join(f'<span id="char-{i}">{char}</span>' for i, char in enumerate(value))

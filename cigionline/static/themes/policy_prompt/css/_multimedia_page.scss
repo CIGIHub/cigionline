@@ -27,38 +27,69 @@ body {
           margin-bottom: 3rem;
         }
 
+        .subscribe-share {
+          @include link(
+            $color: $cigi-dark-grey,
+            $hover-color: $policy-prompt-blue
+          );
+          display: flex;
+          font-size: 0.8rem;
+          text-align: right;
+
+          a {
+            margin-left: 2rem;
+
+            i {
+              margin-left: 0.5rem;
+            }
+          }
+        }
+
         .hero-content {
           text-align: left;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          height: 100%;
+          margin-top: 2rem;
 
           .episode-number {
             text-transform: uppercase;
             font-size: 0.8rem;
             letter-spacing: 1px;
             margin-bottom: 0.5rem;
+            font-weight: 500;
           }
 
           h1 {
-            font-size: 1.75rem;
+            @include media-breakpoint-up(md) {
+              font-size: 1.75rem;
+            }
+            @include media-breakpoint-up(lg) {
+              font-size: 2.5rem;
+            }
+            font-size: 1.5rem;
             font-family: $policy-prompt-font;
-            color: $policy-prompt-blue;
+            color: $black;
             font-weight: 600;
             text-align: left;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
 
             span {
-              display: inline-block;
-              background-color: $policy-prompt-green;
-              border-radius: 0.5em;
-              height: 0.25em;
-              width: 1em;
-              position: relative;
-              transition: opacity 1s ease;
-              animation: blink 5s infinite;
-              transform: rotate(5deg);
+              &.logo-animation-cursor {
+                display: inline-block;
+                background-color: $policy-prompt-green;
+                border-radius: 0.5em;
+                height: 0.25em;
+                width: 1em;
+                position: relative;
+                transition: opacity 1s ease;
+                animation: blink 5s infinite;
+                transform: rotate(5deg);
+              }
+
+              &.animate-color {
+                animation: colorSwitch 6s ease;
+              }
             }
           }
 
@@ -66,13 +97,17 @@ body {
             font-family: $policy-prompt-font;
             font-size: 0.9rem;
             line-height: 1.25;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
 
             p {
               &:last-child {
                 margin-bottom: 0;
               }
             }
+          }
+
+          .podcast-player {
+            margin-bottom: 1rem;
           }
 
           .mejs__container {
@@ -151,23 +186,6 @@ body {
 
             svg {
               fill: $black;
-            }
-          }
-
-          .subscribe-share {
-            @include link(
-              $color: $cigi-dark-grey,
-              $hover-color: $policy-prompt-blue
-            );
-            display: flex;
-            font-size: 0.8rem;
-
-            a {
-              margin-right: 2rem;
-
-              i {
-                margin-left: 0.5rem;
-              }
             }
           }
         }
@@ -443,5 +461,18 @@ body {
         }
       }
     }
+  }
+}
+
+@keyframes colorSwitch {
+  0% {
+    color: $black;
+  }
+  40%,
+  60% {
+    color: $policy-prompt-blue;
+  }
+  100% {
+    color: $black;
   }
 }

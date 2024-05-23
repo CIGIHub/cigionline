@@ -84,6 +84,43 @@ $(document).ready(function () {
       });
     });
   }
+
+  const spans = document.querySelectorAll('#animated-title span');
+  const totalSpans = spans.length;
+  const batchSize = 5;  // Number of spans to animate at a time
+  const animationDuration = 6000;  // Duration of animation in milliseconds
+  const delayBetweenBatches = 0;  // Delay between batches in milliseconds
+
+  function getRandomIndices(total, count) {
+    const indices = new Set();
+    while (indices.size < count) {
+      const randomIndex = Math.floor(Math.random() * total);
+      indices.add(randomIndex);
+    }
+    return Array.from(indices);
+  }
+
+  function animateSpans() {
+    // Remove the animation class from all spans
+    spans.forEach((span) => span.classList.remove('animate-color'));
+
+    // Get random indices for the current batch
+    const randomIndices = getRandomIndices(totalSpans, batchSize);
+
+    // Add the animation class to the selected spans
+    randomIndices.forEach((index) => {
+      spans[index].classList.add('animate-color');
+    });
+  }
+
+  function startAnimationCycle() {
+    animateSpans();
+    setInterval(() => {
+      animateSpans();
+    }, animationDuration + delayBetweenBatches);
+  }
+
+  startAnimationCycle();
 });
 
 const texts = ['policy', 'prompt'];
@@ -134,3 +171,5 @@ if (document.getElementsByClassName('policy-prompt-multimedia-series').length) {
     startTyping();
   }, 2000);
 }
+
+
