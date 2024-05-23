@@ -149,7 +149,7 @@ body {
             color: $black;
             font-weight: 600;
             text-align: left;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
 
             span {
               &.logo-animation-cursor {
@@ -174,7 +174,7 @@ body {
             font-family: $policy-prompt-font;
             font-size: 0.9rem;
             line-height: 1.25;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
 
             p {
               &:last-child {
@@ -184,7 +184,7 @@ body {
           }
 
           .podcast-player {
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
           }
 
           .mejs__container {
