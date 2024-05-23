@@ -6,6 +6,7 @@ from home.models import HomePage
 from django.template import Context, Template
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
+from utils.helpers import CreatePage, CreateArticlePage
 from datetime import date
 
 from .models import (
@@ -141,27 +142,9 @@ class HighlightedTopicsTests(WagtailPageTestCase):
     TEMPLATE = Template('{% load topic_tags %} {% highlighted_topics %}')
 
     def _tag_topic(self, topic_title, article_title):
-        def create_page(page_model, page_title, parent_page_title, is_article_page=False):
-            print('Creating page: {0} under {1}'.format(page_title, parent_page_title))
-            if not page_model.objects.filter(title=page_title).exists():
-                if Page.objects.filter(title=parent_page_title).exists():
-                    if is_article_page:
-                        today_date = date.today().strftime("%Y-%m-%d")
-                        test_article_type = ArticleTypePage.objects.get(title='Test')
-                        new_page = page_model(
-                            title=page_title,
-                            publishing_date=today_date,
-                            article_type=test_article_type,
-                        )
-                    else:
-                        new_page = page_model(title=page_title)
-                    parent_page = Page.objects.get(title=parent_page_title).specific
-                    parent_page.add_child(instance=new_page)
-
-        create_page(Page, 'Articles', 'Home')
-        create_page(ArticleTypePage, 'Test', 'Articles')
-        create_page(ArticlePage, article_title, 'Articles', True)
-        article_page = ArticlePage.objects.get(title=article_title)
+        CreatePage(Page, 'Articles', 'Home').create_page()
+        article_type_page = CreatePage(ArticleTypePage, 'Test', 'Articles').create_page()
+        article_page = CreateArticlePage(ArticlePage, article_title, 'Articles', date.today(), article_type_page).create_article_page()
         article_page.topics.add(TopicPage.objects.get(title=topic_title))
         article_page.save()
 
@@ -176,6 +159,10 @@ class HighlightedTopicsTests(WagtailPageTestCase):
             self._tag_topic('topic{0}'.format(n), 'article{0}'.format(n))
         rendered = self.TEMPLATE.render(Context({}))
 
+        self.assertIn('topic0', rendered)
+        self.assertIn('topic1', rendered)
+        self.assertIn('topic2', rendered)
+        self.assertIn('topic3', rendered)
         self.assertIn('topic4', rendered)
         self.assertNotIn('topic5', rendered)
 
