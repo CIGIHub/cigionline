@@ -32,14 +32,91 @@ body {
             $color: $cigi-dark-grey,
             $hover-color: $policy-prompt-blue
           );
+          color: $cigi-dark-grey;
           display: flex;
           font-size: 0.8rem;
           text-align: right;
+          flex-direction: column;
 
-          a {
-            margin-left: 2rem;
+          .dropdowns {
+            display: flex;
+            justify-content: flex-end;
 
-            i {
+            .dropdown {
+              position: relative;
+              margin-left: 2rem;
+              cursor: pointer;
+
+              &:hover {
+                .dropdown-menu {
+                  display: block;
+                }
+              }
+
+              i {
+                margin-left: 0.5rem;
+              }
+
+              .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: auto;
+                background-color: $policy-prompt-blue;
+                color: $white;
+                font-family: $policy-prompt-font;
+                font-size: 0.8rem;
+                font-weight: 500;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                padding: 0;
+                margin: 0;
+                list-style: none;
+                z-index: 1000;
+                border-radius: 0;
+
+                li {
+                  padding: 0;
+                  border-bottom: 1px solid $white;
+
+                  &:last-child {
+                    border-bottom: none;
+                  }
+
+                  &:hover {
+                    button {
+                      background-color: $white;
+
+                      a {
+                        color: $policy-prompt-blue;
+                      }
+                    }
+                  }
+
+                  button {
+                    text-transform: uppercase;
+                    display: block;
+                    width: 100%;
+                    padding: 0.5rem 1rem;
+                    border: none;
+                    background: none;
+                    text-align: left;
+                    cursor: pointer;
+
+                    a {
+                      color: $white;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .follow {
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+
+            a {
               margin-left: 0.5rem;
             }
           }
@@ -468,8 +545,8 @@ body {
   0% {
     color: $black;
   }
-  40%,
-  60% {
+  25%,
+  75% {
     color: $policy-prompt-blue;
   }
   100% {
