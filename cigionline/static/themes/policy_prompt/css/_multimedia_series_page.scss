@@ -2,21 +2,21 @@ body {
   &.policy-prompt-multimedia-series {
     .divider {
       background-color: $policy-prompt-bg;
-  
+
       hr {
         width: 100%;
         background-color: $cigi-medium-light-grey;
         margin: 0;
       }
     }
-  
+
     section {
       &.hero {
         background-color: $policy-prompt-bg;
         text-align: center;
         margin-bottom: 0;
         padding-bottom: 3em;
-  
+
         h1 {
           @include media-breakpoint-up(md) {
             font-size: 5rem;
@@ -32,12 +32,12 @@ body {
           margin-bottom: 0.1em;
           letter-spacing: -0.03em;
         }
-  
+
         .logo-animation {
           display: flex;
           flex-direction: column;
           align-items: center;
-  
+
           .line-1-container {
             display: flex;
             align-items: end;
@@ -49,7 +49,7 @@ body {
               }
             }
           }
-  
+
           .line-1 {
             white-space: pre-wrap;
             display: flex;
@@ -57,14 +57,14 @@ body {
             justify-content: center;
             padding-right: 0.2em;
           }
-  
+
           .line-2 {
             margin-top: -0.2em;
           }
-  
+
           span {
             display: inline-block;
-  
+
             &.logo-animation-cursor {
               flex-shrink: 0;
               background-color: $policy-prompt-green;
@@ -74,20 +74,20 @@ body {
               position: relative;
               transition: opacity 1s ease;
               animation: blink 5s step-end infinite;
-  
+
               &.hidden {
                 display: none;
               }
-  
+
               &.wobble {
                 animation: wobble 5s infinite;
               }
-  
+
               &.offset-left {
                 margin-left: -0.6em;
               }
             }
-  
+
             &.logo-animation-text {
               color: $policy-prompt-blue;
               font-size: 1em;
@@ -95,58 +95,66 @@ body {
             }
           }
         }
-  
+
         .label {
           font-size: 0.8rem;
           letter-spacing: 0.1em;
           margin-bottom: 1rem;
         }
-  
+
         .subtitle {
           font-size: 1.3rem;
           font-weight: 300;
           font-family: $policy-prompt-font;
           margin-bottom: 3rem;
         }
-  
+
         .subscribe-container {
           @include link($color: $black, $hover-color: $cigi-dark-pink);
           @include media-breakpoint-down(md) {
             flex-wrap: wrap;
           }
           display: flex;
-          justify-content: center;
-          align-items: flex-start;
+          flex-direction: column;
           font-family: $policy-prompt-heading-font;
-  
+
           &.live-false {
-            a {
-              pointer-events: none;
-  
-              &:hover {
-                color: $black;
+            .subscribe-buttons {
+              a {
+                pointer-events: none;
+
+                &:hover {
+                  color: $black;
+                }
               }
             }
-  
+
             .subscribe-coming-soon {
               color: $cigi-text-grey;
               white-space: nowrap;
             }
-  
+
             .subscribe-button {
               color: $cigi-text-grey;
+
               svg {
                 fill: $cigi-text-grey;
               }
             }
           }
-  
+
+          .subscribe-buttons-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+          }
+
           .subscribe-coming-soon {
             font-weight: 600;
             margin-right: 0.5em;
             margin-bottom: 1em;
           }
-  
+
           .subscribe-buttons {
             @include media-breakpoint-down(lg) {
               justify-content: flex-start;
@@ -156,7 +164,7 @@ body {
             align-items: center;
             flex-wrap: wrap;
             flex: 1 0 40%;
-  
+
             .subscribe-button {
               display: flex;
               align-items: center;
@@ -165,34 +173,43 @@ body {
               text-align: left;
               white-space: nowrap;
               margin-bottom: 0.5em;
-    
+
               &:hover {
                 svg {
                   fill: $cigi-dark-pink;
                   transition: fill 0.2s ease;
                 }
               }
-    
+
               i {
                 margin-right: 0.75rem;
                 font-size: 1.5em;
               }
-    
+
               svg {
                 width: 25px;
                 margin-right: 0.75rem;
               }
             }
           }
-  
+
+          .follow {
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+            font-weight: 600;
+
+            a {
+              margin-left: 0.5rem;
+            }
+          }
         }
       }
-  
+
       &.latest-episode {
         background-color: $policy-prompt-bg;
         text-align: center;
         padding: 1em 0 3em;
-  
+
         h2 {
           color: $policy-prompt-blue;
           font-size: 1rem;
@@ -200,7 +217,7 @@ body {
           letter-spacing: 0.1em;
           margin-bottom: 1em;
         }
-  
+
         article {
           h3 {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
@@ -208,12 +225,12 @@ body {
             font-weight: 500;
             margin-bottom: 1em;
           }
-  
+
           .episode-subtitle {
             line-height: 1.1;
             margin-top: 1em;
           }
-  
+
           .episode-publishing-date {
             color: $policy-prompt-blue;
             font-size: 0.8rem;
@@ -223,12 +240,12 @@ body {
           }
         }
       }
-  
+
       &.body {
         background-color: $policy-prompt-bg;
         padding: 3em 0;
         margin: 0;
-  
+
         .paragraph-heading {
           color: $policy-prompt-blue;
           font-size: 0.9rem;
@@ -238,22 +255,22 @@ body {
           margin: 0 0 2rem;
           border: 0;
         }
-  
+
         p {
           line-height: 1.35;
           font-family: $policy-prompt-font;
           font-size: 0.9rem;
-  
+
           &:last-child {
             margin-bottom: 0;
           }
         }
       }
-  
+
       &.hosts {
         background-color: $policy-prompt-bg;
         padding: 3em 0;
-  
+
         h2 {
           color: $policy-prompt-blue;
           font-size: 0.9rem;
@@ -263,7 +280,7 @@ body {
           margin-bottom: 2rem;
           text-transform: uppercase;
         }
-  
+
         .hosts-list {
           @include media-breakpoint-down(md) {
             flex-direction: column;
@@ -271,38 +288,38 @@ body {
           display: flex;
           justify-content: space-between;
         }
-  
+
         .host {
           @include media-breakpoint-down(md) {
             margin-bottom: 2em;
           }
           flex: 0 1 47.5%;
           display: flex;
-  
+
           .host-image {
             width: 100px;
             margin-right: 1em;
             overflow: hidden;
             border-radius: 50%;
-  
+
             .img-wrapper {
               position: relative;
             }
-  
+
             img {
               transition: filter 0.2s ease;
-  
+
               &:hover {
                 filter: brightness(80%);
               }
             }
           }
-  
+
           .host-details {
             font-family: $policy-prompt-font;
             display: flex;
             align-items: center;
-  
+
             span {
               display: inline-block;
               background-color: $policy-prompt-green;
@@ -315,7 +332,7 @@ body {
               animation: blink 5s infinite;
               transform: rotate(5deg);
             }
-  
+
             h3 {
               @include link($color: $black, $hover-color: $cigi-dark-pink);
               font-size: 1rem;
@@ -323,7 +340,7 @@ body {
               letter-spacing: 0.1em;
               margin: 0.25em 0 0.4em;
             }
-  
+
             .host-bio {
               line-height: 1.4;
               font-size: 0.9rem;
@@ -331,26 +348,26 @@ body {
           }
         }
       }
-  
+
       &.episodes {
         padding: 3em 0;
-  
+
         .episode {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 2em 0;
           border-bottom: 1px solid $cigi-medium-light-grey;
-  
+
           &:last-child {
             padding-bottom: 0;
             border-bottom: 0;
           }
-  
+
           &:first-child {
             padding-top: 0;
           }
-  
+
           .episode-info {
             .episode-number {
               color: $cigi-text-grey;
@@ -359,20 +376,20 @@ body {
               letter-spacing: 0.1em;
               margin-bottom: 0.25em;
             }
-  
+
             h3 {
               @include link($color: $black, $hover-color: $cigi-dark-pink);
               font-size: 1.5rem;
               font-weight: 500;
               margin-bottom: 0.25em;
             }
-  
+
             .episode-description {
               line-height: 1.1;
               font-size: 1rem;
               color: $cigi-text-grey;
             }
-  
+
             .episode-publishing-date {
               color: $policy-prompt-blue;
               font-size: 0.7rem;
@@ -381,7 +398,7 @@ body {
               text-transform: uppercase;
             }
           }
-  
+
           .circle {
             @include media-breakpoint-up(md) {
               display: flex;
@@ -391,11 +408,11 @@ body {
             justify-content: center;
             width: 20%;
             padding: 0 3em;
-  
+
             a {
               color: $policy-prompt-blue;
             }
-  
+
             span {
               border: solid 1.75px $policy-prompt-blue;
               border-radius: 2.5rem;
@@ -404,7 +421,7 @@ body {
               line-height: 100%;
               padding: 1.3rem;
               transition: color ease 0.5s, background-color ease 0.5s;
-  
+
               &:hover {
                 background-color: $policy-prompt-blue;
                 border-color: transparent;

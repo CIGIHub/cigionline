@@ -77,6 +77,20 @@ function startAnimationCycle(
   }, animationDuration + delayBetweenBatches);
 }
 
+function scrollToElement(e) {
+  e.preventDefault();
+
+  const OFFSET = 80;
+  const targetId = this.getAttribute('href').substring(1);
+  const targetElement = document.getElementById(targetId);
+  const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - OFFSET;
+
+  window.scrollTo({
+    top: targetPosition,
+    behavior: 'smooth',
+  });
+}
+
 $(document).ready(function () {
   const podcastPlayer = $('#podcast-player').mediaelementplayer({
     alwaysShowControls: true,
@@ -172,6 +186,11 @@ $(document).ready(function () {
       animationDuration,
       delayBetweenBatches,
     );
+
+    const scrollLinks = document.querySelectorAll('.scroll-link');
+    scrollLinks.forEach((link) => {
+      link.addEventListener('click', scrollToElement);
+    });
   }
 
   if (
