@@ -96,10 +96,6 @@ footer {
       display: none;
       margin: 0 1em;
 
-      &:first-of-type {
-        display: block;
-      }
-
       .slash {
         @include slash($height: 50px, $color: $white);
         @include media-breakpoint-up(md) {

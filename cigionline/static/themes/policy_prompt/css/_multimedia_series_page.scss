@@ -176,7 +176,7 @@ body {
 
               &:hover {
                 svg {
-                  fill: $cigi-dark-pink;
+                  fill: $policy-prompt-blue;
                   transition: fill 0.2s ease;
                 }
               }
@@ -194,12 +194,31 @@ body {
           }
 
           .follow {
+            @include link($color: $black, $hover-color: $policy-prompt-blue);
+            @include media-breakpoint-down(sm) {
+              justify-content: flex-start;
+            }
             text-transform: uppercase;
+            display: flex;
             margin-top: 0.5rem;
             font-weight: 600;
+            justify-content: center;
+            align-items: center;
+
+            span {
+              @include media-breakpoint-down(sm) {
+                width: 128px;
+                margin-right: 0.5rem;
+                text-align: right;
+              }
+            }
 
             a {
-              margin-left: 0.5rem;
+              @include media-breakpoint-down(sm) {
+                margin: 0 0.5rem;
+              }
+              margin-left: 1.5rem;
+              font-size: 1.5rem;
             }
           }
         }
