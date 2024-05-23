@@ -226,7 +226,7 @@
 
   {% with podcast_chapters=self.podcast_chapters %}
     {% if podcast_chapters %}
-      <section class="episode-chapters">
+      <section class="episode-chapters" id="chapters">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
@@ -244,7 +244,7 @@
 
   {% with transcript=self.transcript %}
     {% if transcript %}
-      <section class="episode-transcript">
+      <section class="episode-transcript" id="transcript">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">

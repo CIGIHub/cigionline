@@ -3,6 +3,80 @@ import 'mediaelement/src/css/mediaelementplayer.css';
 import 'mediaelement/src/css/mejs-controls.svg';
 import 'mediaelement/full';
 
+function typeText(text, elementId, speed, callback) {
+  const line = document.getElementById(elementId);
+  const textElement = line.children[0];
+  let index = 0;
+
+  function type() {
+    if (index < text.length) {
+      textElement.textContent += text.charAt(index);
+      index += 1;
+      setTimeout(type, speed);
+    } else if (callback) {
+      callback();
+    }
+  }
+
+  type();
+}
+
+function startTyping(texts, speed) {
+  document
+    .getElementById('logo-animation-cursor-1')
+    .classList.remove('offset-left');
+  typeText(texts[0], 'line-1', speed, () => {
+    document.getElementById('logo-animation-cursor-1').remove();
+    document
+      .getElementById('logo-animation-cursor-2')
+      .classList.remove('hidden');
+
+    setTimeout(() => {
+      typeText(texts[1], 'line-2', speed, () => {
+        document.getElementById('logo-animation-cursor-2').remove();
+      });
+    }, 250);
+  });
+
+  setTimeout(() => {
+    const cursorEnd = document.getElementById('logo-animation-cursor-end');
+    cursorEnd.classList.remove('hidden');
+    cursorEnd.classList.add('wobble');
+  }, 1250);
+}
+
+function getRandomIndices(total, count) {
+  const indices = new Set();
+  while (indices.size < count) {
+    const randomIndex = Math.floor(Math.random() * total);
+    indices.add(randomIndex);
+  }
+  return Array.from(indices);
+}
+
+function animateSpans(spansElems, spansCount, size) {
+  spansElems.forEach((span) => span.classList.remove('animate-color'));
+
+  const randomIndices = getRandomIndices(spansCount, size);
+
+  randomIndices.forEach((index) => {
+    spansElems[index].classList.add('animate-color');
+  });
+}
+
+function startAnimationCycle(
+  spans,
+  totalSpans,
+  batchSize,
+  animationDuration,
+  delayBetweenBatches,
+) {
+  animateSpans(spans, totalSpans, batchSize);
+  setInterval(() => {
+    animateSpans(spans, totalSpans, batchSize);
+  }, animationDuration + delayBetweenBatches);
+}
+
 $(document).ready(function () {
   const podcastPlayer = $('#podcast-player').mediaelementplayer({
     alwaysShowControls: true,
@@ -59,8 +133,7 @@ $(document).ready(function () {
     const time = chapter.getAttribute('data-timestamp');
     const timeArray = time.split(':');
     const seconds =
-      parseInt(timeArray[0], 10) * 60 +
-      parseInt(timeArray[1], 10);
+      parseInt(timeArray[0], 10) * 60 + parseInt(timeArray[1], 10);
     podcastPlayer[0].setCurrentTime(seconds);
     podcastPlayer[0].play();
   }
@@ -85,91 +158,29 @@ $(document).ready(function () {
     });
   }
 
-  const spans = document.querySelectorAll('#animated-title span');
-  const totalSpans = spans.length;
-  const batchSize = 5;  // Number of spans to animate at a time
-  const animationDuration = 6000;  // Duration of animation in milliseconds
-  const delayBetweenBatches = 0;  // Delay between batches in milliseconds
+  if (document.getElementsByClassName('policy-prompt-multimedia').length) {
+    const spans = document.querySelectorAll('#animated-title span');
+    const totalSpans = spans.length;
+    const batchSize = 5;
+    const animationDuration = 6000;
+    const delayBetweenBatches = 0;
 
-  function getRandomIndices(total, count) {
-    const indices = new Set();
-    while (indices.size < count) {
-      const randomIndex = Math.floor(Math.random() * total);
-      indices.add(randomIndex);
-    }
-    return Array.from(indices);
+    startAnimationCycle(
+      spans,
+      totalSpans,
+      batchSize,
+      animationDuration,
+      delayBetweenBatches,
+    );
   }
 
-  function animateSpans() {
-    // Remove the animation class from all spans
-    spans.forEach((span) => span.classList.remove('animate-color'));
-
-    // Get random indices for the current batch
-    const randomIndices = getRandomIndices(totalSpans, batchSize);
-
-    // Add the animation class to the selected spans
-    randomIndices.forEach((index) => {
-      spans[index].classList.add('animate-color');
-    });
-  }
-
-  function startAnimationCycle() {
-    animateSpans();
-    setInterval(() => {
-      animateSpans();
-    }, animationDuration + delayBetweenBatches);
-  }
-
-  startAnimationCycle();
-});
-
-const texts = ['policy', 'prompt'];
-const speed = 75;
-
-function typeText(text, elementId, callback) {
-  const line = document.getElementById(elementId);
-  const textElement = line.children[0];
-  let index = 0;
-
-  function type() {
-    if (index < text.length) {
-      textElement.textContent += text.charAt(index);
-      index += 1;
-      setTimeout(type, speed);
-    } else if (callback) {
-      callback();
-    }
-  }
-
-  type();
-}
-
-function startTyping() {
-  document.getElementById('logo-animation-cursor-1').classList.remove('offset-left');
-  typeText(texts[0], 'line-1', () => {
-    document.getElementById('logo-animation-cursor-1').remove();
-    document
-      .getElementById('logo-animation-cursor-2')
-      .classList.remove('hidden');
-
+  if (
+    document.getElementsByClassName('policy-prompt-multimedia-series').length
+  ) {
+    const texts = ['policy', 'prompt'];
+    const speed = 75;
     setTimeout(() => {
-      typeText(texts[1], 'line-2', () => {
-        document.getElementById('logo-animation-cursor-2').remove();
-      });
-    }, 250);
-  });
-
-  setTimeout(() => {
-    const cursorEnd = document.getElementById('logo-animation-cursor-end');
-    cursorEnd.classList.remove('hidden');
-    cursorEnd.classList.add('wobble');
-  }, 1250);
-}
-
-if (document.getElementsByClassName('policy-prompt-multimedia-series').length) {
-  setTimeout(() => {
-    startTyping();
-  }, 2000);
-}
-
-
+      startTyping(texts, speed);
+    }, 2000);
+  }
+});
