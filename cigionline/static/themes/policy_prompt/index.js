@@ -54,13 +54,13 @@ function getRandomIndices(total, count) {
   return Array.from(indices);
 }
 
-function animateSpans(spansElems, spansCount, size) {
-  spansElems.forEach((span) => span.classList.remove('animate-color'));
+function animateSpans(spans, totalSpans, batchSize) {
+  spans.forEach((span) => span.classList.remove('animate-color'));
 
-  const randomIndices = getRandomIndices(spansCount, size);
+  const randomIndices = getRandomIndices(totalSpans, batchSize);
 
   randomIndices.forEach((index) => {
-    spansElems[index].classList.add('animate-color');
+    spans[index].classList.add('animate-color');
   });
 }
 
