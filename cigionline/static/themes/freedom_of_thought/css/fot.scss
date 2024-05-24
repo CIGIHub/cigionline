@@ -67,8 +67,19 @@ body {
       .highlights {
         .stream-block-additional-file-block {
           .img-container {
-            display: flex;
-            align-items: center;
+            figure {
+              background-color: $black;
+
+              &:hover {
+                img {
+                  opacity: 0.8;
+                }
+              }
+
+              img {
+                transition: opacity 0.2s ease;
+              }
+            }
           }
         }
       }
