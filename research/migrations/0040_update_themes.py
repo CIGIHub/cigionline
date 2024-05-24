@@ -77,10 +77,6 @@ def update_topics(apps, schema_editor):
                 if not topic.program_theme:
                     topic.program_theme = theme
                     topic.save()
-                else:
-                    print(f'{topic_title} already has theme - {theme_title}')
-            else:
-                print(f'{topic_title} does not exist')
 
 
 class Migration(migrations.Migration):
