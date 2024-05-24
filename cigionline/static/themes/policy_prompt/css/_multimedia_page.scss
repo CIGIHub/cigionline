@@ -34,7 +34,8 @@ body {
           );
           color: $cigi-dark-grey;
           display: flex;
-          font-size: 0.8rem;
+          font-size: 0.9rem;
+          font-weight: 500;
           text-align: right;
           flex-direction: column;
 
@@ -47,33 +48,17 @@ body {
               margin-left: 2rem;
               cursor: pointer;
 
-              &:hover {
-                .dropdown-menu {
-                  display: block;
-                }
-              }
-
               i {
                 margin-left: 0.5rem;
               }
 
               .dropdown-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                right: 0;
-                left: auto;
                 background-color: $policy-prompt-blue;
                 color: $white;
-                font-family: $policy-prompt-font;
-                font-size: 0.8rem;
-                font-weight: 500;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 padding: 0;
                 margin: 0;
-                list-style: none;
-                z-index: 1000;
                 border-radius: 0;
+                z-index: 10;
 
                 li {
                   padding: 0;
@@ -102,6 +87,7 @@ body {
                     background: none;
                     text-align: left;
                     cursor: pointer;
+                    transition: background-color 0.2s ease;
 
                     a {
                       color: $white;

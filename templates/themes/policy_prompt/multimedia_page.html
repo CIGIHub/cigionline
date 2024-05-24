@@ -67,9 +67,11 @@
               <div class="subscribe-share">
                 <div class="dropdowns">
                   <div class="dropdown">
-                    SUBSCRIBE
-                    <i class="fa fa-headphones"></i>
-                    <ul class="dropdown-menu">
+                    <button class="dropdown-toggle" type="button" id="subscribeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      SUBSCRIBE
+                      <i class="fa fa-headphones"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="subscribeDropdownMenuButton">
                       <li>
                         <button>
                           <a href="" target="_blank" rel="noopener noreferrer">
@@ -108,9 +110,11 @@
                     </ul>
                   </div>
                   <div class="dropdown">
-                    SHARE
-                    <i class="fa-solid fa-share"></i>
-                    <ul class="dropdown-menu">
+                    <button class="dropdown-toggle" type="button" id="subscribeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      SHARE
+                      <i class="fa-solid fa-share"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="subscribeDropdownMenuButton">
                       <li>
                         <button>
                           <a href="" target="_blank" rel="noopener noreferrer">
@@ -297,9 +301,11 @@
                     </div>
                     <div class="col-12 col-md-8">
                       <div class="recommended-text">
-                        <div class="episode-number">Episode {{ recommended_content.podcast_episode }}</div>
-                        <h3><a href="{% pageurl recommended_content %}">{{ recommended_content.title }}</a></h3>
-                        <div class="subtitle">{{ recommended_content.subtitle|richtext }}</div>
+                        <div>
+                          <div class="episode-number">Episode {{ recommended_content.podcast_episode }}</div>
+                          <h3><a href="{% pageurl recommended_content %}">{{ recommended_content.title }}</a></h3>
+                          <div class="subtitle">{{ recommended_content.subtitle|richtext }}</div>
+                        </div>
                         <div class="date">{{ recommended_content.publishing_date|date:"F j, Y" }}</div>
                       </div>
                     </div>
