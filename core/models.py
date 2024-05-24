@@ -59,6 +59,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 import math
+from django_countries.fields import CountryField
 
 
 class BasicPageAbstract(models.Model):
@@ -404,6 +405,7 @@ class ContentPage(Page, SearchablePageAbstract):
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True, related_name='content_pages')
+    countries = CountryField(blank=True, multiple=True)
 
     @property
     def topics_sorted(self):
@@ -545,6 +547,7 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
+        FieldPanel('countries'),
     ]
 
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields + [

@@ -455,6 +455,7 @@ class ArticlePage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('countries'),
                 PageChooserPanel(
                     'article_series',
                     ['articles.ArticleSeriesPage'],
