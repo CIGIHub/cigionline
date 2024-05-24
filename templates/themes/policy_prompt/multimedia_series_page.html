@@ -130,7 +130,9 @@
                   {{ episode.title }}
                 </a>
               </h3>
-              {% include "includes/simplecast_embed.html" with simplecast_url=episode.multimedia_url %}
+              <div class="podcast-player">
+                <audio id="podcast-player" src="{{ episode.multimedia_url }}"></audio>
+              </div>
               <div class="episode-subtitle">{{ episode.subtitle|richtext }}</div>
               <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
             </article>            
