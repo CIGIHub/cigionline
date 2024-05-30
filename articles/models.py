@@ -809,6 +809,7 @@ class ArticleSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -1065,6 +1066,7 @@ class OpinionSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',
