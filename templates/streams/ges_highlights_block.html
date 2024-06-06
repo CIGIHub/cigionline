@@ -14,7 +14,7 @@
                 {% if self.description %}
                   {{ self.description|richtext }}
                 {% endif %}
-                <a href="{{ self.pdf.url }}" target="_blank">
+                <a href="{{ self.pdf.url }}" target="_blank" rel="noopener noreferrer">
                   <button class="button-action">
                     <i class="fas fa-download"></i> Download PDF
                   </button>
