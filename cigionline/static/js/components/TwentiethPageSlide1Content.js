@@ -52,7 +52,7 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                   <li className="twitter">
                     <a
                       className="twitter-share-link"
-                      href={`https://twitter.com/share?text=${socialString}&amp;url=${absoluteUrl}`}
+                      href={`https://x.com/share?text=${socialString}&amp;url=${absoluteUrl}`}
                     >
                       <i className="fa-brands fa-x-twitter fa-sm icon" />
                     </a>
