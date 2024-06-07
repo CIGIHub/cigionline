@@ -134,28 +134,28 @@
                       {% if page.twitter_username %}
                         <div class="contact-item">
                           <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
-                          <a href="https://x.com/{{ page.twitter_username }}" target="_blank">{{ page.twitter_username }}</a>
+                          <a href="https://x.com/{{ page.twitter_username }}" target="_blank" rel="noopener noreferrer">{{ page.twitter_username }}</a>
                         </div>
                       {% endif %}
 
                       {% if page.linkedin_url %}
                         <div class="contact-item">
                           <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
-                          <a href="{{ page.linkedin_url }}" target="_blank">{{ page.linkedin_url|no_protocol }}</a>
+                          <a href="{{ page.linkedin_url }}" target="_blank" rel="noopener noreferrer">{{ page.linkedin_url|no_protocol }}</a>
                         </div>
                       {% endif %}
 
                       {% if page.website %}
                         <div class="contact-item">
                           <i class="fas fa-link" aria-hidden="true"></i>
-                          <a href="{{ page.website }}" target="_blank">{{ page.website|no_protocol }}</a>
+                          <a href="{{ page.website }}" target="_blank" rel="noopener noreferrer">{{ page.website|no_protocol }}</a>
                         </div>
                       {% endif %}
 
                       {% if page.curriculum_vitae %}
                         <div class="contact-item">
                           <i class="far fa-newspaper" aria-hidden="true"></i>
-                          <a href="{{ page.curriculum_vitae.url }}" target="_blank">Curriculum Vitae</a>
+                          <a href="{{ page.curriculum_vitae.url }}" target="_blank" rel="noopener noreferrer">Curriculum Vitae</a>
                         </div>
                       {% endif %}
 
@@ -163,7 +163,7 @@
                         {% image page.image_media original as high_res %}
                         <div class="contact-item">
                           <i class="fas fa-download" aria-hidden="true"></i>
-                          <a href="{{ high_res.url }}" target="_blank">High-resolution Photo</a>
+                          <a href="{{ high_res.url }}" target="_blank" rel="noopener noreferrer">High-resolution Photo</a>
                         </div>
                       {% endif %}
                     </div>
