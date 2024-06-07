@@ -459,6 +459,16 @@ class PublicationSeriesPage(
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    image_poster = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster image',
+        help_text='A poster image which will be used in the highlights section of the homepage.',
+    )
+
     @property
     def series_authors(self):
         authors = set()
@@ -480,7 +490,14 @@ class PublicationSeriesPage(
             heading='General Information',
             classname='collapsible collapsed',
         ),
-        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('image_hero'),
+                FieldPanel('image_poster'),
+            ],
+            heading='Images',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
