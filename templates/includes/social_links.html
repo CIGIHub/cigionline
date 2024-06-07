@@ -2,7 +2,7 @@
 
 <ul class="social-share-list {% if no_circle %}no-stack{% endif %}" {% if id %}id="{{id}}"{% endif %}>
   <li class="twitter">
-    <a class="twitter-share-link {% if no_circle is not True %}fa-stack{% endif %}" href="https://twitter.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
+    <a class="twitter-share-link {% if no_circle is not True %}fa-stack{% endif %}" href="https://x.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">
       {% if no_circle is not True %}
         <i class="fas fa-circle fa-stack-2x"></i>
       {% endif %}
