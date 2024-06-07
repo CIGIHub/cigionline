@@ -743,7 +743,7 @@ class TweetBlock(blocks.StructBlock, ThemeableBlock):
 
     tweet_url = blocks.URLBlock(
         required=True,
-        help_text='The URL of the tweet. Example: https://twitter.com/CIGIonline/status/1188821562440454144',
+        help_text='The URL of the tweet. Example: https://x.com/CIGIonline/status/1188821562440454144',
         verbose_name='Tweet URL',
     )
 
