@@ -33,7 +33,7 @@
                     <ul>
                       {% for pdf in item.series_pdf %}
                         <li>
-                          <a href="{{ pdf.url }}" target="_blank">
+                          <a href="{{ pdf.url }}" target="_blank" rel="noopener noreferrer">
                             <button class="button button-action" type="button">
                               <i class="fa fas fa-download"></i>
                               {{ pdf.type }}

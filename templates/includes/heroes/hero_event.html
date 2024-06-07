@@ -22,7 +22,7 @@
 
         {% if location_string %}
           <div class="meta location-string">
-            <a href="{{ location_map_url }}" target="_blank">  
+            <a href="{{ location_map_url }}" target="_blank" rel="noopener noreferrer">  
               <i class="fas fa-map-marker-alt"></i>{{ location_string }}
             </a>
           </div>
@@ -59,7 +59,7 @@
             <li class="dropdown-button-list">
               <button class="button">Add to Calendar <i class="fas fa-chevron-down"></i></button>
               <ul>
-                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ title }}&amp;dates={{date|date:'Ymd His'}}/{{end_date|date:'Ymd His'}}&amp;ctz={{time_zone}}&amp;details=More Event Information: {{ request.build_absolute_uri|slice:':-1' }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" class="cal_google">Google</a></li>
+                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ title }}&amp;dates={{date|date:'Ymd His'}}/{{end_date|date:'Ymd His'}}&amp;ctz={{time_zone}}&amp;details=More Event Information: {{ request.build_absolute_uri|slice:':-1' }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml" target="_blank" rel="noopener noreferrer" class="cal_google">Google</a></li>
                 <li><a href="/events/feed.ics?id={{self.id}}">Outlook</a></li>
                 <li><a href="/events/feed.ics?id={{self.id}}">iCal</a></li>
               </ul>
