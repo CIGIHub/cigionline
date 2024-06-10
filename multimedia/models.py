@@ -295,7 +295,7 @@ class MultimediaPage(
 
     def podcast_episode_minutes(self):
         return int(self.podcast_audio_duration.split(':')[0])
-    
+
     def next_episode(self):
         if self.podcast_episode is None:
             return None
@@ -455,6 +455,11 @@ class MultimediaSeriesPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    credits = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
     featured_episodes = StreamField(
         [
             ('featured_episode', FeaturedEpisodeBlock()),
@@ -558,6 +563,7 @@ class MultimediaSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
+                FieldPanel('credits'),
             ],
             heading='General Information',
             classname='collapsible collapsed',

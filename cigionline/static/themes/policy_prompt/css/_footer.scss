@@ -22,6 +22,10 @@ footer {
     }
   }
 
+  .credits {
+    margin-bottom: 2rem;
+  }
+
   .footer-content {
     @include media-breakpoint-up(md) {
       flex-direction: row;
@@ -49,7 +53,7 @@ footer {
         margin-top: 0;
         max-width: 400px;
       }
-      margin-top: 3em;
+      margin-top: 2em;
 
       & > p {
         line-height: 1.25;
