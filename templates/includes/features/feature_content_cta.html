@@ -37,5 +37,9 @@
     <a href="{{ content.url }}" class="button-action track-cta" data-cta="article-read">
       <i class="fas fa-comment-dots"></i> Read
     </a>
+  {% elif content.contentsubtype == 'Publication Series' %}
+    <a href="{{ content.url }}" class="button-action track-cta" data-cta="series-view">
+      View Series
+    </a>
   {% endif %}
 {% endif %}
