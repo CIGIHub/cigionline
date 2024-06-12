@@ -48,7 +48,7 @@
                 {% for submenu_item in submenu_items %}
                   {% if submenu_item.link_page %}
                     <li>
-                      {% if submenu_item.link_page.url_path == request.path or submenu_item.link_url == request.path  %}
+                      {% if submenu_item.link_page.url_path == self.url_path or submenu_item.link_url == request.path  %}
                         {{ submenu_item.title }}
                       {% else %}
                         <a href="
