@@ -58,6 +58,7 @@ from wagtail.url_routing import RouteResult
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
+from wagtail.admin.forms import WagtailAdminPageForm
 import math
 
 
@@ -400,6 +401,14 @@ class ArchiveablePageAbstract(models.Model):
         abstract = True
 
 
+class ContentPageForm(WagtailAdminPageForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        from research.models import TopicPage
+        self.fields['topics'].queryset = TopicPage.objects.filter(archive=0)
+
+
 class ContentPage(Page, SearchablePageAbstract):
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
@@ -546,6 +555,8 @@ class ContentPage(Page, SearchablePageAbstract):
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
     ]
+
+    base_form_class = ContentPageForm
 
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields + [
         index.FilterField('author_ids'),

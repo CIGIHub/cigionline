@@ -8,7 +8,11 @@
   <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}" class="feature-content-image">
     <div class="img-wrapper">
       {% if poster %}
-        {% image content.image_poster original %}
+        {% if content.image_poster.file.url|file_extension == '.gif' %}
+          <img src="{{content.image_poster.file.url}}" alt="{{content.image_poster.caption}}" />
+        {% else %}
+          {% image content.image_poster original %}
+        {% endif %}
       {% else %}
         {% if content.image_feature %}
           {% define content.image_feature as feature_image %}
