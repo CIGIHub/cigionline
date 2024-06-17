@@ -48,3 +48,7 @@ class CreateArticlePage(CreateContentPage):
                 page = self.page_model(title=self.page_title, publishing_date=self.publishing_date, article_type=self.article_type)
                 parent_page.add_child(instance=page)
             return self.page_model.objects.get(title=self.page_title)
+
+
+class EmptyClass:
+    pass
