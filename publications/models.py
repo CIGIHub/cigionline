@@ -7,6 +7,7 @@ from core.models import (
     ShareablePageAbstract,
 )
 from django.db import models
+from django.http import Http404
 from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
@@ -23,12 +24,13 @@ from wagtail.admin.panels import (
 from wagtail.blocks import (
     RichTextBlock,
 )
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
 
 
-class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
+class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAbstract, Page):
     """Publication list page"""
 
     def featured_publications_list(self):
@@ -45,6 +47,15 @@ class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         return ArticleSeriesPage.objects.prefetch_related(
             'topics',
         ).live().public().order_by('-publishing_date')[:10]
+
+    @route(r'^essays/$')
+    def essays(self, request):
+        try:
+            from articles.models import ArticleTypePage
+            article_type_essay_page = ArticleTypePage.objects.get(title='Essays')
+            return article_type_essay_page.specific.serve(request)
+        except ArticleTypePage.DoesNotExist:
+            raise Http404
 
     max_count = 1
     parent_page_types = ['home.HomePage']

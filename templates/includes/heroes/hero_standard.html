@@ -48,10 +48,16 @@
                 {% for submenu_item in submenu_items %}
                   {% if submenu_item.link_page %}
                     <li>
-                      {% if submenu_item.link_page.url_path == self.url_path %}
+                      {% if submenu_item.link_page.url_path == self.url_path or submenu_item.link_url == request.path  %}
                         {{ submenu_item.title }}
                       {% else %}
-                        <a href="{% pageurl submenu_item.link_page %}">
+                        <a href="
+                          {% if submenu_item.link_url %}
+                            {{ submenu_item.link_url }}
+                          {% else %}
+                            {% pageurl submenu_item.link_page %}
+                          {% endif %}
+                        ">
                           {{ submenu_item.title }}
                         </a>
                       {% endif %}
