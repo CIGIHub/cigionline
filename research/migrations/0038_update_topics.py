@@ -65,6 +65,10 @@ def archive_topics(apps, schema_editor):
                 topic.save()
 
 
+def no_op(apps, schema_editor):
+    pass
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -72,7 +76,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(rename_topics),
-        migrations.RunPython(create_topics),
-        migrations.RunPython(archive_topics),
+        # migrations.RunPython(rename_topics),
+        # migrations.RunPython(create_topics),
+        # migrations.RunPython(archive_topics),
+        migrations.RunPython(no_op),
     ]
