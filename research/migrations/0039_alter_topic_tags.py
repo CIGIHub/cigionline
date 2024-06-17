@@ -72,6 +72,10 @@ def one_to_many(apps, schema_editor):
                 old_topic.save()
 
 
+def no_op(apps, schema_editor):
+    pass
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -79,6 +83,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(many_to_one),
-        migrations.RunPython(one_to_many),
+        migrations.RunPython(no_op),
+        # migrations.RunPython(many_to_one),
+        # migrations.RunPython(one_to_many),
     ]
