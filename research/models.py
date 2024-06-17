@@ -554,3 +554,74 @@ class ThemePage(
         ]
         verbose_name = 'Theme Page'
         verbose_name_plural = 'Theme Pages'
+
+
+class CountryListPage(Page):
+    """Country list page"""
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = ['research.CountryPage']
+    templates = 'research/country_list_page.html'
+
+    class Meta:
+        verbose_name = 'Country List Page'
+
+
+class CountryPage(
+    ArchiveablePageAbstract,
+    BasicPageAbstract,
+    SearchablePageAbstract,
+    Page
+):
+    """View country page"""
+    description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    alpha_2_code = models.CharField(max_length=2, blank=True, null=True)
+    alpha_3_code = models.CharField(max_length=3, blank=True, null=True)
+    numeric_code = models.CharField(max_length=3, blank=True, null=True)
+    display_name = models.CharField(max_length=255, blank=True, null=True)
+
+    @property
+    def country_name(self):
+        if self.display_name:
+            return self.display_name
+        return self.title
+
+    def __str__(self):
+        return f"{self.title} (Archived)" if self.archive == 1 else self.title
+
+    content_panels = Page.content_panels + [
+        FieldPanel('description'),
+        MultiFieldPanel(
+            [
+                FieldPanel('alpha_2_code'),
+                FieldPanel('alpha_3_code'),
+                FieldPanel('numeric_code'),
+                FieldPanel('display_name'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed',
+        )
+    ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + SearchablePageAbstract.search_fields \
+        + [
+            index.SearchField('country_name')
+        ]
+
+    parent_page_types = ['research.CountryListPage']
+    subpage_types = []
+    templates = 'research/country_page.html'
+
+    class Meta:
+        verbose_name = 'Country Page'
+        verbose_name_plural = 'Country Pages'
