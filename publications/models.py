@@ -383,11 +383,12 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
+                FieldPanel('countries'),
                 PageChooserPanel(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
                 ),
-                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -513,6 +514,7 @@ class PublicationSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',

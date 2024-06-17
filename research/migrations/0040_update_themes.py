@@ -7,7 +7,7 @@ def create_page(page_model, page_title, parent_page_title):
     if not page_model.objects.filter(title=page_title).exists():
         if Page.objects.filter(title=parent_page_title).exists():
             new_page = page_model(title=page_title)
-            parent_page = Page.objects.get(title=parent_page_title).specific
+            parent_page = Page.objects.get(title=parent_page_title)
             parent_page.add_child(instance=new_page)
 
 
