@@ -554,6 +554,8 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
+        FieldPanel('projects'),
+        FieldPanel('countries'),
     ]
 
     base_form_class = ContentPageForm

@@ -181,6 +181,7 @@ class ProjectPage(
                 ),
                 FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
+                FieldPanel('countries'),
                 FieldPanel('related_files'),
             ],
             heading='Related',
