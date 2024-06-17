@@ -413,6 +413,7 @@ class ContentPage(Page, SearchablePageAbstract):
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True, related_name='content_pages')
+    countries = ParentalManyToManyField('research.CountryPage', blank=True, related_name='content_pages')
 
     @property
     def topics_sorted(self):
@@ -554,6 +555,7 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
+        FieldPanel('countries'),
     ]
 
     base_form_class = ContentPageForm
