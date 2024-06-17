@@ -60,7 +60,6 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
 import math
-from django_countries.fields import CountryField
 
 
 class BasicPageAbstract(models.Model):
@@ -405,16 +404,38 @@ class ArchiveablePageAbstract(models.Model):
 class ContentPageForm(WagtailAdminPageForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        from research.models import TopicPage, CountryPage
 
-        from research.models import TopicPage
+        # filter out archived topics
         self.fields['topics'].queryset = TopicPage.objects.filter(archive=0)
+
+        # order commonly used country tags first
+        common_countries = [
+            'Canada',
+            'United States of America',
+            'Russian Federation',
+            'China',
+            'India',
+            'Brazil',
+        ]
+
+        _whens = []
+        for sort_index, value in enumerate(common_countries):
+            _whens.append(models.When(title=value, then=sort_index))
+
+        self.fields['countries'].queryset = CountryPage.objects.filter(archive=0).annotate(
+            _sort_index=models.Case(
+                *_whens,
+                output_field=models.IntegerField()
+            )
+        ).order_by('_sort_index', 'title')
 
 
 class ContentPage(Page, SearchablePageAbstract):
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True, related_name='content_pages')
-    countries = CountryField(blank=True, multiple=True)
+    countries = ParentalManyToManyField('research.CountryPage', blank=True, related_name='content_pages')
 
     @property
     def topics_sorted(self):

@@ -13,7 +13,6 @@ Django==3.2.18
 django-adv-cache-tag==1.1.3
 django-appconf==1.0.4
 django-compressor==2.4.1
-django-countries==7.6.1
 django-debug-toolbar==3.2.1
 django-filter==23.3
 django-ical==1.8.0
@@ -38,6 +37,7 @@ gunicorn==20.1.0
 html5lib==1.1
 icalendar==4.0.7
 idna==2.10
+iso3166==2.1.1
 isort==5.9.3
 jdcal==1.4.1
 jmespath==0.10.0
