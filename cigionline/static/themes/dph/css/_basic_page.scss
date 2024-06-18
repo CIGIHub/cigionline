@@ -1,9 +1,3 @@
-@import '../../../css/global/mixins';
-@import '../../../css/global/animations/bounce';
-
-$dph-font: neue-haas-grotesk-text, sans-serif;
-$dph-font-copy: neue-haas-grotesk-display, sans-serif;
-
 body {
   @include top-bar($background-color: $dph-background);
   background-color: $dph-background;
@@ -17,6 +11,13 @@ body {
 
   a {
     color: $dph-green;
+  }
+
+  .links-and-logos {
+    @include media-breakpoint-up(md) {
+      margin-top: 3rem;
+    }
+    margin-top: 2rem;
   }
 
   .nav-tabs {
@@ -246,24 +247,4 @@ body {
 .fellows-disclaimer {
   font-size: 15px;
   margin-bottom: 0;
-}
-
-footer {
-  font-size: 16px;
-  background-color: $dph-background;
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 0;
-
-  img {
-    margin: 1rem 0 3rem;
-  }
-
-  .footer__copyright {
-    @include link(
-      $color: $cigi-medium-grey,
-      $hover-color: $cigi-primary-colour
-    );
-    color: $cigi-medium-grey;
-  }
 }
