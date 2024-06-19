@@ -13,6 +13,7 @@ from .models import (
     ResearchLandingPage,
     TopicPage,
     ThemePage,
+    CountryPage,
 )
 
 
@@ -90,11 +91,28 @@ class ThemePageModelAdmin(ModelAdmin):
     permission_helper_class = CIGIModelAdminPermissionHelper
 
 
+@hooks.register('register_permissions')
+def register_country_page_permissions():
+    country_content_type = ContentType.objects.get(app_label='research', model='countrypage')
+    return Permission.objects.filter(content_type=country_content_type)
+
+
+class CountryPageModelAdmin(ModelAdmin):
+    model = CountryPage
+    menu_label = 'Countries'
+    menu_icon = 'site'
+    menu_order = 104
+    list_display = ('title',)
+    search_fields = ('title',)
+    ordering = ['title']
+    permission_helper_class = CIGIModelAdminPermissionHelper
+
+
 class ResearchModelAdminGroup(ModelAdminGroup):
     menu_label = 'Research'
     menu_icon = 'site'
     menu_order = 106
-    items = (ResearchLandingPageModelAdmin, ThemePageModelAdmin, TopicPageModelAdmin, ProjectPageModelAdmin)
+    items = (ResearchLandingPageModelAdmin, ThemePageModelAdmin, TopicPageModelAdmin, ProjectPageModelAdmin, CountryPageModelAdmin)
 
 
 modeladmin_register(ResearchModelAdminGroup)

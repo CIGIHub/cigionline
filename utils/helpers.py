@@ -48,3 +48,22 @@ class CreateArticlePage(CreateContentPage):
                 page = self.page_model(title=self.page_title, publishing_date=self.publishing_date, article_type=self.article_type)
                 parent_page.add_child(instance=page)
             return self.page_model.objects.get(title=self.page_title)
+
+
+class CreateCountryPage(CreatePage):
+    def __init__(self, page_model, page_title, parent_page_title, country_iso):
+        super().__init__(page_model, page_title, parent_page_title)
+        self.country_iso = country_iso
+
+    def create_country_page(self):
+        if self.parent_page_exists():
+            if not self.page_exists():
+                parent_page = Page.objects.get(title=self.parent_page_title)
+                page = self.page_model(
+                    title=self.page_title,
+                    alpha_2_code=self.country_iso.alpha2,
+                    alpha_3_code=self.country_iso.alpha3,
+                    numeric_code=self.country_iso.numeric,
+                )
+                parent_page.add_child(instance=page)
+            return self.page_model.objects.get(title=self.page_title)

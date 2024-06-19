@@ -79,6 +79,10 @@ def update_topics(apps, schema_editor):
                     topic.save()
 
 
+def no_op(apps, schema_editor):
+    pass
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -86,6 +90,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_theme_list_page),
-        migrations.RunPython(update_topics),
+        # migrations.RunPython(create_theme_list_page),
+        # migrations.RunPython(update_topics),
+        migrations.RunPython(no_op),
     ]
