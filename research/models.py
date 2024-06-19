@@ -580,12 +580,15 @@ class CountryPage(
     alpha_2_code = models.CharField(max_length=2, blank=True, null=True)
     alpha_3_code = models.CharField(max_length=3, blank=True, null=True)
     numeric_code = models.CharField(max_length=3, blank=True, null=True)
-    display_name = models.CharField(max_length=255, blank=True, null=True)
+    display_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Override political name with common name for tag display.'
+    )
 
     @property
     def country_name(self):
-        if self.display_name:
-            return self.display_name
         return self.title
 
     def __str__(self):
