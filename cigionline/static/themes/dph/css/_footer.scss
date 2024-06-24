@@ -45,7 +45,11 @@ footer {
   }
 
   .logos {
-    display: flex;
+    @include media-breakpoint-up(lg) {
+      text-align: right;
+      margin-top: 0;
+    }
+    margin-top: 2rem;
 
     .separator {
       margin: 0 1rem;
@@ -55,12 +59,16 @@ footer {
     img {
       margin: 0;
     }
+
+    line {
+      stroke: $white;
+    }
   }
 
   svg {
     &.mitacs {
       width: 10rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
 
       path,
       polyline {
@@ -69,24 +77,32 @@ footer {
     }
   }
 
-  nav {
-    @include link($color: $white, $hover-color: $cigi-dark-pink);
+  .links-and-logos {
+    @include media-breakpoint-up(md) {
+      margin-top: 2rem;
+    }
+    margin-top: 1rem;
 
-    .nav-tabs {
-      .nav-link {
-        padding-top: 0;
-        padding-bottom: 0;
-
-        &.active {
-          color: $cigi-medium-light-grey;
-        }
-
-        &:not(:last-child) {
-          border-right: 2px solid $cigi-text-grey;
+    nav {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
+  
+      .nav-tabs {
+        .nav-link {
+          padding-top: 0;
+          padding-bottom: 0;
+  
+          &.active {
+            color: $cigi-medium-light-grey;
+          }
+  
+          &:not(:last-child) {
+            border-right: 2px solid $cigi-text-grey;
+          }
         }
       }
     }
   }
+
 
   .copyright {
     @include link(

@@ -13,13 +13,6 @@ body {
     color: $dph-green;
   }
 
-  .links-and-logos {
-    @include media-breakpoint-up(md) {
-      margin-top: 3rem;
-    }
-    margin-top: 2rem;
-  }
-
   .nav-tabs {
     border-bottom: 0;
 
