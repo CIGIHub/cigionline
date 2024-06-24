@@ -56,6 +56,7 @@ const config = {
     publicationTypePage: './cigionline/static/pages/publication_type_page/index.js',
     searchPage: './cigionline/static/pages/search_page/index.js',
     researchLandingPage: './cigionline/static/pages/research_landing_page/index.js',
+    sliderGalleryBlock: './cigionline/static/blocks/slider_gallery_block/index.js',
     subscribePage: './cigionline/static/pages/subscribe_page/index.js',
     themeAccents: './cigionline/static/themes/accents/index.js',
     themeAfterCovidSeries: './cigionline/static/themes/after_covid_series/index.js',

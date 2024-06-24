@@ -34,6 +34,7 @@ from streams.blocks import (
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
+    SliderGalleryBlock,
     TableStreamBlock,
     TextBackgroundBlock,
     TextBorderBlock,
@@ -73,6 +74,7 @@ class BasicPageAbstract(models.Model):
         ('image', ImageBlock()),
         ('inline_video', InlineVideoBlock(page_type='multimedia.MultimediaPage')),
         ('paragraph', ParagraphBlock()),
+        ('slider_gallery', SliderGalleryBlock()),
         ('table', TableStreamBlock()),
         ('text_background_block', TextBackgroundBlock(
             features=['bold', 'italic', 'link'],

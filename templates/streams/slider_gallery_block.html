@@ -1,0 +1,31 @@
+{% load wagtailimages_tags webpack_loader wagtailcore_tags %}
+
+<div class="slider-gallery-block">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        <div class="swiper-controls">
+          <div class="swiper-button-prev"><i class="fas fa-arrow-left"></i></div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-next"><i class="fas fa-arrow-right"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      {% for block in self.slides %}
+      <div class="swiper-slide">
+        <div class="img-wrapper">
+          {% image block.value.image original %}
+        </div>
+        <div class="gallery-text">
+          <div class="caption">{{block.value.caption|richtext}}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% render_bundle 'sliderGalleryBlock' 'js' attrs='defer' %}
+  {% render_bundle 'sliderGalleryBlock' 'css' %}
+</div>

@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import SwiperCore, { Navigation, Pagination } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper.scss';
+import 'swiper/swiper-bundle.css';
 
 import '../../css/components/TwentiethPageSlide3Content.scss';
 

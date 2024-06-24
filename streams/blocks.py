@@ -1092,6 +1092,25 @@ class TimelineGalleryBlock(blocks.StructBlock):
         template = 'streams/timeline_gallery_block.html'
 
 
+class SliderGalleryBlock(blocks.StructBlock):
+    slides = blocks.StreamBlock(
+        [
+            ('slide', blocks.StructBlock(
+                [
+                    ('image', ImageChooserBlock()),
+                    ('caption', blocks.RichTextBlock()),
+                ]
+            ))
+        ],
+        required=False,
+    )
+
+    class Meta:
+        icon = 'image'
+        label = 'Slider Gallery'
+        template = 'streams/slider_gallery_block.html'
+
+
 class PodcastSubscribeButtonBlock(blocks.StructBlock):
     label = blocks.CharBlock(required=True)
     url = blocks.URLBlock(required=True)
