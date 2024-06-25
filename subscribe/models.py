@@ -1,6 +1,11 @@
+import json
+import requests
 from django import forms
 from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from core.models import BasicPageAbstract, SearchablePageAbstract
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
