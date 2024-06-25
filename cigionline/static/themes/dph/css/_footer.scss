@@ -25,6 +25,7 @@ footer {
         border-bottom: 3px solid white;
         margin-right: 0.5rem;
         width: 75%;
+        padding-left: 1rem;
 
         &::placeholder {
           color: $cigi-medium-light-grey;
@@ -40,6 +41,20 @@ footer {
         &:hover {
           background-color: $dph-green;
         }
+      }
+    }
+
+    .response-message {
+      opacity: 0;
+      transition: opacity ease 0.2s;
+      border: 1px solid $white;
+      border-radius: 5px;
+      color: $white;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+
+      &.show {
+        opacity: 1;
       }
     }
   }
@@ -85,16 +100,16 @@ footer {
 
     nav {
       @include link($color: $white, $hover-color: $cigi-dark-pink);
-  
+
       .nav-tabs {
         .nav-link {
           padding-top: 0;
           padding-bottom: 0;
-  
+
           &.active {
             color: $cigi-medium-light-grey;
           }
-  
+
           &:not(:last-child) {
             border-right: 2px solid $cigi-text-grey;
           }
@@ -102,7 +117,6 @@ footer {
       }
     }
   }
-
 
   .copyright {
     @include link(
