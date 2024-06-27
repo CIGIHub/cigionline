@@ -42,6 +42,9 @@
     cursor: grab;
 
     .swiper-slide {
+      transition: opacity 1s ease;
+      opacity: 1;
+
       &:not(.swiper-slide-visible) {
         @include media-breakpoint-up(lg) {
           opacity: 0;

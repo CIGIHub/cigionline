@@ -1,10 +1,12 @@
 import json
 import requests
+import hashlib
 import mailchimp_marketing as MailchimpMarketing
 import logging
 from django import forms
 from django.conf import settings
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
 from mailchimp_marketing.api_client import ApiClientError
@@ -31,6 +33,7 @@ class EmailOnlySubscribeForm(forms.Form):
 @csrf_protect
 @require_POST
 def subscribe_dph(request):
+    status = None
     form = EmailOnlySubscribeForm(request.POST)
     if form.is_valid():
         email = form.cleaned_data['email']
@@ -50,15 +53,25 @@ def subscribe_dph(request):
                 'server': server,
             })
 
-            response = client.lists.add_list_member(list_id, member_info)
-            if response['status'] == 'pending':
-                logger.info(f'Successful newsletter sign up: {response["email_address"]}')
-                return JsonResponse({'message': 'Subscription successful'}, status=200)
+            member_id = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
+            response = client.lists.get_list_member(list_id, member_id)
 
+            if response['status'] == 'unsubscribed':
+                status = 'unsubscribed'
+            elif response['status'] == 'subscribed':
+                status = 'subscribed'
+            elif response['status'] == 'pending':
+                status = 'pending'
     except ApiClientError as error:
-        logger.error('An error occurred with Mailchimp: {}'.format(error.text))
-        response_text = json.loads(error.text)
-
-        if response_text['title'] == 'Member Exists':
-            return JsonResponse({'error': 'Subscription failed', 'details': 'Email already exists'}, status=400)
-        return JsonResponse({'error': 'Subscription failed', 'details': 'failed'}, status=500)
+        error_text = (error.text)
+        logger.error('An error occurred with Mailchimp: {}'.format(error_text))
+        
+        if '404' in error_text:
+            try:
+                response = client.lists.add_list_member(list_id, member_info)
+            except ApiClientError as error:
+                logger.error('An error occurred with Mailchimp: {}'.format(error.text))
+                status = 'error'
+            status = 'subscribed_success'
+    
+    return render(request, 'subscribe/subscribe_page_landing.html', {'status': status, 'subscription_type': 'dph'})
