@@ -30,8 +30,6 @@ class EmailOnlySubscribeForm(forms.Form):
     }))
 
 
-@csrf_protect
-@require_POST
 def subscribe_dph(request):
     status = None
     form = EmailOnlySubscribeForm(request.POST)
