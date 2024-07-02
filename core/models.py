@@ -446,6 +446,10 @@ class ContentPage(Page, SearchablePageAbstract):
         return [item.title for item in self.topics.all()]
 
     @property
+    def country_names(self):
+        return [item.title for item in self.countries.all()]
+
+    @property
     def author_ids(self):
         return [item.author.id for item in self.authors.all()]
 
@@ -593,6 +597,7 @@ class ContentPage(Page, SearchablePageAbstract):
         index.SearchField('topic_names'),
         index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
+        index.SearchField('country_names'),
     ]
 
     def on_form_bound(self):
