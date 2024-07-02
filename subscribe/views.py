@@ -22,14 +22,6 @@ if hasattr(settings, 'MAILCHIMP_DATA_CENTER_DPH'):
     server = settings.MAILCHIMP_DATA_CENTER_DPH
 if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_DPH'):
     list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_DPH
-    
-print(settings.MAILCHIMP_API_KEY)
-print(settings.MAILCHIMP_DATA_CENTER)
-print(settings.MAILCHIMP_NEWSLETTER_LIST_ID)
-
-print(settings.MAILCHIMP_API_KEY_DPH)
-print(settings.MAILCHIMP_DATA_CENTER_DPH)
-print(settings.MAILCHIMP_NEWSLETTER_LIST_ID_DPH)
 
 
 class EmailOnlySubscribeForm(forms.Form):
@@ -47,10 +39,6 @@ def subscribe_dph(request):
             'email_address': email,
             'status': 'pending'
         }
-    print(api_key)
-    print(server)
-    print(list_id)
-    print(member_info)
 
     if not email:
         return JsonResponse({'error': 'Email is required'}, status=400)
@@ -72,23 +60,16 @@ def subscribe_dph(request):
                 status = 'subscribed'
             elif response['status'] == 'pending':
                 status = 'pending'
-            print('1')
-            print(status)
-            print(response)
-    except Exception as error:
+    except ApiClientError as error:
         error_text = (error.text)
         logger.error('An error occurred with Mailchimp: {}'.format(error_text))
         
         if '404' in error_text:
             try:
                 response = client.lists.add_list_member(list_id, member_info)
-                print('2')
-                print(status)
-                print(response)
-            except Exception as error:
+            except ApiClientError as error:
                 logger.error('An error occurred with Mailchimp: {}'.format(error.text))
                 status = 'error'
-                print(error)
             status = 'subscribed_success'
     
     return render(request, 'subscribe/subscribe_page_landing.html', {'status': status, 'subscription_type': 'dph'})
