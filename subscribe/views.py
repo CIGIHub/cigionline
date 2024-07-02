@@ -22,6 +22,14 @@ if hasattr(settings, 'MAILCHIMP_DATA_CENTER_DPH'):
     server = settings.MAILCHIMP_DATA_CENTER_DPH
 if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_DPH'):
     list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_DPH
+    
+print(settings.MAILCHIMP_API_KEY)
+print(settings.MAILCHIMP_DATA_CENTER)
+print(settings.MAILCHIMP_NEWSLETTER_LIST_ID)
+
+print(settings.MAILCHIMP_API_KEY_DPH)
+print(settings.MAILCHIMP_DATA_CENTER_DPH)
+print(settings.MAILCHIMP_NEWSLETTER_LIST_ID_DPH)
 
 
 class EmailOnlySubscribeForm(forms.Form):
