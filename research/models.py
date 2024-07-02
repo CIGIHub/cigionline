@@ -591,6 +591,21 @@ class CountryPage(
     def country_name(self):
         return self.title
 
+    @property
+    def featured_latest_pages(self):
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'countries',
+        ).in_bulk(featured_page_ids)
+        featured_pages = [pages[x] for x in featured_page_ids]
+        if len(featured_pages) < 3:
+            featured_pages = featured_pages + list(self.content_pages.specific().prefetch_related(
+                'authors__author',
+                'countries',
+            ).live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))])
+        return featured_pages
+
     def __str__(self):
         return f"{self.title} (Archived)" if self.archive == 1 else self.title
 
@@ -606,7 +621,19 @@ class CountryPage(
             ],
             heading='General Information',
             classname='collapsible collapsed',
-        )
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=3,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featuerd Content',
+            classname='collapsible collapsed',
+        ),
     ]
     promote_panels = Page.promote_panels + [
         SearchablePageAbstract.search_panel,
@@ -630,3 +657,34 @@ class CountryPage(
     class Meta:
         verbose_name = 'Country Page'
         verbose_name_plural = 'Country Pages'
+
+
+class CountryPageFeaturedPage(Orderable):
+    country_page = ParentalKey(
+        'research.CountryPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            [
+                'articles.ArticlePage',
+                'articles.ArticleSeriesPage',
+                'events.EventPage',
+                'multimedia.MultimediaPage',
+                'multimedia.MultimediaSeriesPage',
+                'publications.PublicationPage',
+                'publications.PublicationSeriesPage',
+                'research.ProjectPage',
+            ]
+        )
+    ]
