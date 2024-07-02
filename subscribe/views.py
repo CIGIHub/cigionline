@@ -60,14 +60,14 @@ def subscribe_dph(request):
                 status = 'subscribed'
             elif response['status'] == 'pending':
                 status = 'pending'
-    except ApiClientError as error:
+    except Exception as error:
         error_text = (error.text)
         logger.error('An error occurred with Mailchimp: {}'.format(error_text))
         
         if '404' in error_text:
             try:
                 response = client.lists.add_list_member(list_id, member_info)
-            except ApiClientError as error:
+            except Exception as error:
                 logger.error('An error occurred with Mailchimp: {}'.format(error.text))
                 status = 'error'
             status = 'subscribed_success'
