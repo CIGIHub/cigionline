@@ -1,5 +1,3 @@
-import json
-import requests
 import hashlib
 import mailchimp_marketing as MailchimpMarketing
 import logging
@@ -7,8 +5,6 @@ from django import forms
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.http import require_POST
 from mailchimp_marketing.api_client import ApiClientError
 
 logger = logging.getLogger('cigionline')
@@ -63,7 +59,7 @@ def subscribe_dph(request):
     except ApiClientError as error:
         error_text = (error.text)
         logger.error('An error occurred with Mailchimp: {}'.format(error_text))
-        
+
         if '404' in error_text:
             try:
                 response = client.lists.add_list_member(list_id, member_info)
@@ -71,5 +67,5 @@ def subscribe_dph(request):
                 logger.error('An error occurred with Mailchimp: {}'.format(error.text))
                 status = 'error'
             status = 'subscribed_success'
-    
+
     return render(request, 'subscribe/subscribe_page_landing.html', {'status': status, 'subscription_type': 'dph'})
