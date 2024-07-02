@@ -39,6 +39,10 @@ def subscribe_dph(request):
             'email_address': email,
             'status': 'pending'
         }
+    print(api_key)
+    print(server)
+    print(list_id)
+    print(member_info)
 
     if not email:
         return JsonResponse({'error': 'Email is required'}, status=400)
