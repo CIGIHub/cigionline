@@ -9,7 +9,7 @@ import './css/country_page.scss';
 const endpointParams = [];
 if (countryId) {
   endpointParams.push({
-    paramName: 'topic',
+    paramName: 'country',
     paramValue: countryId,
   });
 }

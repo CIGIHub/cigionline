@@ -598,6 +598,7 @@ class ContentPage(Page, SearchablePageAbstract):
         index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
         index.SearchField('country_names'),
+        ParentalManyToManyFilterField('countries'),
     ]
 
     def on_form_bound(self):
