@@ -1,5 +1,4 @@
 import 'swiper/swiper-bundle.css';
-import 'swiper/css/effect-coverflow';
 import Swiper from 'swiper';
 import { Navigation, Pagination, EffectCoverflow, A11y } from 'swiper/modules';
 import './css/slider_gallery_block.scss';
