@@ -3,7 +3,8 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import SwiperCore, { Navigation, Pagination } from 'swiper/core';
+import { Navigation, Pagination } from 'swiper/modules';
+import SwiperCore from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 

@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
+        horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
       },
 
       scrollbar: {

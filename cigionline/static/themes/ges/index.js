@@ -4,7 +4,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Swiper, { Navigation, Pagination, EffectFade } from 'swiper';
+import Swiper from 'swiper';
+import { Navigation, Pagination, EffectFade } from 'swiper/modules';
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/ges.scss';
@@ -32,6 +33,7 @@ if (swiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
+      horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
     },
   });
 }

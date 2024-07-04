@@ -3,7 +3,8 @@
 import 'swiper/swiper-bundle.css';
 import './css/_home_page.scss';
 
-import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules';
 
 // Homepage Highlights
 Swiper.use([Navigation, Pagination]);
@@ -27,6 +28,7 @@ if (swiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
+      horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
     },
 
     breakpoints: {

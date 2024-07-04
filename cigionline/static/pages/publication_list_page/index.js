@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules';
 import PublicationListing from '../../js/components/PublicationListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/publication_list_page.scss';
@@ -155,6 +156,7 @@ if (featuredPublicationsSwiperContainer) {
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
+        horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
       },
 
       breakpoints: {
@@ -193,6 +195,7 @@ if (essaySeriesSwiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
+      horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
     },
   });
 }
