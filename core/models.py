@@ -404,15 +404,38 @@ class ArchiveablePageAbstract(models.Model):
 class ContentPageForm(WagtailAdminPageForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        from research.models import TopicPage, CountryPage
 
-        from research.models import TopicPage
+        # filter out archived topics
         self.fields['topics'].queryset = TopicPage.objects.filter(archive=0)
+
+        # order commonly used country tags first
+        common_countries = [
+            'Canada',
+            'United States of America',
+            'Russian Federation',
+            'China',
+            'India',
+            'Brazil',
+        ]
+
+        _whens = []
+        for sort_index, value in enumerate(common_countries):
+            _whens.append(models.When(title=value, then=sort_index))
+
+        self.fields['countries'].queryset = CountryPage.objects.filter(archive=0).annotate(
+            _sort_index=models.Case(
+                *_whens,
+                output_field=models.IntegerField()
+            )
+        ).order_by('_sort_index', 'title')
 
 
 class ContentPage(Page, SearchablePageAbstract):
     projects = ParentalManyToManyField('research.ProjectPage', blank=True, related_name='content_pages')
     publishing_date = models.DateTimeField(blank=False, null=True)
     topics = ParentalManyToManyField('research.TopicPage', blank=True, related_name='content_pages')
+    countries = ParentalManyToManyField('research.CountryPage', blank=True, related_name='content_pages')
 
     @property
     def topics_sorted(self):
@@ -421,6 +444,10 @@ class ContentPage(Page, SearchablePageAbstract):
     @property
     def topic_names(self):
         return [item.title for item in self.topics.all()]
+
+    @property
+    def country_names(self):
+        return [item.title for item in self.countries.all()]
 
     @property
     def author_ids(self):
@@ -554,6 +581,7 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
+        FieldPanel('countries'),
     ]
 
     base_form_class = ContentPageForm
@@ -569,6 +597,8 @@ class ContentPage(Page, SearchablePageAbstract):
         index.SearchField('topic_names'),
         index.FilterField('related_people_ids'),
         ParentalManyToManyFilterField('topics'),
+        index.SearchField('country_names'),
+        ParentalManyToManyFilterField('countries'),
     ]
 
     def on_form_bound(self):
