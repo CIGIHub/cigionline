@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules'; 
+import { Navigation, Pagination } from 'swiper/modules';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchTableAnnualReports from '../../js/components/SearchTableAnnualReports';

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import 'swiper/swiper-bundle.css';
 import Swiper from 'swiper';
 import { Navigation, Pagination, EffectCoverflow, A11y } from 'swiper/modules';
