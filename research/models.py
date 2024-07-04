@@ -181,6 +181,7 @@ class ProjectPage(
                 ),
                 FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
+                FieldPanel('countries'),
                 FieldPanel('related_files'),
             ],
             heading='Related',
@@ -554,3 +555,136 @@ class ThemePage(
         ]
         verbose_name = 'Theme Page'
         verbose_name_plural = 'Theme Pages'
+
+
+class CountryListPage(Page):
+    """Country list page"""
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = ['research.CountryPage']
+    templates = 'research/country_list_page.html'
+
+    class Meta:
+        verbose_name = 'Country List Page'
+
+
+class CountryPage(
+    ArchiveablePageAbstract,
+    BasicPageAbstract,
+    SearchablePageAbstract,
+    Page
+):
+    """View country page"""
+    description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    alpha_2_code = models.CharField(max_length=2, blank=True, null=True)
+    alpha_3_code = models.CharField(max_length=3, blank=True, null=True)
+    numeric_code = models.CharField(max_length=3, blank=True, null=True)
+    display_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Override political name with common name for tag display.'
+    )
+
+    @property
+    def country_name(self):
+        return self.title
+
+    @property
+    def featured_latest_pages(self):
+        featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
+        pages = Page.objects.specific().prefetch_related(
+            'authors__author',
+            'countries',
+        ).in_bulk(featured_page_ids)
+        featured_pages = [pages[x] for x in featured_page_ids]
+        if len(featured_pages) < 3:
+            featured_pages = featured_pages + list(self.content_pages.specific().prefetch_related(
+                'authors__author',
+                'countries',
+            ).live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))])
+        return featured_pages
+
+    def __str__(self):
+        return f"{self.title} (Archived)" if self.archive == 1 else self.title
+
+    content_panels = Page.content_panels + [
+        FieldPanel('description'),
+        FieldPanel('display_name'),
+        MultiFieldPanel(
+            [
+                FieldPanel('alpha_2_code'),
+                FieldPanel('alpha_3_code'),
+                FieldPanel('numeric_code'),
+
+            ],
+            heading='General Information',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel(
+                    'featured_pages',
+                    max_num=3,
+                    min_num=0,
+                    label='Page',
+                ),
+            ],
+            heading='Featuerd Content',
+            classname='collapsible collapsed',
+        ),
+    ]
+    promote_panels = Page.promote_panels + [
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ArchiveablePageAbstract.archive_panel,
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields \
+        + ArchiveablePageAbstract.search_fields \
+        + SearchablePageAbstract.search_fields \
+        + [
+            index.SearchField('country_name')
+        ]
+
+    parent_page_types = ['research.CountryListPage']
+    subpage_types = []
+    templates = 'research/country_page.html'
+
+    class Meta:
+        verbose_name = 'Country Page'
+        verbose_name_plural = 'Country Pages'
+
+
+class CountryPageFeaturedPage(Orderable):
+    country_page = ParentalKey(
+        'research.CountryPage',
+        related_name='featured_pages',
+    )
+    featured_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Page',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'featured_page',
+            [
+                'articles.ArticlePage',
+                'articles.ArticleSeriesPage',
+                'events.EventPage',
+                'multimedia.MultimediaPage',
+                'multimedia.MultimediaSeriesPage',
+                'publications.PublicationPage',
+                'publications.PublicationSeriesPage',
+                'research.ProjectPage',
+            ]
+        )
+    ]

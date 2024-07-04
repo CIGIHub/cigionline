@@ -1,0 +1,12 @@
+@import '../../../css/global/mixins';
+
+.country-featured-content {
+  .feature-content-medium {
+    .feature-content-image {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
+      display: none;
+    }
+  }
+}

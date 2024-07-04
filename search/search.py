@@ -154,6 +154,7 @@ class CIGIOnlineSearchQueryCompiler:
         years,
         eventaccess,
         experts,
+        countries,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -173,6 +174,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.years = None
         self.eventaccess = None
         self.experts = None
+        self.countries = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -200,6 +202,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.eventaccess = eventaccess
         if years is not None:
             self.years = years
+        if countries and len(countries) > 0:
+            self.countries = countries
 
     @property
     def queryset(self):
@@ -217,7 +221,7 @@ class CIGIOnlineSearchQueryCompiler:
                 if item.startswith('"') and item.endswith('"'):
                     should.append({
                         "multi_match": {
-                            "fields": ["title", "*__body", "core_contentpage__author_names^2", "*__topic_names^2", "research_topicpage__topic_name^100", "people_personpage__person_name^100"],
+                            "fields": ["title", "*__body", "core_contentpage__author_names^2", "*__topic_names^2", "*__country_names^2", "research_topicpage__topic_name^100", "people_personpage__person_name^100"],
                             "query": item,
                             "type": "phrase",
                         },
@@ -226,7 +230,7 @@ class CIGIOnlineSearchQueryCompiler:
                     terms.append(item)
             should.append({
                 "multi_match": {
-                    "fields": ["title", "*_body", "core_contentpage__author_names", "*__topic_names^2"],
+                    "fields": ["title", "*_body", "core_contentpage__author_names", "*__topic_names^2", "*__country_names^2"],
                     "query": ' '.join(terms),
                 },
             },)
@@ -371,6 +375,13 @@ class CIGIOnlineSearchQueryCompiler:
                     ]
                 }
             })
+        if self.countries:
+            filters.append({
+                "terms": {
+                    "core_contentpage__countries_filter": self.countries,
+                },
+            })
+            print(filters)
         if self.articletypeid:
             filters.append({
                 "term": {
@@ -424,7 +435,6 @@ class CIGIOnlineSearchQueryCompiler:
                     "should": year_ranges
                 }
             })
-
         return {
             "function_score": {
                 "query": {
@@ -468,7 +478,8 @@ def cigi_search(content_type=None,
                 multimediaseriesid=None,
                 years=None,
                 eventaccess=None,
-                experts=None,):
+                experts=None,
+                countries=None):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
         CIGIOnlineSearchQueryCompiler(content_type,
@@ -486,7 +497,8 @@ def cigi_search(content_type=None,
                                       multimediaseriesid,
                                       years,
                                       eventaccess,
-                                      experts,)
+                                      experts,
+                                      countries)
     )
 
 
@@ -561,6 +573,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         publicationseriesid,
         multimediaseriesid,
         experts,
+        countries,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -579,6 +592,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         self.multimediaseriesid = None
         self.years = None
         self.experts = None
+        self.countries = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -602,6 +616,8 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             self.publicationseriesid = publicationseriesid
         if multimediaseriesid is not None:
             self.multimediaseriesid = multimediaseriesid
+        if countries and len(countries) > 0:
+            self.countries = countries
 
     @property
     def queryset(self):
@@ -680,6 +696,12 @@ class CIGIOnlineElevatedSearchQueryCompiler:
                     "core_contentpage__topics_filter": self.topics,
                 },
             })
+        if self.countries:
+            filters.append({
+                "terms": {
+                    "core_contentpage__countries_filter": self.countries,
+                },
+            })
         if self.articletypeid:
             filters.append({
                 "term": {
@@ -735,7 +757,8 @@ def cigi_search_promoted(content_type=None,
                          publicationtypeid=None,
                          publicationseriesid=None,
                          multimediaseriesid=None,
-                         experts=None):
+                         experts=None,
+                         countries=None):
     return CIGIOnlineElevatedElasticsearchResults(
         get_search_backend(),
         CIGIOnlineElevatedSearchQueryCompiler(content_type,
@@ -751,5 +774,6 @@ def cigi_search_promoted(content_type=None,
                                               publicationtypeid,
                                               publicationseriesid,
                                               multimediaseriesid,
-                                              experts)
+                                              experts,
+                                              countries)
     )
