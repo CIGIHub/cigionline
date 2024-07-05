@@ -1,0 +1,66 @@
+{% load static %}
+<footer>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col">
+        <h2>Partners</h2>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <p>
+          The Hub would like to acknowledge our partnership with Mitacs in
+          developing the proposal and approving an umbrella for support.
+          We’d also like to thank our universities, governments and the private
+          sector partners for their involvement that allows CIGI to offer this
+          transdisciplinary research program.
+        </p>
+        <a href="https://www.mitacs.ca/en">
+          {% include './mitacs_logo.svg' %}
+        </a>
+      </div>
+      <div class="col-md-6">
+        <div class="email-list">
+          <p>
+            For additional information or inquiries, please contact the Digital Policy Hub team at: <a
+              href="mailto:digitalhubinquiries@cigionline.org">digitalhubinquiries@cigionline.org</a>
+          </p>
+          <p>
+            or sign up for the email list to stay up to date:
+          </p>
+          <form id='subscribe-form-dph' action="{% url 'subscribe_dph' %}" method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="enter your email" required>
+            <input type="submit" value="Sign up">
+          </form>
+          <div class="response-message" id="response-message"></div>
+        </div>
+      </div>
+    </div>
+    <div class="links-and-logos">
+      <div class="row justify-content-between align-items-end">
+        <div class="col-md-6">
+          <nav>
+            <div class="nav nav-tabs">
+              <a class="nav-link {% if self.slug == 'digital-policy-hub' %} active{% endif %}" href="/digital-policy-hub/">About the Hub</a>
+              <a class="nav-link {% if self.slug == 'working-papers' %} active{% endif %}" href="/digital-policy-hub/working-papers">Working Papers</a>
+              <a class="nav-link {% if self.slug == 'news' %} active{% endif %}" href="/digital-policy-hub/news">News</a>
+            </div>
+          </nav>
+        </div>
+        <div class="col-md-6">
+          <div class="logos">
+            {% include 'includes/CIGI-DPH-logo.svg' %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col">
+        <div class="copyright">
+          © 2024 | <a href="/privacy-policy/">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

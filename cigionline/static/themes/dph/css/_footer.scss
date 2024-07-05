@@ -1,0 +1,140 @@
+footer {
+  background-color: $dph-dark-green;
+  padding: 3rem 0;
+  text-align: left;
+  font-size: 16px;
+  margin-top: 2rem;
+
+  img {
+    margin: 1rem 0 3rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  .email-list {
+    @include link($color: $white, $hover-color: $cigi-dark-pink);
+
+    form {
+      display: flex;
+
+      input[type='email'] {
+        background-color: $dph-dark-green;
+        border: 0;
+        border-bottom: 3px solid white;
+        margin-right: 0.5rem;
+        width: 75%;
+        padding-left: 1rem;
+
+        &::placeholder {
+          color: $cigi-medium-light-grey;
+        }
+      }
+
+      input[type='submit'] {
+        padding: 0.25rem 1rem;
+        border: 1px solid $white;
+        border-radius: 2rem;
+        transition: background-color ease 0.2s;
+
+        &:hover {
+          background-color: $dph-green;
+        }
+      }
+    }
+
+    .response-message {
+      opacity: 0;
+      transition: opacity ease 0.2s;
+      border: 1px solid $white;
+      border-radius: 5px;
+      color: $white;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+
+      &.show {
+        opacity: 1;
+      }
+    }
+  }
+
+  .logos {
+    @include media-breakpoint-up(lg) {
+      text-align: right;
+      margin-top: 0;
+    }
+    margin-top: 2rem;
+
+    .separator {
+      margin: 0 1rem;
+      border-left: 1px solid $white;
+    }
+
+    img {
+      margin: 0;
+    }
+
+    line {
+      stroke: $white;
+    }
+  }
+
+  svg {
+    &.mitacs {
+      width: 10rem;
+      margin-bottom: 1rem;
+
+      path,
+      polyline {
+        fill: $white;
+      }
+    }
+  }
+
+  .links-and-logos {
+    @include media-breakpoint-up(md) {
+      margin-top: 2rem;
+    }
+    margin-top: 1rem;
+
+    nav {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
+
+      .nav-tabs {
+        @include media-breakpoint-only(md) {
+          flex-direction: column;
+        }
+
+        .nav-link {
+          @include media-breakpoint-only(md) {
+            padding: 0;
+          }
+          padding-top: 0;
+          padding-bottom: 0;
+
+          &.active {
+            color: $cigi-medium-light-grey;
+          }
+
+          &:not(:last-child) {
+            @include media-breakpoint-only(md) {
+              border: 0;
+            }
+            border-right: 2px solid $cigi-text-grey;
+          }
+        }
+      }
+    }
+  }
+
+  .copyright {
+    @include link(
+      $color: $cigi-medium-light-grey,
+      $hover-color: $cigi-primary-colour
+    );
+    color: $cigi-medium-light-grey;
+    margin-top: 2rem;
+    text-align: center;
+  }
+}

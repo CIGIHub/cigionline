@@ -4,6 +4,7 @@ from core.models import (
     FeatureablePageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
@@ -96,6 +97,7 @@ class EventPage(
     ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     class EventAccessOptions(models.IntegerChoices):
         PRIVATE = (0, 'Private')
@@ -318,6 +320,12 @@ class EventPage(
         context['location_map_url'] = self.location_map_url()
         return context
 
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(EventPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/event_page.html'
+        return standard_template
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -400,6 +408,9 @@ class EventPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
     ]
 
     search_fields = BasicPageAbstract.search_fields \

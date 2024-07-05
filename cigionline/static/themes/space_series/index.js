@@ -1,5 +1,6 @@
 import './css/space_series.scss';
-import Swiper, { Navigation } from 'swiper';
+import Swiper from 'swiper';
+import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 
 Swiper.use([Navigation]);
@@ -42,6 +43,10 @@ const enableSwiper = function(articleType) {
         nextEl: `.swiper-button-next-${id.replace('.swiper-container-', '')}`,
         prevEl: `.swiper-button-prev-${id.replace('.swiper-container-', '')}`,
         hiddenClass: 'swiper-button-hidden',
+      },
+
+      pagination: {
+        horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
       },
 
       breakpoints: {

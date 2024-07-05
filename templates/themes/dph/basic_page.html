@@ -5,6 +5,10 @@
   {% render_bundle 'themeDPH' 'css' %}
 {% endblock %}
 
+{% block theme_js %}
+  {% render_bundle 'themeDPH' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block extra_fonts %}
   <link rel="stylesheet" href="https://use.typekit.net/mks4fbg.css">
 {% endblock %}
@@ -96,30 +100,5 @@
 {% endblock content %}
 
 {% block footer %}
-  <footer>
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <hr>
-        </div>
-        <div class="col-md-7">
-          <p>
-            For additional information or inquiries, please contact the Digital Policy Hub team at: <a href="mailto:digitalhubinquiries@cigionline.org">digitalhubinquiries@cigionline.org</a>
-          </p>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col col-sm-8 col-md-6 col-lg-4">
-          <img src="/static/themes/dph/assets/CIGI_DPH_logos.png" alt="">
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col">
-          <div class="footer__copyright">
-            © 2023 | <a href="/privacy-policy/">Privacy Policy</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
+    {% include "./includes/footer.html" %}
 {% endblock %}
