@@ -102,7 +102,14 @@ footer {
       @include link($color: $white, $hover-color: $cigi-dark-pink);
 
       .nav-tabs {
+        @include media-breakpoint-only(md) {
+          flex-direction: column;
+        }
+
         .nav-link {
+          @include media-breakpoint-only(md) {
+            padding: 0;
+          }
           padding-top: 0;
           padding-bottom: 0;
 
@@ -111,6 +118,9 @@ footer {
           }
 
           &:not(:last-child) {
+            @include media-breakpoint-only(md) {
+              border: 0;
+            }
             border-right: 2px solid $cigi-text-grey;
           }
         }
