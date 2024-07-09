@@ -1,5 +1,5 @@
-{% extends "events/event_page.html" %}
-{% load wagtailimages_tags webpack_loader wagtailcore_tags %}
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
 {% block theme_css %}
   {% render_bundle 'themeDPH' 'css' %}
@@ -13,13 +13,14 @@
   <link rel="stylesheet" href="https://use.typekit.net/mks4fbg.css">
 {% endblock %}
 
-{% block body_class %}dph-event-page{% endblock %}
+{% block body_class %}dph-article-page{% endblock %}
 
 {% block header %}
   {% include "includes/top_bar.html" with small=True %}
 {% endblock %}
 
 {% block content %}
+  {% block hero %}
   <section class="hero">
     <div class="container">
       <div class="row justify-content-center">
@@ -52,9 +53,10 @@
       </div>
     </div>
   </section>
+  {% endblock %}
 
   {% include "includes/body.html" with body=self.body %}
-{% endblock content %}
+{% endblock %}
 
 {% block footer %}
   {% include "./includes/footer.html" %}

@@ -1093,12 +1093,13 @@ class TimelineGalleryBlock(blocks.StructBlock):
 
 
 class SliderGalleryBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
     slides = blocks.StreamBlock(
         [
             ('slide', blocks.StructBlock(
                 [
                     ('image', ImageChooserBlock()),
-                    ('caption', blocks.RichTextBlock()),
+                    ('caption', blocks.RichTextBlock(required=False)),
                 ]
             ))
         ],
