@@ -53,7 +53,7 @@ INSTALLED_APPS = [
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
-    'wagtail.contrib.modeladmin',
+    # 'wagtail.contrib.modeladmin',
     'wagtail.contrib.redirects',
     'wagtail.contrib.routable_page',
     'wagtail.contrib.table_block',
@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'wagtailmedia',
     'webpack_loader',
     # 'adv_cache_tag',
+    'wagtail_modeladmin',
 
     'wagtail_2fa',
     'django_otp',
