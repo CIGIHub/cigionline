@@ -73,7 +73,7 @@ INSTALLED_APPS = [
     'taggit',
     'wagtailmedia',
     'webpack_loader',
-    'adv_cache_tag',
+    # 'adv_cache_tag',
 
     'wagtail_2fa',
     'django_otp',
