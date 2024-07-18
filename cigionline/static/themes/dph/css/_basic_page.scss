@@ -328,6 +328,8 @@ body {
         @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
 
         li:not(:only-child) {
+          color: $dph-green;
+
           &::after {
             color: $dph-green;
           }
