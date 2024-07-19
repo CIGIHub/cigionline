@@ -197,7 +197,6 @@ updates:
     - 5.2.4
   - dependency-name: swiper
     versions:
-    - 11.1.4
     - 6.4.12
     - 6.4.14
     - 6.4.9
