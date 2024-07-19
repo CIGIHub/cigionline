@@ -5,6 +5,7 @@ from core.models import (
     FromTheArchivesPageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 )
 from django.db import models
 from django.http import Http404
@@ -124,6 +125,7 @@ class PublicationPage(
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     """View publication page"""
 
@@ -314,6 +316,12 @@ class PublicationPage(
             (self.book_format or self.book_pages or self.book_publisher or self.isbn or self.isbn_ebook or self.isbn_hardcover)
         )
 
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(PublicationPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/publication_page.html'
+        return standard_template
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -399,6 +407,9 @@ class PublicationPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
     ]
 
     search_fields = BasicPageAbstract.search_fields \
