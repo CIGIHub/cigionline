@@ -381,7 +381,6 @@ class CIGIOnlineSearchQueryCompiler:
                     "core_contentpage__countries_filter": self.countries,
                 },
             })
-            print(filters)
         if self.articletypeid:
             filters.append({
                 "term": {
