@@ -46,7 +46,7 @@ lazy-object-proxy==1.6.0
 libsass==0.21.0
 mailchimp-marketing==3.0.53
 mccabe==0.7.0
-newrelic==7.10.0.175
+newrelic==9.12.0
 openpyxl==3.0.10
 Pillow==9.2.0
 psycopg2==2.9.9

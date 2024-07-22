@@ -25,6 +25,5 @@
     "web": {
       "size": "hobby"
     }
-  },
-  "stack": "heroku-24"
+  }
 }
