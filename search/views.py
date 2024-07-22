@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from wagtail.search.models import Query
+from wagtail.contrib.search_promotions.models import Query
 
 from .search import cigi_search, cigi_search_promoted
 
