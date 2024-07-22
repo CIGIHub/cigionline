@@ -15,6 +15,7 @@ def dph_term(value):
 
     if (month <= 4):
         term = 'Fall'
+        year = year - 1
     elif 5 <= month <= 8:
         term = 'Winter'
     elif 9 <= month <= 12:
