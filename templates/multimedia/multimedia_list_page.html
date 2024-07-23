@@ -38,17 +38,19 @@
       </div>
     </div>
   </section>
-  <section class="multimedia-promotion-blocks">
-    <div class="container">
-      <div class="row">
-        {% for promotion_block in promotion_blocks %}
-          <div class="col">
-            {% include "includes/promotion_block.html" with promotion_block=promotion_block.promotion_block %}
-          </div>
-        {% endfor %}
+  {% if promotion_blocks %}
+    <section class="multimedia-promotion-blocks">
+      <div class="container">
+        <div class="row">
+          {% for promotion_block in promotion_blocks %}
+            <div class="col">
+              {% include "includes/promotion_block.html" with promotion_block=promotion_block.promotion_block %}
+            </div>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
   <section>
     <div class="container">
       <div class="row">
