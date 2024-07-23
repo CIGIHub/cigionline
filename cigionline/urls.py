@@ -18,10 +18,15 @@ from wagtail import urls as wagtail_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
+import os
 
 
 urlpatterns = []
 if settings.ADMIN_ENABLED:
+    if 'VIRUSTOTAL_API_KEY' in os.environ:
+        urlpatterns = urlpatterns + [
+            re_path(r'^admin/documents/multiple/add/', core_views.MalwareScannedAddview.as_view(), name='add_multiple'),
+        ]
     urlpatterns = urlpatterns + [
         re_path(r'^admin/', include(wagtailadmin_urls)),
     ]
