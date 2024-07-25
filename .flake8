@@ -10,5 +10,6 @@ exclude =
     node_modules,
     static,
     venv,
-    cigionline/settings
-    src/wagtailschedules
+    cigionline/settings,
+    src/wagtailschedules,
+    src/django-adv-cache-tag
