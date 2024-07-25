@@ -236,7 +236,8 @@ body {
     }
   }
 
-  &.event-page-dph {
+  &.dph-event-page,
+  &.dph-article-page {
     .hero {
       padding-bottom: 0;
 
@@ -275,6 +276,77 @@ body {
 
       .subtitle {
         line-height: 1.2;
+      }
+    }
+  }
+
+  &.dph-publication-page {
+    .publication-hero {
+      h1 {
+        color: $white;
+      }
+
+      h2,
+      .date {
+        color: $cigi-medium-light-grey;
+      }
+
+      .topics,
+      .authors {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+
+        &.custom-text-list {
+          li:not(:only-child) {
+            &::after {
+              color: $dph-green;
+            }
+          }
+        }
+      }
+    }
+
+    .about-the-author {
+      h3 {
+        border-top: 0;
+        width: 100%;
+        font-size: 1.125rem;
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+
+      .author-block {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+      }
+    }
+
+    .recommended-section {
+      .recommended-dot {
+        background-color: $cigi-medium-light-grey;
+      }
+
+      .custom-text-list {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+
+        li:not(:only-child) {
+          color: $dph-green;
+
+          &::after {
+            color: $dph-green;
+          }
+        }
+      }
+
+      h3 {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+      }
+
+      .feature-content-date {
+        color: $cigi-medium-light-grey;
+      }
+
+      .table-icon {
+        color: $dph-green;
+        border-color: $dph-green;
       }
     }
   }

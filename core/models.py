@@ -529,6 +529,8 @@ class ContentPage(Page, SearchablePageAbstract):
             eventpage__isnull=True
         ).exclude(id__in=exclude_ids).exclude(
             articlepage__article_type__title='CIGI in the News'
+        ).exclude(
+            publicationpage__publication_type__title='Working Paper'
         ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_content)])
 
         recommended_content = list(recommended_content) + additional_content
