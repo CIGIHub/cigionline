@@ -15,6 +15,7 @@ function SearchResultListing(props) {
     return [...acc, curr];
   }, []);
   const contentTypes = [
+    'Essay Series',
     'Opinion',
     'Opinion Series',
     'Publication',
@@ -66,7 +67,12 @@ function SearchResultListing(props) {
           <i className="fal fa-copy" />
         </span>
       )}
-      {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
+      {row.contenttype === 'Essay Series' && (
+        <span className="table-icon icon-opinion">
+          <i className="fal fa-comment-dots" />
+        </span>
+      )}
+      {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds', 'Essays'].includes(row.contentsubtype) && (
         <span className="table-icon icon-opinion">
           <i className="fal fa-comment-dots" />
         </span>
@@ -74,11 +80,6 @@ function SearchResultListing(props) {
       {row.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
         <span className="table-icon icon-media">
           <i className="fal fa-bullhorn" />
-        </span>
-      )}
-      {row.contenttype === 'Opinion' && ['Essays'].includes(row.contentsubtype) && (
-        <span className="table-icon icon-publication">
-          <i className="fal fa-file-alt" />
         </span>
       )}
       {row.contenttype === 'Opinion Series' && (
