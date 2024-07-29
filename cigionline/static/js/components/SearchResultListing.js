@@ -42,21 +42,25 @@ function SearchResultListing(props) {
         </span>
       )}
       {row.contenttype === 'Multimedia Series'
-        && row.contentsubtype === 'Multimedia Series' && (
-        <span className="table-icon icon-multimedia">
-          <i className="fal fa-play" />
-        </span>
-      )}
+        && row.contentsubtype === 'Multimedia Series'
+        && (
+          <span className="table-icon icon-multimedia">
+            <i className="fal fa-play" />
+          </span>
+        )}
       {row.contenttype === 'Multimedia' && row.contentsubtype === 'Audio' && (
         <span className="table-icon icon-multimedia">
           <i className="fal fa-headphones" />
         </span>
       )}
-      {['Publication', 'Publication Series'].includes(row.contenttype) && (
-        <span className="table-icon icon-publication">
-          <i className="fal fa-file-alt" />
-        </span>
-      )}
+      {(['Publication', 'Publication Series'].includes(row.contenttype)
+        || (row.contenttype === 'Opinion'
+        && ['Essays'].includes(row.contentsubtype)))
+        && (
+          <span className="table-icon icon-publication">
+            <i className="fal fa-file-alt" />
+          </span>
+        )}
       {row.contenttype === 'Person' && (
         <span className="table-icon icon-person">
           <i className="fal fa-user" />
@@ -72,12 +76,16 @@ function SearchResultListing(props) {
           <i className="fal fa-comment-dots" />
         </span>
       )}
-      {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds', 'Essays'].includes(row.contentsubtype) && (
+      {row.contenttype === 'Opinion'
+        && ['Opinion', 'Interviews', 'Op-Eds'].includes(
+          row.contentsubtype,
+        ) && (
         <span className="table-icon icon-opinion">
           <i className="fal fa-comment-dots" />
         </span>
       )}
-      {row.contenttype === 'Opinion' && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
+      {row.contenttype === 'Opinion'
+      && ['CIGI in the News', 'News Releases'].includes(row.contentsubtype) && (
         <span className="table-icon icon-media">
           <i className="fal fa-bullhorn" />
         </span>
@@ -139,13 +147,12 @@ function SearchResultListing(props) {
         )}
         {highlights.length > 0 && (
           <p className="search-result-highlight">
-            {row.highlights
-              .map((highlight, index) => (
-                <span
-                  key={`${row.id}-highlight-${index}`}
-                  dangerouslySetInnerHTML={{ __html: highlight }}
-                />
-              ))}
+            {row.highlights.map((highlight, index) => (
+              <span
+                key={`${row.id}-highlight-${index}`}
+                dangerouslySetInnerHTML={{ __html: highlight }}
+              />
+            ))}
           </p>
         )}
         {row.highlights.length === 0 && row.snippet && (
@@ -161,7 +168,9 @@ function SearchResultListing(props) {
           <p className="search-result-highlight">
             View results related to this topic.
           </p>
-        ) : ''}
+        ) : (
+          ''
+        )}
       </div>
     </article>
   );

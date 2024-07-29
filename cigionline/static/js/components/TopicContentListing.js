@@ -28,12 +28,12 @@ function TopicContentListing(props) {
               <i className="fal fa-headphones" />
             </span>
           )}
-          {row.contenttype === 'Publication' && (
+          {(row.contenttype === 'Publication' || (row.contenttype === 'Opinion' && ['Essays'].includes(row.contentsubtype))) && (
             <span className="table-icon icon-publication">
               <i className="fal fa-file-alt" />
             </span>
           )}
-          {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds', 'Essays'].includes(row.contentsubtype) && (
+          {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
             <span className="table-icon icon-opinion">
               <i className="fal fa-comment-dots" />
             </span>
