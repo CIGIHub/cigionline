@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import PublicationListing from '../../js/components/PublicationListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/publication_list_page.scss';

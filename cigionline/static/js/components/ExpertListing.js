@@ -60,9 +60,14 @@ function ExpertListing(props) {
                   <i className="fal fa-headphones" />
                 </span>
               )}
-              {row.latest_activity.contenttype === 'Publication' && (
+              {(row.latest_activity.contenttype === 'Publication' || (row.latest_activity.contenttype === 'Opinion' && ['Essays'].includes(row.latest_activity.contentsubtype))) && (
                 <span className="table-icon icon-publication">
                   <i className="fal fa-file-alt" />
+                </span>
+              )}
+              {row.latest_activity.contenttype === 'Essay Series' && (
+                <span className="table-icon icon-opinion">
+                  <i className="fal fa-comment-dots" />
                 </span>
               )}
               {row.latest_activity.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.latest_activity.contentsubtype) && (
