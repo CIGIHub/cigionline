@@ -3,9 +3,9 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { Navigation, Pagination } from 'swiper/modules';
 import SwiperCore from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
+import { Swiper, SwiperSlide } from 'swiper/react'; // eslint-disable-line import/no-unresolved
 import 'swiper/swiper-bundle.css';
 
 import '../../css/components/TwentiethPageSlide3Content.scss';

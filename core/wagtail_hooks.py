@@ -5,7 +5,7 @@ from wagtail.admin.rich_text.converters.html_to_contentstate import (
     BlockElementHandler,
     InlineStyleElementHandler,
 )
-from wagtail.contrib.modeladmin.options import (ModelAdmin, modeladmin_register)
+from wagtail_modeladmin.options import (ModelAdmin, modeladmin_register)
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail import hooks
 from wagtail.models import Page

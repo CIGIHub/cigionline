@@ -1,4 +1,4 @@
-from wagtail.contrib.modeladmin.helpers import PagePermissionHelper
+from wagtail_modeladmin.helpers import PagePermissionHelper
 
 
 class CIGIModelAdminPermissionHelper(PagePermissionHelper):

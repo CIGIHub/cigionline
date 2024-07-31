@@ -9,7 +9,7 @@ Wagtail source code for cigionline.org
 
 
 ## Installation
-This project uses Python 3.8.5.
+This project uses Python 3.12.4.
 ``` shell
 $ git clone git@github.com:CIGIHub/cigionline.git
 $ cd cigionline

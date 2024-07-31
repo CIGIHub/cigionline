@@ -4,7 +4,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/ogbv.scss';

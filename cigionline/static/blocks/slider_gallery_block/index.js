@@ -2,7 +2,7 @@
 
 import 'swiper/swiper-bundle.css';
 import Swiper from 'swiper';
-import { Navigation, Pagination, EffectCoverflow, A11y } from 'swiper/modules';
+import { Navigation, Pagination, EffectCoverflow, A11y } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import './css/slider_gallery_block.scss';
 
 Swiper.use([Navigation, Pagination]);

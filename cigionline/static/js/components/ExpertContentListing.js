@@ -28,7 +28,7 @@ function ExpertContentListing(props) {
               <i className="fal fa-headphones" />
             </span>
           )}
-          {row.contenttype === 'Publication' && (
+          {(row.contenttype === 'Publication' || (row.contenttype === 'Opinion' && ['Essays'].includes(row.contentsubtype))) && (
             <span className="table-icon icon-publication">
               <i className="fal fa-file-alt" />
             </span>

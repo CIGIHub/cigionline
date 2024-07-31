@@ -4,7 +4,7 @@ import 'swiper/swiper-bundle.css';
 import './css/_home_page.scss';
 
 import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 
 // Homepage Highlights
 Swiper.use([Navigation, Pagination]);

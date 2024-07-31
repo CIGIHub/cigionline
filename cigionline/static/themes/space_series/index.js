@@ -1,6 +1,6 @@
 import './css/space_series.scss';
 import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules';
+import { Navigation } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import 'swiper/swiper-bundle.css';
 
 Swiper.use([Navigation]);
