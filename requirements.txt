@@ -37,7 +37,7 @@ html5lib==1.1
 icalendar==4.0.7
 idna==2.10
 iso3166==2.1.1
-isort==5.9.3
+isort==5.13.2
 jdcal==1.4.1
 jmespath==0.10.0
 l18n==2021.3
