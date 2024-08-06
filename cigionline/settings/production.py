@@ -194,9 +194,17 @@ SECURE_HSTS_PRELOAD = True
 
 # CSP settings for production
 CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://analytics.google.com")
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "https://cigionline-static-staging.s3.amazonaws.com",
+    "https://cigionline-static-staging-alternate.s3.amazonaws.com",
+    "https://cigionline-static-production.s3.amazonaws.com",
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://analytics.google.com"
+)
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://use.typekit.net", "https://p.typekit.net")
-CSP_IMG_SRC = ("'self'", 'data:',)
+CSP_IMG_SRC = ("'self'", 'data:', "https://s3.amazonaws.com")
 CSP_CONNECT_SRC = ("'self'", "https://www.google-analytics.com", "https://analytics.google.com")
 CSP_FONT_SRC = ("'self'", 'data:', "https://use.typekit.net", "https://p.typekit.net")
 CSP_OBJECT_SRC = ("'none'",)
