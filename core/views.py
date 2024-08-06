@@ -3,7 +3,6 @@ from datetime import date
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
-from wagtail.documents.views.multiple import AddView
 
 
 def ar_timeline_pages(request):
@@ -102,4 +101,3 @@ def years(request):
     return JsonResponse({
         'years': list(years)
     })
-
