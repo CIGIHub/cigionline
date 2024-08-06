@@ -54,6 +54,22 @@ CACHES = {
 
 INTERNAL_IPS = ('127.0.0.1')
 
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+
+# CSP settings for development
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://analytics.google.com")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://use.typekit.net", "https://p.typekit.net")
+CSP_IMG_SRC = ("'self'", 'data:',)
+CSP_CONNECT_SRC = ("'self'", "https://www.google-analytics.com", "https://analytics.google.com")
+CSP_FONT_SRC = ("'self'", 'data:', "https://use.typekit.net", "https://p.typekit.net")
+CSP_OBJECT_SRC = ("'none'",)
+CSP_FRAME_ANCESTORS = ("'none'",)
+CSP_FORM_ACTION = ("'self'",)
+
 try:
     from .local import *  # noqa: F401,F403
 except ImportError:

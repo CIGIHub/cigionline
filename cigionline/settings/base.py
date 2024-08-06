@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'compressor',
     'contact',
     'core',
+    'csp',
     'embeds',
     'events',
     'features',
@@ -91,6 +92,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
