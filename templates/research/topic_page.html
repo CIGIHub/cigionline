@@ -5,9 +5,6 @@
   {% render_bundle 'topicPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var topicId = {{ self.id }};
-  </script>
   {% render_bundle 'topicPage' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -36,7 +33,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div id="topic-search-table">
+          <div id="topic-search-table" data-topic-id="{{ self.id }}">
           </div>
         </div>
       </div>

@@ -1,4 +1,3 @@
-/* global topicId */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchTable from '../../js/components/SearchTable';
@@ -6,6 +5,7 @@ import TopicContentListing from '../../js/components/TopicContentListing';
 
 import './css/topic_page.scss';
 
+const topicId = document.getElementById('topic-search-table').getAttribute('data-topic-id');
 const endpointParams = [];
 if (topicId) {
   endpointParams.push({

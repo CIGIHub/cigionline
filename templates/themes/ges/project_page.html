@@ -40,10 +40,6 @@
   {% render_bundle 'themeGES' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var projectId= {{ self.id }};
-    var hasTaggedPages = {{ self.has_tagged_pages|lower }};
-  </script>
   {% render_bundle 'themeGES' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -108,7 +104,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div id="project-search-table">
+          <div id="project-search-table" data-project-id="{{self.id}}">
           </div>
         </div>
       </div>
