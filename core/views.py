@@ -1,9 +1,6 @@
-from django.forms import ValidationError
-import requests
 from core.models import ContentPage
 from datetime import date
-from django.conf import settings
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from wagtail.documents.views.multiple import AddView
@@ -106,71 +103,3 @@ def years(request):
         'years': list(years)
     })
 
-
-class MalwareScannedAddview(AddView):
-    def scan_file_for_viruses(self, file):
-        api_key = settings.VIRUSTOTAL_API_KEY
-        url = 'https://www.virustotal.com/api/v3/files'
-        headers = {
-            'x-apikey': api_key
-        }
-        files = {
-            'file': file
-        }
-        response = requests.post(url, headers=headers, files=files)
-        print(response)
-
-        if response.status_code != 200:
-            raise ValidationError('Failed to scan file for viruses')
-
-        result = response.json()
-        print(result)
-        if result.get('data', {}).get('attributes', {}).get('last_analysis_stats', {}).get('malicious', 0) > 0:
-            raise ValidationError('The uploaded file is infected with malware.')
-
-    def post(self, request):
-        if not request.FILES:
-            return HttpResponseBadRequest("Must upload a file")
-
-        # Perform the malware check on the file
-        try:
-            for file in request.FILES.getlist('files[]'):
-                self.scan_file_for_viruses(file)
-        except ValidationError as e:
-            return JsonResponse({'error': str(e)}, status=400)
-
-        # Build a form for validation
-        upload_form_class = self.get_upload_form_class()
-        form = upload_form_class(
-            {
-                "title": request.POST.get("title", request.FILES["files[]"].name),
-                "collection": request.POST.get("collection"),
-            },
-            {
-                "file": request.FILES["files[]"],
-            },
-            user=request.user,
-        )
-
-        if form.is_valid():
-            # Save it
-            self.object = self.save_object(form)
-
-            # Success! Send back an edit form for this object to the user
-            return JsonResponse(self.get_edit_object_response_data())
-        elif "file" in form.errors:
-            # The uploaded file is invalid; reject it now
-            return JsonResponse(self.get_invalid_response_data(form))
-        else:
-            # Some other field of the form has failed validation, e.g. a required metadata field
-            # on a custom image model. Store the object as an upload_model instance instead and
-            # present the edit form so that it will become a proper object when successfully filled in
-            self.upload_object = self.upload_model.objects.create(
-                file=self.request.FILES["files[]"], uploaded_by_user=self.request.user
-            )
-            self.object = self.model(
-                title=self.request.FILES["files[]"].name,
-                collection_id=self.request.POST.get("collection"),
-            )
-
-            return JsonResponse(self.get_edit_upload_response_data())
