@@ -203,8 +203,20 @@ CSP_SCRIPT_SRC = (
     "https://www.google-analytics.com",
     "https://analytics.google.com"
 )
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://use.typekit.net", "https://p.typekit.net")
-CSP_IMG_SRC = ("'self'", 'data:', "https://s3.amazonaws.com")
+CSP_STYLE_SRC = (
+    "'self'",
+    "'unsafe-inline'", 
+    "https://use.typekit.net",
+    "https://p.typekit.net",
+    "https://cigionline-static-staging.s3.amazonaws.com",
+    "https://cigionline-static-staging-alternate.s3.amazonaws.com",
+    "https://cigionline-static-production.s3.amazonaws.com",)
+CSP_IMG_SRC = (
+    "'self'",
+    'data:',
+    "https://cigionline-static-staging.s3.amazonaws.com",
+    "https://cigionline-static-staging-alternate.s3.amazonaws.com",
+    "https://cigionline-static-production.s3.amazonaws.com",)
 CSP_CONNECT_SRC = ("'self'", "https://www.google-analytics.com", "https://analytics.google.com")
 CSP_FONT_SRC = ("'self'", 'data:', "https://use.typekit.net", "https://p.typekit.net")
 CSP_OBJECT_SRC = ("'none'",)
