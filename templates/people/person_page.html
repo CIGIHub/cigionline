@@ -47,9 +47,6 @@
   {% render_bundle 'personPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var personId = {{ self.id }};
-  </script>
   {% render_bundle 'personPage' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -289,7 +286,7 @@
               <h2 class="paragraph-heading">
                 From This Expert
               </h2>
-              <div id="expert-search-table" class="expert-search-table">
+              <div id="expert-search-table" class="expert-search-table" data-person-id="{{ self.id }}">
               </div>
             </div>
           </div>

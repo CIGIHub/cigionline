@@ -186,3 +186,39 @@ if 'MAILCHIMP_NEWSLETTER_LIST_ID_DPH' in os.environ:
     MAILCHIMP_NEWSLETTER_LIST_ID_DPH = os.environ['MAILCHIMP_NEWSLETTER_LIST_ID_DPH']
 
 WAGTAIL_2FA_REQUIRED = True
+
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# CSP settings for production
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "https://cigionline-static-staging.s3.amazonaws.com",
+    "https://cigionline-static-staging-alternate.s3.amazonaws.com",
+    "https://cigionline-static-production.s3.amazonaws.com",
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://analytics.google.com"
+)
+CSP_STYLE_SRC = (
+    "'self'",
+    "'unsafe-inline'", 
+    "https://use.typekit.net",
+    "https://p.typekit.net",
+    "https://cigionline-static-staging.s3.amazonaws.com",
+    "https://cigionline-static-staging-alternate.s3.amazonaws.com",
+    "https://cigionline-static-production.s3.amazonaws.com",)
+CSP_IMG_SRC = (
+    "'self'",
+    'data:',
+    "https://cigionline-static-staging.s3.amazonaws.com",
+    "https://cigionline-static-staging-alternate.s3.amazonaws.com",
+    "https://cigionline-static-production.s3.amazonaws.com",)
+CSP_CONNECT_SRC = ("'self'", "https://www.google-analytics.com", "https://analytics.google.com")
+CSP_FONT_SRC = ("'self'", 'data:', "https://use.typekit.net", "https://p.typekit.net")
+CSP_OBJECT_SRC = ("'none'",)
+CSP_FRAME_ANCESTORS = ("'none'",)
+CSP_FORM_ACTION = ("'self'",)

@@ -1,4 +1,3 @@
-/* global countryId */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchTable from '../../js/components/SearchTable';
@@ -6,6 +5,7 @@ import TopicContentListing from '../../js/components/TopicContentListing';
 
 import './css/country_page.scss';
 
+const countryId = document.getElementById('country-search-table').getAttribute('data-country-id');
 const endpointParams = [];
 if (countryId) {
   endpointParams.push({

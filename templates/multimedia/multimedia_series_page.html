@@ -29,9 +29,6 @@
   {% render_bundle 'multimediaSeriesPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var multimediaSeriesId = {{ self.id }};
-  </script>
   {% render_bundle 'multimediaSeriesPage' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -59,7 +56,7 @@
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
           <h2 class="paragraph-heading">In the Series</h2>
-          <div id="multimedia-list">
+          <div id="multimedia-list" data-multimedia-series-id="{{ self.id }}">
           </div>
         </div>
       </div>

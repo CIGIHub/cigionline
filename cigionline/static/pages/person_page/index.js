@@ -1,10 +1,10 @@
-/* global personId */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ExpertContentListing from '../../js/components/ExpertContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/person_page.scss';
 
+const personId = document.getElementById('expert-search-table').getAttribute('data-person-id');
 const endpointParams = [];
 if (personId) {
   endpointParams.push({

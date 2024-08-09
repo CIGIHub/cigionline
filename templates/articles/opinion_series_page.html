@@ -5,9 +5,6 @@
   {% render_bundle 'opinionSeriesPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var opinionSeriesId = {{ self.id }};
-  </script>
   {% render_bundle 'opinionSeriesPage' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -42,7 +39,7 @@
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
           <h2 class="paragraph-heading">In the Series</h2>
-          <div id="opinions-list">
+          <div id="opinions-list" data-opinion-series-id="{{ self.id }}">
           </div>
         </div>
       </div>

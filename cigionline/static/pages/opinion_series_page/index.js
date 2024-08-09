@@ -1,11 +1,11 @@
 import './css/opinion_series_page.scss';
 
-/* global opinionSeriesId */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PublicationListingSeries from '../../js/components/PublicationListingSeries';
 import SearchTable from '../../js/components/SearchTable';
 
+const opinionSeriesId = document.getElementById('opinions-list').getAttribute('data-opinion-series-id');
 const endpointParams = [];
 if (opinionSeriesId) {
   endpointParams.push({

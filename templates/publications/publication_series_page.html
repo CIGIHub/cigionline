@@ -5,9 +5,6 @@
   {% render_bundle 'publicationSeriesPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var publicationSeriesId = {{ self.id }};
-  </script>
   {% render_bundle 'publicationSeriesPage' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -38,7 +35,7 @@
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
           <h2 class="paragraph-heading">In the Series</h2>
-          <div id="publications-list">
+          <div id="publications-list" data-publication-series-id="{{ self.id }}">
           </div>
         </div>
       </div>
