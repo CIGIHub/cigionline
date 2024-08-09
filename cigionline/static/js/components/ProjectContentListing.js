@@ -28,9 +28,17 @@ function ProjectContentListing(props) {
               <i className="fal fa-headphones" />
             </span>
           )}
-          {['Publication', 'Publication Series'].includes(row.contenttype) && (
-            <span className="table-icon icon-publication">
-              <i className="fal fa-file-alt" />
+          {(['Publication', 'Publication Series'].includes(row.contenttype)
+            || (row.contenttype === 'Opinion'
+            && ['Essays'].includes(row.contentsubtype)))
+            && (
+              <span className="table-icon icon-publication">
+                <i className="fal fa-file-alt" />
+              </span>
+            )}
+          {row.contenttype === 'Essay Series' && (
+            <span className="table-icon icon-opinion">
+              <i className="fal fa-comment-dots" />
             </span>
           )}
           {row.contenttype === 'Opinion' && ['Opinion', 'Interviews', 'Op-Eds'].includes(row.contentsubtype) && (
