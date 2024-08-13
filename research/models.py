@@ -114,14 +114,6 @@ class ProjectPage(
         use_json_field=True,
     )
     project_types = ParentalManyToManyField('research.ProjectType', blank=True)
-    primary_theme = models.ForeignKey(
-        'research.ThemePage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Primary Theme',
-    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -129,6 +121,7 @@ class ProjectPage(
         blank=True,
         use_json_field=True,
     )
+    primary_themes = ParentalManyToManyField('research.ThemePage', blank=True, related_name='primary_themes')
     secondary_themes = ParentalManyToManyField('research.ThemePage', blank=True)
     survey_findings = StreamField(
         [
@@ -175,10 +168,7 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                PageChooserPanel(
-                    'primary_theme',
-                    ['research.ThemePage'],
-                ),
+                FieldPanel('primary_themes'),
                 FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
                 FieldPanel('countries'),
