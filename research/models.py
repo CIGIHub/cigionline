@@ -607,7 +607,11 @@ class CountryPage(
             featured_pages = featured_pages + list(self.content_pages.specific().prefetch_related(
                 'authors__author',
                 'countries',
-            ).live().exclude(articlepage=None).order_by('-publishing_date')[:(3 - len(featured_pages))])
+            ).live().exclude(
+                articlepage=None
+            ).exclude(
+                articlepage__article_type__title='CIGI in the News'
+            ).order_by('-publishing_date')[:(3 - len(featured_pages))])
         return featured_pages
 
     def __str__(self):
