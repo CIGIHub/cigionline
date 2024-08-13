@@ -5,9 +5,6 @@
   {% render_bundle 'articleTypePage' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var articleTypeId = {{ self.id }};
-  </script>
   {% render_bundle 'articleTypePage' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -17,7 +14,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8">
-        <div id="articles-list">
+        <div id="articles-list" data-article-type-id="{{ self.id }}">
         </div>
       </div>
     </div>

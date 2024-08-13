@@ -40,9 +40,6 @@
   {% render_bundle 'themeOGBV' 'css' %}
 {% endblock %}
 {% block extra_js %}
-  <script type="text/javascript">
-    var projectId= {{ self.id }};
-  </script>
   {% render_bundle 'themeOGBV' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -171,7 +168,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <div id="project-search-table">
+          <div id="project-search-table" data-project-id="{{self.id}}">
           </div>
         </div>
       </div>

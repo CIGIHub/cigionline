@@ -1,11 +1,11 @@
-/* global projectId */
-/* global hasTaggedPages */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/project_page.scss';
 
+const projectId = document.getElementById('project-search-table').getAttribute('data-project-id');
+const hasTaggedPages = document.getElementById('project-search-table').getAttribute('data-has-tagged-pages');
 const endpointParams = [];
 if (projectId) {
   endpointParams.push({

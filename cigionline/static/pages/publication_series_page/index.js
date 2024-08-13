@@ -1,11 +1,11 @@
 import './css/publication_series_page.scss';
 
-/* global publicationSeriesId */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PublicationListingSeries from '../../js/components/PublicationListingSeries';
 import SearchTable from '../../js/components/SearchTable';
 
+const publicationSeriesId = document.getElementById('publications-list').getAttribute('data-publication-series-id');
 const endpointParams = [];
 if (publicationSeriesId) {
   endpointParams.push({
