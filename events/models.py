@@ -61,9 +61,21 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         ).in_bulk(featured_event_ids)
         return [pages[x] for x in featured_event_ids]
 
+    def get_featured_events_preview(self):
+        featured_events = self.featured_events.order_by('sort_order')
+        featured_event_ids = [x.event_page.id for x in featured_events]
+        pages = Page.objects.specific().prefetch_related(
+            'topics',
+        ).in_bulk(featured_event_ids)
+        return [pages[x] for x in featured_event_ids]
+
     def get_context(self, request):
         context = super().get_context(request)
-        context['featured_events'] = self.get_featured_events()
+        if hasattr(context['request'], 'is_preview'):
+            if context['request'].is_preview:
+                context['featured_events'] = self.get_featured_events_preview()
+            else:
+                context['featured_events'] = self.get_featured_events()
         return context
 
     class Meta:
