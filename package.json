@@ -60,7 +60,7 @@
     "sass": "1.35.2",
     "sass-loader": "12.1.0",
     "scrollreveal": "4.0.9",
-    "source-map-loader": "3.0.0",
+    "source-map-loader": "3.0.2",
     "style-loader": "3.2.1",
     "webpack": "5.44.0",
     "webpack-bundle-tracker": "0.4.3",
