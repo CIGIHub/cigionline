@@ -764,7 +764,7 @@ class SearchTable extends React.Component {
                   required="required"
                 />
                 <div className="input-group-append">
-                  <button className="btn-search" type="submit">
+                  <button className="btn-search" type="submit" aria-label="Search">
                     <i className="far fa-search" />
                   </button>
                 </div>
@@ -1194,7 +1194,7 @@ class SearchTable extends React.Component {
                         onKeyUp={(e) => this.handleExpertsFilter(e)}
                       />
                       <div className="input-group-append">
-                        <button className="btn-search" type="submit">
+                        <button className="btn-search" type="submit" aria-label="Search">
                           <i className="far fa-search" />
                         </button>
                       </div>
@@ -1294,7 +1294,7 @@ class SearchTable extends React.Component {
                         onKeyUp={(e) => this.handleTopicsFilter(e)}
                       />
                       <div className="input-group-append">
-                        <button className="btn-search" type="submit">
+                        <button className="btn-search" type="submit" aria-label="Search">
                           <i className="far fa-search" />
                         </button>
                       </div>

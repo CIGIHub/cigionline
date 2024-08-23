@@ -1,0 +1,25 @@
+$dph-font: neue-haas-grotesk-text, sans-serif;
+$dph-font-copy: neue-haas-grotesk-display, sans-serif;
+
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+@import './basic_page.scss';
+@import './footer.scss';
+
+.swiper-controls {
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: $dph-green;
+    font-size: 1.5rem;
+  }
+
+  .swiper-pagination {
+    .swiper-pagination-bullet {
+      background-color: $cigi-medium-grey;
+
+      &.swiper-pagination-bullet-active {
+        background-color: $white;
+      }
+    }
+  }
+}

@@ -3,9 +3,10 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import SwiperCore, { Navigation, Pagination } from 'swiper/core';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper.scss';
+import SwiperCore from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
+import { Swiper, SwiperSlide } from 'swiper/react'; // eslint-disable-line import/no-unresolved
+import 'swiper/swiper-bundle.css';
 
 import '../../css/components/TwentiethPageSlide3Content.scss';
 

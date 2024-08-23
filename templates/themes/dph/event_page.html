@@ -1,0 +1,61 @@
+{% extends "events/event_page.html" %}
+{% load wagtailimages_tags webpack_loader wagtailcore_tags %}
+
+{% block theme_css %}
+  {% render_bundle 'themeDPH' 'css' %}
+{% endblock %}
+
+{% block theme_js %}
+  {% render_bundle 'themeDPH' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/mks4fbg.css">
+{% endblock %}
+
+{% block body_class %}dph-event-page{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h2>
+            <a href="/digital-policy-hub">
+              Digital Policy Hub
+            </a>
+          </h2>
+          <h1>{{ self.title }}</h1>
+          {% if self.authors.all|length > 0 %}
+            <div class="speakers">Speakers: 
+              <ul class="custom-text-list">
+                {% for item in self.authors.all %}
+                  {% if item.hide_link %}
+                    <li class="block-speaker">{{ item.author.title }}</li>
+                  {% else %}
+                    <li class="block-speaker"><a href="{% pageurl item.author %}">{{ item.author.title }}</a></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+        <div class="row justify-content-center">
+          <div class="col col-md-8 col-lg-6">
+            <div class="subtitle">{{ self.subtitle|richtext }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include "includes/body.html" with body=self.body %}
+{% endblock content %}
+
+{% block footer %}
+  {% include "./includes/footer.html" %}
+{% endblock %}

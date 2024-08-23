@@ -5,8 +5,10 @@ from core.models import (
     FromTheArchivesPageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 )
 from django.db import models
+from django.http import Http404
 from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
@@ -23,12 +25,13 @@ from wagtail.admin.panels import (
 from wagtail.blocks import (
     RichTextBlock,
 )
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
 
 
-class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
+class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAbstract, Page):
     """Publication list page"""
 
     def featured_publications_list(self):
@@ -46,9 +49,24 @@ class PublicationListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             'topics',
         ).live().public().order_by('-publishing_date')[:10]
 
+    @route(r'^essays/$')
+    def essays(self, request):
+        try:
+            from articles.models import ArticleTypePage
+            article_type_essay_page = ArticleTypePage.objects.get(title='Essays')
+            return article_type_essay_page.specific.serve(request)
+        except ArticleTypePage.DoesNotExist:
+            raise Http404
+
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = ['articles.ArticleSeriesListPage', 'publications.PublicationPage', 'publications.PublicationTypePage', 'publications.PublicationSeriesListPage']
+    subpage_types = [
+        'articles.ArticleSeriesListPage',
+        'articles.ArticleTypePage',
+        'publications.PublicationPage',
+        'publications.PublicationTypePage',
+        'publications.PublicationSeriesListPage'
+    ]
     templates = 'publications/publication_list_page.html'
 
     content_panels = [
@@ -107,6 +125,7 @@ class PublicationPage(
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
     ShareablePageAbstract,
+    ThemeablePageAbstract,
 ):
     """View publication page"""
 
@@ -297,6 +316,12 @@ class PublicationPage(
             (self.book_format or self.book_pages or self.book_publisher or self.isbn or self.isbn_ebook or self.isbn_hardcover)
         )
 
+    def get_template(self, request, *args, **kwargs):
+        standard_template = super(PublicationPage, self).get_template(request, *args, **kwargs)
+        if self.theme:
+            return f'themes/{self.get_theme_dir()}/publication_page.html'
+        return standard_template
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -366,11 +391,12 @@ class PublicationPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
+                FieldPanel('countries'),
                 PageChooserPanel(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
                 ),
-                FieldPanel('projects'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -381,6 +407,9 @@ class PublicationPage(
         FeatureablePageAbstract.feature_panel,
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.theme_panel,
     ]
 
     search_fields = BasicPageAbstract.search_fields \
@@ -453,6 +482,16 @@ class PublicationSeriesPage(
     # Reference field for Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    image_poster = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster image',
+        help_text='A poster image which will be used in the highlights section of the homepage.',
+    )
+
     @property
     def series_authors(self):
         authors = set()
@@ -474,11 +513,19 @@ class PublicationSeriesPage(
             heading='General Information',
             classname='collapsible collapsed',
         ),
-        BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('image_hero'),
+                FieldPanel('image_poster'),
+            ],
+            heading='Images',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',

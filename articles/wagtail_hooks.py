@@ -3,7 +3,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from wagtail.contrib.modeladmin.options import (
+from wagtail_modeladmin.options import (
     ModelAdmin,
     ModelAdminGroup,
     modeladmin_register,

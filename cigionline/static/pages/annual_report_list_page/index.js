@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
-import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchTableAnnualReports from '../../js/components/SearchTableAnnualReports';
@@ -27,6 +28,7 @@ if (swiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
+      horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
     },
 
     breakpoints: {

@@ -402,6 +402,7 @@ class MultimediaPage(
                 ),
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -591,6 +592,8 @@ class MultimediaSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',

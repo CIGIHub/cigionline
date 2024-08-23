@@ -1,9 +1,3 @@
-@import '../../../css/global/mixins';
-@import '../../../css/global/animations/bounce';
-
-$dph-font: neue-haas-grotesk-text, sans-serif;
-$dph-font-copy: neue-haas-grotesk-display, sans-serif;
-
 body {
   @include top-bar($background-color: $dph-background);
   background-color: $dph-background;
@@ -241,29 +235,124 @@ body {
       }
     }
   }
+
+  &.dph-event-page,
+  &.dph-article-page {
+    .hero {
+      padding-bottom: 0;
+
+      h2 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        @include media-breakpoint-up(md) {
+          font-size: 2rem;
+        }
+        font-size: 1.5rem;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+      }
+
+      .speakers {
+        font-size: 0.9rem;
+        font-weight: 400;
+        margin-bottom: 1.5rem;
+
+        ul {
+          display: inline-flex;
+          margin: 0;
+
+          li {
+            &:not(:only-child) {
+              &::after {
+                margin-right: 5px;
+              }
+            }
+          }
+        }
+      }
+
+      .subtitle {
+        line-height: 1.2;
+      }
+    }
+  }
+
+  &.dph-publication-page {
+    .publication-hero {
+      h1 {
+        color: $white;
+      }
+
+      h2,
+      .date {
+        color: $cigi-medium-light-grey;
+      }
+
+      .topics,
+      .authors {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+
+        &.custom-text-list {
+          li:not(:only-child) {
+            &::after {
+              color: $dph-green;
+            }
+          }
+        }
+      }
+    }
+
+    .about-the-author {
+      h3 {
+        border-top: 0;
+        width: 100%;
+        font-size: 1.125rem;
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+
+      .author-block {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+      }
+    }
+
+    .recommended-section {
+      .recommended-dot {
+        background-color: $cigi-medium-light-grey;
+      }
+
+      .custom-text-list {
+        @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
+
+        li:not(:only-child) {
+          color: $dph-green;
+
+          &::after {
+            color: $dph-green;
+          }
+        }
+      }
+
+      h3 {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+      }
+
+      .feature-content-date {
+        color: $cigi-medium-light-grey;
+      }
+
+      .table-icon {
+        color: $dph-green;
+        border-color: $dph-green;
+      }
+    }
+  }
 }
 
 .fellows-disclaimer {
   font-size: 15px;
   margin-bottom: 0;
-}
-
-footer {
-  font-size: 16px;
-  background-color: $dph-background;
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 0;
-
-  img {
-    margin: 1rem 0 3rem;
-  }
-
-  .footer__copyright {
-    @include link(
-      $color: $cigi-medium-grey,
-      $hover-color: $cigi-primary-colour
-    );
-    color: $cigi-medium-grey;
-  }
 }

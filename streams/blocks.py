@@ -743,7 +743,7 @@ class TweetBlock(blocks.StructBlock, ThemeableBlock):
 
     tweet_url = blocks.URLBlock(
         required=True,
-        help_text='The URL of the tweet. Example: https://twitter.com/CIGIonline/status/1188821562440454144',
+        help_text='The URL of the tweet. Example: https://x.com/CIGIonline/status/1188821562440454144',
         verbose_name='Tweet URL',
     )
 
@@ -1092,6 +1092,26 @@ class TimelineGalleryBlock(blocks.StructBlock):
         template = 'streams/timeline_gallery_block.html'
 
 
+class SliderGalleryBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    slides = blocks.StreamBlock(
+        [
+            ('slide', blocks.StructBlock(
+                [
+                    ('image', ImageChooserBlock()),
+                    ('caption', blocks.RichTextBlock(required=False)),
+                ]
+            ))
+        ],
+        required=False,
+    )
+
+    class Meta:
+        icon = 'image'
+        label = 'Slider Gallery'
+        template = 'streams/slider_gallery_block.html'
+
+
 class PodcastSubscribeButtonBlock(blocks.StructBlock):
     label = blocks.CharBlock(required=True)
     url = blocks.URLBlock(required=True)
@@ -1266,7 +1286,7 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/persons_list_block.html'
 
 
-class PublicastionsListBlock(blocks.StructBlock):
+class PublicastionsListBlock(blocks.StructBlock, ThemeableBlock):
     publication_type = blocks.PageChooserBlock(page_type='publications.PublicationTypePage', required=False, help_text='Select a publication type to automatically populate with this type of publications.')
     publications = blocks.StreamBlock(
         [
@@ -1274,6 +1294,9 @@ class PublicastionsListBlock(blocks.StructBlock):
         ],
         required=False,
     )
+    implemented_themes = [
+        'dph_page',
+    ]
 
     def get_publications_by_type(self, publication_type):
         from publications.models import PublicationPage
@@ -1284,6 +1307,10 @@ class PublicastionsListBlock(blocks.StructBlock):
         if value.get('publication_type'):
             context['publications_by_type'] = self.get_publications_by_type(value.get('publication_type').specific.title)
         return context
+
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(PublicastionsListBlock, self).get_template(value, context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'publications_list_block')
 
     class Meta:
         icon = 'doc-full'

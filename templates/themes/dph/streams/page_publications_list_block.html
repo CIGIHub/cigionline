@@ -1,0 +1,86 @@
+{% load wagtailcore_tags wagtailimages_tags theme_tags %}
+
+<div class="container publications-list-block">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      {% if publications_by_type %}
+        {% for publication in publications_by_type %}
+          <article class="publications-list__publication row">
+            <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
+              <a href="{{ publication.url }}">
+                <div class="img-wrapper">
+                  {% image publication.image_cover fill-695x900 %}
+                </div>
+              </a>
+            </div>
+            <div class="publications-list__publication__right col-md-6 col-lg-8">
+              <div>
+                <h2 class="publications-list__publication__title">
+                  <a href="{{ publication.url }}">{{ publication.title }}</a>
+                </h2>
+                <div class="publications-list__publication__description">
+                  {{ publication.short_description|safe }}
+                </div>
+              </div>
+              <div class="publications-list__publication__author">
+                {% image publication.authors.first.author.image_square fill-300x300 %}
+                <div>
+                  {% with publication.authors.first as author %}
+                    {% if author.hide_link or author.author.is_external_profile %}
+                      <h3>{{ author.author.title }}</h3>
+                    {% else %}
+                      <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
+                    {% endif %}
+                    <div class="publications-list__publication__author__position">
+                      {{ author.author.position }}
+                    </div>
+                    <div class="publications-list__publication__author__position">
+                      {% if author.author.position_secondary %}
+                        {{ author.author.position_secondary }}
+                      {% else %}
+                        {{ publication.publishing_date|dph_term }}
+                      {% endif %}
+                    </div>
+                  {% endwith %}
+                </div>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      {% elif self.publications %}
+        {% for publication in self.publications %}
+          <article class="publications-list__publication row">
+            <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
+              {% image publication.value.image_cover fill-695x900 %}
+            </div>
+            <div class="publications-list__publication__right col-md-6 col-lg-8">
+              <div>
+                <h2 class="publications-list__publication__title">
+                  <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>
+                </h2>
+                <div class="publications-list__publication__description">
+                  {{ publication.value.short_description|safe }}
+                </div>
+              </div>
+              <div class="publications-list__publication__author">
+                {% image publication.value.authors.first.author.image_square fill-300x300 %}
+                <div>
+                  {% with publication.value.authors.first as author %}
+                    {% if author.hide_link or author.author.is_external_profile %}
+                      <h3>{{ author.author.title }}</h3>
+                    {% else %}
+                      <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
+                    {% endif %}
+                    <div class="publications-list__publication__author__position">
+                      {{ author.author.position }}
+                    </div>
+                  {% endwith %}
+                </div>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>

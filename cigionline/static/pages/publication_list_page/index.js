@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import PublicationListing from '../../js/components/PublicationListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/publication_list_page.scss';
@@ -10,7 +11,7 @@ import 'swiper/swiper-bundle.css';
 ReactDOM.render(
   <SearchTable
     showSearch
-    contenttypes={['Publication']}
+    contenttypes={['Publication', 'Opinion']}
     contentsubtypes={[
       'Books',
       'CIGI Papers',
@@ -19,6 +20,7 @@ ReactDOM.render(
       'Policy Briefs',
       'Policy Memos',
       'Special Reports',
+      'Essays',
     ]}
     fields={['authors', 'pdf_download', 'publishing_date', 'topics']}
     filterTypes={[
@@ -50,6 +52,16 @@ ReactDOM.render(
           {
             name: 'contentsubtype',
             value: 'Conference Reports',
+          },
+        ],
+      },
+      {
+        name: 'Essays',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Essays',
           },
         ],
       },
@@ -144,6 +156,7 @@ if (featuredPublicationsSwiperContainer) {
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
+        horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
       },
 
       breakpoints: {
@@ -182,6 +195,7 @@ if (essaySeriesSwiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
+      horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
     },
   });
 }

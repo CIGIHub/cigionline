@@ -3,7 +3,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/ogbv.scss';
@@ -29,6 +30,7 @@ if (swiperContainer) {
     pagination: {
       el: '.swiper-pagination',
       clickable: true,
+      horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
     },
 
     breakpoints: {

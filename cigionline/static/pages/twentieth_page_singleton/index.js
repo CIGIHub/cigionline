@@ -1,6 +1,7 @@
 import './css/twentieth_page_singleton.scss';
-import 'swiper/swiper.scss';
-import Swiper, { Navigation, Pagination } from 'swiper';
+import 'swiper/swiper-bundle.css';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 
 Swiper.use([Navigation, Pagination]);
 

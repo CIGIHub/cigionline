@@ -53,10 +53,11 @@ INSTALLED_APPS = [
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',
-    'wagtail.contrib.modeladmin',
     'wagtail.contrib.redirects',
+    'wagtail.contrib.routable_page',
     'wagtail.contrib.table_block',
     'wagtail.contrib.styleguide',
+    'wagtail.contrib.search_promotions',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     'wagtailmedia',
     'webpack_loader',
     'adv_cache_tag',
+    'wagtail_modeladmin',
 
     'wagtail_2fa',
     'django_otp',
@@ -312,3 +314,5 @@ if 'SENDGRID_API_KEY' in os.environ:
     SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 if 'PUBLISHING_NOTIFICATION_FROM_EMAIL' in os.environ:
     PUBLISHING_NOTIFICATION_FROM_EMAIL = os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL']
+
+WAGTAILDOCS_EXTENSIONS = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf']

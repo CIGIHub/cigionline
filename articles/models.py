@@ -455,6 +455,7 @@ class ArticlePage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('countries'),
                 PageChooserPanel(
                     'article_series',
                     ['articles.ArticleSeriesPage'],
@@ -554,7 +555,7 @@ class ArticleTypePage(BasicPageAbstract, Page):
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
-    parent_page_types = ['articles.ArticleListPage']
+    parent_page_types = ['articles.ArticleListPage', 'publications.PublicationListPage']
     subpage_types = []
     templates = 'articles/article_type_page.html'
 
@@ -808,6 +809,8 @@ class ArticleSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('projects'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -1064,6 +1067,7 @@ class OpinionSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
+                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',

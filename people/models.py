@@ -216,6 +216,7 @@ class PersonPage(
     person_weight = models.IntegerField(blank=False, null=False, default=0)
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
+    position_secondary = models.CharField(blank=True, max_length=255)
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     short_bio = RichTextField(
         blank=True,
@@ -327,6 +328,7 @@ class PersonPage(
                 FieldPanel('first_name'),
                 FieldPanel('last_name'),
                 FieldPanel('position'),
+                FieldPanel('position_secondary'),
                 FieldPanel('board_position')
             ],
             heading='General Information',

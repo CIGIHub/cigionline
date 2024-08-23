@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from wagtail.search.models import Query
+from wagtail.contrib.search_promotions.models import Query
 
 from .search import cigi_search, cigi_search_promoted
 
@@ -45,6 +45,12 @@ def process_item(page, request):
                     'title': topic.title,
                     'url': topic.url,
                 } for topic in page.specific.topics.all()]
+            elif field == 'countries':
+                item['countries'] = [{
+                    'id': country.id,
+                    'title': country.title,
+                    'url': country.url,
+                } for country in page.specific.countries.all()]
             elif field == 'contenttype':
                 verbose_name = page.specific._meta.verbose_name
                 if verbose_name == 'Person Page':
@@ -105,6 +111,7 @@ def search_api(request):
         years=request.GET.getlist('year', None),
         eventaccess=request.GET.getlist('eventaccess', None),
         experts=request.GET.get('expert', None),
+        countries=request.GET.getlist('country', None),
     )
     promoted_pages = []
     if request.GET.get('searchpage'):
@@ -123,6 +130,7 @@ def search_api(request):
             sort=request.GET.get('sort', None),
             topics=request.GET.getlist('topic', None),
             experts=request.GET.get('expert', None),
+            countries=request.GET.getlist('country', None),
         )
 
     aggregations = pages.get_aggregations()

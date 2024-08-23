@@ -7,16 +7,37 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_plain.html" with title="Thank you for signing up!" %}
-  {{ self.landing_page_body }}
+  {% if subscription_type == 'dph' and status != 'subscribed_success' %}
+    {% include "includes/heroes/hero_plain.html" with title="There was an error with the subscription." %}
+    <section class="body">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12{% if full_heading is not True %} col-md-10 col-lg-8{% endif %}">
+            {% if status == 'pending' %}
+              <p>In order to complete your subscription, please check your inbox for a confirmation email. If it does not appear in your inbox, please check your spam or junk folder. If you did not receive a confirmation email please <a href="https://www.cigionline.org/contact">contact us</a>.</p>
+            {% elif status == 'subscribed' %}
+              <p>Your email is already subscribed. Please check your inbox for any updates.</p>
+            {% elif status == 'unsubscribed' %}
+              <p>Your email has been unsubscribed. If you would like to resubscribe,please use the links in the unsubscribe confirmation email, or <a href="https://www.cigionline.org/contact">contact us</a>.</p>
+            {% elif status == 'error' %}
+              <p>There was an error with your subscription. Please <a href="https://www.cigionline.org/contact">contact us</a> for assistance.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% else %}
+    {% include "includes/heroes/hero_plain.html" with title="Thank you for signing up!" %}
+    {{ self.landing_page_body }}
+  {% endif %}
   <section class="social-links">
     <div class="container">
       <div class="row d-block">
         <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
           <h2>Follow Us:</h2>
           <p>Stay connected with us on LinkedIn and X for daily news, events and updates.</p>
-          <a href="https://www.linkedin.com/company/cigionline/" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="https://twitter.com/cigionline" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
         </div> 
       </div>
     </div>

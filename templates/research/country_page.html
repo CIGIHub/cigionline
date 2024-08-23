@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'countryPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  <script type="text/javascript">
+    var countryId = {{ self.id }};
+  </script>
+  {% render_bundle 'countryPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title submenu=self.submenu %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="paragraph-heading">Featured</h2>
+        </div>
+      </div>
+      <div class="row featured-medium">
+        {% for item in self.featured_latest_pages %}
+          <div class="col-12 col-md-4 country-featured-content">
+            {% if forloop.counter > 1 %}
+              <hr>
+            {% endif %}
+            {% include "includes/features/feature_content_medium.html" with content=item %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div id="country-search-table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

@@ -3,7 +3,7 @@
     .feature-content-topic-list,
     .feature-content-people-list,
     .feature-content-title {
-      @include link($color: $white, $hover-color: $cigi-primary-colour);
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
       color: $white;
 
       li {
@@ -22,12 +22,12 @@
 
     .feature-content-topic-list {
       a {
-        color: $cigi-primary-colour;
+        color: $cigi-primary-colour-dark-bg;
       }
 
       li {
         &::after {
-          color: $cigi-primary-colour;
+          color: $cigi-primary-colour-dark-bg;
         }
       }
     }
