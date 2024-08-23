@@ -1,0 +1,160 @@
+footer {
+  @include media-breakpoint-up(md) {
+    padding: 4rem 0;
+  }
+  background-color: $policy-prompt-blue;
+  padding: 2rem 0;
+
+  &.live-false {
+    .footer-content {
+      .subscribe {
+        a {
+          color: $white;
+          pointer-events: none;
+
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .credits {
+    margin-bottom: 2rem;
+  }
+
+  .footer-content {
+    @include media-breakpoint-up(md) {
+      flex-direction: row;
+    }
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    p {
+      @include link($color: $white, $hover-color: $cigi-dark-pink);
+      @include media-breakpoint-up(md) {
+        text-align: left;
+      }
+      font-style: italic;
+      text-align: center;
+
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    .about {
+      @include media-breakpoint-up(md) {
+        margin-top: 0;
+        max-width: 400px;
+      }
+      margin-top: 2em;
+
+      & > p {
+        line-height: 1.25;
+        font-size: 0.8rem;
+        margin-bottom: 0.7em;
+      }
+    }
+
+    .logos {
+      @include media-breakpoint-up(md) {
+        max-width: 100%;
+      }
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      max-width: 300px;
+    }
+
+    .cigi-logo,
+    .logic-logo {
+      svg {
+        @include media-breakpoint-up(md) {
+          max-width: 200px;
+        }
+        fill: $white;
+        max-width: 120px;
+        width: 100%;
+      }
+    }
+
+    .copyright {
+      margin: 0;
+      color: $white;
+
+      span {
+        padding: 0 0.5em;
+      }
+    }
+
+    .spacer {
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
+      display: none;
+      margin: 0 1em;
+
+      .slash {
+        @include slash($height: 50px, $color: $white);
+        @include media-breakpoint-up(md) {
+          height: 150px;
+          margin: 0 1rem;
+        }
+        @include media-breakpoint-up(lg) {
+          margin: 0 2rem;
+        }
+        margin: 0 1rem;
+      }
+    }
+
+    .subscribe {
+      @include media-breakpoint-up(md) {
+        justify-content: flex-start;
+      }
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1em;
+
+      a {
+        display: block;
+        margin-left: 2em;
+        width: 25px;
+
+        &:hover {
+          svg {
+            path {
+              fill: $cigi-dark-pink;
+            }
+          }
+        }
+
+        svg {
+          path {
+            fill: $white;
+            transition: fill 0.2s ease;
+
+            &.glyph-path {
+              fill: $black;
+            }
+          }
+        }
+      }
+
+      p {
+        font-weight: 500;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        font-style: normal;
+        margin: 0;
+        text-transform: uppercase;
+      }
+    }
+  }
+}

@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.short_description %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.short_description %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/nyt4kej.css">
+{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'themePolicyPrompt' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themePolicyPrompt' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock header %}
+
+{% block body_class %}policy-prompt-multimedia-series{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="label">A CIGI PODCAST</div>
+          <h1>
+            <div class="logo-animation" id="logo-animation">
+              <div class="line-1-container">
+                <div>
+                  <span class="logo-animation-cursor hidden" id="logo-animation-cursor-end"></span>
+                </div>
+                <div class="line-1" id="line-1">
+                  <span class="logo-animation-text text-1" id="logo-animation-text-1"></span>
+                  <span class="logo-animation-cursor offset-left" id="logo-animation-cursor-1"></span>
+                </div>
+              </div>
+              <div class="line-2" id="line-2">
+                <span class="logo-animation-text text-2" id="logo-animation-text-2"></span>
+                <span class="logo-animation-cursor hidden" id="logo-animation-cursor-2"></span>
+              </div>
+            </div>
+          </h1>
+          <div class="subtitle">
+            {{ self.subtitle|richtext }}
+          </div>
+          <div class="subscribe-container live-{{self.podcast_live|lower}}">
+            <div class="subscribe-buttons-container">
+              {% if not self.podcast_live %}
+                <div class="subscribe-coming-soon">coming soon on:</div>
+              {% endif %}
+              <div class="subscribe-buttons">
+                {% for item in self.podcast_subscribe_buttons %}
+                  <a href="{{ item.value.url }}" target="_blank" rel="noopener noreferrer">
+                    <div class="subscribe-button">
+                      {% if item.value.label == 'Apple Podcasts' %}
+                        <i class="fa-solid fa-podcast"></i>
+                      {% elif item.value.label == 'Spotify' %}
+                        <i class="fa-brands fa-spotify"></i>
+                      {% elif item.value.label == 'Google Podcasts' %}
+                        {% include 'includes/google_podcasts_sm.svg' %}
+                      {% endif %}
+                      <span>
+                        {{ item.value.label }}
+                      </span>
+                    </div>
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="follow">
+              <span>
+                Follow: 
+              </span>
+              <a href="https://x.com/_policyprompt" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+              <a href="https://www.instagram.com/_policyprompt/" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-square-instagram"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if self.podcast_live and self.latest_episode %}
+    {% with episode=self.latest_episode %}
+    <div class="divider">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="latest-episode">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-6">
+            <h2>LATEST EPISODE</h2>
+            <article class="episode">
+              <h3 class="episode-title">
+                <a href="{% pageurl episode %}">
+                  {{ episode.title }}
+                </a>
+              </h3>
+              <div class="podcast-player">
+                <audio id="podcast-player" src="{{ episode.multimedia_url }}"></audio>
+              </div>
+              <div class="episode-subtitle">{{ episode.subtitle|richtext }}</div>
+              <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
+            </article>            
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endwith %}
+  {% endif %}
+
+  {% if self.podcast_live %}
+    {% with series_seasons=self.series_seasons %}
+      {% if series_seasons %}
+        <section class="episodes">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-8">
+                {% for season, episodes in self.series_seasons.items %}
+                  <div class="season">
+                    {% for episode in episodes.unpublished %}
+                      <article class="episode">
+                        <div>
+                          <div class="episode-number">
+                            {{ episode.podcast_episode }}
+                          </div>
+                          <h3 class="episode-title">
+                            <a href="{% pageurl episode %}">
+                              {{ episode.title }}
+                            </a>
+                          </h3>
+                          <div class="episode-description">{{ episode.description|richtext }}</div>
+                          <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
+                        </div>
+                      </article>
+                    {% endfor %}
+
+                    {% for episode in episodes.published %}
+                      <article class="episode">
+                        <div class="episode-info">
+                          <div class="episode-number">
+                            EPISODE {{ episode.podcast_episode }}
+                          </div>
+                          <h3>
+                            <a href="{% pageurl episode %}">
+                              {{ episode.title }}
+                            </a>
+                          </h3>
+                          <div class="episode-description">
+                            {{ episode.subtitle|richtext }}
+                          </div>
+                          <div class="episode-publishing-date">
+                            {{ episode.publishing_date|date:"F j, Y" }}
+                          </div>
+                        </div>
+                        <div class="circle">
+                          <a href="{{ episode.url }}">
+                            <span><i class="fa fa-headphones" aria-hidden="true"></i></span>
+                          </a>
+                        </div>
+                      </article>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+
+  {% with featured_episodes=self.featured_episodes %}
+    {% if featured_episodes %}
+      <section class="featured-episodes">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-10">
+              <h2>FEATURED EPISODES</h2>
+              <div class="episodes">
+                {% for episode in featured_episodes|slice:":3" %}
+                  <article class="episode">
+                    <div class="episode-number">
+                      EPISODE {{ episode.podcast_episode }}
+                    </div>
+                    <h3>
+                      <a href="{% pageurl episode %}">
+                        {{ episode.title }}
+                      </a>
+                    </h3>
+                    <div class="episode-description">
+                      {{ episode.subtitle|richtext }}
+                    </div>
+                    <div class="episode-publishing-date">
+                      {{ episode.publishing_date|date:"F j, Y" }}
+                    </div>
+                  </article>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
+
+  {% if not self.podcast_live %}
+    <div class="divider">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% include "includes/body.html" with body=self.body heading="About the podcast" %}
+
+  {% with podcast_hosts=self.podcast_hosts %}
+    {% if podcast_hosts %}
+      <div class="divider">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <hr>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="hosts">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+              <h2>The Hosts</h2>
+              <div class="hosts-list">
+                {% for host in podcast_hosts %}
+                  {% include_block host %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
+{% endblock content %}
+
+{% block footer %}
+  {% include "./includes/footer.html" with live=self.podcast_live|lower credits=self.credits %}
+{% endblock footer %}

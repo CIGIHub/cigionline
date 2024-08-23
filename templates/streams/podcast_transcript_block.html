@@ -1,0 +1,11 @@
+{% load wagtailcore_tags %}
+
+<div class="transcript">
+  <div class="transcript-line">
+    <span></span>
+  </div>
+  <figure class="transcript-text {% if timestamp_string %}has-timestamp{% endif %}" data-timestamp="{{timestamp_string}}">
+    <figcaption>{{self.title}}</figcaption>
+    <div class="text">{{self.text}}</div>
+  </figure>
+</div>

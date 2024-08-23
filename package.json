@@ -23,6 +23,7 @@
     "@panzoom/panzoom": "4.4.1",
     "bootstrap": "4.6.0",
     "jquery": "3.6.0",
+    "mediaelement": "^7.0.5",
     "normalize.css": "8.0.1",
     "react-calendar": "3.4.0",
     "react-router-dom": "^5.3.4",

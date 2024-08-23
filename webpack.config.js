@@ -82,6 +82,7 @@ const config = {
     themeOGBV: './cigionline/static/themes/ogbv/index.js',
     themePfPCSeries: './cigionline/static/themes/pfpc_series/index.js',
     themePlatformGovernanceSeries: './cigionline/static/themes/platform_governance_series/index.js',
+    themePolicyPrompt: './cigionline/static/themes/policy_prompt/index.js',
     themeSpaceSeries: './cigionline/static/themes/space_series/index.js',
     themeSpecialOpinions: './cigionline/static/themes/special_opinions/index.js',
     themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
