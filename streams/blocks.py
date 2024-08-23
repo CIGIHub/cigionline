@@ -1462,7 +1462,7 @@ class PodcastTranscriptBlock(blocks.StructBlock):
         required=False,
         help_text='Enter the timestamp of the transcript if it corresponds to a specific time in the podcast.',
     )
-    
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         try:
