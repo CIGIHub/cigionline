@@ -10,7 +10,14 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
-from streams.blocks import PodcastSubscribeButtonBlock
+from streams.blocks import (
+    PodcastSubscribeButtonBlock,
+    FeaturedEpisodeBlock,
+    PodcastHostBlock,
+    PodcastChapterBlock,
+    PodcastGuestBlock,
+    PodcastTranscriptBlock,
+)
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -195,6 +202,11 @@ class MultimediaPage(
     podcast_audio_duration = models.CharField(blank=True, max_length=8)
     podcast_audio_file_size = models.IntegerField(blank=True, null=True)
     podcast_audio_url = models.URLField(blank=True)
+    podcast_recording_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Recording Date',
+    )
     podcast_episode = models.IntegerField(
         blank=True,
         null=True,
@@ -203,9 +215,11 @@ class MultimediaPage(
     podcast_guests = StreamField(
         [
             ('guest', CharBlock(required=True)),
+            ('guest_page', PodcastGuestBlock()),
         ],
         blank=True,
         use_json_field=True,
+        help_text='A list of guests for the podcast. If the guest has a page on the site, you can link to it here.',
     )
     podcast_season = models.IntegerField(
         blank=True,
@@ -221,10 +235,20 @@ class MultimediaPage(
         null=False,
         features=['bold', 'italic', 'link'],
     )
+    podcast_chapters = StreamField(
+        [
+            ('podcast_chapter', PodcastChapterBlock())
+        ],
+        blank=True,
+        verbose_name='Podcast Chapters',
+        help_text='A list of chapters for the podcast',
+        use_json_field=True,
+    )
     transcript = StreamField(
         [
             BasicPageAbstract.body_accordion_block,
             BasicPageAbstract.body_read_more_block,
+            ('transcript_block', PodcastTranscriptBlock()),
         ],
         blank=True,
         use_json_field=True,
@@ -268,6 +292,15 @@ class MultimediaPage(
         if self.theme:
             return f'themes/{self.get_theme_dir()}/multimedia_page.html'
         return standard_template
+
+    def podcast_episode_minutes(self):
+        return int(self.podcast_audio_duration.split(':')[0])
+
+    def next_episode(self):
+        if self.podcast_episode is None:
+            return None
+        next_episode_number = self.podcast_episode + 1
+        return MultimediaPage.objects.filter(multimedia_series=self.multimedia_series, podcast_episode=next_episode_number).first()
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -318,11 +351,13 @@ class MultimediaPage(
                 FieldPanel('podcast_season'),
                 FieldPanel('podcast_episode'),
                 FieldPanel('podcast_guests'),
+                FieldPanel('podcast_chapters'),
                 MultiFieldPanel(
                     [
                         FieldPanel('podcast_audio_url'),
                         FieldPanel('podcast_audio_duration'),
                         FieldPanel('podcast_audio_file_size'),
+                        FieldPanel('podcast_recording_date'),
                     ],
                     heading='Audio',
                     classname='collapsible collapsed',
@@ -421,6 +456,18 @@ class MultimediaSeriesPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    credits = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
+    featured_episodes = StreamField(
+        [
+            ('featured_episode', FeaturedEpisodeBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -447,7 +494,6 @@ class MultimediaSeriesPage(
         help_text='A poster image which will be used in the highlights section of the homepage.',
     )
     podcast_season_tagline = CharField(blank=True, null=True, max_length=256)
-
     podcast_subscribe_buttons = StreamField([
         ('podcast_subscribe_button', PodcastSubscribeButtonBlock())
     ],
@@ -456,9 +502,18 @@ class MultimediaSeriesPage(
         help_text='A list of subscribe links to various podcast providers',
         use_json_field=True,
     )
+    podcast_hosts = StreamField([
+        ('podcast_host', PodcastHostBlock())
+    ],
+        blank=True,
+        verbose_name='Podcast Hosts',
+        help_text='Hosts of the podcast',
+        use_json_field=True
+    )
+    podcast_live = models.BooleanField(default=False)
 
     @property
-    def series_seasons(self):
+    def series_seasons_big_tech(self):
         episode_filter = {
             'multimedia_series': self,
             'theme__name__in': [
@@ -480,6 +535,23 @@ class MultimediaSeriesPage(
         return series_seasons
 
     @property
+    def series_seasons(self):
+        episode_filter = {
+            'multimedia_series': self,
+        }
+        series_episodes = MultimediaPage.objects.filter(**episode_filter).order_by('-publishing_date')
+        series_seasons = {}
+        for episode in series_episodes:
+            episode_season = episode.specific.podcast_season if episode.specific.podcast_season else 0
+            if episode_season not in series_seasons:
+                series_seasons.update({episode_season: {'published': [], 'unpublished': []}})
+            if episode.live:
+                series_seasons[episode_season]['published'].append(episode)
+            else:
+                series_seasons[episode_season]['unpublished'].append(episode)
+        return series_seasons
+
+    @property
     def latest_episode(self):
         return MultimediaPage.objects.filter(multimedia_series=self).live().latest('publishing_date')
 
@@ -492,6 +564,7 @@ class MultimediaSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('publishing_date'),
+                FieldPanel('credits'),
             ],
             heading='General Information',
             classname='collapsible collapsed',
@@ -508,8 +581,10 @@ class MultimediaSeriesPage(
         MultiFieldPanel(
             [
                 FieldPanel('image_logo'),
+                FieldPanel('podcast_hosts'),
                 FieldPanel('podcast_season_tagline'),
                 FieldPanel('podcast_subscribe_buttons'),
+                FieldPanel('podcast_live'),
             ],
             heading='Podcast Details',
             classname='collapsible collapsed',
