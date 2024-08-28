@@ -283,5 +283,5 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with live=self.podcast_live|lower credits=self.credits %}
+  {% include "./includes/footer.html" with live=self.podcast_live|lower credits=self.credits podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
 {% endblock footer %}

@@ -19,18 +19,20 @@
           <div class="slash"></div>
         </div>
         <div class="about">
-          <div class="subscribe">
-            <p>Subscribe:</p>
-            <a href="{{ podcast_subscribe_buttons.0.value.url }}" target="_blank" rel="noopener noreferrer">
-              {% include 'includes/apple_podcasts_sm.svg' %}
-            </a>
-            <a href="{{ podcast_subscribe_buttons.1.value.url }}" target="_blank" rel="noopener noreferrer">
-              {% include 'includes/spotify_podcasts_sm.svg' %}
-            </a>
-            <a href="{{ podcast_subscribe_buttons.2.value.url }}" target="_blank" rel="noopener noreferrer">
-              {% include 'includes/google_podcasts_sm.svg' %}
-            </a>
-          </div>
+          {% if live %}
+            <div class="subscribe">
+              <p>Subscribe:</p>
+              {% for button in podcast_subscribe_buttons %}
+                <a href="{{ button.value.url }}" target="_blank" rel="noopener noreferrer">
+                  {% if button.value.label == 'Apple Podcasts' %}
+                    {% include 'includes/apple_podcasts_sm.svg' %}
+                  {% elif button.value.label == 'Spotify' %}
+                    {% include 'includes/spotify_podcasts_sm.svg' %}
+                  {% endif %}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
           <p>
             <em>Policy Prompt is produced by the Centre for International Governance Innovation.</em>
           </p>
