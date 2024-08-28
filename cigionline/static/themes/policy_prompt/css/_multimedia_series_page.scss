@@ -157,12 +157,9 @@ body {
           }
 
           .subscribe-buttons {
-            @include media-breakpoint-down(lg) {
-              justify-content: flex-start;
-            }
             @include link($color: $black, $hover-color: $policy-prompt-blue);
             display: flex;
-            justify-content: space-evenly;
+            justify-content: center;
             align-items: center;
             flex-wrap: wrap;
             flex: 1 0 40%;
@@ -171,7 +168,7 @@ body {
               display: flex;
               align-items: center;
               height: 100%;
-              padding: 0 0.5em;
+              padding: 0 1em;
               text-align: left;
               white-space: nowrap;
               margin-bottom: 0.5em;
@@ -198,9 +195,6 @@ body {
 
           .follow {
             @include link($color: $black, $hover-color: $policy-prompt-blue);
-            @include media-breakpoint-down(md) {
-              justify-content: flex-start;
-            }
             text-transform: lowercase;
             display: flex;
             margin-top: 0.5rem;
@@ -210,7 +204,6 @@ body {
 
             span {
               @include media-breakpoint-down(md) {
-                width: 128px;
                 margin-right: 0.5rem;
                 text-align: right;
               }
