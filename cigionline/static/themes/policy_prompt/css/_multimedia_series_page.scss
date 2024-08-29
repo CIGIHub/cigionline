@@ -131,21 +131,14 @@ body {
             }
 
             .subscribe-coming-soon {
-              color: $cigi-text-grey;
               white-space: nowrap;
-            }
-
-            .subscribe-button {
-              color: $cigi-text-grey;
-
-              svg {
-                fill: $cigi-text-grey;
-              }
             }
           }
 
           .subscribe-buttons-container {
-            display: flex;
+            @include media-breakpoint-up(md) {
+              display: flex;
+            }
             justify-content: center;
             align-items: flex-start;
           }
@@ -194,7 +187,6 @@ body {
 
           .follow {
             @include link($color: $black, $hover-color: $policy-prompt-blue);
-            text-transform: lowercase;
             display: flex;
             margin-top: 0.5rem;
             font-weight: 600;

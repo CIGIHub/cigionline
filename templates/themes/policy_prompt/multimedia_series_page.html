@@ -70,7 +70,7 @@
           <div class="subscribe-container live-{{self.podcast_live|lower}}">
             <div class="subscribe-buttons-container">
               {% if not self.podcast_live %}
-                <div class="subscribe-coming-soon">coming soon on:</div>
+                <div class="subscribe-coming-soon">Coming soon on:</div>
               {% endif %}
               <div class="subscribe-buttons">
                 {% for item in self.podcast_subscribe_buttons %}
@@ -283,5 +283,5 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with live=self.podcast_live|lower credits=self.credits podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
+  {% include "./includes/footer.html" with live=self.podcast_live credits=self.credits podcast_subscribe_buttons=self.podcast_subscribe_buttons %}
 {% endblock footer %}
