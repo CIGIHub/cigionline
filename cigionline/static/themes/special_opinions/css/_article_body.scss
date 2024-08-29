@@ -10,6 +10,15 @@ section {
       border: 0;
       font-size: 3.25em;
       line-height: 0.7em;
+      padding: 0.1em 0;
+    }
+
+    figure {
+      &.stream-image-block {
+        figcaption {
+          text-align: right;
+        }
+      }
     }
   }
 }
