@@ -8,14 +8,18 @@ section {
 
     .drop-caps {
       border: 0;
-      font-size: 3.25em;
-      line-height: 0.7em;
-      padding: 0.1em 0;
+      font-size: 3.5em;
+      line-height: 0.55em;
+      padding: 0.2em 0 0;
     }
 
     figure {
       &.stream-image-block {
         figcaption {
+          font-family: $special-opinions-font-secondary;
+          font-size: 0.75em;
+          font-weight: 400;
+          padding-top: 0.5em;
           text-align: right;
         }
       }
