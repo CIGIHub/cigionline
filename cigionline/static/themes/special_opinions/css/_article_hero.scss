@@ -82,3 +82,13 @@ section {
     }
   }
 }
+
+figure {
+  &.article-image-hero{
+    figcaption {
+      font-family: $special-opinions-font-secondary;
+      font-size: 0.75em;
+      font-weight: 400;
+    }
+  }
+}
