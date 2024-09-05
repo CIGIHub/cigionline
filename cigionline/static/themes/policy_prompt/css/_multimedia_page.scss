@@ -1,8 +1,10 @@
 body {
   &.policy-prompt-multimedia {
+    background-color: $policy-prompt-bg;
+    
     section {
       background-color: $policy-prompt-bg;
-
+      
       hr {
         background-color: $cigi-medium-grey;
         height: 1px;
@@ -71,14 +73,12 @@ body {
                   &:hover {
                     button {
                       background-color: $white;
-
-                      a {
-                        color: $policy-prompt-blue;
-                      }
+                      color: $policy-prompt-blue;
                     }
                   }
 
                   button {
+                    color: $white;
                     text-transform: uppercase;
                     display: block;
                     width: 100%;
@@ -87,11 +87,7 @@ body {
                     background: none;
                     text-align: left;
                     cursor: pointer;
-                    transition: background-color 0.2s ease;
-
-                    a {
-                      color: $white;
-                    }
+                    transition: background-color 0.2s ease, color 0.2s ease;
                   }
                 }
               }
