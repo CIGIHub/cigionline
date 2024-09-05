@@ -72,7 +72,7 @@
                       <i class="fa fa-headphones"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="subscribeDropdownMenuButton">
-                      {% for button in self.multimedia_series.specific.podcas_subscribe_buttons %}
+                      {% for button in self.multimedia_series.specific.podcast_subscribe_buttons %}
                         <li>
                           <button>
                             <a href="{{ button.value.url }}" target="_blank" rel="noopener noreferrer">
@@ -90,25 +90,18 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="subscribeDropdownMenuButton">
                       <li>
-                        <button>
-                          <a href="" target="_blank" rel="noopener noreferrer">
-                            Facebook
-                          </a>
-                        </button>
-                      </li>
-                      <li>
-                        <button>
-                          <a href="" target="_blank" rel="noopener noreferrer">
+                        <a href="https://x.com/share?text={{self.title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}" target="_blank" rel="noopener noreferrer">
+                          <button>
                             X
-                          </a>
-                        </button>
+                          </button>
+                        </a>
                       </li>
                       <li>
-                        <button>
-                          <a href="" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{self.title|social_string}}" target="_blank" rel="noopener noreferrer">
+                          <button>
                             LinkedIn
-                          </a>
-                        </button>
+                          </button>
+                        </a>
                       </li>
                     </ul>
                   </div>
