@@ -280,6 +280,12 @@ class PublicationPage(
         null=False,
         features=['bold', 'italic', 'link'],
     )
+    dph_term = models.CharField(
+        blank=True,
+        max_length=255,
+        verbose_name='DPH Working Paper Term',
+        help_text='Override field for DPH Working Paper term. Ex. "Summer 2024"',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -339,6 +345,7 @@ class PublicationPage(
                     ['publications.PublicationTypePage'],
                 ),
                 FieldPanel('publishing_date'),
+                FieldPanel('dph_term'),
             ],
             heading='General Information',
             classname='collapsible collapsed',

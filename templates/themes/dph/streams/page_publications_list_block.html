@@ -35,7 +35,9 @@
                       {{ author.author.position }}
                     </div>
                     <div class="publications-list__publication__author__position">
-                      {% if author.author.position_secondary %}
+                      {% if publication.dph_term %}
+                        {{ publication.dph_term }} term
+                      {% elif author.author.position_secondary %}
                         {{ author.author.position_secondary }}
                       {% else %}
                         {{ publication.publishing_date|dph_term }}
