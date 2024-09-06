@@ -68,16 +68,13 @@
     <section class="featured">
       <div class="container">
         <h2 class="paragraph-heading">Featured</h2>
-        {% if featured_pages|length == 1 %}
           <div class="row">
-            <div class="col-12">
-              {% include "includes/features/feature_content_xlarge.html" with content=featured_pages.0 %}
-            </div>
-          </div>
-        {% else %}
-          <div class="row">
+          {% if featured_pages|length == 1 %}
+            <div class="col-12 singular-feature">
+          {% else %}
             <div class="col-12 col-md-8">
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 additional_classes="poster" poster=True cta=True %}
+          {% endif %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True %}
             </div>
             <hr class="separator-large">
             <div class="col-12 col-md-4 featured-small">
@@ -91,7 +88,6 @@
             {% endwith %}
             </div>
           </div>
-        {% endif %}
         <div class="row">
           <div class="col-12">
             <hr>

@@ -83,6 +83,12 @@ body {
           }
         }
       }
+
+      .singular-feature {
+        .feature-content-image {
+          flex: 0 0 33.3333%;
+        }
+      }
     }
   }
 }

@@ -19,6 +19,24 @@
       margin-right: 15px;
     }
   }
+
+  .singular-feature {
+    .feature-content-image {
+      flex: 0 0 33.3333%;
+    }
+  }
+
+  .feature-content-large {
+    .feature-content-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .img-wrapper {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .search-table-container {
