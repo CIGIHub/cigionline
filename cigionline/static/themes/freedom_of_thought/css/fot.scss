@@ -64,6 +64,13 @@ body {
         }
       }
 
+      .separator-large {
+        @include media-breakpoint-down(sm) {
+          margin-left: 15px;
+          margin-right: 15px;
+        }
+      }
+
       .highlights {
         .stream-block-additional-file-block {
           .img-container {
