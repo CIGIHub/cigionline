@@ -150,23 +150,6 @@
               <div class="col-12 col-md-8">
                 {% for season, episodes in self.series_seasons.items %}
                   <div class="season">
-                    {% for episode in episodes.unpublished %}
-                      <article class="episode">
-                        <div>
-                          <div class="episode-number">
-                            {{ episode.podcast_episode }}
-                          </div>
-                          <h3 class="episode-title">
-                            <a href="{% pageurl episode %}">
-                              {{ episode.title }}
-                            </a>
-                          </h3>
-                          <div class="episode-description">{{ episode.description|richtext }}</div>
-                          <div class="episode-publishing-date">{{ episode.publishing_date|date:"F j, Y" }}</div>
-                        </div>
-                      </article>
-                    {% endfor %}
-
                     {% for episode in episodes.published %}
                       <article class="episode">
                         <div class="episode-info">
