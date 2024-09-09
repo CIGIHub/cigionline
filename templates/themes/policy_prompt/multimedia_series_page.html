@@ -153,9 +153,11 @@
                     {% for episode in episodes.published %}
                       <article class="episode">
                         <div class="episode-info">
+                          {% if episode.podcast_episode %}
                           <div class="episode-number">
                             EPISODE {{ episode.podcast_episode }}
                           </div>
+                          {% endif %}
                           <h3>
                             <a href="{% pageurl episode %}">
                               {{ episode.title }}
