@@ -147,59 +147,63 @@
     </div>
   </section>
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
-  <section class="episode-info">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
-          <div class="episode-info-container">
-            {% if self.podcast_audio_duration %}
-              <div class="episode-info-item">
-                <div class="episode-length">{{ self.podcast_episode_minutes }} Minutes</div>
-              </div>
-              <span>\</span>
-            {% endif %}
-            <div class="episode-info-item">
-              <div class="episode-info-value">Recorded {{ self.podcast_recording_date|date:"F j, Y" }}</div>
-            </div>
-            <span>\</span>
-            <div class="episode-info-item">
-              <div class="episode-info-value">Published {{ self.publishing_date|date:"F j, Y" }}</div>
-            </div>
-            {% if self.podcast_chapters %}
-              <span>\</span>
-              <div class="episode-info-item">
-                <a class="scroll-link" href="#chapters">Chapters</a>
-              </div>
-            {% endif %}
-            {% if self.transcript %}
-              <span>\</span>
-              <div class="episode-info-item">
-                <a class="scroll-link" href="#transcript">Transcript</a>
-              </div>
-            {% endif %}
-          </div>
-          <hr>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="episode-guests">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
-          <h2>Featuring</h2>
-          <div class="episode-guests-list">
-            {% for guest in self.podcast_guests %}
-              {% if guest.block_type == 'guest_page' %}
-                {% include_block guest %}
+  {% if self.podcast_recording_date %}
+    <section class="episode-info">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="episode-info-container">
+              {% if self.podcast_audio_duration %}
+                <div class="episode-info-item">
+                  <div class="episode-length">{{ self.podcast_episode_minutes }} Minutes</div>
+                </div>
+                <span>\</span>
               {% endif %}
-            {% endfor %}
+              <div class="episode-info-item">
+                <div class="episode-info-value">Recorded {{ self.podcast_recording_date|date:"F j, Y" }}</div>
+              </div>
+              <span>\</span>
+              <div class="episode-info-item">
+                <div class="episode-info-value">Published {{ self.publishing_date|date:"F j, Y" }}</div>
+              </div>
+              {% if self.podcast_chapters %}
+                <span>\</span>
+                <div class="episode-info-item">
+                  <a class="scroll-link" href="#chapters">Chapters</a>
+                </div>
+              {% endif %}
+              {% if self.transcript %}
+                <span>\</span>
+                <div class="episode-info-item">
+                  <a class="scroll-link" href="#transcript">Transcript</a>
+                </div>
+              {% endif %}
+            </div>
+            <hr>
           </div>
-          <hr>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
+  {% if self.podcast_guests %}
+    <section class="episode-guests">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <h2>Featuring</h2>
+            <div class="episode-guests-list">
+              {% for guest in self.podcast_guests %}
+                {% if guest.block_type == 'guest_page' %}
+                  {% include_block guest %}
+                {% endif %}
+              {% endfor %}
+            </div>
+            <hr>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 
   {% with podcast_chapters=self.podcast_chapters %}
     {% if podcast_chapters %}
