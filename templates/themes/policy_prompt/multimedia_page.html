@@ -123,7 +123,9 @@
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
           <div class="hero-content">
-            <div class="episode-number">Episode {{ self.podcast_episode }}</div>
+            {% if self.podcast_episode %}
+              <div class="episode-number">Episode {{ self.podcast_episode }}</div>
+            {% endif %}
             <h1 id="animated-title">{{ self.title|split_to_spans|safe }}</h1>
             <div class="subtitle">
               {{ self.subtitle|richtext}}
@@ -139,15 +141,15 @@
           {% image self.image_hero width-1920 %}
         </div>
       </div>
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <hr>
-        </div>
-      </div>
     </div>
   </section>
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
   {% if self.podcast_recording_date %}
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <hr>
+      </div>
+    </div>
     <section class="episode-info">
       <div class="container">
         <div class="row justify-content-center">
