@@ -42,8 +42,9 @@
 {% block extra_js %}
   <script type="text/javascript">
     var projectId= {{ self.id }};
+    var hasTaggedPages = {{ self.has_tagged_pages|lower }};
   </script>
-  {% render_bundle 'projectPage' 'js' attrs='defer' %}
+  {% render_bundle 'themeNSS' 'js' attrs='defer' %}
 {% endblock %}
 
 {% block content %}
