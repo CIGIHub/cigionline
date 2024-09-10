@@ -79,6 +79,7 @@ const config = {
     themeLongform: './cigionline/static/themes/longform/index.js',
     themeLongform2: './cigionline/static/themes/longform_2/index.js',
     themeLongform2DarkMode: './cigionline/static/themes/longform_2_dark_mode/index.js',
+    themeNSS: './cigionline/static/themes/nss/index.js',
     themeOGBV: './cigionline/static/themes/ogbv/index.js',
     themePfPCSeries: './cigionline/static/themes/pfpc_series/index.js',
     themePlatformGovernanceSeries: './cigionline/static/themes/platform_governance_series/index.js',
