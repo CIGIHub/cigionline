@@ -217,7 +217,12 @@ class PersonPage(
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     position_secondary = models.CharField(blank=True, max_length=255)
-    position_dph = models.CharField(blank=True, max_length=255, help_text='Digital Policy Hub Position')
+    position_dph = models.CharField(
+        blank=True,
+        max_length=255,
+        help_text='Digital Policy Hub Position',
+        verbose_name='DPH Position',
+    )
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     short_bio = RichTextField(
         blank=True,
@@ -330,6 +335,7 @@ class PersonPage(
                 FieldPanel('last_name'),
                 FieldPanel('position'),
                 FieldPanel('position_secondary'),
+                FieldPanel('position_dph'),
                 FieldPanel('board_position')
             ],
             heading='General Information',
