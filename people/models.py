@@ -217,6 +217,7 @@ class PersonPage(
     phone_number = models.CharField(blank=True, max_length=32)
     position = models.CharField(blank=True, max_length=255)
     position_secondary = models.CharField(blank=True, max_length=255)
+    position_dph = models.CharField(blank=True, max_length=255, help_text='Digital Policy Hub Position')
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
     short_bio = RichTextField(
         blank=True,
