@@ -226,12 +226,23 @@
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
-              <h2>Transcript</h2>
-              {% for block in transcript %}
-                {% if block.block_type == 'transcript_block' %}
-                  {% include_block block %}
-                {% endif %}
-              {% endfor %}
+              <div class="accordion-header">
+                <h2 class="d-flex justify-content-between">
+                  <button class="accordion-button" type="button" data-toggle="collapse" data-target="#transcript-accordion" aria-expanded="true" aria-controls="transcript-accordion">
+                    <span>
+                      Transcript
+                    </span>
+                    <i class="fa fa-chevron-up"></i>
+                  </button>
+                </h2>
+              </div>
+              <div id="transcript-accordion" class="accordion-collapse show">
+                {% for block in transcript %}
+                  {% if block.block_type == 'transcript_block' %}
+                    {% include_block block %}
+                  {% endif %}
+                {% endfor %}
+              </div>
               <hr>
             </div>
           </div>
