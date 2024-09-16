@@ -144,7 +144,7 @@
     </div>
   </section>
   {% include "includes/body.html" with body=self.body heading="Episode Description" %}
-  {% if self.podcast_recording_date %}
+  {% if self.podcast_audio_duration %}
     <section class="episode-info">
       <div class="container">
         <div class="row justify-content-center">
@@ -162,20 +162,16 @@
                 <span>\</span>
               {% endif %}
               <div class="episode-info-item">
-                <div class="episode-info-value">Recorded {{ self.podcast_recording_date|date:"F j, Y" }}</div>
-              </div>
-              <span>\</span>
-              <div class="episode-info-item">
                 <div class="episode-info-value">Published {{ self.publishing_date|date:"F j, Y" }}</div>
               </div>
+              <span>\</span>
               {% if self.podcast_chapters %}
-                <span>\</span>
                 <div class="episode-info-item">
                   <a class="scroll-link" href="#chapters">Chapters</a>
                 </div>
+                <span>\</span>
               {% endif %}
               {% if self.transcript %}
-                <span>\</span>
                 <div class="episode-info-item">
                   <a class="scroll-link" href="#transcript">Transcript</a>
                 </div>
