@@ -275,7 +275,13 @@
                       <div class="col-12 col-md-4">
                         <a href="{% pageurl recommended_content %}" class="image">
                           <div class="img-wrapper">
-                            {% image recommended_content.image_hero fill-780x585 %}
+                            {% if recommended_content.image_feature and not recommended_content.expired_image %}
+                              {% image recommended_content.image_feature fill-780x585 %}
+                            {% elif recommended_content.image_hero and not recommended_content.expired_image %}
+                              {% image recommended_content.image_hero fill-780x585 %}
+                            {% else %}
+                              <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
+                            {% endif %}
                           </div>
                         </a>
                       </div>
