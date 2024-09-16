@@ -200,7 +200,6 @@
                 {% endif %}
               {% endfor %}
             </div>
-            <hr>
           </div>
         </div>
       </div>
@@ -310,5 +309,5 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons %}
+  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons live=self.multimedia_series.specific.podcast_live %}
 {% endblock %}
