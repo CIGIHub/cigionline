@@ -1,4 +1,4 @@
-from django.db.models.fields import CharField
+from bs4 import BeautifulSoup
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -8,6 +8,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from django.db.models.fields import CharField
 from django.db import models
 from modelcluster.fields import ParentalKey
 from streams.blocks import (
@@ -33,6 +34,7 @@ from wagtail.blocks import (
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+import re
 
 
 class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -301,6 +303,40 @@ class MultimediaPage(
             return None
         next_episode_number = self.podcast_episode + 1
         return MultimediaPage.objects.filter(multimedia_series=self.multimedia_series, podcast_episode=next_episode_number).first()
+
+    def get_transcript(self):
+        soup = BeautifulSoup(self.transcript[0].value['text'].source, 'html.parser')
+        parsed_transcript = []
+        paragraphs = soup.find_all('p')
+        pattern = r"(?P<name>.*?)\s*\((?P<role>host|guest)\):"
+        current_speaker = None
+        current_role = None
+        current_text = []
+
+        for para in paragraphs:
+            text = para.get_text(strip=True)
+            match = re.match(pattern, text, flags=re.IGNORECASE)
+            if match:
+                if current_speaker:
+                    parsed_transcript.append({
+                        'name': current_speaker,
+                        'role': current_role,
+                        'text': ''.join(current_text)
+                    })
+                current_speaker = match.group('name').strip()
+                current_role = match.group('role').strip()
+                current_text = []
+            else:
+                current_text.append(str(para))
+
+        if current_speaker:
+            parsed_transcript.append({
+                'name': current_speaker,
+                'role': current_role,
+                'text': ''.join(current_text)
+            })
+        
+        return parsed_transcript
 
     content_panels = [
         BasicPageAbstract.title_panel,

@@ -237,10 +237,16 @@
                 </h2>
               </div>
               <div id="transcript-accordion" class="accordion-collapse show">
-                {% for block in transcript %}
-                  {% if block.block_type == 'transcript_block' %}
-                    {% include_block block %}
-                  {% endif %}
+                {% for transcript_block in self.get_transcript %}
+                  <div class="transcript">
+                    <div class="transcript-line">
+                      <span></span>
+                    </div>
+                    <figure class="transcript-text {% if timestamp_string %}has-timestamp{% endif %}" data-timestamp="{{timestamp_string}}">
+                      <figcaption>{{ transcript_block.name }} ({{ transcript_block.role }})</figcaption>
+                      <div class="text">{{transcript_block.text|richtext}}</div>
+                    </figure>
+                  </div>
                 {% endfor %}
               </div>
               <hr>
