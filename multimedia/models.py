@@ -335,7 +335,7 @@ class MultimediaPage(
                 'role': current_role,
                 'text': ''.join(current_text)
             })
-        
+
         return parsed_transcript
 
     content_panels = [
