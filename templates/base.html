@@ -9,7 +9,7 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-NKKJHZX');</script>
     <!-- End Google Tag Manager -->
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>
       {% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}
       {% block title_suffix %}
@@ -18,17 +18,17 @@
         {% endwith %}
       {% endblock %}
     </title>
-    <meta name="title" content="{{ self.title }}" />
+    <meta name="title" content="{{ self.title }}">
     {% block meta_description %}
     {% endblock %}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@CIGIOnline" />
-    <meta property="og:url" content="{{ self.full_url }}" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@CIGIOnline">
+    <meta property="og:url" content="{{ self.full_url }}">
     {% block og_type %}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content="website">
     {% endblock %}
-    <meta property="og:site_name" content="{{ self.get_site.site_name }}" />
-    <meta property="og:title" content="{% if self.social_title %}{{ self.social_title }}{% else %}{{ self.title }}{% endif %}" />
+    <meta property="og:site_name" content="{{ self.get_site.site_name }}">
+    <meta property="og:title" content="{% if self.social_title %}{{ self.social_title }}{% else %}{{ self.title }}{% endif %}">
     {% block og_description %}
     {% endblock %}
     {% block og_image %}
@@ -36,7 +36,7 @@
     {% endblock %}
     {% block extra_og_meta %}
     {% endblock %}
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {# Fonts #}
     <link rel="stylesheet" href="https://use.typekit.net/two4qwo.css">
     {% block extra_fonts %}
@@ -56,7 +56,7 @@
     {% block theme_js %}
       {# Override this in templates to add theme JS #}
     {% endblock %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'assets/favicon.ico' %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/favicon.ico' %}">
   </head>
   <body class="{% block body_class %}{% endblock %}">
     <!-- Google Tag Manager (noscript) -->
