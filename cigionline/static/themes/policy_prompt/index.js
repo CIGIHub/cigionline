@@ -145,10 +145,12 @@ $(document).ready(function () {
 
   function navigateToChapter(chapter) {
     const time = chapter.getAttribute('data-timestamp');
-    const timeArray = time.split(':');
-    const seconds = parseInt(timeArray[0], 10) * 60 + parseInt(timeArray[1], 10);
-    podcastPlayer[0].setCurrentTime(seconds);
-    podcastPlayer[0].play();
+    if (time) {
+      const timeArray = time.split(':');
+      const seconds = parseInt(timeArray[0], 10) * 60 + parseInt(timeArray[1], 10);
+      podcastPlayer[0].setCurrentTime(seconds);
+      podcastPlayer[0].play();
+    }
   }
 
   const chapterTimes = document.querySelectorAll('.chapter-time');
