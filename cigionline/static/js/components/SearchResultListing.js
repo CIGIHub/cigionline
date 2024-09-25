@@ -53,7 +53,8 @@ function SearchResultListing(props) {
           <i className="fal fa-headphones" />
         </span>
       )}
-      {(['Publication', 'Publication Series'].includes(row.contenttype)
+      {!(row.contentsubtype === 'Quick Insights')
+        && (['Publication', 'Publication Series'].includes(row.contenttype)
         || (row.contenttype === 'Opinion'
         && ['Essays'].includes(row.contentsubtype)))
         && (

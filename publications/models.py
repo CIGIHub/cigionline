@@ -143,6 +143,7 @@ class PublicationPage(
         ESSAY_SERIES = ('essay_series', 'Essay Series')
         POLICY_BRIEFS = ('policy_briefs', 'Policy Briefs')
         POLICY_MEMOS = ('policy_memos', 'Policy Memos')
+        QUICK_INSIGHTS = ('quick_insights', 'Quick Insights')
         SPECIAL_REPORTS = ('special_reports', 'Special Reports')
         SPEECHES = ('speeches', 'Speeches')
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
