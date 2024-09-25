@@ -80,11 +80,13 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-10 col-lg-8">
-            <em><a href="/publications/quick-insights/">Quick Insights</a> are outputs from CIGI’s research programs that distill timely research and ideas into accessible formats.</em>
+            <p>
+              <em><a href="/publications/quick-insights/">Quick Insights</a> are outputs from CIGI’s research programs that distill timely research and ideas into accessible formats.</em>
+            </p>
           </div>
         </div>
       </div>
-      {% for block in body %}
+      {% for block in self.body %}
         {% if block.block_type != 'additional_disclaimer' and block.block_type != 'additional_file' %}
           {% include_block block %}
         {% endif %}
