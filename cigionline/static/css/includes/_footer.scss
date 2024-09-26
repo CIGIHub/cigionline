@@ -117,9 +117,32 @@ footer {
     .social-links {
       li {
         padding: 0 0.5em;
+        height: 25px;
 
         a {
           color: $white;
+
+          &:hover {
+            svg {
+              fill: $cigi-primary-colour;
+            }
+
+            i {
+              color: $cigi-primary-colour;
+            }
+          }
+
+          i {
+            transition: color 0.2s ease;
+          }
+
+          svg {
+            width: 1.15rem;
+            height: 1.15rem;
+            fill: $white;
+            margin-bottom: 0.3rem;
+            transition: fill 0.2s ease;
+          }
         }
       }
     }
