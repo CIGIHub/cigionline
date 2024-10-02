@@ -6,6 +6,18 @@
   $background-color-scrolled: $black
 );
 
+section {
+  &.hero {
+    .hero-container {
+      .hero-main {
+        h2 {
+          color: $black;
+        }
+      }
+    }
+  }
+}
+
 .body {
   button {
     &.button-action {
