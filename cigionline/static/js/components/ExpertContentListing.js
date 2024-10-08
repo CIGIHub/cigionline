@@ -36,7 +36,7 @@ function ExpertContentListing(props) {
           {!(row.contentsubtype === 'Quick Insights')
             && (row.contenttype === 'Publication'
             || (row.contenttype === 'Opinion'
-            && ['Essays'].includes(row.contentsubtype))) 
+            && ['Essays'].includes(row.contentsubtype)))
             && (
               <span className="table-icon icon-publication">
                 <i className="fal fa-file-alt" />
