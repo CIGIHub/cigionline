@@ -147,7 +147,8 @@ $(document).ready(function () {
     const time = chapter.getAttribute('data-timestamp');
     if (time) {
       const timeArray = time.split(':');
-      const seconds = parseInt(timeArray[0], 10) * 60 + parseInt(timeArray[1], 10);
+      const seconds = parseInt(timeArray[0], 10) * 3600
+        + parseInt(timeArray[1], 10) * 60 + parseInt(timeArray[2], 10);
       podcastPlayer[0].setCurrentTime(seconds);
       podcastPlayer[0].play();
     }

@@ -76,6 +76,8 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
                 context['featured_events'] = self.get_featured_events_preview()
             else:
                 context['featured_events'] = self.get_featured_events()
+        else:
+            context['featured_events'] = self.get_featured_events()
         return context
 
     class Meta:

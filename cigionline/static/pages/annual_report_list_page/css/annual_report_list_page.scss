@@ -2,7 +2,7 @@
 @import '../../../css/includes/swiper';
 
 section {
-  margin: 4em 0;
+  margin: 3em 0;
 }
 
 .search {
@@ -42,6 +42,12 @@ section {
 }
 
 .featured {
+  .swiper-container {
+    &.annual-reports {
+      padding-bottom: 1rem;
+    }
+  }
+
   article {
     @include hover-darken;
 

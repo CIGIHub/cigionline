@@ -1436,7 +1436,11 @@ class PodcastChapterBlock(blocks.StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        timestamp_string = f"{value.get('timestamp').get('minutes'):02d}:{value.get('timestamp').get('seconds'):02d}"
+        timestamp = value.get('timestamp')
+        hour = timestamp.get('hours')
+        minute = timestamp.get('minutes')
+        second = timestamp.get('seconds')
+        timestamp_string = f"{hour}:{minute:02d}:{second:02d}"
         context['timestamp_string'] = timestamp_string
 
         return context
