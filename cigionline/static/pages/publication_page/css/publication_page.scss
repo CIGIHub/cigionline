@@ -105,3 +105,16 @@
     }
   }
 }
+
+.publication-quick-insights {
+  .stream-block-chart {
+    margin: 2rem 0;
+
+    .stream-block-chart-title {
+      color: $black;
+      border: 0;
+      padding: 0;
+      margin: 0 0 1rem;
+    }
+  }
+}
