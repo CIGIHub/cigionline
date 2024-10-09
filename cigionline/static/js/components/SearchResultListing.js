@@ -53,6 +53,11 @@ function SearchResultListing(props) {
           <i className="fal fa-headphones" />
         </span>
       )}
+      {row.contentsubtype === 'Quick Insights' && (
+        <span className="table-icon icon-publication">
+          <i className="fa-light fa-lightbulb-exclamation" />
+        </span>
+      )}
       {!(row.contentsubtype === 'Quick Insights')
         && (['Publication', 'Publication Series'].includes(row.contenttype)
         || (row.contenttype === 'Opinion'
