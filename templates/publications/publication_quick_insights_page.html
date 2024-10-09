@@ -95,95 +95,17 @@
       {% endfor %}
     </section>
 
-    {% if self.book_excerpt_download %}
-      <section class="book-excerpt-download">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <a class="button-action track-cta" href="{{self.book_excerpt_download.file.url}}" data-cta="publication-pdf">
-                Download Excerpt
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% if self.has_book_metadata %}
+    <section class="disclaimer">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
-            <ul class="publication-book-metadata">
-              {% if self.isbn %}
-                <li>
-                  <span>ISBN:</span> {{ self.isbn }}
-                </li>
-              {% endif %}
-              {% if self.isbn_ebook %}
-                <li>
-                  <span>eBook ISBN:</span> {{ self.isbn_ebook }}
-                </li>
-              {% endif %}
-              {% if self.isbn_hardcover %}
-                <li>
-                  <span>Hardcover ISBN:</span> {{ self.isbn_hardcover }}
-                </li>
-              {% endif %}
-              {% if self.book_publisher %}
-                <li>
-                  <span>Publisher:</span> {{ self.book_publisher }}
-                </li>
-              {% endif %}
-              <li>
-                <span>Published:</span> {{ self.publishing_date|date:"F j, Y" }}
-              </li>
-              {% if self.book_pages %}
-                <li>
-                  <span>Pages:</span> {{ self.book_pages }}
-                </li>
-              {% endif %}
-              {% if self.book_format %}
-                <li>
-                  <span>Format:</span> {{ self.get_book_format_display }}
-                </li>
-              {% endif %}
-            </ul>
+            <p class="opinion-disclaimer">
+              The opinions expressed in this article are those of the author(s) and do not necessarily reflect the views of CIGI or its Board of Directors.
+            </p>
           </div>
         </div>
       </div>
-    {% endif %}
-
-    {% if self.publication_type.title == "Books" and self.embed_youtube %}
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8 publication-book-trailer">
-            <h2 class="paragraph-heading">
-              Book Trailer
-            </h2>
-            <div class="publication-book-trailer-embed">
-              {% embed self.embed_youtube max_width=620 %}
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endif %}
-
-    {% if self.editorial_reviews|length > 0 %}
-      <section class="editorial-reviews">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <h3>Editorial Reviews</h3>
-              {% for review in self.editorial_reviews %}
-                <div class="editorial-review">
-                  {{ review }}
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
+    </section>
 
     {% if self.embed_issuu %}
       <section class="embed-issuu">
@@ -191,24 +113,6 @@
           <div class="row">
             <div class="col">
               {% embed self.embed_issuu max_width=1110 %}
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
-    {% if self.publication_series.live %}
-      <section class="publication-part-of-series">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <h2>Part of Series</h2>
-              <h3>
-                <a href="{{ self.publication_series.url }}">
-                  {{ self.publication_series.title }}
-                </a>
-              </h3>
-              {{ self.publication_series.specific.subtitle|richtext }}
             </div>
           </div>
         </div>
