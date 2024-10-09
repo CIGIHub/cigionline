@@ -148,6 +148,13 @@ class PublicationPage(
         SPEECHES = ('speeches', 'Speeches')
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
 
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_chart_block,
+        ],
+        blank=True,
+    )
+    
     book_excerpt = RichTextField(
         blank=True,
         features=['bold', 'italic', 'link'],
