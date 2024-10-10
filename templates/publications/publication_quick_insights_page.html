@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags webpack_loader core_tags cache %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  {% if self.publication_type.title == "Books" %}
+    <meta property="og:type" content="book" />
+  {% else %}
+    <meta property="og:type" content="article" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_feature %}
+    {% image self.image_feature fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.publication_type.title == "Books" %}
+    {% if self.publishing_date %}
+      <meta property="book:release_date" content="{{ self.publishing_date|date:'c' }}" />
+    {% endif %}
+    {% if self.isbn %}
+      <meta property="book:isbn" content="{{ self.isbn }}" />
+    {% endif %}
+  {% else %}
+    {% if self.publishing_date %}
+      <meta property="article:published_time" content="{{ self.publishing_date|date:'c' }}" />
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block body_class %}publication-quick-insights{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'publicationPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  {% preview_cache_bust as is_preview %}
+  {% cache 604800 publication_content request.path request.user.username self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
+    {% block hero %}
+      <section class="hero hero-container hero-quick-insights">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              {% include "includes/topics.html" with topics=self.topics_sorted %}
+              <h1>{{self.title}}</h1>
+              {% include "includes/authors.html" with authors=self.authors.all %}
+              {% include "includes/date.html" with date=self.publishing_date %}
+              {% include "includes/social_links.html" with title=self.title no_circle=True %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endblock %}
+
+    {% if self.from_the_archives and self.from_the_archives_blurb %}
+      {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
+    {% endif %}
+
+    <section class="body" id="article-body">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <p>
+              <em><a href="/publications/quick-insights/">Quick Insights</a> are outputs from CIGI’s research programs that distill timely research and ideas into accessible formats.</em>
+            </p>
+          </div>
+        </div>
+      </div>
+      {% for block in self.body %}
+        {% if block.block_type != 'additional_disclaimer' and block.block_type != 'additional_file' %}
+          {% include_block block %}
+        {% endif %}
+      {% endfor %}
+    </section>
+
+    <section class="disclaimer">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <p class="opinion-disclaimer">
+              The opinions expressed in this article are those of the author(s) and do not necessarily reflect the views of CIGI or its Board of Directors.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% if self.embed_issuu %}
+      <section class="embed-issuu">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              {% embed self.embed_issuu max_width=1110 %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if self.author_count > 0 %}
+      {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
+    {% endif %}
+    {% if self.editor_count > 0 %}
+      {% include "includes/about_the_author.html" with authors=self.editors.all editor_count=self.editor_count title_override="About the Editor" %}
+    {% endif %}
+
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
+    {% elif self.recommended_content %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content %}
+    {% endif %}
+  {% endcache %}
+{% endblock content %}
+
+{{ pdf_downloads }}

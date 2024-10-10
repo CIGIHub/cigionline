@@ -143,9 +143,17 @@ class PublicationPage(
         ESSAY_SERIES = ('essay_series', 'Essay Series')
         POLICY_BRIEFS = ('policy_briefs', 'Policy Briefs')
         POLICY_MEMOS = ('policy_memos', 'Policy Memos')
+        QUICK_INSIGHTS = ('quick_insights', 'Quick Insights')
         SPECIAL_REPORTS = ('special_reports', 'Special Reports')
         SPEECHES = ('speeches', 'Speeches')
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
+
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_chart_block,
+        ],
+        blank=True,
+    )
 
     book_excerpt = RichTextField(
         blank=True,
@@ -324,6 +332,8 @@ class PublicationPage(
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(PublicationPage, self).get_template(request, *args, **kwargs)
+        if self.publication_type.title == 'Quick Insights':
+            return 'publications/publication_quick_insights_page.html'
         if self.theme:
             return f'themes/{self.get_theme_dir()}/publication_page.html'
         return standard_template

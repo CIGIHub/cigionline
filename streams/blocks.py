@@ -173,6 +173,7 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
     title = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+    full_width = blocks.BooleanBlock(required=False)
 
     implemented_themes = [
         'cyber_series_opinion',

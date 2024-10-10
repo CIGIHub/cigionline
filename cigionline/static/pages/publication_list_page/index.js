@@ -16,11 +16,12 @@ ReactDOM.render(
       'Books',
       'CIGI Papers',
       'Conference Reports',
+      'Essays',
       'Essay Series',
       'Policy Briefs',
       'Policy Memos',
+      'Quick Insights',
       'Special Reports',
-      'Essays',
     ]}
     fields={['authors', 'pdf_download', 'publishing_date', 'topics']}
     filterTypes={[
@@ -92,6 +93,16 @@ ReactDOM.render(
           {
             name: 'contentsubtype',
             value: 'Policy Memos',
+          },
+        ],
+      },
+      {
+        name: 'Quick Insights',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Quick Insights',
           },
         ],
       },
