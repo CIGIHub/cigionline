@@ -35,20 +35,37 @@
       @include media-breakpoint-up(md) {
         text-align: center;
       }
+      @include media-breakpoint-up(md) {
+        font-size: 0.875rem;
+      }
+      font-size: 1.0625em;
       color: $white;
       margin-bottom: 0;
       font-weight: 300;
 
       &.newsletter {
         @include link($color: $white, $hover-color: $cigi-primary-colour);
-        @include media-breakpoint-up(md) {
-          font-size: 0.875rem;
-        }
-        font-size: 1.0625em;
 
         a {
           font-weight: 500;
           text-decoration: underline;
+        }
+      }
+
+      &.curated-content {
+        a {
+          &:hover {
+            svg {
+              fill: $cigi-primary-colour;
+            }
+          }
+          
+          svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: $white;
+            transition: fill 0.2s ease;
+          }
         }
       }
     }
