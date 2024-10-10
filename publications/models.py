@@ -154,7 +154,7 @@ class PublicationPage(
         ],
         blank=True,
     )
-    
+
     book_excerpt = RichTextField(
         blank=True,
         features=['bold', 'italic', 'link'],
