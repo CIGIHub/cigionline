@@ -321,6 +321,10 @@ class HomePage(Page):
     class Meta:
         verbose_name = 'Home Page'
 
+class Think7HomePage(Page):
+    """Singleton model for the Think 7 Canada home page."""
+    class Meta:
+        verbose_name = 'Think 7 Home Page'
 
 class HomePageFeaturedPage(Orderable):
     home_page = ParentalKey(
