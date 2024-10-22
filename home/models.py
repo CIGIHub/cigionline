@@ -323,6 +323,10 @@ class HomePage(Page):
 
 class Think7HomePage(Page):
     """Singleton model for the Think 7 Canada home page."""
+    
+    def get_template(self, request, *args, **kwargs):
+        return 'think7/home_page.html'
+    
     class Meta:
         verbose_name = 'Think 7 Home Page'
 

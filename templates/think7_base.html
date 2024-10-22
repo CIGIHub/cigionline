@@ -1,0 +1,71 @@
+{% load cache static wagtailuserbar webpack_loader %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      {% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}
+      {% block title_suffix %}
+        {% with self.get_site.site_name as site_name %}
+          {% if site_name %}- {{ site_name }}{% endif %}
+        {% endwith %}
+      {% endblock %}
+    </title>
+    <meta name="title" content="{{ self.title }}">
+    {% block meta_description %}
+    {% endblock %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@CIGIOnline">
+    <meta property="og:url" content="{{ self.full_url }}">
+    {% block og_type %}
+      <meta property="og:type" content="website">
+    {% endblock %}
+    <meta property="og:site_name" content="{{ self.get_site.site_name }}">
+    <meta property="og:title" content="{% if self.social_title %}{{ self.social_title }}{% else %}{{ self.title }}{% endif %}">
+    {% block og_description %}
+    {% endblock %}
+    {% block og_image %}
+      {% include "includes/og_image_default.html" %}
+    {% endblock %}
+    {% block extra_og_meta %}
+    {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {# Fonts #}
+    <link rel="stylesheet" href="https://use.typekit.net/two4qwo.css">
+    {% block extra_fonts %}
+      {# Override this in templates to add extra fonts #}
+    {% endblock %}
+    {% render_bundle 'think7' 'css' %}
+    {% block extra_css %}
+      {# Override this in templates to add page-specific CSS #}
+    {% endblock %}
+    {% block theme_css %}
+      {# Override this in templates to add theme CSS #}
+    {% endblock %}
+    {% render_bundle 'think7' 'js' attrs='defer' %}
+    {% block extra_js %}
+      {# Override this in templates to add page-specific JS #}
+    {% endblock %}
+    {% block theme_js %}
+      {# Override this in templates to add theme JS #}
+    {% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/favicon.ico' %}">
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+    {% wagtailuserbar %}
+
+    {% block header %}
+      {% include "includes/top_bar.html" %}
+    {% endblock %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+      {% include "includes/footer.html" %}
+    {% endblock %}
+
+    <div id="cigi-cookie-consent-container"></div>
+  </body>
+</html>

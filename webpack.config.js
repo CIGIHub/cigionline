@@ -88,6 +88,8 @@ const config = {
     themeSpecialOpinions: './cigionline/static/themes/special_opinions/index.js',
     themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
     themeWTOSeries: './cigionline/static/themes/wto_series/index.js',
+    think7: './cigionline/static/pages/think7/index.js',
+    think7HomePage: './cigionline/static/pages/think7/home_page/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',
     twentiethPage: './cigionline/static/pages/twentieth_page/index.js',
     twentiethPageSingleton: './cigionline/static/pages/twentieth_page_singleton/index.js',
