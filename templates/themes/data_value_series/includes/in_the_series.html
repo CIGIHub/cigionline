@@ -1,0 +1,39 @@
+{% load wagtailcore_tags %}
+
+<section class="data-series-in-the-series-title">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8 ">
+        <h3>
+          <a href="{{ article_series.url }}"><span>{{ article_series.title }}</span></a>
+        </h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="data-series-in-the-series">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8 series-items">
+        {% for series_item in article_series.article_series_items %}
+          {% if series_item.category_title %}
+            <h4 class="section-title">{{ series_item.category_title }}</h4>
+          {% endif %}
+          <article>
+            <h5 class="article-title"><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a></h5>
+            <p class="authors">
+              {% for item in series_item.content_page.authors.all %}
+                {% if item.hide_link %}
+                  <span>{{ item.author.title }}</span>
+                {% else %}
+                  <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
+                {% endif %}
+              {% endfor %}
+            </p>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

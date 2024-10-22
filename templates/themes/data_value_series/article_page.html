@@ -1,0 +1,26 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block theme_css %}
+  {% render_bundle 'themeDataValueSeries' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'themeDataValueSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}data-value-series data-value-series-article{% endblock %}
+
+{% block hero %}
+  
+{% endblock %}
+
+{% block in_the_series %}
+  {% if self.article_series %}
+    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
+  {% endif %}
+{% endblock %}
+
+{% block recommended %}
+  {# Remove recommended section for Data series articles #}
+{% endblock %}

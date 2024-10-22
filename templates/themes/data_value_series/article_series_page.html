@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block theme_css %}
+  {% render_bundle 'themeDataValueSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}data-value-series data-value-series-article-series{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div class="data-series-hero">
+      <div class="video-bg">
+        {% if self.video_banner %}
+        <video playsinline autoplay muted loop class="video-background">
+          <source src="{{ self.video_banner.url }}" type="video/mp4">
+        </video>
+      {% endif %}
+      </div>
+
+      <div class="container">
+        {% include "./includes/social_links.html" with title=self.title no_circle=True %}
+        <h1><span>{{ self.title }}</span></h1>
+        <div class="subtitle">{{ self.subtitle|richtext }}</div>
+        <ul class="contributors">
+          {% for item in self.series_contributors_by_article %}
+            {% for contributor in item.contributors %}
+              <li>{{ contributor.author.title }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+      <a href="#article-body" class="scroll-arrow">
+        <i class="far fa-angle-down" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+
+  <div id="content" class="page-content">
+
+    {% include "includes/body.html" with body=self.body heading="About the Series" full_heading=True %}
+
+    <div class="footer-image"></div>
+    <section class="data-series-in-the-series">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            {% for series_item in self.article_series_items %}
+              {% if series_item.category_title %}
+                <h3 class="section-title">{{ series_item.category_title }}</h3>
+              {% endif %}
+              <article>
+                <h4 class="article-title"><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title}}</a></h4>
+                <p class="authors">
+                  {% for item in series_item.content_page.authors.all %}
+                    {% if item.hide_link %}
+                      <span>{{ item.author.title }}</span>
+                    {% else %}
+                      <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
+                    {% endif %}
+                  {% endfor %}
+                </p>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}
