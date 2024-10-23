@@ -77,6 +77,22 @@ body {
         margin: 0;
         padding: 0.2rem 0.5rem 0.2rem 0;
       }
+
+      p {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      .stream-block-blockquote {
+        .stream-block-blockquote-content {
+          &::before {
+            border-bottom: 5px solid $black;
+          }
+        }
+      }
     }
   }
 }
