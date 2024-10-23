@@ -1,0 +1,82 @@
+body {
+  &.data-value-series-article {
+    @include top-bar(
+      $background-color: transparent,
+      $color: $black,
+      $color-scrolled: $white,
+      $background-color-scrolled: $black
+    );
+
+    .data-value-series-article-hero {
+      height: 30rem;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 1rem;
+
+      .hero-content {
+        color: $white;
+
+        h1 {
+          @include media-breakpoint-up(md) {
+            font-size: 5rem;
+          }
+          font-size: 2rem;
+          font-weight: 600;
+          line-height: 1;
+        }
+
+        h2 {
+          @include media-breakpoint-up(md) {
+            font-size: 1.3125rem;
+          }
+          font-size: 1.1rem;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .meta-info {
+      margin: 2rem 0 3rem;
+
+      .authors {
+        margin: 0;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .date {
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 0.875rem;
+      }
+
+      .social-share-list {
+        justify-content: flex-start;
+
+        a {
+          margin: 0;
+        }
+      }
+    }
+
+    .article-series-description {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      border: 0;
+      margin: 0 0 1.5rem;
+      padding: 0;
+
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    .body {
+      .drop-caps {
+        border: 0;
+        font-weight: 600;
+        margin: 0;
+        padding: 0.2rem 0.5rem 0.2rem 0;
+      }
+    }
+  }
+}

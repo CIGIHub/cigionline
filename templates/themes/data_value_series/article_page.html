@@ -11,9 +11,49 @@
 
 {% block body_class %}data-value-series data-value-series-article{% endblock %}
 
-{% block hero %}
-  
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
 {% endblock %}
+
+{% block content %}
+  {% block hero %}
+    {% image self.image_banner original as image_banner %}
+    <section class="data-value-series-article-hero" style="background-image: url('{{ image_banner.url }}');">
+      <div class="container">
+        <div class="row">
+          <div class="col col-md-12 col-lg-10 hero-content">
+            <h2>{{ self.get_series_article_category }}</h2>
+            <h1>{{ self.title }}</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <div class="meta-info">
+            {% include "includes/authors.html" with authors=self.authors.all %}
+            {% include "includes/date.html" with date=self.publishing_date %}
+            {% include "includes/social_links.html" with title=self.title no_circle=True %}
+          </div>
+          <div class="article-series-description">
+            {{ self.article_series_description|richtext }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock hero %}
+
+  {% include "includes/body.html" with body=self.body %}
+
+  {% block recommended %}
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
+    {% elif self.recommended_content %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content %}
+    {% endif %}
+  {% endblock %}
+{% endblock content %}
 
 {% block in_the_series %}
   {% if self.article_series %}
@@ -21,6 +61,3 @@
   {% endif %}
 {% endblock %}
 
-{% block recommended %}
-  {# Remove recommended section for Data series articles #}
-{% endblock %}

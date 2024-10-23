@@ -402,6 +402,15 @@ class ArticlePage(
             if block.block_type == 'additional_disclaimer':
                 additional_disclaimers.append(block.value)
         return additional_disclaimers
+    
+    def get_series_article_category(self):
+        article_series_page = self.article_series.specific
+        current_series_title = article_series_page.series_items.first().category_title
+        for series_item in article_series_page.series_items.all():
+            if series_item.category_title:
+                current_series_title = series_item.category_title
+            if series_item.content_page.id == self.id:
+                return current_series_title
 
     content_panels = [
         BasicPageAbstract.title_panel,
