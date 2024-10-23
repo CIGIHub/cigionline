@@ -46,6 +46,39 @@
 
   {% include "includes/body.html" with body=self.body %}
 
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Works Cited</h2>
+            {{ self.works_cited|richtext }}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.article_series_disclaimer %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-disclaimer">
+            {{self.article_series_disclaimer|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
+
+  {% block in_the_series %}
+    {% if self.article_series %}
+      {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
+    {% endif %}
+  {% endblock %}
+
   {% block recommended %}
     {% if request.is_preview and self.recommended_content_preview %}
       {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
@@ -54,10 +87,3 @@
     {% endif %}
   {% endblock %}
 {% endblock content %}
-
-{% block in_the_series %}
-  {% if self.article_series %}
-    {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
-  {% endif %}
-{% endblock %}
-

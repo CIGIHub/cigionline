@@ -1,0 +1,37 @@
+.data-value-series-in-the-series {
+  @include link($color: $black, $hover-color: $cigi-primary-colour);
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    border-bottom: 3px solid black;
+    font-weight: 600;
+  }
+
+  .series-category {
+    margin-bottom: 2rem;
+  }
+
+  article {
+    border-bottom: 1px solid $cigi-light-grey;
+    padding: 1rem 0;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    h5 {
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem;
+    }
+
+    .authors {
+      font-size: 0.875rem;
+      margin: 0;
+      text-transform: uppercase;
+    }
+  }
+}
