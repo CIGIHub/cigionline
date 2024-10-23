@@ -5,8 +5,12 @@
   {% render_bundle 'themeDataValueSeries' 'css' %}
 {% endblock %}
 
-{% block extra_js %}
+{% block theme_js %}
   {% render_bundle 'themeDataValueSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/bmh2gvl.css">
 {% endblock %}
 
 {% block body_class %}data-value-series data-value-series-article{% endblock %}

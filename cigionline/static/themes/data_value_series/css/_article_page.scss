@@ -11,7 +11,23 @@ body {
       height: 30rem;
       display: flex;
       align-items: flex-end;
-      padding-bottom: 1rem;
+      padding-bottom: 3rem;
+
+      h1,
+      h3,
+      h4 {
+        font-family: $header-font;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+      }
+
+      h2,
+      h4,
+      h5,
+      .authors,
+      .date {
+        font-family: $subheader-font;
+      }
 
       .hero-content {
         color: $white;
@@ -21,7 +37,6 @@ body {
             font-size: 5rem;
           }
           font-size: 2rem;
-          font-weight: 600;
           line-height: 1;
         }
 
@@ -30,7 +45,7 @@ body {
             font-size: 1.3125rem;
           }
           font-size: 1.1rem;
-          font-weight: 600;
+          font-weight: 700;
         }
       }
     }
@@ -42,12 +57,13 @@ body {
         margin: 0;
         text-transform: uppercase;
         font-weight: 600;
+        font-size: 0.875rem;
       }
 
       .date {
         text-transform: uppercase;
         font-weight: 500;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
       }
 
       .social-share-list {
@@ -71,9 +87,24 @@ body {
     }
 
     .body {
-      .drop-caps {
-        border: 0;
+      font-family: $body-font;
+
+      h2,
+      h4,
+      h5,
+      .authors,
+      .date {
+        font-family: $subheader-font;
+      }
+
+      h2 {
         font-weight: 600;
+      }
+
+      .drop-caps {
+        font-family: $header-font;
+        border: 0;
+        font-weight: 900;
         margin: 0;
         padding: 0.2rem 0.5rem 0.2rem 0;
       }

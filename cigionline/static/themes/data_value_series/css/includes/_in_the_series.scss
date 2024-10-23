@@ -1,16 +1,31 @@
 .data-value-series-in-the-series {
   @include link($color: $black, $hover-color: $cigi-primary-colour);
 
+  h1,
+  h3,
+  h4 {
+    font-family: $header-font;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+  }
+
+  h2,
+  h5,
+  .authors,
+  .date {
+    font-family: $subheader-font;
+  }
+
   h3 {
     font-size: 2rem;
-    font-weight: 600;
+
     margin-bottom: 1.5rem;
   }
 
   h4 {
     font-size: 1.5rem;
+    padding-bottom: 0.5rem;
     border-bottom: 3px solid black;
-    font-weight: 600;
   }
 
   .series-category {
@@ -28,10 +43,11 @@
     h5 {
       font-size: 1.1rem;
       margin: 0 0 0.5rem;
+      font-weight: 600;
     }
 
     .authors {
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       margin: 0;
       text-transform: uppercase;
     }
