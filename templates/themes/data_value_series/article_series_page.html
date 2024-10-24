@@ -73,12 +73,9 @@
   {% include "./includes/in_the_series.html" with article_series=self title=False %}
   <section class="acknowledgements">
     <div class="container">
-      <h2>Acknowledgements</h2>
       <div class="row">
         <div class="col-md-10 col-lg-8">
-          <div class="meta-info">
-            {{ self.acknowledgements|richtext }}
-          </div>
+          {{ self.acknowledgements|richtext }}
         </div>  
       </div>
     </div>
