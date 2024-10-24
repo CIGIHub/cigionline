@@ -60,7 +60,7 @@
           {% else %}
             <div class="col-12 col-md-8">
           {% endif %}
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True cta_pdf=True %}
             </div>
             {% if featured_pages|length > 1 %}
               <hr class="separator-large">
