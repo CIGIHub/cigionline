@@ -108,4 +108,27 @@ body {
     margin: 2rem 0;
     font-family: $body-font;
   }
+
+  .credits {
+    .credits-content {
+      @include media-breakpoint-up(md) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 8em 6em 6em;
+        margin: 1em 0 4em 2em;
+      }
+      @include media-breakpoint-up(xl) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      -ms-grid-columns: 1fr 0.5em 1fr;
+      display: -ms-grid;
+      display: grid; // sass-lint:disable-line no-duplicate-properties
+      font-size: 0.75em;
+      grid-column-gap: 0.5em;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 8em 6em 4em 6em;
+      margin: 1em 0 4em;
+    }
+  }
 }
