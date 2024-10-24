@@ -70,7 +70,7 @@
                   {% if forloop.counter > 1 %}
                     <hr>
                   {% endif %}
-                  {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+                  {% include "includes/features/feature_content_small.html" with content=item cta=True cta_pdf=True %}
                 {% endfor %}
               {% endwith %}
               </div>
