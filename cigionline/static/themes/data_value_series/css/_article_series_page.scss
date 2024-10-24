@@ -12,6 +12,12 @@ body {
       font-family: $subheader-font;
     }
 
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
     .data-value-series-hero {
       position: relative;
       height: 100vh;
@@ -95,5 +101,11 @@ body {
         }
       }
     }
+  }
+
+  .acknowledgements,
+  .credits {
+    margin: 2rem 0;
+    font-family: $body-font;
   }
 }

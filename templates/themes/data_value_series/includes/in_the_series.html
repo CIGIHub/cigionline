@@ -14,8 +14,8 @@
             {% if forloop.counter != 1 %}
               </div>
             {% endif %}
-            <h4 class="section-title {{series_item.category_title|slugify}}">{{ series_item.category_title }}</h4>
             <div class="series-category">
+              <h4 class="section-title {{series_item.category_title|slugify}}">{{ series_item.category_title }}</h4>
           {% endif %}
           <article>
             <h5 class="article-title"><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title }}</a></h5>

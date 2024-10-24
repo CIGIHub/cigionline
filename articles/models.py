@@ -609,6 +609,9 @@ class ArticleSeriesPage(
             'bold',
             'italic',
             'link',
+            'h2',
+            'h3',
+            'h4',
         ],
     )
     credits = RichTextField(

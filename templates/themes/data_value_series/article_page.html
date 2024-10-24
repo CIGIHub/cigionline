@@ -93,7 +93,7 @@
 
   {% block in_the_series %}
     {% if self.article_series %}
-      {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id %}
+      {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id title=True %}
     {% endif %}
   {% endblock %}
 

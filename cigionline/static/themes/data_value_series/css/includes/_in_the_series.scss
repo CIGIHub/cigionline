@@ -30,6 +30,12 @@
 
   .series-category {
     margin-bottom: 2rem;
+
+    &:last-child {
+      padding-bottom: 1rem;
+      margin-bottom: 0;
+      border-bottom: 1px solid $black;
+    }
   }
 
   article {
