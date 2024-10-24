@@ -39,30 +39,48 @@
 {% endblock %}
 
 {% block content %}
-  <div class="page-header">
-    <div class="data-value-series-hero">
-      <div class="container">
-        {% include "includes/social_links.html" with title=self.title no_circle=True %}
-        <h1><span>{{ self.title }}</span></h1>
-        <div class="subtitle">{{ self.subtitle|richtext }}</div>
-        <ul class="contributors">
-          {% for item in self.series_contributors_by_article %}
-            {% for contributor in item.contributors %}
-              <li>{{ contributor.author.title }}</li>
-            {% endfor %}
-          {% endfor %}
-        </ul>
+  <div class="data-value-series-hero">
+    <div class="video-bg">
+      {% if self.video_banner %}
+        <video playsinline autoplay muted loop class="video-background">
+          <source src="{{ self.video_banner.url }}" type="video/webm">
+        </video>
+      {% endif %}
+    </div>
+    <div class="bg-gradient"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="row justify-content-center">
+          <div class="col">
+            <p>A CIGI Essay Series</p>
+            <h1><span>{{ self.title }}</span></h1>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <div class="short-description">{{ self.short_description|richtext }}</div>
+            <div class="scroll-arrow">
+              <a href="#article-body">
+                <i class="far fa-angle-down" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-      <a href="#article-body" class="scroll-arrow">
-        <i class="far fa-angle-down" aria-hidden="true"></i>
-      </a>
     </div>
   </div>
-
-  <div class="page-content">
-    {% include "includes/body.html" with body=self.body heading="About the Series" full_heading=True %}
-
-    <div class="footer-image"></div>
-    {% include "./includes/in_the_series.html" with article_series=self title=False %}
-  </div>
+  {% include "includes/body.html" with body=self.body heading="About the Series" full_heading=True %}
+  {% include "./includes/in_the_series.html" with article_series=self title=False %}
+  <section class="acknowledgements">
+    <div class="container">
+      <h2>Acknowledgements</h2>
+      <div class="row">
+        <div class="col-md-10 col-lg-8">
+          <div class="meta-info">
+            {{ self.acknowledgements|richtext }}
+          </div>
+        </div>  
+      </div>
+    </div>
+  </section>
 {% endblock %}

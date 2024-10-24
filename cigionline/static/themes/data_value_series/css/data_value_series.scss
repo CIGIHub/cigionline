@@ -3,6 +3,8 @@ $subheader-font: area-normal, sans-serif;
 $body-font: 'sole-serif-small-variable', sans-serif;
 
 @import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+
 @import './article_series_page';
 @import './article_page';
 @import './includes/in_the_series';
