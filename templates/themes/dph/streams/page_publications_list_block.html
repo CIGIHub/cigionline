@@ -32,10 +32,16 @@
                       <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
                     {% endif %}
                     <div class="publications-list__publication__author__position">
-                      {{ author.author.position }}
+                      {% if author.author.position_dph %}
+                        {{ author.author.position_dph }}
+                      {% else %}
+                        {{ author.author.position }}
+                      {% endif %}
                     </div>
                     <div class="publications-list__publication__author__position">
-                      {% if author.author.position_secondary %}
+                      {% if publication.dph_term %}
+                        {{ publication.dph_term }} term
+                      {% elif author.author.position_secondary %}
                         {{ author.author.position_secondary }}
                       {% else %}
                         {{ publication.publishing_date|dph_term }}
@@ -72,7 +78,11 @@
                       <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
                     {% endif %}
                     <div class="publications-list__publication__author__position">
-                      {{ author.author.position }}
+                      {% if author.author.position_dph %}
+                        {{ author.author.position_dph }}
+                      {% else %}
+                        {{ author.author.position }}
+                      {% endif %}
                     </div>
                   {% endwith %}
                 </div>

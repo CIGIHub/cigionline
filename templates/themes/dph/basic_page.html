@@ -77,7 +77,7 @@
           {% if block.block_type == 'persons_list_block' %}
             {% with block.value.title|dash_case as cohort %}
               <div class="tab-{{cohort}} tab-pane fade {% if counter == 0 %}show active{% endif %}" id="{{cohort}}" role="tabpabel" aria-labelledby="{{cohort}}-tab">
-                {% include_block block with hide_title=True %}
+                {% include_block block with hide_title=True page='dph_landing' %}
               </div>
             {% endwith %}
             {% define 1 as counter %}

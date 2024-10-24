@@ -122,7 +122,7 @@
               <li data-season="season-1"><button>SEASON 1</button></li>
             </ul>
           </div>
-          {% for season, episodes in self.series_seasons.items %}
+          {% for season, episodes in self.series_seasons_big_tech.items %}
             <div class="season-episodes {% if season == 4 %}active{% endif %}" id="season-{{ season }}">
               {% if episodes.unpublished %}
                 {% for unpublushed_episode in episodes.unpublished %}
@@ -157,7 +157,9 @@
                         {% if not episode.specific.podcast_subtitle %}
                           <div class="block-guest title-case">{{ episode.title }}</div>
                         {% else %}
-                          {{ episode.specific.podcast_guests }}
+                          <div class="block-guest">
+                            {{ episode.specific.podcast_guests.0 }}
+                          </div>
                           <div>{{ episode.specific.podcast_subtitle }}</div>
                         {% endif %}
                       </a>

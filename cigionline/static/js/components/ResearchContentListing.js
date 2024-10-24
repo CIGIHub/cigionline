@@ -28,9 +28,17 @@ function ResearchContentListing(props) {
               <i className="fal fa-headphones" />
             </span>
           )}
-          {(row.contenttype === 'Publication' || (row.contenttype === 'Opinion' && ['Essays'].includes(row.contentsubtype))) && (
+          {!(row.contentsubtype === 'Quick Insights')
+            && (row.contenttype === 'Publication'
+            || (row.contenttype === 'Opinion'
+            && ['Essays'].includes(row.contentsubtype))) && (
             <span className="table-icon icon-publication">
               <i className="fal fa-file-alt" />
+            </span>
+          )}
+          {row.contentsubtype === 'Quick Insights' && (
+            <span className="table-icon icon-publication">
+              <i className="fa-light fa-lightbulb-exclamation" />
             </span>
           )}
           {row.contenttype === 'Essay Series' && (

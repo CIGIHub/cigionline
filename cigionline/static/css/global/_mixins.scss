@@ -36,7 +36,7 @@
             }
             @include media-breakpoint-up(md) {
               fill: $color-medium-scrolled;
-  
+
               * {
                 fill: $color-medium-scrolled;
               }
@@ -44,7 +44,7 @@
             fill: $color-scrolled;
           }
         }
-  
+
         nav {
           ul {
             a,
@@ -53,7 +53,7 @@
                 color: $color-medium-scrolled;
               }
               color: $color-scrolled;
-  
+
               &:hover {
                 @include media-breakpoint-up(md) {
                   color: $hover-color-medium;
@@ -396,4 +396,12 @@
       }
     }
   }
+}
+
+@mixin slash($width: 5px, $height: 60px, $color: $black-alpha-40) {
+  border-right: 1px solid $color;
+  height: $height;
+  margin: 0 25px 0 28px;
+  transform: rotate(15deg);
+  width: $width;
 }

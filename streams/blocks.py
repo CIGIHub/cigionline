@@ -173,6 +173,7 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
     title = blocks.CharBlock(required=False)
     image = ImageChooserBlock(required=True)
     hide_image_caption = blocks.BooleanBlock(required=False)
+    full_width = blocks.BooleanBlock(required=False)
 
     implemented_themes = [
         'cyber_series_opinion',
@@ -1121,6 +1122,29 @@ class PodcastSubscribeButtonBlock(blocks.StructBlock):
         label = 'Podcast Subscribe Button'
 
 
+class PodcastHostBlock(blocks.StructBlock):
+    host = blocks.PageChooserBlock(page_type='people.PersonPage', required=True)
+    image = ImageChooserBlock(required=False)
+    bio = blocks.RichTextBlock(required=False)
+
+    class Meta:
+        icon = 'user'
+        label = 'Podcast Host'
+        template = 'streams/podcast_host_block.html'
+
+
+class PodcastGuestBlock(blocks.StructBlock):
+    guest = blocks.CharBlock(required=False)
+    guest_page = blocks.PageChooserBlock(page_type='people.PersonPage', required=False)
+    image = ImageChooserBlock(required=False)
+    bio = blocks.RichTextBlock(required=False)
+
+    class Meta:
+        icon = 'user'
+        label = 'Podcast Guest'
+        template = 'streams/podcast_guest_block.html'
+
+
 class AdditionalImageBlock(blocks.StructBlock, ThemeableBlock):
     class PositionChoices(models.TextChoices):
         layer_0 = ('0', '0')
@@ -1389,3 +1413,71 @@ class GESRawDataBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'GES Raw Data'
         template = 'streams/ges_raw_data_block.html'
+
+
+class FeaturedEpisodeBlock(blocks.StructBlock):
+    episode = blocks.PageChooserBlock(page_type='multimedia.MultimediaPage', required=True)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Featured Episode'
+        template = 'streams/featured_episode_block.html'
+
+
+class PodcastChapterBlock(blocks.StructBlock):
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    timestamp = blocks.StructBlock([
+        ('hours', blocks.IntegerBlock(required=True, min_value=0)),
+        ('minutes', blocks.IntegerBlock(required=True, min_value=0, max_value=59)),
+        ('seconds', blocks.IntegerBlock(required=True, min_value=0, max_value=59)),
+    ])
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        timestamp = value.get('timestamp')
+        hour = timestamp.get('hours')
+        minute = timestamp.get('minutes')
+        second = timestamp.get('seconds')
+        timestamp_string = f"{hour}:{minute:02d}:{second:02d}"
+        context['timestamp_string'] = timestamp_string
+
+        return context
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Podcast Chapter'
+        template = 'streams/podcast_chapter_block.html'
+
+
+class PodcastTranscriptBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    text = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    timestamp = blocks.StructBlock(
+        [
+            ('hours', blocks.IntegerBlock(required=False, min_value=0)),
+            ('minutes', blocks.IntegerBlock(required=False, min_value=0, max_value=59)),
+            ('seconds', blocks.IntegerBlock(required=False, min_value=0, max_value=59)),
+        ],
+        required=False,
+        help_text='Enter the timestamp of the transcript if it corresponds to a specific time in the podcast.',
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        try:
+            timestamp_string = f"{value.get('timestamp').get('minutes'):02d}:{value.get('timestamp').get('seconds'):02d}"
+            context['timestamp_string'] = timestamp_string
+        except TypeError:
+            pass
+        return context
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Podcast Transcript'
+        template = 'streams/podcast_transcript_block.html'

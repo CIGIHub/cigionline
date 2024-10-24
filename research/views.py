@@ -1,7 +1,7 @@
 from core.models import ArchiveablePageAbstract
 from django.http import JsonResponse
 
-from .models import TopicPage, ThemePage
+from .models import TopicPage, ThemePage, ProjectPage
 
 from articles.models import ArticlePage
 from publications.models import PublicationPage
@@ -114,4 +114,38 @@ def themes(request):
     return JsonResponse({
         "name": "Themes",
         "children": results,
+    })
+
+
+def programs(request):
+    themes = ThemePage.objects.live().filter(archive=0).order_by('title')
+    theme_results = []
+
+    for theme in themes:
+        topic_pages = TopicPage.objects.filter(program_theme=theme)
+        topic_results = []
+
+        for topic in topic_pages:
+            program_pages = ProjectPage.objects.filter(topics__in=[topic])
+            program_results = []
+
+            for program in program_pages:
+                program_results.append({
+                    "name": program.title,
+                    "value": program.content_pages.count(),
+                })
+
+            topic_results.append({
+                "name": topic.title,
+                "children": program_results,
+            })
+
+        theme_results.append({
+            "name": theme.title,
+            "children": topic_results,
+        })
+
+    return JsonResponse({
+        "name": "Themes",
+        "children": theme_results,
     })

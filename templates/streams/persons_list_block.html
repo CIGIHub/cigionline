@@ -22,7 +22,11 @@
               <div>
                 <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
                 <div class="person-function">
-                  {{ person.position }}
+                  {% if page == 'dph_landing' and person.position_dph %}
+                    {{ person.position_dph }}
+                  {% else %}
+                    {{ person.position }}
+                  {% endif %}
                 </div>
               </div>
             </div>

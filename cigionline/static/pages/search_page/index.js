@@ -115,6 +115,13 @@ ReactDOM.render(
         value: 'Policy Memos',
       }],
     }, {
+      name: 'Quick Insights',
+      parent: 'Publication',
+      params: [{
+        name: 'contentsubtype',
+        value: 'Quick Insights',
+      }],
+    }, {
       name: 'Special Reports',
       parent: 'Publication',
       params: [{

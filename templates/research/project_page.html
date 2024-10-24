@@ -68,40 +68,30 @@
     <section class="featured">
       <div class="container">
         <h2 class="paragraph-heading">Featured</h2>
-        <div class="row">
-          <div class="col-12 col-md-8">
-            {% if featured_pages|length > 0 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
-            {% endif %}
+          <div class="row">
+          {% if featured_pages|length == 1 %}
+            <div class="col-12 singular-feature">
+          {% else %}
+            <div class="col-12 col-md-8">
+          {% endif %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True %}
+            </div>
+            <hr class="separator-large">
+            <div class="col-12 col-md-4 featured-small">
+            {% with featured_pages|slice:"1:4" as featured_small %}
+              {% for item in featured_small %}
+                {% if forloop.counter > 1 %}
+                  <hr>
+                {% endif %}
+                {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+              {% endfor %}
+            {% endwith %}
+            </div>
           </div>
-          <hr class="separator-large">
-          <div class="col-12 col-md-4 featured-small">
-          {% with featured_pages|slice:"4:" as featured_small %}
-            {% for item in featured_small %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
-            {% endfor %}
-          {% endwith %}
-          </div>
-        </div>
         <div class="row">
           <div class="col-12">
             <hr>
           </div>
-        </div>
-        <div class="row featured-medium">
-        {% with featured_pages|slice:"1:4" as featured_medium %}
-          {% for item in featured_medium %}
-            <div class="col-12 col-md-4">
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
-            </div>
-          {% endfor %}
-        {% endwith %}
         </div>
       </div>
     </section>

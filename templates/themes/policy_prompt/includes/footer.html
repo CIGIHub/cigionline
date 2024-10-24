@@ -1,0 +1,50 @@
+{% load wagtailcore_tags %}
+<footer class="footer live-{{live|lower}}">
+  <div class="container">
+    {% if credits %}
+      <div class="row justify-content-center">
+        <div class="col col-md-8 col-lg-6">
+          <div class="credits">
+            {{ credits|richtext }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="row">
+      <div class="col footer-content">
+        <a href="/" class="cigi-logo">
+          {% include "includes/header_cigi_logo_large.svg" %}
+        </a>
+        <div class="spacer">
+          <div class="slash"></div>
+        </div>
+        <div class="about">
+          <div class="subscribe">
+            {% if live %}
+              <p>Subscribe:</p>
+            {% else %}
+              <p>Coming soon on:</p>
+            {% endif %}
+            {% for button in podcast_subscribe_buttons %}
+              <a href="{{ button.value.url }}" target="_blank" rel="noopener noreferrer">
+                {% if button.value.label == 'Apple Podcasts' %}
+                  {% include 'includes/apple_podcasts_sm.svg' %}
+                {% elif button.value.label == 'Spotify' %}
+                  {% include 'includes/spotify_podcasts_sm.svg' %}
+                {% endif %}
+              </a>
+            {% endfor %}
+          </div>
+          <p>
+            Policy Prompt <em>is produced by the Centre for International Governance Innovation.</em>
+          </p>
+          <p class="copyright">
+            &copy; {% now "Y" %}
+            /
+            <a href="/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
