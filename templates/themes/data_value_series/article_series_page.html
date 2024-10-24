@@ -70,33 +70,40 @@
     </div>
   </div>
   {% include "includes/body.html" with body=self.body heading="About the Series" full_heading=True %}
+  
   {% include "./includes/in_the_series.html" with article_series=self title=False %}
-  <section class="acknowledgements">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          {{ self.acknowledgements|richtext }}
-        </div>  
-      </div>
-    </div>
-  </section>
-  <section class="credits">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <h2>Credits</h2>
-          <div class="credits-content">
-            {% for title in self.credits_stream_field %}
-              <div class="title-container">
-                <div class="title">{{ title.value.title }}</div>
-                {% for person in title.value.people %}
-                  <div class="name">{{ person }}</div>
-                {% endfor %}
-              </div>
-            {% endfor %}
+
+  {% if self.credits_stream %}
+    <section class="credits">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Credits</h2>
+            <div class="credits-content">
+              {% for title in self.credits_stream_field %}
+                <div class="title-container">
+                  <div class="title">{{ title.value.title }}</div>
+                  {% for person in title.value.people %}
+                    <div class="name">{{ person }}</div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
+
+  {% if self.acknowledgements%}
+    <section class="acknowledgements">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            {{ self.acknowledgements|richtext }}
+          </div>  
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}
