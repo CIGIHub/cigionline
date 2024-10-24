@@ -58,7 +58,7 @@
           {% if featured_pages|length == 1 %}
             <div class="col-12 singular-feature">
           {% else %}
-            <div class="col-12 col-md-8">
+            <div class="col-12 col-md-8 feature-border-right">
           {% endif %}
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True cta_pdf=True %}
             </div>
