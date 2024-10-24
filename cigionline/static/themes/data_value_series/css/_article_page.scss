@@ -90,6 +90,7 @@ body {
       font-family: $body-font;
 
       h2,
+      h3,
       h4,
       h5,
       .authors,
@@ -123,6 +124,26 @@ body {
             border-bottom: 5px solid $black;
           }
         }
+      }
+
+      .stream-block-chart {
+        h3 {
+          border-top: 5px solid $black;
+          color: $black;
+        }
+      }
+    }
+
+    .article-works-cited {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      font-family: $body-font;
+
+      a {
+        text-decoration: underline;
+      }
+
+      h2 {
+        font-family: $subheader-font;
       }
     }
   }
