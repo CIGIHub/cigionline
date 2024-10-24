@@ -50,6 +50,20 @@
 
   {% include "includes/body.html" with body=self.body %}
 
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
   {% if self.works_cited %}
     <section class="article-works-cited">
       <div class="container">

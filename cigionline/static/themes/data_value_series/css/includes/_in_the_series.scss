@@ -52,4 +52,44 @@
       text-transform: uppercase;
     }
   }
+
+  h4 {
+    position: relative;
+    padding-left: 5px;
+
+    &::before {
+      content: '';
+      display: block;
+      height: 100%;
+      width: 2.5rem;
+      bottom: 5px;
+      position: absolute;
+      z-index: -1;
+      left: -2px;
+    }
+  }
+
+  .the-current-state-of-global-data-governance {
+    &::before {
+      background-color: #60d2f6;
+    }
+  }
+
+  .different-perspectives-on-notions-of-value {
+    &::before {
+      background-color: #ffd738;
+    }
+  }
+
+  .governance-frameworks-to-unleash-the-value-of-data {
+    &::before {
+      background-color: #ff73f6;
+    }
+  }
+
+  .mechanisms-for-governance-cooperation {
+    &::before {
+      background-color: #ff8c00;
+    }
+  }
 }

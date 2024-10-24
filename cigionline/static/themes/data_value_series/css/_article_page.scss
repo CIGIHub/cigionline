@@ -134,6 +134,7 @@ body {
       }
     }
 
+    .article-footnotes,
     .article-works-cited {
       @include link($color: $black, $hover-color: $cigi-primary-colour);
       font-family: $body-font;

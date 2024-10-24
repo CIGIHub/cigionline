@@ -1,0 +1,10 @@
+body {
+  &.data-value-series-article-series {
+    @include top-bar(
+      $background-color: transparent,
+      $color: $black,
+      $color-scrolled: $white,
+      $background-color-scrolled: $black
+    );
+  }
+}

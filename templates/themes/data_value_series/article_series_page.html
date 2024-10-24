@@ -34,19 +34,15 @@
 
 {% block body_class %}data-value-series data-value-series-article-series{% endblock %}
 
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
 {% block content %}
   <div class="page-header">
-    <div class="data-series-hero">
-      <div class="video-bg">
-        {% if self.video_banner %}
-        <video playsinline autoplay muted loop class="video-background">
-          <source src="{{ self.video_banner.url }}" type="video/mp4">
-        </video>
-      {% endif %}
-      </div>
-
+    <div class="data-value-series-hero">
       <div class="container">
-        {% include "./includes/social_links.html" with title=self.title no_circle=True %}
+        {% include "includes/social_links.html" with title=self.title no_circle=True %}
         <h1><span>{{ self.title }}</span></h1>
         <div class="subtitle">{{ self.subtitle|richtext }}</div>
         <ul class="contributors">
@@ -63,35 +59,10 @@
     </div>
   </div>
 
-  <div id="content" class="page-content">
-
+  <div class="page-content">
     {% include "includes/body.html" with body=self.body heading="About the Series" full_heading=True %}
 
     <div class="footer-image"></div>
-    <section class="data-series-in-the-series">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            {% for series_item in self.article_series_items %}
-              {% if series_item.category_title %}
-                <h3 class="section-title">{{ series_item.category_title }}</h3>
-              {% endif %}
-              <article>
-                <h4 class="article-title"><a href="{% pageurl series_item.content_page %}">{{ series_item.content_page.title}}</a></h4>
-                <p class="authors">
-                  {% for item in series_item.content_page.authors.all %}
-                    {% if item.hide_link %}
-                      <span>{{ item.author.title }}</span>
-                    {% else %}
-                      <span><a href="{% pageurl item.author %}">{{ item.author.title }}</a></span>
-                    {% endif %}
-                  {% endfor %}
-                </p>
-              </article>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    </section>
+    {% include "./includes/in_the_series.html" with article_series=self title=False %}
   </div>
 {% endblock %}

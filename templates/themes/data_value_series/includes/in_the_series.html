@@ -4,9 +4,11 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8 series-items">
-        <h3>
-          <a href="{{ article_series.url }}"><span>{{ article_series.title }}</span></a>
-        </h3>
+        {% if title %}
+          <h3>
+            <a href="{{ article_series.url }}"><span>{{ article_series.title }}</span></a>
+          </h3>
+        {% endif %}
         {% for series_item in article_series.article_series_items %}
           {% if series_item.category_title %}
             {% if forloop.counter != 1 %}
