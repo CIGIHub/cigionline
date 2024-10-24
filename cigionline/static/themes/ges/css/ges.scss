@@ -8,11 +8,104 @@
 
 section {
   &.hero {
+    margin-bottom: 1.5em;
+    background-size: cover;
+
     .hero-container {
       .hero-main {
         h2 {
           color: $black;
         }
+      }
+    }
+
+    .hero-main {
+      position: relative;
+      z-index: 1;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $black-alpha-30;
+    }
+  }
+
+  &.featured {
+    .stream-block-title {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+      font-size: 1.5em;
+    }
+
+    .feature-content-people-list {
+      @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
+      font-size: 0.75em;
+      margin-bottom: 0;
+      text-transform: uppercase;
+  
+      li {
+        color: $cigi-text-grey;
+        display: inline;
+      }
+    }
+
+    .feature-content-large {
+      &.poster {
+        .feature-content-image {
+          .img-wrapper {
+            margin: 0;
+          }
+        }
+      }
+
+      .feature-content-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .feature-content-title {
+          @include media-breakpoint-up(lg) {
+            font-size: 2.1em;
+          }
+          font-size: 1.7em;
+        }
+      }
+    }
+
+    .separator-large {
+      @include media-breakpoint-down(sm) {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+    }
+
+    .highlights {
+      .stream-block-additional-file-block {
+        .img-container {
+          figure {
+            background-color: $black;
+
+            &:hover {
+              img {
+                opacity: 0.8;
+              }
+            }
+
+            img {
+              transition: opacity 0.2s ease;
+            }
+          }
+        }
+      }
+    }
+
+    .singular-feature {
+      .feature-content-image {
+        flex: 0 0 33.3333%;
       }
     }
   }
@@ -22,107 +115,6 @@ section {
   button {
     &.button-action {
       text-transform: capitalize;
-    }
-  }
-
-  section {
-    &.hero {
-      margin-bottom: 1.5em;
-      background-size: cover;
-
-      .hero-main {
-        position: relative;
-        z-index: 1;
-      }
-
-      p {
-        color: $white;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: $black-alpha-30;
-      }
-    }
-
-    &.featured {
-      .stream-block-title {
-        @include link($color: $black, $hover-color: $cigi-primary-colour);
-        font-size: 1.5em;
-      }
-
-      .feature-content-people-list {
-        @include link($color: $cigi-text-grey, $hover-color: $cigi-dark-pink);
-        font-size: 0.75em;
-        margin-bottom: 0;
-        text-transform: uppercase;
-    
-        li {
-          color: $cigi-text-grey;
-          display: inline;
-        }
-      }
-
-      .feature-content-large {
-        &.poster {
-          .feature-content-image {
-            .img-wrapper {
-              margin: 0;
-            }
-          }
-        }
-
-        .feature-content-text {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-
-          .feature-content-title {
-            @include media-breakpoint-up(lg) {
-              font-size: 2.1em;
-            }
-            font-size: 1.7em;
-          }
-        }
-      }
-
-      .separator-large {
-        @include media-breakpoint-down(sm) {
-          margin-left: 15px;
-          margin-right: 15px;
-        }
-      }
-
-      .highlights {
-        .stream-block-additional-file-block {
-          .img-container {
-            figure {
-              background-color: $black;
-
-              &:hover {
-                img {
-                  opacity: 0.8;
-                }
-              }
-
-              img {
-                transition: opacity 0.2s ease;
-              }
-            }
-          }
-        }
-      }
-
-      .singular-feature {
-        .feature-content-image {
-          flex: 0 0 33.3333%;
-        }
-      }
     }
   }
 
