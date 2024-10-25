@@ -154,4 +154,12 @@ body {
       margin-top: 3rem;
     }
   }
+
+  .data-value-series-in-the-series {
+    .series-category {
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
 }

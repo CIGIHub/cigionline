@@ -54,13 +54,16 @@
           <div class="col">
             <p>A CIGI Essay Series</p>
             <h1><span>{{ self.title }}</span></h1>
+            <div class="subtitle">
+              {{ self.subtitle|richtext }}
+            </div>
           </div>
         </div>
         <div class="row justify-content-center">
           <div class="col-md-10 col-lg-8">
             <div class="short-description">{{ self.short_description|richtext }}</div>
             <div class="scroll-arrow">
-              <a href="#article-body">
+              <a href="#scroll-anchor">
                 <i class="far fa-angle-down" aria-hidden="true"></i>
               </a>
             </div>
@@ -68,6 +71,7 @@
         </div>
       </div>
     </div>
+    <div id="scroll-anchor"></div>
   </div>
   {% include "includes/body.html" with body=self.body heading="About the Series" full_heading=True %}
   
@@ -82,10 +86,10 @@
             <div class="credits-content">
               {% for title in self.credits_stream_field %}
                 <div class="title-container">
-                  <div class="title">{{ title.value.title }}</div>
                   {% for person in title.value.people %}
                     <div class="name">{{ person }}</div>
                   {% endfor %}
+                  <div class="title">{{ title.value.title }}</div>
                 </div>
               {% endfor %}
             </div>

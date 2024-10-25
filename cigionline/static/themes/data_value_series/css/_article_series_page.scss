@@ -19,6 +19,10 @@ body {
     }
 
     .data-value-series-hero {
+      @include media-breakpoint-down(sm) {
+        align-items: flex-start;
+        text-align: left;
+      }
       position: relative;
       height: 100vh;
       display: flex;
@@ -29,6 +33,16 @@ body {
       background-color: $black;
 
       .bg-gradient {
+        @include media-breakpoint-down(sm) {
+          height: 100%;
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.7) 20%,
+            rgba(0, 0, 0, 0.9) 70%,
+            $black 100%
+          );
+        }
         position: absolute;
         top: 0;
         left: 0;
@@ -37,8 +51,8 @@ body {
         height: 70%;
         background: linear-gradient(
           to bottom,
-          rgba(0, 0, 0, 0) 0%,
-          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.4) 50%,
           rgba(0, 0, 0, 0.9) 70%,
           $black 100%
         );
@@ -46,6 +60,12 @@ body {
       }
 
       .video-bg {
+        @include media-breakpoint-down(sm) {
+          height: 100%;
+          width: 100%;
+          bottom: 0;
+          left: auto;
+        }
         position: absolute;
         top: 0;
         left: 0;
@@ -55,6 +75,14 @@ body {
         z-index: 0;
 
         video {
+          @include media-breakpoint-down(sm) {
+            width: auto;
+            height: 100%;
+            transform: translate(-50%, 0);
+            object-fit: fill;
+            top: auto;
+            bottom: 0;
+          }
           position: absolute;
           top: 50%;
           left: 50%;
@@ -71,6 +99,9 @@ body {
       }
 
       .hero-content {
+        @include media-breakpoint-down(sm) {
+          margin-top: 6rem;
+        }
         position: relative;
         z-index: 2;
 
@@ -85,10 +116,23 @@ body {
           margin-bottom: 2rem;
         }
 
+        .subtitle {
+          @include media-breakpoint-up(md) {
+            display: none;
+          }
+        }
+
         p {
           margin-bottom: 0.75rem;
           line-height: 1.25;
           font-family: $subheader-font;
+          font-size: 0.85rem;
+        }
+
+        .short-description {
+          @include media-breakpoint-down(sm) {
+            display: none;
+          }
         }
 
         .scroll-arrow {
@@ -114,8 +158,7 @@ body {
       @include media-breakpoint-up(md) {
         -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
         grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 8em 6em 6em;
-        margin: 1em 0 4em 2em;
+        margin: 1em 0 0 0;
       }
       @include media-breakpoint-up(xl) {
         -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
@@ -127,8 +170,20 @@ body {
       font-size: 0.75em;
       grid-column-gap: 0.5em;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: 8em 6em 4em 6em;
-      margin: 1em 0 4em;
+      grid-template-rows: 1fr;
+      margin: 1em 0 0;
+
+      .title-container {
+        margin-bottom: 2rem;
+
+        .name {
+          text-transform: uppercase;
+        }
+
+        .title {
+          text-transform: capitalize;
+        }
+      }
     }
   }
 }
