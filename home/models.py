@@ -12,13 +12,14 @@ from features.models import (
     HomePageFeaturedHighlightsList,
     HomePageFeaturedEventsList,
 )
+from streams.blocks import ParagraphBlock, PersonsListBlock
 from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     FieldPanel
 )
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
@@ -323,6 +324,20 @@ class HomePage(Page):
 
 class Think7HomePage(Page):
     """Singleton model for the Think 7 Canada home page."""
+    
+    body = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+    )
+    
+    board_members = StreamField(
+        [
+            ('board_members', PersonsListBlock()),
+        ],
+        blank=True,
+    )
     
     def get_template(self, request, *args, **kwargs):
         return 'think7/home_page.html'
