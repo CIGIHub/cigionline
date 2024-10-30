@@ -1,3 +1,84 @@
 footer {
-  background-color: $think7_bg_white;
+  @include link($color: $white, $hover-color: $cigi-primary-colour);
+  margin-top: 3rem;
+  padding: 3rem 0 5rem;
+  background-color: $think7_bg_green;
+  color: $white;
+  text-align: center;
+  font-size: 1rem;
+
+  .logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    a {
+      width: 30%;
+      margin: 0 3rem;
+    }
+
+    svg {
+      path {
+        fill: $white;
+      }
+    }
+  }
+
+  .email {
+    font-size: 1rem;
+    margin: 2rem 0;
+  }
+
+  nav {
+    margin: 2rem 0;
+    ul {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+
+      li {
+        @include link($color: $white, $hover-color: $cigi-primary-colour);
+        position: relative;
+        padding: 0.5rem 1rem 0.5rem;
+        text-transform: uppercase;
+        font-size: 1rem;
+
+        &:not(:last-child) {
+          &::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            transform: rotate(15deg);
+            background-color: $cigi-primary-colour;
+            transform-origin: center;
+          }
+        }
+
+        &.submit-abstract {
+          button {
+            border: 2px solid $cigi-primary-colour;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-transform: uppercase;
+          }
+
+          &:hover {
+            button {
+              background-color: $cigi-primary-colour;
+              color: $white;
+            }
+          }
+        }
+      }
+    }
+  }
 }
