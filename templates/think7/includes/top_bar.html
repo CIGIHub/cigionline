@@ -10,23 +10,28 @@
 
       {% get_menu_items 'think7' as think7_menu_items %}
     
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          {% for menu_item in think7_menu_items %}
-            <li class="nav-item">
-              {% if menu_item.link_page %}
-                <a class="nav-link" href="{% pageurl menu_item.link_page %}">
-                  {{ menu_item.title }}
-                </a>
-              {% elif menu_item.link_url %}
-                <a class="nav-link" href="{{ menu_item.link_url }}">
-                  {{ menu_item.title }}
-                </a>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+      <ul class="navbar-nav">
+        {% for menu_item in think7_menu_items %}
+          <li class="nav-item">
+            {% if menu_item.link_page %}
+              <a href="{% pageurl menu_item.link_page %}">
+                {{ menu_item.title }}
+              </a>
+            {% elif menu_item.link_url %}
+              <a href="{{ menu_item.link_url }}">
+                {{ menu_item.title }}
+              </a>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li class="nav-item submit-abstract">
+          <a href="/submit-abstract">
+            <button class="submit-abstract">
+              Submit Abstract
+            </button>
+          </a>
+        </li>
+      </ul>
     </nav>
   </div>
 </header>
