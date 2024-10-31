@@ -745,7 +745,7 @@ class BasicPage(
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
-    parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'home.HomePage']
+    parent_page_types = ['careers.JobPostingListPage', 'core.BasicPage', 'home.HomePage', 'home.Think7HomePage']
     subpage_types = [
         'annual_reports.AnnualReportListPage',
         'core.BasicPage',

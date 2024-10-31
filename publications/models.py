@@ -58,8 +58,8 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         except ArticleTypePage.DoesNotExist:
             raise Http404
 
-    max_count = 1
-    parent_page_types = ['home.HomePage']
+    max_count = 2
+    parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = [
         'articles.ArticleSeriesListPage',
         'articles.ArticleTypePage',

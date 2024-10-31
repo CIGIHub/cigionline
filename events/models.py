@@ -25,8 +25,8 @@ import urllib.parse
 
 
 class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
-    max_count = 1
-    parent_page_types = ['home.HomePage']
+    max_count = 2
+    parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = ['events.EventPage']
     templates = 'events/event_list_page.html'
 

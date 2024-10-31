@@ -2,6 +2,7 @@ from distutils.log import error
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
+from research.models import ProjectPage
 from events.models import EventPage, EventListPage
 from features.models import (
     HomePageFeaturedPromotionsList,
@@ -355,7 +356,22 @@ class Think7HomePage(Page):
             classname='collapsible collapsed',
         ),
     ]
-
+    
+    def get_task_forces(self):
+        return self.get_children().type(ProjectPage)
+    
+    max_count = 1
+    subpage_types = [
+        'articles.ArticleListPage',
+        'contact.ContactPage',
+        'core.BasicPage',
+        'events.EventListPage',
+        'people.PeoplePage',
+        'people.PersonListPage',
+        'publications.PublicationListPage',
+        'research.ProjectListPage',
+    ]
+    
     def get_template(self, request, *args, **kwargs):
         return 'think7/home_page.html'
     
