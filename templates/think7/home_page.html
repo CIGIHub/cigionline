@@ -3,6 +3,7 @@
 
 {% block extra_css %}
   {% render_bundle 'think7' 'css' %}
+  {% render_bundle 'think7HomePage' 'css' %}
 {% endblock %}
 {% block extra_js %}
   {% render_bundle 'think7' 'js' attrs='defer' %}
@@ -15,13 +16,24 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        body
+  <section class="body" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h2>About Think 7</h2>
+        </div>
       </div>
     </div>
-  </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+
+  <section class="advisory-board">
+    {% for block in self.board_members %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
 {% endblock content %}
 
 {% block footer %}

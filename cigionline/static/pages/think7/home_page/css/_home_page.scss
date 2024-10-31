@@ -1,2 +1,59 @@
 @import '../../css/variables';
 
+body {
+  section {
+    margin: 3rem 0;
+  }
+
+  h2 {
+    text-transform: uppercase;
+    position: relative;
+    margin-left: 0.2rem;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      top: 0;
+      width: 2px;
+      transform: rotate(15deg);
+      background-color: $cigi-primary-colour;
+      transform-origin: center;
+    }
+  }
+
+  .body {
+    margin: 9rem 0 3rem;
+  }
+
+  .advisory-board {
+    h2 {
+      font-weight: 400;
+    }
+
+    ul {
+      &.persons-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        li {
+          border: 0;
+          display: flex;
+          padding: 0;
+          margin-bottom: 1rem;
+
+          .person-info {
+            display: block;
+
+            .person-description {
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
