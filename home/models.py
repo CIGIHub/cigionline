@@ -339,6 +339,23 @@ class Think7HomePage(Page):
         blank=True,
     )
     
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('board_members'),
+            ],
+            heading='Board Members',
+            classname='collapsible collapsed',
+        ),
+    ]
+
     def get_template(self, request, *args, **kwargs):
         return 'think7/home_page.html'
     
