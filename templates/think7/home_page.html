@@ -107,8 +107,19 @@
           {% with self.get_latest_event as event %}
             <article>
               <div class="img-wrapper">
-                <div>
+                <div class="before-wrapper">
                   {% image event.specific.image_hero fill-750x500 %}
+                </div>
+                <div class="img-overlay">
+                  <div class="img-overlay-date">
+                    {{event.specific.publishing_date|date:"M d Y"}}
+                  </div>
+                  <div class="img-overlay-city">
+                    <a href="https://www.google.com/maps/place/{{event.specific.location_string}}" target="_blank">
+                      <i class="fa-sharp fa-solid fa-location-dot"></i>
+                      {{event.specific.location_city}}
+                    </a>
+                  </div>
                 </div>
               </div>
               <div class="article-text">
@@ -124,7 +135,7 @@
                   {{event.specific.publishing_date|date:"F j, Y"}}
                 </div>
                 <div class="location">
-                  {{event.specific.location_string}}
+                  {{event.specific.location_city}}, {{event.specific.location_province}}, {{event.specific.location_country}}
                 </div>
               </div>
             </article>

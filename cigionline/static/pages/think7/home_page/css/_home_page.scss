@@ -155,7 +155,9 @@ body {
 
   .upcoming-events {
     .img-wrapper {
-      & > div {
+      position: relative;
+
+      .before-wrapper {
         position: relative;
 
         &::before {
@@ -174,6 +176,33 @@ body {
           border-radius: 15px;
         }
       }
-    } 
+
+      .img-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        color: $white;
+
+        .img-overlay-date {
+          font-size: 1.2rem;
+          width: 50%;
+          line-height: 1;
+          margin-bottom: 0.2rem;
+        }
+
+        .img-overlay-city {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          i {
+            margin-right: 0.2rem;
+          }
+        }
+      }
+    }
+
+    .date {
+      color: $black;
+    }
   }
 }
