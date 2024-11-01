@@ -125,4 +125,55 @@ body {
       }
     }
   }
+
+  .latest-publication,
+  .upcoming-events {
+    article {
+      display: flex;
+
+      .img-wrapper {
+        flex-basis: 30%;
+        flex-shrink: 0;
+        margin-right: 1rem;
+
+        img {
+          border-radius: 15px;
+          border: 1px solid $cigi-light-grey;
+        }
+      }
+
+      h3 {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        font-weight: 500;
+      }
+
+      .subtitle {
+        line-height: 1.25;
+      }
+    }
+  }
+
+  .upcoming-events {
+    .img-wrapper {
+      & > div {
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 0.5) 30%,
+            rgba(0, 0, 0, 0) 100%
+          );
+          border-radius: 15px;
+        }
+      }
+    } 
+  }
 }
