@@ -332,12 +332,16 @@ class Think7HomePage(Page):
         ],
         blank=True,
     )
-    
     board_members = StreamField(
         [
             ('board_members', PersonsListBlock()),
         ],
         blank=True,
+    )
+    release_stage = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
     )
     
     content_panels = Page.content_panels + [
@@ -353,6 +357,13 @@ class Think7HomePage(Page):
                 FieldPanel('board_members'),
             ],
             heading='Board Members',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('release_stage'),
+            ],
+            heading='Release Stage',
             classname='collapsible collapsed',
         ),
     ]

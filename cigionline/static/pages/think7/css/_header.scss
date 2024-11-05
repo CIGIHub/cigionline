@@ -1,6 +1,6 @@
 header {
   &.think7-header {
-    background-color: $think7_bg_white;
+    padding-top: 1rem;
 
     nav {
       ul {
@@ -17,7 +17,7 @@ header {
           position: relative;
           padding: 0.75rem 1rem 0.75rem;
           text-transform: uppercase;
-          color: $black;
+          color: $cigi-text-grey;
           font-size: 1rem;
 
           &:not(:nth-last-child(-n + 2)) {
@@ -41,6 +41,7 @@ header {
               padding: 0.5rem 1rem;
               transition: background-color 0.3s ease, color 0.3s ease;
               text-transform: uppercase;
+              background-color: $think7_bg_white;
             }
 
             &:hover {

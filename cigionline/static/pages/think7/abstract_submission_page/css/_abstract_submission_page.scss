@@ -13,7 +13,13 @@ body {
 
   .abstract-submission {
     text-align: center;
-    margin: 4rem 0 5rem;
+    margin: 2rem 0 5rem;
+
+    .form-wrapper {
+      border: 1px solid $cigi-medium-grey;
+      padding: 2rem 4rem;
+      border-radius: 5px;
+    }
 
     button {
       border: 2px solid $cigi-primary-colour;
@@ -22,6 +28,11 @@ body {
       background-color: $white;
       transition: background-color 0.3s ease, color 0.3s ease;
       text-transform: uppercase;
+
+      &:hover {
+        background-color: $cigi-primary-colour;
+        color: $white;
+      }
     }
 
     .response-message {

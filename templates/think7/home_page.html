@@ -10,8 +10,12 @@
 
 {% block body_class %}think7-homepage{% endblock %}
 
+{% if self.release_stage == '1' %}
+  {% define 'hide-links' as links %}
+{% endif %}
+
 {% block header %}
-  {% include "./includes/top_bar.html" %}
+  {% include "./includes/top_bar.html" with class=links %}
 {% endblock %}
 
 {% block content %}
@@ -28,121 +32,123 @@
     {% endfor %}
   </section>
 
-  <section class="advisory-board">
-    {% for block in self.board_members %}
-      {% include_block block %}
-    {% endfor %}
-  </section>
+  {% if self.release_stage != '1' %}
+    <section class="advisory-board">
+      {% for block in self.board_members %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
 
-  <section class="task-forces">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <h2>Task Forces</h2>
+    <section class="task-forces">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Task Forces</h2>
+          </div>
         </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col">
-          <div class="task-forces-list">
-            {% for task_force in self.get_task_forces %}
-              <div class="task-force">
-                <div class="img-wrapper">
-                  {% if task_force.specific.image_hero %}
-                    {% image task_force.specific.image_hero fill-750x1000 %}
-                  {% endif %}
+        <div class="row justify-content-center">
+          <div class="col">
+            <div class="task-forces-list">
+              {% for task_force in self.get_task_forces %}
+                <div class="task-force">
+                  <div class="img-wrapper">
+                    {% if task_force.specific.image_hero %}
+                      {% image task_force.specific.image_hero fill-750x1000 %}
+                    {% endif %}
+                  </div>
+                  <div class="task-force-overlay">
+                    <div class="label">{{ task_force.specific.task_force_label }}</div>
+                    <h3>
+                      <a href="{% pageurl task_force %}">
+                        {{ task_force.title }}
+                      </a>
+                    </h3>
+                  </div>
                 </div>
-                <div class="task-force-overlay">
-                  <div class="label">{{ task_force.specific.task_force_label }}</div>
-                  <h3>
-                    <a href="{% pageurl task_force %}">
-                      {{ task_force.title }}
-                    </a>
-                  </h3>
-                </div>
-              </div>
-            {% endfor %}
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="latest-publication">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <h2>Latest Publication</h2>
-          {% with self.get_latest_publication as publication %}
-            <article>
-              <div class="img-wrapper">
-                {% if publication.specific.image_poster %}
-                  {% image publication.specific.image_poster fill-750x1000 %}
-                {% endif %}
-              </div>
-              <div class="article-text">
-                <h3>
-                  <a href="{% pageurl publication %}">
-                    {{publication.title}}
-                  </a>
-                </h3>
-                <div class="subtitle">
-                  {{publication.specific.subtitle|richtext}}
+    <section class="latest-publication">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Latest Publication</h2>
+            {% with self.get_latest_publication as publication %}
+              <article>
+                <div class="img-wrapper">
+                  {% if publication.specific.image_poster %}
+                    {% image publication.specific.image_poster fill-750x1000 %}
+                  {% endif %}
                 </div>
-                {% include 'includes/authors.html' with authors=publication.specific.authors.all %}
-              </div>
-            </article>
-
-          {% endwith %}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="upcoming-events">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <h2>Upcoming Events</h2>
-          {% with self.get_latest_event as event %}
-            <article>
-              <div class="img-wrapper">
-                <div class="before-wrapper">
-                  {% image event.specific.image_hero fill-750x500 %}
-                </div>
-                <div class="img-overlay">
-                  <div class="img-overlay-date">
-                    {{event.specific.publishing_date|date:"M d Y"}}
-                  </div>
-                  <div class="img-overlay-city">
-                    <a href="https://www.google.com/maps/place/{{event.specific.location_string}}" target="_blank">
-                      <i class="fa-sharp fa-solid fa-location-dot"></i>
-                      {{event.specific.location_city}}
+                <div class="article-text">
+                  <h3>
+                    <a href="{% pageurl publication %}">
+                      {{publication.title}}
                     </a>
+                  </h3>
+                  <div class="subtitle">
+                    {{publication.specific.subtitle|richtext}}
                   </div>
+                  {% include 'includes/authors.html' with authors=publication.specific.authors.all %}
                 </div>
-              </div>
-              <div class="article-text">
-                <h3>
-                  <a href="{% pageurl event %}">
-                    {{event.title}}
-                  </a>
-                </h3>
-                <div class="subtitle">
-                  {{event.specific.subtitle|richtext}}
-                </div>
-                <div class="date">
-                  {{event.specific.publishing_date|date:"F j, Y"}}
-                </div>
-                <div class="location">
-                  {{event.specific.location_city}}, {{event.specific.location_province}}, {{event.specific.location_country}}
-                </div>
-              </div>
-            </article>
-          {% endwith %}
+              </article>
+
+            {% endwith %}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <section class="upcoming-events">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Upcoming Events</h2>
+            {% with self.get_latest_event as event %}
+              <article>
+                <div class="img-wrapper">
+                  <div class="before-wrapper">
+                    {% image event.specific.image_hero fill-750x500 %}
+                  </div>
+                  <div class="img-overlay">
+                    <div class="img-overlay-date">
+                      {{event.specific.publishing_date|date:"M d Y"}}
+                    </div>
+                    <div class="img-overlay-city">
+                      <a href="https://www.google.com/maps/place/{{event.specific.location_string}}" target="_blank">
+                        <i class="fa-sharp fa-solid fa-location-dot"></i>
+                        {{event.specific.location_city}}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="article-text">
+                  <h3>
+                    <a href="{% pageurl event %}">
+                      {{event.title}}
+                    </a>
+                  </h3>
+                  <div class="subtitle">
+                    {{event.specific.subtitle|richtext}}
+                  </div>
+                  <div class="date">
+                    {{event.specific.publishing_date|date:"F j, Y"}}
+                  </div>
+                  <div class="location">
+                    {{event.specific.location_city}}, {{event.specific.location_province}}, {{event.specific.location_country}}
+                  </div>
+                </div>
+              </article>
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
 
 {% block footer %}

@@ -25,6 +25,24 @@
 
         <nav>
           <ul>
+            <li class="nav-item">
+              <a href="/">
+                About
+              </a>
+            </li>
+            {% for menu_item in think7_menu_items %}
+              <li class="nav-item">
+                {% if menu_item.link_page %}
+                  {{ menu_item.title }}
+                {% elif menu_item.link_url %}
+                  {{ menu_item.title }}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+        <!-- <nav>
+          <ul>
             {% for menu_item in think7_menu_items %}
               <li class="nav-item">
                 {% if menu_item.link_page %}
@@ -39,7 +57,7 @@
               </li>
             {% endfor %}
           </ul>
-        </nav>
+        </nav> -->
 
         <div class="copyright">
           &copy; {{ current_year }} Centre for International Governance Innovation

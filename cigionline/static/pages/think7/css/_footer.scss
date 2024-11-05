@@ -2,7 +2,7 @@ footer {
   @include link($color: $white, $hover-color: $cigi-primary-colour);
   margin-top: 3rem;
   padding: 3rem 0 5rem;
-  background-color: $think7_bg_green;
+  background-color: $think7_bg_red;
   color: $white;
   text-align: center;
   font-size: 1rem;
@@ -47,6 +47,7 @@ footer {
         padding: 0.5rem 1rem 0.5rem;
         text-transform: uppercase;
         font-size: 1rem;
+        color: $cigi-medium-light-grey;
 
         &:not(:last-child) {
           &::after {

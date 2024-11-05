@@ -3,14 +3,38 @@
 
 <header class="think7-header">
   <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
       <a class="navbar-brand" href="/">
         <img src="{% static 'assets/think7-logo.png' %}" alt="Logo" class="logo">
       </a>
 
       {% get_menu_items 'think7' as think7_menu_items %}
-    
+
       <ul class="navbar-nav">
+        <li>
+          <a href="/">
+            About
+          </a>
+        </li>
+        {% for menu_item in think7_menu_items %}
+          <li class="nav-item">
+            {% if menu_item.link_page %}
+              {{ menu_item.title }}
+            {% elif menu_item.link_url %}
+              {{ menu_item.title }}
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li class="nav-item submit-abstract">
+          <a href="/abstract-submission">
+            <button class="submit-abstract">
+              Submit Abstract
+            </button>
+          </a>
+        </li>
+      </ul>
+    
+      <!-- <ul class="navbar-nav">
         {% for menu_item in think7_menu_items %}
           <li class="nav-item">
             {% if menu_item.link_page %}
@@ -31,7 +55,7 @@
             </button>
           </a>
         </li>
-      </ul>
+      </ul> -->
     </nav>
   </div>
 </header>

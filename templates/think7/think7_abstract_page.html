@@ -32,15 +32,18 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-          <form id="abstractUploadForm" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.file.label_tag }}
-            {{ form.file }} 
-            <button type="submit">Upload File</button>
-          </form>
+          <div class="form-wrapper">
+            <form id="abstractUploadForm" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.file.label_tag }}
+              {{ form.file }} 
+              <button type="submit">Upload File</button>
+            </form>
+  
+            <div>
+              <div id="responseMessage" class="response-message"></div>
+            </div>
 
-          <div>
-            <div id="responseMessage" class="response-message"></div>
           </div>
         </div>
       </div>
