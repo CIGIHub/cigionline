@@ -1,8 +1,7 @@
-{% extends "base.html" %}
+{% extends "think7_base.html" %}
 {% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
 
 {% block extra_css %}
-  {% render_bundle 'think7' 'css' %}
   {% render_bundle 'think7HomePage' 'css' %}
 {% endblock %}
 {% block extra_js %}
