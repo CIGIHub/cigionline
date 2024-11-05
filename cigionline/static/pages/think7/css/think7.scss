@@ -1,12 +1,43 @@
+$fa-font-path: '../fontawesome-pro/webfonts';
+@import '~@fortawesome/fontawesome-pro/css/all.css';
+@import '~bootstrap/scss/bootstrap';
+
 @import './_variables.scss';
 @import './_mixins.scss';
 @import './_header.scss';
 @import './_footer.scss';
+
+html {
+  font-size: 17px;
+}
 
 body {
   background-color: $think7_bg_white;
 }
 
 main {
-  margin: 6rem 0 3rem; 
+  margin: 6rem 0 3rem;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.125rem;
+}
+
+a {
+  transition: color 0.2s ease;
+  color: $black;
+
+  &:hover {
+    text-decoration: none;
+    color: $cigi-primary-colour;
+  }
 }
