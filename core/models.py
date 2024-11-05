@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup
 from django.db import models
 from django.db.models.fields import CharField
+from django.http import JsonResponse
 from django.http.response import Http404
 from django.utils.functional import cached_property
+from django.shortcuts import render
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -54,12 +56,14 @@ from wagtail.admin.panels import (
 )
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page
+from wagtail.models import Orderable, Page, Collection
 from wagtail.url_routing import RouteResult
 from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.documents.models import Document
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
+from .forms import Think7AbstractUploadForm
 import math
 
 
@@ -1111,3 +1115,63 @@ class Theme(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Think7AbstractPage(BasicPageAbstract, Page):
+    """Singleton page for Think 7 abstract submission"""
+    
+    def serve(self, request):
+        form = Think7AbstractUploadForm()
+
+        if request.method == 'POST':
+            form = Think7AbstractUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                uploaded_file = form.cleaned_data['file']
+                collection, created = Collection.objects.get_or_create(name='Think7 Abstracts')
+                
+                try:
+                    document = Document.objects.create(
+                        title=uploaded_file.name,
+                        file=uploaded_file,
+                        collection=collection
+                    )
+                    return JsonResponse({
+                        'status': 'success',
+                        'message': 'File uploaded successfully!'
+                    })
+                    
+                except Exception as e:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': f'Failed to save file: {str(e)}'
+                    })
+            else:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid form submission.'
+                })
+                
+        return render(request, 'think7/think7_abstract_page.html', {
+            'page': self,
+            'form': form,
+            'self': self,
+        })
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+    
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['home.Think7HomePage']
+    subpage_types = []
+    template = 'think7/think7_abstract_page.html'
+
+    class Meta:
+        verbose_name = 'Think7 Abstract Page'
+        verbose_name_plural = 'Think7 Abstract Pages'
