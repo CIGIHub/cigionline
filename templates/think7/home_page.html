@@ -32,45 +32,49 @@
     {% endfor %}
   </section>
 
+  <section class="task-forces">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h2>
+            <a href="/task-forces/">
+              Task Forces
+            </a>
+          </h2>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="task-forces-list">
+            {% for task_force in self.get_task_forces %}
+              <div class="task-force">
+                <div class="img-wrapper">
+                  {% if task_force.specific.image_hero %}
+                    {% image task_force.specific.image_hero fill-750x1000 %}
+                  {% endif %}
+                </div>
+                <div class="task-force-overlay">
+                  <div class="label">{{ task_force.specific.task_force_label }}</div>
+                  <h3>
+                    <a href="{% pageurl task_force %}">
+                      {{ task_force.title }}
+                    </a>
+                  </h3>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   {% if self.release_stage != '1' %}
     <section class="advisory-board">
       {% for block in self.board_members %}
         {% include_block block %}
       {% endfor %}
-    </section>
-
-    <section class="task-forces">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-8">
-            <h2>Task Forces</h2>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col">
-            <div class="task-forces-list">
-              {% for task_force in self.get_task_forces %}
-                <div class="task-force">
-                  <div class="img-wrapper">
-                    {% if task_force.specific.image_hero %}
-                      {% image task_force.specific.image_hero fill-750x1000 %}
-                    {% endif %}
-                  </div>
-                  <div class="task-force-overlay">
-                    <div class="label">{{ task_force.specific.task_force_label }}</div>
-                    <h3>
-                      <a href="{% pageurl task_force %}">
-                        {{ task_force.title }}
-                      </a>
-                    </h3>
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </section>   
 
     <section class="latest-publication">
       <div class="container">

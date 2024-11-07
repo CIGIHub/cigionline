@@ -1126,23 +1126,32 @@ class Think7AbstractPage(BasicPageAbstract, Page):
             form = Think7AbstractUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 uploaded_file = form.cleaned_data['file']
-                collection, created = Collection.objects.get_or_create(name='Think7 Abstracts')
+                valid_extensions = ['.pdf', '.doc', '.docx']
+                file_extension = uploaded_file.name.lower().split('.')[-1]
                 
-                try:
-                    document = Document.objects.create(
-                        title=uploaded_file.name,
-                        file=uploaded_file,
-                        collection=collection
-                    )
-                    return JsonResponse({
-                        'status': 'success',
-                        'message': 'File uploaded successfully!'
-                    })
+                if f".{file_extension}" in valid_extensions:
+                    collection, created = Collection.objects.get_or_create(name='Think7 Abstracts')
                     
-                except Exception as e:
+                    try:
+                        document = Document.objects.create(
+                            title=uploaded_file.name,
+                            file=uploaded_file,
+                            collection=collection
+                        )
+                        return JsonResponse({
+                            'status': 'success',
+                            'message': 'File uploaded successfully!'
+                        })
+                        
+                    except Exception as e:
+                        return JsonResponse({
+                            'status': 'error',
+                            'message': f'Failed to save file: {str(e)}'
+                        })
+                else:
                     return JsonResponse({
                         'status': 'error',
-                        'message': f'Failed to save file: {str(e)}'
+                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.'
                     })
             else:
                 return JsonResponse({

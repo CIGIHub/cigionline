@@ -5,32 +5,25 @@
   margin: 3rem 0;
 
   .task-forces-list {
-    display: flex;
-    justify-content: space-between;
-
     .task-force {
-      position: relative;
-      flex-basis: 24%;
+      display: flex;
+      padding: 1rem 0;
+      border-bottom: 2px solid $cigi-light-grey;
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
 
       .img-wrapper {
         position: relative;
         z-index: 1;
-
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 1) 0%,
-            rgba(0, 0, 0, 0.7) 50%,
-            rgba(0, 0, 0, 0.1) 100%
-          );
-          border-radius: 15px;
-        }
+        flex: 0 0 20%;
+        margin-right: 1rem;
 
         img {
           object-fit: cover;
@@ -38,23 +31,16 @@
         }
       }
 
-      .task-force-overlay {
-        padding: 1.5rem 1rem;
-        position: absolute;
-        top: 0;
-        left: 0;
-        color: white;
-        z-index: 2;
+      h3 {
+        @include link(
+          $color: $think7_bg_red,
+          $hover-color: $cigi-primary-colour
+        );
+        font-size: 1.25rem;
+      }
 
-        .label {
-          font-size: 0.8rem;
-          margin-bottom: 0.75rem;
-        }
-
-        h3 {
-          @include link($color: $white, $hover-color: $cigi-primary-colour);
-          font-size: 1.25rem;
-        }
+      .task-force-subtitle {
+        line-height: 1.25;
       }
     }
   }

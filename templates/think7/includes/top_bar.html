@@ -1,4 +1,4 @@
-{% load wagtailcore_tags menu_tags cache static %}
+{% load wagtailcore_tags menu_tags cache static core_tags %}
 
 
 <header class="think7-header">
@@ -11,19 +11,18 @@
       {% get_menu_items 'think7' as think7_menu_items %}
 
       <ul class="navbar-nav">
-        <li>
-          <a href="/">
-            About
-          </a>
-        </li>
         {% for menu_item in think7_menu_items %}
           <li class="nav-item">
-            {% if menu_item.link_page %}
-              <a href="{% pageurl menu_item.link_page %}">
-                {{ menu_item.title }}
-              </a>
-            {% elif menu_item.link_url %}
-              <a href="{{ menu_item.link_url }}">
+            {% if menu_item.link_page.url_path == self.url_path or menu_item.link_url == request.path  %}
+              {{ menu_item.title }}
+            {% else %}
+              <a href="
+                {% if menu_item.link_url %}
+                  {{ menu_item.link_url }}
+                {% else %}
+                  {% pageurl menu_item.link_page %}
+                {% endif %}
+              ">
                 {{ menu_item.title }}
               </a>
             {% endif %}

@@ -26,22 +26,26 @@
   <section class="task-forces">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col">
+        <div class="col-md-10 col-lg-8">
           <div class="task-forces-list">
             {% for task_force in self.get_task_forces %}
               <div class="task-force">
                 <div class="img-wrapper">
-                  {% if task_force.specific.image_hero %}
-                    {% image task_force.specific.image_hero fill-750x1000 %}
-                  {% endif %}
+                  <a href="{% pageurl task_force %}">
+                    {% if task_force.specific.image_hero %}
+                      {% image task_force.specific.image_hero fill-750x1000 %}
+                    {% endif %}
+                  </a>
                 </div>
-                <div class="task-force-overlay">
-                  <div class="label">{{ task_force.specific.task_force_label }}</div>
+                <div class="task-force-info">
                   <h3>
                     <a href="{% pageurl task_force %}">
                       {{ task_force.title }}
                     </a>
                   </h3>
+                  <div class="task-force-subtitle">
+                    {{ task_force.specific.subtitle|richtext }}
+                  </div>
                 </div>
               </div>
             {% endfor %}
