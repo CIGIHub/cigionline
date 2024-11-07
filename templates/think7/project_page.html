@@ -1,0 +1,25 @@
+{% extends "think7_base.html" %}
+{% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
+
+{% block header %}
+  {% include "./includes/top_bar.html" with class=links %}
+{% endblock %}
+
+{% block content %}
+  <section class="body" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h1>{{self.title}}</h1>
+        </div>
+      </div>
+    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock %}
+
+{% block footer %}
+  {% include "./includes/footer.html" %}
+{% endblock %}

@@ -1,0 +1,61 @@
+@import '../../css/variables';
+@import '../../css/mixins';
+
+.task-forces {
+  margin: 3rem 0;
+
+  .task-forces-list {
+    display: flex;
+    justify-content: space-between;
+
+    .task-force {
+      position: relative;
+      flex-basis: 24%;
+
+      .img-wrapper {
+        position: relative;
+        z-index: 1;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 0.7) 50%,
+            rgba(0, 0, 0, 0.1) 100%
+          );
+          border-radius: 15px;
+        }
+
+        img {
+          object-fit: cover;
+          border-radius: 15px;
+        }
+      }
+
+      .task-force-overlay {
+        padding: 1.5rem 1rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: white;
+        z-index: 2;
+
+        .label {
+          font-size: 0.8rem;
+          margin-bottom: 0.75rem;
+        }
+
+        h3 {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+}

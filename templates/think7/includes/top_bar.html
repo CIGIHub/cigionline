@@ -19,6 +19,39 @@
         {% for menu_item in think7_menu_items %}
           <li class="nav-item">
             {% if menu_item.link_page %}
+              <a href="{% pageurl menu_item.link_page %}">
+                {{ menu_item.title }}
+              </a>
+            {% elif menu_item.link_url %}
+              <a href="{{ menu_item.link_url }}">
+                {{ menu_item.title }}
+              </a>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li class="nav-item submit-abstract">
+          <a href="/abstract-submission">
+            <button class="submit-abstract">
+              Submit Abstract
+            </button>
+          </a>
+        </li>
+      </ul>
+      
+      <button class="dropdown-button">
+        <span class="icon-opened"><i class="far fa-times"></i></span>
+        <span class="icon-closed"><i class="far fa-bars"></i></span>
+      </button>
+
+      <ul class="navbar-nav dropdown hide">
+        <li>
+          <a href="/">
+            About
+          </a>
+        </li>
+        {% for menu_item in think7_menu_items %}
+          <li class="nav-item">
+            {% if menu_item.link_page %}
               {{ menu_item.title }}
             {% elif menu_item.link_url %}
               {{ menu_item.title }}

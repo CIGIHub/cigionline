@@ -40,7 +40,26 @@ class ProjectListPage(Page):
     parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = ['research.ProjectPage']
     templates = 'research/project_list_page.html'
+    
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks,
+        blank=True,
+        use_json_field=True,
+    )
+    
+    content_panels = Page.content_panels + [
+        FieldPanel('body'),
+    ]
 
+    def get_template(self, request, *args, **kwargs):
+        site = self.get_site()
+        
+        if site.site_name == 'Think 7 Canada':
+            return 'think7/project_list_page.html'
+        return super().get_template(request, *args, **kwargs)
+    
+    def get_task_forces(self):
+        return self.get_children().type(ProjectPage).live().public()
     class Meta:
         verbose_name = 'Activity List Page'
 
@@ -233,6 +252,11 @@ class ProjectPage(
         return [pages[x] for x in featured_page_ids]
 
     def get_template(self, request, *args, **kwargs):
+        site = self.get_site()
+        
+        if site.site_name == 'Think 7 Canada':
+            return 'think7/project_page.html'
+        
         standard_template = super(ProjectPage, self).get_template(request, *args, **kwargs)
         if self.theme:
             return f'themes/{self.get_theme_dir()}/project_page.html'

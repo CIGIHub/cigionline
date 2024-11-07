@@ -4,13 +4,10 @@ header {
 
     .navbar-brand {
       max-width: 250px;
+      width: 50%;
     }
 
     nav {
-      @include media-breakpoint-down(md) {
-        justify-content: center;
-      }
-
       ul {
         display: flex;
         align-items: center;
@@ -62,6 +59,20 @@ header {
               }
             }
           }
+        }
+
+        &.dropdown {
+          width: 100%;
+
+          &.hide {
+            display: none;
+          }
+        }
+      }
+
+      .dropdown-button {
+        @include media-breakpoint-up(lg) {
+          display: none;
         }
       }
     }

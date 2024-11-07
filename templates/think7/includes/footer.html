@@ -33,9 +33,13 @@
             {% for menu_item in think7_menu_items %}
               <li class="nav-item">
                 {% if menu_item.link_page %}
-                  {{ menu_item.title }}
+                  <a href="{% pageurl menu_item.link_page %}">
+                    {{ menu_item.title }}
+                  </a>
                 {% elif menu_item.link_url %}
-                  {{ menu_item.title }}
+                  <a href="{{ menu_item.link_url }}">
+                    {{ menu_item.title }}
+                  </a>
                 {% endif %}
               </li>
             {% endfor %}
