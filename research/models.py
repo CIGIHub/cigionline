@@ -8,6 +8,7 @@ from core.models import (
     ThemeablePageAbstract,
 )
 from django.db import models
+from django.db.models import F
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import AdditionalFileBlock, SurveyFindingsCountryBlock
 from wagtail.admin.panels import (
@@ -59,7 +60,7 @@ class ProjectListPage(Page):
         return super().get_template(request, *args, **kwargs)
     
     def get_task_forces(self):
-        return self.get_children().type(ProjectPage).live().public().specific().order_by('-publishing_date')
+        return self.get_children().type(ProjectPage).live().public().specific().annotate(publishing_date=F('contentpage__publishing_date')).order_by('-publishing_date')
     class Meta:
         verbose_name = 'Activity List Page'
 
