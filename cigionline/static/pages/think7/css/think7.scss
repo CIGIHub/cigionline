@@ -47,3 +47,14 @@ a {
     color: $cigi-primary-colour;
   }
 }
+
+.body {
+  a {
+    color: $cigi-primary-colour;
+    text-decoration: underline;
+
+    &:hover {
+      color: $cigi-dark-pink;
+    }
+  }
+}
