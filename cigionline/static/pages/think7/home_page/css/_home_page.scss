@@ -32,6 +32,10 @@ body {
       background-color: $cigi-primary-colour;
       transform-origin: center;
     }
+
+    &:not(:first-child) {
+      margin-top: 3rem;
+    }
   }
 
   .body {
