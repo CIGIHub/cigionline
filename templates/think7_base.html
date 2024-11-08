@@ -15,7 +15,6 @@
     {% block meta_description %}
     {% endblock %}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@CIGIOnline">
     <meta property="og:url" content="{{ self.full_url }}">
     {% block og_type %}
       <meta property="og:type" content="website">
@@ -25,7 +24,7 @@
     {% block og_description %}
     {% endblock %}
     {% block og_image %}
-      {% include "includes/og_image_default.html" %}
+      <meta property="og:image" content="/static/assets/T7-generic.png" />
     {% endblock %}
     {% block extra_og_meta %}
     {% endblock %}
