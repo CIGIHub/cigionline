@@ -369,7 +369,7 @@ class Think7HomePage(Page):
     ]
     
     def get_task_forces(self):
-        return self.get_children().type(ProjectListPage).first().get_children().type(ProjectPage).live().public()
+        return self.get_children().type(ProjectListPage).first().get_children().type(ProjectPage).live().public().specific().order_by('-publishing_date')
     
     def get_latest_publication(self):
         return self.get_children().type(PublicationListPage).first().get_children().type(PublicationPage).live().public().first()
