@@ -2,7 +2,7 @@ body {
   &.data-value-series-article {
     @include top-bar(
       $background-color: transparent,
-      $color: $black,
+      $color: $white,
       $color-scrolled: $white,
       $background-color-scrolled: $black
     );

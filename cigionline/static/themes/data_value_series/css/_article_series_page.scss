@@ -74,7 +74,8 @@ body {
         overflow: hidden;
         z-index: 0;
 
-        video {
+        video,
+        img {
           @include media-breakpoint-down(sm) {
             width: auto;
             height: 100%;
@@ -90,6 +91,13 @@ body {
           height: auto;
           transform: translate(-50%, -50%);
           object-fit: cover;
+        }
+
+        video {
+          z-index: 1;
+        }
+
+        img {
           z-index: 0;
         }
       }
