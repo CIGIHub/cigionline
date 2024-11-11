@@ -1115,10 +1115,11 @@ class Theme(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Think7AbstractPage(BasicPageAbstract, Page):
     """Singleton page for Think 7 abstract submission"""
-    
+
     def serve(self, request):
         form = Think7AbstractUploadForm()
 
@@ -1128,10 +1129,10 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                 uploaded_file = form.cleaned_data['file']
                 valid_extensions = ['.pdf', '.doc', '.docx']
                 file_extension = uploaded_file.name.lower().split('.')[-1]
-                
+
                 if f".{file_extension}" in valid_extensions:
                     collection, created = Collection.objects.get_or_create(name='Think7 Abstracts')
-                    
+
                     try:
                         document = Document.objects.create(
                             title=uploaded_file.name,
@@ -1142,7 +1143,7 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                             'status': 'success',
                             'message': 'File uploaded successfully!'
                         })
-                        
+
                     except Exception as e:
                         return JsonResponse({
                             'status': 'error',
@@ -1158,7 +1159,7 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                     'status': 'error',
                     'message': 'Invalid form submission.'
                 })
-                
+
         return render(request, 'think7/think7_abstract_page.html', {
             'page': self,
             'form': form,

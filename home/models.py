@@ -323,9 +323,10 @@ class HomePage(Page):
     class Meta:
         verbose_name = 'Home Page'
 
+
 class Think7HomePage(Page):
     """Singleton model for the Think 7 Canada home page."""
-    
+
     body = StreamField(
         [
             ('paragraph', ParagraphBlock()),
@@ -343,7 +344,7 @@ class Think7HomePage(Page):
         blank=True,
         null=True,
     )
-    
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -367,7 +368,7 @@ class Think7HomePage(Page):
             classname='collapsible collapsed',
         ),
     ]
-    
+
     def get_task_forces(self):
         return self.get_children().type(ProjectListPage).first().get_children().type(ProjectPage).live().public().specific().annotate(publishing_date=models.F('contentpage__publishing_date')).order_by('publishing_date')
     
@@ -376,7 +377,7 @@ class Think7HomePage(Page):
     
     def get_latest_event(self):
         return self.get_children().type(EventListPage).first().get_children().type(EventPage).live().public().first()
-    
+
     max_count = 1
     subpage_types = [
         'articles.ArticleListPage',
@@ -389,12 +390,13 @@ class Think7HomePage(Page):
         'publications.PublicationListPage',
         'research.ProjectListPage',
     ]
-    
+
     def get_template(self, request, *args, **kwargs):
         return 'think7/home_page.html'
     
     class Meta:
         verbose_name = 'Think 7 Home Page'
+
 
 class HomePageFeaturedPage(Orderable):
     home_page = ParentalKey(

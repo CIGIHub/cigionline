@@ -35,7 +35,7 @@ class ThemeableBlock:
             site = context['page'].get_site()
             if site.site_name == 'Think 7 Canada':
                 return f'think7/streams/{template_name}.html'
-    
+
         if (
             context and
             context['page'] and

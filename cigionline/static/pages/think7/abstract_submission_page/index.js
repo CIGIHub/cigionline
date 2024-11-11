@@ -28,8 +28,7 @@ document
 
         responseMessage.style.display = 'block';
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
         const responseMessage = document.getElementById('responseMessage');
         responseMessage.innerText = 'An unexpected error occurred.';
         responseMessage.style.color = 'red';
