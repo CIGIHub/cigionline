@@ -67,6 +67,7 @@ const config = {
     themeBigTechS3: './cigionline/static/themes/big_tech_s3/index.js',
     themeCyberSeries: './cigionline/static/themes/cyber_series/index.js',
     themeDataSeries: './cigionline/static/themes/data_series/index.js',
+    themeDataValueSeries: './cigionline/static/themes/data_value_series/index.js',
     themeDPH: './cigionline/static/themes/dph/index.js',
     themeFreedomOfThought: './cigionline/static/themes/freedom_of_thought/index.js',
     themeFourDomainsSeries: './cigionline/static/themes/four_domains_series/index.js',
