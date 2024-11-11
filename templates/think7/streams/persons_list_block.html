@@ -1,0 +1,38 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="container persons-list-block">
+  <div class="row justify-content-center">
+    <div class="col col-md-10 col-lg-8">
+      {% if self.title and not hide_title %}
+        <h2>{{ self.title }}</h2>
+      {% endif %}
+      <ul class="persons-list">
+        {% for block in self.persons %}
+          {% with block.value.specific as person %}
+            <li>
+              <a href="{{ person.url }}" class="person-photo">
+                <div class="img-wrapper">
+                  {% if person.image_square %}
+                    {% image person.image_square fill-300x300 %}
+                  {% endif %}
+                </div>
+              </a>
+              <div class="person-info">
+                <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
+                <div class="person-description">
+                  {% if self.bio_source_field and self.bio_source_field == 'short_bio' %}
+                    {{ person.short_bio|safe }}
+                  {% else %}
+                    {% for block in person.body %}
+                      {{ block.value|safe }}
+                    {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+          {% endwith %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

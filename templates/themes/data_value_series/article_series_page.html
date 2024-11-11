@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader static %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -105,6 +105,10 @@
         <div class="row justify-content-center">
           <div class="col-md-10 col-lg-8">
             {{ self.acknowledgements|richtext }}
+            <img src="{% static 'assets/ON-logo.jpg' %}" alt="Omidyar Network Logo">
+            <p class="copyright">
+              Copyright © 2024 by the Centre for International Governance Innovation
+            </p>
           </div>  
         </div>
       </div>

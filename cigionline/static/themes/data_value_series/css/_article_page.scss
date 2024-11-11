@@ -149,6 +149,26 @@ body {
       font-family: $body-font;
 
       h2 {
+        padding: 0;
+        
+        &::after {
+          content: none;
+        }
+      }
+
+      a {
+        
+        &[name] {
+          font-family: $primary-font-family;
+          color: $black;
+          font-weight: 500;
+          font-size: 1em;
+          padding-right: 0;
+          vertical-align: baseline;
+        }
+      }
+
+      h2 {
         font-family: $subheader-font;
       }
     }
