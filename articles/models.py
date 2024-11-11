@@ -116,7 +116,7 @@ class MediaLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
 
 class ArticleListPage(Page):
-    max_count = 1
+    max_count = 2
     parent_page_types = ['home.HomePage']
     subpage_types = ['articles.ArticlePage', 'articles.ArticleTypePage']
     templates = 'articles/article_list_page.html'
@@ -831,7 +831,7 @@ class ArticleSeriesPage(
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields
 
-    parent_page_types = ['home.HomePage']
+    parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
 

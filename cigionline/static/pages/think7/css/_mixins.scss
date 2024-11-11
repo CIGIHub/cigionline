@@ -1,0 +1,13 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+@mixin link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink) {
+  a {
+    color: $color;
+
+    &:hover {
+      color: $hover-color;
+    }
+  }
+}

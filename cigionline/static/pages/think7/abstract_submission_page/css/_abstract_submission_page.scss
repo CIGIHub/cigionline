@@ -1,0 +1,59 @@
+@import '../../css/variables';
+@import '../../css/mixins';
+
+body {
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    margin: 2rem 0 1rem;
+    text-decoration: underline;
+  }
+
+  .abstract-submission {
+    text-align: center;
+    margin: 2rem 0 6rem;
+
+    .form-wrapper {
+      @include media-breakpoint-up(sm) {
+        padding: 2rem 4rem;
+      }
+      overflow: hidden;
+      padding: 1rem 2rem;
+      border: 1px solid $cigi-medium-grey;
+      border-radius: 5px;
+    }
+
+    input[type='file'] {
+      @include media-breakpoint-up(lg) {
+        margin-right: 4rem;
+      }
+      margin-bottom: 1rem;
+      width: 14rem;
+    }
+
+    button {
+      color: $black;
+      border: 2px solid $cigi-primary-colour;
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      background-color: $think7_bg_white;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      text-transform: uppercase;
+
+      &:hover {
+        background-color: $cigi-primary-colour;
+        color: $white;
+      }
+    }
+
+    .response-message {
+      margin-top: 1rem;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid $black;
+      border-radius: 5px;
+      display: none;
+    }
+  }
+}

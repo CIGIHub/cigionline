@@ -1,0 +1,159 @@
+header {
+  &.think7-header {
+    padding-top: 1rem;
+
+    .navbar-brand {
+      max-width: 250px;
+      width: 50%;
+    }
+
+    nav {
+      flex-wrap: nowrap;
+      padding: 0;
+    }
+
+    ul {
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-direction: row;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+
+      li {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        position: relative;
+        padding: 0.75rem 1rem 0.75rem;
+        text-transform: uppercase;
+        color: $cigi-medium-grey;
+        font-size: 0.875rem;
+
+        &:not(:nth-last-child(-n + 2)) {
+          &::after {
+            @include media-breakpoint-down(md) {
+              display: none;
+            }
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            transform: rotate(15deg);
+            background-color: lightgray;
+            transform-origin: center;
+          }
+        }
+
+        &.submit-abstract {
+          button {
+            border: 2px solid $cigi-primary-colour;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-transform: uppercase;
+            background-color: $think7_bg_white;
+          }
+
+          &:hover {
+            button {
+              background-color: $cigi-primary-colour;
+              color: $white;
+            }
+          }
+        }
+      }
+
+      &.dropdown {
+        @include media-breakpoint-up(lg) {
+          display: none;
+        }
+        width: 100%;
+        flex-direction: column;
+        position: absolute;
+        right: 0;
+        background-color: $think7_bg_white;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        width: 100vw;
+
+        &.show {
+          @include media-breakpoint-down(md) {
+            display: flex;
+          }
+        }
+      }
+    }
+
+    .custom-nav-popup-btn {
+      @include media-breakpoint-up(lg) {
+        display: none;
+      }
+      align-items: center;
+      display: inline-flex;
+      justify-content: center;
+      position: relative;
+      width: 22px;
+      background: 0;
+      border: 0;
+
+      span {
+        left: 0;
+        margin-left: auto;
+        margin-right: auto;
+        position: absolute;
+        right: 0;
+        transition: transform 0.3s ease;
+      }
+
+      .icon-opened {
+        transform: scale(0, 0);
+      }
+
+      .icon-closed {
+        transform: scale(1, 1);
+      }
+
+      &.open {
+        .icon-closed {
+          transform: scale(0, 0);
+        }
+
+        .icon-opened {
+          transform: scale(1, 1);
+        }
+      }
+    }
+  }
+}
+
+li {
+  &.submit-abstract {
+    &.standalone {
+      list-style: none;
+      margin-top: 1rem;
+      width: 100%;
+
+      button {
+        border: 2px solid $cigi-primary-colour;
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-transform: uppercase;
+        background-color: $think7_bg_white;
+        width: 100%;
+      }
+
+      &:hover {
+        button {
+          background-color: $cigi-primary-colour;
+          color: $white;
+        }
+      }
+    }
+  }
+}

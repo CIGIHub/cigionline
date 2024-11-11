@@ -1,0 +1,78 @@
+{% load wagtailcore_tags menu_tags cache static core_tags %}
+
+
+<header class="think7-header">
+  <div class="container">
+    <nav class="navbar">
+      <a class="navbar-brand" href="/">
+        <img src="/static/assets/t7-logo-animated-v2.gif" alt="Logo" class="logo">
+      </a>
+
+      {% get_menu_items 'think7' as think7_menu_items %}
+
+      <ul class="navbar-nav">
+        {% for menu_item in think7_menu_items %}
+          <li class="nav-item">
+            {% if menu_item.link_page.url_path == self.url_path or menu_item.link_url == request.path  %}
+              {{ menu_item.title }}
+            {% else %}
+              <a href="
+                {% if menu_item.link_url %}
+                  {{ menu_item.link_url }}
+                {% else %}
+                  {% pageurl menu_item.link_page %}
+                {% endif %}
+              ">
+                {{ menu_item.title }}
+              </a>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li class="nav-item submit-abstract">
+          <a href="/abstract-submission">
+            <button class="submit-abstract">
+              Submit Abstract
+            </button>
+          </a>
+        </li>
+      </ul>
+      
+      <button class="custom-nav-popup-btn overlay-controls-button" id="open-menu-btn" role="button" aria-expanded="false" aria-label="Open menu">
+        <span class="icon-opened"><i class="far fa-times"></i></span>
+        <span class="icon-closed"><i class="far fa-bars"></i></span>
+      </button>
+    </nav>
+    <ul id="dropdown-menu" class="navbar-nav dropdown hide">
+      {% for menu_item in think7_menu_items %}
+        <li class="nav-item">
+          {% if menu_item.link_page.url_path == self.url_path or menu_item.link_url == request.path  %}
+            {{ menu_item.title }}
+          {% else %}
+            <a href="
+              {% if menu_item.link_url %}
+                {{ menu_item.link_url }}
+              {% else %}
+                {% pageurl menu_item.link_page %}
+              {% endif %}
+            ">
+              {{ menu_item.title }}
+            </a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</header>
+<div class="container {% if self.url_path == '/think-7-home/abstract-submission/' %} d-none{% endif %}">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8 d-lg-none">
+      <li class="nav-item submit-abstract standalone">
+        <a href="/abstract-submission">
+          <button class="submit-abstract">
+            Submit Abstract
+          </button>
+        </a>
+      </li>
+    </div>
+  </div>
+</div>

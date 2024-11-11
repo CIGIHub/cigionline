@@ -109,7 +109,7 @@ class ContactPage(AbstractEmailForm):
         send_mail(subject, self.render_email(form), addresses, self.from_address,)
 
     max_count = 1
-    parent_page_types = ['home.HomePage']
+    parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = []
     template = 'contact/contact_page.html'
     landing_page_template = 'contact/contact_page_landing.html'
