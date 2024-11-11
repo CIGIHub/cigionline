@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader static %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta name="description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.short_description %}
+    <meta property="og:description" content="{{ self.short_description|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block theme_css %}
+  {% render_bundle 'themeDataValueSeries' 'css' %}
+{% endblock %}
+
+{% block body_class %}data-value-series data-value-series-article-series{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
+{% block content %}
+  <div class="data-value-series-hero">
+    <div class="video-bg">
+      {% if self.video_banner %}
+        <video playsinline autoplay muted loop class="video-background">
+          <source src="{{ self.video_banner.url }}" type="video/webm">
+        </video>
+      {% endif %}
+    </div>
+    <div class="bg-gradient"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="row justify-content-center">
+          <div class="col">
+            <p>A CIGI Essay Series</p>
+            <h1><span>{{ self.title }}</span></h1>
+            <div class="subtitle">
+              {{ self.subtitle|richtext }}
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <div class="short-description">{{ self.short_description|richtext }}</div>
+            <div class="scroll-arrow">
+              <a href="#scroll-anchor">
+                <i class="far fa-angle-down" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="scroll-anchor"></div>
+  </div>
+  {% include "includes/body.html" with body=self.body %}
+  
+  {% include "./includes/in_the_series.html" with article_series=self title=False %}
+
+  {% if self.credits_stream_field %}
+    <section class="credits">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Credits</h2>
+            <div class="credits-content">
+              {% for title in self.credits_stream_field %}
+                <div class="title-container">
+                  {% for person in title.value.people %}
+                    <div class="name">{{ person }}</div>
+                  {% endfor %}
+                  <div class="title">{{ title.value.title }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.acknowledgements%}
+    <section class="acknowledgements">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            {{ self.acknowledgements|richtext }}
+            <img src="{% static 'assets/ON-logo.jpg' %}" alt="Omidyar Network Logo">
+            <p class="copyright">
+              Copyright © 2024 by the Centre for International Governance Innovation
+            </p>
+          </div>  
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}
