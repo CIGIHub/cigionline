@@ -115,13 +115,14 @@ body {
 
         h1 {
           @include media-breakpoint-up(md) {
-            font-size: 4.5rem;
+            font-size: 4rem;
           }
           font-family: $header-font;
           font-size: 2rem;
           line-height: 1;
           font-weight: 900;
           margin-bottom: 2rem;
+          letter-spacing: -0.05em;
         }
 
         .subtitle {
