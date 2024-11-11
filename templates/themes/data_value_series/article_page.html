@@ -1,0 +1,107 @@
+{% extends "articles/article_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block theme_css %}
+  {% render_bundle 'themeDataValueSeries' 'css' %}
+{% endblock %}
+
+{% block theme_js %}
+  {% render_bundle 'themeDataValueSeries' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/bmh2gvl.css">
+{% endblock %}
+
+{% block body_class %}data-value-series data-value-series-article{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
+{% block content %}
+  {% block hero %}
+    {% image self.image_banner original as image_banner %}
+    <section class="data-value-series-article-hero" style="background-image: url('{{ image_banner.url }}');">
+      <div class="container">
+        <div class="row">
+          <div class="col col-md-12 col-lg-10 hero-content">
+            <h2>{{ self.get_series_article_category }}</h2>
+            <h1>{{ self.title }}</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <div class="meta-info">
+            {% include "includes/authors.html" with authors=self.authors.all %}
+            {% include "includes/date.html" with date=self.publishing_date %}
+            {% include "includes/social_links.html" with title=self.title no_circle=True %}
+          </div>
+          <div class="article-series-description">
+            {{ self.article_series_description|richtext }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock hero %}
+
+  {% include "includes/body.html" with body=self.body %}
+
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.works_cited %}
+    <section class="article-works-cited">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2>Works Cited</h2>
+            {{ self.works_cited|richtext }}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if self.article_series_disclaimer %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-disclaimer">
+            {{self.article_series_disclaimer|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
+
+  {% block in_the_series %}
+    {% if self.article_series %}
+      {% include "./includes/in_the_series.html" with article_series=self.article_series.specific article_id=self.id title=True %}
+    {% endif %}
+  {% endblock %}
+
+  {% block recommended %}
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
+    {% elif self.recommended_content %}
+      {% include 'includes/recommended.html' with recommended=self.recommended_content %}
+    {% endif %}
+  {% endblock %}
+{% endblock content %}
