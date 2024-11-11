@@ -22,7 +22,11 @@
 {% block content %}
   {% block hero %}
     {% image self.image_banner original as image_banner %}
-    <section class="data-value-series-article-hero" style="background-image: url('{{ image_banner.url }}');">
+    <section class="data-value-series-article-hero">
+      <div class="banner-bg">
+        <img src="{{ self.image_banner.file.url }}" alt="Banner Image">
+      </div>
+      <div class="bg-gradient"></div>
       <div class="container">
         <div class="row">
           <div class="col col-md-12 col-lg-10 hero-content">
