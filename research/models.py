@@ -60,7 +60,7 @@ class ProjectListPage(Page):
         return super().get_template(request, *args, **kwargs)
 
     def get_task_forces(self):
-        return self.get_children().type(ProjectPage).live().public().specific().annotate(publishing_date=F('contentpage__publishing_date')).order_by('publishing_date')
+        return self.get_children().type(ProjectPage).live().specific().annotate(publishing_date=F('contentpage__publishing_date')).order_by('publishing_date')
 
     class Meta:
         verbose_name = 'Activity List Page'
