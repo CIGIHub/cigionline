@@ -98,6 +98,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'cigionline.middleware.BasicAuthMiddleware',
 
     'wagtail_2fa.middleware.VerifyUserMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
