@@ -8,6 +8,7 @@ class BasicAuthMiddleware:
 
     def __call__(self, request):
         target_domain = "think7canada.org"
+        print('request.get_host()', request.get_host())
 
         if request.get_host() == target_domain:
             auth = request.META.get("HTTP_AUTHORIZATION")
