@@ -54,7 +54,7 @@ class ProjectListPage(Page):
 
     def get_template(self, request, *args, **kwargs):
         site = self.get_site()
-        
+
         if site.site_name == 'Think 7 Canada':
             return 'think7/project_list_page.html'
         return super().get_template(request, *args, **kwargs)

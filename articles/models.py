@@ -402,7 +402,7 @@ class ArticlePage(
             if block.block_type == 'additional_disclaimer':
                 additional_disclaimers.append(block.value)
         return additional_disclaimers
-    
+
     def get_series_article_category(self):
         article_series_page = self.article_series.specific
         current_series_title = article_series_page.series_items.first().category_title
