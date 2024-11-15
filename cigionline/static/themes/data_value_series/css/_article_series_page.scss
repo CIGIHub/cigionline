@@ -1,0 +1,213 @@
+body {
+  &.data-value-series-article-series {
+    @include top-bar(
+      $background-color: transparent,
+      $color: $white,
+      $color-scrolled: $white,
+      $background-color-scrolled: $black
+    );
+
+    h2,
+    h3 {
+      font-family: $subheader-font;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .data-value-series-hero {
+      @include media-breakpoint-down(sm) {
+        align-items: flex-start;
+        text-align: left;
+      }
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+      color: $white;
+      text-align: center;
+      background-color: $black;
+
+      .bg-gradient {
+        @include media-breakpoint-down(sm) {
+          height: 100%;
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.7) 20%,
+            rgba(0, 0, 0, 0.9) 70%,
+            $black 100%
+          );
+        }
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 70%;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.4) 50%,
+          rgba(0, 0, 0, 0.9) 70%,
+          $black 100%
+        );
+        z-index: 1;
+      }
+
+      .video-bg {
+        @include media-breakpoint-down(sm) {
+          height: 100%;
+          width: 100%;
+          bottom: 0;
+          left: auto;
+        }
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70%;
+        overflow: hidden;
+        z-index: 0;
+
+        video,
+        img {
+          @include media-breakpoint-down(sm) {
+            width: auto;
+            height: 100%;
+            transform: translate(-50%, 0);
+            object-fit: fill;
+            top: auto;
+            bottom: 0;
+          }
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 100vw;
+          height: auto;
+          transform: translate(-50%, -50%);
+          object-fit: cover;
+        }
+
+        video {
+          z-index: 1;
+        }
+
+        img {
+          z-index: 0;
+        }
+      }
+
+      .container {
+        z-index: 2;
+      }
+
+      .hero-content {
+        @include media-breakpoint-down(sm) {
+          margin-top: 6rem;
+        }
+        position: relative;
+        z-index: 2;
+
+        h1 {
+          @include media-breakpoint-up(md) {
+            font-size: 4rem;
+          }
+          font-family: $header-font;
+          font-size: 2rem;
+          line-height: 1;
+          font-weight: 900;
+          margin-bottom: 2rem;
+          letter-spacing: -0.05em;
+        }
+
+        .subtitle {
+          @include media-breakpoint-up(md) {
+            display: none;
+          }
+        }
+
+        p {
+          @include link($color: $white, $hover-color: $cigi-primary-colour);
+          margin-bottom: 0.75rem;
+          line-height: 1.25;
+          font-family: $subheader-font;
+          font-size: 0.85rem;
+
+          a {
+            text-decoration: underline;
+          }
+        }
+
+        .short-description {
+          @include media-breakpoint-down(sm) {
+            display: none;
+          }
+        }
+
+        .scroll-arrow {
+          animation: bounce 2s infinite;
+          margin: 2rem 0;
+
+          i {
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+
+  .acknowledgements {
+    font-size: 0.85rem;
+
+    img {
+      max-width: 300px;
+      margin-bottom: 1rem;
+      margin-top: -1rem;
+    }
+  }
+
+  .acknowledgements,
+  .credits {
+    margin: 2rem 0;
+    font-family: $body-font;
+  }
+
+  .credits {
+    .credits-content {
+      @include media-breakpoint-up(md) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin: 1em 0 0 0;
+      }
+      @include media-breakpoint-up(xl) {
+        -ms-grid-columns: 1fr 0.5em 1fr 0.5em 1fr 0.5em 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      -ms-grid-columns: 1fr 0.5em 1fr;
+      display: -ms-grid;
+      display: grid; // sass-lint:disable-line no-duplicate-properties
+      font-size: 0.75em;
+      grid-column-gap: 0.5em;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      margin: 1em 0 0;
+
+      .title-container {
+        margin-bottom: 2rem;
+
+        .name {
+          text-transform: uppercase;
+        }
+
+        .title {
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+}

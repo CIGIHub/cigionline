@@ -1,0 +1,47 @@
+@import '../../css/variables';
+@import '../../css/mixins';
+
+.task-forces {
+  margin: 3rem 0;
+
+  .task-forces-list {
+    .task-force {
+      display: flex;
+      padding: 1rem 0;
+      border-bottom: 2px solid $cigi-light-grey;
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .img-wrapper {
+        position: relative;
+        z-index: 1;
+        flex: 0 0 20%;
+        margin-right: 1rem;
+
+        img {
+          object-fit: cover;
+          border-radius: 15px;
+        }
+      }
+
+      h3 {
+        @include link(
+          $color: $think7_bg_red,
+          $hover-color: $cigi-primary-colour
+        );
+        font-size: 1.25rem;
+      }
+
+      .task-force-subtitle {
+        line-height: 1.25;
+      }
+    }
+  }
+}

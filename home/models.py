@@ -1,7 +1,8 @@
 from distutils.log import error
 from django.db import models
 from modelcluster.fields import ParentalKey
-from publications.models import PublicationPage
+from publications.models import PublicationPage, PublicationListPage
+from research.models import ProjectPage, ProjectListPage
 from events.models import EventPage, EventListPage
 from features.models import (
     HomePageFeaturedPromotionsList,
@@ -12,13 +13,14 @@ from features.models import (
     HomePageFeaturedHighlightsList,
     HomePageFeaturedEventsList,
 )
+from streams.blocks import ParagraphBlock, PersonsListBlock
 from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     FieldPanel
 )
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from django.utils import timezone
 from people.models import PersonPage
@@ -320,6 +322,80 @@ class HomePage(Page):
 
     class Meta:
         verbose_name = 'Home Page'
+
+
+class Think7HomePage(Page):
+    """Singleton model for the Think 7 Canada home page."""
+
+    body = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+    )
+    board_members = StreamField(
+        [
+            ('board_members', PersonsListBlock()),
+        ],
+        blank=True,
+    )
+    release_stage = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+            ],
+            heading='Body',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('board_members'),
+            ],
+            heading='Board Members',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('release_stage'),
+            ],
+            heading='Release Stage',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    def get_task_forces(self):
+        return self.get_children().type(ProjectListPage).first().get_children().type(ProjectPage).live().specific().annotate(publishing_date=models.F('contentpage__publishing_date')).order_by('publishing_date')
+    
+    def get_latest_publication(self):
+        return self.get_children().type(PublicationListPage).first().get_children().type(PublicationPage).live().public().first()
+    
+    def get_latest_event(self):
+        return self.get_children().type(EventListPage).first().get_children().type(EventPage).live().public().first()
+
+    max_count = 1
+    subpage_types = [
+        'articles.ArticleListPage',
+        'contact.ContactPage',
+        'core.BasicPage',
+        'core.Think7AbstractPage',
+        'events.EventListPage',
+        'people.PeoplePage',
+        'people.PersonListPage',
+        'publications.PublicationListPage',
+        'research.ProjectListPage',
+    ]
+
+    def get_template(self, request, *args, **kwargs):
+        return 'think7/home_page.html'
+    
+    class Meta:
+        verbose_name = 'Think 7 Home Page'
 
 
 class HomePageFeaturedPage(Orderable):

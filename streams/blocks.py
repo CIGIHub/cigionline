@@ -11,6 +11,7 @@ from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.models import Page
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
 
@@ -25,6 +26,16 @@ class ThemeableBlock:
         return verbose_name.lower().replace(' ', '_')
 
     def get_theme_template(self, standard_template, context, template_name):
+        if (
+            context and
+            context['page'] and
+            isinstance(context['page'], Page) and
+            context['page'].get_site()
+        ):
+            site = context['page'].get_site()
+            if site.site_name == 'Think 7 Canada':
+                return f'think7/streams/{template_name}.html'
+
         if (
             context and
             context['page'] and

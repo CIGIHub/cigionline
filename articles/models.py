@@ -116,7 +116,7 @@ class MediaLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
 
 
 class ArticleListPage(Page):
-    max_count = 1
+    max_count = 2
     parent_page_types = ['home.HomePage']
     subpage_types = ['articles.ArticlePage', 'articles.ArticleTypePage']
     templates = 'articles/article_list_page.html'
@@ -402,6 +402,15 @@ class ArticlePage(
             if block.block_type == 'additional_disclaimer':
                 additional_disclaimers.append(block.value)
         return additional_disclaimers
+    
+    def get_series_article_category(self):
+        article_series_page = self.article_series.specific
+        current_series_title = article_series_page.series_items.first().category_title
+        for series_item in article_series_page.series_items.all():
+            if series_item.category_title:
+                current_series_title = series_item.category_title
+            if series_item.content_page.id == self.id:
+                return current_series_title
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -600,6 +609,9 @@ class ArticleSeriesPage(
             'bold',
             'italic',
             'link',
+            'h2',
+            'h3',
+            'h4',
         ],
     )
     credits = RichTextField(
@@ -831,7 +843,7 @@ class ArticleSeriesPage(
         + BasicPageAbstract.search_fields \
         + ContentPage.search_fields
 
-    parent_page_types = ['home.HomePage']
+    parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = []
     templates = 'articles/article_series_page.html'
 
