@@ -371,10 +371,10 @@ class Think7HomePage(Page):
 
     def get_task_forces(self):
         return self.get_children().type(ProjectListPage).first().get_children().type(ProjectPage).live().specific().annotate(publishing_date=models.F('contentpage__publishing_date')).order_by('publishing_date')
-    
+
     def get_latest_publication(self):
         return self.get_children().type(PublicationListPage).first().get_children().type(PublicationPage).live().public().first()
-    
+
     def get_latest_event(self):
         return self.get_children().type(EventListPage).first().get_children().type(EventPage).live().public().first()
 
@@ -393,7 +393,7 @@ class Think7HomePage(Page):
 
     def get_template(self, request, *args, **kwargs):
         return 'think7/home_page.html'
-    
+
     class Meta:
         verbose_name = 'Think 7 Home Page'
 

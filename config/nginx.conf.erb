@@ -269,6 +269,37 @@ http {
 			}
 		<% end %>
 
+        <% if ENV['INTERACTIVE_2024ANNUALREPORT_PROXY'] %>
+			location /interactives/2024annualreport {
+				proxy_pass https://<%= ENV['INTERACTIVE_2024ANNUALREPORT_PROXY'] %>;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2024annualreport/assets/ {
+				proxy_pass https://<%= ENV['INTERACTIVE_2024ANNUALREPORT_PROXY'] %>/assets/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+
+			location /interactives/2024annualreport/assets/favicon/ {
+				proxy_pass https://<%= ENV['INTERACTIVE_2024ANNUALREPORT_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+		<% end %>
+
+		<% if ENV['INTERACTIVE_2024ANNUALREPORT_STATIC_PROXY'] %>
+			location /interactives/2024annualreport/static/ {
+				proxy_pass https://<%= ENV['INTERACTIVE_2024ANNUALREPORT_STATIC_PROXY'] %>/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-Proto $scheme;
+			}
+		<% end %>
+
 		<% if ENV['INTERACTIVE_GLOBALTHINKTANKSUMMIT_PROXY'] %>
 			location /interactives/globalthinktanksummit/ {
 				proxy_pass http://<%= ENV['INTERACTIVE_GLOBALTHINKTANKSUMMIT_PROXY'] %>/;

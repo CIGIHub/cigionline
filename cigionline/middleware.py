@@ -1,4 +1,5 @@
-import base64, os
+import base64
+import os
 from django.http import HttpResponse
 
 
@@ -14,8 +15,7 @@ class BasicAuthMiddleware:
                 auth = request.META.get("HTTP_AUTHORIZATION")
 
                 if (
-                    "BASIC_AUTH_USER_THINK7" in os.environ
-                    and "BASIC_AUTH_PASSWORD_THINK7" in os.environ
+                    "BASIC_AUTH_USER_THINK7" in os.environ and "BASIC_AUTH_PASSWORD_THINK7" in os.environ
                 ):
                     BASIC_AUTH_USER_THINK7 = os.environ.get("BASIC_AUTH_USER_THINK7")
                     BASIC_AUTH_PASSWORD_THINK7 = os.environ.get(
@@ -31,8 +31,7 @@ class BasicAuthMiddleware:
                             username, password = credentials.split(":", 1)
 
                             if (
-                                username == BASIC_AUTH_USER_THINK7
-                                and password == BASIC_AUTH_PASSWORD_THINK7
+                                username == BASIC_AUTH_USER_THINK7 and password == BASIC_AUTH_PASSWORD_THINK7
                             ):
                                 return self.get_response(request)
 

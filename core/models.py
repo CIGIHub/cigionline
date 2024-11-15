@@ -1174,7 +1174,7 @@ class Think7AbstractPage(BasicPageAbstract, Page):
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
     ]
-    
+
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
 
     max_count = 1
