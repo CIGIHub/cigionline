@@ -332,8 +332,9 @@ class PublicationPage(
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(PublicationPage, self).get_template(request, *args, **kwargs)
-        if self.publication_type.title == 'Quick Insights':
-            return 'publications/publication_quick_insights_page.html'
+        if self.publication_type:
+            if self.publication_type.title == 'Quick Insights':
+                return 'publications/publication_quick_insights_page.html'
         if self.theme:
             return f'themes/{self.get_theme_dir()}/publication_page.html'
         return standard_template
