@@ -1,11 +1,14 @@
 import './css/_abstract_submission_page.scss';
 
-document
-  .getElementById('abstractUploadForm')
+const abstractUploadForm = document.getElementById('abstractUploadForm');
+abstractUploadForm
   .addEventListener('submit', function (event) {
     event.preventDefault();
 
     const formData = new FormData(this);
+    const responseMessage = document.getElementById('responseMessage');
+    responseMessage.classList.add('loading');
+    responseMessage.innerText = 'Uploading file...';
 
     fetch('/abstract-submission/', {
       method: 'POST',
@@ -16,22 +19,23 @@ document
     })
       .then((response) => response.json())
       .then((data) => {
-        const responseMessage = document.getElementById('responseMessage');
-
         if (data.status === 'success') {
           responseMessage.innerText = data.message;
+          responseMessage.classList.remove('loading');
+          responseMessage.classList.remove('error');
           responseMessage.classList.add('success');
+          abstractUploadForm.querySelector('input[type="file"]').value = '';
         } else {
           responseMessage.innerText = data.message;
+          responseMessage.classList.remove('loading');
+          responseMessage.classList.remove('success');
           responseMessage.classList.add('error');
         }
-
-        responseMessage.style.display = 'block';
       })
       .catch(() => {
-        const responseMessage = document.getElementById('responseMessage');
         responseMessage.innerText = 'An unexpected error occurred.';
-        responseMessage.style.color = 'red';
-        responseMessage.style.display = 'block';
+        responseMessage.classList.remove('loading');
+        responseMessage.classList.remove('success');
+        responseMessage.classList.add('error');
       });
   });

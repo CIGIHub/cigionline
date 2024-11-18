@@ -23,6 +23,11 @@ body {
       padding: 1rem 2rem;
       border: 1px solid $cigi-medium-grey;
       border-radius: 5px;
+
+      &>div {
+        display: flex;
+        justify-content: center;
+      }
     }
 
     input[type='file'] {
@@ -55,6 +60,22 @@ body {
       border-radius: 5px;
       display: none;
       transition: color 0.2s ease, border 0.2s ease;
+
+      &.success,
+      &.error,
+      &.loading {
+        display: block;
+      }
+
+      &.loading {
+        color: grey;
+        border-color: grey;
+
+        &::after {
+          content: '';
+          background-image: 'url(/static/assets/loader_spinner.gif)';
+        }
+      }
 
       &.success {
         color: green;
