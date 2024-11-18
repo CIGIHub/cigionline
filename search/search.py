@@ -207,7 +207,7 @@ class CIGIOnlineSearchQueryCompiler:
 
     @property
     def queryset(self):
-        return Page.objects.not_type(NewsletterPage).live()
+        return Page.objects.exclude(path__startswith='00010002').not_type(NewsletterPage).live()
 
     def get_query(self):
         if self.searchtext:
