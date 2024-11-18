@@ -20,10 +20,10 @@ document
 
         if (data.status === 'success') {
           responseMessage.innerText = data.message;
-          responseMessage.style.color = 'green';
+          responseMessage.classList.add('success');
         } else {
           responseMessage.innerText = data.message;
-          responseMessage.style.color = 'red';
+          responseMessage.classList.add('error');
         }
 
         responseMessage.style.display = 'block';

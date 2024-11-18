@@ -54,6 +54,17 @@ body {
       border: 1px solid $black;
       border-radius: 5px;
       display: none;
+      transition: color 0.2s ease, border 0.2s ease;
+
+      &.success {
+        color: green;
+        border-color: green;
+      }
+
+      &.error {
+        color: red;
+        border-color: red;
+      }
     }
   }
 }
