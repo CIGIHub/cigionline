@@ -24,7 +24,7 @@ body {
       border: 1px solid $cigi-medium-grey;
       border-radius: 5px;
 
-      &>div {
+      & > div {
         display: flex;
         justify-content: center;
       }
