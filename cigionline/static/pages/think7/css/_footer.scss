@@ -41,6 +41,9 @@ footer {
     margin: 2rem 0;
 
     ul {
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
       display: flex;
       align-items: center;
       justify-content: center;
@@ -60,6 +63,9 @@ footer {
 
         &:not(:last-child) {
           &::after {
+            @include media-breakpoint-down(sm) {
+              content: none;
+            }
             content: '';
             position: absolute;
             right: 0;
