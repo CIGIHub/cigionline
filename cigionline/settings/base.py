@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'subscribe',
     'wagtailschedules',
     'signals',
+    'uploads',
 
     'wagtail.api.v2',
     'wagtail.contrib.forms',

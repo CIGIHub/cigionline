@@ -47,6 +47,7 @@ from streams.blocks import (
     HighlightTitleBlock,
     LineBreakBlock,
 )
+from uploads.models import DocumentUpload
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -1127,6 +1128,7 @@ class Think7AbstractPage(BasicPageAbstract, Page):
             form = Think7AbstractUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 uploaded_file = form.cleaned_data['file']
+                email = form.cleaned_data['email']
                 valid_extensions = ['.pdf', '.doc', '.docx']
                 file_extension = uploaded_file.name.lower().split('.')[-1]
 
@@ -1138,6 +1140,10 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                             title=uploaded_file.name,
                             file=uploaded_file,
                             collection=collection
+                        )
+                        document_upload = DocumentUpload.objects.create(
+                            document=document,
+                            email=email
                         )
                         return JsonResponse({
                             'status': 'success',

@@ -36,8 +36,16 @@
             <p>Please upload your abstract as either a PDF (.pdf) or Word (.doc/.docx) file.</p>
             <form id="abstractUploadForm" method="post" enctype="multipart/form-data">
               {% csrf_token %}
-              {{ form.file.label_tag }}
-              {{ form.file }} 
+              <div class="form-fields">
+                <div class="form-field">
+                  {{ form.file.label_tag }}
+                  {{ form.file }} 
+                </div>
+                <div class="form-field">
+                  {{ form.email.label_tag }}
+                  {{ form.email }}
+                </div>
+              </div>
               <button type="submit">Upload File</button>
             </form>
             <div>
