@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from django.conf import settings
 from django.db import models
 from django.db.models.fields import CharField
 from django.http import JsonResponse
@@ -47,6 +48,8 @@ from streams.blocks import (
     HighlightTitleBlock,
     LineBreakBlock,
 )
+from uploads.models import DocumentUpload
+from utils.email_utils import send_email, send_email_with_attachment
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -1122,43 +1125,83 @@ class Think7AbstractPage(BasicPageAbstract, Page):
 
     def serve(self, request):
         form = Think7AbstractUploadForm()
+        email_recipient = settings.THINK7_SENDGRID_EMAIL_RECIPIENT
 
         if request.method == 'POST':
             form = Think7AbstractUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 uploaded_file = form.cleaned_data['file']
+                email = form.cleaned_data['email']
                 valid_extensions = ['.pdf', '.doc', '.docx']
                 file_extension = uploaded_file.name.lower().split('.')[-1]
 
-                if f".{file_extension}" in valid_extensions:
-                    collection, created = Collection.objects.get_or_create(name='Think7 Abstracts')
+                if f'.{file_extension}' in valid_extensions:
+                    collection, created = Collection.objects.get_or_create(
+                        name='Think7 Abstracts'
+                    )
 
                     try:
                         document = Document.objects.create(
                             title=uploaded_file.name,
                             file=uploaded_file,
-                            collection=collection
+                            collection=collection,
                         )
-                        return JsonResponse({
-                            'status': 'success',
-                            'message': 'File uploaded successfully!'
-                        })
+                        DocumentUpload.objects.create(
+                            document=document, email=email
+                        )
+                        if email_recipient:
+                            try:
+                                send_email_with_attachment(
+                                    recipient=email_recipient,
+                                    subject='New File Uploaded Successfully',
+                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.',
+                                    uploaded_file=uploaded_file
+                                )
+                            except Exception as e:
+                                print(str(e))
+                        return JsonResponse(
+                            {
+                                'status': 'success',
+                                'message': 'File uploaded successfully!',
+                            }
+                        )
 
                     except Exception as e:
-                        return JsonResponse({
-                            'status': 'error',
-                            'message': f'Failed to save file: {str(e)}'
-                        })
+                        if email_recipient:
+                            send_email(
+                                recipient=email_recipient,
+                                subject='File Upload Failed',
+                                body=f'File upload failed for {email}. Error: {str(e)}',
+                            )
+                        return JsonResponse(
+                            {
+                                'status': 'error',
+                                'message': f'Failed to save file: {str(e)}',
+                            }
+                        )
                 else:
-                    return JsonResponse({
+                    if email_recipient:
+                        send_email(
+                            recipient=email_recipient,
+                            subject='File Upload Failed',
+                            body=f'File upload failed for {email}. Invalid file type.',
+                        )
+                return JsonResponse(
+                    {
                         'status': 'error',
-                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.'
-                    })
+                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
+                    }
+                )
             else:
-                return JsonResponse({
-                    'status': 'error',
-                    'message': 'Invalid form submission.'
-                })
+                if email_recipient:
+                    send_email(
+                        recipient=email_recipient,
+                        subject='Form Submission Failed',
+                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data.',
+                    )
+                return JsonResponse(
+                    {'status': 'error', 'message': 'Invalid form submission.'}
+                )
 
         return render(request, 'think7/think7_abstract_page.html', {
             'page': self,
