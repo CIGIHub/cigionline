@@ -68,7 +68,6 @@ from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
 from .forms import Think7AbstractUploadForm
 import math
-import os
 
 
 class BasicPageAbstract(models.Model):
@@ -1127,7 +1126,6 @@ class Think7AbstractPage(BasicPageAbstract, Page):
     def serve(self, request):
         form = Think7AbstractUploadForm()
         email_recipient = settings.THINK7_SENDGRID_EMAIL_RECIPIENT
-        print(email_recipient)
 
         if request.method == 'POST':
             form = Think7AbstractUploadForm(request.POST, request.FILES)
@@ -1148,7 +1146,7 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                             file=uploaded_file,
                             collection=collection,
                         )
-                        document_upload = DocumentUpload.objects.create(
+                        DocumentUpload.objects.create(
                             document=document, email=email
                         )
                         if email_recipient:
@@ -1169,7 +1167,6 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                         )
 
                     except Exception as e:
-                        # Send failure email if email_recipient is set
                         if email_recipient:
                             send_email(
                                 recipient=email_recipient,
