@@ -49,5 +49,6 @@ def send_email(recipient, subject, body):
             plain_text_content=body,
         )
         sg.send(message)
+
     except Exception as e:
         print(f'Error sending email: {str(e)}')

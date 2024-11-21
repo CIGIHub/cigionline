@@ -1151,11 +1151,10 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                         )
                         if email_recipient:
                             try:
-                                send_email_with_attachment(
+                                send_email(
                                     recipient=email_recipient,
                                     subject='New File Uploaded Successfully',
                                     body=f'File "{uploaded_file.name}" was uploaded by {email}.',
-                                    uploaded_file=uploaded_file
                                 )
                             except Exception as e:
                                 print(str(e))
