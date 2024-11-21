@@ -52,3 +52,7 @@ def send_email(recipient, subject, body):
 
     except Exception as e:
         print(f'Error sending email: {str(e)}')
+
+
+def extract_errors_as_string(form_errors):
+    return [str(error) for field_errors in form_errors.values() for error in field_errors]

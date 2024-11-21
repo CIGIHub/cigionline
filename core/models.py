@@ -49,7 +49,7 @@ from streams.blocks import (
     LineBreakBlock,
 )
 from uploads.models import DocumentUpload
-from utils.email_utils import send_email, send_email_with_attachment
+from utils.email_utils import send_email, extract_errors_as_string
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -1156,6 +1156,11 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                                     subject='New File Uploaded Successfully',
                                     body=f'File "{uploaded_file.name}" was uploaded by {email}.',
                                 )
+                                send_email(
+                                    recipient=email,
+                                    subject='Think 7 Abstract Upload Successful',
+                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission to Think 7 Canada.',
+                                )
                             except Exception as e:
                                 print(str(e))
                         return JsonResponse(
@@ -1192,14 +1197,17 @@ class Think7AbstractPage(BasicPageAbstract, Page):
                     }
                 )
             else:
+                error_message = " ".join(extract_errors_as_string(form.errors))
+
                 if email_recipient:
                     send_email(
                         recipient=email_recipient,
                         subject='Form Submission Failed',
-                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data.',
+                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
                     )
+
                 return JsonResponse(
-                    {'status': 'error', 'message': 'Invalid form submission.'}
+                    {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
                 )
 
         return render(request, 'think7/think7_abstract_page.html', {
