@@ -7,16 +7,31 @@
 <div class="container chair-block">
   <div class="row justify-content-center">
     <div class="col col-md-10 col-lg-8">
-    {% if self.image %}
-      {% define self.image as chair_image %}
-    {% elif self.chair.image_square %}
-      {% define self.chair.image_square as chair_image %}
+    {% if self.name %}
+      {% define self.name as name %}
+    {% elif self.chair %}
+      {% define self.chair.title as name %}
     {% endif %}
-    {% if chair_image %}
+    {% if self.image %}
+      {% define self.image as image %}
+    {% elif self.chair.image_square %}
+      {% define self.chair.image_square as image %}
+    {% endif %}
+    {% if self.url %}
+      {% define self.url as url %}
+    {% elif self.chair.url %}
+      {% define self.chair.url as url %}
+    {% endif %}
+    {% if self.position %}
+      {% define self.position as position %}
+    {% elif self.chair.position %}
+      {% define self.chair.position as position %}
+    {% endif %}
+    {% if image %}
       <div class="person-info">
-        <a href="{{ self.chair.url }}" class="person-photo">
+        <a href="{{ url }}" class="person-photo">
           <div class="img-wrapper">
-            {% image chair_image fill-300x300 %}
+            {% image image fill-300x300 %}
           </div>
         </a>
     {% else %}
@@ -24,13 +39,9 @@
     {% endif %}
         <div>
           <h2>Chair</h2>
-          <a href="{{ self.chair.url }}" class="person-name">{{ self.chair.title }}</a>
+          <a href="{{ url }}" class="person-name">{{ name }}</a>
           <div class="person-function">
-            {% if self.position %}
-              {{ self.position }}
-            {% elif self.chair.position %}
-              {{ self.chair.position }}
-            {% endif %}
+            {{ position }}
           </div>
         </div>
       </div>
