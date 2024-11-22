@@ -10,7 +10,7 @@ from core.models import (
 from django.db import models
 from django.db.models import F
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import AdditionalFileBlock, SurveyFindingsCountryBlock
+from streams.blocks import AdditionalFileBlock, SurveyFindingsCountryBlock, Think7ChairBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -91,6 +91,7 @@ class ProjectPage(
             ('ges_slide_deck', GESSlideDeckBlock()),
             ('ges_data', GESDataBlock()),
             ('ges_raw_data', GESRawDataBlock()),
+            ('chair', Think7ChairBlock()),
         ],
         blank=True,
         use_json_field=True,

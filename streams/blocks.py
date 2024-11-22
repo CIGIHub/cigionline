@@ -1492,3 +1492,14 @@ class PodcastTranscriptBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Podcast Transcript'
         template = 'streams/podcast_transcript_block.html'
+
+
+class Think7ChairBlock(blocks.StructBlock):
+    chair = blocks.PageChooserBlock(page_type='people.PersonPage', required=True)
+    image = ImageChooserBlock(required=False, help_text='Optional override to their default profile image.')
+    position = blocks.RichTextBlock(required=False, help_text='Optional override to their default title.')
+
+    class Meta:
+        icon = 'user'
+        label = 'Taskforce Chair'
+        template = 'think7/streams/chair_block.html'
