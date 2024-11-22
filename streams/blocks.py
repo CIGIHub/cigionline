@@ -1495,9 +1495,11 @@ class PodcastTranscriptBlock(blocks.StructBlock):
 
 
 class Think7ChairBlock(blocks.StructBlock):
-    chair = blocks.PageChooserBlock(page_type='people.PersonPage', required=True)
-    image = ImageChooserBlock(required=False, help_text='Optional override to their default profile image.')
-    position = blocks.RichTextBlock(required=False, help_text='Optional override to their default title.')
+    chair = blocks.PageChooserBlock(page_type='people.PersonPage', required=False, help_text='Internal profile if available.')
+    url = blocks.URLBlock(required=False, help_text='URL to their external profile if internal profile is not available.')
+    name = blocks.CharBlock(required=False, help_text='Chair name if internal profile is not available.')
+    position = blocks.RichTextBlock(required=False, help_text='Override internal profile position.')
+    image = ImageChooserBlock(required=False, help_text='Override internal profile image.')
 
     class Meta:
         icon = 'user'

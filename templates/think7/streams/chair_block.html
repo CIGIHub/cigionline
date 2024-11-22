@@ -1,4 +1,4 @@
-{% load wagtailcore_tags webpack_loader wagtailimages_tags %}
+{% load wagtailcore_tags webpack_loader wagtailimages_tags core_tags %}
 
 {% block extra_css %}
   {% render_bundle 'think7ProjectPage' 'css' %}
@@ -7,25 +7,41 @@
 <div class="container chair-block">
   <div class="row justify-content-center">
     <div class="col col-md-10 col-lg-8">
+    {% if self.name %}
+      {% define self.name as name %}
+    {% elif self.chair %}
+      {% define self.chair.title as name %}
+    {% endif %}
+    {% if self.image %}
+      {% define self.image as image %}
+    {% elif self.chair.image_square %}
+      {% define self.chair.image_square as image %}
+    {% endif %}
+    {% if self.url %}
+      {% define self.url as url %}
+    {% elif self.chair.url %}
+      {% define self.chair.url as url %}
+    {% endif %}
+    {% if self.position %}
+      {% define self.position as position %}
+    {% elif self.chair.position %}
+      {% define self.chair.position as position %}
+    {% endif %}
+    {% if image %}
       <div class="person-info">
-        <a href="{{ self.chair.url }}" class="person-photo">
+        <a href="{{ url }}" class="person-photo">
           <div class="img-wrapper">
-            {% if self.image %}
-              {% image self.image fill-300x300 %}
-            {% elif self.chair.image_square %}
-              {% image self.chair.image_square fill-300x300 %}
-            {% endif %}
+            {% image image fill-300x300 %}
           </div>
         </a>
-        <div>
+    {% else %}
+      <div class="person-info justify-content-center">
+    {% endif %}
+        <div class="text-wrapper">
           <h2>Chair</h2>
-          <a href="{{ self.chair.url }}" class="person-name">{{ self.chair.title }}</a>
+          <a href="{{ url }}" class="person-name">{{ name }}</a>
           <div class="person-function">
-            {% if self.position %}
-              {{ self.position }}
-            {% elif self.chair.position %}
-              {{ self.chair.position }}
-            {% endif %}
+            {{ position }}
           </div>
         </div>
       </div>

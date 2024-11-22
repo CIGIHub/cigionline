@@ -1,8 +1,17 @@
 @import '../../../../css/global/mixins';
 
 body {
+  h1 {
+    @include media-breakpoint-down(xs) {
+      font-size: 1.75em;
+    }
+  }
+
   .chair-block {
     .person-info {
+      @include media-breakpoint-down(xs) {
+        padding: 0.5em 1em;
+      }
       align-items: center;
       display: flex;
       margin-bottom: 1em;
@@ -10,11 +19,33 @@ body {
       border-radius: 100px;
       padding: 1em;
 
-      h2 {
-        font-weight: bold;
-        margin-bottom: 0;
-        margin-top: 0.5em;
-        text-transform: uppercase;
+      .text-wrapper{
+        max-width: 75%;
+
+        h2 {
+          font-weight: bold;
+          margin-bottom: 0;
+          margin-top: 0.5em;
+          text-transform: uppercase;
+        }
+
+        .person-name {
+          @include link(
+            $color: $cigi-primary-colour,
+            $hover-color: $cigi-dark-pink
+          );
+          font-size: 1.0625em;
+          font-weight: 400;
+          margin-left: 0.5rem;
+          text-decoration: none;
+        }
+        
+        .person-function {
+          color: $cigi-text-grey;
+          font-size: 0.8em;
+          margin-bottom: 0.5em;
+          margin-left: 0.5rem;
+        }
       }
 
       .person-photo {
@@ -25,24 +56,6 @@ body {
         height: 100px;
         margin-right: 1em;
         width: 100px;
-      }
-      
-      .person-name {
-        @include link(
-          $color: $cigi-primary-colour,
-          $hover-color: $cigi-dark-pink
-        );
-        font-size: 1.0625em;
-        font-weight: 400;
-        margin-left: 0.5rem;
-        text-decoration: none;
-      }
-      
-      .person-function {
-        color: $cigi-text-grey;
-        font-size: 0.8em;
-        margin-bottom: 0.5em;
-        margin-left: 0.5rem;
       }
     }
   }
