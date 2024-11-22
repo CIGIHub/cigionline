@@ -1,4 +1,4 @@
-{% load wagtailcore_tags webpack_loader wagtailimages_tags %}
+{% load wagtailcore_tags webpack_loader wagtailimages_tags core_tags %}
 
 {% block extra_css %}
   {% render_bundle 'think7ProjectPage' 'css' %}
@@ -7,16 +7,21 @@
 <div class="container chair-block">
   <div class="row justify-content-center">
     <div class="col col-md-10 col-lg-8">
+    {% if self.image %}
+      {% define self.image as chair_image %}
+    {% elif self.chair.image_square %}
+      {% define self.chair.image_square as chair_image %}
+    {% endif %}
+    {% if chair_image %}
       <div class="person-info">
         <a href="{{ self.chair.url }}" class="person-photo">
           <div class="img-wrapper">
-            {% if self.image %}
-              {% image self.image fill-300x300 %}
-            {% elif self.chair.image_square %}
-              {% image self.chair.image_square fill-300x300 %}
-            {% endif %}
+            {% image chair_image fill-300x300 %}
           </div>
         </a>
+    {% else %}
+      <div class="person-info justify-content-center">
+    {% endif %}
         <div>
           <h2>Chair</h2>
           <a href="{{ self.chair.url }}" class="person-name">{{ self.chair.title }}</a>
