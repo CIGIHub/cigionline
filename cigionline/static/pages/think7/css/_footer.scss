@@ -37,6 +37,53 @@ footer {
     margin: 2rem 0;
   }
 
+  .email-list {
+    @include link($color: $white, $hover-color: $cigi-dark-pink);
+
+    form {
+      display: flex;
+      justify-content: center;
+
+      input[type='email'] {
+        border: 0;
+        border-bottom: 3px solid white;
+        margin-right: 0.5rem;
+        width: 75%;
+        padding-left: 1rem;
+
+        &::placeholder {
+          color: $cigi-medium-light-grey;
+        }
+      }
+
+      input[type='submit'] {
+        padding: 0.25rem 1rem;
+        border: 1px solid $white;
+        border-radius: 2rem;
+        transition: background-color ease 0.2s;
+
+        &:hover {
+          background-color: $cigi-primary-colour;
+          color: $white;
+        }
+      }
+    }
+
+    .response-message {
+      opacity: 0;
+      transition: opacity ease 0.2s;
+      border: 1px solid $white;
+      border-radius: 5px;
+      color: $white;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+
+      &.show {
+        opacity: 1;
+      }
+    }
+  }
+
   nav {
     margin: 2rem 0;
 

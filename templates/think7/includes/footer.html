@@ -21,6 +21,18 @@
           </a>
         </div>
 
+        <div class="email-list">
+          <p>
+            Sign up for the email list to stay up to date:
+          </p>
+          <form id='subscribe-form-think7' action="{% url 'subscribe_think7' %}" method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="enter your email" required>
+            <input type="submit" value="Sign up">
+          </form>
+          <div class="response-message" id="response-message"></div>
+        </div>
+
         {% get_menu_items 'think7' as think7_menu_items %}
 
         <nav>

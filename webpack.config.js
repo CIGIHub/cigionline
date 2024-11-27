@@ -94,6 +94,7 @@ const config = {
     think7ProjectListPage: './cigionline/static/pages/think7/project_list_page/index.js',
     think7ProjectPage: './cigionline/static/pages/think7/project_page/index.js',
     think7AbstractSubmissionPage: './cigionline/static/pages/think7/abstract_submission_page/index.js',
+    think7SubscribePage: './cigionline/static/pages/think7/subscribe_page/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',
     twentiethPage: './cigionline/static/pages/twentieth_page/index.js',
     twentiethPageSingleton: './cigionline/static/pages/twentieth_page_singleton/index.js',
