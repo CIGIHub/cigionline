@@ -1,10 +1,6 @@
 {% extends "think7_base.html" %}
 {% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
 
-{% block header %}
-  {% include "./includes/top_bar.html" with class=links %}
-{% endblock %}
-
 {% block content %}
   <section class="body" id="article-body">
     <div class="container">
@@ -18,8 +14,4 @@
       {% include_block block %}
     {% endfor %}
   </section>
-{% endblock %}
-
-{% block footer %}
-  {% include "./includes/footer.html" %}
 {% endblock %}

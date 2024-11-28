@@ -9,7 +9,6 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-12{% if full_heading is not True %} col-md-10 col-lg-8{% endif %}">
-            {{ status}}
             {% if status == 'pending' %}
               <p>In order to complete your subscription, please check your inbox for a confirmation email. If it does not appear in your inbox, please check your spam or junk folder. If you did not receive a confirmation email please contact us: <a href="mailto:info@think7.org">info@think7.org</a>.</p>
             {% elif status == 'subscribed' %}
