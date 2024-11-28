@@ -47,8 +47,9 @@ footer {
       input[type='email'] {
         border: 0;
         border-bottom: 3px solid white;
+        margin-left: 3em;
         margin-right: 0.5rem;
-        width: 75%;
+        width: 60%;
         padding-left: 1rem;
 
         &::placeholder {
@@ -57,6 +58,7 @@ footer {
       }
 
       input[type='submit'] {
+        margin-right: 3em;
         padding: 0.25rem 1rem;
         border: 1px solid $white;
         border-radius: 2rem;

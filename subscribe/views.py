@@ -12,12 +12,19 @@ api_key = None
 server = None
 list_id = None
 
-if hasattr(settings, 'MAILCHIMP_API_KEY_DPH'):
-    api_key = settings.MAILCHIMP_API_KEY_DPH
-if hasattr(settings, 'MAILCHIMP_DATA_CENTER_DPH'):
-    server = settings.MAILCHIMP_DATA_CENTER_DPH
-if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_DPH'):
-    list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_DPH
+# if hasattr(settings, 'MAILCHIMP_API_KEY_DPH'):
+#     api_key = settings.MAILCHIMP_API_KEY_DPH
+# if hasattr(settings, 'MAILCHIMP_DATA_CENTER_DPH'):
+#     server = settings.MAILCHIMP_DATA_CENTER_DPH
+# if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_DPH'):
+#     list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_DPH
+
+# if hasattr(settings, 'MAILCHIMP_API_KEY_THINK7'):
+#     api_key = settings.MAILCHIMP_API_KEY_THINK7
+# if hasattr(settings, 'MAILCHIMP_DATA_CENTER_THINK7'):
+#     server = settings.MAILCHIMP_DATA_CENTER_THINK7
+# if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_THINK7'):
+#     list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_THINK7
 
 
 class EmailOnlySubscribeForm(forms.Form):
@@ -72,6 +79,10 @@ def subscribe_dph(request):
 
 
 def subscribe_think7(request):
+    api_key = None
+    server = None
+    list_id = None
+
     if hasattr(settings, 'MAILCHIMP_API_KEY_THINK7'):
         api_key = settings.MAILCHIMP_API_KEY_THINK7
     if hasattr(settings, 'MAILCHIMP_DATA_CENTER_THINK7'):

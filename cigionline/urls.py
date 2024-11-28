@@ -46,7 +46,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
 
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
-    re_path(r'^subscribe_think7$', subscribe_think7, name='subscribe_think7'),
+    re_path(r'^subscribe$', subscribe_think7, name='subscribe_think7'),
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
