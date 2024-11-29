@@ -11,10 +11,6 @@
   {% define 'hide-links' as links %}
 {% endif %}
 
-{% block header %}
-  {% include "./includes/top_bar.html" with class=links %}
-{% endblock %}
-
 {% block content %}
   <section class="body" id="article-body">
     <div class="container">
@@ -151,7 +147,3 @@
     </section>
   {% endif %}
 {% endblock content %}
-
-{% block footer %}
-  {% include "./includes/footer.html" %}
-{% endblock %}

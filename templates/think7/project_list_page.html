@@ -5,10 +5,6 @@
   {% render_bundle 'think7ProjectListPage' 'css' %}
 {% endblock %}
 
-{% block header %}
-  {% include "./includes/top_bar.html" with class=links %}
-{% endblock %}
-
 {% block content %}
   <section class="body" id="article-body">
     <div class="container">
@@ -54,8 +50,4 @@
       </div>
     </div>
   </section>
-{% endblock %}
-
-{% block footer %}
-  {% include "./includes/footer.html" %}
 {% endblock %}

@@ -12,7 +12,7 @@ from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
 from articles import views as article_views
-from subscribe.views import subscribe_dph
+from subscribe.views import subscribe_dph, subscribe_think7
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.contrib.sitemaps.views import sitemap
@@ -46,6 +46,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
 
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
+    re_path(r'^subscribe$', subscribe_think7, name='subscribe_think7'),
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
