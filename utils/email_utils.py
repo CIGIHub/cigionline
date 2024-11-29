@@ -17,7 +17,7 @@ def send_email_with_attachment(recipient, subject, body, uploaded_file):
     try:
         sg = SendGridAPIClient(settings.THINK7_SENDGRID_API_KEY)
         message = Mail(
-            from_email='info@think7canada.org',
+            from_email='info@think7.org',
             to_emails=recipient,
             subject=subject,
             plain_text_content=body,
@@ -43,7 +43,7 @@ def send_email(recipient, subject, body):
     try:
         sg = SendGridAPIClient(settings.THINK7_SENDGRID_API_KEY)
         message = Mail(
-            from_email='info@think7canada.org',
+            from_email='info@think7.org',
             to_emails=recipient,
             subject=subject,
             plain_text_content=body,
