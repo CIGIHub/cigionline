@@ -1,12 +1,15 @@
-from django.http import HttpResponse
-from django.core.files.storage import default_storage
+import boto3
 from zipfile import ZipFile, ZIP_DEFLATED
 from io import BytesIO
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
 from .models import DocumentUpload
-import requests
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+from django.http import StreamingHttpResponse
+from zipfile import ZipFile, ZIP_DEFLATED
+from io import BytesIO
+from .models import DocumentUpload
 
 
 class DocumentZipAPIView(APIView):
@@ -23,28 +26,32 @@ class DocumentZipAPIView(APIView):
         if not documents.exists():
             return Response({"error": "No documents found."}, status=404)
 
-        # Create a zip file in memory
-        buffer = BytesIO()
-        with ZipFile(buffer, 'w', ZIP_DEFLATED) as zip_file:
-            for doc_upload in documents:
-                document = doc_upload.document
-                email = doc_upload.email
+        # Create a streaming response
+        def zip_generator():
+            buffer = BytesIO()
+            with ZipFile(buffer, "w", ZIP_DEFLATED) as zip_file:
+                s3_client = boto3.client("s3")
+                for doc_upload in documents:
+                    document = doc_upload.document
+                    email = doc_upload.email
+                    try:
+                        # Fetch the file from S3
+                        file_key = document.file.name
+                        s3_bucket = settings.AWS_STORAGE_BUCKET_NAME
+                        response = s3_client.get_object(Bucket=s3_bucket, Key=file_key)
+                        file_content = response["Body"].read()
 
-                # Get the file URL and download the content
-                file_url = document.file.url
-                try:
-                    response = requests.get(file_url)
-                    response.raise_for_status()  # Raise error for bad responses
-                    file_content = response.content
-                except requests.RequestException as e:
-                    continue  # Skip this file if it cannot be downloaded
+                        # Write the file to the zip
+                        file_name = f"{email} - {file_key.split('/')[-1]}"
+                        zip_file.writestr(file_name, file_content)
+                    except (NoCredentialsError, PartialCredentialsError, Exception) as e:
+                        continue  # Skip if file cannot be retrieved
+            buffer.seek(0)
+            yield buffer.read()
 
-                # Define the file name in the zip
-                file_name = f"{email} - {document.file.name.split('/')[-1]}"
-                zip_file.writestr(file_name, file_content)
-
-        # Set the response headers for file download
-        buffer.seek(0)
-        response = HttpResponse(buffer, content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="all_documents.zip"'
+        # Return streaming response
+        response = StreamingHttpResponse(
+            zip_generator(), content_type="application/zip"
+        )
+        response["Content-Disposition"] = "attachment; filename=all_documents.zip"
         return response
