@@ -38,7 +38,8 @@ class DocumentZipAPIView(APIView):
                         # Fetch the file from S3
                         file_key = document.file.name
                         s3_bucket = settings.AWS_STORAGE_BUCKET_NAME
-                        response = s3_client.get_object(Bucket=s3_bucket, Key=file_key)
+                        folder_prefix = 'static/documents/'
+                        response = s3_client.get_object(Bucket=s3_bucket, Key=f'{folder_prefix}{file_key}')
                         file_content = response["Body"].read()
 
                         # Write the file to the zip
