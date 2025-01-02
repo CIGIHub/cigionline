@@ -4,6 +4,7 @@ from django.conf.urls import include
 from django.urls import path, re_path
 from django.views.decorators.cache import cache_control
 from core import views as core_views
+from uploads.views import DocumentZipAPIView
 from events.feeds import EventFeed
 from images.views import favicon_view
 from people import views as people_views
@@ -44,6 +45,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/old_images/$', core_views.old_images),
     re_path(r'^api/years/$', core_views.years),
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
+    re_path(r'^api/document_uploads/download/', DocumentZipAPIView.as_view(), name='document_zip_api'),
 
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
     re_path(r'^subscribe$', subscribe_think7, name='subscribe_think7'),
