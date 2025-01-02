@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
 from .models import DocumentUpload
+import requests
 
 
 class DocumentZipAPIView(APIView):
@@ -29,13 +30,14 @@ class DocumentZipAPIView(APIView):
                 document = doc_upload.document
                 email = doc_upload.email
 
-                # Get file path and read the file
-                file_path = document.file.path
-                if not default_storage.exists(file_path):
-                    continue
-
-                with default_storage.open(file_path, 'rb') as f:
-                    file_content = f.read()
+                # Get the file URL and download the content
+                file_url = document.file.url
+                try:
+                    response = requests.get(file_url)
+                    response.raise_for_status()  # Raise error for bad responses
+                    file_content = response.content
+                except requests.RequestException as e:
+                    continue  # Skip this file if it cannot be downloaded
 
                 # Define the file name in the zip
                 file_name = f"{email} - {document.file.name.split('/')[-1]}"
