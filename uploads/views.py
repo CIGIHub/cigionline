@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.conf import settings
 from django.core.files.storage import default_storage
 from zipfile import ZipFile, ZIP_DEFLATED
 from io import BytesIO
@@ -8,10 +7,11 @@ from rest_framework.response import Response
 from django.conf import settings
 from .models import DocumentUpload
 
+
 class DocumentZipAPIView(APIView):
     def get(self, request, *args, **kwargs):
         API_PASSWORD = settings.DOCUMENT_UPLOAD_PASSWORD
-        
+
         # Get the password from query parameters
         password = request.query_params.get('password')
         if not password or password != API_PASSWORD:
