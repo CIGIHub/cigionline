@@ -11,6 +11,8 @@ class DocumentUpload(models.Model):
         related_name='+'
     )
     email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     panels = [
         FieldPanel('document'),

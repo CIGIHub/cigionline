@@ -21,8 +21,16 @@ class DocumentZipAPIView(APIView):
         if not password or password != API_PASSWORD:
             return Response({"error": "Invalid or missing password."}, status=403)
 
+        # Get the id_gt parameter
+        id_gt = request.query_params.get("id_gt", 29)
+        if id_gt:
+            try:
+                id_gt = int(id_gt)
+            except ValueError:
+                return Response({"error": "id_gt must be an integer."}, status=400)
+
         # Fetch all DocumentUpload objects
-        documents = DocumentUpload.objects.all()
+        documents = DocumentUpload.objects.filter(id__gt=id_gt)
         if not documents.exists():
             return Response({"error": "No documents found."}, status=404)
 
