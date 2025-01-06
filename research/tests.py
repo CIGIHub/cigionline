@@ -2,7 +2,7 @@ from core.models import BasicPage
 from wagtail.models import Page
 from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
-from home.models import HomePage
+from home.models import HomePage, Think7HomePage
 from django.template import Context, Template
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
@@ -22,7 +22,7 @@ class ProjectListPageTests(WagtailPageTestCase):
     def test_projectlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             ProjectListPage,
-            {HomePage},
+            {HomePage, Think7HomePage},
         )
 
     def test_projectlistpage_child_page_types(self):

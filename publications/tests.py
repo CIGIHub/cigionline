@@ -1,4 +1,4 @@
-from home.models import HomePage
+from home.models import HomePage, Think7HomePage
 from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
@@ -16,7 +16,7 @@ class PublicationListPageTests(WagtailPageTestCase):
     def test_publicationlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PublicationListPage,
-            {HomePage},
+            {HomePage, Think7HomePage},
         )
 
     def test_publicationlistpage_child_page_types(self):

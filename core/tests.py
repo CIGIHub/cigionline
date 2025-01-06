@@ -1,6 +1,6 @@
 from annual_reports.models import AnnualReportListPage
 from careers.models import JobPostingListPage
-from home.models import HomePage
+from home.models import HomePage, Think7HomePage
 from people.models import PersonListPage
 from research.models import (
     ProjectPage,
@@ -23,7 +23,7 @@ class BasicPageTests(WagtailPageTestCase):
         """
         self.assertAllowedParentPageTypes(
             BasicPage,
-            {BasicPage, HomePage, JobPostingListPage}
+            {BasicPage, HomePage, JobPostingListPage, Think7HomePage}
         )
 
     def test_basicpage_child_page_types(self):

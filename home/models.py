@@ -385,7 +385,6 @@ class Think7HomePage(Page):
         'core.BasicPage',
         'core.Think7AbstractPage',
         'events.EventListPage',
-        'people.PeoplePage',
         'people.PersonListPage',
         'publications.PublicationListPage',
         'research.ProjectListPage',
