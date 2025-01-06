@@ -7,9 +7,6 @@ from django.conf import settings
 from .models import DocumentUpload
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from django.http import StreamingHttpResponse
-from zipfile import ZipFile, ZIP_DEFLATED
-from io import BytesIO
-from .models import DocumentUpload
 
 
 class DocumentZipAPIView(APIView):
@@ -54,7 +51,8 @@ class DocumentZipAPIView(APIView):
                         file_name = f"{email} - {file_key.split('/')[-1]}"
                         zip_file.writestr(file_name, file_content)
                     except (NoCredentialsError, PartialCredentialsError, Exception) as e:
-                        continue  # Skip if file cannot be retrieved
+                        print(f"Error fetching file from S3: {e}")
+                        continue
             buffer.seek(0)
             yield buffer.read()
 

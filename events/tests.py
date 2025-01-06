@@ -1,5 +1,5 @@
 from datetime import datetime
-from home.models import HomePage
+from home.models import HomePage, Think7HomePage
 from wagtail.test.utils import WagtailPageTestCase
 
 from .models import EventListPage, EventPage
@@ -11,7 +11,7 @@ class EventListPageTests(WagtailPageTestCase):
     def test_eventlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             EventListPage,
-            {HomePage},
+            {HomePage, Think7HomePage},
         )
 
     def test_eventlistpage_child_page_types(self):

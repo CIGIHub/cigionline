@@ -23,33 +23,4 @@
       {% include_block block %}
     {% endfor %}
   </section>
-
-  <section class="abstract-submission">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <div class="form-wrapper">
-            <p>Please upload your abstract as either a PDF (.pdf) or Word (.doc/.docx) file.</p>
-            <form id="abstractUploadForm" method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="form-fields">
-                <div class="form-field">
-                  {{ form.file.label_tag }}
-                  {{ form.file }} 
-                </div>
-                <div class="form-field">
-                  {{ form.email.label_tag }}
-                  {{ form.email }}
-                </div>
-              </div>
-              <button type="submit">Upload File</button>
-            </form>
-            <div>
-              <div id="responseMessage" class="response-message"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 {% endblock %}

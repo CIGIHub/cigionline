@@ -32,7 +32,7 @@ header {
         color: $cigi-medium-grey;
         font-size: 0.875rem;
 
-        &:not(:nth-last-child(-n + 2)) {
+        &:not(:last-child) {
           &::after {
             @include media-breakpoint-down(md) {
               display: none;
