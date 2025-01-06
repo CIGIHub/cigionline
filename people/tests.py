@@ -2,7 +2,7 @@ from core.models import BasicPage
 from django.contrib.auth.models import User
 from home.models import HomePage, Think7HomePage
 from wagtail.test.utils import WagtailPageTestCase
-from wagtail.test.utils.form_data import nested_form_data, rich_text
+from wagtail.test.utils.form_data import nested_form_data
 
 from .models import PeoplePage, PersonListPage, PersonPage
 
