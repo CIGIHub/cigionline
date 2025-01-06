@@ -28,13 +28,6 @@
             {% endif %}
           </li>
         {% endfor %}
-        <li class="nav-item submit-abstract">
-          <a href="/abstract-submission">
-            <button class="submit-abstract">
-              Abstract Submission
-            </button>
-          </a>
-        </li>
       </ul>
       
       <button class="custom-nav-popup-btn overlay-controls-button" id="open-menu-btn" role="button" aria-expanded="false" aria-label="Open menu">
@@ -63,16 +56,3 @@
     </ul>
   </div>
 </header>
-<div class="container {% if self.url_path == '/think-7-canada/abstract-submission/' %} d-none{% endif %}">
-  <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8 d-lg-none">
-      <li class="nav-item submit-abstract standalone">
-        <a href="/abstract-submission">
-          <button class="submit-abstract">
-            Abstract Submission
-          </button>
-        </a>
-      </li>
-    </div>
-  </div>
-</div>
