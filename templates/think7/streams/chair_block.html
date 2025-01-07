@@ -44,9 +44,7 @@
         <div class="person-info justify-content-center">
       {% endif %}
           <div class="text-wrapper">
-            {% if self.chair_type == 'chair' %}
-              <div class="chair-label">CHAIR</div>
-            {% endif %}
+            <div class="chair-label">{{self.chair_type}}</div>
             <h2 class="person-name">
               <a href="{{ url }}">{{ name }}</a>
             </h2>
