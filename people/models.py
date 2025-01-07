@@ -36,7 +36,7 @@ class PeoplePage(Page):
     A special singleton page that isn't published, but is the parent to all the
     person pages at the path /people.
     """
-    max_count = 1
+    max_count = 2
     parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = ['people.PersonPage']
     templates = 'people/person_list_page.html'
