@@ -93,7 +93,9 @@ body {
         line-height: 1.375;
 
         p {
-          margin-bottom: 0;
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
       }
     }
