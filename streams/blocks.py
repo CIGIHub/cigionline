@@ -1515,7 +1515,6 @@ class Think7ChairBlock(blocks.StructBlock):
         bio_content = value.get('bio', '')
         plain_text = strip_tags(bio_content.source if hasattr(bio_content, 'source') else bio_content)
         word_count = len(plain_text.split())
-        print(word_count)
 
         if word_count > word_limit:
             raise blocks.StreamBlockValidationError({

@@ -46,7 +46,11 @@
           <div class="text-wrapper">
             <div class="chair-label">{{self.chair_type}}</div>
             <h2 class="person-name">
-              <a href="{{ url }}">{{ name }}</a>
+              {% if url %} 
+                <a href="{{ url }}">{{ name }}</a>
+              {% else %}
+                {{ name }}
+              {% endif %}
             </h2>
             <div class="person-function">
               {{ position }}

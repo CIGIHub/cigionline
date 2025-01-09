@@ -62,6 +62,7 @@ body {
               $color: $cigi-primary-colour,
               $hover-color: $cigi-dark-pink
             );
+            color: $cigi-primary-colour;
             font-size: 1.0625em;
             font-weight: 400;
             text-decoration: none;
@@ -93,6 +94,11 @@ body {
         line-height: 1.375;
 
         p {
+          @include link(
+            $color: $cigi-primary-colour,
+            $hover-color: $cigi-dark-pink
+          );
+
           &:last-child {
             margin-bottom: 0;
           }
