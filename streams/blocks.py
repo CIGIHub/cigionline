@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.forms.utils import flatatt
 from django.utils import timezone
-from django.utils.html import format_html, format_html_join
+from django.utils.html import format_html, format_html_join, strip_tags
 from django.utils.safestring import mark_safe
 import wagtail.rich_text as rich_text
 from wagtail.contrib.table_block.blocks import TableBlock
@@ -14,6 +14,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Page
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
+from django.core.exceptions import ValidationError
 
 
 class ThemeableBlock:
@@ -1495,11 +1496,33 @@ class PodcastTranscriptBlock(blocks.StructBlock):
 
 
 class Think7ChairBlock(blocks.StructBlock):
+    class ChairTypeChoices(models.TextChoices):
+        CHAIR = ('chair', 'Chair')
+        CO_CHAIR = ('co-chair', 'Co-Chair')
+
+    chair_type = blocks.ChoiceBlock(choices=ChairTypeChoices.choices, required=False, help_text='Chair or Co-Chair.')
     chair = blocks.PageChooserBlock(page_type='people.PersonPage', required=False, help_text='Internal profile if available.')
     url = blocks.URLBlock(required=False, help_text='URL to their external profile if internal profile is not available.')
     name = blocks.CharBlock(required=False, help_text='Chair name if internal profile is not available.')
     position = blocks.RichTextBlock(required=False, help_text='Override internal profile position.')
     image = ImageChooserBlock(required=False, help_text='Override internal profile image.')
+    bio = blocks.RichTextBlock(required=False, help_text='Chair bio.')
+
+    def clean(self, value):
+        value = super().clean(value)
+
+        word_limit = 250
+        bio_content = value.get('bio', '')
+        plain_text = strip_tags(bio_content.source if hasattr(bio_content, 'source') else bio_content)
+        word_count = len(plain_text.split())
+        print(word_count)
+
+        if word_count > word_limit:
+            raise blocks.StreamBlockValidationError({
+                'bio': ValidationError(f'Bio must be less than {word_limit} words. it is currently {word_count} words.')
+            })
+
+        return value
 
     class Meta:
         icon = 'user'

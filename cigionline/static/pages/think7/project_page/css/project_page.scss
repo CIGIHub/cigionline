@@ -7,54 +7,94 @@ body {
     }
   }
 
-  .chair-block {
-    .person-info {
-      @include media-breakpoint-down(xs) {
-        padding: 0.5em 1em;
+  .taskforce-chair {
+    margin-top: 3rem;
+
+    .chair-block {
+      padding: 2rem 0;
+
+      &.chair {
+        padding-bottom: 1rem;
+
+        .chair-bio {
+          p {
+            margin-bottom: 1rem;
+          }
+        }
       }
-      align-items: center;
-      display: flex;
-      margin-bottom: 1em;
-      background-color: $cigi-light-grey;
-      border-radius: 100px;
-      padding: 1em;
 
-      .text-wrapper{
-        max-width: 75%;
+      &:not(.chair) {
+        &:not(:last-child) {
+          border-bottom: 1px solid $cigi-light-grey;
+        }
+      }
 
-        h2 {
-          font-size: 1.0625em;
-          font-weight: 400;
+      .chair-background {
+        &.chair {
+          margin: -1rem;
+          padding: 1rem;
+          background-color: $cigi-light-grey;
+          border-radius: 25px;
+        }
+      }
+
+      .person-info {
+        @include media-breakpoint-down(xs) {
+          padding: 0.5em 1em;
+        }
+        align-items: center;
+        display: flex;
+        margin-bottom: 1em;
+
+        .text-wrapper {
+          max-width: 75%;
+
+          .chair-label {
+            font-size: 0.875rem;
+            font-weight: 400;
+            margin-bottom: 0.2rem;
+            margin-top: 0;
+            text-transform: uppercase;
+          }
+
+          .person-name {
+            @include link(
+              $color: $cigi-primary-colour,
+              $hover-color: $cigi-dark-pink
+            );
+            font-size: 1.0625em;
+            font-weight: 400;
+            text-decoration: none;
+            margin-bottom: 0.25rem;
+          }
+
+          .person-function {
+            color: $cigi-text-grey;
+            font-size: 0.8em;
+
+            p {
+              margin-bottom: 0;
+            }
+          }
+        }
+
+        .person-photo {
+          @include aspect-ratio(1, 1);
+          border-radius: 100%;
+          display: inline-block;
+          flex: 0 0 100px;
+          height: 100px;
+          margin-right: 1em;
+          width: 100px;
+        }
+      }
+
+      .chair-bio {
+        line-height: 1.375;
+
+        p {
           margin-bottom: 0;
-          margin-top: 0.5em;
-          text-transform: uppercase;
         }
-
-        .person-name {
-          @include link(
-            $color: $cigi-primary-colour,
-            $hover-color: $cigi-dark-pink
-          );
-          font-size: 1.0625em;
-          font-weight: 400;
-          text-decoration: none;
-        }
-        
-        .person-function {
-          color: $cigi-text-grey;
-          font-size: 0.8em;
-          margin-bottom: 0.5em;
-        }
-      }
-
-      .person-photo {
-        @include aspect-ratio(1, 1);
-        border-radius: 100%;
-        display: inline-block;
-        flex: 0 0 100px;
-        height: 100px;
-        margin-right: 1em;
-        width: 100px;
       }
     }
   }

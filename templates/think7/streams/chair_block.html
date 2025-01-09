@@ -4,47 +4,58 @@
   {% render_bundle 'think7ProjectPage' 'css' %}
 {% endblock %}
 
-<div class="container chair-block">
-  <div class="row justify-content-center">
-    <div class="col col-md-10 col-lg-8">
-    {% if self.name %}
-      {% define self.name as name %}
-    {% elif self.chair %}
-      {% define self.chair.title as name %}
-    {% endif %}
-    {% if self.image %}
-      {% define self.image as image %}
-    {% elif self.chair.image_square %}
-      {% define self.chair.image_square as image %}
-    {% endif %}
-    {% if self.url %}
-      {% define self.url as url %}
-    {% elif self.chair.url %}
-      {% define self.chair.url as url %}
-    {% endif %}
-    {% if self.position %}
-      {% define self.position as position %}
-    {% elif self.chair.position %}
-      {% define self.chair.position as position %}
-    {% endif %}
-    {% if image %}
-      <div class="person-info">
-        <a href="{{ url }}" class="person-photo">
-          <div class="img-wrapper">
-            {% image image fill-300x300 %}
-          </div>
-        </a>
-    {% else %}
-      <div class="person-info justify-content-center">
-    {% endif %}
-        <div class="text-wrapper">
-          <h2>Chair</h2>
-          <a href="{{ url }}" class="person-name">{{ name }}</a>
-          <div class="person-function">
-            {{ position }}
+<div class="chair-block {% if self.chair_type == 'chair' %}chair{% endif %}">
+  {% if self.name %}
+    {% define self.name as name %}
+  {% elif self.chair %}
+    {% define self.chair.title as name %}
+  {% endif %}
+  {% if self.image %}
+    {% define self.image as image %}
+  {% elif self.chair.image_square %}
+    {% define self.chair.image_square as image %}
+  {% endif %}
+  {% if self.url %}
+    {% define self.url as url %}
+  {% elif self.chair %}
+    {% define self.chair.url as url %}
+  {% endif %}
+  {% if self.position %}
+    {% define self.position as position %}
+  {% elif self.chair.position %}
+    {% define self.chair.position as position %}
+  {% endif %}
+  {% if self.bio %}
+    {% define self.bio as bio %}
+  {% else %}
+    {% define self.chair.short_bio as bio %}
+  {% endif %}
+
+  <div class="chair-background {% if self.chair_type == 'chair' %}chair{% endif %}">
+    <div>
+      {% if image %}
+        <div class="person-info">
+          <a href="{{ url }}" class="person-photo">
+            <div class="img-wrapper">
+              {% image image fill-300x300 %}
+            </div>
+          </a>
+      {% else %}
+        <div class="person-info justify-content-center">
+      {% endif %}
+          <div class="text-wrapper">
+            <div class="chair-label">{{self.chair_type}}</div>
+            <h2 class="person-name">
+              <a href="{{ url }}">{{ name }}</a>
+            </h2>
+            <div class="person-function">
+              {{ position }}
+            </div>
           </div>
         </div>
-      </div>
+    </div>
+    <div class="chair-bio">
+      {{ bio|richtext }}
     </div>
   </div>
 </div>
