@@ -33,6 +33,7 @@ from streams.blocks import (
     GESSlideDeckBlock,
     GESDataBlock,
     GESRawDataBlock,
+    PersonsListBlock
 )
 
 
@@ -135,6 +136,12 @@ class ProjectPage(
         blank=True,
         use_json_field=True,
     )
+    additional_members = StreamField(
+        [
+            ('additional_members', PersonsListBlock()),
+        ],
+        blank=True,
+    )
     project_types = ParentalManyToManyField('research.ProjectType', blank=True)
     related_files = StreamField(
         [
@@ -176,6 +183,7 @@ class ProjectPage(
                     'members',
                     label='Person',
                 ),
+                FieldPanel('additional_members'),
             ],
             heading='People',
             classname='collapsible collapsed',
