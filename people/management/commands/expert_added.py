@@ -1,40 +1,76 @@
+import csv
+from django.core.management.base import BaseCommand
 from wagtail.models import Revision
 from people.models import PersonPage  # Replace `myapp` with your actual app name
-from django.core.management.base import BaseCommand
-from django.contrib.contenttypes.models import ContentType
 from json import loads
 
-
 class Command(BaseCommand):
-    def handle(self, *args, **options):
-        # Filter PersonPage objects tagged with "Expert"
-        expert_pages = PersonPage.objects.filter(position__in=['Senior Fellow', 'Fellow'], archive=0).distinct().live()
-        # expert_pages = PersonPage.objects.filter(person_types__name="Research Fellow", archive=0).distinct().live()
-        person_page_content_type = ContentType.objects.get_for_model(PersonPage)
-        print(expert_pages.count())
+    help = "Analyze Expert type history for PersonPages and export to CSV"
 
-        # Iterate through each page
-        for page in expert_pages:
-            print(page.title)
-            # # Get all revisions for the page
-            # revisions = Revision.objects.filter(
-            #     content_type=person_page_content_type,
-            #     object_id=page.id
-            # ).order_by("created_at")
+    def handle(self, *args, **kwargs):
+        # File paths
+        input_file = "names.csv"  # Replace with the actual path to your file
+        output_file = "expert_history.csv"
 
-            # # Initialize a flag to track when "Expert" is first seen
-            # expert_added_date = None
+        # Read names from the input file
+        with open(input_file, "r") as f:
+            # Read lines, clean extra spaces, and strip leading/trailing spaces
+            names = [" ".join(line.split()) for line in f.readlines()]
 
-            # for revision in revisions:
-            #     # Deserialize the content_json field
-            #     content = revision.content
+        # Prepare CSV output
+        rows = []
+        header = ["Name", "Expert Added Dates", "Expert Removed Dates"]
+        first_run = True
 
-            #     # Check if "person_types" is in the content and contains "Expert"
-            #     if "person_types" in content:
-            #         person_types = content["person_types"]
-            #         if 4 in person_types and not expert_added_date:
-            #             # If "Expert" is found and not yet recorded
-            #             expert_added_date = revision.created_at
-            #             # Print person's name and the date of "Expert" added
-            #             print(f"{page.title}, {expert_added_date.strftime('%Y-%m-%d')}")
-            #             break  # Stop further checks for this page
+        for name in names:
+            # Query the PersonPage object
+            try:
+                if first_run:
+                    person = PersonPage.objects.get(last_name="Mathur")
+                    first_run = False
+                else:
+                    person = PersonPage.objects.live().get(title=name)
+            except PersonPage.DoesNotExist:
+                
+                self.stdout.write(f"Person not found: {name}")
+                # break
+                continue
+
+            # Get all revisions for the page
+            revisions = Revision.objects.filter(
+                content_type=person.specific_class().content_type,
+                object_id=person.id,
+            ).order_by("created_at")
+
+            # Analyze revisions
+            status_changes = []
+            was_expert = False
+
+            for revision in revisions:
+                # Deserialize the content
+                content = revision.content if isinstance(revision.content, dict) else loads(revision.content)
+
+                # Check the person_types field
+                person_types = content["person_types"]
+                if 4 in person_types and not was_expert:
+                    # "Expert" was added
+                    status_changes.append(f"Added: {revision.created_at.strftime('%Y-%m-%d')}")
+                    was_expert = True
+                elif 4 not in person_types and was_expert:
+                    # "Expert" was removed
+                    status_changes.append(f"Removed: {revision.created_at.strftime('%Y-%m-%d')}")
+                    was_expert = False
+
+            # Add data to rows
+            rows.append([
+                name,
+                " | ".join(status_changes),  # Join changes with a vertical bar
+            ])
+
+        # Write to CSV
+        with open(output_file, "w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(header)
+            writer.writerows(rows)
+
+        self.stdout.write(f"CSV export completed: {output_file}")
