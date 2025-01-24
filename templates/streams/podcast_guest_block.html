@@ -1,21 +1,31 @@
 {% load wagtailimages_tags wagtailcore_tags %}
 <div class="guest">
-  <div class="guest-image">
-    <a href="{% pageurl self.guest_page %}">
-      <div class="img-wrapper">
-        {% if self.image %}
-          {% image self.image fill-400x400 %}
-        {% else %}
-          {% image self.guest_page.image_square fill-400x400 %}
-        {% endif %}
-      </div>
-    </a>
-  </div>
+  {% if self.image or self.guest_page.image_square %}
+    <div class="guest-image">
+      {% if self.guest_page %}
+        <a href="{% pageurl self.guest_page %}">
+      {% endif %}
+        <div class="img-wrapper">
+          {% if self.image %}
+            {% image self.image fill-400x400 %}
+          {% else %}
+            {% image self.guest_page.image_square fill-400x400 %}
+          {% endif %}
+        </div>
+      {% if self.guest_page %}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
   <div class="guest-details">
     <h3>
-      <a href="{% pageurl self.guest_page %}">
-        {{ self.guest_page.title }}
-      </a>
+      {% if self.guest_page %}
+        <a href="{% pageurl self.guest_page %}">
+          {{ self.guest_page.title }}
+        </a>
+      {% else %}
+        {{ self.guest }}
+      {% endif %}
     </h3>
     {% if self.bio %}
       <div class="bio">
