@@ -177,27 +177,11 @@ body {
 
     .program-information {
       .program-information-list {
-        @include media-breakpoint-up(md) {
-          display: flex;
-        }
         list-style: none;
         padding: 0;
 
         li {
-          @include media-breakpoint-up(md) {
-            padding: 0 1rem;
-          }
           padding: 0;
-
-          &:not(:last-child) {
-            @include media-breakpoint-up(md) {
-              border-right: 1px solid $cigi-text-grey;
-            }
-          }
-
-          &:first-child {
-            padding-left: 0;
-          }
 
           i {
             margin-right: 0.5rem;
