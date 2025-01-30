@@ -6,6 +6,7 @@ from core.models import (
 )
 from django.db import models
 from django.template.defaultfilters import date
+from streams.blocks import FilesBlock
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, TitleFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
@@ -46,7 +47,9 @@ class JobPostingPage(
 ):
     closing_date = models.DateField(blank=True, null=True)
     description = StreamField(
-        BasicPageAbstract.body_default_blocks,
+        BasicPageAbstract.body_default_blocks + [
+            ('files', FilesBlock()),
+        ],
         blank=True,
         use_json_field=True,
     )

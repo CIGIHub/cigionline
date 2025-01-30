@@ -1527,3 +1527,23 @@ class Think7ChairBlock(blocks.StructBlock):
         icon = 'user'
         label = 'Taskforce Chair'
         template = 'think7/streams/chair_block.html'
+
+
+class FilesBlock(blocks.StructBlock):
+    files = blocks.StreamBlock(
+        [
+            ('file', blocks.StructBlock(
+                [
+                    ('file', DocumentChooserBlock(required=True)),
+                    ('title', blocks.CharBlock(required=False)),
+                ],
+                required=True,
+            )),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Files'
+        template = 'streams/files_block.html'
