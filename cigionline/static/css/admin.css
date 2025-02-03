@@ -33,16 +33,20 @@
 
 #id_featured_articles-FORMS [id^='inline_child_featured_articles']::before,
 #id_featured_pages-FORMS [id^='inline_child_featured_pages']::before,
-#id_featured_multimedia-FORMS [id^='inline_child_featured_multimedia']::before  {
+#id_featured_multimedia-FORMS [id^='inline_child_featured_multimedia']::before {
   counter-increment: featured-item;
   content: 'Item ' counter(featured-item) ': ';
 }
 
 .newsletter-streamfield-menu {
   .w-combobox__optgroup {
-    [id$="item-0"],
-    [id$="item-1"] {
+    [id$='item-0'],
+    [id$='item-1'] {
       display: none;
     }
   }
+}
+
+.public-DraftStyleDefault-unorderedListItem.public-DraftStyleDefault-depth3 {
+  list-style-type: disc;
 }
