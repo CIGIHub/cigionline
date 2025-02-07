@@ -13,6 +13,11 @@
   <link rel="stylesheet" href="https://use.typekit.net/mks4fbg.css">
 {% endblock %}
 
+{% block body_class %}
+  {% now "Y-m-d" as today %}
+  {% if today < '2025-03-04' %}banner-enabled{% endif %}
+{% endblock %}
+
 {% block header %}
   {% include "./includes/top_bar.html" with small=True %}
 {% endblock %}
