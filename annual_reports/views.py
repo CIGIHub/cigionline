@@ -1,5 +1,8 @@
 from django.http import JsonResponse
-from .models import AnnualReportPage
+from .models import AnnualReportPage, AnnualReportSlidePage, AnnualReportSPAPage
+
+from wagtail.api.v2.views import PagesAPIViewSet
+from wagtail.api.v2.router import WagtailAPIRouter
 
 
 def all_annual_reports(request):
@@ -19,3 +22,24 @@ def all_annual_reports(request):
             'year': annual_report.year,
         } for annual_report in annual_reports]
     })
+
+
+api_router = WagtailAPIRouter("wagtailapi")
+
+
+class AnnualReportSPAPageAPIViewSet(PagesAPIViewSet):
+    """Custom API view to expose annual report data."""
+
+    def get_queryset(self):
+        return AnnualReportSPAPage.objects.live().public()
+
+
+class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
+    """API for fetching slides."""
+
+    def get_queryset(self):
+        return AnnualReportSlidePage.objects.live().public()
+
+
+api_router.register_endpoint("annual_report_spa", AnnualReportSPAPageAPIViewSet)
+api_router.register_endpoint("annual_report_slide", AnnualReportSlidePageAPIViewSet)

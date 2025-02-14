@@ -16,11 +16,14 @@ from articles import views as article_views
 from subscribe.views import subscribe_dph, subscribe_think7
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
+from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
 
-
+api_router = WagtailAPIRouter("wagtailapi")
+api_router.register_endpoint("annual_report", annual_report_views.AnnualReportSPAPageAPIViewSet)
+api_router.register_endpoint("annual_report_slide", annual_report_views.AnnualReportSlidePageAPIViewSet)
 urlpatterns = []
 if settings.ADMIN_ENABLED:
     urlpatterns = urlpatterns + [
@@ -46,6 +49,8 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/years/$', core_views.years),
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
     re_path(r'^api/document_uploads/download/', DocumentZipAPIView.as_view(), name='document_zip_api'),
+    
+    re_path(r'^api/v2/', api_router.urls),
 
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
     re_path(r'^subscribe$', subscribe_think7, name='subscribe_think7'),

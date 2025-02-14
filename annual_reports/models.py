@@ -10,7 +10,7 @@ from wagtail.admin.panels import (
     MultiFieldPanel,
 )
 from wagtail.blocks import PageChooserBlock
-from wagtail.fields import StreamField
+from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
 
 
@@ -133,9 +133,29 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields
 
     parent_page_types = ['annual_reports.AnnualReportListPage']
-    subpage_types = []
+    subpage_types = ['annual_reports.AnnualReportSPAPage']
     templates = 'annual_reports/annual_report_page.html'
 
     class Meta:
         verbose_name = 'Annual Report Page'
         verbose_name_plural = 'Annual Report Pages'
+
+
+class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
+    """View annual report SPA page"""
+
+    subpage_types = ["AnnualReportSlidePage"]
+
+
+class AnnualReportSlidePage(Page):
+    """Each individual slide within the annual report."""
+
+    slide_title = models.CharField(max_length=255, help_text="Title of the slide")
+    slide_content = RichTextField(blank=True, help_text="Content of the slide")
+
+    content_panels = Page.content_panels + [
+        FieldPanel("slide_title"),
+        FieldPanel("slide_content"),
+    ]
+
+    parent_page_types = ["AnnualReportSPAPage"]
