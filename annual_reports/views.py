@@ -24,9 +24,6 @@ def all_annual_reports(request):
     })
 
 
-api_router = WagtailAPIRouter("wagtailapi")
-
-
 class AnnualReportSPAPageAPIViewSet(PagesAPIViewSet):
     """Custom API view to expose annual report data."""
 
@@ -39,7 +36,3 @@ class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
 
     def get_queryset(self):
         return AnnualReportSlidePage.objects.live().public()
-
-
-api_router.register_endpoint("annual_report_spa", AnnualReportSPAPageAPIViewSet)
-api_router.register_endpoint("annual_report_slide", AnnualReportSlidePageAPIViewSet)

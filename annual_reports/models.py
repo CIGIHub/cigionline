@@ -9,6 +9,7 @@ from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
 )
+from wagtail.api import APIField
 from wagtail.blocks import PageChooserBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
@@ -159,3 +160,9 @@ class AnnualReportSlidePage(Page):
     ]
 
     parent_page_types = ["AnnualReportSPAPage"]
+
+    api_fields = [
+        APIField("slide_title"),
+        APIField("slide_content"),
+    ]
+# 22560

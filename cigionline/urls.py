@@ -1,3 +1,4 @@
+from .api import api_router
 from annual_reports import views as annual_report_views
 from django.conf import settings
 from django.conf.urls import include
@@ -16,14 +17,10 @@ from articles import views as article_views
 from subscribe.views import subscribe_dph, subscribe_think7
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
-from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
 
-api_router = WagtailAPIRouter("wagtailapi")
-api_router.register_endpoint("annual_report", annual_report_views.AnnualReportSPAPageAPIViewSet)
-api_router.register_endpoint("annual_report_slide", annual_report_views.AnnualReportSlidePageAPIViewSet)
 urlpatterns = []
 if settings.ADMIN_ENABLED:
     urlpatterns = urlpatterns + [
