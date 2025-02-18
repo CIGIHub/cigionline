@@ -152,10 +152,22 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
 class AnnualReportSlidePage(Page):
     """Each individual slide within the annual report."""
 
+    SLIDE_TYPES = [
+        ("regular", "Regular Slide"),
+        ("toc", "Table of Contents"),
+    ]
+
     slide_title = models.CharField(max_length=255, help_text="Title of the slide")
     slide_content = RichTextField(blank=True, help_text="Content of the slide")
+    slide_type = models.CharField(
+        max_length=255,
+        choices=SLIDE_TYPES,
+        default="regular",
+        help_text="Type of slide",
+    )
 
     content_panels = Page.content_panels + [
+        FieldPanel("slide_type"),
         FieldPanel("slide_title"),
         FieldPanel("slide_content"),
     ]
@@ -163,6 +175,7 @@ class AnnualReportSlidePage(Page):
     parent_page_types = ["AnnualReportSPAPage"]
 
     api_fields = [
+        APIField("slide_type"),
         APIField("slide_title"),
         APIField("slide_content"),
     ]

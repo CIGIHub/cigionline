@@ -5,7 +5,7 @@ import AnnualReportSlide from './AnnualReportSlide';
 
 const fetchSlides = async (annualReportId) => {
   const response = await fetch(
-    `/api/v2/annual_report_slide/?child_of=${annualReportId}&fields=slide_title,slide_content`,
+    `/api/v2/annual_report_slide/?child_of=${annualReportId}&fields=slide_title,slide_content,slide_type`,
   );
   const data = await response.json();
 

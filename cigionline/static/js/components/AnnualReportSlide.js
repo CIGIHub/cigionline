@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import '../../css/components/AnnualReportSlide.scss';
-import AnnualReportNav from './AnnualReportNav';
-import AnnualReportSlideList from './AnnualReportSlideList';
+import AnnualReportRegularSlide from './AnnualReportRegularSlide';
+import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 
 const AnnualReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
@@ -62,20 +62,23 @@ const AnnualReportSlide = ({ slides, basePath }) => {
     };
   }, [currentIndex, navigate, isScrolling]);
 
-  return (
-    <div className="annual-report-slide">
-      <div>{slides[currentIndex].id}</div>
-      <h1 aria-live="assertive">{slides[currentIndex].slide_title}</h1>
-      <div
-        dangerouslySetInnerHTML={{ __html: slides[currentIndex].slide_content }}
-      />
-      <AnnualReportSlideList slides={slides} basePath={basePath} />
-      <AnnualReportNav
+  if (slides[currentIndex].slide_type === 'toc') {
+    return (
+      <AnnualReportTOCSlide
+        slides={slides}
         basePath={basePath}
-        prevSlide={prevSlide}
-        nextSlide={nextSlide}
+        currentIndex={currentIndex}
       />
-    </div>
+    );
+  }
+  return (
+    <AnnualReportRegularSlide
+      slides={slides}
+      basePath={basePath}
+      currentIndex={currentIndex}
+      prevSlide={prevSlide}
+      nextSlide={nextSlide}
+    />
   );
 };
 
