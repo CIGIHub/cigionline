@@ -11,6 +11,13 @@
     }
   }
 
+  &:not(.with-banner) {
+    .homepage-featured {
+      margin-bottom: 3rem;
+      padding-top: 5rem;
+    }
+  }
+
   .homepage-header-newsletter {
     @include media-breakpoint-up(lg) {
       padding-top: 5em;
