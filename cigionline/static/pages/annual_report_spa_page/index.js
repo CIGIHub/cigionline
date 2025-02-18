@@ -1,11 +1,11 @@
 import './css/annual_report_spa_page.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from '../../js/components/AnnualReportSPA';
+import AnnualReportSPA from '../../js/components/AnnualReportSPA';
 
 const normalizeBasePath = (path) => {
   const url = new URL(path, window.location.origin);
-  return url.pathname.replace(/\/$/, ''); // ✅ Remove trailing slash
+  return url.pathname.replace(/\/$/, '');
 };
 
 const annualReportSPAId =
@@ -15,6 +15,6 @@ const BASE_PATH = document
   .dataset.basePath.replace(/\/$/, '');
 const basePath = normalizeBasePath(BASE_PATH);
 ReactDOM.render(
-  <App annualReportSPAId={annualReportSPAId} basePath={basePath} />,
+  <AnnualReportSPA annualReportSPAId={annualReportSPAId} basePath={basePath} />,
   document.getElementById('annual-report-spa'),
 );

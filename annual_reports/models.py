@@ -5,6 +5,7 @@ from core.models import (
 )
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.shortcuts import render
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -165,4 +166,8 @@ class AnnualReportSlidePage(Page):
         APIField("slide_title"),
         APIField("slide_content"),
     ]
-# 22560
+
+    def serve(self, request):
+        """Always serve the SPA regardless of sub-page requested."""
+        parent = self.get_parent().specific
+        return render(request, "annual_reports/annual_report_spa_page.html", {"page": parent})
