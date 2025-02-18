@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import '../../css/components/AnnualReportSlide.scss';
+import AnnualReportNav from './AnnualReportNav';
 
 const AnnualReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const [isScrolling, setIsScrolling] = useState(false); // Cooldown state
 
   if (!slides || slides.length === 0) {
     return <div>Loading slides...</div>;
@@ -21,6 +23,24 @@ const AnnualReportSlide = ({ slides, basePath }) => {
   const nextSlide =
     currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
+  useEffect(() => {
+    const handleScroll = (event) => {
+      if (isScrolling) return; // Prevent rapid scrolling
+      setIsScrolling(true);
+
+      setTimeout(() => setIsScrolling(false), 1000); // Cooldown period
+
+      if (event.deltaY > 0 && nextSlide) {
+        navigate(`${basePath}/${nextSlide.slug}`);
+      } else if (event.deltaY < 0 && prevSlide) {
+        navigate(`${basePath}/${prevSlide.slug}`);
+      }
+    };
+
+    window.addEventListener('wheel', handleScroll);
+    return () => window.removeEventListener('wheel', handleScroll);
+  }, [currentIndex, navigate, isScrolling]);
+
   return (
     <div className="annual-report-slide">
       <div>{slides[currentIndex].id}</div>
@@ -28,24 +48,11 @@ const AnnualReportSlide = ({ slides, basePath }) => {
       <div
         dangerouslySetInnerHTML={{ __html: slides[currentIndex].slide_content }}
       />
-
-      <div>
-        <button
-          type="button"
-          onClick={() => navigate(`${basePath}/${prevSlide.slug}`)}
-          disabled={!prevSlide}
-        >
-          Previous
-        </button>
-
-        <button
-          type="button"
-          onClick={() => navigate(`${basePath}/${nextSlide.slug}`)}
-          disabled={!nextSlide}
-        >
-          Next
-        </button>
-      </div>
+      <AnnualReportNav
+        basePath={basePath}
+        prevSlide={prevSlide}
+        nextSlide={nextSlide}
+      />
     </div>
   );
 };
