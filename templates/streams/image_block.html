@@ -10,7 +10,7 @@
         {% if self.image.file.url|file_extension == '.gif' %}
           <img src="{{self.image.file.url}}" alt="{{self.image.caption}}" />
         {% else %}
-          {% image self.image width-640 %}
+          {% image self.image width-1920 %}
         {% endif %}
         {% if self.link %}
           </a>
