@@ -115,7 +115,22 @@
     </section>
   {% endif %}
 
-  {% include "includes/body.html" with body=self.body heading="about" %}
+  <section class="body" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">About</h2>
+        </div>
+      </div>
+    </div>
+    {% for block in self.body %}
+      {% with type=block.block_type %}
+        {% if type != 'additional_disclaimer' and type != 'additional_file' and type != 'embedded_video' and type != 'image' %}
+          {% include_block block %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </section>
 
   <section class="ogbv-resources">
     <div class="container">
@@ -140,6 +155,20 @@
         {% endfor %}
       </div>
     </div> 
+    {% for block in self.body %}
+      {% with type=block.block_type %}
+        {% if type == 'embedded_video' or type == 'image' %}
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-10 col-lg-8">
+                <hr>
+              </div>
+            </div>
+          </div>
+          {% include_block block %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
   </section> 
   <section class="ogbv-acknowledgements">
     <div class="container">
