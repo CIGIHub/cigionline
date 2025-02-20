@@ -210,12 +210,6 @@ class AnnualReportSlidePage(Page):
     parent_page_types = ["AnnualReportSPAPage"]
     subpage_types = []
 
-    api_fields = [
-        APIField("slide_type"),
-        APIField("slide_title"),
-        APIField("slide_content"),
-    ]
-
     def serve(self, request):
         """Always serve the SPA regardless of sub-page requested."""
         parent = self.get_parent().specific
