@@ -174,6 +174,7 @@ class AnnualReportSlidePage(Page):
         ("toc", "Table of Contents"),
     ]
 
+
     slide_title = models.CharField(max_length=255, help_text="Title of the slide")
     slide_content = RichTextField(blank=True, help_text="Content of the slide")
     slide_type = models.CharField(
@@ -198,6 +199,15 @@ class AnnualReportSlidePage(Page):
         related_name="+",
         help_text="Background video for the slide",
     )
+    background_colour = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Background colour for the slide",
+    )
+    include_on_toc = models.BooleanField(
+        default=True,
+        help_text="Include this slide in the table of contents",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("slide_type"),
@@ -205,6 +215,7 @@ class AnnualReportSlidePage(Page):
         FieldPanel("slide_content"),
         FieldPanel("background_image"),
         FieldPanel("background_video"),
+        FieldPanel("include_on_toc"),
     ]
 
     parent_page_types = ["AnnualReportSPAPage"]

@@ -62,23 +62,41 @@ const AnnualReportSlide = ({ slides, basePath }) => {
     };
   }, [currentIndex, navigate, isScrolling]);
 
-  if (slides[currentIndex].slide_type === 'toc') {
-    return (
-      <AnnualReportTOCSlide
-        slides={slides}
-        basePath={basePath}
-        currentIndex={currentIndex}
-      />
-    );
-  }
   return (
-    <AnnualReportRegularSlide
-      slides={slides}
-      basePath={basePath}
-      currentIndex={currentIndex}
-      prevSlide={prevSlide}
-      nextSlide={nextSlide}
-    />
+    <div className="annual-report-slide">
+      <div
+        className="ar-slide-background-image"
+        style={{
+          backgroundImage: `url(${slides[currentIndex].background_image})`,
+        }}
+      />
+
+      <div className="ar-slide-content">
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-md-10 col-lg-8">
+              <div className="annual-report-slide">
+                {slides[currentIndex].slide_type === 'toc' ? (
+                  <AnnualReportTOCSlide
+                    slides={slides}
+                    basePath={basePath}
+                    currentIndex={currentIndex}
+                  />
+                ) : (
+                  <AnnualReportRegularSlide
+                    slides={slides}
+                    basePath={basePath}
+                    currentIndex={currentIndex}
+                    prevSlide={prevSlide}
+                    nextSlide={nextSlide}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
