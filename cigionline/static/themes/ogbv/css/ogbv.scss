@@ -140,4 +140,14 @@ body {
       }
     }
   }
+
+  .persons-list-block {
+    .persons-list {
+      li {
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
 }

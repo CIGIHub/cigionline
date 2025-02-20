@@ -205,6 +205,50 @@
       </div>
     </section>
   {% endif %}
+  {% if self.additional_members %}
+    {% for block in self.additional_members %}
+      <section class="persons-list-block">
+        <div class="container">
+          <div class="row d-block">
+            <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+              <h2 class="paragraph-heading">{{ block.value.title }}</h2>
+              <ul class="persons-list">
+                {% for member in block.value.persons %}
+                  <li>
+                    <div class="person-info">
+                      <a href="{{ member.url }}" class="person-photo">
+                        <div class="img-wrapper">
+                          {% if member.value.image_square %}
+                            {% image member.value.image_square fill-300x300 %}
+                          {% endif %}
+                        </div>
+                      </a>
+              
+                      <div>
+                        <a href="{{ member.value.url }}" class="person-name">{{ member.value.title }}</a>
+                        <div class="person-function">
+                          {{ member.value.position }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="person-description">
+                      {% if block.value.bio_source_field and block.value.bio_source_field == 'short_bio' %}
+                        {{ member.value.short_bio|safe }}
+                      {% else %}
+                        {% for block in member.value.body %}
+                          {{ block.value|safe }}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+  {% endif %}
   <section class="ogbv-acknowledgements">
     <div class="container">
       <div class="row justify-content-center">
