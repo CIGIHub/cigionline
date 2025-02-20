@@ -16,6 +16,7 @@ body {
       background-size: cover;
       background-position: 80%;
       background-repeat: no-repeat;
+      margin-top: 0;
 
       .hero-container {
         .hero-main {
@@ -138,6 +139,10 @@ body {
         align-items: center;
         height: 100%;
       }
+    }
+
+    &.search-table-section {
+      margin: 0;
     }
   }
 
