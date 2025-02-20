@@ -6,6 +6,7 @@ from core.models import (
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
+from streams.blocks import SlideChooserBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -14,6 +15,7 @@ from wagtail.api import APIField
 from wagtail.blocks import PageChooserBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
+from wagtailmedia.models import Media
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -146,6 +148,21 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
 class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
     """View annual report SPA page"""
 
+    slides = StreamField(
+        [("slide", SlideChooserBlock())],
+        blank=True,
+    )
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("slides"),
+            ],
+            heading="Slides",
+            classname="collapsible",
+        ),
+    ]
+
     subpage_types = ["AnnualReportSlidePage"]
 
 
@@ -165,14 +182,33 @@ class AnnualReportSlidePage(Page):
         default="regular",
         help_text="Type of slide",
     )
+    background_image = models.ForeignKey(
+        "images.CigionlineImage",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Background image for the slide",
+    )
+    background_video = models.ForeignKey(
+        Media,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Background video for the slide",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("slide_type"),
         FieldPanel("slide_title"),
         FieldPanel("slide_content"),
+        FieldPanel("background_image"),
+        FieldPanel("background_video"),
     ]
 
     parent_page_types = ["AnnualReportSPAPage"]
+    subpage_types = []
 
     api_fields = [
         APIField("slide_type"),

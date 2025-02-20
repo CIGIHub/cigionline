@@ -1,8 +1,7 @@
-from django.http import JsonResponse
 from .models import AnnualReportPage, AnnualReportSlidePage, AnnualReportSPAPage
-
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from wagtail.api.v2.views import PagesAPIViewSet
-from wagtail.api.v2.router import WagtailAPIRouter
 
 
 def all_annual_reports(request):
@@ -36,3 +35,30 @@ class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
 
     def get_queryset(self):
         return AnnualReportSlidePage.objects.live().public()
+
+
+def get_ordered_slides(request, page_id):
+    page = get_object_or_404(AnnualReportSPAPage, id=page_id)
+    slide_ids = [block.value["slide"].id for block in page.slides]
+    slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
+    slide_map = {slide.id: slide for slide in slides}
+    ordered_slides = [slide_map[id] for id in slide_ids if id in slide_map]
+
+    response_data = {
+        "slides": [
+            {
+                "id": slide.id,
+                "title": slide.title,
+                "slug": slide.slug,
+                "slide_title": slide.slide_title,
+                "slide_content": slide.slide_content,
+                "slide_type": slide.slide_type,
+                "background_image": slide.background_image.get_rendition('original').file.url if slide.background_image else '',
+                "background_video": slide.background_video.file.url if slide.background_video else '',
+            }
+            for slide in ordered_slides
+        ]
+    }
+    print(response_data)
+
+    return JsonResponse(response_data)

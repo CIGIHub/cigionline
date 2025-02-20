@@ -1,5 +1,3 @@
-from .api import api_router
-from annual_reports import views as annual_report_views
 from django.conf import settings
 from django.conf.urls import include
 from django.urls import path, re_path
@@ -14,6 +12,7 @@ from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
 from articles import views as article_views
+from annual_reports import views as annual_report_views
 from subscribe.views import subscribe_dph, subscribe_think7
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -27,8 +26,8 @@ if settings.ADMIN_ENABLED:
         re_path(r'^admin/', include(wagtailadmin_urls)),
     ]
 urlpatterns = urlpatterns + [
+    path('api/annual-report/<int:page_id>/slides/', annual_report_views.get_ordered_slides, name='ordered_slides_api'),
     re_path(r'^documents/', include(wagtaildocs_urls)),
-
     re_path(r'^search/$', search_views.search, name='search'),
     re_path(r'^api/experts/$', people_views.all_experts),
     re_path(r'^api/all_experts_search/$', people_views.all_experts_search),
@@ -46,9 +45,6 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/years/$', core_views.years),
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
     re_path(r'^api/document_uploads/download/', DocumentZipAPIView.as_view(), name='document_zip_api'),
-    
-    re_path(r'^api/v2/', api_router.urls),
-
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
     re_path(r'^subscribe$', subscribe_think7, name='subscribe_think7'),
     re_path(r'^events/feed.ics$', EventFeed()),

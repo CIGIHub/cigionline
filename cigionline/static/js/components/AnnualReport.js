@@ -4,15 +4,14 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import AnnualReportSlide from './AnnualReportSlide';
 
 const fetchSlides = async (annualReportId) => {
-  const response = await fetch(
-    `/api/v2/annual_report_slide/?child_of=${annualReportId}&fields=slide_title,slide_content,slide_type`,
-  );
-  const data = await response.json();
-
-  return data.items.map((slide) => ({
-    ...slide,
-    slug: slide.meta.slug,
-  }));
+  const response = await fetch(`/api/annual-report/${annualReportId}/slides/`);
+  try {
+    const data = await response.json();
+    return data.slides;
+  } catch (error) {
+    console.error('Error fetching slides:', error);
+    return [];
+  }
 };
 
 const AnnualReport = ({ annualReportId, basePath }) => {

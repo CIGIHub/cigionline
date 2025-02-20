@@ -11,6 +11,7 @@ const AnnualReportRegularSlide = ({
   currentIndex,
 }) => (
   <div className="annual-report-slide">
+    <div className="background-image" style={`background-image:${slides[currentIndex].background_image}`} />
     <div>{slides[currentIndex].id}</div>
     <h1 aria-live="assertive">{slides[currentIndex].slide_title}</h1>
     <div
