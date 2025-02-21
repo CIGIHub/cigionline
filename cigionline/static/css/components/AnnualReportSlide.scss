@@ -1,31 +1,26 @@
-.annual-report-slide {
-  .ar-slide-background-image {
-    width: 100%;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -1;
-  }
+.slide-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
 
-  .ar-slide-content {
-    position: relative;
-    z-index: 1;
-  }
+.slide-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100vh + 50px);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
 
-  .ar-slide-background-colour {
-    width: 100%;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -2;
-
-    &.strategic-plan-yellow {
-      background-color: #edc54c;
-    }
+  &.strategic-plan-yellow {
+    background-color: #edc54c;
   }
 }

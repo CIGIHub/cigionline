@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/components/AnnualReportSlide.scss';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
@@ -8,7 +9,7 @@ import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 const AnnualReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const [isScrolling, setIsScrolling] = useState(false); // Cooldown state
+  const [isScrolling, setIsScrolling] = useState(false);
 
   if (!slides || slides.length === 0) {
     return <div>Loading slides...</div>;
@@ -28,7 +29,7 @@ const AnnualReportSlide = ({ slides, basePath }) => {
     const handleNavigation = (direction) => {
       if (isScrolling) return; // Prevent rapid navigation
       setIsScrolling(true);
-      setTimeout(() => setIsScrolling(false), 1000); // Cooldown
+      setTimeout(() => setIsScrolling(false), 600); // Cooldown
 
       if (direction === 'next' && nextSlide) {
         navigate(`${basePath}/${nextSlide.slug}`);
@@ -63,42 +64,48 @@ const AnnualReportSlide = ({ slides, basePath }) => {
   }, [currentIndex, navigate, isScrolling]);
 
   return (
-    <div className="annual-report-slide">
-      <div
-        className="ar-slide-background-image"
-        style={{
-          backgroundImage: `url(${slides[currentIndex].background_image})`,
-        }}
-      />
-      <div
-        className={`ar-slide-background-colour ${slides[currentIndex].background_colour}`}
-      />
-
-      <div className="ar-slide-content">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-10 col-lg-8">
-              <div className="annual-report-slide">
-                {slides[currentIndex].slide_type === 'toc' ? (
-                  <AnnualReportTOCSlide
-                    slides={slides}
-                    basePath={basePath}
-                    currentIndex={currentIndex}
-                  />
-                ) : (
-                  <AnnualReportRegularSlide
-                    slides={slides}
-                    basePath={basePath}
-                    currentIndex={currentIndex}
-                    prevSlide={prevSlide}
-                    nextSlide={nextSlide}
-                  />
-                )}
+    <div className="slide-wrapper">
+      <AnimatePresence>
+        <motion.div
+          key={slug}
+          className={`slide-container ${slides[currentIndex].background_colour}`}
+          style={{
+            backgroundImage: `url(${slides[currentIndex].background_image})`,
+          }}
+          initial={{ opacity: 0, y: 0 }} // ✅ Subtle slide up, but the slide is already in place
+          animate={{ opacity: 1, y: -20 }} // ✅ Slide up slightly while fading in
+          exit={{ opacity: 0, y: -20 }} // ✅ Fade out while moving up slightly
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
+        >
+          <div className="annual-report-slide">
+            <div className="ar-slide-content">
+              <div className="container">
+                <div className="row justify-content-center">
+                  <div className="col-md-10 col-lg-8">
+                    <div className="annual-report-slide">
+                      {slides[currentIndex].slide_type === 'toc' ? (
+                        <AnnualReportTOCSlide
+                          slides={slides}
+                          basePath={basePath}
+                          currentIndex={currentIndex}
+                        />
+                      ) : (
+                        <AnnualReportRegularSlide
+                          slides={slides}
+                          basePath={basePath}
+                          currentIndex={currentIndex}
+                          prevSlide={prevSlide}
+                          nextSlide={nextSlide}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };
