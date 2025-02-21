@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import ProjectContentListing from '../../js/components/ProjectContentListing';
@@ -54,7 +54,8 @@ if (projectId) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('project-content-listing'));
+root.render(
   <SearchTable
     showSearch
     endpointParams={endpointParams}
@@ -134,5 +135,4 @@ ReactDOM.render(
       colTitle: 'PDF',
     }]}
   />,
-  document.getElementById('project-search-table'),
 );

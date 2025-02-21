@@ -1,6 +1,6 @@
 /* global personId */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import ExpertContentListing from '../../js/components/ExpertContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/person_page.scss';
@@ -13,7 +13,8 @@ if (personId) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('expert-search-table'));
+root.render(
   <SearchTable
     endpointParams={endpointParams}
     fields={[
@@ -43,5 +44,4 @@ ReactDOM.render(
     }]}
     showSidebar={false}
   />,
-  document.getElementById('expert-search-table'),
 );

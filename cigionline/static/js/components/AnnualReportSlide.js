@@ -70,6 +70,9 @@ const AnnualReportSlide = ({ slides, basePath }) => {
           backgroundImage: `url(${slides[currentIndex].background_image})`,
         }}
       />
+      <div
+        className={`ar-slide-background-colour ${slides[currentIndex].background_colour}`}
+      />
 
       <div className="ar-slide-content">
         <div className="container">

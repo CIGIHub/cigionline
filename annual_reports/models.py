@@ -173,7 +173,11 @@ class AnnualReportSlidePage(Page):
         ("regular", "Regular Slide"),
         ("toc", "Table of Contents"),
     ]
-
+    BACKGROUND_COLOURS = [
+        ("white", "White"),
+        ("black", "Black"),
+        ("strategic_plan_yellow", "Strategic Plan Yellow"),
+    ]
 
     slide_title = models.CharField(max_length=255, help_text="Title of the slide")
     slide_content = RichTextField(blank=True, help_text="Content of the slide")
@@ -201,6 +205,7 @@ class AnnualReportSlidePage(Page):
     )
     background_colour = models.CharField(
         max_length=255,
+        choices=BACKGROUND_COLOURS,
         blank=True,
         help_text="Background colour for the slide",
     )
@@ -210,12 +215,32 @@ class AnnualReportSlidePage(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("slide_type"),
-        FieldPanel("slide_title"),
-        FieldPanel("slide_content"),
-        FieldPanel("background_image"),
-        FieldPanel("background_video"),
-        FieldPanel("include_on_toc"),
+        MultiFieldPanel(
+            [
+                FieldPanel("slide_type"),
+                FieldPanel("slide_title"),
+                FieldPanel("slide_content"),
+            ],
+            heading="Slide Content",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("background_image"),
+                FieldPanel("background_video"),
+                FieldPanel("background_colour"),
+            ],
+            heading="Background",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("include_on_toc"),
+            ],
+            heading="Slide Settings",
+            classname="collapsible collapsed",
+        ),
+
     ]
 
     parent_page_types = ["AnnualReportSPAPage"]

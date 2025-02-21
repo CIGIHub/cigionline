@@ -3,7 +3,7 @@
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import SearchTableAnnualReports from '../../js/components/SearchTableAnnualReports';
 import './css/annual_report_list_page.scss';
 import 'swiper/swiper-bundle.css';
@@ -48,7 +48,5 @@ if (swiperContainer) {
   });
 }
 
-ReactDOM.render(
-  <SearchTableAnnualReports />,
-  document.getElementById('annual-reports-search-table'),
-);
+const root = createRoot(document.getElementById('annual-reports-search-table'));
+root.render(<SearchTableAnnualReports />);
