@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AnnualReportSlide from './AnnualReportSlide';
+import Loader from './Loader';
 
 const fetchSlides = async (annualReportId) => {
   const response = await fetch(`/api/annual-report/${annualReportId}/slides/`);
@@ -28,7 +29,11 @@ const AnnualReport = ({ annualReportId, basePath }) => {
   }, [annualReportId]);
 
   if (loading) {
-    return <div>Loading slides...</div>;
+    return (
+      <div className="loading-screen">
+        <Loader />
+      </div>
+    );
   }
 
   if (slides.length === 0) {
@@ -39,7 +44,7 @@ const AnnualReport = ({ annualReportId, basePath }) => {
     <Routes>
       <Route
         path={`${basePath}/:slug`}
-        element={<AnnualReportSlide slides={slides} basePath={basePath} />}
+        element={<AnnualReportSlide slides={slides} basePath={basePath} isLoading={loading} />}
       />
       <Route
         path="*"

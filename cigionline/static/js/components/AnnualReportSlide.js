@@ -10,10 +10,7 @@ const AnnualReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
-
-  if (!slides || slides.length === 0) {
-    return <div>Loading slides...</div>;
-  }
+  const [contentVisible, setContentVisible] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
 
@@ -63,22 +60,35 @@ const AnnualReportSlide = ({ slides, basePath }) => {
     };
   }, [currentIndex, navigate, isScrolling]);
 
+  useEffect(() => {
+    setContentVisible(false);
+  }, [slug]);
+
   return (
     <div className="slide-wrapper">
       <AnimatePresence>
-        <motion.div
-          key={slug}
-          className={`slide-container ${slides[currentIndex].background_colour}`}
-          style={{
-            backgroundImage: `url(${slides[currentIndex].background_image})`,
-          }}
-          initial={{ opacity: 0, y: 0 }} // ✅ Subtle slide up, but the slide is already in place
-          animate={{ opacity: 1, y: -20 }} // ✅ Slide up slightly while fading in
-          exit={{ opacity: 0, y: -20 }} // ✅ Fade out while moving up slightly
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-        >
-          <div className="annual-report-slide">
-            <div className="ar-slide-content">
+        <div className="annual-report-slide">
+          <motion.div
+            key={`bg-${slug}`}
+            className={`slide-background ${slides[currentIndex].background_colour}`}
+            style={{
+              backgroundImage: `url(${slides[currentIndex].background_image})`,
+            }}
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: -20 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            onAnimationComplete={() => setContentVisible(true)}
+          />
+          {contentVisible && (
+            <motion.div
+              key={`content-${slug}`}
+              className="ar-slide-content"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6, ease: 'easeInOut' }}
+            >
               <div className="container">
                 <div className="row justify-content-center">
                   <div className="col-md-10 col-lg-8">
@@ -102,9 +112,9 @@ const AnnualReportSlide = ({ slides, basePath }) => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </motion.div>
+            </motion.div>
+          )}
+        </div>
       </AnimatePresence>
     </div>
   );
@@ -113,6 +123,7 @@ const AnnualReportSlide = ({ slides, basePath }) => {
 AnnualReportSlide.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   basePath: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 export default AnnualReportSlide;
