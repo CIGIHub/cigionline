@@ -1,5 +1,9 @@
-{% extends "think7_base.html," %}
+{% extends "think7_base.html" %}
 {% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'think7EventPage' 'css' %}
+{% endblock %}
 
 {% block content %}
   <section class="body" id="article-body">
