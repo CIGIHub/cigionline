@@ -1,4 +1,5 @@
 @import '../../../../css/global/mixins';
+@import '../../css/variables';
 
 h2 {
   text-transform: uppercase;
@@ -21,5 +22,31 @@ h2 {
 
   &:not(:first-child) {
     margin-top: 3rem;
+  }
+}
+
+.event-registration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  button {
+    border: 2px solid $cigi-primary-colour;
+    border-radius: 5px;
+    padding: 0.5rem 3rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-transform: uppercase;
+    background-color: $think7_bg_white;
+
+    &:hover {
+      background-color: $cigi-primary-colour;
+      color: $white;
+    }
+  }
+
+  .registration-text {
+    color: $cigi-text-grey;
+    font-size: 0.8em;
+    padding-top: 1rem;
   }
 }
