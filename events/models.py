@@ -215,7 +215,7 @@ class EventPage(
         verbose_name='Multimedia',
     )
     registration_url = models.URLField(blank=True, max_length=512)
-    # registration_text = models.CharField(blank=True, max_length=64)
+    registration_text = models.CharField(blank=True, max_length=64)
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
