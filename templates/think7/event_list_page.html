@@ -1,0 +1,29 @@
+{% extends "think7_base.html" %}
+{% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'think7ProjectListPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  {% if featured_events|length == 1 %}
+    {% include "./event_page_no_base.html" with event=featured_events.0 %}
+  {% else %}
+    <section class="body" id="article-body">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Featured</h2>
+            <div class="row featured-event-row">
+              {% for item in featured_events %}
+                <div class="col-md-4 featured-event-col">
+                  {% include "includes/features/feature_event.html" with event=item %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

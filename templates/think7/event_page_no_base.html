@@ -1,0 +1,16 @@
+{% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
+
+{% block content %}
+  <section class="body" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h2>{{event.title}}</h2>
+        </div>
+      </div>
+    </div>
+    {% for block in event.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock %}

@@ -80,6 +80,11 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             context['featured_events'] = self.get_featured_events()
         return context
 
+    def get_template(self, request, *args, **kwargs):
+        if self.get_site().site_name == 'Think 7 Canada':
+            return 'think7/event_list_page.html'
+        return super().get_template(request, *args, **kwargs)
+
     class Meta:
         verbose_name = 'Event List Page'
 
@@ -336,6 +341,10 @@ class EventPage(
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(EventPage, self).get_template(request, *args, **kwargs)
+
+        if self.get_site().site_name == 'Think 7 Canada':
+            return 'think7/event_page.html'
+
         if self.theme:
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
