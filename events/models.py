@@ -381,6 +381,7 @@ class EventPage(
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
                 FieldPanel('registration_url'),
+                FieldPanel('registration_text'),
             ],
             heading='Event Details',
             classname='collapsible collapsed',
