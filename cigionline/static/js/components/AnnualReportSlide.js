@@ -5,6 +5,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/components/AnnualReportSlide.scss';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
+import AnnualReportTextSlide from './AnnualReportTextSlide';
+import AnnualReportQuoteSlide from './AnnualReportQuoteSlide';
+
+const slideComponents = {
+  regular: AnnualReportRegularSlide,
+  toc: AnnualReportTOCSlide,
+  text: AnnualReportTextSlide,
+  quote: AnnualReportQuoteSlide,
+};
 
 const AnnualReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
@@ -64,6 +73,10 @@ const AnnualReportSlide = ({ slides, basePath }) => {
     setContentVisible(false);
   }, [slug]);
 
+  const SlideComponent =
+    slideComponents[slides[currentIndex].slide_type] ||
+    AnnualReportRegularSlide;
+
   return (
     <div className="slide-wrapper">
       <AnimatePresence>
@@ -93,21 +106,13 @@ const AnnualReportSlide = ({ slides, basePath }) => {
                 <div className="row justify-content-center">
                   <div className="col-md-10 col-lg-8">
                     <div className="annual-report-slide">
-                      {slides[currentIndex].slide_type === 'toc' ? (
-                        <AnnualReportTOCSlide
-                          slides={slides}
-                          basePath={basePath}
-                          currentIndex={currentIndex}
-                        />
-                      ) : (
-                        <AnnualReportRegularSlide
-                          slides={slides}
-                          basePath={basePath}
-                          currentIndex={currentIndex}
-                          prevSlide={prevSlide}
-                          nextSlide={nextSlide}
-                        />
-                      )}
+                      <SlideComponent
+                        slides={slides}
+                        basePath={basePath}
+                        currentIndex={currentIndex}
+                        prevSlide={prevSlide}
+                        nextSlide={nextSlide}
+                      />
                     </div>
                   </div>
                 </div>
@@ -123,7 +128,6 @@ const AnnualReportSlide = ({ slides, basePath }) => {
 AnnualReportSlide.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   basePath: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool.isRequired,
 };
 
 export default AnnualReportSlide;

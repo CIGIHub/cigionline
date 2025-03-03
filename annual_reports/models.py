@@ -178,6 +178,10 @@ class AnnualReportSlidePage(Page):
         ("black", "Black"),
         ("strategic_plan_yellow", "Strategic Plan Yellow"),
     ]
+    SLIDE_THEMES = [
+        ("annual_report", "Annual Report"),
+        ("strategic_plan", "Strategic Plan"),
+    ]
 
     slide_title = models.CharField(max_length=255, help_text="Title of the slide")
     slide_content = RichTextField(blank=True, help_text="Content of the slide")
@@ -186,6 +190,12 @@ class AnnualReportSlidePage(Page):
         choices=SLIDE_TYPES,
         default="regular",
         help_text="Type of slide",
+    )
+    slide_theme = models.CharField(
+        max_length=255,
+        choices=SLIDE_THEMES,
+        default="annual_report",
+        help_text="Theme of the slide",
     )
     background_image = models.ForeignKey(
         "images.CigionlineImage",
