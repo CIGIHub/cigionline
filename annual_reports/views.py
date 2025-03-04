@@ -53,6 +53,7 @@ def get_ordered_slides(request, page_id):
                 "slide_title": slide.slide_title,
                 "slide_content": slide.slide_content,
                 "slide_type": slide.slide_type,
+                "slide_theme": slide.slide_theme,
                 "background_image": slide.background_image.get_rendition('original').file.url if slide.background_image else '',
                 "background_video": slide.background_video.file.url if slide.background_video else '',
                 "background_colour": slide.background_colour.replace("_", "-"),

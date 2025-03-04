@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import AnnualReportNav from './AnnualReportNav';
-import AnnualReportSlideList from './AnnualReportSlideList';
 
 const AnnualReportTextSlide = ({
   slides,
@@ -11,11 +10,9 @@ const AnnualReportTextSlide = ({
   currentIndex,
 }) => (
   <div className="regular-slide">
-    <h1 aria-live="assertive">{slides[currentIndex].slide_title}</h1>
     <div
       dangerouslySetInnerHTML={{ __html: slides[currentIndex].slide_content }}
     />
-    <AnnualReportSlideList slides={slides} basePath={basePath} />
     <AnnualReportNav
       basePath={basePath}
       prevSlide={prevSlide}

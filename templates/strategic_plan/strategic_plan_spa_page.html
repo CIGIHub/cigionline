@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load webpack_loader %}
+
+{% block extra_css %}
+{% render_bundle 'strategicPlanSPAPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+{% render_bundle 'strategicPlanSPAPage' 'js' attrs='defer' %}
+{% endblock %}
+
+
+{% block header %}
+{% endblock %}
+{% block content %}
+<div id="strategic-plan-spa" data-strategic-plan-id="{{page.id}}" data-base-path="{{page.url}}"></div>
+{% endblock content %}
+{% block footer %}
+{% endblock %}

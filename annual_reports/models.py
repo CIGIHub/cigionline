@@ -166,12 +166,12 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
     subpage_types = ["AnnualReportSlidePage"]
 
 
-class AnnualReportSlidePage(Page):
-    """Each individual slide within the annual report."""
-
+class SlidePageAbstract(models.Model):
     SLIDE_TYPES = [
         ("regular", "Regular Slide"),
         ("toc", "Table of Contents"),
+        ("text", "Text Slide"),
+        ("quote", "Quote Slide"),
     ]
     BACKGROUND_COLOURS = [
         ("white", "White"),
@@ -253,6 +253,13 @@ class AnnualReportSlidePage(Page):
 
     ]
 
+    class Meta:
+        abstract = True
+
+
+class AnnualReportSlidePage(SlidePageAbstract, Page):
+    """Each individual slide within the annual report."""
+
     parent_page_types = ["AnnualReportSPAPage"]
     subpage_types = []
 
@@ -260,3 +267,36 @@ class AnnualReportSlidePage(Page):
         """Always serve the SPA regardless of sub-page requested."""
         parent = self.get_parent().specific
         return render(request, "annual_reports/annual_report_spa_page.html", {"page": parent})
+
+
+class StrategicPlanSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
+    """View annual report SPA page"""
+
+    slides = StreamField(
+        [("slide", SlideChooserBlock())],
+        blank=True,
+    )
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("slides"),
+            ],
+            heading="Slides",
+            classname="collapsible",
+        ),
+    ]
+
+    subpage_types = ["StrategicPlanSlidePage"]
+1
+
+class StrategicPlanSlidePage(SlidePageAbstract, Page):
+    """Each individual slide within the strategic plan."""
+
+    parent_page_types = ["StrategicPlanSPAPage"]
+    subpage_types = []
+
+    def serve(self, request):
+        """Always serve the SPA regardless of sub-page requested."""
+        parent = self.get_parent().specific
+        return render(request, "strategic_plan/strategic_plan_spa_page.html", {"page": parent})
