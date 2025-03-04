@@ -71,52 +71,50 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     (() => <div>Slide type not found</div>);
 
   return (
-    <div className="slide-wrapper">
+    <div className={`slide-wrapper ${slides[currentIndex].background_colour}`}>
       <AnimatePresence>
-        <div className="annual-report-slide">
+        <motion.div
+          key={`bg-${slug}`}
+          className={`slide-background ${slides[currentIndex].slide_type}`}
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: -20 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          onAnimationComplete={() => setContentVisible(true)}
+        >
+          <div
+            className={`background-colour ${slides[currentIndex].background_colour}`}
+          />
+          <div
+            className="background-image"
+            style={{
+              backgroundImage: `url(${slides[currentIndex].background_image})`,
+            }}
+          />
+        </motion.div>
+        {contentVisible && (
           <motion.div
-            key={`bg-${slug}`}
-            className={`slide-background ${slides[currentIndex].slide_type}`}
-            initial={{ opacity: 0, y: 0 }}
-            animate={{ opacity: 1, y: -20 }}
+            key={`content-${slug}`}
+            className="ar-slide-content"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
-            onAnimationComplete={() => setContentVisible(true)}
           >
-            <div
-              className={`background-colour ${slides[currentIndex].background_colour}`}
-            />
-            <div
-              className="background-image"
-              style={{
-                backgroundImage: `url(${slides[currentIndex].background_image})`,
-              }}
-            />
-          </motion.div>
-          {contentVisible && (
-            <motion.div
-              key={`content-${slug}`}
-              className="ar-slide-content"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.6, ease: 'easeInOut' }}
-            >
-              <div className="container">
-                <div className="row justify-content-center">
-                  <div className="col-12">
-                    <div className="annual-report-slide">
-                      <SlideComponent
-                        slides={slides}
-                        currentIndex={currentIndex}
-                      />
-                    </div>
+            <div className="container">
+              <div className="row justify-content-center">
+                <div className="col-12">
+                  <div className="annual-report-slide">
+                    <SlideComponent
+                      slides={slides}
+                      currentIndex={currentIndex}
+                    />
                   </div>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </div>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
