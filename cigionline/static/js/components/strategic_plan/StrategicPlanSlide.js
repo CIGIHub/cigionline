@@ -2,20 +2,13 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import '../../css/components/AnnualReportSPA.scss';
-import AnnualReportRegularSlide from './AnnualReportRegularSlide';
-import AnnualReportTOCSlide from './AnnualReportTOCSlide';
-import AnnualReportTextSlide from './AnnualReportTextSlide';
-import AnnualReportQuoteSlide from './AnnualReportQuoteSlide';
+import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
 
 const slideComponents = {
-  regular: AnnualReportRegularSlide,
-  toc: AnnualReportTOCSlide,
-  text: AnnualReportTextSlide,
-  quote: AnnualReportQuoteSlide,
+  title: StrategicPlanTitleSlide,
 };
 
-const AnnualReportSlide = ({ slides, basePath }) => {
+const StrategicReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
@@ -75,7 +68,7 @@ const AnnualReportSlide = ({ slides, basePath }) => {
 
   const SlideComponent =
     slideComponents[slides[currentIndex].slide_type] ||
-    AnnualReportRegularSlide;
+    (() => <div>Slide type not found</div>);
 
   return (
     <div className="slide-wrapper">
@@ -83,16 +76,23 @@ const AnnualReportSlide = ({ slides, basePath }) => {
         <div className="annual-report-slide">
           <motion.div
             key={`bg-${slug}`}
-            className={`slide-background ${slides[currentIndex].background_colour}`}
-            style={{
-              backgroundImage: `url(${slides[currentIndex].background_image})`,
-            }}
+            className={`slide-background ${slides[currentIndex].slide_type}`}
             initial={{ opacity: 0, y: 0 }}
             animate={{ opacity: 1, y: -20 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             onAnimationComplete={() => setContentVisible(true)}
-          />
+          >
+            <div
+              className={`background-colour ${slides[currentIndex].background_colour}`}
+            />
+            <div
+              className="background-image"
+              style={{
+                backgroundImage: `url(${slides[currentIndex].background_image})`,
+              }}
+            />
+          </motion.div>
           {contentVisible && (
             <motion.div
               key={`content-${slug}`}
@@ -108,10 +108,7 @@ const AnnualReportSlide = ({ slides, basePath }) => {
                     <div className="annual-report-slide">
                       <SlideComponent
                         slides={slides}
-                        basePath={basePath}
                         currentIndex={currentIndex}
-                        prevSlide={prevSlide}
-                        nextSlide={nextSlide}
                       />
                     </div>
                   </div>
@@ -125,9 +122,9 @@ const AnnualReportSlide = ({ slides, basePath }) => {
   );
 };
 
-AnnualReportSlide.propTypes = {
+StrategicReportSlide.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   basePath: PropTypes.string.isRequired,
 };
 
-export default AnnualReportSlide;
+export default StrategicReportSlide;

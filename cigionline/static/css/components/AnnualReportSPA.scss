@@ -11,14 +11,27 @@
   left: 0;
   width: 100%;
   height: calc(100vh + 50px);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: -1;
+  
+  .background-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+  }
+
+  .background-colour {
+    z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .ar-slide-content {

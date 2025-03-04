@@ -1,2 +1,56 @@
 $strategic-plan-grey: #2d2e35;
 $strategic-plan-yellow: #edc54c;
+
+@import '../global/variables';
+@import '../global/mixins';
+
+.slide-background {
+  &.title {
+    .background-colour {
+      &.strategic-plan-grey {
+        background-color: $strategic-plan-grey;
+      }
+      height: 105vh;
+      width: 50%;
+      left: 0;
+      z-index: -1;
+      position: absolute;
+    }
+  }
+}
+
+.title-slide {
+  padding-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  padding-bottom: 6rem;
+  color: $white;
+
+  .large-logo {
+    width: 150px;
+    fill: $white;
+    transition: fill 0.3s ease;
+
+    &:hover {
+      fill: $cigi-primary-colour;
+    }
+  }
+
+  .title-slide__title {
+    padding-top: 10rem;
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    p {
+      font-size: 1.25rem;
+    }
+  }
+
+  .title-slide__content {
+    font-size: 1.5rem;
+  }
+}

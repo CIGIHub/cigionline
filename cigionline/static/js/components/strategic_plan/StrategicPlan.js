@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import '../../../css/components/AnnualReportSPA.scss';
-import AnnualReportSlide from '../AnnualReportSlide';
+import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
 
 const fetchSlides = async (strategicPlanSPAId) => {
@@ -45,7 +45,7 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
     <Routes>
       <Route
         path={`${basePath}/:slug`}
-        element={<AnnualReportSlide slides={slides} basePath={basePath} isLoading={loading} />}
+        element={<StrategicPlanSlide slides={slides} basePath={basePath} isLoading={loading} />}
       />
       <Route
         path="*"
