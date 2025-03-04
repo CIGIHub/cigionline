@@ -1549,6 +1549,11 @@ class FilesBlock(blocks.StructBlock):
         template = 'streams/files_block.html'
 
 
-class SlideChooserBlock(blocks.StructBlock):
+class ARSlideChooserBlock(blocks.StructBlock):
     """A block that lets editors choose slides for ordering. Used in the Annual Report SPA Page."""
     slide = blocks.PageChooserBlock(required=True, page_type=["annual_reports.AnnualReportSlidePage"])
+
+
+class SPSlideChooserBlock(blocks.StructBlock):
+    """A block that lets editors choose slides for ordering. Used in the Strategic Plan SPA Page."""
+    slide = blocks.PageChooserBlock(required=True, page_type=["annual_reports.StrategicPlanSlidePage"])

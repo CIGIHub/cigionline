@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import '../../css/components/AnnualReportSlide.scss';
-import AnnualReportSlide from './AnnualReportSlide';
-import Loader from './Loader';
+import '../../../css/components/AnnualReportSPA.scss';
+import AnnualReportSlide from '../AnnualReportSlide';
+import Loader from '../Loader';
 
 const fetchSlides = async (strategicPlanSPAId) => {
   const response = await fetch(`/api/annual-report/${strategicPlanSPAId}/slides/`);

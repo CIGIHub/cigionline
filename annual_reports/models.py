@@ -6,7 +6,7 @@ from core.models import (
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
-from streams.blocks import SlideChooserBlock
+from streams.blocks import ARSlideChooserBlock, SPSlideChooserBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -149,7 +149,7 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
     """View annual report SPA page"""
 
     slides = StreamField(
-        [("slide", SlideChooserBlock())],
+        [("slide", ARSlideChooserBlock())],
         blank=True,
     )
 
@@ -176,7 +176,6 @@ class SlidePageAbstract(models.Model):
     BACKGROUND_COLOURS = [
         ("white", "White"),
         ("black", "Black"),
-        ("strategic_plan_yellow", "Strategic Plan Yellow"),
     ]
     SLIDE_THEMES = [
         ("annual_report", "Annual Report"),
@@ -184,6 +183,11 @@ class SlidePageAbstract(models.Model):
     ]
 
     slide_title = models.CharField(max_length=255, help_text="Title of the slide")
+    slide_subtitle = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Subtitle of the slide",
+    )
     slide_content = RichTextField(blank=True, help_text="Content of the slide")
     slide_type = models.CharField(
         max_length=255,
@@ -229,6 +233,7 @@ class SlidePageAbstract(models.Model):
             [
                 FieldPanel("slide_type"),
                 FieldPanel("slide_title"),
+                FieldPanel("slide_subtitle"),
                 FieldPanel("slide_content"),
             ],
             heading="Slide Content",
@@ -273,7 +278,7 @@ class StrategicPlanSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract
     """View annual report SPA page"""
 
     slides = StreamField(
-        [("slide", SlideChooserBlock())],
+        [("slide", SPSlideChooserBlock())],
         blank=True,
     )
 
@@ -288,10 +293,59 @@ class StrategicPlanSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract
     ]
 
     subpage_types = ["StrategicPlanSlidePage"]
-1
+
+    def get_template(self, request, *args, **kwargs):
+        return "strategic_plan/strategic_plan_spa_page.html"
+
 
 class StrategicPlanSlidePage(SlidePageAbstract, Page):
     """Each individual slide within the strategic plan."""
+
+    BACKGROUND_COLOURS = SlidePageAbstract.BACKGROUND_COLOURS + [
+        ("strategic_plan_yellow", "Strategic Plan Yellow"),
+        ("strategic_plan_grey", "Strategic Plan Grey"),
+    ]
+    SLIDE_TYPES = [
+        ('title', 'Title Slide'),
+        ('toc', 'Table of Contents'),
+        ('text', 'Text Slide'),
+        ('regular', 'Regular Slide'),
+        ('framework', 'Framework Slide'),
+        ('timeline', 'Timeline Slide'),
+    ]
+
+    slide_type = models.CharField(
+        max_length=255,
+        choices=SLIDE_TYPES,
+        default="regular",
+        help_text="Type of slide",
+    )
+    background_colour = models.CharField(
+        max_length=255,
+        choices=BACKGROUND_COLOURS,
+        blank=True,
+        help_text="Background colour for the slide",
+    )
+    columns = models.IntegerField(
+        default=1,
+        help_text="Number of columns for the slide (only for regular slides)",
+        validators=[MinValueValidator(1), MaxValueValidator(3)],
+    )
+    wide_column = models.BooleanField(
+        default=False,
+        help_text="Make the column wide (only applicable if there is one column)",
+    )
+
+    content_panels = SlidePageAbstract.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("columns"),
+                FieldPanel("wide_column"),
+            ],
+            heading="Layout",
+            classname="collapsible collapsed",
+        ),
+    ]
 
     parent_page_types = ["StrategicPlanSPAPage"]
     subpage_types = []
