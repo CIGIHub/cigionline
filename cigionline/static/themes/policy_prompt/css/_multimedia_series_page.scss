@@ -68,7 +68,7 @@ body {
 
             &.logo-animation-cursor {
               flex-shrink: 0;
-              background-color: $policy-prompt-green;
+              background-color: $policy-prompt-blue;
               border-radius: 0.5rem;
               height: 0.13333em;
               width: 0.8em;
@@ -415,7 +415,7 @@ body {
 
             span {
               display: inline-block;
-              background-color: $policy-prompt-green;
+              background-color: $policy-prompt-blue;
               border-radius: 0.5em;
               height: 0.25em;
               width: 1em;
