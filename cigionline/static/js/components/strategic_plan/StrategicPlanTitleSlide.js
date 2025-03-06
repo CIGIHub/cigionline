@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const StrategicPlanTitleSlide = ({ slides, currentIndex }) => (
+const StrategicPlanTitleSlide = ({ slide }) => (
   <div className="title-slide">
     <div>
       <a href="/">
@@ -15,20 +15,19 @@ const StrategicPlanTitleSlide = ({ slides, currentIndex }) => (
         </svg>
       </a>
       <div className="title-slide__title">
-        <h1 aria-live="assertive">{slides[currentIndex].slide_title}</h1>
-        <p>{slides[currentIndex].slide_subtitle}</p>
+        <h1 aria-live="assertive">{slide.slide_title}</h1>
+        <p>{slide.slide_subtitle}</p>
       </div>
     </div>
     <div
       className="title-slide__content"
-      dangerouslySetInnerHTML={{ __html: slides[currentIndex].slide_content }}
+      dangerouslySetInnerHTML={{ __html: slide.slide_content }}
     />
   </div>
 );
 
 StrategicPlanTitleSlide.propTypes = {
-  slides: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currentIndex: PropTypes.number.isRequired,
+  slide: PropTypes.object.isRequired,
 };
 
 export default StrategicPlanTitleSlide;

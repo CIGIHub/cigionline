@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
+import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
 
 const slideComponents = {
   title: StrategicPlanTitleSlide,
+  regular: StrategicPlanRegularSlide,
 };
 
 const StrategicReportSlide = ({ slides, basePath }) => {
@@ -106,8 +108,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
                 <div className="col-12">
                   <div className="annual-report-slide">
                     <SlideComponent
-                      slides={slides}
-                      currentIndex={currentIndex}
+                      slide={slides[currentIndex]}
                     />
                   </div>
                 </div>

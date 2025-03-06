@@ -11,8 +11,7 @@ from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
 )
-from wagtail.api import APIField
-from wagtail.blocks import PageChooserBlock
+from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
 from wagtailmedia.models import Media
@@ -228,36 +227,6 @@ class SlidePageAbstract(models.Model):
         help_text="Include this slide in the table of contents",
     )
 
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel("slide_type"),
-                FieldPanel("slide_title"),
-                FieldPanel("slide_subtitle"),
-                FieldPanel("slide_content"),
-            ],
-            heading="Slide Content",
-            classname="collapsible collapsed",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("background_image"),
-                FieldPanel("background_video"),
-                FieldPanel("background_colour"),
-            ],
-            heading="Background",
-            classname="collapsible collapsed",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("include_on_toc"),
-            ],
-            heading="Slide Settings",
-            classname="collapsible collapsed",
-        ),
-
-    ]
-
     class Meta:
         abstract = True
 
@@ -320,6 +289,14 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         default="regular",
         help_text="Type of slide",
     )
+    strategic_plan_slide_content = StreamField(
+        [
+            ("column", RichTextBlock()),
+            ("acknowledgements", RichTextBlock()),
+        ],
+        blank=True,
+        help_text="Content of the slide",
+    )
     background_colour = models.CharField(
         max_length=255,
         choices=BACKGROUND_COLOURS,
@@ -336,7 +313,33 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         help_text="Make the column wide (only applicable if there is one column)",
     )
 
-    content_panels = SlidePageAbstract.content_panels + [
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("slide_type"),
+                FieldPanel("slide_title"),
+                FieldPanel("slide_subtitle"),
+                FieldPanel("strategic_plan_slide_content"),
+            ],
+            heading="Slide Content",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("background_image"),
+                FieldPanel("background_video"),
+                FieldPanel("background_colour"),
+            ],
+            heading="Background",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("include_on_toc"),
+            ],
+            heading="Slide Settings",
+            classname="collapsible collapsed",
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("columns"),
