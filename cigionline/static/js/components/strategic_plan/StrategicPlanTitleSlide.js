@@ -19,10 +19,13 @@ const StrategicPlanTitleSlide = ({ slide }) => (
         <p>{slide.slide_subtitle}</p>
       </div>
     </div>
-    <div
-      className="title-slide__content"
-      dangerouslySetInnerHTML={{ __html: slide.slide_content }}
-    />
+    {slide.slide_content.columns?.map((content, index) => (
+      <div
+        key={index}
+        className="title-slide__content"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    ))}
   </div>
 );
 

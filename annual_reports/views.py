@@ -38,7 +38,7 @@ class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
         return AnnualReportSlidePage.objects.live().public()
 
 
-def get_ordered_slides(request, page_id):
+def get_ordered_slides_annual_report(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
     if isinstance(page, AnnualReportSPAPage):
@@ -71,5 +71,44 @@ def get_ordered_slides(request, page_id):
             for slide in ordered_slides
         ]
     }
+
+    return JsonResponse(response_data)
+
+def get_ordered_slides_strategic_plan(request, page_id):
+    page = get_object_or_404(Page, id=page_id).specific
+    slide_ids = [block.value["slide"].id for block in page.slides]
+    if isinstance(page, AnnualReportSPAPage):
+        slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
+    elif isinstance(page, StrategicPlanSPAPage):
+        slides = StrategicPlanSlidePage.objects.filter(id__in=slide_ids)
+    else:
+        slides = []
+    slide_map = {slide.id: slide for slide in slides}
+    ordered_slides = [slide_map[id] for id in slide_ids if id in slide_map]
+
+    response_data = {
+        "slides": [
+            {
+                "id": slide.id,
+                "title": slide.title,
+                "slug": slide.slug,
+                "slide_title": slide.slide_title,
+                "slide_subtitle": slide.slide_subtitle,
+                "slide_content": slide.get_strategic_plan_slide_content(),
+                "slide_type": slide.slide_type,
+                "slide_theme": slide.slide_theme,
+                "background_image": slide.background_image.get_rendition('original').file.url if slide.background_image else '',
+                "background_video": slide.background_video.file.url if slide.background_video else '',
+                "background_colour": slide.background_colour.replace("_", "-"),
+                "include_on_toc": slide.include_on_toc,
+                "columns": slide.columns,
+                "wide_column": slide.wide_column,
+                "alignment": slide.alignment,
+            }
+            for slide in ordered_slides
+        ]
+    }
+    
+    print(response_data)
 
     return JsonResponse(response_data)

@@ -10,19 +10,31 @@ const StrategicPlanRegularSlide = ({ slide }) => {
   const columnClass = columnClasses[slide.columns];
 
   return (
-    <div className={`regular-slide ${slide} col-9`}>
+    <div className={`regular-slide ${columnClass}`}>
       <div>
-        <div className="title-slide__title">
+        <div className="regular-slide__title">
           {slide.slide_title && (
             <h1 aria-live="assertive">{slide.slide_title}</h1>
           )}
           {slide.slide_subtitle && <p>{slide.slide_subtitle}</p>}
         </div>
+        <div className="regular-slide__content__columns">
+          {slide.slide_content.columns?.map((content, index) => (
+            <div
+              key={index}
+              className="regular-slide__content__column"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          ))}
+        </div>
       </div>
-      <div
-        className="title-slide__content"
-        dangerouslySetInnerHTML={{ __html: slide.slide_content }}
-      />
+      {slide.slide_content.acknowledgements?.map((content, index) => (
+        <div
+          key={index}
+          className="regular-slide__content__acknowledgement"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      ))}
     </div>
   );
 };

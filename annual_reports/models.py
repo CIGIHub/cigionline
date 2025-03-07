@@ -14,6 +14,7 @@ from wagtail.admin.panels import (
 from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
+from wagtail.rich_text import expand_db_html
 from wagtailmedia.models import Media
 
 
@@ -282,6 +283,12 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         ('framework', 'Framework Slide'),
         ('timeline', 'Timeline Slide'),
     ]
+    ALIGNMENT_CHOICES = [
+        ('left', 'Left'),
+        ('right', 'Right'),
+        ('full', 'Full'),
+        ('none', 'None'),
+    ]
 
     slide_type = models.CharField(
         max_length=255,
@@ -307,6 +314,12 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         default=1,
         help_text="Number of columns for the slide (only for regular slides)",
         validators=[MinValueValidator(1), MaxValueValidator(3)],
+    )
+    alignment = models.CharField(
+        max_length=255,
+        choices=ALIGNMENT_CHOICES,
+        blank=True,
+        help_text="Alignment of the columns (only for regular slides)",
     )
     wide_column = models.BooleanField(
         default=False,
@@ -344,6 +357,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
             [
                 FieldPanel("columns"),
                 FieldPanel("wide_column"),
+                FieldPanel("alignment"),
             ],
             heading="Layout",
             classname="collapsible collapsed",
@@ -352,6 +366,25 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
 
     parent_page_types = ["StrategicPlanSPAPage"]
     subpage_types = []
+    
+    def get_strategic_plan_slide_content(self):
+        content = {
+            'columns': [],
+            'acknowledgements': []
+        }
+
+        for block in self.strategic_plan_slide_content:
+            if block.block_type == 'column':
+                content['columns'].append(expand_db_html(block.value.source))
+            elif block.block_type == 'acknowledgements':
+                content['acknowledgements'].append(expand_db_html(block.value.source))
+
+        if not content['columns']:
+            content.pop('columns')
+        if not content['acknowledgements']:
+            content.pop('acknowledgements')
+
+        return content
 
     def serve(self, request):
         """Always serve the SPA regardless of sub-page requested."""

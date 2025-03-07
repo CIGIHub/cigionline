@@ -10,6 +10,20 @@ const slideComponents = {
   regular: StrategicPlanRegularSlide,
 };
 
+const getGradientClass = (alignment) => {
+  switch (alignment) {
+  case 'left':
+    return 'left';
+  case 'right':
+    return 'right';
+  case 'full':
+    return 'full';
+  case 'none':
+  default:
+    return 'none';
+  }
+};
+
 const StrategicReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -17,6 +31,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   const [contentVisible, setContentVisible] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
+  const gradientClass = getGradientClass(slides[currentIndex].alignment);
 
   if (currentIndex === -1) {
     return <Navigate to={`/${slides[0].slug}`} replace />;
@@ -88,7 +103,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             className={`background-colour ${slides[currentIndex].background_colour}`}
           />
           <div
-            className="background-image"
+            className={`background-image ${gradientClass}`}
             style={{
               backgroundImage: `url(${slides[currentIndex].background_image})`,
             }}
@@ -107,9 +122,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
               <div className="row justify-content-center">
                 <div className="col-12">
                   <div className="annual-report-slide">
-                    <SlideComponent
-                      slide={slides[currentIndex]}
-                    />
+                    <SlideComponent slide={slides[currentIndex]} />
                   </div>
                 </div>
               </div>

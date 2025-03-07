@@ -26,7 +26,8 @@ if settings.ADMIN_ENABLED:
         re_path(r'^admin/', include(wagtailadmin_urls)),
     ]
 urlpatterns = urlpatterns + [
-    path('api/annual-report/<int:page_id>/slides/', annual_report_views.get_ordered_slides, name='ordered_slides_api'),
+    path('api/annual-report/<int:page_id>/slides/', annual_report_views.get_ordered_slides_annual_report, name='ordered_slides_api'),
+    path('api/strategic_plan/<int:page_id>/slides/', annual_report_views.get_ordered_slides_strategic_plan, name='ordered_slides_api'),
     re_path(r'^documents/', include(wagtaildocs_urls)),
     re_path(r'^search/$', search_views.search, name='search'),
     re_path(r'^api/experts/$', people_views.all_experts),

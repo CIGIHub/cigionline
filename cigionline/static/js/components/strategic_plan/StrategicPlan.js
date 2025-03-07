@@ -6,7 +6,7 @@ import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
 
 const fetchSlides = async (strategicPlanSPAId) => {
-  const response = await fetch(`/api/annual-report/${strategicPlanSPAId}/slides/`);
+  const response = await fetch(`/api/strategic_plan/${strategicPlanSPAId}/slides/`);
   try {
     const data = await response.json();
     return data.slides;
