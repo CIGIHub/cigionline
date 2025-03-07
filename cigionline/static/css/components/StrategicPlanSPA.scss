@@ -4,6 +4,23 @@ $strategic-plan-yellow: #edc54c;
 @import '../global/variables';
 @import '../global/mixins';
 
+@keyframes slideTitleLineExpand {
+  0% {
+    margin-left: -350px;
+    width: 0;
+  }
+
+  50% {
+    margin-left: -350px;
+    width: 450px;
+  }
+
+  100% {
+    margin-left: 0;
+    width: 100px;
+  }
+}
+
 .slide-background {
   &.title {
     .background-colour {
@@ -46,10 +63,24 @@ $strategic-plan-yellow: #edc54c;
       &::before {
         background: linear-gradient(
           to left,
-          rgba(0, 0, 0, 0.7),
+          rgba(0, 0, 0, 0.9),
           rgba(0, 0, 0, 0.3),
           transparent
         );
+      }
+
+      &.columns-2 {
+        &::before {
+          background: linear-gradient(
+            to left,
+            rgba(0, 0, 0, 0.9),
+            rgba(0, 0, 0, 0.9),
+            rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.3),
+            transparent
+          );
+        }
       }
     }
 
@@ -78,6 +109,21 @@ $strategic-plan-yellow: #edc54c;
 
   h1 {
     font-size: clamp(2.5rem, 5vw, 4rem);
+
+    &::before {
+      animation-duration: 1.5s;
+      animation-name: slideTitleLineExpand;
+      border-bottom: 8px solid #e6023b;
+      margin: 0 0 0.5rem;
+      width: 100px;
+      animation-timing-function: ease-in-out;
+      display: block;
+      content: '';
+    }
+  }
+
+  ul {
+    padding-left: 1.5rem;
   }
 }
 

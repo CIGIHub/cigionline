@@ -106,7 +106,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             className={`background-colour ${slides[currentIndex].background_colour}`}
           />
           <div
-            className={`background-image ${gradientClass}`}
+            className={`background-image ${gradientClass} columns-${slides[currentIndex].slide_content.columns?.length}`}
             style={{
               backgroundImage: `url(${slides[currentIndex].background_image})`,
             }}
