@@ -69,15 +69,19 @@ $strategic-plan-yellow: #edc54c;
   }
 }
 
-.title-slide {
-  padding-top: 6rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
-  padding-bottom: 6rem;
-  color: $white;
+.strategic-plan-slide {
+  @include media-breakpoint-up(md) {
+    padding: 6rem 0;
+    height: 100vh;
+  }
+  color: white;
 
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+  }
+}
+
+.title-slide {
   .large-logo {
     width: 150px;
     fill: $white;
@@ -91,10 +95,6 @@ $strategic-plan-yellow: #edc54c;
   .title-slide__title {
     padding-top: 10rem;
 
-    h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-    }
-
     p {
       font-size: 1.25rem;
     }
@@ -107,11 +107,31 @@ $strategic-plan-yellow: #edc54c;
 
 .regular-slide {
   @include media-breakpoint-up(md) {
-    padding: 6rem 0;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
-  color: $white;
+  line-height: 1.25;
+
+  .regular-slide__title {
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  &.full {
+    p {
+      font-size: 1.25rem;
+    }
+
+    .regular-slide__content__acknowledgement {
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
 }

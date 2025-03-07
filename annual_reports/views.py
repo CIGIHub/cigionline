@@ -101,8 +101,7 @@ def get_ordered_slides_strategic_plan(request, page_id):
                 "background_video": slide.background_video.file.url if slide.background_video else '',
                 "background_colour": slide.background_colour.replace("_", "-"),
                 "include_on_toc": slide.include_on_toc,
-                "columns": slide.columns,
-                "wide_column": slide.wide_column,
+                "column_size": slide.column_size,
                 "alignment": slide.alignment,
             }
             for slide in ordered_slides

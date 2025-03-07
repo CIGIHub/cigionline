@@ -4,23 +4,25 @@ import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
 import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
+import StrategicPlanTOCSlide from './StrategicPlanTOCSlide';
 
 const slideComponents = {
   title: StrategicPlanTitleSlide,
   regular: StrategicPlanRegularSlide,
+  toc: StrategicPlanTOCSlide,
 };
 
 const getGradientClass = (alignment) => {
   switch (alignment) {
-  case 'left':
-    return 'left';
-  case 'right':
-    return 'right';
-  case 'full':
-    return 'full';
-  case 'none':
-  default:
-    return 'none';
+    case 'left':
+      return 'left';
+    case 'right':
+      return 'right';
+    case 'full':
+      return 'full';
+    case 'none':
+    default:
+      return 'none';
   }
 };
 
@@ -83,6 +85,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     setContentVisible(false);
   }, [slug]);
 
+  const currentSlide = slides[currentIndex];
   const SlideComponent =
     slideComponents[slides[currentIndex].slide_type] ||
     (() => <div>Slide type not found</div>);
@@ -119,12 +122,20 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
             <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-12">
-                  <div className="annual-report-slide">
-                    <SlideComponent slide={slides[currentIndex]} />
-                  </div>
-                </div>
+              <div className="annual-report-slide">
+                {currentSlide.slide_type === 'toc' && (
+                  <SlideComponent
+                    slides={slides}
+                    currentIndex={currentIndex}
+                    basePath={basePath}
+                  />
+                )}
+                {currentSlide.slide_type === 'title' && (
+                  <SlideComponent slide={currentSlide} />
+                )}
+                {currentSlide.slide_type === 'regular' && (
+                  <SlideComponent slide={currentSlide} />
+                )}
               </div>
             </div>
           </motion.div>

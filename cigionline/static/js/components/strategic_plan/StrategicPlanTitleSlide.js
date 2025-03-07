@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const StrategicPlanTitleSlide = ({ slide }) => (
-  <div className="title-slide">
+  <div className="strategic-plan-slide title-slide">
     <div>
       <a href="/">
         <svg

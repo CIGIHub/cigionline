@@ -289,6 +289,10 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         ('full', 'Full'),
         ('none', 'None'),
     ]
+    COLUMN_SIZES = [
+        ('small', 'Small'),
+        ('large', 'Large'),
+    ]
 
     slide_type = models.CharField(
         max_length=255,
@@ -310,20 +314,17 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         blank=True,
         help_text="Background colour for the slide",
     )
-    columns = models.IntegerField(
-        default=1,
-        help_text="Number of columns for the slide (only for regular slides)",
-        validators=[MinValueValidator(1), MaxValueValidator(3)],
+    column_size = models.CharField(
+        max_length=255,
+        choices=COLUMN_SIZES,
+        blank=True,
+        help_text="Column size (only for regular slides)",
     )
     alignment = models.CharField(
         max_length=255,
         choices=ALIGNMENT_CHOICES,
         blank=True,
         help_text="Alignment of the columns (only for regular slides)",
-    )
-    wide_column = models.BooleanField(
-        default=False,
-        help_text="Make the column wide (only applicable if there is one column)",
     )
 
     content_panels = Page.content_panels + [
@@ -355,8 +356,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         ),
         MultiFieldPanel(
             [
-                FieldPanel("columns"),
-                FieldPanel("wide_column"),
+                FieldPanel("column_size"),
                 FieldPanel("alignment"),
             ],
             heading="Layout",
