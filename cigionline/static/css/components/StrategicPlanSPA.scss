@@ -35,6 +35,17 @@ $strategic-plan-yellow: #edc54c;
     }
   }
 
+  &.toc {
+    .background-colour {
+      background-color: $strategic-plan-grey;
+      height: 105vh;
+      width: 66%;
+      left: 0;
+      z-index: -1;
+      position: absolute;
+    }
+  }
+
   .background-image {
     &::before {
       content: '';
@@ -177,6 +188,33 @@ $strategic-plan-yellow: #edc54c;
     .regular-slide__content__acknowledgement {
       p {
         font-size: 1rem;
+      }
+    }
+  }
+}
+
+.table-of-contents {
+  h1 {
+    margin-bottom: 3rem;
+  }
+  ol {
+    padding-left: 3rem;
+    list-style: none;
+    counter-reset: custom-counter 1;
+
+    li {
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
+      counter-increment: custom-counter;
+      position: relative;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+
+      &::before {
+        content: counter(custom-counter);
+        color: $cigi-primary-colour;
+        font-weight: 500;
+        position: absolute;
+        left: -2rem;
       }
     }
   }

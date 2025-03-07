@@ -91,10 +91,13 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     (() => <div>Slide type not found</div>);
 
   return (
-    <div className={`slide-wrapper ${slides[currentIndex].background_colour}`}>
+    <div
+      key={`content-${slug}-${slides[currentIndex].slide_type}`}
+      className={`slide-wrapper ${slides[currentIndex].background_colour}`}
+    >
       <AnimatePresence>
         <motion.div
-          key={`bg-${slug}`}
+          key={`bg-${slug}-${slides[currentIndex].slide_type}`}
           className={`slide-background ${slides[currentIndex].slide_type}`}
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: -20 }}
@@ -114,7 +117,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
         </motion.div>
         {contentVisible && (
           <motion.div
-            key={`content-${slug}`}
+            key={`content-${slug}-${slides[currentIndex].slide_type}`}
             className="ar-slide-content"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
