@@ -96,7 +96,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       key={`content-${slug}-${slides[currentIndex].slide_type}`}
       className={`slide-wrapper ${slides[currentIndex].background_colour}`}
     >
-      <AnnualReportNav slides={slides} basePath={basePath} />
+      <AnnualReportNav slides={slides} basePath={basePath} currentIndex={currentIndex} />
       <AnimatePresence>
         <motion.div
           key={`bg-${slug}-${slides[currentIndex].slide_type}`}

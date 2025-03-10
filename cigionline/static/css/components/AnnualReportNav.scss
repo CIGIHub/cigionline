@@ -11,6 +11,70 @@
   z-index: 10;
 }
 
+.nav-arrow {
+  border-color: #fff;
+  border-style: solid;
+  cursor: pointer;
+  display: block;
+  height: 30px;
+  left: 50%;
+  padding: 3px;
+  position: absolute;
+  transition: border-color 250ms;
+  width: 30px;
+  z-index: 7;
+
+  span {
+    opacity: 0;
+  }
+
+  &:hover {
+    border-color: $cigi-primary-colour;
+  }
+}
+
+.nav-arrow-top {
+  border-width: 1px 0 0 1px;
+  top: 40px;
+  transform: rotate(45deg) translateX(-75%);
+}
+
+.nav-arrow-bottom {
+  border-width: 0 1px 1px 0;
+  bottom: 10px;
+  transform: rotate(45deg) translateX(-75%);
+}
+
+.nav-item-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-tooltip {
+  position: absolute;
+  right: 30px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(0, 0, 0, 0.8);
+  }
+}
+
 .nav-circle {
   width: 16px;
   height: 16px;
