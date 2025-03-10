@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const columnClasses = {
   small: 'col-4',
@@ -28,19 +29,30 @@ const StrategicPlanRegularSlide = ({ slide }) => {
     <div className={`strategic-plan-slide regular-slide ${slide.alignment}`}>
       <div>
         <div className={`${alignmentClass} row`}>
-          <div
+          <motion.div
             className={`regular-slide__title ${getTitleColumnClass(
               slide.column_size,
               slide.slide_content.columns.length,
             )}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
           >
             {slide.slide_title && (
               <h1 aria-live="assertive">{slide.slide_title}</h1>
             )}
             {slide.slide_subtitle && <p>{slide.slide_subtitle}</p>}
-          </div>
+          </motion.div>
         </div>
-        <div className={`${alignmentClass} row`}>
+
+        <motion.div
+          className={`${alignmentClass} row`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.75 }}
+        >
           {slide.slide_content.columns?.map((content, index) => (
             <div
               key={index}
@@ -48,7 +60,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
               dangerouslySetInnerHTML={{ __html: content }}
             />
           ))}
-        </div>
+        </motion.div>
       </div>
       <div className={`${alignmentClass} row`}>
         {slide.slide_content.acknowledgements?.map((content, index) => (

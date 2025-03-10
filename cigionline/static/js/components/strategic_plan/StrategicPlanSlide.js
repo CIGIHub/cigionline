@@ -118,13 +118,9 @@ const StrategicReportSlide = ({ slides, basePath }) => {
           />
         </motion.div>
         {contentVisible && (
-          <motion.div
+          <div
             key={`content-${slug}-${slides[currentIndex].slide_type}`}
             className="ar-slide-content"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
             <div className="container">
               <div className="annual-report-slide">
@@ -143,7 +139,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
