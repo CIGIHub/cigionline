@@ -1,0 +1,53 @@
+@import '../global/variables';
+
+.slide-nav {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 10;
+}
+
+.nav-circle {
+  width: 16px;
+  height: 16px;
+  border: 1px solid white;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+.nav-circle {
+  &::before {
+    content: '';
+    width: 70%;
+    height: 70%;
+    background-color: $white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+    border-color: $cigi-primary-colour;
+    &::before {
+      transform: translate(-50%, -50%) scale(1);
+      background-color: $cigi-primary-colour;
+    }
+  }
+
+  &.active {
+    &::before {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+}

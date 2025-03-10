@@ -10,13 +10,7 @@ const StrategicPlanTOCSlide = ({ slides, basePath, currentIndex }) => (
         (slide) =>
           slide.include_on_toc && (
             <li key={slide.slug}>
-              <Link
-                to={`${basePath}/${slide.slug}`}
-                replace={false}
-                onClick={() => window.scrollTo(0, 0)}
-              >
-                {slide.slide_title}
-              </Link>
+              <Link to={`${basePath}/${slide.slug}`}>{slide.slide_title}</Link>
             </li>
           ),
       )}
