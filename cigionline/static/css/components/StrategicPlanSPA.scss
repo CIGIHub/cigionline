@@ -132,7 +132,7 @@ $strategic-plan-yellow: #edc54c;
   color: white;
 
   h1 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(1.25rem, 5vw, 2rem);
 
     &::before {
       animation-duration: 1.25s;
@@ -166,7 +166,7 @@ $strategic-plan-yellow: #edc54c;
     padding-top: 10rem;
 
     p {
-      font-size: 1.25rem;
+      font-size: 1rem;
     }
   }
 
@@ -188,19 +188,19 @@ $strategic-plan-yellow: #edc54c;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 0.5rem;
     font-weight: 500;
   }
 
   &.full {
     p {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
     }
 
     .regular-slide__content__acknowledgement {
       p {
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
     }
   }

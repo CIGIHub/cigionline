@@ -62,7 +62,13 @@ const StrategicPlanRegularSlide = ({ slide }) => {
           ))}
         </motion.div>
       </div>
-      <div className={`${alignmentClass} row`}>
+      <motion.div
+        className={`${alignmentClass} row`}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.75 }}
+      >
         {slide.slide_content.acknowledgements?.map((content, index) => (
           <div
             key={index}
@@ -70,7 +76,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
             dangerouslySetInnerHTML={{ __html: content }}
           />
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };

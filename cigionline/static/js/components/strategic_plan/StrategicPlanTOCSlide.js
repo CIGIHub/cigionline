@@ -1,11 +1,26 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const StrategicPlanTOCSlide = ({ slides, basePath, currentIndex }) => (
   <div className="strategic-plan-slide table-of-contents">
-    <h1 aria-live="assertive">{slides[currentIndex].slide_title}</h1>
-    <ol start="2">
+    <motion.h1
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
+      aria-live="assertive"
+    >
+      {slides[currentIndex].slide_title}
+    </motion.h1>
+    <motion.ol
+      start="2"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.75 }}
+    >
       {slides.map(
         (slide) =>
           slide.include_on_toc && (
@@ -14,7 +29,7 @@ const StrategicPlanTOCSlide = ({ slides, basePath, currentIndex }) => (
             </li>
           ),
       )}
-    </ol>
+    </motion.ol>
   </div>
 );
 
