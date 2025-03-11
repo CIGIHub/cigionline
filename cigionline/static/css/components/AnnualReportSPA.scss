@@ -1,33 +1,33 @@
+@import '../global/variables';
+@import '../global/mixins';
+
 .slide-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
 }
 
 .slide-background {
-  position: absolute;
-  top: 0;
+  height: calc(100% + 50px);
   left: 0;
+  position: fixed;
+  top: 0;
   width: 100%;
-  height: calc(100vh + 50px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   z-index: -1;
-  
+
   .background-image {
+    position: inherit;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    z-index: -2;
+    z-index: -1;
     width: 100%;
     height: 100%;
   }
 
   .background-colour {
-    z-index: -1;
+    z-index: -2;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -35,6 +35,7 @@
 }
 
 .ar-slide-content {
+  height: 100%;
   position: relative;
   z-index: 1;
 }

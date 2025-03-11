@@ -1,6 +1,10 @@
 @import '../global/variables';
+@import '../global/mixins';
 
 .slide-nav {
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
   position: fixed;
   right: 20px;
   top: 50%;
@@ -19,7 +23,7 @@
   height: 30px;
   left: 50%;
   padding: 3px;
-  position: absolute;
+  position: fixed;
   transition: border-color 250ms;
   width: 30px;
   z-index: 7;

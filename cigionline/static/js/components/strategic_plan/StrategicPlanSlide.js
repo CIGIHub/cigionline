@@ -92,18 +92,14 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     (() => <div>Slide type not found</div>);
 
   return (
-    <div
-      key={`content-${slug}-${slides[currentIndex].slide_type}`}
-      className={`slide-wrapper ${slides[currentIndex].background_colour}`}
-    >
-      <AnnualReportNav slides={slides} basePath={basePath} currentIndex={currentIndex} />
-      <AnimatePresence>
+    <>
+      <AnimatePresence mode="sync">
         <motion.div
           key={`bg-${slug}-${slides[currentIndex].slide_type}`}
           className={`slide-background ${slides[currentIndex].slide_type}`}
-          initial={{ opacity: 0, y: 0 }}
+          initial={{ opacity: 0.1, y: 0 }}
           animate={{ opacity: 1, y: -20 }}
-          exit={{ opacity: 0, y: -20 }}
+          exit={{ opacity: 0, y: -20, transition: { delay: 1 } }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
           onAnimationComplete={() => setContentVisible(true)}
         >
@@ -117,6 +113,16 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             }}
           />
         </motion.div>
+      </AnimatePresence>
+      <div
+        key={`content-${slug}-${slides[currentIndex].slide_type}`}
+        className={`slide-wrapper ${slides[currentIndex].background_colour}`}
+      >
+        <AnnualReportNav
+          slides={slides}
+          basePath={basePath}
+          currentIndex={currentIndex}
+        />
         {contentVisible && (
           <div
             key={`content-${slug}-${slides[currentIndex].slide_type}`}
@@ -141,8 +147,8 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             </div>
           </div>
         )}
-      </AnimatePresence>
-    </div>
+      </div>
+    </>
   );
 };
 

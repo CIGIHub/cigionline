@@ -3,8 +3,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const columnClasses = {
-  small: 'col-4',
-  large: 'col-10',
+  small: 'col-lg-4',
+  large: 'col-lg-10',
 };
 const alignmentClasses = {
   left: 'justify-content-start text-start',
@@ -14,12 +14,12 @@ const alignmentClasses = {
 const getTitleColumnClass = (columnSize, columnCount) => {
   console.log(columnSize, columnCount);
   if (columnSize === 'small' && columnCount === 1) {
-    return 'col-4';
+    return 'col-lg-4';
   }
   if (columnSize === 'small' && columnCount >= 2) {
-    return 'col-8';
+    return 'col-lg-8';
   }
-  return 'col-10';
+  return 'col-lg-10';
 };
 const StrategicPlanRegularSlide = ({ slide }) => {
   const columnClass = columnClasses[slide.column_size];
