@@ -45,10 +45,23 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
   useEffect(() => {
+    const MIN_SCREEN_WIDTH = 1024;
+
+    const checkScrollCondition = () => {
+      const contentHeight =
+        document.querySelector('.slide-wrapper')?.scrollHeight || 0;
+      const viewportHeight = window.innerHeight;
+      const isLargeScreen = window.innerWidth >= MIN_SCREEN_WIDTH;
+
+      return isLargeScreen && contentHeight <= viewportHeight;
+    };
+
+    let canScroll = checkScrollCondition();
+
     const handleNavigation = (direction) => {
-      if (isScrolling) return; // Prevent rapid navigation
+      if (!canScroll || isScrolling) return;
       setIsScrolling(true);
-      setTimeout(() => setIsScrolling(false), 600); // Cooldown
+      setTimeout(() => setIsScrolling(false), 600);
 
       if (direction === 'next' && nextSlide) {
         navigate(`${basePath}/${nextSlide.slug}`);
@@ -58,6 +71,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     };
 
     const handleScroll = (event) => {
+      if (!canScroll) return;
       if (event.deltaY > 0) {
         handleNavigation('next');
       } else if (event.deltaY < 0) {
@@ -75,13 +89,20 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
     window.addEventListener('wheel', handleScroll);
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener(
+      'resize',
+      () => (canScroll = checkScrollCondition()),
+    ); // ✅ Re-check on resize
 
     return () => {
       window.removeEventListener('wheel', handleScroll);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener(
+        'resize',
+        () => (canScroll = checkScrollCondition()),
+      );
     };
-  }, [currentIndex, navigate, isScrolling]);
-
+  }, [currentIndex, navigate, isScrolling, slides]);
   useEffect(() => {
     setContentVisible(false);
   }, [slug]);

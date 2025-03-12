@@ -21,13 +21,28 @@ $strategic-plan-yellow: #edc54c;
   }
 }
 
+.strategic-plan-slide {
+  &.title-slide {
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 1.25rem;
+    }
+  }
+}
+
 .slide-background {
   &.title {
     .background-colour {
+      @include media-breakpoint-up(md) {
+        width: 50%;
+      }
       background-color: $strategic-plan-grey;
       height: 105vh;
-      width: 50%;
       left: 0;
+      width: 75%;
       position: absolute;
       z-index: -1;
     }
@@ -35,9 +50,12 @@ $strategic-plan-yellow: #edc54c;
 
   &.toc {
     .background-colour {
+      @include media-breakpoint-up(md) {
+        width: 66%;
+      }
       background-color: $strategic-plan-grey;
       height: 105vh;
-      width: 66%;
+      width: 75%;
       left: 0;
       position: absolute;
       z-index: -1;
