@@ -203,6 +203,21 @@ $strategic-plan-yellow: #edc54c;
     font-weight: 500;
   }
 
+  a {
+    color: $white;
+    background-size: 0 100%;
+    transition: background-size 0.5s;
+    background-image: linear-gradient(
+      transparent calc(100% - 2px),
+      $cigi-primary-colour 10px
+    );
+    background-repeat: no-repeat;
+
+    &:hover {
+      background-size: 100% 100%;
+    }
+  }
+
   &.full {
     p {
       font-size: 1.1rem;

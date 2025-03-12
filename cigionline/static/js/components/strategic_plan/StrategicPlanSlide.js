@@ -6,6 +6,7 @@ import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
 import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
 import StrategicPlanTOCSlide from './StrategicPlanTOCSlide';
 import AnnualReportNav from '../AnnualReportNav';
+import AnnualReportHamburgerMenu from '../AnnualReportHamburgerMenu';
 
 const slideComponents = {
   title: StrategicPlanTitleSlide,
@@ -92,7 +93,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     window.addEventListener(
       'resize',
       () => (canScroll = checkScrollCondition()),
-    ); // ✅ Re-check on resize
+    );
 
     return () => {
       window.removeEventListener('wheel', handleScroll);
@@ -114,6 +115,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
   return (
     <>
+      <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
       <AnimatePresence mode="sync">
         <motion.div
           key={`bg-${slug}-${slides[currentIndex].slide_type}`}
