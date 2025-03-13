@@ -31,24 +31,26 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
       .catch(() => setLoading(false));
   }, [strategicPlanSPAId]);
 
+  if (loading) {
+    return <Loader isLoading={loading} />;
+  }
+
+  if (!slides) {
+    return <div>No slides found.</div>;
+  }
+
   return (
     <>
-      {loading && <Loader isLoading={loading} />}
-
-      {!loading && slides.length === 0 ? (
-        <div>No slides found.</div>
-      ) : (
-        <Routes>
-          <Route
-            path={`${basePath}/:slug`}
-            element={<StrategicPlanSlide slides={slides} basePath={basePath} />}
-          />
-          <Route
-            path="*"
-            element={<Navigate to={`${basePath}/${slides[0]?.slug || ''}`} />}
-          />
-        </Routes>
-      )}
+      <Routes>
+        <Route
+          path={`${basePath}/:slug`}
+          element={<StrategicPlanSlide slides={slides} basePath={basePath} />}
+        />
+        <Route
+          path="*"
+          element={<Navigate to={`${basePath}/${slides[0]?.slug || ''}`} />}
+        />
+      </Routes>
     </>
   );
 };

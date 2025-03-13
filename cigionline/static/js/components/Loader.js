@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import '../../css/components/Loader.scss';
 import PropTypes from 'prop-types';
 

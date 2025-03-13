@@ -6,7 +6,7 @@ from core.models import (
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
-from streams.blocks import ARSlideChooserBlock, SPSlideChooserBlock
+from streams.blocks import ARSlideChooserBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -304,6 +304,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         [
             ("column", RichTextBlock()),
             ("acknowledgements", RichTextBlock()),
+            ("framework_block", SPSlideFrameworkBlock()),
         ],
         blank=True,
         help_text="Content of the slide",
@@ -366,11 +367,12 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
 
     parent_page_types = ["StrategicPlanSPAPage"]
     subpage_types = []
-    
+
     def get_strategic_plan_slide_content(self):
         content = {
             'columns': [],
-            'acknowledgements': []
+            'acknowledgements': [],
+            'framework_blocks': [],
         }
 
         for block in self.strategic_plan_slide_content:
@@ -378,12 +380,21 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
                 content['columns'].append(expand_db_html(block.value.source))
             elif block.block_type == 'acknowledgements':
                 content['acknowledgements'].append(expand_db_html(block.value.source))
+            elif block.block_type == 'framework_block':
+                block = {
+                    'title': block.value['title'],
+                    'subtitle': block.value['subtitle'],
+                    'content': expand_db_html(block.value['text'].source),
+                    'colour': block.value['colour'],
+                }
+                content['framework_blocks'].append(block)
 
         if not content['columns']:
             content.pop('columns')
         if not content['acknowledgements']:
             content.pop('acknowledgements')
-
+        if not content['framework_blocks']:
+            content.pop('framework_blocks')
         return content
 
     def serve(self, request):

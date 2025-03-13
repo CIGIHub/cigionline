@@ -107,7 +107,5 @@ def get_ordered_slides_strategic_plan(request, page_id):
             for slide in ordered_slides
         ]
     }
-    
-    print(response_data)
 
     return JsonResponse(response_data)

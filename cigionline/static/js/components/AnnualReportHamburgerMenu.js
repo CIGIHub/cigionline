@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence, delay } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../../css/components/AnnualReportHamburgerMenu.scss';
 import PropTypes from 'prop-types';
 

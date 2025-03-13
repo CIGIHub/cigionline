@@ -7,11 +7,13 @@ import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
 import StrategicPlanTOCSlide from './StrategicPlanTOCSlide';
 import AnnualReportNav from '../AnnualReportNav';
 import AnnualReportHamburgerMenu from '../AnnualReportHamburgerMenu';
+import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
 
 const slideComponents = {
   title: StrategicPlanTitleSlide,
   regular: StrategicPlanRegularSlide,
   toc: StrategicPlanTOCSlide,
+  framework: StrategicPlanFrameworkSlide,
 };
 
 const getGradientClass = (alignment) => {
@@ -160,12 +162,9 @@ const StrategicReportSlide = ({ slides, basePath }) => {
                     basePath={basePath}
                   />
                 )}
-                {currentSlide.slide_type === 'title' && (
-                  <SlideComponent slide={currentSlide} />
-                )}
-                {currentSlide.slide_type === 'regular' && (
-                  <SlideComponent slide={currentSlide} />
-                )}
+                {['title', 'regular', 'framework'].includes(
+                  currentSlide.slide_type,
+                ) && <SlideComponent slide={currentSlide} />}
               </div>
             </div>
           </div>
