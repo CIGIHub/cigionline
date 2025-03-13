@@ -6,7 +6,9 @@ import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
 
 const fetchSlides = async (strategicPlanSPAId) => {
-  const response = await fetch(`/api/strategic_plan/${strategicPlanSPAId}/slides/`);
+  const response = await fetch(
+    `/api/strategic_plan/${strategicPlanSPAId}/slides/`,
+  );
   try {
     const data = await response.json();
     return data.slides;
@@ -29,29 +31,25 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
       .catch(() => setLoading(false));
   }, [strategicPlanSPAId]);
 
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <Loader />
-      </div>
-    );
-  }
-
-  if (slides.length === 0) {
-    return <div>No slides found.</div>;
-  }
-
   return (
-    <Routes>
-      <Route
-        path={`${basePath}/:slug`}
-        element={<StrategicPlanSlide slides={slides} basePath={basePath} isLoading={loading} />}
-      />
-      <Route
-        path="*"
-        element={<Navigate to={`${basePath}/${slides[0].slug}`} />}
-      />
-    </Routes>
+    <>
+      {loading && <Loader isLoading={loading} />}
+
+      {!loading && slides.length === 0 ? (
+        <div>No slides found.</div>
+      ) : (
+        <Routes>
+          <Route
+            path={`${basePath}/:slug`}
+            element={<StrategicPlanSlide slides={slides} basePath={basePath} />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to={`${basePath}/${slides[0]?.slug || ''}`} />}
+          />
+        </Routes>
+      )}
+    </>
   );
 };
 

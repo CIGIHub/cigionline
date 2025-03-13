@@ -38,9 +38,12 @@
 }
 
 .menu-content {
+  @include media-breakpoint-up(md) {
+    top: 25%;
+  }
+  top: 6rem;
   z-index: 101;
   position: absolute;
-  top: 25%;
   width: 100%;
   color: $white;
 
@@ -51,12 +54,14 @@
 
   .slide-list {
     ol {
+      @include media-breakpoint-up(md) {
+        columns: 2;
+      }
       padding: 0;
-      columns: 2;
 
       p {
         margin-bottom: 0;
-        font-weight: 500;
+        font-weight: 600;
       }
     }
   }
