@@ -78,27 +78,12 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
         transition={{
           duration: 0.5,
           ease: 'easeInOut',
-          delay: 6.25,
+          delay: 5.25,
         }}
       >
         <hr />
       </motion.div>
     </div>
-    <motion.div
-      className={`row`}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.75 }}
-    >
-      {slide.slide_content.acknowledgements?.map((content, index) => (
-        <div
-          key={index}
-          className={`regular-slide__content__acknowledgement`}
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
-      ))}
-    </motion.div>
   </div>
 );
 
