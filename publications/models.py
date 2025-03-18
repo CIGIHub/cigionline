@@ -65,6 +65,7 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         'articles.ArticleSeriesListPage',
         'articles.ArticleTypePage',
         'publications.PublicationPage',
+        'publications.T7PublicationPage',
         'publications.PublicationTypePage',
         'publications.PublicationSeriesListPage'
     ]
@@ -569,7 +570,7 @@ class PublicationSeriesPage(
         verbose_name_plural = 'Publication Series'
 
 
-class T7PublicationPage:
+class T7PublicationPage(Page):
     """View T7 publication page"""
 
     class PublicationTypes(models.TextChoices):
@@ -580,7 +581,7 @@ class T7PublicationPage:
         UNARCHIVED = (0, 'No')
         ARCHIVED = (1, 'Yes')
 
-    abstract = RichTextField(required=True, null=False, features=[
+    abstract = RichTextField(null=False, features=[
         'bold',
         'dropcap',
         'endofarticle',
@@ -600,7 +601,6 @@ class T7PublicationPage:
     ])
     publishing_date = models.DateTimeField(blank=False, null=True)
     publication_type = models.CharField(
-        required=True,
         max_length=64,
         choices=PublicationTypes.choices,
     )
