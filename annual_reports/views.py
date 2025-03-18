@@ -98,6 +98,7 @@ def get_ordered_slides_strategic_plan(request, page_id):
                 "slide_type": slide.slide_type,
                 "slide_theme": slide.slide_theme,
                 "background_image": slide.background_image.get_rendition('original').file.url if slide.background_image else '',
+                "background_image_thumbnail": slide.background_image.get_rendition('fill-300x200').file.url if slide.background_image else '',
                 "background_video": slide.background_video.file.url if slide.background_video else '',
                 "background_colour": slide.background_colour.replace("_", "-"),
                 "include_on_toc": slide.include_on_toc,
