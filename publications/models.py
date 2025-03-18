@@ -644,7 +644,7 @@ class T7PublicationPage(Page):
         related_name="+"
     )
 
-    content_panels = [
+    content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
                 FieldPanel('abstract'),
