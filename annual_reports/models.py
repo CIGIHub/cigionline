@@ -2,6 +2,7 @@ from core.models import (
     BasicPageAbstract,
     FeatureablePageAbstract,
     SearchablePageAbstract,
+    ShareablePageAbstract
 )
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -241,10 +242,10 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
     def serve(self, request):
         """Always serve the SPA regardless of sub-page requested."""
         parent = self.get_parent().specific
-        return render(request, "annual_reports/annual_report_spa_page.html", {"page": parent})
+        return render(request, "annual_reports/annual_report_spa_page.html", {"page": parent, "self": self})
 
 
-class StrategicPlanSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
+class StrategicPlanSPAPage(FeatureablePageAbstract, Page, ShareablePageAbstract, SearchablePageAbstract):
     """View annual report SPA page"""
 
     slides = StreamField(
@@ -260,6 +261,11 @@ class StrategicPlanSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract
             heading="Slides",
             classname="collapsible",
         ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
     ]
 
     subpage_types = ["StrategicPlanSlidePage"]
@@ -400,4 +406,4 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
     def serve(self, request):
         """Always serve the SPA regardless of sub-page requested."""
         parent = self.get_parent().specific
-        return render(request, "strategic_plan/strategic_plan_spa_page.html", {"page": parent})
+        return render(request, "strategic_plan/strategic_plan_spa_page.html", {"page": parent, "self": self})
