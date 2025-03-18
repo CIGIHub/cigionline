@@ -29,6 +29,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+from wagtail.documents.models import Document
 
 
 class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAbstract, Page):
@@ -566,3 +567,124 @@ class PublicationSeriesPage(
     class Meta:
         verbose_name = 'Publication Series'
         verbose_name_plural = 'Publication Series'
+
+
+class T7PublicationPage:
+    """View T7 publication page"""
+
+    class PublicationTypes(models.TextChoices):
+        POLICY_BRIEFS = ('policy_briefs', 'Policy Briefs')
+        COMMUNIQUE = ('communique', 'Communiqué')
+
+    class ArchiveStatus(models.IntegerChoices):
+        UNARCHIVED = (0, 'No')
+        ARCHIVED = (1, 'Yes')
+
+    abstract = RichTextField(required=True, null=False, features=[
+        'bold',
+        'dropcap',
+        'endofarticle',
+        'paragraph_heading',
+        'h2',
+        'h3',
+        'h4',
+        'hr',
+        'image',
+        'italic',
+        'link',
+        'ol',
+        'subscript',
+        'superscript',
+        'ul',
+        'anchor',
+    ])
+    publishing_date = models.DateTimeField(blank=False, null=True)
+    publication_type = models.CharField(
+        required=True,
+        max_length=64,
+        choices=PublicationTypes.choices,
+    )
+    taskforce = models.ForeignKey(
+        'research.ProjectPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+    archive = models.IntegerField(
+        choices=ArchiveStatus.choices,
+        default=ArchiveStatus.UNARCHIVED,
+        help_text='Whether this publication was from a previous G7 summit.',
+    )
+    authors = models.CharField(max_length=255, blank=True)
+    special_focus_authors = models.CharField(max_length=255, blank=True)
+    image_feature = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Feature image',
+        help_text='A landscape image used in featuring the publication on the landing page',
+    )
+    image_poster = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Poster image',
+        help_text='A portrait image displayed on the publication page',
+    )
+    pdf_attachment = models.ForeignKey(
+        Document,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
+
+    content_panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel('abstract'),
+            ],
+            heading='Abstract',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+                FieldPanel('publication_type'),
+                FieldPanel('taskforce'),
+                FieldPanel('archive'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('authors'),
+                FieldPanel('special_focus_authors'),
+            ],
+            heading='Authors',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('image_feature'),
+                FieldPanel('image_poster'),
+                FieldPanel('pdf_attachment'),
+            ],
+            heading='Assets',
+            classname='collapsible collapsed',
+        ),
+    ]
+
+    parent_page_types = ['publications.PublicationListPage']
+    subpage_types = []
+    templates = 'think7/publication_page.html'
+
+    class Meta:
+        verbose_name = 'T7 Publication'
+        verbose_name_plural = 'T7 Publications'
