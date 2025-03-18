@@ -19,7 +19,7 @@ class PeoplePageTests(WagtailPageTestCase):
     def test_peoplepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             PeoplePage,
-            {HomePage},
+            {HomePage, Think7HomePage},
         )
 
     def test_people_page_child_page_types(self):
@@ -33,22 +33,6 @@ class PeoplePageTests(WagtailPageTestCase):
         self.assertCanCreate(home_page, PeoplePage, nested_form_data({
             'title': 'People',
         }))
-
-    def test_cannot_create_second_peoplepage(self):
-        home_page = HomePage.objects.get()
-        self.assertCanCreate(home_page, PeoplePage, nested_form_data({
-            'title': 'People',
-        }))
-        try:
-            self.assertCanCreate(home_page, PeoplePage, nested_form_data({
-                'title': 'People 2',
-            }))
-            self.fail('Expected to error')
-        except AssertionError as ae:
-            if str(ae) == "Creating a page people.peoplepage didn't redirect the user to the expected page /admin/pages/3/, but to [(\'/admin/\', 302)]":
-                pass
-            else:
-                raise ae
 
 
 class PersonListPageBasicTests(WagtailPageTestCase):
