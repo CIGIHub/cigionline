@@ -618,6 +618,9 @@ class T7PublicationPage(Page):
     )
     authors = models.CharField(max_length=255, blank=True)
     special_focus_authors = models.CharField(max_length=255, blank=True)
+    co_authors = models.CharField(max_length=255, blank=True)
+    team_fao_italy = models.CharField(max_length=255, blank=True)
+    united_states = models.CharField(max_length=255, blank=True)
     image_feature = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -666,6 +669,9 @@ class T7PublicationPage(Page):
             [
                 FieldPanel('authors'),
                 FieldPanel('special_focus_authors'),
+                FieldPanel('co_authors'),
+                FieldPanel('team_fao_italy'),
+                FieldPanel('united_states'),
             ],
             heading='Authors',
             classname='collapsible collapsed',
