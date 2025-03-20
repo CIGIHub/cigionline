@@ -59,6 +59,14 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         except ArticleTypePage.DoesNotExist:
             raise Http404
 
+    def get_template(self, request, *args, **kwargs):
+        site = self.get_site()
+        if site.site_name == 'Think 7 Canada':
+            return 'think7/publication_list_page.html'
+
+        standard_template = super(PublicationListPage, self).get_template(request, *args, **kwargs)
+        return standard_template
+
     max_count = 2
     parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = [
@@ -690,6 +698,9 @@ class T7PublicationPage(Page):
     parent_page_types = ['publications.PublicationListPage']
     subpage_types = []
     templates = 'think7/publication_page.html'
+
+    def get_template(self, request, *args, **kwargs):
+        return 'think7/publication_page.html'
 
     class Meta:
         verbose_name = 'T7 Publication'
