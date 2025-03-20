@@ -10,6 +10,7 @@ from core.models import (
 from django.db import models
 from django.db.models import F
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from publications.models import T7PublicationPage
 from streams.blocks import AdditionalFileBlock, SurveyFindingsCountryBlock, Think7ChairBlock
 from wagtail.admin.panels import (
     FieldPanel,
@@ -280,6 +281,9 @@ class ProjectPage(
             if block.block_type == 'additional_file':
                 additional_files.append(block.value)
         return additional_files
+
+    def get_taskforce_publications(self):
+        return T7PublicationPage.objects.filter(taskforce=self).live().public().order_by('-publishing_date')
 
     def get_context(self, request):
         context = super().get_context(request)

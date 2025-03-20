@@ -7,9 +7,11 @@ body {
     }
   }
 
-  .taskforce-chair {
-    margin-top: 3rem;
+  section {
+    margin: 3rem 0;
+  }
 
+  .taskforce-chair {
     .chair-block {
       padding: 2rem 0;
 
@@ -103,6 +105,44 @@ body {
             margin-bottom: 0;
           }
         }
+      }
+    }
+  }
+
+  .policy-briefs-link {
+    text-decoration: none;
+  }
+
+  .publications {
+    .publication {
+      padding: 2rem 0;
+
+      .publication-authors {
+        line-height: 1.25;
+        margin-bottom: 0.25rem;
+      }
+
+      .publication-taskforce {
+        font-size: 0.875rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        color: $cigi-primary-colour;
+
+        &:hover {
+          color: $cigi-dark-pink;
+        }
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $cigi-light-grey;
+      }
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
       }
     }
   }
