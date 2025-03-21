@@ -94,6 +94,22 @@ footer {
     }
   }
 
+  .archive-link {
+    @include media-breakpoint-up(sm) {
+      margin-left: 3rem;
+      margin-right: 3rem;
+    }
+    @include media-breakpoint-up(lg) {
+      margin-left: 5rem;
+      margin-right: 5rem;
+    }
+    margin-bottom: 2rem;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
   nav {
     margin: 2rem 0;
 
