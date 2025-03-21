@@ -59,6 +59,9 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         except ArticleTypePage.DoesNotExist:
             raise Http404
 
+    def get_t7_publications(self):
+        return T7PublicationPage.objects.live().public().order_by('-publishing_date')
+
     def get_template(self, request, *args, **kwargs):
         site = self.get_site()
         if site.site_name == 'Think 7 Canada':
@@ -676,10 +679,6 @@ class T7PublicationPage(Page):
         MultiFieldPanel(
             [
                 FieldPanel('authors'),
-                FieldPanel('special_focus_authors'),
-                FieldPanel('co_authors'),
-                FieldPanel('team_fao_italy'),
-                FieldPanel('united_states'),
             ],
             heading='Authors',
             classname='collapsible collapsed',

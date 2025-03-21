@@ -1,0 +1,53 @@
+{% extends "think7_base.html" %}
+{% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
+
+{% block extra_css %}
+{% render_bundle 'think7PublicationListPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  <section class="t7-hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h1>{{ self.title }}</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="publications">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          {% for publication in self.get_t7_publications %}
+            <div class="publication">
+              <div class="img-wrapper">
+                <a href="{% pageurl publication %}">
+                  {% if publication.image_poster %}
+                    {% image publication.image_poster width-700 %}
+                  {% endif %}
+                </a>
+              </div>
+              <div class="publication-info">
+                <div class="publication-taskforce">
+                  <a href="{% pageurl publication.taskforce %}">
+                    {{ publication.taskforce.title }}
+                  </a>
+                </div>
+                <h3>
+                  <a href="{% pageurl publication %}">
+                    {{ publication.title }}
+                  </a>
+                </h3>
+                <div class="publication-authors">
+                  {{ publication.authors }}
+                </div>
+                {% include "includes/date.html" with date=publication.publishing_date %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
