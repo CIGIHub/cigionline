@@ -24,9 +24,6 @@
   text-align: center;
 
   button {
-    @include media-breakpoint-down(sm) {
-      margin-top: 1rem;
-    }
     color: $black;
     border: 2px solid $cigi-primary-colour;
     border-radius: 5px;

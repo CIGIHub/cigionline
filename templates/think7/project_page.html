@@ -2,7 +2,7 @@
 {% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
 
 {% block content %}
-  <section class="body" id="article-body">
+  <section>
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
@@ -10,6 +10,8 @@
         </div>
       </div>
     </div>
+  </section>
+  <section class="body" id="article-body">
     {% for block in self.body %}
       {% if block.block_type != 'chair' %}
         {% include_block block %}

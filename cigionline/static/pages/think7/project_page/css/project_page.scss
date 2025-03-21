@@ -16,6 +16,7 @@ body {
       padding: 2rem 0;
 
       &.chair {
+        padding-top: 1rem;
         padding-bottom: 1rem;
 
         .chair-bio {
@@ -33,7 +34,9 @@ body {
 
       .chair-background {
         &.chair {
-          margin: -1rem;
+          @include media-breakpoint-up(sm) {
+            margin: -1rem;
+          }
           padding: 1rem;
           background-color: $cigi-light-grey;
           border-radius: 25px;
@@ -42,7 +45,7 @@ body {
 
       .person-info {
         @include media-breakpoint-down(xs) {
-          padding: 0.5em 1em;
+          padding: 0.5em 0;
         }
         align-items: center;
         display: flex;

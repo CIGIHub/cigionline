@@ -18,7 +18,10 @@ body {
 }
 
 main {
-  margin: 6rem 0 3rem;
+  @include media-breakpoint-up(md) {
+    margin: 6rem 0 3rem;
+  }
+  margin: 3rem 0;
 }
 
 img {
@@ -27,7 +30,9 @@ img {
 }
 
 h1 {
-  margin-bottom: 2rem;
+  @include media-breakpoint-down(sm) {
+    font-size: 1.75rem;
+  }
 }
 
 h2 {
@@ -81,4 +86,8 @@ a {
       color: $cigi-dark-pink;
     }
   }
+}
+
+section {
+  margin: 3rem 0;
 }

@@ -15,6 +15,11 @@
       </div>
     </div>
   </section>
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
   <section class="publications">
     <div class="container">
       <div class="row justify-content-center">
