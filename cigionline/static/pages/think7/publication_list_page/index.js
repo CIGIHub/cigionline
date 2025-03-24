@@ -3,7 +3,6 @@ import './css/publication_list_page.scss';
 $(function () {
   const select = document.getElementById('taskforce-select');
   const caret = document.getElementById('taskforce-select-caret');
-  console.log(select, caret);
 
   const form = document.getElementById('taskforce-filter-form');
 
@@ -17,7 +16,6 @@ $(function () {
 
     document.body.appendChild(temp);
     const textWidth = temp.offsetWidth;
-    console.log(textWidth);
     document.body.removeChild(temp);
 
     caret.style.left = `${select.offsetLeft + textWidth + 10}px`;
