@@ -7,6 +7,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from django.apps import apps
 from django.db import models
 from django.http import Http404
 from modelcluster.fields import ParentalKey
@@ -59,9 +60,6 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         except ArticleTypePage.DoesNotExist:
             raise Http404
 
-    def get_t7_publications(self):
-        return T7PublicationPage.objects.live().public().order_by('-publishing_date')
-
     def get_template(self, request, *args, **kwargs):
         site = self.get_site()
         if site.site_name == 'Think 7 Canada':
@@ -69,6 +67,24 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
 
         standard_template = super(PublicationListPage, self).get_template(request, *args, **kwargs)
         return standard_template
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        site = self.get_site()
+        if site.site_name == 'Think 7 Canada':
+            taskforce_slug = request.GET.get('taskforce')
+            publications = T7PublicationPage.objects.live().public().order_by('-publishing_date')
+            if taskforce_slug:
+                filtered_publications = publications.filter(taskforce__slug=taskforce_slug)
+            ProjectPage = apps.get_model('research', 'ProjectPage')
+            taskforces = ProjectPage.objects.filter(id__in=publications.values_list('taskforce__id', flat=True)).distinct()
+
+            context['publications'] = filtered_publications if taskforce_slug else publications
+            context['taskforces'] = taskforces
+            context['selected_taskforce'] = taskforce_slug
+
+        return context
 
     max_count = 2
     parent_page_types = ['home.HomePage', 'home.Think7HomePage']

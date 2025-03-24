@@ -4,6 +4,9 @@
 {% block extra_css %}
 {% render_bundle 'think7PublicationListPage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+{% render_bundle 'think7PublicationListPage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   <section class="t7-hero">
@@ -24,7 +27,22 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-          {% for publication in self.get_t7_publications %}
+          <div class="taskforce-form-wrapper">
+            <label for="taskforce">Taskforce:</label>
+            <form method="get" id="taskforce-filter-form">
+              <select name="taskforce" id="taskforce-select">
+                  <option value="">All</option>
+                  {% for tf in taskforces %}
+                    <option value="{{ tf.slug }}" {% if tf.slug == selected_taskforce %}selected{% endif %}>
+                        {{ tf.title }}
+                    </option>
+                  {% endfor %}
+              </select>
+              <i class="fas fa-angle-down" id="taskforce-select-caret"></i>
+            </form>
+          </div>
+        
+          {% for publication in publications %}
             <div class="publication">
               <div class="img-wrapper">
                 <a href="{% pageurl publication %}">
@@ -50,6 +68,8 @@
                 {% include "includes/date.html" with date=publication.publishing_date %}
               </div>
             </div>
+          {% empty %}
+            <div>No publications found.</div>
           {% endfor %}
         </div>
       </div>
