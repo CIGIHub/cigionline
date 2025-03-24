@@ -1,8 +1,4 @@
-{% load wagtailcore_tags webpack_loader wagtailimages_tags core_tags %}
-
-{% block extra_css %}
-  {% render_bundle 'think7ProjectPage' 'css' %}
-{% endblock %}
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
 
 <div class="chair-block {% if self.chair_type == 'chair' %}chair{% endif %}">
   {% if self.name %}

@@ -1,6 +1,13 @@
 {% extends "think7_base.html" %}
 {% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
 
+{% block extra_css %}
+{% render_bundle 'think7ProjectPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+{% render_bundle 'think7ProjectPage' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
   <section>
     <div class="container">
@@ -21,7 +28,7 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-10 col-lg-8">
-            <a class="policy-briefs-link" href="#publications">Task Force {{self.task_force_label}} Policy Briefs</a>
+            <a class="policy-briefs-link" id="policy-briefs-link" href="#publications">Task Force {{self.task_force_label}} Policy Briefs</a>
           </div>
         </div>
       </div>
