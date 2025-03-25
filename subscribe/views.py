@@ -37,8 +37,8 @@ def subscribe_dph(request):
             'status': 'pending'
         }
 
-        if not email:
-            return JsonResponse({'error': 'Email is required'}, status=400)
+    if not email:
+        return JsonResponse({'error': 'Email is required'}, status=400)
 
     try:
         if api_key and server and list_id:
