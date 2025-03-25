@@ -18,7 +18,7 @@ $(function () {
     const textWidth = temp.offsetWidth;
     document.body.removeChild(temp);
 
-    caret.style.left = `${select.offsetLeft + textWidth + 10}px`;
+    caret.style.left = `${select.offsetLeft + textWidth + 15}px`;
     caret.style.opacity = 1;
   }
 
