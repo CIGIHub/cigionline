@@ -28,6 +28,7 @@ class EmailOnlySubscribeForm(forms.Form):
 
 def subscribe_dph(request):
     status = None
+    email = None
     form = EmailOnlySubscribeForm(request.POST)
     if form.is_valid():
         email = form.cleaned_data['email']
@@ -36,8 +37,8 @@ def subscribe_dph(request):
             'status': 'pending'
         }
 
-    if not email:
-        return JsonResponse({'error': 'Email is required'}, status=400)
+        if not email:
+            return JsonResponse({'error': 'Email is required'}, status=400)
 
     try:
         if api_key and server and list_id:
@@ -84,6 +85,7 @@ def subscribe_think7(request):
         list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_THINK7
 
     status = None
+    email = None
     form = EmailOnlySubscribeForm(request.POST)
     if form.is_valid():
         email = form.cleaned_data['email']
