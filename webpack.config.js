@@ -93,6 +93,8 @@ const config = {
     think7HomePage: './cigionline/static/pages/think7/home_page/index.js',
     think7ProjectListPage: './cigionline/static/pages/think7/project_list_page/index.js',
     think7ProjectPage: './cigionline/static/pages/think7/project_page/index.js',
+    think7PublicationPage: './cigionline/static/pages/think7/publication_page/index.js',
+    think7PublicationListPage: './cigionline/static/pages/think7/publication_list_page/index.js',
     think7EventListPage: './cigionline/static/pages/think7/event_list_page/index.js',
     think7EventPage: './cigionline/static/pages/think7/event_page/index.js',
     think7AbstractSubmissionPage: './cigionline/static/pages/think7/abstract_submission_page/index.js',
