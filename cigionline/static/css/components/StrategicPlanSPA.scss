@@ -8,6 +8,21 @@ $framework-slide-pink: #ea6aaa;
 @import '../global/variables';
 @import '../global/mixins';
 
+@mixin link-underline {
+  color: $white;
+  background-size: 0 100%;
+  transition: background-size 0.5s;
+  background-image: linear-gradient(
+    transparent calc(100% - 2px),
+    $cigi-primary-colour 10px
+  );
+  background-repeat: no-repeat;
+
+  &:hover {
+    background-size: 100% 100%;
+  }
+}
+
 @keyframes slideTitleLineExpand {
   0% {
     margin-left: -350px;
@@ -213,18 +228,7 @@ $framework-slide-pink: #ea6aaa;
   }
 
   a {
-    color: $white;
-    background-size: 0 100%;
-    transition: background-size 0.5s;
-    background-image: linear-gradient(
-      transparent calc(100% - 2px),
-      $cigi-primary-colour 10px
-    );
-    background-repeat: no-repeat;
-
-    &:hover {
-      background-size: 100% 100%;
-    }
+    @include link-underline;
   }
 
   &.full {
@@ -244,13 +248,13 @@ $framework-slide-pink: #ea6aaa;
   h1 {
     margin-bottom: 3rem;
   }
+
   ol {
     padding-left: 3rem;
     list-style: none;
     counter-reset: custom-counter 1;
 
     li {
-      @include link($color: $white, $hover-color: $cigi-primary-colour);
       counter-increment: custom-counter;
       position: relative;
       font-size: 1.25rem;
@@ -262,6 +266,10 @@ $framework-slide-pink: #ea6aaa;
         font-weight: 500;
         position: absolute;
         left: -2rem;
+      }
+
+      a {
+        @include link-underline;
       }
     }
   }
@@ -369,9 +377,14 @@ $framework-slide-pink: #ea6aaa;
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
     }
+
     p {
       line-height: 1.25;
       font-size: 15px;
+
+      a {
+        @include link-underline;
+      }
     }
   }
 
