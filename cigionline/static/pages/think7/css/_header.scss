@@ -5,6 +5,10 @@ header {
     .navbar-brand {
       max-width: 250px;
       width: 50%;
+
+      &.g7-logo {
+        max-width: 125px;
+      }
     }
 
     nav {

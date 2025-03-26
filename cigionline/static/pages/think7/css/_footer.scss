@@ -19,10 +19,10 @@ footer {
     a {
       @include media-breakpoint-down(sm) {
         width: 50%;
-        margin-bottom: 1rem;
+        margin-bottom: 3rem;
       }
       width: 30%;
-      margin: 0 3rem;
+      margin: 0 2rem;
     }
 
     svg {
