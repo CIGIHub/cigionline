@@ -259,9 +259,12 @@ $framework-slide-pink: #ea6aaa;
     counter-reset: custom-counter 1;
 
     li {
+      @include media-breakpoint-up(md) {
+        font-size: 1.25rem;
+      }
       counter-increment: custom-counter;
       position: relative;
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       margin-bottom: 1rem;
 
       &::before {
