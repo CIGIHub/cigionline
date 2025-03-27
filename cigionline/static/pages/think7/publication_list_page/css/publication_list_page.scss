@@ -24,12 +24,14 @@ section {
       font-size: 15px;
     }
   }
+
   form {
     font-family: $primary-font-family;
     position: relative;
     font-size: 15px;
 
     select {
+      position: relative;
       padding: 0 1.5rem 0 0.5rem;
       border: 0;
       background-color: transparent;
@@ -48,8 +50,10 @@ section {
       position: absolute;
       opacity: 0;
       color: red;
+      z-index: -1;
     }
   }
+
   .publication {
     @include media-breakpoint-up(sm) {
       display: flex;

@@ -19,16 +19,26 @@ footer {
     a {
       @include media-breakpoint-down(sm) {
         width: 50%;
-        margin-bottom: 1rem;
+        margin-bottom: 3rem;
       }
       width: 30%;
-      margin: 0 3rem;
+      margin: 0 0.5rem;
     }
 
     svg {
       path {
         fill: $white;
       }
+    }
+
+    img,
+    svg {
+      height: 60px;
+      width: auto;
+    }
+
+    .g7-logo {
+      height: 65px;
     }
   }
 
