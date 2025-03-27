@@ -22,13 +22,23 @@ footer {
         margin-bottom: 3rem;
       }
       width: 30%;
-      margin: 0 2rem;
+      margin: 0 0.5rem;
     }
 
     svg {
       path {
         fill: $white;
       }
+    }
+
+    img,
+    svg {
+      height: 60px;
+      width: auto;
+    }
+
+    .g7-logo {
+      height: 65px;
     }
   }
 

@@ -1,13 +1,21 @@
 header {
   &.think7-header {
-    padding-top: 1rem;
+    padding-top: 2rem;
 
     .navbar-brand {
-      max-width: 250px;
-      width: 50%;
+      &.t7-logo {
+        margin-right: 2rem;
+      }
 
       &.g7-logo {
-        max-width: 125px;
+        img {
+          height: 65px;
+        }
+      }
+
+      img {
+        height: 60px;
+        width: auto;
       }
     }
 

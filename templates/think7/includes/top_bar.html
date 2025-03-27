@@ -4,12 +4,14 @@
 <header class="think7-header">
   <div class="container">
     <nav class="navbar">
-      <a class="navbar-brand" href="/">
-        <img src="/static/assets/t7-logo-animated-v3.gif" alt="T7 Logo" class="logo">
-      </a>
-      <a class="navbar-brand g7-logo" href="https://g7.canada.ca/">
-        <img src="/static/assets/G72025_LOGO_colour.png" alt="G7 Logo" class="g7-logo">
-      </a>
+      <div class="d-flex align-items-center">
+        <a class="navbar-brand t7-logo" href="/" aria-label="Home">
+          <img src="/static/assets/t7-logo-animated-v4.gif" alt="T7 Logo" class="logo">
+        </a>
+        <a class="navbar-brand g7-logo" href="https://g7.canada.ca/" target="_blank" rel="noreferrer" aria-label="G7 website">
+          <img src="/static/assets/G72025_LOGO_colour.png" alt="G7 Logo" class="g7-logo">
+        </a>
+      </div>
 
       {% get_menu_items 'think7' as think7_menu_items %}
 
