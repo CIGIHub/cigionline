@@ -42,7 +42,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
             {slide.slide_title && (
               <h1 aria-live="assertive">{slide.slide_title}</h1>
             )}
-            {slide.slide_subtitle && <p>{slide.slide_subtitle}</p>}
+            {slide.slide_subtitle && <p class="subtitle">{slide.slide_subtitle}</p>}
           </motion.div>
         </div>
 

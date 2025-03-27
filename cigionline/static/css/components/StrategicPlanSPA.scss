@@ -50,6 +50,14 @@ $framework-slide-pink: #ea6aaa;
       font-size: 1.25rem;
     }
   }
+
+  p {
+    font-size: 16px;
+
+    &.subtitle {
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .slide-background {
@@ -159,7 +167,7 @@ $framework-slide-pink: #ea6aaa;
 
 .strategic-plan-slide {
   @include media-breakpoint-up(md) {
-    padding: 3rem 0;
+    padding: 5rem 0;
     height: 100vh;
   }
   padding: 3rem 0;
@@ -232,10 +240,6 @@ $framework-slide-pink: #ea6aaa;
   }
 
   &.full {
-    p {
-      font-size: 1.1rem;
-    }
-
     .regular-slide__content__acknowledgement {
       p {
         font-size: 0.9rem;
