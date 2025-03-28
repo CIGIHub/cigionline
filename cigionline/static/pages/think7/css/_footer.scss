@@ -1,11 +1,23 @@
 footer {
-  @include link($color: $white, $hover-color: $cigi-primary-colour);
   margin-top: 6rem;
   padding: 3rem 0 5rem;
   background-color: $think7_bg_red;
   color: $white;
   text-align: center;
   font-size: 1rem;
+
+  a {
+    color: $white;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      color: $white;
+      text-decoration: underline;
+      background-color: rgba(255, 255, 255, 0.1); /* light translucent white */
+    }
+  }
 
   .logos {
     @include media-breakpoint-down(sm) {
@@ -19,9 +31,9 @@ footer {
     a {
       @include media-breakpoint-down(sm) {
         width: 50%;
-        margin-bottom: 3rem;
+        margin-bottom: 1rem;
       }
-      width: 30%;
+      padding: 1rem 1rem;
       margin: 0 0.5rem;
     }
 
@@ -48,8 +60,6 @@ footer {
   }
 
   .email-list {
-    @include link($color: $white, $hover-color: $cigi-dark-pink);
-
     form {
       display: flex;
       justify-content: center;
@@ -137,7 +147,6 @@ footer {
       width: 100%;
 
       li {
-        @include link($color: $white, $hover-color: $cigi-primary-colour);
         position: relative;
         padding: 0.5rem 1rem 0.5rem;
         text-transform: uppercase;
