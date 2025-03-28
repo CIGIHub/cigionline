@@ -1,0 +1,41 @@
+@import '../../../../css/global/mixins';
+@import '../../../../css/global/variables';
+@import '../../css/variables';
+@import '../../css/mixins';
+
+.t7-hero {
+  @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
+  a {
+    text-decoration: none;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+  }
+
+  .authors {
+    line-height: 1.25;
+    margin-bottom: 0.25rem;
+  }
+}
+
+.pdf-download {
+  margin: 3rem 0;
+  text-align: center;
+
+  button {
+    color: $black;
+    border: 2px solid $cigi-primary-colour;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    background-color: $think7_bg_white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-transform: uppercase;
+    height: fit-content;
+
+    &:hover {
+      background-color: $cigi-primary-colour;
+      color: $white;
+    }
+  }
+}

@@ -1,0 +1,125 @@
+@import '../../../../css/global/mixins';
+@import '../../../../css/global/variables';
+@import '../../css/variables';
+@import '../../css/mixins';
+
+section {
+  margin: 3rem 0;
+}
+
+.t7-hero {
+  h1 {
+    margin-bottom: 1rem;
+  }
+}
+
+.publications {
+  .taskforce-form-wrapper {
+    @include media-breakpoint-up(sm) {
+      display: flex;
+    }
+
+    label {
+      margin-right: 0.5rem;
+      font-size: 15px;
+    }
+  }
+
+  form {
+    font-family: $primary-font-family;
+    position: relative;
+    font-size: 15px;
+
+    select {
+      position: relative;
+      padding: 0 1.5rem 0 0.5rem;
+      border: 0;
+      background-color: transparent;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      &:focus {
+        outline: 2px solid $cigi-medium-light-grey;
+        border-radius: 3px;
+      }
+    }
+
+    i {
+      top: 4px;
+      position: absolute;
+      opacity: 0;
+      color: red;
+      z-index: -1;
+    }
+  }
+
+  .publication {
+    @include media-breakpoint-up(sm) {
+      display: flex;
+    }
+    padding: 2rem 0;
+
+    .img-wrapper {
+      @include media-breakpoint-up(md) {
+        flex: 0 0 25%;
+      }
+      @include media-breakpoint-up(sm) {
+        margin-bottom: 0;
+        margin-right: 2rem;
+      }
+      margin-bottom: 1rem;
+      flex: 0 0 50%;
+      background-color: $black;
+
+      img {
+        transition: opacity 0.3s ease;
+        object-fit: cover;
+        border: 1px solid $cigi-light-grey;
+      }
+
+      &:hover {
+        img {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .publication-authors,
+    .date {
+      font-size: 0.875rem;
+      font-weight: 300;
+    }
+
+    .publication-authors {
+      line-height: 1.25;
+      margin-bottom: 0.25rem;
+    }
+
+    .publication-taskforce {
+      font-size: 0.875rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+
+      a {
+        color: $cigi-primary-colour;
+
+        &:hover {
+          color: $cigi-dark-pink;
+        }
+      }
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $cigi-light-grey;
+    }
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+}

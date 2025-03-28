@@ -1,8 +1,15 @@
 {% extends "think7_base.html" %}
 {% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
 
+{% block extra_css %}
+{% render_bundle 'think7ProjectPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+{% render_bundle 'think7ProjectPage' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
-  <section class="body" id="article-body">
+  <section>
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
@@ -10,16 +17,28 @@
         </div>
       </div>
     </div>
+  </section>
+  <section class="body" id="article-body">
     {% for block in self.body %}
       {% if block.block_type != 'chair' %}
         {% include_block block %}
       {% endif %}
     {% endfor %}
+    {% if self.get_taskforce_publications %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <a class="policy-briefs-link" id="policy-briefs-link" href="#publications">Task Force {{self.task_force_label}} Policy Briefs</a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
   </section>
   <section class="taskforce-chair">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
+          <h2 class="section-heading">Bios</h2>
           {% for block in self.body %}
             {% if block.block_type == 'chair' %}
               {% include_block block %}
@@ -27,5 +46,41 @@
           {% endfor %}
         </div>
       </div>
+    </div>
   </section>
+  {% if self.get_taskforce_publications %}
+    <section class="publications" id="publications">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2 class="section-heading">
+              Publications
+            </h2>
+            <div class="publication-list">
+              {% for publication in self.get_taskforce_publications %}
+                <div class="publication">
+                  <div class="publication-info">
+                    <a class="publication-taskforce" href="{% pageurl publication.taskforce %}">
+                      {{ publication.taskforce.title }}
+                    </a>
+                    <h3>
+                      <a href="{% pageurl publication %}">
+                        {{ publication.title }}
+                      </a>
+                    </h3>
+                    <div class="publication-authors">
+                      {{ publication.authors }}
+                    </div>
+                    <div class="publication-date">
+                      {% include "includes/date.html" with date=publication.publishing_date %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}

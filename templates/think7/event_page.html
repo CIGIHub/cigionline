@@ -1,0 +1,51 @@
+{% extends "think7_base.html" %}
+{% load wagtailcore_tags webpack_loader core_tags cache wagtailimages_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'think7EventPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  <section class="body" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h2>{{self.title}}</h2>
+        </div>
+      </div>
+    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+    {% if self.registration_url %}
+      <div class="event-registration">
+        <a href="{{ self.registration_url }}">
+          <button>
+            Register
+          </button>
+        </a>
+        {% if self.registration_text %}
+          <div class="registration-text">
+            <p>{{ self.registration_text }}</p>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if self.event_agenda %}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <p>View the latest agenda <a href="{{ self.event_agenda.url }}" target="_blank" rel="noopener noreferrer" aria-label="Link to event agenda">HERE</a>.</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <p>For more information, please contact <a href="mailto:info@think7.org">info@think7.org</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

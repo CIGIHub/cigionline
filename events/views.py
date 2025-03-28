@@ -17,7 +17,7 @@ def events_api(request):
         year = now.year
 
     events = []
-    queryset = EventPage.objects.live().public().filter(publishing_date__year=year, publishing_date__month=month)
+    queryset = EventPage.objects.live().public().filter(publishing_date__year=year, publishing_date__month=month).exclude(path__startswith='00010002')
     for event_page in queryset:
         events.append({
             "title": event_page.title,

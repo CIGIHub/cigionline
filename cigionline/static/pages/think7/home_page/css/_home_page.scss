@@ -81,7 +81,7 @@ body {
   .task-forces {
     background-color: $think7_bg_grey;
     margin: 0;
-    padding: 3rem 0 7rem;
+    padding: 3rem 0 6rem;
 
     .task-forces-list {
       @include media-breakpoint-down(md) {

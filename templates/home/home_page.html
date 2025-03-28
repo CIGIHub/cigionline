@@ -8,7 +8,7 @@
   {% render_bundle 'homePage' 'js' attrs='defer' %}
 {% endblock %}
 
-{% block body_class %}homepage{% endblock %}
+{% block body_class %}homepage {% if self.banner_text %}with-banner{% endif %}{% endblock %}
 
 {% block header %}
   {% include "includes/top_bar.html" %}

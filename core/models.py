@@ -534,10 +534,14 @@ class ContentPage(Page, SearchablePageAbstract):
             topics__in=self.topics.values_list('id', flat=True),
             publishing_date__isnull=False,
             eventpage__isnull=True
-        ).exclude(id__in=exclude_ids).exclude(
+        ).exclude(
+            id__in=exclude_ids
+        ).exclude(
             articlepage__article_type__title='CIGI in the News'
         ).exclude(
             publicationpage__publication_type__title='Working Paper'
+        ).exclude(
+            path__startswith='00010002'
         ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_content)])
 
         recommended_content = list(recommended_content) + additional_content

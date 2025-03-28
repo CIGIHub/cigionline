@@ -10,10 +10,13 @@ body {
   );
 
   section {
+    margin: 3rem 0;
+
     &.hero {
       background-size: cover;
       background-position: 80%;
       background-repeat: no-repeat;
+      margin-top: 0;
 
       .hero-container {
         .hero-main {
@@ -43,7 +46,7 @@ body {
         font-size: 0.75em;
         margin-bottom: 0;
         text-transform: uppercase;
-    
+
         li {
           color: $cigi-text-grey;
           display: inline;
@@ -121,6 +124,10 @@ body {
           margin-bottom: 0;
         }
       }
+
+      .embedded-video-block {
+        margin: 0;
+      }
     }
 
     &.ogbv-acknowledgements {
@@ -131,6 +138,20 @@ body {
         justify-content: center;
         align-items: center;
         height: 100%;
+      }
+    }
+
+    &.search-table-section {
+      margin: 0;
+    }
+  }
+
+  .persons-list-block {
+    .persons-list {
+      li {
+        &:last-child {
+          padding-bottom: 0;
+        }
       }
     }
   }

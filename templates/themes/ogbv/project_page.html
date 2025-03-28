@@ -115,13 +115,27 @@
     </section>
   {% endif %}
 
-  {% include "includes/body.html" with body=self.body heading="about" %}
+  <section class="body" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <h2 class="paragraph-heading">About</h2>
+        </div>
+      </div>
+    </div>
+    {% for block in self.body %}
+      {% with type=block.block_type %}
+        {% if type != 'additional_disclaimer' and type != 'additional_file' and type != 'embedded_video' and type != 'image' %}
+          {% include_block block %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </section>
 
   <section class="ogbv-resources">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
-          <hr>
           <h2 class="paragraph-heading">Resources</h2>
         </div>
         {% for file in self.related_files %}
@@ -140,7 +154,101 @@
         {% endfor %}
       </div>
     </div> 
-  </section> 
+    {% for block in self.body %}
+      {% with type=block.block_type %}
+        {% if type == 'embedded_video' or type == 'image' %}
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-10 col-lg-8">
+                <hr>
+              </div>
+            </div>
+          </div>
+          {% include_block block %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </section>
+  {% if self.members.all %}
+    <section class="persons-list-block">
+      <div class="container">
+        <div class="row d-block">
+          <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <h2 class="paragraph-heading">Team Members</h2>
+            <ul class="persons-list">
+              {% for member in self.members.all %}
+                <li>
+                  <div class="person-info">
+                    <a href="{{ member.url }}" class="person-photo">
+                      <div class="img-wrapper">
+                        {% if member.member.image_square %}
+                          {% image member.member.image_square fill-300x300 %}
+                        {% endif %}
+                      </div>
+                    </a>
+            
+                    <div>
+                      <a href="{{ member.member.url }}" class="person-name">{{ member.member.title }}</a>
+                      <div class="person-function">
+                        {{ member.member.position }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="person-description">
+                    {{ member.member.short_bio|safe }}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% if self.additional_members %}
+    {% for block in self.additional_members %}
+      <section class="persons-list-block">
+        <div class="container">
+          <div class="row d-block">
+            <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+              <h2 class="paragraph-heading">{{ block.value.title }}</h2>
+              <ul class="persons-list">
+                {% for member in block.value.persons %}
+                  <li>
+                    <div class="person-info">
+                      <a href="{{ member.url }}" class="person-photo">
+                        <div class="img-wrapper">
+                          {% if member.value.image_square %}
+                            {% image member.value.image_square fill-300x300 %}
+                          {% endif %}
+                        </div>
+                      </a>
+              
+                      <div>
+                        <a href="{{ member.value.url }}" class="person-name">{{ member.value.title }}</a>
+                        <div class="person-function">
+                          {{ member.value.position }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="person-description">
+                      {% if block.value.bio_source_field and block.value.bio_source_field == 'short_bio' %}
+                        {{ member.value.short_bio|safe }}
+                      {% else %}
+                        {% for block in member.value.body %}
+                          {{ block.value|safe }}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+  {% endif %}
   <section class="ogbv-acknowledgements">
     <div class="container">
       <div class="row justify-content-center">
@@ -167,7 +275,7 @@
       </div>
     </div>
   </section>
-  <section>
+  <section class="search-table-section">
     <div class="container">
       <div class="row">
         <div class="col-12">

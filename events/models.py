@@ -80,6 +80,11 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
             context['featured_events'] = self.get_featured_events()
         return context
 
+    def get_template(self, request, *args, **kwargs):
+        if self.get_site().site_name == 'Think 7 Canada':
+            return 'think7/event_list_page.html'
+        return super().get_template(request, *args, **kwargs)
+
     class Meta:
         verbose_name = 'Event List Page'
 
@@ -170,6 +175,14 @@ class EventPage(
         AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
 
     embed_youtube = models.URLField(blank=True)
+    event_agenda = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Event agenda',
+    )
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
     event_end = models.DateTimeField(blank=True, null=True)
     event_format = models.CharField(
@@ -202,6 +215,7 @@ class EventPage(
         verbose_name='Multimedia',
     )
     registration_url = models.URLField(blank=True, max_length=512)
+    registration_text = models.CharField(blank=True, max_length=64)
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -336,6 +350,10 @@ class EventPage(
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(EventPage, self).get_template(request, *args, **kwargs)
+
+        if self.get_site().site_name == 'Think 7 Canada':
+            return 'think7/event_page.html'
+
         if self.theme:
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
@@ -363,6 +381,7 @@ class EventPage(
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
                 FieldPanel('registration_url'),
+                FieldPanel('registration_text'),
             ],
             heading='Event Details',
             classname='collapsible collapsed',
@@ -390,6 +409,7 @@ class EventPage(
         MultiFieldPanel(
             [
                 FieldPanel('embed_youtube'),
+                FieldPanel('event_agenda'),
                 FieldPanel('related_files'),
             ],
             heading='Media',
