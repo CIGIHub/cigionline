@@ -40,6 +40,33 @@ $framework-slide-pink: #ea6aaa;
   }
 }
 
+@keyframes panX {
+  0% {
+    background-position-x: 48%;
+  }
+  100% {
+    background-position-x: 52%;
+  }
+}
+
+@keyframes panY {
+  0% {
+    background-position-y: 50%;
+  }
+  100% {
+    background-position-y: 47%;
+  }
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
 .strategic-plan-slide {
   &.title-slide {
     h1 {
@@ -73,6 +100,14 @@ $framework-slide-pink: #ea6aaa;
       position: absolute;
       z-index: -1;
     }
+
+    .background-image {
+      animation: panX 34s ease-in-out infinite alternate,
+        panY 42s ease-in-out infinite alternate,
+        zoom 27s ease-in-out infinite alternate;
+      background-size: cover;
+      background-position: center;
+    }
   }
 
   &.toc {
@@ -86,6 +121,14 @@ $framework-slide-pink: #ea6aaa;
       left: 0;
       position: absolute;
       z-index: -1;
+    }
+
+    .background-image {
+      animation: panX 34s ease-in-out infinite alternate,
+        panY 42s ease-in-out infinite alternate,
+        zoom 27s ease-in-out infinite alternate;
+      background-size: cover;
+      background-position: center;
     }
   }
 
