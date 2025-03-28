@@ -42,7 +42,9 @@ const StrategicPlanRegularSlide = ({ slide }) => {
             {slide.slide_title && (
               <h1 aria-live="assertive">{slide.slide_title}</h1>
             )}
-            {slide.slide_subtitle && <p class="subtitle">{slide.slide_subtitle}</p>}
+            {slide.slide_subtitle && (
+              <p class="subtitle">{slide.slide_subtitle}</p>
+            )}
           </motion.div>
         </div>
 
@@ -57,8 +59,25 @@ const StrategicPlanRegularSlide = ({ slide }) => {
             <div
               key={index}
               className={`${columnClass} regular-slide__content__column`}
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
+            >
+              <div dangerouslySetInnerHTML={{ __html: content }} />
+              {slide.slide_content.board && (
+                <>
+                  <h2>Board</h2>
+                  <div className="regular-slide__content__board">
+                    {slide.slide_content.board[0].map((member, index) => (
+                      <div
+                        key={`board-member-${index}`}
+                        className="regular-slide__content__board__member"
+                      >
+                        <div className="member-name">{member.name}</div>
+                        <div className="member-title">{member.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           ))}
         </motion.div>
       </div>

@@ -67,6 +67,10 @@ $framework-slide-pink: #ea6aaa;
   }
 }
 
+.strategic-plan-spa {
+  position: relative;
+}
+
 .strategic-plan-slide {
   &.title-slide {
     h1 {
@@ -287,6 +291,20 @@ $framework-slide-pink: #ea6aaa;
       p {
         font-size: 0.9rem;
       }
+    }
+  }
+
+  .regular-slide__content__board {
+    columns: 2;
+
+    .regular-slide__content__board__member {
+      margin-bottom: 0.5rem;
+    }
+
+    .member-title {
+      text-transform: uppercase;
+      font-weight: 300;
+      font-size: 15px;
     }
   }
 }
@@ -538,5 +556,48 @@ $framework-slide-pink: #ea6aaa;
         color: $cigi-primary-colour;
       }
     }
+  }
+}
+
+.vertical-title-container {
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  bottom: 1rem;
+  z-index: 1;
+
+  svg {
+    width: 40px;
+    fill: $white;
+  }
+
+  .vertical-title {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 16px;
+    font-weight: 300;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .vertical-line {
+    width: 1px;
+    background: $white;
+    margin: 0.5rem 0;
+    flex: auto;
+  }
+
+  .page-num {
+    border-top: 2px solid $white;
+    width: 20px;
+    text-align: center;
   }
 }

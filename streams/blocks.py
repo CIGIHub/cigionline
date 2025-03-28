@@ -1566,8 +1566,17 @@ class SPSlideFrameworkBlock(blocks.StructBlock):
         PINK = ('pink', 'Pink')
         BLUE = ('blue', 'Blue')
         MULTI = ('multi', 'Multi')
-        
+
     title = blocks.CharBlock(required=True)
     subtitle = blocks.CharBlock(required=True)
     text = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'coloured'])
     colour = blocks.ChoiceBlock(choices=COLOURS.choices, required=False)
+
+
+class SPSlideBoardBlock(blocks.StructBlock):
+    board_members = blocks.StreamBlock([
+        ('member', blocks.StructBlock([
+            ('name', blocks.CharBlock(required=True)),
+            ('title', blocks.CharBlock(required=True)),
+        ])),
+    ])

@@ -9,6 +9,7 @@ import AnnualReportNav from '../AnnualReportNav';
 import AnnualReportHamburgerMenu from '../AnnualReportHamburgerMenu';
 import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
 import StrategicPlanTimelineSlide from './StrategicPlanTimelineSlide';
+import StrategicPlanVerticalTitle from './StrategicPlanVerticalTitle';
 
 const slideComponents = {
   title: StrategicPlanTitleSlide,
@@ -172,6 +173,9 @@ const StrategicReportSlide = ({ slides, basePath }) => {
           </div>
         )}
       </div>
+      {['regular', 'framework', 'timeline'].includes(
+        currentSlide.slide_type,
+      ) && <StrategicPlanVerticalTitle currentIndex={currentIndex} slide={slides[currentIndex]} />}
     </>
   );
 };

@@ -7,7 +7,7 @@ from core.models import (
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
-from streams.blocks import ARSlideChooserBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from streams.blocks import ARSlideChooserBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -311,6 +311,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
             ("column", RichTextBlock()),
             ("acknowledgements", RichTextBlock()),
             ("framework_block", SPSlideFrameworkBlock()),
+            ("board", SPSlideBoardBlock()),
         ],
         blank=True,
         help_text="Content of the slide",
@@ -332,6 +333,10 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         choices=ALIGNMENT_CHOICES,
         blank=True,
         help_text="Alignment of the columns (only for regular slides)",
+    )
+    display_vertical_title = models.BooleanField(
+        default=True,
+        help_text="Display the title vertically",
     )
 
     content_panels = Page.content_panels + [
@@ -379,6 +384,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
             'columns': [],
             'acknowledgements': [],
             'framework_blocks': [],
+            'board': [],
         }
 
         for block in self.strategic_plan_slide_content:
@@ -394,6 +400,12 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
                     'colour': block.value['colour'],
                 }
                 content['framework_blocks'].append(block)
+            elif block.block_type == 'board':
+                member_block = [{
+                    'title': member.value['title'],
+                    'name': member.value['name'],
+                } for member in block.value['board_members']]
+                content['board'].append(member_block)
 
         if not content['columns']:
             content.pop('columns')
@@ -401,6 +413,8 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
             content.pop('acknowledgements')
         if not content['framework_blocks']:
             content.pop('framework_blocks')
+        if not content['board']:
+            content.pop('board')
         return content
 
     def serve(self, request):
