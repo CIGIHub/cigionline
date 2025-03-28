@@ -1,11 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import EventListing from '../../js/components/EventListing';
 import SearchTable from '../../js/components/SearchTable';
 import EventCalendar from '../../js/components/EventCalendar';
 import './css/_event_list_page.scss';
 
-ReactDOM.render(
+const rootSearch = createRoot(document.getElementById('events-search-table'));
+rootSearch.render(
   <SearchTable
     showSearch
     contenttypes={['Event']}
@@ -18,98 +19,138 @@ ReactDOM.render(
       'registration_url',
       'topics',
     ]}
-    filterTypes={[{
-      name: 'CIGI Sponsored',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'CIGI Sponsored',
-      }],
-    }, {
-      name: 'Cinema Series',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Cinema Series',
-      }],
-    }, {
-      name: 'Community Event',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Community Event',
-      }],
-    }, {
-      name: 'Conference',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Conference',
-      }],
-    }, {
-      name: 'Global Policy Forum',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Global Policy Forum',
-      }],
-    }, {
-      name: 'Noon Lecture Series',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Noon Lecture Series',
-      }],
-    }, {
-      name: 'Panel Discussion',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Panel Discussion',
-      }],
-    }, {
-      name: 'Publication Launch',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Publication Launch',
-      }],
-    }, {
-      name: 'Round Table',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Round Table',
-      }],
-    }, {
-      name: 'Seminar',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Seminar',
-      }],
-    }, {
-      name: 'Signature Lecture',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Signature Lecture',
-      }],
-    }, {
-      name: 'Virtual Event',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Virtual Event',
-      }],
-    }, {
-      name: 'Workshop',
-      aggregationField: 'contentsubtypes',
-      params: [{
-        name: 'contentsubtype',
-        value: 'Workshop',
-      }],
-    }]}
+    filterTypes={[
+      {
+        name: 'CIGI Sponsored',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'CIGI Sponsored',
+          },
+        ],
+      },
+      {
+        name: 'Cinema Series',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Cinema Series',
+          },
+        ],
+      },
+      {
+        name: 'Community Event',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Community Event',
+          },
+        ],
+      },
+      {
+        name: 'Conference',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Conference',
+          },
+        ],
+      },
+      {
+        name: 'Global Policy Forum',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Global Policy Forum',
+          },
+        ],
+      },
+      {
+        name: 'Noon Lecture Series',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Noon Lecture Series',
+          },
+        ],
+      },
+      {
+        name: 'Panel Discussion',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Panel Discussion',
+          },
+        ],
+      },
+      {
+        name: 'Publication Launch',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Publication Launch',
+          },
+        ],
+      },
+      {
+        name: 'Round Table',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Round Table',
+          },
+        ],
+      },
+      {
+        name: 'Seminar',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Seminar',
+          },
+        ],
+      },
+      {
+        name: 'Signature Lecture',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Signature Lecture',
+          },
+        ],
+      },
+      {
+        name: 'Virtual Event',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Virtual Event',
+          },
+        ],
+      },
+      {
+        name: 'Workshop',
+        aggregationField: 'contentsubtypes',
+        params: [
+          {
+            name: 'contentsubtype',
+            value: 'Workshop',
+          },
+        ],
+      },
+    ]}
     containerClass={['custom-theme-table', 'table-events']}
     RowComponent={EventListing}
     tableColumns={[
@@ -131,10 +172,7 @@ ReactDOM.render(
       },
     ]}
   />,
-  document.getElementById('events-search-table'),
 );
 
-ReactDOM.render(
-  <EventCalendar />,
-  document.getElementById('event-list-calendar'),
-);
+const rootCalendar = createRoot(document.getElementById('event-list-calendar'));
+rootCalendar.render(<EventCalendar />);

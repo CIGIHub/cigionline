@@ -2,7 +2,7 @@ import './css/opinion_series_page.scss';
 
 /* global opinionSeriesId */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import PublicationListingSeries from '../../js/components/PublicationListingSeries';
 import SearchTable from '../../js/components/SearchTable';
 
@@ -14,7 +14,8 @@ if (opinionSeriesId) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('opinions-list'));
+root.render(
   <SearchTable
     blockListing
     endpointParams={endpointParams}
@@ -28,5 +29,4 @@ ReactDOM.render(
     ]}
     RowComponent={PublicationListingSeries}
   />,
-  document.getElementById('opinions-list'),
 );

@@ -1547,3 +1547,27 @@ class FilesBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Files'
         template = 'streams/files_block.html'
+
+
+class ARSlideChooserBlock(blocks.StructBlock):
+    """A block that lets editors choose slides for ordering. Used in the Annual Report SPA Page."""
+    slide = blocks.PageChooserBlock(required=True, page_type=["annual_reports.AnnualReportSlidePage"])
+
+
+class SPSlideChooserBlock(blocks.StructBlock):
+    """A block that lets editors choose slides for ordering. Used in the Strategic Plan SPA Page."""
+    slide = blocks.PageChooserBlock(required=True, page_type=["annual_reports.StrategicPlanSlidePage"])
+
+
+class SPSlideFrameworkBlock(blocks.StructBlock):
+    class COLOURS(models.TextChoices):
+        YELLOW = ('yellow', 'Yellow')
+        GREEN = ('green', 'Green')
+        PINK = ('pink', 'Pink')
+        BLUE = ('blue', 'Blue')
+        MULTI = ('multi', 'Multi')
+        
+    title = blocks.CharBlock(required=True)
+    subtitle = blocks.CharBlock(required=True)
+    text = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'coloured'])
+    colour = blocks.ChoiceBlock(choices=COLOURS.choices, required=False)

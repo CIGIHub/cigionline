@@ -1,7 +1,7 @@
 /* global fbq */
 import 'bootstrap/dist/js/bootstrap.bundle';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import CookieConsent from './js/components/CookieConsent';
 import './css/cigionline.scss';
 
@@ -134,10 +134,8 @@ addInlineVideoActions();
 
 const cookieConsentContainer = document.getElementById('cigi-cookie-consent-container');
 if (cookieConsentContainer && !document.cookie.split(';').some((item) => item.includes('cigionline.accept.privacy.notice=1'))) {
-  ReactDOM.render(
-    <CookieConsent />,
-    cookieConsentContainer,
-  );
+  const root = createRoot(cookieConsentContainer);
+  root.render(<CookieConsent />);
 }
 
 // Add Meta pixel tracking to all elements with class 'track-cta'
