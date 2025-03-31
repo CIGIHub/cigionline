@@ -362,6 +362,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         MultiFieldPanel(
             [
                 FieldPanel("include_on_toc"),
+                FieldPanel("display_vertical_title"),
             ],
             heading="Slide Settings",
             classname="collapsible collapsed",
