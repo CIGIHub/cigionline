@@ -12,7 +12,6 @@ const alignmentClasses = {
   full: 'justify-content-start text-start',
 };
 const getTitleColumnClass = (columnSize, columnCount) => {
-  console.log(columnSize, columnCount);
   if (columnSize === 'small' && columnCount === 1) {
     return 'col-lg-4';
   }
@@ -43,7 +42,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
               <h1 aria-live="assertive">{slide.slide_title}</h1>
             )}
             {slide.slide_subtitle && (
-              <p class="subtitle">{slide.slide_subtitle}</p>
+              <p className="subtitle">{slide.slide_subtitle}</p>
             )}
           </motion.div>
         </div>

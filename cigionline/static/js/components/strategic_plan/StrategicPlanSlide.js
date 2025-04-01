@@ -76,11 +76,23 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       }
     };
 
+    let scrollTimeout = null;
+
     const handleScroll = (event) => {
-      if (!canScroll) return;
+      if (!canScroll || isScrolling) return;
+      const SCROLL_THRESHOLD = 30;
+
+      if (Math.abs(event.deltaY) < SCROLL_THRESHOLD) return;
+
+      if (scrollTimeout) return;
+
+      scrollTimeout = setTimeout(() => {
+        scrollTimeout = null;
+      }, 700);
+
       if (event.deltaY > 0) {
         handleNavigation('next');
-      } else if (event.deltaY < 0) {
+      } else {
         handleNavigation('prev');
       }
     };
@@ -93,20 +105,18 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       }
     };
 
+    const handleResize = () => {
+      canScroll = checkScrollCondition();
+    };
+
     window.addEventListener('wheel', handleScroll);
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener(
-      'resize',
-      () => (canScroll = checkScrollCondition()),
-    );
+    window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('wheel', handleScroll);
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener(
-        'resize',
-        () => (canScroll = checkScrollCondition()),
-      );
+      window.removeEventListener('resize', handleResize);
     };
   }, [currentIndex, navigate, isScrolling, slides]);
   useEffect(() => {
@@ -175,7 +185,12 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       </div>
       {['regular', 'framework', 'timeline'].includes(
         currentSlide.slide_type,
-      ) && <StrategicPlanVerticalTitle currentIndex={currentIndex} slide={slides[currentIndex]} />}
+      ) && (
+        <StrategicPlanVerticalTitle
+          currentIndex={currentIndex}
+          slide={slides[currentIndex]}
+        />
+      )}
     </>
   );
 };
