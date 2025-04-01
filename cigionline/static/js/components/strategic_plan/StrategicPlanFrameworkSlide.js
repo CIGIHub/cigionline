@@ -25,7 +25,7 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
           ?.slice(0, 3)
           .map((content, index) => (
             <motion.div
-              key={index}
+              key={`column-${index}`}
               className={`framework-slide__content__column col-lg-4 ${content.colour}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -50,7 +50,7 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
       {slide.slide_content.framework_blocks?.slice(3).map((content, index) => (
         <div className="row">
           <motion.div
-            key={index}
+            key={`column-bottom-${index}`}
             className={`framework-slide__content__column col ${content.colour}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
