@@ -150,6 +150,14 @@ const StrategicReportSlide = ({ slides, basePath }) => {
               backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
             }}
           />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="background-video"
+            src={slides[currentIndex].background_video}
+          />
         </motion.div>
       </AnimatePresence>
       <div
