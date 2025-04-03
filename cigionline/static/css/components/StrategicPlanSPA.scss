@@ -285,7 +285,7 @@ $framework-slide-pink: #ea6aaa;
 
   .navigation-section {
     @include media-breakpoint-down(md) {
-      display: none
+      display: none;
     }
     @include media-breakpoint-up(xl) {
       width: 40%;
@@ -345,10 +345,15 @@ $framework-slide-pink: #ea6aaa;
   }
 
   .regular-slide__content__board {
-    columns: 2;
+    columns: 3;
 
     .regular-slide__content__board__member {
       margin-bottom: 0.5rem;
+      break-inside: avoid;
+    }
+
+    .member-name {
+      font-size: 16px;
     }
 
     .member-title {

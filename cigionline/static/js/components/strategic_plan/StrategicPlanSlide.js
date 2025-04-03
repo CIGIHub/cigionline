@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
@@ -50,22 +50,15 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   const nextSlide =
     currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
+  const canScrollRef = useRef(true);
+
   useEffect(() => {
-    const MIN_SCREEN_WIDTH = 1024;
+    const checkScrollCondition = () => window.innerWidth >= 992;
 
-    const checkScrollCondition = () => {
-      const contentHeight =
-        document.querySelector('.slide-wrapper')?.scrollHeight || 0;
-      const viewportHeight = window.innerHeight;
-      const isLargeScreen = window.innerWidth >= MIN_SCREEN_WIDTH;
-
-      return isLargeScreen && contentHeight <= viewportHeight;
-    };
-
-    let canScroll = checkScrollCondition();
+    canScrollRef.current = checkScrollCondition();
 
     const handleNavigation = (direction) => {
-      if (!canScroll || isScrolling) return;
+      if (!canScrollRef.current || isScrolling) return;
       setIsScrolling(true);
       setTimeout(() => setIsScrolling(false), 600);
 
@@ -79,8 +72,8 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     let scrollTimeout = null;
 
     const handleScroll = (event) => {
-      if (!canScroll || isScrolling) return;
-      const SCROLL_THRESHOLD = 30;
+      if (!canScrollRef.current || isScrolling) return;
+      const SCROLL_THRESHOLD = 75;
 
       if (Math.abs(event.deltaY) < SCROLL_THRESHOLD) return;
 
@@ -106,7 +99,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     };
 
     const handleResize = () => {
-      canScroll = checkScrollCondition();
+      canScrollRef.current = checkScrollCondition();
     };
 
     window.addEventListener('wheel', handleScroll);
