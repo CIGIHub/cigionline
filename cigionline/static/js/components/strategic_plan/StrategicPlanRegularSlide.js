@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const columnClasses = {
-  small: 'col-lg-4',
+  small: 'col-lg-5',
   large: 'col-lg-10',
 };
 const alignmentClasses = {
@@ -13,10 +13,20 @@ const alignmentClasses = {
 };
 const getTitleColumnClass = (columnSize, columnCount) => {
   if (columnSize === 'small' && columnCount === 1) {
-    return 'col-lg-4';
+    return 'col-lg-5';
   }
   if (columnSize === 'small' && columnCount >= 2) {
     return 'col-lg-8';
+  }
+  return 'col-lg-10';
+};
+
+const getColumnClass = (columnSize, columnCount) => {
+  if (columnSize === 'small' && columnCount === 1) {
+    return 'col-lg-5';
+  }
+  if (columnSize === 'small' && columnCount >= 2) {
+    return 'col-lg-4';
   }
   return 'col-lg-10';
 };
@@ -57,7 +67,10 @@ const StrategicPlanRegularSlide = ({ slide }) => {
           {slide.slide_content.columns?.map((content, index) => (
             <div
               key={index}
-              className={`${columnClass} regular-slide__content__column`}
+              className={`${getColumnClass(
+                slide.column_size,
+                slide.slide_content.columns.length,
+              )} regular-slide__content__column`}
             >
               <div dangerouslySetInnerHTML={{ __html: content }} />
               {slide.slide_content.board && (
@@ -90,7 +103,10 @@ const StrategicPlanRegularSlide = ({ slide }) => {
         {slide.slide_content.acknowledgements?.map((content, index) => (
           <div
             key={index}
-            className={`${columnClass} regular-slide__content__acknowledgement`}
+            className={`${getColumnClass(
+              slide.column_size,
+              slide.slide_content.columns.length,
+            )} regular-slide__content__acknowledgement`}
             dangerouslySetInnerHTML={{ __html: content }}
           />
         ))}
