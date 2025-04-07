@@ -33,7 +33,7 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
               transition={{
                 duration: 0.5,
                 ease: 'easeInOut',
-                delay: 1.25 + index,
+                delay: 1 + index,
               }}
             >
               <div className="column-title">
@@ -58,7 +58,7 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
             transition={{
               duration: 0.5,
               ease: 'easeInOut',
-              delay: 4.25 + index,
+              delay: 4 + index,
             }}
           >
             <div className="column-title">
@@ -78,7 +78,7 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
         transition={{
           duration: 0.5,
           ease: 'easeInOut',
-          delay: 5.25,
+          delay: 5,
         }}
       >
         <hr />

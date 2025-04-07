@@ -127,7 +127,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       <AnimatePresence mode="sync">
         <motion.div
           key={`bg-${slug}-${slides[currentIndex].slide_type}`}
-          className={`slide-background ${slides[currentIndex].slide_type}`}
+          className={`slide-background ${gradientClass} ${slides[currentIndex].slide_type}`}
           initial={{ opacity: 0.1, y: 0 }}
           animate={{ opacity: 1, y: -20 }}
           exit={{ opacity: 0, y: -20, transition: { delay: 1 } }}
@@ -148,7 +148,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             loop
             muted
             playsInline
-            className="background-video"
+            className={`background-video ${gradientClass}`}
             src={slides[currentIndex].background_video}
           />
         </motion.div>

@@ -11,7 +11,7 @@ function StrategicPlanVerticalTitle({ currentIndex, slide }) {
           className="vertical-title-container"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 2, ease: 'easeInOut' }}
+          transition={{ duration: 0.6, delay: 1.5, ease: 'easeInOut' }}
         >
           <svg
             className="hide-for-large"
