@@ -73,7 +73,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
     const handleScroll = (event) => {
       if (!canScrollRef.current || isScrolling) return;
-      const SCROLL_THRESHOLD = 75;
+      const SCROLL_THRESHOLD = 60;
 
       if (Math.abs(event.deltaY) < SCROLL_THRESHOLD) return;
 

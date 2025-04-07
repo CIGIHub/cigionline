@@ -25,10 +25,14 @@ const StrategicPlanTitleSlide = ({ slide }) => (
         <motion.div
           className="navigation-section"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 2, ease: 'easeInOut', delay: 0.5 }}
+          animate={{ opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: 8,
+            ease: 'easeInOut',
+            times: [0, 0.2, 0.8, 1],
+            delay: 0.5,
+          }}
         >
-          <p>Use the mouse or keyboard to navigate</p>
           <div>
             <svg width="16px" height="59px" viewBox="0 0 16 59" version="1.1">
               <g
@@ -135,6 +139,7 @@ const StrategicPlanTitleSlide = ({ slide }) => (
               </g>
             </svg>
           </div>
+          <p>Use the mouse or keyboard to navigate</p>
         </motion.div>
       </div>
     </div>
