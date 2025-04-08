@@ -20,31 +20,56 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
         </motion.div>
       </div>
 
-      <div className="row">
+      <div className="columns-row">
         {slide.slide_content.framework_blocks
           ?.slice(0, 3)
           .map((content, index) => (
-            <motion.div
-              key={`column-${index}`}
-              className={`framework-slide__content__column col-lg-4 ${content.colour}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{
-                duration: 0.5,
-                ease: 'easeInOut',
-                delay: 1 + index,
-              }}
-            >
-              <div className="column-title">
+            <>
+              <motion.div
+                key={`column-title-${index}`}
+                className={`column-title column-item ${content.colour} column-${
+                  index + 1
+                } row-1`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{
+                  duration: 0.5,
+                  ease: 'easeInOut',
+                  delay: 1 + index,
+                }}
+              >
                 <h2>{content.title}</h2>
                 <p>
                   <em>{content.subtitle}</em>
                 </p>
-              </div>
-              <hr />
-              <div dangerouslySetInnerHTML={{ __html: content.content }} />
-            </motion.div>
+                <hr />
+              </motion.div>
+              {content.content.map((item, itemIndex) => (
+                <motion.div
+                  key={`framework-item-${index}-${itemIndex}`}
+                  className={`framework-slide__content__item column-item ${
+                    content.colour
+                  } column-${index + 1} row-${itemIndex + 2}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{
+                    duration: 0.5,
+                    ease: 'easeInOut',
+                    delay: 1 + index,
+                  }}
+                >
+                  <div dangerouslySetInnerHTML={{ __html: item }} />
+                  {index === 0 && itemIndex !== content.content.length - 1 && (
+                    <div className="arrows">
+                      <i className="fa-light fa-arrow-up" />
+                      <i className="fa-light fa-arrow-down" />
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </>
           ))}
       </div>
       {slide.slide_content.framework_blocks?.slice(3).map((content, index) => (

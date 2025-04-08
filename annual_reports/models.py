@@ -397,7 +397,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
                 block = {
                     'title': block.value['title'],
                     'subtitle': block.value['subtitle'],
-                    'content': expand_db_html(block.value['text'].source),
+                    'content': [text_block.value.source for text_block in block.value['text_stream']],
                     'colour': block.value['colour'],
                 }
                 content['framework_blocks'].append(block)
@@ -416,6 +416,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
             content.pop('framework_blocks')
         if not content['board']:
             content.pop('board')
+        print(content)
         return content
 
     def serve(self, request):
