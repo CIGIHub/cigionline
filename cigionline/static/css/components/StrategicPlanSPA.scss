@@ -67,6 +67,52 @@ $framework-slide-pink: #ea6aaa;
   }
 }
 
+@keyframes arrowBounceUp {
+  0% {
+    transform: translateY(1px);
+    opacity: 0.5;
+  }
+  20% {
+    transform: translateY(1px);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-1px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(1px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(1px);
+    opacity: 0.5;
+  }
+}
+
+@keyframes arrowBounceDown {
+  0% {
+    transform: translateY(-1px);
+    opacity: 0.5;
+  }
+  20% {
+    transform: translateY(-1px);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(1px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-1px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-1px);
+    opacity: 0.5;
+  }
+}
+
 .strategic-plan-spa {
   position: relative;
 }
@@ -411,6 +457,13 @@ $framework-slide-pink: #ea6aaa;
 }
 
 .framework-slide {
+  @include media-breakpoint-up(md) {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+  }
   p {
     line-height: 1.25;
     margin-bottom: 0;
@@ -460,6 +513,12 @@ $framework-slide-pink: #ea6aaa;
     .column-title {
       position: relative;
       text-align: center;
+
+      &:not(:first-child) {
+        @include media-breakpoint-down(md) {
+          margin-top: 2em;
+        }
+      }
 
       p {
         width: 15em;
@@ -557,6 +616,14 @@ $framework-slide-pink: #ea6aaa;
 
     i {
       margin: 0 0.25em;
+    }
+
+    .fa-arrow-up {
+      animation: arrowBounceUp 4s ease-in-out infinite;
+    }
+
+    .fa-arrow-down {
+      animation: arrowBounceDown 4s ease-in-out infinite;
     }
   }
 
@@ -810,5 +877,34 @@ $framework-slide-pink: #ea6aaa;
     border-top: 2px solid $white;
     width: 20px;
     text-align: center;
+  }
+}
+
+ul {
+  &.social-links {
+    list-style: none;
+    display: flex;
+    padding: 0;
+
+    li {
+      padding: 0 0.5em;
+      height: 25px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      a {
+        color: $white;
+
+        svg {
+          width: 1.15rem;
+          height: 1.15rem;
+          fill: $white;
+          margin-bottom: 0.3rem;
+          transition: fill 0.2s ease;
+        }
+      }
+    }
   }
 }
