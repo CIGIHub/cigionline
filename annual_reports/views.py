@@ -86,10 +86,16 @@ def get_ordered_slides_strategic_plan(request, page_id):
     slide_map = {slide.id: slide for slide in slides}
     ordered_slides = [slide_map[id] for id in slide_ids if id in slide_map]
 
-    response_data = {
-        "slides": [
-            {
-                "id": slide.id,
+    slides = []
+    for slide in ordered_slides:
+        if slide.background_images:
+            background_image = slide.background_images[0].value.get_rendition('fill-1920x1080').file.url
+            background_image_thumbnail = slide.background_images[0].value.get_rendition('fill-384x216').file.url
+        else:
+            background_image = slide.background_image.get_rendition('fill-1920x1080').file.url if slide.background_image else ''
+            background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
+        slides.append({
+            "id": slide.id,
                 "title": slide.title,
                 "slug": slide.slug,
                 "slide_title": slide.slide_title,
@@ -97,17 +103,21 @@ def get_ordered_slides_strategic_plan(request, page_id):
                 "slide_content": slide.get_strategic_plan_slide_content(),
                 "slide_type": slide.slide_type,
                 "slide_theme": slide.slide_theme,
-                "background_image": slide.background_image.get_rendition('fill-3000x2000').file.url if slide.background_image else '',
-                "background_image_thumbnail": slide.background_image.get_rendition('fill-300x200').file.url if slide.background_image else '',
+                "background_image": background_image,
+                "background_images": [
+                    image.value.get_rendition('fill-1920x1080').file.url for image in slide.background_images
+                ],
+                "background_image_thumbnail": background_image_thumbnail,
                 "background_video": slide.background_video.file.url if slide.background_video else '',
                 "background_colour": slide.background_colour.replace("_", "-"),
                 "display_vertical_title": slide.display_vertical_title,
                 "include_on_toc": slide.include_on_toc,
                 "column_size": slide.column_size,
                 "alignment": slide.alignment,
-            }
-            for slide in ordered_slides
-        ]
+        })
+
+    response_data = {
+        "slides": slides,
     }
 
     return JsonResponse(response_data)

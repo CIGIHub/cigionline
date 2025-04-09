@@ -38,6 +38,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
   const gradientClass = getGradientClass(slides[currentIndex].alignment);
@@ -115,6 +116,12 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   useEffect(() => {
     setContentVisible(false);
   }, [slug]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImageIndex((prev) => (prev + 1) % slides[currentIndex].background_images.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const currentSlide = slides[currentIndex];
   const SlideComponent =
@@ -138,11 +145,27 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             className={`background-colour ${slides[currentIndex].background_colour}`}
           />
           <div
-            className={`background-image ${gradientClass} columns-${slides[currentIndex].slide_content.columns?.length}`}
+            className="background-image"
             style={{
               backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
             }}
           />
+          {slides[currentIndex].background_images && (
+            <>
+              {slides[currentIndex].background_images.map((image, index) => (
+                <motion.div
+                  key={`bg-image-${index}`}
+                  className={`background-image background-images-${index}`}
+                  style={{
+                    backgroundImage: `url(${image})`,
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: imageIndex === index ? 1 : 0 }}
+                  transition={{ duration: 2 }}
+                />
+              ))}
+            </>
+          )}
           <video
             autoPlay
             loop

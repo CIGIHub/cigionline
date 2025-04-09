@@ -16,6 +16,7 @@ from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
 from wagtail.rich_text import expand_db_html
+from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
 
 
@@ -210,6 +211,13 @@ class SlidePageAbstract(models.Model):
         related_name="+",
         help_text="Background image for the slide",
     )
+    background_images = StreamField(
+        [
+            ("image", ImageChooserBlock()),
+        ],
+        blank=True,
+        help_text="Additional background images for the slide",
+    )
     background_video = models.ForeignKey(
         Media,
         null=True,
@@ -355,6 +363,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
                 FieldPanel("background_image"),
                 FieldPanel("background_video"),
                 FieldPanel("background_colour"),
+                FieldPanel("background_images"),
             ],
             heading="Background",
             classname="collapsible collapsed",
@@ -416,7 +425,6 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
             content.pop('framework_blocks')
         if not content['board']:
             content.pop('board')
-        print(content)
         return content
 
     def serve(self, request):
