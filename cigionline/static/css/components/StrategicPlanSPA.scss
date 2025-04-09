@@ -72,31 +72,112 @@ $framework-slide-pink: #ea6aaa;
 }
 
 .strategic-plan-slide {
+  @include media-breakpoint-up(md) {
+    padding: 5em 0;
+  }
+  @media screen and (min-width: 2000px) {
+    font-size: 1.25rem;
+  }
+  padding: 3em 0;
+  color: white;
+
   &.title-slide {
     h1 {
-      @include media-breakpoint-up(md) {
-        font-size: 3.5rem;
+      @include media-breakpoint-up(lg) {
+        font-size: 3.5em;
       }
-      font-size: 2.5rem;
+      font-size: 2.5em;
       font-weight: 400;
     }
 
     p {
-      font-size: 1.25rem;
+      font-size: 1.25em;
     }
+
+    .large-logo {
+      width: 150px;
+      fill: $white;
+      transition: fill 0.3s ease;
+
+      &:hover {
+        fill: $cigi-primary-colour;
+      }
+    }
+
+    .title-slide__title {
+      padding-top: 10em;
+
+      p {
+        font-size: 1em;
+      }
+    }
+
+    .title-slide__content {
+      font-size: 1.5em;
+    }
+
+    .navigation-section {
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+      @include media-breakpoint-up(xl) {
+        width: 40%;
+      }
+      margin-top: 15vh;
+      width: 50%;
+      display: flex;
+      align-items: center;
+
+      p {
+        width: 50%;
+        font-size: 12px;
+        margin: 0;
+      }
+
+      svg {
+        &:first-child {
+          height: 45px;
+          margin-right: 0.25em;
+        }
+
+        &:last-child {
+          margin-right: 0.75em;
+        }
+      }
+
+      .up-down-icon {
+        transform: scale(0.8);
+      }
+    }
+  }
+
+  h1 {
+    font-size: clamp(1.25em, 5vw, 2em);
+    font-weight: 400;
+    &::before {
+      animation-duration: 1.25s;
+      animation-name: slideTitleLineExpand;
+      border-bottom: 8px solid #e6023b;
+      margin: 0 0 0.5em;
+      width: 75px;
+      animation-timing-function: ease-in-out;
+      display: block;
+      content: '';
+    }
+  }
+
+  ul {
+    padding-left: 1.5em;
   }
 
   p {
-    font-size: 16px;
+    font-size: 0.88em;
+    line-height: 1.25;
 
     &.subtitle {
-      font-size: 1.1rem;
+      font-size: 1.1em;
     }
   }
-}
-
-h1 {
-  font-weight: 400;
 }
 
 .slide-background {
@@ -248,105 +329,16 @@ h1 {
   }
 }
 
-.strategic-plan-slide {
-  @include media-breakpoint-up(md) {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0;
-  }
-  padding: 3rem 0;
-  color: white;
-
-  h1 {
-    font-size: clamp(1.25rem, 5vw, 2rem);
-
-    &::before {
-      animation-duration: 1.25s;
-      animation-name: slideTitleLineExpand;
-      border-bottom: 8px solid #e6023b;
-      margin: 0 0 0.5rem;
-      width: 75px;
-      animation-timing-function: ease-in-out;
-      display: block;
-      content: '';
-    }
-  }
-
-  ul {
-    padding-left: 1.5rem;
-  }
-}
-
-.title-slide {
-  .large-logo {
-    width: 150px;
-    fill: $white;
-    transition: fill 0.3s ease;
-
-    &:hover {
-      fill: $cigi-primary-colour;
-    }
-  }
-
-  .title-slide__title {
-    padding-top: 10rem;
-
-    p {
-      font-size: 1rem;
-    }
-  }
-
-  .title-slide__content {
-    font-size: 1.5rem;
-  }
-
-  .navigation-section {
-    @include media-breakpoint-down(md) {
-      display: none;
-    }
-    @include media-breakpoint-up(xl) {
-      width: 40%;
-    }
-    margin-top: 15vh;
-    width: 50%;
-    display: flex;
-    align-items: center;
-
-    p {
-      width: 50%;
-      font-size: 12px;
-      margin: 0;
-    }
-
-    svg {
-      &:first-child {
-        height: 45px;
-        margin-right: 0.25rem;
-      }
-
-      &:last-child {
-        margin-right: 0.75rem;
-      }
-    }
-
-    .up-down-icon {
-      transform: scale(0.8);
-    }
-  }
-}
-
 .regular-slide {
   line-height: 1.25;
 
   .regular-slide__title {
-    margin-bottom: 2rem;
+    margin-bottom: 2em;
   }
 
   h2 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
     font-weight: 400;
   }
 
@@ -357,7 +349,7 @@ h1 {
   &.full {
     .regular-slide__content__acknowledgement {
       p {
-        font-size: 0.9rem;
+        font-size: 0.9em;
       }
     }
   }
@@ -366,47 +358,49 @@ h1 {
     columns: 3;
 
     .regular-slide__content__board__member {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.5em;
       break-inside: avoid;
     }
 
     .member-name {
-      font-size: 16px;
+      font-size: 0.88em;
     }
 
     .member-title {
       text-transform: uppercase;
       font-weight: 300;
-      font-size: 15px;
+      font-size: 0.88em;
     }
   }
 }
 
 .table-of-contents {
+  width: 70%;
+
   h1 {
-    margin-bottom: 3rem;
+    margin-bottom: 3em;
   }
 
   ol {
-    padding-left: 3rem;
+    padding-left: 3em;
     list-style: none;
     counter-reset: custom-counter 1;
 
     li {
       @include media-breakpoint-up(md) {
-        font-size: 1.25rem;
+        font-size: 1.25em;
       }
       counter-increment: custom-counter;
       position: relative;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
+      font-size: 1.1em;
+      margin-bottom: 1em;
 
       &::before {
         content: counter(custom-counter);
         color: $cigi-primary-colour;
         font-weight: 500;
         position: absolute;
-        left: -2rem;
+        left: -2em;
       }
 
       a {
@@ -418,13 +412,12 @@ h1 {
 
 .framework-slide {
   p {
-    font-size: 15px;
     line-height: 1.25;
     margin-bottom: 0;
   }
 
   h1 {
-    margin-bottom: 2rem;
+    margin-bottom: 2em;
   }
 
   .columns-row {
@@ -434,7 +427,7 @@ h1 {
       grid-template-rows: repeat(5, auto);
     }
     margin: 0 -15px;
-    margin-bottom: 1rem;
+    margin-bottom: 1em;
 
     .column-1 {
       grid-column: 1;
@@ -469,8 +462,8 @@ h1 {
       text-align: center;
 
       p {
-        width: 15rem;
-        margin: 0 auto
+        width: 15em;
+        margin: 0 auto;
       }
 
       h2 {
@@ -560,10 +553,10 @@ h1 {
   .arrows {
     display: flex;
     justify-content: center;
-    margin: 0.4rem 0;
+    margin: 0.4em 0;
 
     i {
-      margin: 0 0.25rem;
+      margin: 0 0.25em;
     }
   }
 
@@ -651,26 +644,23 @@ h1 {
 
     .column-title {
       text-align: center;
-      padding-top: 0.75rem;
+      padding-top: 0.75em;
 
       h2 {
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.25em;
       }
 
       p {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.5em;
       }
     }
 
     hr {
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
     }
 
     p {
-      line-height: 1.25;
-      font-size: 15px;
-
       a {
         @include link-underline;
       }
@@ -688,7 +678,7 @@ h1 {
 
 .timeline-slide {
   line-height: 1.25;
-  font-size: 15px;
+  font-size: 0.88em;
 
   .timeline-container {
     position: relative;
@@ -727,38 +717,38 @@ h1 {
         background: $framework-slide-yellow;
         width: 100%;
         bottom: 48px;
-        left: 0.75rem;
-        width: calc(22.22% - 0.333rem);
+        left: 0.75em;
+        width: calc(22.22% - 0.333em);
       }
 
       &.timeline-bar-2 {
         background: $framework-slide-green;
         width: 100%;
         bottom: 58px;
-        left: calc(22.22% + 0.4166rem);
-        width: calc(44.44% - 0.6667rem);
+        left: calc(22.22% + 0.4166em);
+        width: calc(44.44% - 0.6667em);
       }
 
       &.timeline-bar-3 {
         background: $cigi-primary-colour;
         width: 100%;
         bottom: 68px;
-        right: 0.75rem;
-        width: calc(33.33% - 0.5rem);
+        right: 0.75em;
+        width: calc(33.33% - 0.5em);
       }
     }
 
     .month-container {
       position: relative;
-      width: 1.5rem;
+      width: 1.5em;
     }
   }
 
   .slide-content {
     @include media-breakpoint-up(md) {
-      margin-top: 3rem;
+      margin-top: 3em;
     }
-    margin-top: 1rem;
+    margin-top: 1em;
 
     .column-0 {
       h2 {
@@ -790,9 +780,9 @@ h1 {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  left: 1rem;
-  top: 1rem;
-  bottom: 1rem;
+  left: 1em;
+  top: 1em;
+  bottom: 1em;
   z-index: 1;
 
   svg {
@@ -812,7 +802,7 @@ h1 {
   .vertical-line {
     width: 1px;
     background: $white;
-    margin: 0.5rem 0;
+    margin: 0.5em 0;
     flex: auto;
   }
 
