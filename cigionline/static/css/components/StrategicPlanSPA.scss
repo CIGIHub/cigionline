@@ -198,8 +198,9 @@ $framework-slide-pink: #ea6aaa;
   }
 
   h1 {
-    font-size: clamp(1.25em, 5vw, 2em);
+    font-size: clamp(1.5em, 5vw, 2em);
     font-weight: 400;
+
     &::before {
       animation-duration: 1.25s;
       animation-name: slideTitleLineExpand;
@@ -443,7 +444,7 @@ $framework-slide-pink: #ea6aaa;
   }
 
   .columns-row {
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(lg) {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(5, auto);
@@ -480,14 +481,11 @@ $framework-slide-pink: #ea6aaa;
     }
 
     .column-title {
+      @include media-breakpoint-down(md) {
+        margin-top: 3em;
+      }
       position: relative;
       text-align: center;
-
-      &:not(:first-child) {
-        @include media-breakpoint-down(md) {
-          margin-top: 2em;
-        }
-      }
 
       p {
         width: 15em;

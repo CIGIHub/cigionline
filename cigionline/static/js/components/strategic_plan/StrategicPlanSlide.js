@@ -42,6 +42,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
   const gradientClass = getGradientClass(slides[currentIndex].alignment);
+  const timerRef = useRef(null);
 
   if (currentIndex === -1) {
     return <Navigate to={`/${slides[0].slug}`} replace />;
@@ -113,15 +114,25 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       window.removeEventListener('resize', handleResize);
     };
   }, [currentIndex, navigate, isScrolling, slides]);
+
   useEffect(() => {
     setContentVisible(false);
   }, [slug]);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setImageIndex((prev) => (prev + 1) % slides[currentIndex].background_images.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+    const images = slides[currentIndex]?.background_images;
+    if (!images || images.length <= 1) return;
+
+    setImageIndex(0);
+
+    if (timerRef.current) clearInterval(timerRef.current);
+
+    timerRef.current = setInterval(() => {
+      setImageIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+
+    () => clearInterval(timerRef.current);
+  }, [currentIndex]);
 
   const currentSlide = slides[currentIndex];
   const SlideComponent =
