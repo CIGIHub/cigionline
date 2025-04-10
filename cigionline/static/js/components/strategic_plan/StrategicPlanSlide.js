@@ -10,6 +10,7 @@ import AnnualReportHamburgerMenu from '../AnnualReportHamburgerMenu';
 import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
 import StrategicPlanTimelineSlide from './StrategicPlanTimelineSlide';
 import StrategicPlanVerticalTitle from './StrategicPlanVerticalTitle';
+import usePreloadSlideAssets from './usePreloadSlideAssets';
 
 const slideComponents = {
   title: StrategicPlanTitleSlide,
@@ -43,6 +44,8 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
   const gradientClass = getGradientClass(slides[currentIndex].alignment);
   const timerRef = useRef(null);
+
+  usePreloadSlideAssets(slides);
 
   if (currentIndex === -1) {
     return <Navigate to={`/${slides[0].slug}`} replace />;
@@ -139,6 +142,16 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     slideComponents[slides[currentIndex].slide_type] ||
     (() => <div>Slide type not found</div>);
 
+  useEffect(() => {
+    slides.forEach((slide) => {
+      const images = slide.background_images || [slide.background_image];
+      images.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+    });
+  }, [slides]);
+
   return (
     <>
       <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
@@ -182,6 +195,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             loop
             muted
             playsInline
+            preload="auto"
             className={`background-video ${gradientClass}`}
             src={slides[currentIndex].background_video}
           />

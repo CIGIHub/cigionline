@@ -67,21 +67,21 @@ const StrategicPlanTimelineSlide = ({ slide }) => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.75, delay: 1.5, ease: 'easeInOut' }}
+          transition={{ duration: 0.75, delay: 2, ease: 'easeInOut' }}
         />
         <motion.div
           className="timeline-bar timeline-bar-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.75, delay: 2.25, ease: 'easeInOut' }}
+          transition={{ duration: 0.75, delay: 3, ease: 'easeInOut' }}
         />
         <motion.div
           className="timeline-bar timeline-bar-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.75, delay: 3, ease: 'easeInOut' }}
+          transition={{ duration: 0.75, delay: 4, ease: 'easeInOut' }}
         />
       </div>
     </motion.div>
@@ -96,7 +96,7 @@ const StrategicPlanTimelineSlide = ({ slide }) => (
             exit={{ opacity: 0, y: -20 }}
             transition={{
               duration: 0.75,
-              delay: 1.5 + index * 0.75,
+              delay: 2 + index,
               ease: 'easeInOut',
             }}
           >
