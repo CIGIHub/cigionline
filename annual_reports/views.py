@@ -92,8 +92,12 @@ def get_ordered_slides_strategic_plan(request, page_id):
             background_image = slide.background_images[0].value.get_rendition('fill-1920x1080').file.url
             background_image_thumbnail = slide.background_images[0].value.get_rendition('fill-384x216').file.url
         else:
-            background_image = slide.background_image.get_rendition('fill-1920x1080').file.url if slide.background_image else ''
-            background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
+            if slide.slide_type in ['title', 'toc']:
+                background_image = slide.background_image.get_rendition('fill-1920x2160').file.url if slide.background_image else ''
+                background_image_thumbnail = slide.background_image.get_rendition('fill-384x432').file.url if slide.background_image else ''
+            else:
+                background_image = slide.background_image.get_rendition('fill-1920x1080').file.url if slide.background_image else ''
+                background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
         slides.append({
             "id": slide.id,
                 "title": slide.title,

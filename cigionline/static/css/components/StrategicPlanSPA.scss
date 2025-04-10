@@ -262,7 +262,9 @@ $framework-slide-pink: #ea6aaa;
         rgba(0, 0, 0, 0.9),
         rgba(0, 0, 0, 0.8),
         rgba(0, 0, 0, 0.3),
-        transparent
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0.95),
       );
     }
 
@@ -288,7 +290,7 @@ $framework-slide-pink: #ea6aaa;
         rgba(0, 0, 0, 0.9),
         rgba(0, 0, 0, 0.8),
         rgba(0, 0, 0, 0.7),
-        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0),
         rgba(0, 0, 0, 0.8),
         rgba(0, 0, 0, 0.9)
       );
@@ -296,6 +298,12 @@ $framework-slide-pink: #ea6aaa;
   }
 
   &.title {
+    .background-image {
+      width: 50%;
+      left: unset;
+      right: 0;
+    }
+
     .background-colour {
       @include media-breakpoint-up(md) {
         width: 50%;
@@ -316,6 +324,12 @@ $framework-slide-pink: #ea6aaa;
   }
 
   &.toc {
+    .background-image {
+      width: 34%;
+      left: unset;
+      right: 0;
+    }
+
     .background-colour {
       @include media-breakpoint-up(md) {
         width: 66%;
@@ -354,6 +368,10 @@ $framework-slide-pink: #ea6aaa;
 
 .regular-slide {
   line-height: 1.25;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .regular-slide__title {
     margin-bottom: 2em;
