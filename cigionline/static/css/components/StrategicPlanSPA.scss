@@ -433,20 +433,13 @@ $framework-slide-pink: #ea6aaa;
 }
 
 .framework-slide {
-  @include media-breakpoint-up(md) {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    justify-content: center;
-  }
   p {
     line-height: 1.25;
     margin-bottom: 0;
   }
 
   h1 {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
   }
 
   .columns-row {
