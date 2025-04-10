@@ -316,7 +316,9 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
     )
     strategic_plan_slide_content = StreamField(
         [
-            ("column", RichTextBlock()),
+            ("column", RichTextBlock(features=[
+                "bold", "italic", "h2", "h3", "h3", "ol", "ul", "link", "coloured"
+            ])),
             ("acknowledgements", RichTextBlock()),
             ("framework_block", SPSlideFrameworkBlock()),
             ("board", SPSlideBoardBlock()),

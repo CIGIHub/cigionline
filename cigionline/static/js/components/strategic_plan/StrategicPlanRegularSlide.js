@@ -30,6 +30,7 @@ const getColumnClass = (columnSize, columnCount) => {
   }
   return 'col-lg-10';
 };
+
 const StrategicPlanRegularSlide = ({ slide }) => {
   const columnClass = columnClasses[slide.column_size];
   const alignmentClass = alignmentClasses[slide.alignment];
@@ -57,41 +58,65 @@ const StrategicPlanRegularSlide = ({ slide }) => {
           </motion.div>
         </div>
 
-        <motion.div
-          className={`${alignmentClass} row`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.5, ease: 'easeInOut', delay: 1 }}
-        >
-          {slide.slide_content.columns?.map((content, index) => (
-            <div
-              key={index}
-              className={`${getColumnClass(
-                slide.column_size,
-                slide.slide_content.columns.length,
-              )} regular-slide__content__column`}
-            >
-              <div dangerouslySetInnerHTML={{ __html: content }} />
-              {slide.slide_content.board && (
-                <>
-                  <h2>Board</h2>
-                  <div className="regular-slide__content__board">
-                    {slide.slide_content.board[0].map((member, index) => (
-                      <div
-                        key={`board-member-${index}`}
-                        className="regular-slide__content__board__member"
-                      >
-                        <div className="member-name">{member.name}</div>
-                        <div className="member-title">{member.title}</div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-        </motion.div>
+        {slide.slide_content.framework_blocks ? (
+          <div
+            className={`${alignmentClass} row`}
+          >
+            {slide.slide_content.framework_blocks.map((content, index) => (
+              <motion.div
+                key={index}
+                className={`${getColumnClass(
+                  slide.column_size,
+                  slide.slide_content.columns.length,
+                )} regular-slide__content__column ${content.colour} framework-block`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.5, ease: 'easeInOut', delay: 1 + index }}
+              >
+                {content.content.map((content, index) => (
+                  <div dangerouslySetInnerHTML={{ __html: content }} />
+                ))}
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            className={`${alignmentClass} row`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.5, ease: 'easeInOut', delay: 1 }}
+          >
+            {slide.slide_content.columns?.map((content, index) => (
+              <div
+                key={index}
+                className={`${getColumnClass(
+                  slide.column_size,
+                  slide.slide_content.columns.length,
+                )} regular-slide__content__column`}
+              >
+                <div dangerouslySetInnerHTML={{ __html: content }} />
+                {slide.slide_content.board && (
+                  <>
+                    <h2>Board</h2>
+                    <div className="regular-slide__content__board">
+                      {slide.slide_content.board[0].map((member, index) => (
+                        <div
+                          key={`board-member-${index}`}
+                          className="regular-slide__content__board__member"
+                        >
+                          <div className="member-name">{member.name}</div>
+                          <div className="member-title">{member.title}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </motion.div>
+        )}
         {slide.slide_title === 'Thank You.' && (
           <motion.div
             className={`${alignmentClass} row`}

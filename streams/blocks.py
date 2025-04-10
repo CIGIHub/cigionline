@@ -1567,11 +1567,11 @@ class SPSlideFrameworkBlock(blocks.StructBlock):
         BLUE = ('blue', 'Blue')
         MULTI = ('multi', 'Multi')
 
-    title = blocks.CharBlock(required=True)
-    subtitle = blocks.CharBlock(required=True)
+    title = blocks.CharBlock(required=False)
+    subtitle = blocks.CharBlock(required=False)
     text_stream = blocks.StreamBlock(
         [
-            ('text', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'coloured'])),
+            ('text', blocks.RichTextBlock(required=False, features=['h2', 'bold', 'italic', 'link', 'coloured'])),
         ],
         required=False)
     colour = blocks.ChoiceBlock(choices=COLOURS.choices, required=False)
