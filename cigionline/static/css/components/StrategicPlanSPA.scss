@@ -470,7 +470,7 @@ $framework-slide-pink: #ea6aaa;
   width: 70%;
 
   h1 {
-    margin-bottom: 3em;
+    margin-bottom: 1.5em;
   }
 
   ol {
@@ -485,7 +485,7 @@ $framework-slide-pink: #ea6aaa;
       counter-increment: custom-counter;
       position: relative;
       font-size: 1.1em;
-      margin-bottom: 1em;
+      margin-bottom: 0.6em;
 
       &::before {
         content: counter(custom-counter);
