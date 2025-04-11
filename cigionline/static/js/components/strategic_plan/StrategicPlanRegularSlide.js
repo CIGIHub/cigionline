@@ -31,12 +31,18 @@ const getColumnClass = (columnSize, columnCount) => {
   return 'col-lg-10';
 };
 
+const kebabCase = (str) => {
+  return str.toLowerCase().replace(/\s+/g, '-');
+};
+
 const StrategicPlanRegularSlide = ({ slide }) => {
   const columnClass = columnClasses[slide.column_size];
   const alignmentClass = alignmentClasses[slide.alignment];
 
   return (
-    <div className={`strategic-plan-slide regular-slide ${slide.alignment}`}>
+    <div
+      className={`strategic-plan-slide regular-slide ${slide.alignment} ${kebabCase(slide.slide_title)}`}
+    >
       <div>
         <div className={`${alignmentClass} row`}>
           <motion.div
@@ -59,20 +65,24 @@ const StrategicPlanRegularSlide = ({ slide }) => {
         </div>
 
         {slide.slide_content.framework_blocks ? (
-          <div
-            className={`${alignmentClass} row`}
-          >
+          <div className={`${alignmentClass} row`}>
             {slide.slide_content.framework_blocks.map((content, index) => (
               <motion.div
                 key={index}
                 className={`${getColumnClass(
                   slide.column_size,
                   slide.slide_content.columns.length,
-                )} regular-slide__content__column ${content.colour} framework-block`}
+                )} regular-slide__content__column ${
+                  content.colour
+                } framework-block`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.5, ease: 'easeInOut', delay: 1 + index }}
+                transition={{
+                  duration: 0.5,
+                  ease: 'easeInOut',
+                  delay: 1 + index,
+                }}
               >
                 {content.content.map((content, index) => (
                   <div dangerouslySetInnerHTML={{ __html: content }} />
