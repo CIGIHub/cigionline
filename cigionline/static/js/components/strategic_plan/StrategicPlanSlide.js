@@ -34,6 +34,16 @@ const getGradientClass = (alignment) => {
   }
 };
 
+const getRandomIndex = (arrayLength, excludeIndex) => {
+  if (arrayLength <= 1) return 0;
+
+  let newIndex = excludeIndex;
+  while (newIndex === excludeIndex) {
+    newIndex = Math.floor(Math.random() * arrayLength);
+  }
+  return newIndex;
+};
+
 const StrategicReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -126,12 +136,13 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     const images = slides[currentIndex]?.background_images;
     if (!images || images.length <= 1) return;
 
-    setImageIndex(0);
+    const firstIndex = getRandomIndex(images.length, -1);
+    setImageIndex(firstIndex);
 
     if (timerRef.current) clearInterval(timerRef.current);
 
     timerRef.current = setInterval(() => {
-      setImageIndex((prev) => (prev + 1) % images.length);
+      setImageIndex((prev) => getRandomIndex(images.length, prev));
     }, 4000);
 
     () => clearInterval(timerRef.current);
