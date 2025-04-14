@@ -164,18 +164,26 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   }, [slides]);
 
   const videoRef = useRef();
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const newSrc = slides[currentIndex]?.background_video;
+    if (!newSrc || video.dataset.src === newSrc) return;
 
-    if (!newSrc || video.src === newSrc) return;
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
 
     video.src = newSrc;
+    video.dataset.src = newSrc;
+
     video.load();
-    video.play().catch(() => {});
-  }, [currentIndex, slides]);
+    setTimeout(() => {
+      video.play().catch(() => {});
+    }, 100);
+  }, [currentIndex]);
 
   return (
     <>
