@@ -171,11 +171,8 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     );
     const target = videoRef.current;
     if (!preloaded || !target) return;
-    target.pause();
     target.removeAttribute('src');
-    target.load();
     target.src = preloaded.src;
-    target.load();
     target.play().catch(() => {});
   }, [currentIndex]);
 
