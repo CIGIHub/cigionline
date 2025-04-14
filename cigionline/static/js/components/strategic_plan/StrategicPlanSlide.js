@@ -163,19 +163,6 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     });
   }, [slides]);
 
-  const videoRef = useRef();
-
-  useEffect(() => {
-    const preloaded = document.querySelector(
-      `video[data-slug="${slides[currentIndex].slug}"]`,
-    );
-    const target = videoRef.current;
-    if (!preloaded || !target) return;
-    target.removeAttribute('src');
-    target.src = preloaded.src;
-    target.play().catch(() => {});
-  }, [currentIndex]);
-
   return (
     <>
       <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
@@ -214,15 +201,29 @@ const StrategicReportSlide = ({ slides, basePath }) => {
               ))}
             </>
           )}
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            className={`background-video ${gradientClass}`}
-          />
+          <div className="persistent-video-layer">
+            {slides.map((slide, index) => (
+              <>
+                {slide.background_video ? (
+                  <video
+                    key={slide.slug}
+                    src={slide.background_video}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    className={`background-video ${
+                      index === currentIndex ? 'visible' : ''
+                    } ${gradientClass}`}
+                    style={{
+                      opacity: index === currentIndex ? 1 : 0,
+                    }}
+                  />
+                ) : null}
+              </>
+            ))}
+          </div>
         </motion.div>
       </AnimatePresence>
       <div

@@ -4,8 +4,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import '../../../css/components/AnnualReportSPA.scss';
 import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
+import usePreloadSlideAssets from './usePreloadSlideAssets';
 
-const fetchSlides = async (strategicPlanSPAId) => {
+const fetchSlides = async (strategicPlanSPAId, slides) => {
   const response = await fetch(
     `/api/strategic_plan/${strategicPlanSPAId}/slides/`,
   );
@@ -18,31 +19,6 @@ const fetchSlides = async (strategicPlanSPAId) => {
   }
 };
 
-const BackgroundVideoPreloader = ({ slides }) => {
-  useEffect(() => {
-    slides.forEach((slide) => {
-      if (!slide.background_video) return;
-
-      const video = document.createElement('video');
-      video.src = slide.background_video;
-      video.muted = true;
-      video.playsInline = true;
-      video.preload = 'auto';
-      video.setAttribute('data-slug', slide.slug);
-      video.style.position = 'absolute';
-      video.style.width = '1px';
-      video.style.height = '1px';
-      video.style.zIndex = -100;
-      video.style.pointerEvents = 'none';
-      video.style.opacity = 0;
-
-      document.body.appendChild(video);
-    });
-  }, [slides]);
-
-  return null;
-};
-
 const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +27,7 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
     fetchSlides(strategicPlanSPAId)
       .then((data) => {
         setSlides(data);
+        usePreloadSlideAssets(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -66,7 +43,6 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
 
   return (
     <>
-      <BackgroundVideoPreloader slides={slides} />
       <Routes>
         <Route
           path={`${basePath}/:slug`}
