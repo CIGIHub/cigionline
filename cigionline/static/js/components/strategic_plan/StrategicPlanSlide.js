@@ -166,23 +166,17 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   const videoRef = useRef();
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const newSrc = slides[currentIndex]?.background_video;
-    if (!newSrc || video.dataset.src === newSrc) return;
-
-    video.pause();
-    video.removeAttribute('src');
-    video.load();
-
-    video.src = newSrc;
-    video.dataset.src = newSrc;
-
-    video.load();
-    setTimeout(() => {
-      video.play().catch(() => {});
-    }, 100);
+    const preloaded = document.querySelector(
+      `video[data-slug="${slides[currentIndex].slug}"]`,
+    );
+    const target = videoRef.current;
+    if (!preloaded || !target) return;
+    target.pause();
+    target.removeAttribute('src');
+    target.load();
+    target.src = preloaded.src;
+    target.load();
+    target.play().catch(() => {});
   }, [currentIndex]);
 
   return (

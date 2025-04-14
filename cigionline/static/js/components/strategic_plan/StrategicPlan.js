@@ -18,6 +18,31 @@ const fetchSlides = async (strategicPlanSPAId) => {
   }
 };
 
+const BackgroundVideoPreloader = ({ slides }) => {
+  useEffect(() => {
+    slides.forEach((slide) => {
+      if (!slide.background_video) return;
+
+      const video = document.createElement('video');
+      video.src = slide.background_video;
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = 'auto';
+      video.setAttribute('data-slug', slide.slug);
+      video.style.position = 'absolute';
+      video.style.width = '1px';
+      video.style.height = '1px';
+      video.style.zIndex = -100;
+      video.style.pointerEvents = 'none';
+      video.style.opacity = 0;
+
+      document.body.appendChild(video);
+    });
+  }, [slides]);
+
+  return null;
+};
+
 const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,6 +66,7 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
 
   return (
     <>
+      <BackgroundVideoPreloader slides={slides} />
       <Routes>
         <Route
           path={`${basePath}/:slug`}
