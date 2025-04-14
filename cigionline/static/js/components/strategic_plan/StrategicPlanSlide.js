@@ -166,6 +166,29 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   return (
     <>
       <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
+      <div className={`persistent-video-layer ${slides[currentIndex].slide_type}`}>
+        {slides.map((slide, index) => (
+          <React.Fragment key={`bg-${slide.slug}`}>
+            {slide.background_video ? (
+              <video
+                src={slide.background_video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className={`background-video ${
+                  index === currentIndex ? 'visible' : ''
+                } ${gradientClass}`}
+                style={{
+                  opacity: index === currentIndex ? 1 : 0,
+                  zIndex: index === currentIndex ? -1 : -5,
+                }}
+              />
+            ) : null}
+          </React.Fragment>
+        ))}
+      </div>
       <AnimatePresence mode="sync">
         <motion.div
           key={`bg-${slug}-${slides[currentIndex].slide_type}`}
@@ -201,29 +224,6 @@ const StrategicReportSlide = ({ slides, basePath }) => {
               ))}
             </>
           )}
-          <div className="persistent-video-layer">
-            {slides.map((slide, index) => (
-              <>
-                {slide.background_video ? (
-                  <video
-                    key={slide.slug}
-                    src={slide.background_video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="auto"
-                    className={`background-video ${
-                      index === currentIndex ? 'visible' : ''
-                    } ${gradientClass}`}
-                    style={{
-                      opacity: index === currentIndex ? 1 : 0,
-                    }}
-                  />
-                ) : null}
-              </>
-            ))}
-          </div>
         </motion.div>
       </AnimatePresence>
       <div

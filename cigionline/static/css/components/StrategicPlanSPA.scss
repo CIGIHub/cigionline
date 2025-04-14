@@ -389,6 +389,35 @@ $framework-slide-pink: #ea6aaa;
   }
 }
 
+.persistent-video-layer {
+  .background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    transition: opacity 1s ease-in-out;
+  }
+
+  &.toc {
+    .background-video {
+      left: unset;
+      right: 0;
+      width: 34%;
+    }
+  }
+
+  &.title {
+    .background-video {
+      left: unset;
+      right: 0;
+      width: 50%;
+    }
+  }
+}
+
 .regular-slide {
   line-height: 1.25;
   height: 100vh;
