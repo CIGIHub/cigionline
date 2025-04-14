@@ -163,6 +163,20 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     });
   }, [slides]);
 
+  const videoRef = useRef();
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const newSrc = slides[currentIndex]?.background_video;
+
+    if (!newSrc || video.src === newSrc) return;
+
+    video.src = newSrc;
+    video.load();
+    video.play().catch(() => {});
+  }, [currentIndex, slides]);
+
   return (
     <>
       <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
@@ -202,13 +216,13 @@ const StrategicReportSlide = ({ slides, basePath }) => {
             </>
           )}
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
             className={`background-video ${gradientClass}`}
-            src={slides[currentIndex].background_video}
           />
         </motion.div>
       </AnimatePresence>
