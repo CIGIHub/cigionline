@@ -9,17 +9,6 @@ const preloadImage = (src) => {
   loadedAssets.add(src);
 };
 
-const preloadVideo = (src) => {
-  if (!src || loadedAssets.has(src)) return;
-  const video = document.createElement('video');
-  video.src = src;
-  video.preload = 'auto';
-  video.muted = true;
-  video.playsInline = true;
-  video.load();
-  loadedAssets.add(src);
-};
-
 const usePreloadSlideAssets = (slides) => {
   useEffect(() => {
     if (!slides?.length) return;
@@ -29,10 +18,6 @@ const usePreloadSlideAssets = (slides) => {
       preloadImage(slide.background_image_thumbnail);
 
       slide.background_images?.forEach(preloadImage);
-
-      if (slide.background_video) {
-        preloadVideo(slide.background_video);
-      }
     });
   }, []);
 };
