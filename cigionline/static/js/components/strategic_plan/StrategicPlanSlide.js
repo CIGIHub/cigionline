@@ -10,7 +10,6 @@ import AnnualReportHamburgerMenu from '../AnnualReportHamburgerMenu';
 import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
 import StrategicPlanTimelineSlide from './StrategicPlanTimelineSlide';
 import StrategicPlanVerticalTitle from './StrategicPlanVerticalTitle';
-import usePreloadSlideAssets from './usePreloadSlideAssets';
 
 const slideComponents = {
   title: StrategicPlanTitleSlide,
@@ -54,8 +53,6 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
   const gradientClass = getGradientClass(slides[currentIndex].alignment);
   const timerRef = useRef(null);
-
-  usePreloadSlideAssets(slides);
 
   if (currentIndex === -1) {
     return <Navigate to={`/${slides[0].slug}`} replace />;
@@ -153,20 +150,14 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     slideComponents[slides[currentIndex].slide_type] ||
     (() => <div>Slide type not found</div>);
 
-  useEffect(() => {
-    slides.forEach((slide) => {
-      const images = slide.background_images || [slide.background_image];
-      images.forEach((src) => {
-        const img = new Image();
-        img.src = src;
-      });
-    });
-  }, [slides]);
-
   return (
     <>
       <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
-      <div className={`persistent-video-layer ${slides[currentIndex].slide_type}`}>
+      <div
+        className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
+          [0, 2, 3].includes(Number(currentIndex)) ? 'visible' : ''
+        } ${currentIndex}`}
+      >
         {slides.map((slide, index) => (
           <React.Fragment key={`bg-${slide.slug}`}>
             {slide.background_video ? (
@@ -179,11 +170,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
                 preload="auto"
                 className={`background-video ${
                   index === currentIndex ? 'visible' : ''
-                } ${gradientClass}`}
-                style={{
-                  opacity: index === currentIndex ? 1 : 0,
-                  zIndex: index === currentIndex ? -1 : -5,
-                }}
+                } ${gradientClass} bg-${index}`}
               />
             ) : null}
           </React.Fragment>

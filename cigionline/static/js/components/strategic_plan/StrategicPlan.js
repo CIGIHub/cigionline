@@ -6,7 +6,7 @@ import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
 import usePreloadSlideAssets from './usePreloadSlideAssets';
 
-const fetchSlides = async (strategicPlanSPAId, slides) => {
+const fetchSlides = async (strategicPlanSPAId) => {
   const response = await fetch(
     `/api/strategic_plan/${strategicPlanSPAId}/slides/`,
   );
