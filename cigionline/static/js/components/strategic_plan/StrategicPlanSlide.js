@@ -155,7 +155,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
       <div
         className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
-          [0, 2, 3].includes(Number(currentIndex)) ? 'visible' : ''
+          [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
         } ${currentIndex}`}
       >
         {slides.map((slide, index) => (
