@@ -28,7 +28,7 @@
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
           <div class="taskforce-form-wrapper">
-            <label for="taskforce">Taskforce:</label>
+            <label for="taskforce">Task Force:</label>
             <form method="get" id="taskforce-filter-form">
               <select name="taskforce" id="taskforce-select">
                   <option value="">All</option>
@@ -65,7 +65,11 @@
                 <div class="publication-authors">
                   {{ publication.authors }}
                 </div>
-                {% include "includes/date.html" with date=publication.publishing_date %}
+                {% if publication.publication_type %}
+                  <div class="publication-type">
+                    {{ publication.publication_type|revert_snake_case|remove_trailing_s|title }}
+                  </div>
+                {% endif %}
               </div>
             </div>
           {% empty %}
