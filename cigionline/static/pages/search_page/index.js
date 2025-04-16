@@ -1,10 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import SearchResultListing from '../../js/components/SearchResultListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/search_page.scss';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('search-table'));
+root.render(
   <SearchTable
     blockListing
     isSearchPage
@@ -175,5 +176,4 @@ ReactDOM.render(
     }].sort((a, b) => a.name.localeCompare(b.name))}
     RowComponent={SearchResultListing}
   />,
-  document.getElementById('search-table'),
 );

@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import {
-  Redirect,
   Route,
-  useHistory,
+  useNavigate,
   useLocation,
+  Navigate,
 } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import TwentiethPageSlide from './TwentiethPageSlide';
 import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 
 const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const [allowScroll, setAllowScroll] = useState(true);
   const pathArray = location.pathname.split('/').filter((slug) => slug);
@@ -44,7 +44,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
       (element) => element.slide_number === slideNumber,
     )[0];
     const slug = slide.slug;
-    history.push(`${pageUrl}${slug}`);
+    navigate(`${pageUrl}${slug}`);
   }
 
   function handleWheel(e) {
@@ -92,7 +92,7 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
   return (
     <div className="slides" onWheel={handleWheel}>
       <Route exact path={`${pageUrl}`}>
-        <Redirect to={`${pageUrl}${slides[0].slug}`} />
+        <Navigate to={`${pageUrl}${slides[0].slug}`} />
       </Route>
       {routes.map(({ slug }) => (
         <Route key={slug} exact path={`${pageUrl}${slug}`}>

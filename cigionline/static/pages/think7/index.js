@@ -1,6 +1,6 @@
 import './css/think7.scss';
 // import React from 'react';
-// import ReactDOM from 'react-dom';
+// import { createRoot } from 'react-dom/client';
 // import CookieConsent from '../../js/components/CookieConsent';
 
 $(function () {
