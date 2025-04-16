@@ -301,6 +301,7 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         ('left', 'Left'),
         ('right', 'Right'),
         ('full', 'Full'),
+        ('top', 'Top'),
         ('none', 'None'),
     ]
     COLUMN_SIZES = [

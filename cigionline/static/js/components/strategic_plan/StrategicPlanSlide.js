@@ -21,15 +21,18 @@ const slideComponents = {
 
 const getGradientClass = (alignment) => {
   switch (alignment) {
-    case 'left':
-      return 'left';
-    case 'right':
-      return 'right';
-    case 'full':
-      return 'full';
-    case 'none':
-    default:
-      return 'none';
+  case 'left':
+    return 'left';
+  case 'right':
+    return 'right';
+  case 'full':
+    return 'full';
+  case 'top':
+    return 'top';
+  case 'none':
+    return 'none';
+  default:
+    return 'none';
   }
 };
 
@@ -64,9 +67,22 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
   const canScrollRef = useRef(true);
 
-  useEffect(() => {
-    const checkScrollCondition = () => window.innerWidth >= 992;
+  const checkScrollCondition = () => {
+    const wrapper = document.querySelector('.slide-wrapper');
+    const isLargeScreen = window.innerWidth >= 992;
+    const contentOverflows =
+      wrapper && wrapper.scrollHeight > window.innerHeight;
 
+    if (contentOverflows) {
+      document.body.classList.add('content-overflows');
+    } else {
+      document.body.classList.remove('content-overflows');
+    }
+
+    return isLargeScreen && !contentOverflows;
+  };
+
+  useEffect(() => {
     canScrollRef.current = checkScrollCondition();
 
     const handleNavigation = (direction) => {
@@ -127,6 +143,10 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
   useEffect(() => {
     setContentVisible(false);
+  }, [slug]);
+
+  useEffect(() => {
+    canScrollRef.current = checkScrollCondition();
   }, [slug]);
 
   useEffect(() => {
