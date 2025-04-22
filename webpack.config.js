@@ -49,6 +49,7 @@ const config = {
     personListExpertsPage: './cigionline/static/pages/person_list_experts_page/index.js',
     personListStaffPage: './cigionline/static/pages/person_list_staff_page/index.js',
     personPage: './cigionline/static/pages/person_page/index.js',
+    portalPage: './cigionline/static/pages/portal_page/index.js',
     projectPage: './cigionline/static/pages/project_page/index.js',
     publicationListPage: './cigionline/static/pages/publication_list_page/index.js',
     publicationPage: './cigionline/static/pages/publication_page/index.js',

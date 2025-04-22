@@ -1,4 +1,3 @@
-
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.db import models
@@ -1547,3 +1546,17 @@ class FilesBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Files'
         template = 'streams/files_block.html'
+
+
+class ResourceBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    file = DocumentChooserBlock(required=False)
+    cta_link = blocks.URLBlock(required=False)
+    cta_text = blocks.CharBlock(required=False)
+    image = ImageChooserBlock(required=False)
+
+    class Meta:
+        icon = 'link'
+        label = 'Resource'
+        template = 'streams/resource_block.html'
