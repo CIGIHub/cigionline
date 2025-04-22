@@ -15,7 +15,7 @@ class PortalPage(Page, BasicPageAbstract):
         ],
         blank=True,
     )
-  
+
     def get_template(self, request, *args, **kwargs):
         return "portal/portal_page.html"
 
