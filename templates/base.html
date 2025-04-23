@@ -87,7 +87,9 @@
     {% block footer %}
       {% include "includes/footer.html" %}
     {% endblock %}
-
-    <div id="cigi-cookie-consent-container"></div>
+    
+    {% if self.get_site.site_name == "Centre for International Governance Innovation" %}
+      <div id="cigi-cookie-consent-container"></div>
+    {% endif %}
   </body>
 </html>
