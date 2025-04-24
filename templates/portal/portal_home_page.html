@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+{% render_bundle 'portalPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+{% render_bundle 'portalPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}portal_page{% endblock %}
+
+{% block header %}
+<header>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col">
+        <div class="top-bar">
+          <a class="cigi-logo" href="https://cigionline.org">
+            {% include 'includes/header_cigi_logo_large.svg' %}
+            {% include 'includes/header_cigi_logo_small.svg' %}
+          </a>
+          <div class="portal-label">
+            <span>
+              <em>
+                CIGI PORTAL
+              </em>
+            </span>
+            <i class="fa fa-lock"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8">
+        <h1>{{ page.title }}</h1>
+        {% if page.subtitle %}
+        <p>{{ page.subtitle }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="body">
+  {% for block in self.body %}
+  {% include_block block %}
+  {% endfor %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8">
+        <p class="circulation"><em>NOT FOR CIRCULATION</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="resources">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8">
+        {% if page.resources %}
+        {% for resource in page.resources %}
+        {% include_block resource %}
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+{% block footer %}
+<footer>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col">
+        <div class="site-link">
+          <a href="https://cigionline.org">
+            <em>Centre for International Governance Innovation</em>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endblock footer %}
