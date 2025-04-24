@@ -8,6 +8,22 @@ from wagtail.fields import StreamField
 from wagtail.models import Page
 
 
+class PortalHomePage(Page, BasicPageAbstract):
+    def get_template(self, request, *args, **kwargs):
+        return "portal/portal_home_page.html"
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+
+    max_count = 1
+    subpage_types = ['portal.PortalPage']
+
+    class Meta:
+        verbose_name = "Portal Home Page"
+
+
 class PortalPage(Page, BasicPageAbstract):
     resources = StreamField(
         [
@@ -30,7 +46,7 @@ class PortalPage(Page, BasicPageAbstract):
         ),
     ]
 
-    max_count = 1
+    parent_page_types = ['portal.PortalHomePage']
 
     class Meta:
         verbose_name = "Portal Page"
