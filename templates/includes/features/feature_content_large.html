@@ -42,13 +42,19 @@
 
   <div class="feature-content-text {% if not poster %}center-text{% endif %}">
     <div>
-      {% include 'includes/topics.html' with topics=content.topics_sorted %}
+      {% if content|page_type == 't7-publication' %}
+        {% include '../../think7/includes/features/topics.html' %}
+      {% else %}
+        {% include 'includes/topics.html' with topics=content.topics_sorted %}
+      {% endif %}
       {% include 'includes/features/feature_content_title.html' %}
       {% include 'includes/features/feature_content_subtitle.html' %}
     </div>
     <div>
       {% if content|page_type == 'opinion-series' %}
         {% include 'includes/features/feature_content_people.html' with authors=content.series_authors %}
+      {% elif content.t7_authors %}
+        {% include '../../think7/includes/features/feature_content_people.html' with authors=content.t7_authors %}
       {% else %}
         {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
       {% endif %}

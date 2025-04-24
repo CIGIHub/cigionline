@@ -13,6 +13,7 @@ class FeaturedPageBlock(StructBlock):
         'events.EventPage',
         'research.ProjectPage',
         'annual_reports.AnnualReportPage',
+        'publications.T7PublicationPage',
     ]
     page = PageChooserBlock(page_type=page_types)
 
