@@ -1,0 +1,27 @@
+{% load wagtailcore_tags %}
+
+<div class="communique-block">
+  <div class="img-wrapper">
+    <a href="{% pageurl self.page %}">
+      {% if self.page.image_poster %}
+        {% image self.page.image_poster width-700 %}
+      {% endif %}
+    </a>
+  </div>
+  <div>
+    <a href="{% pageurl self.page %}">
+      <h3>
+        {% if self.title_override %}
+          {{ self.title_override }}
+        {% else %}
+          {{ self.page.title }}
+        {% endif %}
+      </h3>
+    </a>
+    <button href="{{ self.page.pdf_attachment }}" target="_blank">
+      <span>
+        Download
+      </span>
+    </button>
+  </div>
+</div>

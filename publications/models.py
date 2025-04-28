@@ -176,6 +176,7 @@ class PublicationPage(
         SPECIAL_REPORTS = ('special_reports', 'Special Reports')
         SPEECHES = ('speeches', 'Speeches')
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
+        T7COMMUNIQUE = ('t7_communique', 'T7 Communiqué')
 
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [

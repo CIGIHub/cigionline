@@ -1560,3 +1560,14 @@ class ResourceBlock(blocks.StructBlock):
         icon = 'link'
         label = 'Resource'
         template = 'streams/resource_block.html'
+
+
+class T7CommuniqueBlock(blocks.StructBlock):
+    page = blocks.PageChooserBlock(page_type='publications.T7PublicationPage', required=False)
+    image_override = ImageChooserBlock(required=False)
+    title_override = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'T7 Communique'
+        template = 'streams/t7_communique_block.html'
