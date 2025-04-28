@@ -648,6 +648,28 @@ class T7PublicationPage(Page):
         null=True,
         blank=True,
     )
+    body = RichTextField(
+        features=[
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+        ],
+        null=True,
+        blank=True,
+    )
     publishing_date = models.DateTimeField(blank=False, null=True)
     publication_type = models.CharField(
         max_length=64,
@@ -699,9 +721,10 @@ class T7PublicationPage(Page):
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
+                FieldPanel('body'),
                 FieldPanel('abstract'),
             ],
-            heading='Abstract',
+            heading='body',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
