@@ -21,7 +21,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-pro": "6.5.1",
     "@panzoom/panzoom": "4.4.1",
-    "bootstrap": "4.6.0",
+    "bootstrap": "5.3.3",
     "jquery": "3.6.0",
     "mediaelement": "^7.0.5",
     "normalize.css": "8.0.1",
