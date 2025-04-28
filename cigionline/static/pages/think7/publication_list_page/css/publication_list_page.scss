@@ -9,8 +9,37 @@ section {
 
 .t7-hero {
   h1 {
-    margin-bottom: 1rem;
+    margin-bottom: 0;
   }
+}
+
+h2 {
+  text-transform: uppercase;
+  position: relative;
+  margin-left: 0.2rem;
+  margin-bottom: 2rem;
+  padding-left: 1rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    top: 0;
+    width: 2px;
+    transform: rotate(15deg);
+    background-color: $cigi-primary-colour;
+    transform-origin: center;
+  }
+
+  &:not(:first-child) {
+    margin-top: 3rem;
+  }
+}
+
+.publications-communique {
+  background-color: $think7_bg_grey;
+  padding: 3rem 0;
 }
 
 .publications {
@@ -21,6 +50,7 @@ section {
 
     label {
       margin-right: 0.5rem;
+      margin-bottom: 0;
       font-size: 15px;
     }
   }

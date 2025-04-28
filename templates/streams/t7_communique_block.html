@@ -4,7 +4,7 @@
   <div class="img-wrapper">
     <a href="{% pageurl self.page %}">
       {% if self.page.image_poster %}
-        {% image self.page.image_poster width-700 %}
+      {% image self.page.image_poster width-700 %}
       {% endif %}
     </a>
   </div>
@@ -12,16 +12,18 @@
     <a href="{% pageurl self.page %}">
       <h3>
         {% if self.title_override %}
-          {{ self.title_override }}
+        {{ self.title_override }}
         {% else %}
-          {{ self.page.title }}
+        {{ self.page.title }}
         {% endif %}
       </h3>
     </a>
-    <button href="{{ self.page.pdf_attachment }}" target="_blank">
-      <span>
-        Download
-      </span>
-    </button>
+    <a href="{{ self.page.pdf_attachment.file.url }}">
+      <button target="_blank">
+        <span>
+          Download
+        </span>
+      </button>
+    </a>
   </div>
 </div>

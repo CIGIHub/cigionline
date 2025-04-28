@@ -16,6 +16,7 @@ from streams.blocks import (
     PDFDownloadBlock,
     EPubDownloadBlock,
     CTABlock,
+    T7CommuniqueBlock,
 )
 from wagtail.admin.panels import (
     FieldPanel,
@@ -35,6 +36,14 @@ from wagtail.documents.models import Document
 
 class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAbstract, Page):
     """Publication list page"""
+
+    t7_communiques = StreamField(
+        [
+            ('t7_communique', T7CommuniqueBlock()),
+        ],
+        blank=True,
+        null=True,
+    )
 
     def featured_publications_list(self):
         featured_publications = []
@@ -74,7 +83,7 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         site = self.get_site()
         if site.site_name == 'Think 7 Canada':
             taskforce_slug = request.GET.get('taskforce')
-            publications = T7PublicationPage.objects.live().public().order_by('-publishing_date')
+            publications = T7PublicationPage.objects.filter(publication_type="policy_briefs").live().public().order_by('-publishing_date')
             if taskforce_slug:
                 filtered_publications = publications.filter(taskforce__slug=taskforce_slug)
             ProjectPage = apps.get_model('research', 'ProjectPage')
@@ -113,6 +122,14 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
                 ),
             ],
             heading='Featured Publications',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('t7_communiques'),
+            ],
+            heading='Theme Fields',
+            help_text='These are additional fields required for specific themed content, and are not needed for normal content.',
             classname='collapsible collapsed',
         ),
     ]
