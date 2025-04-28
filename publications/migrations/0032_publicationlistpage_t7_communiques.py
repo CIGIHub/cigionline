@@ -9,7 +9,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('publications', '0030_alter_t7publicationpage_abstract'),
+        ('publications', '0031_alter_t7publicationpage_abstract'),
     ]
 
     operations = [
