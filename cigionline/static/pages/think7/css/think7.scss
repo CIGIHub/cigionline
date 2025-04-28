@@ -91,3 +91,35 @@ a {
 section {
   margin: 3rem 0;
 }
+
+.communique-block {
+  @include media-breakpoint-up(sm) {
+    display: flex;
+  }
+  padding: 2rem 0;
+
+  .img-wrapper {
+    @include media-breakpoint-up(md) {
+      flex: 0 0 25%;
+    }
+    @include media-breakpoint-up(sm) {
+      margin-bottom: 0;
+      margin-right: 2rem;
+    }
+    margin-bottom: 1rem;
+    flex: 0 0 50%;
+    background-color: $black;
+
+    img {
+      transition: opacity 0.3s ease;
+      object-fit: cover;
+      border: 1px solid $cigi-light-grey;
+    }
+
+    &:hover {
+      img {
+        opacity: 0.8;
+      }
+    }
+  }
+}
