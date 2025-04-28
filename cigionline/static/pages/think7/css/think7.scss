@@ -96,7 +96,6 @@ section {
   @include media-breakpoint-up(sm) {
     display: flex;
   }
-  padding: 2rem 0;
 
   .img-wrapper {
     @include media-breakpoint-up(md) {
@@ -119,6 +118,30 @@ section {
     &:hover {
       img {
         opacity: 0.8;
+      }
+    }
+  }
+
+  .communique-info {
+    h3 {
+      @include media-breakpoint-up(sm) {
+        margin-top: 2rem;
+      }
+      font-size: 1rem;
+    }
+
+    button {
+      border: 2px solid $cigi-dark-pink;
+      border-radius: 10px;
+      background: transparent;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      padding: 0.5rem 2rem;
+
+      &:hover {
+        background: $cigi-dark-pink;
+        color: $white;
       }
     }
   }

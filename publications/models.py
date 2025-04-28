@@ -609,24 +609,28 @@ class T7PublicationPage(Page):
         UNARCHIVED = (0, 'No')
         ARCHIVED = (1, 'Yes')
 
-    abstract = RichTextField(null=False, features=[
-        'bold',
-        'dropcap',
-        'endofarticle',
-        'paragraph_heading',
-        'h2',
-        'h3',
-        'h4',
-        'hr',
-        'image',
-        'italic',
-        'link',
-        'ol',
-        'subscript',
-        'superscript',
-        'ul',
-        'anchor',
-    ])
+    abstract = RichTextField(
+        features=[
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+        ],
+        null=True,
+        blank=True,
+    )
     publishing_date = models.DateTimeField(blank=False, null=True)
     publication_type = models.CharField(
         max_length=64,
