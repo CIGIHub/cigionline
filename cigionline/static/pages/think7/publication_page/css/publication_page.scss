@@ -23,15 +23,27 @@
   margin: 3rem 0;
   text-align: center;
 
+  .pdf-downloads {
+    & > a {
+      button {
+        &:first-child {
+          margin-right: 1rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+
   button {
     color: $black;
     border: 2px solid $cigi-primary-colour;
     border-radius: 5px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0;
     background-color: $think7_bg_white;
     transition: background-color 0.3s ease, color 0.3s ease;
     text-transform: uppercase;
     height: fit-content;
+    min-width: 200px;
 
     &:hover {
       background-color: $cigi-primary-colour;

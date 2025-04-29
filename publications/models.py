@@ -17,6 +17,7 @@ from streams.blocks import (
     EPubDownloadBlock,
     CTABlock,
     T7CommuniqueBlock,
+    ParagraphBlock,
 )
 from wagtail.admin.panels import (
     FieldPanel,
@@ -648,27 +649,13 @@ class T7PublicationPage(Page):
         null=True,
         blank=True,
     )
-    body = RichTextField(
-        features=[
-            'bold',
-            'dropcap',
-            'endofarticle',
-            'paragraph_heading',
-            'h2',
-            'h3',
-            'h4',
-            'hr',
-            'image',
-            'italic',
-            'link',
-            'ol',
-            'subscript',
-            'superscript',
-            'ul',
-            'anchor',
+    body = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
         ],
-        null=True,
         blank=True,
+        null=True,
+        use_json_field=True,
     )
     publishing_date = models.DateTimeField(blank=False, null=True)
     publication_type = models.CharField(
