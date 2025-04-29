@@ -717,6 +717,13 @@ class T7PublicationPage(Page):
         on_delete=models.SET_NULL,
         related_name="+"
     )
+    pdf_attachment_fr = models.ForeignKey(
+        Document,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
 
     @property
@@ -756,6 +763,7 @@ class T7PublicationPage(Page):
                 FieldPanel('image_feature'),
                 FieldPanel('image_poster'),
                 FieldPanel('pdf_attachment'),
+                FieldPanel('pdf_attachment_fr'),
             ],
             heading='Assets',
             classname='collapsible collapsed',

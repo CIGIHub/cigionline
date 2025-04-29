@@ -124,25 +124,42 @@ section {
 
   .communique-info {
     h3 {
-      @include media-breakpoint-up(sm) {
-        margin-top: 2rem;
-      }
       margin-bottom: 1rem;
       font-size: 1rem;
     }
 
-    button {
-      border: 2px solid $cigi-dark-pink;
-      border-radius: 10px;
-      background: transparent;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      text-transform: uppercase;
-      font-size: 0.875rem;
-      padding: 0.5rem 2rem;
+    .communique-description {
+      p {
+        line-height: 1.25;
+      }
+    }
 
-      &:hover {
-        background: $cigi-dark-pink;
-        color: $white;
+    .communique-downloads {
+      @include media-breakpoint-up(lg) {
+        flex-direction: row;
+      }
+      flex-direction: column;
+      display: flex;
+
+      button {
+        @include media-breakpoint-up(lg) {
+          margin-right: 1rem;
+        }
+        border: 2px solid $cigi-dark-pink;
+        border-radius: 10px;
+        background: transparent;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        padding: 0.5rem 0;
+        width: 200px;
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+
+        &:hover {
+          background: $cigi-dark-pink;
+          color: $white;
+        }
       }
     }
   }

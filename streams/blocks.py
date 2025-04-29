@@ -1564,6 +1564,10 @@ class ResourceBlock(blocks.StructBlock):
 
 class T7CommuniqueBlock(blocks.StructBlock):
     page = blocks.PageChooserBlock(page_type='publications.T7PublicationPage', required=False)
+    description = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
     image_override = ImageChooserBlock(required=False)
     title_override = blocks.CharBlock(required=False)
 
