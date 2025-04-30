@@ -1,10 +1,11 @@
 import './css/publication_series_list_page.scss';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import PublicationListingSimple from '../../js/components/PublicationListingSimple';
 import SearchTable from '../../js/components/SearchTable';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('publications-list'));
+root.render(
   <SearchTable
     blockListing
     contenttypes={[
@@ -17,5 +18,4 @@ ReactDOM.render(
     ]}
     RowComponent={PublicationListingSimple}
   />,
-  document.getElementById('publications-list'),
 );

@@ -1,0 +1,7 @@
+@import '../../../css/global/mixins';
+
+body {
+  @include media-breakpoint-up(lg) {
+    overflow: hidden;
+  }
+}

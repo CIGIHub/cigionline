@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import OpinionListing from '../../js/components/OpinionListing';
 import SearchTable from '../../js/components/SearchTable';
 
 import './css/article_landing_page.scss';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('opinions-search-table'));
+root.render(
   <SearchTable
     showSearch
     contenttypes={['Opinion']}
@@ -31,5 +32,4 @@ ReactDOM.render(
       },
     ]}
   />,
-  document.getElementById('opinions-search-table'),
 );

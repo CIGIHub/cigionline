@@ -1,6 +1,6 @@
 /* global publicationTypeId */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import PublicationListingSimple from '../../js/components/PublicationListingSimple';
 import SearchTable from '../../js/components/SearchTable';
 
@@ -12,7 +12,8 @@ if (publicationTypeId) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('publications-list'));
+root.render(
   <SearchTable
     blockListing
     endpointParams={endpointParams}
@@ -23,5 +24,4 @@ ReactDOM.render(
     ]}
     RowComponent={PublicationListingSimple}
   />,
-  document.getElementById('publications-list'),
 );

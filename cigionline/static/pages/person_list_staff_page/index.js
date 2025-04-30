@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import StaffList from '../../js/components/StaffList';
 import './css/person_list_staff_page.scss';
 
-ReactDOM.render(
-  <StaffList />,
-  document.getElementById('staff-list'),
-);
+const root = createRoot(document.getElementById('staff-list'));
+root.render(<StaffList />);
