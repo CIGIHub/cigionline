@@ -86,9 +86,14 @@ section {
     }
 
     .publication-authors,
-    .date {
+    .date,
+    .publication-type {
       font-size: 0.875rem;
       font-weight: 300;
+    }
+
+    .publication-type {
+      color: $cigi-text-grey;
     }
 
     .publication-authors {

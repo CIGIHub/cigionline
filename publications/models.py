@@ -673,13 +673,20 @@ class T7PublicationPage(Page):
         on_delete=models.SET_NULL,
         related_name="+"
     )
+    subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
+
+    @property
+    def t7_authors(self):
+        if self.authors:
+            return self.authors.split(', ')
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
+                FieldPanel('subtitle'),
                 FieldPanel('abstract'),
             ],
-            heading='Abstract',
+            heading='Body',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(

@@ -1,0 +1,29 @@
+{% load wagtailcore_tags %}
+
+<div class="resource-block">
+  <h3>{{ self.title }}</h3>
+  {% if self.description %}
+  <p>{{ self.description|richtext }}</p>
+  {% endif %}
+  {% if self.file %}
+  <a href="{{ self.file.url }}" target="_blank">
+    <button>
+      <i class="fa fa-download"></i>
+      <span>
+        {{ self.cta_text|default:"Download" }}
+      </span>
+    </button>
+  </a>
+  {% endif %}
+
+  {% if self.cta_link %}
+  <a href="{{ self.cta_link }}" target="_blank">
+    <button>
+      <i class="fa-solid fa-up-right-from-square"></i>
+      <span>
+        {{ self.cta_text|default:"" }}
+      </span>
+    </button>
+  </a>
+  {% endif %}
+</div>

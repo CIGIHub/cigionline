@@ -85,3 +85,16 @@ def split_to_spans(value):
     if not isinstance(value, str):
         return value
     return ''.join(f'<span id="char-{i}">{char}</span>' for i, char in enumerate(value))
+
+
+@register.filter
+@stringfilter
+def revert_snake_case(value):
+    return value.lower().replace('_', ' ')
+
+
+@register.filter
+def remove_trailing_s(value):
+    if isinstance(value, str) and value.endswith('s'):
+        return value[:-1]
+    return value
