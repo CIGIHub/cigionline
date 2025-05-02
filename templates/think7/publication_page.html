@@ -10,8 +10,12 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-          <a href="{% pageurl self.taskforce %}">Task Force {{ self.taskforce.task_force_label }}:
-            {{self.taskforce.title}}</a>
+          {% if self.taskforce %}
+            <a href="{% pageurl self.taskforce %}">
+              Task Force {{ self.taskforce.task_force_label }}:
+              {{self.taskforce.title}}
+            </a>
+          {% endif %}
           <h1>{{ self.title }}</h1>
           <div class="authors">{{ self.authors }}</div>
           {% include "includes/date.html" with date=self.publishing_date %}
@@ -23,23 +27,41 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-          <a href="{{ self.pdf_attachment.url }}" target="_blank">
-            <button type="button">
-              Download PDF
-            </button>
-          </a>
+          <div class="pdf-downloads">
+            <a href="{{ self.pdf_attachment.url }}" target="_blank">
+              <button type="button">
+                Download PDF
+              </button>
+            </a>
+            {% if self.pdf_attachment_fr %}
+              <a href="{{ self.pdf_attachment_fr.url }}" target="_blank">
+                <button type="button">
+                  Télécharger le PDF
+                </button>
+              </a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
   </section>
-  <section class="abstract">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <h2 class="section-heading">Abstract</h2>
-          {{ self.abstract|richtext }}
+  {% if self.abstract %}
+    <section class="abstract">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2 class="section-heading">Abstract</h2>
+            {{ self.abstract|richtext }}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
+  {% if self.body %}
+    <section class="body">
+      {% for block in self.body %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
 {% endblock %}

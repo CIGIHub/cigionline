@@ -16,6 +16,8 @@ from streams.blocks import (
     PDFDownloadBlock,
     EPubDownloadBlock,
     CTABlock,
+    T7CommuniqueBlock,
+    ParagraphBlock,
 )
 from wagtail.admin.panels import (
     FieldPanel,
@@ -35,6 +37,14 @@ from wagtail.documents.models import Document
 
 class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAbstract, Page):
     """Publication list page"""
+
+    t7_communiques = StreamField(
+        [
+            ('t7_communique', T7CommuniqueBlock()),
+        ],
+        blank=True,
+        null=True,
+    )
 
     def featured_publications_list(self):
         featured_publications = []
@@ -74,7 +84,7 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         site = self.get_site()
         if site.site_name == 'Think 7 Canada':
             taskforce_slug = request.GET.get('taskforce')
-            publications = T7PublicationPage.objects.live().public().order_by('-publishing_date')
+            publications = T7PublicationPage.objects.filter(publication_type="policy_briefs").live().public().order_by('-publishing_date')
             if taskforce_slug:
                 filtered_publications = publications.filter(taskforce__slug=taskforce_slug)
             ProjectPage = apps.get_model('research', 'ProjectPage')
@@ -113,6 +123,14 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
                 ),
             ],
             heading='Featured Publications',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('t7_communiques'),
+            ],
+            heading='Theme Fields',
+            help_text='These are additional fields required for specific themed content, and are not needed for normal content.',
             classname='collapsible collapsed',
         ),
     ]
@@ -176,6 +194,7 @@ class PublicationPage(
         SPECIAL_REPORTS = ('special_reports', 'Special Reports')
         SPEECHES = ('speeches', 'Speeches')
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
+        T7COMMUNIQUE = ('t7_communique', 'T7 Communiqué')
 
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
@@ -608,24 +627,36 @@ class T7PublicationPage(Page):
         UNARCHIVED = (0, 'No')
         ARCHIVED = (1, 'Yes')
 
-    abstract = RichTextField(null=False, features=[
-        'bold',
-        'dropcap',
-        'endofarticle',
-        'paragraph_heading',
-        'h2',
-        'h3',
-        'h4',
-        'hr',
-        'image',
-        'italic',
-        'link',
-        'ol',
-        'subscript',
-        'superscript',
-        'ul',
-        'anchor',
-    ])
+    abstract = RichTextField(
+        features=[
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+        ],
+        null=True,
+        blank=True,
+    )
+    body = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+        null=True,
+        use_json_field=True,
+    )
     publishing_date = models.DateTimeField(blank=False, null=True)
     publication_type = models.CharField(
         max_length=64,
@@ -673,6 +704,13 @@ class T7PublicationPage(Page):
         on_delete=models.SET_NULL,
         related_name="+"
     )
+    pdf_attachment_fr = models.ForeignKey(
+        Document,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
     subtitle = RichTextField(blank=True, null=False, features=['bold', 'italic', 'link'])
 
     @property
@@ -684,6 +722,7 @@ class T7PublicationPage(Page):
         MultiFieldPanel(
             [
                 FieldPanel('subtitle'),
+                FieldPanel('body'),
                 FieldPanel('abstract'),
             ],
             heading='Body',
@@ -711,6 +750,7 @@ class T7PublicationPage(Page):
                 FieldPanel('image_feature'),
                 FieldPanel('image_poster'),
                 FieldPanel('pdf_attachment'),
+                FieldPanel('pdf_attachment_fr'),
             ],
             heading='Assets',
             classname='collapsible collapsed',

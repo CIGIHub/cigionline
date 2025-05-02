@@ -13,7 +13,7 @@ from features.models import (
     HomePageFeaturedHighlightsList,
     HomePageFeaturedEventsList,
 )
-from streams.blocks import ParagraphBlock, PersonsListBlock
+from streams.blocks import ParagraphBlock, PersonsListBlock, T7CommuniqueBlock
 from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
@@ -344,10 +344,17 @@ class Think7HomePage(Page):
         blank=True,
         null=True,
     )
+    communiques = StreamField(
+        [
+            ('communique', T7CommuniqueBlock()),
+        ],
+        blank=True,
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
+                FieldPanel('communiques'),
                 FieldPanel('body'),
             ],
             heading='Body',
