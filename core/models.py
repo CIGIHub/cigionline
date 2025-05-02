@@ -765,6 +765,7 @@ class BasicPage(
         'core.TwentiethPageSingleton',
         'people.PersonListPage',
         'research.ProjectPage',
+        'annual_reports.AnnualReportSPAPage',
     ]
     template = 'core/basic_page.html'
 

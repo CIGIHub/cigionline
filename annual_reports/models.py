@@ -147,7 +147,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         verbose_name_plural = 'Annual Report Pages'
 
 
-class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
+class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract, ShareablePageAbstract):
     """View annual report SPA page"""
 
     slides = StreamField(
@@ -166,6 +166,15 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
     ]
 
     subpage_types = ["AnnualReportSlidePage"]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
+    def get_template(self, request, *args, **kwargs):
+        return "annual_reports/annual_report_spa_page.html"
 
 
 class SlidePageAbstract(models.Model):
@@ -243,6 +252,27 @@ class SlidePageAbstract(models.Model):
 
 class AnnualReportSlidePage(SlidePageAbstract, Page):
     """Each individual slide within the annual report."""
+
+    SLIDE_TYPES = [
+        ('title', 'Title Slide'),
+        ('toc', 'Table of Contents'),
+        ('regular', 'Regular Slide'),
+        ('message', 'Message Slide'),
+        ('outputs', 'Outputs Slide'),
+        ('timeline', 'Timeline Slide'),
+        ('financials', 'Financials Slide'),
+    ]
+    slide_type = models.CharField(
+        max_length=255,
+        choices=SLIDE_TYPES,
+        default="regular",
+        help_text="Type of slide",
+    )
+    # slide_content = StreamField(
+    #     [
+    #         ("column", )
+    #     ]
+    
 
     parent_page_types = ["AnnualReportSPAPage"]
     subpage_types = []
