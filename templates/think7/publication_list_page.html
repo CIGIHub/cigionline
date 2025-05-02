@@ -23,18 +23,20 @@
       {% include_block block %}
     {% endfor %}
   </section>
-  <section class="publications-communique">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <h2>Communiqué</h2>
-          {% for block in self.t7_communiques %}
-            {% include_block block %}
-          {% endfor %}
+  {% if self.t7_communiques %}
+    <section class="publications-communique">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <h2>Communiqué</h2>
+            {% for block in self.t7_communiques %}
+              {% include_block block %}
+            {% endfor %}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
   <section class="publications" id="publications">
     <div class="container">
       <div class="row justify-content-center">
