@@ -499,6 +499,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'hr',
             'image',
             'italic',
+            'underline',
             'link',
             'ol',
             'subscript',
