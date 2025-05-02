@@ -4,7 +4,9 @@ header {
 
     .navbar-brand {
       &.t7-logo {
-        margin-right: 2rem;
+        @include media-breakpoint-up(md) {
+          margin-right: 2rem;
+        }
       }
 
       &.g7-logo {
