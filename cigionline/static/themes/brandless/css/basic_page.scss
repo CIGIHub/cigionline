@@ -1,5 +1,7 @@
 @import '../../../css/global/mixins';
 @import '../../../css/global/variables';
+$link-color: #0000ee;
+$link-hover-color: #0056b3;
 
 section {
   &.hero {
@@ -23,10 +25,25 @@ section {
       }
       font-size: 1.25em;
     }
+
+    .banner-bg {
+      &::after {
+        @include media-breakpoint-down(sm) {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
   }
 
   &.related-files {
-    @include link($color: #0000EE, $hover-color: #0056b3);
+    @include link($color: $link-color, $hover-color: $link-hover-color);
+
     a {
       &:hover {
         text-decoration: underline;
