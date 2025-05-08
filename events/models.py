@@ -24,7 +24,6 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.models import Document
-from wagtail.documents.views import DocumentUpload
 from wagtail.models import Page, Collection
 from wagtail.search import index
 import pytz
@@ -374,13 +373,14 @@ class EventPage(
     def serve(self, request):
         form = EventSubmissionForm()
         email_recipient = self.email_recipient
+        if self.theme:
+            template = f'themes/{self.get_theme_dir()}/event_page.html'
+        else:
+            template = 'events/event_page.html'
 
-        if request.method == "POST":
+        if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
             form = EventSubmissionForm(request.POST, request.FILES)
             if form.is_valid():
-                email = form.cleaned_data['email']
-                uploaded_file = form.cleaned_data['file']
-
                 uploaded_file = form.cleaned_data['file']
                 email = form.cleaned_data['email']
                 valid_extensions = ['.pdf', '.doc', '.docx']
@@ -409,8 +409,8 @@ class EventPage(
                                 )
                                 send_email(
                                     recipient=email,
-                                    subject='Think 7 Abstract Upload Successful',
-                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission to Think 7 Canada.',
+                                    subject='Event Submission Upload Successful',
+                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
                                 )
                             except Exception as e:
                                 print(str(e))
@@ -461,8 +461,9 @@ class EventPage(
                     {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
                 )
 
-        return render(request, "event_page/event_page.html", {
+        return render(request, template, {
             "page": self,
+            "self": self,
             "form": form,
         })
 
@@ -543,6 +544,13 @@ class EventPage(
                 ),
             ],
             heading='Related',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('email_recipient'),
+            ],
+            heading='Submission Form',
             classname='collapsible collapsed',
         ),
     ]

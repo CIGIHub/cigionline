@@ -30,7 +30,11 @@
     {% include "includes/og_image_default.html" %}
   {% endif %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeEventsSubmission' 'js' attrs='defer' %}
+{% endblock %}
 {% block extra_css %}
+  {% render_bundle 'themeEventsSubmission' 'css' %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
 
@@ -86,13 +90,13 @@
     </section>
   {% endif %}
 
-  <section class="submission">
+  <section class="events-submission">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
           <div class="form-wrapper">
-            <p>Please upload your abstract as either a PDF (.pdf) or Word (.doc/.docx) file.</p>
-            <form id="abstractUploadForm" method="post" enctype="multipart/form-data">
+            <p>Please upload your file as either a PDF (.pdf) or Word (.doc/.docx) file.</p>
+            <form id="eventUploadForm" method="post" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="form-fields">
                 <div class="form-field">
