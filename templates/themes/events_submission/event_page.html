@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta property="og:type" content="article" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all author_count=self.author_count registration_url=self.registration_url time_zone=self.time_zone time_zone_label=self.time_zone_label is_past=self.is_past %}
+
+  {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
+    <section class="event-multimedia-embed-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="event-multimedia-embed">
+              {% embed self.multimedia_page.specific.multimedia_url max_width="1080" %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% elif self.image_hero %}
+    <section>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <figure class="event-image-hero">
+              {% image self.image_hero width-1280 %}
+              {% if self.image_hero.caption %}
+                <figcaption>
+                  {{ self.image_hero.caption }}
+                </figcaption>
+              {% endif %}
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% include "includes/body.html" with body=self.body %}
+
+  {% if self.author_count > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count title_override="Event Speaker"%}
+  {% endif %}
+
+  {% if self.related_files %}
+    <section class="related-files">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="submission">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <div class="form-wrapper">
+            <p>Please upload your abstract as either a PDF (.pdf) or Word (.doc/.docx) file.</p>
+            <form id="abstractUploadForm" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-fields">
+                <div class="form-field">
+                  {{ form.file.label_tag }}
+                  {{ form.file }} 
+                </div>
+                <div class="form-field">
+                  {{ form.email.label_tag }}
+                  {{ form.email }}
+                </div>
+              </div>
+              <button type="submit">Upload File</button>
+            </form>
+            <div>
+              <div id="responseMessage" class="response-message"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if request.is_preview and self.recommended_content_preview %}
+    {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
+  {% elif self.recommended_content %}
+    {% include 'includes/recommended.html' with recommended=self.recommended_content %}
+  {% endif %}
+{% endblock content %}

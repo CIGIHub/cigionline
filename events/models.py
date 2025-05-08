@@ -1,3 +1,4 @@
+from .forms import EventSubmissionForm
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -7,7 +8,12 @@ from core.models import (
     ThemeablePageAbstract
 )
 from django.db import models
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.utils import timezone
 from modelcluster.fields import ParentalKey
+from uploads.models import DocumentUpload
+from utils.email_utils import send_email, extract_errors_as_string
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -17,7 +23,9 @@ from wagtail.admin.panels import (
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from django.utils import timezone
+from wagtail.documents.models import Document
+from wagtail.documents.views import DocumentUpload
+from wagtail.models import Page, Collection
 from wagtail.search import index
 import pytz
 import re
@@ -197,6 +205,11 @@ class EventPage(
         null=True,
         choices=EventTypes.choices,
     )
+    email_recipient = models.EmailField(
+        blank=True,
+        null=True,
+        help_text='Email address to send notifications to when a file is uploaded via submission form.',
+    )
     flickr_album_url = models.URLField(blank=True)
     invitation_type = models.IntegerField(choices=InvitationTypes.choices, default=InvitationTypes.RSVP_REQUIRED)
     location_address1 = models.CharField(blank=True, max_length=255, verbose_name='Address (Line 1)')
@@ -357,6 +370,101 @@ class EventPage(
         if self.theme:
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
+
+    def serve(self, request):
+        form = EventSubmissionForm()
+        email_recipient = self.email_recipient
+
+        if request.method == "POST":
+            form = EventSubmissionForm(request.POST, request.FILES)
+            if form.is_valid():
+                email = form.cleaned_data['email']
+                uploaded_file = form.cleaned_data['file']
+
+                uploaded_file = form.cleaned_data['file']
+                email = form.cleaned_data['email']
+                valid_extensions = ['.pdf', '.doc', '.docx']
+                file_extension = uploaded_file.name.lower().split('.')[-1]
+
+                if f'.{file_extension}' in valid_extensions:
+                    collection, created = Collection.objects.get_or_create(
+                        name='Event submissions',
+                    )
+
+                    try:
+                        document = Document.objects.create(
+                            title=uploaded_file.name,
+                            file=uploaded_file,
+                            collection=collection,
+                        )
+                        DocumentUpload.objects.create(
+                            document=document, email=email
+                        )
+                        if email_recipient:
+                            try:
+                                send_email(
+                                    recipient=email_recipient,
+                                    subject='New File Uploaded Successfully',
+                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.',
+                                )
+                                send_email(
+                                    recipient=email,
+                                    subject='Think 7 Abstract Upload Successful',
+                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission to Think 7 Canada.',
+                                )
+                            except Exception as e:
+                                print(str(e))
+                        return JsonResponse(
+                            {
+                                'status': 'success',
+                                'message': 'File uploaded successfully!',
+                            }
+                        )
+
+                    except Exception as e:
+                        if email_recipient:
+                            send_email(
+                                recipient=email_recipient,
+                                subject='File Upload Failed',
+                                body=f'File upload failed for {email}. Error: {str(e)}',
+                            )
+                        return JsonResponse(
+                            {
+                                'status': 'error',
+                                'message': f'Failed to save file: {str(e)}',
+                            }
+                        )
+                else:
+                    if email_recipient:
+                        send_email(
+                            recipient=email_recipient,
+                            subject='File Upload Failed',
+                            body=f'File upload failed for {email}. Invalid file type.',
+                        )
+                return JsonResponse(
+                    {
+                        'status': 'error',
+                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
+                    }
+                )
+            else:
+                error_message = " ".join(extract_errors_as_string(form.errors))
+
+                if email_recipient:
+                    send_email(
+                        recipient=email_recipient,
+                        subject='Form Submission Failed',
+                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
+                    )
+
+                return JsonResponse(
+                    {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
+                )
+
+        return render(request, "event_page/event_page.html", {
+            "page": self,
+            "form": form,
+        })
 
     content_panels = [
         BasicPageAbstract.title_panel,
