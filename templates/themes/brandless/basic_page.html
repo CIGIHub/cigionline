@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block header %}{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'themeBrandless' 'css' %}
+{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    {% if self.image_banner %}
+      {% with self.image_banner as image_banner %}
+        <picture class="banner-bg">
+          {% image image_banner original as image_banner_lg %}
+          {% image image_banner fill-1440x484 as image_banner_md %}
+          {% image image_banner fill-768x412 as image_banner_sm %}
+          <source srcset="{{image_banner_lg.url}}, 1440w" media="(min-width: 1440px)">
+          <source srcset="{{image_banner_md.url}}, 768w" media="(min-width: 768px)">
+          <img src="{{image_banner_sm.url}}" alt="{{image_banner.title}}">
+        </picture>
+      {% endwith %}
+    {% endif %}
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-lg-6">
+          <h1>{{ self.title }}</h1>
+          {% if self.subtitle %}
+            <div class="subtitle">
+              {{ self.subtitle|richtext }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% if self.image_hero %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <figure>
+            {% image self.image_hero width-1280 %}
+            {% if self.image_hero.caption %}
+              <figcaption>
+                {{ self.image_hero.caption }}
+              </figcaption>
+            {% endif %}
+          </figure>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  
+  {% include "includes/body.html" with body=self.body %}
+
+  {% if self.related_files %}
+    <section class="related-files">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock content %}
+
+{% block footer %}{% endblock %}

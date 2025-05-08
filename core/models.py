@@ -139,6 +139,15 @@ class BasicPageAbstract(models.Model):
         verbose_name='Hero Image',
         help_text='A large image to be displayed prominently on the page.',
     )
+    image_banner = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+        help_text='A banner image to be displayed as background of the hero section.',
+    )
     submenu = models.ForeignKey(
         'menus.Menu',
         null=True,
@@ -222,6 +231,7 @@ class BasicPageAbstract(models.Model):
     images_panel = MultiFieldPanel(
         [
             FieldPanel('image_hero'),
+            FieldPanel('image_banner'),
         ],
         heading='Images',
         classname='collapsible collapsed',
