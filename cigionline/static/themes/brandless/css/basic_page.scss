@@ -5,7 +5,7 @@ $link-hover-color: #0056b3;
 
 section {
   &.hero {
-    background-color: transparent;
+    background-color: $black;
 
     h1,
     .subtitle {
