@@ -2,6 +2,7 @@
 @import '../../../css/global/variables';
 $link-color: #0000ee;
 $link-hover-color: #0056b3;
+$hero-text-colour: #c43c2c;
 
 section {
   &.hero {
@@ -9,7 +10,7 @@ section {
 
     h1,
     .subtitle {
-      color: $black;
+      color: $hero-text-colour;
     }
 
     h1 {
