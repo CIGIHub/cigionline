@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_banner %}
+    {% image self.image_banner fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% endif %}
+{% endblock %}
+
 {% block header %}{% endblock %}
 
 {% block extra_css %}
