@@ -47,6 +47,7 @@ from streams.blocks import (
     InlineVideoBlock,
     HighlightTitleBlock,
     LineBreakBlock,
+    FilesBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -89,6 +90,7 @@ class BasicPageAbstract(models.Model):
         ('persons_list_block', PersonsListBlock()),
         ('publications_list_block', PublicastionsListBlock()),
         ('additional_pages_block', AddtionalPagesBlock()),
+        ('files_block', FilesBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())

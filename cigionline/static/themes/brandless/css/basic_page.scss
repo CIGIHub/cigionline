@@ -42,4 +42,21 @@ section {
 
 main {
   margin-bottom: 4rem;
+
+  .files-block {
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        @include link($color: $link-color, $hover-color: $link-hover-color);
+
+        a {
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
 }
