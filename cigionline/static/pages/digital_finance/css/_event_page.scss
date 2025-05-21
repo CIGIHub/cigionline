@@ -192,7 +192,7 @@ body {
     }
 
     .footer-menu {
-      margin: 2rem 0 4rem;
+      margin: 3rem 0 4rem;
     }
 
     ul {
@@ -212,6 +212,34 @@ body {
 
     svg {
       width: 75px;
+    }
+
+    form {
+      display: flex;
+    }
+
+    input[type='email'] {
+      background-color: $footer-bg-colour;
+      border: 0;
+      border-bottom: 3px solid $black;
+      margin-right: 1rem;
+      padding-left: 1rem;
+      height: 2rem;
+    }
+
+    input[type='submit'] {
+      background-color: $white;
+      color: $black;
+      border: 0;
+      padding: 0.5rem 1rem;
+      font-family: $heading-font;
+      font-size: 0.875rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+      &:hover {
+        background-color: $cigi-primary-colour;
+        color: $white;
+      }
     }
   }
 }
