@@ -1,0 +1,175 @@
+@import '../../../css/global/mixins';
+$digital-finance-bg-colour: #fffaf3;
+$digital-finance-light-pink: #dda0c4;
+$digital-finance-dark-pink: #ab218e;
+$digital-finance-orange: #efbc83;
+$digital-finance-green: #73bd9a;
+$heading-font: 'ocr-a-std', monospace, sans-serif;
+$body-font: 'Crimson Pro', sans-serif;
+
+body {
+  @include top-bar(
+    $color: $black,
+    $hover-color: $link-hover-color,
+    $background-color: transparent
+  );
+  background-color: $digital-finance-bg-colour;
+
+  h1,
+  h2 {
+    font-family: $heading-font;
+  }
+
+  section {
+    &.hero {
+      background-color: $digital-finance-bg-colour;
+      padding: 7rem 0 5rem;
+
+      h1 {
+        div {
+          &:first-child {
+            @include media-breakpoint-up(md) {
+              font-size: 4rem;
+            }
+            font-size: 2rem;
+            margin-bottom: 2rem;
+          }
+
+          &:nth-child(2) {
+            @include media-breakpoint-up(md) {
+              font-size: 1.75rem;
+              width: 80%;
+            }
+            font-size: 1.25rem;
+          }
+        }
+      }
+
+      .subtitle {
+        @include media-breakpoint-up(md) {
+          font-size: 1.5em;
+        }
+        font-size: 1.25em;
+      }
+    }
+
+    &.abstract-submission {
+      margin-bottom: 3rem;
+
+      text-align: center;
+      margin: 2rem 0 6rem;
+
+      .form-wrapper {
+        @include media-breakpoint-up(sm) {
+          padding: 2rem 4rem;
+        }
+        overflow: hidden;
+        padding: 2rem;
+        border: 1px solid $cigi-medium-grey;
+        border-radius: 5px;
+
+        & > div {
+          display: flex;
+          justify-content: center;
+        }
+      }
+
+      form {
+        @include media-breakpoint-down(sm) {
+          flex-direction: column;
+        }
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+
+      .form-fields {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+
+        .form-field {
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: center;
+          margin-bottom: 1rem;
+          overflow: hidden;
+
+          label {
+            margin-right: 0.5rem;
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      input[type='file'] {
+        @include media-breakpoint-up(lg) {
+          margin-right: 4rem;
+        }
+        width: 14rem;
+      }
+
+      button {
+        @include media-breakpoint-down(sm) {
+          margin-top: 1rem;
+        }
+        color: $black;
+        border: 2px solid $digital-finance-green;
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+        background-color: $digital-finance-bg-colour;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-transform: uppercase;
+        height: fit-content;
+
+        &:hover {
+          background-color: $digital-finance-green;
+          color: $white;
+        }
+      }
+
+      .response-message {
+        margin-top: 1rem;
+        padding: 0.25rem 0.75rem;
+        border: 1px solid $black;
+        border-radius: 5px;
+        display: none;
+        transition: color 0.2s ease, border 0.2s ease;
+
+        &.success,
+        &.error,
+        &.loading {
+          display: block;
+        }
+
+        &.loading {
+          color: grey;
+          border-color: grey;
+
+          &::after {
+            content: '';
+            background-image: 'url(/static/assets/loader_spinner.gif)';
+          }
+        }
+
+        &.success {
+          color: green;
+          border-color: green;
+        }
+
+        &.error {
+          color: red;
+          border-color: red;
+        }
+      }
+    }
+
+    &.body {
+      font-family: $body-font;
+    }
+  }
+
+  footer {
+    font-family: $body-font;
+  }
+}

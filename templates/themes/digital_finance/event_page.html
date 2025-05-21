@@ -31,46 +31,42 @@
   {% endif %}
 {% endblock %}
 {% block extra_js %}
-  {% render_bundle 'themeEventsSubmission' 'js' attrs='defer' %}
+  {% render_bundle 'themeDigitalFinance' 'js' attrs='defer' %}
 {% endblock %}
 {% block extra_css %}
-  {% render_bundle 'themeEventsSubmission' 'css' %}
+  {% render_bundle 'themeDigitalFinance' 'css' %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/xib7ess.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
+{% block body_class %}digital-finance-conference{% endblock%}
 
 {% block content %}
-  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all author_count=self.author_count registration_url=self.registration_url time_zone=self.time_zone time_zone_label=self.time_zone_label is_past=self.is_past %}
-
-  {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
-    <section class="event-multimedia-embed-section">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-10 col-lg-8">
-            <div class="event-multimedia-embed">
-              {% embed self.multimedia_page.specific.multimedia_url max_width="1080" %}
+  <section class="hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h1>
+            <div>
+              Future of Digital Finance:
             </div>
-          </div>
+            <div>
+              Emerging opportunities in India, China and the African Continent
+            </div>
+          </h1>
         </div>
       </div>
-    </section>
-  {% elif self.image_hero %}
-    <section>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <figure class="event-image-hero">
-              {% image self.image_hero width-1280 %}
-              {% if self.image_hero.caption %}
-                <figcaption>
-                  {{ self.image_hero.caption }}
-                </figcaption>
-              {% endif %}
-            </figure>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
+    </div>
+  </section>
 
   {% include "includes/body.html" with body=self.body %}
 
@@ -90,7 +86,7 @@
     </section>
   {% endif %}
 
-  <section class="events-submission">
+  <section class="abstract-submission">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
@@ -118,10 +114,4 @@
       </div>
     </div>
   </section>
-
-  {% if request.is_preview and self.recommended_content_preview %}
-    {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
-  {% elif self.recommended_content %}
-    {% include 'includes/recommended.html' with recommended=self.recommended_content %}
-  {% endif %}
 {% endblock content %}

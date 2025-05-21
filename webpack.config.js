@@ -71,7 +71,7 @@ const config = {
     themeDataSeries: './cigionline/static/themes/data_series/index.js',
     themeDataValueSeries: './cigionline/static/themes/data_value_series/index.js',
     themeDPH: './cigionline/static/themes/dph/index.js',
-    themeEventsSubmission: './cigionline/static/pages/events_submission/index.js',
+    themeDigitalFinance: './cigionline/static/pages/digital_finance/index.js',
     themeFreedomOfThought: './cigionline/static/themes/freedom_of_thought/index.js',
     themeFourDomainsSeries: './cigionline/static/themes/four_domains_series/index.js',
     themeGES: './cigionline/static/themes/ges/index.js',
