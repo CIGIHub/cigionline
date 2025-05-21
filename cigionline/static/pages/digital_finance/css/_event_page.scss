@@ -6,6 +6,7 @@ $digital-finance-orange: #efbc83;
 $digital-finance-green: #73bd9a;
 $heading-font: 'ocr-a-std', monospace, sans-serif;
 $body-font: 'Crimson Pro', sans-serif;
+$footer-bg-colour: #eedfe7;
 
 body {
   @include top-bar(
@@ -20,7 +21,17 @@ body {
     font-family: $heading-font;
   }
 
+  h2 {
+    @include media-breakpoint-up(md) {
+      font-size: 1.75rem;
+    }
+    font-size: 1.25rem;
+    text-transform: uppercase;
+  }
+
   section {
+    margin: 3rem 0;
+
     &.hero {
       background-color: $digital-finance-bg-colour;
       padding: 7rem 0 5rem;
@@ -54,15 +65,13 @@ body {
     }
 
     &.abstract-submission {
-      margin-bottom: 3rem;
-
-      text-align: center;
-      margin: 2rem 0 6rem;
+      margin-bottom: 6rem;
 
       .form-wrapper {
         @include media-breakpoint-up(sm) {
           padding: 2rem 4rem;
         }
+        text-align: center;
         overflow: hidden;
         padding: 2rem;
         border: 1px solid $cigi-medium-grey;
@@ -170,6 +179,39 @@ body {
   }
 
   footer {
-    font-family: $body-font;
+    color: $black;
+    font-size: 0.875rem;
+    font-family: $heading-font;
+    line-height: 1.25;
+    background-color: $footer-bg-colour;
+
+    a {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .footer-menu {
+      margin: 2rem 0 4rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        margin-right: 2rem;
+      }
+    }
+
+    p {
+      @include link($color: $black, $hover-color: $cigi-primary-colour);
+    }
+
+    svg {
+      width: 75px;
+    }
   }
 }
