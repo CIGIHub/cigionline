@@ -52,6 +52,10 @@
 
 {% block content %}
   <section class="hero">
+    <picture class="banner-bg">
+      {% image self.image_banner original as image_banner %}
+      <img src="{{image_banner.url}}" alt="{{image_banner.title}}">
+    </picture>
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">

@@ -34,7 +34,25 @@ body {
 
     &.hero {
       background-color: $digital-finance-bg-colour;
-      padding: 7rem 0 5rem;
+      padding: 7rem 0 0;
+      margin-top: 0;
+
+      .banner-bg {
+        @include media-breakpoint-up(lg) {
+          right: 10%;
+        }
+        @include media-breakpoint-up(xl) {
+          right: 15%;
+        }
+        position: absolute;
+        width: auto;
+        right: 0;
+
+        img {
+          object-fit: contain;
+          object-position: right;
+        }
+      }
 
       h1 {
         div {
@@ -186,9 +204,7 @@ body {
     background-color: $footer-bg-colour;
 
     a {
-      &:hover {
-        text-decoration: underline;
-      }
+      text-decoration: underline;
     }
 
     .footer-menu {
