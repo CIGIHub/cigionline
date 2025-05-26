@@ -38,6 +38,33 @@ section {
       }
     }
   }
+
+  &.themed-content {
+    .sovereign-canada-rationale-block {
+      .rationale-content {
+        display: flex;
+
+        .document-wrapper {
+          padding: 2rem 1rem;
+          position: relative;
+          &::before {
+            content: '';
+            border: 1px solid $cigi-medium-grey;
+            transform: skewX(-10deg);
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            transition: 0.2s;
+          }
+        }
+      }
+    }
+  }
 }
 
 main {

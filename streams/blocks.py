@@ -1576,3 +1576,30 @@ class T7CommuniqueBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'T7 Communique'
         template = 'streams/t7_communique_block.html'
+
+
+class SovereignCanadaRationaleBlock(blocks.StructBlock):
+    documents = blocks.StreamBlock(
+        [
+            ('document', blocks.StructBlock(
+                [
+                    ('file', DocumentChooserBlock(required=True)),
+                    ('title', blocks.CharBlock(required=False)),
+                    ('size', blocks.ChoiceBlock(
+                        choices=[
+                            ('small', 'Small'),
+                            ('large', 'Large'),
+                        ],
+                        default='large',
+                    )),
+                ],
+                required=True,
+            )),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Sovereign Canada Rationale'
+        template = 'streams/sovereign_canada_rationale_block.html'

@@ -64,6 +64,14 @@
   
   {% include "includes/body.html" with body=self.body %}
 
+  {% if self.themed_content %}
+    <section class="themed-content">
+      {% for block in self.themed_content %}
+        {% include_block block %}
+      {% endfor %}
+    </section>
+  {% endif %}
+
   {% if self.related_files %}
     <section class="related-files">
       <div class="container">
