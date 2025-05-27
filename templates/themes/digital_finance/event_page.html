@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags webpack_loader %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -61,7 +61,7 @@
         <div class="col col-md-10 col-lg-8">
           <h1>
             <div>
-              Future of Digital Finance:
+              The Future of Digital Finance:
             </div>
             <div>
               Emerging opportunities in India, China and the African Continent
@@ -70,6 +70,57 @@
         </div>
       </div>
     </div>
+  </section>
+  <section class="event-details">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="event-details-container">
+            <ul>
+
+              <li class="event-date">
+                Wednesday, September 24, 2025, 07:00 a.m. to 10:30 a.m. EST
+              </li>
+              <li class="event-end">
+                -Thursday, September 25, 2025, 07:00 a.m. to 11:15 a.m. EST
+              </li>
+              <li class="event-location">
+                <a href="{{ self.location_map_url }}" target="_blank" rel="noopener noreferrer">  
+                  <i class="fas fa-map-marker-alt"></i>{{ self.location_string }}
+                </a>
+              </li>
+              <li class="event-type">
+                {{ self.get_event_type_display }}
+              </li>
+              {% if self.registration_url %}
+                <li class="event-registration">
+                  <a href="{{ self.registration_url }}" target="_blank" rel="noopener noreferrer">Register here</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="navigation">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <nav>
+            <ul>
+              <li><a href="#overview">Overview</a></li>
+              <li><a href="#event-objectives">Event Objectives</a></li>
+              <li><a href="#policy-areas">Policy Areas</a></li>
+              <li><a href="#format">Format</a></li>
+              <li><a href="#abstract-submission">Abstract Submission</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   {% include "includes/body.html" with body=self.body %}
@@ -89,84 +140,35 @@
       </div>
     </section>
   {% endif %}
-
-  <section class="abstract-submission">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <h2>Abstract Submission</h2>
-          <div class="form-wrapper">
-            <p>Please upload your file as either a PDF (.pdf) or Word (.doc/.docx) file.</p>
-            <form id="eventUploadForm" method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="form-fields">
-                <div class="form-field">
-                  {{ form.file.label_tag }}
-                  {{ form.file }} 
-                </div>
-                <div class="form-field">
-                  {{ form.email.label_tag }}
-                  {{ form.email }}
-                </div>
-              </div>
-              <button type="submit">Upload File</button>
-            </form>
-            <div>
-              <div id="responseMessage" class="response-message"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  {% endblock content %}
+{% endblock content %}
   
-  {% block footer %}
-    <footer>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-4">
-            <p>Partner</p>
-            <p>To acknowledge our partnership with CIGI to offer this transdisciplinary research program</p>
+{% block footer %}
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col col-lg-5 offset-md-1 offset-lg-2">
+        <h1>
+          <div>
+            The Future of Digital Finance:
           </div>
-          <div class="col-md-10 col-lg-4">
+          <div>
+            Emerging opportunities in India, China and the African Continent
+          </div>
+        </h1>
+        </div>
+        <div class="col col-lg-5 offset-md-1 offset-lg-0">
+          <div class="subscribe-blurb">
             <p>
-              For additional information or inquiries,
-              please contact the Digital Policy Hub team
-              at: <a href="mailto:digitalhubinquiries@cigionline.org">digitalhubinquiries@cigionline.org</a>
+              For additional information or inquiries, please contact the Future of Digital Finance team at: <a href="digifinconference@cigionline.org">digifinconference@cigionline.org</a>.
             </p>
-            <p>
-              or sign up for the email list to stay up
-              to date:
-            </p>
-            
-            <form id='subscribe-form-dph' action="{% url 'subscribe_dph' %}" method="POST">
+            <form id='subscribe-form' action="{% url 'subscribe_dph' %}" method="POST">
               {% csrf_token %}
               <input type="email" name="email" placeholder="enter your email" required>
               <input type="submit" value="Sign up">
             </form>
           </div>
         </div>
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-8">
-            <div class="d-flex justify-content-between align-items-end footer-menu">
-              <ul class="d-flex">
-                <li>
-                  <a href="/digital-policy-hub/">About us</a>
-                </li>
-                <li>
-                  <a href="/digital-policy-hub/working-papers/">Working Papers</a>
-                </li>
-                <li>
-                  <a href="/digital-policy-hub/news/">News</a>
-                </li>
-              </ul>
-              <a href="/">
-                {% include 'includes/header_cigi_logo_small.svg' %}
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
-    </footer>
-  {% endblock %}
+    </div>
+  </footer>
+{% endblock %}

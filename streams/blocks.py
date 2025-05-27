@@ -1576,3 +1576,11 @@ class T7CommuniqueBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'T7 Communique'
         template = 'streams/t7_communique_block.html'
+
+
+class AbstractSubmissionBlock(blocks.StructBlock):
+    # Renders a block that contains a form for submitting abstracts.
+    class Meta:
+        icon = 'form'
+        label = 'Abstract Submission Form'
+        template = 'streams/abstract_submission_form_block.html'

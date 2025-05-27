@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from modelcluster.fields import ParentalKey
+from streams.blocks import AbstractSubmissionBlock
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
 from wagtail.admin.panels import (
@@ -181,6 +182,12 @@ class EventPage(
         SYDNEY = ('Australia/Sydney', '(UTC+10:00/11:00) AUS Eastern Time')
         AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
 
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            ('abstract_submission_block', AbstractSubmissionBlock()),
+        ],
+        blank=True,
+    )
     embed_youtube = models.URLField(blank=True)
     event_agenda = models.ForeignKey(
         'wagtaildocs.Document',

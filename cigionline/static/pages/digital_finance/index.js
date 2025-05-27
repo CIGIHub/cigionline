@@ -1,5 +1,12 @@
 import './css/_event_page.scss';
 
+const h2 = document.querySelectorAll('h2');
+if (h2) {
+  h2.forEach((h2Element) => {
+    const id = h2Element.innerText.trim().toLowerCase().replace(/\s+/g, '-');
+    h2Element.setAttribute('id', id);
+  });
+}
 const eventUploadForm = document.getElementById('eventUploadForm');
 eventUploadForm.addEventListener('submit', function (event) {
   event.preventDefault();
