@@ -386,7 +386,7 @@ class EventPage(
         else:
             template = 'events/event_page.html'
 
-        if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if email_recipient and request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
             form = EventSubmissionForm(request.POST, request.FILES)
             if form.is_valid():
                 uploaded_file = form.cleaned_data['file']
@@ -395,9 +395,12 @@ class EventPage(
                 file_extension = uploaded_file.name.lower().split('.')[-1]
 
                 if f'.{file_extension}' in valid_extensions:
-                    collection, created = Collection.objects.get_or_create(
-                        name='Event submissions',
-                    )
+                    if self.theme.name == 'Digital Finance':
+                        collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
+                    else:
+                        collection = Collection.objects.get(
+                            name='Event submissions',
+                        )
 
                     try:
                         document = Document.objects.create(
@@ -412,8 +415,8 @@ class EventPage(
                             try:
                                 send_email(
                                     recipient=email_recipient,
-                                    subject='New File Uploaded Successfully',
-                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.',
+                                    subject='Digital Finance Abstract Uploaded Successfully',
+                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
                                 )
                                 send_email(
                                     recipient=email,
