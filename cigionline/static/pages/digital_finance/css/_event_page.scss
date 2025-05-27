@@ -12,10 +12,49 @@ body {
   &.digital-finance-conference {
     @include top-bar(
       $color: $black,
-      $hover-color: $link-hover-color,
       $background-color: transparent
     );
     background-color: $digital-finance-bg-colour;
+
+    &.disable-scroll {
+      header {
+        .cigi-top-bar {
+          .cigi-logo {
+            svg {
+              @include media-breakpoint-down(md) {
+                * {
+                  fill: $white;
+                }
+              }
+              @include media-breakpoint-up(md) {
+                fill: $white;
+
+                * {
+                  fill: $white;
+                }
+              }
+              fill: $white;
+            }
+          }
+
+          nav {
+            ul {
+              a,
+              button {
+                @include media-breakpoint-up(md) {
+                  color: $white;
+                }
+                color: $white;
+
+                &:hover {
+                  color: $cigi-primary-colour;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 
     h1,
     h2,
@@ -118,7 +157,7 @@ body {
                   $hover-color: $cigi-primary-colour
                 );
                 margin-left: -1.1rem;
-    
+
                 i {
                   margin-right: 0.5rem;
                 }
@@ -179,10 +218,7 @@ body {
             margin: 0;
 
             li {
-              @include link(
-                $color: $black,
-                $hover-color: $cigi-primary-colour
-              );
+              @include link($color: $black, $hover-color: $cigi-primary-colour);
               margin-right: 1rem;
               font-size: 1.25rem;
               text-decoration: underline;
@@ -408,7 +444,7 @@ body {
 
         p {
           font-family: Courier, monospace, sans-serif;
-          
+
           &:last-child {
             margin-bottom: 0;
           }

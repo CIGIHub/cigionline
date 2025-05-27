@@ -1589,6 +1589,29 @@ class AbstractSubmissionBlock(blocks.StructBlock):
 class CollapsibleParagraphBlock(blocks.StructBlock):
     """Standard text paragraph that is collapsible."""
 
+    collapsed = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        help_text="If checked, the paragraph will be collapsed by default.",
+    )
+    title = blocks.RichTextBlock(
+        required=False,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Optional title for the collapsible paragraph.",
+    )
+    title_type = blocks.ChoiceBlock(
+        choices=[
+            ('h2', 'H2'),
+            ('h3', 'H3'),
+            ('h4', 'H4'),
+        ],
+        default='h2',
+        help_text="Select the heading type for the title.",
+    )
     paragraph = blocks.RichTextBlock(
         required=True,
         features=[
@@ -1611,20 +1634,6 @@ class CollapsibleParagraphBlock(blocks.StructBlock):
             'anchor',
             'rtl',
         ],
-    )
-    collapsed = blocks.BooleanBlock(
-        required=False,
-        default=True,
-        help_text="If checked, the paragraph will be collapsed by default.",
-    )
-    title = blocks.RichTextBlock(
-        required=False,
-        features=[
-            'bold',
-            'italic',
-            'link',
-        ],
-        help_text="Optional title for the collapsible paragraph.",
     )
 
     class Meta:

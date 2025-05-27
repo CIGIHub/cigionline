@@ -5,7 +5,13 @@
     <div class="row d-block">
       <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
         <div class="collapsible-header">
-          <h2>{{ self.title }}</h2>
+          {% if self.title_type == "h2" %}
+            <h2>{{ self.title }}</h2>
+          {% elif self.title_type == "h3" %}
+            <h3>{{ self.title }}</h3>
+          {% elif self.title_type == "h4" %}
+            <h4>{{ self.title }}</h4>
+          {% endif %}
           <button class="toggle-button" aria-expanded="{% if self.collapsed %}false{% else %}true{% endif %}" aria-controls="collapsible-content-{{ self.id }}">
             <span class="icon-expand">+</span>
             <span class="icon-collapse">−</span>
