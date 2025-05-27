@@ -1,6 +1,10 @@
 .collapsible-paragraph-block {
   &.collapsed {
     .collapsible-header {
+      h3 {
+        margin-bottom: -1rem;
+      }
+
       .toggle-button {
         .icon-expand {
           display: block;
@@ -47,10 +51,15 @@
         display: block;
       }
     }
+
+    h3 {
+      margin-top: 2rem;
+      margin-bottom: 0.5em;
+    }
   }
 
   .collapsible-content {
-    transition: max-height 0.3s ease, opacity 0.3s ease;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin-bottom 0.3s ease;
     overflow: hidden;
     max-height: 100rem;
     opacity: 1;
