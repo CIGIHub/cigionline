@@ -1584,3 +1584,50 @@ class AbstractSubmissionBlock(blocks.StructBlock):
         icon = 'form'
         label = 'Abstract Submission Form'
         template = 'streams/abstract_submission_form_block.html'
+
+
+class CollapsibleParagraphBlock(blocks.StructBlock):
+    """Standard text paragraph that is collapsible."""
+
+    paragraph = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'underline',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+            'rtl',
+        ],
+    )
+    collapsed = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        help_text="If checked, the paragraph will be collapsed by default.",
+    )
+    title = blocks.RichTextBlock(
+        required=False,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Optional title for the collapsible paragraph.",
+    )
+
+    class Meta:
+        icon = 'edit'
+        label = 'Collapsible Paragraph'
+        template = 'streams/collapsible_paragraph_block.html'

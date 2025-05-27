@@ -1,0 +1,58 @@
+.collapsible-paragraph-block {
+  &.collapsed {
+    .collapsible-header {
+      .toggle-button {
+        .icon-expand {
+          display: block;
+        }
+        .icon-collapse {
+          display: none;
+        }
+      }
+    }
+
+    .collapsible-content {
+      max-height: 0;
+      opacity: 0;
+    }
+  }
+
+  .collapsible-header {
+    position: relative;
+
+    .toggle-button {
+      font-size: 1.5rem;
+      position: absolute;
+      left: -1rem;
+      top: 0;
+      bottom: 0;
+      width: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+
+      span {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+      }
+
+      .icon-expand {
+        display: none;
+      }
+      .icon-collapse {
+        display: block;
+      }
+    }
+  }
+
+  .collapsible-content {
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
+    max-height: 100rem;
+    opacity: 1;
+  }
+}

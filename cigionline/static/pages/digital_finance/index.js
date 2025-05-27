@@ -7,6 +7,15 @@ if (h2) {
     h2Element.setAttribute('id', id);
   });
 }
+const collapsibleParagraphs = document.querySelectorAll('.collapsible-paragraph-block');
+if (collapsibleParagraphs) {
+  collapsibleParagraphs.forEach((paragraph) => {
+    const toggleButton = paragraph.querySelector('button');
+    toggleButton.addEventListener('click', () => {
+      paragraph.classList.toggle('collapsed');
+    });
+  });
+}
 const eventUploadForm = document.getElementById('eventUploadForm');
 eventUploadForm.addEventListener('submit', function (event) {
   event.preventDefault();

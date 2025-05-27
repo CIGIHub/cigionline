@@ -408,6 +408,10 @@ body {
 
         p {
           font-family: Courier, monospace, sans-serif;
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
       }
     }
