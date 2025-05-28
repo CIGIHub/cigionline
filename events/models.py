@@ -426,7 +426,7 @@ class EventPage(
                                 )
                                 send_email_digital_finance(
                                     recipient=email,
-                                    subject='Event Submission Upload Successful',
+                                    subject='Abstract Submission Upload Successful',
                                     body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
                                 )
                             except Exception as e:
