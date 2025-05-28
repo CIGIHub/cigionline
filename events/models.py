@@ -14,7 +14,7 @@ from django.utils import timezone
 from modelcluster.fields import ParentalKey
 from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
 from uploads.models import DocumentUpload
-from utils.email_utils import send_email, extract_errors_as_string
+from utils.email_utils import send_email_digital_finance, extract_errors_as_string
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -380,7 +380,13 @@ class EventPage(
 
     def serve(self, request):
         form = EventSubmissionForm()
-        email_recipient = self.email_recipient
+        
+
+        if self.theme.name == 'Digital Finance':
+            email_recipient = 'digitalfinanceinquiries@cigionline.org'
+        if self.email_recipient:
+            email_recipient = self.email_recipient
+
         if self.theme:
             template = f'themes/{self.get_theme_dir()}/event_page.html'
         else:
@@ -413,12 +419,12 @@ class EventPage(
                         )
                         if email_recipient:
                             try:
-                                send_email(
+                                send_email_digital_finance(
                                     recipient=email_recipient,
                                     subject='Digital Finance Abstract Uploaded Successfully',
                                     body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
                                 )
-                                send_email(
+                                send_email_digital_finance(
                                     recipient=email,
                                     subject='Event Submission Upload Successful',
                                     body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
@@ -434,7 +440,7 @@ class EventPage(
 
                     except Exception as e:
                         if email_recipient:
-                            send_email(
+                            send_email_digital_finance(
                                 recipient=email_recipient,
                                 subject='File Upload Failed',
                                 body=f'File upload failed for {email}. Error: {str(e)}',
@@ -447,7 +453,7 @@ class EventPage(
                         )
                 else:
                     if email_recipient:
-                        send_email(
+                        send_email_digital_finance(
                             recipient=email_recipient,
                             subject='File Upload Failed',
                             body=f'File upload failed for {email}. Invalid file type.',
@@ -462,7 +468,7 @@ class EventPage(
                 error_message = " ".join(extract_errors_as_string(form.errors))
 
                 if email_recipient:
-                    send_email(
+                    send_email_digital_finance(
                         recipient=email_recipient,
                         subject='Form Submission Failed',
                         body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
