@@ -129,10 +129,10 @@
         <div class="col col-lg-5 offset-md-1 offset-lg-2">
         <h1>
           <div>
-            The Future of Digital Finance:
+            The Future of Digital Finance
           </div>
           <div>
-            Emerging opportunities in India, China and on the African Continent
+            Emerging opportunities in India, in China and on the African continent
           </div>
         </h1>
         </div>
@@ -141,6 +141,14 @@
             <p>
               For additional information or inquiries, please contact the Future of Digital Finance team at: <a href="mailto:digitalfinanceinquiries@cigionline.org">digitalfinanceinquiries@cigionline.org</a>.
             </p>
+            <p>
+              or sign up for the email list to stay up to date:
+            </p>
+            <form id='subscribe-form' action="{% url 'subscribe_digital_finance' %}" method="POST">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="enter your email" required>
+                <input type="submit" value="Sign up">
+            </form>
           </div>
         </div>
       </div>

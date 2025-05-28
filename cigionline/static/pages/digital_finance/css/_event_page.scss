@@ -10,10 +10,7 @@ $footer-bg-colour: #eedfe7;
 
 body {
   &.digital-finance-conference {
-    @include top-bar(
-      $color: $black,
-      $background-color: transparent
-    );
+    @include top-bar($color: $black, $background-color: transparent);
     background-color: $digital-finance-bg-colour;
 
     &.disable-scroll {
@@ -365,18 +362,20 @@ body {
           margin-bottom: 0;
         }
         margin-bottom: 1rem;
+
         div {
           &:first-child {
-            @include media-breakpoint-up(md) {
-              font-size: 2.5rem;
+            @include media-breakpoint-up(lg) {
+              width: 60%;
             }
-            font-size: 1.5rem;
-          }
-          &:nth-child(2) {
             @include media-breakpoint-up(md) {
-              font-size: 1.5rem;
+              font-size: 1.75rem;
             }
             font-size: 1.25rem;
+            margin-bottom: 1rem;
+          }
+          &:nth-child(2) {
+            font-size: 0.875rem;
           }
         }
       }
@@ -441,12 +440,12 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-
+        
         p {
           font-family: Courier, monospace, sans-serif;
 
-          &:last-child {
-            margin-bottom: 0;
+          &:nth-child(2) {
+            margin-bottom: 2rem;
           }
         }
       }
