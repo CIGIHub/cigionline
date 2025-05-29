@@ -76,30 +76,33 @@ body {
       margin-top: 1rem;
     }
 
+    .banner-bg {
+      @include media-breakpoint-up(md) {
+        opacity: 0.3;
+      }
+      @include media-breakpoint-up(lg) {
+        opacity: 0.5;
+      }
+      position: fixed;
+      width: auto;
+      height: 100vh;
+      right: 0;
+      opacity: 0.2;
+      transform: translateX(25%);
+
+      img {
+        height: 100vh;
+        width: auto;
+      }
+    }
+
     section {
       margin: 3rem 0;
 
       &.hero {
-        background-color: $digital-finance-bg-colour;
+        background-color: transparent;
         padding: 7rem 0 0;
         margin-top: 0;
-
-        .banner-bg {
-          @include media-breakpoint-up(lg) {
-            right: 10%;
-          }
-          @include media-breakpoint-up(xl) {
-            right: 15%;
-          }
-          position: absolute;
-          width: auto;
-          right: 0;
-
-          img {
-            object-fit: contain;
-            object-position: right;
-          }
-        }
 
         h1 {
           margin-bottom: -8px;
@@ -231,6 +234,19 @@ body {
 
         li {
           margin-bottom: 0.25rem;
+        }
+
+        .collapsible-paragraph-block {
+          .collapsible-header {
+            .toggle-button {
+              @include media-breakpoint-up(md) {
+                left: -1rem;
+              }
+              left: auto;
+              right: 0;
+              line-height: 0.8;
+            }
+          }
         }
       }
 
@@ -440,7 +456,7 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        
+
         p {
           font-family: Courier, monospace, sans-serif;
 

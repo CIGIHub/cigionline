@@ -51,11 +51,11 @@
 {% block body_class %}digital-finance-conference{% endblock%}
 
 {% block content %}
+  <picture class="banner-bg">
+    {% image self.image_banner original as image_banner %}
+    <img src="{{image_banner.url}}" alt="{{image_banner.title}}">
+  </picture>
   <section class="hero">
-    <picture class="banner-bg">
-      {% image self.image_banner original as image_banner %}
-      <img src="{{image_banner.url}}" alt="{{image_banner.title}}">
-    </picture>
     <div class="container">
       <div class="row justify-content-center">
         <div class="col col-md-10 col-lg-8">
@@ -78,10 +78,10 @@
           <div class="event-details-container">
             <ul>
               <li class="event-date">
-                Wednesday, Sept 24, 2025, 7:00 - 10:30 AM EDT
+                Wednesday, Sept 24, 2025, 7:00 - 10:30 AM EDT (UTC–5)
               </li>
               <li class="event-end">
-                and Thursday, Sept 25, 2025, 7:00 - 11:15 AM EDT
+                &nbsp;Thursday, Sept 25, 2025, 7:00 - 11:15 AM EDT (UTC–5)
               </li>
               <li class="event-location">
                 <a href="{{ self.location_map_url }}" target="_blank" rel="noopener noreferrer">  
