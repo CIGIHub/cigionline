@@ -52,7 +52,8 @@ def send_email(recipient, subject, body):
 
     except Exception as e:
         print(f'Error sending email: {str(e)}')
-        
+
+
 def send_email_digital_finance(recipient, subject, body):
     '''Send a simple email via SendGrid.'''
 

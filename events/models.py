@@ -22,10 +22,9 @@ from wagtail.admin.panels import (
     PageChooserPanel,
 )
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page
+from wagtail.models import Orderable, Page, Collection
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.models import Document
-from wagtail.models import Page, Collection
 from wagtail.search import index
 import pytz
 import re
@@ -380,7 +379,6 @@ class EventPage(
 
     def serve(self, request):
         form = EventSubmissionForm()
-        
 
         if self.theme.name == 'Digital Finance':
             email_recipient = 'digitalfinanceinquiries@cigionline.org'
