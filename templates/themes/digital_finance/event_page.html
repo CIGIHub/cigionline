@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags webpack_loader %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta property="og:type" content="article" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'themeDigitalFinance' 'js' attrs='defer' %}
+{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'themeDigitalFinance' 'css' %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+{% block extra_fonts %}
+  <link rel="stylesheet" href="https://use.typekit.net/xib7ess.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  {% include "includes/top_bar.html" with small=True %}
+{% endblock %}
+
+{% block body_class %}digital-finance-conference{% endblock%}
+
+{% block content %}
+  <picture class="banner-bg">
+    {% image self.image_banner original as image_banner %}
+    <img src="{{image_banner.url}}" alt="{{image_banner.title}}">
+  </picture>
+  <section class="hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <h1>
+            <div>
+              The Future of Digital Finance
+            </div>
+            <div>
+              Emerging opportunities in India, in China and on the African continent
+            </div>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="event-details">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="event-details-container">
+            <ul>
+              <li class="event-date">
+                Wednesday, Sept 24, 2025, 7:00 - 10:30 AM EDT (UTC–5)
+              </li>
+              <li class="event-end">
+                &nbsp;Thursday, Sept 25, 2025, 7:00 - 11:15 AM EDT (UTC–5)
+              </li>
+              <li class="event-location">
+                <a href="{{ self.location_map_url }}" target="_blank" rel="noopener noreferrer">  
+                  <i class="fas fa-map-marker-alt"></i>{{ self.location_string }}
+                </a>
+              </li>
+              <li class="event-type">
+                {{ self.get_event_type_display }}
+              </li>
+              {% if self.registration_url %}
+                <li class="event-registration">
+                  <a href="{{ self.registration_url }}" target="_blank" rel="noopener noreferrer">Register here</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include "includes/body.html" with body=self.body %}
+
+  {% if self.author_count > 0 %}
+    {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count title_override="Event Speaker"%}
+  {% endif %}
+
+  {% if self.related_files %}
+    <section class="related-files">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock content %}
+  
+{% block footer %}
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-10 col-lg-5 offset-md-1 offset-lg-2">
+        <h1>
+          <div>
+            The Future of Digital Finance
+          </div>
+          <div>
+            Emerging opportunities in India, in China and on the African continent
+          </div>
+        </h1>
+        </div>
+        <div class="col-12 col-md-10 col-lg-5 offset-md-1 offset-lg-0">
+          <div class="subscribe-blurb">
+            <p>
+              For additional information or inquiries, please contact the Future of Digital Finance team at: <a href="mailto:digitalfinanceinquiries@cigionline.org">digitalfinanceinquiries@cigionline.org</a>.
+            </p>
+            <p>
+              or sign up for the email list to stay up to date:
+            </p>
+            <form id='subscribe-form' action="{% url 'subscribe_digital_finance' %}" method="POST">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="enter your email" required>
+                <input type="submit" value="Sign up">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+{% endblock %}
