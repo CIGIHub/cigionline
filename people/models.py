@@ -328,6 +328,10 @@ class PersonPage(
     def programs_as_team_member(self):
         return ProjectPage.objects.filter(members__member=self).order_by('-publishing_date')
 
+    @property
+    def is_external_profile(self):
+        return self.person_types.filter(name='External profile').exists()
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [

@@ -72,7 +72,7 @@
               </div>
             {% endif %}
           </div>
-          {% if page.image_square and not page.archive %}
+          {% if not self.is_external_profile and page.image_square and not page.archive %}
             <div class="col-md-3 col-lg-2 offset-lg-3 portrait-circle">
               {% image page.image_square fill-200x200 %}
             </div>
@@ -80,6 +80,22 @@
         </div>
       </div>
     </section>
+
+    {% if self.is_external_profile %}
+      <section class="external-profile-disclaimer">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+              <p>
+                <em>
+                  This external contributor’s bio may not be up to date and media requests cannot be facilitated but we are happy to connect you with a CIGI expert.
+                </em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
 
     {% if not page.archive %}
       {% if page.expertise or page.programs_as_team_member.all|length > 0 or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}

@@ -46,3 +46,11 @@
     @include link($color: $cigi-text-grey, $hover-color: $cigi-primary-colour);
   }
 }
+
+.external-profile-disclaimer {
+  margin-bottom: 2rem;
+
+  p {
+    margin-bottom: 0;
+  }
+}
