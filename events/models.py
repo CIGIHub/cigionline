@@ -379,8 +379,9 @@ class EventPage(
 
     def serve(self, request):
         form = EventSubmissionForm()
+        email_recipient = ''
 
-        if self.theme.name == 'Digital Finance':
+        if self.theme and self.theme.name == 'Digital Finance':
             email_recipient = 'digitalfinanceinquiries@cigionline.org'
         if self.email_recipient:
             email_recipient = self.email_recipient
