@@ -3,6 +3,8 @@
 $link-color: #0000ee;
 $link-hover-color: #0056b3;
 $hero-text-colour: #c43c2c;
+$box-blue: #77c4f0;
+$box-orange: #e6a883;
 
 section {
   &.hero {
@@ -42,11 +44,27 @@ section {
   &.themed-content {
     .sovereign-canada-rationale-block {
       .rationale-content {
+        @include link($color: $black, $hover-color: $cigi-primary-colour);
+        @include media-breakpoint-up(md) {
+          flex-direction: row;
+        }
+        flex-direction: column;
         display: flex;
 
+        h2 {
+          @include media-breakpoint-up(md) {
+            font-size: 1.3125rem;
+          }
+          margin: 0;
+          font-size: 1.125rem;
+        }
+
         .document-wrapper {
-          padding: 2rem 1rem;
+          padding: 2rem 1rem 2rem 2rem;
           position: relative;
+          display: flex;
+          align-items: center;
+
           &::before {
             content: '';
             border: 1px solid $cigi-medium-grey;
@@ -60,6 +78,34 @@ section {
             width: 100%;
             height: 100%;
             transition: 0.2s;
+          }
+
+          &.small {
+            @include media-breakpoint-up(md) {
+              max-width: 25%;
+            }
+
+            &::before {
+              border: 2px solid $box-blue;
+            }
+          }
+
+          &.large {
+            @include media-breakpoint-up(md) {
+              max-width: 75%;
+            }
+
+            &::before {
+              border: 2px solid $box-orange;
+            }
+          }
+
+          &:first-child {
+            @include media-breakpoint-up(md) {
+              margin-right: 1rem;
+              margin-bottom: 0;
+            }
+            margin-bottom: 1rem;
           }
         }
       }
