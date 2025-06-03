@@ -83,13 +83,8 @@
               <li class="event-end">
                 &nbsp;Thursday, Sept 25, 2025, 7:00 - 11:15 AM EDT (UTC–5)
               </li>
-              <li class="event-location">
-                <a href="{{ self.location_map_url }}" target="_blank" rel="noopener noreferrer">  
-                  <i class="fas fa-map-marker-alt"></i>{{ self.location_string }}
-                </a>
-              </li>
               <li class="event-type">
-                {{ self.get_event_type_display }}
+                Virtual {{ self.get_event_type_display }}
               </li>
               {% if self.registration_url %}
                 <li class="event-registration">
