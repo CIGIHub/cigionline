@@ -49,6 +49,7 @@ from streams.blocks import (
     LineBreakBlock,
     FilesBlock,
     SovereignCanadaRationaleBlock,
+    SovereignCanadaDashboardBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -736,6 +737,7 @@ class BasicPage(
     themed_content = StreamField(
         [
             ('sovereign_canada_rationale', SovereignCanadaRationaleBlock()),
+            ('sovereign_canada_dashboard', SovereignCanadaDashboardBlock()),
         ],
         blank=True,
     )

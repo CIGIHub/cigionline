@@ -1603,3 +1603,28 @@ class SovereignCanadaRationaleBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Sovereign Canada Rationale'
         template = 'streams/sovereign_canada_rationale_block.html'
+
+
+class SovereignCanadaDashboardBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    categories = blocks.StreamBlock(
+        [
+            ('category', blocks.StructBlock(
+                [
+                    ('title', blocks.CharBlock(required=True, help_text='Title of the category.')),
+                    ('files', blocks.StreamBlock(
+                        [
+                            ('file', DocumentChooserBlock(required=True, help_text='File to be displayed in the category.')),
+                        ]
+                    ))
+                ],
+                required=True,
+            )),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Sovereign Canada Dashboard'
+        template = 'streams/sovereign_canada_dashboard_block.html'
