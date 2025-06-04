@@ -1615,7 +1615,8 @@ class SovereignCanadaDashboardBlock(blocks.StructBlock):
                     ('files', blocks.StreamBlock(
                         [
                             ('file', DocumentChooserBlock(required=True, help_text='File to be displayed in the category.')),
-                        ]
+                        ],
+                        required=False,
                     ))
                 ],
                 required=True,
