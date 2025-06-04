@@ -1578,6 +1578,59 @@ class T7CommuniqueBlock(blocks.StructBlock):
         template = 'streams/t7_communique_block.html'
 
 
+class SovereignCanadaRationaleBlock(blocks.StructBlock):
+    documents = blocks.StreamBlock(
+        [
+            ('document', blocks.StructBlock(
+                [
+                    ('file', DocumentChooserBlock(required=True)),
+                    ('title', blocks.CharBlock(required=False)),
+                    ('size', blocks.ChoiceBlock(
+                        choices=[
+                            ('small', 'Small'),
+                            ('large', 'Large'),
+                        ],
+                        default='large',
+                    )),
+                ],
+                required=True,
+            )),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Sovereign Canada Rationale'
+        template = 'streams/sovereign_canada_rationale_block.html'
+
+
+class SovereignCanadaDashboardBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    categories = blocks.StreamBlock(
+        [
+            ('category', blocks.StructBlock(
+                [
+                    ('title', blocks.CharBlock(required=True, help_text='Title of the category.')),
+                    ('files', blocks.StreamBlock(
+                        [
+                            ('file', DocumentChooserBlock(required=True, help_text='File to be displayed in the category.')),
+                        ],
+                        required=False,
+                    ))
+                ],
+                required=True,
+            )),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Sovereign Canada Dashboard'
+        template = 'streams/sovereign_canada_dashboard_block.html'
+
+
 class AbstractSubmissionBlock(blocks.StructBlock):
     # Renders a block that contains a form for submitting abstracts.
     class Meta:

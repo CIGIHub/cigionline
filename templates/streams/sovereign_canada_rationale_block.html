@@ -1,0 +1,21 @@
+{% load wagtailcore_tags %}
+
+<div class="sovereign-canada-rationale-block">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <div class="rationale-content">
+          {% for document in self.documents %}
+            <div class="document-wrapper {{document.value.size}}">
+              <div class="document">
+                <a href="{{ document.value.file.url }}" target="_blank">
+                  <h2>{{ document.value.title }}</h2>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

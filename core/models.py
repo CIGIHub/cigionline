@@ -48,6 +48,8 @@ from streams.blocks import (
     HighlightTitleBlock,
     LineBreakBlock,
     FilesBlock,
+    SovereignCanadaRationaleBlock,
+    SovereignCanadaDashboardBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -732,6 +734,14 @@ class BasicPage(
         use_json_field=True,
     )
 
+    themed_content = StreamField(
+        [
+            ('sovereign_canada_rationale', SovereignCanadaRationaleBlock()),
+            ('sovereign_canada_dashboard', SovereignCanadaDashboardBlock()),
+        ],
+        blank=True,
+    )
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
@@ -754,6 +764,14 @@ class BasicPage(
             ],
             heading='Related Files',
             classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('themed_content'),
+            ],
+            heading='Themed content',
+            classname='collapsible collapsed',
+            help_text='These fields are used only for specific themes.',
         ),
     ]
     promote_panels = Page.promote_panels + [
