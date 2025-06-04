@@ -1,6 +1,4 @@
 from django.db import migrations
-from articles.models import ArticleSeriesPage, ArticleTypePage
-from wagtail.models import Page
 
 
 def update_article_pages(apps, schema_editor):
