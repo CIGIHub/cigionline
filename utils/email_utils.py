@@ -54,5 +54,22 @@ def send_email(recipient, subject, body):
         print(f'Error sending email: {str(e)}')
 
 
+def send_email_digital_finance(recipient, subject, body):
+    '''Send a simple email via SendGrid.'''
+
+    try:
+        sg = SendGridAPIClient(settings.DIGITAL_FINANCE_SENDGRID_API)
+        message = Mail(
+            from_email=settings.DIGITAL_FINANCE_EMAIL_RECIPIENT,
+            to_emails=recipient,
+            subject=subject,
+            plain_text_content=body,
+        )
+        sg.send(message)
+
+    except Exception as e:
+        print(f'Error sending email: {str(e)}')
+
+
 def extract_errors_as_string(form_errors):
     return [str(error) for field_errors in form_errors.values() for error in field_errors]

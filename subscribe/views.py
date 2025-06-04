@@ -127,3 +127,62 @@ def subscribe_think7(request):
             status = 'subscribed_success'
 
     return render(request, 'think7/subscribe_page_landing.html', {'status': status, 'subscription_type': 'think7'})
+
+
+def subscribe_digital_finance(request):
+    api_key = None
+    server = None
+    list_id = None
+
+    if hasattr(settings, 'MAILCHIMP_API_KEY_DIGITAL_FINANCE'):
+        api_key = settings.MAILCHIMP_API_KEY_DIGITAL_FINANCE
+    if hasattr(settings, 'MAILCHIMP_DATA_CENTER_DIGITAL_FINANCE'):
+        server = settings.MAILCHIMP_DATA_CENTER_DIGITAL_FINANCE
+    if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_DIGITAL_FINANCE'):
+        list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_DIGITAL_FINANCE
+    print(api_key, server, list_id)
+    status = None
+    email = None
+    form = EmailOnlySubscribeForm(request.POST)
+    if form.is_valid():
+        email = form.cleaned_data['email']
+        member_info = {
+            'email_address': email,
+            'status': 'pending'
+        }
+
+    if not email:
+        return JsonResponse({'error': 'Email is required'}, status=400)
+
+    try:
+        if api_key and server and list_id:
+            client = MailchimpMarketing.Client()
+            client.set_config({
+                'api_key': api_key,
+                'server': server,
+            })
+
+            member_id = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
+            response = client.lists.get_list_member(list_id, member_id)
+            print(response)
+
+            if response['status'] == 'unsubscribed':
+                status = 'unsubscribed'
+            elif response['status'] == 'subscribed':
+                status = 'subscribed'
+            elif response['status'] == 'pending':
+                status = 'pending'
+    except ApiClientError as error:
+        error_text = (error.text)
+        logger.error('An error occurred with Mailchimp: {}'.format(error_text))
+
+        if '404' in error_text:
+            try:
+                response = client.lists.add_list_member(list_id, member_info)
+                print(response)
+            except ApiClientError as error:
+                logger.error('An error occurred with Mailchimp: {}'.format(error.text))
+                status = 'error'
+            status = 'subscribed_success'
+
+    return render(request, 'subscribe/subscribe_page_landing.html', {'status': status, 'subscription_type': 'digital_finance'})

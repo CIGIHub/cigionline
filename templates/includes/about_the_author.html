@@ -18,6 +18,11 @@
             {% if not item.hide_link and person.short_bio|length > 1 and not person.archive %}
               {{ person.short_bio|richtext }}
             {% endif %}
+            {% if person.position and person.archive %}
+              <p>
+                {% if not 'Former' in person.position %}Former {% endif %}{{ person.position }}
+              </p>
+            {% endif %}
           </div>
         {% endfor %}
       </div>

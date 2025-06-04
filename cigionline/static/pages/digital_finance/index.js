@@ -1,0 +1,58 @@
+import './css/_event_page.scss';
+
+const h2 = document.querySelectorAll('h2');
+if (h2) {
+  h2.forEach((h2Element) => {
+    const id = h2Element.innerText.trim().toLowerCase().replace(/\s+/g, '-');
+    h2Element.setAttribute('id', id);
+  });
+}
+const collapsibleParagraphs = document.querySelectorAll('.collapsible-paragraph-block');
+if (collapsibleParagraphs) {
+  collapsibleParagraphs.forEach((paragraph) => {
+    const toggleButton = paragraph.querySelector('button');
+    toggleButton.addEventListener('click', () => {
+      paragraph.classList.toggle('collapsed');
+    });
+  });
+}
+const eventUploadForm = document.getElementById('eventUploadForm');
+eventUploadForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const formData = new FormData(this);
+  const responseMessage = document.getElementById('responseMessage');
+  responseMessage.classList.remove('success');
+  responseMessage.classList.remove('error');
+  responseMessage.classList.add('loading');
+  responseMessage.innerText = 'Uploading file...';
+
+  fetch(window.location.pathname, {
+    method: 'POST',
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 'success') {
+        responseMessage.innerText = data.message;
+        responseMessage.classList.remove('loading');
+        responseMessage.classList.remove('error');
+        responseMessage.classList.add('success');
+        eventUploadForm.querySelector('input[type="file"]').value = '';
+      } else {
+        responseMessage.innerText = data.message;
+        responseMessage.classList.remove('loading');
+        responseMessage.classList.remove('success');
+        responseMessage.classList.add('error');
+      }
+    })
+    .catch(() => {
+      responseMessage.innerText = 'An unexpected error occurred.';
+      responseMessage.classList.remove('loading');
+      responseMessage.classList.remove('success');
+      responseMessage.classList.add('error');
+    });
+});
