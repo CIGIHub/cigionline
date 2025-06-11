@@ -113,10 +113,6 @@ footer {
           padding-top: 0;
           padding-bottom: 0;
 
-          &.active {
-            color: $cigi-medium-light-grey;
-          }
-
           &:not(:last-child) {
             @include media-breakpoint-only(md) {
               border: 0;
