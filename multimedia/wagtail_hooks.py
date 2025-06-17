@@ -1,81 +1,73 @@
-from core.helpers import CIGIModelAdminPermissionHelper
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from wagtail_modeladmin.options import (
-    ModelAdmin,
-    ModelAdminGroup,
-    modeladmin_register,
-)
 from wagtail import hooks
-
+from wagtail.admin.ui.tables import Column
+from utils.admin_utils import title_with_actions, live_icon
 from .models import (
     MultimediaListPage,
     MultimediaPage,
     MultimediaSeriesPage,
 )
+from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.viewsets.base import ViewSetGroup
 
 
-@hooks.register('register_permissions')
-def register_multimedia_list_page_permissions():
-    multimedia_list_page_content_type = ContentType.objects.get(app_label='multimedia', model='multimedialistpage')
-    return Permission.objects.filter(content_type=multimedia_list_page_content_type)
+class MultimediaPageListingViewSet(ModelViewSet):
+    model = MultimediaPage
+    menu_label = 'Multimedia'
+    menu_icon = 'media'
+    menu_order = 102
+    name = 'multimediapage'
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+        Column('publishing_date', label='Publishing Date', sort_key='publishing_date'),
+        Column('multimedia_type', label='Multimedia Type', sort_key='article_type'),
+        Column('article_series', label='Article Series', sort_key='article_series'),
+        Column('multimedia_series', label='Multimedia Series', sort_key='multimedia_series'),
+        Column('theme', label='Theme', sort_key='theme'),
+        Column(live_icon, label='Live', sort_key='live'),
+    ]
+    list_filter = ['publishing_date', 'multimedia_type', 'article_series', 'multimedia_series', 'theme', 'live']
+    form_fields = ['title', 'publishing_date', 'multimedia_type', 'article_series', 'multimedia_series', 'theme',]
+    search_fields = ('title',)
+    ordering = ['-publishing_date']
 
 
-class MultimediaListPageModelAdmin(ModelAdmin):
+class MultimediaLandingPageListingViewSet(ModelViewSet):
     model = MultimediaListPage
     menu_label = 'Multimedia Landing Page'
     menu_icon = 'home'
     menu_order = 100
-    list_display = ('title',)
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
+    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
 
 
-@hooks.register('register_permissions')
-def register_multimedia_page_permissions():
-    multimedia_content_type = ContentType.objects.get(app_label='multimedia', model='multimediapage')
-    return Permission.objects.filter(content_type=multimedia_content_type)
-
-
-class MultimediaPageModelAdmin(ModelAdmin):
-    # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
-    model = MultimediaPage
-    menu_label = 'Multimedia'
-    menu_icon = 'media'
-    menu_order = 101
-    list_display = ('title', 'publishing_date', 'multimedia_type', 'multimedia_series', 'theme', 'live')
-    list_filter = ('publishing_date', 'multimedia_type', 'multimedia_series', 'theme', 'live')
-    search_fields = ('title',)
-    ordering = ['-publishing_date']
-    permission_helper_class = CIGIModelAdminPermissionHelper
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(publishing_date__isnull=False)
-
-
-class MultimediaSeriesPageModelAdmin(ModelAdmin):
+class MultimediaSeriesPageListingViewSet(ModelViewSet):
     model = MultimediaSeriesPage
     menu_label = 'Multimedia Series'
     menu_icon = 'list-ul'
-    menu_order = 102
-    list_display = ('title', 'publishing_date', 'live')
+    menu_order = 103
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+        Column('publishing_date', label='Publishing Date', sort_key='publishing_date'),
+        Column(live_icon, label='Live', sort_key='live'),
+        Column('id', label='ID', sort_key='id'),
+    ]
+    form_fields = ['title', 'publishing_date']
     list_filter = ('publishing_date', 'live')
     search_fields = ('title',)
     ordering = ['-publishing_date']
-    permission_helper_class = CIGIModelAdminPermissionHelper
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(publishing_date__isnull=False)
 
 
-class MultimediaModelAdminGroup(ModelAdminGroup):
-    menu_label = 'Multimedia'
+class MultimediaViewSetGroup(ViewSetGroup):
+    menu_label = 'Multimedia new'
     menu_icon = 'media'
     menu_order = 102
-    items = (MultimediaListPageModelAdmin, MultimediaPageModelAdmin, MultimediaSeriesPageModelAdmin)
+    items = (MultimediaLandingPageListingViewSet, MultimediaPageListingViewSet, MultimediaSeriesPageListingViewSet)
 
 
-modeladmin_register(MultimediaModelAdminGroup)
+@hooks.register("register_admin_viewset")
+def register_viewset():
+    return MultimediaViewSetGroup()

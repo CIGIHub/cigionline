@@ -1,15 +1,4 @@
-from core.helpers import CIGIModelAdminPermissionHelper
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from wagtail_modeladmin.options import (
-    ModelAdmin,
-    ModelAdminGroup,
-    modeladmin_register,
-)
-from wagtail import hooks
-
 from .models import (
     ArticleLandingPage,
     ArticlePage,
@@ -18,11 +7,12 @@ from .models import (
     OpinionSeriesPage,
 )
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
-
+from utils.admin_utils import title_with_actions, live_icon
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
 from wagtail.admin.ui.tables import Column
-from utils.admin_utils import title_with_actions, live_icon
+from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
+from wagtail import hooks
 
 
 @hooks.register('register_rich_text_features')
@@ -172,7 +162,7 @@ class ArticlePageListingViewSet(ModelViewSet):
 
 
 class ArticleViewSetGroup(ViewSetGroup):
-    menu_label = 'Articles New'
+    menu_label = 'Articles'
     menu_icon = 'copy'
     menu_order = 101
     items = (ArticleLandingPageListingViewSet, MediaLandingPageListingViewSet, ArticlePageListingViewSet, ArticleSeriesPageListingViewSet, OpinionSeriesPageListingViewSet)
