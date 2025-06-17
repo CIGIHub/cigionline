@@ -11,7 +11,6 @@ $footer-bg-colour: #eedfe7;
 body {
   &.digital-finance-conference {
     @include top-bar($color: $black, $background-color: transparent);
-    background-color: $digital-finance-bg-colour;
 
     &.disable-scroll {
       header {
