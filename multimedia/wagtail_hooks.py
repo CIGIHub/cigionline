@@ -62,12 +62,12 @@ class MultimediaSeriesPageListingViewSet(ModelViewSet):
 
 
 class MultimediaViewSetGroup(ViewSetGroup):
-    menu_label = 'Multimedia new'
+    menu_label = 'Multimedia'
     menu_icon = 'media'
     menu_order = 102
     items = (MultimediaLandingPageListingViewSet, MultimediaPageListingViewSet, MultimediaSeriesPageListingViewSet)
 
 
 @hooks.register("register_admin_viewset")
-def register_viewset():
+def register_multimedia_viewset():
     return MultimediaViewSetGroup()

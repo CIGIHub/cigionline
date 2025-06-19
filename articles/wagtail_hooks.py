@@ -169,5 +169,5 @@ class ArticleViewSetGroup(ViewSetGroup):
 
 
 @hooks.register("register_admin_viewset")
-def register_viewset():
+def register_article_viewset():
     return ArticleViewSetGroup()
