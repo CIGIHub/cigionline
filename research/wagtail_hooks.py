@@ -1,13 +1,4 @@
-from core.helpers import CIGIModelAdminPermissionHelper
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from wagtail_modeladmin.options import (
-    ModelAdmin,
-    ModelAdminGroup,
-    modeladmin_register,
-)
 from wagtail import hooks
-
 from .models import (
     ProjectPage,
     ResearchLandingPage,
@@ -15,104 +6,94 @@ from .models import (
     ThemePage,
     CountryPage,
 )
+from utils.admin_utils import title_with_actions, live_icon
+from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.viewsets.base import ViewSetGroup
+from wagtail.admin.ui.tables import Column
 
 
-@hooks.register('register_permissions')
-def register_project_page_permissions():
-    project_content_type = ContentType.objects.get(app_label='research', model='projectpage')
-    return Permission.objects.filter(content_type=project_content_type)
-
-
-class ProjectPageModelAdmin(ModelAdmin):
-    model = ProjectPage
-    menu_label = 'Projects'
-    menu_icon = 'folder'
-    menu_order = 101
-    list_display = ('title', 'publishing_date', 'live')
-    list_filter = ('publishing_date', 'live')
-    search_fields = ('title',)
-    ordering = ['-publishing_date']
-    permission_helper_class = CIGIModelAdminPermissionHelper
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(publishing_date__isnull=False)
-
-
-@hooks.register('register_permissions')
-def register_research_landing_page_permissions():
-    research_landing_content_type = ContentType.objects.get(app_label='research', model='researchlandingpage')
-    return Permission.objects.filter(content_type=research_landing_content_type)
-
-
-class ResearchLandingPageModelAdmin(ModelAdmin):
+class ResearchLandingPageListingViewSet(ModelViewSet):
     model = ResearchLandingPage
     menu_label = 'Research Landing Page'
     menu_icon = 'home'
     menu_order = 100
-    list_display = ('title',)
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
+    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
 
 
-@hooks.register('register_permissions')
-def register_topic_page_permissions():
-    topic_content_type = ContentType.objects.get(app_label='research', model='topicpage')
-    return Permission.objects.filter(content_type=topic_content_type)
-
-
-class TopicPageModelAdmin(ModelAdmin):
-    model = TopicPage
-    menu_label = 'Topics'
-    menu_icon = 'thumbtack'
-    menu_order = 102
-    list_display = ('title',)
-    list_filter = ('live',)
-    search_fields = ('title',)
-    ordering = ['title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
-
-
-@hooks.register('register_permissions')
-def register_theme_page_permissions():
-    theme_content_type = ContentType.objects.get(app_label='research', model='themepage')
-    return Permission.objects.filter(content_type=theme_content_type)
-
-
-class ThemePageModelAdmin(ModelAdmin):
+class ThemePageListingViewSet(ModelViewSet):
     model = ThemePage
     menu_label = 'Themes'
     menu_icon = 'tag'
     menu_order = 103
-    list_display = ('title',)
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
+    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
 
 
-@hooks.register('register_permissions')
-def register_country_page_permissions():
-    country_content_type = ContentType.objects.get(app_label='research', model='countrypage')
-    return Permission.objects.filter(content_type=country_content_type)
+class TopicPageListingViewSet(ModelViewSet):
+    model = TopicPage
+    menu_label = 'Topics'
+    menu_icon = 'thumbtack'
+    menu_order = 102
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
+    form_fields = ['title',]
+    search_fields = ('title',)
+    ordering = ['title']
 
 
-class CountryPageModelAdmin(ModelAdmin):
+class ProjectPageListingViewSet(ModelViewSet):
+    model = ProjectPage
+    menu_label = 'Projects'
+    menu_icon = 'folder'
+    menu_order = 101
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+        Column('publishing_date', label='Publishing Date', sort_key='publishing_date'),
+        Column(live_icon, label='Live', sort_key='live'),
+        Column('id', label='ID', sort_key='id'),
+    ]
+    list_filter = ('publishing_date', 'live')
+    form_fields = ['title', 'publishing_date']
+    search_fields = ('title',)
+    ordering = ['-publishing_date']
+
+
+class CountryPageListingViewSet(ModelViewSet):
     model = CountryPage
     menu_label = 'Countries'
     menu_icon = 'site'
     menu_order = 104
-    list_display = ('title',)
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
+    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
 
 
-class ResearchModelAdminGroup(ModelAdminGroup):
+class ResearchViewSetGroup(ViewSetGroup):
     menu_label = 'Research'
     menu_icon = 'site'
     menu_order = 106
-    items = (ResearchLandingPageModelAdmin, ThemePageModelAdmin, TopicPageModelAdmin, ProjectPageModelAdmin, CountryPageModelAdmin)
+    items = (
+        ResearchLandingPageListingViewSet,
+        ThemePageListingViewSet,
+        TopicPageListingViewSet,
+        ProjectPageListingViewSet,
+        CountryPageListingViewSet,
+    )
 
 
-modeladmin_register(ResearchModelAdminGroup)
+@hooks.register('register_admin_viewset')
+def register_research_viewsets():
+    return ResearchViewSetGroup()
