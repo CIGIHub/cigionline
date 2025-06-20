@@ -76,7 +76,6 @@ INSTALLED_APPS = [
     'wagtailmedia',
     'webpack_loader',
     'adv_cache_tag',
-    'wagtail_modeladmin',
 
     'wagtail_2fa',
     'django_otp',

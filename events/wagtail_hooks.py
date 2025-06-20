@@ -1,11 +1,3 @@
-from core.helpers import CIGIModelAdminPermissionHelper
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from wagtail_modeladmin.options import (
-    ModelAdmin,
-    ModelAdminGroup,
-    modeladmin_register,
-)
 from wagtail import hooks
 from .models import EventListPage, EventPage
 from wagtail.admin.viewsets.model import ModelViewSet
