@@ -30,7 +30,6 @@ footer {
 
     a {
       @include media-breakpoint-down(sm) {
-        width: 50%;
         margin-bottom: 1rem;
       }
       padding: 1rem 1rem;

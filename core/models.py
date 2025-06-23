@@ -47,6 +47,9 @@ from streams.blocks import (
     InlineVideoBlock,
     HighlightTitleBlock,
     LineBreakBlock,
+    FilesBlock,
+    SovereignCanadaRationaleBlock,
+    SovereignCanadaDashboardBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -89,6 +92,7 @@ class BasicPageAbstract(models.Model):
         ('persons_list_block', PersonsListBlock()),
         ('publications_list_block', PublicastionsListBlock()),
         ('additional_pages_block', AddtionalPagesBlock()),
+        ('files_block', FilesBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
@@ -138,6 +142,15 @@ class BasicPageAbstract(models.Model):
         related_name='+',
         verbose_name='Hero Image',
         help_text='A large image to be displayed prominently on the page.',
+    )
+    image_banner = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+        help_text='A banner image to be displayed as background of the hero section.',
     )
     submenu = models.ForeignKey(
         'menus.Menu',
@@ -222,6 +235,7 @@ class BasicPageAbstract(models.Model):
     images_panel = MultiFieldPanel(
         [
             FieldPanel('image_hero'),
+            FieldPanel('image_banner'),
         ],
         heading='Images',
         classname='collapsible collapsed',
@@ -720,6 +734,14 @@ class BasicPage(
         use_json_field=True,
     )
 
+    themed_content = StreamField(
+        [
+            ('sovereign_canada_rationale', SovereignCanadaRationaleBlock()),
+            ('sovereign_canada_dashboard', SovereignCanadaDashboardBlock()),
+        ],
+        blank=True,
+    )
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
@@ -742,6 +764,14 @@ class BasicPage(
             ],
             heading='Related Files',
             classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('themed_content'),
+            ],
+            heading='Themed content',
+            classname='collapsible collapsed',
+            help_text='These fields are used only for specific themes.',
         ),
     ]
     promote_panels = Page.promote_panels + [

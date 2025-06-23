@@ -1,0 +1,218 @@
+@import '../../../css/global/mixins';
+@import '../../../css/global/variables';
+$link-color: #0000ee;
+$link-hover-color: #0056b3;
+$hero-text-colour: #c43c2c;
+$box-blue: #77c4f0;
+$box-orange: #e6a883;
+$box-green: #4d7c31;
+
+body {
+  margin-bottom: 12rem;
+}
+
+section {
+  &.hero {
+    padding: 7rem 0;
+    background-color: $black;
+
+    h1,
+    .subtitle {
+      color: $hero-text-colour;
+    }
+
+    h1 {
+      @include media-breakpoint-up(md) {
+        font-size: 2.5em;
+      }
+      font-size: 2em;
+    }
+
+    .subtitle {
+      @include media-breakpoint-up(md) {
+        font-size: 1.5em;
+      }
+      font-size: 1.25em;
+    }
+  }
+
+  &.related-files {
+    @include link($color: $link-color, $hover-color: $link-hover-color);
+
+    a {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &.themed-content {
+    .sovereign-canada-rationale-block {
+      margin: 2rem 0;
+
+      .rationale-content {
+        @include link($color: $black, $hover-color: $link-hover-color);
+        @include media-breakpoint-up(md) {
+          flex-direction: row;
+        }
+        flex-direction: column;
+        display: flex;
+        margin: 0 30px;
+
+        h2 {
+          @include media-breakpoint-up(md) {
+            font-size: 1.3125rem;
+          }
+          margin: 0;
+          font-size: 1.125rem;
+        }
+
+        .document-wrapper {
+          padding: 2rem 1rem 2rem 2rem;
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          &::before {
+            content: '';
+            border: 1px solid $cigi-medium-grey;
+            transform: skewX(-10deg);
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            transition: 0.2s;
+          }
+
+          &.small {
+            @include media-breakpoint-up(md) {
+              max-width: 25%;
+            }
+
+            &::before {
+              border: 2px solid $box-blue;
+            }
+          }
+
+          &.large {
+            @include media-breakpoint-up(md) {
+              max-width: 75%;
+            }
+
+            &::before {
+              border: 2px solid $box-orange;
+            }
+          }
+
+          &:first-child {
+            @include media-breakpoint-up(md) {
+              margin-right: 1rem;
+              margin-bottom: 0;
+            }
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
+
+    .sovereign-canada-dashboard-block {
+      margin: 2rem 0;
+
+      .dashboard-content {
+        @include media-breakpoint-up(md) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        gap: 20px;
+        padding: 0 20px;
+
+        .category {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 3px solid $box-green;
+          border-top-left-radius: 12px;
+          border-bottom-right-radius: 12px;
+          padding: 2rem 1.5rem;
+          transition: box-shadow 0.3s ease;
+          text-align: center;
+
+          h3 {
+            margin: 0;
+            font-weight: 500;
+          }
+
+          &:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+
+            .popup-content {
+              opacity: 1;
+              transform: translateY(0);
+              pointer-events: auto;
+            }
+          }
+
+          .popup-content {
+            @include link($color: $link-color, $hover-color: $link-hover-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+            position: absolute;
+            bottom: -3px;
+            left: -3px;
+            right: -3px;
+            background: $white;
+            border: 3px solid $box-green;
+            border-top-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            min-height: 100%;
+            padding: 3rem 1.5rem;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+            .popup-file {
+              line-height: 1.25;
+
+              &:not(:last-child) {
+                margin-bottom: 0.5rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+main {
+  margin-bottom: 4rem;
+
+  .files-block {
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        @include link($color: $link-color, $hover-color: $link-hover-color);
+
+        a {
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

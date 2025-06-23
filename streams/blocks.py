@@ -499,6 +499,7 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
             'hr',
             'image',
             'italic',
+            'underline',
             'link',
             'ol',
             'subscript',
@@ -1597,3 +1598,135 @@ class ResourceBlock(blocks.StructBlock):
         icon = 'link'
         label = 'Resource'
         template = 'streams/resource_block.html'
+
+
+class T7CommuniqueBlock(blocks.StructBlock):
+    page = blocks.PageChooserBlock(page_type='publications.T7PublicationPage', required=False)
+    description = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link'],
+        required=False,
+    )
+    image_override = ImageChooserBlock(required=False)
+    title_override = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'T7 Communique'
+        template = 'streams/t7_communique_block.html'
+
+
+class SovereignCanadaRationaleBlock(blocks.StructBlock):
+    documents = blocks.StreamBlock(
+        [
+            ('document', blocks.StructBlock(
+                [
+                    ('file', DocumentChooserBlock(required=True)),
+                    ('title', blocks.CharBlock(required=False)),
+                    ('size', blocks.ChoiceBlock(
+                        choices=[
+                            ('small', 'Small'),
+                            ('large', 'Large'),
+                        ],
+                        default='large',
+                    )),
+                ],
+                required=True,
+            )),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Sovereign Canada Rationale'
+        template = 'streams/sovereign_canada_rationale_block.html'
+
+
+class SovereignCanadaDashboardBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    categories = blocks.StreamBlock(
+        [
+            ('category', blocks.StructBlock(
+                [
+                    ('title', blocks.CharBlock(required=True, help_text='Title of the category.')),
+                    ('files', blocks.StreamBlock(
+                        [
+                            ('file', DocumentChooserBlock(required=True, help_text='File to be displayed in the category.')),
+                        ],
+                        required=False,
+                    ))
+                ],
+                required=True,
+            )),
+        ],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Sovereign Canada Dashboard'
+        template = 'streams/sovereign_canada_dashboard_block.html'
+
+
+class AbstractSubmissionBlock(blocks.StructBlock):
+    # Renders a block that contains a form for submitting abstracts.
+    class Meta:
+        icon = 'form'
+        label = 'Abstract Submission Form'
+        template = 'streams/abstract_submission_form_block.html'
+
+
+class CollapsibleParagraphBlock(blocks.StructBlock):
+    """Standard text paragraph that is collapsible."""
+
+    collapsed = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        help_text="If checked, the paragraph will be collapsed by default.",
+    )
+    title = blocks.RichTextBlock(
+        required=False,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Optional title for the collapsible paragraph.",
+    )
+    title_type = blocks.ChoiceBlock(
+        choices=[
+            ('h2', 'H2'),
+            ('h3', 'H3'),
+            ('h4', 'H4'),
+        ],
+        default='h2',
+        help_text="Select the heading type for the title.",
+    )
+    paragraph = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'underline',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+            'rtl',
+        ],
+    )
+
+    class Meta:
+        icon = 'edit'
+        label = 'Collapsible Paragraph'
+        template = 'streams/collapsible_paragraph_block.html'

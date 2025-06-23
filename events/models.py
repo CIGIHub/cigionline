@@ -1,3 +1,4 @@
+from .forms import EventSubmissionForm
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -7,7 +8,13 @@ from core.models import (
     ThemeablePageAbstract
 )
 from django.db import models
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.utils import timezone
 from modelcluster.fields import ParentalKey
+from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
+from uploads.models import DocumentUpload
+from utils.email_utils import send_email_digital_finance, extract_errors_as_string
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -15,9 +22,9 @@ from wagtail.admin.panels import (
     PageChooserPanel,
 )
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page
+from wagtail.models import Orderable, Page, Collection
 from wagtail.documents.blocks import DocumentChooserBlock
-from django.utils import timezone
+from wagtail.documents.models import Document
 from wagtail.search import index
 import pytz
 import re
@@ -174,6 +181,13 @@ class EventPage(
         SYDNEY = ('Australia/Sydney', '(UTC+10:00/11:00) AUS Eastern Time')
         AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
 
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            ('abstract_submission_block', AbstractSubmissionBlock()),
+            ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
+        ],
+        blank=True,
+    )
     embed_youtube = models.URLField(blank=True)
     event_agenda = models.ForeignKey(
         'wagtaildocs.Document',
@@ -196,6 +210,11 @@ class EventPage(
         max_length=32,
         null=True,
         choices=EventTypes.choices,
+    )
+    email_recipient = models.EmailField(
+        blank=True,
+        null=True,
+        help_text='Email address to send notifications to when a file is uploaded via submission form.',
     )
     flickr_album_url = models.URLField(blank=True)
     invitation_type = models.IntegerField(choices=InvitationTypes.choices, default=InvitationTypes.RSVP_REQUIRED)
@@ -358,6 +377,112 @@ class EventPage(
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
 
+    def serve(self, request):
+        form = EventSubmissionForm()
+        email_recipient = ''
+
+        if self.theme and self.theme.name == 'Digital Finance':
+            email_recipient = 'digitalfinanceinquiries@cigionline.org'
+        if self.email_recipient:
+            email_recipient = self.email_recipient
+
+        if self.theme:
+            template = f'themes/{self.get_theme_dir()}/event_page.html'
+        else:
+            template = 'events/event_page.html'
+
+        if email_recipient and request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+            form = EventSubmissionForm(request.POST, request.FILES)
+            if form.is_valid():
+                uploaded_file = form.cleaned_data['file']
+                email = form.cleaned_data['email']
+                valid_extensions = ['.pdf', '.doc', '.docx']
+                file_extension = uploaded_file.name.lower().split('.')[-1]
+
+                if f'.{file_extension}' in valid_extensions:
+                    if self.theme.name == 'Digital Finance':
+                        collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
+                    else:
+                        collection = Collection.objects.get(
+                            name='Event submissions',
+                        )
+
+                    try:
+                        document = Document.objects.create(
+                            title=uploaded_file.name,
+                            file=uploaded_file,
+                            collection=collection,
+                        )
+                        DocumentUpload.objects.create(
+                            document=document, email=email
+                        )
+                        if email_recipient:
+                            try:
+                                send_email_digital_finance(
+                                    recipient=email_recipient,
+                                    subject='Digital Finance Abstract Uploaded Successfully',
+                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
+                                )
+                                send_email_digital_finance(
+                                    recipient=email,
+                                    subject='Abstract Submission Upload Successful',
+                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
+                                )
+                            except Exception as e:
+                                print(str(e))
+                        return JsonResponse(
+                            {
+                                'status': 'success',
+                                'message': 'File uploaded successfully!',
+                            }
+                        )
+
+                    except Exception as e:
+                        if email_recipient:
+                            send_email_digital_finance(
+                                recipient=email_recipient,
+                                subject='File Upload Failed',
+                                body=f'File upload failed for {email}. Error: {str(e)}',
+                            )
+                        return JsonResponse(
+                            {
+                                'status': 'error',
+                                'message': f'Failed to save file: {str(e)}',
+                            }
+                        )
+                else:
+                    if email_recipient:
+                        send_email_digital_finance(
+                            recipient=email_recipient,
+                            subject='File Upload Failed',
+                            body=f'File upload failed for {email}. Invalid file type.',
+                        )
+                return JsonResponse(
+                    {
+                        'status': 'error',
+                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
+                    }
+                )
+            else:
+                error_message = " ".join(extract_errors_as_string(form.errors))
+
+                if email_recipient:
+                    send_email_digital_finance(
+                        recipient=email_recipient,
+                        subject='Form Submission Failed',
+                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
+                    )
+
+                return JsonResponse(
+                    {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
+                )
+
+        return render(request, template, {
+            "page": self,
+            "self": self,
+            "form": form,
+        })
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -435,6 +560,13 @@ class EventPage(
                 ),
             ],
             heading='Related',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('email_recipient'),
+            ],
+            heading='Submission Form',
             classname='collapsible collapsed',
         ),
     ]

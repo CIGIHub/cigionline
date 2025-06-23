@@ -64,7 +64,6 @@ main {
   line-height: 1.25;
 
   .hero {
-    display: none;
     padding: 0;
     margin: 0;
     background: $white;
@@ -81,6 +80,12 @@ main {
       color: $cigi-text-grey;
       margin: 1rem 0 0;
       font-size: 1.125rem;
+    }
+
+    ul {
+      li {
+        margin-bottom: 0.5rem;
+      }
     }
   }
 
