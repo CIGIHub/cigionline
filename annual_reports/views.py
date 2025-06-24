@@ -74,6 +74,7 @@ def get_ordered_slides_annual_report(request, page_id):
 
     return JsonResponse(response_data)
 
+
 def get_ordered_slides_strategic_plan(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
@@ -100,24 +101,24 @@ def get_ordered_slides_strategic_plan(request, page_id):
                 background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
         slides.append({
             "id": slide.id,
-                "title": slide.title,
-                "slug": slide.slug,
-                "slide_title": slide.slide_title,
-                "slide_subtitle": slide.slide_subtitle,
-                "slide_content": slide.get_strategic_plan_slide_content(),
-                "slide_type": slide.slide_type,
-                "slide_theme": slide.slide_theme,
-                "background_image": background_image,
-                "background_images": [
-                    image.value.get_rendition('fill-1920x1080').file.url for image in slide.background_images
-                ],
-                "background_image_thumbnail": background_image_thumbnail,
-                "background_video": slide.background_video.file.url if slide.background_video else '',
-                "background_colour": slide.background_colour.replace("_", "-"),
-                "display_vertical_title": slide.display_vertical_title,
-                "include_on_toc": slide.include_on_toc,
-                "column_size": slide.column_size,
-                "alignment": slide.alignment,
+            "title": slide.title,
+            "slug": slide.slug,
+            "slide_title": slide.slide_title,
+            "slide_subtitle": slide.slide_subtitle,
+            "slide_content": slide.get_strategic_plan_slide_content(),
+            "slide_type": slide.slide_type,
+            "slide_theme": slide.slide_theme,
+            "background_image": background_image,
+            "background_images": [
+                image.value.get_rendition('fill-1920x1080').file.url for image in slide.background_images
+            ],
+            "background_image_thumbnail": background_image_thumbnail,
+            "background_video": slide.background_video.file.url if slide.background_video else '',
+            "background_colour": slide.background_colour.replace("_", "-"),
+            "display_vertical_title": slide.display_vertical_title,
+            "include_on_toc": slide.include_on_toc,
+            "column_size": slide.column_size,
+            "alignment": slide.alignment,
         })
 
     response_data = {
