@@ -7,8 +7,17 @@
 
 {% block body_class %}caiai-about-page{% endblock %}
 
-
-
 {% block content %}
-
+  <section class="body" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h2>About the Canadian AI Adoption Initiative (CAIAI)</h2>
+        </div>
+      </div>
+    </div>
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
 {% endblock content %}
