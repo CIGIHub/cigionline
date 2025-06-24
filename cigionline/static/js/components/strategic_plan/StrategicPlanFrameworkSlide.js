@@ -27,9 +27,7 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
             <React.Fragment key={`framework-block-${index}`}>
               <motion.div
                 key={`column-title-${index}`}
-                className={`column-title column-item ${content.colour} column-${
-                  index + 1
-                } row-1`}
+                className={`column-title column-item ${content.colour} column-${index + 1} row-1`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
@@ -48,9 +46,7 @@ const StrategicPlanFrameworkSlide = ({ slide }) => (
               {content.content.map((item, itemIndex) => (
                 <motion.div
                   key={`framework-item-${index}-${itemIndex}`}
-                  className={`framework-slide__content__item column-item ${
-                    content.colour
-                  } column-${index + 1} row-${itemIndex + 2}`}
+                  className={`framework-slide__content__item column-item ${content.colour} column-${index + 1} row-${itemIndex + 2}`}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
