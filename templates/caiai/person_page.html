@@ -1,0 +1,14 @@
+{% extends "caiai_base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'caiai' 'css' %}
+{% endblock %}
+
+{% block body_class %}caiai-person-page{% endblock %}
+
+
+
+{% block content %}
+
+{% endblock content %}
