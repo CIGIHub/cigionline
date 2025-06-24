@@ -30,6 +30,7 @@ const config = {
     articleSeriesPage: './cigionline/static/pages/article_series_page/index.js',
     articleSeriesListPage: './cigionline/static/pages/article_series_list_page/index.js',
     articleTypePage: './cigionline/static/pages/article_type_page/index.js',
+    caiai: './cigionline/static/caiai/index.js',
     cigionline: './cigionline/static/index.js',
     countryPage: './cigionline/static/pages/country_page/index.js',
     eventListPage: './cigionline/static/pages/event_list_page/index.js',
