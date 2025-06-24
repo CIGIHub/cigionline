@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load webpack_loader %}
+
+{% block extra_css %}
+{% render_bundle 'annualReportSPAPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+{% render_bundle 'annualReportSPAPage' 'js' attrs='defer' %}
+{% endblock %}
+
+
+{% block header %}
+{% endblock %}
+{% block content %}
+<div id="annual-report-spa" data-annual-report-id="{{page.id}}" data-base-path="{{page.url}}"></div>
+{% endblock content %}
+{% block footer %}
+{% endblock %}

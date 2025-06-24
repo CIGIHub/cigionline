@@ -1,7 +1,7 @@
 /* global projectId */
 /* global hasTaggedPages */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import ProjectContentListing from '../../js/components/ProjectContentListing';
 import SearchTable from '../../js/components/SearchTable';
 
@@ -14,7 +14,8 @@ if (projectId) {
 }
 
 if (hasTaggedPages) {
-  ReactDOM.render(
+  const root = createRoot(document.getElementById('project-search-table'));
+  root.render(
     <SearchTable
       showSearch
       endpointParams={endpointParams}
@@ -94,6 +95,5 @@ if (hasTaggedPages) {
         colTitle: 'PDF',
       }]}
     />,
-    document.getElementById('project-search-table'),
   );
 }

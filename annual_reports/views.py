@@ -1,5 +1,8 @@
+from wagtail.models import Page
+from .models import AnnualReportPage, AnnualReportSlidePage, AnnualReportSPAPage, StrategicPlanSPAPage, StrategicPlanSlidePage
+from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from .models import AnnualReportPage
+from wagtail.api.v2.views import PagesAPIViewSet
 
 
 def all_annual_reports(request):
@@ -19,3 +22,107 @@ def all_annual_reports(request):
             'year': annual_report.year,
         } for annual_report in annual_reports]
     })
+
+
+class AnnualReportSPAPageAPIViewSet(PagesAPIViewSet):
+    """Custom API view to expose annual report data."""
+
+    def get_queryset(self):
+        return AnnualReportSPAPage.objects.live().public()
+
+
+class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
+    """API for fetching slides."""
+
+    def get_queryset(self):
+        return AnnualReportSlidePage.objects.live().public()
+
+
+def get_ordered_slides_annual_report(request, page_id):
+    page = get_object_or_404(Page, id=page_id).specific
+    slide_ids = [block.value["slide"].id for block in page.slides]
+    if isinstance(page, AnnualReportSPAPage):
+        slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
+    elif isinstance(page, StrategicPlanSPAPage):
+        slides = StrategicPlanSlidePage.objects.filter(id__in=slide_ids)
+    else:
+        slides = []
+    slide_map = {slide.id: slide for slide in slides}
+    ordered_slides = [slide_map[id] for id in slide_ids if id in slide_map]
+
+    response_data = {
+        "slides": [
+            {
+                "id": slide.id,
+                "title": slide.title,
+                "slug": slide.slug,
+                "slide_title": slide.slide_title,
+                "slide_subtitle": slide.slide_subtitle,
+                "slide_content": slide.slide_content,
+                "slide_type": slide.slide_type,
+                "slide_theme": slide.slide_theme,
+                "background_image": slide.background_image.get_rendition('original').file.url if slide.background_image else '',
+                "background_video": slide.background_video.file.url if slide.background_video else '',
+                "background_colour": slide.background_colour.replace("_", "-"),
+                "include_on_toc": slide.include_on_toc,
+                "columns": slide.columns if hasattr(slide, "columns") else '',
+                "wide_column": slide.wide_column if hasattr(slide, "wide_column") else '',
+            }
+            for slide in ordered_slides
+        ]
+    }
+
+    return JsonResponse(response_data)
+
+
+def get_ordered_slides_strategic_plan(request, page_id):
+    page = get_object_or_404(Page, id=page_id).specific
+    slide_ids = [block.value["slide"].id for block in page.slides]
+    if isinstance(page, AnnualReportSPAPage):
+        slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
+    elif isinstance(page, StrategicPlanSPAPage):
+        slides = StrategicPlanSlidePage.objects.filter(id__in=slide_ids)
+    else:
+        slides = []
+    slide_map = {slide.id: slide for slide in slides}
+    ordered_slides = [slide_map[id] for id in slide_ids if id in slide_map]
+
+    slides = []
+    for slide in ordered_slides:
+        if slide.background_images:
+            background_image = slide.background_images[0].value.get_rendition('fill-1920x1080').file.url
+            background_image_thumbnail = slide.background_images[0].value.get_rendition('fill-384x216').file.url
+        else:
+            if slide.slide_type in ['title', 'toc']:
+                background_image = slide.background_image.get_rendition('fill-1920x2160').file.url if slide.background_image else ''
+                background_image_thumbnail = slide.background_image.get_rendition('fill-384x432').file.url if slide.background_image else ''
+            else:
+                background_image = slide.background_image.get_rendition('fill-1920x1080').file.url if slide.background_image else ''
+                background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
+        slides.append({
+            "id": slide.id,
+            "title": slide.title,
+            "slug": slide.slug,
+            "slide_title": slide.slide_title,
+            "slide_subtitle": slide.slide_subtitle,
+            "slide_content": slide.get_strategic_plan_slide_content(),
+            "slide_type": slide.slide_type,
+            "slide_theme": slide.slide_theme,
+            "background_image": background_image,
+            "background_images": [
+                image.value.get_rendition('fill-1920x1080').file.url for image in slide.background_images
+            ],
+            "background_image_thumbnail": background_image_thumbnail,
+            "background_video": slide.background_video.file.url if slide.background_video else '',
+            "background_colour": slide.background_colour.replace("_", "-"),
+            "display_vertical_title": slide.display_vertical_title,
+            "include_on_toc": slide.include_on_toc,
+            "column_size": slide.column_size,
+            "alignment": slide.alignment,
+        })
+
+    response_data = {
+        "slides": slides,
+    }
+
+    return JsonResponse(response_data)

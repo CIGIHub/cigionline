@@ -1,10 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import MediaListing from '../../js/components/MediaListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/media_landing_page.scss';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('media-search-table'));
+root.render(
   <SearchTable
     showSearch
     contenttypes={[
@@ -61,5 +62,4 @@ ReactDOM.render(
       colTitle: 'Topic',
     }]}
   />,
-  document.getElementById('media-search-table'),
 );
