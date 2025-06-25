@@ -1,3 +1,5 @@
+@import '~bootstrap/scss/bootstrap';
+
 header {
   padding: 2rem 0;
   background-color: red;
@@ -5,9 +7,137 @@ header {
 
 main {
   padding: 2rem 0;
+
+  .body {
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      margin-top: 1rem;
+    }
+  }
 }
 
 footer {
   padding: 3rem 0 5rem;
   background-color: red;
+}
+
+.floated-bio-block {
+  padding: 1rem;
+
+  &.floated-bio-block--left {
+    img {
+      float: left;
+      margin-right: 1rem;
+    }
+  }
+
+  &.floated-bio-block--right {
+    img {
+      float: right;
+      margin-left: 1rem;
+    }
+  }
+
+  .floated-bio-block__container {
+    display: flex;
+    align-items: center;
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    img {
+      margin-bottom: 1rem;
+      margin-right: 2rem;
+      border-radius: 50%;
+    }
+
+    button {
+      display: block;
+    }
+  }
+
+  .modal {
+    display: flex;
+    opacity: 0;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: -1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease;
+
+    &.show {
+      opacity: 1;
+      z-index: 1000;
+
+      .modal-content {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.5s ease, transform 0.3s ease;
+
+      h3 {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+
+  .open-modal-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: red;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-decoration: none;
+    margin-top: 0.5rem;
+  }
+
+  .open-modal-btn:hover {
+    background-color: red;
+    transform: scale(1.03);
+  }
+
+  .open-modal-btn:focus {
+    outline: 2px solid #ff8080;
+    outline-offset: 2px;
+  }
 }
