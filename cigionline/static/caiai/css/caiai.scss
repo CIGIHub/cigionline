@@ -1,9 +1,9 @@
 @import '~bootstrap/scss/bootstrap';
-
 @import './_variables.scss';
 
 body {
   font-family: $caiai-font-family;
+  background-color: $caiai-bg-red;
 }
 
 header {
@@ -61,8 +61,6 @@ header {
 }
 
 main {
-  padding: 0 0 4rem;
-
   .hero {
     padding: 2rem 0 4rem;
     background-color: $caiai-bg-red;
@@ -83,7 +81,8 @@ main {
 
         @include media-breakpoint-down(sm) {
           height: auto;
-          margin: auto 3rem;
+          margin: auto 25%;
+          margin-bottom: 1rem;
         }
       }
 
@@ -95,13 +94,15 @@ main {
 
         @include media-breakpoint-down(sm) {
           text-align: center;
+          font-size: 2.5rem;
         }
       }
     }
   }
 
   .body {
-    padding-top: 4rem;
+    padding: 4rem 0;
+    background-color: $white;
 
     .container {
       &:first-child {
@@ -191,11 +192,16 @@ main {
 }
 
 .floated-bio-block {
-  padding: 1rem;
+  &:not(:last-child) {
+    .floated-bio-block__container {
+      border-bottom: 1px solid $cigi-light-grey;
+    }
+  }
 
   .floated-bio-block__container {
     display: flex;
     align-items: flex-start;
+    padding: 1.5rem 0;
 
     h3 {
       margin-top: 0;
@@ -208,7 +214,6 @@ main {
         width: 100px;
         height: 100px;
       }
-      margin-bottom: 1rem;
       margin-right: 2rem;
       border-radius: 50%;
     }
@@ -352,26 +357,35 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1024px) {
       flex-direction: column;
     }
 
     img {
       width: auto;
+      &:not(:last-child) {
+        @media screen and (max-width: 1024px) {
+          margin-bottom: 1.5rem;
+          margin-right: 0;
+        }
+        margin-right: 2rem;
+        margin-bottom: 0;
+      }
       &.caiai-logo {
-        height: 100px;
+        height: 50px;
       }
       &.cigi-logo {
-        height: 40px;
+        height: 50px;
       }
       &.uwaterloo-logo {
-        height: 100px;
+        height: 120px;
+        margin: 0 -1rem 0 -2rem;
       }
 
       &.csls-logo {
-        height: 50px;
+        height: 55px;
       }
     }
   }
