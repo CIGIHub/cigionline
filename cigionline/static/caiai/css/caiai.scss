@@ -169,11 +169,6 @@ main {
   }
 }
 
-footer {
-  padding: 3rem 0 5rem;
-  background-color: $caiai-bg-red;
-}
-
 .floated-bio-block {
   padding: 1rem;
 
@@ -336,6 +331,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 2rem;
 
     @media screen and (max-width: 768px) {
       flex-direction: column;
@@ -351,6 +347,10 @@ footer {
       }
       &.uwaterloo-logo {
         height: 100px;
+      }
+
+      &.csls-logo {
+        height: 50px;
       }
     }
   }
