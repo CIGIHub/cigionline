@@ -2,6 +2,9 @@
 
 @import './_variables.scss';
 
+body {
+  font-family: $caiai-font-family;
+}
 header {
   padding: 2rem 0;
   background-color: $caiai-bg-red;
@@ -9,13 +12,14 @@ header {
   ul {
     list-style: none;
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     margin: 0;
     padding: 0;
+
     li {
       margin-right: 1.5rem;
-      font-weight: 600;
+      font-weight: 400;
       font-size: 0.9rem;
 
       &:last-child {
@@ -52,10 +56,35 @@ header {
 }
 
 main {
-  padding: 2rem 0 10rem;
-  font-family: $caiai-font-family;
+  padding: 0 0 10rem;
+
+  .hero {
+    padding: 2rem 0 4rem;
+    background-color: $caiai-bg-red;
+    color: $white;
+
+    .hero-content {
+      display: flex;
+
+      img {
+        height: 10rem;
+        width: auto;
+        margin-right: 2rem;
+        flex-shrink: 0;
+      }
+
+      h1 {
+        font-size: 3rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 200;
+        text-transform: uppercase;
+      }
+    }
+  }
 
   .body {
+    padding-top: 4rem;
+
     h2 {
       margin-top: 2rem;
       margin-bottom: 1rem;
@@ -85,7 +114,7 @@ main {
     a {
       transition: color 0.2s ease;
       color: $caiai-bg-red;
-    
+
       &:hover {
         text-decoration: none;
         color: $cigi-primary-colour;
