@@ -9,8 +9,7 @@
           {% image self.image fill-150x150 %}
           {% endif %}
           <div class="bio-content">
-            <h3 class="floated-bio-block__title">{{ self.title }}</h3>
-            {{ self.text|richtext|truncatewords:30 }}
+            {{ self.short_text|richtext }}
             <button class="open-modal-btn" data-modal="modal-{{self.title|slugify}}">Read More</button>
           </div>
         </div>

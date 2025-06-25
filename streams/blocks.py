@@ -1703,6 +1703,15 @@ class FloatedBioBlock(blocks.StructBlock):
         help_text="Title of the bio.",
     )
     image = ImageChooserBlock(required=True, help_text="Image to be displayed alongside the bio.")
+    short_text = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Short text content of the bio.",
+    )
     text = blocks.RichTextBlock(
         required=True,
         features=[
@@ -1711,14 +1720,6 @@ class FloatedBioBlock(blocks.StructBlock):
             'link',
         ],
         help_text="Text content of the bio.",
-    )
-    float_side = blocks.ChoiceBlock(
-        choices=[
-            ('left', 'Left'),
-            ('right', 'Right'),
-        ],
-        default='left',
-        help_text="Choose which side the image should float.",
     )
 
     class Meta:
