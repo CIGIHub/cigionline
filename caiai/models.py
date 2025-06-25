@@ -26,6 +26,7 @@ class CAIAIHomePage(Page):
     subpage_types = [
         'caiai.CAIAIAboutPage',
         'caiai.CAIAIBioPage',
+        'caiai.CAIAIRecommendationsPage',
     ]
 
     class Meta:
@@ -55,6 +56,7 @@ class CAIAIAboutPage(Page):
 
     class Meta:
         verbose_name = 'CAIAI About Page'
+
 
 class CAIAIRecommendationsPage(Page):
     """Singleton model for the CAIAI recommendations page."""
