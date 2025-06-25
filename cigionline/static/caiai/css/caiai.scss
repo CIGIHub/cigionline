@@ -18,6 +18,10 @@ header {
     margin: 0;
     padding: 0;
 
+    @include media-breakpoint-down(sm) {
+      justify-content: center;
+    }
+
     li {
       margin-right: 1.5rem;
       font-weight: 400;
@@ -67,11 +71,20 @@ main {
     .hero-content {
       display: flex;
 
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+
       img {
         height: 10rem;
         width: auto;
         margin-right: 2rem;
         flex-shrink: 0;
+
+        @include media-breakpoint-down(sm) {
+          height: auto;
+          margin: auto 3rem;
+        }
       }
 
       h1 {
@@ -79,6 +92,10 @@ main {
         font-family: 'Roboto', sans-serif;
         font-weight: 200;
         text-transform: uppercase;
+
+        @include media-breakpoint-down(sm) {
+          text-align: center;
+        }
       }
     }
   }
@@ -134,6 +151,10 @@ main {
 
     ol {
       padding-left: 2rem;
+
+      @include media-breakpoint-down(sm) {
+        padding-left: 1rem;
+      }
     }
 
     .caiai-objectives-block {
