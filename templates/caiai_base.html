@@ -49,7 +49,9 @@
     {# Fonts #}
 
     {% block extra_fonts %}
-      {# Override this in templates to add extra fonts #}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     {% endblock %}
     {% render_bundle 'caiai' 'css' %}
     {% block extra_css %}

@@ -38,6 +38,7 @@ class CAIAIAboutPage(Page):
     body = StreamField(
         [
             ('paragraph', ParagraphBlock()),
+            ('floated_bio', FloatedBioBlock()),
         ],
         blank=True,
     )
