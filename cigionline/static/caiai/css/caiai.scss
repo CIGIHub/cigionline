@@ -141,6 +141,10 @@ main {
         color: $caiai-bg-red;
       }
       ul {
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+          align-items: center;
+        }
         display: flex;
         list-style: none;
         padding: 0;
@@ -173,23 +177,9 @@ footer {
 .floated-bio-block {
   padding: 1rem;
 
-  &.floated-bio-block--left {
-    img {
-      float: left;
-      margin-right: 1rem;
-    }
-  }
-
-  &.floated-bio-block--right {
-    img {
-      float: right;
-      margin-left: 1rem;
-    }
-  }
-
   .floated-bio-block__container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 
     h3 {
       margin-top: 0;
@@ -198,6 +188,10 @@ footer {
     }
 
     img {
+      @include media-breakpoint-down(sm) {
+        width: 100px;
+        height: 100px;
+      }
       margin-bottom: 1rem;
       margin-right: 2rem;
       border-radius: 50%;
@@ -342,6 +336,10 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
+    }
 
     img {
       width: auto;
