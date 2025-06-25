@@ -1,7 +1,7 @@
 from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
-from streams.blocks import ParagraphBlock, FloatedBioBlock
+from streams.blocks import ParagraphBlock, FloatedBioBlock, CAIAIObjectivesBlock
 
 
 class CAIAIHomePage(Page):
@@ -39,6 +39,7 @@ class CAIAIAboutPage(Page):
         [
             ('paragraph', ParagraphBlock()),
             ('floated_bio', FloatedBioBlock()),
+            ('caiai_objectives', CAIAIObjectivesBlock()),
         ],
         blank=True,
     )

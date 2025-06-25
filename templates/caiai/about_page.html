@@ -7,6 +7,10 @@
 
 {% block body_class %}caiai-about-page{% endblock %}
 
+{% block header %}
+  {% include "caiai/includes/top_bar.html" %}
+{% endblock %}
+
 {% block content %}
   <section class="body">
     {% for block in self.body %}

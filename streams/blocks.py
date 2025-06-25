@@ -1725,3 +1725,25 @@ class FloatedBioBlock(blocks.StructBlock):
         icon = 'user'
         label = 'Floated Bio'
         template = 'streams/floated_bio_block.html'
+
+
+class CAIAIObjectivesBlock(blocks.StructBlock):
+    """A block for displaying the objectives of the CAI AI."""
+
+    objectives = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'h2',
+            'h3',
+            'ul',
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Text content of the CAI AI Objectives.",
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'CAI AI Objectives'
+        template = 'streams/cai_ai_objectives_block.html'
