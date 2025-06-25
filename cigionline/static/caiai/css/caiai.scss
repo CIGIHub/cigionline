@@ -4,31 +4,45 @@
 
 header {
   padding: 2rem 0;
-  background-color: $caiai_bg_red;
+  background-color: $caiai-bg-red;
 }
 
 main {
   padding: 2rem 0;
+  font-family: $caiai-font-family;
 
   .body {
-    li {
-      margin-bottom: 0.5rem;
-    }
-
     h2 {
       margin-top: 2rem;
       margin-bottom: 1rem;
+      font-weight: 300;
     }
 
     h3 {
       margin-top: 1rem;
+    }
+
+    h4 {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      color: $cigi-text-grey;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    hr {
+      margin: 2rem 0;
+      border: none;
+      border-top: 1px solid $cigi-light-grey;
     }
   }
 }
 
 footer {
   padding: 3rem 0 5rem;
-  background-color: $caiai_bg_red;
+  background-color: $caiai-bg-red;
 }
 
 .floated-bio-block {
