@@ -37,6 +37,20 @@ main {
       border: none;
       border-top: 1px solid $cigi-light-grey;
     }
+
+    a {
+      transition: color 0.2s ease;
+      color: $caiai-bg-red;
+    
+      &:hover {
+        text-decoration: none;
+        color: $cigi-primary-colour;
+      }
+    }
+
+    ol {
+      padding-left: 2rem;
+    }
   }
 }
 
@@ -135,7 +149,7 @@ footer {
   .open-modal-btn {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background-color: red;
+    background-color: $caiai-bg-red;
     color: white;
     font-size: 0.9rem;
     font-weight: 600;
