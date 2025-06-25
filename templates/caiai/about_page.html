@@ -2,13 +2,13 @@
 {% load wagtailcore_tags webpack_loader %}
 
 {% block extra_css %}
-  {% render_bundle 'caiaiHomePage' 'css' %}
+  {% render_bundle 'caiai' 'css' %}
 {% endblock %}
 
 {% block body_class %}caiai-about-page{% endblock %}
 
 {% block content %}
-  <section class="body" id="article-body">
+  <section class="body">
     {% for block in self.body %}
       {% include_block block %}
     {% endfor %}

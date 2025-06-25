@@ -1,8 +1,10 @@
 @import '~bootstrap/scss/bootstrap';
 
+@import './_variables.scss';
+
 header {
   padding: 2rem 0;
-  background-color: red;
+  background-color: $caiai_bg_red;
 }
 
 main {
@@ -26,7 +28,7 @@ main {
 
 footer {
   padding: 3rem 0 5rem;
-  background-color: red;
+  background-color: $caiai_bg_red;
 }
 
 .floated-bio-block {
