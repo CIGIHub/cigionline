@@ -1693,3 +1693,35 @@ class CollapsibleParagraphBlock(blocks.StructBlock):
         icon = 'edit'
         label = 'Collapsible Paragraph'
         template = 'streams/collapsible_paragraph_block.html'
+
+
+class FloatedBioBlock(blocks.StructBlock):
+    """A block for displaying a floated bio with an image and text."""
+
+    title = blocks.CharBlock(
+        required=True,
+        help_text="Title of the bio.",
+    )
+    image = ImageChooserBlock(required=True, help_text="Image to be displayed alongside the bio.")
+    text = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Text content of the bio.",
+    )
+    float_side = blocks.ChoiceBlock(
+        choices=[
+            ('left', 'Left'),
+            ('right', 'Right'),
+        ],
+        default='left',
+        help_text="Choose which side the image should float.",
+    )
+
+    class Meta:
+        icon = 'user'
+        label = 'Floated Bio'
+        template = 'streams/floated_bio_block.html'

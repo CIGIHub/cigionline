@@ -1,7 +1,7 @@
 from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
-from streams.blocks import ParagraphBlock
+from streams.blocks import ParagraphBlock, FloatedBioBlock
 
 
 class CAIAIHomePage(Page):
@@ -10,6 +10,7 @@ class CAIAIHomePage(Page):
     body = StreamField(
         [
             ('paragraph', ParagraphBlock()),
+            ('floated_bio', FloatedBioBlock()),
         ],
         blank=True,
     )
@@ -22,6 +23,57 @@ class CAIAIHomePage(Page):
         return 'caiai/home_page.html'
 
     max_count = 1
+    subpage_types = [
+        'caiai.CAIAIAboutPage',
+        'caiai.CAIAIBioPage',
+    ]
 
     class Meta:
         verbose_name = 'CAIAI Home Page'
+
+
+class CAIAIAboutPage(Page):
+    """Singleton model for the CAIAI about page."""
+
+    body = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+    )
+    content_panels = Page.content_panels + [
+        FieldPanel('body'),
+    ]
+
+    def get_template(self, request, *args, **kwargs):
+        """Return the template for the CAIAI about page."""
+        return 'caiai/about_page.html'
+
+    max_count = 1
+
+    class Meta:
+        verbose_name = 'CAIAI About Page'
+
+
+class CAIAIBioPage(Page):
+    """Singleton model for the CAIAI bio page."""
+
+    body = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+            ('floated_bio', FloatedBioBlock()),
+        ],
+        blank=True,
+    )
+    content_panels = Page.content_panels + [
+        FieldPanel('body'),
+    ]
+
+    def get_template(self, request, *args, **kwargs):
+        """Return the template for the CAIAI bio page."""
+        return 'caiai/bio_page.html'
+
+    max_count = 1
+
+    class Meta:
+        verbose_name = 'CAIAI Bio Page'
