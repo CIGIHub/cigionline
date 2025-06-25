@@ -56,6 +56,28 @@ class CAIAIAboutPage(Page):
     class Meta:
         verbose_name = 'CAIAI About Page'
 
+class CAIAIRecommendationsPage(Page):
+    """Singleton model for the CAIAI recommendations page."""
+
+    body = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+    )
+    content_panels = Page.content_panels + [
+        FieldPanel('body'),
+    ]
+
+    def get_template(self, request, *args, **kwargs):
+        """Return the template for the CAIAI recommendations page."""
+        return 'caiai/recommendations_page.html'
+
+    max_count = 1
+
+    class Meta:
+        verbose_name = 'CAIAI Recommendations Page'
+
 
 class CAIAIBioPage(Page):
     """Singleton model for the CAIAI bio page."""
