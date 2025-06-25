@@ -1746,4 +1746,4 @@ class CAIAIObjectivesBlock(blocks.StructBlock):
     class Meta:
         icon = 'doc-full'
         label = 'CAI AI Objectives'
-        template = 'streams/cai_ai_objectives_block.html'
+        template = 'streams/caiai_objectives_block.html'

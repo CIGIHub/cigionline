@@ -86,6 +86,16 @@ main {
   .body {
     padding-top: 4rem;
 
+    .container {
+      &:first-child {
+        h1,
+        h2,
+        h3 {
+          margin-top: 0;
+        }
+      }
+    }
+
     h2 {
       margin-top: 2rem;
       margin-bottom: 1rem;
@@ -124,6 +134,33 @@ main {
 
     ol {
       padding-left: 2rem;
+    }
+
+    .caiai-objectives-block {
+      h2 {
+        color: $caiai-bg-red;
+      }
+      ul {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        gap: 1rem;
+      }
+      li {
+        position: relative;
+        padding-top: 0.5rem;
+        color: $cigi-text-grey;
+
+        &::before {
+          content: '';
+          height: 3px;
+          top: 0;
+          position: absolute;
+          width: 100%;
+          font-weight: bold;
+          background-color: $caiai-bg-red;
+        }
+      }
     }
   }
 }
@@ -305,7 +342,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     img {
       width: auto;
       &.caiai-logo {
