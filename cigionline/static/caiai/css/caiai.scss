@@ -252,6 +252,11 @@ main {
     }
 
     .modal-content {
+      @include media-breakpoint-down(sm) {
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
       background: white;
       padding: 2rem;
       border-radius: 8px;
