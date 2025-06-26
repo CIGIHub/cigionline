@@ -14,7 +14,7 @@ from django.utils import timezone
 from modelcluster.fields import ParentalKey
 from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
 from uploads.models import DocumentUpload
-from utils.email_utils import send_email_digital_finance, extract_errors_as_string
+from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -29,6 +29,8 @@ from wagtail.search import index
 import pytz
 import re
 import urllib.parse
+import traceback
+import logging
 
 
 class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -391,7 +393,7 @@ class EventPage(
         else:
             template = 'events/event_page.html'
 
-        if email_recipient and request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if email_recipient and request.method == "POST":
             form = EventSubmissionForm(request.POST, request.FILES)
             if form.is_valid():
                 uploaded_file = form.cleaned_data['file']
@@ -438,6 +440,22 @@ class EventPage(
                         )
 
                     except Exception as e:
+                        logging.error("Exception during event form submission", exc_info=True)
+                        error_trace = traceback.format_exc()
+                        print(str(e))
+                        send_email_digifincon_debug(
+                            recipient='jxu@cigionline.org',
+                            subject='File Upload Failed',
+                            body=f"""
+                                    An error occurred during abstract submission:
+
+                                    Error: {str(e)}
+
+                                    Traceback:
+                                    {error_trace}
+                                """,
+                        )
+
                         if email_recipient:
                             send_email_digital_finance(
                                 recipient=email_recipient,
