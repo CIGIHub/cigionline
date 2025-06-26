@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from django.http import JsonResponse
+from django.middleware.csrf import get_token
 from django.shortcuts import render
 from django.utils import timezone
 from modelcluster.fields import ParentalKey
@@ -380,6 +381,7 @@ class EventPage(
         return standard_template
 
     def serve(self, request):
+        get_token(request)
         form = EventSubmissionForm()
         email_recipient = ''
 
