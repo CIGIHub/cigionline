@@ -56,6 +56,9 @@
     {% block theme_js %}
       {# Override this in templates to add theme JS #}
     {% endblock %}
+    {% block canonical_link %}
+      {# Override this in templates to add canonical link #}
+    {% endblock %}
     <link rel="shortcut icon" type="image/png" href="{% static 'assets/favicon.ico' %}">
   </head>
   <body class="{% block body_class %}{% endblock %}">
