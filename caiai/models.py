@@ -2,9 +2,10 @@ from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from streams.blocks import ParagraphBlock, FloatedBioBlock, CAIAIObjectivesBlock
+from core.models import ShareablePageAbstract
 
 
-class CAIAIHomePage(Page):
+class CAIAIHomePage(Page, ShareablePageAbstract):
     """Singleton model for the CAIAI home page."""
 
     body = StreamField(
@@ -33,7 +34,7 @@ class CAIAIHomePage(Page):
         verbose_name = 'CAIAI Home Page'
 
 
-class CAIAIAboutPage(Page):
+class CAIAIAboutPage(Page, ShareablePageAbstract):
     """Singleton model for the CAIAI about page."""
 
     body = StreamField(
@@ -58,7 +59,7 @@ class CAIAIAboutPage(Page):
         verbose_name = 'CAIAI About Page'
 
 
-class CAIAIRecommendationsPage(Page):
+class CAIAIRecommendationsPage(Page, ShareablePageAbstract):
     """Singleton model for the CAIAI recommendations page."""
 
     body = StreamField(
