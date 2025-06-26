@@ -44,6 +44,11 @@
     {% endif %}
   {% endif %}
 {% endblock %}
+{% block canonical_link %}
+  <link rel="canonical" href="{{ self.canonical_link }}" />
+{% endblock %}
+
+{% block body_class %}article-page{% endblock body_class %}
 {% block extra_css %}
   {% render_bundle 'articlePage' 'css' %}
 {% endblock %}
