@@ -5,6 +5,7 @@ function getCSRFToken() {
   return input ? input.value : null;
 }
 
+const CSRFToken = getCSRFToken();
 const h2 = document.querySelectorAll('h2');
 if (h2) {
   h2.forEach((h2Element) => {
@@ -36,9 +37,10 @@ eventUploadForm.addEventListener('submit', function (event) {
     method: 'POST',
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'X-CSRFToken': getCSRFToken(),
+      'X-CSRFToken': CSRFToken,
     },
     body: formData,
+    credentials: 'same-origin',
   })
     .then((response) => response.json())
     .then((data) => {
