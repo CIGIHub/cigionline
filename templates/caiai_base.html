@@ -1,0 +1,89 @@
+{% load cache static wagtailuserbar webpack_loader %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KGTN94P8');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K69KWSL1T8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-K69KWSL1T8');
+    </script>
+    <!-- End Google tag (gtag.js) -->
+    <meta charset="utf-8">
+    <title>
+      {% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}
+      {% block title_suffix %}
+        {% with self.get_site.site_name as site_name %}
+          {% if site_name %}- {{ site_name }}{% endif %}
+        {% endwith %}
+      {% endblock %}
+    </title>
+    <meta name="title" content="{{ self.title }}">
+    {% block meta_description %}
+    {% endblock %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:url" content="{{ self.full_url }}">
+    {% block og_type %}
+      <meta property="og:type" content="website">
+    {% endblock %}
+    <meta property="og:site_name" content="{{ self.get_site.site_name }}">
+    <meta property="og:title" content="{% if self.social_title %}{{ self.social_title }}{% else %}{{ self.title }}{% endif %}">
+    {% block og_description %}
+    {% endblock %}
+    {% block og_image %}
+      <meta property="og:image" content="{% static 'assets/T7-generic.png'%}" />
+    {% endblock %}
+    {% block extra_og_meta %}
+    {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {# Fonts #}
+
+    {% block extra_fonts %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    {% endblock %}
+    {% render_bundle 'caiai' 'css' %}
+    {% block extra_css %}
+      {# Override this in templates to add page-specific CSS #}
+    {% endblock %}
+    {% block theme_css %}
+      {# Override this in templates to add theme CSS #}
+    {% endblock %}
+    {% render_bundle 'caiai' 'js' attrs='defer' %}
+    {% block extra_js %}
+      {# Override this in templates to add page-specific JS #}
+    {% endblock %}
+    {% block theme_js %}
+      {# Override this in templates to add theme JS #}
+    {% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'caiai/assets/favicon.svg' %}">
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+    {% wagtailuserbar %}
+
+    {% block header %}
+      {% include "caiai/includes/top_bar.html" %}
+    {% endblock %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+      {% include "caiai/includes/footer.html" %}
+    {% endblock %}
+
+    <div id="cigi-cookie-consent-container"></div>
+  </body>
+</html>

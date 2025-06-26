@@ -1,0 +1,392 @@
+@import '~bootstrap/scss/bootstrap';
+@import './_variables.scss';
+
+body {
+  font-family: $caiai-font-family;
+  background-color: $caiai-bg-red;
+}
+
+header {
+  padding: 2rem 0;
+  background-color: $caiai-bg-red;
+
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+
+    @include media-breakpoint-down(sm) {
+      justify-content: center;
+    }
+
+    li {
+      margin-right: 1.5rem;
+      font-weight: 400;
+      font-size: 0.9rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      a {
+        color: $white;
+        text-decoration: none;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0%;
+          height: 2px;
+          background-color: $white;
+          transition: width 0.3s ease;
+        }
+
+        &:hover {
+          color: $white;
+          text-decoration: none;
+
+          &::after {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+main {
+  .hero {
+    padding: 2rem 0 4rem;
+    background-color: $caiai-bg-red;
+    color: $white;
+
+    .hero-content {
+      display: flex;
+
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+
+      img {
+        height: 10rem;
+        width: auto;
+        margin-right: 2rem;
+        flex-shrink: 0;
+
+        @include media-breakpoint-down(sm) {
+          height: auto;
+          margin: auto 25%;
+          margin-bottom: 1rem;
+        }
+      }
+
+      h1 {
+        font-size: 3rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 200;
+        text-transform: uppercase;
+
+        @include media-breakpoint-down(sm) {
+          text-align: center;
+          font-size: 2.5rem;
+        }
+      }
+    }
+  }
+
+  .body {
+    padding: 4rem 0;
+    background-color: $white;
+
+    .container {
+      &:first-child {
+        h1,
+        h2,
+        h3 {
+          margin-top: 0;
+        }
+      }
+    }
+
+    h2 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    h3 {
+      margin-top: 1rem;
+    }
+
+    h4 {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      color: $cigi-text-grey;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    hr {
+      margin: 2rem 0;
+      border: none;
+      border-top: 1px solid $cigi-light-grey;
+    }
+
+    a {
+      transition: color 0.2s ease;
+      color: $caiai-bg-red;
+
+      &:hover {
+        text-decoration: none;
+        color: $cigi-primary-colour;
+      }
+    }
+
+    ol {
+      padding-left: 2rem;
+
+      @include media-breakpoint-down(sm) {
+        padding-left: 1rem;
+      }
+    }
+
+    .caiai-objectives-block {
+      h2 {
+        color: $caiai-bg-red;
+      }
+      ul {
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+          align-items: center;
+        }
+        display: flex;
+        list-style: none;
+        padding: 0;
+        gap: 1rem;
+      }
+      li {
+        position: relative;
+        padding-top: 0.5rem;
+        color: $cigi-text-grey;
+
+        &::before {
+          content: '';
+          height: 3px;
+          top: 0;
+          position: absolute;
+          width: 100%;
+          font-weight: bold;
+          background-color: $caiai-bg-red;
+        }
+      }
+    }
+  }
+}
+
+.floated-bio-block {
+  &:not(:last-child) {
+    .floated-bio-block__container {
+      border-bottom: 1px solid $cigi-light-grey;
+    }
+  }
+
+  .floated-bio-block__container {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem 0;
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    img {
+      @include media-breakpoint-down(sm) {
+        width: 100px;
+        height: 100px;
+      }
+      margin-right: 2rem;
+      border-radius: 50%;
+    }
+
+    button {
+      display: block;
+    }
+  }
+
+  .modal {
+    display: flex;
+    opacity: 0;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: -1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease;
+
+    &.show {
+      opacity: 1;
+      z-index: 1000;
+
+      .modal-content {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.5s ease, transform 0.3s ease;
+
+      h3 {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+
+  .open-modal-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: $caiai-bg-red;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-decoration: none;
+    margin-top: 0.5rem;
+  }
+
+  .open-modal-btn:hover {
+    background-color: red;
+    transform: scale(1.03);
+  }
+
+  .open-modal-btn:focus {
+    outline: 2px solid #ff8080;
+    outline-offset: 2px;
+  }
+}
+
+footer {
+  background-color: $caiai-bg-red;
+  color: $white;
+  padding: 4rem 0 6rem;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+
+    li {
+      margin-right: 1.5rem;
+      font-weight: 400;
+      font-size: 0.9rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &:not(:last-child)::after {
+        content: '|';
+        margin-left: 1rem;
+        color: $white;
+      }
+
+      a {
+        color: $white;
+        text-decoration: none;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0%;
+          height: 2px;
+          background-color: $white;
+          transition: width 0.3s ease;
+        }
+
+        &:hover {
+          color: $white;
+          text-decoration: none;
+
+          &::after {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+
+    @media screen and (max-width: 1024px) {
+      flex-direction: column;
+    }
+
+    img {
+      width: auto;
+      &:not(:last-child) {
+        @media screen and (max-width: 1024px) {
+          margin-bottom: 1.5rem;
+          margin-right: 0;
+        }
+        margin-right: 2rem;
+        margin-bottom: 0;
+      }
+      &.caiai-logo {
+        height: 50px;
+      }
+      &.cigi-logo {
+        height: 50px;
+      }
+      &.uwaterloo-logo {
+        height: 120px;
+        margin: 0 -1rem 0 -2rem;
+      }
+
+      &.csls-logo {
+        height: 55px;
+      }
+    }
+  }
+}
