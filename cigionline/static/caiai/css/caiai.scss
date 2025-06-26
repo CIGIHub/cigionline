@@ -125,9 +125,13 @@ main {
     }
 
     h4 {
-      margin-bottom: 2rem;
       font-size: 1rem;
+      font-weight: 300;;
       color: $cigi-text-grey;
+      
+      &:last-child {
+        margin-bottom: 2rem;
+      }
     }
 
     li {
