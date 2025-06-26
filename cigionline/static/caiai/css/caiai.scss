@@ -371,7 +371,7 @@ footer {
       width: auto;
       &:not(:last-child) {
         @media screen and (max-width: 1024px) {
-          margin-bottom: 1.5rem;
+          margin-bottom: 2rem;
           margin-right: 0;
         }
         margin-right: 2rem;
@@ -384,10 +384,8 @@ footer {
         height: 50px;
       }
       &.uwaterloo-logo {
-        height: 120px;
-        margin: 0 -1rem 0 -2rem;
+        height: 50px;
       }
-
       &.csls-logo {
         height: 55px;
       }
