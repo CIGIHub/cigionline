@@ -1,5 +1,10 @@
 import './css/_event_page.scss';
 
+function getCSRFToken() {
+  const input = document.querySelector('[name=csrfmiddlewaretoken]');
+  return input ? input.value : null;
+}
+
 const h2 = document.querySelectorAll('h2');
 if (h2) {
   h2.forEach((h2Element) => {
@@ -31,6 +36,7 @@ eventUploadForm.addEventListener('submit', function (event) {
     method: 'POST',
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRFToken': getCSRFToken(),
     },
     body: formData,
   })
