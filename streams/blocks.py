@@ -1730,3 +1730,58 @@ class CollapsibleParagraphBlock(blocks.StructBlock):
         icon = 'edit'
         label = 'Collapsible Paragraph'
         template = 'streams/collapsible_paragraph_block.html'
+
+
+class FloatedBioBlock(blocks.StructBlock):
+    """A block for displaying a floated bio with an image and text."""
+
+    title = blocks.CharBlock(
+        required=True,
+        help_text="Title of the bio.",
+    )
+    image = ImageChooserBlock(required=True, help_text="Image to be displayed alongside the bio.")
+    short_text = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Short text content of the bio.",
+    )
+    text = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Text content of the bio.",
+    )
+
+    class Meta:
+        icon = 'user'
+        label = 'Floated Bio'
+        template = 'streams/floated_bio_block.html'
+
+
+class CAIAIObjectivesBlock(blocks.StructBlock):
+    """A block for displaying the objectives of the CAI AI."""
+
+    objectives = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'h2',
+            'h3',
+            'ul',
+            'bold',
+            'italic',
+            'link',
+        ],
+        help_text="Text content of the CAI AI Objectives.",
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'CAI AI Objectives'
+        template = 'streams/caiai_objectives_block.html'

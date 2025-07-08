@@ -1,0 +1,16 @@
+{% extends "caiai_base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'caiai' 'css' %}
+{% endblock %}
+
+{% block body_class %}caiai-recommendations-page{% endblock %}
+
+{% block content %}
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock content %}
