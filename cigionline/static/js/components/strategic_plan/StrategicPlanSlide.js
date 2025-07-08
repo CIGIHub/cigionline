@@ -157,19 +157,25 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     setImageIndex(firstIndex);
 
     if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
+      clearTimeout(timerRef.current.timeout);
+      clearInterval(timerRef.current.interval);
     }
 
-    timerRef.current = setInterval(() => {
-      setImageIndex((prev) => getRandomIndex(images.length, prev));
-    }, 4000);
+    timerRef.current = {};
 
+    timerRef.current.timeout = setTimeout(() => {
+      setImageIndex((prev) => getRandomIndex(images.length, prev));
+
+      timerRef.current.interval = setInterval(() => {
+        setImageIndex((prev) => getRandomIndex(images.length, prev));
+      }, 4000);
+    }, 6000);
+
+    // Cleanup on unmount or slide change
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
+      if (timerRef.current.timeout) clearTimeout(timerRef.current.timeout);
+      if (timerRef.current.interval) clearInterval(timerRef.current.interval);
+      timerRef.current = null;
     };
   }, [currentIndex]);
 
