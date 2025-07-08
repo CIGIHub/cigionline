@@ -21,18 +21,18 @@ const slideComponents = {
 
 const getGradientClass = (alignment) => {
   switch (alignment) {
-  case 'left':
-    return 'left';
-  case 'right':
-    return 'right';
-  case 'full':
-    return 'full';
-  case 'top':
-    return 'top';
-  case 'none':
-    return 'none';
-  default:
-    return 'none';
+    case 'left':
+      return 'left';
+    case 'right':
+      return 'right';
+    case 'full':
+      return 'full';
+    case 'top':
+      return 'top';
+    case 'none':
+      return 'none';
+    default:
+      return 'none';
   }
 };
 
@@ -156,13 +156,21 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     const firstIndex = getRandomIndex(images.length, -1);
     setImageIndex(firstIndex);
 
-    if (timerRef.current) clearInterval(timerRef.current);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
 
     timerRef.current = setInterval(() => {
       setImageIndex((prev) => getRandomIndex(images.length, prev));
     }, 4000);
 
-    () => clearInterval(timerRef.current);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
   }, [currentIndex]);
 
   const currentSlide = slides[currentIndex];
