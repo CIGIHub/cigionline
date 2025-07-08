@@ -1,0 +1,121 @@
+@import '../global/variables';
+@import '../global/mixins';
+
+.slide-nav {
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 10;
+}
+
+.nav-arrow {
+  border-color: #fff;
+  border-style: solid;
+  cursor: pointer;
+  display: block;
+  height: 30px;
+  left: 50%;
+  padding: 3px;
+  position: fixed;
+  transition: border-color 250ms;
+  width: 30px;
+  z-index: 7;
+
+  span {
+    opacity: 0;
+  }
+
+  &:hover {
+    border-color: $cigi-primary-colour;
+  }
+}
+
+.nav-arrow-top {
+  border-width: 1px 0 0 1px;
+  top: 40px;
+  transform: rotate(45deg) translateX(-75%);
+}
+
+.nav-arrow-bottom {
+  border-width: 0 1px 1px 0;
+  bottom: 10px;
+  transform: rotate(45deg) translateX(-75%);
+}
+
+.nav-item-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-tooltip {
+  position: absolute;
+  right: 30px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(0, 0, 0, 0.8);
+  }
+}
+
+.nav-circle {
+  width: 16px;
+  height: 16px;
+  border: 1px solid white;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+.nav-circle {
+  &::before {
+    content: '';
+    width: 70%;
+    height: 70%;
+    background-color: $white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+    border-color: $cigi-primary-colour;
+    &::before {
+      transform: translate(-50%, -50%) scale(1);
+      background-color: $cigi-primary-colour;
+    }
+  }
+
+  &.active {
+    &::before {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+}

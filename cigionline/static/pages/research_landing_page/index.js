@@ -1,10 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import ResearchContentListing from '../../js/components/ResearchContentListing';
 import SearchTable from '../../js/components/SearchTable';
 import './css/research_landing_page.scss';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('research-search-table'));
+root.render(
   <SearchTable
     showSearch
     contenttypes={[
@@ -106,5 +107,4 @@ ReactDOM.render(
       colTitle: 'PDF',
     }]}
   />,
-  document.getElementById('research-search-table'),
 );

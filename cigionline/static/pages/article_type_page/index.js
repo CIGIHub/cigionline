@@ -1,6 +1,6 @@
 /* global articleTypeId */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import ArticleListingSimple from '../../js/components/ArticleListingSimple';
 import SearchTable from '../../js/components/SearchTable';
 
@@ -12,17 +12,14 @@ if (articleTypeId) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('articles-list'));
+root.render(
   <SearchTable
     blockListing
     endpoint="/articles"
     endpointParams={endpointParams}
     limit={10}
-    fields={[
-      'authors',
-      'publishing_date',
-    ]}
+    fields={['authors', 'publishing_date']}
     RowComponent={ArticleListingSimple}
   />,
-  document.getElementById('articles-list'),
 );

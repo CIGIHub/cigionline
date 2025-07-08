@@ -2,7 +2,7 @@ import './css/publication_series_page.scss';
 
 /* global publicationSeriesId */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import PublicationListingSeries from '../../js/components/PublicationListingSeries';
 import SearchTable from '../../js/components/SearchTable';
 
@@ -14,7 +14,8 @@ if (publicationSeriesId) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('publications-list'));
+root.render(
   <SearchTable
     blockListing
     endpointParams={endpointParams}
@@ -28,5 +29,4 @@ ReactDOM.render(
     ]}
     RowComponent={PublicationListingSeries}
   />,
-  document.getElementById('publications-list'),
 );

@@ -92,6 +92,30 @@ def register_rich_text_name(features):
 
 
 @hooks.register('register_rich_text_features')
+def register_rich_text_coloured(features):
+    feature_name = 'coloured'
+    type_ = 'COLOURED'
+
+    control = {
+        'type': type_,
+        'label': 'Coloured',
+        'description': 'Coloured',
+        'element': 'span',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.InlineStyleFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'span[class=coloured]': InlineStyleElementHandler(type_)},
+        'to_database_format': {'style_map': {type_: {'element': 'span', 'props': {'class': 'coloured'}}}},
+    })
+
+
+@hooks.register('register_rich_text_features')
 def register_rich_text_underline(features):
     feature_name = 'underline'
     type_ = 'UNDERLINE'

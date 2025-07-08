@@ -294,6 +294,7 @@ class HomePage(Page):
 
     max_count = 1
     subpage_types = [
+        'annual_reports.StrategicPlanSPAPage',
         'articles.ArticleLandingPage',
         'articles.ArticleListPage',
         'articles.ArticleSeriesListPage',
@@ -317,6 +318,7 @@ class HomePage(Page):
         'research.ResearchLandingPage',
         'research.TopicListPage',
         'subscribe.SubscribePage',
+        'annual_reports.StrategicPlanSPAPage',
     ]
     templates = 'core/home_page.html'
 

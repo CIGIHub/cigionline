@@ -1,6 +1,6 @@
 /* global topicId */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import SearchTable from '../../js/components/SearchTable';
 import TopicContentListing from '../../js/components/TopicContentListing';
 
@@ -14,7 +14,8 @@ if (topicId) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('topic-search-table'));
+root.render(
   <SearchTable
     showSearch
     hideTopicDropdown
@@ -91,5 +92,4 @@ ReactDOM.render(
       colTitle: 'PDF',
     }]}
   />,
-  document.getElementById('topic-search-table'),
 );

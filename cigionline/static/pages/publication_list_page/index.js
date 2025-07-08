@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
 import PublicationListing from '../../js/components/PublicationListing';
@@ -8,7 +8,8 @@ import SearchTable from '../../js/components/SearchTable';
 import './css/publication_list_page.scss';
 import 'swiper/swiper-bundle.css';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('publications-search-table'));
+root.render(
   <SearchTable
     showSearch
     contenttypes={['Publication', 'Opinion']}
@@ -139,7 +140,6 @@ ReactDOM.render(
       },
     ]}
   />,
-  document.getElementById('publications-search-table'),
 );
 
 Swiper.use([Navigation, Pagination]);
