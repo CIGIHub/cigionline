@@ -66,7 +66,6 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
   const canScrollRef = useRef(true);
-  const [scrollEnabled, setScrollEnabled] = useState(false);
 
   const checkScrollCondition = () => {
     const wrapper = document.querySelector('.slide-wrapper');
@@ -84,22 +83,10 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   };
 
   useEffect(() => {
-    setContentVisible(false);
-    setScrollEnabled(false);
-
-    const timer = setTimeout(() => {
-      setScrollEnabled(true);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [slug]);
-
-  useEffect(() => {
     canScrollRef.current = checkScrollCondition();
 
     const handleNavigation = (direction) => {
-      if (!canScrollRef.current || isScrolling || !scrollEnabled) return;
-
+      if (!canScrollRef.current || isScrolling) return;
       setIsScrolling(true);
       setTimeout(() => setIsScrolling(false), 600);
 
