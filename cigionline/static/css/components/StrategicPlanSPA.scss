@@ -459,6 +459,23 @@ body {
     }
   }
 
+  &.right {
+    &::before {
+      background: linear-gradient(
+        to left,
+        rgba(0, 0, 0, 0.95),
+        rgba(0, 0, 0, 0.9),
+        rgba(0, 0, 0, 0.8),
+        rgba(0, 0, 0, 0.8),
+        rgba(0, 0, 0, 0.8),
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0.95)
+      );
+    }
+  }
+
   .background-video {
     position: fixed;
     height: calc(100% + 50px);
@@ -485,7 +502,8 @@ body {
       width: 34%;
     }
 
-    &.bg-3 {
+    &.bg-3,
+    &.bg-9 {
       width: 100%;
       object-position: center;
     }
