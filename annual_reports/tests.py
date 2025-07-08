@@ -4,6 +4,7 @@ from wagtail.test.utils import WagtailPageTestCase
 from .models import (
     AnnualReportListPage,
     AnnualReportPage,
+    AnnualReportSPAPage,
 )
 
 
@@ -31,5 +32,5 @@ class AnnualReportPageTests(WagtailPageTestCase):
     def test_annualreportpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             AnnualReportPage,
-            {},
+            {AnnualReportSPAPage},
         )

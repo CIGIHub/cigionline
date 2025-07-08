@@ -318,6 +318,7 @@ class HomePage(Page):
         'research.ResearchLandingPage',
         'research.TopicListPage',
         'subscribe.SubscribePage',
+        'annual_reports.StrategicPlanSPAPage',
     ]
     templates = 'core/home_page.html'
 

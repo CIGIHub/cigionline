@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import '../../../css/components/AnnualReportSPA.scss';
 import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
-import usePreloadSlideAssets from './usePreloadSlideAssets';
+import preloadAllSlideAssets from './preloadAllSlideAssets';
 
 const fetchSlides = async (strategicPlanSPAId) => {
   const response = await fetch(
@@ -25,9 +25,9 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
 
   useEffect(() => {
     fetchSlides(strategicPlanSPAId)
-      .then((data) => {
+      .then(async (data) => {
         setSlides(data);
-        usePreloadSlideAssets(data);
+        await preloadAllSlideAssets(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
