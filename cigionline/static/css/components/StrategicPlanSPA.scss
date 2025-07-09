@@ -247,7 +247,6 @@ body {
   }
 
   p {
-    font-size: 0.88em;
     line-height: 1.25;
 
     &.subtitle {
@@ -606,14 +605,9 @@ body {
       break-inside: avoid;
     }
 
-    .member-name {
-      font-size: 0.88em;
-    }
-
     .member-title {
       text-transform: uppercase;
       font-weight: 300;
-      font-size: 0.88em;
     }
   }
 }
@@ -933,7 +927,6 @@ body {
 
 .timeline-slide {
   line-height: 1.25;
-  font-size: 0.88em;
 
   .timeline-container {
     position: relative;
