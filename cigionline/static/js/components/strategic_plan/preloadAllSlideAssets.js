@@ -16,23 +16,40 @@ const preloadImageAsPromise = (src) =>
     img.src = src;
   });
 
+const preloadVideoAsPromise = (src) =>
+  new Promise((resolve) => {
+    if (!src || loadedAssets.has(src)) {
+      resolve();
+      return;
+    }
+
+    const video = document.createElement('video');
+    video.onloadeddata = () => {
+      loadedAssets.add(src);
+      resolve();
+    };
+    video.onerror = () => resolve();
+    video.src = src;
+    video.load();
+  });
+
 const preloadAllSlideAssets = async (slides) => {
   if (!slides?.length) return;
 
-  const allImagePromises = [];
+  const criticalAssets = [];
 
   slides.forEach((slide) => {
-    allImagePromises.push(preloadImageAsPromise(slide.background_image));
-    allImagePromises.push(
-      preloadImageAsPromise(slide.background_image_thumbnail),
-    );
-
-    slide.background_images?.forEach((src) => {
-      allImagePromises.push(preloadImageAsPromise(src));
-    });
+    if (slide.background_image_thumbnail) {
+      criticalAssets.push(
+        preloadImageAsPromise(slide.background_image_thumbnail),
+      );
+    }
+    if (slide.background_video) {
+      criticalAssets.push(preloadVideoAsPromise(slide.background_video));
+    }
   });
 
-  await Promise.all(allImagePromises);
+  await Promise.all(criticalAssets);
 };
 
 export default preloadAllSlideAssets;

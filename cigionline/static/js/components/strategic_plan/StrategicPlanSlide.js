@@ -19,6 +19,8 @@ const slideComponents = {
   timeline: StrategicPlanTimelineSlide,
 };
 
+const loadedImages = new Set();
+
 const getGradientClass = (alignment) => {
   switch (alignment) {
     case 'left':
@@ -46,6 +48,15 @@ const getRandomIndex = (arrayLength, excludeIndex) => {
   return newIndex;
 };
 
+const preloadImage = (src) => {
+  if (!src || loadedImages.has(src)) return;
+
+  const img = new Image();
+  img.onload = () => loadedImages.add(src);
+  img.onerror = () => {};
+  img.src = src;
+};
+
 const StrategicReportSlide = ({ slides, basePath }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -68,19 +79,29 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   const canScrollRef = useRef(true);
 
   const checkScrollCondition = () => {
+    if (typeof document === 'undefined') return false;
+
     const wrapper = document.querySelector('.slide-wrapper');
     const isLargeScreen = window.innerWidth >= 992;
     const contentOverflows =
       wrapper && wrapper.scrollHeight > window.innerHeight;
 
-    if (contentOverflows) {
-      document.body.classList.add('content-overflows');
-    } else {
-      document.body.classList.remove('content-overflows');
-    }
+    document.body.classList.toggle('content-overflows', contentOverflows);
 
     return isLargeScreen && !contentOverflows;
   };
+
+  useEffect(() => {
+    if (nextSlide?.background_image) {
+      preloadImage(nextSlide.background_image);
+    }
+  }, [currentIndex, nextSlide]);
+
+  useEffect(() => {
+    if (prevSlide?.background_image) {
+      preloadImage(prevSlide.background_image);
+    }
+  }, [currentIndex, prevSlide]);
 
   useEffect(() => {
     canScrollRef.current = checkScrollCondition();
@@ -212,7 +233,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       </div>
       <AnimatePresence mode="sync">
         <motion.div
-          key={`bg-${slug}-${slides[currentIndex].slide_type}`}
+          key={currentSlide.id || currentSlide.slug}
           className={`slide-background ${gradientClass} ${slides[currentIndex].slide_type}`}
           initial={{ opacity: 0.1, y: 0 }}
           animate={{ opacity: 1, y: -20 }}
@@ -226,7 +247,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
           <div
             className="background-image"
             style={{
-              backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
+              backgroundImage: `url(${slides[currentIndex].background_image_thumbnail},url(${slides[currentIndex].background_image}))`,
             }}
           />
           {slides[currentIndex].background_images && (

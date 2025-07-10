@@ -114,6 +114,8 @@ $framework-slide-pink: #ea6aaa;
 }
 
 body {
+  background-color: $black;
+
   &.content-overflows {
     overflow-y: scroll;
   }
