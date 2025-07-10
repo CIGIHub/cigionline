@@ -247,7 +247,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
           <div
             className="background-image"
             style={{
-              backgroundImage: `url(${slides[currentIndex].background_image_thumbnail},url(${slides[currentIndex].background_image}))`,
+              backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
             }}
           />
           {slides[currentIndex].background_images && (
