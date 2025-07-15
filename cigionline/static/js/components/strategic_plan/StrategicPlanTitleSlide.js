@@ -162,7 +162,7 @@ const StrategicPlanTitleSlide = ({ slide }) => (
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.5, ease: 'easeInOut', delay: 1.5 }}
           >
-            2025-2030
+            2025–2030
           </motion.div>
         </div>
       </div>

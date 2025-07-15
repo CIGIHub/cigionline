@@ -251,6 +251,10 @@ body {
   p {
     line-height: 1.25;
 
+    li {
+      margin-bottom: 0.5em;
+    }
+
     &.subtitle {
       font-size: 1.1em;
     }
