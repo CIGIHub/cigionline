@@ -86,9 +86,8 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
     const isLargeScreen = window.innerWidth >= 992;
     const contentOverflows = wrapper.scrollHeight > window.innerHeight;
-    const forceOverflow = slides[currentIndex]?.slide_type === 'framework';
 
-    return isLargeScreen && !(contentOverflows || forceOverflow);
+    return isLargeScreen && !(contentOverflows);
   };
 
   useEffect(() => {
