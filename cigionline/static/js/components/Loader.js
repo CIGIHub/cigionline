@@ -67,10 +67,7 @@ const Loader = ({ isLoading }) => {
             </svg>
           </svg>
         </div>
-        <p>
-          {progress}
-          %
-        </p>
+        <p>{progress}%</p>
       </div>
     </div>
   );
