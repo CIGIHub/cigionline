@@ -85,7 +85,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
                 }}
               >
                 {content.content.map((content, index) => (
-                  <div dangerouslySetInnerHTML={{ __html: content }} />
+                  <div key={`framework-blocks-${index}`} dangerouslySetInnerHTML={{ __html: content }} />
                 ))}
               </motion.div>
             ))}
@@ -273,7 +273,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
       >
         {slide.slide_content.acknowledgements?.map((content, index) => (
           <div
-            key={index}
+            key={`acknowledgements-${index}`}
             className={`${getColumnClass(
               slide.column_size,
               slide.slide_content.columns.length,

@@ -82,13 +82,13 @@ const StrategicReportSlide = ({ slides, basePath }) => {
     if (typeof document === 'undefined') return false;
 
     const wrapper = document.querySelector('.slide-wrapper');
+    if (!wrapper) return false;
+
     const isLargeScreen = window.innerWidth >= 992;
-    const contentOverflows =
-      wrapper && wrapper.scrollHeight > window.innerHeight;
+    const contentOverflows = wrapper.scrollHeight > window.innerHeight;
+    const forceOverflow = slides[currentIndex]?.slide_type === 'framework';
 
-    document.body.classList.toggle('content-overflows', contentOverflows);
-
-    return isLargeScreen && !contentOverflows;
+    return isLargeScreen && !(contentOverflows || forceOverflow);
   };
 
   useEffect(() => {
@@ -164,10 +164,6 @@ const StrategicReportSlide = ({ slides, basePath }) => {
 
   useEffect(() => {
     setContentVisible(false);
-  }, [slug]);
-
-  useEffect(() => {
-    canScrollRef.current = checkScrollCondition();
   }, [slug]);
 
   useEffect(() => {
