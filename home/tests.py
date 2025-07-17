@@ -1,3 +1,4 @@
+from annual_reports.models import StrategicPlanSPAPage
 from articles.models import (
     ArticleLandingPage,
     ArticleListPage,
@@ -61,6 +62,7 @@ class HomePageTests(WagtailPageTestCase):
                 ResearchLandingPage,
                 SubscribePage,
                 TopicListPage,
+                StrategicPlanSPAPage,
             }
         )
 

@@ -73,3 +73,22 @@ def send_email_digital_finance(recipient, subject, body):
 
 def extract_errors_as_string(form_errors):
     return [str(error) for field_errors in form_errors.values() for error in field_errors]
+
+
+def send_email_digifincon_debug(recipient, subject, body):
+    """
+    Send an email for debugging purposes.
+    This function is used to send emails with the debug email address.
+    """
+    try:
+        sg = SendGridAPIClient(settings.DIGITAL_FINANCE_EMAIL_RECIPIENT)
+        message = Mail(
+            from_email=settings.DIGITAL_FINANCE_EMAIL_RECIPIENT,
+            to_emails=recipient,
+            subject=subject,
+            plain_text_content=body,
+        )
+        sg.send(message)
+
+    except Exception as e:
+        print(f'Error sending debug email: {str(e)}')

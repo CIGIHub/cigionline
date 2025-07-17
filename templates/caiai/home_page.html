@@ -1,0 +1,32 @@
+{% extends "caiai_base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'caiai' 'css' %}
+{% endblock %}
+
+{% block body_class %}caiai-homepage{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="hero-content">
+            <img src="/static/caiai/assets/Icon-white.png" alt="">
+            <h1 class="hero-title">
+              <div>CANADIAN</div>
+              <div>AI ADOPTION</div>
+              <div>INITIATIVE</div>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="body">
+    {% for block in self.body %}
+      {% include_block block %}
+    {% endfor %}
+  </section>
+{% endblock content %}

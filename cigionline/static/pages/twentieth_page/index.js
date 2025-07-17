@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import TwentiethPage from '../../js/components/TwentiethPage';
 import './css/twentieth_page.scss';
@@ -21,7 +21,8 @@ socialButton.on('click', function() {
   $(this).toggleClass('open');
 });
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('twentieth-page-slides'));
+root.render(
   <Router>
     <TwentiethPage
       slides={slides}
@@ -29,5 +30,4 @@ ReactDOM.render(
       pageUrl={pageUrl}
     />
   </Router>,
-  document.getElementById('twentieth-page-slides'),
 );

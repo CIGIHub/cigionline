@@ -1,9 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import MultimediaListing from '../../js/components/MultimediaListing';
 import SearchTable from '../../js/components/SearchTable';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('multimedia-search-table'));
+root.render(
   <SearchTable
     blockListing
     contenttypes={[
@@ -42,5 +43,4 @@ ReactDOM.render(
     ]}
     RowComponent={MultimediaListing}
   />,
-  document.getElementById('multimedia-search-table'),
 );

@@ -203,6 +203,11 @@ class ArticlePage(
         blank=True,
         use_json_field=True,
     )
+    canonical_link = models.URLField(
+        blank=True,
+        max_length=512,
+        help_text='An external URL (https://...) or an internal URL (/interactives/2019annualreport/).',
+    )
     embed_youtube = models.URLField(
         blank=True,
         verbose_name='YouTube Embed',
@@ -493,6 +498,7 @@ class ArticlePage(
     ]
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
+        FieldPanel('canonical_link'),
     ]
 
     search_fields = BasicPageAbstract.search_fields \

@@ -1,0 +1,26 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+
+<div class="floated-bio-block">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        <div class="floated-bio-block__container">
+          {% if self.image %}
+          {% image self.image fill-150x150 %}
+          {% endif %}
+          <div class="bio-content">
+            {{ self.short_text|richtext }}
+            <button class="open-modal-btn" data-modal="modal-{{self.title|slugify}}">Read More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="modal-{{self.title|slugify}}">
+    <div class="modal-content">
+      <span class="close-btn" data-modal="modal-{{self.title|slugify}}">&times;</span>
+      <h3>{{self.title}}</h3>
+      {{ self.text|richtext }}
+    </div>
+  </div>
+</div>

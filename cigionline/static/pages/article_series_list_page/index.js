@@ -1,9 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import ArticleSeriesListing from '../../js/components/ArticleSeriesListing';
 import SearchTable from '../../js/components/SearchTable';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('article-series-search-table'));
+root.render(
   <SearchTable
     blockListing
     contenttypes={[
@@ -24,5 +25,4 @@ ReactDOM.render(
     showSidebar={false}
     RowComponent={ArticleSeriesListing}
   />,
-  document.getElementById('article-series-search-table'),
 );

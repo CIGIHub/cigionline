@@ -294,6 +294,7 @@ class HomePage(Page):
 
     max_count = 1
     subpage_types = [
+        'annual_reports.StrategicPlanSPAPage',
         'articles.ArticleLandingPage',
         'articles.ArticleListPage',
         'articles.ArticleSeriesListPage',

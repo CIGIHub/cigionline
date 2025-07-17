@@ -1,0 +1,53 @@
+@import '../global/variables';
+@import '../global/mixins';
+
+.loading-container {
+  background-color: $black;
+  height: 100vh;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+
+  .loading {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 2;
+
+    .progress-icon {
+      background-color: $black;
+      fill: $black;
+      height: 100px;
+      width: 180px;
+
+      .background-progress {
+        fill: $white;
+        height: 100%;
+        width: 100%;
+      }
+
+      .progress {
+        fill: $cigi-primary-colour;
+        height: 100%;
+        transition: transform 50ms ease-in;
+        width: 100%;
+
+        @for $i from 0 through 100 {
+          &.update-#{$i} {
+            transform: translateX(0% - (100 - $i));
+          }
+        }
+      }
+    }
+
+    p {
+      color: $white;
+      letter-spacing: 1px;
+      margin-top: 10px;
+      text-align: center;
+    }
+  }
+}

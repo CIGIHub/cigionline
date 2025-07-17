@@ -14,6 +14,7 @@ class FeaturedPageBlock(StructBlock):
         'research.ProjectPage',
         'annual_reports.AnnualReportPage',
         'publications.T7PublicationPage',
+        'annual_reports.StrategicPlanSPAPage',
     ]
     page = PageChooserBlock(page_type=page_types)
 
