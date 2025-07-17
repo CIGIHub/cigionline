@@ -3,10 +3,8 @@ from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.admin.panels import PageChooserPanel, InlinePanel, FieldPanel, MultiFieldPanel
 from wagtail.models import Orderable
-from wagtail.snippets.models import register_snippet
 
 
-@register_snippet
 class PublishEmailNotification(ClusterableModel):
     user = models.ForeignKey(
         'wagtailusers.userprofile',
