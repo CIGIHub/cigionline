@@ -1,7 +1,6 @@
 from wagtail import hooks
 from .models import NewsletterPage
 from wagtail.admin.viewsets.model import ModelViewSet
-from wagtail.admin.viewsets.base import ViewSetGroup
 from wagtail.admin.ui.tables import Column
 from utils.admin_utils import title_with_actions, live_icon
 
