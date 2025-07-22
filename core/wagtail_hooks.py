@@ -12,7 +12,6 @@ from .models import Theme
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.ui.tables import Column
 from utils.admin_utils import title_with_actions
-from wagtail.snippets.views.snippets import SnippetViewSet
 
 
 @hooks.register('insert_global_admin_css')
@@ -215,18 +214,19 @@ class AboutListingViewSet(ModelViewSet):
         return kwargs
 
 
-class ThemeListingViewSet(SnippetViewSet):
+class ThemeListingViewSet(ModelViewSet):
     model = Theme
     menu_label = 'Themes'
+    icon = 'image'
     menu_icon = 'image'
     menu_order = 204
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
     ]
-    form_fields = ['name']
     search_fields = ('name',)
     ordering = ['name']
     add_to_admin_menu = True
+    exclude_form_fields = []
 
 
 @hooks.register("register_admin_viewset")

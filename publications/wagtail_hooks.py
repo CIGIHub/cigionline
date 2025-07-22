@@ -6,30 +6,31 @@ from .models import (
     PublicationSeriesPage,
     PublicationSeriesListPage
 )
-from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.viewsets.pages import PageListingViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
 from wagtail.admin.ui.tables import Column
 from utils.admin_utils import title_with_actions, live_icon
 
 
-class PublicationListPageListingViewSet(ModelViewSet):
+class PublicationListPageListingViewSet(PageListingViewSet):
     model = PublicationListPage
     menu_label = 'Publications Landing Page'
     menu_icon = 'home'
     menu_order = 100
+    name = 'publicationlistpage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
     ]
-    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
 
 
-class PublicationsPageListingViewSet(ModelViewSet):
+class PublicationsPageListingViewSet(PageListingViewSet):
     model = PublicationPage
     menu_label = 'Publications'
     menu_icon = 'doc-full'
     menu_order = 103
+    name = 'publicationpage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
         Column('publishing_date', label='Publishing Date', sort_key='publishing_date'),
@@ -39,7 +40,6 @@ class PublicationsPageListingViewSet(ModelViewSet):
         Column('id', label='ID', sort_key='id'),
     ]
     list_filter = ('publishing_date', 'publication_type', 'live', 'publication_series')
-    form_fields = ['title', 'publishing_date', 'publication_type', 'publication_series']
     search_fields = ('title',)
     ordering = ['-publishing_date']
 
@@ -49,32 +49,32 @@ class PublicationsPageListingViewSet(ModelViewSet):
         return kwargs
 
 
-class PublicationSeriesPageListingViewSet(ModelViewSet):
+class PublicationSeriesPageListingViewSet(PageListingViewSet):
     model = PublicationSeriesPage
     menu_label = 'Publication Series'
     menu_icon = 'list-ul'
     menu_order = 104
+    name = 'publicationseriespage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
         Column('publishing_date', label='Publishing Date', sort_key='publishing_date'),
         Column(live_icon, label='Live', sort_key='live'),
         Column('id', label='ID', sort_key='id'),
     ]
-    form_fields = ['title', 'publishing_date']
     list_filter = ('publishing_date', 'live')
     search_fields = ('title',)
     ordering = ['-publishing_date']
 
 
-class PublicationSeriesLandingPageListingViewSet(ModelViewSet):
+class PublicationSeriesLandingPageListingViewSet(PageListingViewSet):
     model = PublicationSeriesListPage
     menu_label = 'Publication Series Landing Page'
     menu_icon = 'home'
     menu_order = 101
+    name = 'publicationserieslistpage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
     ]
-    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
 

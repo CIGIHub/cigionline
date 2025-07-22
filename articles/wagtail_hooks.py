@@ -8,7 +8,7 @@ from .models import (
 )
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 from utils.admin_utils import title_with_actions, live_icon
-from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.viewsets.pages import PageListingViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
 from wagtail.admin.ui.tables import Column
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
@@ -74,19 +74,18 @@ def register_rich_text_anchor(features):
     })
 
 
-class ArticleLandingPageListingViewSet(ModelViewSet):
+class ArticleLandingPageListingViewSet(PageListingViewSet):
     model = ArticleLandingPage
     menu_label = 'Opinions Landing Page'
     icon = 'home'
     menu_order = 100
     name = 'articlelandingpage'
-    form_fields = ['title',]
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
     ]
 
 
-class ArticleSeriesPageListingViewSet(ModelViewSet):
+class ArticleSeriesPageListingViewSet(PageListingViewSet):
     model = ArticleSeriesPage
     menu_label = 'Essay Series'
     menu_icon = 'list-ul'
@@ -100,42 +99,41 @@ class ArticleSeriesPageListingViewSet(ModelViewSet):
         Column('id', label='ID', sort_key='id'),
     ]
     list_filter = ('publishing_date', 'live')
-    form_fields = ['title', 'publishing_date']
     search_fields = ('title',)
     ordering = ['-publishing_date']
 
 
-class MediaLandingPageListingViewSet(ModelViewSet):
+class MediaLandingPageListingViewSet(PageListingViewSet):
     model = MediaLandingPage
     menu_label = 'Media Landing Page'
     menu_icon = 'home'
     menu_order = 101
+    name = 'medialandingpage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
     ]
-    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
 
 
-class OpinionSeriesPageListingViewSet(ModelViewSet):
+class OpinionSeriesPageListingViewSet(PageListingViewSet):
     model = OpinionSeriesPage
     menu_label = 'Opinion Series'
     menu_icon = 'list-ul'
     menu_order = 104
+    name = 'opinionseriespage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
         Column('publishing_date', label='Publishing Date', sort_key='publishing_date'),
         Column(live_icon, label='Live', sort_key='live'),
         Column('id', label='ID', sort_key='id'),
     ]
-    form_fields = ['title', 'publishing_date']
     list_filter = ('publishing_date', 'live')
     search_fields = ('title',)
     ordering = ['-publishing_date']
 
 
-class ArticlePageListingViewSet(ModelViewSet):
+class ArticlePageListingViewSet(PageListingViewSet):
     model = ArticlePage
     menu_label = 'Articles'
     menu_icon = 'copy'
@@ -151,7 +149,6 @@ class ArticlePageListingViewSet(ModelViewSet):
         Column('id', label='ID', sort_key='id'),
     ]
     list_filter = ['publishing_date', 'article_type', 'theme', 'live']
-    form_fields = ['title', 'publishing_date', 'article_series', 'article_type', 'theme',]
     search_fields = ('title',)
     ordering = ['-publishing_date']
 

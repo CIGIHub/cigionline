@@ -1,29 +1,30 @@
 from wagtail import hooks
 from .models import AnnualReportListPage, AnnualReportPage
 from utils.admin_utils import title_with_actions, live_icon
-from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.viewsets.pages import PageListingViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
 from wagtail.admin.ui.tables import Column
 
 
-class AnnualReportListPageListingViewSet(ModelViewSet):
+class AnnualReportListPageListingViewSet(PageListingViewSet):
     model = AnnualReportListPage
     menu_label = 'Annual Reports Landing Page'
     menu_icon = 'home'
     menu_order = 100
+    name = 'annualreportlistpage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
     ]
-    form_fields = ['title',]
     search_fields = ('title',)
     ordering = ['title']
 
 
-class AnnualReportPageListingViewSet(ModelViewSet):
+class AnnualReportPageListingViewSet(PageListingViewSet):
     model = AnnualReportPage
     menu_label = 'Annual Reports'
     menu_icon = 'history'
     menu_order = 101
+    name = 'annualreportpage'
     list_display = [
         Column(title_with_actions, label='Title', sort_key='title'),
         Column('year', label='Year', sort_key='year'),
@@ -31,7 +32,6 @@ class AnnualReportPageListingViewSet(ModelViewSet):
         Column('id', label='ID', sort_key='id'),
     ]
     list_filter = ('year', 'live')
-    form_fields = ['title', 'year']
     search_fields = ('title',)
     ordering = ['-year']
 

@@ -30,27 +30,27 @@ def title_with_actions(obj):
         # Handle specific types with their own display logic
         type_map = {
             Theme: {
-                "url": lambda o: f"/admin/snippets/core/theme/edit/{o.pk}/",
+                "url": lambda o: f"/admin/theme/edit/{o.pk}/",
                 "display": lambda o: o.name,
-                "edit_url": lambda o: f"/admin/snippets/core/theme/edit/{o.pk}/",
+                "edit_url": lambda o: f"/admin/theme/edit/{o.pk}/",
                 "actions": True,
             },
             Menu: {
-                "url": lambda o: f"/admin/snippets/menus/menu/edit/{o.pk}/",
+                "url": lambda o: f"/admin/menu/edit/{o.pk}/",
                 "display": lambda o: o.name,
-                "edit_url": lambda o: f"/admin/snippets/menus/menu/edit/{o.pk}/",
+                "edit_url": lambda o: f"/admin/menu/edit/{o.pk}/",
                 "actions": True,
             },
             PromotionBlock: {
-                "url": lambda o: f"/admin/snippets/promotions/promotionblock/edit/{o.pk}/",
+                "url": lambda o: f"/admin/promotionblock/edit/{o.pk}/",
                 "display": lambda o: o.name,
-                "edit_url": lambda o: f"/admin/snippets/promotions/promotionblock/edit/{o.pk}/",
+                "edit_url": lambda o: f"/admin/promotionblock/edit/{o.pk}/",
                 "actions": True,
             },
             PublishEmailNotification: {
-                "url": lambda o: f"/admin/snippets/signals/publishemailnotification/edit/{o.pk}/",
+                "url": lambda o: f"/admin/publishemailnotification/edit/{o.pk}/",
                 "display": lambda o: o.user,
-                "edit_url": lambda o: f"/admin/snippets/signals/publishemailnotification/edit/{o.pk}/",
+                "edit_url": lambda o: f"/admin/publishemailnotification/edit/{o.pk}/",
                 "actions": True,
             },
         }
