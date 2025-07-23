@@ -1,33 +1,28 @@
-from wagtail_modeladmin.helpers import PermissionHelper
-from wagtail_modeladmin.options import ModelAdmin, modeladmin_register
 from .models import Menu
-
+from wagtail import hooks
+from wagtail.admin.ui.tables import Column
+from utils.admin_utils import title_with_actions
+from wagtail.admin.viewsets.model import ModelViewSet
 
 # Menus are not allowed to be created in the admin interface. To add/remove a
 # menu, a migration needs to be created.
-class MenuAdminPermissionHelper(PermissionHelper):
-    def user_can_list(self, user):
-        return True
-
-    def user_can_create(self, user):
-        return True
-
-    def user_can_edit_obj(self, user, obj):
-        return True
-
-    def user_can_delete_obj(self, user, obj):
-        return True
 
 
-class MenuAdmin(ModelAdmin):
+class MenuViewSet(ModelViewSet):
     model = Menu
     menu_label = 'Menus'
     menu_icon = 'list-ul'
     menu_order = 100
+    icon = 'list-ul'
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='name'),
+    ]
+    exclude_form_fields = []
+    search_fields = ('name',)
     ordering = ['name']
-    permission_helper_class = MenuAdminPermissionHelper
     add_to_settings_menu = True
-    exclude_from_explorer = False
 
 
-modeladmin_register(MenuAdmin)
+@hooks.register('register_admin_viewset')
+def register_menu_viewset():
+    return MenuViewSet()
