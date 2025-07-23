@@ -50,3 +50,8 @@
 .public-DraftStyleDefault-unorderedListItem.public-DraftStyleDefault-depth3 {
   list-style-type: disc;
 }
+
+.sidebar-custom-branding svg {
+  width: 80%;
+  fill: white;
+}

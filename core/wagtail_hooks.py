@@ -5,11 +5,13 @@ from wagtail.admin.rich_text.converters.html_to_contentstate import (
     BlockElementHandler,
     InlineStyleElementHandler,
 )
-from wagtail_modeladmin.options import (ModelAdmin, modeladmin_register)
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail import hooks
 from wagtail.models import Page
 from .models import Theme
+from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.ui.tables import Column
+from utils.admin_utils import title_with_actions
 
 
 @hooks.register('insert_global_admin_css')
@@ -187,32 +189,16 @@ def register_rich_text_rtl(features):
     })
 
 
-class ThemeModelAdmin(ModelAdmin):
-    # See https://docs.wagtail.io/en/stable/reference/contrib/modeladmin/
-    model = Theme
-    menu_label = 'Themes'
-    menu_icon = 'image'
-    menu_order = 204
-    list_display = ('name',)
-    search_fields = ('name',)
-
-
-# sort page chooser panels by most recent pages
-@hooks.register('construct_page_chooser_queryset')
-def order_pages_in_chooser(pages, request):
-    if "choose-page" in request.path:
-        return pages.order_by('-live', '-latest_revision_created_at')
-    return pages
-
-
-class AboutModelAdmin(ModelAdmin):
+class AboutListingViewSet(ModelViewSet):
     model = Page
     menu_label = 'About'
     menu_icon = 'help'
     menu_order = 110
-    list_display = ('title',)
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
     search_fields = ('title',)
-
+    form_fields = ['title']
     page_names = [
         'CIGI History',
         'Our Partners',
@@ -220,11 +206,34 @@ class AboutModelAdmin(ModelAdmin):
         'Strategy and Evaluation',
         'The CIGI Rule',
     ]
+    add_to_admin_menu = True
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(title__in=self.page_names)
+    def get_index_view_kwargs(self):
+        kwargs = super().get_index_view_kwargs()
+        kwargs["queryset"] = self.model.objects.filter(title__in=AboutListingViewSet.page_names)
+        return kwargs
 
 
-modeladmin_register(ThemeModelAdmin)
-modeladmin_register(AboutModelAdmin)
+class ThemeListingViewSet(ModelViewSet):
+    model = Theme
+    menu_label = 'Themes'
+    icon = 'image'
+    menu_icon = 'image'
+    menu_order = 204
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
+    search_fields = ('name',)
+    ordering = ['name']
+    add_to_admin_menu = True
+    exclude_form_fields = []
+
+
+@hooks.register("register_admin_viewset")
+def register_theme_viewset():
+    return ThemeListingViewSet()
+
+
+@hooks.register("register_admin_viewset")
+def register_about_viewset():
+    return AboutListingViewSet()

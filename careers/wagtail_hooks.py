@@ -1,55 +1,48 @@
-from core.helpers import CIGIModelAdminPermissionHelper
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from wagtail_modeladmin.options import (
-    ModelAdmin,
-    ModelAdminGroup,
-    modeladmin_register,
-)
 from wagtail import hooks
-
 from .models import JobPostingListPage, JobPostingPage
+from utils.admin_utils import title_with_actions, live_icon
+from wagtail.admin.viewsets.pages import PageListingViewSet
+from wagtail.admin.viewsets.base import ViewSetGroup
+from wagtail.admin.ui.tables import Column
 
 
-@hooks.register('register_permissions')
-def register_job_posting_list_page_permissions():
-    job_posting_list_page_content_type = ContentType.objects.get(app_label='careers', model='jobpostinglistpage')
-    return Permission.objects.filter(content_type=job_posting_list_page_content_type)
-
-
-class JobPostingListPageModelAdmin(ModelAdmin):
-    model = JobPostingListPage
-    menu_label = 'Careers Page'
-    menu_icon = 'home'
-    menu_order = 100
-    list_display = ('title',)
-    search_fields = ('title',)
-    ordering = ['title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
-
-
-@hooks.register('register_permissions')
-def register_job_posting_page_permissions():
-    job_posting_page_content_type = ContentType.objects.get(app_label='careers', model='jobpostingpage')
-    return Permission.objects.filter(content_type=job_posting_page_content_type)
-
-
-class JobPostingPageModelAdmin(ModelAdmin):
+class JobPostingPageListingViewSet(PageListingViewSet):
     model = JobPostingPage
     menu_label = 'Job Postings'
     menu_icon = 'user'
-    list_display = ('title', 'live')
-    list_filter = ('live',)
+    menu_order = 101
+    name = 'jobpostingpage'
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+        Column('latest_revision_created_at', label='Latest Draft Created At', sort_key='latest_revision_created_at'),
+        Column(live_icon, label='Live', sort_key='live'),
+        Column('id', label='ID', sort_key='id'),
+    ]
+    list_filter = ['live']
     search_fields = ('title',)
-    ordering = ['-live', 'title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
+    ordering = ['-latest_revision_created_at', 'title']
 
 
-class JobPostingModelAdminGroup(ModelAdminGroup):
+class JobPostingListPageListingViewSet(PageListingViewSet):
+    model = JobPostingListPage
+    menu_label = 'Careers Landing Page'
+    menu_icon = 'home'
+    menu_order = 100
+    name = 'jobpostinglistpage'
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
+    search_fields = ('title',)
+    ordering = ['title']
+
+
+class JobPostingViewSetGroup(ViewSetGroup):
     menu_label = 'Careers'
     menu_icon = 'user'
     menu_order = 202
-    items = (JobPostingListPageModelAdmin, JobPostingPageModelAdmin)
+    items = (JobPostingListPageListingViewSet, JobPostingPageListingViewSet)
 
 
-modeladmin_register(JobPostingModelAdminGroup)
+@hooks.register('register_admin_viewset')
+def register_job_posting_viewset():
+    return JobPostingViewSetGroup()

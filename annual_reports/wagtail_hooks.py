@@ -1,55 +1,48 @@
-from core.helpers import CIGIModelAdminPermissionHelper
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from wagtail_modeladmin.options import (
-    ModelAdmin,
-    ModelAdminGroup,
-    modeladmin_register,
-)
 from wagtail import hooks
-
 from .models import AnnualReportListPage, AnnualReportPage
+from utils.admin_utils import title_with_actions, live_icon
+from wagtail.admin.viewsets.pages import PageListingViewSet
+from wagtail.admin.viewsets.base import ViewSetGroup
+from wagtail.admin.ui.tables import Column
 
 
-@hooks.register('register_permissions')
-def register_annual_report_list_page_permissions():
-    annual_report_list_page_content_type = ContentType.objects.get(app_label='annual_reports', model='annualreportlistpage')
-    return Permission.objects.filter(content_type=annual_report_list_page_content_type)
-
-
-class AnnualReportListPageModelAdmin(ModelAdmin):
+class AnnualReportListPageListingViewSet(PageListingViewSet):
     model = AnnualReportListPage
     menu_label = 'Annual Reports Landing Page'
     menu_icon = 'home'
     menu_order = 100
-    list_display = ('title',)
+    name = 'annualreportlistpage'
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+    ]
     search_fields = ('title',)
     ordering = ['title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
 
 
-@hooks.register('register_permissions')
-def register_annual_report_page_permissions():
-    annual_report_page_content_type = ContentType.objects.get(app_label='annual_reports', model='annualreportpage')
-    return Permission.objects.filter(content_type=annual_report_page_content_type)
-
-
-class AnnualReportPageModelAdmin(ModelAdmin):
+class AnnualReportPageListingViewSet(PageListingViewSet):
     model = AnnualReportPage
     menu_label = 'Annual Reports'
     menu_icon = 'history'
-    list_display = ('title',)
-    list_filter = ('live',)
+    menu_order = 101
+    name = 'annualreportpage'
+    list_display = [
+        Column(title_with_actions, label='Title', sort_key='title'),
+        Column('year', label='Year', sort_key='year'),
+        Column(live_icon, label='Live', sort_key='live'),
+        Column('id', label='ID', sort_key='id'),
+    ]
+    list_filter = ('year', 'live')
     search_fields = ('title',)
-    ordering = ['-title']
-    permission_helper_class = CIGIModelAdminPermissionHelper
+    ordering = ['-year']
 
 
-class AnnualReportModelAdminGroup(ModelAdminGroup):
+class AnnualReportViewSetGroup(ViewSetGroup):
     menu_label = 'Annual Reports'
     menu_icon = 'history'
     menu_order = 201
-    items = (AnnualReportListPageModelAdmin, AnnualReportPageModelAdmin)
+    items = (AnnualReportListPageListingViewSet, AnnualReportPageListingViewSet)
 
 
-modeladmin_register(AnnualReportModelAdminGroup)
+@hooks.register('register_admin_viewset')
+def register_annual_report_viewset():
+    return AnnualReportViewSetGroup()
