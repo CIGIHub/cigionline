@@ -1,17 +1,31 @@
 .table-block {
   table {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 2rem 0;
     font-size: 0.75em;
+    border: 1px solid $black;
+    font-weight: 400;
 
     tr {
-      border-bottom: 1px solid $cigi-light-grey;
+      border-bottom: 1px solid $black;
+    }
+
+    th {
+      font-weight: 400;
+    }
+
+    td,
+    th {
+      padding: 0.5rem 1rem;
     }
 
     thead {
+      background-color: $black;
+
       tr {
         th {
-          color: $cigi-dark-grey;
+          color: $cigi-light-grey;
           font-size: 1em;
-          font-weight: 700;
           padding: 16px 10px;
           text-align: left;
           vertical-align: middle;
@@ -22,22 +36,10 @@
         }
       }
     }
-
     tbody {
       tr {
-        th,
-        td {
-          padding: 16px 10px;
-        }
-
         td {
           border-bottom: 0;
-        }
-
-        th {
-          &:first-child {
-            padding-left: 0;
-          }
         }
       }
     }

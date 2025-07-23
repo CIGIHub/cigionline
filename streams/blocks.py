@@ -684,21 +684,10 @@ class PullQuoteRightBlock(blocks.StructBlock, ThemeableBlock):
 
 
 class TableStreamBlock(TableBlock):
-
-    def render(self, value, context=None):
-        return """
-        <div class="container table-block">
-        <div class="row d-block">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-        {super_template}
-        </div>
-        </div>
-        </div>
-        """.format(super_template=super(TableStreamBlock, self).render(value, context))
-
     class Meta:
         icon = 'form'
         label = 'Table'
+        template = 'streams/table_block.html'
 
 
 class TextBackgroundBlock(blocks.RichTextBlock, ThemeableBlock):
