@@ -54,7 +54,7 @@ if (projectId) {
   });
 }
 
-const root = createRoot(document.getElementById('project-content-listing'));
+const root = createRoot(document.getElementById('project-search-table'));
 root.render(
   <SearchTable
     showSearch
