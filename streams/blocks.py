@@ -14,6 +14,7 @@ from wagtail.models import Page
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
 
 
 class ThemeableBlock:
@@ -690,6 +691,39 @@ class TableStreamBlock(TableBlock):
         template = 'streams/table_block.html'
 
 
+class TableStreamBlockV2(blocks.StructBlock, ThemeableBlock):
+    """Table block with optional caption"""
+
+    title = blocks.CharBlock(required=False)
+    table = TableStreamBlock(required=True)
+
+    def render(self, value, context=None):
+        if context is None:
+            context = {}
+
+        # Get rendered HTML for the table block
+        table_block = self.child_blocks['table']
+        table_html = table_block.render(value['table'], context=context)
+
+        new_context = dict(context)
+        new_context.update({
+            'self': value,
+            'title': value.get('title'),
+            'rendered_table': table_html,
+        })
+
+        return render_to_string(self.get_template(value, context), new_context)
+
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(TableStreamBlockV2, self).get_template(value, context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'table_block')
+
+    class Meta:
+        icon = 'form'
+        label = 'Table Block V2'
+        template = 'streams/table_block_v2.html'
+
+
 class TextBackgroundBlock(blocks.RichTextBlock, ThemeableBlock):
     """Text box with background colour """
 
@@ -1288,7 +1322,7 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/persons_list_block.html'
 
 
-class PublicastionsListBlock(blocks.StructBlock, ThemeableBlock):
+class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
     publication_type = blocks.PageChooserBlock(page_type='publications.PublicationTypePage', required=False, help_text='Select a publication type to automatically populate with this type of publications.')
     publications = blocks.StreamBlock(
         [

@@ -1,0 +1,13 @@
+{% load table_block_tags %}
+
+{% if title %}
+  <div class="container table-block-v2 table-block">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        <div class="table-block-title">{{ title }}</div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{{ rendered_table }}
