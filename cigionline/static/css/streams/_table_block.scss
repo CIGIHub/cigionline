@@ -1,45 +1,73 @@
 .table-block {
   table {
-    font-size: 0.75em;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 2rem 0;
+    font-size: 0.75rem;
+    border: 1px solid $black;
+    font-weight: 400;
+    line-height: 1.25;
 
     tr {
-      border-bottom: 1px solid $cigi-light-grey;
+      border-bottom: 1px solid $black;
+    }
+
+    th {
+      font-weight: 400;
+    }
+
+    td,
+    th {
+      padding: 0.75em 0.5rem;
     }
 
     thead {
+      background-color: $black;
+      border-bottom: 1px solid $black;
+
       tr {
         th {
-          color: $cigi-dark-grey;
+          color: $cigi-light-grey;
           font-size: 1em;
-          font-weight: 700;
-          padding: 16px 10px;
           text-align: left;
           vertical-align: middle;
+          border-bottom: 0;
+          border-right: 1px solid $cigi-medium-grey;
+          text-align: center;
 
-          &:first-child {
-            padding-left: 0;
+          &:last-child {
+            border-right: 0;
           }
         }
       }
     }
-
     tbody {
       tr {
-        th,
-        td {
-          padding: 16px 10px;
-        }
-
-        td {
-          border-bottom: 0;
-        }
-
+        td,
         th {
-          &:first-child {
-            padding-left: 0;
-          }
+          border-bottom: 0;
+          border-right: 1px solid $black;
+        }
+
+        td {
+          text-align: center;
         }
       }
+    }
+  }
+}
+
+.table-block-v2 {
+  .table-block-title {
+    border-top: 5px solid $cigi-primary-colour;
+    color: $cigi-primary-colour;
+    line-height: 1.25;
+    padding: 0.5em 0 1em;
+    margin-top: 2rem;
+  }
+
+  & + div {
+    table {
+      margin-top: 0;
     }
   }
 }
