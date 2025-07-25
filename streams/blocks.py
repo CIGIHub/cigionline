@@ -1345,7 +1345,7 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
         return context
 
     def get_template(self, value, context, *args, **kwargs):
-        standard_template = super(PublicastionsListBlock, self).get_template(value, context, *args, **kwargs)
+        standard_template = super(PublicationsListBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'publications_list_block')
 
     class Meta:
