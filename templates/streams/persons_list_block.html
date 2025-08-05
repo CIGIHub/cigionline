@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="container persons-list-block">
+<div class="container persons-list-block {{self.title|slugify}}">
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
       {% if self.title and not hide_title %}
@@ -31,7 +31,9 @@
               </div>
             </div>
             <div class="person-description">
-              {% if self.bio_source_field and self.bio_source_field == 'short_bio' %}
+              {% if person.dph_bio %}
+                {{ person.dph_bio|safe }}
+              {% elif self.bio_source_field and self.bio_source_field == 'short_bio' %}
                 {{ person.short_bio|safe }}
               {% else %}
                 {% for block in person.body %}
