@@ -5,7 +5,7 @@ from django.db.models.fields import CharField
 from django.http import JsonResponse
 from django.http.response import Http404
 from django.utils.functional import cached_property
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -53,6 +53,7 @@ from streams.blocks import (
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
+from utils.auth_utils import build_auth0_authorization_url
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -1269,3 +1270,34 @@ class Think7AbstractPage(BasicPageAbstract, Page):
     class Meta:
         verbose_name = 'Think7 Abstract Page'
         verbose_name_plural = 'Think7 Abstract Pages'
+
+
+class Auth0ProtectedPageMixin(models.Model):
+    """
+    Abstract model for pages that require Auth0 authentication.
+    This model can be inherited by any page that needs to be protected.
+    """
+    auth0_protected = models.BooleanField(
+        default=False,
+        verbose_name='Auth0 Protected',
+        help_text='When enabled, this page requires Auth0 authentication to access.'
+    )
+
+    auth0_protected_panel = MultiFieldPanel(
+        [
+            FieldPanel('auth0_protected'),
+        ],
+        heading='Auth0 Protection',
+        classname='collapsible collapsed',
+    )
+    
+    def serve(self, request, *args, **kwargs):
+        if self.auth0_protected and not request.user.is_authenticated:
+            # Redirect to Auth0 login page or handle unauthenticated access
+            token = request.session.get('auth0_access_token')
+            if not token:
+                return redirect(build_auth0_authorization_url(request))
+        return super().serve(request, *args, **kwargs)
+
+    class Meta:
+        abstract = True
