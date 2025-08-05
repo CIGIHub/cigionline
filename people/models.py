@@ -253,6 +253,12 @@ class PersonPage(
     topics = ParentalManyToManyField('research.TopicPage', blank=True)
     twitter_username = models.CharField(blank=True, max_length=255)
     website = models.URLField(blank=True)
+    dph_bio = RichTextField(
+        blank=True,
+        features=['bold', 'italic', 'underline', 'link', 'ul', 'ol'],
+        verbose_name='Digital Policy Hub Biography',
+        help_text='A short biography that is used on the Digital Policy Hub theme.',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -339,7 +345,6 @@ class PersonPage(
                 FieldPanel('last_name'),
                 FieldPanel('position'),
                 FieldPanel('position_secondary'),
-                FieldPanel('position_dph'),
                 FieldPanel('board_position')
             ],
             heading='General Information',
@@ -429,6 +434,14 @@ class PersonPage(
                 FieldPanel('external_publications')
             ],
             heading='External Publications',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('position_dph'),
+                FieldPanel('dph_bio'),
+            ],
+            heading='DPH Fields',
             classname='collapsible collapsed'
         ),
     ]
