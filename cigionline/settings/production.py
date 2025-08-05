@@ -20,7 +20,7 @@ if 'ALLOWED_HOSTS' in os.environ:
     ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
 
 if 'WAGTAILADMIN_BASE_URL' in os.environ:
-    WAGTAILADMIN_BASE_URL = [os.environ['WAGTAILADMIN_BASE_URL']]
+    WAGTAILADMIN_BASE_URL = os.environ['WAGTAILADMIN_BASE_URL']
 
 if 'DATABASE_URL' in os.environ:
     DATABASES = {
