@@ -1286,7 +1286,7 @@ class Auth0AccessRole(models.Model):
         return self.name
 
 
-class Auth0ProtectedPageMixin(models.Model):
+class Auth0ProtectedPageAbstract(models.Model):
     """
     Abstract model for pages that require Auth0 authentication.
     This model can be inherited by any page that needs to be protected.
