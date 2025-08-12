@@ -48,6 +48,10 @@
   <link rel="canonical" href="{{ self.full_url }}" />
 {% endblock canonical_link %}
 
+{% block extra_js %}
+  <script src="{% static 'js/text_to_speech.js' %}"></script>
+{% endblock %}
+
 {% block extra_css %}
   {% render_bundle 'articlePage' 'css' %}
 {% endblock %}
@@ -106,7 +110,7 @@
       {% endif %}
       {% if self.body %}
         {% if self.article_type.title == 'CIGI in the News' %}
-          <section class="body" id="article-body">
+          <section class="body" id="article-body" data-tts data-tts-lang="en" data-tts-position="before">
             {% if self.hide_excerpt %}
               {% for block in self.body %}
                 {% if block.block_type != 'additional_disclaimer' %}
