@@ -1308,6 +1308,9 @@ class Auth0ProtectedPageAbstract(models.Model):
     )
 
     def serve(self, request):
+        if request.user.is_authenticated:
+            return super().serve(request)
+
         if self.auth0_protected:
             token = request.session.get('auth0_access_token')
             if not token:
