@@ -207,3 +207,16 @@ if 'DOCUMENT_UPLOAD_PASSWORD' in os.environ:
     DOCUMENT_UPLOAD_PASSWORD = os.environ['DOCUMENT_UPLOAD_PASSWORD']
 
 WAGTAIL_2FA_REQUIRED = True
+
+if AUTH0_CLIENT_ID in os.environ:
+    AUTH0_CLIENT_ID = os.environ['AUTH0_CLIENT_ID']
+if AUTH0_CLIENT_SECRET in os.environ:
+    AUTH0_CLIENT_SECRET = os.environ['AUTH0_CLIENT_SECRET']
+if AUTH0_DOMAIN in os.environ:
+    AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
+if AUTH0_REDIRECT_URI in os.environ:
+    AUTH0_REDIRECT_URI = os.environ['AUTH0_REDIRECT_URI']
+if AUTH0_SCOPE in os.environ:
+    AUTH0_SCOPE = os.environ['AUTH0_SCOPE']
+if AUTH0_AUDIENCE in os.environ:
+    AUTH0_AUDIENCE = os.environ['AUTH0_AUDIENCE']
