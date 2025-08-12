@@ -298,7 +298,7 @@ WAGTAILAPI_LIMIT_MAX = 40
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = 'https://edit.cigionline.org'
+WAGTAILADMIN_BASE_URL = 'https://cigionline.org'
 
 WAGTAIL_USER_TIME_ZONES = ['America/Toronto']
 TIME_ZONE = 'America/Toronto'

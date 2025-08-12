@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.db import models
 from django.db.models.fields import CharField
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.http.response import Http404
 from django.utils.functional import cached_property
 from django.shortcuts import render, redirect
@@ -53,7 +53,7 @@ from streams.blocks import (
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
-from utils.auth_utils import build_auth0_authorization_url
+from utils.auth_utils import build_auth0_authorization_url, decode_and_verify
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -70,6 +70,7 @@ from wagtail.documents.models import Document
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
+from wagtail.snippets.models import register_snippet
 from .forms import Think7AbstractUploadForm
 import math
 
@@ -1272,6 +1273,19 @@ class Think7AbstractPage(BasicPageAbstract, Page):
         verbose_name_plural = 'Think7 Abstract Pages'
 
 
+@register_snippet
+class Auth0AccessRole(models.Model):
+    """
+    Mirrors an Auth0 Role by name (slug optional).
+    """
+    name = models.CharField(max_length=128, unique=True)
+
+    panels = [FieldPanel('name')]
+
+    def __str__(self):
+        return self.name
+
+
 class Auth0ProtectedPageMixin(models.Model):
     """
     Abstract model for pages that require Auth0 authentication.
@@ -1282,22 +1296,37 @@ class Auth0ProtectedPageMixin(models.Model):
         verbose_name='Auth0 Protected',
         help_text='When enabled, this page requires Auth0 authentication to access.'
     )
+    allowed_roles = ParentalManyToManyField(Auth0AccessRole, blank=True)
 
     auth0_protected_panel = MultiFieldPanel(
         [
             FieldPanel('auth0_protected'),
+            FieldPanel('allowed_roles'),
         ],
         heading='Auth0 Protection',
         classname='collapsible collapsed',
     )
-    
-    def serve(self, request, *args, **kwargs):
-        if self.auth0_protected and not request.user.is_authenticated:
-            # Redirect to Auth0 login page or handle unauthenticated access
+
+    def serve(self, request):
+        if self.auth0_protected:
             token = request.session.get('auth0_access_token')
             if not token:
                 return redirect(build_auth0_authorization_url(request))
-        return super().serve(request, *args, **kwargs)
+
+            try:
+                claims = decode_and_verify(token)
+            except Exception:
+                # Token invalid/expired → re-auth
+                return redirect(build_auth0_authorization_url(request))
+
+            token_roles = set(claims.get(f'{settings.WAGTAILADMIN_BASE_URL}/oauth/roles', []))
+            required = set(self.allowed_roles.values_list('name', flat=True))
+
+            # If page lists roles and user doesn't have any -> 403
+            if required and token_roles.isdisjoint(required):
+                return HttpResponseForbidden('You don’t have access to this page.')
+
+        return super().serve(request)
 
     class Meta:
         abstract = True
