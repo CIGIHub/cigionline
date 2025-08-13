@@ -1,3 +1,6 @@
+import requests
+from django.shortcuts import redirect
+from django.conf import settings
 from core.models import ContentPage
 from datetime import date
 from django.http import JsonResponse
@@ -101,3 +104,28 @@ def years(request):
     return JsonResponse({
         'years': list(years)
     })
+
+
+def oauth_callback(request):
+    code = request.GET.get('code')
+    state = request.GET.get('state')  # original URL
+
+    token_url = f"https://{settings.AUTH0_DOMAIN}/oauth/token"
+    payload = {
+        'grant_type': 'authorization_code',
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'client_secret': settings.AUTH0_CLIENT_SECRET,
+        'code': code,
+        'redirect_uri': settings.AUTH0_REDIRECT_URI,
+    }
+
+    res = requests.post(token_url, json=payload)
+    if res.status_code == 200:
+        token_data = res.json()
+        access_token = token_data.get('access_token')
+        request.session['auth0_access_token'] = access_token
+    else:
+        # Log or handle error
+        pass
+
+    return redirect(state or '/')

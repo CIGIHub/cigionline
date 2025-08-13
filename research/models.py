@@ -6,6 +6,7 @@ from core.models import (
     SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
+    Auth0ProtectedPageAbstract,
 )
 from django.db import models
 from django.db.models import F
@@ -69,6 +70,7 @@ class ProjectListPage(Page):
 
 
 class ProjectPage(
+    Auth0ProtectedPageAbstract,
     ArchiveablePageAbstract,
     BasicPageAbstract,
     ContentPage,
@@ -241,6 +243,7 @@ class ProjectPage(
         ArchiveablePageAbstract.archive_panel,
         BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
+        Auth0ProtectedPageAbstract.auth0_protected_panel,
     ]
 
     search_fields = ArchiveablePageAbstract.search_fields \
