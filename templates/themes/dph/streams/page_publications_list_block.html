@@ -26,7 +26,7 @@
                 {% image publication.authors.first.author.image_square fill-300x300 %}
                 <div>
                   {% with publication.authors.first as author %}
-                    {% if author.hide_link or author.author.is_external_profile %}
+                    {% if author.hide_link %}
                       <h3>{{ author.author.title }}</h3>
                     {% else %}
                       <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
