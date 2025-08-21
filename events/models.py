@@ -1,4 +1,5 @@
 from .forms import EventSubmissionForm
+# from .forms_admin import RegistrationFormFieldAdminForm
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -7,11 +8,13 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
-from django.db import models
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import render
 from django.utils import timezone
+from django.db import models, transaction
+from django.core import signing
+from django import forms
 from modelcluster.fields import ParentalKey
 from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
 from uploads.models import DocumentUpload
@@ -21,12 +24,16 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
+    FieldRowPanel,
 )
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, Collection
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.models import Document
 from wagtail.search import index
+from wagtail.snippets.models import register_snippet
+from wagtail import blocks
+from wagtail.contrib.forms.models import AbstractFormField
 import pytz
 import re
 import urllib.parse
@@ -263,6 +270,16 @@ class EventPage(
         help_text='Override the button text for the event website. If empty, the button will read "Event Website".'
     )
     website_url = models.URLField(blank=True, max_length=512)
+
+    # Registration related fields
+    registration_open = models.BooleanField(default=False)
+    max_capacity = models.IntegerField(blank=True, null=True)
+    confirmation_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
+    reminder_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -503,6 +520,20 @@ class EventPage(
             "form": form,
         })
 
+    @property
+    def total_confirmed(self):
+        return self.registrants.filter(status=Registrant.Status.CONFIRMED).count()
+
+    def has_capacity_for(self, reg_type_id: int) -> bool:
+        # Check per‑type and overall capacity
+        rt = self.registration_types.get(id=reg_type_id)
+        if rt.capacity is not None:
+            if rt.confirmed_count >= rt.capacity:
+                return False
+        if self.max_total_capacity is not None and self.total_confirmed >= self.max_total_capacity:
+            return False
+        return True
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -589,6 +620,18 @@ class EventPage(
             heading='Submission Form',
             classname='collapsible collapsed',
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel('registration_open'),
+                FieldPanel('max_capacity'),
+                InlinePanel('registration_types', label='Registration Types'),
+                InlinePanel('form_fields', label='Registration Form Fields'),
+                FieldPanel('confirmation_template'),
+                FieldPanel('reminder_template'),
+            ],
+            heading='Registration',
+            classname='collapsible collapsed',
+        ),
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -613,3 +656,141 @@ class EventPage(
     class Meta:
         verbose_name = 'Event'
         verbose_name_plural = 'Events'
+
+
+class RegistrationType(Orderable):
+    event = ParentalKey(EventPage, on_delete=models.CASCADE, related_name='registration_types')
+    name = models.CharField(max_length=120)
+    slug = models.SlugField(max_length=140)
+    capacity = models.PositiveIntegerField(null=True, blank=True)
+    is_public = models.BooleanField(default=True, help_text="If False, only invitees can see/use.")
+    custom_confirmation_text = RichTextField(blank=True)
+
+    panels = [
+        FieldRowPanel([FieldPanel('name'), FieldPanel('slug')]),
+        FieldRowPanel([FieldPanel('capacity'), FieldPanel('is_public')]),
+        FieldPanel('custom_confirmation_text'),
+    ]
+
+    @property
+    def confirmed_count(self):
+        return self.event.registrants.filter(
+            registration_type_id=self.id, status=Registrant.Status.CONFIRMED
+        ).count()
+
+
+class RegistrationFormField(AbstractFormField):
+    event = ParentalKey(EventPage, on_delete=models.CASCADE, related_name='form_fields')
+    show_for_types = models.ManyToManyField(RegistrationType, blank=True)
+    required_for_types = models.ManyToManyField(
+        RegistrationType, blank=True, related_name='+',
+        help_text="If set, this field is required for these types only."
+    )
+    
+    # base_form_class = RegistrationFormFieldAdminForm
+
+    panels = AbstractFormField.panels + [
+        FieldPanel('show_for_types', widget=forms.CheckboxSelectMultiple),
+        FieldPanel('required_for_types', widget=forms.CheckboxSelectMultiple),
+    ]
+
+
+class Invite(models.Model):
+    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='invites')
+    email = models.EmailField()
+    token = models.CharField(max_length=64, unique=True)
+    allowed_types = models.ManyToManyField(RegistrationType, blank=True)
+    max_uses = models.PositiveIntegerField(default=1)
+    used_count = models.PositiveIntegerField(default=0)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
+    def is_valid(self):
+        if self.expires_at and timezone.now() > self.expires_at:
+            return False
+        return self.used_count < self.max_uses
+
+    @staticmethod
+    def generate_token(payload: dict):
+        return signing.TimestampSigner().sign_object(payload)
+
+
+class Registrant(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        CONFIRMED = "confirmed", "Confirmed"
+        WAITLISTED = "waitlisted", "Waitlisted"
+        CANCELLED = "cancelled", "Cancelled"
+
+    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='registrants')
+    registration_type = models.ForeignKey(RegistrationType, on_delete=models.PROTECT)
+    email = models.EmailField()
+    first_name = models.CharField(max_length=120, blank=True)
+    last_name = models.CharField(max_length=120, blank=True)
+    # Store editor‑defined answers
+    answers = models.JSONField(default=dict, blank=True)
+    # Uploaded files stored as Documents; keep ids here for quick access
+    uploaded_document_ids = models.JSONField(default=list, blank=True)
+    invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [('event', 'email', 'registration_type')]  # tweak if needed
+
+    @transaction.atomic
+    def confirm_with_capacity(self):
+        # Capacity‑safe transition to CONFIRMED, else WAITLIST if enabled
+        ev = self.event
+        if ev.has_capacity_for(self.registration_type_id):
+            # Lock row(s) to avoid race
+            type_row = RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
+            total_cap = ev.max_total_capacity
+            # Recheck in tx
+            if ((type_row.capacity is None or
+                 ev.registrants.filter(registration_type=type_row, status=self.Status.CONFIRMED).count() < type_row.capacity) and
+                    (total_cap is None or ev.registrants.filter(status=self.Status.CONFIRMED).count() < total_cap)):
+                self.status = self.Status.CONFIRMED
+                self.save(update_fields=['status'])
+                return True
+        if ev.waitlist_enabled:
+            self.status = self.Status.WAITLISTED
+            self.save(update_fields=['status'])
+        return False
+
+
+@register_snippet
+class EmailTemplate(models.Model):
+    name = models.CharField(max_length=120)
+    subject = models.CharField(max_length=200)
+    # Body supports rich content + optional placeholder merge fields
+    body = StreamField([
+        ('paragraph', blocks.RichTextBlock(features=["bold", "italic", "link", "ul", "ol"])),
+        ('attachment_hint', blocks.StructBlock([
+            ('note', blocks.TextBlock(required=False)),
+        ], icon="paperclip", label="Attachment Hint (non‑rendered)")),
+    ], use_json_field=True)
+
+    # Example: {{ event.title }}, {{ registrant.first_name }}, {{ registration_type.name }}
+    merge_vars_help = models.TextField(blank=True)
+
+    panels = [FieldPanel('name'), FieldPanel('subject'), FieldPanel('body'), FieldPanel('merge_vars_help')]
+
+
+class EmailCampaign(models.Model):
+    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='email_campaigns')
+    template = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT)
+    scheduled_for = models.DateTimeField()
+    # Audience filters
+    include_statuses = models.JSONField(default=list)  # e.g., ["confirmed", "waitlisted"]
+    include_type_ids = models.JSONField(default=list)  # list of RegistrationType IDs
+    # Optional single attachment via Wagtail Documents
+    attachment = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel('template'),
+        FieldPanel('scheduled_for'),
+        FieldPanel('include_statuses'),
+        FieldPanel('include_type_ids'),
+        FieldPanel('attachment'),
+    ]
