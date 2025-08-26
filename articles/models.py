@@ -23,6 +23,7 @@ from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
+from django.utils.html import strip_tags
 import datetime
 import pytz
 
@@ -341,6 +342,23 @@ class ArticlePage(
         ],
     )
 
+    # TTS controls
+    POLLY_VOICE_CHOICES = [
+        ('Joanna', 'Joanna'),
+        ('Matthew', 'Matthew'),
+        ('Amy', 'Amy'),
+    ]
+    tts_enabled = models.BooleanField(default=True, help_text='Generate audio for this article.')
+    tts_voice = models.CharField(
+        max_length=32,
+        choices=POLLY_VOICE_CHOICES,
+        default='Joanna',
+        blank=True,
+        help_text='Amazon Polly voice ID (e.g., Joanna, Matthew, Amy, Takumi).'
+    )
+    tts_last_generated = models.DateTimeField(null=True, blank=True)
+    audio_file = models.FileField(upload_to='tts/', blank=True, null=True)
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -417,6 +435,27 @@ class ArticlePage(
             if series_item.content_page.id == self.id:
                 return current_series_title
 
+    # collect readable text
+    def get_plaintext(self):
+        '''Return a readable plaintext of the article.'''
+        chunks = []
+        if self.title:
+            chunks.append(self.title)
+        if self.subtitle:
+            chunks.append(strip_tags(self.subtitle))
+        if self.body:
+            for block in self.body:
+                if hasattr(block, 'value'):
+                    val = block.value
+                    if isinstance(val, str):
+                        chunks.append(strip_tags(val))
+                    elif hasattr(val, 'source'):  # RichText
+                        chunks.append(strip_tags(val.source))
+                    elif hasattr(val, 'get') and val.get('text'):
+                        chunks.append(strip_tags(val.get('text')))
+        text = '\n\n'.join([c for c in chunks if c and c.strip()])
+        return ' '.join(text.split())
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -445,6 +484,15 @@ class ArticlePage(
             classname='collapsible collapsed',
         ),
         ContentPage.authors_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('tts_enabled'),
+                FieldPanel('tts_voice'),
+                FieldPanel('audio_file'),
+            ],
+            heading='Text-to-Speech',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('image_hero'),
