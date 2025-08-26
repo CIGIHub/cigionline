@@ -1,5 +1,6 @@
-from .forms import EventSubmissionForm
-# from .forms_admin import RegistrationFormFieldAdminForm
+from .forms import EventSubmissionForm, build_dynamic_form
+from .panels import RegistrationFormFieldPanel
+from .utils import save_registrant_from_form
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -10,12 +11,14 @@ from core.models import (
 )
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db import models, transaction
 from django.core import signing
+from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 from django import forms
-from modelcluster.fields import ParentalKey
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
@@ -34,6 +37,7 @@ from wagtail.search import index
 from wagtail.snippets.models import register_snippet
 from wagtail import blocks
 from wagtail.contrib.forms.models import AbstractFormField
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 import pytz
 import re
 import urllib.parse
@@ -129,6 +133,7 @@ class EventListPageFeaturedEvent(Orderable):
 
 
 class EventPage(
+    RoutablePageMixin,
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
@@ -534,6 +539,111 @@ class EventPage(
             return False
         return True
 
+    @property
+    def register_url(self):
+        return self.url + "register/"
+
+    # ---------- ROUTES ----------
+
+    @route(r"^register/$")
+    def register_entry(self, request, *args, **kwargs):
+        """
+        Landing step. Validates invite token (if required) and shows
+        allowed RegistrationType choices OR skips straight to form
+        if only one type is available.
+        """
+        invite = self._get_invite_from_request(request)
+
+        if self.is_private_registration and not invite:
+            # private event, no token
+            raise PermissionDenied("Private registration")
+
+        # Compute allowed types
+        if invite and invite.allowed_types.exists():
+            types_qs = self.registration_types.filter(
+                id__in=invite.allowed_types.values_list('id', flat=True)
+            )
+        elif self.is_private_registration:
+            # private but invite doesn't specify types => no choices
+            types_qs = self.registration_types.none()
+        else:
+            # public event: show only public types
+            types_qs = self.registration_types.filter(is_public=True)
+
+        types = list(types_qs.order_by('sort_order'))
+
+        if not types:
+            return render(request, "events/registration_no_types.html", {"event": self})
+
+        if len(types) == 1:
+            # Skip chooser and go straight to form for the single allowed type
+            return redirect(self.url + f"register/{types[0].slug}/")
+
+        return render(request, "events/registration_type_select.html", {
+            "event": self, "types": types, "invite": invite
+        })
+
+    @route(r"^register/(?P<type_slug>[-\w]+)/$")
+    def register_form(self, request, type_slug, *args, **kwargs):
+        """
+        The actual registration page. Renders dynamic fields based on
+        the chosen RegistrationType and (optionally) the invite token.
+        """
+        reg_type = get_object_or_404(self.registration_types, slug=type_slug)
+
+        invite = self._get_invite_from_request(request)
+
+        if self.is_private_registration:
+            if not invite or not invite.is_valid():
+                raise PermissionDenied("Invite invalid or expired.")
+            # If invite restricts types, enforce it:
+            if invite.allowed_types.exists() and reg_type.id not in invite.allowed_types.values_list('id', flat=True):
+                raise PermissionDenied("Invite not valid for this registration type.")
+
+        # Build dynamic form (see helper below)
+        form_class = build_dynamic_form(self, reg_type, invite)
+        if request.method == "POST":
+            form = form_class(request.POST, request.FILES)
+            if form.is_valid():
+                registrant = save_registrant_from_form(self, reg_type, form, invite)
+                # Atomically burn invite usage if present
+                if invite:
+                    updated = Invite.objects.filter(pk=invite.pk, used_count__lt=models.F('max_uses')) \
+                                            .update(used_count=models.F('used_count') + 1)
+                    if not updated:
+                        form.add_error(None, "This invite link has already been used.")
+                        return render(request, "events/registration_form.html",
+                                      {"event": self, "reg_type": reg_type, "form": form, "invite": invite})
+
+                confirmed = registrant.confirm_with_capacity()
+                # send_confirmation_async(registrant, confirmed)
+                messages.success(request, "Thanks—you're {}.".format("confirmed" if confirmed else "on the waitlist"))
+                return redirect(self.url)
+        else:
+            form = form_class()
+
+        return render(request, "events/registration_form.html", {
+            "event": self, "reg_type": reg_type, "form": form, "invite": invite
+        })
+
+    def _get_invite_from_request(self, request):
+        """
+        Accepts invite via ?invite=TOKEN once, then persists it in session.
+        """
+        token = request.GET.get("invite")
+        if token:
+            # validate basic shape; we’ll check is_valid() later
+            invite = Invite.objects.filter(event=self, token=token).first()
+            if invite:
+                request.session[f"invite:{self.id}"] = token
+                return invite
+
+        # fallback to session
+        token = request.session.get(f"invite:{self.id}")
+        if token:
+            return Invite.objects.filter(event=self, token=token).first()
+        return None
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -625,7 +735,7 @@ class EventPage(
                 FieldPanel('registration_open'),
                 FieldPanel('max_capacity'),
                 InlinePanel('registration_types', label='Registration Types'),
-                InlinePanel('form_fields', label='Registration Form Fields'),
+                RegistrationFormFieldPanel('form_fields', label='Registration Form Fields'),
                 FieldPanel('confirmation_template'),
                 FieldPanel('reminder_template'),
             ],
@@ -678,16 +788,17 @@ class RegistrationType(Orderable):
             registration_type_id=self.id, status=Registrant.Status.CONFIRMED
         ).count()
 
+    def __str__(self):
+        if self.capacity is not None:
+            return f"{self.name} (cap {self.capacity})"
+        return self.name
+
 
 class RegistrationFormField(AbstractFormField):
     event = ParentalKey(EventPage, on_delete=models.CASCADE, related_name='form_fields')
-    show_for_types = models.ManyToManyField(RegistrationType, blank=True)
-    required_for_types = models.ManyToManyField(
-        RegistrationType, blank=True, related_name='+',
-        help_text="If set, this field is required for these types only."
-    )
-    
-    # base_form_class = RegistrationFormFieldAdminForm
+
+    show_for_types = ParentalManyToManyField('events.RegistrationType', blank=True)
+    required_for_types = ParentalManyToManyField('events.RegistrationType', blank=True, related_name='+')
 
     panels = AbstractFormField.panels + [
         FieldPanel('show_for_types', widget=forms.CheckboxSelectMultiple),
