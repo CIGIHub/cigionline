@@ -165,7 +165,16 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
         ),
     ]
 
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
     subpage_types = ["AnnualReportSlidePage"]
+
+    def get_template(self, request, *args, **kwargs):
+        return "annual_reports/annual_report_spa_page.html"
 
 
 class SlidePageAbstract(models.Model):
@@ -244,8 +253,41 @@ class SlidePageAbstract(models.Model):
 class AnnualReportSlidePage(SlidePageAbstract, Page):
     """Each individual slide within the annual report."""
 
-    parent_page_types = ["AnnualReportSPAPage"]
+    SLIDE_TYPES = [
+        ('title', 'Title'),
+        ('toc', 'Table of Contents'),
+        ('chairs_message', 'Chair\'s Message'),
+        ('presidents_message', 'President\'s Message'),
+        ('standard', 'Standard'),
+        ('outputs_and_activities', 'Outputs and Activities'),
+        ('timeline', 'Timeline'),
+        ('financials', 'Financials'),
+    ]
+
+    slide_type = models.CharField(
+        max_length=255,
+        choices=SLIDE_TYPES,
+        default='standard',
+        help_text='Type of slide',
+    )
+    
+    ar_slide_content = StreamField(
+        [
+            ("column", RichTextBlock(features=[
+                "bold", "italic", "h2", "h3", "h3", "ol", "ul", "link", "coloured"
+            ])),
+        ],
+        blank=True,
+        help_text="Content of the slide",
+    )
+
+    parent_page_types = ['AnnualReportSPAPage']
     subpage_types = []
+
+    def get_annual_report_slide_content(self):
+        content = {
+        }
+        return content
 
     def serve(self, request):
         """Always serve the SPA regardless of sub-page requested."""

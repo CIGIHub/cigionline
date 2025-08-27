@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 
-{% load webpack_loader %}
+{% load webpack_loader wagtailimages_tags %}
+
+
+{% block og_image %}
+{% if self.image_social %}
+{% image self.image_social fill-300x200 as og_image %}
+{% else %}
+{% image self.background_image fill-300x200 as og_image %}
+{% endif %}
+<meta property="og:image" content="{{ og_image.url }}">
+{% endblock %}
+
+{% block title %}
+{{ self.title }}
+{% endblock %}
 
 {% block extra_css %}
 {% render_bundle 'annualReportSPAPage' 'css' %}
@@ -13,7 +27,8 @@
 {% block header %}
 {% endblock %}
 {% block content %}
-<div id="annual-report-spa" data-annual-report-id="{{page.id}}" data-base-path="{{page.url}}"></div>
+<div class="annual-report-spa" id="annual-report-spa" data-annual-report-id="{{page.id}}" data-base-path="{{page.url}}">
+</div>
 {% endblock content %}
 {% block footer %}
 {% endblock %}
