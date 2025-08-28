@@ -87,39 +87,41 @@
           {% include_block block %}
         {% endif %}
       {% endfor %}
+
+      <div id="cohort-variants" class="d-none">
+        {% for block in self.body %}
+          {% if block.block_type == 'persons_list_block' %}
+            {% with block.value.title|default:"People" as title %}
+            {% with title|dash_case as title_slug %}
+            {% with block.value.cohort|default:"(Default)" as cohort_label %}
+            <div class="cohort-variant"
+                data-title="{{ title }}"
+                data-title-slug="{{ title_slug }}"
+                data-cohort="{{ cohort_label }}">
+              <template>
+                {# Render the block once; we’ll clone it when a tab/cohort is active #}
+                {% include_block block with hide_title=True page='dph_landing' %}
+              </template>
+            </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-12 col-md-10 col-lg-8">
             <h2>Digital Policy Hub Cohorts</h2>
             <nav class="cohorts-buttons">
-              <div class="nav nav-tabs content-tabs" id="nav-tab-content" role="tablist">
-                {% define 0 as counter %}
-                {% for block in self.body %}
-                  {% if block.block_type == 'persons_list_block' %}
-                    {% with block.value.title|dash_case as cohort %}
-                    <a class="nav-link {% if counter == 0 %}active{% endif %}" id="{{cohort}}-tab" data-toggle="tab" href="#{{cohort}}" role="tab" aria-controls="{{cohort}}" aria-selected="true">{{ block.value.title }}</a>
-                    {% endwith %}
-                    {% define 1 as counter %}
-                  {% endif %}
-                {% endfor %}
-              </div>
+              <div class="nav nav-tabs content-tabs" id="cohorts-tablist" role="tablist"></div>
             </nav>
           </div>
         </div>
       </div>
-      <div class="cohorts-list tab-content">
-        {% define 0 as counter %}
-        {% for block in self.body %}
-          {% if block.block_type == 'persons_list_block' %}
-            {% with block.value.title|dash_case as cohort %}
-              <div class="tab-{{cohort}} tab-pane fade {% if counter == 0 %}show active{% endif %}" id="{{cohort}}" role="tabpabel" aria-labelledby="{{cohort}}-tab">
-                {% include_block block with hide_title=True page='dph_landing' %}
-              </div>
-            {% endwith %}
-            {% define 1 as counter %}
-          {% endif %}
-        {% endfor %}
-      </div>
+
+      <div id="cohorts-panels" class="cohorts-list tab-content"></div>
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
