@@ -80,16 +80,7 @@ function cohortTabs() {
 
       toolbar.appendChild(label);
       toolbar.appendChild(select);
-      const col = document.createElement('div');
-      col.className = 'col-12 col-md-10 col-lg-8';
-      col.appendChild(toolbar);
-      const row = document.createElement('div');
-      row.className = 'row justify-content-center';
-      row.appendChild(col);
-      const toolbarContainer = document.createElement('div');
-      toolbarContainer.className = 'container';
-      toolbarContainer.appendChild(row);
-      pane.appendChild(toolbarContainer);
+      pane.appendChild(toolbar);
 
       const content = document.createElement('div');
       content.className = 'variants';

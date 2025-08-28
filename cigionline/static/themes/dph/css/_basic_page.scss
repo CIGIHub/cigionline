@@ -192,6 +192,46 @@ body {
       font-size: 1rem;
     }
 
+    .dph-sidebar {
+      font-size: 0.95rem;
+      border: 1px solid $cigi-text-grey;
+      padding: 1.5rem;
+
+      h2 {
+        &.dph-sidebar-heading {
+          margin-top: 0;
+        }
+      }
+
+      ul {
+        margin: 0;
+
+        &.dph-sidebar-list {
+          padding: 0;
+
+          li {
+            padding: 0;
+          }
+        }
+      }
+
+      .dph-doc {
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .dph-sticky {
+      @include media-breakpoint-up(lg) {
+        position: sticky;
+        top: 2rem;
+      }
+    }
+
     .stream-image-block {
       @include media-breakpoint-up(md) {
         width: 33%;
