@@ -1306,7 +1306,7 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
         ],
         required=True,
     )
-
+    cohort = blocks.CharBlock(required=False)
     implemented_themes = [
         'ges_activity',
     ]

@@ -40,7 +40,9 @@
           <nav>
             <div class="nav nav-tabs">
               <a class="nav-link {% if self.slug == 'digital-policy-hub' %} active{% endif %}" href="/digital-policy-hub/">About the Hub</a>
+              <a class="nav-link {% if self.slug == 'current-cohort-alumni' %} active{% endif %}" href="/digital-policy-hub/current-cohort-alumni">Current Cohort & Alumni</a>
               <a class="nav-link {% if self.slug == 'working-papers' %} active{% endif %}" href="/digital-policy-hub/working-papers">Working Papers</a>
+              <a class="nav-link {% if self.slug == 'program-speakers' %} active{% endif %}" href="/digital-policy-hub/program-speakers">Program Speakers</a>
               <a class="nav-link {% if self.slug == 'news' %} active{% endif %}" href="/digital-policy-hub/news">News and Media</a>
             </div>
           </nav>
@@ -77,7 +79,14 @@
           </div>
         </div>
       {% endif %}
-
+    </section>
+  {% elif self.slug == "current-cohort-alumni" %}
+    <section class="body">
+      {% for block in self.body %}
+        {% if block.block_type != 'persons_list_block' %}
+          {% include_block block %}
+        {% endif %}
+      {% endfor %}
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-12 col-md-10 col-lg-8">
@@ -94,7 +103,7 @@
                   {% endif %}
                 {% endfor %}
               </div>
-            </div>
+            </nav>
           </div>
         </div>
       </div>
@@ -119,6 +128,7 @@
         </div>
       </div>
     </section>
+
   {% else %}
     {% for block in self.body %}
       {% include_block block %}

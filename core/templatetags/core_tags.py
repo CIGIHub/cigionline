@@ -1,9 +1,9 @@
 from datetime import datetime
 from pathlib import Path
-
 from django import template
-
 from django.template.defaultfilters import stringfilter
+from django.utils.safestring import mark_safe
+from collections import OrderedDict
 
 register = template.Library()
 
@@ -98,3 +98,48 @@ def remove_trailing_s(value):
     if isinstance(value, str) and value.endswith('s'):
         return value[:-1]
     return value
+
+
+@register.inclusion_tag("streams/persons_tabs.html", takes_context=True)
+def render_persons_groups(context, stream_value, block_type_name="persons_list"):
+    """
+    Collect all PersonsListBlocks (by block_type or label) from a StreamField and group them by 'title'.
+    For each block, pre-render its HTML so switching years is instant on the client.
+    """
+    request = context.get("request")
+    groups = OrderedDict()
+    order_counter = 0
+
+    for child in getattr(stream_value, "stream_data", []) or stream_value:
+        if hasattr(child, "block_type"):
+            bt = child.block_type
+            value = child.value
+            block = child.block
+        else:
+            bt = child.get("type")
+            value = child.get("value")
+            block = None
+
+        if bt != block_type_name:
+            continue
+
+        title = (value.get("title") or "").strip() or "People"
+        year = value.get("year")
+
+        if hasattr(child, "block"):
+            html = child.block.render(value, context.flatten())
+        else:
+            html = ""
+
+        groups.setdefault(title, [])
+        groups[title].append({
+            "year": year,
+            "html": mark_safe(html),
+            "key": f"{order_counter}",
+        })
+        order_counter += 1
+
+    return {
+        "groups": groups,
+        "request": request,
+    }

@@ -1,0 +1,56 @@
+{% load static %}
+
+<div class="persons-tabs" id="persons-tabs-root">
+  {# NAV TABS #}
+  <ul class="persons-tabs__nav" role="tablist">
+    {% for title, items in groups.items %}
+    {# The first title gets aria-selected="true" #}
+    <li role="presentation">
+      <button class="persons-tabs__tab{% if forloop.first %} is-active{% endif %}" role="tab"
+        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+        aria-controls="tabpanel-{{ forloop.counter0 }}" id="tab-{{ forloop.counter0 }}"
+        data-tab-index="{{ forloop.counter0 }}" type="button">
+        {{ title }}
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {# PANELS #}
+  <div class="persons-tabs__panels">
+    {% for title, items in groups.items %}
+    {# Decide default shown item = the first one encountered #}
+    {% with default_item=items.0 %}
+    <section id="tabpanel-{{ forloop.counter0 }}"
+      class="persons-tabs__panel{% if not forloop.first %} is-hidden{% endif %}" role="tabpanel"
+      aria-labelledby="tab-{{ forloop.counter0 }}" tabindex="0" data-panel-index="{{ forloop.counter0 }}">
+
+      {# Year dropdown appears only when multiple blocks share the same title #}
+      {% if items|length > 1 %}
+      <div class="persons-tabs__toolbar">
+        <label for="year-select-{{ forloop.counter0 }}" class="sr-only">Select year for {{ title }}</label>
+        <select id="year-select-{{ forloop.counter0 }}" class="persons-tabs__year"
+          data-panel-index="{{ forloop.counter0 }}" aria-label="Select year for {{ title }}">
+          {% for item in items %}
+          <option value="{{ item.key }}" {% if forloop.first %}selected{% endif %}>
+            {{ item.year|default:"(No year)" }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      {# Render container with all pre-rendered variants; show only the default #}
+      <div class="persons-tabs__variants" data-panel-index="{{ forloop.counter0 }}">
+        {% for item in items %}
+        <div class="persons-tabs__variant{% if not forloop.first %} is-hidden{% endif %}"
+          data-variant-key="{{ item.key }}" data-year="{{ item.year }}">
+          {{ item.html|safe }}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endwith %}
+    {% endfor %}
+  </div>
+</div>
