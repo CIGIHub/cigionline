@@ -518,7 +518,8 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         'platform_governance_series_opinion_series',
         'women_and_trade_series_opinion_series',
         'big_tech_s3_multimedia_series',
-        'indigenous_lands_series_opinion_series'
+        'indigenous_lands_series_opinion_series',
+        'dph_page',
     ]
 
     def get_template(self, value, context, *args, **kwargs):
@@ -1355,13 +1356,21 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/publications_list_block.html'
 
 
-class AddtionalPagesBlock(blocks.StructBlock):
+class AddtionalPagesBlock(blocks.StructBlock, ThemeableBlock):
     pages = blocks.StreamBlock(
         [
             ('page', blocks.PageChooserBlock(required=True)),
         ],
         required=True,
     )
+    
+    implemented_themes = [
+        'dph_page',
+    ]
+    
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(AddtionalPagesBlock, self).get_template(value, context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'additional_pages_block')
 
     class Meta:
         icon = 'doc-full'

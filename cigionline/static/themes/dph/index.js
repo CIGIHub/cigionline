@@ -39,7 +39,9 @@ function cohortTabs() {
     tablist.appendChild(btn);
 
     const pane = document.createElement('div');
-    pane.className = `tab-pane fade cohort-panel${idx === 0 ? ' show active' : ''}`;
+    pane.className = `tab-pane fade cohort-panel${
+      idx === 0 ? ' show active' : ''
+    }`;
     pane.id = `${slug}-panel`;
     pane.setAttribute('role', 'tabpanel');
     pane.setAttribute('aria-labelledby', `${slug}-tab`);
@@ -135,4 +137,60 @@ function cohortTabs() {
   });
 }
 
+function pubTabs() {
+  const scope = document.querySelector('[data-filter-scope]');
+  if (!scope) return;
+
+  const sel = scope.querySelector('#termFilter');
+  const items = Array.from(
+    scope.querySelectorAll('.publications-list__publication'),
+  );
+  if (!items.length) return;
+
+  // Build unique terms from DOM
+  const termsMap = new Map(); // slug -> label
+  items.forEach((el) => {
+    const slug = (el.getAttribute('data-term') || '').trim();
+    const label = (el.getAttribute('data-term-label') || '').trim();
+    if (slug && label && !termsMap.has(slug)) termsMap.set(slug, label);
+  });
+
+  // Sort terms by label (customize as needed)
+  const sorted = Array.from(termsMap.entries()).sort((a, b) =>
+    a[1].localeCompare(b[1], undefined, { numeric: true }),
+  );
+
+  // Populate dropdown (after default "All terms")
+  sorted.forEach(([slug, label]) => {
+    const opt = document.createElement('option');
+    opt.value = slug;
+    opt.textContent = label;
+    sel.appendChild(opt);
+  });
+
+  const qs = new URLSearchParams(location.search);
+  const initial = qs.get('term') || '';
+  if (initial && termsMap.has(initial)) sel.value = initial;
+
+  const apply = (slug) => {
+    items.forEach((el) => {
+      const match = !slug || el.getAttribute('data-term') === slug;
+      el.style.display = match ? '' : 'none';
+    });
+
+    // Update query string (no reload)
+    const params = new URLSearchParams(location.search);
+    if (slug) params.set('term', slug);
+    else params.delete('term');
+    const newUrl = `${location.pathname}${
+      params.toString() ? '?' + params.toString() : ''
+    }${location.hash}`;
+    history.replaceState(null, '', newUrl);
+  };
+
+  sel.addEventListener('change', () => apply(sel.value));
+  apply(initial);
+}
+
 cohortTabs();
+pubTabs();

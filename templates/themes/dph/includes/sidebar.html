@@ -1,3 +1,4 @@
+{% load theme_tags %}
 <aside class="dph-sidebar dph-sticky" aria-labelledby="dph-sidebar-heading">
   <h2 id="dph-sidebar-heading" class="h5 mb-3 dph-sidebar-heading">Application &amp; Program Information</h2>
 
@@ -14,13 +15,15 @@
     </li>
 
     <li class="mb-4">
-      <a class="btn btn-outline-primary w-100" href="{{ mailing_list_url|default:'#' }}">
+      <a class="mailing-list-button" href="{{ mailing_list_url|default:'#' }}">
         Sign up for updates
       </a>
     </li>
 
-    {% if self.related_files %}
-      {% for document in self.related_files %}
+    {% dph_related_files as related_files %}
+
+    {% if related_files %}
+      {% for document in related_files %}
         <li class="mb-2">
           <a href="{{ document.value.file.url }}" target="_blank">
             <i class="fa-solid fa-download"></i>

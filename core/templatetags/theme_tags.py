@@ -1,6 +1,7 @@
 from datetime import datetime
 from django import template
 from django.template.defaultfilters import stringfilter
+from wagtail.models import Page
 
 register = template.Library()
 
@@ -24,3 +25,11 @@ def dph_term(value):
         term = ''
 
     return f'{term} {year} term'
+
+@register.simple_tag
+def dph_related_files():
+    try:
+        page = Page.objects.get(slug="digital-policy-hub").specific
+        return getattr(page, "related_files", None)
+    except Page.DoesNotExist:
+        return None

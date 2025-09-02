@@ -16,6 +16,7 @@
 {% block body_class %}
   {% now "Y-m-d" as today %}
   {% if today < '2025-03-04' %}banner-enabled{% endif %}
+  dph-basic-page
 {% endblock %}
 
 {% block header %}
@@ -36,7 +37,7 @@
         </div>
       </div>
       <div class="row justify-content-center">
-        <div class="col">
+        <div class="col col-md-8 col-lg-6">
           <nav>
             <div class="nav nav-tabs">
               <a class="nav-link {% if self.slug == 'digital-policy-hub' %} active{% endif %}" href="/digital-policy-hub/">About the Hub</a>
@@ -52,20 +53,18 @@
   </section>
   {% if self.slug == "digital-policy-hub" %}
     <section class="body">
-      <div class="col-12 col-lg-3 col-xl-3 order-lg-1 mb-4 mb-lg-0">
-        {% include "./includes/sidebar.html" %}
-      </div>
-      
-      {% for block in self.body %}
-        {% if block.block_type != 'persons_list_block' %}
-          {% include_block block %}
-        {% endif %}
-      {% endfor %}
-      
-      {% if self.related_files %}
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-3 col-xl-3 order-lg-1 mb-4 mb-lg-0">
+            {% include "./includes/sidebar.html" %}
+          </div>
+          
+          <div class="col-12 col-lg-8 col-xl-7 order-lg-2">
+            {% for block in self.body %}
+              {% include_block block %}
+            {% endfor %}
+
+            {% if self.related_files %}
               <div class="program-information">
                 <h2>More Program Information</h2>
                 <ul class="program-information-list">
@@ -79,21 +78,19 @@
                   {% endfor %}
                 </ul>
               </div>
-            </div>
+            {% endif %}
           </div>
         </div>
-      {% endif %}
+      </div>
     </section>
   {% elif self.slug == "current-cohort-alumni" %}
     <section class="body">
       <div class="container">
         <div class="row justify-content-center">
-          {# LEFT: Sidebar #}
           <div class="col-12 col-lg-3 col-xl-3 order-lg-1 mb-4 mb-lg-0">
             {% include "./includes/sidebar.html" %}
           </div>
 
-          {# RIGHT: Main content #}
           <div class="col-12 col-lg-8 col-xl-7 order-lg-2">
             {# Non-person blocks #}
             {% for block in self.body %}
@@ -109,14 +106,14 @@
                   {% with block.value.title|default:"People" as title %}
                   {% with title|dash_case as title_slug %}
                   {% with block.value.cohort|default:"(Default)" as cohort_label %}
-                  <div class="cohort-variant"
-                      data-title="{{ title }}"
-                      data-title-slug="{{ title_slug }}"
-                      data-cohort="{{ cohort_label }}">
-                    <template>
-                      {% include_block block with hide_title=True page='dph_landing' %}
-                    </template>
-                  </div>
+                    <div class="cohort-variant"
+                        data-title="{{ title }}"
+                        data-title-slug="{{ title_slug }}"
+                        data-cohort="{{ cohort_label }}">
+                      <template>
+                        {% include_block block with hide_title=True page='dph_landing' %}
+                      </template>
+                    </div>
                   {% endwith %}
                   {% endwith %}
                   {% endwith %}
@@ -144,14 +141,22 @@
         </div>
       </div>
     </section>
-
-
-
-
   {% else %}
-    {% for block in self.body %}
-      {% include_block block %}
-    {% endfor %}
+    <section class="body">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-3 col-xl-3 order-lg-1 mb-4 mb-lg-0">
+            {% include "./includes/sidebar.html" %}
+          </div>
+
+          <div class="col-12 col-lg-8 col-xl-7 order-lg-2">
+            {% for block in self.body %}
+              {% include_block block %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
   {% endif %}
 {% endblock content %}
 
