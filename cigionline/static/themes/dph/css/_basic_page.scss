@@ -243,29 +243,28 @@ body {
     }
 
     .persons-list-block {
-      &.alumni {
-        .persons-list {
-          .person-description {
-            p {
-              margin: 0;
+      .persons-list {
+        .person-description {
+          p {
+            margin: 0;
 
-              &:first-child {
-                margin-bottom: 0.5rem;
-              }
+            &:first-child {
+              margin-bottom: 0.5rem;
             }
+          }
 
-            li {
-              padding: 0;
-              border: 0;
-              list-style: disc;
-            }
+          li {
+            padding: 0;
+            border: 0;
+            list-style: disc;
+          }
 
-            .underline {
-              text-decoration: underline;
-            }
+          .underline {
+            text-decoration: underline;
           }
         }
       }
+
       .persons-list {
         @include link($color: $dph-green, $hover-color: $cigi-primary-colour);
 
@@ -344,6 +343,10 @@ body {
 
     .publications-list__publication {
       padding: 2rem 0;
+
+      &:last-child {
+        padding-bottom: 0;
+      }
 
       &:not(:last-child) {
         border-bottom: 1px solid $cigi-text-grey;
@@ -435,14 +438,13 @@ body {
   }
 
   .additional-pages-block {
-    padding-bottom: 3rem;
-
     .feature-content {
       border-bottom: 1px solid $cigi-text-grey;
-      padding: 2rem 0;
+      padding: 1.5rem 0;
 
       &:last-child {
         border-bottom: 0;
+        padding-bottom: 0;
       }
 
       h3 {

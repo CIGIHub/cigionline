@@ -73,11 +73,11 @@
     <section class="body">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="col-12 col-lg-3 col-xl-3 order-lg-1 mb-4 mb-lg-0">
+          <div class="col-12 col-lg-4 order-lg-1 mb-4 mb-lg-0">
             {% include "./includes/sidebar.html" %}
           </div>
 
-          <div class="col-12 col-lg-8 col-xl-7 order-lg-2">
+          <div class="col-12 col-lg-8 order-lg-2">
             {# Non-person blocks #}
             {% for block in self.body %}
               {% if block.block_type != 'persons_list_block' %}
