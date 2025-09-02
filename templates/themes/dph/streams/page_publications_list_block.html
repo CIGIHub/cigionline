@@ -14,7 +14,6 @@
 
   {% if publications_by_type %}
   {% for publication in publications_by_type %}
-  {# compute term label #}
   {% with term=publication.dph_term %}
   <article class="publications-list__publication row" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
     <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">

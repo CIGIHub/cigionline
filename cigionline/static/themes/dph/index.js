@@ -1,5 +1,17 @@
 import './css/dph.scss';
 
+const mailingListButton = document.getElementById('mailing-list-button');
+mailingListButton.addEventListener('click', () => {
+  const input = document.getElementById('subscribe-email');
+  input.scrollIntoView({
+    behavior: 'smooth',
+  });
+
+  setTimeout(() => {
+    input.focus();
+  }, 600);
+});
+
 function cohortTabs() {
   const stash = document.getElementById('cohort-variants');
   if (!stash) return;
