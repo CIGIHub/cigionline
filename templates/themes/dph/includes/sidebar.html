@@ -23,8 +23,9 @@
     {% dph_related_files as related_files %}
 
     {% if related_files %}
+      <h2>More Program Information</h2>
       {% for document in related_files %}
-        <li class="mb-2">
+        <li>
           <a href="{{ document.value.file.url }}" target="_blank">
             <i class="fa-solid fa-download"></i>
             {{ document.value.title }}

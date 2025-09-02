@@ -392,6 +392,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
         'data_series_opinion',
         'longform_2_opinion',
         'space_series_opinion',
+        'dph_page',
     ]
 
     def get_template(self, value, context, *args, **kwargs):
