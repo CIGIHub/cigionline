@@ -13,9 +13,8 @@ mailingListButton.addEventListener('click', () => {
 });
 
 function initVariantContainerHeight(contentEl) {
-  const active =
-    contentEl.querySelector('.variant.is-active') ||
-    contentEl.querySelector('.variant');
+  const active = contentEl.querySelector('.variant.is-active')
+    || contentEl.querySelector('.variant');
   if (active) {
     active.classList.add('is-active');
     requestAnimationFrame(() => {
@@ -28,8 +27,7 @@ function wireCohortSelect(selectEl, contentEl) {
   selectEl.addEventListener('change', () => {
     const boxes = Array.from(contentEl.children);
     const nextIndex = Number(selectEl.value);
-    const current =
-      boxes.find((b) => b.classList.contains('is-active')) || boxes[0];
+    const current = boxes.find((b) => b.classList.contains('is-active')) || boxes[0];
     const next = boxes[nextIndex] || boxes[0];
     if (current === next) return;
 
@@ -191,59 +189,10 @@ function cohortTabs() {
   });
 }
 
-function xfadeTo(container, nextPane) {
-  const panes = Array.from(container.children);
-  const current =
-    panes.find((p) => p.classList.contains('is-active')) || panes[0];
-  if (!nextPane || current === nextPane) return;
-  const currentH = current.offsetHeight;
-  container.style.height = currentH + 'px';
-  current.classList.remove('is-active');
-  current.classList.add('is-hidden');
-  nextPane.classList.add('is-active');
-  nextPane.classList.remove('is-hidden');
-  const nextH = nextPane.offsetHeight;
-  container.style.height = nextH + 'px';
-  const onEnd = (e) => {
-    if (e.propertyName !== 'height') return;
-    container.style.height = 'auto';
-    container.removeEventListener('transitionend', onEnd);
-  };
-  container.addEventListener('transitionend', onEnd);
-}
-function initXfade(container) {
-  const panes = Array.from(container.children);
-  if (!panes.length) return;
-  const active =
-    panes.find((p) => p.classList.contains('is-active')) || panes[0];
-  panes.forEach((p) => {
-    const isActive = p === active;
-    p.classList.toggle('is-active', isActive);
-    p.classList.toggle('is-hidden', !isActive);
-  });
-  requestAnimationFrame(() => {
-    container.style.height = active.offsetHeight + 'px';
-    setTimeout(() => {
-      container.style.height = 'auto';
-    }, 320);
-  });
-  container.querySelectorAll('img').forEach((img) => {
-    img.addEventListener(
-      'load',
-      () => {
-        const pane = container.querySelector('.xfade-pane.is-active');
-        if (pane) container.style.height = pane.offsetHeight + 'px';
-      },
-      { once: true },
-    );
-  });
-}
-
 function pubsList() {
   const root = document.getElementById('publist');
   if (!root) return;
 
-  // Elements
   const termDD = document.getElementById('termDropdown');
   const topicDD = document.getElementById('topicDropdown');
   const termBtn = termDD?.querySelector('.dropdown-toggle');
@@ -257,19 +206,17 @@ function pubsList() {
   const noResultsEl = root.querySelector('.publist-noresults');
   if (!items.length) return;
 
-  // Collect unique Terms (order = DOM)
   const terms = [];
   const seenTerms = new Set();
   items.forEach((el) => {
     const slug = (el.dataset.term || '').trim();
     const label = (el.dataset.termLabel || slug || '').trim();
-    if (!slug) return; // skip empties, or map to 'uncategorized'
+    if (!slug) return;
     if (seenTerms.has(slug)) return;
     seenTerms.add(slug);
     terms.push({ value: slug, label: label || 'Uncategorized' });
   });
 
-  // Collect unique Topics (order = DOM)
   const topics = [];
   const seenTopics = new Set();
   items.forEach((el) => {
@@ -287,18 +234,6 @@ function pubsList() {
       });
   });
 
-  // Helpers: menu populate & behavior (single-select)
-  function populateMenu(listEl, itemsArr, allText) {
-    if (!listEl) return;
-    listEl.innerHTML = '';
-    // All option first (value="")
-    listEl.appendChild(makeChoice(allText, ''));
-    // Then dynamic options
-    itemsArr.forEach(({ label, value }) =>
-      listEl.appendChild(makeChoice(label, value)),
-    );
-  }
-
   function makeChoice(label, value) {
     const li = document.createElement('li');
     const btn = document.createElement('button');
@@ -312,6 +247,14 @@ function pubsList() {
     return li;
   }
 
+  function populateMenu(listEl, itemsArr, allText) {
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    listEl.appendChild(makeChoice(allText, ''));
+    itemsArr.forEach(({ label, value }) => listEl.appendChild(makeChoice(label, value)));
+  }
+
   function openMenu(dd, btn) {
     const menu = dd.querySelector('.dropdown-menu');
     menu.classList.add('show');
@@ -323,9 +266,8 @@ function pubsList() {
     btn.setAttribute('aria-expanded', 'false');
   }
   function setSelection(dd, btn, value, label) {
-    btn.dataset.current = value; // store current value
-    btn.textContent = label || btn.textContent; // update label
-    // update aria-selected on items
+    btn.dataset.current = value;
+    btn.textContent = label || btn.textContent;
     dd.querySelectorAll('.dropdown-choice').forEach((ch) => {
       const isSel = ch.dataset.value === value;
       ch.setAttribute('aria-selected', isSel ? 'true' : 'false');
@@ -333,68 +275,6 @@ function pubsList() {
     });
   }
 
-  // Populate menus
-  populateMenu(termList, terms, 'All Terms');
-  populateMenu(topicList, topics, 'All Topics');
-
-  // Defaults: All (value = "")
-  setSelection(termDD, termBtn, '', 'All Terms');
-  setSelection(topicDD, topicBtn, '', 'All Topics');
-
-  // Toggle handlers
-  termBtn?.addEventListener('click', () => {
-    const expanded = termBtn.getAttribute('aria-expanded') === 'true';
-    closeMenu(topicDD, topicBtn);
-    expanded ? closeMenu(termDD, termBtn) : openMenu(termDD, termBtn);
-  });
-  topicBtn?.addEventListener('click', () => {
-    const expanded = topicBtn.getAttribute('aria-expanded') === 'true';
-    closeMenu(termDD, termBtn);
-    expanded ? closeMenu(topicDD, topicBtn) : openMenu(topicDD, topicBtn);
-  });
-  // Close on outside click / Esc
-  document.addEventListener('click', (e) => {
-    if (!termDD.contains(e.target)) closeMenu(termDD, termBtn);
-    if (!topicDD.contains(e.target)) closeMenu(topicDD, topicBtn);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeMenu(termDD, termBtn);
-      closeMenu(topicDD, topicBtn);
-    }
-  });
-
-  // Selection handlers (single-select)
-  termList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.dropdown-choice');
-    if (!btn) return;
-    const value = btn.dataset.value || '';
-    const label = btn.textContent.trim();
-    setSelection(
-      termDD,
-      termBtn,
-      value,
-      label,
-    );
-    closeMenu(termDD, termBtn);
-    applyFilterWithLoading();
-  });
-  topicList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.dropdown-choice');
-    if (!btn) return;
-    const value = btn.dataset.value || '';
-    const label = btn.textContent.trim();
-    setSelection(
-      topicDD,
-      topicBtn,
-      value,
-      label,
-    );
-    closeMenu(topicDD, topicBtn);
-    applyFilterWithLoading();
-  });
-
-  // Filtering
   function matches(el, term, topic) {
     const elTerm = el.dataset.term || '';
     const elTopics = (el.dataset.topics || '').split(/\s+/).filter(Boolean);
@@ -403,7 +283,6 @@ function pubsList() {
     return termOk && topicOk;
   }
 
-  let pendingTimer = null;
   function showSpinner() {
     spinner?.classList.add('is-visible');
   }
@@ -411,6 +290,7 @@ function pubsList() {
     spinner?.classList.remove('is-visible');
   }
 
+  let pendingTimer = null;
   function applyFilterWithLoading() {
     const term = termBtn?.dataset.current || '';
     const topic = topicBtn?.dataset.current || '';
@@ -422,14 +302,10 @@ function pubsList() {
 
     const toShow = [];
     const toHide = [];
-    items.forEach((el) =>
-      (matches(el, term, topic) ? toShow : toHide).push(el),
-    );
+    items.forEach((el) => (matches(el, term, topic) ? toShow : toHide).push(el));
 
-    // Toggle "No results"
     if (noResultsEl) noResultsEl.classList.toggle('d-none', toShow.length > 0);
 
-    // Immediately hide non-matches from flow
     toHide.forEach((el) => {
       el.classList.add('is-hidden');
       el.classList.remove('will-fade');
@@ -437,7 +313,6 @@ function pubsList() {
       el.style.transitionDelay = '';
     });
 
-    // Prepare matches to reveal: visible but opacity 0
     toShow.forEach((el) => {
       el.classList.remove('is-hidden');
       el.classList.add('will-fade');
@@ -445,7 +320,6 @@ function pubsList() {
       el.style.transitionDelay = '';
     });
 
-    // 1s loading overlay (0 if reduced motion)
     if (toShow.length > 0) {
       showSpinner();
     }
@@ -456,22 +330,65 @@ function pubsList() {
     pendingTimer = setTimeout(() => {
       hideSpinner();
       requestAnimationFrame(() => {
-        // optional micro-stagger for polish
         toShow.forEach((el, i) => {
           const delay = Math.min(i * 20, 120);
           el.style.transitionDelay = delay ? `${delay}ms` : '';
         });
         toShow.forEach((el) => el.classList.remove('will-fade'));
-        // cleanup delay
         setTimeout(() => {
-          toShow.forEach((el) => (el.style.transitionDelay = ''));
+          toShow.forEach((el) => { el.style.transitionDelay = ''; });
         }, 240 + 130);
       });
       pendingTimer = null;
     }, DELAY);
   }
+  populateMenu(termList, terms, 'All Terms');
+  populateMenu(topicList, topics, 'All Topics');
 
-  // Initial: All terms + All topics, show everything
+  setSelection(termDD, termBtn, '', 'All Terms');
+  setSelection(topicDD, topicBtn, '', 'All Topics');
+
+  termBtn?.addEventListener('click', () => {
+    const expanded = termBtn.getAttribute('aria-expanded') === 'true';
+    closeMenu(topicDD, topicBtn);
+    expanded ? closeMenu(termDD, termBtn) : openMenu(termDD, termBtn);
+  });
+  topicBtn?.addEventListener('click', () => {
+    const expanded = topicBtn.getAttribute('aria-expanded') === 'true';
+    closeMenu(termDD, termBtn);
+    expanded ? closeMenu(topicDD, topicBtn) : openMenu(topicDD, topicBtn);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!termDD.contains(e.target)) closeMenu(termDD, termBtn);
+    if (!topicDD.contains(e.target)) closeMenu(topicDD, topicBtn);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMenu(termDD, termBtn);
+      closeMenu(topicDD, topicBtn);
+    }
+  });
+
+  termList?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.dropdown-choice');
+    if (!btn) return;
+    const value = btn.dataset.value || '';
+    const label = btn.textContent.trim();
+    setSelection(termDD, termBtn, value, label);
+    closeMenu(termDD, termBtn);
+    applyFilterWithLoading();
+  });
+  topicList?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.dropdown-choice');
+    if (!btn) return;
+    const value = btn.dataset.value || '';
+    const label = btn.textContent.trim();
+    setSelection(topicDD, topicBtn, value, label);
+    closeMenu(topicDD, topicBtn);
+    applyFilterWithLoading();
+  });
+
   items.forEach((el) => {
     el.classList.remove('is-hidden', 'will-fade');
     el.setAttribute('aria-hidden', 'false');
