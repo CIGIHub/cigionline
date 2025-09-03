@@ -239,87 +239,166 @@ function initXfade(container) {
   });
 }
 
-function pubTabs() {
+function pubsList() {
+  // --- Build selects (keeps "All ..." as default) ---
+  function populateTerms(select) {
+    if (!select) return;
+    const seen = new Set();
+    const keepFirst =
+      select.querySelector('option[value=""]') || new Option('All terms', '');
+    select.innerHTML = '';
+    select.appendChild(keepFirst);
+    for (const el of items) {
+      const slug = (el.dataset.term || '').trim();
+      const label = (el.dataset.termLabel || slug || 'Uncategorized').trim();
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      select.appendChild(new Option(label, slug));
+    }
+    select.value = '';
+  }
+  function populateTopics(select) {
+    if (!select) return;
+    const seen = new Set();
+    const keepFirst =
+      select.querySelector('option[value=""]') || new Option('All topics', '');
+    select.innerHTML = '';
+    select.appendChild(keepFirst);
+    for (const el of items) {
+      const topics = (el.dataset.topics || '')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+      for (const slug of topics) {
+        if (seen.has(slug)) continue;
+        seen.add(slug);
+        const label = slug
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+        select.appendChild(new Option(label, slug));
+      }
+    }
+    select.value = '';
+  }
+
   const root = document.getElementById('publist');
   if (!root) return;
 
-  const select = root.querySelector('#termFilter');
-  const articles = Array.from(
+  const termSel = root.querySelector('#termFilter');
+  const topicSel = root.querySelector('#topicFilter');
+  const spinner = root.querySelector('.publist-spinner');
+  const items = Array.from(
     root.querySelectorAll('.publications-list__publication'),
   );
+  if (!items.length) return;
 
-  if (!articles.length || !select) return;
+  populateTerms(termSel);
+  populateTopics(topicSel);
+  // Keep your existing population (or leave as is if server-filled):
+  // populateTerms(termSel); populateTopics(topicSel);
 
-  // Collect unique terms (preserve DOM order)
-  const termMap = new Map(); // slug -> { label, nodes: [] }
-  for (const art of articles) {
-    const slug = (art.dataset.term || 'all').trim();
-    const label = (art.dataset.termLabel || 'All terms').trim();
-    if (!termMap.has(slug)) termMap.set(slug, { label, nodes: [] });
-    termMap.get(slug).nodes.push(art);
+  // Matching logic
+  function matches(el, term, topic) {
+    const elTerm = el.dataset.term || '';
+    const elTopics = (el.dataset.topics || '').split(/\s+/).filter(Boolean);
+    const termOk = !term || elTerm === term;
+    const topicOk = !topic || elTopics.includes(topic);
+    return termOk && topicOk;
   }
 
-  // Populate the select (keep your existing "All terms" option on top)
-  // (If you already populate server-side, you can skip this loop.)
-  const existingValues = new Set(
-    Array.from(select.options).map((o) => o.value),
-  );
-  for (const [slug, info] of termMap.entries()) {
-    if (slug === 'all') continue; // avoid duplicate of default
-    if (existingValues.has(slug)) continue;
-    const opt = document.createElement('option');
-    opt.value = slug;
-    opt.textContent = info.label;
-    select.appendChild(opt);
+  let pendingTimer = null;
+
+  function showSpinner() {
+    spinner?.classList.add('is-visible');
+  }
+  function hideSpinner() {
+    spinner?.classList.remove('is-visible');
   }
 
-  // Build panes wrapper
-  const panes = document.createElement('div');
-  panes.id = 'pub-panes';
-  panes.className = 'xfade-container';
+  function applyFilterWithLoading() {
+    const term = termSel ? termSel.value.trim() : '';
+    const topic = topicSel ? topicSel.value.trim() : '';
 
-  // Pane: "All terms" (clone nodes so other panes can keep originals)
-  const allPane = document.createElement('div');
-  allPane.className = 'xfade-pane is-active'; // default active matches default select=""
-  allPane.dataset.pane = 'all';
-  const allFrag = document.createDocumentFragment();
-  for (const art of articles) allFrag.appendChild(art.cloneNode(true));
-  allPane.appendChild(allFrag);
-  panes.appendChild(allPane);
+    // Cancel any in-flight reveal
+    if (pendingTimer) {
+      clearTimeout(pendingTimer);
+      pendingTimer = null;
+    }
 
-  // Panes: one per term (move originals to save memory)
-  for (const [slug, info] of termMap.entries()) {
-    if (slug === 'all') continue;
-    const pane = document.createElement('div');
-    pane.className = 'xfade-pane';
-    pane.dataset.pane = slug;
+    // Classify items once
+    const toShow = [];
+    const toHide = [];
+    for (const el of items) {
+      if (matches(el, term, topic)) toShow.push(el);
+      else toHide.push(el);
+    }
 
-    const frag = document.createDocumentFragment();
-    info.nodes.forEach((node) => frag.appendChild(node)); // move original nodes into this pane
-    pane.appendChild(frag);
+    const noResultsEl = root.querySelector('.publist-noresults');
+    if (noResultsEl) {
+      if (toShow.length === 0) noResultsEl.classList.remove('d-none');
+      else noResultsEl.classList.add('d-none');
+    }
 
-    panes.appendChild(pane);
+    // Immediately hide non-matches (remove from flow)
+    toHide.forEach((el) => {
+      el.classList.add('is-hidden');
+      el.classList.remove('will-fade');
+      el.setAttribute('aria-hidden', 'true');
+      el.style.transitionDelay = '';
+    });
+
+    // Prepare matches to reveal: ensure in flow but invisible (opacity 0)
+    toShow.forEach((el) => {
+      el.classList.remove('is-hidden');
+      el.classList.add('will-fade');
+      el.setAttribute('aria-hidden', 'false');
+      el.style.transitionDelay = ''; // reset any old delay
+    });
+
+    // Show loading overlay for 1s
+    showSpinner();
+    const DELAY = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 0
+      : 1000;
+
+    pendingTimer = setTimeout(() => {
+      hideSpinner();
+
+      // Next frame: drop the "will-fade" class to animate to visible
+      requestAnimationFrame(() => {
+        // optional: deterministic tiny stagger
+        toShow.forEach((el, i) => {
+          const delay = Math.min(i * 20, 120); // cap at 120ms
+          el.style.transitionDelay = delay ? `${delay}ms` : '';
+        });
+
+        toShow.forEach((el) => el.classList.remove('will-fade'));
+
+        // clean up delays after transition
+        const CLEANUP_AFTER = 240 + 130; // css duration + max stagger
+        setTimeout(() => {
+          toShow.forEach((el) => {
+            el.style.transitionDelay = '';
+          });
+        }, CLEANUP_AFTER);
+      });
+
+      pendingTimer = null;
+    }, DELAY);
   }
 
-  // Insert panes and remove any leftover article shells
-  // Keep the toolbar row (already inside #publist)
-  // Remove any stray article wrappers still under #publist (we moved them)
-  root
-    .querySelectorAll('.publications-list__publication')
-    .forEach((n) => n.remove());
-  root.appendChild(panes);
-
-  // Init animator
-  initXfade(panes);
-
-  // Wire filter -> cross-fade
-  select.addEventListener('change', () => {
-    const value = select.value.trim();
-    const target = value ? value : 'all';
-    const next = panes.querySelector(`.xfade-pane[data-pane="${target}"]`);
-    if (next) xfadeTo(panes, next);
+  // Defaults: "All terms" + "All topics"
+  if (termSel) termSel.value = '';
+  if (topicSel) topicSel.value = '';
+  // Start with everything visible (no flicker)
+  items.forEach((el) => {
+    el.classList.remove('is-hidden', 'will-fade');
+    el.setAttribute('aria-hidden', 'false');
   });
+
+  termSel?.addEventListener('change', applyFilterWithLoading);
+  topicSel?.addEventListener('change', applyFilterWithLoading);
 }
 
+pubsList();
 cohortTabs();
-pubTabs();
