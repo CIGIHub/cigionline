@@ -81,14 +81,19 @@ body {
       color: $dph-green;
       position: relative;
 
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: transparent;
+        transition: background-color ease 0.2s;
+      }
+
       &:hover {
         &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 2px;
           background-color: $dph-green;
         }
       }
@@ -96,7 +101,6 @@ body {
       &.active {
         background-color: transparent;
         border: 0;
-        font-weight: 500;
         color: $dph-green;
         pointer-events: none;
 
@@ -318,16 +322,22 @@ body {
     margin-bottom: 2rem;
   }
 
-  .publications-list-block {
-    margin-top: 1.5rem;
+  .toolbar {
+    select {
+      width: auto;
+      color: $dph-green;
+      border-bottom: 2px solid $dph-green;
+      height: 1.5rem;
 
-    .toolbar {
-      select {
-        width: auto;
+      &:focus {
         color: $dph-green;
-        border-bottom: 1px solid $dph-green;
+        border-bottom: 2px solid $dph-green;
       }
     }
+  }
+
+  .publications-list-block {
+    margin-top: 1.5rem;
 
     .sr-only {
       position: absolute;
@@ -343,6 +353,16 @@ body {
 
     .publications-list__publication {
       padding: 2rem 0;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 220ms ease, transform 220ms ease;
+      will-change: opacity, transform;
+
+      &.is-hidden {
+        opacity: 0;
+        transform: translateY(6px);
+        pointer-events: none;
+      }
 
       &:last-child {
         padding-bottom: 0;
@@ -411,7 +431,10 @@ body {
 
   .cohorts-list {
     .is-hidden {
+      position: absolute;
       display: none;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .toolbar {
@@ -434,6 +457,23 @@ body {
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
+    }
+
+    .variants {
+      position: relative;
+      transition: height 0.5s ease;
+
+      .variant {
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+
+        &.is-active {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
     }
   }
 

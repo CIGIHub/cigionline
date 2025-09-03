@@ -12,6 +12,46 @@ mailingListButton.addEventListener('click', () => {
   }, 600);
 });
 
+function initVariantContainerHeight(contentEl) {
+  const active =
+    contentEl.querySelector('.variant.is-active') ||
+    contentEl.querySelector('.variant');
+  if (active) {
+    active.classList.add('is-active');
+    requestAnimationFrame(() => {
+      contentEl.style.height = `${active.offsetHeight}px`;
+    });
+  }
+}
+
+function wireCohortSelect(selectEl, contentEl) {
+  selectEl.addEventListener('change', () => {
+    const boxes = Array.from(contentEl.children);
+    const nextIndex = Number(selectEl.value);
+    const current =
+      boxes.find((b) => b.classList.contains('is-active')) || boxes[0];
+    const next = boxes[nextIndex] || boxes[0];
+    if (current === next) return;
+
+    contentEl.style.height = `${current.offsetHeight}px`;
+
+    requestAnimationFrame(() => {
+      current.classList.remove('is-active');
+      next.classList.add('is-active');
+
+      const nextHeight = next.offsetHeight;
+      contentEl.style.height = `${nextHeight}px`;
+    });
+
+    const onEnd = (e) => {
+      if (e.propertyName !== 'height') return;
+      contentEl.style.height = `${next.offsetHeight}px`;
+      contentEl.removeEventListener('transitionend', onEnd);
+    };
+    contentEl.addEventListener('transitionend', onEnd);
+  });
+}
+
 function cohortTabs() {
   const stash = document.getElementById('cohort-variants');
   if (!stash) return;
@@ -88,7 +128,7 @@ function cohortTabs() {
         const opt = document.createElement('option');
         opt.value = String(i);
         opt.textContent = it.cohort;
-        if (i === 0) opt.selected = true; // default = first in DOM order
+        if (i === 0) opt.selected = true;
         select.appendChild(opt);
       });
 
@@ -98,11 +138,13 @@ function cohortTabs() {
 
       const content = document.createElement('div');
       content.className = 'variants';
+      initVariantContainerHeight(content);
+      wireCohortSelect(select, content);
       content.dataset.cohortTitleSlug = slug;
 
       deduped.forEach((it, i) => {
         const variant = document.createElement('div');
-        variant.className = `variant${i === 0 ? '' : ' is-hidden'}`;
+        variant.className = `variant${i === 0 ? ' is-active' : ' is-hidden'}`;
         variant.dataset.cohort = it.cohort;
         variant.appendChild(it.tmpl.content.cloneNode(true));
         content.appendChild(variant);
@@ -149,59 +191,134 @@ function cohortTabs() {
   });
 }
 
-function pubTabs() {
-  const scope = document.querySelector('[data-filter-scope]');
-  if (!scope) return;
-
-  const sel = scope.querySelector('#termFilter');
-  const items = Array.from(
-    scope.querySelectorAll('.publications-list__publication'),
-  );
-  if (!items.length) return;
-
-  // Build unique terms from DOM
-  const termsMap = new Map(); // slug -> label
-  items.forEach((el) => {
-    const slug = (el.getAttribute('data-term') || '').trim();
-    const label = (el.getAttribute('data-term-label') || '').trim();
-    if (slug && label && !termsMap.has(slug)) termsMap.set(slug, label);
+function xfadeTo(container, nextPane) {
+  const panes = Array.from(container.children);
+  const current =
+    panes.find((p) => p.classList.contains('is-active')) || panes[0];
+  if (!nextPane || current === nextPane) return;
+  const currentH = current.offsetHeight;
+  container.style.height = currentH + 'px';
+  current.classList.remove('is-active');
+  current.classList.add('is-hidden');
+  nextPane.classList.add('is-active');
+  nextPane.classList.remove('is-hidden');
+  const nextH = nextPane.offsetHeight;
+  container.style.height = nextH + 'px';
+  const onEnd = (e) => {
+    if (e.propertyName !== 'height') return;
+    container.style.height = 'auto';
+    container.removeEventListener('transitionend', onEnd);
+  };
+  container.addEventListener('transitionend', onEnd);
+}
+function initXfade(container) {
+  const panes = Array.from(container.children);
+  if (!panes.length) return;
+  const active =
+    panes.find((p) => p.classList.contains('is-active')) || panes[0];
+  panes.forEach((p) => {
+    const isActive = p === active;
+    p.classList.toggle('is-active', isActive);
+    p.classList.toggle('is-hidden', !isActive);
   });
+  requestAnimationFrame(() => {
+    container.style.height = active.offsetHeight + 'px';
+    setTimeout(() => {
+      container.style.height = 'auto';
+    }, 320);
+  });
+  container.querySelectorAll('img').forEach((img) => {
+    img.addEventListener(
+      'load',
+      () => {
+        const pane = container.querySelector('.xfade-pane.is-active');
+        if (pane) container.style.height = pane.offsetHeight + 'px';
+      },
+      { once: true },
+    );
+  });
+}
 
-  // Sort terms by label (customize as needed)
-  const sorted = Array.from(termsMap.entries()).sort((a, b) =>
-    a[1].localeCompare(b[1], undefined, { numeric: true }),
+function pubTabs() {
+  const root = document.getElementById('publist');
+  if (!root) return;
+
+  const select = root.querySelector('#termFilter');
+  const articles = Array.from(
+    root.querySelectorAll('.publications-list__publication'),
   );
 
-  // Populate dropdown (after default "All terms")
-  sorted.forEach(([slug, label]) => {
+  if (!articles.length || !select) return;
+
+  // Collect unique terms (preserve DOM order)
+  const termMap = new Map(); // slug -> { label, nodes: [] }
+  for (const art of articles) {
+    const slug = (art.dataset.term || 'all').trim();
+    const label = (art.dataset.termLabel || 'All terms').trim();
+    if (!termMap.has(slug)) termMap.set(slug, { label, nodes: [] });
+    termMap.get(slug).nodes.push(art);
+  }
+
+  // Populate the select (keep your existing "All terms" option on top)
+  // (If you already populate server-side, you can skip this loop.)
+  const existingValues = new Set(
+    Array.from(select.options).map((o) => o.value),
+  );
+  for (const [slug, info] of termMap.entries()) {
+    if (slug === 'all') continue; // avoid duplicate of default
+    if (existingValues.has(slug)) continue;
     const opt = document.createElement('option');
     opt.value = slug;
-    opt.textContent = label;
-    sel.appendChild(opt);
+    opt.textContent = info.label;
+    select.appendChild(opt);
+  }
+
+  // Build panes wrapper
+  const panes = document.createElement('div');
+  panes.id = 'pub-panes';
+  panes.className = 'xfade-container';
+
+  // Pane: "All terms" (clone nodes so other panes can keep originals)
+  const allPane = document.createElement('div');
+  allPane.className = 'xfade-pane is-active'; // default active matches default select=""
+  allPane.dataset.pane = 'all';
+  const allFrag = document.createDocumentFragment();
+  for (const art of articles) allFrag.appendChild(art.cloneNode(true));
+  allPane.appendChild(allFrag);
+  panes.appendChild(allPane);
+
+  // Panes: one per term (move originals to save memory)
+  for (const [slug, info] of termMap.entries()) {
+    if (slug === 'all') continue;
+    const pane = document.createElement('div');
+    pane.className = 'xfade-pane';
+    pane.dataset.pane = slug;
+
+    const frag = document.createDocumentFragment();
+    info.nodes.forEach((node) => frag.appendChild(node)); // move original nodes into this pane
+    pane.appendChild(frag);
+
+    panes.appendChild(pane);
+  }
+
+  // Insert panes and remove any leftover article shells
+  // Keep the toolbar row (already inside #publist)
+  // Remove any stray article wrappers still under #publist (we moved them)
+  root
+    .querySelectorAll('.publications-list__publication')
+    .forEach((n) => n.remove());
+  root.appendChild(panes);
+
+  // Init animator
+  initXfade(panes);
+
+  // Wire filter -> cross-fade
+  select.addEventListener('change', () => {
+    const value = select.value.trim();
+    const target = value ? value : 'all';
+    const next = panes.querySelector(`.xfade-pane[data-pane="${target}"]`);
+    if (next) xfadeTo(panes, next);
   });
-
-  const qs = new URLSearchParams(location.search);
-  const initial = qs.get('term') || '';
-  if (initial && termsMap.has(initial)) sel.value = initial;
-
-  const apply = (slug) => {
-    items.forEach((el) => {
-      const match = !slug || el.getAttribute('data-term') === slug;
-      el.style.display = match ? '' : 'none';
-    });
-
-    // Update query string (no reload)
-    const params = new URLSearchParams(location.search);
-    if (slug) params.set('term', slug);
-    else params.delete('term');
-    const newUrl = `${location.pathname}${
-      params.toString() ? '?' + params.toString() : ''
-    }${location.hash}`;
-    history.replaceState(null, '', newUrl);
-  };
-
-  sel.addEventListener('change', () => apply(sel.value));
-  apply(initial);
 }
 
 cohortTabs();

@@ -8,6 +8,11 @@
         <select id="termFilter" class="form-select form-control">
           <option value="">All terms</option>
         </select>
+
+        <label for="topicFilter" class="sr-only">Filter by topic</label>
+        <select id="topicFilter" class="form-select form-control">
+          <option value="">All topics</option>
+        </select>
       </div>
     </div>
   </div>
@@ -15,7 +20,9 @@
   {% if publications_by_type %}
   {% for publication in publications_by_type %}
   {% with term=publication.dph_term %}
-  <article class="publications-list__publication row" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
+  {% with topics=publication.topics.all %}
+  <article class="publications-list__publication row" data-term="{{ term|slugify }}" data-term-label="{{ term }}"
+    data-topics="{% for t in topics %}{{ t.slug }}{% if not forloop.last %} {% endif %}{% endfor %}">
     <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
       <a href="{{ publication.url }}">
         <div class="img-wrapper">
@@ -62,6 +69,7 @@
       </div>
     </div>
   </article>
+  {% endwith %}
   {% endwith %}
   {% endfor %}
 
