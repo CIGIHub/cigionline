@@ -2,17 +2,27 @@
 
 <div class="publications-list-block" id="publist" data-filter-scope>
   <div class="row">
-    <div class="col-12 col-md-10 col-lg-8">
+    <div class="col">
       <div class="toolbar">
-        <label for="termFilter" class="sr-only">Filter by term</label>
-        <select id="termFilter" class="form-select form-control">
-          <option value="">All terms</option>
-        </select>
+        <div class="dropdown custom-dropdown keep-open" id="termDropdown">
+          <button class="dropdown-toggle" type="button" id="termsButton" aria-haspopup="true" aria-expanded="false"
+            data-current="">
+            All Terms
+          </button>
+          <div class="dropdown-menu" role="menu" aria-labelledby="termsButton">
+            <ul></ul>
+          </div>
+        </div>
 
-        <label for="topicFilter" class="sr-only">Filter by topic</label>
-        <select id="topicFilter" class="form-select form-control">
-          <option value="">All topics</option>
-        </select>
+        <div class="dropdown custom-dropdown keep-open" id="topicDropdown">
+          <button class="dropdown-toggle" type="button" id="topicsButton" aria-haspopup="true" aria-expanded="false"
+            data-current="">
+            All Topics
+          </button>
+          <div class="dropdown-menu topics" role="menu" aria-labelledby="topicsButton">
+            <ul></ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>

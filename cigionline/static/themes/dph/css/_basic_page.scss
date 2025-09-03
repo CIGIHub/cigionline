@@ -251,10 +251,6 @@ body {
         .person-description {
           p {
             margin: 0;
-
-            &:first-child {
-              margin-bottom: 0.5rem;
-            }
           }
 
           li {
@@ -358,6 +354,62 @@ body {
     @keyframes spin {
       to {
         transform: rotate(360deg);
+      }
+    }
+
+    .toolbar {
+      width: 100%;
+      position: relative;
+
+      .dropdown {
+        flex: 50%;
+        position: static;
+
+        .dropdown-toggle {
+          border-bottom: 2px solid $dph-green;
+          color: $dph-green;
+
+          &::after {
+            color: $dph-green;
+          }
+        }
+
+        .dropdown-menu {
+          border: 2px solid $dph-green;
+          border-radius: 0;
+          background: $dph-background;
+          padding: 1rem 0;
+          box-shadow: none;
+          margin-top: -2px;
+          position: absolute;
+          top: 1.5rem;
+          left: 0;
+
+          &.topics {
+            columns: 2;
+          }
+
+          ul {
+            padding: 0;
+            margin: 0;
+
+            li {
+              list-style: none;
+              padding: 0;
+
+              button {
+                padding: 0.5rem 2rem;
+                color: $white;
+                width: 100%;
+                text-align: left;
+
+                &:hover {
+                  background: darken($dph-background, 5%);
+                }
+              }
+            }
+          }
+        }
       }
     }
     .publist-spinner {

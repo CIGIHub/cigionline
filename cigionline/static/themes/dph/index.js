@@ -240,64 +240,161 @@ function initXfade(container) {
 }
 
 function pubsList() {
-  // --- Build selects (keeps "All ..." as default) ---
-  function populateTerms(select) {
-    if (!select) return;
-    const seen = new Set();
-    const keepFirst =
-      select.querySelector('option[value=""]') || new Option('All terms', '');
-    select.innerHTML = '';
-    select.appendChild(keepFirst);
-    for (const el of items) {
-      const slug = (el.dataset.term || '').trim();
-      const label = (el.dataset.termLabel || slug || 'Uncategorized').trim();
-      if (!slug || seen.has(slug)) continue;
-      seen.add(slug);
-      select.appendChild(new Option(label, slug));
-    }
-    select.value = '';
-  }
-  function populateTopics(select) {
-    if (!select) return;
-    const seen = new Set();
-    const keepFirst =
-      select.querySelector('option[value=""]') || new Option('All topics', '');
-    select.innerHTML = '';
-    select.appendChild(keepFirst);
-    for (const el of items) {
-      const topics = (el.dataset.topics || '')
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean);
-      for (const slug of topics) {
-        if (seen.has(slug)) continue;
-        seen.add(slug);
-        const label = slug
-          .replace(/-/g, ' ')
-          .replace(/\b\w/g, (c) => c.toUpperCase());
-        select.appendChild(new Option(label, slug));
-      }
-    }
-    select.value = '';
-  }
-
   const root = document.getElementById('publist');
   if (!root) return;
 
-  const termSel = root.querySelector('#termFilter');
-  const topicSel = root.querySelector('#topicFilter');
+  // Elements
+  const termDD = document.getElementById('termDropdown');
+  const topicDD = document.getElementById('topicDropdown');
+  const termBtn = termDD?.querySelector('.dropdown-toggle');
+  const topicBtn = topicDD?.querySelector('.dropdown-toggle');
+  const termList = termDD?.querySelector('.dropdown-menu ul');
+  const topicList = topicDD?.querySelector('.dropdown-menu ul');
   const spinner = root.querySelector('.publist-spinner');
   const items = Array.from(
     root.querySelectorAll('.publications-list__publication'),
   );
+  const noResultsEl = root.querySelector('.publist-noresults');
   if (!items.length) return;
 
-  populateTerms(termSel);
-  populateTopics(topicSel);
-  // Keep your existing population (or leave as is if server-filled):
-  // populateTerms(termSel); populateTopics(topicSel);
+  // Collect unique Terms (order = DOM)
+  const terms = [];
+  const seenTerms = new Set();
+  items.forEach((el) => {
+    const slug = (el.dataset.term || '').trim();
+    const label = (el.dataset.termLabel || slug || '').trim();
+    if (!slug) return; // skip empties, or map to 'uncategorized'
+    if (seenTerms.has(slug)) return;
+    seenTerms.add(slug);
+    terms.push({ value: slug, label: label || 'Uncategorized' });
+  });
 
-  // Matching logic
+  // Collect unique Topics (order = DOM)
+  const topics = [];
+  const seenTopics = new Set();
+  items.forEach((el) => {
+    (el.dataset.topics || '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .forEach((slug) => {
+        if (seenTopics.has(slug)) return;
+        seenTopics.add(slug);
+        const label = slug
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+        topics.push({ value: slug, label });
+      });
+  });
+
+  // Helpers: menu populate & behavior (single-select)
+  function populateMenu(listEl, itemsArr, allText) {
+    if (!listEl) return;
+    listEl.innerHTML = '';
+    // All option first (value="")
+    listEl.appendChild(makeChoice(allText, ''));
+    // Then dynamic options
+    itemsArr.forEach(({ label, value }) =>
+      listEl.appendChild(makeChoice(label, value)),
+    );
+  }
+
+  function makeChoice(label, value) {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'dropdown-choice';
+    btn.textContent = label;
+    btn.setAttribute('role', 'menuitemradio');
+    btn.setAttribute('aria-checked', 'false');
+    btn.dataset.value = value;
+    li.appendChild(btn);
+    return li;
+  }
+
+  function openMenu(dd, btn) {
+    const menu = dd.querySelector('.dropdown-menu');
+    menu.classList.add('show');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu(dd, btn) {
+    const menu = dd.querySelector('.dropdown-menu');
+    menu.classList.remove('show');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+  function setSelection(dd, btn, value, label) {
+    btn.dataset.current = value; // store current value
+    btn.textContent = label || btn.textContent; // update label
+    // update aria-selected on items
+    dd.querySelectorAll('.dropdown-choice').forEach((ch) => {
+      const isSel = ch.dataset.value === value;
+      ch.setAttribute('aria-selected', isSel ? 'true' : 'false');
+      ch.setAttribute('aria-checked', isSel ? 'true' : 'false');
+    });
+  }
+
+  // Populate menus
+  populateMenu(termList, terms, 'All Terms');
+  populateMenu(topicList, topics, 'All Topics');
+
+  // Defaults: All (value = "")
+  setSelection(termDD, termBtn, '', 'All Terms');
+  setSelection(topicDD, topicBtn, '', 'All Topics');
+
+  // Toggle handlers
+  termBtn?.addEventListener('click', () => {
+    const expanded = termBtn.getAttribute('aria-expanded') === 'true';
+    closeMenu(topicDD, topicBtn);
+    expanded ? closeMenu(termDD, termBtn) : openMenu(termDD, termBtn);
+  });
+  topicBtn?.addEventListener('click', () => {
+    const expanded = topicBtn.getAttribute('aria-expanded') === 'true';
+    closeMenu(termDD, termBtn);
+    expanded ? closeMenu(topicDD, topicBtn) : openMenu(topicDD, topicBtn);
+  });
+  // Close on outside click / Esc
+  document.addEventListener('click', (e) => {
+    if (!termDD.contains(e.target)) closeMenu(termDD, termBtn);
+    if (!topicDD.contains(e.target)) closeMenu(topicDD, topicBtn);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMenu(termDD, termBtn);
+      closeMenu(topicDD, topicBtn);
+    }
+  });
+
+  // Selection handlers (single-select)
+  termList?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.dropdown-choice');
+    if (!btn) return;
+    const value = btn.dataset.value || '';
+    const label = btn.textContent.trim();
+    setSelection(
+      termDD,
+      termBtn,
+      value,
+      label,
+    );
+    closeMenu(termDD, termBtn);
+    applyFilterWithLoading();
+  });
+  topicList?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.dropdown-choice');
+    if (!btn) return;
+    const value = btn.dataset.value || '';
+    const label = btn.textContent.trim();
+    setSelection(
+      topicDD,
+      topicBtn,
+      value,
+      label,
+    );
+    closeMenu(topicDD, topicBtn);
+    applyFilterWithLoading();
+  });
+
+  // Filtering
   function matches(el, term, topic) {
     const elTerm = el.dataset.term || '';
     const elTopics = (el.dataset.topics || '').split(/\s+/).filter(Boolean);
@@ -307,7 +404,6 @@ function pubsList() {
   }
 
   let pendingTimer = null;
-
   function showSpinner() {
     spinner?.classList.add('is-visible');
   }
@@ -316,30 +412,24 @@ function pubsList() {
   }
 
   function applyFilterWithLoading() {
-    const term = termSel ? termSel.value.trim() : '';
-    const topic = topicSel ? topicSel.value.trim() : '';
+    const term = termBtn?.dataset.current || '';
+    const topic = topicBtn?.dataset.current || '';
 
-    // Cancel any in-flight reveal
     if (pendingTimer) {
       clearTimeout(pendingTimer);
       pendingTimer = null;
     }
 
-    // Classify items once
     const toShow = [];
     const toHide = [];
-    for (const el of items) {
-      if (matches(el, term, topic)) toShow.push(el);
-      else toHide.push(el);
-    }
+    items.forEach((el) =>
+      (matches(el, term, topic) ? toShow : toHide).push(el),
+    );
 
-    const noResultsEl = root.querySelector('.publist-noresults');
-    if (noResultsEl) {
-      if (toShow.length === 0) noResultsEl.classList.remove('d-none');
-      else noResultsEl.classList.add('d-none');
-    }
+    // Toggle "No results"
+    if (noResultsEl) noResultsEl.classList.toggle('d-none', toShow.length > 0);
 
-    // Immediately hide non-matches (remove from flow)
+    // Immediately hide non-matches from flow
     toHide.forEach((el) => {
       el.classList.add('is-hidden');
       el.classList.remove('will-fade');
@@ -347,57 +437,46 @@ function pubsList() {
       el.style.transitionDelay = '';
     });
 
-    // Prepare matches to reveal: ensure in flow but invisible (opacity 0)
+    // Prepare matches to reveal: visible but opacity 0
     toShow.forEach((el) => {
       el.classList.remove('is-hidden');
       el.classList.add('will-fade');
       el.setAttribute('aria-hidden', 'false');
-      el.style.transitionDelay = ''; // reset any old delay
+      el.style.transitionDelay = '';
     });
 
-    // Show loading overlay for 1s
-    showSpinner();
+    // 1s loading overlay (0 if reduced motion)
+    if (toShow.length > 0) {
+      showSpinner();
+    }
     const DELAY = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       ? 0
-      : 1000;
+      : 500;
 
     pendingTimer = setTimeout(() => {
       hideSpinner();
-
-      // Next frame: drop the "will-fade" class to animate to visible
       requestAnimationFrame(() => {
-        // optional: deterministic tiny stagger
+        // optional micro-stagger for polish
         toShow.forEach((el, i) => {
-          const delay = Math.min(i * 20, 120); // cap at 120ms
+          const delay = Math.min(i * 20, 120);
           el.style.transitionDelay = delay ? `${delay}ms` : '';
         });
-
         toShow.forEach((el) => el.classList.remove('will-fade'));
-
-        // clean up delays after transition
-        const CLEANUP_AFTER = 240 + 130; // css duration + max stagger
+        // cleanup delay
         setTimeout(() => {
-          toShow.forEach((el) => {
-            el.style.transitionDelay = '';
-          });
-        }, CLEANUP_AFTER);
+          toShow.forEach((el) => (el.style.transitionDelay = ''));
+        }, 240 + 130);
       });
-
       pendingTimer = null;
     }, DELAY);
   }
 
-  // Defaults: "All terms" + "All topics"
-  if (termSel) termSel.value = '';
-  if (topicSel) topicSel.value = '';
-  // Start with everything visible (no flicker)
+  // Initial: All terms + All topics, show everything
   items.forEach((el) => {
     el.classList.remove('is-hidden', 'will-fade');
     el.setAttribute('aria-hidden', 'false');
   });
-
-  termSel?.addEventListener('change', applyFilterWithLoading);
-  topicSel?.addEventListener('change', applyFilterWithLoading);
+  applyFilterWithLoading();
 }
 
 pubsList();
