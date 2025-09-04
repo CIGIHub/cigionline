@@ -28,7 +28,7 @@ footer {
         padding-left: 1rem;
 
         &::placeholder {
-          color: $cigi-medium-light-grey;
+          color: $white;
         }
       }
 
@@ -105,20 +105,31 @@ footer {
         }
 
         .nav-link {
+          color: $dph-light-green;
           padding: 0;
           padding-top: 0;
           padding-bottom: 0;
+
+          &.active {
+            color: $dph-light-green;
+
+            &::after {
+              background-color: $dph-light-green;
+            }
+          }
+
+          &:hover {
+            &::after {
+              background-color: $dph-light-green;
+            }
+          }
         }
       }
     }
   }
 
   .copyright {
-    @include link(
-      $color: $cigi-medium-light-grey,
-      $hover-color: $cigi-primary-colour
-    );
-    color: $cigi-medium-light-grey;
+    @include link($color: $cigi-light-grey, $hover-color: $cigi-primary-colour);
     margin-top: 2rem;
     text-align: center;
   }

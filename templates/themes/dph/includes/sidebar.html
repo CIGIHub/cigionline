@@ -19,11 +19,12 @@
         Sign up for updates
       </button>
     </li>
+  </ul>
+  {% dph_related_files as related_files %}
 
-    {% dph_related_files as related_files %}
-
-    {% if related_files %}
-      <h2>More Program Information</h2>
+  {% if related_files %}
+    <h2>More Program Information</h2>
+    <ul class="list-unstyled dph-sidebar-list">
       {% for document in related_files %}
         <li>
           <a href="{{ document.value.file.url }}" target="_blank">
@@ -32,6 +33,6 @@
           </a>
         </li>
       {% endfor %}
-    {% endif %}
-  </ul>
+    </ul>
+  {% endif %}
 </aside>
