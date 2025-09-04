@@ -1364,11 +1364,11 @@ class AddtionalPagesBlock(blocks.StructBlock, ThemeableBlock):
         ],
         required=True,
     )
-    
+
     implemented_themes = [
         'dph_page',
     ]
-    
+
     def get_template(self, value, context, *args, **kwargs):
         standard_template = super(AddtionalPagesBlock, self).get_template(value, context, *args, **kwargs)
         return self.get_theme_template(standard_template, context, 'additional_pages_block')

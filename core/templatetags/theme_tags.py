@@ -26,6 +26,7 @@ def dph_term(value):
 
     return f'{term} {year} term'
 
+
 @register.simple_tag
 def dph_related_files():
     try:
