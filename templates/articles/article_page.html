@@ -85,8 +85,6 @@
           </audio>
           <p><a href='{{ page.audio_file.url }}' download>Download MP3</a></p>
         </div>
-      {% elif page.tts_enabled %}
-        <p><em>Audio is being generated…</em></p>
       {% endif %}
     {% endblock %}
     {% block article_content %}
