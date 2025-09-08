@@ -51,6 +51,9 @@
 {% block extra_css %}
   {% render_bundle 'articlePage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'articlePage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% preview_cache_bust as is_preview %}
@@ -79,11 +82,25 @@
       {% endif %}
       {% if page.audio_file %}
         <div class='article-audio'>
-          <audio controls preload='metadata' aria-label='Listen to this article'>
-            <source src='{{ page.audio_file.url }}' type='audio/mpeg'>
-            Your browser does not support the audio element.
-          </audio>
-          <p><a href='{{ page.audio_file.url }}' download>Download MP3</a></p>
+          <audio id='articleAudio' src='{{ page.audio_file.url }}' preload='metadata'></audio>
+
+          <div id='ttsPlayer' class='tts-player' data-target='articleAudio' aria-live='polite'>
+            <button class='tts-fab' type='button' aria-label='Play article audio' aria-pressed='false'>
+              <span class='icon icon-play' aria-hidden='true'></span>
+              <span class='icon icon-pause' aria-hidden='true'></span>
+            </button>
+
+            <div class='tts-meta'>
+              <span class='tts-title'>{{ page.title }}</span>
+              <span class='tts-time' id='ttsTime'>00:00</span>
+            </div>
+
+            <div class='tts-progress' aria-hidden='true' role='progressbar' aria-valuemin='0' aria-valuemax='100' aria-valuenow='0'>
+              <div class='tts-bar' style='width:0%'></div>
+            </div>
+          </div>
+
+          <div id='ttsSentinel' class='tts-sentinel' aria-hidden='true'></div>
         </div>
       {% endif %}
     {% endblock %}
