@@ -77,6 +77,17 @@
           </div>
         </div>
       {% endif %}
+      {% if page.audio_file %}
+        <div class='article-audio'>
+          <audio controls preload='metadata' aria-label='Listen to this article'>
+            <source src='{{ page.audio_file.url }}' type='audio/mpeg'>
+            Your browser does not support the audio element.
+          </audio>
+          <p><a href='{{ page.audio_file.url }}' download>Download MP3</a></p>
+        </div>
+      {% elif page.tts_enabled %}
+        <p><em>Audio is being generated…</em></p>
+      {% endif %}
     {% endblock %}
     {% block article_content %}
       {% if self.article_series_description %}

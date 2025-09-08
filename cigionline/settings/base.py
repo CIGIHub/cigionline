@@ -320,7 +320,3 @@ if 'PUBLISHING_NOTIFICATION_FROM_EMAIL' in os.environ:
     PUBLISHING_NOTIFICATION_FROM_EMAIL = os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL']
 
 WAGTAILDOCS_EXTENSIONS = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf']
-
-# Amazon Polly TTS
-AWS_REGION_NAME = os.getenv('AWS_REGION_NAME', 'us-east-1')
-POLLY_DEFAULT_VOICE_ID = os.getenv('POLLY_DEFAULT_VOICE_ID', 'Joanna')
