@@ -147,7 +147,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         verbose_name_plural = 'Annual Report Pages'
 
 
-class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
+class AnnualReportSPAPage(FeatureablePageAbstract, SearchablePageAbstract, ShareablePageAbstract, Page):
     """View annual report SPA page"""
 
     slides = StreamField(
