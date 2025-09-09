@@ -80,15 +80,13 @@ footer {
     }
   }
 
-  svg {
-    &.mitacs {
-      width: 10rem;
-      margin-bottom: 1rem;
-
-      path,
-      polyline {
-        fill: $white;
+  .partners {
+    .mitacs-logo {
+      @include media-breakpoint-up(md) {
+        margin-bottom: 1rem;
       }
+      width: 15rem;
+      margin-bottom: 2rem;
     }
   }
 
