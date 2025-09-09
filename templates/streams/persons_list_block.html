@@ -77,9 +77,7 @@
                 </div>
               </div>
               <div class="person-description">
-                {% if person.dph_bio %}
-                  {{ person.dph_bio|safe }}
-                {% elif self.bio_source_field and self.bio_source_field == 'short_bio' %}
+                {% if self.bio_source_field and self.bio_source_field == 'short_bio' %}
                   {{ person.short_bio|safe }}
                 {% else %}
                   {% for block in person.body %}
