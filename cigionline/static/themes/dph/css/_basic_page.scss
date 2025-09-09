@@ -251,6 +251,16 @@ body {
     }
 
     .persons-list-block {
+      &.current {
+        .persons-list {
+          p {
+            &:first-child {
+              margin-bottom: 0.5rem;
+            }
+          }
+        }
+      }
+
       .persons-list {
         .person-description {
           p {
