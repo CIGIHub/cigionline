@@ -1,50 +1,97 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="container persons-list-block {{self.title|slugify}}">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      {% if self.title and not hide_title %}
-        <div class="block-title">{{ self.title }}</div>
-      {% endif %}
-      <ul class="persons-list">
-        {% for block in self.persons %}
-          {% with block.value.specific as person %}
-          <li>
-            <div class="person-info">
-              <a href="{{ person.url }}" class="person-photo">
-                <div class="img-wrapper">
-                  {% if person.image_square %}
-                    {% image person.image_square fill-300x300 %}
-                  {% endif %}
-                </div>
-              </a>
-      
-              <div>
-                <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
-                <div class="person-function">
-                  {% if page == 'dph_landing' and person.position_dph %}
-                    {{ person.position_dph }}
-                  {% else %}
-                    {{ person.position }}
-                  {% endif %}
-                </div>
+{% if page == 'dph_landing' %}
+  <div class="persons-list-block {{self.title|slugify}}">
+    {% if self.title and not hide_title %}
+      <div class="block-title">{{ self.title }}</div>
+    {% endif %}
+    <ul class="persons-list">
+      {% for block in self.persons %}
+        {% with block.value.specific as person %}
+        <li>
+          <div class="person-info">
+            <a href="{{ person.url }}" class="person-photo">
+              <div class="img-wrapper">
+                {% if person.image_square %}
+                  {% image person.image_square fill-300x300 %}
+                {% endif %}
+              </div>
+            </a>
+    
+            <div>
+              <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
+              <div class="person-function">
+                {% if page == 'dph_landing' and person.position_dph %}
+                  {{ person.position_dph }}
+                {% else %}
+                  {{ person.position }}
+                {% endif %}
               </div>
             </div>
-            <div class="person-description">
-              {% if person.dph_bio %}
-                {{ person.dph_bio|safe }}
-              {% elif self.bio_source_field and self.bio_source_field == 'short_bio' %}
-                {{ person.short_bio|safe }}
-              {% else %}
-                {% for block in person.body %}
-                  {{ block.value|safe }}
-                {% endfor %}
-              {% endif %}
-            </div>
-          </li>
-          {% endwith %}
-        {% endfor %}
-      </ul>
+          </div>
+          <div class="person-description">
+            {% if person.dph_bio %}
+              {{ person.dph_bio|safe }}
+            {% elif self.bio_source_field and self.bio_source_field == 'short_bio' %}
+              {{ person.short_bio|safe }}
+            {% else %}
+              {% for block in person.body %}
+                {{ block.value|safe }}
+              {% endfor %}
+            {% endif %}
+          </div>
+        </li>
+        {% endwith %}
+      {% endfor %}
+    </ul>
+  </div>
+{% else %}
+  <div class="container persons-list-block {{self.title|slugify}}">
+    <div class="row d-block">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {% if self.title and not hide_title %}
+          <div class="block-title">{{ self.title }}</div>
+        {% endif %}
+        <ul class="persons-list">
+          {% for block in self.persons %}
+            {% with block.value.specific as person %}
+            <li>
+              <div class="person-info">
+                <a href="{{ person.url }}" class="person-photo">
+                  <div class="img-wrapper">
+                    {% if person.image_square %}
+                      {% image person.image_square fill-300x300 %}
+                    {% endif %}
+                  </div>
+                </a>
+        
+                <div>
+                  <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
+                  <div class="person-function">
+                    {% if page == 'dph_landing' and person.position_dph %}
+                      {{ person.position_dph }}
+                    {% else %}
+                      {{ person.position }}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="person-description">
+                {% if person.dph_bio %}
+                  {{ person.dph_bio|safe }}
+                {% elif self.bio_source_field and self.bio_source_field == 'short_bio' %}
+                  {{ person.short_bio|safe }}
+                {% else %}
+                  {% for block in person.body %}
+                    {{ block.value|safe }}
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </li>
+            {% endwith %}
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
-</div>
+{% endif %}

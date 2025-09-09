@@ -1,0 +1,20 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+<figure class="stream-image-block">
+  {% if self.link %}
+  <a href="{{ self.link }}" class="stream-image-block-link">
+    {% endif %}
+    {% if self.image.file.url|file_extension == '.gif' %}
+    <img src="{{self.image.file.url}}" alt="{{self.image.caption}}" />
+    {% else %}
+    {% image self.image width-1920 %}
+    {% endif %}
+    {% if self.link %}
+  </a>
+  {% endif %}
+  {% if not self.hide_image_caption %}
+  <figcaption>
+    {{ self.image.caption }}
+  </figcaption>
+  {% endif %}
+</figure>
