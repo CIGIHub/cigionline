@@ -1609,6 +1609,54 @@ class SPSlideBoardBlock(blocks.StructBlock):
     ])
 
 
+class ARSlideBoardBlock(blocks.StructBlock):
+    BOARD_TYPES = [
+        ('board', 'Board'),
+        ('executive', 'Executive'),
+    ]
+    board_type = blocks.ChoiceBlock(choices=BOARD_TYPES, required=True)
+    board_members = blocks.StreamBlock([
+        ('member', blocks.StructBlock([
+            ('name', blocks.CharBlock(required=True)),
+            ('title', blocks.CharBlock(required=True)),
+            ('title_fr', blocks.CharBlock(required=True)),
+        ])),
+    ])
+
+
+class ARSlideColumnBlock(blocks.StructBlock):
+    CONTENT_TYPES = [
+        ('publication', 'Publication'),
+        ('opinion', 'Opinion'),
+        ('video', 'Video'),
+        ('podcast', 'Podcast'),
+        ('event', 'Event'),
+        ('essay series', 'Essay Series'),
+        ('media', 'Media'),
+        ('news release', 'News Release')
+    ]
+    column = blocks.StreamBlock([
+        ('paragraph_column', blocks.StructBlock([
+            ('en', blocks.RichTextBlock(required=False)),
+            ('fr', blocks.RichTextBlock(required=False)),
+        ])),
+        ('content_column', blocks.StreamBlock(
+            [
+                ('content', blocks.StructBlock(
+                    [
+                        ('type', blocks.ChoiceBlock(choices=CONTENT_TYPES, required=False)),
+                        ('page', blocks.PageChooserBlock(required=False)),
+                        ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this content item')),
+                        ('title_en', blocks.CharBlock(required=False, help_text='Override the title for this content item')),
+                        ('title_fr', blocks.CharBlock(required=False, help_text='Override the title for this content item')),
+                    ]
+                ))
+            ],
+            required=False
+        )),
+    ])
+
+
 class ResourceBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)

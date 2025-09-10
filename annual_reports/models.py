@@ -7,7 +7,7 @@ from core.models import (
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
-from streams.blocks import ARSlideChooserBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from streams.blocks import ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -270,19 +270,61 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
         default='standard',
         help_text='Type of slide',
     )
-    
+
+    slide_title_fr = models.CharField(max_length=255, help_text="Title of the slide (French)", blank=True)
+
     ar_slide_content = StreamField(
         [
-            ("column", RichTextBlock(features=[
-                "bold", "italic", "h2", "h3", "h3", "ol", "ul", "link", "coloured"
-            ])),
+            ("column", ARSlideColumnBlock()),
+            ("board", ARSlideBoardBlock()),
         ],
         blank=True,
         help_text="Content of the slide",
     )
+    background_caption = RichTextField(blank=True, help_text="Caption for the background image")
+    background_caption_fr = RichTextField(blank=True, help_text="Caption for the background image (French)")
 
     parent_page_types = ['AnnualReportSPAPage']
     subpage_types = []
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("slide_title"),
+                FieldPanel("slide_title_fr"),
+                FieldPanel("slide_subtitle"),
+                FieldPanel("slide_type"),
+            ],
+            heading="Slide title",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("slide_content"),
+            ],
+            heading="Slide Content",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("background_image"),
+                FieldPanel("background_video"),
+                FieldPanel("background_colour"),
+                FieldPanel("background_images"),
+                FieldPanel("background_caption"),
+                FieldPanel("background_caption_fr"),
+            ],
+            heading="Background",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("include_on_toc"),
+            ],
+            heading="Slide Settings",
+            classname="collapsible collapsed",
+        ),
+    ]
 
     def get_annual_report_slide_content(self):
         content = {
