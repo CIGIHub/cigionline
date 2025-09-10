@@ -7,12 +7,25 @@ import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 import AnnualReportTextSlide from './AnnualReportTextSlide';
 import AnnualReportQuoteSlide from './AnnualReportQuoteSlide';
+import AnnualReportTitleSlide from './AnnualReportTitleSlide';
 
 const slideComponents = {
-  regular: AnnualReportRegularSlide,
+  title: AnnualReportTitleSlide,
   toc: AnnualReportTOCSlide,
+  regular: AnnualReportRegularSlide,
   text: AnnualReportTextSlide,
   quote: AnnualReportQuoteSlide,
+};
+
+const loadedImages = new Set();
+
+const preloadImage = (src) => {
+  if (!src || loadedImages.has(src)) return;
+
+  const img = new Image();
+  img.onload = () => loadedImages.add(src);
+  img.onerror = () => {};
+  img.src = src;
 };
 
 const AnnualReportSlide = ({ slides, basePath }) => {

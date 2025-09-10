@@ -18,6 +18,7 @@ from wagtail.models import Page
 from wagtail.rich_text import expand_db_html
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
+from wagtailmedia.widgets import AdminMediaChooser
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -300,7 +301,7 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
         ),
         MultiFieldPanel(
             [
-                FieldPanel("slide_content"),
+                FieldPanel("ar_slide_content"),
             ],
             heading="Slide Content",
             classname="collapsible collapsed",
@@ -308,7 +309,7 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
         MultiFieldPanel(
             [
                 FieldPanel("background_image"),
-                FieldPanel("background_video"),
+                FieldPanel("background_video", widget=AdminMediaChooser),
                 FieldPanel("background_colour"),
                 FieldPanel("background_images"),
                 FieldPanel("background_caption"),
@@ -327,7 +328,33 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
     ]
 
     def get_annual_report_slide_content(self):
+        if self.slide_type == 'toc':
+            boards = {}
+            credits_message = {"paragraphs": []}
+            for block in self.ar_slide_content:
+                if block.block_type == "board":
+                    board_block = block.value
+                    board_type = board_block["board_type"]
+
+                    boards.setdefault(board_type, [])
+
+                    for member in board_block["board_members"]:
+                        if member.block_type == "member":
+                            boards[board_type].append({
+                                "name": member.value["name"],
+                                "title": member.value["title"],
+                                "title_fr": member.value["title_fr"],
+                            })
+
+                if block.block_type == "paragraph_column":
+                    credits_message["paragraphs"].append({
+                        "en": block.value.get("en") or "",
+                        "fr": block.value.get("fr") or "",
+                    })
+
         content = {
+            "boards": boards,
+            "credits_message": credits_message,
         }
         return content
 

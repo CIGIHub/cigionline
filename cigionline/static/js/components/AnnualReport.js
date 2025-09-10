@@ -6,7 +6,10 @@ import AnnualReportSlide from './AnnualReportSlide';
 import Loader from './Loader';
 
 const fetchSlides = async (annualReportSPAId) => {
-  const response = await fetch(`/api/annual-report/${annualReportSPAId}/slides/`);
+  console.log(`Fetching slides for Annual Report SPA ID: ${annualReportSPAId}`);
+  const response = await fetch(
+    `/api/annual-report/${annualReportSPAId}/slides/`,
+  );
   try {
     const data = await response.json();
     return data.slides;
@@ -30,11 +33,7 @@ const AnnualReport = ({ annualReportSPAId, basePath }) => {
   }, [annualReportSPAId]);
 
   if (loading) {
-    return (
-      <div className="loading-screen">
-        <Loader />
-      </div>
-    );
+    return <Loader isLoading={loading} />;
   }
 
   if (slides.length === 0) {
@@ -45,11 +44,11 @@ const AnnualReport = ({ annualReportSPAId, basePath }) => {
     <Routes>
       <Route
         path={`${basePath}/:slug`}
-        element={<AnnualReportSlide slides={slides} basePath={basePath} isLoading={loading} />}
+        element={<AnnualReportSlide slides={slides} basePath={basePath} />}
       />
       <Route
         path="*"
-        element={<Navigate to={`${basePath}/${slides[0].slug}`} />}
+        element={<Navigate to={`${basePath}/${slides[0].slug || ''}`} />}
       />
     </Routes>
   );

@@ -41,12 +41,15 @@ class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
 def get_ordered_slides_annual_report(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
-    slides = []
+
     if isinstance(page, AnnualReportSPAPage):
         slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
+    else:
+        slides = []
     slide_map = {slide.id: slide for slide in slides}
     ordered_slides = [slide_map[id] for id in slide_ids if id in slide_map]
     
+    slides = []
     for slide in ordered_slides:
         background_image = slide.background_image.get_rendition('fill-1920x1080').file.url if slide.background_image else ''
         background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
@@ -55,13 +58,15 @@ def get_ordered_slides_annual_report(request, page_id):
             "title": slide.title,
             "slug": slide.slug,
             "slide_title": slide.slide_title,
+            "slide_title_fr": slide.slide_title_fr,
             "slide_subtitle": slide.slide_subtitle,
-            "slide_content": slide.get_strategic_plan_slide_content(),
+            "slide_content": slide.get_annual_report_slide_content(),
             "slide_type": slide.slide_type,
-            "slide_theme": slide.slide_theme,
             "background_image": background_image,
             "background_image_thumbnail": background_image_thumbnail,
             "background_video": slide.background_video.file.url if slide.background_video else '',
+            "background_caption": slide.background_caption,
+            "background_caption_fr": slide.background_caption_fr,
             "include_on_toc": slide.include_on_toc,
         })
 
@@ -75,9 +80,8 @@ def get_ordered_slides_annual_report(request, page_id):
 def get_ordered_slides_strategic_plan(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
-    if isinstance(page, AnnualReportSPAPage):
-        slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
-    elif isinstance(page, StrategicPlanSPAPage):
+
+    if isinstance(page, StrategicPlanSPAPage):
         slides = StrategicPlanSlidePage.objects.filter(id__in=slide_ids)
     else:
         slides = []

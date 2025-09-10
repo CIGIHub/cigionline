@@ -1633,7 +1633,11 @@ class ARSlideColumnBlock(blocks.StructBlock):
         ('event', 'Event'),
         ('essay series', 'Essay Series'),
         ('media', 'Media'),
-        ('news release', 'News Release')
+        ('news release', 'News Release'),
+        ('experts', 'Experts'),
+        ('subscribe', 'Subscribe'),
+        ('listen', 'Listen'),
+        ('explore', 'Explore'),
     ]
     column = blocks.StreamBlock([
         ('paragraph_column', blocks.StructBlock([
@@ -1644,7 +1648,7 @@ class ARSlideColumnBlock(blocks.StructBlock):
             [
                 ('content', blocks.StructBlock(
                     [
-                        ('type', blocks.ChoiceBlock(choices=CONTENT_TYPES, required=False)),
+                        ('type', blocks.ChoiceBlock(choices=CONTENT_TYPES, required=True)),
                         ('page', blocks.PageChooserBlock(required=False)),
                         ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this content item')),
                         ('title_en', blocks.CharBlock(required=False, help_text='Override the title for this content item')),
