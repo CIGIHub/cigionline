@@ -328,6 +328,7 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
     ]
 
     def get_annual_report_slide_content(self):
+        content = {}
         if self.slide_type == 'toc':
             boards = {}
             credits_message = {"paragraphs": []}
@@ -352,10 +353,10 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
                         "fr": block.value.get("fr") or "",
                     })
 
-        content = {
-            "boards": boards,
-            "credits_message": credits_message,
-        }
+            content = {
+                "boards": boards,
+                "credits_message": credits_message,
+            }
         return content
 
     def serve(self, request):

@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import '../../../css/components/AnnualReportSPA.scss';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 import AnnualReportTextSlide from './AnnualReportTextSlide';
 import AnnualReportQuoteSlide from './AnnualReportQuoteSlide';
 import AnnualReportTitleSlide from './AnnualReportTitleSlide';
+import AnnualReportNav from './AnnualReportNav';
+import AnnualReportHamburgerMenu from './AnnualReportHamburgerMenu';
+import AnnualReportVerticalTitle from './AnnualReportVerticalTitle';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -41,13 +43,42 @@ function AnnualReportSlide({ slides, basePath }) {
   }
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
-  const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
+  const nextSlide =
+    currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
+
+  const canScrollRef = useRef(true);
+
+  const checkScrollCondition = () => {
+    if (typeof document === 'undefined') return false;
+
+    const wrapper = document.querySelector('.slide-wrapper');
+    if (!wrapper) return false;
+
+    const isLargeScreen = window.innerWidth >= 992;
+    const contentOverflows = wrapper.scrollHeight > window.innerHeight;
+
+    return isLargeScreen && !contentOverflows;
+  };
 
   useEffect(() => {
+    if (nextSlide?.background_image) {
+      preloadImage(nextSlide.background_image);
+    }
+  }, [currentIndex, nextSlide]);
+
+  useEffect(() => {
+    if (prevSlide?.background_image) {
+      preloadImage(prevSlide.background_image);
+    }
+  }, [currentIndex, prevSlide]);
+
+  useEffect(() => {
+    canScrollRef.current = checkScrollCondition();
+
     const handleNavigation = (direction) => {
-      if (isScrolling) return; // Prevent rapid navigation
+      if (!canScrollRef.current || isScrolling) return;
       setIsScrolling(true);
-      setTimeout(() => setIsScrolling(false), 600); // Cooldown
+      setTimeout(() => setIsScrolling(false), 600);
 
       if (direction === 'next' && nextSlide) {
         navigate(`${basePath}/${nextSlide.slug}`);
@@ -56,10 +87,23 @@ function AnnualReportSlide({ slides, basePath }) {
       }
     };
 
+    let scrollTimeout = null;
+
     const handleScroll = (event) => {
+      if (!canScrollRef.current || isScrolling) return;
+      const SCROLL_THRESHOLD = 60;
+
+      if (Math.abs(event.deltaY) < SCROLL_THRESHOLD) return;
+
+      if (scrollTimeout) return;
+
+      scrollTimeout = setTimeout(() => {
+        scrollTimeout = null;
+      }, 700);
+
       if (event.deltaY > 0) {
         handleNavigation('next');
-      } else if (event.deltaY < 0) {
+      } else {
         handleNavigation('prev');
       }
     };
@@ -72,67 +116,113 @@ function AnnualReportSlide({ slides, basePath }) {
       }
     };
 
+    const handleResize = () => {
+      canScrollRef.current = checkScrollCondition();
+    };
+
     window.addEventListener('wheel', handleScroll);
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('wheel', handleScroll);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleResize);
     };
-  }, [currentIndex, navigate, isScrolling]);
+  }, [currentIndex, navigate, isScrolling, slides]);
 
   useEffect(() => {
     setContentVisible(false);
   }, [slug]);
 
-  const SlideComponent = slideComponents[slides[currentIndex].slide_type]
-    || AnnualReportRegularSlide;
+  const currentSlide = slides[currentIndex];
+  const SlideComponent =
+    slideComponents[slides[currentIndex].slide_type] ||
+    (() => <div>Slide type not found</div>);
 
   return (
-    <div className="slide-wrapper">
-      <AnimatePresence>
-        <div className="annual-report-slide">
-          <motion.div
-            key={`bg-${slug}`}
-            className={`slide-background ${slides[currentIndex].background_colour}`}
-            style={{
-              backgroundImage: `url(${slides[currentIndex].background_image})`,
-            }}
-            initial={{ opacity: 0, y: 0 }}
-            animate={{ opacity: 1, y: -20 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6, ease: 'easeInOut' }}
-            onAnimationComplete={() => setContentVisible(true)}
+    <>
+      <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
+      <div
+        className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
+          [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
+        } ${currentIndex}`}
+      >
+        {slides.map((slide, index) => (
+          <React.Fragment key={`bg-${slide.slug}`}>
+            {slide.background_video ? (
+              <video
+                src={slide.background_video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className={`background-video ${
+                  index === currentIndex ? 'visible' : ''
+                } bg-${index}`}
+              />
+            ) : null}
+          </React.Fragment>
+        ))}
+      </div>
+      <AnimatePresence mode="sync">
+        <motion.div
+          key={currentSlide.id || currentSlide.slug}
+          className={`slide-background ${slides[currentIndex].slide_type}`}
+          initial={{ opacity: 0.1, y: 0 }}
+          animate={{ opacity: 1, y: -20 }}
+          exit={{ opacity: 0, y: -20, transition: { delay: 1 } }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          onAnimationComplete={() => setContentVisible(true)}
+        >
+          <div
+            className={`background-colour ${slides[currentIndex].background_colour}`}
           />
-          {contentVisible && (
-            <motion.div
-              key={`content-${slug}`}
-              className="ar-slide-content"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.6, ease: 'easeInOut' }}
-            >
-              <div className="container">
-                <div className="row justify-content-center">
-                  <div className="col-12">
-                    <div className="annual-report-slide">
-                      <SlideComponent
-                        slides={slides}
-                        basePath={basePath}
-                        currentIndex={currentIndex}
-                        prevSlide={prevSlide}
-                        nextSlide={nextSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
+          <div
+            className="background-image"
+            style={{
+              backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
+            }}
+          />
+        </motion.div>
       </AnimatePresence>
-    </div>
+      <div
+        key={`content-${slug}-${slides[currentIndex].slide_type}`}
+        className={`slide-wrapper ${slides[currentIndex].background_colour}`}
+      >
+        <AnnualReportNav
+          slides={slides}
+          basePath={basePath}
+          currentIndex={currentIndex}
+        />
+        {contentVisible && (
+          <div
+            key={`content-${slug}-${slides[currentIndex].slide_type}`}
+            className="ar-slide-content"
+          >
+            <div className="container">
+              <div className="annual-report-slide">
+                {currentSlide.slide_type === 'toc' && (
+                  <SlideComponent
+                    slides={slides}
+                    currentIndex={currentIndex}
+                    basePath={basePath}
+                  />
+                )}
+                {['title', 'regular', 'framework', 'timeline'].includes(
+                  currentSlide.slide_type,
+                ) && <SlideComponent slide={currentSlide} />}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <AnnualReportVerticalTitle
+        currentIndex={currentIndex}
+        slide={slides[currentIndex]}
+      />
+    </>
   );
 }
 
