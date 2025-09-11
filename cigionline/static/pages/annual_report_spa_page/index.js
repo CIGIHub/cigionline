@@ -1,7 +1,7 @@
 import './css/annual_report_spa_page.scss';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import AnnualReportSPA from '../../js/components/AnnualReportSPA';
+import AnnualReportSPA from '../../js/components/annual_report/AnnualReportSPA';
 
 const normalizeBasePath = (path) => {
   const url = new URL(path, window.location.origin);

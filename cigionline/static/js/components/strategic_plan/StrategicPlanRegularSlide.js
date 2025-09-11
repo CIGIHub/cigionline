@@ -2,10 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const columnClasses = {
-  small: 'col-lg-5',
-  large: 'col-lg-10',
-};
 const alignmentClasses = {
   left: 'justify-content-start text-start',
   right: 'justify-content-end text-end',
@@ -31,12 +27,9 @@ const getColumnClass = (columnSize, columnCount) => {
   return 'col-lg-10';
 };
 
-const kebabCase = (str) => {
-  return str.toLowerCase().replace(/\s+/g, '-');
-};
+const kebabCase = (str) => str.toLowerCase().replace(/\s+/g, '-');
 
-const StrategicPlanRegularSlide = ({ slide }) => {
-  const columnClass = columnClasses[slide.column_size];
+function StrategicPlanRegularSlide({ slide }) {
   const alignmentClass = alignmentClasses[slide.alignment];
 
   return (
@@ -144,7 +137,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
                     rel="noopener noreferrer"
                     aria-label="Link to CIGI's X profile"
                   >
-                    <i className="fa-brands fa-x-twitter"></i>
+                    <i className="fa-brands fa-x-twitter" />
                   </a>
                 </li>
                 <li>
@@ -154,7 +147,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
                     rel="noopener noreferrer"
                     aria-label="Link to CIGI's LinkedIn profile"
                   >
-                    <i className="fa-brands fa-linkedin-in"></i>
+                    <i className="fa-brands fa-linkedin-in" />
                   </a>
                 </li>
                 <li>
@@ -164,7 +157,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
                     rel="noopener noreferrer"
                     aria-label="Link to CIGI's Youtube channel"
                   >
-                    <i className="fa-brands fa-youtube"></i>
+                    <i className="fa-brands fa-youtube" />
                   </a>
                 </li>
                 <li>
@@ -174,7 +167,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
                     rel="noopener noreferrer"
                     aria-label="Link to CIGI's Instagram Profile"
                   >
-                    <i className="fa-brands fa-instagram"></i>
+                    <i className="fa-brands fa-instagram" />
                   </a>
                 </li>
                 <li>
@@ -284,7 +277,7 @@ const StrategicPlanRegularSlide = ({ slide }) => {
       </motion.div>
     </div>
   );
-};
+}
 
 StrategicPlanRegularSlide.propTypes = {
   slide: PropTypes.object.isRequired,

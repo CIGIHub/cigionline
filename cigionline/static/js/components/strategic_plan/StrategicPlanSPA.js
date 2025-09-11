@@ -6,11 +6,13 @@ import '../../../css/components/AnnualReportSPA.scss';
 import '../../../css/components/StrategicPlanSPA.scss';
 import StrategicPlan from './StrategicPlan';
 
-const StrategicPlanSPA = ({ strategicPlanSPAId, basePath }) => (
-  <Router>
-    <StrategicPlan strategicPlanSPAId={strategicPlanSPAId} basePath={basePath} />
-  </Router>
-);
+function StrategicPlanSPA({ strategicPlanSPAId, basePath }) {
+  return (
+    <Router>
+      <StrategicPlan strategicPlanSPAId={strategicPlanSPAId} basePath={basePath} />
+    </Router>
+  );
+}
 
 StrategicPlanSPA.propTypes = {
   strategicPlanSPAId: PropTypes.string.isRequired,

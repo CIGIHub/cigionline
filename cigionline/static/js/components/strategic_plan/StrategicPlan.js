@@ -19,7 +19,7 @@ const fetchSlides = async (strategicPlanSPAId) => {
   }
 };
 
-const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
+function StrategicPlan({ strategicPlanSPAId, basePath }) {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,20 +42,18 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
   }
 
   return (
-    <>
-      <Routes>
-        <Route
-          path={`${basePath}/:slug`}
-          element={<StrategicPlanSlide slides={slides} basePath={basePath} />}
-        />
-        <Route
-          path="*"
-          element={<Navigate to={`${basePath}/${slides[0]?.slug || ''}`} />}
-        />
-      </Routes>
-    </>
+    <Routes>
+      <Route
+        path={`${basePath}/:slug`}
+        element={<StrategicPlanSlide slides={slides} basePath={basePath} />}
+      />
+      <Route
+        path="*"
+        element={<Navigate to={`${basePath}/${slides[0]?.slug || ''}`} />}
+      />
+    </Routes>
   );
-};
+}
 
 StrategicPlan.propTypes = {
   strategicPlanSPAId: PropTypes.string.isRequired,

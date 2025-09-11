@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import '../../css/components/AnnualReportSPA.scss';
+import '../../../css/components/AnnualReportSPA.scss';
 import AnnualReportSlide from './AnnualReportSlide';
-import Loader from './Loader';
+import Loader from '../Loader';
 
 const fetchSlides = async (annualReportSPAId) => {
   console.log(`Fetching slides for Annual Report SPA ID: ${annualReportSPAId}`);
@@ -19,7 +19,7 @@ const fetchSlides = async (annualReportSPAId) => {
   }
 };
 
-const AnnualReport = ({ annualReportSPAId, basePath }) => {
+function AnnualReport({ annualReportSPAId, basePath }) {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,7 +52,7 @@ const AnnualReport = ({ annualReportSPAId, basePath }) => {
       />
     </Routes>
   );
-};
+}
 
 AnnualReport.propTypes = {
   annualReportSPAId: PropTypes.string.isRequired,

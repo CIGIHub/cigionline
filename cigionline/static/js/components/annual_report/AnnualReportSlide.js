@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import '../../css/components/AnnualReportSPA.scss';
+import '../../../css/components/AnnualReportSPA.scss';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 import AnnualReportTextSlide from './AnnualReportTextSlide';
@@ -28,7 +28,7 @@ const preloadImage = (src) => {
   img.src = src;
 };
 
-const AnnualReportSlide = ({ slides, basePath }) => {
+function AnnualReportSlide({ slides, basePath }) {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
@@ -41,8 +41,7 @@ const AnnualReportSlide = ({ slides, basePath }) => {
   }
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
-  const nextSlide =
-    currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
+  const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
   useEffect(() => {
     const handleNavigation = (direction) => {
@@ -86,9 +85,8 @@ const AnnualReportSlide = ({ slides, basePath }) => {
     setContentVisible(false);
   }, [slug]);
 
-  const SlideComponent =
-    slideComponents[slides[currentIndex].slide_type] ||
-    AnnualReportRegularSlide;
+  const SlideComponent = slideComponents[slides[currentIndex].slide_type]
+    || AnnualReportRegularSlide;
 
   return (
     <div className="slide-wrapper">
@@ -136,7 +134,7 @@ const AnnualReportSlide = ({ slides, basePath }) => {
       </AnimatePresence>
     </div>
   );
-};
+}
 
 AnnualReportSlide.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,

@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
 import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
 import StrategicPlanTOCSlide from './StrategicPlanTOCSlide';
-import AnnualReportNav from '../AnnualReportNav';
-import AnnualReportHamburgerMenu from '../AnnualReportHamburgerMenu';
+import AnnualReportNav from '../annual_report/AnnualReportNav';
+import AnnualReportHamburgerMenu from '../annual_report/AnnualReportHamburgerMenu';
 import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
 import StrategicPlanTimelineSlide from './StrategicPlanTimelineSlide';
 import StrategicPlanVerticalTitle from './StrategicPlanVerticalTitle';
@@ -23,18 +23,18 @@ const loadedImages = new Set();
 
 const getGradientClass = (alignment) => {
   switch (alignment) {
-    case 'left':
-      return 'left';
-    case 'right':
-      return 'right';
-    case 'full':
-      return 'full';
-    case 'top':
-      return 'top';
-    case 'none':
-      return 'none';
-    default:
-      return 'none';
+  case 'left':
+    return 'left';
+  case 'right':
+    return 'right';
+  case 'full':
+    return 'full';
+  case 'top':
+    return 'top';
+  case 'none':
+    return 'none';
+  default:
+    return 'none';
   }
 };
 
@@ -57,7 +57,7 @@ const preloadImage = (src) => {
   img.src = src;
 };
 
-const StrategicReportSlide = ({ slides, basePath }) => {
+function StrategicReportSlide({ slides, basePath }) {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
@@ -73,8 +73,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
   }
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
-  const nextSlide =
-    currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
+  const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
   const canScrollRef = useRef(true);
 
@@ -187,18 +186,16 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       }, 4000);
     }, 6000);
 
-    // Cleanup on unmount or slide change
-    return () => {
+    (() => {
       if (timerRef.current.timeout) clearTimeout(timerRef.current.timeout);
       if (timerRef.current.interval) clearInterval(timerRef.current.interval);
       timerRef.current = null;
-    };
+    })();
   }, [currentIndex]);
 
   const currentSlide = slides[currentIndex];
-  const SlideComponent =
-    slideComponents[slides[currentIndex].slide_type] ||
-    (() => <div>Slide type not found</div>);
+  const SlideComponent = slideComponents[slides[currentIndex].slide_type]
+    || (() => <div>Slide type not found</div>);
 
   return (
     <>
@@ -304,7 +301,7 @@ const StrategicReportSlide = ({ slides, basePath }) => {
       )}
     </>
   );
-};
+}
 
 StrategicReportSlide.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,

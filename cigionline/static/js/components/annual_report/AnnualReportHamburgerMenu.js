@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import '../../css/components/AnnualReportHamburgerMenu.scss';
+import '../../../css/components/AnnualReportHamburgerMenu.scss';
 import PropTypes from 'prop-types';
 
-const AnnualReportHamburgerMenu = ({ slides, basePath }) => {
+function AnnualReportHamburgerMenu({ slides, basePath }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -100,7 +100,7 @@ const AnnualReportHamburgerMenu = ({ slides, basePath }) => {
       </AnimatePresence>
     </>
   );
-};
+}
 
 AnnualReportHamburgerMenu.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,

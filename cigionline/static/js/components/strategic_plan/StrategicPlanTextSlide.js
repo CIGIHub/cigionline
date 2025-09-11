@@ -1,24 +1,27 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import AnnualReportNav from '../annual_report/AnnualReportNav';
 
-const AnnualReportTextSlide = ({
+function AnnualReportTextSlide({
   slides,
   basePath,
   prevSlide,
   nextSlide,
   currentIndex,
-}) => (
-  <div className="regular-slide">
-    <div
-      dangerouslySetInnerHTML={{ __html: slides[currentIndex].slide_content }}
-    />
-    <AnnualReportNav
-      basePath={basePath}
-      prevSlide={prevSlide}
-      nextSlide={nextSlide}
-    />
-  </div>
-);
+}) {
+  return (
+    <div className="regular-slide">
+      <div
+        dangerouslySetInnerHTML={{ __html: slides[currentIndex].slide_content }}
+      />
+      <AnnualReportNav
+        basePath={basePath}
+        prevSlide={prevSlide}
+        nextSlide={nextSlide}
+      />
+    </div>
+  );
+}
 
 AnnualReportTextSlide.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
