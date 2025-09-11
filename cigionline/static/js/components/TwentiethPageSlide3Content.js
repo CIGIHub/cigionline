@@ -12,7 +12,7 @@ import '../../css/components/TwentiethPageSlide3Content.scss';
 
 SwiperCore.use([Navigation, Pagination]);
 
-const TwentiethPageSlide3Content = ({ slide }) => {
+function TwentiethPageSlide3Content({ slide }) {
   slide.timeline.sort((a, b) => Number(a.year) - Number(b.year));
   const years = slide.timeline.map((year) => year.year);
   const [currentYear, setCurrentYear] = useState(years[0]);
@@ -109,8 +109,8 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                   <i className="fal fa-angle-left" />
                 </div>
                 {slide.timeline.map((year) => (
-                  <SwiperSlide key={year.year} onClick={handleSlideClick}>
-                    <div className="timeline-slide" key={year.year}>
+                  <SwiperSlide key={year.year}>
+                    <div className="timeline-slide" key={year.year} onClick={handleSlideClick}>
                       <div className="img-wrapper align-items-center">
                         <img src={year.image} alt="" />
                       </div>
@@ -168,6 +168,7 @@ const TwentiethPageSlide3Content = ({ slide }) => {
                           type="button"
                           className="close-modal"
                           onClick={handleCloseModal}
+                          aria-label="Close modal"
                         >
                           <i className="fal fa-times-square" />
                         </button>
@@ -182,6 +183,6 @@ const TwentiethPageSlide3Content = ({ slide }) => {
       )}
     </div>
   );
-};
+}
 
 export default TwentiethPageSlide3Content;

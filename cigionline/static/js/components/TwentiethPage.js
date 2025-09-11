@@ -10,7 +10,21 @@ import { CSSTransition } from 'react-transition-group';
 import TwentiethPageSlide from './TwentiethPageSlide';
 import TwentiethPageNavArrows from './TwentiethPageNavArrows';
 
-const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
+function Slide({ slug, slides, changeSlide }) {
+  const routeSlide = slides.filter((slide) => slide.slug === slug)[0];
+
+  return (
+    <>
+      <TwentiethPageSlide slide={routeSlide} changeSlide={changeSlide} />
+      <TwentiethPageNavArrows
+        changeSlide={changeSlide}
+        slide={routeSlide}
+      />
+    </>
+  );
+}
+
+function TwentiethPage({ slides, pageUrl, initialSlideSlug }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [allowScroll, setAllowScroll] = useState(true);
@@ -39,13 +53,13 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
     topBar.classList.add('scrolled-nav');
   }
 
-  function changeSlide(slideNumber) {
+  const changeSlide = React.useCallback((slideNumber) => {
     const slide = slides.filter(
       (element) => element.slide_number === slideNumber,
     )[0];
     const slug = slide.slug;
     navigate(`${pageUrl}${slug}`);
-  }
+  }, [slides, navigate, pageUrl]);
 
   function handleWheel(e) {
     if (!allowScroll) return;
@@ -59,20 +73,6 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
     if (e.deltaY < 0 && currentSlide.prev_slide) {
       changeSlide(currentSlide.prev_slide);
     }
-  }
-
-  function Slide({ slug }) {
-    const routeSlide = slides.filter((slide) => slide.slug === slug)[0];
-
-    return (
-      <>
-        <TwentiethPageSlide slide={routeSlide} changeSlide={changeSlide} />
-        <TwentiethPageNavArrows
-          changeSlide={changeSlide}
-          slide={routeSlide}
-        />
-      </>
-    );
   }
 
   useEffect(() => {
@@ -103,13 +103,13 @@ const TwentiethPage = ({ slides, pageUrl, initialSlideSlug }) => {
               classNames="fade"
               unmountOnExit
             >
-              <Slide slug={slug} />
+              <Slide slug={slug} slides={slides} changeSlide={changeSlide} />
             </CSSTransition>
           )}
         </Route>
       ))}
     </div>
   );
-};
+}
 
 export default TwentiethPage;
