@@ -8,8 +8,7 @@ const normalizeBasePath = (path) => {
   return url.pathname.replace(/\/$/, '');
 };
 
-const annualReportSPAId =
-  document.getElementById('annual-report-spa').dataset.annualReportId;
+const annualReportSPAId = document.getElementById('annual-report-spa').dataset.annualReportId;
 const BASE_PATH = document
   .getElementById('annual-report-spa')
   .dataset.basePath.replace(/\/$/, '');

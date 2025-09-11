@@ -77,8 +77,8 @@ function StrategicPlanRegularSlide({ slide }) {
                   delay: 1 + index,
                 }}
               >
-                {content.content.map((content, index) => (
-                  <div key={`framework-blocks-${index}`} dangerouslySetInnerHTML={{ __html: content }} />
+                {content.content.map((item, itemIdx) => (
+                  <div key={`framework-blocks-${itemIdx}`} dangerouslySetInnerHTML={{ __html: item }} />
                 ))}
               </motion.div>
             ))}
@@ -104,9 +104,9 @@ function StrategicPlanRegularSlide({ slide }) {
                   <>
                     <h2>Board</h2>
                     <div className="regular-slide__content__board">
-                      {slide.slide_content.board[0].map((member, index) => (
+                      {slide.slide_content.board[0].map((member, memberIdx) => (
                         <div
-                          key={`board-member-${index}`}
+                          key={`board-member-${memberIdx}`}
                           className="regular-slide__content__board__member"
                         >
                           <div className="member-name">{member.name}</div>
