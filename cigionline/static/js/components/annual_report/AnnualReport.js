@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import '../../../css/components/AnnualReportSPA.scss';
 import AnnualReportSlide from './AnnualReportSlide';
 import Loader from '../Loader';
 
@@ -43,12 +42,12 @@ function AnnualReport({ annualReportSPAId, basePath }) {
   return (
     <Routes>
       <Route
-        path={`${basePath}/:slug`}
+        path={`${basePath}/:slug/:lang?`}
         element={<AnnualReportSlide slides={slides} basePath={basePath} />}
       />
       <Route
         path="*"
-        element={<Navigate to={`${basePath}/${slides[0].slug || ''}`} />}
+        element={<Navigate to={`${basePath}/${slides[0].slug || ''}/`} />}
       />
     </Routes>
   );

@@ -1,5 +1,47 @@
-@import '../global/variables';
-@import '../global/mixins';
+@import '../../global/variables';
+@import '../../global/mixins';
+
+@mixin link-underline {
+  color: $white;
+  background-size: 0 100%;
+  transition: background-size 0.5s;
+  background-image: linear-gradient(
+    transparent calc(100% - 2px),
+    $cigi-primary-colour 10px
+  );
+  background-repeat: no-repeat;
+
+  &:hover {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes slideTitleLineExpand {
+  0% {
+    margin-left: -350px;
+    width: 0;
+  }
+
+  50% {
+    margin-left: -350px;
+    width: 425px;
+  }
+
+  100% {
+    margin-left: 0;
+    width: 75px;
+  }
+}
+
+body {
+  background-color: $black;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.annual-report-spa {
+  position: relative;
+}
 
 .slide-wrapper {
   min-height: 100vh;
@@ -31,12 +73,6 @@
     width: 100%;
     height: 100%;
   }
-}
-
-.ar-slide-content {
-  height: 100%;
-  position: relative;
-  z-index: 1;
 }
 
 .loading-screen {

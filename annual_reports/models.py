@@ -273,6 +273,7 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
     )
 
     slide_title_fr = models.CharField(max_length=255, help_text="Title of the slide (French)", blank=True)
+    year = models.PositiveIntegerField(help_text="Year of the report - only used for title page", blank=True, null=True)
 
     ar_slide_content = StreamField(
         [
@@ -295,6 +296,7 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
                 FieldPanel("slide_title_fr"),
                 FieldPanel("slide_subtitle"),
                 FieldPanel("slide_type"),
+                FieldPanel("year"),
             ],
             heading="Slide title",
             classname="collapsible collapsed",

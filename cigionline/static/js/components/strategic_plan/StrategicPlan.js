@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import '../../../css/components/AnnualReportSPA.scss';
 import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
 import preloadAllSlideAssets from './preloadAllSlideAssets';

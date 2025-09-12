@@ -1,0 +1,171 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+
+@keyframes indexLogoYearFade {
+  0% {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes indexLogoTextFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes indexLogoYearFadeMobile {
+  0% {
+    opacity: 0;
+    top: 50px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes indexLogoTextFadeMobile {
+  0% {
+    opacity: 0;
+    top: -50px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes nagivationFadeInOut {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0.6;
+  }
+
+  75% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.intro-logo {
+  font-weight: 700;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-55%);
+
+  @include media-breakpoint-up(md) {
+    display: flex;
+  }
+
+  &.intro-french {
+    .text {
+      .annual {
+        font-size: 3.4em;
+      }
+
+      .report {
+        font-size: 3.2em;
+      }
+    }
+  }
+
+  .year {
+    animation-duration: 1000ms;
+    animation-name: indexLogoYearFadeMobile;
+    animation-timing-function: ease-out;
+    color: $cigi-primary-colour;
+    font-size: 6em;
+    line-height: 0.7;
+    position: relative;
+
+    @include media-breakpoint-up(md) {
+      animation-duration: 1500ms;
+      animation-name: indexLogoYearFade;
+      animation-timing-function: ease-out;
+      font-size: 5em;
+      letter-spacing: -3px;
+      line-height: 0.7;
+      margin-right: 3px;
+    }
+
+    @include media-breakpoint-up(lg) {
+      font-size: 8em;
+      letter-spacing: -5px;
+      line-height: 0.7;
+      margin-right: 5px;
+    }
+
+    // The letter spacing on the '1' is way too wide, this is a fix.
+    .special-spacing {
+      @include media-breakpoint-up(md) {
+        letter-spacing: -14px;
+        margin-left: -5px;
+      }
+      @include media-breakpoint-up(lg) {
+        letter-spacing: -23px;
+        margin-left: -10px;
+      }
+      letter-spacing: -10px;
+      margin-left: -3px;
+    }
+  }
+
+  .text {
+    animation-duration: 1000ms;
+    animation-name: indexLogoTextFadeMobile;
+    animation-timing-function: ease-out;
+    color: $white;
+    line-height: 0.9;
+    position: relative;
+    text-transform: uppercase;
+
+    @include media-breakpoint-up(md) {
+      animation-duration: 1500ms;
+      animation-name: indexLogoTextFade;
+      animation-timing-function: ease-out;
+    }
+
+    .annual {
+      font-size: 3.25em;
+      @include media-breakpoint-up(md) {
+        font-size: 2em;
+        margin-left: 2px;
+      }
+      @include media-breakpoint-up(lg) {
+        font-size: 3em;
+      }
+    }
+
+    .report {
+      font-size: 3.75em;
+      @include media-breakpoint-up(md) {
+        font-size: 2.25em;
+      }
+
+      @include media-breakpoint-up(lg) {
+        font-size: 3.5em;
+      }
+    }
+  }
+}

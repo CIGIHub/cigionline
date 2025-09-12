@@ -62,6 +62,7 @@ def get_ordered_slides_annual_report(request, page_id):
             "slide_subtitle": slide.slide_subtitle,
             "slide_content": slide.get_annual_report_slide_content(),
             "slide_type": slide.slide_type,
+            "year": slide.year,
             "background_image": background_image,
             "background_image_thumbnail": background_image_thumbnail,
             "background_video": slide.background_video.file.url if slide.background_video else '',

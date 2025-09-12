@@ -1,27 +1,41 @@
-@import '../global/variables';
-@import '../global/mixins';
+@import '../../global/variables';
+@import '../../global/mixins';
 
-.hamburger-btn {
+.annual-report-hamburger-menu {
   position: fixed;
+  display: flex;
   top: 15px;
   right: 15px;
-  width: 50px;
-  height: 50px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+  justify-content: flex-end;
   z-index: 101;
-  color: white;
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
-  span {
-    position: absolute;
-
-    i {
+  .ar-lang-toggle {
+    button {
       color: $white;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  .hamburger-btn {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    color: white;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      position: absolute;
+
+      i {
+        color: $white;
+      }
     }
   }
 }

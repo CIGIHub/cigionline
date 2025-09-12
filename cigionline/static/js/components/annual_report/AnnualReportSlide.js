@@ -10,6 +10,7 @@ import AnnualReportTitleSlide from './AnnualReportTitleSlide';
 import AnnualReportNav from './AnnualReportNav';
 import AnnualReportHamburgerMenu from './AnnualReportHamburgerMenu';
 import AnnualReportVerticalTitle from './AnnualReportVerticalTitle';
+import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -31,15 +32,22 @@ const preloadImage = (src) => {
 };
 
 function AnnualReportSlide({ slides, basePath }) {
-  const { slug } = useParams();
+  const { slug, lang } = useParams();
+  const currentLang = lang === 'fr' ? 'fr' : 'en';
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
+  console.log(currentLang);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
 
   if (currentIndex === -1) {
-    return <Navigate to={`/${slides[0].slug}`} replace />;
+    return (
+      <Navigate
+        to={`${basePath}/${slides[0].slug}${currentLang === 'fr' ? '/fr' : ''}`}
+        replace
+      />
+    );
   }
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
@@ -81,9 +89,13 @@ function AnnualReportSlide({ slides, basePath }) {
       setTimeout(() => setIsScrolling(false), 600);
 
       if (direction === 'next' && nextSlide) {
-        navigate(`${basePath}/${nextSlide.slug}`);
+        navigate(
+          `${basePath}/${nextSlide.slug}${currentLang === 'fr' ? '/fr' : ''}`,
+        );
       } else if (direction === 'prev' && prevSlide) {
-        navigate(`${basePath}/${prevSlide.slug}`);
+        navigate(
+          `${basePath}/${prevSlide.slug}${currentLang === 'fr' ? '/fr' : ''}`,
+        );
       }
     };
 
@@ -142,7 +154,12 @@ function AnnualReportSlide({ slides, basePath }) {
 
   return (
     <>
-      <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
+      <AnnualReportHamburgerMenu
+        slides={slides}
+        basePath={basePath}
+        currentLang={currentLang}
+        currentSlug={slug}
+      />
       <div
         className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
           [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
@@ -201,18 +218,21 @@ function AnnualReportSlide({ slides, basePath }) {
             key={`content-${slug}-${slides[currentIndex].slide_type}`}
             className="ar-slide-content"
           >
-            <div className="container">
-              <div className="annual-report-slide">
+            <div
+              className={`annual-report-slide ${slides[currentIndex].slide_type}`}
+            >
+              <div className="container">
                 {currentSlide.slide_type === 'toc' && (
                   <SlideComponent
                     slides={slides}
                     currentIndex={currentIndex}
                     basePath={basePath}
+                    lang={currentLang}
                   />
                 )}
                 {['title', 'regular', 'framework', 'timeline'].includes(
                   currentSlide.slide_type,
-                ) && <SlideComponent slide={currentSlide} />}
+                ) && <SlideComponent slide={currentSlide} lang={currentLang} />}
               </div>
             </div>
           </div>
@@ -221,6 +241,7 @@ function AnnualReportSlide({ slides, basePath }) {
       <AnnualReportVerticalTitle
         currentIndex={currentIndex}
         slide={slides[currentIndex]}
+        lang={currentLang}
       />
     </>
   );

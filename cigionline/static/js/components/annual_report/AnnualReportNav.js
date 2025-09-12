@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import '../../../css/components/AnnualReportNav.scss';
+import '../../../css/components/annual_reports/AnnualReportNav.scss';
 
 function AnnualReportNav({ slides, basePath, currentIndex }) {
   const location = useLocation();

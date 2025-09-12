@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import '../../../css/components/AnnualReportHamburgerMenu.scss';
+import '../../../css/components/annual_reports/AnnualReportHamburgerMenu.scss';
 import PropTypes from 'prop-types';
 
-function AnnualReportHamburgerMenu({ slides, basePath }) {
+function AnnualReportHamburgerMenu({ slides, basePath, currentLang, currentSlug }) {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const toEn = `${basePath}/${currentSlug}`;
+  const toFr = `${basePath}/${currentSlug}/fr`;
 
   return (
-    <>
+    <div className="annual-report-hamburger-menu">
+      <div className="ar-lang-toggle" role="group" aria-label="Language">
+        <button
+          type="button"
+          className={`lang-btn ${currentLang === 'en' ? 'active' : ''}`}
+          aria-pressed={currentLang === 'en'}
+          onClick={() => navigate(toEn)}
+        >
+          EN
+        </button>
+        <button
+          type="button"
+          className={`lang-btn ${currentLang === 'fr' ? 'active' : ''}`}
+          aria-pressed={currentLang === 'fr'}
+          onClick={() => navigate(toFr)}
+        >
+          FR
+        </button>
+      </div>
       <button
         className="hamburger-btn"
         type="button"
@@ -81,7 +102,7 @@ function AnnualReportHamburgerMenu({ slides, basePath }) {
                             </p>
                             <div className="col">
                               <Link
-                                to={`${basePath}/${slide.slug}`}
+                                to={`${basePath}/${slide.slug}${currentLang === 'fr' ? '/fr' : ''}`}
                                 onClick={() => setIsOpen(false)}
                               >
                                 {slide.slide_title}
@@ -98,13 +119,15 @@ function AnnualReportHamburgerMenu({ slides, basePath }) {
           </>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
 
 AnnualReportHamburgerMenu.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   basePath: PropTypes.string.isRequired,
+  currentLang: PropTypes.string.isRequired,
+  currentSlug: PropTypes.string.isRequired,
 };
 
 export default AnnualReportHamburgerMenu;
