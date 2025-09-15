@@ -41,6 +41,7 @@ class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
 def get_ordered_slides_annual_report(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
+    year = page.year
 
     if isinstance(page, AnnualReportSPAPage):
         slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
@@ -62,7 +63,7 @@ def get_ordered_slides_annual_report(request, page_id):
             "slide_subtitle": slide.slide_subtitle,
             "slide_content": slide.get_annual_report_slide_content(),
             "slide_type": slide.slide_type,
-            "year": slide.year,
+            "year": year,
             "background_image": background_image,
             "background_image_thumbnail": background_image_thumbnail,
             "background_video": slide.background_video.file.url if slide.background_video else '',

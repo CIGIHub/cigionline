@@ -16,6 +16,7 @@ from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
 from wagtail.rich_text import expand_db_html
+from django.utils.html import strip_tags
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
 from wagtailmedia.widgets import AdminMediaChooser
@@ -152,6 +153,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
 class AnnualReportSPAPage(FeatureablePageAbstract, SearchablePageAbstract, ShareablePageAbstract, Page):
     """View annual report SPA page"""
 
+    year = models.PositiveIntegerField(blank=False, null=True)
     slides = StreamField(
         [("slide", ARSlideChooserBlock())],
         blank=True,
@@ -160,6 +162,7 @@ class AnnualReportSPAPage(FeatureablePageAbstract, SearchablePageAbstract, Share
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
+                FieldPanel("year"),
                 FieldPanel("slides"),
             ],
             heading="Slides",
@@ -295,7 +298,6 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
     )
 
     slide_title_fr = models.CharField(max_length=255, help_text="Title of the slide (French)", blank=True)
-    year = models.PositiveIntegerField(help_text="Year of the report - only used for title page", blank=True, null=True)
 
     ar_slide_content = StreamField(
         [
@@ -318,7 +320,6 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 FieldPanel("slide_title_fr"),
                 FieldPanel("slide_subtitle"),
                 FieldPanel("slide_type"),
-                FieldPanel("year"),
             ],
             heading="Slide title",
             classname="collapsible collapsed",
@@ -355,8 +356,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         content = {}
         if self.slide_type == 'toc':
             boards = {}
-            credits_message = {"paragraphs": []}
+            credits_message = {}
             for block in self.ar_slide_content:
+                print(block.block_type)
                 if block.block_type == "board":
                     board_block = block.value
                     board_type = board_block["board_type"]
@@ -371,11 +373,12 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                                 "title_fr": member.value["title_fr"],
                             })
 
-                if block.block_type == "paragraph_column":
-                    credits_message["paragraphs"].append({
-                        "en": block.value.get("en") or "",
-                        "fr": block.value.get("fr") or "",
-                    })
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    for paragraph_column in column:
+                        if paragraph_column.block_type == "paragraph_column":
+                            credits_message["en"] = strip_tags(paragraph_column.value.get("en").source) or ""
+                            credits_message["fr"] = strip_tags(paragraph_column.value.get("fr").source) or ""
 
             content = {
                 "boards": boards,

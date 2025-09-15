@@ -5,7 +5,6 @@ import AnnualReportSlide from './AnnualReportSlide';
 import Loader from '../Loader';
 
 const fetchSlides = async (annualReportSPAId) => {
-  console.log(`Fetching slides for Annual Report SPA ID: ${annualReportSPAId}`);
   const response = await fetch(
     `/api/annual-report/${annualReportSPAId}/slides/`,
   );

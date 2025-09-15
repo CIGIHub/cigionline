@@ -3,7 +3,6 @@ import React from 'react';
 import '../../../css/components/annual_reports/AnnualReportTitleSlide.scss';
 
 function AnnualReportTitleSlide({ slide, lang }) {
-  console.log(slide);
   return (
     <div className="row">
       <div className="col">

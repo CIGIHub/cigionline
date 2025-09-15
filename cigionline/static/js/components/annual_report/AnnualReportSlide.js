@@ -37,7 +37,6 @@ function AnnualReportSlide({ slides, basePath }) {
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
-  console.log(currentLang);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
 

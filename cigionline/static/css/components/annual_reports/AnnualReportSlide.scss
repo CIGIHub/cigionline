@@ -86,17 +86,6 @@
   h1 {
     font-size: clamp(1.5em, 5vw, 2em);
     font-weight: 400;
-
-    &::before {
-      animation-duration: 1.25s;
-      animation-name: slideTitleLineExpand;
-      border-bottom: 8px solid #e6023b;
-      margin: 0 0 0.5em;
-      width: 75px;
-      animation-timing-function: ease-in-out;
-      display: block;
-      content: '';
-    }
   }
 
   ul {
