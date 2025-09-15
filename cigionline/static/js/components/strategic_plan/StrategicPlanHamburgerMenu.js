@@ -8,7 +8,7 @@ function StrategicPlanHamburgerMenu({ slides, basePath }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="annual-report-hamburger-menu">
+    <>
       <button
         className="hamburger-btn"
         type="button"
@@ -81,7 +81,7 @@ function StrategicPlanHamburgerMenu({ slides, basePath }) {
                             </p>
                             <div className="col">
                               <Link
-                                to={`${basePath}/${slide.slug}/`}
+                                to={`${basePath}/${slide.slug}`}
                                 onClick={() => setIsOpen(false)}
                               >
                                 {slide.slide_title}
@@ -98,7 +98,7 @@ function StrategicPlanHamburgerMenu({ slides, basePath }) {
           </>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 
