@@ -21,7 +21,7 @@
   cursor: pointer;
   display: block;
   height: 30px;
-  left: 50%;
+  left: calc(50% + 15px);
   padding: 3px;
   position: fixed;
   transition: border-color 250ms;

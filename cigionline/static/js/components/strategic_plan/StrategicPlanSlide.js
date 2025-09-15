@@ -6,7 +6,7 @@ import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
 import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
 import StrategicPlanTOCSlide from './StrategicPlanTOCSlide';
 import AnnualReportNav from '../annual_report/AnnualReportNav';
-import AnnualReportHamburgerMenu from '../annual_report/AnnualReportHamburgerMenu';
+import StrategicPlanHamburgerMenu from './StrategicPlanHamburgerMenu';
 import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
 import StrategicPlanTimelineSlide from './StrategicPlanTimelineSlide';
 import StrategicPlanVerticalTitle from './StrategicPlanVerticalTitle';
@@ -199,7 +199,7 @@ function StrategicReportSlide({ slides, basePath }) {
 
   return (
     <>
-      <AnnualReportHamburgerMenu slides={slides} basePath={basePath} />
+      <StrategicPlanHamburgerMenu slides={slides} basePath={basePath} />
       <div
         className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
           [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''

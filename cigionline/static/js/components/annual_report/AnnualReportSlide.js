@@ -206,7 +206,7 @@ function AnnualReportSlide({ slides, basePath }) {
       </AnimatePresence>
       <div
         key={`content-${slug}-${slides[currentIndex].slide_type}`}
-        className={`slide-wrapper ${slides[currentIndex].background_colour}`}
+        className={`slide-wrapper ${slides[currentIndex].slide_type} ${slides[currentIndex].background_colour}`}
       >
         <AnnualReportNav
           slides={slides}

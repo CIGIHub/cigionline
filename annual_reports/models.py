@@ -19,6 +19,7 @@ from wagtail.rich_text import expand_db_html
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
 from wagtailmedia.widgets import AdminMediaChooser
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -251,8 +252,29 @@ class SlidePageAbstract(models.Model):
         abstract = True
 
 
-class AnnualReportSlidePage(SlidePageAbstract, Page):
+class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
     """Each individual slide within the annual report."""
+
+    def _serve_spa(self, request, initial_lang="en"):
+        parent = self.get_parent().specific
+        ctx = {
+            "page": parent,
+            "self": self,
+            "initial_lang": initial_lang,
+        }
+        return render(request, "annual_reports/annual_report_spa_page.html", ctx)
+
+    @route(r"^$")
+    def slide_root(self, request, *args, **kwargs):
+        return self._serve_spa(request, initial_lang="en")
+
+    @route(r"^fr/?$")
+    def slide_fr(self, request, *args, **kwargs):
+        return self._serve_spa(request, initial_lang="fr")
+
+    @route(r"^(?P<trailing>[/]+)?$")
+    def slide_catchall(self, request, trailing=None, *args, **kwargs):
+        return self._serve_spa(request, initial_lang="en")
 
     SLIDE_TYPES = [
         ('title', 'Title'),
@@ -360,11 +382,6 @@ class AnnualReportSlidePage(SlidePageAbstract, Page):
                 "credits_message": credits_message,
             }
         return content
-
-    def serve(self, request):
-        """Always serve the SPA regardless of sub-page requested."""
-        parent = self.get_parent().specific
-        return render(request, "annual_reports/annual_report_spa_page.html", {"page": parent, "self": self})
 
 
 class StrategicPlanSPAPage(FeatureablePageAbstract, Page, ShareablePageAbstract, SearchablePageAbstract):
