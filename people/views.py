@@ -7,6 +7,9 @@ from django.core.cache import cache
 from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
+import csv
+from django.http import HttpResponse
+import datetime
 
 EXPERTS_API_CACHE_TIMEOUT = 86400
 
@@ -109,4 +112,45 @@ def all_experts_search(request):
             'id': expert.id,
             'title': expert.title,
         } for expert in experts],
+    }, safe=False)
+
+
+def all_expertise(request):
+    experts = PersonPage.objects.public().live().filter(
+        archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+        person_types__name__in=['Expert']
+    ).distinct()
+
+    expertise_set = set()
+    for expert in experts:
+        if hasattr(expert, 'expertise') and expert.expertise:
+            for block in expert.expertise:
+                value = block.value if hasattr(block, 'value') else block
+                if value:
+                    if "," in value:
+                        for v in value.split(","):
+                            v = v.strip()
+                            if v and not v[0].isupper():
+                                v = v.capitalize()
+                            expertise_set.add(v.strip())
+                    else:
+                        if not value[0].isupper():
+                            value = value.capitalize()
+                        expertise_set.add(value)
+
+    # Optional: Export as CSV
+    # response = HttpResponse(content_type='text/csv')
+    # timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    # response['Content-Disposition'] = f'attachment; filename="expertise_{timestamp}.csv"'
+    # writer = csv.writer(response)
+    # writer.writerow(['expertise'])
+    # for expertise in sorted(expertise_set):
+    #     writer.writerow([expertise])
+    # return response
+
+    return JsonResponse({
+        'meta': {
+            'total_count': len(expertise_set),
+        },
+        'items': sorted(expertise_set),
     }, safe=False)
