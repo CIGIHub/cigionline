@@ -1619,7 +1619,14 @@ class ARSlideBoardBlock(blocks.StructBlock):
         ('member', blocks.StructBlock([
             ('name', blocks.CharBlock(required=True)),
             ('title', blocks.CharBlock(required=True)),
+            ('title_line_2', blocks.CharBlock(required=False)),
             ('title_fr', blocks.CharBlock(required=True)),
+            ('title_line_2_fr', blocks.CharBlock(required=False)),
+            ('bio_en', blocks.RichTextBlock(required=False)),
+            ('bio_fr', blocks.RichTextBlock(required=False)),
+            ('page', blocks.PageChooserBlock(page_type='people.PersonPage', required=False)),
+            ('image_override', ImageChooserBlock(required=False)),
+            ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this person')),
         ])),
     ])
 

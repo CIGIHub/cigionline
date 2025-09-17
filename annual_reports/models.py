@@ -357,8 +357,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         if self.slide_type == 'toc':
             boards = {}
             credits_message = {}
+            member_counter = 1
+
             for block in self.ar_slide_content:
-                print(block.block_type)
                 if block.block_type == "board":
                     board_block = block.value
                     board_type = board_block["board_type"]
@@ -367,11 +368,22 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
 
                     for member in board_block["board_members"]:
                         if member.block_type == "member":
+                            image = member.value.get("image_override") or (member.value.get("page").specific.image_square if member.value.get("page") else None)
+                            print(image)
+                            link = member.value.get("link_override") or (member.value.get("page").specific.url if member.value.get("page") else None)
                             boards[board_type].append({
+                                "id": member_counter,
                                 "name": member.value["name"],
                                 "title": member.value["title"],
                                 "title_fr": member.value["title_fr"],
+                                "title_line_2": member.value.get("title_line_2", ""),
+                                "title_line_2_fr": member.value.get("title_line_2_fr", ""),
+                                "bio_en": expand_db_html(member.value.get("bio_en").source) if member.value.get("bio_en") else "",
+                                "bio_fr": expand_db_html(member.value.get("bio_fr").source) if member.value.get("bio_fr") else "",
+                                "image": image.get_rendition('fill-150x150').file.url if image else '',
+                                "link": link,
                             })
+                            member_counter += 1
 
                 if block.block_type == "column":
                     column = block.value.get("column")

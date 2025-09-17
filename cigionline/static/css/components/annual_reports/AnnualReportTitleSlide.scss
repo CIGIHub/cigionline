@@ -77,147 +77,152 @@
   }
 }
 
-.home-page {
-  height: 100vh;
-  position: relative;
-  width: 100%;
-  z-index: 2;
+.ar-slide-content {
+  &.home-page {
+    height: 100vh;
+    position: relative;
+    width: 100%;
+    z-index: 2;
 
-  @include media-breakpoint-up(lg) {
-    position: absolute;
-    top: 0;
-  }
-
-  .intro-logo {
-    font-weight: 700;
-    left: 50%;
-    position: absolute;
-    top: 50%;
-    transform: translateX(-50%) translateY(-55%);
-
-    @include media-breakpoint-up(md) {
-      display: flex;
+    @include media-breakpoint-up(lg) {
+      transform: none;
+      position: absolute;
+      top: 0;
     }
 
-    &.intro-french {
+    .intro-logo {
+      font-weight: 700;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translateX(-50%) translateY(-55%);
+
+      @include media-breakpoint-up(md) {
+        display: flex;
+      }
+
+      &.intro-french {
+        .text {
+          .annual {
+            font-size: 3.4em;
+          }
+
+          .report {
+            font-size: 3.2em;
+          }
+        }
+      }
+
+      .year {
+        animation-duration: 1000ms;
+        animation-name: indexLogoYearFadeMobile;
+        animation-timing-function: ease-out;
+        color: $cigi-primary-colour;
+        font-size: 6em;
+        line-height: 0.7;
+        position: relative;
+
+        @include media-breakpoint-up(md) {
+          animation-duration: 1500ms;
+          animation-name: indexLogoYearFade;
+          animation-timing-function: ease-out;
+          font-size: 5em;
+          letter-spacing: -3px;
+          line-height: 0.7;
+          margin-right: 3px;
+        }
+
+        @include media-breakpoint-up(lg) {
+          font-size: 8em;
+          letter-spacing: -5px;
+          line-height: 0.7;
+          margin-right: 5px;
+        }
+
+        // The letter spacing on the '1' is way too wide, this is a fix.
+        .special-spacing {
+          @include media-breakpoint-up(md) {
+            letter-spacing: -14px;
+            margin-left: -5px;
+          }
+          @include media-breakpoint-up(lg) {
+            letter-spacing: -23px;
+            margin-left: -10px;
+          }
+          letter-spacing: -10px;
+          margin-left: -3px;
+        }
+      }
+
       .text {
+        animation-duration: 1000ms;
+        animation-name: indexLogoTextFadeMobile;
+        animation-timing-function: ease-out;
+        color: $white;
+        line-height: 0.7;
+        position: relative;
+        text-transform: uppercase;
+        display: flex;
+        flex-direction: column;
+
+        @include media-breakpoint-up(md) {
+          animation-duration: 1500ms;
+          animation-name: indexLogoTextFade;
+          animation-timing-function: ease-out;
+        }
+
         .annual {
-          font-size: 3.4em;
+          font-size: 3.25em;
+          @include media-breakpoint-up(md) {
+            font-size: 2em;
+            margin-left: 2px;
+          }
+          @include media-breakpoint-up(lg) {
+            font-size: 3em;
+          }
         }
 
         .report {
-          font-size: 3.2em;
+          font-size: 3.75em;
+          @include media-breakpoint-up(md) {
+            font-size: 2.25em;
+          }
+
+          @include media-breakpoint-up(lg) {
+            font-size: 3.5em;
+          }
         }
       }
     }
 
-    .year {
-      animation-duration: 1000ms;
-      animation-name: indexLogoYearFadeMobile;
-      animation-timing-function: ease-out;
-      color: $cigi-primary-colour;
-      font-size: 6em;
-      line-height: 0.7;
-      position: relative;
+    .navigation-section {
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+      animation-duration: 6000ms;
+      animation-name: nagivationFadeInOut;
+      animation-timing-function: ease-in;
+      bottom: 50px;
+      left: 50%;
+      opacity: 0;
+      position: absolute;
+      text-align: center;
+      transform: translateX(-50%) translateY(-55%);
+      width: 150px;
 
-      @include media-breakpoint-up(md) {
-        animation-duration: 1500ms;
-        animation-name: indexLogoYearFade;
-        animation-timing-function: ease-out;
-        font-size: 5em;
-        letter-spacing: -3px;
-        line-height: 0.7;
-        margin-right: 3px;
+      p {
+        font-size: 12px;
       }
 
-      @include media-breakpoint-up(lg) {
-        font-size: 8em;
-        letter-spacing: -5px;
-        line-height: 0.7;
-        margin-right: 5px;
-      }
-
-      // The letter spacing on the '1' is way too wide, this is a fix.
-      .special-spacing {
-        @include media-breakpoint-up(md) {
-          letter-spacing: -14px;
-          margin-left: -5px;
-        }
-        @include media-breakpoint-up(lg) {
-          letter-spacing: -23px;
-          margin-left: -10px;
-        }
-        letter-spacing: -10px;
-        margin-left: -3px;
-      }
-    }
-
-    .text {
-      animation-duration: 1000ms;
-      animation-name: indexLogoTextFadeMobile;
-      animation-timing-function: ease-out;
-      color: $white;
-      line-height: 0.9;
-      position: relative;
-      text-transform: uppercase;
-
-      @include media-breakpoint-up(md) {
-        animation-duration: 1500ms;
-        animation-name: indexLogoTextFade;
-        animation-timing-function: ease-out;
-      }
-
-      .annual {
-        font-size: 3.25em;
-        @include media-breakpoint-up(md) {
-          font-size: 2em;
-          margin-left: 2px;
-        }
-        @include media-breakpoint-up(lg) {
-          font-size: 3em;
+      svg {
+        &:nth-child(2) {
+          padding-right: 0.25em;
         }
       }
 
-      .report {
-        font-size: 3.75em;
-        @include media-breakpoint-up(md) {
-          font-size: 2.25em;
-        }
-
-        @include media-breakpoint-up(lg) {
-          font-size: 3.5em;
-        }
+      .up-down-icon {
+        transform: scale(0.8);
       }
-    }
-  }
-
-  .navigation-section {
-    @include media-breakpoint-down(sm) {
-      display: none;
-    }
-    animation-duration: 6000ms;
-    animation-name: nagivationFadeInOut;
-    animation-timing-function: ease-in;
-    bottom: 50px;
-    left: 50%;
-    opacity: 0;
-    position: absolute;
-    text-align: center;
-    transform: translateX(-50%) translateY(-55%);
-    width: 150px;
-
-    p {
-      font-size: 12px;
-    }
-
-    svg {
-      &:nth-child(2) {
-        padding-right: 0.25em;
-      }
-    }
-
-    .up-down-icon {
-      transform: scale(0.8);
     }
   }
 }

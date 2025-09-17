@@ -8,7 +8,7 @@ import AnnualReportTextSlide from './AnnualReportTextSlide';
 import AnnualReportQuoteSlide from './AnnualReportQuoteSlide';
 import AnnualReportTitleSlide from './AnnualReportTitleSlide';
 import AnnualReportNav from './AnnualReportNav';
-import AnnualReportHamburgerMenu from './AnnualReportHamburgerMenu';
+import AnnualReportHeader from './AnnualReportHeader';
 import AnnualReportVerticalTitle from './AnnualReportVerticalTitle';
 import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 
@@ -153,7 +153,7 @@ function AnnualReportSlide({ slides, basePath }) {
 
   return (
     <>
-      <AnnualReportHamburgerMenu
+      <AnnualReportHeader
         slides={slides}
         basePath={basePath}
         currentLang={currentLang}
@@ -213,28 +213,19 @@ function AnnualReportSlide({ slides, basePath }) {
           currentIndex={currentIndex}
         />
         {contentVisible && (
-          <div
-            key={`content-${slug}-${slides[currentIndex].slide_type}`}
-            className="ar-slide-content"
-          >
-            <div
-              className={`annual-report-slide ${slides[currentIndex].slide_type}`}
-            >
-              <div className="container">
-                {currentSlide.slide_type === 'toc' && (
-                  <SlideComponent
-                    slides={slides}
-                    currentIndex={currentIndex}
-                    basePath={basePath}
-                    lang={currentLang}
-                  />
-                )}
-                {['title', 'regular', 'framework', 'timeline'].includes(
-                  currentSlide.slide_type,
-                ) && <SlideComponent slide={currentSlide} lang={currentLang} />}
-              </div>
-            </div>
-          </div>
+          <>
+            {currentSlide.slide_type === 'toc' && (
+              <SlideComponent
+                slides={slides}
+                currentIndex={currentIndex}
+                basePath={basePath}
+                lang={currentLang}
+              />
+            )}
+            {['title', 'regular', 'framework', 'timeline'].includes(
+              currentSlide.slide_type,
+            ) && <SlideComponent slide={currentSlide} lang={currentLang} />}
+          </>
         )}
       </div>
       <AnnualReportVerticalTitle

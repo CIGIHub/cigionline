@@ -212,6 +212,7 @@
       }
 
       button {
+        color: $white;
         transition: color 250ms;
 
         &:hover {
@@ -253,6 +254,7 @@
     .slide-link {
       line-height: 18px;
       margin-bottom: 5px;
+      display: flex;
 
       @include media-breakpoint-up(xl) {
         margin-bottom: 10px;
@@ -329,6 +331,7 @@
     top: 0;
     width: 100%;
     z-index: 4;
+    color: $white;
 
     @include media-breakpoint-down(md) {
       overflow-y: scroll;
@@ -385,6 +388,7 @@
       font-weight: 500;
       margin-top: 1.5em;
       position: relative;
+      color: $white;
 
       &:hover {
         color: $white;
@@ -436,6 +440,21 @@
 
     .person-heading {
       margin-bottom: 2em;
+      display: flex;
+
+      .person-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      img {
+        margin-right: 1.5em;
+      }
+
+      h2 {
+        margin-bottom: 0.5rem;
+      }
 
       p {
         margin-bottom: 0.5em;
@@ -447,6 +466,7 @@
       animation-name: pubOpenContentFade;
       animation-timing-function: ease-in-out;
       margin-top: 1.25em;
+      color: $white;
 
       p {
         animation: none;

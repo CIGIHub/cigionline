@@ -50,7 +50,7 @@ function AnnualReportHamburgerMenu({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
               >
-                <i className="fas fa-times" />
+                <i className="fal fa-times" />
               </motion.div>
             ) : (
               <motion.span
@@ -60,7 +60,7 @@ function AnnualReportHamburgerMenu({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
               >
-                <i className="fas fa-bars" />
+                <i className="fal fa-bars" />
               </motion.span>
             )}
           </AnimatePresence>
