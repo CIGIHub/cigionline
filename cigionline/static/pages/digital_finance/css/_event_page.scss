@@ -111,7 +111,13 @@ body {
           div {
             &:first-child {
               @include media-breakpoint-up(md) {
-                font-size: 4rem;
+                font-size: 3rem;
+              }
+              @include media-breakpoint-up(lg) {
+                font-size: 3.3rem;
+              }
+              @include media-breakpoint-up(xl) {
+                font-size: 3.9rem;
               }
               font-size: 2rem;
               margin-bottom: 2rem;
