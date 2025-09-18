@@ -1,0 +1,37 @@
+{% load wagtailcore_tags wagtailimages_tags theme_tags %}
+
+<div class="publications-list-block" id="publist" data-filter-scope>
+  <div class="container">
+    <div class="row">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {% if self.publications %}
+        {% for publication in self.publications %}
+        <article class="publications-list__publication" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
+          <div class="publications-list__publication__img">
+            <a href="{% pageurl publication.value %}">
+              {% image publication.value.image_cover fill-695x900 %}
+            </a>
+          </div>
+          <div class="publications-list__publication__right">
+            <div>
+              {% if publication.value.topics %}
+              {% include 'includes/topics.html' with topics=publication.value.topics %}
+              {% endif %}
+              <h3 class="publications-list__publication__title">
+                <a href="{% pageurl publication.value %}">{{ publication.value.title }}</a>
+              </h3>
+            </div>
+            <div class="publications-list__publication__author">
+              {% include 'includes/authors.html' with authors=publication.value.authors.all %}
+            </div>
+            <div class="publications-list__publication__type">
+              Policy Brief
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

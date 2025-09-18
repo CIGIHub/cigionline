@@ -1334,6 +1334,7 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
     )
     implemented_themes = [
         'dph_page',
+        'digital_finance_event',    
     ]
 
     def get_publications_by_type(self, publication_type):
