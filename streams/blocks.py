@@ -1325,6 +1325,7 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
 
 
 class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
+    title = blocks.CharBlock(required=False)
     publication_type = blocks.PageChooserBlock(page_type='publications.PublicationTypePage', required=False, help_text='Select a publication type to automatically populate with this type of publications.')
     publications = blocks.StreamBlock(
         [

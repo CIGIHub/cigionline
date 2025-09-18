@@ -55,7 +55,8 @@ body {
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
       font-family: $heading-font;
     }
 
@@ -238,6 +239,13 @@ body {
 
         .collapsible-paragraph-block {
           .collapsible-header {
+            cursor: pointer;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
+
             .toggle-button {
               @include media-breakpoint-up(md) {
                 left: -1rem;
@@ -257,6 +265,10 @@ body {
               display: flex;
             }
             padding-top: 2rem;
+
+            &:first-child {
+              padding-top: 1rem;
+            }
 
             &:not(:last-child) {
               border-bottom: 1px solid $cigi-medium-grey;
@@ -287,7 +299,7 @@ body {
             }
           }
 
-          h3 {
+          h4 {
             @include media-breakpoint-up(md) {
               font-size: 1.25rem;
             }

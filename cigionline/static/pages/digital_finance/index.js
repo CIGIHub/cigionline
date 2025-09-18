@@ -16,7 +16,7 @@ if (h2) {
 const collapsibleParagraphs = document.querySelectorAll('.collapsible-paragraph-block');
 if (collapsibleParagraphs) {
   collapsibleParagraphs.forEach((paragraph) => {
-    const toggleButton = paragraph.querySelector('button');
+    const toggleButton = paragraph.querySelector('h3');
     toggleButton.addEventListener('click', () => {
       paragraph.classList.toggle('collapsed');
     });
