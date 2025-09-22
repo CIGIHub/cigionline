@@ -1,6 +1,42 @@
 @import '../../global/variables';
 @import '../../global/mixins';
 
+.cigi-top-bar {
+  &.background-white {
+    .annual-report-hamburger-menu {
+      .ar-lang-toggle {
+        button {
+          color: $black;
+
+          &:hover {
+            color: $cigi-primary-colour;
+          }
+
+          &.active {
+            &::before {
+              background-color: $black;
+            }
+          }
+
+          &:first-child {
+            &::after {
+              color: $black;
+            }
+          }
+        }
+      }
+
+      .hamburger-btn {
+        span {
+          i {
+            color: $black;
+          }
+        }
+      }
+    }
+  }
+}
+
 .annual-report-hamburger-menu {
   display: flex;
   justify-content: flex-end;

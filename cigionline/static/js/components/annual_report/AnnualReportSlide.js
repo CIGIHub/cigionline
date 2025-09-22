@@ -158,11 +158,12 @@ function AnnualReportSlide({ slides, basePath }) {
         basePath={basePath}
         currentLang={currentLang}
         currentSlug={slug}
+        currentIndex={currentIndex}
       />
       <div
         className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
           [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
-        } ${currentIndex}`}
+        }`}
       >
         {slides.map((slide, index) => (
           <React.Fragment key={`bg-${slide.slug}`}>
@@ -193,7 +194,7 @@ function AnnualReportSlide({ slides, basePath }) {
           onAnimationComplete={() => setContentVisible(true)}
         >
           <div
-            className={`background-colour ${slides[currentIndex].background_colour}`}
+            className={`background-colour background-${slides[currentIndex].background_colour}`}
           />
           <div
             className="background-image"
@@ -205,7 +206,7 @@ function AnnualReportSlide({ slides, basePath }) {
       </AnimatePresence>
       <div
         key={`content-${slug}-${slides[currentIndex].slide_type}`}
-        className={`slide-wrapper ${slides[currentIndex].slide_type} ${slides[currentIndex].background_colour}`}
+        className={`slide-wrapper ${slides[currentIndex].slide_type} background-${slides[currentIndex].background_colour}`}
       >
         <AnnualReportNav
           slides={slides}

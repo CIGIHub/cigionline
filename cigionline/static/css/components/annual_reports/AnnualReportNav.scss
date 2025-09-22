@@ -1,6 +1,50 @@
 @import '../../global/variables';
 @import '../../global/mixins';
 
+.slide-wrapper {
+  &.background-white {
+    .slide-nav {
+      .nav-circle {
+        border-color: $black;
+
+        &::before {
+          background-color: $black;
+        }
+
+        &:hover {
+          border-color: $black;
+
+          &::before {
+            background-color: $black;
+          }
+        }
+
+        &.active {
+          &::before {
+            background-color: $black;
+          }
+        }
+      }
+
+      .nav-tooltip {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: $black;
+
+        &::after {
+          border-color: transparent transparent transparent rgba(255, 255, 255, 0.9);
+        }
+      }
+    }
+
+    .nav-arrow {
+      border-color: $black;
+
+      &:hover {
+        border-color: $cigi-primary-colour;
+      }
+    }
+  }
+}
 .slide-nav {
   @include media-breakpoint-down(md) {
     display: none;

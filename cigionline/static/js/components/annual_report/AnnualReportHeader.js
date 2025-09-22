@@ -3,12 +3,12 @@ import React from 'react';
 import AnnualReportHamburgerMenu from './AnnualReportHamburgerMenu';
 import '../../../css/components/annual_reports/AnnualReportHeader.scss';
 
-function AnnualReportHeader({ slides, basePath, currentLang, currentSlug }) {
+function AnnualReportHeader({ slides, basePath, currentLang, currentSlug, currentIndex }) {
   return (
     <div className="container">
       <div className="row">
         <div className="col">
-          <header className="cigi-top-bar">
+          <header className={`cigi-top-bar background-${slides[currentIndex].background_colour}`}>
             <div className="cigi-logo">
               <a href="https://www.cigionline.org" aria-label="CIGI Homepage">
                 <svg
@@ -55,6 +55,7 @@ AnnualReportHeader.propTypes = {
   basePath: PropTypes.string.isRequired,
   currentLang: PropTypes.string.isRequired,
   currentSlug: PropTypes.string.isRequired,
+  currentIndex: PropTypes.number.isRequired,
 };
 
 export default AnnualReportHeader;
