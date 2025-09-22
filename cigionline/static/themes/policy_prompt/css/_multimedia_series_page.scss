@@ -446,10 +446,18 @@ body {
         padding: 3em 0;
 
         .season-tabs {
+          h2 {
+            border: 0;
+            color: #325ab2;
+            font-family: articulat-cf, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            margin: 0 0 2rem;
+          }
           span {
             color: $policy-prompt-blue;
             font-size: 0.9rem;
-            font-weight: 500;
             text-transform: uppercase;
             margin-right: 1em;
             align-self: center;
@@ -458,10 +466,9 @@ body {
           button {
             margin: 0 0.5rem;
             color: $policy-prompt-blue;
-            font-size: 0.9rem;
 
             &.active {
-              font-weight: 600;
+              font-weight: 700;
               position: relative;
 
               &:after {
@@ -477,7 +484,7 @@ body {
                 animation: blink 5s infinite;
                 transform: rotate(5deg);
                 left: -4px;
-                bottom: 0;
+                bottom: -3px;
               }
             }
           }
