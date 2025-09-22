@@ -445,6 +445,51 @@ body {
       &.episodes {
         padding: 3em 0;
 
+        .season-tabs {
+          h2 {
+            border: 0;
+            color: #325ab2;
+            font-family: articulat-cf, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            margin: 0 0 2rem;
+          }
+          span {
+            color: $policy-prompt-blue;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-right: 1em;
+            align-self: center;
+          }
+
+          button {
+            margin: 0 0.5rem;
+            color: $policy-prompt-blue;
+
+            &.active {
+              font-weight: 700;
+              position: relative;
+
+              &:after {
+                content: '';
+                display: inline-block;
+                background-color: $policy-prompt-blue;
+                border-radius: 0.5em;
+                height: 0.25em;
+                width: 1em;
+                margin-right: -0.2em;
+                position: absolute;
+                transition: opacity 1s ease;
+                animation: blink 5s infinite;
+                transform: rotate(5deg);
+                left: -4px;
+                bottom: -3px;
+              }
+            }
+          }
+        }
+
         .episode {
           display: flex;
           align-items: center;
@@ -459,6 +504,39 @@ body {
 
           &:first-child {
             padding-top: 0;
+          }
+
+          &.unpublished {
+            .episode-info {
+              h3 {
+                color: $cigi-medium-light-grey;
+              }
+
+              .episode-number {
+                color: $cigi-medium-light-grey;
+              }
+
+              .episode-publishing-date {
+                color: $cigi-medium-light-grey;
+              }
+
+              .episode-description {
+                color: $cigi-medium-light-grey;
+              }
+            }
+
+            .circle {
+              span {
+                border-color: $cigi-medium-light-grey;
+                color: $cigi-medium-light-grey;
+
+                &:hover {
+                  background-color: $white;
+                  color: $cigi-medium-light-grey;
+                  border-color: $cigi-medium-light-grey;
+                }
+              }
+            }
           }
 
           .episode-info {
