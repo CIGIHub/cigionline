@@ -396,6 +396,24 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 "boards": boards,
                 "credits_message": credits_message,
             }
+
+        elif self.slide_type in ['chairs_message', 'presidents_message']:
+            columns = []
+            for block in self.ar_slide_content:
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    column_content = {
+                        "en": [],
+                        "fr": [],
+                    }
+                    for paragraph_column in column:
+                        if paragraph_column.block_type == "paragraph_column":
+                            column_content["en"].append(expand_db_html(paragraph_column.value.get("en").source))
+                            column_content["fr"].append(expand_db_html(paragraph_column.value.get("fr").source))
+                    columns.append(column_content)
+            content = {
+                "columns": columns,
+            }
         return content
 
 

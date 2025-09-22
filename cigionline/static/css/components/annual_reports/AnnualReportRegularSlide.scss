@@ -1,0 +1,65 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+
+.ar-slide-content {
+  &.chairs-message,
+  &.presidents-message {
+    color: $black;
+    position: relative;
+    top: 0%;
+    width: 100%;
+    z-index: 2;
+
+    @include media-breakpoint-down(md) {
+      padding-bottom: 40px;
+      padding-top: 10px;
+    }
+
+    @include media-breakpoint-up(lg) {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    h1 {
+      animation-duration: 1000ms;
+      animation-name: messageTitleFade;
+      animation-timing-function: ease-in;
+      color: $black;
+      position: relative;
+    }
+
+    p {
+      animation-duration: 1500ms;
+      animation-name: messageContentFade;
+      animation-timing-function: ease-in;
+      color: $black;
+      position: relative;
+
+      @include media-breakpoint-between(lg, xl) {
+        font-size: 15px;
+        line-height: 1.3;
+      }
+    }
+
+    .cigi-red-line {
+      animation-duration: 1000ms;
+      animation-name: messageLineExpand;
+      animation-timing-function: ease-in-out;
+      border-top: 4px solid $cigi-primary-colour;
+      content: '';
+      display: block;
+      width: 100px;
+    }
+
+    .chair-name {
+      font-size: 16px;
+      margin-bottom: 0;
+      margin-top: 1rem;
+
+      @include media-breakpoint-between(lg, xl) {
+        font-size: 15px;
+      }
+    }
+  }
+}

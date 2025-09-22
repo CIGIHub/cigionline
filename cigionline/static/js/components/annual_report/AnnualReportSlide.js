@@ -4,8 +4,6 @@ import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
-import AnnualReportTextSlide from './AnnualReportTextSlide';
-import AnnualReportQuoteSlide from './AnnualReportQuoteSlide';
 import AnnualReportTitleSlide from './AnnualReportTitleSlide';
 import AnnualReportNav from './AnnualReportNav';
 import AnnualReportHeader from './AnnualReportHeader';
@@ -16,8 +14,8 @@ const slideComponents = {
   title: AnnualReportTitleSlide,
   toc: AnnualReportTOCSlide,
   regular: AnnualReportRegularSlide,
-  text: AnnualReportTextSlide,
-  quote: AnnualReportQuoteSlide,
+  chairs_message: AnnualReportRegularSlide,
+  presidents_message: AnnualReportRegularSlide,
 };
 
 const loadedImages = new Set();
@@ -214,19 +212,22 @@ function AnnualReportSlide({ slides, basePath }) {
           currentIndex={currentIndex}
         />
         {contentVisible && (
-          <>
-            {currentSlide.slide_type === 'toc' && (
+          <div>
+            {currentSlide.slide_type === 'toc' ? (
               <SlideComponent
                 slides={slides}
                 currentIndex={currentIndex}
                 basePath={basePath}
                 lang={currentLang}
               />
+            ) : (
+              <SlideComponent
+                slide={currentSlide}
+                basePath={basePath}
+                lang={currentLang}
+              />
             )}
-            {['title', 'regular', 'framework', 'timeline'].includes(
-              currentSlide.slide_type,
-            ) && <SlideComponent slide={currentSlide} lang={currentLang} />}
-          </>
+          </div>
         )}
       </div>
       <AnnualReportVerticalTitle
