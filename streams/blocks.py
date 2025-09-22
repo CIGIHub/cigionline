@@ -1342,20 +1342,31 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
         from publications.models import PublicationPage
         return PublicationPage.objects.live().public().filter(publication_type__title=publication_type).order_by('-publishing_date')
 
-    def get_publications_by_author(self, publication_type):
-        from publications.models import PublicationPage
-        return (
-            PublicationPage.objects.live().public()
-            .filter(publication_type__title=publication_type)
-            .order_by('authors__author__last_name').distinct()
-        )
+    def get_publications_by_type_sorted(self, publication_type, by='date'):
+        qs = self.get_publications_by_type(publication_type)
+
+        if by == 'author':
+            pubs = list(qs)
+
+            def first_author_last(pub):
+                first_author_rel = pub.authors.order_by('sort_order').first()
+                if first_author_rel and first_author_rel.author:
+                    return (first_author_rel.author.last_name or '').lower()
+                return 'zzzz'
+
+            pubs.sort(key=first_author_last)
+            return pubs
+
+        return qs
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
+
         if value.get('publication_type'):
-            context['publications_by_type'] = self.get_publications_by_type(value.get('publication_type').specific.title)
-        if value.get('publication_type'):
-            context['publications_by_author'] = self.get_publications_by_author(value.get('publication_type').specific.title)
+            pub_type = value['publication_type'].specific.title
+
+            context['publications_by_type'] = self.get_publications_by_type(pub_type)
+            context['publications_by_author'] = self.get_publications_by_type_sorted(pub_type, by='author')
         return context
 
     def get_template(self, value, context, *args, **kwargs):

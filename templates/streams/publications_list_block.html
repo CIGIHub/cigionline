@@ -3,8 +3,8 @@
 <div class="container publications-list-block">
   <div class="row d-block">
     <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      {% if publications_by_type %}
-        {% for publication in publications_by_type %}
+      {% if publications_by_author %}
+        {% for publication in publications_by_author %}
           <article class="publications-list__publication row">
             <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
               <a href="{{ publication.url }}">
