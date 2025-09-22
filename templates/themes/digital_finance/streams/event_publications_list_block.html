@@ -1,0 +1,64 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags %}
+
+<div class="publications-list-block" id="publist" data-filter-scope>
+  <div class="container">
+    {% if self.title %}
+      <div class="row">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h3 class="publications-list-block__title">{{ self.title }}</h3>
+        </div>
+      </div>
+    {% endif %}
+    <div class="row">
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {% if publications_by_author %}
+          {% for publication in publications_by_author %}
+            <article class="publications-list__publication" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
+              <div class="publications-list__publication__img">
+                <a href="{% pageurl publication %}">
+                  {% image publication.image_cover fill-695x900 %}
+                </a>
+              </div>
+              <div class="publications-list__publication__right">
+                <div>
+                  <h4 class="publications-list__publication__title">
+                    <a href="{% pageurl publication %}">{{ publication.title }}</a>
+                  </h4>
+                </div>
+                <div class="publications-list__publication__author">
+                  {% include 'includes/authors.html' with authors=publication.authors.all hide_link=True %}
+                </div>
+                <div class="publications-list__publication__type">
+                  Policy Brief
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        {% elif self.publications %}
+          {% for publication in publications %}
+            <article class="publications-list__publication" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
+              <div class="publications-list__publication__img">
+                <a href="{% pageurl publication.value %}">
+                  {% image publication.value.image_cover fill-695x900 %}
+                </a>
+              </div>
+              <div class="publications-list__publication__right">
+                <div>
+                  <h4 class="publications-list__publication__title">
+                    <a href="{% pageurl publication.value %}">{{ publication.value.title }}</a>
+                  </h4>
+                </div>
+                <div class="publications-list__publication__author">
+                  {% include 'includes/authors.html' with authors=publication.value.authors.all %}
+                </div>
+                <div class="publications-list__publication__type">
+                  Policy Brief
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,11 +2,16 @@ section {
   &.disclaimer {
     margin-bottom: 2em;
 
-    .additional-opinion-disclaimer {
+    .additional-opinion-disclaimer,
+    .publication-disclaimer {
       color: $cigi-text-grey;
       font-size: 0.85em;
       font-style: italic;
       margin-bottom: 2em;
+    }
+
+    .publication-disclaimer {
+      margin-bottom: 0;
     }
 
     .multimedia-disclaimer {

@@ -378,6 +378,11 @@ class PublicationPage(
             (self.book_format or self.book_pages or self.book_publisher or self.isbn or self.isbn_ebook or self.isbn_hardcover)
         )
 
+    def disclaimer(self):
+        if self.publication_type and self.publication_type.title == 'DigiFin Policy Brief':
+            return 'Disclaimer: This policy brief has been reviewed by the Future of Digital Finance conference organizers but has not been through CIGI’s formal editing process.'
+        return False
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(PublicationPage, self).get_template(request, *args, **kwargs)
         if self.publication_type:

@@ -207,7 +207,9 @@ class CIGIOnlineSearchQueryCompiler:
 
     @property
     def queryset(self):
-        return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).live()
+        exclusions = {'contentpage__publicationpage__publication_type__title': 'DigiFin Policy Brief'}
+
+        return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 
     def get_query(self):
         if self.searchtext:

@@ -1325,6 +1325,7 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
 
 
 class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
+    title = blocks.CharBlock(required=False)
     publication_type = blocks.PageChooserBlock(page_type='publications.PublicationTypePage', required=False, help_text='Select a publication type to automatically populate with this type of publications.')
     publications = blocks.StreamBlock(
         [
@@ -1334,16 +1335,27 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
     )
     implemented_themes = [
         'dph_page',
+        'digital_finance_event',
     ]
 
     def get_publications_by_type(self, publication_type):
         from publications.models import PublicationPage
         return PublicationPage.objects.live().public().filter(publication_type__title=publication_type).order_by('-publishing_date')
 
+    def get_publications_by_author(self, publication_type):
+        from publications.models import PublicationPage
+        return (
+            PublicationPage.objects.live().public()
+            .filter(publication_type__title=publication_type)
+            .order_by('authors__author__last_name')
+        )
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         if value.get('publication_type'):
             context['publications_by_type'] = self.get_publications_by_type(value.get('publication_type').specific.title)
+        if value.get('publication_type'):
+            context['publications_by_author'] = self.get_publications_by_author(value.get('publication_type').specific.title)
         return context
 
     def get_template(self, value, context, *args, **kwargs):
