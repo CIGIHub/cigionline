@@ -1349,6 +1349,7 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
             .filter(publication_type__title=publication_type)
             .order_by('authors__author__last_name')
         )
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         if value.get('publication_type'):
