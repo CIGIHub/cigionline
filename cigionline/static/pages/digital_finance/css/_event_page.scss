@@ -334,6 +334,16 @@ body {
             margin-bottom: 0.5rem;
           }
         }
+
+        .files-block {
+          ul {
+            list-style: none;
+
+            li {
+              font-size: 1.2rem;
+            }
+          }
+        }
       }
 
       &.abstract-submission {
