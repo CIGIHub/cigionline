@@ -35,7 +35,7 @@
             </article>
           {% endfor %}
         {% elif self.publications %}
-          {% for publication in publications %}
+          {% for publication in self.publications %}
             <article class="publications-list__publication" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
               <div class="publications-list__publication__img">
                 <a href="{% pageurl publication.value %}">
