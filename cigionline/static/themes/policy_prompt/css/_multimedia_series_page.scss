@@ -445,6 +445,44 @@ body {
       &.episodes {
         padding: 3em 0;
 
+        .season-tabs {
+          span {
+            color: $policy-prompt-blue;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-right: 1em;
+            align-self: center;
+          }
+
+          button {
+            margin: 0 0.5rem;
+            color: $policy-prompt-blue;
+            font-size: 0.9rem;
+
+            &.active {
+              font-weight: 600;
+              position: relative;
+
+              &:after {
+                content: '';
+                display: inline-block;
+                background-color: $policy-prompt-blue;
+                border-radius: 0.5em;
+                height: 0.25em;
+                width: 1em;
+                margin-right: -0.2em;
+                position: absolute;
+                transition: opacity 1s ease;
+                animation: blink 5s infinite;
+                transform: rotate(5deg);
+                left: -4px;
+                bottom: 0;
+              }
+            }
+          }
+        }
+
         .episode {
           display: flex;
           align-items: center;
@@ -459,6 +497,31 @@ body {
 
           &:first-child {
             padding-top: 0;
+          }
+
+          &.unpublished {
+            .episode-info {
+              h3 {
+                color: $cigi-text-grey;
+              }
+
+              .episode-publishing-date {
+                color: $cigi-text-grey;
+              }
+            }
+
+            .circle {
+              span {
+                border-color: $cigi-text-grey;
+                color: $cigi-text-grey;
+
+                &:hover {
+                  background-color: $white;
+                  color: $cigi-text-grey;
+                  border-color: $cigi-text-grey;
+                }
+              }
+            }
           }
 
           .episode-info {

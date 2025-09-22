@@ -142,42 +142,99 @@
   {% endif %}
 
   {% if self.podcast_live %}
-    {% with series_seasons=self.series_seasons %}
-      {% if series_seasons.0.published %}
+    {% with seasons=self.series_seasons %}
+      {% if seasons %}
         <section class="episodes">
           <div class="container">
             <div class="row justify-content-center">
               <div class="col-12 col-md-8">
-                {% for season, episodes in self.series_seasons.items %}
-                  <div class="season">
-                    {% for episode in episodes.published %}
-                      <article class="episode">
-                        <div class="episode-info">
-                          {% if episode.podcast_episode %}
-                          <div class="episode-number">
-                            EPISODE {{ episode.podcast_episode }}
-                          </div>
-                          {% endif %}
-                          <h3>
-                            <a href="{% pageurl episode %}">
-                              {{ episode.title }}
-                            </a>
-                          </h3>
-                          <div class="episode-description">
-                            {{ episode.subtitle|richtext }}
-                          </div>
-                          <div class="episode-publishing-date">
-                            {{ episode.publishing_date|date:"F j, Y" }}
-                          </div>
-                        </div>
-                        <div class="circle">
-                          <a href="{{ episode.url }}">
-                            <span><i class="fa fa-headphones" aria-hidden="true"></i></span>
-                          </a>
-                        </div>
-                      </article>
-                    {% endfor %}
-                  </div>
+                <div class="season-tabs d-flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Seasons">
+                  <span>Season</span>
+                  {% for season, episodes in seasons.items %}
+                    {% with is_first=forloop.last %}
+                      <button
+                        id="tab-{{ season }}"
+                        class="season-tab {% if is_first %}active{% endif %}"
+                        type="button"
+                        role="tab"
+                        aria-controls="season-{{ season }}"
+                        aria-selected="{% if is_first %}true{% else %}false{% endif %}"
+                        data-season="season-{{ season }}"
+                      >
+                        {% if season > 0 %}{{ season }}{% else %}Unseasoned{% endif %}
+                      </button>
+                    {% endwith %}
+                  {% endfor %}
+                </div>
+
+                {% for season, episodes in seasons.items %}
+                  {% with is_first=forloop.last %}
+                    <div
+                      id="season-{{ season }}"
+                      class="season-pane {% if not is_first %}d-none{% endif %}"
+                      role="tabpanel"
+                      aria-labelledby="tab-{{ season }}"
+                    >
+                      {% if episodes.unpublished %}
+                        {% for episode in episodes.unpublished %}
+                          <article class="episode unpublished">
+                            <div class="episode-info">
+                              {% if episode.podcast_episode %}
+                                <div class="episode-number">
+                                  EPISODE {{ episode.podcast_episode }}
+                                </div>
+                              {% endif %}
+                              <h3>
+                                {{ episode.title }}
+                              </h3>
+                              <div class="episode-description">
+                                {{ episode.subtitle|richtext }}
+                              </div>
+                              <div class="episode-publishing-date">
+                                {{ episode.publishing_date|date:"F j, Y" }}
+                              </div>
+                            </div>
+                            <div class="circle">
+                              <span>
+                                <i class="fa fa-headphones" aria-hidden="true"></i>
+                              </span>
+                            </div>
+                          </article>
+                        {% endfor %}
+                      {% endif %}
+                      {% if episodes.published %}
+                        {% for episode in episodes.published %}
+                          <article class="episode">
+                            <div class="episode-info">
+                              {% if episode.podcast_episode %}
+                                <div class="episode-number">
+                                  EPISODE {{ episode.podcast_episode }}
+                                </div>
+                              {% endif %}
+                              <h3>
+                                <a href="{% pageurl episode %}">{{ episode.title }}</a>
+                              </h3>
+                              <div class="episode-description">
+                                {{ episode.subtitle|richtext }}
+                              </div>
+                              <div class="episode-publishing-date">
+                                {{ episode.publishing_date|date:"F j, Y" }}
+                              </div>
+                            </div>
+                            <div class="circle">
+                              <a href="{{ episode.url }}" aria-label="Listen to {{ episode.title }}">
+                                <span>
+                                  <i class="fa fa-headphones" aria-hidden="true"></i>
+                                </span>
+                              </a>
+                            </div>
+                          </article>
+                        {% endfor %}
+                      {% else %}
+                        <p class="text-muted">No published episodes in this season yet.</p>
+                      {% endif %}
+                    </div>
+                  {% endwith %}
                 {% endfor %}
               </div>
             </div>
