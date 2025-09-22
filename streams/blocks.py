@@ -1347,7 +1347,7 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
         return (
             PublicationPage.objects.live().public()
             .filter(publication_type__title=publication_type)
-            .order_by('authors__author__last_name')
+            .order_by('authors__author__last_name').distinct()
         )
 
     def get_context(self, value, parent_context=None):
