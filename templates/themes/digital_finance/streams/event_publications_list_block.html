@@ -11,8 +11,8 @@
     {% endif %}
     <div class="row">
       <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-        {% if publications_by_type %}
-          {% for publication in publications_by_type %}
+        {% if publications_by_author %}
+          {% for publication in publications_by_author %}
             <article class="publications-list__publication" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
               <div class="publications-list__publication__img">
                 <a href="{% pageurl publication %}">
@@ -26,14 +26,14 @@
                   </h4>
                 </div>
                 <div class="publications-list__publication__author">
-                  {% include 'includes/authors.html' with authors=publication.authors.all %}
+                  {% include 'includes/authors.html' with authors=publication.authors.all hide_link=True %}
                 </div>
                 <div class="publications-list__publication__type">
                   Policy Brief
                 </div>
               </div>
             </article>
-            {% endfor %}
+          {% endfor %}
         {% elif self.publications %}
           {% for publication in publications %}
             <article class="publications-list__publication" data-term="{{ term|slugify }}" data-term-label="{{ term }}">

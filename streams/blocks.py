@@ -1342,10 +1342,19 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
         from publications.models import PublicationPage
         return PublicationPage.objects.live().public().filter(publication_type__title=publication_type).order_by('-publishing_date')
 
+    def get_publications_by_author(self, publication_type):
+        from publications.models import PublicationPage
+        return (
+            PublicationPage.objects.live().public()
+            .filter(publication_type__title=publication_type)
+            .order_by('authors__author__last_name')
+        )
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         if value.get('publication_type'):
             context['publications_by_type'] = self.get_publications_by_type(value.get('publication_type').specific.title)
+        if value.get('publication_type'):
+            context['publications_by_author'] = self.get_publications_by_author(value.get('publication_type').specific.title)
         return context
 
     def get_template(self, value, context, *args, **kwargs):
