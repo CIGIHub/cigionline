@@ -502,23 +502,31 @@ body {
           &.unpublished {
             .episode-info {
               h3 {
-                color: $cigi-text-grey;
+                color: $cigi-medium-light-grey;
+              }
+
+              .episode-number {
+                color: $cigi-medium-light-grey;
               }
 
               .episode-publishing-date {
-                color: $cigi-text-grey;
+                color: $cigi-medium-light-grey;
+              }
+
+              .episode-description {
+                color: $cigi-medium-light-grey;
               }
             }
 
             .circle {
               span {
-                border-color: $cigi-text-grey;
-                color: $cigi-text-grey;
+                border-color: $cigi-medium-light-grey;
+                color: $cigi-medium-light-grey;
 
                 &:hover {
                   background-color: $white;
-                  color: $cigi-text-grey;
-                  border-color: $cigi-text-grey;
+                  color: $cigi-medium-light-grey;
+                  border-color: $cigi-medium-light-grey;
                 }
               }
             }
