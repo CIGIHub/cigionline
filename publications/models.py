@@ -383,6 +383,9 @@ class PublicationPage(
             return 'Disclaimer: This policy brief has been reviewed by the Future of Digital Finance conference organizers but has not been through CIGI’s formal editing process.'
         return False
 
+    def display_authors(self):
+        return self.publication_type.title != 'DigiFin Policy Brief' if self.publication_type else True
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(PublicationPage, self).get_template(request, *args, **kwargs)
         if self.publication_type:
