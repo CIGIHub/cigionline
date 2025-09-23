@@ -212,7 +212,6 @@
               {% for chapter in podcast_chapters %}
                 {% include_block chapter with chapter_num=forloop.counter %}
               {% endfor %}
-              <hr>
             </div>
           </div>
         </div>
@@ -226,6 +225,7 @@
         <div class="container">
           <div class="row justify-content-center">
             <div class="col col-md-10 col-lg-8">
+              <hr>
               <div class="accordion-header">
                 <h2 class="d-flex justify-content-between">
                   <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#transcript-accordion" aria-expanded="false" aria-controls="transcript-accordion">
