@@ -1,6 +1,60 @@
 @import '../../global/variables';
 @import '../../global/mixins';
 
+@keyframes slideTitleFade {
+  0% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  50% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes slideTitleLineExpand {
+  0% {
+    margin-left: -350px;
+    width: 0;
+    border-color: $cigi-primary-colour;
+  }
+
+  50% {
+    margin-left: -350px;
+    width: 450px;
+    border-color: $cigi-primary-colour;
+  }
+
+  100% {
+    margin-left: 0;
+    width: 100px;
+    border-color: $white;
+  }
+}
+
+@keyframes slideContentFade {
+  0% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  66% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
 .ar-slide-content {
   &.chairs-message,
   &.presidents-message {
@@ -59,6 +113,204 @@
 
       @include media-breakpoint-between(lg, xl) {
         font-size: 15px;
+      }
+    }
+  }
+
+  &.standard {
+    position: relative;
+    // top: 0;
+    width: 100%;
+    z-index: 2;
+
+    @include media-breakpoint-down(md) {
+      padding-bottom: 40px;
+      padding-top: 10px;
+    }
+
+    @include media-breakpoint-up(lg) {
+      @include media-breakpoint-up(md) {
+        @include media-breakpoint-up(sm) {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-55%);
+        }
+      }
+    }
+
+    .text-italic {
+      margin-right: 0.15em;
+    }
+
+    .slide-title {
+      &::after {
+        animation-duration: 1500ms;
+        animation-name: slideTitleLineExpand;
+        animation-timing-function: ease-in-out;
+        border-bottom: 4px solid $white;
+        content: '';
+        display: block;
+        margin: 15px 0 25px;
+        width: 100px;
+      }
+
+      h1 {
+        animation-duration: 1000ms;
+        animation-name: slideTitleFade;
+        animation-timing-function: ease-in;
+        position: relative;
+      }
+    }
+
+    .content-links {
+      animation-duration: 1500ms;
+      animation-name: slideContentFade;
+      animation-timing-function: ease-in;
+      position: relative;
+
+      .content-link {
+        display: block;
+        margin-bottom: 12px;
+
+        &:hover {
+          h4 {
+            color: $cigi-primary-colour;
+          }
+
+          .content-link-icon {
+            border-color: $cigi-primary-colour;
+          }
+
+          .underline {
+            background-size: 100% 100%;
+          }
+        }
+
+        h4 {
+          color: #acaaaa;
+          font-size: 12px;
+          letter-spacing: 0.5px;
+          margin-bottom: 0;
+          text-transform: uppercase;
+          transition: color 500ms;
+        }
+
+        p {
+          font-weight: 400;
+          margin-bottom: 0;
+        }
+
+        &.in-line-links {
+          span {
+            color: $white;
+            font-family: $primary-font-family, sans-serif;
+            font-style: normal;
+            font-weight: 400;
+          }
+
+          a {
+            &:visited {
+              color: $white;
+            }
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
+          }
+        }
+
+        .underline {
+          background-image: linear-gradient(
+            transparent calc(100% - 2px),
+            $cigi-primary-colour 10px
+          );
+          background-repeat: no-repeat;
+          background-size: 0% 100%;
+          transition: background-size 500ms;
+          width: calc(100%);
+        }
+
+        .content-link-icon {
+          border-color: $white;
+          border-radius: 50%;
+          border-style: solid;
+          border-width: 1px;
+          color: $white;
+          display: block;
+          font-size: 12px;
+          height: 38px;
+          line-height: 38px;
+          margin-right: 10px;
+          position: relative;
+          text-align: center;
+          transition: border-color 500ms;
+          width: 38px;
+        }
+
+        .content-copy {
+          overflow: hidden;
+        }
+      }
+    }
+
+    .content-links-mobile {
+      &::before {
+        border-top: 1px solid $white;
+        content: '';
+        display: block;
+      }
+
+      .content-link-mobile {
+        border-bottom: 1px solid $white;
+        display: block;
+        font-weight: 500;
+        padding: 12px 0;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+
+        &.in-line-links {
+          span {
+            color: $white;
+            font-family: $primary-font-family, sans-serif;
+            font-style: normal;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+
+    .content-image {
+      margin-bottom: 15px;
+    }
+
+    .paragraphs {
+      animation-duration: 1500ms;
+      animation-name: slideContentFade;
+      animation-timing-function: ease-in;
+      position: relative;
+
+      a {
+        @include media-breakpoint-up(lg) {
+          &:visited {
+            color: $white;
+          }
+
+          &:hover {
+            color: $cigi-primary-colour;
+            background-size: 0% 100%;
+          }
+
+          background-image: linear-gradient(
+            transparent calc(100% - 2px),
+            $cigi-primary-colour 10px
+          );
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          transition: background-size 500ms;
+          width: calc(100%);
+        }
       }
     }
   }

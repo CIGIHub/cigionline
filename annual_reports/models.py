@@ -414,6 +414,42 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             content = {
                 "columns": columns,
             }
+        elif self.slide_type == 'standard':
+            columns = []
+            for block in self.ar_slide_content:
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    column_content = {
+                        "en": [],
+                        "fr": [],
+                        "content": [],
+                    }
+                    for subblock in column:
+                        if subblock.block_type == "paragraph_column":
+                            column_content["en"].append(
+                                expand_db_html(subblock.value.get("en").source)
+                            )
+                            column_content["fr"].append(
+                                expand_db_html(subblock.value.get("fr").source)
+                            )
+
+                        elif subblock.block_type == "content_column":
+                            for content_item in subblock.value:
+                                if content_item.block_type == "content":
+                                    content_val = content_item.value
+                                    link = content_val.get("link_override") or (content_val.get("page").specific.url if content_val.get("page") else None)
+                                    column_content["content"].append({
+                                        "type": content_val.get("type"),
+                                        "link": link,
+                                        "title_en": content_val.get("title_en"),
+                                        "title_fr": content_val.get("title_fr"),
+                                    })
+
+                    columns.append(column_content)
+
+            content = {
+                "columns": columns,
+            }
         return content
 
 

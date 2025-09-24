@@ -13,7 +13,7 @@ import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 const slideComponents = {
   title: AnnualReportTitleSlide,
   toc: AnnualReportTOCSlide,
-  regular: AnnualReportRegularSlide,
+  standard: AnnualReportRegularSlide,
   chairs_message: AnnualReportRegularSlide,
   presidents_message: AnnualReportRegularSlide,
 };
@@ -37,6 +37,7 @@ function AnnualReportSlide({ slides, basePath }) {
   const [contentVisible, setContentVisible] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
+  console.log(slides[currentIndex]);
 
   if (currentIndex === -1) {
     return (
