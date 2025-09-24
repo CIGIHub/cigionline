@@ -7,7 +7,7 @@ from core.models import (
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
-from streams.blocks import ARSlideChooserBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from streams.blocks import ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -16,8 +16,11 @@ from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
 from wagtail.rich_text import expand_db_html
+from django.utils.html import strip_tags
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
+from wagtailmedia.widgets import AdminMediaChooser
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -147,9 +150,10 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         verbose_name_plural = 'Annual Report Pages'
 
 
-class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
+class AnnualReportSPAPage(FeatureablePageAbstract, SearchablePageAbstract, ShareablePageAbstract, Page):
     """View annual report SPA page"""
 
+    year = models.PositiveIntegerField(blank=False, null=True)
     slides = StreamField(
         [("slide", ARSlideChooserBlock())],
         blank=True,
@@ -158,6 +162,7 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
+                FieldPanel("year"),
                 FieldPanel("slides"),
             ],
             heading="Slides",
@@ -165,7 +170,16 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
         ),
     ]
 
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
     subpage_types = ["AnnualReportSlidePage"]
+
+    def get_template(self, request, *args, **kwargs):
+        return "annual_reports/annual_report_spa_page.html"
 
 
 class SlidePageAbstract(models.Model):
@@ -241,16 +255,202 @@ class SlidePageAbstract(models.Model):
         abstract = True
 
 
-class AnnualReportSlidePage(SlidePageAbstract, Page):
+class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
     """Each individual slide within the annual report."""
 
-    parent_page_types = ["AnnualReportSPAPage"]
+    def _serve_spa(self, request, initial_lang="en"):
+        parent = self.get_parent().specific
+        ctx = {
+            "page": parent,
+            "self": self,
+            "initial_lang": initial_lang,
+        }
+        return render(request, "annual_reports/annual_report_spa_page.html", ctx)
+
+    @route(r"^$")
+    def slide_root(self, request, *args, **kwargs):
+        return self._serve_spa(request, initial_lang="en")
+
+    @route(r"^fr/?$")
+    def slide_fr(self, request, *args, **kwargs):
+        return self._serve_spa(request, initial_lang="fr")
+
+    @route(r"^(?P<trailing>[/]+)?$")
+    def slide_catchall(self, request, trailing=None, *args, **kwargs):
+        return self._serve_spa(request, initial_lang="en")
+
+    SLIDE_TYPES = [
+        ('title', 'Title'),
+        ('toc', 'Table of Contents'),
+        ('chairs_message', 'Chair\'s Message'),
+        ('presidents_message', 'President\'s Message'),
+        ('standard', 'Standard'),
+        ('outputs_and_activities', 'Outputs and Activities'),
+        ('timeline', 'Timeline'),
+        ('financials', 'Financials'),
+    ]
+
+    slide_type = models.CharField(
+        max_length=255,
+        choices=SLIDE_TYPES,
+        default='standard',
+        help_text='Type of slide',
+    )
+
+    slide_title_fr = models.CharField(max_length=255, help_text="Title of the slide (French)", blank=True)
+
+    ar_slide_content = StreamField(
+        [
+            ("column", ARSlideColumnBlock()),
+            ("board", ARSlideBoardBlock()),
+        ],
+        blank=True,
+        help_text="Content of the slide",
+    )
+    background_caption = RichTextField(blank=True, help_text="Caption for the background image")
+    background_caption_fr = RichTextField(blank=True, help_text="Caption for the background image (French)")
+
+    parent_page_types = ['AnnualReportSPAPage']
     subpage_types = []
 
-    def serve(self, request):
-        """Always serve the SPA regardless of sub-page requested."""
-        parent = self.get_parent().specific
-        return render(request, "annual_reports/annual_report_spa_page.html", {"page": parent, "self": self})
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("slide_title"),
+                FieldPanel("slide_title_fr"),
+                FieldPanel("slide_subtitle"),
+                FieldPanel("slide_type"),
+            ],
+            heading="Slide title",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("ar_slide_content"),
+            ],
+            heading="Slide Content",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("background_image"),
+                FieldPanel("background_video", widget=AdminMediaChooser),
+                FieldPanel("background_colour"),
+                FieldPanel("background_images"),
+                FieldPanel("background_caption"),
+                FieldPanel("background_caption_fr"),
+            ],
+            heading="Background",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("include_on_toc"),
+            ],
+            heading="Slide Settings",
+            classname="collapsible collapsed",
+        ),
+    ]
+
+    def get_annual_report_slide_content(self):
+        content = {}
+        if self.slide_type == 'toc':
+            boards = {}
+            credits_message = {}
+            member_counter = 1
+
+            for block in self.ar_slide_content:
+                if block.block_type == "board":
+                    board_block = block.value
+                    board_type = board_block["board_type"]
+
+                    boards.setdefault(board_type, [])
+
+                    for member in board_block["board_members"]:
+                        if member.block_type == "member":
+                            image = member.value.get("image_override") or (member.value.get("page").specific.image_square if member.value.get("page") else None)
+                            print(image)
+                            link = member.value.get("link_override") or (member.value.get("page").specific.url if member.value.get("page") else None)
+                            boards[board_type].append({
+                                "id": member_counter,
+                                "name": member.value["name"],
+                                "title": member.value["title"],
+                                "title_fr": member.value["title_fr"],
+                                "title_line_2": member.value.get("title_line_2", ""),
+                                "title_line_2_fr": member.value.get("title_line_2_fr", ""),
+                                "bio_en": expand_db_html(member.value.get("bio_en").source) if member.value.get("bio_en") else "",
+                                "bio_fr": expand_db_html(member.value.get("bio_fr").source) if member.value.get("bio_fr") else "",
+                                "image": image.get_rendition('fill-150x150').file.url if image else '',
+                                "link": link,
+                            })
+                            member_counter += 1
+
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    for paragraph_column in column:
+                        if paragraph_column.block_type == "paragraph_column":
+                            credits_message["en"] = strip_tags(paragraph_column.value.get("en").source) or ""
+                            credits_message["fr"] = strip_tags(paragraph_column.value.get("fr").source) or ""
+
+            content = {
+                "boards": boards,
+                "credits_message": credits_message,
+            }
+
+        elif self.slide_type in ['chairs_message', 'presidents_message']:
+            columns = []
+            for block in self.ar_slide_content:
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    column_content = {
+                        "en": [],
+                        "fr": [],
+                    }
+                    for paragraph_column in column:
+                        if paragraph_column.block_type == "paragraph_column":
+                            column_content["en"].append(expand_db_html(paragraph_column.value.get("en").source))
+                            column_content["fr"].append(expand_db_html(paragraph_column.value.get("fr").source))
+                    columns.append(column_content)
+            content = {
+                "columns": columns,
+            }
+        elif self.slide_type == 'standard':
+            columns = []
+            for block in self.ar_slide_content:
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    column_content = {
+                        "en": [],
+                        "fr": [],
+                        "content": [],
+                    }
+                    for subblock in column:
+                        if subblock.block_type == "paragraph_column":
+                            column_content["en"].append(
+                                expand_db_html(subblock.value.get("en").source)
+                            )
+                            column_content["fr"].append(
+                                expand_db_html(subblock.value.get("fr").source)
+                            )
+
+                        elif subblock.block_type == "content_column":
+                            for content_item in subblock.value:
+                                if content_item.block_type == "content":
+                                    content_val = content_item.value
+                                    link = content_val.get("link_override") or (content_val.get("page").specific.url if content_val.get("page") else None)
+                                    column_content["content"].append({
+                                        "type": content_val.get("type"),
+                                        "link": link,
+                                        "title_en": content_val.get("title_en"),
+                                        "title_fr": content_val.get("title_fr"),
+                                    })
+
+                    columns.append(column_content)
+
+            content = {
+                "columns": columns,
+            }
+        return content
 
 
 class StrategicPlanSPAPage(FeatureablePageAbstract, Page, ShareablePageAbstract, SearchablePageAbstract):

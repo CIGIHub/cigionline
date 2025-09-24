@@ -11,7 +11,7 @@ function ExpertListing(props) {
           Name
         </div>
         <div className="table-infos-wrapper">
-          <a href={row.url} className="table-thumbnail-photo">
+          <a href={row.url} className="table-thumbnail-photo" aria-label={`View profile of ${row.title}`}>
             <div className="img-wrapper" style={{ backgroundImage: `url(${row.image_square_url})` }} />
           </a>
           <div className="table-infos">

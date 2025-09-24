@@ -166,7 +166,7 @@ class SearchTableExperts extends React.Component {
                     onChange={this.handleSearchValueChange}
                   />
                   <div className="input-group-append">
-                    <button className="btn-search" type="submit">
+                    <button className="btn-search" type="submit" aria-label="Search">
                       <i className="far fa-search" />
                     </button>
                   </div>

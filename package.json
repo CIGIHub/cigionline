@@ -10,7 +10,7 @@
   },
   "homepage": "https://github.com/CIGIHub/cigionline#readme",
   "engines": {
-    "node": "^14"
+    "node": "^20"
   },
   "scripts": {
     "build": "rimraf static/bundles && cross-env NODE_ENV=production webpack --mode production --progress",
@@ -20,6 +20,10 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-pro": "6.5.1",
+    "@fortawesome/fontawesome-svg-core": "7.0.1",
+    "@fortawesome/free-solid-svg-icons": "7.0.1",
+    "@fortawesome/pro-light-svg-icons": "7.0.1",
+    "@fortawesome/react-fontawesome": "3.0.2",
     "@panzoom/panzoom": "4.4.1",
     "bootstrap": "4.6.0",
     "framer-motion": "12.4.7",
@@ -35,13 +39,13 @@
     "swiper": "11.1.4"
   },
   "devDependencies": {
-    "@babel/core": "7.15.0",
+    "@babel/core": "^7.28.4",
     "@babel/eslint-parser": "7.28.0",
     "@babel/plugin-transform-runtime": "7.26.9",
     "@babel/preset-env": "7.14.7",
     "@babel/preset-react": "7.14.5",
     "autoprefixer": "10.4.16",
-    "babel-loader": "8.2.2",
+    "babel-loader": "^9.2.1",
     "babel-preset-react-app": "10.0.0",
     "cross-env": "7.0.3",
     "css-loader": "5.2.6",
@@ -54,7 +58,7 @@
     "file-loader": "6.2.0",
     "image-webpack-loader": "8.1.0",
     "luxon": "1.28.0",
-    "mini-css-extract-plugin": "2.1.0",
+    "mini-css-extract-plugin": "2.9.4",
     "postcss": "8.4.12",
     "postcss-loader": "6.1.1",
     "prop-types": "15.7.2",
@@ -66,8 +70,8 @@
     "scrollreveal": "4.0.9",
     "source-map-loader": "3.0.0",
     "style-loader": "3.2.1",
-    "webpack": "5.44.0",
+    "webpack": "5.101.3",
     "webpack-bundle-tracker": "0.4.3",
-    "webpack-cli": "4.9.2"
+    "webpack-cli": "5.1.4"
   }
 }

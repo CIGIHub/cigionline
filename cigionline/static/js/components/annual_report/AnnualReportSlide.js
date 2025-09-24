@@ -2,51 +2,23 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
-import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
-import StrategicPlanTOCSlide from './StrategicPlanTOCSlide';
-import AnnualReportNav from '../annual_report/AnnualReportNav';
-import StrategicPlanHamburgerMenu from './StrategicPlanHamburgerMenu';
-import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
-import StrategicPlanTimelineSlide from './StrategicPlanTimelineSlide';
-import StrategicPlanVerticalTitle from './StrategicPlanVerticalTitle';
+import AnnualReportRegularSlide from './AnnualReportRegularSlide';
+import AnnualReportTOCSlide from './AnnualReportTOCSlide';
+import AnnualReportTitleSlide from './AnnualReportTitleSlide';
+import AnnualReportNav from './AnnualReportNav';
+import AnnualReportHeader from './AnnualReportHeader';
+import AnnualReportVerticalTitle from './AnnualReportVerticalTitle';
+import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 
 const slideComponents = {
-  title: StrategicPlanTitleSlide,
-  regular: StrategicPlanRegularSlide,
-  toc: StrategicPlanTOCSlide,
-  framework: StrategicPlanFrameworkSlide,
-  timeline: StrategicPlanTimelineSlide,
+  title: AnnualReportTitleSlide,
+  toc: AnnualReportTOCSlide,
+  standard: AnnualReportRegularSlide,
+  chairs_message: AnnualReportRegularSlide,
+  presidents_message: AnnualReportRegularSlide,
 };
 
 const loadedImages = new Set();
-
-const getGradientClass = (alignment) => {
-  switch (alignment) {
-  case 'left':
-    return 'left';
-  case 'right':
-    return 'right';
-  case 'full':
-    return 'full';
-  case 'top':
-    return 'top';
-  case 'none':
-    return 'none';
-  default:
-    return 'none';
-  }
-};
-
-const getRandomIndex = (arrayLength, excludeIndex) => {
-  if (arrayLength <= 1) return 0;
-
-  let newIndex = excludeIndex;
-  while (newIndex === excludeIndex) {
-    newIndex = Math.floor(Math.random() * arrayLength);
-  }
-  return newIndex;
-};
 
 const preloadImage = (src) => {
   if (!src || loadedImages.has(src)) return;
@@ -57,23 +29,28 @@ const preloadImage = (src) => {
   img.src = src;
 };
 
-function StrategicReportSlide({ slides, basePath }) {
-  const { slug } = useParams();
+function AnnualReportSlide({ slides, basePath }) {
+  const { slug, lang } = useParams();
+  const currentLang = lang === 'fr' ? 'fr' : 'en';
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
-  const [imageIndex, setImageIndex] = useState(0);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
-  const gradientClass = getGradientClass(slides[currentIndex].alignment);
-  const timerRef = useRef(null);
+  console.log(slides[currentIndex]);
 
   if (currentIndex === -1) {
-    return <Navigate to={`/${slides[0].slug}`} replace />;
+    return (
+      <Navigate
+        to={`${basePath}/${slides[0].slug}${currentLang === 'fr' ? '/fr' : ''}`}
+        replace
+      />
+    );
   }
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
-  const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
+  const nextSlide =
+    currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
   const canScrollRef = useRef(true);
 
@@ -86,7 +63,7 @@ function StrategicReportSlide({ slides, basePath }) {
     const isLargeScreen = window.innerWidth >= 992;
     const contentOverflows = wrapper.scrollHeight > window.innerHeight;
 
-    return isLargeScreen && !(contentOverflows);
+    return isLargeScreen && !contentOverflows;
   };
 
   useEffect(() => {
@@ -110,9 +87,13 @@ function StrategicReportSlide({ slides, basePath }) {
       setTimeout(() => setIsScrolling(false), 600);
 
       if (direction === 'next' && nextSlide) {
-        navigate(`${basePath}/${nextSlide.slug}`);
+        navigate(
+          `${basePath}/${nextSlide.slug}${currentLang === 'fr' ? '/fr' : ''}`,
+        );
       } else if (direction === 'prev' && prevSlide) {
-        navigate(`${basePath}/${prevSlide.slug}`);
+        navigate(
+          `${basePath}/${prevSlide.slug}${currentLang === 'fr' ? '/fr' : ''}`,
+        );
       }
     };
 
@@ -164,46 +145,24 @@ function StrategicReportSlide({ slides, basePath }) {
     setContentVisible(false);
   }, [slug]);
 
-  useEffect(() => {
-    const images = slides[currentIndex]?.background_images;
-    if (!images || images.length <= 1) return;
-
-    const firstIndex = getRandomIndex(images.length, -1);
-    setImageIndex(firstIndex);
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current.timeout);
-      clearInterval(timerRef.current.interval);
-    }
-
-    timerRef.current = {};
-
-    timerRef.current.timeout = setTimeout(() => {
-      setImageIndex((prev) => getRandomIndex(images.length, prev));
-
-      timerRef.current.interval = setInterval(() => {
-        setImageIndex((prev) => getRandomIndex(images.length, prev));
-      }, 4000);
-    }, 6000);
-
-    (() => {
-      if (timerRef.current.timeout) clearTimeout(timerRef.current.timeout);
-      if (timerRef.current.interval) clearInterval(timerRef.current.interval);
-      timerRef.current = null;
-    })();
-  }, [currentIndex]);
-
   const currentSlide = slides[currentIndex];
-  const SlideComponent = slideComponents[slides[currentIndex].slide_type]
-    || (() => <div>Slide type not found</div>);
+  const SlideComponent =
+    slideComponents[slides[currentIndex].slide_type] ||
+    (() => <div>Slide type not found</div>);
 
   return (
     <>
-      <StrategicPlanHamburgerMenu slides={slides} basePath={basePath} />
+      <AnnualReportHeader
+        slides={slides}
+        basePath={basePath}
+        currentLang={currentLang}
+        currentSlug={slug}
+        currentIndex={currentIndex}
+      />
       <div
         className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
           [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
-        } ${gradientClass} ${currentIndex}`}
+        }`}
       >
         {slides.map((slide, index) => (
           <React.Fragment key={`bg-${slide.slug}`}>
@@ -217,7 +176,7 @@ function StrategicReportSlide({ slides, basePath }) {
                 preload="auto"
                 className={`background-video ${
                   index === currentIndex ? 'visible' : ''
-                } ${gradientClass} bg-${index}`}
+                } bg-${index}`}
               />
             ) : null}
           </React.Fragment>
@@ -226,7 +185,7 @@ function StrategicReportSlide({ slides, basePath }) {
       <AnimatePresence mode="sync">
         <motion.div
           key={currentSlide.id || currentSlide.slug}
-          className={`slide-background ${gradientClass} ${slides[currentIndex].slide_type}`}
+          className={`slide-background ${slides[currentIndex].slide_type}`}
           initial={{ opacity: 0.1, y: 0 }}
           animate={{ opacity: 1, y: -20 }}
           exit={{ opacity: 0, y: -20, transition: { delay: 1 } }}
@@ -234,7 +193,7 @@ function StrategicReportSlide({ slides, basePath }) {
           onAnimationComplete={() => setContentVisible(true)}
         >
           <div
-            className={`background-colour ${slides[currentIndex].background_colour}`}
+            className={`background-colour background-${slides[currentIndex].background_colour}`}
           />
           <div
             className="background-image"
@@ -242,27 +201,11 @@ function StrategicReportSlide({ slides, basePath }) {
               backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
             }}
           />
-          {slides[currentIndex].background_images && (
-            <>
-              {slides[currentIndex].background_images.map((image, index) => (
-                <motion.div
-                  key={`bg-image-${index}`}
-                  className={`background-image background-images-${index}`}
-                  style={{
-                    backgroundImage: `url(${image})`,
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: imageIndex === index ? 1 : 0 }}
-                  transition={{ duration: 2 }}
-                />
-              ))}
-            </>
-          )}
         </motion.div>
       </AnimatePresence>
       <div
         key={`content-${slug}-${slides[currentIndex].slide_type}`}
-        className={`slide-wrapper ${slides[currentIndex].background_colour}`}
+        className={`slide-wrapper ${slides[currentIndex].slide_type} background-${slides[currentIndex].background_colour}`}
       >
         <AnnualReportNav
           slides={slides}
@@ -270,42 +213,36 @@ function StrategicReportSlide({ slides, basePath }) {
           currentIndex={currentIndex}
         />
         {contentVisible && (
-          <div
-            key={`content-${slug}-${slides[currentIndex].slide_type}`}
-            className="ar-slide-content"
-          >
-            <div className="container">
-              <div className="annual-report-slide">
-                {currentSlide.slide_type === 'toc' && (
-                  <SlideComponent
-                    slides={slides}
-                    currentIndex={currentIndex}
-                    basePath={basePath}
-                  />
-                )}
-                {['title', 'regular', 'framework', 'timeline'].includes(
-                  currentSlide.slide_type,
-                ) && <SlideComponent slide={currentSlide} />}
-              </div>
-            </div>
+          <div>
+            {currentSlide.slide_type === 'toc' ? (
+              <SlideComponent
+                slides={slides}
+                currentIndex={currentIndex}
+                basePath={basePath}
+                lang={currentLang}
+              />
+            ) : (
+              <SlideComponent
+                slide={currentSlide}
+                basePath={basePath}
+                lang={currentLang}
+              />
+            )}
           </div>
         )}
       </div>
-      {['regular', 'framework', 'timeline'].includes(
-        currentSlide.slide_type,
-      ) && (
-        <StrategicPlanVerticalTitle
-          currentIndex={currentIndex}
-          slide={slides[currentIndex]}
-        />
-      )}
+      <AnnualReportVerticalTitle
+        currentIndex={currentIndex}
+        slide={slides[currentIndex]}
+        lang={currentLang}
+      />
     </>
   );
 }
 
-StrategicReportSlide.propTypes = {
+AnnualReportSlide.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   basePath: PropTypes.string.isRequired,
 };
 
-export default StrategicReportSlide;
+export default AnnualReportSlide;

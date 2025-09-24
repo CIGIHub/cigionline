@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
-function StrategicPlanVerticalTitle({ currentIndex, slide }) {
+function AnnualReportVerticalTitle({ currentIndex, slide }) {
   return (
     <>
       {slide.display_vertical_title && (
@@ -40,9 +40,9 @@ function StrategicPlanVerticalTitle({ currentIndex, slide }) {
   );
 }
 
-StrategicPlanVerticalTitle.propTypes = {
+AnnualReportVerticalTitle.propTypes = {
   currentIndex: PropTypes.number.isRequired,
   slide: PropTypes.object.isRequired,
 };
 
-export default StrategicPlanVerticalTitle;
+export default AnnualReportVerticalTitle;

@@ -1,0 +1,151 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+
+$timeline-event: #e7bc5d;
+$timeline-opinion: #63a9a4;
+$timeline-publication: $cigi-primary-colour;
+
+@mixin link-underline {
+  color: $white;
+  background-size: 0 100%;
+  transition: background-size 0.5s;
+  background-image: linear-gradient(
+    transparent calc(100% - 2px),
+    $cigi-primary-colour 10px
+  );
+  background-repeat: no-repeat;
+
+  &:hover {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes slideTitleLineExpand {
+  0% {
+    margin-left: -350px;
+    width: 0;
+  }
+
+  50% {
+    margin-left: -350px;
+    width: 425px;
+  }
+
+  100% {
+    margin-left: 0;
+    width: 75px;
+  }
+}
+
+body {
+  background-color: $black;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.annual-report-spa {
+  position: relative;
+}
+
+.slide-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-background {
+  height: calc(100% + 50px);
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: -3;
+
+  .background-image {
+    position: inherit;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+  }
+
+  .background-colour {
+    z-index: -2;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    &.background-white {
+      background-color: $white;
+    }
+  }
+}
+
+.loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.back-link {
+  display: flex;
+  position: relative;
+
+  &:hover {
+    .underline {
+      background-size: 100% 100%;
+    }
+  }
+
+  p {
+    font-weight: 500;
+    line-height: 44px;
+  }
+
+  .back-link-icon {
+    background-color: $white;
+    border-radius: 50%;
+    height: 44px;
+    line-height: 50px;
+    margin-right: 10px;
+    position: relative;
+    text-align: center;
+    transition: background-color 500ms;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.event {
+      background-color: $timeline-event;
+    }
+
+    &.article {
+      background-color: $timeline-opinion;
+    }
+
+    &.publication {
+      background-color: $timeline-publication;
+    }
+  }
+
+  .underline {
+    background-image: linear-gradient(
+      transparent calc(100% - 2px),
+      $cigi-primary-colour 10px
+    );
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition: background-size 500ms;
+    width: calc(100%);
+  }
+}

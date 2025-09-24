@@ -38,11 +38,23 @@ function AnnualReportListing(props) {
         </div>
         <div className="table-content">
           {(row.report_english && (
-            <a className="table-btn-icon track-cta" data-cta="ar-eng" onClick={handleCTAClick} href={row.report_english}>
+            <a
+              className="table-btn-icon track-cta"
+              data-cta="ar-eng"
+              onClick={handleCTAClick}
+              href={row.report_english}
+              aria-label="Download English Annual Report"
+            >
               <i className="fas fa-download" />
             </a>
           )) || (
-            <a className="table-btn-icon" data-cta="ar-interactive" onClick={handleCTAClick} href={`https://www.cigionline.org${row.report_interactive}en`}>
+            <a
+              className="table-btn-icon"
+              data-cta="ar-interactive"
+              onClick={handleCTAClick}
+              href={`https://www.cigionline.org${row.report_interactive}en`}
+              aria-label="Explore English Interactive Annual Report"
+            >
               <i className="fas fa-mouse-pointer" />
             </a>
           )}
@@ -54,11 +66,23 @@ function AnnualReportListing(props) {
         </div>
         <div className="table-content">
           {(row.report_french && (
-            <a className="table-btn-icon track-cta" data-cta="ar-fr" onClick={handleCTAClick} href={row.report_french}>
+            <a
+              className="table-btn-icon track-cta"
+              data-cta="ar-fr"
+              onClick={handleCTAClick}
+              href={row.report_french}
+              aria-label="Download French Annual Report"
+            >
               <i className="fas fa-download" />
             </a>
           )) || (
-            <a className="table-btn-icon track-cta" data-cta="ar-interactive" onClick={handleCTAClick} href={`https://www.cigionline.org${row.report_interactive}fr`}>
+            <a
+              className="table-btn-icon track-cta"
+              data-cta="ar-interactive"
+              onClick={handleCTAClick}
+              href={`https://www.cigionline.org${row.report_interactive}fr`}
+              aria-label="Explore French Interactive Annual Report"
+            >
               <i className="fas fa-mouse-pointer" />
             </a>
           )}
@@ -71,7 +95,13 @@ function AnnualReportListing(props) {
               Financial Statement
             </div>
             <div className="table-content">
-              <a className="table-btn-icon track-cta" data-cta="ar-financial" onClick={handleCTAClick} href={row.report_financial}>
+              <a
+                className="table-btn-icon track-cta"
+                data-cta="ar-financial"
+                onClick={handleCTAClick}
+                href={row.report_financial}
+                aria-label="Download Financial Statement"
+              >
                 <i className="fas fa-download" />
               </a>
             </div>

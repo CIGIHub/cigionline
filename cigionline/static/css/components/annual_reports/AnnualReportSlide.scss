@@ -1,0 +1,106 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+
+.ar-slide-content {
+  @include media-breakpoint-down(md) {
+    padding-bottom: 40px;
+    padding-top: 10px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-55%);
+  }
+
+  position: relative;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.annual-report-slide {
+  width: 100%;
+  z-index: 2;
+  color: white;
+
+  &.title-slide {
+    height: 100vh;
+
+    h1 {
+      @include media-breakpoint-up(lg) {
+        font-size: 3.5em;
+      }
+      font-size: 2.5em;
+      font-weight: 400;
+    }
+
+    p {
+      font-size: 1.25em;
+    }
+
+    .row {
+      height: 100%;
+    }
+
+    .col-9 {
+      height: 100%;
+    }
+
+    .title-slide-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .years {
+        color: $cigi-primary-colour;
+        font-weight: 500;
+        font-size: 1.1em;
+      }
+    }
+
+    .large-logo {
+      width: 150px;
+      fill: $white;
+      transition: fill 0.3s ease;
+
+      &:hover {
+        fill: $cigi-primary-colour;
+      }
+    }
+
+    .title-slide__title {
+      padding-top: 10em;
+
+      p {
+        font-size: 1em;
+      }
+    }
+
+    .title-slide__content {
+      font-size: 1.5em;
+    }
+  }
+
+  h1 {
+    font-size: clamp(1.5em, 5vw, 2em);
+    font-weight: 400;
+  }
+
+  ul {
+    padding-left: 1.5em;
+  }
+
+  p {
+    line-height: 1.25;
+
+    li {
+      margin-bottom: 0.5em;
+    }
+
+    &.subtitle {
+      font-size: 1.1em;
+    }
+  }
+}
