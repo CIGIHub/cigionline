@@ -555,7 +555,7 @@ class ContentPage(Page, SearchablePageAbstract):
         ).exclude(
             articlepage__article_type__title='CIGI in the News'
         ).exclude(
-            publicationpage__publication_type__title='Working Paper'
+            publicationpage__publication_type__title__in=['Working Paper', 'DigiFin Policy Brief']
         ).exclude(
             path__startswith='00010002'
         ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_content)])

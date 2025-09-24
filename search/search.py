@@ -207,7 +207,7 @@ class CIGIOnlineSearchQueryCompiler:
 
     @property
     def queryset(self):
-        exclusions = {'contentpage__publicationpage__publication_type__title': 'DigiFin Policy Brief'}
+        exclusions = {'contentpage__publicationpage__publication_type__title__in': ['DigiFin Policy Brief', 'Working Paper']}
 
         return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 
