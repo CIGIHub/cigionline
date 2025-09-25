@@ -182,27 +182,20 @@ function AnnualReportSlide({ slides, basePath }) {
           </React.Fragment>
         ))}
       </div>
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={currentSlide.id || currentSlide.slug}
-          className={`slide-background ${slides[currentIndex].slide_type}`}
-          initial={{ opacity: 0.1, y: 0 }}
-          animate={{ opacity: 1, y: -20 }}
-          exit={{ opacity: 0, y: -20, transition: { delay: 1 } }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-          onAnimationComplete={() => setContentVisible(true)}
-        >
-          <div
-            className={`background-colour background-${slides[currentIndex].background_colour}`}
-          />
-          <div
-            className="background-image"
-            style={{
-              backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
-            }}
-          />
-        </motion.div>
-      </AnimatePresence>
+      <div
+        key={currentSlide.id || currentSlide.slug}
+        className={`slide-background ${slides[currentIndex].slide_type}`}
+      >
+        <div
+          className={`background-colour background-${slides[currentIndex].background_colour}`}
+        />
+        <div
+          className="background-image hover-reveal"
+          style={{
+            backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
+          }}
+        />
+      </div>
       <div
         key={`content-${slug}-${slides[currentIndex].slide_type}`}
         className={`slide-wrapper ${slides[currentIndex].slide_type} background-${slides[currentIndex].background_colour}`}
@@ -212,23 +205,19 @@ function AnnualReportSlide({ slides, basePath }) {
           basePath={basePath}
           currentIndex={currentIndex}
         />
-        {contentVisible && (
-          <div>
-            {currentSlide.slide_type === 'toc' ? (
-              <SlideComponent
-                slides={slides}
-                currentIndex={currentIndex}
-                basePath={basePath}
-                lang={currentLang}
-              />
-            ) : (
-              <SlideComponent
-                slide={currentSlide}
-                basePath={basePath}
-                lang={currentLang}
-              />
-            )}
-          </div>
+        {currentSlide.slide_type === 'toc' ? (
+          <SlideComponent
+            slides={slides}
+            currentIndex={currentIndex}
+            basePath={basePath}
+            lang={currentLang}
+          />
+        ) : (
+          <SlideComponent
+            slide={currentSlide}
+            basePath={basePath}
+            lang={currentLang}
+          />
         )}
       </div>
       <AnnualReportVerticalTitle

@@ -97,32 +97,6 @@ body {
   flex-direction: column;
 }
 
-.slide-background {
-  height: calc(100% + 50px);
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: -3;
-
-  .background-image {
-    position: inherit;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-  }
-
-  .background-colour {
-    z-index: -2;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-  }
-}
-
 .ar-slide-content {
   height: 100%;
   position: relative;
@@ -374,74 +348,6 @@ body {
         rgba(0, 0, 0, 0.7)
       );
     }
-  }
-
-  &.title {
-    .background-image {
-      width: 50%;
-      left: unset;
-      right: 0;
-    }
-
-    .background-colour {
-      @include media-breakpoint-up(md) {
-        width: 50%;
-      }
-      background-color: $black;
-      height: 105vh;
-      left: 0;
-      width: 75%;
-      position: absolute;
-      z-index: -1;
-    }
-
-    .background-video {
-      left: unset;
-      right: 0;
-      width: 50%;
-    }
-  }
-
-  &.toc {
-    .background-image {
-      width: 34%;
-      left: unset;
-      right: 0;
-    }
-
-    .background-colour {
-      @include media-breakpoint-up(md) {
-        width: 66%;
-      }
-      background-color: $black;
-      height: 105vh;
-      width: 75%;
-      left: 0;
-      position: absolute;
-      z-index: -1;
-    }
-
-    .background-video {
-      left: unset;
-      right: 0;
-      width: 34%;
-    }
-  }
-
-  &.framework,
-  &.timeline {
-    background-color: $black;
-  }
-
-  .background-image,
-  .background-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -2;
   }
 }
 

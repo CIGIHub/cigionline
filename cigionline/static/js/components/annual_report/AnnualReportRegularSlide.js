@@ -3,23 +3,25 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFileLines,
-  faVideo,
+  faFilm,
   faPodcast,
-  faCalendar,
+  faCalendarDays,
   faNewspaper,
   faUser,
   faEnvelope,
   faHeadphones,
   faMagnifyingGlass,
+  faMessageLines,
 } from '@fortawesome/pro-light-svg-icons';
 import '../../../css/components/annual_reports/AnnualReportRegularSlide.scss';
 
 function AnnualReportRegularSlide({ slide, lang }) {
   const contentIcons = {
     publication: faFileLines,
-    video: faVideo,
+    opinion: faMessageLines,
+    video: faFilm,
     podcast: faPodcast,
-    event: faCalendar,
+    event: faCalendarDays,
     essay_series: faNewspaper,
     media: faNewspaper,
     news_release: faNewspaper,
@@ -46,7 +48,7 @@ function AnnualReportRegularSlide({ slide, lang }) {
           </div>
           <div className="row">
             {slide.slide_content.columns?.map((column, index) => (
-              <div className="col-12 col-md-6" key={index}>
+              <div className="col-12 col-lg-6" key={index}>
                 {column.en && (
                   <div
                     className="paragraphs"
@@ -56,24 +58,54 @@ function AnnualReportRegularSlide({ slide, lang }) {
                   />
                 )}
                 {column.content && (
-                  <div>
-                    {column.content.map((contentBlock, idx) => (
-                      <a
-                        key={idx}
-                        className="content-link"
-                        href={contentBlock.link}
-                        aria-label={
-                          contentBlock.label || 'Related content link'
-                        }
-                      >
-                        <div className="float-left content-link-icon">
-                          <FontAwesomeIcon
-                            icon={contentIcons[contentBlock.type]}
-                          />
-                        </div>
-                      </a>
-                    ))}
-                  </div>
+                  <>
+                    <div className="content-links">
+                      {column.content.map((contentBlock, idx) => (
+                        <a
+                          key={idx}
+                          className="content-link d-none d-lg-block"
+                          href={contentBlock.link}
+                          aria-label={
+                            contentBlock.label || 'Related content link'
+                          }
+                        >
+                          <div className="float-left content-link-icon">
+                            <FontAwesomeIcon
+                              icon={contentIcons[contentBlock.type]}
+                            />
+                          </div>
+                          <div className="content-copy">
+                            <h4>{contentBlock.type}</h4>
+                            <p>
+                              <span className="underline">
+                                {lang === 'fr'
+                                  ? contentBlock.title_fr
+                                  : contentBlock.title_en}
+                              </span>
+                            </p>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                    <div className="content-links-mobile d-lg-none">
+                      {column.content.map((contentBlock, idx) => (
+                        <a
+                          key={`mobile-${idx}`}
+                          className="clearfix content-link-mobile"
+                          href={contentBlock.link}
+                          aria-label={
+                            contentBlock.label || 'Related content link'
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {lang === 'fr'
+                            ? contentBlock.title_fr
+                            : contentBlock.title_en}
+                        </a>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             ))}
