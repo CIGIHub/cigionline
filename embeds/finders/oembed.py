@@ -21,7 +21,8 @@ class YouTubeOEmbedFinder(OEmbedFinder):
         embed = super().find_embed(url, max_width)
 
         soup = BeautifulSoup(embed['html'], 'html.parser')
-        iframe_url = soup.find('iframe').attrs['src']
+        iframe = soup.find('iframe')
+        iframe_url = iframe.attrs['src']
         scheme, netloc, path, params, query, fragment = urlparse(iframe_url)
 
         querydict = parse_qs(query)
@@ -29,7 +30,10 @@ class YouTubeOEmbedFinder(OEmbedFinder):
         query = urlencode(querydict, doseq=1)
 
         iframe_url = urlunparse((scheme, netloc, path, params, query, fragment))
-        soup.find('iframe').attrs['src'] = iframe_url
+        iframe.attrs['src'] = iframe_url
+        iframe['referrerpolicy'] = 'strict-origin-when-cross-origin'
+        print(iframe)
+
         embed['html'] = str(soup)
 
         return embed
