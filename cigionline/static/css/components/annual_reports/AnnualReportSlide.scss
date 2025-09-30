@@ -2,7 +2,7 @@
 @import '../../global/mixins';
 
 $lightbox-background: rgba(0, 0, 0, 0.2);
-$quote-background-overlay: rgba(0, 0, 0, .9);
+$quote-background-overlay: rgba(0, 0, 0, 0.9);
 
 .ar-slide-content {
   @include media-breakpoint-down(md) {
@@ -204,12 +204,22 @@ $quote-background-overlay: rgba(0, 0, 0, .9);
     }
 
     .hover-reveal-quote {
+      color: $white;
       font-size: 32px;
       font-weight: 700;
       line-height: 1.2;
-      opacity: 0;
       position: relative;
-      top: 10px;
+      --reveal-delay: 0s;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease var(--reveal-delay),
+        transform 0.5s ease var(--reveal-delay);
+
+      &.is-revealed {
+        --reveal-delay: 0.7s;
+        opacity: 1;
+        transform: translateY(0);
+      }
 
       &.no-indent {
         padding-left: 0;
@@ -221,7 +231,15 @@ $quote-background-overlay: rgba(0, 0, 0, .9);
       border-top: 4px solid $cigi-primary-colour;
       display: block;
       margin: 20px 0;
-      width: 0;
+      opacity: 1;
+      --reveal-delay: 0s;
+      width: 0px;
+      transition: width 0.5s ease var(--reveal-delay);
+
+      &.is-revealed {
+        --reveal-delay: 0.7s;
+        width: 100px;
+      }
     }
 
     .hover-reveal-quote-source {
@@ -241,32 +259,63 @@ $quote-background-overlay: rgba(0, 0, 0, .9);
 .radial-progress {
   background-color: transparent;
   border-radius: 50%;
-  height: 44px;
-  left: -2px;
+  height: 38px;
   position: absolute;
-  top: -2px;
-  width: 44px;
+  width: 38px;
   z-index: -1;
+
+  &.is-dimmed {
+    .circle {
+      .mask {
+        &.left {
+          transform: rotate(180deg);
+        }
+
+        .fill {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
 
   .circle {
     .fill,
     .mask {
       border-radius: 50%;
-      height: 44px;
+      height: 38px;
       position: absolute;
-      width: 44px;
+      width: 38px;
     }
 
     .mask {
-      clip: rect(0, 44px, 44px, 22px);
+      clip: rect(0, 38px, 38px, 19px);
       transition: transform 500ms;
 
       .fill {
         -webkit-backface-visibility: hidden;
         background-color: $cigi-primary-colour;
-        clip: rect(0, 22px, 44px, 0);
+        clip: rect(0, 19px, 38px, 0);
         transition: transform 500ms;
       }
     }
+  }
+}
+
+.fadeable {
+  opacity: 1;
+  transition: opacity 0.7s ease;
+  will-change: opacity;
+  &.is-dimmed {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.revealable {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  will-change: opacity;
+  &.is-revealed {
+    opacity: 1;
   }
 }

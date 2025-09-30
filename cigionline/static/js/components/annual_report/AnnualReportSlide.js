@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 import AnnualReportTitleSlide from './AnnualReportTitleSlide';
 import AnnualReportNav from './AnnualReportNav';
 import AnnualReportHeader from './AnnualReportHeader';
 import AnnualReportVerticalTitle from './AnnualReportVerticalTitle';
+import AnnualReportFooter from './AnnualReportFooter';
 import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 
 const slideComponents = {
@@ -29,12 +29,14 @@ const preloadImage = (src) => {
   img.src = src;
 };
 
+const shareRoute = 'cigionline.org';
+
 function AnnualReportSlide({ slides, basePath }) {
   const { slug, lang } = useParams();
   const currentLang = lang === 'fr' ? 'fr' : 'en';
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
-  const [contentVisible, setContentVisible] = useState(false);
+  const [dimUI, setDimUI] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
   console.log(slides[currentIndex]);
@@ -47,6 +49,16 @@ function AnnualReportSlide({ slides, basePath }) {
       />
     );
   }
+
+  const fadeableClass = useMemo(
+    () => `fadeable${dimUI ? ' is-dimmed' : ''}`,
+    [dimUI],
+  );
+
+  const revealableClass = useMemo(
+    () => `revealable${dimUI ? ' is-revealed' : ''}`,
+    [dimUI],
+  );
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
   const nextSlide =
@@ -141,10 +153,6 @@ function AnnualReportSlide({ slides, basePath }) {
     };
   }, [currentIndex, navigate, isScrolling, slides]);
 
-  useEffect(() => {
-    setContentVisible(false);
-  }, [slug]);
-
   const currentSlide = slides[currentIndex];
   const SlideComponent =
     slideComponents[slides[currentIndex].slide_type] ||
@@ -152,13 +160,15 @@ function AnnualReportSlide({ slides, basePath }) {
 
   return (
     <>
-      <AnnualReportHeader
-        slides={slides}
-        basePath={basePath}
-        currentLang={currentLang}
-        currentSlug={slug}
-        currentIndex={currentIndex}
-      />
+      <div className={fadeableClass}>
+        <AnnualReportHeader
+          slides={slides}
+          basePath={basePath}
+          currentLang={currentLang}
+          currentSlug={slug}
+          currentIndex={currentIndex}
+        />
+      </div>
       <div
         className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
           [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
@@ -190,41 +200,70 @@ function AnnualReportSlide({ slides, basePath }) {
           className={`background-colour background-${slides[currentIndex].background_colour}`}
         />
         <div
-          className="background-image hover-reveal"
+          className={`background-image hover-reveal hover-reveal-gradient-${slides[currentIndex].background_gradient_position} ${revealableClass}`}
           style={{
             backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
           }}
-        />
+        >
+          <div
+            className={`quote quote-${slides[currentIndex].background_quote_position}`}
+          >
+            <h3
+              className={`hover-reveal-quote ${revealableClass}`}
+              dangerouslySetInnerHTML={{
+                __html:
+                  currentLang === 'fr'
+                    ? slides[currentIndex].background_quote_fr
+                    : slides[currentIndex].background_quote,
+              }}
+            />
+            <div className={`hover-reveal-quote-line ${revealableClass}`} />
+          </div>
+        </div>
       </div>
       <div
         key={`content-${slug}-${slides[currentIndex].slide_type}`}
         className={`slide-wrapper ${slides[currentIndex].slide_type} background-${slides[currentIndex].background_colour}`}
       >
-        <AnnualReportNav
-          slides={slides}
-          basePath={basePath}
-          currentIndex={currentIndex}
-        />
-        {currentSlide.slide_type === 'toc' ? (
-          <SlideComponent
+        <div className={fadeableClass}>
+          <AnnualReportNav
             slides={slides}
+            basePath={basePath}
             currentIndex={currentIndex}
-            basePath={basePath}
-            lang={currentLang}
           />
-        ) : (
-          <SlideComponent
-            slide={currentSlide}
-            basePath={basePath}
-            lang={currentLang}
-          />
-        )}
+        </div>
+        <div className={fadeableClass}>
+          {currentSlide.slide_type === 'toc' ? (
+            <SlideComponent
+              className={fadeableClass}
+              slides={slides}
+              currentIndex={currentIndex}
+              basePath={basePath}
+              lang={currentLang}
+            />
+          ) : (
+            <SlideComponent
+              className={fadeableClass}
+              slide={currentSlide}
+              basePath={basePath}
+              lang={currentLang}
+            />
+          )}
+        </div>
       </div>
-      <AnnualReportVerticalTitle
-        currentIndex={currentIndex}
-        slide={slides[currentIndex]}
-        lang={currentLang}
+      <AnnualReportFooter
+        slide={currentSlide}
+        shareRoute={shareRoute}
+        onHoverChange={setDimUI}
+        dimUI={dimUI}
       />
+      <div className={fadeableClass}>
+        <AnnualReportVerticalTitle
+          currentIndex={currentIndex}
+          slide={slides[currentIndex]}
+          lang={currentLang}
+        />
+      </div>
     </>
   );
 }

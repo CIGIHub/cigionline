@@ -13,8 +13,11 @@
           }
 
           &.active {
+            color: $grey-selected;
+            cursor: default;
+
             &::before {
-              background-color: $black;
+              background-color: $grey-selected;
             }
           }
 

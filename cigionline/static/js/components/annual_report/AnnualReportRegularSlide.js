@@ -30,6 +30,7 @@ function AnnualReportRegularSlide({ slide, lang }) {
     listen: faHeadphones,
     explore: faMagnifyingGlass,
   };
+
   return (
     <div className="annual-report-slide">
       <div
@@ -41,9 +42,14 @@ function AnnualReportRegularSlide({ slide, lang }) {
         <div className="container">
           <div className="row">
             <div className="col">
-              <h1 className="slide-title" aria-live="assertive">
-                {lang === 'fr' ? slide.slide_title_fr : slide.slide_title}
-              </h1>
+              <div className="slide-title">
+                <h1
+                  aria-live="assertive"
+                  key={lang}
+                >
+                  {lang === 'fr' ? slide.slide_title_fr : slide.slide_title}
+                </h1>
+              </div>
             </div>
           </div>
           <div className="row">
