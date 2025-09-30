@@ -68,7 +68,6 @@ $whisper-grey: #eee;
 
 // Backgrounds
 $dph-background: #2c2c2c;
-$ar-background-overlay: rgba(0, 0, 0, .7);
 
 //addons
 $white-opacity-0: rgba(255, 255, 255, 0);
@@ -88,3 +87,7 @@ $black-alpha-65: rgba(0, 0, 0, 0.65);
 $black-alpha-70: rgba(0, 0, 0, 0.7);
 $black-alpha-80: rgba(0, 0, 0, 0.8);
 $black-alpha-85: rgba(0, 0, 0, 0.85);
+
+//ar
+$ar-background-overlay: rgba(0, 0, 0, 0.7);
+$ar-tooltip-background: #373737;

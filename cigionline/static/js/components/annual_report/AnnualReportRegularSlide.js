@@ -42,11 +42,8 @@ function AnnualReportRegularSlide({ slide, lang }) {
         <div className="container">
           <div className="row">
             <div className="col">
-              <div className="slide-title">
-                <h1
-                  aria-live="assertive"
-                  key={lang}
-                >
+              <div className="slide-title" key={lang}>
+                <h1 aria-live="assertive">
                   {lang === 'fr' ? slide.slide_title_fr : slide.slide_title}
                 </h1>
               </div>
@@ -58,17 +55,18 @@ function AnnualReportRegularSlide({ slide, lang }) {
                 {column.en && (
                   <div
                     className="paragraphs"
+                    key={lang}
                     dangerouslySetInnerHTML={{
                       __html: lang === 'fr' ? column.fr : column.en,
                     }}
                   />
                 )}
                 {column.content && (
-                  <>
-                    <div className="content-links">
+                  <div className="content-links" key={`content-${lang}`}>
+                    <div>
                       {column.content.map((contentBlock, idx) => (
                         <a
-                          key={idx}
+                          key={`content-${idx}-${lang}`}
                           className="content-link d-none d-lg-block"
                           href={contentBlock.link}
                           aria-label={
@@ -111,7 +109,7 @@ function AnnualReportRegularSlide({ slide, lang }) {
                         </a>
                       ))}
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             ))}

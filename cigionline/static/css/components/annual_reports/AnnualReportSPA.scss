@@ -37,10 +37,22 @@ $timeline-publication: $cigi-primary-colour;
   }
 }
 
+html,
 body {
+  @include media-breakpoint-up(lg) {
+    overflow-y: hidden;
+    position: fixed;
+    width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+body {
+  @include media-breakpoint-up(lg) {
+    height: 100%;
+    overflow: hidden;
+  }
   background-color: $black;
-  overflow-y: auto;
-  height: 100%;
 }
 
 .annual-report-spa {

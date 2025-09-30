@@ -1,7 +1,12 @@
 @import '../../global/variables';
 @import '../../global/mixins';
 
-.slide-wrapper {
+.annual-report-nav {
+  position: relative;
+  z-index: 10;
+}
+
+.annual-report-nav {
   &.background-white {
     .slide-nav {
       .nav-circle {
@@ -31,7 +36,8 @@
         color: $black;
 
         &::after {
-          border-color: transparent transparent transparent rgba(255, 255, 255, 0.9);
+          border-color: transparent transparent transparent
+            rgba(255, 255, 255, 0.9);
         }
       }
     }
@@ -45,6 +51,7 @@
     }
   }
 }
+
 .slide-nav {
   @include media-breakpoint-down(md) {
     display: none;
@@ -99,67 +106,138 @@
   align-items: center;
 }
 
-.nav-tooltip {
-  position: absolute;
+.dot-nav {
+  list-style-type: none;
+  margin: 0;
+  position: fixed;
   right: 30px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  white-space: nowrap;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  top: 50%;
+  transform: translateY(-50%);
+  visibility: hidden;
+  width: 20px;
+  z-index: 1;
 
-  &::after {
-    content: '';
-    position: absolute;
-    right: -16px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-width: 8px;
-    border-style: solid;
-    border-color: transparent transparent transparent rgba(0, 0, 0, 0.8);
-  }
-}
-
-.nav-circle {
-  width: 16px;
-  height: 16px;
-  border: 1px solid white;
-  border-radius: 50%;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background-color: transparent;
-}
-
-.nav-circle {
-  &::before {
-    content: '';
-    width: 70%;
-    height: 70%;
-    background-color: $white;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    transition: transform 0.3s ease;
+  @media screen and (min-width: 1140px) {
+    visibility: visible;
   }
 
-  &:hover {
-    transform: scale(1.2);
-    border-color: $cigi-primary-colour;
-    &::before {
-      transform: translate(-50%, -50%) scale(1);
-      background-color: $cigi-primary-colour;
+  &.background-white {
+    li {
+      .current-page,
+      .link-dot {
+        .dot-circle {
+          border-color: $black;
+        }
+      }
+
+      .current-page {
+        .dot-circle {
+          background-color: $black;
+        }
+      }
     }
   }
 
-  &.active {
-    &::before {
-      transform: translate(-50%, -50%) scale(1);
+  li {
+    height: 20px;
+    position: relative;
+    transition: height 250ms;
+    width: 20px;
+
+    &:hover {
+      height: 28px;
+
+      &.link-item {
+        .dot-nav-tooltip {
+          visibility: visible;
+        }
+      }
+    }
+
+    .current-page,
+    .link-dot {
+      display: block;
+      height: 20px;
+      padding: 2px 0;
+      transition: height 250ms, padding 250ms;
+      width: 20px;
+
+      &:hover {
+        height: 28ms;
+        padding: 4px 0;
+
+        .dot-circle {
+          height: 20px;
+          margin: 0;
+          width: 20px;
+        }
+      }
+
+      .dot-circle {
+        background-clip: content-box;
+        border-color: $white;
+        border-radius: 50%;
+        border-style: solid;
+        border-width: 1px;
+        height: 16px;
+        margin: 0 2px;
+        padding: 2px;
+        transition: background-color 250ms, border-color 250ms, height 250ms,
+          margin 250ms, width 250ms;
+        width: 16px;
+      }
+    }
+
+    .current-page {
+      .dot-circle {
+        background-color: $white;
+      }
+    }
+
+    .link-dot {
+      &:hover {
+        .dot-circle {
+          background-color: $cigi-primary-colour;
+          border-color: $cigi-primary-colour;
+        }
+      }
+    }
+
+    .dot-nav-tooltip {
+      max-width: 550px;
+      position: absolute;
+      right: 175%;
+      text-align: right;
+      top: 50%;
+      transform: translateY(-50%);
+      visibility: hidden;
+      width: 50vw;
+
+      span {
+        background: $ar-tooltip-background;
+        border-radius: 3px;
+        color: $white;
+        font-family: $primary-font-family, sans-serif;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        padding: 3px 6px;
+
+        &::after {
+          border: solid transparent;
+          border-color: transparent;
+          border-left-color: $ar-tooltip-background;
+          border-width: 8px;
+          content: '';
+          height: 0;
+          left: 100%;
+          margin-top: -8px;
+          pointer-events: none;
+          position: absolute;
+          top: 50%;
+          width: 0;
+        }
+      }
     }
   }
 }

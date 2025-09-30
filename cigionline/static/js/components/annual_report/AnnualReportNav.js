@@ -1,13 +1,10 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../../css/components/annual_reports/AnnualReportNav.scss';
 
-function AnnualReportNav({ slides, basePath, currentIndex }) {
-  const location = useLocation();
+function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass }) {
   const navigate = useNavigate();
-  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const prevSlide = slides[currentIndex - 1] || null;
   const nextSlide = slides[currentIndex + 1] || null;
@@ -19,7 +16,9 @@ function AnnualReportNav({ slides, basePath, currentIndex }) {
   };
 
   return (
-    <>
+    <div
+      className={`annual-report-nav background-${slides[currentIndex].background_colour} ${fadeableClass}`}
+    >
       {prevSlide && (
         <button
           type="button"
@@ -40,40 +39,34 @@ function AnnualReportNav({ slides, basePath, currentIndex }) {
           <span>Next Slide</span>
         </button>
       )}
-      <div className="slide-nav">
+      <div
+        className={`dot-nav d-none d-lg-block background-${slides[currentIndex].background_colour}`}
+      >
         {slides.map((slide, index) => (
-          <div
-            key={slide.slug}
-            className="nav-item-wrapper"
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-          >
-            <AnimatePresence>
-              {hoveredIndex === index && (
-                <motion.div
-                  className="nav-tooltip"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                >
-                  {slide.slide_title}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <Link
-              to={`${basePath}/${slide.slug}`}
-              className={`nav-circle ${
-                location.pathname.includes(slide.slug) ? 'active' : ''
-              }`}
-            >
-              <span />
-            </Link>
+          <div key={slide.slug}>
+            {currentIndex === index ? (
+              <li className="current-item">
+                <div className="dot-nav-tooltip">
+                  <span>{slide.slide_title}</span>
+                </div>
+                <div className="current-page">
+                  <div className="dot-circle" />
+                </div>
+              </li>
+            ) : (
+              <li className="link-item">
+                <div className="dot-nav-tooltip">
+                  <span>{slide.slide_title}</span>
+                </div>
+                <Link to={`${basePath}/${slide.slug}`} className="link-dot">
+                  <div className="dot-circle" />
+                </Link>
+              </li>
+            )}
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -81,6 +74,7 @@ AnnualReportNav.propTypes = {
   slides: PropTypes.array.isRequired,
   basePath: PropTypes.string.isRequired,
   currentIndex: PropTypes.number.isRequired,
+  fadeableClass: PropTypes.string.isRequired,
 };
 
 export default AnnualReportNav;

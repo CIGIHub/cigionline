@@ -160,15 +160,14 @@ function AnnualReportSlide({ slides, basePath }) {
 
   return (
     <>
-      <div className={fadeableClass}>
-        <AnnualReportHeader
-          slides={slides}
-          basePath={basePath}
-          currentLang={currentLang}
-          currentSlug={slug}
-          currentIndex={currentIndex}
-        />
-      </div>
+      <AnnualReportHeader
+        slides={slides}
+        basePath={basePath}
+        currentLang={currentLang}
+        currentSlug={slug}
+        currentIndex={currentIndex}
+        fadeableClass={fadeableClass}
+      />
       <div
         className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
           [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
@@ -194,62 +193,61 @@ function AnnualReportSlide({ slides, basePath }) {
       </div>
       <div
         key={currentSlide.id || currentSlide.slug}
-        className={`slide-background ${slides[currentIndex].slide_type}`}
+        className={`slide-background background-row ${slides[currentIndex].slide_type}`}
       >
         <div
           className={`background-colour background-${slides[currentIndex].background_colour}`}
         />
+        {slides[currentIndex].slide_type === 'regular' && (
+          <div className="background-overlay hover-reveal-hide" />
+        )}
         <div
           className={`background-image hover-reveal hover-reveal-gradient-${slides[currentIndex].background_gradient_position} ${revealableClass}`}
           style={{
             backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
           }}
         >
-          <div
-            className={`quote quote-${slides[currentIndex].background_quote_position}`}
-          >
-            <h3
-              className={`hover-reveal-quote ${revealableClass}`}
-              dangerouslySetInnerHTML={{
-                __html:
-                  currentLang === 'fr'
-                    ? slides[currentIndex].background_quote_fr
-                    : slides[currentIndex].background_quote,
-              }}
-            />
-            <div className={`hover-reveal-quote-line ${revealableClass}`} />
-          </div>
-        </div>
-      </div>
-      <div
-        key={`content-${slug}-${slides[currentIndex].slide_type}`}
-        className={`slide-wrapper ${slides[currentIndex].slide_type} background-${slides[currentIndex].background_colour}`}
-      >
-        <div className={fadeableClass}>
-          <AnnualReportNav
-            slides={slides}
-            basePath={basePath}
-            currentIndex={currentIndex}
-          />
-        </div>
-        <div className={fadeableClass}>
-          {currentSlide.slide_type === 'toc' ? (
-            <SlideComponent
-              className={fadeableClass}
-              slides={slides}
-              currentIndex={currentIndex}
-              basePath={basePath}
-              lang={currentLang}
-            />
-          ) : (
-            <SlideComponent
-              className={fadeableClass}
-              slide={currentSlide}
-              basePath={basePath}
-              lang={currentLang}
-            />
+          {slides[currentIndex].background_quote && (
+            <div
+              className={`quote quote-${slides[currentIndex].background_quote_position}`}
+            >
+              <h3
+                className={`hover-reveal-quote ${revealableClass}`}
+                dangerouslySetInnerHTML={{
+                  __html:
+                    currentLang === 'fr'
+                      ? slides[currentIndex].background_quote_fr
+                      : slides[currentIndex].background_quote,
+                }}
+              />
+              <div className={`hover-reveal-quote-line ${revealableClass}`} />
+            </div>
           )}
         </div>
+      </div>
+      <AnnualReportNav
+        slides={slides}
+        basePath={basePath}
+        currentIndex={currentIndex}
+        fadeableClass={fadeableClass}
+      />
+      <div className={fadeableClass}>
+        {currentSlide.slide_type === 'toc' ? (
+          <SlideComponent
+            className={fadeableClass}
+            slides={slides}
+            currentIndex={currentIndex}
+            basePath={basePath}
+            lang={currentLang}
+          />
+        ) : (
+          <SlideComponent
+            className={fadeableClass}
+            slide={currentSlide}
+            basePath={basePath}
+            lang={currentLang}
+          />
+        )}
       </div>
       <AnnualReportFooter
         slide={currentSlide}
