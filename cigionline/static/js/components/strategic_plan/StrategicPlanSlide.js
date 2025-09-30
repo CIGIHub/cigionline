@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import StrategicPlanTitleSlide from './StrategicPlanTitleSlide';
 import StrategicPlanRegularSlide from './StrategicPlanRegularSlide';
 import StrategicPlanTOCSlide from './StrategicPlanTOCSlide';
-import AnnualReportNav from '../annual_report/AnnualReportNav';
+import StrategicPlanNav from './StrategicPlanNav';
 import StrategicPlanHamburgerMenu from './StrategicPlanHamburgerMenu';
 import StrategicPlanFrameworkSlide from './StrategicPlanFrameworkSlide';
 import StrategicPlanTimelineSlide from './StrategicPlanTimelineSlide';
@@ -264,7 +264,7 @@ function StrategicReportSlide({ slides, basePath }) {
         key={`content-${slug}-${slides[currentIndex].slide_type}`}
         className={`slide-wrapper ${slides[currentIndex].background_colour}`}
       >
-        <AnnualReportNav
+        <StrategicPlanNav
           slides={slides}
           basePath={basePath}
           currentIndex={currentIndex}
