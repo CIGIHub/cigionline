@@ -39,6 +39,14 @@ class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
 
 
 def get_ordered_slides_annual_report(request, page_id):
+    gradient_positions = {
+        'left': 'left',
+        'right': 'right',
+        'top-left': 'left',
+        'top-right': 'right',
+        'bottom-left': 'left',
+        'bottom-right': 'right',
+    }
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
     year = page.year
@@ -67,8 +75,10 @@ def get_ordered_slides_annual_report(request, page_id):
             "background_image": background_image,
             "background_image_thumbnail": background_image_thumbnail,
             "background_video": slide.background_video.file.url if slide.background_video else '',
-            "background_caption": slide.background_caption,
-            "background_caption_fr": slide.background_caption_fr,
+            "background_quote": slide.background_quote,
+            "background_quote_fr": slide.background_quote_fr,
+            "background_quote_position": slide.background_quote_position,
+            "background_gradient_position": gradient_positions.get(slide.background_quote_position, 'left') if slide.background_quote_position else 'left',
             "background_colour": slide.background_colour.replace("_", "-"),
             "include_on_toc": slide.include_on_toc,
         })

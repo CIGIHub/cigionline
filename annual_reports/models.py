@@ -289,6 +289,15 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         ('timeline', 'Timeline'),
         ('financials', 'Financials'),
     ]
+    
+    QUOTE_POSITIONS = [
+        ('right', 'Right'),
+        ('left', 'Left'),
+        ('top-left', 'Top Left'),
+        ('top-right', 'Top Right'),
+        ('bottom-left', 'Bottom Left'),
+        ('bottom-right', 'Bottom Right'),
+    ]
 
     slide_type = models.CharField(
         max_length=255,
@@ -307,8 +316,14 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         blank=True,
         help_text="Content of the slide",
     )
-    background_caption = RichTextField(blank=True, help_text="Caption for the background image")
-    background_caption_fr = RichTextField(blank=True, help_text="Caption for the background image (French)")
+    background_quote = RichTextField(blank=True, help_text="quote for the background image")
+    background_quote_fr = RichTextField(blank=True, help_text="quote for the background image (French)")
+    background_quote_position = models.CharField(
+        max_length=255,
+        choices=QUOTE_POSITIONS,
+        blank=True,
+        help_text="Position of the quote",
+    )
 
     parent_page_types = ['AnnualReportSPAPage']
     subpage_types = []
@@ -337,8 +352,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 FieldPanel("background_video", widget=AdminMediaChooser),
                 FieldPanel("background_colour"),
                 FieldPanel("background_images"),
-                FieldPanel("background_caption"),
-                FieldPanel("background_caption_fr"),
+                FieldPanel("background_quote"),
+                FieldPanel("background_quote_fr"),
+                FieldPanel("background_quote_position"),
             ],
             heading="Background",
             classname="collapsible collapsed",
