@@ -1648,8 +1648,8 @@ class ARSlideColumnBlock(blocks.StructBlock):
     ]
     column = blocks.StreamBlock([
         ('paragraph_column', blocks.StructBlock([
-            ('en', blocks.RichTextBlock(required=False)),
-            ('fr', blocks.RichTextBlock(required=False)),
+            ('en', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'red-line', 'chair-name'])),
+            ('fr', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'red-line', 'chair-name'])),
         ])),
         ('content_column', blocks.StreamBlock(
             [
