@@ -289,7 +289,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         ('timeline', 'Timeline'),
         ('financials', 'Financials'),
     ]
-    
+
     QUOTE_POSITIONS = [
         ('right', 'Right'),
         ('left', 'Left'),
@@ -316,8 +316,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         blank=True,
         help_text="Content of the slide",
     )
-    background_quote = RichTextField(blank=True, help_text="quote for the background image")
-    background_quote_fr = RichTextField(blank=True, help_text="quote for the background image (French)")
+    background_quote = RichTextField(blank=True, help_text="quote for the background image", features=['bold', 'italic', 'link', 'source'])
+    background_quote_fr = RichTextField(blank=True, help_text="quote for the background image (French)", features=['bold', 'italic', 'link', 'source'])
     background_quote_position = models.CharField(
         max_length=255,
         choices=QUOTE_POSITIONS,
