@@ -26,40 +26,38 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
         darkSlideTypes.includes(slide.slide_type) ? 'footer-dark' : ''
       }`}
     >
-      <button
-        className="footer-icon-btn"
-        type="button"
-        data-ember-action=""
-        data-ember-action-1705="1705"
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-        onFocus={handleEnter}
-        onBlur={handleLeave}
-      >
-        <div className={`radial-progress ${dimUI ? ' is-dimmed' : ''}`}>
-          <div className="circle">
-            <div className="mask left">
-              <div className="fill" />
-            </div>
-            <div className="mask right">
-              <div className="fill" />
+      {slide.slide_type !== 'title' && (
+        <button
+          className="footer-icon-btn"
+          type="button"
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
+          onFocus={handleEnter}
+          onBlur={handleLeave}
+        >
+          <div className={`radial-progress ${dimUI ? ' is-dimmed' : ''}`}>
+            <div className="circle">
+              <div className="mask left">
+                <div className="fill" />
+              </div>
+              <div className="mask right">
+                <div className="fill" />
+              </div>
             </div>
           </div>
-        </div>
-        <FontAwesomeIcon
-          icon={faCameraRetro}
-          className="svg-inline--fa fa-camera-retro fa-lg"
-          aria-hidden="true"
-          focusable="false"
-          role="img"
-        />
-      </button>
+          <FontAwesomeIcon
+            icon={faCameraRetro}
+            className="svg-inline--fa fa-camera-retro fa-lg"
+            aria-hidden="true"
+            focusable="false"
+            role="img"
+          />
+        </button>
+      )}
       <div className={`cigi-social fadeable${dimUI ? ' is-dimmed' : ''}`}>
         <button
           className="social-1-btn"
           type="button"
-          data-ember-action=""
-          data-ember-action-1706="1706"
           aria-label="Share on Facebook"
         >
           <FontAwesomeIcon

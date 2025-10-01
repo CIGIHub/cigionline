@@ -69,7 +69,7 @@ function AnnualReportSlide({ slides, basePath }) {
   const checkScrollCondition = () => {
     if (typeof document === 'undefined') return false;
 
-    const wrapper = document.querySelector('.slide-wrapper');
+    const wrapper = document.querySelector('.ar-slide-content');
     if (!wrapper) return false;
 
     const isLargeScreen = window.innerWidth >= 992;
@@ -231,24 +231,26 @@ function AnnualReportSlide({ slides, basePath }) {
         currentIndex={currentIndex}
         fadeableClass={fadeableClass}
       />
-      <div className={fadeableClass}>
-        {currentSlide.slide_type === 'toc' ? (
-          <SlideComponent
-            className={fadeableClass}
-            slides={slides}
-            currentIndex={currentIndex}
-            basePath={basePath}
-            lang={currentLang}
-          />
-        ) : (
-          <SlideComponent
-            className={fadeableClass}
-            slide={currentSlide}
-            basePath={basePath}
-            lang={currentLang}
-          />
-        )}
-      </div>
+
+      {currentSlide.slide_type === 'toc' ? (
+        <SlideComponent
+          className={fadeableClass}
+          slides={slides}
+          currentIndex={currentIndex}
+          basePath={basePath}
+          lang={currentLang}
+          fadeableClass={fadeableClass}
+        />
+      ) : (
+        <SlideComponent
+          className={fadeableClass}
+          slide={currentSlide}
+          basePath={basePath}
+          lang={currentLang}
+          fadeableClass={fadeableClass}
+        />
+      )}
+
       <AnnualReportFooter
         slide={currentSlide}
         shareRoute={shareRoute}

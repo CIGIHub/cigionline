@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/pro-light-svg-icons';
 import '../../../css/components/annual_reports/AnnualReportRegularSlide.scss';
 
-function AnnualReportRegularSlide({ slide, lang }) {
+function AnnualReportRegularSlide({ slide, lang, fadeableClass }) {
   const contentIcons = {
     publication: faFileLines,
     opinion: faMessageLines,
@@ -34,7 +34,7 @@ function AnnualReportRegularSlide({ slide, lang }) {
   return (
     <div className="annual-report-slide">
       <div
-        className={`ar-slide-content regular-slide ${slide.slide_type.replace(
+        className={`ar-slide-content regular-slide ${fadeableClass} ${slide.slide_type.replace(
           '_',
           '-',
         )}`}
@@ -123,6 +123,7 @@ function AnnualReportRegularSlide({ slide, lang }) {
 AnnualReportRegularSlide.propTypes = {
   slide: PropTypes.object.isRequired,
   lang: PropTypes.string.isRequired,
+  fadeableClass: PropTypes.string.isRequired,
 };
 
 export default AnnualReportRegularSlide;
