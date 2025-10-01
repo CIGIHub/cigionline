@@ -60,6 +60,24 @@
   {% cache 604800 self.page_cache_key request.path request.user.username self.pk self.latest_revision_created_at request.GET.urlencode is_preview %}
     {% block hero %}
       {% include "includes/heroes/hero_article.html" with title=self.title subtitle=self.subtitle %}
+      {% if page.audio_file %}
+          <div class='article-audio'>
+            <audio id='articleAudio' src='{{ page.audio_file.url }}' preload='metadata'></audio>
+            <div id='ttsPlayer' class='tts-player' data-target='articleAudio' aria-live='polite'>
+              <button class='tts-fab' type='button' aria-label='Play article audio' aria-pressed='false'>
+                <span class='icon icon-play' aria-hidden='true'></span>
+                <span class='icon icon-pause' aria-hidden='true'></span>
+              </button>
+              <div class='tts-row'>
+                <div class='tts-progress' role='progressbar' aria-valuemin='0' aria-valuemax='100' aria-valuenow='0'>
+                  <div class='tts-bar' style='width:0%'></div>
+                </div>
+                <span class='tts-time' id='ttsTime'>00:00</span>
+              </div>
+            </div>
+            <div id='ttsSentinel' class='tts-sentinel' aria-hidden='true'></div>
+          </div>
+      {% endif %}
       {% if not self.expired_image and self.image_hero %}
         <div class="container">
           <div class="row justify-content-center">
@@ -78,29 +96,6 @@
               </figure>
             </div>
           </div>
-        </div>
-      {% endif %}
-      {% if page.audio_file %}
-        <div class='article-audio'>
-          <audio id='articleAudio' src='{{ page.audio_file.url }}' preload='metadata'></audio>
-
-          <div id='ttsPlayer' class='tts-player' data-target='articleAudio' aria-live='polite'>
-            <button class='tts-fab' type='button' aria-label='Play article audio' aria-pressed='false'>
-              <span class='icon icon-play' aria-hidden='true'></span>
-              <span class='icon icon-pause' aria-hidden='true'></span>
-            </button>
-
-            <div class='tts-meta'>
-              <span class='tts-title'>{{ page.title }}</span>
-              <span class='tts-time' id='ttsTime'>00:00</span>
-            </div>
-
-            <div class='tts-progress' aria-hidden='true' role='progressbar' aria-valuemin='0' aria-valuemax='100' aria-valuenow='0'>
-              <div class='tts-bar' style='width:0%'></div>
-            </div>
-          </div>
-
-          <div id='ttsSentinel' class='tts-sentinel' aria-hidden='true'></div>
         </div>
       {% endif %}
     {% endblock %}

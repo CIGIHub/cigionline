@@ -188,7 +188,7 @@
 .tts-player {
   display: grid;
   grid-template-columns: 56px 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto;
   gap: 8px 12px;
   align-items: center;
   padding: 10px 12px;
@@ -200,23 +200,20 @@
 }
 
 .tts-fab {
-  grid-row: 1 / span 2;
-  width: 56px;
-  height: 56px;
+  grid-row: 1;                 /* was 1 / span 2 */
+  width: 56px; height: 56px;
   border-radius: 50%;
   border: none;
   background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.06), rgba(0,0,0,0.12));
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex; align-items: center; justify-content: center;
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 .tts-fab:hover { transform: scale(1.03); }
 .tts-fab:active { transform: scale(0.98); }
 .tts-fab:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
-/* Icons (CSS shapes) */
+/* Icons */
 .icon { display: inline-block; line-height: 0; }
 .icon-play {
   width: 0; height: 0;
@@ -226,36 +223,33 @@
 }
 .icon-pause {
   width: 16px; height: 16px; display: none; border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    currentColor 0 40%,
-    transparent 40% 60%,
-    currentColor 60% 100%
-  );
+  background: linear-gradient(90deg, currentColor 0 40%, transparent 40% 60%, currentColor 60% 100%);
 }
 .tts-player.is-playing .icon-play { display: none; }
 .tts-player.is-playing .icon-pause { display: inline-block; }
 
-/* Title + time */
-.tts-meta {
-  display: flex; align-items: baseline; gap: 10px;
+/* Progress */
+.tts-row {
+  grid-column: 2 / -1;
+  display: flex; align-items: center; gap: 12px;
   min-width: 0;
 }
-.tts-title {
-  font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.tts-time { font-variant-numeric: tabular-nums; opacity: 0.75; }
-
-/* Progress */
 .tts-progress {
-  grid-column: 2 / -1;
+  flex: 1 1 auto;
   height: 6px; border-radius: 999px; overflow: hidden;
   background: rgba(0,0,0,0.12);
 }
 .tts-bar {
-  height: 100%; width: 0%;
+  height: 100%;
   background: linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.85));
   transition: width 120ms linear;
+}
+.tts-time {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+  white-space: nowrap;
+  text-align: right;
+  min-width: 72px;
 }
 
 /* Sticky (floating) at top after scrolled past) */
@@ -268,9 +262,4 @@
   border-radius: 0 0 16px 16px;
   box-shadow: 0 8px 18px rgba(0,0,0,0.18);
   background: rgba(255,255,255,0.92);
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .tts-bar, .tts-fab { transition: none; }
 }
