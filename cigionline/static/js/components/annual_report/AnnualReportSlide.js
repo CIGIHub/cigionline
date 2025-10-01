@@ -9,6 +9,7 @@ import AnnualReportHeader from './AnnualReportHeader';
 import AnnualReportVerticalTitle from './AnnualReportVerticalTitle';
 import AnnualReportFooter from './AnnualReportFooter';
 import '../../../css/components/annual_reports/AnnualReportSlide.scss';
+import AnnualReportTimelineSlide from './AnnualReportTimelineSlide';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -16,6 +17,7 @@ const slideComponents = {
   standard: AnnualReportRegularSlide,
   chairs_message: AnnualReportRegularSlide,
   presidents_message: AnnualReportRegularSlide,
+  time_line: AnnualReportTimelineSlide,
 };
 
 const loadedImages = new Set();
