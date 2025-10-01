@@ -168,7 +168,7 @@ if 'STATIC_URL' in os.environ:
     STATIC_URL = os.environ['STATIC_URL']
 
 # Amazon Polly TTS
-AWS_REGION_NAME = os.getenv('AWS_REGION_NAME', 'us-east-1')
+AWS_REGION_NAME = os.getenv('AWS_REGION_NAME')
 POLLY_DEFAULT_VOICE_ID = os.getenv('POLLY_DEFAULT_VOICE_ID', 'Joanna')
 
 if 'WAGTAILADMIN_NOTIFICATION_FROM_EMAIL' in os.environ:

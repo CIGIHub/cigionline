@@ -2,9 +2,12 @@ import io
 import boto3
 from pydub import AudioSegment
 from textwrap import wrap
+import os
+from django.conf import settings
 
 # safe limit for NTTS and SSML text
 POLLY_CHAR_LIMIT = 3000
+AWS_REGION = getattr(settings, 'AWS_REGION_NAME', None) or os.getenv('AWS_REGION_NAME')
 
 
 def chunk_text(text: str, limit: int = POLLY_CHAR_LIMIT):
@@ -42,7 +45,7 @@ def synthesize_chunk(polly_client, text, voice_id='Joanna', use_ssml=False, form
 
 
 def synthesize_full_mp3(text, voice_id='Joanna', use_ssml=False):
-    polly = boto3.client('polly')
+    polly = boto3.client('polly', region_name=AWS_REGION)
     chunks = chunk_text(text)
     combined = None
     for i, ch in enumerate(chunks):
