@@ -7,7 +7,32 @@
         <h2>{{subtitle|safe}}</h2>
         {% include "includes/authors.html" with authors=self.authors.all %}
         {% include "includes/date.html" with date=self.publishing_date %}
-        {% include "includes/social_links.html" with title=self.title %}
+        <div class="hero-social-links">
+          {% if self.audio_file %}
+            <div class='article-audio'>
+              <audio id='articleAudio' src='{{ page.audio_file.url }}' preload='metadata'></audio>
+              <div id='ttsPlayer' class='tts-player is-idle' data-target='articleAudio' aria-live='polite'>
+                <button class='tts-fab' type='button' aria-label='Play article audio' aria-pressed='false'>
+                  <span class='icon icon-play' aria-hidden='true'></span>
+                  <span class='icon icon-pause' aria-hidden='true'></span>
+                </button>
+                <div class='tts-row'>
+                  {# Prompt (visible before first play) #}
+                  <div class='tts-prompt' id='ttsPrompt' aria-hidden='false'>Listen to this article</div>
+                  {# Progress bar (appears after first play) #}
+                  <div class='tts-progress' role='progressbar'
+                      aria-valuemin='0' aria-valuemax='100' aria-valuenow='0'
+                      aria-hidden='true'>
+                    <div class='tts-bar' style='width:0%'></div>
+                  </div>
+                  <span class='tts-time' id='ttsTime'>00:00</span>
+                </div>
+              </div>
+              <div id='ttsSentinel' class='tts-sentinel' aria-hidden='true'></div>
+            </div>
+          {% endif %}
+          {% include "includes/social_links.html" with title=self.title %}
+        </div>
       </div>
     </div>
   </div>

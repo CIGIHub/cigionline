@@ -185,29 +185,33 @@
 }
 
 /* TTS */
+.hero-social-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Player */
 .tts-player {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  grid-template-rows: auto;
+  display: inline-grid;
+  grid-template-columns: 56px auto;
   gap: 8px 12px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 16px;
-  background: rgba(0,0,0,0.04);
-  backdrop-filter: saturate(140%) blur(2px);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-  max-width: 720px;
+  background: none;
+  width: max-content;
+  max-width: none;
 }
 
 .tts-fab {
-  grid-row: 1;                 /* was 1 / span 2 */
   width: 56px; height: 56px;
-  border-radius: 50%;
   border: none;
   background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.06), rgba(0,0,0,0.12));
+  border-radius: 50%;
   cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
-  transition: transform 120ms ease, box-shadow 120ms ease;
+  transition: transform 120ms ease;
 }
 .tts-fab:hover { transform: scale(1.03); }
 .tts-fab:active { transform: scale(0.98); }
@@ -228,15 +232,41 @@
 .tts-player.is-playing .icon-play { display: none; }
 .tts-player.is-playing .icon-pause { display: inline-block; }
 
-/* Progress */
+/* Row */
 .tts-row {
   grid-column: 2 / -1;
-  display: flex; align-items: center; gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
 }
+
+/* Prompt occupies the same slot as progress */
+.tts-prompt, .tts-progress { grid-column: 1; }
+.tts-time { grid-column: 2; font-variant-numeric: tabular-nums; opacity: .75; white-space: nowrap; }
+
+/* Prompt visuals */
+.tts-prompt {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hide/show logic: before first play, show prompt; after first play, show progress */
+.tts-player:not(.has-started) .tts-progress { display: none; }
+.tts-player.has-started .tts-prompt { display: none; }
+
+/* Progress bar */
 .tts-progress {
-  flex: 1 1 auto;
-  height: 6px; border-radius: 999px; overflow: hidden;
+  width: var(--tts-line, 22ch);         /* fallback ~ width of "Listen to this article" */
+  height: 6px;
+  border-radius: 999px;
+  overflow: hidden;
   background: rgba(0,0,0,0.12);
 }
 .tts-bar {
@@ -244,6 +274,7 @@
   background: linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.85));
   transition: width 120ms linear;
 }
+
 .tts-time {
   font-variant-numeric: tabular-nums;
   opacity: 0.75;
@@ -257,9 +288,8 @@
   position: fixed;
   top: 0; left: 50%;
   transform: translateX(-50%);
-  width: min(720px, 92vw);
+  width: max-content;
   z-index: 1000;
   border-radius: 0 0 16px 16px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-  background: rgba(255,255,255,0.92);
+  background: transparent;
 }

@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const progress = player.querySelector('.tts-progress');
   const sentinel = document.getElementById('ttsSentinel');
 
+  // NEW: prompt element for "Listen to this article"
+  const promptEl = document.getElementById('ttsPrompt');
+
   const fmt = t => {
     if (!isFinite(t)) return '00:00';
     const m = Math.floor(t / 60);
@@ -41,16 +44,26 @@ document.addEventListener('DOMContentLoaded', () => {
     fab.setAttribute('aria-label', isPlaying ? 'Pause article audio' : 'Play article audio');
   };
 
+  // NEW: flip prompt -> progress on first play
+  const flipToProgress = () => {
+    if (!player.classList.contains('has-started')) {
+      player.classList.add('has-started');
+      if (promptEl) promptEl.setAttribute('aria-hidden', 'true');
+      if (progress) progress.setAttribute('aria-hidden', 'false');
+    }
+  };
+
   // Play/pause toggle (no stop/reset)
   fab.addEventListener('click', () => {
     if (audio.paused) {
-      audio.play().catch(() => {});
+      audio.play().then(() => {
+        flipToProgress(); // NEW
+      }).catch(() => {});
     } else {
       audio.pause();
     }
   });
 
-  // Keyboard activation is native for <button>, no extra handler needed.
   // Click-to-seek
   progress.addEventListener('click', e => {
     const rect = progress.getBoundingClientRect();
@@ -62,7 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Audio events
-  audio.addEventListener('play', () => setPlayingState(true));
+  audio.addEventListener('play', () => {
+    flipToProgress();         // NEW (covers non-button starts)
+    setPlayingState(true);
+  });
   audio.addEventListener('pause', () => setPlayingState(false));
   audio.addEventListener('ended', () => setPlayingState(false));
   audio.addEventListener('timeupdate', () => { updateTime(); updateProgress(); });
@@ -86,8 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  // Pause if navigating away (optional)
+  // Optional: pause if navigating away
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && !audio.paused) audio.pause();
   });
+
+  // If audio loads already in progress, show progress immediately
+  if ((audio.currentTime || 0) > 0) flipToProgress();
+
+  // Initial paint
+  updateTime();
+  updateProgress();
 });
