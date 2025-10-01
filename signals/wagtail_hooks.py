@@ -3,7 +3,7 @@ from wagtail import hooks
 from wagtail.admin.ui.tables import Column
 from utils.admin_utils import title_with_actions
 from wagtail.admin.viewsets.model import ModelViewSet
-from articles.tasks import generate_tts_for_page
+from articles.tasks import generate_tts_for_page_sync
 
 
 class PublishEmailNotificationViewSet(ModelViewSet):
@@ -28,6 +28,8 @@ def register_publish_email_notification_viewset():
 
 @hooks.register('after_publish_page')
 def trigger_tts_on_publish(request, page):
-    from .models import ArticlePage
+    from articles.models import ArticlePage
     if isinstance(page.specific, ArticlePage) and page.specific.tts_enabled:
-        generate_tts_for_page.delay(page.id)
+        print("After publish hook for page", page.id)
+        # generate_tts_for_page.delay(page.id)
+        generate_tts_for_page_sync(page.id)
