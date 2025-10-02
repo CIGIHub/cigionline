@@ -286,7 +286,8 @@
 /* Sticky (floating) at top after scrolled past) */
 .tts-player.is-sticky {
   position: fixed;
-  top: 0; left: 50%;
+  top: 10%; 
+  left: 50%;
   transform: translateX(-50%);
   width: max-content;
   z-index: 1000;
