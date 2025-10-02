@@ -11,46 +11,74 @@ import re
 POLLY_CHAR_LIMIT = 3000
 AWS_REGION = getattr(settings, 'AWS_REGION_NAME', None) or os.getenv('AWS_REGION_NAME')
 
+_TERMINALS = '.!?…'
+_CLOSERS = '\'"”’»)]}'
+
+
+def _ensure_terminal_punct(text, terminal_mark='.'):
+    trimmed_text = text.rstrip()
+    result_text = ''
+    if trimmed_text:
+        last_char = trimmed_text[-1]
+        if last_char in _TERMINALS:
+            result_text = trimmed_text
+        elif last_char in _CLOSERS:
+            scan_index = len(trimmed_text) - 1
+            while scan_index >= 0 and trimmed_text[scan_index] in _CLOSERS + ' ':
+                scan_index -= 1
+            if scan_index >= 0 and trimmed_text[scan_index] in _TERMINALS:
+                result_text = trimmed_text
+            else:
+                leading_text = trimmed_text[:scan_index + 1]
+                trailing_closers = trimmed_text[scan_index + 1:]
+                result_text = leading_text + terminal_mark + trailing_closers
+        else:
+            result_text = trimmed_text + terminal_mark
+    return result_text
+
 
 def extract_title_text(page):
     return (getattr(page, 'title', '') or '').strip()
 
 
 def extract_meta_text(page):
-    subtitle = (getattr(page, 'subtitle', '') or '').strip()
-
-    authors = getattr(page, 'authors', None)
-    if authors:
-        names = [a.author.title for a in authors.all()]
-        if names:
-            if len(names) == 1:
-                authors_text = f'By {names[0]}'
+    subtitle_text = (getattr(page, 'subtitle', '') or '').strip()
+    authors_text = ''
+    author_relation = getattr(page, 'authors', None)
+    if author_relation:
+        author_names = [
+            author_item.author.title
+            for author_item in author_relation.all()
+            if getattr(author_item, 'author', None) and getattr(author_item.author, 'title', None)
+        ]
+        if author_names:
+            if len(author_names) == 1:
+                authors_text = f'By {author_names[0]}'
             else:
-                authors_text = f'By {', '.join(names[:-1])} and {names[-1]}'
-    return strip_tags(f'{subtitle} {authors_text}')
+                authors_text = f'By {", ".join(author_names[:-1])} and {author_names[-1]}'
+    return strip_tags(f'{subtitle_text} {authors_text}').strip()
 
 
-def _block_html_to_text_with_para_spaces(html):
-    if html:
-        # Normalize paragraph boundaries and line breaks before stripping tags
-        # Ensure a separator after closing </p>, and treat <br> as a soft break.
-        html = re.sub(r'(?is)</p\s*>', '</p>\n', html)      # mark paragraph ends
-        html = re.sub(r'(?is)<br\s*/?>', '\n', html)        # line breaks → newline
+def _block_html_to_text(html_string):
+    output_text = ''
+    if html_string:
+        block_closers_pattern = r'(p|h[1-6]|li|blockquote|pre|div|section|article|figure|figcaption)'
+        html_string = re.sub(rf'(?is)</{block_closers_pattern}\s*>', r'</\1>\n', html_string)
+        html_string = re.sub(r'(?is)<br\s*/?>', '\n', html_string)
+        html_string = re.sub(r'(?is)<hr\s*/?>', '\n\n', html_string)
 
-        text = strip_tags(html)
+        stripped_text = strip_tags(html_string)
+        paragraph_list = [para for para in re.split(r'\n+', stripped_text) if para and para.strip()]
 
-        # Split into paragraphs/lines, keep non-empty ones
-        paragraphs = [p.strip() for p in re.split(r'\n+', text) if p.strip()]
-        if paragraphs:
-            pieces = []
-            for p in paragraphs:
-                if not p.endswith(' '):
-                    p = p + ' '
-                pieces.append(p)
+        paragraph_pieces = []
+        for paragraph in paragraph_list:
+            normalized_paragraph = re.sub(r'\s+', ' ', paragraph).strip()
+            punctuated_paragraph = _ensure_terminal_punct(normalized_paragraph, '.')
+            paragraph_with_space = re.sub(r'\s*$', ' ', punctuated_paragraph)
+            paragraph_pieces.append(paragraph_with_space)
 
-        # Collapse any internal runs of whitespace except the deliberate trailing space
-        block_text = re.sub(r'\s+', ' ', ''.join(pieces))
-        return block_text
+        output_text = re.sub(r' {2,}', ' ', ''.join(paragraph_pieces))
+    return output_text
 
 
 def extract_body_text(page):
@@ -68,7 +96,7 @@ def extract_body_text(page):
             elif hasattr(val, 'get') and val.get('text'):
                 html = val.get('text')
             if html:
-                block_text = _block_html_to_text_with_para_spaces(html)
+                block_text = _block_html_to_text(html)
                 if block_text:
                     body_text.append(block_text)
 
