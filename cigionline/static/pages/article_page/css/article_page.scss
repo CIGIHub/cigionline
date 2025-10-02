@@ -211,12 +211,30 @@
   background: $cigi-light-grey;
   border-radius: 50%;
   cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center;
-  transition: transform 120ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-.tts-fab:hover { transform: scale(1.03); }
-.tts-fab:active { transform: scale(0.98); }
-.tts-fab:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.tts-fab:hover { 
+  background: $cigi-primary-colour;
+  transform: scale(1.03);
+
+  i {
+    color: $white;
+  }
+}
+.tts-fab:active { 
+  transform: scale(0.98);
+}
+.tts-fab:focus-visible { 
+  background: $cigi-primary-colour;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+
+  i {
+    color: $white;
+  }
+}
 
 /* Icons */
 .icon {
