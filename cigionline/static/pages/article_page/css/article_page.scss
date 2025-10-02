@@ -194,8 +194,8 @@
 /* Player */
 .tts-player {
   display: inline-grid;
-  grid-template-columns: 56px auto;
-  gap: 8px 12px;
+  grid-template-columns: 2em auto;
+  gap: 8px 14px;
   align-items: center;
   padding: 8px 10px;
   border-radius: 16px;
@@ -208,7 +208,7 @@
   width: 2em;
   height: 2em;
   border: none;
-  background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.06), rgba(0,0,0,0.12));
+  background: $cigi-light-grey;
   border-radius: 50%;
   cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
@@ -219,25 +219,21 @@
 .tts-fab:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
 /* Icons */
-.icon { display: inline-block; line-height: 0; }
-.icon-play {
-  width: 0; height: 0;
-  border-left: 12px solid currentColor;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
-.icon-pause {
-  width: 12px; height: 12px; display: none; border-radius: 2px;
-  background: linear-gradient(90deg, currentColor 0 40%, transparent 40% 60%, currentColor 60% 100%);
-}
+.icon-pause { display: none; }
 .tts-player.is-playing .icon-play { display: none; }
-.tts-player.is-playing .icon-pause { display: inline-block; }
+.tts-player.is-playing .icon-pause { display: inline-flex; }
 
 /* Row */
 .tts-row {
   grid-column: 2 / -1;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr max-content;
   align-items: center;
   gap: 10px;
   min-width: 0;
@@ -250,9 +246,9 @@
 /* Prompt visuals */
 .tts-prompt {
   background: none;
+  color: $cigi-text-grey;
   padding: 0;
   border-radius: 0;
-  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -264,7 +260,7 @@
 
 /* Progress bar */
 .tts-progress {
-  width: var(--tts-line, 12ch);         /* fallback ~ width of "Listen to this article" */
+  width: var(--tts-line, 12ch);
   height: 6px;
   border-radius: 999px;
   overflow: hidden;
@@ -281,7 +277,7 @@
   opacity: 0.75;
   white-space: nowrap;
   text-align: right;
-  min-width: 72px;
+  width: max-content;
 }
 
 /* Sticky (floating) at top after scrolled past) */

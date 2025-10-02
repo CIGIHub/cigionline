@@ -13,8 +13,8 @@
               <audio id='articleAudio' src='{{ page.audio_file.url }}' preload='metadata'></audio>
               <div id='ttsPlayer' class='tts-player is-idle' data-target='articleAudio' aria-live='polite'>
                 <button class='tts-fab' type='button' aria-label='Play article audio' aria-pressed='false'>
-                  <span class='icon icon-play' aria-hidden='true'></span>
-                  <span class='icon icon-pause' aria-hidden='true'></span>
+                  <span class='icon icon-play' aria-hidden='true'><i class='fa-solid fa-play'></i></span>
+                  <span class='icon icon-pause' aria-hidden='true'><i class='fa-solid fa-pause'></i></span>
                 </button>
                 <div class='tts-row'>
                   {# Prompt (visible before first play) #}

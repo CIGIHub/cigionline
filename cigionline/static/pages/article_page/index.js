@@ -28,7 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateTime = () => {
     const cur = audio.currentTime || 0;
     const dur = audio.duration || 0;
-    if (timeEl) timeEl.textContent = fmt(cur) + (isFinite(dur) && dur > 0 ? ' / ' + fmt(dur) : '');
+
+    if (!timeEl) return;
+
+    if (!hasInteracted) {
+      // Before first play: show only total length
+      timeEl.textContent = (isFinite(dur) && dur > 0) ? fmt(dur) : '00:00';
+    } else {
+      // After first play: show current / total
+      const total = (isFinite(dur) && dur > 0) ? ' / ' + fmt(dur) : '';
+      timeEl.textContent = fmt(cur) + total;
+    }
   };
 
   const updateProgress = () => {
