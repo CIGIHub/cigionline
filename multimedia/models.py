@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from bs4 import BeautifulSoup
 from core.models import (
     BasicPageAbstract,
@@ -572,20 +573,16 @@ class MultimediaSeriesPage(
 
     @property
     def series_seasons(self):
-        episode_filter = {
-            'multimedia_series': self,
-        }
+        episode_filter = {'multimedia_series': self}
         series_episodes = MultimediaPage.objects.filter(**episode_filter).order_by('-publishing_date')
-        series_seasons = {}
+        seasons = {}
         for episode in series_episodes:
-            episode_season = episode.specific.podcast_season if episode.specific.podcast_season else 0
-            if episode_season not in series_seasons:
-                series_seasons.update({episode_season: {'published': [], 'unpublished': []}})
-            if episode.live:
-                series_seasons[episode_season]['published'].append(episode)
-            else:
-                series_seasons[episode_season]['unpublished'].append(episode)
-        return series_seasons
+            season = episode.specific.podcast_season or 0
+            if season not in seasons:
+                seasons[season] = {'published': [], 'unpublished': []}
+            (seasons[season]['published'] if episode.live else seasons[season]['unpublished']).append(episode)
+
+        return OrderedDict(sorted(seasons.items(), key=lambda x: x[0]))
 
     @property
     def latest_episode(self):
