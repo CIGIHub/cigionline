@@ -205,7 +205,8 @@
 }
 
 .tts-fab {
-  width: 56px; height: 56px;
+  width: 2em;
+  height: 2em;
   border: none;
   background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.06), rgba(0,0,0,0.12));
   border-radius: 50%;
@@ -221,12 +222,12 @@
 .icon { display: inline-block; line-height: 0; }
 .icon-play {
   width: 0; height: 0;
-  border-left: 14px solid currentColor;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
+  border-left: 12px solid currentColor;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
 }
 .icon-pause {
-  width: 16px; height: 16px; display: none; border-radius: 2px;
+  width: 12px; height: 12px; display: none; border-radius: 2px;
   background: linear-gradient(90deg, currentColor 0 40%, transparent 40% 60%, currentColor 60% 100%);
 }
 .tts-player.is-playing .icon-play { display: none; }
@@ -263,7 +264,7 @@
 
 /* Progress bar */
 .tts-progress {
-  width: var(--tts-line, 22ch);         /* fallback ~ width of "Listen to this article" */
+  width: var(--tts-line, 12ch);         /* fallback ~ width of "Listen to this article" */
   height: 6px;
   border-radius: 999px;
   overflow: hidden;
@@ -286,11 +287,12 @@
 /* Sticky (floating) at top after scrolled past) */
 .tts-player.is-sticky {
   position: fixed;
-  top: 10%; 
+  bottom: 10%; 
   left: 50%;
   transform: translateX(-50%);
   width: max-content;
   z-index: 1000;
-  border-radius: 0 0 16px 16px;
-  background: transparent;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
 }

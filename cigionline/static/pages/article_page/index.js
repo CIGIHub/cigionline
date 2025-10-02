@@ -4,20 +4,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const player = document.getElementById('ttsPlayer');
   if (!player) return;
 
-  const audioId = player.getAttribute('data-target');
-  const audio = document.getElementById(audioId);
+  const audio = document.getElementById(player.getAttribute('data-target') || '');
   if (!audio) return;
 
   const fab = player.querySelector('.tts-fab');
-  const bar = player.querySelector('.tts-bar');
-  const timeEl = document.getElementById('ttsTime');
   const progress = player.querySelector('.tts-progress');
+  const bar      = player.querySelector('.tts-bar');
+  const timeEl = document.getElementById('ttsTime');
+  const promptEl = document.getElementById('ttsPrompt');
   const sentinel = document.getElementById('ttsSentinel');
 
-  // NEW: prompt element for "Listen to this article"
-  const promptEl = document.getElementById('ttsPrompt');
+  // Session flags for sticky behavior
+  let hasInteracted = false;     // becomes true after first play this session
+  let sentinelOutOfView = false; // true when we've scrolled past the sentinel
 
-  const fmt = t => {
+  const fmt = (t) => {
     if (!isFinite(t)) return '00:00';
     const m = Math.floor(t / 60);
     const s = Math.floor(t % 60);
@@ -27,24 +28,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateTime = () => {
     const cur = audio.currentTime || 0;
     const dur = audio.duration || 0;
-    timeEl.textContent = fmt(cur) + (isFinite(dur) && dur > 0 ? ' / ' + fmt(dur) : '');
+    if (timeEl) timeEl.textContent = fmt(cur) + (isFinite(dur) && dur > 0 ? ' / ' + fmt(dur) : '');
   };
 
   const updateProgress = () => {
     const dur = audio.duration || 0;
     const cur = audio.currentTime || 0;
     const pct = dur ? (cur / dur) * 100 : 0;
-    bar.style.width = pct + '%';
-    progress.setAttribute('aria-valuenow', String(Math.round(pct)));
+    if (bar) bar.style.width = pct + '%';
+    if (progress) progress.setAttribute('aria-valuenow', String(Math.round(pct)));
   };
 
-  const setPlayingState = isPlaying => {
+  const setPlayingState = (isPlaying) => {
     player.classList.toggle('is-playing', isPlaying);
-    fab.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
-    fab.setAttribute('aria-label', isPlaying ? 'Pause article audio' : 'Play article audio');
+    if (fab) {
+      fab.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+      fab.setAttribute('aria-label', isPlaying ? 'Pause article audio' : 'Play article audio');
+    }
   };
 
-  // NEW: flip prompt -> progress on first play
+  // Show progress (and hide prompt) after the first play
   const flipToProgress = () => {
     if (!player.classList.contains('has-started')) {
       player.classList.add('has-started');
@@ -53,64 +56,104 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Play/pause toggle (no stop/reset)
-  fab.addEventListener('click', () => {
+  // Sticky only when: scrolled past sentinel AND user has interacted AND audio is playing
+  const updateSticky = () => {
+    const shouldStick = Boolean(sentinelOutOfView && hasInteracted && !audio.paused);
+    player.classList.toggle('is-sticky', shouldStick);
+  };
+
+  // Measure prompt width so progress matches it exactly
+  const setLineWidth = () => {
+    if (!promptEl) return;
+    const style = getComputedStyle(promptEl);
+    const wasHidden = style.display === 'none' || style.visibility === 'hidden';
+    if (wasHidden) promptEl.style.display = '';
+    const w = Math.ceil(promptEl.getBoundingClientRect().width);
+    player.style.setProperty('--tts-line', w > 0 ? `${w}px` : '12ch');
+    if (wasHidden) promptEl.style.display = 'none';
+  };
+
+  // Play/pause toggle (no reset)
+  fab && fab.addEventListener('click', () => {
     if (audio.paused) {
       audio.play().then(() => {
-        flipToProgress(); // NEW
+        hasInteracted = true;
+        flipToProgress();
+        setPlayingState(true);
+        updateSticky();
       }).catch(() => {});
     } else {
-      audio.pause();
+      audio.pause(); // pause event will clear sticky
     }
   });
 
-  // Click-to-seek
-  progress.addEventListener('click', e => {
+  // Click-to-seek on progress track
+  progress && progress.addEventListener('click', (e) => {
     const rect = progress.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const pct = x / rect.width;
-    if (isFinite(audio.duration)) {
-      audio.currentTime = Math.max(0, Math.min(audio.duration * pct, audio.duration));
+    const pct = Math.max(0, Math.min(1, x / rect.width));
+    if (isFinite(audio.duration) && audio.duration > 0) {
+      audio.currentTime = audio.duration * pct;
     }
   });
 
   // Audio events
   audio.addEventListener('play', () => {
-    flipToProgress();         // NEW (covers non-button starts)
+    hasInteracted = true;
+    flipToProgress();
     setPlayingState(true);
+    updateSticky();
   });
-  audio.addEventListener('pause', () => setPlayingState(false));
-  audio.addEventListener('ended', () => setPlayingState(false));
+
+  audio.addEventListener('pause', () => {
+    setPlayingState(false);
+    player.classList.remove('is-sticky'); // hide sticky when paused
+  });
+
+  audio.addEventListener('ended', () => {
+    setPlayingState(false);
+    player.classList.remove('is-sticky'); // also hide on end
+  });
+
   audio.addEventListener('timeupdate', () => { updateTime(); updateProgress(); });
   audio.addEventListener('loadedmetadata', () => { updateTime(); updateProgress(); });
 
-  // Sticky on scroll using IntersectionObserver
+  // Sticky behavior with IntersectionObserver
   if ('IntersectionObserver' in window && sentinel) {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        player.classList.toggle('is-sticky', entry.intersectionRatio === 0);
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        sentinelOutOfView = entry.intersectionRatio === 0;
+        updateSticky();
       });
     }, { rootMargin: '0px', threshold: [0] });
     io.observe(sentinel);
   } else if (sentinel) {
+    // Fallback scroll/resize
     let sentTop = sentinel.getBoundingClientRect().top + window.pageYOffset;
     const recalc = () => { sentTop = sentinel.getBoundingClientRect().top + window.pageYOffset; };
-    window.addEventListener('resize', recalc, { passive: true });
+    window.addEventListener('resize', () => { recalc(); setLineWidth(); updateSticky(); }, { passive: true });
     window.addEventListener('scroll', () => {
-      const stuck = window.pageYOffset > sentTop;
-      player.classList.toggle('is-sticky', stuck);
+      sentinelOutOfView = window.pageYOffset > sentTop;
+      updateSticky();
     }, { passive: true });
   }
 
-  // Optional: pause if navigating away
+  // Pause if navigating away (optional nicety)
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && !audio.paused) audio.pause();
   });
 
-  // If audio loads already in progress, show progress immediately
-  if ((audio.currentTime || 0) > 0) flipToProgress();
+  // If page loads with a non-zero currentTime, show progress immediately
+  if ((audio.currentTime || 0) > 0) {
+    hasInteracted = true;
+    flipToProgress();
+  }
 
-  // Initial paint
+  // Initial layout
+  setLineWidth();
   updateTime();
   updateProgress();
+
+  // Keep line width in sync with viewport changes
+  window.addEventListener('resize', setLineWidth, { passive: true });
 });
