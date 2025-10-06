@@ -123,12 +123,26 @@ def chunk_text(text: str, limit: int = POLLY_CHAR_LIMIT):
 
 
 def synthesize_chunk(polly_client, text, voice_id='Joanna', use_ssml=False, format='mp3'):
-    resp = polly_client.synthesize_speech(
-        Text=text,
-        OutputFormat=format,
-        VoiceId=voice_id,
-        Engine='long-form',
-    )
+    long_form_voices = [
+        'Danielle',
+        'Gregory',
+        'Ruth',
+        'Patrick',
+    ]
+
+    if voice_id in long_form_voices:
+        resp = polly_client.synthesize_speech(
+            Text=text,
+            OutputFormat=format,
+            VoiceId=voice_id,
+            Engine='long-form',
+        )
+    else:
+        resp = polly_client.synthesize_speech(
+            Text=text,
+            OutputFormat=format,
+            VoiceId=voice_id,
+        )
     audio_bytes = resp['AudioStream'].read()
     return AudioSegment.from_file(io.BytesIO(audio_bytes), format=format)
 
