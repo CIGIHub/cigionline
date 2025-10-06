@@ -7,7 +7,6 @@ from .models import ArticlePage
 
 @shared_task
 def generate_tts_for_page(page_id):
-    print("Generating TTS for page", page_id)
     page = ArticlePage.objects.filter(id=page_id).specific().first()
     if page and page.tts_enabled:
         text = page.get_plaintext()

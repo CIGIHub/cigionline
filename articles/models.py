@@ -347,6 +347,10 @@ class ArticlePage(
         ('Joanna', 'Joanna'),
         ('Matthew', 'Matthew'),
         ('Amy', 'Amy'),
+        ('Danielle', 'Danielle'),
+        ('Gregory', 'Gregory'),
+        ('Ruth', 'Ruth'),
+        ('Patrick', 'Patrick'),
     ]
     tts_enabled = models.BooleanField(default=True, help_text='Generate audio for this article.')
     tts_voice = models.CharField(

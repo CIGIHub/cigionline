@@ -104,7 +104,6 @@ def extract_body_text(page):
         body_clean = re.sub(r'\s+', ' ', ' '.join(body_text)).strip()
         parts.append(body_clean)
 
-    print(' '.join(p.strip() for p in parts if p and p.strip()))
     return ' '.join(p.strip() for p in parts if p and p.strip())
 
 
@@ -127,7 +126,8 @@ def synthesize_chunk(polly_client, text, voice_id='Joanna', use_ssml=False, form
     resp = polly_client.synthesize_speech(
         Text=text,
         OutputFormat=format,
-        VoiceId=voice_id
+        VoiceId=voice_id,
+        Engine='long-form',
     )
     audio_bytes = resp['AudioStream'].read()
     return AudioSegment.from_file(io.BytesIO(audio_bytes), format=format)

@@ -9,14 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const fab = player.querySelector('.tts-fab');
   const progress = player.querySelector('.tts-progress');
-  const bar      = player.querySelector('.tts-bar');
+  const bar       = player.querySelector('.tts-bar');
   const timeEl = document.getElementById('ttsTime');
   const promptEl = document.getElementById('ttsPrompt');
-  const sentinel = document.getElementById('ttsSentinel');
+  const sentinel  = document.getElementById('ttsSentinel');
+  const closeBtn  = player.querySelector('.tts-close'); // ⬅️ now from template
 
-  // Session flags for sticky behavior
-  let hasInteracted = false;     // becomes true after first play this session
-  let sentinelOutOfView = false; // true when we've scrolled past the sentinel
+  // Session flags
+  let hasInteracted = false;      // true after first play this session
+  let sentinelOutOfView = false;  // true when we've scrolled past the sentinel
+  let stickyDismissed = false;
 
   const fmt = (t) => {
     if (!isFinite(t)) return '00:00';
@@ -32,10 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!timeEl) return;
 
     if (!hasInteracted) {
-      // Before first play: show only total length
       timeEl.textContent = (isFinite(dur) && dur > 0) ? fmt(dur) : '00:00';
     } else {
-      // After first play: show current / total
       const total = (isFinite(dur) && dur > 0) ? ' / ' + fmt(dur) : '';
       timeEl.textContent = fmt(cur) + total;
     }
@@ -66,10 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Sticky only when: scrolled past sentinel AND user has interacted AND audio is playing
+  // Sticky only when: scrolled past sentinel AND user has interacted AND not dismissed
   const updateSticky = () => {
-    const shouldStick = Boolean(sentinelOutOfView && hasInteracted && !audio.paused);
+    const shouldStick = Boolean(sentinelOutOfView && hasInteracted && !stickyDismissed);
     player.classList.toggle('is-sticky', shouldStick);
+    // No direct style toggling; CSS shows .tts-close when .is-sticky is present
   };
 
   // Measure prompt width so progress matches it exactly
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Play/pause toggle (no reset)
   fab && fab.addEventListener('click', () => {
     if (audio.paused) {
+      stickyDismissed = false;
       audio.play().then(() => {
         hasInteracted = true;
         flipToProgress();
@@ -93,8 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSticky();
       }).catch(() => {});
     } else {
-      audio.pause(); // pause event will clear sticky
+      audio.pause(); // pause does NOT close sticky
     }
+  });
+
+  // Close button: pause if playing, then dismiss sticky for this session
+  closeBtn && closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    stickyDismissed = true;
+    if (!audio.paused) audio.pause();
+    updateSticky(); // hides sticky (and the close button via CSS)
   });
 
   // Click-to-seek on progress track
@@ -109,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Audio events
   audio.addEventListener('play', () => {
+    stickyDismissed = false;
     hasInteracted = true;
     flipToProgress();
     setPlayingState(true);
@@ -117,12 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   audio.addEventListener('pause', () => {
     setPlayingState(false);
-    player.classList.remove('is-sticky'); // hide sticky when paused
+    // keep sticky open after pause (user closes via X)
+    updateSticky();
   });
 
   audio.addEventListener('ended', () => {
     setPlayingState(false);
-    player.classList.remove('is-sticky'); // also hide on end
+    // keep sticky open after end
+    updateSticky();
   });
 
   audio.addEventListener('timeupdate', () => { updateTime(); updateProgress(); });
@@ -138,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { rootMargin: '0px', threshold: [0] });
     io.observe(sentinel);
   } else if (sentinel) {
-    // Fallback scroll/resize
     let sentTop = sentinel.getBoundingClientRect().top + window.pageYOffset;
     const recalc = () => { sentTop = sentinel.getBoundingClientRect().top + window.pageYOffset; };
     window.addEventListener('resize', () => { recalc(); setLineWidth(); updateSticky(); }, { passive: true });
@@ -148,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  // Pause if navigating away (optional nicety)
+  // Pause if navigating away (optional)
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && !audio.paused) audio.pause();
   });
