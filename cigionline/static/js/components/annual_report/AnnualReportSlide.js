@@ -10,6 +10,7 @@ import AnnualReportVerticalTitle from './AnnualReportVerticalTitle';
 import AnnualReportFooter from './AnnualReportFooter';
 import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 import AnnualReportTimelineSlide from './AnnualReportTimelineSlide';
+import AnnualReportsFinancialsSlide from './AnnualReportFinancialsSlide';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -17,7 +18,8 @@ const slideComponents = {
   standard: AnnualReportRegularSlide,
   chairs_message: AnnualReportRegularSlide,
   presidents_message: AnnualReportRegularSlide,
-  time_line: AnnualReportTimelineSlide,
+  timeline: AnnualReportTimelineSlide,
+  financials: AnnualReportsFinancialsSlide,
 };
 
 const loadedImages = new Set();
@@ -63,8 +65,7 @@ function AnnualReportSlide({ slides, basePath }) {
   );
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
-  const nextSlide =
-    currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
+  const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
   const canScrollRef = useRef(true);
 
@@ -156,9 +157,8 @@ function AnnualReportSlide({ slides, basePath }) {
   }, [currentIndex, navigate, isScrolling, slides]);
 
   const currentSlide = slides[currentIndex];
-  const SlideComponent =
-    slideComponents[slides[currentIndex].slide_type] ||
-    (() => <div>Slide type not found</div>);
+  const SlideComponent = slideComponents[slides[currentIndex].slide_type]
+    || (() => <div>Slide type not found</div>);
 
   return (
     <>
@@ -171,61 +171,16 @@ function AnnualReportSlide({ slides, basePath }) {
         fadeableClass={fadeableClass}
       />
       <div
-        className={`persistent-video-layer ${slides[currentIndex].slide_type} ${
-          [0, 2, 3, 9].includes(Number(currentIndex)) ? 'visible' : ''
-        }`}
-      >
-        {slides.map((slide, index) => (
-          <React.Fragment key={`bg-${slide.slug}`}>
-            {slide.background_video ? (
-              <video
-                src={slide.background_video}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                className={`background-video ${
-                  index === currentIndex ? 'visible' : ''
-                } bg-${index}`}
-              />
-            ) : null}
-          </React.Fragment>
-        ))}
-      </div>
-      <div
         key={currentSlide.id || currentSlide.slug}
-        className={`slide-background background-row ${slides[currentIndex].slide_type}`}
+        className={`slide-background background-row ${slides[currentIndex].slide_type} d-lg-none`}
       >
         <div
-          className={`background-colour background-${slides[currentIndex].background_colour}`}
-        />
-        {slides[currentIndex].slide_type === 'regular' && (
-          <div className="background-overlay hover-reveal-hide" />
-        )}
-        <div
-          className={`background-image hover-reveal hover-reveal-gradient-${slides[currentIndex].background_gradient_position} ${revealableClass}`}
+          className="background-image"
           style={{
             backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
           }}
-        >
-          {slides[currentIndex].background_quote && (
-            <div
-              className={`quote quote-${slides[currentIndex].background_quote_position}`}
-            >
-              <h3
-                className={`hover-reveal-quote ${revealableClass}`}
-                dangerouslySetInnerHTML={{
-                  __html:
-                    currentLang === 'fr'
-                      ? slides[currentIndex].background_quote_fr
-                      : slides[currentIndex].background_quote,
-                }}
-              />
-              <div className={`hover-reveal-quote-line ${revealableClass}`} />
-            </div>
-          )}
-        </div>
+        />
+        <div className="background-overlay hover-reveal-hide" />
       </div>
       <AnnualReportNav
         slides={slides}
@@ -250,6 +205,7 @@ function AnnualReportSlide({ slides, basePath }) {
           basePath={basePath}
           lang={currentLang}
           fadeableClass={fadeableClass}
+          revealableClass={revealableClass}
         />
       )}
 

@@ -7,7 +7,8 @@ from core.models import (
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
-from streams.blocks import ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from django.utils.text import slugify
+from streams.blocks import ARFinancialsAuditorReportBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -283,7 +284,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         ('title', 'Title'),
         ('toc', 'Table of Contents'),
         ('chairs_message', 'Chair\'s Message'),
-        ('presidents_message', 'President\'s Message'),
+        ('presidents-message', 'President\'s Message'),
         ('standard', 'Standard'),
         ('outputs_and_activities', 'Outputs and Activities'),
         ('timeline', 'Timeline'),
@@ -312,6 +313,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         [
             ("column", ARSlideColumnBlock()),
             ("board", ARSlideBoardBlock()),
+            ("auditor_report", ARFinancialsAuditorReportBlock()),
         ],
         blank=True,
         help_text="Content of the slide",
@@ -385,7 +387,6 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     for member in board_block["board_members"]:
                         if member.block_type == "member":
                             image = member.value.get("image_override") or (member.value.get("page").specific.image_square if member.value.get("page") else None)
-                            print(image)
                             link = member.value.get("link_override") or (member.value.get("page").specific.url if member.value.get("page") else None)
                             boards[board_type].append({
                                 "id": member_counter,
@@ -466,6 +467,66 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             content = {
                 "columns": columns,
             }
+        elif self.slide_type == 'financials':
+            auditor_reports = []
+
+            for block in self.ar_slide_content:
+                if block.block_type != "auditor_report":
+                    continue
+
+                columns = []
+                for column_block in (block.value.get("columns") or []):
+                    en_stream = column_block.value.get("en") or []
+                    fr_stream = column_block.value.get("fr") or []
+
+                    col = {"en": [], "fr": []}
+
+                    for child in en_stream:
+                        if child.block_type == "paragraph":
+                            rt = child.value
+                            col["en"].append(expand_db_html(rt.source))
+                        elif child.block_type == "signature":
+                            sig = child.value 
+                            sig_img = sig.get("signature")
+                            col["en"].append({
+                                "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
+                                "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
+                            })
+                        else:
+                            # future-proof: pass through unknown child types as strings
+                            col["en"].append(str(child.value))
+
+                    # FR stream items
+                    for child in fr_stream:
+                        if child.block_type == "paragraph":
+                            rt = child.value
+                            col["fr"].append(expand_db_html(rt.source))
+                        elif child.block_type == "signature":
+                            sig = child.value
+                            sig_img = sig.get("signature")
+                            col["fr"].append({
+                                "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
+                                "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
+                            })
+                        else:
+                            col["fr"].append(str(child.value))
+
+                    columns.append(col)
+
+                title_en = block.value.get("title_en") or ""
+                title_fr = block.value.get("title_fr") or ""
+
+                auditor_reports.append({
+                    "title_en": title_en,
+                    "title_fr": title_fr,
+                    "slug_en": slugify(title_en) if title_en else "auditor-report-en",
+                    "slug_fr": slugify(title_fr) if title_fr else "auditor-report-fr",
+                    "columns": columns,
+                })
+
+                content = {
+                    "auditor_reports": auditor_reports,
+                }
         return content
 
 

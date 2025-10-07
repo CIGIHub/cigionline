@@ -1668,6 +1668,43 @@ class ARSlideColumnBlock(blocks.StructBlock):
     ])
 
 
+class ARFinancialsSignatureBlock(blocks.StructBlock):
+    signature = ImageChooserBlock(required=False)
+    signature_text = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link'])
+
+    class Meta:
+        icon = 'user'
+        label = 'Signature'
+        template = 'annual_reports/streams/ar_financials_signature_block.html'
+
+
+class ARFinancialsAuditorReportBlock(blocks.StructBlock):
+    title_en = blocks.CharBlock(required=False)
+    title_fr = blocks.CharBlock(required=False)
+    columns = blocks.StreamBlock([
+        ('column', blocks.StructBlock([
+            ('en', blocks.StreamBlock([
+                ('paragraph', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'h4'])),
+                ('signature', ARFinancialsSignatureBlock()),
+            ])),
+            ('fr', blocks.StreamBlock([
+                ('paragraph', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'h4'])),
+                ('signature', ARFinancialsSignatureBlock()),
+            ])),
+        ]))
+    ])
+
+
+class ARFinancialPositionBlock(blocks.StructBlock):
+    title_en = blocks.CharBlock(required=False)
+    title_fr = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Financial Position'
+        template = 'annual_reports/streams/ar_financial_position_block.html'
+
+
 class ResourceBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)
