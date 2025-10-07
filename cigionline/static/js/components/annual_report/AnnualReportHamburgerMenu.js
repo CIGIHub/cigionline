@@ -12,8 +12,8 @@ function AnnualReportHamburgerMenu({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const toEn = `${basePath}/${currentSlug}`;
-  const toFr = `${basePath}/${currentSlug}/fr`;
+  const toEn = `${basePath}/en/${currentSlug}`;
+  const toFr = `${basePath}/fr/${currentSlug}`;
 
   return (
     <>

@@ -48,7 +48,7 @@ function AnnualReportSlide({ slides, basePath }) {
   if (currentIndex === -1) {
     return (
       <Navigate
-        to={`${basePath}/${slides[0].slug}${currentLang === 'fr' ? '/fr' : ''}`}
+        to={`${basePath}${currentLang === 'fr' ? '/fr' : ''}/${slides[0].slug}`}
         replace
       />
     );
@@ -187,6 +187,7 @@ function AnnualReportSlide({ slides, basePath }) {
         basePath={basePath}
         currentIndex={currentIndex}
         fadeableClass={fadeableClass}
+        lang={currentLang}
       />
 
       {currentSlide.slide_type === 'toc' ? (

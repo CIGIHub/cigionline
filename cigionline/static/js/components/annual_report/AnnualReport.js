@@ -41,12 +41,12 @@ function AnnualReport({ annualReportSPAId, basePath }) {
   return (
     <Routes>
       <Route
-        path={`${basePath}/:slug/:lang?`}
+        path={`${basePath}/:lang?/:slug/`}
         element={<AnnualReportSlide slides={slides} basePath={basePath} />}
       />
       <Route
         path="*"
-        element={<Navigate to={`${basePath}/${slides[0].slug || ''}/`} />}
+        element={<Navigate to={`${basePath}/en/${slides[0].slug || ''}/`} />}
       />
     </Routes>
   );

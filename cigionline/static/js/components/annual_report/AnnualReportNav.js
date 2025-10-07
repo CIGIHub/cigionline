@@ -3,7 +3,14 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../../css/components/annual_reports/AnnualReportNav.scss';
 
-function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass }) {
+const slideTypeBackgrounds = {
+  chairs_message: 'white',
+  presidents_message: 'white',
+  outputs_and_activities: 'white',
+  financials: 'white',
+};
+
+function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass, lang }) {
   const navigate = useNavigate();
 
   const prevSlide = slides[currentIndex - 1] || null;
@@ -14,11 +21,12 @@ function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass }) {
       navigate(`${basePath}/${slide.slug}`);
     }
   };
+  const backgroundClass = `background-${
+    slideTypeBackgrounds[slides[currentIndex].slide_type] || 'black'
+  }`;
 
   return (
-    <div
-      className={`annual-report-nav background-${slides[currentIndex].background_colour} ${fadeableClass}`}
-    >
+    <div className={`annual-report-nav ${backgroundClass} ${fadeableClass}`}>
       {prevSlide && (
         <button
           type="button"
@@ -39,9 +47,7 @@ function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass }) {
           <span>Next Slide</span>
         </button>
       )}
-      <div
-        className={`dot-nav d-none d-lg-block background-${slides[currentIndex].background_colour}`}
-      >
+      <div className={`dot-nav d-none d-lg-block ${backgroundClass}`}>
         {slides.map((slide, index) => (
           <div key={slide.slug}>
             {currentIndex === index ? (
@@ -58,7 +64,7 @@ function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass }) {
                 <div className="dot-nav-tooltip">
                   <span>{slide.slide_title}</span>
                 </div>
-                <Link to={`${basePath}/${slide.slug}`} className="link-dot">
+                <Link to={`${basePath}/${lang}/${slide.slug}`} className="link-dot">
                   <div className="dot-circle" />
                 </Link>
               </li>
@@ -75,6 +81,7 @@ AnnualReportNav.propTypes = {
   basePath: PropTypes.string.isRequired,
   currentIndex: PropTypes.number.isRequired,
   fadeableClass: PropTypes.string.isRequired,
+  lang: PropTypes.string.isRequired,
 };
 
 export default AnnualReportNav;

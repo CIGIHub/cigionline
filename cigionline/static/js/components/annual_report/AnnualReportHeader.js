@@ -3,6 +3,13 @@ import React from 'react';
 import AnnualReportHamburgerMenu from './AnnualReportHamburgerMenu';
 import '../../../css/components/annual_reports/AnnualReportHeader.scss';
 
+const slideTypeBackgrounds = {
+  chairs_message: 'white',
+  presidents_message: 'white',
+  outputs_and_activities: 'white',
+  financials: 'white',
+};
+
 function AnnualReportHeader({
   slides,
   basePath,
@@ -16,7 +23,9 @@ function AnnualReportHeader({
       <div className="row">
         <div className="col">
           <header
-            className={`cigi-top-bar background-${slides[currentIndex].background_colour} ${fadeableClass}`}
+            className={`cigi-top-bar background-${
+              slideTypeBackgrounds[slides[currentIndex].slide_type] || 'black'
+            } ${fadeableClass}`}
           >
             <div className="cigi-logo">
               <a href="https://www.cigionline.org" aria-label="CIGI Homepage">
