@@ -1,3 +1,4 @@
+from django.http import Http404
 from core.models import (
     BasicPageAbstract,
     FeatureablePageAbstract,
@@ -151,7 +152,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         verbose_name_plural = 'Annual Report Pages'
 
 
-class AnnualReportSPAPage(FeatureablePageAbstract, SearchablePageAbstract, ShareablePageAbstract, Page):
+class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, SearchablePageAbstract, ShareablePageAbstract, Page):
     """View annual report SPA page"""
 
     year = models.PositiveIntegerField(blank=False, null=True)
@@ -181,6 +182,14 @@ class AnnualReportSPAPage(FeatureablePageAbstract, SearchablePageAbstract, Share
 
     def get_template(self, request, *args, **kwargs):
         return "annual_reports/annual_report_spa_page.html"
+
+    @route(r'^(?P<lang>en|fr)/(?P<slide_slug>[-\w]+)/?$')
+    def slide_with_lang(self, request, lang, slide_slug, *args, **kwargs):
+        qs = self.get_children().type(AnnualReportSlidePage).live().filter(slug=slide_slug)
+        slide = qs.specific().first()
+        if not slide:
+            raise Http404("Slide not found")
+        return slide._serve_spa(request, initial_lang=lang)
 
 
 class SlidePageAbstract(models.Model):
@@ -486,7 +495,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                             rt = child.value
                             col["en"].append(expand_db_html(rt.source))
                         elif child.block_type == "signature":
-                            sig = child.value 
+                            sig = child.value
                             sig_img = sig.get("signature")
                             col["en"].append({
                                 "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),

@@ -41,7 +41,7 @@ function AnnualReport({ annualReportSPAId, basePath }) {
   return (
     <Routes>
       <Route
-        path={`${basePath}/:lang?/:slug/`}
+        path={`${basePath}/:lang?/:slug/:subslug?`}
         element={<AnnualReportSlide slides={slides} basePath={basePath} />}
       />
       <Route
