@@ -7,7 +7,7 @@ import { faDownload } from '@fortawesome/pro-light-svg-icons';
 
 function AnnualReportsFinancialsSlide({ slide, lang }) {
   const navigate = useNavigate();
-  const { slug } = useParams();
+  const { subSlug } = useParams();
   const tabs = useMemo(
     () => slide?.slide_content.auditor_reports || [],
     [slide],
@@ -17,14 +17,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
   console.log(tabs);
 
   useEffect(() => {
-    if (!slug && tabs.length > 0) {
+    if (!subSlug && tabs.length > 0) {
       const tabSlug = lang === 'fr' ? `${tabs[0].slug_fr}/fr` : tabs[0].slug_en;
       navigate(tabSlug, { replace: true });
     }
-  }, [slug, tabs, navigate]);
+  }, [subSlug, tabs, navigate]);
 
   const activeSlug =
-    slug || (lang === 'fr' && tabs[0].slug_fr) || tabs[0].slug_en;
+    subSlug || (lang === 'fr' && tabs[0].slug_fr) || tabs[0].slug_en;
   const activeTab =
     tabs.find((t) => {
       if (lang === 'fr') {
@@ -57,17 +57,21 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                       const tabTitle = lang === 'fr' ? t.title_fr : t.title_en;
                       return (
                         <React.Fragment key={tabSlug}>
-                          <Link
-                            to={tabSlug}
-                            className={`financials-tab-link ${
-                              isActive ? 'is-active' : ''
-                            }`}
-                            aria-current={isActive ? 'page' : undefined}
-                          >
-                            <span className={isActive ? '' : 'underline'}>
-                              {tabTitle}
-                            </span>
-                          </Link>
+                          {isActive ? (
+                            tabTitle
+                          ) : (
+                            <Link
+                              to={tabSlug}
+                              className={`financials-tab-link ${
+                                isActive ? 'is-active' : ''
+                              }`}
+                              aria-current={isActive}
+                            >
+                              <span className={isActive ? '' : 'underline'}>
+                                {tabTitle}
+                              </span>
+                            </Link>
+                          )}
                           {idx < tabs.length - 1 && (
                             <span className="menu-break mx-2">/</span>
                           )}
@@ -92,22 +96,61 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                 </div>
               </div>
 
-              <div className="financials-content mt-4">
-                {activeTab ? (
-                  typeof activeTab.content === 'string' ? (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: activeTab.content }}
-                    />
-                  ) : (
-                    activeTab.content
-                  )
-                ) : (
-                  <p className="text-muted">
-                    {lang === 'en'
-                      ? 'No content available.'
-                      : 'Aucun contenu disponible.'}
-                  </p>
-                )}
+              <div className="financials-content row">
+                {activeTab &&
+                  activeTab.columns.map((col, idx) => (
+                    <div key={idx} className="col col-md-6">
+                      {lang === 'fr'
+                        ? col.fr.map((html, hIdx) => (
+                            <React.Fragment key={hIdx}>
+                              {typeof html === 'string' ? (
+                                <div
+                                  key={hIdx}
+                                  dangerouslySetInnerHTML={{ __html: html }}
+                                />
+                              ) : (
+                                <div key={hIdx} className="auditor-signature">
+                                  <img
+                                    src={html.signature}
+                                    alt="auditor signature"
+                                    width="105"
+                                    height="18"
+                                  />
+                                  <p
+                                    dangerouslySetInnerHTML={{
+                                      __html: html.signature_text,
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </React.Fragment>
+                          ))
+                        : col.en.map((html, hIdx) => (
+                            <React.Fragment key={hIdx}>
+                              {typeof html === 'string' ? (
+                                <div
+                                  key={hIdx}
+                                  dangerouslySetInnerHTML={{ __html: html }}
+                                />
+                              ) : (
+                                <div key={hIdx} className="auditor-signature">
+                                  <img
+                                    src={html.signature}
+                                    alt="auditor signature"
+                                    width="105"
+                                    height="18"
+                                  />
+                                  <p
+                                    dangerouslySetInnerHTML={{
+                                      __html: html.signature_text,
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </React.Fragment>
+                          ))}
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -116,6 +159,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
     </div>
   );
 }
+
 AnnualReportsFinancialsSlide.propTypes = {
   slide: PropTypes.object.isRequired,
   lang: PropTypes.string.isRequired,
