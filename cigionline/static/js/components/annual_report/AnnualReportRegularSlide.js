@@ -64,6 +64,7 @@ function AnnualReportRegularSlide({
       </div>
       <div
         className={`ar-slide-content regular-slide ${fadeableClass} ${slide.slide_type.replace('_', '-')}`}
+        key={`${slide.slug}-${lang}`}
       >
         <div className="container">
           <div className="row">

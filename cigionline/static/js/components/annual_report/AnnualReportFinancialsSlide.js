@@ -26,15 +26,13 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
     }
   }, [subSlug, tabs, navigate]);
 
-  const activeSlug =
-    subSlug || (lang === 'fr' && tabs[0].slug_fr) || tabs[0].slug_en;
-  const activeTab =
-    tabs.find((t) => {
-      if (lang === 'fr') {
-        return t.slug_fr === activeSlug;
-      }
-      return t.slug_en === activeSlug;
-    }) || null;
+  const activeSlug = subSlug || (lang === 'fr' && tabs[0].slug_fr) || tabs[0].slug_en;
+  const activeTab = tabs.find((t) => {
+    if (lang === 'fr') {
+      return t.slug_fr === activeSlug;
+    }
+    return t.slug_en === activeSlug;
+  }) || null;
 
   console.log(activeSlug);
   console.log(activeTab);
@@ -143,12 +141,11 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
             <div className="col financials-container">
               <div className="row">
                 <div className="col">
-                  <div className="financials-menu d-flex align-items-center">
+                  <div className="financials-menu">
                     {tabs.map((tab, idx) => {
                       const tabSlug = lang === 'fr' ? tab.slug_fr : tab.slug_en;
                       const isActive = tabSlug === activeSlug;
-                      const tabTitle =
-                        lang === 'fr' ? tab.title_fr : tab.title_en;
+                      const tabTitle = lang === 'fr' ? tab.title_fr : tab.title_en;
                       const to = `${base}/${encodeURIComponent(
                         tabSlug,
                       )}${search}${hash}`;
@@ -179,7 +176,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
 
                     <div className="download-button ms-3">
                       <a
-                        href={slide.downloadPdfLink}
+                        href={slide.slide_content.pdf}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="d-flex align-items-center"
@@ -195,62 +192,62 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
               </div>
 
               <div key={subSlug} className="financials-content row">
-                {activeTab?.slug_en === 'auditors-report' &&
-                  activeTab.columns.map((col, idx) => (
+                {activeTab?.slug_en === 'auditors-report'
+                  && activeTab.columns.map((col, idx) => (
                     <div key={idx} className="col col-md-6">
                       {lang === 'fr'
                         ? col.fr.map((html, hIdx) => (
-                            <React.Fragment key={hIdx}>
-                              {typeof html === 'string' ? (
-                                <div
-                                  key={hIdx}
-                                  dangerouslySetInnerHTML={{ __html: html }}
+                          <React.Fragment key={hIdx}>
+                            {typeof html === 'string' ? (
+                              <div
+                                key={hIdx}
+                                dangerouslySetInnerHTML={{ __html: html }}
+                              />
+                            ) : (
+                              <div key={hIdx} className="auditor-signature">
+                                <img
+                                  src={html.signature}
+                                  alt="auditor signature"
+                                  width="105"
+                                  height="18"
                                 />
-                              ) : (
-                                <div key={hIdx} className="auditor-signature">
-                                  <img
-                                    src={html.signature}
-                                    alt="auditor signature"
-                                    width="105"
-                                    height="18"
-                                  />
-                                  <p
-                                    dangerouslySetInnerHTML={{
-                                      __html: html.signature_text,
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </React.Fragment>
-                          ))
+                                <p
+                                  dangerouslySetInnerHTML={{
+                                    __html: html.signature_text,
+                                  }}
+                                />
+                              </div>
+                            )}
+                          </React.Fragment>
+                        ))
                         : col.en.map((html, hIdx) => (
-                            <React.Fragment key={hIdx}>
-                              {typeof html === 'string' ? (
-                                <div
-                                  key={hIdx}
-                                  dangerouslySetInnerHTML={{ __html: html }}
+                          <React.Fragment key={hIdx}>
+                            {typeof html === 'string' ? (
+                              <div
+                                key={hIdx}
+                                dangerouslySetInnerHTML={{ __html: html }}
+                              />
+                            ) : (
+                              <div key={hIdx} className="auditor-signature">
+                                <img
+                                  src={html.signature}
+                                  alt="auditor signature"
+                                  width="105"
+                                  height="18"
                                 />
-                              ) : (
-                                <div key={hIdx} className="auditor-signature">
-                                  <img
-                                    src={html.signature}
-                                    alt="auditor signature"
-                                    width="105"
-                                    height="18"
-                                  />
-                                  <p
-                                    dangerouslySetInnerHTML={{
-                                      __html: html.signature_text,
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </React.Fragment>
-                          ))}
+                                <p
+                                  dangerouslySetInnerHTML={{
+                                    __html: html.signature_text,
+                                  }}
+                                />
+                              </div>
+                            )}
+                          </React.Fragment>
+                        ))}
                     </div>
                   ))}
-                {activeTab?.slug_en ===
-                  'summarized-statement-of-financial-position' && (
+                {activeTab?.slug_en
+                  === 'summarized-statement-of-financial-position' && (
                   <div className="col financials-content">
                     <div className="cell">
                       <table>
@@ -264,6 +261,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                                     ? activeTab.description_fr
                                     : activeTab.description_en,
                               }}
+                              aria-label="Financial Statement Title"
                             />
                             <td
                               className="num-col dollar-sign"
@@ -648,8 +646,8 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                   </div>
                 )}
 
-                {activeTab?.slug_en ===
-                  'summarized-statement-of-revenues-and-expenses-and-changes-in-fund-balances' && (
+                {activeTab?.slug_en
+                  === 'summarized-statement-of-revenues-and-expenses-and-changes-in-fund-balances' && (
                   <div className="col financials-content">
                     <div className="cell">
                       <table>
@@ -663,6 +661,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                                     ? activeTab.description_fr
                                     : activeTab.description_en,
                               }}
+                              aria-label="Financial Statement Title"
                             />
                             <td
                               className="num-col dollar-sign"
@@ -757,7 +756,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                             </td>
                           </tr>
                           <tr className="table-subtotal">
-                            <td className="text-col" />
+                            <td className="text-col" aria-label="blank cell" />
                             <td
                               className="num-col dollar-sign"
                               aria-label="blank cell"
@@ -779,12 +778,12 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                               className="num-col dollar-sign"
                               aria-label="blank cell"
                             />
-                            <td className="num-col" />
+                            <td className="num-col" aria-label="blank cell" />
                             <td
                               className="num-col dollar-sign"
                               aria-label="blank cell"
                             />
-                            <td className="num-col" />
+                            <td className="num-col" aria-label="blank cell" />
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">
@@ -876,7 +875,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                             </td>
                           </tr>
                           <tr className="table-subtotal">
-                            <td className="text-col" />
+                            <td className="text-col" aria-label="blank cell" />
                             <td
                               className="num-col dollar-sign"
                               aria-label="blank cell"

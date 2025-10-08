@@ -333,6 +333,13 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         blank=True,
         help_text="Content of the slide",
     )
+    download_pdf = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
     background_quote = RichTextField(blank=True, help_text="quote for the background image", features=['bold', 'italic', 'link', 'source'])
     background_quote_fr = RichTextField(blank=True, help_text="quote for the background image (French)", features=['bold', 'italic', 'link', 'source'])
     background_quote_position = models.CharField(
@@ -359,6 +366,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         MultiFieldPanel(
             [
                 FieldPanel("ar_slide_content"),
+                FieldPanel("download_pdf"),
             ],
             heading="Slide Content",
             classname="collapsible collapsed",
@@ -486,6 +494,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             auditor_reports = []
             financial_position = []
             tabs = []
+            pdf = self.download_pdf.file.url if self.download_pdf else ''
             for block in self.ar_slide_content:
                 if block.block_type == "auditor_report":
                     columns = []
@@ -656,6 +665,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
 
             content = {
                 "tabs": tabs,
+                "pdf": pdf,
             }
         return content
 
