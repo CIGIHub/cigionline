@@ -9,7 +9,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
 from django.utils.text import slugify
-from streams.blocks import ARFinancialsAuditorReportBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -327,6 +327,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             ("column", ARSlideColumnBlock()),
             ("board", ARSlideBoardBlock()),
             ("auditor_report", ARFinancialsAuditorReportBlock()),
+            ("financial_position", ARFinancialPositionBlock()),
         ],
         blank=True,
         help_text="Content of the slide",
@@ -482,64 +483,121 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             }
         elif self.slide_type == 'financials':
             auditor_reports = []
-
+            financial_position = []
+            tabs = []
             for block in self.ar_slide_content:
-                if block.block_type != "auditor_report":
-                    continue
+                if block.block_type == "auditor_report":
+                    columns = []
+                    for column_block in (block.value.get("columns") or []):
+                        en_stream = column_block.value.get("en") or []
+                        fr_stream = column_block.value.get("fr") or []
 
-                columns = []
-                for column_block in (block.value.get("columns") or []):
-                    en_stream = column_block.value.get("en") or []
-                    fr_stream = column_block.value.get("fr") or []
+                        col = {"en": [], "fr": []}
 
-                    col = {"en": [], "fr": []}
+                        for child in en_stream:
+                            if child.block_type == "paragraph":
+                                rt = child.value
+                                col["en"].append(expand_db_html(rt.source))
+                            elif child.block_type == "signature":
+                                sig = child.value
+                                sig_img = sig.get("signature")
+                                col["en"].append({
+                                    "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
+                                    "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
+                                })
+                            else:
+                                # future-proof: pass through unknown child types as strings
+                                col["en"].append(str(child.value))
 
-                    for child in en_stream:
-                        if child.block_type == "paragraph":
-                            rt = child.value
-                            col["en"].append(expand_db_html(rt.source))
-                        elif child.block_type == "signature":
-                            sig = child.value
-                            sig_img = sig.get("signature")
-                            col["en"].append({
-                                "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
-                                "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
-                            })
-                        else:
-                            # future-proof: pass through unknown child types as strings
-                            col["en"].append(str(child.value))
+                        # FR stream items
+                        for child in fr_stream:
+                            if child.block_type == "paragraph":
+                                rt = child.value
+                                col["fr"].append(expand_db_html(rt.source))
+                            elif child.block_type == "signature":
+                                sig = child.value
+                                sig_img = sig.get("signature")
+                                col["fr"].append({
+                                    "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
+                                    "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
+                                })
+                            else:
+                                col["fr"].append(str(child.value))
 
-                    # FR stream items
-                    for child in fr_stream:
-                        if child.block_type == "paragraph":
-                            rt = child.value
-                            col["fr"].append(expand_db_html(rt.source))
-                        elif child.block_type == "signature":
-                            sig = child.value
-                            sig_img = sig.get("signature")
-                            col["fr"].append({
-                                "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
-                                "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
-                            })
-                        else:
-                            col["fr"].append(str(child.value))
+                        columns.append(col)
 
-                    columns.append(col)
+                    title_en = block.value.get("title_en") or ""
+                    title_fr = block.value.get("title_fr") or ""
 
-                title_en = block.value.get("title_en") or ""
-                title_fr = block.value.get("title_fr") or ""
+                    auditor_reports = {
+                        "title_en": title_en,
+                        "title_fr": title_fr,
+                        "slug_en": slugify(title_en) if title_en else "auditor-report-en",
+                        "slug_fr": slugify(title_fr) if title_fr else "auditor-report-fr",
+                        "columns": columns,
+                    }
 
-                auditor_reports.append({
-                    "title_en": title_en,
-                    "title_fr": title_fr,
-                    "slug_en": slugify(title_en) if title_en else "auditor-report-en",
-                    "slug_fr": slugify(title_fr) if title_fr else "auditor-report-fr",
-                    "columns": columns,
-                })
-
-                content = {
-                    "auditor_reports": auditor_reports,
-                }
+                    tabs.append(auditor_reports)
+                elif block.block_type == "financial_position":
+                    title_en = block.value.get("title_en") or ""
+                    title_fr = block.value.get("title_fr") or ""
+                    amounts = block.value.get("amounts")
+                    current_year = amounts.get("year_current")
+                    previous_year = amounts.get("year_previous")
+                    year_current = {
+                        "year_label": current_year.get("year_label"),
+                        "cash_and_cash_equivalents": current_year.get("cash_and_cash_equivalents") or "",
+                        "portfolio_investments": current_year.get("portfolio_investments") or "",
+                        "amounts_receivable": current_year.get("amounts_receivable") or "",
+                        "prepaid_expenses": current_year.get("prepaid_expenses") or "",
+                        "current_assets_subtotal": current_year.get("current_assets_subtotal") or "",
+                        "property_and_equipment": current_year.get("property_and_equipment") or "",
+                        "lease_inducement": current_year.get("lease_inducement") or "",
+                        "other_assets_subtotal": current_year.get("other_assets_subtotal") or "",
+                        "total_assets": current_year.get("total_assets") or "",
+                        "accounts_payable_and_accrued_liabilities": current_year.get("accounts_payable_and_accrued_liabilities") or "",
+                        "deferred_revenue": current_year.get("deferred_revenue") or "",
+                        "total_liabilities": current_year.get("total_liabilities") or "",
+                        "invested_in_capital_assets": current_year.get("invested_in_capital_assets") or "",
+                        "externally_restricted": current_year.get("externally_restricted") or "",
+                        "internally_restricted": current_year.get("internally_restricted") or "",
+                        "unrestricted": current_year.get("unrestricted") or "",
+                        "total_fund_balances": current_year.get("total_fund_balances") or "",
+                        "total_liabilities_and_fund_balances": current_year.get("total_liabilities_and_fund_balances") or "",
+                    }
+                    year_previous = {
+                        "year_label": previous_year.get("year_label"),
+                        "cash_and_cash_equivalents": previous_year.get("cash_and_cash_equivalents") or "",
+                        "portfolio_investments": previous_year.get("portfolio_investments") or "",
+                        "amounts_receivable": previous_year.get("amounts_receivable") or "",
+                        "prepaid_expenses": previous_year.get("prepaid_expenses") or "",
+                        "current_assets_subtotal": previous_year.get("current_assets_subtotal") or "",
+                        "property_and_equipment": previous_year.get("property_and_equipment") or "",
+                        "lease_inducement": previous_year.get("lease_inducement") or "",
+                        "other_assets_subtotal": previous_year.get("other_assets_subtotal") or "",
+                        "total_assets": previous_year.get("total_assets") or "",
+                        "accounts_payable_and_accrued_liabilities": previous_year.get("accounts_payable_and_accrued_liabilities") or "",
+                        "deferred_revenue": previous_year.get("deferred_revenue") or "",
+                        "total_liabilities": previous_year.get("total_liabilities") or "",
+                        "invested_in_capital_assets": previous_year.get("invested_in_capital_assets") or "",
+                        "externally_restricted": previous_year.get("externally_restricted") or "",
+                        "internally_restricted": previous_year.get("internally_restricted") or "",
+                        "unrestricted": previous_year.get("unrestricted") or "",
+                        "total_fund_balances": previous_year.get("total_fund_balances") or "",
+                        "total_liabilities_and_fund_balances": previous_year.get("total_liabilities_and_fund_balances") or "",
+                    }
+                    financial_position = {
+                        "title_en": title_en,
+                        "title_fr": title_fr,
+                        "slug_en": slugify(title_en) if title_en else "financial-position-en",
+                        "slug_fr": slugify(title_fr) if title_fr else "financial-position-fr",
+                        "year_current": year_current,
+                        "year_previous": year_previous,
+                    }
+                    tabs.append(financial_position)
+            content = {
+                "tabs": tabs,
+            }
         return content
 
 

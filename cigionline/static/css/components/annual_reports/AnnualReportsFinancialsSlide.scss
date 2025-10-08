@@ -140,6 +140,7 @@
         font-style: normal;
         font-weight: 400;
         padding: 0;
+        border: 0;
 
         @include media-breakpoint-between(lg, xl) {
           font-size: 10px;

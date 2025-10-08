@@ -1698,11 +1698,68 @@ class ARFinancialsAuditorReportBlock(blocks.StructBlock):
 class ARFinancialPositionBlock(blocks.StructBlock):
     title_en = blocks.CharBlock(required=False)
     title_fr = blocks.CharBlock(required=False)
+    description_en = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+    description_fr = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+
+    amounts = blocks.StructBlock([
+        ('year_current', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('cash_and_cash_equivalents', (blocks.CharBlock(required=False))),
+            ('portfolio_investments', (blocks.CharBlock(required=False))),
+            ('amounts_receivable', (blocks.CharBlock(required=False))),
+            ('prepaid_expenses', (blocks.CharBlock(required=False))),
+            ('current_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('property_and_equipment', (blocks.CharBlock(required=False))),
+            ('lease_inducement', (blocks.CharBlock(required=False))),
+            ('other_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('total_assets', (blocks.CharBlock(required=False))),
+            ('accounts_payable_and_accrued_liabilities', (blocks.CharBlock(required=False))),
+            ('deferred_revenue', (blocks.CharBlock(required=False))),
+            ('total_liabilities', (blocks.CharBlock(required=False))),
+            ('invested_in_capital_assets', (blocks.CharBlock(required=False))),
+            ('externally_restricted', (blocks.CharBlock(required=False))),
+            ('internally_restricted', (blocks.CharBlock(required=False))),
+            ('unrestricted', (blocks.CharBlock(required=False))),
+            ('total_fund_balances', (blocks.CharBlock(required=False))),
+            ('total_liabilities_and_fund_balances', (blocks.CharBlock(required=False))),
+        ])),
+        ('year_previous', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('cash_and_cash_equivalents', (blocks.CharBlock(required=False))),
+            ('portfolio_investments', (blocks.CharBlock(required=False))),
+            ('amounts_receivable', (blocks.CharBlock(required=False))),
+            ('prepaid_expenses', (blocks.CharBlock(required=False))),
+            ('current_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('property_and_equipment', (blocks.CharBlock(required=False))),
+            ('lease_inducement', (blocks.CharBlock(required=False))),
+            ('other_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('total_assets', (blocks.CharBlock(required=False))),
+            ('accounts_payable_and_accrued_liabilities', (blocks.CharBlock(required=False))),
+            ('deferred_revenue', (blocks.CharBlock(required=False))),
+            ('total_liabilities', (blocks.CharBlock(required=False))),
+            ('invested_in_capital_assets', (blocks.CharBlock(required=False))),
+            ('externally_restricted', (blocks.CharBlock(required=False))),
+            ('internally_restricted', (blocks.CharBlock(required=False))),
+            ('unrestricted', (blocks.CharBlock(required=False))),
+            ('total_fund_balances', (blocks.CharBlock(required=False))),
+            ('total_liabilities_and_fund_balances', (blocks.CharBlock(required=False))),
+        ]))
+    ])
 
     class Meta:
         icon = 'doc-full'
         label = 'Financial Position'
         template = 'annual_reports/streams/ar_financial_position_block.html'
+
+
+class ARFundBalancesBlock(blocks.StructBlock):
+    title_en = blocks.CharBlock(required=False)
+    title_fr = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Fund Balances'
+        template = 'annual_reports/streams/ar_fund_balances_block.html'
 
 
 class ResourceBlock(blocks.StructBlock):
