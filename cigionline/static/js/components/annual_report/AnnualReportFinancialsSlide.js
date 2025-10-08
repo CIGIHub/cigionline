@@ -44,16 +44,19 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
     const translations = {
       currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current Assets',
       cashAndCashEquivalents:
-        lang === 'fr' ? 'Espèces et quasi-espèces' : 'Cash and Cash Equivalents',
+        lang === 'fr'
+          ? 'Espèces et quasi-espèces'
+          : 'Cash and Cash Equivalents',
       portfolioInvestments:
         lang === 'fr' ? 'Placements de portefeuille' : 'Portfolio Investments',
-      amountsReceivable:
-        lang === 'fr' ? 'Débiteurs' : 'Amounts Receivable',
+      amountsReceivable: lang === 'fr' ? 'Débiteurs' : 'Amounts Receivable',
       prepaidExpenses:
         lang === 'fr' ? "Frais payés d'avance" : 'Prepaid Expenses',
       otherAssets: lang === 'fr' ? 'Autres actifs' : 'Other Assets',
       propertyAndEquipment:
-        lang === 'fr' ? 'Biens immobiliers et équipement' : 'Property and Equipment',
+        lang === 'fr'
+          ? 'Biens immobiliers et équipement'
+          : 'Property and Equipment',
       leaseInducement:
         lang === 'fr' ? 'Incitatif relatif à un bail' : 'Lease Inducement',
       totalAssets: lang === 'fr' ? 'Total des actifs' : 'Total Assets',
@@ -63,36 +66,68 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
         lang === 'fr'
           ? 'Comptes créditeurs et charges à payer'
           : 'Accounts Payable and Accrued Liabilities',
-      deferredRevenue:
-        lang === 'fr' ? 'Revenus reportés' : 'Deferred Revenue',
-      totalLiabilities:
-        lang === 'fr' ? 'Passif total' : 'Total Liabilities',
+      deferredRevenue: lang === 'fr' ? 'Revenus reportés' : 'Deferred Revenue',
+      totalLiabilities: lang === 'fr' ? 'Passif total' : 'Total Liabilities',
       fundBalances: lang === 'fr' ? 'Soldes de fonds' : 'Fund Balances',
       capitalAssets:
-        lang === 'fr' ? 'Investis en immobilisations' : 'Invested in Capital Assets',
+        lang === 'fr'
+          ? 'Investis en immobilisations'
+          : 'Invested in Capital Assets',
       externallyRestricted:
-        lang === 'fr' ? 'Affectations d’origine externe' : 'Externally Restricted',
+        lang === 'fr'
+          ? 'Affectations d’origine externe'
+          : 'Externally Restricted',
       internallyRestricted:
-        lang === 'fr' ? 'Affectations d’origine interne' : 'Internally Restricted',
-      unrestricted:
-        lang === 'fr' ? 'Non affecté' : 'Unrestricted',
+        lang === 'fr'
+          ? 'Affectations d’origine interne'
+          : 'Internally Restricted',
+      unrestricted: lang === 'fr' ? 'Non affecté' : 'Unrestricted',
       totalFundBalances:
         lang === 'fr' ? 'Soldes de fonds' : 'Total Fund Balances',
       totalLiabilitiesAndFundBalances:
         lang === 'fr'
           ? 'Total du passif et des soldes des fonds'
           : 'Total Liabilities and Fund Balances',
+      revenues: lang === 'fr' ? 'Produits' : 'Revenues',
+      realizedInvestmentIncome:
+        lang === 'fr'
+          ? 'Revenu de placement réalisé'
+          : 'Realized Investment Income',
+      unrealizedInvestmentGains:
+        lang === 'fr'
+          ? 'Gain (perte) de placement non réalisé'
+          : 'Unrealized Investment Gains (losses',
+      other: lang === 'fr' ? 'Autres' : 'Other',
+      governmentAndOtherGrants:
+        lang === 'fr'
+          ? 'Subventions (gouvernementales et autres)'
+          : 'Government and Other Grants',
+      expenses: lang === 'fr' ? 'Charges' : 'Expenses',
+      researchAndConferences:
+        lang === 'fr' ? 'Recherche et conférences' : 'Research and Conferences',
+      amortization: lang === 'fr' ? 'Amortissement' : 'Amortization',
+      administration: lang === 'fr' ? 'Administration' : 'Administration',
+      facilities: lang === 'fr' ? 'Installations' : 'Facilities',
+      technicalSupport:
+        lang === 'fr' ? 'Soutien technique' : 'Technical Support',
+      excessOfExpensesOverRevenues:
+        lang === 'fr'
+          ? 'Excédent des charges sur les produits'
+          : 'Excess of Expenses Over Revenues',
+      fundBalancesBeginningOfYear:
+        lang === 'fr'
+          ? 'Solde des fonds au début de l’exercice'
+          : 'Fund Balances, Beginning of Year',
+      fundBalancesEndOfYear:
+        lang === 'fr'
+          ? 'Solde des fonds à la fin de l’exercice'
+          : 'Fund Balances, End of Year',
     };
     return translations[key] || key;
   };
 
-  const formatCurrency = (value) => {
-    if (typeof value !== 'number') return '';
-    return value.toLocaleString(lang === 'fr' ? 'fr-CA' : 'en-CA');
-  };
-
-  const totals2024 = activeTab?.year_current || {};
-  const totals2023 = activeTab?.year_previous || {};
+  const totalsCurrent = activeTab?.year_current || {};
+  const totalsPrevious = activeTab?.year_previous || {};
 
   return (
     <div className="annual-report-slide">
@@ -114,7 +149,9 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                       const isActive = tabSlug === activeSlug;
                       const tabTitle =
                         lang === 'fr' ? tab.title_fr : tab.title_en;
-                      const to = `${base}/${encodeURIComponent(tabSlug)}${search}${hash}`;
+                      const to = `${base}/${encodeURIComponent(
+                        tabSlug,
+                      )}${search}${hash}`;
                       return (
                         <React.Fragment key={tabSlug}>
                           {isActive ? (
@@ -219,267 +256,373 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                       <table>
                         <tbody>
                           <tr className="table-title">
-                            <td className="text-col">
-                              {lang === 'fr'
-                                ? activeTab.title_fr
-                                : activeTab.title_en}
-                            </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="text-col"
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  lang === 'fr'
+                                    ? activeTab.description_fr
+                                    : activeTab.description_en,
+                              }}
+                            />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
                               {activeTab.year_current.year_label}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
                               {activeTab.year_previous.year_label}
                             </td>
                           </tr>
                           <tr className="table-subtitle">
-                            <td className="text-col">
-                              {lang === 'fr'
-                                ? 'Actifs à court terme'
-                                : 'Current Assets'}
-                            </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td className="text-col">{t('currentAssets')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">
-                              {lang === 'fr'
-                                ? 'Espèces et quasi-espèces'
-                                : 'Cash and Cash Equivalents'}
+                              {t('cashAndCashEquivalents')}
                             </td>
                             <td className="num-col dollar-sign">$</td>
                             <td className="num-col">
-                              {totals2024?.cash_and_cash_equivalents}
+                              {totalsCurrent?.cash_and_cash_equivalents}
                             </td>
                             <td className="num-col dollar-sign">$</td>
                             <td className="num-col">
-                              {totals2023?.cash_and_cash_equivalents}
+                              {totalsPrevious?.cash_and_cash_equivalents}
                             </td>
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">
                               {t('portfolioInvestments')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.portfolio_investments}
+                              {totalsCurrent?.portfolio_investments}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.portfolio_investments}
+                              {totalsPrevious?.portfolio_investments}
                             </td>
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">
                               {t('accountsReceivable')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.accounts_receivable}
+                              {totalsCurrent?.accounts_receivable}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.accounts_receivable}
+                              {totalsPrevious?.accounts_receivable}
                             </td>
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">{t('prepaidExpenses')}</td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.prepaid_expenses}
+                              {totalsCurrent?.prepaid_expenses}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.prepaid_expenses}
+                              {totalsPrevious?.prepaid_expenses}
                             </td>
                           </tr>
                           <tr className="table-subtotal">
                             <td className="text-col" aria-label="blank cell" />
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.current_assets_subtotal}
+                              {totalsPrevious?.current_assets_subtotal}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.current_assets_subtotal}
+                              {totalsCurrent?.current_assets_subtotal}
                             </td>
                           </tr>
                           <tr className="table-subtitle">
                             <td className="text-col">{t('otherAssets')}</td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">
                               {t('propertyAndEquipment')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.property_and_equipment}
+                              {totalsCurrent?.property_and_equipment}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.property_and_equipment}
+                              {totalsPrevious?.property_and_equipment}
                             </td>
                           </tr>
                           <tr className="table-line-entry">
-                            <td className="text-col">
-                              {t('leaseInducement')}
-                            </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td className="text-col">{t('leaseInducement')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.lease_inducement}
+                              {totalsCurrent?.lease_inducement}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.lease_inducement}
+                              {totalsPrevious?.lease_inducement}
                             </td>
                           </tr>
                           <tr className="table-subtotal">
                             <td className="text-col" aria-label="blank cell" />
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.other_assets_subtotal}
+                              {totalsCurrent?.other_assets_subtotal}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.other_assets_subtotal}
+                              {totalsPrevious?.other_assets_subtotal}
                             </td>
                           </tr>
                           <tr className="table-total">
                             <td className="text-col">{t('totalAssets')}</td>
                             <td className="num-col dollar-sign">$</td>
                             <td className="num-col">
-                              {totals2024?.total_assets}
+                              {totalsCurrent?.total_assets}
                             </td>
                             <td className="num-col dollar-sign">$</td>
                             <td className="num-col">
-                              {totals2023?.total_assets}
+                              {totalsPrevious?.total_assets}
                             </td>
                           </tr>
                           <tr className="table-subtitle">
                             <td className="text-col">
                               {t('currentLiabilities')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
                           </tr>
                           <tr className="table-line-entry">
-                            <td className="text-col">
-                              {t('accountsPayable')}
+                            <td className="text-col">{t('accountsPayable')}</td>
+                            <td className="num-col dollar-sign">$</td>
+                            <td className="num-col">
+                              {
+                                totalsCurrent?.accounts_payable_and_accrued_liabilities
+                              }
                             </td>
                             <td className="num-col dollar-sign">$</td>
                             <td className="num-col">
-                              {totals2024?.accounts_payable_and_accrued_liabilities}
-                            </td>
-                            <td className="num-col dollar-sign">$</td>
-                            <td className="num-col">
-                              {totals2023?.accounts_payable_and_accrued_liabilities}
+                              {
+                                totalsPrevious?.accounts_payable_and_accrued_liabilities
+                              }
                             </td>
                           </tr>
                           <tr className="table-line-entry">
-                            <td className="text-col">
-                              {t('deferredRevenue')}
-                            </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td className="text-col">{t('deferredRevenue')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.deferred_revenue}
+                              {totalsCurrent?.deferred_revenue}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.deferred_revenue}
+                              {totalsPrevious?.deferred_revenue}
                             </td>
                           </tr>
                           <tr className="table-subtotal">
                             <td className="text-col">
                               {t('totalLiabilities')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.total_liabilities}
+                              {totalsCurrent?.total_liabilities}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.total_liabilities}
+                              {totalsPrevious?.total_liabilities}
                             </td>
                           </tr>
                           <tr className="table-subtitle">
                             <td className="text-col">{t('fundBalances')}</td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col" aria-label="blank cell" />
                           </tr>
                           <tr className="table-line-entry">
-                            <td className="text-col">
-                              {t('capitalAssets')}
-                            </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td className="text-col">{t('capitalAssets')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.invested_in_capital_assets}
+                              {totalsCurrent?.invested_in_capital_assets}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.invested_in_capital_assets}
+                              {totalsPrevious?.invested_in_capital_assets}
                             </td>
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">
                               {t('externallyRestricted')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.externally_restricted}
+                              {totalsCurrent?.externally_restricted}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.externally_restricted}
+                              {totalsPrevious?.externally_restricted}
                             </td>
                           </tr>
                           <tr className="table-line-entry">
                             <td className="text-col">
                               {t('internallyRestricted')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.internally_restricted}
+                              {totalsCurrent?.internally_restricted}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.internally_restricted}
+                              {totalsPrevious?.internally_restricted}
                             </td>
                           </tr>
                           <tr className="table-line-entry">
-                            <td className="text-col">
-                              {t('unrestricted')}
-                            </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td className="text-col">{t('unrestricted')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.unrestricted}
+                              {totalsCurrent?.unrestricted}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.unrestricted}
+                              {totalsPrevious?.unrestricted}
                             </td>
                           </tr>
                           <tr className="table-subtotal">
                             <td className="text-col">
                               {t('totalFundBalances')}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2024?.total_fund_balances}
+                              {totalsCurrent?.total_fund_balances}
                             </td>
-                            <td className="num-col dollar-sign" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
                             <td className="num-col">
-                              {totals2023?.total_fund_balances}
+                              {totalsPrevious?.total_fund_balances}
                             </td>
                           </tr>
                           <tr className="table-final-total">
@@ -488,11 +631,316 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                             </td>
                             <td className="num-col dollar-sign">$</td>
                             <td className="num-col">
-                              {totals2024?.total_liabilities_and_fund_balances}
+                              {
+                                totalsCurrent?.total_liabilities_and_fund_balances
+                              }
                             </td>
                             <td className="num-col dollar-sign">$</td>
                             <td className="num-col">
-                              {totals2023?.total_liabilities_and_fund_balances}
+                              {
+                                totalsPrevious?.total_liabilities_and_fund_balances
+                              }
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab?.slug_en ===
+                  'summarized-statement-of-revenues-and-expenses-and-changes-in-fund-balances' && (
+                  <div className="col financials-content">
+                    <div className="cell">
+                      <table>
+                        <tbody>
+                          <tr className="table-title">
+                            <td
+                              className="text-col"
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  lang === 'fr'
+                                    ? activeTab.description_fr
+                                    : activeTab.description_en,
+                              }}
+                            />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {activeTab.year_current.year_label}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {activeTab.year_previous.year_label}
+                            </td>
+                          </tr>
+                          <tr className="table-subtitle">
+                            <td className="text-col">{t('revenues')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col" aria-label="blank cell" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col" aria-label="blank cell" />
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">
+                              {t('realizedInvestmentIncome')}
+                            </td>
+                            <td className="num-col dollar-sign">$</td>
+                            <td className="num-col">
+                              {totalsCurrent.realized_investment_income}
+                            </td>
+                            <td className="num-col dollar-sign">$</td>
+                            <td className="num-col">
+                              {totalsPrevious.realized_investment_income}
+                            </td>
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">
+                              {t('unrealizedInvestmentGains')}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.unrealizedInvestmentGains}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.unrealizedInvestmentGains}
+                            </td>
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">{t('other')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">{totalsCurrent.other}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">{totalsPrevious.other}</td>
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">
+                              {t('governmentAndOtherGrants')}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.government_and_other_grants}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.government_and_other_grants}
+                            </td>
+                          </tr>
+                          <tr className="table-subtotal">
+                            <td className="text-col" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.total_revenue}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.total_revenue}
+                            </td>
+                          </tr>
+                          <tr className="table-subtitle">
+                            <td className="text-col">{t('expenses')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col" />
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">
+                              {t('researchAndConferences')}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.research_and_conferences}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.research_and_conferences}
+                            </td>
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">{t('amortization')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.amortization}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.amortization}
+                            </td>
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">{t('administration')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.administration}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.administration}
+                            </td>
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">{t('facilities')}</td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.facilities}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.facilities}
+                            </td>
+                          </tr>
+                          <tr className="table-line-entry">
+                            <td className="text-col">
+                              {t('technicalSupport')}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.technical_support}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.technical_support}
+                            </td>
+                          </tr>
+                          <tr className="table-subtotal">
+                            <td className="text-col" />
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.total_expenses}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.total_expenses}
+                            </td>
+                          </tr>
+                          <tr className="table-subtotal no-bottom-border">
+                            <td className="">
+                              {t('excessOfExpensesOverRevenue')}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.excess_of_expenses_over_revenue}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.excess_of_expenses_over_revenue}
+                            </td>
+                          </tr>
+                          <tr className="table-fund-balances">
+                            <td className="text-col">
+                              {t('fundBalancesBeginningOfYear')}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsCurrent.fund_balances_beginning_of_year}
+                            </td>
+                            <td
+                              className="num-col dollar-sign"
+                              aria-label="blank cell"
+                            />
+                            <td className="num-col">
+                              {totalsPrevious.fund_balances_beginning_of_year}
+                            </td>
+                          </tr>
+                          <tr className="table-final-total">
+                            <td className="text-col">
+                              {t('fundBalancesEndOfYear')}
+                            </td>
+                            <td className="num-col dollar-sign">$</td>
+                            <td className="num-col">
+                              {totalsCurrent.fund_balances_end_of_year}
+                            </td>
+                            <td className="num-col dollar-sign">$</td>
+                            <td className="num-col">
+                              {totalsPrevious.fund_balances_end_of_year}
                             </td>
                           </tr>
                         </tbody>

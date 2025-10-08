@@ -1755,6 +1755,45 @@ class ARFinancialPositionBlock(blocks.StructBlock):
 class ARFundBalancesBlock(blocks.StructBlock):
     title_en = blocks.CharBlock(required=False)
     title_fr = blocks.CharBlock(required=False)
+    description_en = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+    description_fr = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+    
+    amounts = blocks.StructBlock([
+        ('year_current', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('realized_investment_income', (blocks.CharBlock(required=False))),
+            ('unrealized_investment_gains', (blocks.CharBlock(required=False))),
+            ('other', (blocks.CharBlock(required=False))),
+            ('government_and_other_grants', (blocks.CharBlock(required=False))),
+            ('total_revenue', (blocks.CharBlock(required=False))),
+            ('research_and_conferences', (blocks.CharBlock(required=False))),
+            ('amortization', (blocks.CharBlock(required=False))),
+            ('administration', (blocks.CharBlock(required=False))),
+            ('facilities', (blocks.CharBlock(required=False))),
+            ('technical_support', (blocks.CharBlock(required=False))),
+            ('total_expenses', (blocks.CharBlock(required=False))),
+            ('excess_of_expenses_over_revenue', (blocks.CharBlock(required=False))),
+            ('fund_balances_beginning_of_year', (blocks.CharBlock(required=False))),
+            ('fund_balances_end_of_year', (blocks.CharBlock(required=False))),
+        ])),
+        ('year_previous', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('realized_investment_income', (blocks.CharBlock(required=False))),
+            ('unrealized_investment_gains', (blocks.CharBlock(required=False))),
+            ('other', (blocks.CharBlock(required=False))),
+            ('government_and_other_grants', (blocks.CharBlock(required=False))),
+            ('total_revenue', (blocks.CharBlock(required=False))),
+            ('research_and_conferences', (blocks.CharBlock(required=False))),
+            ('amortization', (blocks.CharBlock(required=False))),
+            ('administration', (blocks.CharBlock(required=False))),
+            ('facilities', (blocks.CharBlock(required=False))),
+            ('technical_support', (blocks.CharBlock(required=False))),
+            ('total_expenses', (blocks.CharBlock(required=False))),
+            ('excess_of_expenses_over_revenue', (blocks.CharBlock(required=False))),
+            ('fund_balances_beginning_of_year', (blocks.CharBlock(required=False))),
+            ('fund_balances_end_of_year', (blocks.CharBlock(required=False))),
+        ]))
+    ])
 
     class Meta:
         icon = 'doc-full'

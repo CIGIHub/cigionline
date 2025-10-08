@@ -9,7 +9,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
 from django.utils.text import slugify
-from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -328,6 +328,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             ("board", ARSlideBoardBlock()),
             ("auditor_report", ARFinancialsAuditorReportBlock()),
             ("financial_position", ARFinancialPositionBlock()),
+            ("fund_balances", ARFundBalancesBlock()),
         ],
         blank=True,
         help_text="Content of the slide",
@@ -541,6 +542,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 elif block.block_type == "financial_position":
                     title_en = block.value.get("title_en") or ""
                     title_fr = block.value.get("title_fr") or ""
+                    description_en = expand_db_html(block.value.get("description_en").source) or ""
+                    description_fr = expand_db_html(block.value.get("description_fr").source) or ""
                     amounts = block.value.get("amounts")
                     current_year = amounts.get("year_current")
                     previous_year = amounts.get("year_previous")
@@ -589,12 +592,68 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     financial_position = {
                         "title_en": title_en,
                         "title_fr": title_fr,
+                        "description_en": description_en,
+                        "description_fr": description_fr,
                         "slug_en": slugify(title_en) if title_en else "financial-position-en",
                         "slug_fr": slugify(title_fr) if title_fr else "financial-position-fr",
                         "year_current": year_current,
                         "year_previous": year_previous,
                     }
                     tabs.append(financial_position)
+                elif block.block_type == "fund_balances":
+                    title_en = block.value.get("title_en") or ""
+                    title_fr = block.value.get("title_fr") or ""
+                    description_en = expand_db_html(block.value.get("description_en").source) or ""
+                    description_fr = expand_db_html(block.value.get("description_fr").source) or ""
+                    amounts = block.value.get("amounts")
+                    current_year = amounts.get("year_current")
+                    previous_year = amounts.get("year_previous")
+                    year_current = {
+                        "year_label": current_year.get("year_label"),
+                        "realized_investment_income": current_year.get("realized_investment_income") or "",
+                        "unrealized_investment_gains": current_year.get("unrealized_investment_gains") or "",
+                        "other": current_year.get("other") or "",
+                        "government_and_other_grants": current_year.get("government_and_other_grants") or "",
+                        "total_revenue": current_year.get("total_revenue") or "",
+                        "research_and_conferences": current_year.get("research_and_conferences") or "",
+                        "amortization": current_year.get("amortization") or "",
+                        "administration": current_year.get("administration") or "",
+                        "facilities": current_year.get("facilities") or "",
+                        "technical_support": current_year.get("technical_support") or "",
+                        "total_expenses": current_year.get("total_expenses") or "",
+                        "excess_of_expenses_over_revenue": current_year.get("excess_of_expenses_over_revenue") or "",
+                        "fund_balances_beginning_of_year": current_year.get("fund_balances_beginning_of_year") or "",
+                        "fund_balances_end_of_year": current_year.get("fund_balances_end_of_year") or "",
+                    }
+                    year_previous = {
+                        "year_label": previous_year.get("year_label"),
+                        "realized_investment_income": previous_year.get("realized_investment_income") or "",
+                        "unrealized_investment_gains": previous_year.get("unrealized_investment_gains") or "",
+                        "other": previous_year.get("other") or "",
+                        "government_and_other_grants": previous_year.get("government_and_other_grants") or "",
+                        "total_revenue": previous_year.get("total_revenue") or "",
+                        "research_and_conferences": previous_year.get("research_and_conferences") or "",
+                        "amortization": previous_year.get("amortization") or "",
+                        "administration": previous_year.get("administration") or "",
+                        "facilities": previous_year.get("facilities") or "",
+                        "technical_support": previous_year.get("technical_support") or "",
+                        "total_expenses": previous_year.get("total_expenses") or "",
+                        "excess_of_expenses_over_revenue": previous_year.get("excess_of_expenses_over_revenue") or "",
+                        "fund_balances_beginning_of_year": previous_year.get("fund_balances_beginning_of_year") or "",
+                        "fund_balances_end_of_year": previous_year.get("fund_balances_end_of_year") or "",
+                    }
+                    fund_balances = {
+                        "title_en": title_en,
+                        "title_fr": title_fr,
+                        "description_en": description_en,
+                        "description_fr": description_fr,
+                        "slug_en": slugify(title_en) if title_en else "fund-balances-en",
+                        "slug_fr": slugify(title_fr) if title_fr else "fund-balances-fr",
+                        "year_current": year_current,
+                        "year_previous": year_previous,
+                    }
+                    tabs.append(fund_balances)
+
             content = {
                 "tabs": tabs,
             }
