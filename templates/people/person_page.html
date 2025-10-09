@@ -98,13 +98,13 @@
     {% endif %}
 
     {% if not page.archive %}
-      {% if page.expertise or page.programs_as_team_member.all|length > 0 or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
+      {% if page.expertise or page.programs_as_team_member or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
         <section class="expertise">
           <div class="container">
             <div class="row justify-content-center">
               <div class="col col-md-10 col-lg-8">
                 <div class="expertise-container">
-                  {% if page.expertise or page.programs_as_team_member.all|length > 0 %}
+                  {% if page.expertise or page.programs_as_team_member %}
                     <div>
                       {% if page.expertise %}
                         <div class="related-container">
@@ -117,11 +117,11 @@
                         </div>
                       {% endif %}
     
-                      {% if page.programs_as_team_member.all|length > 0 %}
+                      {% if page.programs_as_team_member %}
                         <div class="related-container">
                           <div class="meta meta-title">Programs</div>
                           <div class="meta">
-                            {% for project in page.programs_as_team_member.all %}
+                            {% for project in page.programs_as_team_member %}
                               <a class="expertise-item" href="{% pageurl project %}">{{ project.title }}</a>
                             {% endfor %}
                           </div>
