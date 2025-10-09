@@ -16,9 +16,6 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
     return subSlug ? trimmed.replace(/\/[^/]+$/, '') : trimmed;
   }, [pathname, subSlug]);
 
-  console.log(slide);
-  console.log(tabs);
-
   useEffect(() => {
     if (!subSlug && tabs.length > 0) {
       const tabSlug = lang === 'fr' ? `${tabs[0].slug_fr}/fr` : tabs[0].slug_en;
@@ -34,10 +31,6 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
     return t.slug_en === activeSlug;
   }) || null;
 
-  console.log(activeSlug);
-  console.log(activeTab);
-
-  // Helper for translations (replace with your i18n solution if needed)
   const t = (key) => {
     const translations = {
       currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current Assets',

@@ -1,5 +1,6 @@
 @import '../../global/variables';
 @import '../../global/mixins';
+@import './variables.scss';
 
 $timeline-event: #e7bc5d;
 $timeline-opinion: #63a9a4;
@@ -37,6 +38,10 @@ $timeline-publication: $cigi-primary-colour;
   }
 }
 
+html {
+  font-size: 16px;
+}
+
 html,
 body {
   @include media-breakpoint-up(lg) {
@@ -53,6 +58,26 @@ body {
     overflow: hidden;
   }
   background-color: $black;
+}
+
+p {
+  font-weight: 300;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.2;
+
+  @media screen and (min-width: $lg-screen-min) and (max-width: $lg-screen-max) and (min-height: $med-height-min) {
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+
+  @media screen and (min-width: $xl-screen-min) and (min-height: $lg-height-min) {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
 }
 
 .annual-report-spa {
