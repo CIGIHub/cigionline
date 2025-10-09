@@ -224,6 +224,13 @@ class PersonPage(
         verbose_name='DPH Position',
     )
     projects = ParentalManyToManyField('research.ProjectPage', blank=True)
+    additional_programs = StreamField(
+        [
+            ('program', blocks.PageChooserBlock(required=True))
+        ],
+        help_text='Additional programs to list under the "Programs" section on the expert/staff page.',
+        blank=True,
+    )
     short_bio = RichTextField(
         blank=True,
         features=['bold', 'italic', 'link'],
@@ -332,7 +339,9 @@ class PersonPage(
 
     @property
     def programs_as_team_member(self):
-        return ProjectPage.objects.filter(members__member=self).order_by('-publishing_date')
+        additional_programs = [block.value for block in self.additional_programs]
+        programs = ProjectPage.objects.filter(members__member=self).order_by('-publishing_date')
+        return additional_programs + list(programs)
 
     @property
     def is_external_profile(self):
@@ -403,6 +412,7 @@ class PersonPage(
             [
                 FieldPanel('expertise'),
                 FieldPanel('projects'),
+                FieldPanel('additional_programs'),
             ],
             heading='Expertise',
             classname='collapsible collapsed'
