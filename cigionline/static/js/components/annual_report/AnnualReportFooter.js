@@ -26,7 +26,7 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
         darkSlideTypes.includes(slide.slide_type) ? 'footer-dark' : ''
       }`}
     >
-      {slide.slide_type !== 'title' && (
+      {slide.background_image && (
         <button
           className="footer-icon-btn"
           type="button"

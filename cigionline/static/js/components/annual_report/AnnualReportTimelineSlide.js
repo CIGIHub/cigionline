@@ -10,17 +10,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt, faSearch, faTimes } from '@fortawesome/pro-light-svg-icons';
 import '../../../css/components/annual_reports/AnnualReportTimelineSlide.scss';
 
-const BEGINNING_OF_YEAR = new Date('2024-08-01'); // match Ember
+const BEGINNING_OF_YEAR = new Date('2024-08-01');
 const DAYS_IN_YEAR = 365;
 const RADIUS = 5;
-const TIMELINE_MIDDLE = 300; // px, matches Ember's 300
+const TIMELINE_MIDDLE = 300;
 
 function getNodeDate(node) {
   return new Date(node.published_date || node.event_date);
-}
-
-function getThumbnailUrl(node) {
-  return node.thumbnailUrl || '';
 }
 
 function canDrawCircle(matrix, x, y, r) {
@@ -70,16 +66,16 @@ function layoutNodes(nodes, width) {
       let placed = false;
       for (let j = 0; j < i; j += 1) {
         if (
-          ind <= nodes.length / 2 &&
-          canDrawCircle(matrix, cx + j, cy - i + j, RADIUS)
+          ind <= nodes.length / 2
+          && canDrawCircle(matrix, cx + j, cy - i + j, RADIUS)
         ) {
           cx += j;
           cy = cy - i + j;
           placed = true;
           break;
         } else if (
-          ind > nodes.length / 2 &&
-          canDrawCircle(matrix, cx - j, cy - i - j, RADIUS)
+          ind > nodes.length / 2
+          && canDrawCircle(matrix, cx - j, cy - i - j, RADIUS)
         ) {
           cx -= j;
           cy = cy - i - j;
@@ -128,19 +124,22 @@ const previousNode = (nodes, current) => {
   const index = nodes.findIndex((n) => n.id === current.id);
   if (index > 0) return nodes[index - 1];
   return null;
-}
+};
 
 const nextNode = (nodes, current) => {
   if (!current) return null;
   const index = nodes.findIndex((n) => n.id === current.id);
   if (index >= 0 && index < nodes.length - 1) return nodes[index + 1];
   return null;
-}
+};
 
-function AnnualReportTimelineSlide({ slide, lang }) {
+function AnnualReportTimelineSlide({ slide, setDimUI }) {
   const [search, setSearch] = useState('');
   const [node, setNode] = useState(null);
   const [hoveredId, setHoveredId] = useState(null);
+
+  const [exitingNode, setExitingNode] = useState(null);
+  const [entered, setEntered] = useState(false);
 
   const timelineRef = useRef(null);
   const [timelineWidth, setTimelineWidth] = useState(1110);
@@ -159,26 +158,50 @@ function AnnualReportTimelineSlide({ slide, lang }) {
     return () => window.removeEventListener('resize', recalcWidth);
   }, [recalcWidth]);
 
+  useEffect(() => {
+    if (node) {
+      const raf = requestAnimationFrame(() => setEntered(true));
+      return () => cancelAnimationFrame(raf);
+    }
+    setEntered(false);
+  }, [node]);
+
+  function closeOverlay() {
+    if (node) {
+      setExitingNode(node);
+      setNode(null);
+    }
+  }
+
+  function handleTransitionEnd(e) {
+    if (e.target !== e.currentTarget) return;
+    if (e.propertyName !== 'opacity') return;
+    if (!node && exitingNode) {
+      setExitingNode(null);
+      setDimUI(false);
+    }
+  }
+
+  const shownNode = node || exitingNode;
+
   const positioned = useMemo(
     () => layoutNodes(nodes, timelineWidth),
     [nodes, timelineWidth],
   );
 
-  // search classification like Ember's runSearch
   const classified = useMemo(
-    () =>
-      positioned.map((n) => ({
-        ...n,
-        isMatch: matchesSearch(n, search),
-      })),
+    () => positioned.map((n) => ({
+      ...n,
+      isMatch: matchesSearch(n, search),
+    })),
     [positioned, search],
   );
 
   const onBubbleClick = (bubbleNode) => {
     setNode(bubbleNode);
-    // the Ember code animates top with jQuery; here we toggle a class
-    // You can add CSS to animate .timeline-top state.
+    setDimUI(true);
   };
+
   return (
     <>
       <div className="background-row timeline-background" />
@@ -256,7 +279,9 @@ function AnnualReportTimelineSlide({ slide, lang }) {
         </div>
       </div>
       <div className="d-none d-lg-block">
-        <div className={`timeline d-none d-lg-block ${node ? 'timeline-top' : ''}`}>
+        <div
+          className={`timeline d-none d-lg-block ${node ? 'timeline-top' : ''}`}
+        >
           <p className="date-marker date-marker-beg">2023</p>
           <p className="date-marker date-marker-end">2024</p>
           <div className="timeline-line line-start" />
@@ -289,69 +314,67 @@ function AnnualReportTimelineSlide({ slide, lang }) {
           </div>
           <div className="timeline-line line-end" />
 
-          {classified.map((node) => {
-            const top = node.cy - node.r;
-            const left = node.cx - node.r;
-            const typeClass =
-              node.type === 'publication'
-                ? 'publication'
-                : node.type === 'article'
+          {classified.map((cNode) => {
+            const top = cNode.cy - cNode.r;
+            const left = cNode.cx - cNode.r;
+            const typeClass = cNode.type === 'publication'
+              ? 'publication'
+              : cNode.type === 'article'
                 ? 'opinion'
-                : node.type === 'event'
-                ? 'event'
-                : '';
+                : cNode.type === 'event'
+                  ? 'event'
+                  : '';
 
-            const isHovered = hoveredId === node.id;
+            const isHovered = hoveredId === cNode.id;
             const anyHovered = hoveredId !== null;
-            const dimSiblings =
-              anyHovered && hoveredId !== node.id && node.isMatch;
+            const dimSiblings = anyHovered && hoveredId !== cNode.id && cNode.isMatch;
 
             return (
               <div
-                key={node.id}
-                className={`timeline-bubble node-${node.id} ${typeClass} ${
-                  node.isMatch ? 'search-match' : 'search-no-match'
+                key={cNode.id}
+                className={`timeline-bubble node-${cNode.id} ${typeClass} ${
+                  cNode.isMatch ? 'search-match' : 'search-no-match'
                 } ${isHovered ? 'hovered' : ''} ${dimSiblings ? 'dimmed' : ''}`}
                 style={{ left, top }}
-                onMouseEnter={() => setHoveredId(node.isMatch ? node.id : null)}
+                onMouseEnter={() => setHoveredId(cNode.isMatch ? cNode.id : null)}
                 onMouseLeave={() => setHoveredId(null)}
-                onClick={() => node.isMatch && onBubbleClick(node)}
+                onClick={() => cNode.isMatch && onBubbleClick(cNode)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && node.isMatch) onBubbleClick(node);
+                  if (e.key === 'Enter' && cNode.isMatch) onBubbleClick(cNode);
                 }}
-                aria-label={`${node.type}: ${node.title}`}
+                aria-label={`${cNode.type}: ${cNode.title}`}
               >
                 <div className="preview">
                   <div className="preview-image-container">
                     <div
-                      className={`preview-image timeline-${node.id}-thumbnail`}
+                      className={`preview-image timeline-${cNode.id}-thumbnail`}
                       style={{
-                        backgroundImage: `url('${node.image}')`,
+                        backgroundImage: `url('${cNode.image}')`,
                       }}
                     />
                   </div>
                   <div className="preview-line" />
                   <div
                     className={`preview-text ${
-                      node.cx >= timelineWidth * 0.75
+                      cNode.cx >= timelineWidth * 0.75
                         ? 'preview-text-left'
                         : 'preview-text-right'
                     }`}
                   >
-                    <h6>{node.type === 'article' ? 'Opinion' : node.type}</h6>
+                    <h6>{cNode.type === 'article' ? 'Opinion' : cNode.type}</h6>
                     <h5>
-                      {Array.isArray(node.subtype) &&
-                      node.subtype[0] === 'Books' ? (
-                        <em>{node.title}</em>
-                      ) : (
-                        node.title
-                      )}
+                      {Array.isArray(cNode.subtype)
+                      && cNode.subtype[0] === 'Books' ? (
+                        <em>{cNode.title}</em>
+                        ) : (
+                          cNode.title
+                        )}
                     </h5>
-                    {getNodeDate(node) && (
+                    {getNodeDate(cNode) && (
                       <h6 className="pub-date">
-                        {formatDate(getNodeDate(node))}
+                        {formatDate(getNodeDate(cNode))}
                       </h6>
                     )}
                   </div>
@@ -368,17 +391,23 @@ function AnnualReportTimelineSlide({ slide, lang }) {
             </div>
           </div>
         </div>
-        {/* <FooterPhoto /> */}
-        {node && (
+
+        {shownNode && (
           <div
-            className="timeline-overlay background-image"
-            style={node && { backgroundImage: `url('${node.image}')` }}
+            className={[
+              'timeline-overlay background-image',
+              node ? (entered ? 'is-entered' : '') : 'is-leaving',
+            ].join(' ')}
+            style={{
+              backgroundImage: `url('${shownNode.image}'),url('${shownNode.image_thumbnail}')`,
+            }}
+            onTransitionEnd={handleTransitionEnd}
           >
             <div className="timeline-overlay-container">
               <div className="container">
                 <div className="row">
                   <div className="col-md-10">
-                    <h2>{node.title}</h2>
+                    <h2>{shownNode.title}</h2>
                   </div>
                 </div>
                 <div className="row">
@@ -389,17 +418,18 @@ function AnnualReportTimelineSlide({ slide, lang }) {
                 <div className="row">
                   <div className="col-md-10">
                     <h6 className="pub-date">
-                      {node.type !== 'event' && (
+                      {shownNode.type !== 'event' && (
                         <>
-                          {node.authors}
+                          {shownNode.authors}
                           <br />
                         </>
                       )}
-                      {getNodeDate(node) && formatDate(getNodeDate(node))}
+                      {getNodeDate(shownNode)
+                        && formatDate(getNodeDate(shownNode))}
                     </h6>
                     <p
                       className="node-summary"
-                      dangerouslySetInnerHTML={{ __html: node.summary }}
+                      dangerouslySetInnerHTML={{ __html: shownNode.summary }}
                     />
                   </div>
                 </div>
@@ -407,7 +437,7 @@ function AnnualReportTimelineSlide({ slide, lang }) {
                   <div className="col-md-10">
                     <a
                       className="clearfix read-link"
-                      href={node.url_landing_page}
+                      href={shownNode.url_landing_page}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -416,11 +446,11 @@ function AnnualReportTimelineSlide({ slide, lang }) {
                       </div>
                       <p>
                         <span className="underline">
-                          {node.type === 'article' && 'Read opinion'}
-                          {node.type === 'event' &&
-                            'Learn more about the event'}
-                          {node.type === 'publication' &&
-                            'Read this publication'}
+                          {shownNode.type === 'article' && 'Read opinion'}
+                          {shownNode.type === 'event'
+                            && 'Learn more about the event'}
+                          {shownNode.type === 'publication'
+                            && 'Read this publication'}
                         </span>
                       </p>
                     </a>
@@ -436,17 +466,19 @@ function AnnualReportTimelineSlide({ slide, lang }) {
                       type="button"
                       className="previous scroll-arrow scroll-arrow-left"
                       onClick={() => {
-                        const prev = previousNode(classified, node);
+                        const prev = previousNode(classified, shownNode);
                         if (prev) setNode(prev);
                       }}
+                      aria-label="Previous item"
                     />
                     <button
                       type="button"
                       className="next scroll-arrow scroll-arrow-right"
                       onClick={() => {
-                        const next = nextNode(classified, node);
+                        const next = nextNode(classified, shownNode);
                         if (next) setNode(next);
                       }}
+                      aria-label="Next item"
                     />
                   </div>
                 </div>
@@ -459,10 +491,10 @@ function AnnualReportTimelineSlide({ slide, lang }) {
                     <button
                       type="button"
                       className="clearfix back-link"
-                      onClick={() => setNode(null)}
+                      onClick={closeOverlay}
                     >
                       <div
-                        className={`float-start back-link-icon ${node.type}`}
+                        className={`float-start back-link-icon ${shownNode.type}`}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -510,7 +542,7 @@ function AnnualReportTimelineSlide({ slide, lang }) {
 
 AnnualReportTimelineSlide.propTypes = {
   slide: PropTypes.object.isRequired,
-  lang: PropTypes.string.isRequired,
+  setDimUI: PropTypes.func.isRequired,
 };
 
 export default AnnualReportTimelineSlide;

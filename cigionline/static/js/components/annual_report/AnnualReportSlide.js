@@ -207,6 +207,7 @@ function AnnualReportSlide({ slides, basePath }) {
           lang={currentLang}
           fadeableClass={fadeableClass}
           revealableClass={revealableClass}
+          setDimUI={setDimUI}
         />
       )}
 

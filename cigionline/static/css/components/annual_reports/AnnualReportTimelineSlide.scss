@@ -454,10 +454,12 @@
   width: 100%;
   z-index: 1;
   color: $white;
-
+  
   &.background-image {
+    transition: opacity 1s ease;
     background-position: center;
     background-size: cover;
+    opacity: 0;
 
     &::after {
       background-color: $ar-background-overlay;
@@ -467,6 +469,14 @@
       position: absolute;
       top: 0;
       width: 100%;
+    }
+
+    &.is-entered {
+      opacity: 1;
+    }
+
+    &.is-leaving {
+      opacity: 0;
     }
   }
 
