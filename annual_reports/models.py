@@ -185,8 +185,8 @@ class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, Searchable
     def get_template(self, request, *args, **kwargs):
         return "annual_reports/annual_report_spa_page.html"
 
-    @route(r'^(?P<lang>en|fr)/(?P<slide_slug>[-\w]+)/(?P<subslug>[-\w]+)/?$')
-    def slide_with_lang_and_subslug(self, request, lang, slide_slug, subslug, *args, **kwargs):
+    @route(r'^(?P<lang>en|fr)/(?P<slide_slug>[-\w]+)(?:/(?P<subslug>[-\w]+))?/?$')
+    def slide_with_lang_and_optional_subslug(self, request, lang, slide_slug, *args, **kwargs):
         slide = (self.get_children()
                  .type(AnnualReportSlidePage)
                  .live()
@@ -735,7 +735,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 'subtype': subtype,
                 'word_count': content_page.specific.word_count,
                 'summary': summary,
-                'image': image,
+                'image': 'https://www.cigionline.org/static/images/HiebertKyle_-_AI_Deception_Capabilities.width-1760.jpg',
             })
 
         return {
