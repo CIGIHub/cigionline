@@ -58,8 +58,8 @@ function layoutNodes(nodes, width) {
       (getNodeDate(node) - BEGINNING_OF_YEAR) / 86400000,
     );
     let cx = Math.floor(numDays * daysWidth);
-    if (cx < RADIUS) cx = RADIUS + 1;
-    if (cx > width - RADIUS) cx = width - RADIUS - 1;
+    if (cx < RADIUS) cx = RADIUS + 4;
+    if (cx > width - RADIUS) cx = width - RADIUS + 3;
 
     let cy = TIMELINE_MIDDLE;
     for (let i = 0; i < TIMELINE_MIDDLE - RADIUS; i += 1) {
@@ -97,12 +97,13 @@ function layoutNodes(nodes, width) {
   });
 }
 
-function matchesSearch(node, search) {
-  if (!search) return true;
-  const s = search.toLowerCase();
+function matchesSearch(node, searchText) {
+  if (!searchText) return true;
+  const s = searchText.toLowerCase();
   const fields = [
     node.title || '',
     (node.authors || []).join(', '),
+    (node.speakers || []).join(', '),
     (node.subtype || []).join(', '),
     node.summary || '',
   ];
@@ -133,8 +134,18 @@ const nextNode = (nodes, current) => {
   return null;
 };
 
+function useDebounced(value, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+  return debounced;
+}
+
 function AnnualReportTimelineSlide({ slide, setDimUI }) {
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounced(search, 300);
   const [node, setNode] = useState(null);
   const [hoveredId, setHoveredId] = useState(null);
 
@@ -192,12 +203,13 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
   const classified = useMemo(
     () => positioned.map((n) => ({
       ...n,
-      isMatch: matchesSearch(n, search),
+      isMatch: matchesSearch(n, debouncedSearch),
     })),
-    [positioned, search],
+    [positioned, debouncedSearch],
   );
 
   const onBubbleClick = (bubbleNode) => {
+    if (!bubbleNode.isMatch) return;
     setNode(bubbleNode);
     setDimUI(true);
   };

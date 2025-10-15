@@ -118,6 +118,20 @@
   background-size: cover;
 }
 
+.background-row {
+  &.standard-background {
+    .background-image {
+      &.revealable {
+        opacity: 0.3;
+
+        &.is-revealed {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
 .ar-slide-content {
   &.chairs-message,
   &.presidents-message {

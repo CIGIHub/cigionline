@@ -333,11 +333,16 @@
       animation-name: searchMatchFade;
       animation-timing-function: ease-in;
       opacity: 1;
+      transition: opacity 0.5s ease;
 
       &:hover {
         .preview {
           display: block;
         }
+      }
+
+      &.dimmed {
+        opacity: 0.5;
       }
     }
 

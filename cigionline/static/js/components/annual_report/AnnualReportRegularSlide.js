@@ -39,31 +39,43 @@ function AnnualReportRegularSlide({
   return (
     <div className="annual-report-slide">
       <div
-        className={`background-row ${slide.slide_type.replace('_', '-')}-background d-none d-md-block`}
-      />
-      <div
-        className={`background-image hover-reveal hover-reveal-gradient-${slide.background_gradient_position} ${slide.slide_type.replace('_', '-')}-background-img ${revealableClass} d-none d-md-block`}
-        style={{
-          backgroundImage: `url(${slide.background_image}),url(${slide.background_image_thumbnail})`,
-        }}
+        className={`background-row ${slide.slide_type.replace(
+          '_',
+          '-',
+        )}-background d-none d-md-block`}
       >
-        {slide.background_quote && (
-          <div className={`quote quote-${slide.background_quote_position}`}>
-            <h3
-              className={`hover-reveal-quote ${revealableClass}`}
-              dangerouslySetInnerHTML={{
-                __html:
-                  lang === 'fr'
-                    ? slide.background_quote_fr
-                    : slide.background_quote,
-              }}
-            />
-            <div className={`hover-reveal-quote-line ${revealableClass}`} />
-          </div>
-        )}
+        <div
+          className={`background-image hover-reveal hover-reveal-gradient-${
+            slide.background_gradient_position
+          } ${slide.slide_type.replace(
+            '_',
+            '-',
+          )}-background-img ${revealableClass} d-none d-md-block`}
+          style={{
+            backgroundImage: `url(${slide.background_image}),url(${slide.background_image_thumbnail})`,
+          }}
+        >
+          {slide.background_quote && (
+            <div className={`quote quote-${slide.background_quote_position}`}>
+              <h3
+                className={`hover-reveal-quote ${revealableClass}`}
+                dangerouslySetInnerHTML={{
+                  __html:
+                    lang === 'fr'
+                      ? slide.background_quote_fr
+                      : slide.background_quote,
+                }}
+              />
+              <div className={`hover-reveal-quote-line ${revealableClass}`} />
+            </div>
+          )}
+        </div>
       </div>
       <div
-        className={`ar-slide-content regular-slide ${fadeableClass} ${slide.slide_type.replace('_', '-')}`}
+        className={`ar-slide-content regular-slide ${fadeableClass} ${slide.slide_type.replace(
+          '_',
+          '-',
+        )}`}
         key={`${slide.slug}-${lang}`}
       >
         <div className="container">

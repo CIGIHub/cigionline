@@ -11,6 +11,7 @@ import AnnualReportFooter from './AnnualReportFooter';
 import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 import AnnualReportTimelineSlide from './AnnualReportTimelineSlide';
 import AnnualReportsFinancialsSlide from './AnnualReportFinancialsSlide';
+import AnnualReportOutputsSlide from './AnnualReportOutputsSlide';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -20,6 +21,7 @@ const slideComponents = {
   presidents_message: AnnualReportRegularSlide,
   timeline: AnnualReportTimelineSlide,
   financials: AnnualReportsFinancialsSlide,
+  outputs_and_activities: AnnualReportOutputsSlide,
 };
 
 const loadedImages = new Set();
@@ -103,11 +105,11 @@ function AnnualReportSlide({ slides, basePath }) {
 
       if (direction === 'next' && nextSlide) {
         navigate(
-          `${basePath}/${nextSlide.slug}${currentLang === 'fr' ? '/fr' : ''}`,
+          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${nextSlide.slug}`,
         );
       } else if (direction === 'prev' && prevSlide) {
         navigate(
-          `${basePath}/${prevSlide.slug}${currentLang === 'fr' ? '/fr' : ''}`,
+          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${prevSlide.slug}`,
         );
       }
     };

@@ -18,7 +18,7 @@ function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass, lang }
 
   const handleNavigation = (slide) => {
     if (slide) {
-      navigate(`${basePath}/${slide.slug}`);
+      navigate(`${basePath}/${lang}/${slide.slug}`);
     }
   };
   const backgroundClass = `background-${
