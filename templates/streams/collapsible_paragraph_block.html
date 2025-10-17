@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags webpack_loader %}
 
 <div class="collapsible-paragraph-block {% if self.collapsed %}collapsed{% endif %}">
   <div class="container">
@@ -6,16 +6,28 @@
       <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
         <div class="collapsible-header">
           {% if self.title_type == "h2" %}
-            <h2>{{ self.title }}</h2>
+            <h2>
+              {{ self.title }}
+              <button class="toggle-button" aria-expanded="{% if self.collapsed %}false{% else %}true{% endif %}" aria-controls="collapsible-content-{{ self.id }}">
+                <i class="fa fa-chevron-up"></i>
+              </button> 
+            </h2>
           {% elif self.title_type == "h3" %}
-            <h3>{{ self.title }}</h3>
+            <h3>
+              {{ self.title }}
+              <button class="toggle-button" aria-expanded="{% if self.collapsed %}false{% else %}true{% endif %}" aria-controls="collapsible-content-{{ self.id }}">
+                <i class="fa fa-chevron-up"></i>
+              </button> 
+            </h3>
           {% elif self.title_type == "h4" %}
-            <h4>{{ self.title }}</h4>
+            <h4>
+              {{ self.title }}
+              <button class="toggle-button" aria-expanded="{% if self.collapsed %}false{% else %}true{% endif %}" aria-controls="collapsible-content-{{ self.id }}">
+                <i class="fa fa-chevron-up"></i>
+              </button> 
+            </h4>
           {% endif %}
-          <button class="toggle-button" aria-expanded="{% if self.collapsed %}false{% else %}true{% endif %}" aria-controls="collapsible-content-{{ self.id }}">
-            <span class="icon-expand">+</span>
-            <span class="icon-collapse">−</span>
-          </button> 
+
         </div>
         <div class="collapsible-content">
           {{ self.paragraph|richtext }}
@@ -23,4 +35,5 @@
       </div>
     </div>
   </div>
+  {% render_bundle 'collapsibleParagraphBlock' %}
 </div>
