@@ -1,17 +1,10 @@
 .collapsible-paragraph-block {
+  margin-bottom: 1rem;
+
   &.collapsed {
     .collapsible-header {
-      h3 {
-        margin-bottom: -1rem;
-      }
-
       .toggle-button {
-        .icon-expand {
-          display: block;
-        }
-        .icon-collapse {
-          display: none;
-        }
+        transform: rotate(180deg);
       }
     }
 
@@ -23,38 +16,28 @@
 
   .collapsible-header {
     position: relative;
+    display: flex;
+
+    h2,
+    h3,
+    h4 {
+      display: flex;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
 
     .toggle-button {
-      font-size: 1.5rem;
-      position: absolute;
-      left: -1rem;
-      top: 0;
-      bottom: 0;
-      width: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      line-height: 1;
-
-      span {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-      }
-
-      .icon-expand {
-        display: none;
-      }
-      .icon-collapse {
-        display: block;
-      }
+      display: inline;
+      margin-left: 1rem;
+      transition: transform 0.3s ease;
     }
 
     h3 {
-      margin-top: 2rem;
       margin-bottom: 0.5em;
+
+      p {
+        margin-bottom: 0;
+      }
     }
   }
 
