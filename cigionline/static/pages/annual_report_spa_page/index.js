@@ -1,4 +1,3 @@
-import './css/annual_report_spa_page.scss';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import AnnualReportSPA from '../../js/components/annual_report/AnnualReportSPA';

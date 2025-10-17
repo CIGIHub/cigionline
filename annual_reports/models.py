@@ -7,11 +7,12 @@ from core.models import (
     SearchablePageAbstract,
     ShareablePageAbstract
 )
+from django.core.cache import cache
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render
 from django.utils.text import slugify
-from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -331,6 +332,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             ("auditor_report", ARFinancialsAuditorReportBlock()),
             ("financial_position", ARFinancialPositionBlock()),
             ("fund_balances", ARFundBalancesBlock()),
+            ("outputs_and_activities", AROutputsBlock()),
         ],
         blank=True,
         help_text="Content of the slide",
@@ -671,13 +673,85 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             }
         elif self.slide_type == 'timeline':
             content = {
-                "nodes": self.timeline_pages
+                "nodes": self.timeline_pages(),
             }
+        elif self.slide_type == 'outputs_and_activities':
+            outputs_and_activities = []
 
+            for block in self.ar_slide_content:
+                title_for_section = block.value.get("title") or ""
+                theme = {
+                    "title": title_for_section,
+                    "slug": slugify(title_for_section),
+                    "pages": [],
+                }
+                outputs_stream = block.value.get("outputs") or []
+
+                for output in outputs_stream:
+                    if output.block_type != 'output':
+                        continue
+
+                    v = output.value
+
+                    page = v.get("page")
+                    page = page.specific if page else None
+
+                    item_title = v.get("title_override") or (page.title if page else "")
+
+                    desc_override = v.get("description_override")
+                    description = (getattr(desc_override, 'source', None) or str(desc_override) or
+                                   getattr(page, 'short_description', '') or
+                                   getattr(page, 'subtitle', '') or '')
+
+                    link = v.get("link_override") or (page.url if page else "")
+
+                    image_obj = v.get("image_override") or \
+                        getattr(page, 'image_hero', None) or \
+                        getattr(page, 'image_feature', None)
+                    image_url = ''
+                    image_thumb_url = ''
+                    authors = getattr(page, 'author_names', '') if page else ''
+                    if image_obj:
+                        try:
+                            image_url = image_obj.get_rendition('fill-2560x1600').url
+                        except Exception:
+                            image_url = ''
+                        try:
+                            image_thumb_url = image_obj.get_rendition('fill-142x80').url
+                        except Exception:
+                            image_thumb_url = ''
+
+                    output_type = getattr(page, 'contenttype', None) or ""
+                    subtype = (v.get("type_override") or
+                               getattr(page, 'contentsubtype', None) or
+                               "")
+                    date = getattr(page, 'publishing_date', None) or None
+
+                    theme["pages"].append({
+                        "title": item_title,
+                        "link": link,
+                        "description": description,
+                        "image": image_url,
+                        "image_thumbnail": image_thumb_url,
+                        "type": output_type,
+                        "subtype": subtype,
+                        "date": date,
+                        "authors": authors,
+                    })
+                outputs_and_activities.append(theme)
+
+            content = {"outputs_and_activities": outputs_and_activities}
         return content
 
-    @cached_property
     def timeline_pages(self):
+        version_part = (self.last_published_at or self.latest_revision_created_at or self.first_published_at)
+        version_str = version_part.strftime("%Y%m%d%H%M%S") if version_part else "v0"
+        cache_key = f"timeline:pages:{self.id}:{version_str}"
+
+        data = cache.get(cache_key)
+        if data is not None:
+            return data
+
         year = self.get_parent().specific.year
         content_pages = ContentPage.objects.live().filter(projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).filter(publishing_date__range=[f'{year - 1}-08-01', f'{year}-07-31'])
 
@@ -743,9 +817,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 'image_thumbnail': image_thumbnail,
             })
 
-        return {
-            'items': json_items
-        }
+        data = {"items": json_items}
+        cache.set(cache_key, data, timeout=60 * 60 * 24)
+        return data
 
 
 class StrategicPlanSPAPage(FeatureablePageAbstract, Page, ShareablePageAbstract, SearchablePageAbstract):

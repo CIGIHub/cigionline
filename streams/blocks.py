@@ -1757,7 +1757,7 @@ class ARFundBalancesBlock(blocks.StructBlock):
     title_fr = blocks.CharBlock(required=False)
     description_en = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
     description_fr = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
-    
+
     amounts = blocks.StructBlock([
         ('year_current', blocks.StructBlock([
             ('year_label', blocks.CharBlock(required=False)),
@@ -1799,6 +1799,21 @@ class ARFundBalancesBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'Fund Balances'
         template = 'annual_reports/streams/ar_fund_balances_block.html'
+
+
+class AROutputsBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+
+    outputs = blocks.StreamBlock([
+        ('output', blocks.StructBlock([
+            ('page', blocks.PageChooserBlock(required=False)),
+            ('title_override', blocks.CharBlock(required=False)),
+            ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this content item')),
+            ('description_override', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link'])),
+            ('image_override', ImageChooserBlock(required=False)),
+            ('type_override', blocks.CharBlock(required=False, help_text='Override the type of output (e.g., Publication, Opinion, Video, Podcast, Event).'))
+        ])),
+    ])
 
 
 class ResourceBlock(blocks.StructBlock):
