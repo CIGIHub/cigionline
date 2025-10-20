@@ -33,7 +33,6 @@ const config = {
     articleTypePage: './cigionline/static/pages/article_type_page/index.js',
     caiai: './cigionline/static/caiai/index.js',
     cigionline: './cigionline/static/index.js',
-    collapsibleParagraphBlock: './cigionline/static/blocks/collapsible_paragraph_block/index.js',
     countryPage: './cigionline/static/pages/country_page/index.js',
     eventListPage: './cigionline/static/pages/event_list_page/index.js',
     eventPage: './cigionline/static/pages/event_page/index.js',

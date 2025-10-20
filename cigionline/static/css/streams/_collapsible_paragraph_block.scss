@@ -24,20 +24,18 @@
       display: flex;
       margin-top: 1rem;
       cursor: pointer;
+      margin-bottom: 0.5em;
+      align-items: flex-start;
+
+      p {
+        margin-bottom: 0;
+      }
     }
 
     .toggle-button {
       display: inline;
       margin-left: 1rem;
       transition: transform 0.3s ease;
-    }
-
-    h3 {
-      margin-bottom: 0.5em;
-
-      p {
-        margin-bottom: 0;
-      }
     }
   }
 
