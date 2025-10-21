@@ -32,6 +32,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^documents/', include(wagtaildocs_urls)),
     re_path(r'^search/$', search_views.search, name='search'),
     re_path(r'^api/experts/$', people_views.all_experts),
+    re_path(r'^api/expertise/$', people_views.all_expertise),
     re_path(r'^api/all_experts_search/$', people_views.all_experts_search),
     re_path(r'^api/search/$', search_views.search_api),
     re_path(r'^api/staff/$', people_views.all_staff),
