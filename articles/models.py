@@ -346,7 +346,8 @@ class ArticlePage(
     POLLY_VOICE_CHOICES = [
         ('Joanna', 'Joanna'),
         ('Matthew', 'Matthew'),
-        ('Amy', 'Amy'),
+        ('Salli', 'Salli'),
+        ('Stephen', 'Stephen'),
         ('Danielle', 'Danielle'),
         ('Gregory', 'Gregory'),
         ('Ruth', 'Ruth'),
