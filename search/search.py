@@ -155,6 +155,7 @@ class CIGIOnlineSearchQueryCompiler:
         eventaccess,
         experts,
         countries,
+        exclusions,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -175,6 +176,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.eventaccess = None
         self.experts = None
         self.countries = None
+        self.exclusions = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -204,10 +206,15 @@ class CIGIOnlineSearchQueryCompiler:
             self.years = years
         if countries and len(countries) > 0:
             self.countries = countries
+        if exclusions and len(exclusions) > 0:
+            self.exclusions = exclusions
 
     @property
     def queryset(self):
-        exclusions = {'contentpage__publicationpage__publication_type__title__in': ['DigiFin Policy Brief', 'Working Paper']}
+        pub_type_exclusions = ['DigiFin Policy Brief']
+        if 'working-papers' in self.exclusions if self.exclusions else []:
+            pub_type_exclusions.append('Working Paper')
+        exclusions = {'contentpage__publicationpage__publication_type__title__in': pub_type_exclusions}
 
         return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 
@@ -480,7 +487,8 @@ def cigi_search(content_type=None,
                 years=None,
                 eventaccess=None,
                 experts=None,
-                countries=None):
+                countries=None,
+                exclusions=None):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
         CIGIOnlineSearchQueryCompiler(content_type,
@@ -499,7 +507,8 @@ def cigi_search(content_type=None,
                                       years,
                                       eventaccess,
                                       experts,
-                                      countries)
+                                      countries,
+                                      exclusions),
     )
 
 
@@ -575,6 +584,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         multimediaseriesid,
         experts,
         countries,
+        exclusions,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -594,6 +604,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         self.years = None
         self.experts = None
         self.countries = None
+        self.exclusions = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -619,10 +630,17 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             self.multimediaseriesid = multimediaseriesid
         if countries and len(countries) > 0:
             self.countries = countries
+        if exclusions and len(exclusions) > 0:
+            self.exclusions = exclusions
 
     @property
     def queryset(self):
-        return Page.objects.not_type(NewsletterPage).live()
+        pub_type_exclusions = ['DigiFin Policy Brief']
+        if 'working-papers' in self.exclusions if self.exclusions else []:
+            pub_type_exclusions.append('Working Paper')
+        exclusions = {'contentpage__publicationpage__publication_type__title__in': pub_type_exclusions}
+
+        return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 
     def get_query(self):
         if self.searchtext:
@@ -759,7 +777,8 @@ def cigi_search_promoted(content_type=None,
                          publicationseriesid=None,
                          multimediaseriesid=None,
                          experts=None,
-                         countries=None):
+                         countries=None,
+                         exclusions=None):
     return CIGIOnlineElevatedElasticsearchResults(
         get_search_backend(),
         CIGIOnlineElevatedSearchQueryCompiler(content_type,
@@ -776,5 +795,6 @@ def cigi_search_promoted(content_type=None,
                                               publicationseriesid,
                                               multimediaseriesid,
                                               experts,
-                                              countries)
+                                              countries,
+                                              exclusions)
     )
