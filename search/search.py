@@ -239,7 +239,7 @@ class CIGIOnlineSearchQueryCompiler:
                     terms.append(item)
             should.append({
                 "multi_match": {
-                    "fields": ["title", "*_body", "core_contentpage__author_names", "*__topic_names^2", "*__country_names^2"],
+                    "fields": ["title", "*__body", "core_contentpage__author_names", "*__topic_names^2", "*__country_names^2"],
                     "query": ' '.join(terms),
                 },
             },)
