@@ -270,6 +270,7 @@ class SearchTable extends React.Component {
       isSearchPage,
       limit,
       sortOptions,
+      exclusions,
     } = this.props;
 
     if (isSearchPage) {
@@ -344,6 +345,10 @@ class SearchTable extends React.Component {
     }
     if (isSearchPage) {
       uri += '&searchpage=true';
+    }
+    if (exclusions.length > 0) {
+      const exclusion = exclusions.join(',');
+      uri += `&exclusions=${exclusion}`;
     }
 
     fetch(encodeURI(uri))
@@ -1710,6 +1715,7 @@ SearchTable.propTypes = {
       colTitle: PropTypes.string,
     }),
   ),
+  exclusions: PropTypes.arrayOf(PropTypes.string),
 };
 
 SearchTable.defaultProps = {
@@ -1735,6 +1741,7 @@ SearchTable.defaultProps = {
     },
   ],
   tableColumns: [],
+  exclusions: [],
 };
 
 export default SearchTable;
