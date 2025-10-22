@@ -118,7 +118,7 @@ $(function () {
     const searchValue = e.target.value;
     if (searchValue) {
       $navSearchInputDropdown.addClass('show');
-      const uri = `/api/search/?limit=6&offset=0&sort=relevance&searchtext=${searchValue}`;
+      const uri = `/api/search/?limit=6&offset=0&sort=relevance&searchtext=${searchValue}&exclusions=working-papers`;
       fetch(encodeURI(uri))
         .then((res) => res.json())
         .then((data) => {
