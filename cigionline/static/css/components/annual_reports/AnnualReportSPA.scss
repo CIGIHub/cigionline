@@ -1,0 +1,263 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+@import './variables.scss';
+
+$timeline-event: #e7bc5d;
+$timeline-opinion: #63a9a4;
+$timeline-publication: $cigi-primary-colour;
+
+@mixin link-underline {
+  color: $white;
+  background-size: 0 100%;
+  transition: background-size 0.5s;
+  background-image: linear-gradient(
+    transparent calc(100% - 2px),
+    $cigi-primary-colour 10px
+  );
+  background-repeat: no-repeat;
+
+  &:hover {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes slideTitleLineExpand {
+  0% {
+    margin-left: -350px;
+    width: 0;
+  }
+
+  50% {
+    margin-left: -350px;
+    width: 425px;
+  }
+
+  100% {
+    margin-left: 0;
+    width: 75px;
+  }
+}
+
+@keyframes scroll-arrow-bounce {
+  0%,
+  25%,
+  75%,
+  100% {
+    transform: translateY(0) rotate(45deg) translateX(-75%);
+  }
+
+  50% {
+    transform: translateY(0.2em) rotate(45deg) translateX(-75%);
+  }
+}
+
+html {
+  font-size: 16px;
+}
+
+html,
+body {
+  @include media-breakpoint-up(lg) {
+    overflow-y: hidden;
+    position: fixed;
+    width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+body {
+  background-color: $black;
+}
+
+p {
+  font-weight: 300;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.2;
+
+  @media screen and (min-width: $lg-screen-min) and (max-width: $lg-screen-max) and (min-height: $med-height-min) {
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+
+  @media screen and (min-width: $xl-screen-min) and (min-height: $lg-height-min) {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+}
+
+.annual-report-spa {
+  @include media-breakpoint-up(lg) {
+    position: fixed;
+  }
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.slide-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-background {
+  height: calc(100% + 50px);
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: -3;
+
+  .background-image {
+    position: inherit;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+  }
+
+  &.background-white {
+    background-color: $white;
+  }
+
+  &.background-black {
+    background-color: $black;
+  }
+}
+
+.loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.back-link {
+  display: flex;
+  position: relative;
+
+  &:hover {
+    .underline {
+      background-size: 100% 100%;
+    }
+  }
+
+  p {
+    font-weight: 500;
+    line-height: 44px;
+  }
+
+  .back-link-icon {
+    background-color: $white;
+    border-radius: 50%;
+    height: 44px;
+    line-height: 50px;
+    margin-right: 10px;
+    position: relative;
+    text-align: center;
+    transition: background-color 500ms;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.event {
+      background-color: $timeline-event;
+    }
+
+    &.article {
+      background-color: $timeline-opinion;
+    }
+
+    &.publication {
+      background-color: $timeline-publication;
+    }
+  }
+
+  .underline {
+    background-image: linear-gradient(
+      transparent calc(100% - 2px),
+      $cigi-primary-colour 10px
+    );
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition: background-size 500ms;
+    width: calc(100%);
+  }
+}
+
+.scroll-arrow {
+  border-color: $white;
+  border-style: solid;
+  cursor: pointer;
+  display: block;
+  height: 30px;
+  left: 50%;
+  padding: 3px;
+  position: absolute;
+  transition: border-color 250ms;
+  width: 30px;
+  z-index: 7;
+
+  &:hover {
+    border-color: $cigi-red;
+  }
+
+  &.light-background {
+    border-color: $black;
+  }
+
+  &.scroll-arrow-up-btn {
+    border-width: 1px 0 0 1px;
+    top: 40px;
+    transform: rotate(45deg) translateX(-75%);
+
+    @media screen and (min-width: $med-screen-min) {
+      top: 50px;
+    }
+  }
+
+  &.scroll-arrow-down-btn {
+    border-width: 0 1px 1px 0;
+    bottom: 10px;
+    transform: rotate(45deg) translateX(-75%);
+
+    @media screen and (min-width: $lg-screen-min) {
+      bottom: 30px;
+    }
+
+    &.bounce {
+      animation: scroll-arrow-bounce 2s infinite;
+      animation-delay: 0s;
+    }
+  }
+
+  &.scroll-arrow-left {
+    border-width: 0 0 1px 1px;
+    transform: rotate(45deg) translateX(-75%);
+  }
+
+  &.scroll-arrow-right {
+    border-width: 1px 1px 0 0;
+    transform: rotate(45deg) translateX(-75%);
+  }
+
+  &.scroll-arrow-after-content {
+    // Show the scroll arrow after scrollable content
+    @media screen and (max-width: $med-screen-max) {
+      position: relative;
+    }
+  }
+}

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import '../../css/components/AnnualReportNav.scss';
+import '../../../css/components/StrategicPlanNav.scss';
 
-const AnnualReportNav = ({ slides, basePath, currentIndex }) => {
+function StrategicPlanNav({ slides, basePath, currentIndex }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -25,7 +25,7 @@ const AnnualReportNav = ({ slides, basePath, currentIndex }) => {
           type="button"
           className="nav-arrow nav-arrow-top"
           onClick={() => handleNavigation(prevSlide)}
-          text="Previous Slide"
+          aria-label="Previous Slide"
         >
           <span>Previous Slide</span>
         </button>
@@ -35,6 +35,7 @@ const AnnualReportNav = ({ slides, basePath, currentIndex }) => {
           type="button"
           className="nav-arrow nav-arrow-bottom"
           onClick={() => handleNavigation(nextSlide)}
+          aria-label="Next Slide"
         >
           <span>Next Slide</span>
         </button>
@@ -74,12 +75,12 @@ const AnnualReportNav = ({ slides, basePath, currentIndex }) => {
       </div>
     </>
   );
-};
+}
 
-AnnualReportNav.propTypes = {
+StrategicPlanNav.propTypes = {
   slides: PropTypes.array.isRequired,
   basePath: PropTypes.string.isRequired,
   currentIndex: PropTypes.number.isRequired,
 };
 
-export default AnnualReportNav;
+export default StrategicPlanNav;

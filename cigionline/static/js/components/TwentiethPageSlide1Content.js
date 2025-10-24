@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 
-const TwentiethPageSlide2Content = ({ slide }) => {
+function TwentiethPageSlide2Content({ slide }) {
   const [showShare, setShowShare] = useState(false);
   const [playing, setPlaying] = useState(true);
   const socialString = JSON.parse(
@@ -53,6 +53,7 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                     <a
                       className="twitter-share-link"
                       href={`https://x.com/share?text=${socialString}&amp;url=${absoluteUrl}`}
+                      aria-label="Share on X (Twitter)"
                     >
                       <i className="fa-brands fa-x-twitter fa-sm icon" />
                     </a>
@@ -61,6 +62,7 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                     <a
                       className="linkedin-share-link"
                       href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${absoluteUrl}&amp;title=${socialString}`}
+                      aria-label="Share on LinkedIn"
                     >
                       <i className="fab fa-linkedin-in fa-sm icon" />
                     </a>
@@ -69,6 +71,7 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                 <button
                   type="button"
                   className="share"
+                  aria-label="Share"
                   onClick={() => setShowShare(!showShare)}
                 >
                   <span className={!showShare ? 'icon-opened' : 'icon-closed'}>
@@ -78,10 +81,20 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                     <i className="fas fa-share-alt" />
                   </span>
                 </button>
-                <button type="button" className={`pause ${!playing ? 'hide' : ''}`} onClick={pauseVideo}>
+                <button
+                  type="button"
+                  className={`pause ${!playing ? 'hide' : ''}`}
+                  onClick={pauseVideo}
+                  aria-label="Pause video"
+                >
                   <i className="fas fa-pause" />
                 </button>
-                <button type="button" className={`play ${playing ? 'hide' : ''}`} onClick={playVideo}>
+                <button
+                  type="button"
+                  className={`play ${playing ? 'hide' : ''}`}
+                  onClick={playVideo}
+                  aria-label="Play video"
+                >
                   <i className="fas fa-play" />
                 </button>
               </div>
@@ -91,6 +104,6 @@ const TwentiethPageSlide2Content = ({ slide }) => {
       </div>
     </>
   );
-};
+}
 
 export default TwentiethPageSlide2Content;

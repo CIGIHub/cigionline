@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../css/components/Loader.scss';
 import PropTypes from 'prop-types';
 
-const Loader = ({ isLoading }) => {
+function Loader({ isLoading }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Loader = ({ isLoading }) => {
       setProgress(Math.min(currentProgress, 100));
     }, 50);
 
-    return () => clearInterval(interval);
+    () => clearInterval(interval);
   }, [isLoading]);
 
   return (
@@ -67,11 +67,14 @@ const Loader = ({ isLoading }) => {
             </svg>
           </svg>
         </div>
-        <p>{progress}%</p>
+        <p>
+          {progress}
+          %
+        </p>
       </div>
     </div>
   );
-};
+}
 
 Loader.propTypes = {
   isLoading: PropTypes.bool.isRequired,
