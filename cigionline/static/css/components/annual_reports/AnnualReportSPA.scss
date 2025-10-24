@@ -122,17 +122,12 @@ h1 {
     height: 100%;
   }
 
-  .background-colour {
-    z-index: -2;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transition: background-color 0.3s ease;
-    background-color: $black;
+  &.background-white {
+    background-color: $white;
+  }
 
-    &.background-white {
-      background-color: $white;
-    }
+  &.background-black {
+    background-color: $black;
   }
 }
 

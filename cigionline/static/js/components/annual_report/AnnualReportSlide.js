@@ -25,6 +25,13 @@ const slideComponents = {
   outputs_and_activities: AnnualReportOutputsSlide,
 };
 
+const backgroundStyles = {
+  chairs_message: { backgroundColor: 'white' },
+  presidents_message: { backgroundColor: 'white' },
+  outputs_and_activities: { backgroundColor: 'white' },
+  financials: { backgroundColor: 'white' },
+};
+
 const loadedImages = new Set();
 
 const preloadImage = (src) => {
@@ -47,7 +54,6 @@ function AnnualReportSlide({ slides, basePath }) {
   const [dimUI, setDimUI] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
-  console.log(slides[currentIndex]);
 
   if (currentIndex === -1) {
     return (
@@ -184,15 +190,21 @@ function AnnualReportSlide({ slides, basePath }) {
       />
       <div
         key={currentSlide.id || currentSlide.slug}
-        className="slide-background background-row d-lg-none"
+        className={`slide-background background-row d-lg-none background-${
+          currentSlide.background_colour || 'black'
+        }`}
       >
         <div
           className="background-image"
-          style={{
-            backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
-          }}
+          style={
+            backgroundStyles[currentSlide.slide_type] || {
+              backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
+            }
+          }
         />
-        <div className="background-overlay hover-reveal-hide" />
+        {currentSlide.slide_type === 'standard' && (
+          <div className="background-overlay hover-reveal-hide" />
+        )}
       </div>
       <AnnualReportNav
         slides={slides}
