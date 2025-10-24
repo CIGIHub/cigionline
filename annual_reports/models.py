@@ -196,10 +196,10 @@ class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, Searchable
         if not slide:
             raise Http404("Slide not found")
         return slide._serve_spa(request)
-    
+
     @route(r'^(?P<slide_slug>[-\w]+)(?:/(?P<subslug>[-\w]+))?/?$')
     def slide_without_lang(self, request, slide_slug, subslug=None, *args, **kwargs):
-        base_url = self.url 
+        base_url = self.url
         new_path = f"{base_url}en/{slide_slug}/"
         if subslug:
             new_path += f"{subslug}/"
@@ -330,6 +330,10 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
     )
 
     slide_title_fr = models.CharField(max_length=255, help_text="Title of the slide (French)", blank=True)
+    french_slide = models.BooleanField(
+        default=True,
+        help_text="Indicates if this slide has a French version",
+    )
 
     ar_slide_content = StreamField(
         [
@@ -397,6 +401,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         MultiFieldPanel(
             [
                 FieldPanel("include_on_toc"),
+                FieldPanel("french_slide"),
             ],
             heading="Slide Settings",
             classname="collapsible collapsed",

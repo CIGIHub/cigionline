@@ -102,8 +102,8 @@ function AnnualReportOutputsSlide({ slide, lang }) {
             {activeTab.pages.map((p, index) => (
               <div className="col-12 col-md-3" key={`${p.id}-${index}`}>
                 <a
-                  className="outputs-activities-listing d-md-none"
-                  href={p.url_landing_page}
+                  className="outputs-activities-listing d-lg-none"
+                  href={p.link}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -118,7 +118,7 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                 </a>
                 <button
                   type="button"
-                  className="outputs-activities-listing d-none d-md-flex"
+                  className="outputs-activities-listing d-none d-lg-flex"
                   onClick={() => setPage(p)}
                 >
                   <h6>

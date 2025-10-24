@@ -18,7 +18,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
 
   useEffect(() => {
     if (!subSlug && tabs.length > 0) {
-      const tabSlug = lang === 'fr' ? `${tabs[0].slug_fr}/fr` : tabs[0].slug_en;
+      const tabSlug = lang === 'fr' ? `${tabs[0].slug_fr}` : `${tabs[0].slug_en}`;
       navigate(tabSlug, { replace: true });
     }
   }, [subSlug, tabs, navigate]);
@@ -74,7 +74,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Internally Restricted',
       unrestricted: lang === 'fr' ? 'Non affecté' : 'Unrestricted',
       totalFundBalances:
-        lang === 'fr' ? 'Soldes de fonds' : 'Total Fund Balances',
+        lang === 'fr' ? 'Solde de fonds' : 'Total Fund Balances',
       totalLiabilitiesAndFundBalances:
         lang === 'fr'
           ? 'Total du passif et des soldes des fonds'
@@ -886,7 +886,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           </tr>
                           <tr className="table-subtotal no-bottom-border">
                             <td className="">
-                              {t('excessOfExpensesOverRevenue')}
+                              {t('excessOfExpensesOverRevenues')}
                             </td>
                             <td
                               className="num-col dollar-sign"
