@@ -62,6 +62,15 @@
   }
 }
 
+.toc-slide {
+  &.component-mode {
+    position: fixed;
+    height: 100vh;
+    background: $black;
+    top: 0;
+  }
+}
+
 .background-table-of-contents {
   background-color: $black;
 

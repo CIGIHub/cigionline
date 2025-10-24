@@ -17,15 +17,18 @@ function AnnualReportHeader({
   currentSlug,
   currentIndex,
   fadeableClass,
+  showTOC,
+  setShowTOC,
 }) {
+  const backgroundClass = showTOC
+    ? 'background-black'
+    : `background-${slideTypeBackgrounds[slides[currentIndex].slide_type] || 'black'}`;
   return (
     <div className="container">
       <div className="row">
         <div className="col">
           <header
-            className={`cigi-top-bar background-${
-              slideTypeBackgrounds[slides[currentIndex].slide_type] || 'black'
-            } ${fadeableClass}`}
+            className={`cigi-top-bar ${backgroundClass} ${fadeableClass}`}
           >
             <div className="cigi-logo">
               <a href="https://www.cigionline.org" aria-label="CIGI Homepage">
@@ -60,6 +63,9 @@ function AnnualReportHeader({
               basePath={basePath}
               currentLang={currentLang}
               currentSlug={currentSlug}
+              currentIndex={currentIndex}
+              showTOC={showTOC}
+              setShowTOC={setShowTOC}
             />
           </header>
         </div>
@@ -75,6 +81,8 @@ AnnualReportHeader.propTypes = {
   currentSlug: PropTypes.string.isRequired,
   currentIndex: PropTypes.number.isRequired,
   fadeableClass: PropTypes.string.isRequired,
+  showTOC: PropTypes.bool.isRequired,
+  setShowTOC: PropTypes.func.isRequired,
 };
 
 export default AnnualReportHeader;

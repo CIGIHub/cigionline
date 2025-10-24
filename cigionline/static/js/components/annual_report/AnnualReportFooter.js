@@ -22,7 +22,7 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
 
   return (
     <div
-      className={`footer ${
+      className={`footer d-none d-lg-flex ${
         darkSlideTypes.includes(slide.slide_type) ? 'footer-dark' : ''
       }`}
     >

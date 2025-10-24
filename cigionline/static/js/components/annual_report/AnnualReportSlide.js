@@ -12,6 +12,7 @@ import '../../../css/components/annual_reports/AnnualReportSlide.scss';
 import AnnualReportTimelineSlide from './AnnualReportTimelineSlide';
 import AnnualReportsFinancialsSlide from './AnnualReportFinancialsSlide';
 import AnnualReportOutputsSlide from './AnnualReportOutputsSlide';
+import AnnualReportTOC from './AnnualReportTOC';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -38,6 +39,7 @@ const preloadImage = (src) => {
 const shareRoute = 'cigionline.org';
 
 function AnnualReportSlide({ slides, basePath }) {
+  const [showTOC, setShowTOC] = useState(false);
   const { slug, lang } = useParams();
   const currentLang = lang === 'fr' ? 'fr' : 'en';
   const navigate = useNavigate();
@@ -67,7 +69,8 @@ function AnnualReportSlide({ slides, basePath }) {
   );
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
-  const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
+  const nextSlide =
+    currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
   const canScrollRef = useRef(true);
 
@@ -105,11 +108,15 @@ function AnnualReportSlide({ slides, basePath }) {
 
       if (direction === 'next' && nextSlide) {
         navigate(
-          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${nextSlide.slug}`,
+          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${
+            nextSlide.slug
+          }`,
         );
       } else if (direction === 'prev' && prevSlide) {
         navigate(
-          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${prevSlide.slug}`,
+          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${
+            prevSlide.slug
+          }`,
         );
       }
     };
@@ -159,8 +166,9 @@ function AnnualReportSlide({ slides, basePath }) {
   }, [currentIndex, navigate, isScrolling, slides]);
 
   const currentSlide = slides[currentIndex];
-  const SlideComponent = slideComponents[slides[currentIndex].slide_type]
-    || (() => <div>Slide type not found</div>);
+  const SlideComponent =
+    slideComponents[slides[currentIndex].slide_type] ||
+    (() => <div>Slide type not found</div>);
 
   return (
     <>
@@ -171,10 +179,12 @@ function AnnualReportSlide({ slides, basePath }) {
         currentSlug={slug}
         currentIndex={currentIndex}
         fadeableClass={fadeableClass}
+        showTOC={showTOC}
+        setShowTOC={setShowTOC}
       />
       <div
         key={currentSlide.id || currentSlide.slug}
-        className={`slide-background background-row ${slides[currentIndex].slide_type} d-lg-none`}
+        className="slide-background background-row d-lg-none"
       >
         <div
           className="background-image"
@@ -210,6 +220,16 @@ function AnnualReportSlide({ slides, basePath }) {
           fadeableClass={fadeableClass}
           revealableClass={revealableClass}
           setDimUI={setDimUI}
+        />
+      )}
+
+      {showTOC && (
+        <AnnualReportTOC
+          slides={slides}
+          currentIndex={currentIndex}
+          basePath={basePath}
+          lang={currentLang}
+          fadeableClass={fadeableClass}
         />
       )}
 

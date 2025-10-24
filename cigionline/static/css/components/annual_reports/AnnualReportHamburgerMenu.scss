@@ -21,6 +21,11 @@
             }
           }
 
+          &.disabled {
+            cursor: default;
+            color: $grey-selected;
+          }
+
           &:first-child {
             &::after {
               color: $black;
@@ -72,6 +77,11 @@
         }
       }
 
+      &.disabled {
+        cursor: default;
+        color: $grey-selected;
+      }
+
       &:first-child {
         &::after {
           content: '/';
@@ -80,6 +90,11 @@
           right: -1em;
         }
       }
+    }
+
+    .intl-disabled {
+      margin: 0 0.75rem;
+      color: $grey-selected;
     }
   }
 
@@ -90,10 +105,20 @@
     color: white;
     font-size: 1.25rem;
     margin-left: 0.5rem;
+    position: relative;
 
     span {
+      position: absolute;
+      top: 0;
+
       i {
         color: $white;
+      }
+
+      &.close-icon {
+        i {
+          color: $white !important;
+        }
       }
     }
   }
