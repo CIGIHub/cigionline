@@ -203,9 +203,12 @@
 }
 
 .timeline {
+  @include media-breakpoint-up(xl) {
+    max-width: 1110px;
+  }
+  max-width: 960px;
   height: 300px;
   left: 50%;
-  max-width: 1110px;
   position: absolute;
   top: 50%;
   transform: translateX(-50%) translateY(-55%);

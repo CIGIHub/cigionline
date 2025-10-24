@@ -55,8 +55,6 @@ function AnnualReportOutputsSlide({ slide, lang }) {
   const activeSlug = subSlug || tabs[0].slug;
   const activeTab = tabs.find((t) => t.slug === activeSlug) || null;
 
-  console.log(page);
-
   return (
     <div className="anual-report-slide">
       <div className="background-row background-outputs-activities" />
@@ -64,7 +62,7 @@ function AnnualReportOutputsSlide({ slide, lang }) {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <h1>Outputs and activities</h1>
+              <h1>Outputs and Activities</h1>
             </div>
           </div>
           <div className="row outputs-activities-content">
@@ -73,17 +71,21 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                 <div className="publications-menu">
                   {outputTitles.map((title, index) => (
                     <React.Fragment key={`title-${index}`}>
-                      <Link key={title} to={`${base}/${tabs[index].slug}`}>
-                        <button
-                          type="button"
-                          key={title}
-                          className={`view-publications-btn${
-                            index === 0 ? ' is-active' : ''
-                          }`}
-                        >
-                          {title}
-                        </button>
-                      </Link>
+                      {activeTab.slug === tabs[index].slug ? (
+                        <span>{title}</span>
+                      ) : (
+                        <Link key={title} to={`${base}/${tabs[index].slug}`}>
+                          <button
+                            type="button"
+                            key={title}
+                            className={`view-publications-btn${
+                              index === 0 ? ' is-active' : ''
+                            }`}
+                          >
+                            {title}
+                          </button>
+                        </Link>
+                      )}
                       {index < outputTitles.length - 1 && (
                         <span className="separator">/</span>
                       )}
@@ -150,7 +152,9 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                     onClick={() => setPage(null)}
                   >
                     <div
-                      className={`float-left back-link-icon ${backLinkIconClass(page.type)}`}
+                      className={`float-left back-link-icon ${backLinkIconClass(
+                        page.type,
+                      )}`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

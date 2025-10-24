@@ -183,11 +183,23 @@
       border-bottom: 1px solid $black;
 
       td {
-        font-size: 14px;
-        font-weight: 500;
-
         @include media-breakpoint-between(lg, xl) {
           font-size: 12px;
+        }
+
+        p {
+          font-size: 14px;
+          font-weight: 500;
+          @include media-breakpoint-between(lg, xl) {
+            font-size: 12px;
+            line-height: 1;
+          }
+
+          @media screen and (min-width: $lg-screen-min) and (max-height: $med-height-min) {
+            font-size: 12px;
+          }
+
+          margin-bottom: 0;
         }
       }
     }

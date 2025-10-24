@@ -172,7 +172,9 @@
       text-transform: uppercase;
 
       span {
-        margin: 0 5px;
+        &.separator {
+          margin: 0 5px;
+        }
       }
 
       button {
@@ -285,6 +287,11 @@
       .underline {
         background-size: 100% 100%;
       }
+    }
+
+    h5,
+    h6 {
+      font-weight: 400;
     }
 
     h5 {

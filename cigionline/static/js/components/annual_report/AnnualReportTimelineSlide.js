@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt, faSearch, faTimes } from '@fortawesome/pro-light-svg-icons';
 import '../../../css/components/annual_reports/AnnualReportTimelineSlide.scss';
 
-const BEGINNING_OF_YEAR = new Date('2024-08-01');
 const DAYS_IN_YEAR = 365;
 const RADIUS = 5;
 const TIMELINE_MIDDLE = 300;
@@ -46,7 +45,7 @@ function drawCircle(matrix, x, y, r, remove = false) {
   }
 }
 
-function layoutNodes(nodes, width) {
+function layoutNodes(nodes, width, beginningOfYear) {
   if (!width || width <= 0) return [];
   const daysWidth = width / DAYS_IN_YEAR;
   const matrix = Array(Math.floor(width) + 1)
@@ -55,7 +54,7 @@ function layoutNodes(nodes, width) {
 
   return nodes.map((node, ind) => {
     const numDays = Math.floor(
-      (getNodeDate(node) - BEGINNING_OF_YEAR) / 86400000,
+      (getNodeDate(node) - beginningOfYear) / 86400000,
     );
     let cx = Math.floor(numDays * daysWidth);
     if (cx < RADIUS) cx = RADIUS + 4;
@@ -66,16 +65,16 @@ function layoutNodes(nodes, width) {
       let placed = false;
       for (let j = 0; j < i; j += 1) {
         if (
-          ind <= nodes.length / 2
-          && canDrawCircle(matrix, cx + j, cy - i + j, RADIUS)
+          ind <= nodes.length / 2 &&
+          canDrawCircle(matrix, cx + j, cy - i + j, RADIUS)
         ) {
           cx += j;
           cy = cy - i + j;
           placed = true;
           break;
         } else if (
-          ind > nodes.length / 2
-          && canDrawCircle(matrix, cx - j, cy - i - j, RADIUS)
+          ind > nodes.length / 2 &&
+          canDrawCircle(matrix, cx - j, cy - i - j, RADIUS)
         ) {
           cx -= j;
           cy = cy - i - j;
@@ -156,10 +155,16 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
   const [timelineWidth, setTimelineWidth] = useState(1110);
 
   const nodes = slide?.slide_content?.nodes.items || [];
+  const BEGINNING_OF_YEAR = new Date(`${Number(slide.year) - 1}-08-01`);
 
   const recalcWidth = useCallback(() => {
     if (timelineRef.current) {
-      setTimelineWidth(Math.floor(timelineRef.current.clientWidth));
+      const windowWidth = window.innerWidth;
+      if (windowWidth < 1200) {
+        setTimelineWidth(960);
+      } else {
+        setTimelineWidth(1110);
+      }
     }
   }, []);
 
@@ -196,15 +201,16 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
   const shownNode = node || exitingNode;
 
   const positioned = useMemo(
-    () => layoutNodes(nodes, timelineWidth),
+    () => layoutNodes(nodes, timelineWidth, BEGINNING_OF_YEAR),
     [nodes, timelineWidth],
   );
 
   const classified = useMemo(
-    () => positioned.map((n) => ({
-      ...n,
-      isMatch: matchesSearch(n, debouncedSearch),
-    })),
+    () =>
+      positioned.map((n) => ({
+        ...n,
+        isMatch: matchesSearch(n, debouncedSearch),
+      })),
     [positioned, debouncedSearch],
   );
 
@@ -293,6 +299,7 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
       <div className="d-none d-lg-block">
         <div
           className={`timeline d-none d-lg-block ${node ? 'timeline-top' : ''}`}
+          ref={timelineRef}
         >
           <p className="date-marker date-marker-beg">2023</p>
           <p className="date-marker date-marker-end">2024</p>
@@ -329,17 +336,19 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
           {classified.map((cNode) => {
             const top = cNode.cy - cNode.r;
             const left = cNode.cx - cNode.r;
-            const typeClass = cNode.type === 'publication'
-              ? 'publication'
-              : cNode.type === 'article'
+            const typeClass =
+              cNode.type === 'publication'
+                ? 'publication'
+                : cNode.type === 'article'
                 ? 'opinion'
                 : cNode.type === 'event'
-                  ? 'event'
-                  : '';
+                ? 'event'
+                : '';
 
             const isHovered = hoveredId === cNode.id;
             const anyHovered = hoveredId !== null;
-            const dimSiblings = anyHovered && hoveredId !== cNode.id && cNode.isMatch;
+            const dimSiblings =
+              anyHovered && hoveredId !== cNode.id && cNode.isMatch;
 
             return (
               <div
@@ -348,7 +357,9 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
                   cNode.isMatch ? 'search-match' : 'search-no-match'
                 } ${isHovered ? 'hovered' : ''} ${dimSiblings ? 'dimmed' : ''}`}
                 style={{ left, top }}
-                onMouseEnter={() => setHoveredId(cNode.isMatch ? cNode.id : null)}
+                onMouseEnter={() =>
+                  setHoveredId(cNode.isMatch ? cNode.id : null)
+                }
                 onMouseLeave={() => setHoveredId(null)}
                 onClick={() => cNode.isMatch && onBubbleClick(cNode)}
                 role="button"
@@ -377,12 +388,12 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
                   >
                     <h6>{cNode.type === 'article' ? 'Opinion' : cNode.type}</h6>
                     <h5>
-                      {Array.isArray(cNode.subtype)
-                      && cNode.subtype[0] === 'Books' ? (
+                      {Array.isArray(cNode.subtype) &&
+                      cNode.subtype[0] === 'Books' ? (
                         <em>{cNode.title}</em>
-                        ) : (
-                          cNode.title
-                        )}
+                      ) : (
+                        cNode.title
+                      )}
                     </h5>
                     {getNodeDate(cNode) && (
                       <h6 className="pub-date">
@@ -436,8 +447,8 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
                           <br />
                         </>
                       )}
-                      {getNodeDate(shownNode)
-                        && formatDate(getNodeDate(shownNode))}
+                      {getNodeDate(shownNode) &&
+                        formatDate(getNodeDate(shownNode))}
                     </h6>
                     <p
                       className="node-summary"
@@ -459,10 +470,10 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
                       <p>
                         <span className="underline">
                           {shownNode.type === 'article' && 'Read opinion'}
-                          {shownNode.type === 'event'
-                            && 'Learn more about the event'}
-                          {shownNode.type === 'publication'
-                            && 'Read this publication'}
+                          {shownNode.type === 'event' &&
+                            'Learn more about the event'}
+                          {shownNode.type === 'publication' &&
+                            'Read this publication'}
                         </span>
                       </p>
                     </a>

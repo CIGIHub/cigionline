@@ -1,4 +1,3 @@
-from functools import cached_property
 from django.http import Http404
 from core.models import (
     BasicPageAbstract,
@@ -10,7 +9,7 @@ from core.models import (
 from django.core.cache import cache
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.text import slugify
 from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
@@ -186,8 +185,8 @@ class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, Searchable
     def get_template(self, request, *args, **kwargs):
         return "annual_reports/annual_report_spa_page.html"
 
-    @route(r'^(?P<lang>en|fr)/(?P<slide_slug>[-\w]+)(?:/(?P<subslug>[-\w]+))?/?$')
-    def slide_with_lang_and_optional_subslug(self, request, lang, slide_slug, *args, **kwargs):
+    @route(r'^(en|fr)/(?P<slide_slug>[-\w]+)(?:/(?P<subslug>[-\w]+))?/?$')
+    def slide_with_lang_and_optional_subslug(self, request, slide_slug, *args, **kwargs):
         slide = (self.get_children()
                  .type(AnnualReportSlidePage)
                  .live()
@@ -196,7 +195,15 @@ class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, Searchable
                  .first())
         if not slide:
             raise Http404("Slide not found")
-        return slide._serve_spa(request, initial_lang=lang)
+        return slide._serve_spa(request)
+    
+    @route(r'^(?P<slide_slug>[-\w]+)(?:/(?P<subslug>[-\w]+))?/?$')
+    def slide_without_lang(self, request, slide_slug, subslug=None, *args, **kwargs):
+        base_url = self.url 
+        new_path = f"{base_url}en/{slide_slug}/"
+        if subslug:
+            new_path += f"{subslug}/"
+        return redirect(new_path)
 
 
 class SlidePageAbstract(models.Model):
@@ -275,26 +282,25 @@ class SlidePageAbstract(models.Model):
 class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
     """Each individual slide within the annual report."""
 
-    def _serve_spa(self, request, initial_lang="en"):
+    def _serve_spa(self, request):
         parent = self.get_parent().specific
         ctx = {
             "page": parent,
             "self": self,
-            "initial_lang": initial_lang,
         }
         return render(request, "annual_reports/annual_report_spa_page.html", ctx)
 
     @route(r"^$")
     def slide_root(self, request, *args, **kwargs):
-        return self._serve_spa(request, initial_lang="en")
+        return self._serve_spa(request)
 
     @route(r"^fr/?$")
     def slide_fr(self, request, *args, **kwargs):
-        return self._serve_spa(request, initial_lang="fr")
+        return self._serve_spa(request)
 
     @route(r"^(?P<trailing>[/]+)?$")
     def slide_catchall(self, request, trailing=None, *args, **kwargs):
-        return self._serve_spa(request, initial_lang="en")
+        return self._serve_spa(request)
 
     SLIDE_TYPES = [
         ('title', 'Title'),
