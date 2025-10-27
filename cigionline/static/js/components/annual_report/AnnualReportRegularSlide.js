@@ -20,6 +20,7 @@ function AnnualReportRegularSlide({
   lang,
   fadeableClass,
   revealableClass,
+  dimUI,
 }) {
   const contentIcons = {
     publication: faFileLines,
@@ -45,31 +46,49 @@ function AnnualReportRegularSlide({
         )}-background d-none d-md-block`}
       >
         <div
-          className={`background-image hover-reveal hover-reveal-gradient-${
-            slide.background_gradient_position
-          } ${slide.slide_type.replace(
+          className={`background-image ${slide.slide_type.replace(
             '_',
             '-',
-          )}-background-img ${revealableClass} d-none d-md-block`}
+          )}-background-img d-none d-md-block`}
           style={{
             backgroundImage: `url(${slide.background_image}),url(${slide.background_image_thumbnail})`,
           }}
         >
-          {slide.background_quote && (
-            <div className={`quote quote-${slide.background_quote_position}`}>
-              <h3
-                className={`hover-reveal-quote ${revealableClass}`}
-                dangerouslySetInnerHTML={{
-                  __html:
-                    lang === 'fr'
-                      ? slide.background_quote_fr
-                      : slide.background_quote,
-                }}
-              />
-              <div className={`hover-reveal-quote-line ${revealableClass}`} />
-            </div>
-          )}
+          <div
+            className={`${revealableClass} hover-reveal-gradient-${slide.background_gradient_position}`}
+          >
+            {slide.background_quote && (
+              <div className={`quote quote-${slide.background_quote_position}`}>
+                <h3
+                  className={`hover-reveal-quote ${dimUI ? 'is-revealed' : ''}`}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      lang === 'fr'
+                        ? slide.background_quote_fr
+                        : slide.background_quote,
+                  }}
+                />
+                <div className={`hover-reveal-quote-line ${dimUI ? 'is-revealed' : ''}`} />
+              </div>
+            )}
+          </div>
         </div>
+        {slide.background_video && (
+          <video
+            className="background-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            src={slide.background_video}
+          />
+        )}
+        {slide.slide_type === 'standard' && (
+          <>
+            <div className={`background-overlay ${fadeableClass}`} />
+            <div className={`background-gradient-overlay ${fadeableClass}`} />
+          </>
+        )}
       </div>
       <div
         className={`ar-slide-content regular-slide ${fadeableClass} ${slide.slide_type.replace(

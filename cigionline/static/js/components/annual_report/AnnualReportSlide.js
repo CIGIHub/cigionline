@@ -67,12 +67,12 @@ function AnnualReportSlide({ slides, basePath }) {
   }
 
   const fadeableClass = useMemo(
-    () => `fadeable${dimUI ? ' is-dimmed' : ''}`,
+    () => `hover-reveal-hide${dimUI ? ' is-dimmed' : ''}`,
     [dimUI],
   );
 
   const revealableClass = useMemo(
-    () => `revealable${dimUI ? ' is-revealed' : ''}`,
+    () => `hover-reveal${dimUI ? ' is-revealed' : ''}`,
     [dimUI],
   );
 
@@ -228,6 +228,7 @@ function AnnualReportSlide({ slides, basePath }) {
           fadeableClass={fadeableClass}
           revealableClass={revealableClass}
           setDimUI={setDimUI}
+          dimUI={dimUI}
         />
       )}
 
