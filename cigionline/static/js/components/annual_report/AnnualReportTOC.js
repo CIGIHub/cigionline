@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-function AnnualReportTOC({ slides, basePath, lang }) {
+function AnnualReportTOC({ slides, basePath, lang, setShowTOC }) {
   const [personId, setPersonId] = useState(null);
   const [showAcknowledgementsTab, setShowAcknowledgementsTab] = useState(false);
   const tocSlide = slides.find((s) => s.slide_type === 'toc');
@@ -12,10 +12,17 @@ function AnnualReportTOC({ slides, basePath, lang }) {
     const allMembers = Object.values(boards).flat();
     return allMembers.find((m) => String(m.id) === String(personId)) || null;
   }, [personId, tocSlide]);
+  const slidesOnToc = useMemo(
+    () => slides.filter((slide) => slide.include_on_toc),
+    [slides],
+  );
+  const slidesCount = slidesOnToc.length;
+  const slidesLeftColumn = slidesOnToc.slice(0, Math.ceil(slidesCount / 2));
+  const slidesRightColumn = slidesOnToc.slice(Math.ceil(slidesCount / 2));
 
   return (
     <>
-      <div className="annual-report-slide toc-slide component-mode">
+      <div className="annual-report-slide toc-slide component-mode lightbox-table-of-contents">
         <div className="background-row background-table-of-contents" />
         <div className="ar-slide-content table-of-contents">
           <div className="container">
@@ -64,26 +71,40 @@ function AnnualReportTOC({ slides, basePath, lang }) {
                   </div>
                   {!showAcknowledgementsTab ? (
                     <div className="row toc-list">
-                      {slides
-                        .filter((s) => s.include_on_toc)
-                        .map(
-                          (s, slideIndex) =>
-                            s.include_on_toc && (
-                              <div
-                                className="col-md-6 toc-item slide-link"
-                                key={s.slug}
-                              >
-                                <p className="slide-number">
-                                  {`0${slideIndex + 1}`.slice(-2)}
-                                </p>
-                                <Link to={`${basePath}/${lang}/${s.slug}/`}>
-                                  {lang === 'en'
-                                    ? s.slide_title
-                                    : s.slide_title_fr}
-                                </Link>
-                              </div>
-                            ),
-                        )}
+                      <div className="col-md-6">
+                        {slidesLeftColumn.map((slide, slideIndex) => (
+                          <div className="toc-item slide-link" key={slide.slug}>
+                            <p className="slide-number">
+                              {`0${slideIndex + 1}`}
+                            </p>
+                            <Link
+                              to={`${basePath}/${lang}/${slide.slug}/`}
+                              onClick={() => setShowTOC(false)}
+                            >
+                              {lang === 'en'
+                                ? slide.slide_title
+                                : slide.slide_title_fr}
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="col-md-6">
+                        {slidesRightColumn.map((slide, slideIndex) => (
+                          <div className="toc-item slide-link" key={slide.slug}>
+                            <p className="slide-number">
+                              {`0${slideIndex + 1 + slidesLeftColumn.length}`}
+                            </p>
+                            <Link
+                              to={`${basePath}/${lang}/${slide.slug}/`}
+                              onClick={() => setShowTOC(false)}
+                            >
+                              {lang === 'en'
+                                ? slide.slide_title
+                                : slide.slide_title_fr}
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ) : (
                     <>
@@ -122,30 +143,30 @@ function AnnualReportTOC({ slides, basePath, lang }) {
                                     )}
                                   </h4>
                                   <div className="row credits-block">
-                                    {tocSlide.slide_content.boards[boardKey].map(
-                                      (member, memberIndex) => (
-                                        <div
-                                          key={`member-${memberIndex}`}
-                                          className="col-6 col-md-4 col-lg-3 mb-2"
-                                        >
-                                          <h5 className="member-name">
-                                            <button
-                                              type="button"
-                                              onClick={() => {
-                                                setPersonId(member.id);
-                                              }}
-                                            >
-                                              {member.name}
-                                            </button>
-                                          </h5>
-                                          <h6 className="member-title">
-                                            {lang === 'en'
-                                              ? member.title
-                                              : member.title_fr}
-                                          </h6>
-                                        </div>
-                                      ),
-                                    )}
+                                    {tocSlide.slide_content.boards[
+                                      boardKey
+                                    ].map((member, memberIndex) => (
+                                      <div
+                                        key={`member-${memberIndex}`}
+                                        className="col-6 col-md-4 col-lg-3 mb-2"
+                                      >
+                                        <h5 className="member-name">
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setPersonId(member.id);
+                                            }}
+                                          >
+                                            {member.name}
+                                          </button>
+                                        </h5>
+                                        <h6 className="member-title">
+                                          {lang === 'en'
+                                            ? member.title
+                                            : member.title_fr}
+                                        </h6>
+                                      </div>
+                                    ))}
                                   </div>
                                   {index === 0 && (
                                     <div className="credits-border" />
@@ -284,6 +305,7 @@ AnnualReportTOC.propTypes = {
   slides: PropTypes.arrayOf(PropTypes.object).isRequired,
   basePath: PropTypes.string.isRequired,
   lang: PropTypes.string.isRequired,
+  setShowTOC: PropTypes.func.isRequired,
 };
 
 export default AnnualReportTOC;

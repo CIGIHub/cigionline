@@ -58,7 +58,9 @@ function AnnualReportSlide({ slides, basePath }) {
   if (currentIndex === -1) {
     return (
       <Navigate
-        to={`${basePath}${currentLang === 'fr' ? '/fr' : ''}/${slides[0].slug}`}
+        to={`${basePath}${currentLang === 'fr' ? '/fr' : '/en'}/${
+          slides[0].slug
+        }`}
         replace
       />
     );
@@ -82,14 +84,8 @@ function AnnualReportSlide({ slides, basePath }) {
 
   const checkScrollCondition = () => {
     if (typeof document === 'undefined') return false;
-
-    const wrapper = document.querySelector('.ar-slide-content');
-    if (!wrapper) return false;
-
     const isLargeScreen = window.innerWidth >= 992;
-    const contentOverflows = wrapper.scrollHeight > window.innerHeight;
-
-    return isLargeScreen && !contentOverflows;
+    return isLargeScreen;
   };
 
   useEffect(() => {
@@ -110,17 +106,17 @@ function AnnualReportSlide({ slides, basePath }) {
     const handleNavigation = (direction) => {
       if (!canScrollRef.current || isScrolling) return;
       setIsScrolling(true);
-      setTimeout(() => setIsScrolling(false), 600);
+      setTimeout(() => setIsScrolling(false), 2000);
 
       if (direction === 'next' && nextSlide) {
         navigate(
-          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${
+          `${basePath}/${currentLang === 'fr' ? 'fr' : 'en'}/${
             nextSlide.slug
           }`,
         );
       } else if (direction === 'prev' && prevSlide) {
         navigate(
-          `${basePath}/${currentLang === 'fr' ? '/fr' : 'en'}/${
+          `${basePath}/${currentLang === 'fr' ? 'fr' : 'en'}/${
             prevSlide.slug
           }`,
         );
@@ -139,7 +135,7 @@ function AnnualReportSlide({ slides, basePath }) {
 
       scrollTimeout = setTimeout(() => {
         scrollTimeout = null;
-      }, 700);
+      }, 2000);
 
       if (event.deltaY > 0) {
         handleNavigation('next');
@@ -235,15 +231,18 @@ function AnnualReportSlide({ slides, basePath }) {
         />
       )}
 
-      {showTOC && (
-        <AnnualReportTOC
-          slides={slides}
-          currentIndex={currentIndex}
-          basePath={basePath}
-          lang={currentLang}
-          fadeableClass={fadeableClass}
-        />
-      )}
+      <div className={`lightbox ${showTOC ? 'is-visible' : ''}`}>
+        {showTOC && (
+          <AnnualReportTOC
+            slides={slides}
+            currentIndex={currentIndex}
+            basePath={basePath}
+            lang={currentLang}
+            fadeableClass={fadeableClass}
+            setShowTOC={setShowTOC}
+          />
+        )}
+      </div>
 
       <AnnualReportFooter
         slide={currentSlide}

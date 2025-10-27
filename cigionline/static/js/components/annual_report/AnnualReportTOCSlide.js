@@ -3,13 +3,26 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../../../css/components/annual_reports/AnnualReportTOCSlide.scss';
 
-function AnnualReportTOCSlide({ slides, basePath, currentIndex, lang, isComponent }) {
+function AnnualReportTOCSlide({
+  slides,
+  basePath,
+  currentIndex,
+  lang,
+  isComponent,
+}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const acknowledgementsParam = searchParams.get('acknowledgements');
   const personIdParam = searchParams.get('personId');
   const [showAcknowledgementsTab, setShowAcknowledgementsTab] = useState(
     acknowledgementsParam === 'true',
   );
+  const slidesOnToc = useMemo(
+    () => slides.filter((slide) => slide.include_on_toc),
+    [slides],
+  );
+  const slidesCount = slidesOnToc.length;
+  const slidesLeftColumn = slidesOnToc.slice(0, Math.ceil(slidesCount / 2));
+  const slidesRightColumn = slidesOnToc.slice(Math.ceil(slidesCount / 2));
 
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
@@ -29,7 +42,11 @@ function AnnualReportTOCSlide({ slides, basePath, currentIndex, lang, isComponen
 
   return (
     <>
-      <div className={`annual-report-slide toc-slide ${isComponent ? 'component-mode' : ''}`}>
+      <div
+        className={`annual-report-slide toc-slide ${
+          isComponent ? 'component-mode' : ''
+        }`}
+      >
         <div className="background-row background-table-of-contents" />
         <div className="ar-slide-content table-of-contents">
           <div className="container">
@@ -78,26 +95,34 @@ function AnnualReportTOCSlide({ slides, basePath, currentIndex, lang, isComponen
                   </div>
                   {!showAcknowledgementsTab ? (
                     <div className="row toc-list">
-                      {slides
-                        .filter((slide) => slide.include_on_toc)
-                        .map(
-                          (slide, slideIndex) =>
-                            slide.include_on_toc && (
-                              <div
-                                className="col-md-6 toc-item slide-link"
-                                key={slide.slug}
-                              >
-                                <p className="slide-number">
-                                  {`0${slideIndex + 1}`.slice(-2)}
-                                </p>
-                                <Link to={`${basePath}/${lang}/${slide.slug}/`}>
-                                  {lang === 'en'
-                                    ? slide.slide_title
-                                    : slide.slide_title_fr}
-                                </Link>
-                              </div>
-                            ),
-                        )}
+                      <div className="col-md-6">
+                        {slidesLeftColumn.map((slide, slideIndex) => (
+                          <div className="toc-item slide-link" key={slide.slug}>
+                            <p className="slide-number">
+                              {`0${slideIndex + 1}`}
+                            </p>
+                            <Link to={`${basePath}/${lang}/${slide.slug}/`}>
+                              {lang === 'en'
+                                ? slide.slide_title
+                                : slide.slide_title_fr}
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="col-md-6">
+                        {slidesRightColumn.map((slide, slideIndex) => (
+                          <div className="toc-item slide-link" key={slide.slug}>
+                            <p className="slide-number">
+                              {`0${slideIndex + 1 + slidesLeftColumn.length}`}
+                            </p>
+                            <Link to={`${basePath}/${lang}/${slide.slug}/`}>
+                              {lang === 'en'
+                                ? slide.slide_title
+                                : slide.slide_title_fr}
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ) : (
                     <>

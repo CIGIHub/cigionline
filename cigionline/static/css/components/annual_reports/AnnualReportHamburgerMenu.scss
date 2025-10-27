@@ -106,19 +106,22 @@
     font-size: 1.25rem;
     margin-left: 0.5rem;
     position: relative;
+    width: 1rem;
+
+    &:hover {
+      i {
+        color: $cigi-primary-colour;
+      }
+    }
 
     span {
       position: absolute;
       top: 0;
+      left: 0;
 
       i {
         color: $white;
-      }
-
-      &.close-icon {
-        i {
-          color: $white !important;
-        }
+        transition: color ease 0.2s;
       }
     }
   }

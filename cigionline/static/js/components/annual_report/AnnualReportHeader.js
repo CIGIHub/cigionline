@@ -22,14 +22,14 @@ function AnnualReportHeader({
 }) {
   const backgroundClass = showTOC
     ? 'background-black'
-    : `background-${slideTypeBackgrounds[slides[currentIndex].slide_type] || 'black'}`;
+    : `background-${
+        slideTypeBackgrounds[slides[currentIndex].slide_type] || 'black'
+      }`;
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col">
-          <header
-            className={`cigi-top-bar ${backgroundClass} ${fadeableClass}`}
-          >
+    <header className={`cigi-top-bar ${backgroundClass} ${fadeableClass}`}>
+      <div className="container">
+        <div className="row">
+          <div className="col">
             <div className="cigi-logo">
               <a href="https://www.cigionline.org" aria-label="CIGI Homepage">
                 <svg
@@ -67,10 +67,10 @@ function AnnualReportHeader({
               showTOC={showTOC}
               setShowTOC={setShowTOC}
             />
-          </header>
+          </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
 

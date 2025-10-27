@@ -63,12 +63,15 @@
 }
 
 .toc-slide {
-  &.component-mode {
-    position: fixed;
-    height: 100vh;
-    background: $black;
-    top: 0;
-  }
+  // &.component-mode {
+  //   @include media-breakpoint-down(md) {
+  //     top: 6rem;
+  //   }
+  //   position: fixed;
+  //   height: 100vh;
+  //   background: $black;
+  //   top: 0;
+  // }
 }
 
 .background-table-of-contents {
