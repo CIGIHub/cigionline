@@ -374,3 +374,22 @@ h1 {
     }
   }
 }
+
+.overlay {
+  background-color: $background-overlay;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: -1;
+
+  @media screen and (min-width: $lg-screen-min) {
+    height: 100vh;
+  }
+
+  &.is-visible {
+    opacity: 1;
+    z-index: 3;
+  }
+}

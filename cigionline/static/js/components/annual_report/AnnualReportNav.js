@@ -10,7 +10,14 @@ const slideTypeBackgrounds = {
   financials: 'white',
 };
 
-function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass, lang }) {
+function AnnualReportNav({
+  slides,
+  basePath,
+  currentIndex,
+  fadeableClass,
+  lang,
+  setHoverNav,
+}) {
   const navigate = useNavigate();
 
   const prevSlide = slides[currentIndex - 1] || null;
@@ -51,7 +58,10 @@ function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass, lang }
         {slides.map((slide, index) => (
           <div key={slide.slug}>
             {currentIndex === index ? (
-              <li className="current-item">
+              <li
+                className="current-item"
+                onMouseLeave={() => setHoverNav(false)}
+              >
                 <div className="dot-nav-tooltip">
                   <span>{slide.slide_title}</span>
                 </div>
@@ -60,11 +70,18 @@ function AnnualReportNav({ slides, basePath, currentIndex, fadeableClass, lang }
                 </div>
               </li>
             ) : (
-              <li className="link-item">
+              <li
+                className="link-item"
+                onMouseEnter={() => setHoverNav(true)}
+                onMouseLeave={() => setHoverNav(false)}
+              >
                 <div className="dot-nav-tooltip">
                   <span>{slide.slide_title}</span>
                 </div>
-                <Link to={`${basePath}/${lang}/${slide.slug}`} className="link-dot">
+                <Link
+                  to={`${basePath}/${lang}/${slide.slug}`}
+                  className="link-dot"
+                >
                   <div className="dot-circle" />
                 </Link>
               </li>
@@ -82,6 +99,7 @@ AnnualReportNav.propTypes = {
   currentIndex: PropTypes.number.isRequired,
   fadeableClass: PropTypes.string.isRequired,
   lang: PropTypes.string.isRequired,
+  setHoverNav: PropTypes.func.isRequired,
 };
 
 export default AnnualReportNav;

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 import AnnualReportTitleSlide from './AnnualReportTitleSlide';
@@ -52,6 +53,7 @@ function AnnualReportSlide({ slides, basePath }) {
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const [dimUI, setDimUI] = useState(false);
+  const [hoverNav, setHoverNav] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
 
@@ -110,15 +112,11 @@ function AnnualReportSlide({ slides, basePath }) {
 
       if (direction === 'next' && nextSlide) {
         navigate(
-          `${basePath}/${currentLang === 'fr' ? 'fr' : 'en'}/${
-            nextSlide.slug
-          }`,
+          `${basePath}/${currentLang === 'fr' ? 'fr' : 'en'}/${nextSlide.slug}`,
         );
       } else if (direction === 'prev' && prevSlide) {
         navigate(
-          `${basePath}/${currentLang === 'fr' ? 'fr' : 'en'}/${
-            prevSlide.slug
-          }`,
+          `${basePath}/${currentLang === 'fr' ? 'fr' : 'en'}/${prevSlide.slug}`,
         );
       }
     };
@@ -208,6 +206,7 @@ function AnnualReportSlide({ slides, basePath }) {
         currentIndex={currentIndex}
         fadeableClass={fadeableClass}
         lang={currentLang}
+        setHoverNav={setHoverNav}
       />
 
       {currentSlide.slide_type === 'toc' ? (
@@ -258,6 +257,25 @@ function AnnualReportSlide({ slides, basePath }) {
           lang={currentLang}
         />
       </div>
+      <motion.div
+        className="overlay"
+        initial={false}
+        animate={hoverNav ? 'open' : 'closed'}
+        variants={{
+          open: {
+            opacity: 1,
+            zIndex: 3,
+            pointerEvents: 'auto',
+            transition: { duration: 0.25, ease: 'easeOut' },
+          },
+          closed: {
+            opacity: 0,
+            pointerEvents: 'none',
+            transition: { duration: 0.25, ease: 'easeIn' },
+            transitionEnd: { zIndex: -1 },
+          },
+        }}
+      />
     </>
   );
 }

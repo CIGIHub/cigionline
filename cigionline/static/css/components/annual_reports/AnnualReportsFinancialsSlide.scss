@@ -126,6 +126,8 @@
 
   table {
     border: 0;
+    table-layout: inherit;
+    box-sizing: inherit;
 
     tbody {
       border: 0;
