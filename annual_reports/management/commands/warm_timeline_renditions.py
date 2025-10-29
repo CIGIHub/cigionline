@@ -1,7 +1,7 @@
 from datetime import date
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Prefetch, Q
-from wagtail.images.models import Rendition
+from images.models import CigionlineRendition as Rendition
 from itertools import chain
 
 # Adjust these imports to your project
