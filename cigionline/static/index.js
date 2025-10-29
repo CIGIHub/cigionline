@@ -140,6 +140,24 @@ $(function () {
       $navSearchInputDropdown.removeClass('show');
     }
   });
+
+  const collapsibleParagraphs = document.querySelectorAll(
+    '.collapsible-paragraph-block',
+  );
+
+  collapsibleParagraphs.forEach((paragraph) => {
+    const toggleButton = paragraph.querySelector('.toggle-expand');
+
+    if (!toggleButton) return;
+
+    toggleButton.addEventListener('click', () => {
+      paragraph.classList.toggle('collapsed');
+      toggleButton.setAttribute(
+        'aria-expanded',
+        !paragraph.classList.contains('collapsed'),
+      );
+    });
+  });
 });
 
 addInlineVideoActions();
@@ -170,20 +188,3 @@ for (let i = 0; i < buttons.length; i += 1) {
     });
   });
 }
-
-const collapsibleParagraphs = document.querySelectorAll(
-  '.collapsible-paragraph-block',
-);
-
-collapsibleParagraphs.forEach((paragraph) => {
-  const toggleButton =
-    paragraph.querySelector('h3') ||
-    paragraph.querySelector('h2') ||
-    paragraph.querySelector('h4');
-
-  if (!toggleButton) return;
-
-  toggleButton.addEventListener('click', () => {
-    paragraph.classList.toggle('collapsed');
-  });
-});
