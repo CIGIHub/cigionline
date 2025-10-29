@@ -60,7 +60,7 @@ def get_ordered_slides_annual_report(request, page_id):
 
     slides = []
     for slide in ordered_slides:
-        background_image = slide.background_image.get_rendition('fill-1920x1080').file.url if slide.background_image else ''
+        background_image = slide.background_image.get_rendition('fill-2400x1350').file.url if slide.background_image else ''
         background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
         slides.append({
             "id": slide.id,

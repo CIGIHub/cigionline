@@ -99,7 +99,7 @@ function AnnualReportTOCSlide({
                         {slidesLeftColumn.map((slide, slideIndex) => (
                           <div className="toc-item slide-link" key={slide.slug}>
                             <p className="slide-number">
-                              {`0${slideIndex + 1}`}
+                              {String(slideIndex + 1).padStart(2, '0')}
                             </p>
                             <Link to={`${basePath}/${lang}/${slide.slug}/`}>
                               {lang === 'en'

@@ -531,10 +531,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                                     "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
                                 })
                             else:
-                                # future-proof: pass through unknown child types as strings
                                 col["en"].append(str(child.value))
 
-                        # FR stream items
                         for child in fr_stream:
                             if child.block_type == "paragraph":
                                 rt = child.value
@@ -769,7 +767,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         json_items = []
 
         for content_page in content_pages:
-            type = ''
+            content_type = ''
             subtype = []
             authors = ''
             speakers = ''
@@ -780,25 +778,25 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             image = ''
             image_thumbnail = ''
             if content_page.contenttype == 'Event':
-                type = 'event'
+                content_type = 'event'
                 speakers = content_page.author_names
                 event_date = content_page.publishing_date
-                # image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
-                # image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
+                image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
+                image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
             else:
                 authors = content_page.author_names
                 publishing_date = content_page.publishing_date
 
             if content_page.contenttype == 'Opinion':
-                type = 'article'
+                content_type = 'article'
                 subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
-                # image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
-                # image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
+                image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
+                image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
             if content_page.contenttype == 'Publication':
-                type = 'publication'
+                content_type = 'publication'
                 subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
-                # image = content_page.specific.image_feature.get_rendition('fill-2560x1600').url if content_page.specific.image_feature else ''
-                # image_thumbnail = content_page.specific.image_feature.get_rendition('fill-142x80').url if content_page.specific.image_feature else ''
+                image = content_page.specific.image_feature.get_rendition('fill-2560x1600').url if content_page.specific.image_feature else ''
+                image_thumbnail = content_page.specific.image_feature.get_rendition('fill-142x80').url if content_page.specific.image_feature else ''
             try:
                 summary = content_page.specific.short_description
             except AttributeError:
@@ -820,7 +818,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 'event_date': event_date,
                 'url_landing_page': content_page.url,
                 'pdf_url': content_page.pdf_download,
-                'type': type,
+                'type': content_type,
                 'subtype': subtype,
                 'word_count': content_page.specific.word_count,
                 'summary': summary,
