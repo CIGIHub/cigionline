@@ -822,7 +822,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 'subtype': subtype,
                 'word_count': content_page.specific.word_count,
                 'summary': summary,
-                'image': 'https://www.cigionline.org/static/images/HiebertKyle_-_AI_Deception_Capabilities.width-1760.jpg',
+                'image': image,
                 'image_thumbnail': image_thumbnail,
             })
 
