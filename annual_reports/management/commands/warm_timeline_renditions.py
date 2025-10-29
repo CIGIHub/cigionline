@@ -92,8 +92,6 @@ class Command(BaseCommand):
                 publishing_date__range=[start_date, end_date],
             )
             .exclude(articlepage__article_type__title__in=["CIGI in the News", "News Releases", "Op-Eds"])
-            .select_related("specific")
-            .only("id", "title", "publishing_date", "contenttype")  # trim payload
         )
 
         if limit > 0:
