@@ -40,33 +40,6 @@ $framework-slide-pink: #ea6aaa;
   }
 }
 
-@keyframes panX {
-  0% {
-    background-position-x: 45%;
-  }
-  100% {
-    background-position-x: 60%;
-  }
-}
-
-@keyframes panY {
-  0% {
-    background-position-y: 55%;
-  }
-  100% {
-    background-position-y: 40%;
-  }
-}
-
-@keyframes zoom {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.05);
-  }
-}
-
 @keyframes arrowBounceUp {
   0% {
     transform: translateY(1px);
@@ -116,6 +89,31 @@ $framework-slide-pink: #ea6aaa;
 body {
   background-color: $black;
   overflow-y: auto;
+}
+
+.slide-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ar-slide-content {
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
 .strategic-plan-spa {
@@ -350,74 +348,6 @@ body {
         rgba(0, 0, 0, 0.7)
       );
     }
-  }
-
-  &.title {
-    .background-image {
-      width: 50%;
-      left: unset;
-      right: 0;
-    }
-
-    .background-colour {
-      @include media-breakpoint-up(md) {
-        width: 50%;
-      }
-      background-color: $black;
-      height: 105vh;
-      left: 0;
-      width: 75%;
-      position: absolute;
-      z-index: -1;
-    }
-
-    .background-video {
-      left: unset;
-      right: 0;
-      width: 50%;
-    }
-  }
-
-  &.toc {
-    .background-image {
-      width: 34%;
-      left: unset;
-      right: 0;
-    }
-
-    .background-colour {
-      @include media-breakpoint-up(md) {
-        width: 66%;
-      }
-      background-color: $black;
-      height: 105vh;
-      width: 75%;
-      left: 0;
-      position: absolute;
-      z-index: -1;
-    }
-
-    .background-video {
-      left: unset;
-      right: 0;
-      width: 34%;
-    }
-  }
-
-  &.framework,
-  &.timeline {
-    background-color: $black;
-  }
-
-  .background-image,
-  .background-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -2;
   }
 }
 

@@ -1,0 +1,357 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+@import './variables.scss';
+
+@keyframes financialsContainerFade {
+  0% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  66% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes financialsContentFade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes financialsTitleFade {
+  0% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  50% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+.financials-background {
+  background-color: $white;
+}
+
+.financials {
+  color: $black;
+  position: relative;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+
+  @include media-breakpoint-down(md) {
+    padding-bottom: 40px;
+    padding-top: 10px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    // height: 800px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-55%);
+  }
+
+  @include media-breakpoint-between(md, lg) {
+    height: 800px;
+  }
+
+  @include media-breakpoint-between(lg, xl) {
+    height: 455px;
+  }
+
+  @include media-breakpoint-up(xl) {
+    height: 571px;
+  }
+
+  @media screen and (min-width: $lg-screen-min) and (min-height: $height-min) and (max-height: $lg-height-min) {
+    height: 455px;
+    transform: translateY(-50%);
+  }
+
+  h1 {
+    animation-duration: 1000ms;
+    animation-name: financialsTitleFade;
+    animation-timing-function: ease-in;
+    color: $black;
+    position: relative;
+  }
+
+  h3 {
+    color: $black;
+  }
+
+  h4 {
+    color: $black;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 0;
+
+    @media screen and (min-width: $lg-screen-min) and (max-height: $med-height-min) {
+      font-size: 13px;
+    }
+  }
+
+  p {
+    color: $black;
+    font-size: 14px;
+    margin-bottom: 0.5rem;
+
+    @include media-breakpoint-between(lg, xl) {
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    @media screen and (min-width: $lg-screen-min) and (max-height: $med-height-min) {
+      font-size: 13px;
+    }
+  }
+
+  table {
+    border: 0;
+    table-layout: inherit;
+    box-sizing: inherit;
+
+    tbody {
+      border: 0;
+    }
+
+    tr {
+      background: transparent !important;
+
+      td {
+        font-family: 'motiva-sans', sans-serif;
+        font-size: 12.5px;
+        font-style: normal;
+        font-weight: 400;
+        padding: 0;
+        border: 0;
+
+        @include media-breakpoint-between(lg, xl) {
+          font-size: 10px;
+        }
+      }
+
+      .num-col {
+        max-width: 150px;
+        text-align: right;
+      }
+
+      .num-col + .dollar-sign {
+        padding-left: 10px;
+      }
+
+      @include media-breakpoint-up(md) {
+        .dollar-sign {
+          width: 105px;
+        }
+
+        .dollar-sign + .num-col {
+          width: 80px;
+        }
+      }
+
+      .text-col {
+        max-width: 300px;
+
+        @include media-breakpoint-down(sm) {
+          max-width: 200px;
+        }
+      }
+
+      .text-value {
+        text-align: right;
+      }
+    }
+
+    .table-title {
+      border-bottom: 1px solid $black;
+
+      td {
+        @include media-breakpoint-between(lg, xl) {
+          font-size: 12px;
+        }
+
+        p {
+          font-size: 14px;
+          font-weight: 500;
+          @include media-breakpoint-between(lg, xl) {
+            font-size: 12px;
+            line-height: 1;
+          }
+
+          @media screen and (min-width: $lg-screen-min) and (max-height: $med-height-min) {
+            font-size: 12px;
+          }
+
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .table-subtitle {
+      td {
+        padding-top: 4px;
+      }
+    }
+
+    .table-line-entry {
+      .text-col {
+        padding-left: 15px;
+      }
+    }
+
+    .table-subtotal {
+      &.no-bottom-border {
+        .num-col {
+          border-bottom: 0;
+        }
+      }
+
+      &.no-top-border {
+        .num-col {
+          border-top: 0;
+        }
+      }
+
+      td {
+        font-weight: 500;
+      }
+
+      .num-col {
+        border-bottom: 1px solid $black;
+        border-top: 1px solid $black;
+        font-weight: 500;
+      }
+    }
+
+    .table-total {
+      td {
+        font-weight: 500;
+      }
+
+      .num-col {
+        border-bottom: 3px double $black;
+        border-top: 1px solid $black;
+      }
+    }
+
+    .table-final-total {
+      td {
+        border-bottom: 3px double $black;
+        font-weight: 500;
+      }
+
+      .num-col {
+        border-top: 1px solid $black;
+      }
+    }
+
+    .table-fund-balances {
+      td {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .financials-menu {
+    border-bottom: 1px solid $black;
+    color: $grey-selected;
+    font-family: $font-primary, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+
+    @include media-breakpoint-between(lg, xl) {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+    }
+
+    .menu-break {
+      margin: 0 5px;
+    }
+
+    a {
+      color: $black;
+      font-weight: 500;
+
+      &:hover {
+        .underline {
+          background-size: 100% 100%;
+        }
+      }
+
+      .underline {
+        background-image: linear-gradient(
+          transparent calc(100% - 5px),
+          $cigi-red 10px
+        );
+        background-repeat: no-repeat;
+        background-size: 0% 100%;
+        transition: background-size 500ms;
+        width: calc(100%);
+      }
+    }
+
+    .download-button {
+      display: inline-block;
+      margin-left: 20px;
+
+      a {
+        display: block;
+      }
+
+      svg {
+        color: $cigi-red;
+        font-size: 14px;
+        margin: 0 3px 1px 0;
+      }
+
+      @include media-breakpoint-up(lg) {
+        float: right;
+      }
+    }
+  }
+
+  .financials-container {
+    animation-duration: 1500ms;
+    animation-name: financialsContainerFade;
+    animation-timing-function: ease-in-out;
+    position: relative;
+  }
+
+  .financials-content {
+    animation-duration: 500ms;
+    animation-name: financialsContentFade;
+    animation-timing-function: ease-in;
+  }
+
+  .auditor-signature {
+    img {
+      width: auto;
+    }
+    p {
+      line-height: 1.2;
+    }
+  }
+}
