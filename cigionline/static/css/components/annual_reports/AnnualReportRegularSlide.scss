@@ -326,6 +326,12 @@
           text-align: center;
           transition: border-color 500ms;
           width: 38px;
+
+          svg {
+            g {
+              fill: $white;
+            }
+          }
         }
 
         .content-copy {
