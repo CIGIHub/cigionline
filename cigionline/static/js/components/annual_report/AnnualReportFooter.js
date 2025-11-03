@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCameraRetro, faShareNodes } from '@fortawesome/pro-light-svg-icons';
+import { faCameraRetro, faShareNodes, faMessageQuote } from '@fortawesome/pro-light-svg-icons';
 import {
   faFacebookSquare,
   faXTwitter,
@@ -26,7 +26,7 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
         darkSlideTypes.includes(slide.slide_type) ? 'footer-dark' : ''
       }`}
     >
-      {slide.background_image && (
+      {slide.background_quote && (
         <button
           className="footer-icon-btn"
           type="button"
@@ -46,7 +46,7 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
             </div>
           </div>
           <FontAwesomeIcon
-            icon={faCameraRetro}
+            icon={faMessageQuote}
             className="svg-inline--fa fa-camera-retro fa-lg"
             aria-hidden="true"
             focusable="false"

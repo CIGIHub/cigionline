@@ -70,7 +70,8 @@ body {
 }
 
 p {
-  font-weight: 300;
+  text-rendering: optimizeLegibility;
+  unicode-bidi: isolate;
 }
 
 h1 {
