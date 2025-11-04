@@ -2,17 +2,29 @@
 {% load webpack_loader %}
 
 {% block extra_css %}
-  {% render_bundle 'facilityRentalsPage' 'css' %}
+{% render_bundle 'facilityRentalsPage' 'css' %}
 {% endblock %}
 
 {% block content %}
 {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 {% include "includes/body.html" with body=self.body %}
+{% if self.related_files %}
+<section class="related-files">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        <h2>Rental Package and Pricing</h2>
+        {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
 <section id="rental-inquiry" class="facility-rental-inquiry-section">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8">
-        <h2>Facility Rental Inquiry</h2>
+        <h2>Event Rental Inquiry</h2>
 
         {% if messages %}
         <div class="messages">
@@ -25,7 +37,6 @@
         <form method="post" novalidate class="cigi-form">
           {% csrf_token %}
           <div class="form-grid">
-            <!-- Use .field and .field--full to control spans -->
             <div class="field">
               <label for="{{ form.first_name.id_for_label }}">First Name</label>
               {{ form.first_name }}
@@ -49,7 +60,6 @@
               {{ form.company }}
             </div>
 
-            <!-- address row -->
             <div class="field field--full">
               <label for="{{ form.street.id_for_label }}">Street Address</label>
               {{ form.street }}
@@ -88,6 +98,9 @@
             <div class="field">
               <label for="{{ form.end_time.id_for_label }}">Event End Time</label>
               {{ form.end_time }}
+            </div>
+            <div class="field field--full">
+              * Please include setup and tear down time.
             </div>
 
             <div class="field">

@@ -24,10 +24,9 @@ class Think7AbstractUploadForm(forms.Form):
 
 CIGI_EVENT_SPACE_CHOICES = [
     ("auditorium", "Auditorium"),
-    ("atrium", "Atrium"),
-    ("boardroom", "Boardroom"),
+    ("main_foyer", "Main Foyer"),
     ("multipurpose", "Multipurpose Room"),
-    ("other", "Other / Not sure"),
+    ("other", "Other"),
 ]
 
 
