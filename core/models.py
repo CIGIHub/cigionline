@@ -962,6 +962,7 @@ class FacilityRentalsPage(
                         send_facility_rental_email(request, recipients, form.cleaned_data)
                         send_facility_rental_confirmation_email(form.cleaned_data)
                     except Exception as e:
+                        print(f"Error sending facility rental inquiry email: {e}")
                         form.add_error(None, "There was an error sending your request. Please try again later.")
                     else:
                         messages.success(request, "Thanks! Your facility rental inquiry has been sent.")
