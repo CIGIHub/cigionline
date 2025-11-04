@@ -13,7 +13,7 @@ def send_facility_rental_email(request, recipients: list[str], form_data: dict):
     if not api_key:
         raise RuntimeError("SENDGRID_API_KEY is not configured")
 
-    subject = f"[Facility Rentals] {form_data.get('event_title')} — {form_data.get('first_name')} {form_data.get('last_name')}"
+    subject = f"[Rental Inquiry] {form_data.get('start_date').strftime('%B %-d, %Y')} — {form_data.get('company')} - {form_data.get('event_title')} - {form_data.get('first_name')} {form_data.get('last_name')}"
 
     html_body = render_to_string("core/email/facility_rental_notification.html", {"data": form_data})
     text_body = strip_tags(html_body)
