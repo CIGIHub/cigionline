@@ -1,8 +1,18 @@
 @import '../../../css/global/mixins';
 
 section {
+  h2 {
+    font-weight: 600;
+  }
+
+  &.related-files {
+    table {
+      margin: 0;
+    }
+  }
+
   &.facility-rental-inquiry-section {
-    padding: 4rem 0;
+    padding: 3rem 0 4rem;
 
     h2 {
       margin-bottom: 2rem;
