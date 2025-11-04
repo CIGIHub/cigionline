@@ -1,0 +1,97 @@
+@import '../../../css/global/mixins';
+
+
+section {
+  &.facility-rental-inquiry-section {
+    padding: 4rem 0;
+
+    h2 {
+      margin-bottom: 2rem;
+    }
+  }
+}
+.cigi-form {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+  }
+
+  .field {
+    grid-column: span 6;
+    display: flex;
+    flex-direction: column;
+  }
+  .field--full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='date'],
+  input[type='time'],
+  input[type='number'],
+  select,
+  textarea {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid #d7d7d7;
+    font: inherit;
+    background: #fff;
+
+    &:focus {
+      outline: none;
+      border-color: #7aa7ff;
+      box-shadow: 0 0 0 0.2rem rgba(122, 167, 255, 0.2);
+    }
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hint {
+    color: #6c757d;
+    display: block;
+    margin: 0.35rem 0;
+  }
+
+  .error {
+    color: #b42318;
+    margin-top: 0.25rem;
+    font-size: 0.925rem;
+  }
+  .form-errors {
+    background: #fff2f1;
+    border: 1px solid #fccfc9;
+    padding: 0.75rem 1rem;
+  }
+
+  .button {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 991px) {
+    .field {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+/* Accessibility helpers */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}

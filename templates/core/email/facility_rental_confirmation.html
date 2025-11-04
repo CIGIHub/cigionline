@@ -1,0 +1,19 @@
+<p>Dear {{ data.first_name }},</p>
+
+<p>Thank you for contacting CIGI about renting our facilities.</p>
+
+<p>We’ve received your inquiry for <strong>{{ data.event_title }}</strong> and our events team will
+  review your request soon. You’ll hear back from us within a few business days.</p>
+
+<hr>
+<h4>Your submission details:</h4>
+<ul>
+  <li><strong>Event Dates:</strong> {{ data.start_date }} to {{ data.end_date }}</li>
+  <li><strong>Event Space:</strong> {{ data.space }}</li>
+  <li><strong>Number of Attendees:</strong> {{ data.attendees }}</li>
+</ul>
+
+<p>If you need to update your submission, please reply to this email.</p>
+
+<p>Best regards,<br>
+  The CIGI Events Team</p>
