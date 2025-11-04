@@ -13,7 +13,7 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render
 from django.utils import timezone
 from modelcluster.fields import ParentalKey
-from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
+from streams.blocks import AbstractSubmissionBlock
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
 from wagtail.admin.panels import (
@@ -187,7 +187,6 @@ class EventPage(
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             ('abstract_submission_block', AbstractSubmissionBlock()),
-            ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
         ],
         blank=True,
     )
