@@ -67,6 +67,7 @@ from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, Collection
 from wagtail.url_routing import RouteResult
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.models import Document
 from wagtail.images.blocks import ImageChooserBlock
@@ -898,6 +899,7 @@ class PrivacyNoticePage(
 
 
 class FacilityRentalsPage(
+    RoutablePageMixin,
     Page,
     BasicPageAbstract,
     FeatureablePageAbstract,
@@ -966,14 +968,17 @@ class FacilityRentalsPage(
                         form.add_error(None, "There was an error sending your request. Please try again later.")
                     else:
                         messages.success(request, "Thanks! Your facility rental inquiry has been sent.")
-                        # Re-render clean form to avoid resubmission issues
-                        form = FacilityRentalInquiryForm()
+                        return redirect(self.url + "thank-you/")
 
             # Render with bound form (errors or success)
             context = self.get_context(request)
             context["form"] = form
             return render(request, self.template, context)
         return super().serve(request, *args, **kwargs)
+
+    @route(r"^thank-you/$")
+    def thank_you(self, request, *args, **kwargs):
+        return render(request, "core/facility_rentals_thanks.html", {"self": self})
 
     max_count = 1
     parent_page_types = ['core.BasicPage']
