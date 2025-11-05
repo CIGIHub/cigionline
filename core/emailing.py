@@ -42,7 +42,7 @@ def send_facility_rental_confirmation_email(form_data):
     if not api_key:
         raise RuntimeError("SENDGRID_API_KEY not configured")
 
-    subject = "Your Facility Rental Inquiry — Thank you"
+    subject = "CIGI Event Rental Inquiry - Submission Confirmation"
     html_body = render_to_string(
         "core/email/facility_rental_confirmation.html", {"data": form_data}
     )

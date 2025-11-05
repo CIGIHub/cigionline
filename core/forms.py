@@ -36,13 +36,13 @@ class FacilityRentalInquiryForm(forms.Form):
     email = forms.EmailField(label="Email Address", widget=forms.EmailInput(attrs={"autocomplete": "email"}))
     phone = forms.CharField(label="Phone Number", max_length=50, widget=forms.TextInput(attrs={"autocomplete": "tel"}))
 
-    company = forms.CharField(label="Company/ Organization Name", max_length=200, required=False, widget=forms.TextInput(attrs={"autocomplete": "organization"}))
-    org_mission = forms.CharField(label="Organization Mission", widget=forms.Textarea, required=False)
-    other_orgs = forms.CharField(label="Other Organizations to be Involved in Event", widget=forms.Textarea, required=False)
+    company = forms.CharField(label="Company/ Organization Name", max_length=200, widget=forms.TextInput(attrs={"autocomplete": "organization"}))
+    org_mission = forms.CharField(label="Organization Mission", widget=forms.Textarea)
+    other_orgs = forms.CharField(label="Other Organizations to be Involved in Event", widget=forms.Textarea)
 
-    street = forms.CharField(label="Street Address", max_length=200, required=False, widget=forms.TextInput(attrs={"autocomplete": "street-address"}))
-    city_province = forms.CharField(label="City & Province", max_length=200, required=False, widget=forms.TextInput(attrs={"autocomplete": "address-level2"}))
-    postal_code = forms.CharField(label="Postal Code", max_length=20, required=False, widget=forms.TextInput(attrs={"autocomplete": "postal-code"}))
+    street = forms.CharField(label="Street Address", max_length=200, widget=forms.TextInput(attrs={"autocomplete": "street-address"}))
+    city_province = forms.CharField(label="City & Province", max_length=200, widget=forms.TextInput(attrs={"autocomplete": "address-level2"}))
+    postal_code = forms.CharField(label="Postal Code", max_length=20, widget=forms.TextInput(attrs={"autocomplete": "postal-code"}))
 
     event_title = forms.CharField(label="Event Full Title", max_length=250)
     purpose = forms.CharField(label="Purpose of the Event", widget=forms.Textarea)
@@ -55,7 +55,7 @@ class FacilityRentalInquiryForm(forms.Form):
     space = forms.ChoiceField(label="What CIGI Event Space are you interested in", choices=CIGI_EVENT_SPACE_CHOICES)
     attendees = forms.IntegerField(label="Number of Attendees", min_value=1)
 
-    details = forms.CharField(label="Additional Details", widget=forms.Textarea, required=False)
+    details = forms.CharField(label="Additional Details", widget=forms.Textarea)
 
     can_provide_liability = forms.BooleanField(
         label="I confirm we can provide a $2M liability certificate before the event",
@@ -63,8 +63,8 @@ class FacilityRentalInquiryForm(forms.Form):
     )
     liability_contact_if_cannot = forms.CharField(
         label="If you cannot provide this, please include contact info we should reach out to",
-        widget=forms.Textarea,
         required=False,
+        widget=forms.Textarea,
     )
 
     # Simple honeypot

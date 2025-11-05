@@ -5,6 +5,10 @@
 {% render_bundle 'facilityRentalsPage' 'css' %}
 {% endblock %}
 
+{% block extra_js %}
+{% render_bundle 'facilityRentalsPage' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
 {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
 {% include "includes/body.html" with body=self.body %}
@@ -35,7 +39,7 @@
         </div>
         {% endif %}
 
-        <form method="post" novalidate class="cigi-form">
+        <form method="post" class="cigi-form">
           {% csrf_token %}
           <div class="form-grid">
             <div class="field">
