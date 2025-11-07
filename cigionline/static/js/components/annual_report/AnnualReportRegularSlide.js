@@ -306,6 +306,17 @@ function AnnualReportRegularSlide({
                             target="_blank"
                             rel="noopener noreferrer"
                           >
+                            <div className="float-left content-link-icon">
+                              {contentIcons[contentBlock.type] ? (
+                                <FontAwesomeIcon
+                                  icon={contentIcons[contentBlock.type]}
+                                />
+                              ) : (
+                                customIcons[contentBlock.type] && (
+                                  <>{customIcons[contentBlock.type]}</>
+                                )
+                              )}
+                            </div>
                             {lang === 'fr'
                               ? contentBlock.title_fr
                               : contentBlock.title_en}

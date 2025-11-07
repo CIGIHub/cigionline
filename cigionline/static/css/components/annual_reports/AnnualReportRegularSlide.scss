@@ -365,6 +365,10 @@
             font-weight: 400;
           }
         }
+
+        .content-link-icon {
+          margin-right: 0.5rem;
+        }
       }
     }
 
@@ -379,25 +383,23 @@
       position: relative;
 
       a {
-        @include media-breakpoint-up(lg) {
-          &:visited {
-            color: $white;
-          }
-
-          &:hover {
-            color: $cigi-primary-colour;
-            background-size: 0% 100%;
-          }
-
-          background-image: linear-gradient(
-            transparent calc(100% - 2px),
-            $cigi-primary-colour 10px
-          );
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-          transition: background-size 500ms;
-          width: calc(100%);
+        &:visited {
+          color: $white;
         }
+
+        &:hover {
+          color: $cigi-primary-colour;
+          background-size: 0% 100%;
+        }
+
+        background-image: linear-gradient(
+          transparent calc(100% - 2px),
+          $cigi-primary-colour 10px
+        );
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        transition: background-size 500ms;
+        width: calc(100%);
       }
     }
   }
