@@ -194,4 +194,24 @@
       </div>
     </section>
   {% endcache %}
+  <section class="homepage-email-list">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-5">
+          <p>Get regular updates on our research and events in your inbox.</p>
+        </div>
+        <div class="col-12 col-md-7">
+          <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
+            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
+              class="form-email required" required="required" aria-required="true">
+            <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
+
+{% block footer %}
+  {% include "./includes/footer.html" %}
+{% endblock footer %}
