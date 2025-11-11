@@ -66,7 +66,7 @@
               fill: $cigi-primary-colour;
             }
           }
-          
+
           svg {
             width: 1.5rem;
             height: 1.5rem;
@@ -239,5 +239,68 @@
         flex-basis: 100%;
       }
     }
+  }
+
+  .homepage-email-list {
+    margin: 3rem 0;
+
+    p {
+      @include media-breakpoint-up(md) {
+        margin-bottom: 0;
+        margin-top: 0.2rem;
+      }
+    }
+
+    form {
+      display: flex;
+      height: 2em;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      &[type='email'] {
+        background: $white;
+        border-bottom: 2px solid $cigi-primary-colour;
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        font-size: 1rem;
+        margin: 0;
+        margin-right: 5px;
+        width: calc(100% - 95px);
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      &::placeholder {
+        color: $black;
+      }
+    }
+
+    button {
+      background: $cigi-primary-colour;
+      border-radius: 2px;
+      color: $white;
+      font-size: 14px;
+      text-transform: uppercase;
+      width: 90px;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: darken($cigi-primary-colour, 10%);
+      }
+
+      i {
+        margin-right: 0.3em;
+      }
+    }
+  }
+}
+
+footer {
+  .highlighted-topics-list {
+    margin-bottom: 2rem;
   }
 }
