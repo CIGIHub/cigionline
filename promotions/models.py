@@ -3,6 +3,7 @@ from multimedia.models import MultimediaPage
 from wagtail.admin.panels import FieldPanel, PageChooserPanel
 from wagtail.snippets.models import register_snippet
 
+
 @register_snippet
 class PromotionBlock(models.Model):
     class PromotionBlockTypes(models.TextChoices):
