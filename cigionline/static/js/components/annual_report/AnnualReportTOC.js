@@ -80,11 +80,13 @@ function AnnualReportTOC({ slides, basePath, lang, setShowTOC }) {
                             <Link
                               to={`${basePath}/${lang}/${slide.slug}/`}
                               onClick={() => setShowTOC(false)}
-                            >
-                              {lang === 'en'
-                                ? slide.slide_title
-                                : slide.slide_title_fr}
-                            </Link>
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  lang === 'en'
+                                    ? slide.slide_title
+                                    : slide.slide_title_fr,
+                              }}
+                            />
                           </div>
                         ))}
                       </div>
@@ -97,11 +99,13 @@ function AnnualReportTOC({ slides, basePath, lang, setShowTOC }) {
                             <Link
                               to={`${basePath}/${lang}/${slide.slug}/`}
                               onClick={() => setShowTOC(false)}
-                            >
-                              {lang === 'en'
-                                ? slide.slide_title
-                                : slide.slide_title_fr}
-                            </Link>
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  lang === 'en'
+                                    ? slide.slide_title
+                                    : slide.slide_title_fr,
+                              }}
+                            />
                           </div>
                         ))}
                       </div>

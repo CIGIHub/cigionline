@@ -101,11 +101,15 @@ function AnnualReportTOCSlide({
                             <p className="slide-number">
                               {String(slideIndex + 1).padStart(2, '0')}
                             </p>
-                            <Link to={`${basePath}/${lang}/${slide.slug}/`}>
-                              {lang === 'en'
-                                ? slide.slide_title
-                                : slide.slide_title_fr}
-                            </Link>
+                            <Link
+                              to={`${basePath}/${lang}/${slide.slug}/`}
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  lang === 'en'
+                                    ? slide.slide_title
+                                    : slide.slide_title_fr,
+                              }}
+                            />
                           </div>
                         ))}
                       </div>
@@ -117,11 +121,15 @@ function AnnualReportTOCSlide({
                                 slideIndex + 1 + slidesLeftColumn.length,
                               ).padStart(2, '0')}
                             </p>
-                            <Link to={`${basePath}/${lang}/${slide.slug}/`}>
-                              {lang === 'en'
-                                ? slide.slide_title
-                                : slide.slide_title_fr}
-                            </Link>
+                            <Link
+                              to={`${basePath}/${lang}/${slide.slug}/`}
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  lang === 'en'
+                                    ? slide.slide_title
+                                    : slide.slide_title_fr,
+                              }}
+                            />
                           </div>
                         ))}
                       </div>
