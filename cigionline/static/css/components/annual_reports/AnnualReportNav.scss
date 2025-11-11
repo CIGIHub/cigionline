@@ -150,6 +150,11 @@
       &.link-item {
         .dot-nav-tooltip {
           visibility: visible;
+
+          p {
+            margin: 0;
+            display: inline;
+          }
         }
       }
     }

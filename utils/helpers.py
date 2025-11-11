@@ -75,3 +75,16 @@ def richtext_html(value):
         return ''
     db_html = getattr(value, 'source', value)
     return expand_db_html(db_html)
+
+
+def richtext_to_inline_html(value):
+    if not value:
+        return ''
+    db_html = getattr(value, 'source', value)
+    html = expand_db_html(db_html).strip()
+
+    if html.startswith('<p') and html.endswith('</p>') and html.count('<p') == 1 and html.count('</p>') == 1:
+        close = html.find('>')
+        if close != -1:
+            return html[close + 1:-4]
+    return html

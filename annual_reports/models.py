@@ -24,7 +24,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
 from wagtailmedia.widgets import AdminMediaChooser
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from utils.helpers import richtext_html
+from utils.helpers import richtext_html, richtext_to_inline_html
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -519,8 +519,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                                         "type_override": content_val.get("type_override") if content_val.get("type_override") else "",
                                         "type_override_fr": content_val.get("type_override_fr") if content_val.get("type_override_fr") else "",
                                         "link": link,
-                                        "title_en": richtext_html(content_val.get("title_en")) if content_val.get("title_en") else "",
-                                        "title_fr": richtext_html(content_val.get("title_fr")) if content_val.get("title_fr") else "",
+                                        "title_en": richtext_to_inline_html(content_val.get("title_en")) if content_val.get("title_en") else "",
+                                        "title_fr": richtext_to_inline_html(content_val.get("title_fr")) if content_val.get("title_fr") else "",
                                     })
 
                     columns.append(column_content)

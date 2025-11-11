@@ -63,7 +63,14 @@ function AnnualReportNav({
                 onMouseLeave={() => setHoverNav(false)}
               >
                 <div className="dot-nav-tooltip">
-                  <span>{slide.slide_title}</span>
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        lang === 'fr'
+                          ? slide.slide_title_fr
+                          : slide.slide_title,
+                    }}
+                  />
                 </div>
                 <div className="current-page">
                   <div className="dot-circle" />
@@ -76,7 +83,14 @@ function AnnualReportNav({
                 onMouseLeave={() => setHoverNav(false)}
               >
                 <div className="dot-nav-tooltip">
-                  <span>{slide.slide_title}</span>
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        lang === 'fr'
+                          ? slide.slide_title_fr
+                          : slide.slide_title,
+                    }}
+                  />
                 </div>
                 <Link
                   to={`${basePath}/${lang}/${slide.slug}`}
