@@ -1662,10 +1662,11 @@ class ARSlideColumnBlock(blocks.StructBlock):
                     [
                         ('type', blocks.ChoiceBlock(choices=CONTENT_TYPES, required=True)),
                         ('type_override', blocks.CharBlock(required=False, help_text='Override the content type label for this content item')),
+                        ('type_override_fr', blocks.CharBlock(required=False, help_text='Override the content type label for this content item in French')),
                         ('page', blocks.PageChooserBlock(required=False)),
                         ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this content item')),
-                        ('title_en', blocks.CharBlock(required=False, help_text='Override the title for this content item')),
-                        ('title_fr', blocks.CharBlock(required=False, help_text='Override the title for this content item')),
+                        ('title_en', blocks.RichTextBlock(required=False, help_text='Override the title for this content item')),
+                        ('title_fr', blocks.RichTextBlock(required=False, help_text='Override the title for this content item')),
                     ]
                 ))
             ],

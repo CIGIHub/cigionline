@@ -113,7 +113,9 @@ function AnnualReportTOCSlide({
                         {slidesRightColumn.map((slide, slideIndex) => (
                           <div className="toc-item slide-link" key={slide.slug}>
                             <p className="slide-number">
-                              {String(slideIndex + 1 + slidesLeftColumn.length).padStart(2, '0')}
+                              {String(
+                                slideIndex + 1 + slidesLeftColumn.length,
+                              ).padStart(2, '0')}
                             </p>
                             <Link to={`${basePath}/${lang}/${slide.slug}/`}>
                               {lang === 'en'
@@ -201,6 +203,10 @@ function AnnualReportTOCSlide({
                                         {lang === 'en'
                                           ? member.title
                                           : member.title_fr}
+                                        <br />
+                                        {lang === 'en'
+                                          ? member.title_line_2
+                                          : member.title_line_2_fr}
                                       </h6>
                                     </div>
                                   ))}

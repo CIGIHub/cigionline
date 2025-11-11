@@ -164,6 +164,10 @@ function AnnualReportTOC({ slides, basePath, lang, setShowTOC }) {
                                           {lang === 'en'
                                             ? member.title
                                             : member.title_fr}
+                                          <br />
+                                          {lang === 'en'
+                                            ? member.title_line_2
+                                            : member.title_line_2_fr}
                                         </h6>
                                       </div>
                                     ))}

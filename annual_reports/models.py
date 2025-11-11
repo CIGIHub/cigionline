@@ -19,12 +19,12 @@ from wagtail.admin.panels import (
 from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
-from wagtail.rich_text import expand_db_html
 from django.utils.html import strip_tags
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
 from wagtailmedia.widgets import AdminMediaChooser
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from utils.helpers import richtext_html
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -329,7 +329,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         help_text='Type of slide',
     )
 
-    slide_title_fr = models.CharField(max_length=255, help_text="Title of the slide (French)", blank=True)
+    slide_title = RichTextField(max_length=255, help_text="Title of the slide")
+    slide_title_fr = RichTextField(max_length=255, help_text="Title of the slide (French)", blank=True)
     french_slide = models.BooleanField(
         default=True,
         help_text="Indicates if this slide has a French version",
@@ -409,6 +410,25 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
     ]
 
     def get_annual_report_slide_content(self):
+        CONTENT_TYPES_FR = [
+            ('publication', 'Publication'),
+            ('opinion', 'Opinion'),
+            ('video', 'Vidéo'),
+            ('podcast', 'Balado'),
+            ('event', 'Événement'),
+            ('essay series', 'Série d\'essais'),
+            ('media', 'Média'),
+            ('news release', 'Communiqué de presse'),
+            ('experts', 'Experts'),
+            ('subscribe', 'Abonnez-vous'),
+            ('listen', 'À écouter'),
+            ('explore', 'Explorer'),
+            ('episode', 'Épisode'),
+            ('research', 'Recherche'),
+            ('survey', 'Sondage'),
+            ('t7', 'T7'),
+            ('website', 'Site web'),
+        ]
         content = {}
         if self.slide_type == 'toc':
             boards = {}
@@ -433,8 +453,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                                 "title_fr": member.value["title_fr"],
                                 "title_line_2": member.value.get("title_line_2", ""),
                                 "title_line_2_fr": member.value.get("title_line_2_fr", ""),
-                                "bio_en": expand_db_html(member.value.get("bio_en").source) if member.value.get("bio_en") else "",
-                                "bio_fr": expand_db_html(member.value.get("bio_fr").source) if member.value.get("bio_fr") else "",
+                                "bio_en": richtext_html(member.value.get("bio_en")) if member.value.get("bio_en") else "",
+                                "bio_fr": richtext_html(member.value.get("bio_fr")) if member.value.get("bio_fr") else "",
                                 "image": image.get_rendition('fill-150x150').file.url if image else '',
                                 "link": link,
                             })
@@ -463,8 +483,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     }
                     for paragraph_column in column:
                         if paragraph_column.block_type == "paragraph_column":
-                            column_content["en"].append(expand_db_html(paragraph_column.value.get("en").source))
-                            column_content["fr"].append(expand_db_html(paragraph_column.value.get("fr").source))
+                            column_content["en"].append(richtext_html(paragraph_column.value.get("en")))
+                            column_content["fr"].append(richtext_html(paragraph_column.value.get("fr")))
                     columns.append(column_content)
             content = {
                 "columns": columns,
@@ -482,10 +502,10 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     for subblock in column:
                         if subblock.block_type == "paragraph_column":
                             column_content["en"].append(
-                                expand_db_html(subblock.value.get("en").source)
+                                richtext_html(subblock.value.get("en"))
                             )
                             column_content["fr"].append(
-                                expand_db_html(subblock.value.get("fr").source)
+                                richtext_html(subblock.value.get("fr"))
                             )
 
                         elif subblock.block_type == "content_column":
@@ -495,10 +515,12 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                                     link = content_val.get("link_override") or (content_val.get("page").specific.url if content_val.get("page") else None)
                                     column_content["content"].append({
                                         "type": content_val.get("type"),
-                                        "type_override": content_val.get("type_override"),
+                                        "type_fr": dict(CONTENT_TYPES_FR).get(content_val.get("type"), ""), 
+                                        "type_override": content_val.get("type_override") if content_val.get("type_override") else "",
+                                        "type_override_fr": content_val.get("type_override_fr") if content_val.get("type_override_fr") else "",
                                         "link": link,
-                                        "title_en": content_val.get("title_en"),
-                                        "title_fr": content_val.get("title_fr"),
+                                        "title_en": richtext_html(content_val.get("title_en")) if content_val.get("title_en") else "",
+                                        "title_fr": richtext_html(content_val.get("title_fr")) if content_val.get("title_fr") else "",
                                     })
 
                     columns.append(column_content)
@@ -523,13 +545,13 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                         for child in en_stream:
                             if child.block_type == "paragraph":
                                 rt = child.value
-                                col["en"].append(expand_db_html(rt.source))
+                                col["en"].append(richtext_html(rt))
                             elif child.block_type == "signature":
                                 sig = child.value
                                 sig_img = sig.get("signature")
                                 col["en"].append({
                                     "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
-                                    "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
+                                    "signature_text": richtext_html(sig.get("signature_text")) if sig.get("signature_text") else "",
                                 })
                             else:
                                 col["en"].append(str(child.value))
@@ -537,13 +559,13 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                         for child in fr_stream:
                             if child.block_type == "paragraph":
                                 rt = child.value
-                                col["fr"].append(expand_db_html(rt.source))
+                                col["fr"].append(richtext_html(rt))
                             elif child.block_type == "signature":
                                 sig = child.value
                                 sig_img = sig.get("signature")
                                 col["fr"].append({
                                     "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
-                                    "signature_text": expand_db_html(sig.get("signature_text").source) if sig.get("signature_text") else "",
+                                    "signature_text": richtext_html(sig.get("signature_text")) if sig.get("signature_text") else "",
                                 })
                             else:
                                 col["fr"].append(str(child.value))
@@ -565,8 +587,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 elif block.block_type == "financial_position":
                     title_en = block.value.get("title_en") or ""
                     title_fr = block.value.get("title_fr") or ""
-                    description_en = expand_db_html(block.value.get("description_en").source) or ""
-                    description_fr = expand_db_html(block.value.get("description_fr").source) or ""
+                    description_en = richtext_html(block.value.get("description_en")) or ""
+                    description_fr = richtext_html(block.value.get("description_fr")) or ""
                     amounts = block.value.get("amounts")
                     current_year = amounts.get("year_current")
                     previous_year = amounts.get("year_previous")
@@ -626,8 +648,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 elif block.block_type == "fund_balances":
                     title_en = block.value.get("title_en") or ""
                     title_fr = block.value.get("title_fr") or ""
-                    description_en = expand_db_html(block.value.get("description_en").source) or ""
-                    description_fr = expand_db_html(block.value.get("description_fr").source) or ""
+                    description_en = richtext_html(block.value.get("description_en")) or ""
+                    description_fr = richtext_html(block.value.get("description_fr")) or ""
                     amounts = block.value.get("amounts")
                     current_year = amounts.get("year_current")
                     previous_year = amounts.get("year_previous")
@@ -981,9 +1003,9 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
 
         for block in self.strategic_plan_slide_content:
             if block.block_type == 'column':
-                content['columns'].append(expand_db_html(block.value.source))
+                content['columns'].append(richtext_html(block.value))
             elif block.block_type == 'acknowledgements':
-                content['acknowledgements'].append(expand_db_html(block.value.source))
+                content['acknowledgements'].append(richtext_html(block.value))
             elif block.block_type == 'framework_block':
                 block = {
                     'title': block.value['title'],

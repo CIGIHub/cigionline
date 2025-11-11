@@ -3,6 +3,7 @@ from .models import AnnualReportPage, AnnualReportSlidePage, AnnualReportSPAPage
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from wagtail.api.v2.views import PagesAPIViewSet
+from utils.helpers import richtext_html
 
 
 def all_annual_reports(request):
@@ -66,8 +67,8 @@ def get_ordered_slides_annual_report(request, page_id):
             "id": slide.id,
             "title": slide.title,
             "slug": slide.slug,
-            "slide_title": slide.slide_title,
-            "slide_title_fr": slide.slide_title_fr,
+            "slide_title": richtext_html(slide.slide_title),
+            "slide_title_fr": richtext_html(slide.slide_title_fr),
             "slide_subtitle": slide.slide_subtitle,
             "slide_content": slide.get_annual_report_slide_content(),
             "slide_type": slide.slide_type,

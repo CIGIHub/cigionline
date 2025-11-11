@@ -165,6 +165,10 @@ function AnnualReportSlide({ slides, basePath }) {
     };
   }, [currentIndex, navigate, isScrolling, slides]);
 
+  useEffect(() => {
+    setHoverNav(false);
+  }, [currentIndex]);
+
   const currentSlide = slides[currentIndex];
   const SlideComponent =
     slideComponents[slides[currentIndex].slide_type] ||
