@@ -160,9 +160,6 @@ AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
 AWS_PRELOAD_METADATA = True
 AWS_S3_FILE_OVERWRITE = False
-AWS_S3_OBJECT_PARAMETERS = {
-    "ACL": "public-read"
-}
 AWS_LOCATION = 'static'
 if 'STATIC_URL' in os.environ:
     STATIC_URL = os.environ['STATIC_URL']
