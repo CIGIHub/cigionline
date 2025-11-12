@@ -100,8 +100,15 @@ function ExpertContentListing(props) {
         </div>
         <div className="table-content">
           {row.pdf_download && (
-            <a href={row.pdf_download} className="table-btn-icon track-cta" data-cta="expert-pdf" onClick={handleCTAClick}>
+            <a
+              href={row.pdf_download}
+              className="table-btn-icon track-cta"
+              data-cta="expert-pdf"
+              onClick={handleCTAClick}
+              aria-label="Download PDF"
+            >
               <i className="fa fas fa-download" />
+              <span className="sr-only">Download PDF</span>
             </a>
           )}
         </div>

@@ -189,6 +189,78 @@ def register_rich_text_rtl(features):
     })
 
 
+@hooks.register('register_rich_text_features')
+def register_rich_text_source(features):
+    feature_name = 'source'
+    type_ = 'SOURCE'
+
+    control = {
+        'type': type_,
+        'label': 'Source',
+        'description': 'Source',
+        'element': 'p',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.BlockFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'p[class=hover-reveal-quote-source]': BlockElementHandler(type_)},
+        'to_database_format': {'block_map': {type_: {'element': 'p', 'props': {'class': 'hover-reveal-quote-source'}}}},
+    })
+
+
+@hooks.register('register_rich_text_features')
+def register_rich_text_red_line(features):
+    feature_name = 'red-line'
+    type_ = 'REDLINE'
+
+    control = {
+        'type': type_,
+        'label': 'Red Line',
+        'description': 'Red Line',
+        'element': 'div',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.BlockFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'div[class=cigi-red-line]': BlockElementHandler(type_)},
+        'to_database_format': {'block_map': {type_: {'element': 'div', 'props': {'class': 'cigi-red-line'}}}},
+    })
+
+
+@hooks.register('register_rich_text_features')
+def register_rich_text_chair_name(features):
+    feature_name = 'chair-name'
+    type_ = 'CHAIRNAME'
+
+    control = {
+        'type': type_,
+        'label': 'Chair Name',
+        'description': 'Chair Name',
+        'element': 'p',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.BlockFeature(
+            control,
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'p[class=chair-name]': BlockElementHandler(type_)},
+        'to_database_format': {'block_map': {type_: {'element': 'p', 'props': {'class': 'chair-name'}}}},
+    })
+
+
 class AboutListingViewSet(ModelViewSet):
     model = Page
     menu_label = 'About'

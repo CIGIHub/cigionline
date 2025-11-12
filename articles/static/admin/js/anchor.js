@@ -41,7 +41,7 @@ class AnchorSource extends React.Component {
   }
 }
 
-const Anchor = (props) => {
+function Anchor(props) {
   const { entityKey, children, contentState } = props;
   const data = contentState.getEntity(entityKey).getData();
 
@@ -56,7 +56,7 @@ const Anchor = (props) => {
     },
     children,
   );
-};
+}
 
 window.draftail.registerPlugin({
   type: 'ANCHOR',

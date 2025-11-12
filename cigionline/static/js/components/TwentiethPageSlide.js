@@ -6,7 +6,7 @@ import TwentiethPageSlide3Content from './TwentiethPageSlide3Content';
 import TwentiethPageSlide4Content from './TwentiethPageSlide4Content';
 import TwentiethPageSlide5Content from './TwentiethPageSlide5Content';
 
-const TwentiethPageSlide = ({ slide, changeSlide }) => {
+function TwentiethPageSlide({ slide, changeSlide }) {
   const styles = {};
   if (slide.background && slide.slide_number !== 1) {
     styles.backgroundImage = `url(${slide.background})`;
@@ -66,7 +66,7 @@ const TwentiethPageSlide = ({ slide, changeSlide }) => {
       </div>
     </div>
   );
-};
+}
 
 TwentiethPageSlide.propTypes = {};
 
