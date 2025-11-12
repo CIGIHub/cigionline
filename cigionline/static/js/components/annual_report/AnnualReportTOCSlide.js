@@ -9,6 +9,9 @@ function AnnualReportTOCSlide({
   currentIndex,
   lang,
   isComponent,
+  fadeableClass,
+  revealableClass,
+  dimUI,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const acknowledgementsParam = searchParams.get('acknowledgements');
@@ -47,8 +50,45 @@ function AnnualReportTOCSlide({
           isComponent ? 'component-mode' : ''
         }`}
       >
-        <div className="background-row background-table-of-contents" />
-        <div className="ar-slide-content table-of-contents">
+        <div className="background-row background-table-of-contents">
+          <div
+            className={`background-image ${slides[
+              currentIndex
+            ].slide_type.replace('_', '-')}-background-img ${revealableClass}`}
+            style={{
+              backgroundImage: `url(${slides[currentIndex].background_image}),url(${slides[currentIndex].background_image_thumbnail})`,
+            }}
+          />
+          <div>
+            <div
+              className={`${revealableClass} hover-reveal-gradient-${slides[currentIndex].background_gradient_position}`}
+            >
+              {slides[currentIndex].background_quote && (
+                <div
+                  className={`quote quote-${slides[currentIndex].background_quote_position}`}
+                >
+                  <h3
+                    className={`hover-reveal-quote ${
+                      dimUI ? 'is-revealed' : ''
+                    }`}
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        lang === 'fr'
+                          ? slides[currentIndex].background_quote_fr
+                          : slides[currentIndex].background_quote,
+                    }}
+                  />
+                  <div
+                    className={`hover-reveal-quote-line ${
+                      dimUI ? 'is-revealed' : ''
+                    }`}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className={`ar-slide-content table-of-contents ${fadeableClass}`}>
           <div className="container">
             <div className="row">
               <div className="col">
@@ -359,6 +399,9 @@ AnnualReportTOCSlide.propTypes = {
   lang: PropTypes.string.isRequired,
   currentIndex: PropTypes.number.isRequired,
   isComponent: PropTypes.bool,
+  fadeableClass: PropTypes.string.isRequired,
+  revealableClass: PropTypes.string.isRequired,
+  dimUI: PropTypes.bool.isRequired,
 };
 
 AnnualReportTOCSlide.defaultProps = {

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faShareNodes,
@@ -20,10 +21,39 @@ const darkSlideTypes = [
   'financials',
 ];
 
+function useShareLinks(slide) {
+  const { pathname, search, hash } = useLocation();
+
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'https://www.cigionline.org';
+
+  const absoluteUrl = useMemo(
+    () => `${origin}${pathname}${search}${hash}`,
+    [origin, pathname, search, hash],
+  );
+
+  const encodedUrl = encodeURIComponent(absoluteUrl);
+  const text = encodeURIComponent(
+    `${slide?.slide_title || 'CIGI Annual Report'} — ${
+      slide.year
+    } CIGI Annual Report`,
+  );
+
+  return {
+    url: absoluteUrl,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    x: `https://x.com/intent/post?url=${encodedUrl}&text=${text}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+  };
+}
+
 function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
   const handleEnter = () => onHoverChange?.(true);
   const handleLeave = () => onHoverChange?.(false);
   const [socialOpen, setSocialOpen] = useState(false);
+  const share = useShareLinks(slide);
 
   return (
     <div
@@ -59,22 +89,28 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
           />
         </button>
       )}
-      <div className={`cigi-social fadeable${dimUI ? ' is-dimmed' : ''} ${socialOpen ? ' open' : ''}`}>
+      <div
+        className={`cigi-social fadeable${dimUI ? ' is-dimmed' : ''} ${
+          socialOpen ? ' open' : ''
+        }`}
+      >
         {socialOpen && (
           <div className="social-buttons">
-            <button
+            <a
               className="social-1-btn"
-              type="button"
+              href={share.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Share on Facebook"
             >
               <FontAwesomeIcon
                 icon={faFacebookSquare}
                 className="svg-inline--fa fa-facebook-square fa-lg"
               />
-            </button>
+            </a>
             <a
               className="social-2-btn"
-              href="https://twitter.com/intent/tweet?text=2024+CIGI+Annual+Report+https://www.cigionline.org/interactives/2024annualreport/en/table-of-contents"
+              href={share.x}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Share on Twitter"
@@ -86,7 +122,7 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
             </a>
             <a
               className="social-3-btn"
-              href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.cigionline.org/interactives/2024annualreport/en/table-of-contents"
+              href={share.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Share on LinkedIn"

@@ -2,7 +2,13 @@ import PropTypes from 'prop-types';
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-function AnnualReportTOC({ slides, basePath, lang, setShowTOC }) {
+function AnnualReportTOC({
+  slides,
+  basePath,
+  lang,
+  setShowTOC,
+  fadeableClass,
+}) {
   const [personId, setPersonId] = useState(null);
   const [showAcknowledgementsTab, setShowAcknowledgementsTab] = useState(false);
   const tocSlide = slides.find((s) => s.slide_type === 'toc');
@@ -23,8 +29,8 @@ function AnnualReportTOC({ slides, basePath, lang, setShowTOC }) {
   return (
     <>
       <div className="annual-report-slide toc-slide component-mode lightbox-table-of-contents">
-        <div className="background-row background-table-of-contents" />
-        <div className="ar-slide-content table-of-contents">
+        <div className={`background-row background-table-of-contents ${fadeableClass}`} />
+        <div className={`ar-slide-content table-of-contents ${fadeableClass}`}>
           <div className="container">
             <div className="row">
               <div className="col">
@@ -314,6 +320,7 @@ AnnualReportTOC.propTypes = {
   basePath: PropTypes.string.isRequired,
   lang: PropTypes.string.isRequired,
   setShowTOC: PropTypes.func.isRequired,
+  fadeableClass: PropTypes.string.isRequired,
 };
 
 export default AnnualReportTOC;

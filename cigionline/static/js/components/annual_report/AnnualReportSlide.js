@@ -221,6 +221,8 @@ function AnnualReportSlide({ slides, basePath }) {
           basePath={basePath}
           lang={currentLang}
           fadeableClass={fadeableClass}
+          revealableClass={revealableClass}
+          dimUI={dimUI}
         />
       ) : (
         <SlideComponent

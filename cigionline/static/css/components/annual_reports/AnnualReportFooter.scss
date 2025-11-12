@@ -47,7 +47,7 @@
   position: absolute;
   transform: translateX(-50%);
   width: 100%;
-  z-index: 3;
+  z-index: 5;
 
   @include media-breakpoint-up(md) {
     padding: 20px 15px;
