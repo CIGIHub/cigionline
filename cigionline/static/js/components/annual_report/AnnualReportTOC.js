@@ -29,7 +29,9 @@ function AnnualReportTOC({
   return (
     <>
       <div className="annual-report-slide toc-slide component-mode lightbox-table-of-contents">
-        <div className={`background-row background-table-of-contents ${fadeableClass}`} />
+        <div
+          className={`background-row background-table-of-contents ${fadeableClass}`}
+        />
         <div className={`ar-slide-content table-of-contents ${fadeableClass}`}>
           <div className="container">
             <div className="row">
@@ -100,7 +102,9 @@ function AnnualReportTOC({
                         {slidesRightColumn.map((slide, slideIndex) => (
                           <div className="toc-item slide-link" key={slide.slug}>
                             <p className="slide-number">
-                              {`0${slideIndex + 1 + slidesLeftColumn.length}`}
+                              {String(
+                                slideIndex + 1 + slidesLeftColumn.length,
+                              ).padStart(2, '0')}
                             </p>
                             <Link
                               to={`${basePath}/${lang}/${slide.slug}/`}
