@@ -60,7 +60,7 @@ const TwentiethPageSlide2Content = ({ slide }) => {
                   <li className="linkedin">
                     <a
                       className="linkedin-share-link"
-                      href={`https://www.linkedin.com/shareArticle?mini=true&amp;url=${absoluteUrl}&amp;title=${socialString}`}
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${absoluteUrl}`}
                     >
                       <i className="fab fa-linkedin-in fa-sm icon" />
                     </a>
