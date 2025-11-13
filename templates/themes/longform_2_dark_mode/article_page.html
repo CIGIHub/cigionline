@@ -20,7 +20,7 @@
             <a class="cigi-logo" href="/">{% include "../../includes/header_cigi_logo_large.svg" %}</a>
             <div class="series-title">{{ self.title }}</div>
             <div class="social-links">
-              <a class="linkedin-share-link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}" target="_blank" rel="noopener noreferrer">
+              <a class="linkedin-share-link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|slice:':-1' }}" target="_blank" rel="noopener noreferrer">
                 <i class="fa-brands fa-linkedin-in icon"></i>
               </a>
               <a href="https://x.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
@@ -54,7 +54,7 @@
           <div class="content-wrapper{% if self.is_title_bottom %} bottom-align{% endif %}">
             {% include "includes/topics.html" with topics=self.topics %}
             <div class="social-links">
-              <a class="linkedin-share-link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}" target="_blank" rel="noopener noreferrer">
+              <a class="linkedin-share-link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|slice:':-1' }}" target="_blank" rel="noopener noreferrer">
                 <i class="fa-brands fa-linkedin-in icon"></i>
               </a>
               <a href="https://x.com/share?text={{title|social_string}}&amp;url={{request.build_absolute_uri|slice:':-1'}}">
