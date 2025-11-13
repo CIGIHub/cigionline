@@ -20,7 +20,7 @@
           <div class="hero-content">
             {% include "includes/topics.html" with topics=self.topics_sorted %}
             <div class="platform-governance-series-article-social">
-              <a class="linkedin-share-link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}" target="_blank" rel="noopener noreferrer">
+              <a class="linkedin-share-link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|slice:':-1' }}" target="_blank" rel="noopener noreferrer">
                 <i class="fa-brands fa-linkedin-in icon"></i>
               </a>
               <a href="twitter-share-link" href="https://x.com/share?text={{title|social_string}}&amp;url={{ request.build_absolute_uri|slice:':-1' }}">

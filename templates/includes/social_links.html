@@ -10,7 +10,7 @@
     </a>
   </li>
   <li class="linkedin">
-    <a class="linkedin-share-link {% if no_circle is not True %}fa-stack{% endif %}" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ request.build_absolute_uri|slice:':-1' }}&amp;title={{title|social_string}}">
+    <a class="linkedin-share-link {% if no_circle is not True %}fa-stack{% endif %}" href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|slice:':-1' }}">
       {% if no_circle is not True %}
         <i class="fas fa-circle fa-stack-2x"></i>
       {% endif %}
