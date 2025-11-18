@@ -320,20 +320,20 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         </td>
                       </tr>
                       <tr className="table-line-entry">
-                        <td className="text-col">{t('accountsReceivable')}</td>
+                        <td className="text-col">{t('amountsReceivable')}</td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.accounts_receivable}
+                          {totalsCurrent?.amounts_receivable}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.accounts_receivable}
+                          {totalsPrevious?.amounts_receivable}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -558,25 +558,28 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           {totalsPrevious?.externally_restricted}
                         </td>
                       </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">
-                          {t('internallyRestricted')}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {totalsCurrent?.internally_restricted}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {totalsPrevious?.internally_restricted}
-                        </td>
-                      </tr>
+                      {(totalsCurrent?.internally_restricted ||
+                        totalsPrevious?.internallyRestricted) && (
+                        <tr className="table-line-entry">
+                          <td className="text-col">
+                            {t('internallyRestricted')}
+                          </td>
+                          <td
+                            className="num-col dollar-sign"
+                            aria-label="blank cell"
+                          />
+                          <td className="num-col">
+                            {totalsCurrent?.internally_restricted}
+                          </td>
+                          <td
+                            className="num-col dollar-sign"
+                            aria-label="blank cell"
+                          />
+                          <td className="num-col">
+                            {totalsPrevious?.internally_restricted}
+                          </td>
+                        </tr>
+                      )}
                       <tr className="table-line-entry">
                         <td className="text-col">{t('unrestricted')}</td>
                         <td
