@@ -89,8 +89,8 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Realized Investment Income',
       unrealizedInvestmentGains:
         lang === 'fr'
-          ? 'Gain (perte) de placement non réalisé'
-          : 'Unrealized Investment Gains (losses',
+          ? 'Gain de placement non réalisé'
+          : 'Unrealized Investment Gains',
       other: lang === 'fr' ? 'Autres' : 'Other',
       governmentAndOtherGrants:
         lang === 'fr'
@@ -170,19 +170,21 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                   );
                 })}
 
-                <div className="download-button ms-3">
-                  <a
-                    href={slide.slide_content.pdf}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="d-flex align-items-center"
-                  >
-                    <FontAwesomeIcon icon={faDownload} size="lg" />
-                    <span className="underline ms-2">
-                      {lang === 'en' ? 'Download PDF' : 'Télécharger PDF'}
-                    </span>
-                  </a>
-                </div>
+                {slide.slide_content.pdf && (
+                  <div className="download-button ms-3">
+                    <a
+                      href={slide.slide_content.pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="d-flex align-items-center"
+                    >
+                      <FontAwesomeIcon icon={faDownload} size="lg" />
+                      <span className="underline ms-2">
+                        {lang === 'en' ? 'Download PDF' : 'Télécharger PDF'}
+                      </span>
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -360,14 +362,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.current_assets_subtotal}
+                          {totalsCurrent?.current_assets_subtotal}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.current_assets_subtotal}
+                          {totalsPrevious?.current_assets_subtotal}
                         </td>
                       </tr>
                       <tr className="table-subtitle">

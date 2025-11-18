@@ -186,7 +186,7 @@ function AnnualReportRegularSlide({
                     dangerouslySetInnerHTML={{
                       __html:
                         lang === 'fr'
-                          ? slide.background_quote_fr
+                          ? slide.background_quote_fr.replace(/#8239;/g, '\u00A0')
                           : slide.background_quote,
                     }}
                   />

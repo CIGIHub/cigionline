@@ -299,7 +299,6 @@ function AnnualReportTOCSlide({
                         {(selectedMember.title_line_2 ||
                           selectedMember.title_line_2_fr) && (
                           <div className="person-title">
-                            ,
                             {lang === 'fr'
                               ? selectedMember.title_line_2_fr
                               : selectedMember.title_line_2}
