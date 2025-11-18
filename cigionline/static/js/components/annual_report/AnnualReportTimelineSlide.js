@@ -301,8 +301,8 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
           className={`timeline d-none d-lg-block ${node ? 'timeline-top' : ''}`}
           ref={timelineRef}
         >
-          <p className="date-marker date-marker-beg">2023</p>
-          <p className="date-marker date-marker-end">2024</p>
+          <p className="date-marker date-marker-beg">{slide.year - 1}</p>
+          <p className="date-marker date-marker-end">{slide.year}</p>
           <div className="timeline-line line-start" />
           <div className="ticks">
             <div className="tick">AUG</div>

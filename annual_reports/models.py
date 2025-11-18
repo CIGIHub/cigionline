@@ -804,8 +804,8 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 content_type = 'event'
                 speakers = content_page.author_names
                 event_date = content_page.publishing_date
-                # image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
-                # image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
+                image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
+                image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
             else:
                 authors = content_page.author_names
                 publishing_date = content_page.publishing_date
@@ -813,13 +813,13 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             if content_page.contenttype == 'Opinion':
                 content_type = 'article'
                 subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
-                # image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
-                # image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
+                image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
+                image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
             if content_page.contenttype == 'Publication':
                 content_type = 'publication'
                 subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
-                # image = content_page.specific.image_feature.get_rendition('fill-2560x1600').url if content_page.specific.image_feature else ''
-                # image_thumbnail = content_page.specific.image_feature.get_rendition('fill-142x80').url if content_page.specific.image_feature else ''
+                image = content_page.specific.image_feature.get_rendition('fill-2560x1600').url if content_page.specific.image_feature else ''
+                image_thumbnail = content_page.specific.image_feature.get_rendition('fill-142x80').url if content_page.specific.image_feature else ''
             try:
                 summary = content_page.specific.short_description
             except AttributeError:
