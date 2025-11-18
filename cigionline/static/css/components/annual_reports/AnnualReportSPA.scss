@@ -246,12 +246,12 @@ h1 {
 
   &.scroll-arrow-left {
     border-width: 0 0 1px 1px;
-    transform: rotate(45deg) translateX(-75%);
+    transform: rotate(45deg);
   }
 
   &.scroll-arrow-right {
     border-width: 1px 1px 0 0;
-    transform: rotate(45deg) translateX(-75%);
+    transform: rotate(45deg);
   }
 
   &.scroll-arrow-after-content {

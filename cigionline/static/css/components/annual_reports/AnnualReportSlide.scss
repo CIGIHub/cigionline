@@ -391,6 +391,11 @@ $quote-background-overlay: rgba(0, 0, 0, 0.9);
         background-size: cover;
       }
     }
+
+    &.chairs-message-background-img {
+      background-position: center top;
+      background-size: cover;
+    }
   }
 
   &.video-slide {
