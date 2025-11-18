@@ -54,6 +54,8 @@ function AnnualReportSlide({ slides, basePath }) {
   const [isScrolling, setIsScrolling] = useState(false);
   const [dimUI, setDimUI] = useState(false);
   const [hoverNav, setHoverNav] = useState(false);
+  const defaultImage = slides[1]?.background_image || '';
+  const defaultImageThumbnail = slides[1]?.background_image_thumbnail || '';
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
 
@@ -234,6 +236,8 @@ function AnnualReportSlide({ slides, basePath }) {
           revealableClass={revealableClass}
           setDimUI={setDimUI}
           dimUI={dimUI}
+          defaultImage={defaultImage}
+          defaultImageThumbnail={defaultImageThumbnail}
         />
       )}
 

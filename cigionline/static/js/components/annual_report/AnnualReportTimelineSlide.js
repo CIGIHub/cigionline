@@ -142,7 +142,7 @@ function useDebounced(value, delay = 300) {
   return debounced;
 }
 
-function AnnualReportTimelineSlide({ slide, setDimUI }) {
+function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImageThumbnail }) {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounced(search, 300);
   const [node, setNode] = useState(null);
@@ -374,7 +374,7 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
                     <div
                       className={`preview-image timeline-${cNode.id}-thumbnail`}
                       style={{
-                        backgroundImage: `url('${cNode.image}')`,
+                        backgroundImage: `url('${cNode.image_thumbnail || defaultImageThumbnail}')`,
                       }}
                     />
                   </div>
@@ -422,7 +422,7 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
               node ? (entered ? 'is-entered' : '') : 'is-leaving',
             ].join(' ')}
             style={{
-              backgroundImage: `url('${shownNode.image}'),url('${shownNode.image_thumbnail}')`,
+              backgroundImage: `url('${shownNode.image || defaultImage}'),url('${shownNode.image_thumbnail || defaultImageThumbnail}')`,
             }}
             onTransitionEnd={handleTransitionEnd}
           >
@@ -566,6 +566,8 @@ function AnnualReportTimelineSlide({ slide, setDimUI }) {
 AnnualReportTimelineSlide.propTypes = {
   slide: PropTypes.object.isRequired,
   setDimUI: PropTypes.func.isRequired,
+  defaultImage: PropTypes.string,
+  defaultImageThumbnail: PropTypes.string,
 };
 
 export default AnnualReportTimelineSlide;
