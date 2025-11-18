@@ -225,6 +225,22 @@ $quote-background-overlay: rgba(0, 0, 0, 0.9);
         padding-left: 0;
         text-indent: 0;
       }
+
+      &.font-size-smaller {
+        font-size: 24px;
+      }
+
+      &.font-size-small {
+        font-size: 28px;
+      }
+
+      &.font-size-medium {
+        font-size: 32px;
+      }
+
+      &.font-size-large {
+        font-size: 36px;
+      }
     }
 
     .hover-reveal-quote-line {

@@ -321,6 +321,12 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         ('bottom-left', 'Bottom Left'),
         ('bottom-right', 'Bottom Right'),
     ]
+    QUOTE_SIZES = [
+        ('smaller', 'Smaller'),
+        ('small', 'Small'),
+        ('medium', 'Medium'),
+        ('large', 'Large'),
+    ]
 
     slide_type = models.CharField(
         max_length=255,
@@ -356,7 +362,19 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         related_name="+",
     )
     background_quote = RichTextField(blank=True, help_text="quote for the background image", features=['bold', 'italic', 'link', 'source'])
+    background_quote_font_size = models.CharField(
+        max_length=255,
+        choices=QUOTE_SIZES,
+        default='medium',
+        help_text="Font size of the quote",
+    )
     background_quote_fr = RichTextField(blank=True, help_text="quote for the background image (French)", features=['bold', 'italic', 'link', 'source'])
+    background_quote_font_size_fr = models.CharField(
+        max_length=255,
+        choices=QUOTE_SIZES,
+        default='medium',
+        help_text="Font size of the quote (French)",
+    )
     background_quote_position = models.CharField(
         max_length=255,
         choices=QUOTE_POSITIONS,
@@ -393,7 +411,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 FieldPanel("background_colour"),
                 FieldPanel("background_images"),
                 FieldPanel("background_quote"),
+                FieldPanel("background_quote_font_size"),
                 FieldPanel("background_quote_fr"),
+                FieldPanel("background_quote_font_size_fr"),
                 FieldPanel("background_quote_position"),
             ],
             heading="Background",

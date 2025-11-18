@@ -180,7 +180,9 @@ function AnnualReportRegularSlide({
                   <h3
                     className={`hover-reveal-quote ${
                       dimUI ? 'is-revealed' : ''
-                    }`}
+                    } font-size-${lang === 'fr'
+                      ? slide.background_quote_font_size_fr
+                      : slide.background_quote_font_size}`}
                     dangerouslySetInnerHTML={{
                       __html:
                         lang === 'fr'

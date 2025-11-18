@@ -32,7 +32,7 @@ if 'BONSAI_URL' in os.environ:
         'default': {
             'BACKEND': 'wagtail.search.backends.elasticsearch7',
             'URLS': [os.environ['BONSAI_URL']],
-            'INDEX_PREFIX': 'wagtail_',
+            'INDEX': 'wagtail',
             'TIMEOUT': 300,
             'OPTIONS': {},
             'INDEX_SETTINGS': {},
@@ -137,7 +137,7 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
             'default': {
                 'BACKEND': 'wagtail.search.backends.elasticsearch7',
                 'URLS': [f'http://{es_host}:{es_port}'],
-                'INDEX_PREFIX': 'wagtail_',
+                'INDEX': 'wagtail',
                 'TIMEOUT': 30,
                 'OPTIONS': {},
                 'INDEX_SETTINGS': {},
