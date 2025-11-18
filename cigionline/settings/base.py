@@ -215,7 +215,7 @@ WAGTAILSEARCH_BACKENDS = {
     'default': {
         'BACKEND': 'wagtail.search.backends.elasticsearch7',
         'URLS': ['http://localhost:9200'],
-        'INDEX': 'wagtail',
+        'INDEX_PREFIX': 'wagtail_',
         'TIMEOUT': 30,
         'OPTIONS': {},
         'INDEX_SETTINGS': {
