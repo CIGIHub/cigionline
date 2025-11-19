@@ -1,0 +1,38 @@
+{% load theme_tags %}
+<aside class="dph-sidebar dph-sticky" aria-labelledby="dph-sidebar-heading">
+  <h2 id="dph-sidebar-heading" class="h5 mb-3 dph-sidebar-heading">Application &amp; Program Information</h2>
+
+  <ul class="list-unstyled dph-sidebar-list">
+    <li class="mb-3">
+      <strong>The Digital Policy Hub is not currently accepting applications.</strong>
+    </li>
+
+    <li class="mb-3">
+      The application cycle typically runs early each year, with fellowship applications generally
+      accepted <strong>February through March</strong>. For the latest information and specific dates about Hub
+      fellowship applications, check the program website and CIGI’s social media pages.
+      You can also sign up for our mailing list below to receive updates and reminders.
+    </li>
+
+    <li class="mb-4">
+      <button class="mailing-list-button" role="button" id="mailing-list-button">
+        Sign up for updates
+      </button>
+    </li>
+  </ul>
+  {% dph_related_files as related_files %}
+
+  {% if related_files %}
+    <h2>More Program Information</h2>
+    <ul class="list-unstyled dph-sidebar-list">
+      {% for document in related_files %}
+        <li>
+          <a href="{{ document.value.file.url }}" target="_blank">
+            <i class="fa-solid fa-download"></i>
+            {{ document.value.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</aside>

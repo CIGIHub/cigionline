@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'wagtail.contrib.table_block',
     'wagtail.contrib.styleguide',
     'wagtail.contrib.search_promotions',
+    'wagtail.contrib.settings',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -100,7 +101,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
     'cigionline.middleware.BasicAuthMiddleware',
 
     'wagtail_2fa.middleware.VerifyUserMiddleware',
@@ -163,6 +164,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'wagtail.contrib.settings.context_processors.settings',
             ],
         },
     },

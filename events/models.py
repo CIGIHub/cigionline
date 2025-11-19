@@ -19,7 +19,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django import forms
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
+from streams.blocks import AbstractSubmissionBlock
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
 from wagtail.admin.panels import (
@@ -199,7 +199,6 @@ class EventPage(
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             ('abstract_submission_block', AbstractSubmissionBlock()),
-            ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
         ],
         blank=True,
     )

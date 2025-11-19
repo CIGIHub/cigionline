@@ -68,6 +68,22 @@
       {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
     {% endif %}
 
+    {% if self.disclaimer %}
+      <section class="disclaimer">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <p class="publication-disclaimer">
+                <em>
+                  {{ self.disclaimer }}
+                </em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
     {% include "includes/body.html" with body=self.body %}
 
     {% if self.book_excerpt_download %}
@@ -190,11 +206,13 @@
       </section>
     {% endif %}
 
-    {% if self.author_count > 0 %}
-      {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
-    {% endif %}
-    {% if self.editor_count > 0 %}
-      {% include "includes/about_the_author.html" with authors=self.editors.all editor_count=self.editor_count title_override="About the Editor" %}
+    {% if self.display_authors %}
+      {% if self.author_count > 0 %}
+        {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
+      {% endif %}
+      {% if self.editor_count > 0 %}
+        {% include "includes/about_the_author.html" with authors=self.editors.all editor_count=self.editor_count title_override="About the Editor" %}
+      {% endif %}
     {% endif %}
 
     {% if request.is_preview and self.recommended_content_preview %}

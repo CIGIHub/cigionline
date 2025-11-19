@@ -36,6 +36,7 @@ const config = {
     countryPage: './cigionline/static/pages/country_page/index.js',
     eventListPage: './cigionline/static/pages/event_list_page/index.js',
     eventPage: './cigionline/static/pages/event_page/index.js',
+    facilityRentalsPage: './cigionline/static/pages/facility_rentals_page/index.js',
     fundingPage: './cigionline/static/pages/funding_page/index.js',
     homePage: './cigionline/static/pages/home_page/index.js',
     igcTimelinePage: './cigionline/static/pages/igc_timeline_page/index.js',

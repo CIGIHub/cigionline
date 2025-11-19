@@ -55,7 +55,8 @@ body {
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
       font-family: $heading-font;
     }
 
@@ -110,7 +111,13 @@ body {
           div {
             &:first-child {
               @include media-breakpoint-up(md) {
-                font-size: 4rem;
+                font-size: 3rem;
+              }
+              @include media-breakpoint-up(lg) {
+                font-size: 3.3rem;
+              }
+              @include media-breakpoint-up(xl) {
+                font-size: 3.9rem;
               }
               font-size: 2rem;
               margin-bottom: 2rem;
@@ -238,6 +245,13 @@ body {
 
         .collapsible-paragraph-block {
           .collapsible-header {
+            cursor: pointer;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
+
             .toggle-button {
               @include media-breakpoint-up(md) {
                 left: -1rem;
@@ -245,6 +259,88 @@ body {
               left: auto;
               right: 0;
               line-height: 0.8;
+            }
+          }
+        }
+
+        .publications-list-block {
+          @include link($color: $black, $hover-color: $cigi-primary-colour);
+
+          article {
+            @include media-breakpoint-up(sm) {
+              display: flex;
+            }
+            padding-top: 2rem;
+
+            &:first-child {
+              padding-top: 1rem;
+            }
+
+            &:not(:last-child) {
+              border-bottom: 1px solid $cigi-medium-grey;
+              padding-bottom: 2rem;
+            }
+          }
+
+          .publications-list__publication__img {
+            @include media-breakpoint-up(md) {
+              flex: 0 0 25%;
+            }
+            @include media-breakpoint-up(sm) {
+              margin-bottom: 0;
+              margin-right: 2rem;
+            }
+            margin-bottom: 1rem;
+            flex: 0 0 50%;
+
+            &:hover {
+              img {
+                box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+              }
+            }
+            img {
+              border: 1px solid $cigi-medium-grey;
+              box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+              transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+          }
+
+          h4 {
+            @include media-breakpoint-up(md) {
+              font-size: 1.25rem;
+            }
+            font-size: 1.125rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            text-transform: none;
+          }
+
+          .topics {
+            margin-bottom: 0.5rem;
+
+            li {
+              margin-bottom: 0;
+            }
+          }
+
+          .authors {
+            margin-top: 0;
+            margin-bottom: 0.25rem;
+          }
+
+          .publications-list__publication__type {
+            font-weight: 300;
+            color: $cigi-text-grey;
+            margin-bottom: 0.5rem;
+          }
+        }
+
+        .files-block {
+          ul {
+            list-style: none;
+
+            li {
+              font-size: 1.2rem;
             }
           }
         }

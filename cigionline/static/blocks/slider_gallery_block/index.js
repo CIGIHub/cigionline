@@ -7,50 +7,58 @@ import './css/slider_gallery_block.scss';
 
 Swiper.use([Navigation, Pagination]);
 
-document.addEventListener('DOMContentLoaded', function () {
-  const swiperContainer = document.querySelector('.swiper-container');
-  if (swiperContainer) {
-    const swiper = new Swiper('.swiper-container', {
+document.addEventListener('DOMContentLoaded', () => {
+  const blocks = document.querySelectorAll('.slider-gallery-block');
+
+  blocks.forEach((block) => {
+    const container = block.querySelector('.swiper-container');
+    if (!container) return;
+
+    const slides = container.querySelectorAll('.swiper-slide');
+    const slideCount = slides.length;
+
+    const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+    const desiredSPV = isDesktop ? 3 : 1;
+
+    const enableLoop = slideCount >= desiredSPV + 1;
+
+    const swiper = new Swiper(container, {
+      modules: [Navigation, Pagination, EffectCoverflow, A11y],
       a11y: {
         prevSlideMessage: 'Previous slide',
         nextSlideMessage: 'Next slide',
       },
       slidesPerView: 1,
-      spaceBetween: 0,
-      loop: true,
-      speed: 1000,
       centeredSlides: true,
-      followFinger: false,
-      modules: [Navigation, Pagination, EffectCoverflow, A11y],
+      spaceBetween: 0,
+      speed: 800,
+      loop: true,
+
       effect: 'coverflow',
       coverflowEffect: {
         rotate: 0,
         stretch: 200,
         depth: 400,
-        modifier: 1,
         slideShadows: false,
         scale: 0.7,
       },
+      watchSlidesProgress: true,
+
       breakpoints: {
         992: {
           slidesPerView: 3,
+          slidesPerGroup: 1,
         },
       },
 
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        nextEl: block.querySelector('.swiper-button-next'),
+        prevEl: block.querySelector('.swiper-button-prev'),
       },
-
       pagination: {
-        el: '.swiper-pagination',
+        el: block.querySelector('.swiper-pagination'),
         clickable: true,
-        horizontalClass: 'swiper-pagination-horizontal-styles-disabled',
-      },
-
-      scrollbar: {
-        el: '.swiper-scrollbar',
       },
     });
-  }
+  });
 });

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+{% render_bundle 'facilityRentalsPage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+{% render_bundle 'facilityRentalsPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+{% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+{% include "includes/body.html" with body=self.body %}
+{% if self.related_files %}
+<section class="related-files">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        <h2>Rental Package and Pricing</h2>
+        {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+<section id="rental-inquiry" class="facility-rental-inquiry-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        <h2>Event Rental Inquiry</h2>
+        <p>Contact us today about your event and our team will get back to you shortly.</p>
+
+        {% if messages %}
+        <div class="messages">
+          {% for m in messages %}
+          <div class="alert {% if m.tags %}alert-{{ m.tags }}{% endif %}">{{ m }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" class="cigi-form">
+          {% csrf_token %}
+          <div class="form-grid">
+            <div class="field">
+              <label for="{{ form.first_name.id_for_label }}">First Name</label>
+              {{ form.first_name }}
+            </div>
+            <div class="field">
+              <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+              {{ form.last_name }}
+            </div>
+
+            <div class="field">
+              <label for="{{ form.email.id_for_label }}">Email Address</label>
+              {{ form.email }}
+            </div>
+            <div class="field">
+              <label for="{{ form.phone.id_for_label }}">Phone Number</label>
+              {{ form.phone }}
+            </div>
+
+            <div class="field field--full">
+              <label for="{{ form.company.id_for_label }}">Company / Organization Name</label>
+              {{ form.company }}
+            </div>
+            <div class="field field--full">
+              <label for="{{ form.org_mission.id_for_label }}">Organization Mission</label>
+              {{ form.org_mission }}
+            </div>
+            <div class="field field--full">
+              <label for="{{ form.other_orgs.id_for_label }}">Other Organizations to be Involved in the Event</label>
+              {{ form.other_orgs }}
+            </div>
+
+
+            <div class="field field--full">
+              <label for="{{ form.street.id_for_label }}">Street Address</label>
+              {{ form.street }}
+            </div>
+            <div class="field">
+              <label for="{{ form.city_province.id_for_label }}">City & Province</label>
+              {{ form.city_province }}
+            </div>
+            <div class="field">
+              <label for="{{ form.postal_code.id_for_label }}">Postal Code</label>
+              {{ form.postal_code }}
+            </div>
+
+            <div class="field field--full">
+              <label for="{{ form.event_title.id_for_label }}">Event Full Title</label>
+              {{ form.event_title }}
+            </div>
+
+            <div class="field field--full">
+              <label for="{{ form.purpose.id_for_label }}">Purpose of the Event</label>
+              {{ form.purpose }}
+            </div>
+
+            <div class="field">
+              <label for="{{ form.start_date.id_for_label }}">Event Start Date</label>
+              {{ form.start_date }}
+            </div>
+            <div class="field">
+              <label for="{{ form.end_date.id_for_label }}">Event End Date</label>
+              {{ form.end_date }}
+            </div>
+            <div class="field field--full">
+              <p>* If requesting a multiday event, please provide a breakdown of dates and times in the additional
+                details field.</p>
+            </div>
+            <div class="field">
+              <label for="{{ form.start_time.id_for_label }}">Event Start Time</label>
+              {{ form.start_time }}
+            </div>
+            <div class="field">
+              <label for="{{ form.end_time.id_for_label }}">Event End Time</label>
+              {{ form.end_time }}
+            </div>
+            <div class="field field--full">
+              <p>* Please include setup and tear down time.</p>
+            </div>
+
+            <div class="field">
+              <label for="{{ form.space.id_for_label }}">Event Space</label>
+              {{ form.space }}
+            </div>
+            <div class="field">
+              <label for="{{ form.attendees.id_for_label }}">Number of Attendees</label>
+              {{ form.attendees }}
+            </div>
+
+            <div class="field field--full">
+              <label for="{{ form.details.id_for_label }}">Additional Details</label>
+              {{ form.details }}
+            </div>
+
+            <div class="field field--full">
+              <div class="checkbox-row">
+                {{ form.can_provide_liability }}
+                <label for="{{ form.can_provide_liability.id_for_label }}">I confirm we can provide a $2M liability
+                  certificate before the event</label>
+              </div>
+              <small class="hint">If you cannot provide this, please include who we should contact:</small>
+              {{ form.liability_contact_if_cannot }}
+            </div>
+
+            <div class="visually-hidden">
+              {{ form.website.label_tag }} {{ form.website }}
+            </div>
+          </div>
+
+          {% if form.errors or form.non_field_errors %}
+          <div class="form-errors">
+            {% for field in form %}
+            {% for e in field.errors %}
+            <div class="error"><strong>{{ field.label }}:</strong> {{ e }}</div>
+            {% endfor %}
+            {% endfor %}
+            {% for e in form.non_field_errors %}
+            <div class="error">{{ e }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <button class="button">Send Inquiry</button>
+        </form>
+
+      </div>
+    </div>
+</section>
+{% endblock %}

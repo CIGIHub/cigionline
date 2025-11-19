@@ -1,0 +1,93 @@
+<h2>New Rental Inquiry</h2>
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
+  <tr>
+    <th align="left">First Name</th>
+    <td>{{ data.first_name }}</td>
+  </tr>
+  <tr>
+    <th align="left">Last Name</th>
+    <td>{{ data.last_name }}</td>
+  </tr>
+  <tr>
+    <th align="left">Email</th>
+    <td>{{ data.email }}</td>
+  </tr>
+  <tr>
+    <th align="left">Phone</th>
+    <td>{{ data.phone }}</td>
+  </tr>
+
+  <tr>
+    <th align="left">Company</th>
+    <td>{{ data.company }}</td>
+  </tr>
+  <tr>
+    <th align="left">Organization Mission</th>
+    <td>{{ data.org_mission|linebreaksbr }}</td>
+  </tr>
+  <tr>
+    <th align="left">Other Organizations</th>
+    <td>{{ data.other_orgs|linebreaksbr }}</td>
+  </tr>
+
+  <tr>
+    <th align="left">Street</th>
+    <td>{{ data.street }}</td>
+  </tr>
+  <tr>
+    <th align="left">City & Province</th>
+    <td>{{ data.city_province }}</td>
+  </tr>
+  <tr>
+    <th align="left">Postal Code</th>
+    <td>{{ data.postal_code }}</td>
+  </tr>
+
+  <tr>
+    <th align="left">Event Title</th>
+    <td>{{ data.event_title }}</td>
+  </tr>
+  <tr>
+    <th align="left">Purpose</th>
+    <td>{{ data.purpose|linebreaksbr }}</td>
+  </tr>
+
+  <tr>
+    <th align="left">Start Date</th>
+    <td>{{ data.start_date }}</td>
+  </tr>
+  <tr>
+    <th align="left">End Date</th>
+    <td>{{ data.end_date }}</td>
+  </tr>
+  <tr>
+    <th align="left">Start Time</th>
+    <td>{{ data.start_time }}</td>
+  </tr>
+  <tr>
+    <th align="left">End Time</th>
+    <td>{{ data.end_time }}</td>
+  </tr>
+  <tr>
+    <th align="left">Event Space</th>
+    <td>{{ data.space }}</td>
+  </tr>
+  <tr>
+    <th align="left">Attendees</th>
+    <td>{{ data.attendees }}</td>
+  </tr>
+
+  <tr>
+    <th align="left">Additional Details</th>
+    <td>{{ data.details|linebreaksbr }}</td>
+  </tr>
+  <tr>
+    <th align="left">Liability Certificate</th>
+    <td>
+      {% if data.can_provide_liability %}Will provide{% else %}Cannot provide{% endif %}
+      {% if not data.can_provide_liability and data.liability_contact_if_cannot %}
+      <div><strong>Contact:</strong> {{ data.liability_contact_if_cannot|linebreaksbr }}</div>
+      {% endif %}
+    </td>
+  </tr>
+</table>

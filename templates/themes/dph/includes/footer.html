@@ -8,16 +8,18 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <p>
-          The Hub would like to acknowledge our partnership with Mitacs in
-          developing the proposal and approving an umbrella for support.
-          We’d also like to thank our universities, governments and the private
-          sector partners for their involvement that allows CIGI to offer this
-          transdisciplinary research program.
-        </p>
-        <a href="https://www.mitacs.ca/en">
-          {% include './mitacs_logo.svg' %}
-        </a>
+        <div class="partners">
+          <p>
+            The Hub would like to acknowledge our partnership with Mitacs in
+            developing the proposal and approving an umbrella for support.
+            We’d also like to thank our universities, governments and the private
+            sector partners for their involvement that allows CIGI to offer this
+            transdisciplinary research program.
+          </p>
+          <a href="https://www.mitacs.ca/en" aria-label="Mitacs website" target="_blank" rel="noopener">
+            <img src="/static/themes/dph/assets/Mitacs_Canada_Logo_Tagline_EN_White.png" alt="Mitacs logo" class="mitacs-logo"/>
+          </a>
+        </div>
       </div>
       <div class="col-md-6">
         <div class="email-list">
@@ -30,7 +32,7 @@
           </p>
           <form id='subscribe-form-dph' action="{% url 'subscribe_dph' %}" method="POST">
             {% csrf_token %}
-            <input type="email" name="email" placeholder="enter your email" required>
+            <input type="email" name="email" autocomplete="email" placeholder="enter your email" required id="subscribe-email">
             <input type="submit" value="Sign up">
           </form>
           <div class="response-message" id="response-message"></div>
@@ -43,8 +45,10 @@
           <nav>
             <div class="nav nav-tabs">
               <a class="nav-link {% if self.slug == 'digital-policy-hub' %} active{% endif %}" href="/digital-policy-hub/">About the Hub</a>
+              <a class="nav-link {% if self.slug == 'current-cohort-alumni' %} active{% endif %}" href="/digital-policy-hub/current-cohort-alumni">Current Cohort & Alumni</a>
               <a class="nav-link {% if self.slug == 'working-papers' %} active{% endif %}" href="/digital-policy-hub/working-papers">Working Papers</a>
-              <a class="nav-link {% if self.slug == 'news' %} active{% endif %}" href="/digital-policy-hub/news">News</a>
+              <a class="nav-link {% if self.slug == 'program-speakers' %} active{% endif %}" href="/digital-policy-hub/program-speakers">Program Speakers</a>
+              <a class="nav-link {% if self.slug == 'news' %} active{% endif %}" href="/digital-policy-hub/news">News and Media</a>
             </div>
           </nav>
         </div>

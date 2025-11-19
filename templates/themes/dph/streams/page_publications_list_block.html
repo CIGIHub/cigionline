@@ -1,96 +1,130 @@
 {% load wagtailcore_tags wagtailimages_tags theme_tags %}
 
-<div class="container publications-list-block">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      {% if publications_by_type %}
-        {% for publication in publications_by_type %}
-          <article class="publications-list__publication row">
-            <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
-              <a href="{{ publication.url }}">
-                <div class="img-wrapper">
-                  {% image publication.image_cover fill-695x900 %}
-                </div>
-              </a>
-            </div>
-            <div class="publications-list__publication__right col-md-6 col-lg-8">
-              <div>
-                <h2 class="publications-list__publication__title">
-                  <a href="{{ publication.url }}">{{ publication.title }}</a>
-                </h2>
-                <div class="publications-list__publication__description">
-                  {{ publication.short_description|safe }}
-                </div>
-              </div>
-              <div class="publications-list__publication__author">
-                {% image publication.authors.first.author.image_square fill-300x300 %}
-                <div>
-                  {% with publication.authors.first as author %}
-                    {% if author.hide_link %}
-                      <h3>{{ author.author.title }}</h3>
-                    {% else %}
-                      <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
-                    {% endif %}
-                    <div class="publications-list__publication__author__position">
-                      {% if author.author.position_dph %}
-                        {{ author.author.position_dph }}
-                      {% else %}
-                        {{ author.author.position }}
-                      {% endif %}
-                    </div>
-                    <div class="publications-list__publication__author__position">
-                      {% if publication.dph_term %}
-                        {{ publication.dph_term }} term
-                      {% elif author.author.position_secondary %}
-                        {{ author.author.position_secondary }}
-                      {% else %}
-                        {{ publication.publishing_date|dph_term }}
-                      {% endif %}
-                    </div>
-                  {% endwith %}
-                </div>
-              </div>
-            </div>
-          </article>
-        {% endfor %}
-      {% elif self.publications %}
-        {% for publication in self.publications %}
-          <article class="publications-list__publication row">
-            <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
-              {% image publication.value.image_cover fill-695x900 %}
-            </div>
-            <div class="publications-list__publication__right col-md-6 col-lg-8">
-              <div>
-                <h2 class="publications-list__publication__title">
-                  <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>
-                </h2>
-                <div class="publications-list__publication__description">
-                  {{ publication.value.short_description|safe }}
-                </div>
-              </div>
-              <div class="publications-list__publication__author">
-                {% image publication.value.authors.first.author.image_square fill-300x300 %}
-                <div>
-                  {% with publication.value.authors.first as author %}
-                    {% if author.hide_link or author.author.is_external_profile %}
-                      <h3>{{ author.author.title }}</h3>
-                    {% else %}
-                      <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
-                    {% endif %}
-                    <div class="publications-list__publication__author__position">
-                      {% if author.author.position_dph %}
-                        {{ author.author.position_dph }}
-                      {% else %}
-                        {{ author.author.position }}
-                      {% endif %}
-                    </div>
-                  {% endwith %}
-                </div>
-              </div>
-            </div>
-          </article>
-        {% endfor %}
-      {% endif %}
+<div class="publications-list-block" id="publist" data-filter-scope>
+  <div class="row">
+    <div class="col">
+      <div class="toolbar">
+        <div class="dropdown custom-dropdown keep-open" id="termDropdown">
+          <button class="dropdown-toggle" type="button" id="termsButton" aria-haspopup="true" aria-expanded="false"
+            data-current="">
+            All Terms
+          </button>
+          <div class="dropdown-menu" role="menu" aria-labelledby="termsButton">
+            <ul></ul>
+          </div>
+        </div>
+
+        <div class="dropdown custom-dropdown keep-open" id="topicDropdown">
+          <button class="dropdown-toggle" type="button" id="topicsButton" aria-haspopup="true" aria-expanded="false"
+            data-current="">
+            All Topics
+          </button>
+          <div class="dropdown-menu topics" role="menu" aria-labelledby="topicsButton">
+            <ul></ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+  {% if publications_by_type %}
+  {% for publication in publications_by_type %}
+  {% with term=publication.dph_term %}
+  {% with topics=publication.topics.all %}
+  <article class="publications-list__publication row" data-term="{{ term|slugify }}" data-term-label="{{ term }}"
+    data-topics="{% for t in topics %}{{ t.slug }}{% if not forloop.last %} {% endif %}{% endfor %}">
+    <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
+      <a href="{{ publication.url }}">
+        <div class="img-wrapper">
+          {% image publication.image_cover fill-695x900 %}
+        </div>
+      </a>
+    </div>
+    <div class="publications-list__publication__right col-md-6 col-lg-8">
+      <div>
+        {% include "includes/topics.html" with topics=topics %}
+        <h2 class="publications-list__publication__title">
+          <a href="{{ publication.url }}">{{ publication.title }}</a>
+        </h2>
+        <div class="publications-list__publication__description">
+          {{ publication.short_description|safe }}
+        </div>
+      </div>
+      <div class="publications-list__publication__author">
+        {% image publication.authors.first.author.image_square fill-300x300 %}
+        <div>
+          {% with publication.authors.first as author %}
+          {% if author.hide_link %}
+          <h3>{{ author.author.title }}</h3>
+          {% else %}
+          <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
+          {% endif %}
+          <div class="publications-list__publication__author__position">
+            {% if author.author.position_dph %}
+            {{ author.author.position_dph }}
+            {% else %}
+            {{ author.author.position }}
+            {% endif %}
+          </div>
+          <div class="publications-list__publication__author__position">
+            {% if publication.dph_term %}
+            {{ publication.dph_term }} term
+            {% elif author.author.position_secondary %}
+            {{ author.author.position_secondary }}
+            {% else %}
+            {{ publication.publishing_date|dph_term }}
+            {% endif %}
+          </div>
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </article>
+  {% endwith %}
+  {% endwith %}
+  {% endfor %}
+
+  <div class="publist-spinner" aria-hidden="true"></div>
+  <p class="publist-noresults d-none">No results</p>
+
+  {% elif self.publications %}
+  {% for publication in self.publications %}
+  {% with term=publication.value.dph_term|default:publication.value.publishing_date|dph_term %}
+  <article class="publications-list__publication row" data-term="{{ term|slugify }}" data-term-label="{{ term }}">
+    <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
+      {% image publication.value.image_cover fill-695x900 %}
+    </div>
+    <div class="publications-list__publication__right col-md-6 col-lg-8">
+      <div>
+        <h2 class="publications-list__publication__title">
+          <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>
+        </h2>
+        <div class="publications-list__publication__description">
+          {{ publication.value.short_description|safe }}
+        </div>
+      </div>
+      <div class="publications-list__publication__author">
+        {% image publication.value.authors.first.author.image_square fill-300x300 %}
+        <div>
+          {% with publication.value.authors.first as author %}
+          {% if author.hide_link or author.author.is_external_profile %}
+          <h3>{{ author.author.title }}</h3>
+          {% else %}
+          <h3 class="author"><a href="{% pageurl author.author %}">{{ author.author.title }}</a></h3>
+          {% endif %}
+          <div class="publications-list__publication__author__position">
+            {% if author.author.position_dph %}
+            {{ author.author.position_dph }}
+            {% else %}
+            {{ author.author.position }}
+            {% endif %}
+          </div>
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </article>
+  {% endwith %}
+  {% endfor %}
+  {% endif %}
 </div>
