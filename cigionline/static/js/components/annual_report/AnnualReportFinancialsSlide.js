@@ -702,14 +702,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.unrealizedInvestmentGains}
+                          {totalsCurrent.unrealized_investment_gains}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.unrealizedInvestmentGains}
+                          {totalsPrevious.unrealized_investment_gains}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
