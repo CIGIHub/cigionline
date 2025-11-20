@@ -53,16 +53,16 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Property and equipment',
       leaseInducement:
         lang === 'fr' ? 'Incitatif relatif à un bail' : 'Lease inducement',
-      totalAssets: lang === 'fr' ? 'Total des actifs' : 'Total assets',
+      totalAssets: lang === 'fr' ? 'Total des actifs' : 'Total Assets',
       currentLiabilities:
-        lang === 'fr' ? 'Passifs à court terme' : 'Current liabilities',
+        lang === 'fr' ? 'Passifs à court terme' : 'Current Liabilities',
       accountsPayable:
         lang === 'fr'
           ? 'Comptes créditeurs et charges à payer'
           : 'Accounts payable and accrued liabilities',
       deferredRevenue: lang === 'fr' ? 'Revenus reportés' : 'Deferred revenue',
-      totalLiabilities: lang === 'fr' ? 'Passif total' : 'Total liabilities',
-      fundBalances: lang === 'fr' ? 'Soldes de fonds' : 'Fund balances',
+      totalLiabilities: lang === 'fr' ? 'Passif total' : 'Total Liabilities',
+      fundBalances: lang === 'fr' ? 'Soldes de fonds' : 'Fund Balances',
       capitalAssets:
         lang === 'fr'
           ? 'Investis en immobilisations'
@@ -77,11 +77,11 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Internally restricted',
       unrestricted: lang === 'fr' ? 'Non affecté' : 'Unrestricted',
       totalFundBalances:
-        lang === 'fr' ? 'Solde de fonds' : 'Total fund balances',
+        lang === 'fr' ? 'Solde de fonds' : 'Total Fund Balances',
       totalLiabilitiesAndFundBalances:
         lang === 'fr'
           ? 'Total du passif et des soldes des fonds'
-          : 'Total liabilities and fund balances',
+          : 'Total Liabilities and Fund Balances',
       revenues: lang === 'fr' ? 'Produits' : 'Revenues',
       realizedInvestmentIncome:
         lang === 'fr'
@@ -107,15 +107,15 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
       excessOfExpensesOverRevenues:
         lang === 'fr'
           ? 'Excédent des charges sur les produits'
-          : 'Excess of expenses over revenues',
+          : 'Excess of Expenses Over Revenues',
       fundBalancesBeginningOfYear:
         lang === 'fr'
           ? 'Solde des fonds au début de l’exercice'
-          : 'Fund balances, beginning of year',
+          : 'Fund Balances, Beginning of Year',
       fundBalancesEndOfYear:
         lang === 'fr'
           ? 'Solde des fonds à la fin de l’exercice'
-          : 'Fund balances, end of year',
+          : 'Fund Balances, End of Year',
     };
     return translations[key] || key;
   };
