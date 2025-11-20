@@ -36,86 +36,86 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
 
   const t = (key) => {
     const translations = {
-      currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current Assets',
+      currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current assets',
       cashAndCashEquivalents:
         lang === 'fr'
           ? 'Espèces et quasi-espèces'
-          : 'Cash and Cash Equivalents',
+          : 'Cash and cash equivalents',
       portfolioInvestments:
-        lang === 'fr' ? 'Placements de portefeuille' : 'Portfolio Investments',
-      amountsReceivable: lang === 'fr' ? 'Débiteurs' : 'Amounts Receivable',
+        lang === 'fr' ? 'Placements de portefeuille' : 'Portfolio investments',
+      amountsReceivable: lang === 'fr' ? 'Débiteurs' : 'Amounts receivable',
       prepaidExpenses:
-        lang === 'fr' ? "Frais payés d'avance" : 'Prepaid Expenses',
-      otherAssets: lang === 'fr' ? 'Autres actifs' : 'Other Assets',
+        lang === 'fr' ? "Frais payés d'avance" : 'Prepaid expenses',
+      otherAssets: lang === 'fr' ? 'Autres actifs' : 'Other assets',
       propertyAndEquipment:
         lang === 'fr'
           ? 'Biens immobiliers et équipement'
-          : 'Property and Equipment',
+          : 'Property and equipment',
       leaseInducement:
-        lang === 'fr' ? 'Incitatif relatif à un bail' : 'Lease Inducement',
-      totalAssets: lang === 'fr' ? 'Total des actifs' : 'Total Assets',
+        lang === 'fr' ? 'Incitatif relatif à un bail' : 'Lease inducement',
+      totalAssets: lang === 'fr' ? 'Total des actifs' : 'Total assets',
       currentLiabilities:
-        lang === 'fr' ? 'Passifs à court terme' : 'Current Liabilities',
+        lang === 'fr' ? 'Passifs à court terme' : 'Current liabilities',
       accountsPayable:
         lang === 'fr'
           ? 'Comptes créditeurs et charges à payer'
-          : 'Accounts Payable and Accrued Liabilities',
-      deferredRevenue: lang === 'fr' ? 'Revenus reportés' : 'Deferred Revenue',
-      totalLiabilities: lang === 'fr' ? 'Passif total' : 'Total Liabilities',
-      fundBalances: lang === 'fr' ? 'Soldes de fonds' : 'Fund Balances',
+          : 'Accounts payable and accrued liabilities',
+      deferredRevenue: lang === 'fr' ? 'Revenus reportés' : 'Deferred revenue',
+      totalLiabilities: lang === 'fr' ? 'Passif total' : 'Total liabilities',
+      fundBalances: lang === 'fr' ? 'Soldes de fonds' : 'Fund balances',
       capitalAssets:
         lang === 'fr'
           ? 'Investis en immobilisations'
-          : 'Invested in Capital Assets',
+          : 'Invested in capital assets',
       externallyRestricted:
         lang === 'fr'
           ? 'Affectations d’origine externe'
-          : 'Externally Restricted',
+          : 'Externally restricted',
       internallyRestricted:
         lang === 'fr'
           ? 'Affectations d’origine interne'
-          : 'Internally Restricted',
+          : 'Internally restricted',
       unrestricted: lang === 'fr' ? 'Non affecté' : 'Unrestricted',
       totalFundBalances:
-        lang === 'fr' ? 'Solde de fonds' : 'Total Fund Balances',
+        lang === 'fr' ? 'Solde de fonds' : 'Total fund balances',
       totalLiabilitiesAndFundBalances:
         lang === 'fr'
           ? 'Total du passif et des soldes des fonds'
-          : 'Total Liabilities and Fund Balances',
+          : 'Total liabilities and fund balances',
       revenues: lang === 'fr' ? 'Produits' : 'Revenues',
       realizedInvestmentIncome:
         lang === 'fr'
           ? 'Revenu de placement réalisé'
-          : 'Realized Investment Income',
+          : 'Realized investment income',
       unrealizedInvestmentGains:
         lang === 'fr'
           ? 'Gain de placement non réalisé'
-          : 'Unrealized Investment Gains',
+          : 'Unrealized investment income',
       other: lang === 'fr' ? 'Autres' : 'Other',
       governmentAndOtherGrants:
         lang === 'fr'
           ? 'Subventions (gouvernementales et autres)'
-          : 'Government and Other Grants',
+          : 'Government and other grants',
       expenses: lang === 'fr' ? 'Charges' : 'Expenses',
       researchAndConferences:
-        lang === 'fr' ? 'Recherche et conférences' : 'Research and Conferences',
+        lang === 'fr' ? 'Recherche et conférences' : 'Research and conferences',
       amortization: lang === 'fr' ? 'Amortissement' : 'Amortization',
       administration: lang === 'fr' ? 'Administration' : 'Administration',
       facilities: lang === 'fr' ? 'Installations' : 'Facilities',
       technicalSupport:
-        lang === 'fr' ? 'Soutien technique' : 'Technical Support',
+        lang === 'fr' ? 'Soutien technique' : 'Technical support',
       excessOfExpensesOverRevenues:
         lang === 'fr'
           ? 'Excédent des charges sur les produits'
-          : 'Excess of Expenses Over Revenues',
+          : 'Excess of expenses over revenues',
       fundBalancesBeginningOfYear:
         lang === 'fr'
           ? 'Solde des fonds au début de l’exercice'
-          : 'Fund Balances, Beginning of Year',
+          : 'Fund balances, beginning of year',
       fundBalancesEndOfYear:
         lang === 'fr'
           ? 'Solde des fonds à la fin de l’exercice'
-          : 'Fund Balances, End of Year',
+          : 'Fund balances, end of year',
     };
     return translations[key] || key;
   };
@@ -694,25 +694,6 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         </td>
                       </tr>
                       <tr className="table-line-entry">
-                        <td className="text-col">
-                          {t('unrealizedInvestmentGains')}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {totalsCurrent.unrealized_investment_gains}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {totalsPrevious.unrealized_investment_gains}
-                        </td>
-                      </tr>
-                      <tr className="table-line-entry">
                         <td className="text-col">{t('other')}</td>
                         <td
                           className="num-col dollar-sign"
@@ -742,6 +723,25 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         />
                         <td className="num-col">
                           {totalsPrevious.government_and_other_grants}
+                        </td>
+                      </tr>
+                      <tr className="table-line-entry">
+                        <td className="text-col">
+                          {t('unrealizedInvestmentGains')}
+                        </td>
+                        <td
+                          className="num-col dollar-sign"
+                          aria-label="blank cell"
+                        />
+                        <td className="num-col">
+                          {totalsCurrent.unrealized_investment_gains}
+                        </td>
+                        <td
+                          className="num-col dollar-sign"
+                          aria-label="blank cell"
+                        />
+                        <td className="num-col">
+                          {totalsPrevious.unrealized_investment_gains}
                         </td>
                       </tr>
                       <tr className="table-subtotal">
