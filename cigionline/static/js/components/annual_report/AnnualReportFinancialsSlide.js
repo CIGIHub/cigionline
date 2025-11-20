@@ -36,7 +36,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
 
   const t = (key) => {
     const translations = {
-      currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current assets',
+      currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current Assets',
       cashAndCashEquivalents:
         lang === 'fr'
           ? 'Espèces et quasi-espèces'
@@ -46,7 +46,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
       amountsReceivable: lang === 'fr' ? 'Débiteurs' : 'Amounts receivable',
       prepaidExpenses:
         lang === 'fr' ? "Frais payés d'avance" : 'Prepaid expenses',
-      otherAssets: lang === 'fr' ? 'Autres actifs' : 'Other assets',
+      otherAssets: lang === 'fr' ? 'Autres actifs' : 'Other Assets',
       propertyAndEquipment:
         lang === 'fr'
           ? 'Biens immobiliers et équipement'
