@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0040_emailtemplate_eventpage_max_capacity_and_more'),
+        ('events', '0043_emailtemplate_eventpage_max_capacity_and_more'),
     ]
 
     operations = [

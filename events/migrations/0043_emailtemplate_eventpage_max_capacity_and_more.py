@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0039_alter_eventlistpage_body_alter_eventpage_body'),
+        ('events', '0042_alter_eventlistpage_body_alter_eventpage_body'),
         ('wagtaildocs', '0014_alter_document_file_size'),
     ]
 

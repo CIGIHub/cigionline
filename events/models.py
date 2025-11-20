@@ -29,6 +29,7 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     FieldRowPanel,
 )
+from wagtail.admin.panels import TabbedInterface, ObjectList
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, Collection
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -729,18 +730,6 @@ class EventPage(
             heading='Submission Form',
             classname='collapsible collapsed',
         ),
-        MultiFieldPanel(
-            [
-                FieldPanel('registration_open'),
-                FieldPanel('max_capacity'),
-                InlinePanel('registration_types', label='Registration Types'),
-                RegistrationFormFieldPanel('form_fields', label='Registration Form Fields'),
-                FieldPanel('confirmation_template'),
-                FieldPanel('reminder_template'),
-            ],
-            heading='Registration',
-            classname='collapsible collapsed',
-        ),
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -750,6 +739,25 @@ class EventPage(
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList([
+            MultiFieldPanel(
+                [
+                    FieldPanel('registration_open'),
+                    FieldPanel('max_capacity'),
+                    InlinePanel('registration_types', label='Registration Types'),
+                    RegistrationFormFieldPanel('form_fields', label='Registration Form Fields'),
+                    FieldPanel('confirmation_template'),
+                    FieldPanel('reminder_template'),
+                ],
+                heading='Registration',
+                classname='collapsible collapsed',
+            ),
+        ], heading='Registration'),
+        ObjectList(promote_panels, heading='Promote'),
+        ObjectList(settings_panels, heading='Settings', classname='settings'),
+    ])
 
     search_fields = BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
