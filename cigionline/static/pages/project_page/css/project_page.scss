@@ -37,6 +37,14 @@
       margin-bottom: 0;
     }
   }
+
+  .row {
+    &:last-child {
+      hr {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 .search-table-container {
