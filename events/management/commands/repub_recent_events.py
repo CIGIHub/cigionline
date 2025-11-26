@@ -98,7 +98,6 @@ class Command(BaseCommand):
                 revision.publish(user=hillary)
                 republished += 1
 
-
         self.stdout.write(
             self.style.SUCCESS(
                 f"Done. Processed {processed} EventPages; republished {republished}."
