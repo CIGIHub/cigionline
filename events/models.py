@@ -199,10 +199,10 @@ class EventPage(
         related_name='+',
         verbose_name='Event agenda',
     )
-    event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
+    event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=True)
     event_end = models.DateTimeField(blank=True, null=True)
     event_format = models.CharField(
-        blank=False,
+        blank=True,
         max_length=32,
         null=True,
         choices=EventFormats.choices,
