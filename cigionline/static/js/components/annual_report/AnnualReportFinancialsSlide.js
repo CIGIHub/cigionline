@@ -120,6 +120,8 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
     return translations[key] || key;
   };
 
+  const renderNumber = (num) => (lang === 'fr' ? num.replace(/,/g, ' ') : num);
+
   const totalsCurrent = activeTab?.year_current || {};
   const totalsPrevious = activeTab?.year_previous || {};
 
@@ -295,11 +297,11 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsCurrent?.cash_and_cash_equivalents}
+                          {renderNumber(totalsCurrent?.cash_and_cash_equivalents)}
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsPrevious?.cash_and_cash_equivalents}
+                          {renderNumber(totalsPrevious?.cash_and_cash_equivalents)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -311,14 +313,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.portfolio_investments}
+                          {renderNumber(totalsCurrent?.portfolio_investments)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.portfolio_investments}
+                          {renderNumber(totalsPrevious?.portfolio_investments)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -328,14 +330,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.amounts_receivable}
+                          {renderNumber(totalsCurrent?.amounts_receivable)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.amounts_receivable}
+                          {renderNumber(totalsPrevious?.amounts_receivable)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -345,14 +347,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.prepaid_expenses}
+                          {renderNumber(totalsCurrent?.prepaid_expenses)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.prepaid_expenses}
+                          {renderNumber(totalsPrevious?.prepaid_expenses)}
                         </td>
                       </tr>
                       <tr className="table-subtotal">
@@ -362,14 +364,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.current_assets_subtotal}
+                          {renderNumber(totalsCurrent?.current_assets_subtotal)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.current_assets_subtotal}
+                          {renderNumber(totalsPrevious?.current_assets_subtotal)}
                         </td>
                       </tr>
                       <tr className="table-subtitle">
@@ -394,14 +396,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.property_and_equipment}
+                          {renderNumber(totalsCurrent?.property_and_equipment)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.property_and_equipment}
+                          {renderNumber(totalsPrevious?.property_and_equipment)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -411,14 +413,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.lease_inducement}
+                          {renderNumber(totalsCurrent?.lease_inducement)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.lease_inducement}
+                          {renderNumber(totalsPrevious?.lease_inducement)}
                         </td>
                       </tr>
                       <tr className="table-subtotal">
@@ -428,25 +430,25 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.other_assets_subtotal}
+                          {renderNumber(totalsCurrent?.other_assets_subtotal)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.other_assets_subtotal}
+                          {renderNumber(totalsPrevious?.other_assets_subtotal)}
                         </td>
                       </tr>
                       <tr className="table-total">
                         <td className="text-col">{t('totalAssets')}</td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsCurrent?.total_assets}
+                          {renderNumber(totalsCurrent?.total_assets)}
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsPrevious?.total_assets}
+                          {renderNumber(totalsPrevious?.total_assets)}
                         </td>
                       </tr>
                       <tr className="table-subtitle">
@@ -467,13 +469,13 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
                           {
-                            totalsCurrent?.accounts_payable_and_accrued_liabilities
+                            renderNumber(totalsCurrent?.accounts_payable_and_accrued_liabilities)
                           }
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
                           {
-                            totalsPrevious?.accounts_payable_and_accrued_liabilities
+                            renderNumber(totalsPrevious?.accounts_payable_and_accrued_liabilities)
                           }
                         </td>
                       </tr>
@@ -484,14 +486,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.deferred_revenue}
+                          {renderNumber(totalsCurrent?.deferred_revenue)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.deferred_revenue}
+                          {renderNumber(totalsPrevious?.deferred_revenue)}
                         </td>
                       </tr>
                       <tr className="table-subtotal">
@@ -501,14 +503,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.total_liabilities}
+                          {renderNumber(totalsCurrent?.total_liabilities)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.total_liabilities}
+                          {renderNumber(totalsPrevious?.total_liabilities)}
                         </td>
                       </tr>
                       <tr className="table-subtitle">
@@ -531,14 +533,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.invested_in_capital_assets}
+                          {renderNumber(totalsCurrent?.invested_in_capital_assets)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.invested_in_capital_assets}
+                          {renderNumber(totalsPrevious?.invested_in_capital_assets)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -550,14 +552,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.externally_restricted}
+                          {renderNumber(totalsCurrent?.externally_restricted)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.externally_restricted}
+                          {renderNumber(totalsPrevious?.externally_restricted)}
                         </td>
                       </tr>
                       {(totalsCurrent?.internally_restricted ||
@@ -571,14 +573,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                             aria-label="blank cell"
                           />
                           <td className="num-col">
-                            {totalsCurrent?.internally_restricted}
+                            {renderNumber(totalsCurrent?.internally_restricted)}
                           </td>
                           <td
                             className="num-col dollar-sign"
                             aria-label="blank cell"
                           />
                           <td className="num-col">
-                            {totalsPrevious?.internally_restricted}
+                            {renderNumber(totalsPrevious?.internally_restricted)}
                           </td>
                         </tr>
                       )}
@@ -589,14 +591,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.unrestricted}
+                          {renderNumber(totalsCurrent?.unrestricted)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.unrestricted}
+                          {renderNumber(totalsPrevious?.unrestricted)}
                         </td>
                       </tr>
                       <tr className="table-subtotal">
@@ -606,14 +608,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent?.total_fund_balances}
+                          {renderNumber(totalsCurrent?.total_fund_balances)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious?.total_fund_balances}
+                          {renderNumber(totalsPrevious?.total_fund_balances)}
                         </td>
                       </tr>
                       <tr className="table-final-total">
@@ -622,11 +624,11 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsCurrent?.total_liabilities_and_fund_balances}
+                          {renderNumber(totalsCurrent?.total_liabilities_and_fund_balances)}
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsPrevious?.total_liabilities_and_fund_balances}
+                          {renderNumber(totalsPrevious?.total_liabilities_and_fund_balances)}
                         </td>
                       </tr>
                     </tbody>
@@ -686,11 +688,11 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsCurrent.realized_investment_income}
+                          {renderNumber(totalsCurrent.realized_investment_income)}
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsPrevious.realized_investment_income}
+                          {renderNumber(totalsPrevious.realized_investment_income)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -699,12 +701,12 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
-                        <td className="num-col">{totalsCurrent.other}</td>
+                        <td className="num-col">{renderNumber(totalsCurrent.other)}</td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
-                        <td className="num-col">{totalsPrevious.other}</td>
+                        <td className="num-col">{renderNumber(totalsPrevious.other)}</td>
                       </tr>
                       <tr className="table-line-entry">
                         <td className="text-col">
@@ -715,14 +717,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.government_and_other_grants}
+                          {renderNumber(totalsCurrent.government_and_other_grants)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.government_and_other_grants}
+                          {renderNumber(totalsPrevious.government_and_other_grants)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -734,14 +736,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.unrealized_investment_gains}
+                          {renderNumber(totalsCurrent.unrealized_investment_gains)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.unrealized_investment_gains}
+                          {renderNumber(totalsPrevious.unrealized_investment_gains)}
                         </td>
                       </tr>
                       <tr className="table-subtotal">
@@ -751,14 +753,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.total_revenue}
+                          {renderNumber(totalsCurrent.total_revenue)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.total_revenue}
+                          {renderNumber(totalsPrevious.total_revenue)}
                         </td>
                       </tr>
                       <tr className="table-subtitle">
@@ -783,14 +785,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.research_and_conferences}
+                          {renderNumber(totalsCurrent.research_and_conferences)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.research_and_conferences}
+                          {renderNumber(totalsPrevious.research_and_conferences)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -800,14 +802,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.amortization}
+                          {renderNumber(totalsCurrent.amortization)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.amortization}
+                          {renderNumber(totalsPrevious.amortization)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -817,14 +819,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.administration}
+                          {renderNumber(totalsCurrent.administration)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.administration}
+                          {renderNumber(totalsPrevious.administration)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
@@ -833,12 +835,12 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
-                        <td className="num-col">{totalsCurrent.facilities}</td>
+                        <td className="num-col">{renderNumber(totalsCurrent.facilities)}</td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
-                        <td className="num-col">{totalsPrevious.facilities}</td>
+                        <td className="num-col">{renderNumber(totalsPrevious.facilities)}</td>
                       </tr>
                       <tr className="table-line-entry">
                         <td className="text-col">{t('technicalSupport')}</td>
@@ -847,14 +849,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.technical_support}
+                          {renderNumber(totalsCurrent.technical_support)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.technical_support}
+                          {renderNumber(totalsPrevious.technical_support)}
                         </td>
                       </tr>
                       <tr className="table-subtotal">
@@ -864,14 +866,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.total_expenses}
+                          {renderNumber(totalsCurrent.total_expenses)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.total_expenses}
+                          {renderNumber(totalsPrevious.total_expenses)}
                         </td>
                       </tr>
                       <tr className="table-subtotal no-bottom-border">
@@ -883,14 +885,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.excess_of_expenses_over_revenue}
+                          {renderNumber(totalsCurrent.excess_of_expenses_over_revenue)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.excess_of_expenses_over_revenue}
+                          {renderNumber(totalsPrevious.excess_of_expenses_over_revenue)}
                         </td>
                       </tr>
                       <tr className="table-fund-balances">
@@ -902,14 +904,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsCurrent.fund_balances_beginning_of_year}
+                          {renderNumber(totalsCurrent.fund_balances_beginning_of_year)}
                         </td>
                         <td
                           className="num-col dollar-sign"
                           aria-label="blank cell"
                         />
                         <td className="num-col">
-                          {totalsPrevious.fund_balances_beginning_of_year}
+                          {renderNumber(totalsPrevious.fund_balances_beginning_of_year)}
                         </td>
                       </tr>
                       <tr className="table-final-total">
@@ -918,11 +920,11 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsCurrent.fund_balances_end_of_year}
+                          {renderNumber(totalsCurrent.fund_balances_end_of_year)}
                         </td>
                         <td className="num-col dollar-sign">$</td>
                         <td className="num-col">
-                          {totalsPrevious.fund_balances_end_of_year}
+                          {renderNumber(totalsPrevious.fund_balances_end_of_year)}
                         </td>
                       </tr>
                     </tbody>
