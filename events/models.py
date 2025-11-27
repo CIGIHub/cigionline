@@ -261,7 +261,7 @@ class EventPage(
         max_length=64,
         help_text='Override the button text for the event website. If empty, the button will read "Event Website".'
     )
-    website_url = models.URLField(blank=True, max_length=512)
+    website_url = models.URLField(blank=True, null=True, max_length=512)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
