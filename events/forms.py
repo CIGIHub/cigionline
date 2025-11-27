@@ -1,6 +1,26 @@
 from wagtail.contrib.forms.utils import get_field_clean_name
 from django import forms
 from django.core.exceptions import ValidationError
+import time
+
+
+class HoneypotMixin:
+    hp_field = "website"
+    ts_field = "_ts"
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get(self.hp_field):
+            raise forms.ValidationError("Invalid submission.")
+        # time-trap: must take at least 3s to submit
+        ts = cleaned.get(self.ts_field)
+        if ts is not None:
+            try:
+                if time.time() - float(ts) < 3:
+                    raise forms.ValidationError("Invalid submission.")
+            except (TypeError, ValueError):
+                pass
+        return cleaned
 
 
 def validate_file_size(file):
@@ -84,4 +104,27 @@ def build_dynamic_form(event, reg_type, invite=None):
 
         fields.append((clean_name, FieldClass(**kwargs)))
 
-    return type('EventDynamicForm', (forms.Form,), dict(fields))
+        fields.append((
+            HoneypotMixin.hp_field,
+            forms.CharField(
+                required=False,
+                label="Leave this field blank",
+                widget=forms.TextInput(attrs={
+                      "autocomplete": "off",
+                      "aria-hidden": "true",
+                    "tabindex": "-1",
+                    "class": "hp-field"
+                }),
+            ),
+        ))
+
+        fields.append((
+            HoneypotMixin.ts_field,
+            forms.CharField(
+                required=False,
+                widget=forms.HiddenInput(),
+                initial=lambda: str(time.time()),
+            ),
+        ))
+
+    return type('EventDynamicForm', (HoneypotMixin, forms.Form,), dict(fields))

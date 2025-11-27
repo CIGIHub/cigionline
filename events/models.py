@@ -279,6 +279,9 @@ class EventPage(
     # Registration related fields
     registration_open = models.BooleanField(default=False)
     max_capacity = models.IntegerField(blank=True, null=True)
+    is_private_registration = models.BooleanField(
+        default=False, help_text="Require invite token or private link to register."
+    )
     confirmation_template = models.ForeignKey(
         'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
     )
@@ -402,128 +405,128 @@ class EventPage(
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
 
-    def serve(self, request):
-        get_token(request)
-        form = EventSubmissionForm()
-        email_recipient = ''
+    # def serve(self, request):
+    #     get_token(request)
+    #     form = EventSubmissionForm()
+    #     email_recipient = ''
 
-        if self.theme and self.theme.name == 'Digital Finance':
-            email_recipient = 'digitalfinanceinquiries@cigionline.org'
-        if self.email_recipient:
-            email_recipient = self.email_recipient
+    #     if self.theme and self.theme.name == 'Digital Finance':
+    #         email_recipient = 'digitalfinanceinquiries@cigionline.org'
+    #     if self.email_recipient:
+    #         email_recipient = self.email_recipient
 
-        if self.theme:
-            template = f'themes/{self.get_theme_dir()}/event_page.html'
-        else:
-            template = 'events/event_page.html'
+    #     if self.theme:
+    #         template = f'themes/{self.get_theme_dir()}/event_page.html'
+    #     else:
+    #         template = 'events/event_page.html'
 
-        if email_recipient and request.method == "POST":
-            form = EventSubmissionForm(request.POST, request.FILES)
-            if form.is_valid():
-                uploaded_file = form.cleaned_data['file']
-                email = form.cleaned_data['email']
-                valid_extensions = ['.pdf', '.doc', '.docx']
-                file_extension = uploaded_file.name.lower().split('.')[-1]
+    #     if email_recipient and request.method == "POST":
+    #         form = EventSubmissionForm(request.POST, request.FILES)
+    #         if form.is_valid():
+    #             uploaded_file = form.cleaned_data['file']
+    #             email = form.cleaned_data['email']
+    #             valid_extensions = ['.pdf', '.doc', '.docx']
+    #             file_extension = uploaded_file.name.lower().split('.')[-1]
 
-                if f'.{file_extension}' in valid_extensions:
-                    if self.theme.name == 'Digital Finance':
-                        collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
-                    else:
-                        collection = Collection.objects.get(
-                            name='Event submissions',
-                        )
+    #             if f'.{file_extension}' in valid_extensions:
+    #                 if self.theme.name == 'Digital Finance':
+    #                     collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
+    #                 else:
+    #                     collection = Collection.objects.get(
+    #                         name='Event submissions',
+    #                     )
 
-                    try:
-                        document = Document.objects.create(
-                            title=uploaded_file.name,
-                            file=uploaded_file,
-                            collection=collection,
-                        )
-                        DocumentUpload.objects.create(
-                            document=document, email=email
-                        )
-                        if email_recipient:
-                            try:
-                                send_email_digital_finance(
-                                    recipient=email_recipient,
-                                    subject='Digital Finance Abstract Uploaded Successfully',
-                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
-                                )
-                                send_email_digital_finance(
-                                    recipient=email,
-                                    subject='Abstract Submission Upload Successful',
-                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
-                                )
-                            except Exception as e:
-                                print(str(e))
-                        return JsonResponse(
-                            {
-                                'status': 'success',
-                                'message': 'File uploaded successfully!',
-                            }
-                        )
+    #                 try:
+    #                     document = Document.objects.create(
+    #                         title=uploaded_file.name,
+    #                         file=uploaded_file,
+    #                         collection=collection,
+    #                     )
+    #                     DocumentUpload.objects.create(
+    #                         document=document, email=email
+    #                     )
+    #                     if email_recipient:
+    #                         try:
+    #                             send_email_digital_finance(
+    #                                 recipient=email_recipient,
+    #                                 subject='Digital Finance Abstract Uploaded Successfully',
+    #                                 body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
+    #                             )
+    #                             send_email_digital_finance(
+    #                                 recipient=email,
+    #                                 subject='Abstract Submission Upload Successful',
+    #                                 body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
+    #                             )
+    #                         except Exception as e:
+    #                             print(str(e))
+    #                     return JsonResponse(
+    #                         {
+    #                             'status': 'success',
+    #                             'message': 'File uploaded successfully!',
+    #                         }
+    #                     )
 
-                    except Exception as e:
-                        logging.error("Exception during event form submission", exc_info=True)
-                        error_trace = traceback.format_exc()
-                        print(str(e))
-                        send_email_digifincon_debug(
-                            recipient='jxu@cigionline.org',
-                            subject='File Upload Failed',
-                            body=f"""
-                                    An error occurred during abstract submission:
+    #                 except Exception as e:
+    #                     logging.error("Exception during event form submission", exc_info=True)
+    #                     error_trace = traceback.format_exc()
+    #                     print(str(e))
+    #                     send_email_digifincon_debug(
+    #                         recipient='jxu@cigionline.org',
+    #                         subject='File Upload Failed',
+    #                         body=f"""
+    #                                 An error occurred during abstract submission:
 
-                                    Error: {str(e)}
+    #                                 Error: {str(e)}
 
-                                    Traceback:
-                                    {error_trace}
-                                """,
-                        )
+    #                                 Traceback:
+    #                                 {error_trace}
+    #                             """,
+    #                     )
 
-                        if email_recipient:
-                            send_email_digital_finance(
-                                recipient=email_recipient,
-                                subject='File Upload Failed',
-                                body=f'File upload failed for {email}. Error: {str(e)}',
-                            )
-                        return JsonResponse(
-                            {
-                                'status': 'error',
-                                'message': f'Failed to save file: {str(e)}',
-                            }
-                        )
-                else:
-                    if email_recipient:
-                        send_email_digital_finance(
-                            recipient=email_recipient,
-                            subject='File Upload Failed',
-                            body=f'File upload failed for {email}. Invalid file type.',
-                        )
-                return JsonResponse(
-                    {
-                        'status': 'error',
-                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
-                    }
-                )
-            else:
-                error_message = " ".join(extract_errors_as_string(form.errors))
+    #                     if email_recipient:
+    #                         send_email_digital_finance(
+    #                             recipient=email_recipient,
+    #                             subject='File Upload Failed',
+    #                             body=f'File upload failed for {email}. Error: {str(e)}',
+    #                         )
+    #                     return JsonResponse(
+    #                         {
+    #                             'status': 'error',
+    #                             'message': f'Failed to save file: {str(e)}',
+    #                         }
+    #                     )
+    #             else:
+    #                 if email_recipient:
+    #                     send_email_digital_finance(
+    #                         recipient=email_recipient,
+    #                         subject='File Upload Failed',
+    #                         body=f'File upload failed for {email}. Invalid file type.',
+    #                     )
+    #             return JsonResponse(
+    #                 {
+    #                     'status': 'error',
+    #                     'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
+    #                 }
+    #             )
+    #         else:
+    #             error_message = " ".join(extract_errors_as_string(form.errors))
 
-                if email_recipient:
-                    send_email_digital_finance(
-                        recipient=email_recipient,
-                        subject='Form Submission Failed',
-                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
-                    )
+    #             if email_recipient:
+    #                 send_email_digital_finance(
+    #                     recipient=email_recipient,
+    #                     subject='Form Submission Failed',
+    #                     body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
+    #                 )
 
-                return JsonResponse(
-                    {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
-                )
+    #             return JsonResponse(
+    #                 {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
+    #             )
 
-        return render(request, template, {
-            "page": self,
-            "self": self,
-            "form": form,
-        })
+    #     return render(request, template, {
+    #         "page": self,
+    #         "self": self,
+    #         "form": form,
+    #     })
 
     @property
     def total_confirmed(self):
@@ -745,6 +748,7 @@ class EventPage(
             MultiFieldPanel(
                 [
                     FieldPanel('registration_open'),
+                    FieldPanel('is_private_registration'),
                     FieldPanel('max_capacity'),
                     InlinePanel('registration_types', label='Registration Types'),
                     RegistrationFormFieldPanel('form_fields', label='Registration Form Fields'),
@@ -752,7 +756,7 @@ class EventPage(
                     FieldPanel('reminder_template'),
                 ],
                 heading='Registration',
-                classname='collapsible collapsed',
+                classname='collapsible',
             ),
         ], heading='Registration'),
         ObjectList(promote_panels, heading='Promote'),
