@@ -61,6 +61,30 @@ class Command(BaseCommand):
         for event in event_qs:
             processed += 1
 
+            # Only process pages whose latest revision is after 2016
+            latest_rev = event.get_latest_revision()
+            if not latest_rev:
+                self.stdout.write(
+                    f"Skipping {event.title} (id={event.id}) – no revisions found."
+                )
+                continue
+
+            rev_date = getattr(latest_rev, "created_at", None) or getattr(
+                latest_rev, "submitted_at", None
+            )
+
+            if not rev_date:
+                self.stdout.write(
+                    f"Skipping {event.title} (id={event.id}) – latest revision has no timestamp."
+                )
+                continue
+
+            if rev_date.year <= 2016:
+                self.stdout.write(
+                    f"Skipping {event.title} (id={event.id}) – latest revision is from {rev_date.year}."
+                )
+                continue
+
             last_unpublish = (
                 PageLogEntry.objects.filter(
                     page=event,
@@ -88,6 +112,7 @@ class Command(BaseCommand):
             self.stdout.write(
                 f"{action_text} {event.title} (id={event.id}); "
                 f"unpublished at {last_unpublish.timestamp}. "
+                f"latest revision year={rev_date.year}. "
                 f"exclude_from_search: {old_value} -> {new_value}"
             )
 
