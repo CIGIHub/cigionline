@@ -164,6 +164,16 @@ class ProjectPage(
         help_text='For OGBV theme only',
     )
     task_force_label = models.CharField(max_length=255, blank=True, null=True)
+    featured_pages_format = models.CharField(
+        max_length=20,
+        choices=[
+            ('standard', 'Standard'),
+            ('medium_only', 'Medium Only'),
+            ('large_only', 'Large Only'),
+        ],
+        default='standard',
+        help_text='Select how featured content is displayed on the project page. Medium Only displays medium cards in rows of three. Large Only displays a large card in a single column.',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -219,6 +229,7 @@ class ProjectPage(
                     min_num=0,
                     label='Page',
                 ),
+                FieldPanel('featured_pages_format'),
             ],
             heading='Featured Content',
             classname='collapsible collapsed',

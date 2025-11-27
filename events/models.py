@@ -212,16 +212,16 @@ class EventPage(
         related_name='+',
         verbose_name='Event agenda',
     )
-    event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
+    event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=True)
     event_end = models.DateTimeField(blank=True, null=True)
     event_format = models.CharField(
-        blank=False,
+        blank=True,
         max_length=32,
         null=True,
         choices=EventFormats.choices,
     )
     event_type = models.CharField(
-        blank=False,
+        blank=True,
         max_length=32,
         null=True,
         choices=EventTypes.choices,
@@ -274,7 +274,7 @@ class EventPage(
         max_length=64,
         help_text='Override the button text for the event website. If empty, the button will read "Event Website".'
     )
-    website_url = models.URLField(blank=True, max_length=512)
+    website_url = models.URLField(blank=True, null=True, max_length=512)
 
     # Registration related fields
     registration_open = models.BooleanField(default=False)
