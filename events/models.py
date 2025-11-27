@@ -1,4 +1,6 @@
-from .forms import EventSubmissionForm
+from .forms import EventSubmissionForm, build_dynamic_form
+from .panels import RegistrationFormFieldPanel
+from .utils import save_registrant_from_form
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -7,12 +9,16 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
-from django.db import models
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from modelcluster.fields import ParentalKey
+from django.db import models, transaction
+from django.core import signing
+from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django import forms
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import AbstractSubmissionBlock
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
@@ -21,12 +27,18 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
+    FieldRowPanel,
 )
+from wagtail.admin.panels import TabbedInterface, ObjectList
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, Collection
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.models import Document
 from wagtail.search import index
+from wagtail.snippets.models import register_snippet
+from wagtail import blocks
+from wagtail.contrib.forms.models import AbstractFormField
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 import pytz
 import re
 import urllib.parse
@@ -122,6 +134,7 @@ class EventListPageFeaturedEvent(Orderable):
 
 
 class EventPage(
+    RoutablePageMixin,
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
@@ -263,6 +276,19 @@ class EventPage(
     )
     website_url = models.URLField(blank=True, null=True, max_length=512)
 
+    # Registration related fields
+    registration_open = models.BooleanField(default=False)
+    max_capacity = models.IntegerField(blank=True, null=True)
+    is_private_registration = models.BooleanField(
+        default=False, help_text="Require invite token or private link to register."
+    )
+    confirmation_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
+    reminder_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -379,128 +405,247 @@ class EventPage(
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
 
-    def serve(self, request):
-        get_token(request)
-        form = EventSubmissionForm()
-        email_recipient = ''
+    # def serve(self, request):
+    #     get_token(request)
+    #     form = EventSubmissionForm()
+    #     email_recipient = ''
 
-        if self.theme and self.theme.name == 'Digital Finance':
-            email_recipient = 'digitalfinanceinquiries@cigionline.org'
-        if self.email_recipient:
-            email_recipient = self.email_recipient
+    #     if self.theme and self.theme.name == 'Digital Finance':
+    #         email_recipient = 'digitalfinanceinquiries@cigionline.org'
+    #     if self.email_recipient:
+    #         email_recipient = self.email_recipient
 
-        if self.theme:
-            template = f'themes/{self.get_theme_dir()}/event_page.html'
+    #     if self.theme:
+    #         template = f'themes/{self.get_theme_dir()}/event_page.html'
+    #     else:
+    #         template = 'events/event_page.html'
+
+    #     if email_recipient and request.method == "POST":
+    #         form = EventSubmissionForm(request.POST, request.FILES)
+    #         if form.is_valid():
+    #             uploaded_file = form.cleaned_data['file']
+    #             email = form.cleaned_data['email']
+    #             valid_extensions = ['.pdf', '.doc', '.docx']
+    #             file_extension = uploaded_file.name.lower().split('.')[-1]
+
+    #             if f'.{file_extension}' in valid_extensions:
+    #                 if self.theme.name == 'Digital Finance':
+    #                     collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
+    #                 else:
+    #                     collection = Collection.objects.get(
+    #                         name='Event submissions',
+    #                     )
+
+    #                 try:
+    #                     document = Document.objects.create(
+    #                         title=uploaded_file.name,
+    #                         file=uploaded_file,
+    #                         collection=collection,
+    #                     )
+    #                     DocumentUpload.objects.create(
+    #                         document=document, email=email
+    #                     )
+    #                     if email_recipient:
+    #                         try:
+    #                             send_email_digital_finance(
+    #                                 recipient=email_recipient,
+    #                                 subject='Digital Finance Abstract Uploaded Successfully',
+    #                                 body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
+    #                             )
+    #                             send_email_digital_finance(
+    #                                 recipient=email,
+    #                                 subject='Abstract Submission Upload Successful',
+    #                                 body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
+    #                             )
+    #                         except Exception as e:
+    #                             print(str(e))
+    #                     return JsonResponse(
+    #                         {
+    #                             'status': 'success',
+    #                             'message': 'File uploaded successfully!',
+    #                         }
+    #                     )
+
+    #                 except Exception as e:
+    #                     logging.error("Exception during event form submission", exc_info=True)
+    #                     error_trace = traceback.format_exc()
+    #                     print(str(e))
+    #                     send_email_digifincon_debug(
+    #                         recipient='jxu@cigionline.org',
+    #                         subject='File Upload Failed',
+    #                         body=f"""
+    #                                 An error occurred during abstract submission:
+
+    #                                 Error: {str(e)}
+
+    #                                 Traceback:
+    #                                 {error_trace}
+    #                             """,
+    #                     )
+
+    #                     if email_recipient:
+    #                         send_email_digital_finance(
+    #                             recipient=email_recipient,
+    #                             subject='File Upload Failed',
+    #                             body=f'File upload failed for {email}. Error: {str(e)}',
+    #                         )
+    #                     return JsonResponse(
+    #                         {
+    #                             'status': 'error',
+    #                             'message': f'Failed to save file: {str(e)}',
+    #                         }
+    #                     )
+    #             else:
+    #                 if email_recipient:
+    #                     send_email_digital_finance(
+    #                         recipient=email_recipient,
+    #                         subject='File Upload Failed',
+    #                         body=f'File upload failed for {email}. Invalid file type.',
+    #                     )
+    #             return JsonResponse(
+    #                 {
+    #                     'status': 'error',
+    #                     'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
+    #                 }
+    #             )
+    #         else:
+    #             error_message = " ".join(extract_errors_as_string(form.errors))
+
+    #             if email_recipient:
+    #                 send_email_digital_finance(
+    #                     recipient=email_recipient,
+    #                     subject='Form Submission Failed',
+    #                     body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
+    #                 )
+
+    #             return JsonResponse(
+    #                 {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
+    #             )
+
+    #     return render(request, template, {
+    #         "page": self,
+    #         "self": self,
+    #         "form": form,
+    #     })
+
+    @property
+    def total_confirmed(self):
+        return self.registrants.filter(status=Registrant.Status.CONFIRMED).count()
+
+    def has_capacity_for(self, reg_type_id: int) -> bool:
+        # Check per‑type and overall capacity
+        rt = self.registration_types.get(id=reg_type_id)
+        if rt.capacity is not None:
+            if rt.confirmed_count >= rt.capacity:
+                return False
+        if self.max_total_capacity is not None and self.total_confirmed >= self.max_total_capacity:
+            return False
+        return True
+
+    @property
+    def register_url(self):
+        return self.url + "register/"
+
+    # ---------- ROUTES ----------
+
+    @route(r"^register/$")
+    def register_entry(self, request, *args, **kwargs):
+        """
+        Landing step. Validates invite token (if required) and shows
+        allowed RegistrationType choices OR skips straight to form
+        if only one type is available.
+        """
+        invite = self._get_invite_from_request(request)
+
+        if self.is_private_registration and not invite:
+            # private event, no token
+            raise PermissionDenied("Private registration")
+
+        # Compute allowed types
+        if invite and invite.allowed_types.exists():
+            types_qs = self.registration_types.filter(
+                id__in=invite.allowed_types.values_list('id', flat=True)
+            )
+        elif self.is_private_registration:
+            # private but invite doesn't specify types => no choices
+            types_qs = self.registration_types.none()
         else:
-            template = 'events/event_page.html'
+            # public event: show only public types
+            types_qs = self.registration_types.filter(is_public=True)
 
-        if email_recipient and request.method == "POST":
-            form = EventSubmissionForm(request.POST, request.FILES)
-            if form.is_valid():
-                uploaded_file = form.cleaned_data['file']
-                email = form.cleaned_data['email']
-                valid_extensions = ['.pdf', '.doc', '.docx']
-                file_extension = uploaded_file.name.lower().split('.')[-1]
+        types = list(types_qs.order_by('sort_order'))
 
-                if f'.{file_extension}' in valid_extensions:
-                    if self.theme.name == 'Digital Finance':
-                        collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
-                    else:
-                        collection = Collection.objects.get(
-                            name='Event submissions',
-                        )
+        if not types:
+            return render(request, "events/registration_no_types.html", {"event": self})
 
-                    try:
-                        document = Document.objects.create(
-                            title=uploaded_file.name,
-                            file=uploaded_file,
-                            collection=collection,
-                        )
-                        DocumentUpload.objects.create(
-                            document=document, email=email
-                        )
-                        if email_recipient:
-                            try:
-                                send_email_digital_finance(
-                                    recipient=email_recipient,
-                                    subject='Digital Finance Abstract Uploaded Successfully',
-                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
-                                )
-                                send_email_digital_finance(
-                                    recipient=email,
-                                    subject='Abstract Submission Upload Successful',
-                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
-                                )
-                            except Exception as e:
-                                print(str(e))
-                        return JsonResponse(
-                            {
-                                'status': 'success',
-                                'message': 'File uploaded successfully!',
-                            }
-                        )
+        if len(types) == 1:
+            # Skip chooser and go straight to form for the single allowed type
+            return redirect(self.url + f"register/{types[0].slug}/")
 
-                    except Exception as e:
-                        logging.error("Exception during event form submission", exc_info=True)
-                        error_trace = traceback.format_exc()
-                        print(str(e))
-                        send_email_digifincon_debug(
-                            recipient='jxu@cigionline.org',
-                            subject='File Upload Failed',
-                            body=f"""
-                                    An error occurred during abstract submission:
-
-                                    Error: {str(e)}
-
-                                    Traceback:
-                                    {error_trace}
-                                """,
-                        )
-
-                        if email_recipient:
-                            send_email_digital_finance(
-                                recipient=email_recipient,
-                                subject='File Upload Failed',
-                                body=f'File upload failed for {email}. Error: {str(e)}',
-                            )
-                        return JsonResponse(
-                            {
-                                'status': 'error',
-                                'message': f'Failed to save file: {str(e)}',
-                            }
-                        )
-                else:
-                    if email_recipient:
-                        send_email_digital_finance(
-                            recipient=email_recipient,
-                            subject='File Upload Failed',
-                            body=f'File upload failed for {email}. Invalid file type.',
-                        )
-                return JsonResponse(
-                    {
-                        'status': 'error',
-                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
-                    }
-                )
-            else:
-                error_message = " ".join(extract_errors_as_string(form.errors))
-
-                if email_recipient:
-                    send_email_digital_finance(
-                        recipient=email_recipient,
-                        subject='Form Submission Failed',
-                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
-                    )
-
-                return JsonResponse(
-                    {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
-                )
-
-        return render(request, template, {
-            "page": self,
-            "self": self,
-            "form": form,
+        return render(request, "events/registration_type_select.html", {
+            "event": self, "types": types, "invite": invite
         })
+
+    @route(r"^register/(?P<type_slug>[-\w]+)/$")
+    def register_form(self, request, type_slug, *args, **kwargs):
+        """
+        The actual registration page. Renders dynamic fields based on
+        the chosen RegistrationType and (optionally) the invite token.
+        """
+        reg_type = get_object_or_404(self.registration_types, slug=type_slug)
+
+        invite = self._get_invite_from_request(request)
+
+        if self.is_private_registration:
+            if not invite or not invite.is_valid():
+                raise PermissionDenied("Invite invalid or expired.")
+            # If invite restricts types, enforce it:
+            if invite.allowed_types.exists() and reg_type.id not in invite.allowed_types.values_list('id', flat=True):
+                raise PermissionDenied("Invite not valid for this registration type.")
+
+        # Build dynamic form (see helper below)
+        form_class = build_dynamic_form(self, reg_type, invite)
+        if request.method == "POST":
+            form = form_class(request.POST, request.FILES)
+            if form.is_valid():
+                registrant = save_registrant_from_form(self, reg_type, form, invite)
+                # Atomically burn invite usage if present
+                if invite:
+                    updated = Invite.objects.filter(pk=invite.pk, used_count__lt=models.F('max_uses')) \
+                                            .update(used_count=models.F('used_count') + 1)
+                    if not updated:
+                        form.add_error(None, "This invite link has already been used.")
+                        return render(request, "events/registration_form.html",
+                                      {"event": self, "reg_type": reg_type, "form": form, "invite": invite})
+
+                confirmed = registrant.confirm_with_capacity()
+                # send_confirmation_async(registrant, confirmed)
+                messages.success(request, "Thanks—you're {}.".format("confirmed" if confirmed else "on the waitlist"))
+                return redirect(self.url)
+        else:
+            form = form_class()
+
+        return render(request, "events/registration_form.html", {
+            "event": self, "reg_type": reg_type, "form": form, "invite": invite
+        })
+
+    def _get_invite_from_request(self, request):
+        """
+        Accepts invite via ?invite=TOKEN once, then persists it in session.
+        """
+        token = request.GET.get("invite")
+        if token:
+            # validate basic shape; we’ll check is_valid() later
+            invite = Invite.objects.filter(event=self, token=token).first()
+            if invite:
+                request.session[f"invite:{self.id}"] = token
+                return invite
+
+        # fallback to session
+        token = request.session.get(f"invite:{self.id}")
+        if token:
+            return Invite.objects.filter(event=self, token=token).first()
+        return None
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -597,6 +742,26 @@ class EventPage(
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList([
+            MultiFieldPanel(
+                [
+                    FieldPanel('registration_open'),
+                    FieldPanel('is_private_registration'),
+                    FieldPanel('max_capacity'),
+                    InlinePanel('registration_types', label='Registration Types'),
+                    RegistrationFormFieldPanel('form_fields', label='Registration Form Fields'),
+                    FieldPanel('confirmation_template'),
+                    FieldPanel('reminder_template'),
+                ],
+                heading='Registration',
+                classname='collapsible',
+            ),
+        ], heading='Registration'),
+        ObjectList(promote_panels, heading='Promote'),
+        ObjectList(settings_panels, heading='Settings', classname='settings'),
+    ])
 
     search_fields = BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
@@ -612,3 +777,142 @@ class EventPage(
     class Meta:
         verbose_name = 'Event'
         verbose_name_plural = 'Events'
+
+
+class RegistrationType(Orderable):
+    event = ParentalKey(EventPage, on_delete=models.CASCADE, related_name='registration_types')
+    name = models.CharField(max_length=120)
+    slug = models.SlugField(max_length=140)
+    capacity = models.PositiveIntegerField(null=True, blank=True)
+    is_public = models.BooleanField(default=True, help_text="If False, only invitees can see/use.")
+    custom_confirmation_text = RichTextField(blank=True)
+
+    panels = [
+        FieldRowPanel([FieldPanel('name'), FieldPanel('slug')]),
+        FieldRowPanel([FieldPanel('capacity'), FieldPanel('is_public')]),
+        FieldPanel('custom_confirmation_text'),
+    ]
+
+    @property
+    def confirmed_count(self):
+        return self.event.registrants.filter(
+            registration_type_id=self.id, status=Registrant.Status.CONFIRMED
+        ).count()
+
+    def __str__(self):
+        if self.capacity is not None:
+            return f"{self.name} (cap {self.capacity})"
+        return self.name
+
+
+class RegistrationFormField(AbstractFormField):
+    event = ParentalKey(EventPage, on_delete=models.CASCADE, related_name='form_fields')
+
+    show_for_types = ParentalManyToManyField('events.RegistrationType', blank=True)
+    required_for_types = ParentalManyToManyField('events.RegistrationType', blank=True, related_name='+')
+
+    panels = AbstractFormField.panels + [
+        FieldPanel('show_for_types', widget=forms.CheckboxSelectMultiple),
+        FieldPanel('required_for_types', widget=forms.CheckboxSelectMultiple),
+    ]
+
+
+class Invite(models.Model):
+    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='invites')
+    email = models.EmailField()
+    token = models.CharField(max_length=64, unique=True)
+    allowed_types = models.ManyToManyField(RegistrationType, blank=True)
+    max_uses = models.PositiveIntegerField(default=1)
+    used_count = models.PositiveIntegerField(default=0)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
+    def is_valid(self):
+        if self.expires_at and timezone.now() > self.expires_at:
+            return False
+        return self.used_count < self.max_uses
+
+    @staticmethod
+    def generate_token(payload: dict):
+        return signing.TimestampSigner().sign_object(payload)
+
+
+class Registrant(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        CONFIRMED = "confirmed", "Confirmed"
+        WAITLISTED = "waitlisted", "Waitlisted"
+        CANCELLED = "cancelled", "Cancelled"
+
+    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='registrants')
+    registration_type = models.ForeignKey(RegistrationType, on_delete=models.PROTECT)
+    email = models.EmailField()
+    first_name = models.CharField(max_length=120, blank=True)
+    last_name = models.CharField(max_length=120, blank=True)
+    # Store editor‑defined answers
+    answers = models.JSONField(default=dict, blank=True)
+    # Uploaded files stored as Documents; keep ids here for quick access
+    uploaded_document_ids = models.JSONField(default=list, blank=True)
+    invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [('event', 'email', 'registration_type')]  # tweak if needed
+
+    @transaction.atomic
+    def confirm_with_capacity(self):
+        # Capacity‑safe transition to CONFIRMED, else WAITLIST if enabled
+        ev = self.event
+        if ev.has_capacity_for(self.registration_type_id):
+            # Lock row(s) to avoid race
+            type_row = RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
+            total_cap = ev.max_total_capacity
+            # Recheck in tx
+            if ((type_row.capacity is None or
+                 ev.registrants.filter(registration_type=type_row, status=self.Status.CONFIRMED).count() < type_row.capacity) and
+                    (total_cap is None or ev.registrants.filter(status=self.Status.CONFIRMED).count() < total_cap)):
+                self.status = self.Status.CONFIRMED
+                self.save(update_fields=['status'])
+                return True
+        if ev.waitlist_enabled:
+            self.status = self.Status.WAITLISTED
+            self.save(update_fields=['status'])
+        return False
+
+
+@register_snippet
+class EmailTemplate(models.Model):
+    name = models.CharField(max_length=120)
+    subject = models.CharField(max_length=200)
+    # Body supports rich content + optional placeholder merge fields
+    body = StreamField([
+        ('paragraph', blocks.RichTextBlock(features=["bold", "italic", "link", "ul", "ol"])),
+        ('attachment_hint', blocks.StructBlock([
+            ('note', blocks.TextBlock(required=False)),
+        ], icon="paperclip", label="Attachment Hint (non‑rendered)")),
+    ], use_json_field=True)
+
+    # Example: {{ event.title }}, {{ registrant.first_name }}, {{ registration_type.name }}
+    merge_vars_help = models.TextField(blank=True)
+
+    panels = [FieldPanel('name'), FieldPanel('subject'), FieldPanel('body'), FieldPanel('merge_vars_help')]
+
+
+class EmailCampaign(models.Model):
+    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='email_campaigns')
+    template = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT)
+    scheduled_for = models.DateTimeField()
+    # Audience filters
+    include_statuses = models.JSONField(default=list)  # e.g., ["confirmed", "waitlisted"]
+    include_type_ids = models.JSONField(default=list)  # list of RegistrationType IDs
+    # Optional single attachment via Wagtail Documents
+    attachment = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel('template'),
+        FieldPanel('scheduled_for'),
+        FieldPanel('include_statuses'),
+        FieldPanel('include_type_ids'),
+        FieldPanel('attachment'),
+    ]

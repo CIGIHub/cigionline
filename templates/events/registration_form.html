@@ -1,0 +1,100 @@
+{# templates/events/registration_form.html #}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; Back to event</a>
+
+      <h1 class="mb-1">{{ event.title }}</h1>
+      <p class="text-muted mb-4">{{ reg_type.name }} registration</p>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} mb-4">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      {% if invite %}
+        <div class="alert alert-info d-flex align-items-start gap-2">
+          <div>
+            <strong>Private invitation</strong><br>
+            {% if invite.email %}This registration is linked to <em>{{ invite.email }}</em>.{% else %}Your invite token has been recognized.{% endif %}
+            {% if invite.allowed_types.exists %}
+              Only specific registration options are available with this invite.
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <dl class="row mb-0 small">
+            <dt class="col-sm-3">Date &amp; time</dt>
+            <dd class="col-sm-9">{{ event.date_time|date:"F j, Y · g:ia T" }}</dd>
+            {% if event.location %}
+              <dt class="col-sm-3">Location</dt>
+              <dd class="col-sm-9">{{ event.location }}</dd>
+            {% endif %}
+          </dl>
+        </div>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        {# Render fields with labels, help text, and per-field errors #}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ field.id_for_label }}">
+              {{ field.label }}
+              {% if field.field.required %}<span class="text-danger" aria-hidden="true">*</span>{% endif %}
+            </label>
+            {% if field.errors %}
+              <div class="is-invalid"></div>
+            {% endif %}
+
+            {# Add Bootstrap classes to widgets where possible #}
+            {% if field.field.widget.input_type == "file" %}
+              {{ field }}
+            {% elif field|slice:":0" and False %}
+              {# noop placeholder #}
+            {% else %}
+              {{ field }}
+            {% endif %}
+
+            {% if field.help_text %}
+              <div class="form-text">{{ field.help_text|safe }}</div>
+            {% endif %}
+            {% if field.errors %}
+              <div class="invalid-feedback d-block">
+                {{ field.errors|join:", " }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        {# Optional: CAPTCHA slot #}
+        {# {% include "partials/recaptcha.html" %} #}
+
+        <button type="submit" class="btn btn-primary">
+          Submit registration
+        </button>
+      </form>
+
+      <p class="mt-4 small text-muted">
+        By submitting this form, you agree to our terms and privacy policy.
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
