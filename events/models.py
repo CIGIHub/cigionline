@@ -208,7 +208,7 @@ class EventPage(
         choices=EventFormats.choices,
     )
     event_type = models.CharField(
-        blank=False,
+        blank=True,
         max_length=32,
         null=True,
         choices=EventTypes.choices,
