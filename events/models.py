@@ -1,4 +1,5 @@
-from .forms import EventSubmissionForm, build_dynamic_form
+from .forms import build_dynamic_form
+from .forms_admin import EventPageAdminForm
 from .panels import RegistrationFormFieldPanel
 from .utils import save_registrant_from_form
 from core.models import (
@@ -9,8 +10,6 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db import models, transaction
@@ -20,8 +19,6 @@ from django.contrib import messages
 from django import forms
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from streams.blocks import AbstractSubmissionBlock
-from uploads.models import DocumentUpload
-from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -31,9 +28,8 @@ from wagtail.admin.panels import (
 )
 from wagtail.admin.panels import TabbedInterface, ObjectList
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page, Collection
+from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.documents.models import Document
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
 from wagtail import blocks
@@ -42,8 +38,6 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 import pytz
 import re
 import urllib.parse
-import traceback
-import logging
 
 
 class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -196,6 +190,8 @@ class EventPage(
         TOKYO = ('Asia/Tokyo', '(UTC+09:00) Tokyo Time')
         SYDNEY = ('Australia/Sydney', '(UTC+10:00/11:00) AUS Eastern Time')
         AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
+
+    base_form_class = EventPageAdminForm
 
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
@@ -751,7 +747,7 @@ class EventPage(
                     FieldPanel('is_private_registration'),
                     FieldPanel('max_capacity'),
                     InlinePanel('registration_types', label='Registration Types'),
-                    RegistrationFormFieldPanel('form_fields', label='Registration Form Fields'),
+                    InlinePanel('form_fields', label='Registration Form Fields'),
                     FieldPanel('confirmation_template'),
                     FieldPanel('reminder_template'),
                 ],
@@ -780,7 +776,7 @@ class EventPage(
 
 
 class RegistrationType(Orderable):
-    event = ParentalKey(EventPage, on_delete=models.CASCADE, related_name='registration_types')
+    event = ParentalKey('events.EventPage', on_delete=models.CASCADE, related_name='registration_types')
     name = models.CharField(max_length=120)
     slug = models.SlugField(max_length=140)
     capacity = models.PositiveIntegerField(null=True, blank=True)
@@ -806,8 +802,7 @@ class RegistrationType(Orderable):
 
 
 class RegistrationFormField(AbstractFormField):
-    event = ParentalKey(EventPage, on_delete=models.CASCADE, related_name='form_fields')
-
+    event = ParentalKey('events.EventPage', on_delete=models.CASCADE, related_name='form_fields')
     show_for_types = ParentalManyToManyField('events.RegistrationType', blank=True)
     required_for_types = ParentalManyToManyField('events.RegistrationType', blank=True, related_name='+')
 
