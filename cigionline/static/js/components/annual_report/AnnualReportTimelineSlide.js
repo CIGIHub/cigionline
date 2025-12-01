@@ -14,6 +14,38 @@ const DAYS_IN_YEAR = 365;
 const RADIUS = 5;
 const TIMELINE_MIDDLE = 300;
 
+function getMonthLabel(monthIndex, lang) {
+  const monthNamesEn = [
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC',
+  ];
+  const monthNamesFr = [
+    'JAN',
+    'FÉV',
+    'MARS',
+    'AVRIL',
+    'MAI',
+    'JUIN',
+    'JUIL',
+    'AOÛT',
+    'SEPT',
+    'OCT',
+    'NOV',
+    'DÉC',
+  ];
+  return lang === 'fr' ? monthNamesFr[monthIndex] : monthNamesEn[monthIndex];
+}
+
 function getNodeDate(node) {
   return new Date(node.published_date || node.event_date);
 }
@@ -142,7 +174,13 @@ function useDebounced(value, delay = 300) {
   return debounced;
 }
 
-function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImageThumbnail }) {
+function AnnualReportTimelineSlide({
+  slide,
+  setDimUI,
+  defaultImage,
+  defaultImageThumbnail,
+  lang,
+}) {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounced(search, 300);
   const [node, setNode] = useState(null);
@@ -227,7 +265,13 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
         <div className="container">
           <div className="row">
             <div className="col-md-8">
-              <h1>Explore Timeline</h1>
+              <h1
+                aria-live="assertive"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    lang === 'fr' ? slide.slide_title_fr : slide.slide_title,
+                }}
+              />
             </div>
             <div className="col-md-4">
               <div className="row">
@@ -244,7 +288,7 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
               </div>
               <div className="row">
                 <div className="col clearfix type-label">
-                  <span className="timeline-bubble-label">Events</span>
+                  <span className="timeline-bubble-label">{lang === 'fr' ? 'Événements' : 'Events'}</span>
                   <div className="timeline-bubble-preview event" />
                 </div>
               </div>
@@ -260,7 +304,7 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search"
+                placeholder={lang === 'fr' ? 'Rechercher' : 'Search'}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -305,31 +349,31 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
           <p className="date-marker date-marker-end">{slide.year}</p>
           <div className="timeline-line line-start" />
           <div className="ticks">
-            <div className="tick">AUG</div>
+            <div className="tick">{getMonthLabel(7, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">SEP</div>
+            <div className="tick line">{getMonthLabel(8, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">OCT</div>
+            <div className="tick line">{getMonthLabel(9, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">NOV</div>
+            <div className="tick line">{getMonthLabel(10, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">DEC</div>
+            <div className="tick line">{getMonthLabel(11, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">JAN</div>
+            <div className="tick line">{getMonthLabel(0, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">FEB</div>
+            <div className="tick line">{getMonthLabel(1, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">MAR</div>
+            <div className="tick line">{getMonthLabel(2, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">APR</div>
+            <div className="tick line">{getMonthLabel(3, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">MAY</div>
+            <div className="tick line">{getMonthLabel(4, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">JUN</div>
+            <div className="tick line">{getMonthLabel(5, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick line">JUL</div>
+            <div className="tick line">{getMonthLabel(6, lang)}</div>
             <div className="tick line">&nbsp;</div>
-            <div className="tick">AUG</div>
+            <div className="tick">{getMonthLabel(7, lang)}</div>
           </div>
           <div className="timeline-line line-end" />
 
@@ -374,7 +418,9 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
                     <div
                       className={`preview-image timeline-${cNode.id}-thumbnail`}
                       style={{
-                        backgroundImage: `url('${cNode.image_thumbnail || defaultImageThumbnail}')`,
+                        backgroundImage: `url('${
+                          cNode.image_thumbnail || defaultImageThumbnail
+                        }')`,
                       }}
                     />
                   </div>
@@ -422,7 +468,9 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
               node ? (entered ? 'is-entered' : '') : 'is-leaving',
             ].join(' ')}
             style={{
-              backgroundImage: `url('${shownNode.image || defaultImage}'),url('${shownNode.image_thumbnail || defaultImageThumbnail}')`,
+              backgroundImage: `url('${
+                shownNode.image || defaultImage
+              }'),url('${shownNode.image_thumbnail || defaultImageThumbnail}')`,
             }}
             onTransitionEnd={handleTransitionEnd}
           >
@@ -443,7 +491,7 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
                     <h6 className="pub-date">
                       {shownNode.type !== 'event' && (
                         <>
-                          {shownNode.authors}
+                          {shownNode.authors.join(', ')}
                           <br />
                         </>
                       )}
@@ -566,8 +614,9 @@ function AnnualReportTimelineSlide({ slide, setDimUI, defaultImage, defaultImage
 AnnualReportTimelineSlide.propTypes = {
   slide: PropTypes.object.isRequired,
   setDimUI: PropTypes.func.isRequired,
-  defaultImage: PropTypes.string,
-  defaultImageThumbnail: PropTypes.string,
+  defaultImage: PropTypes.string.isRequired,
+  defaultImageThumbnail: PropTypes.string.isRequired,
+  lang: PropTypes.string.isRequired,
 };
 
 export default AnnualReportTimelineSlide;

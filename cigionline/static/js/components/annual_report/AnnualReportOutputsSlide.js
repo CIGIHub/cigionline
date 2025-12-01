@@ -62,7 +62,13 @@ function AnnualReportOutputsSlide({ slide, lang }) {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <h1>Outputs and Activities</h1>
+              <h1
+                aria-live="assertive"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    lang === 'fr' ? slide.slide_title_fr : slide.slide_title,
+                }}
+              />
             </div>
           </div>
           <div className="row outputs-activities-content">
@@ -204,7 +210,7 @@ function AnnualReportOutputsSlide({ slide, lang }) {
               <div className="row">
                 <div className="col-md-10">
                   <h6 className="pub-date">
-                    {page.authors}
+                    {page.authors.join(', ')}
                     <br />
                     {formatDate(page.date)}
                   </h6>

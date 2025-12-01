@@ -89,7 +89,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Realized investment income',
       unrealizedInvestmentGains:
         lang === 'fr'
-          ? 'Gain de placement non réalisé'
+          ? 'Revenu de placement non réalisé'
           : 'Unrealized investment income',
       other: lang === 'fr' ? 'Autres' : 'Other',
       governmentAndOtherGrants:
