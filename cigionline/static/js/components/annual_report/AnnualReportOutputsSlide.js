@@ -4,6 +4,7 @@ import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../css/components/annual_reports/AnnualReportsOutputsSlide.scss';
 import { faFileAlt } from '@fortawesome/pro-light-svg-icons';
+import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
@@ -28,7 +29,13 @@ const backLinkIconClass = (type) => {
   }
 };
 
-function AnnualReportOutputsSlide({ slide, lang }) {
+function AnnualReportOutputsSlide({
+  slide,
+  lang,
+  setLightHeader,
+  defaultImage,
+  defaultImageThumbnail,
+}) {
   const navigate = useNavigate();
   const { subSlug } = useParams();
   const { pathname } = useLocation();
@@ -45,8 +52,6 @@ function AnnualReportOutputsSlide({ slide, lang }) {
     return subSlug ? trimmed.replace(/\/[^/]+$/, '') : trimmed;
   }, [pathname, subSlug]);
 
-  console.log(slide);
-
   useEffect(() => {
     if (!subSlug && tabs.length > 0) {
       const tabSlug = tabs[0].slug;
@@ -54,8 +59,26 @@ function AnnualReportOutputsSlide({ slide, lang }) {
     }
   }, [subSlug, tabs, navigate]);
 
+  useEffect(() => {
+    if (page) {
+      setLightHeader(true);
+    } else {
+      setLightHeader(false);
+    }
+  }, [page, setLightHeader]);
+
   const activeSlug = subSlug || tabs[0].slug;
   const activeTab = tabs.find((t) => t.slug === activeSlug) || null;
+
+  function singularizeTitle(title) {
+    if (title.endsWith('ies')) {
+      return `${title.slice(0, -3)}y`;
+    }
+    if (title.endsWith('s')) {
+      return title.slice(0, -1);
+    }
+    return title;
+  }
 
   return (
     <div className="anual-report-slide">
@@ -146,9 +169,15 @@ function AnnualReportOutputsSlide({ slide, lang }) {
       {page && (
         <div
           className="outputs-activities-overlay background-image"
-          style={{
-            backgroundImage: `url(${page.image}),url(${page.image_thumbnail})`,
-          }}
+          style={
+            page.image
+              ? {
+                backgroundImage: `url(${page.image}), url(${page.image_thumbnail})`,
+              }
+              : {
+                backgroundImage: `url(${defaultImage}), url(${defaultImageThumbnail})`,
+              }
+          }
         >
           <div className="outputs-activities-overlay-container">
             <div className="container">
@@ -231,7 +260,11 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                     rel="noopener noreferrer"
                   >
                     <div className="float-left read-link-icon">
-                      <FontAwesomeIcon icon={faFileAlt} size="lg" />
+                      {page.subtype === 'Audio' ? (
+                        <FontAwesomeIcon icon={faHeadphones} size="lg" />
+                      ) : (
+                        <FontAwesomeIcon icon={faFileAlt} size="lg" />
+                      )}
                     </div>
                     <p>
                       <span className="underline">
@@ -239,13 +272,14 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                         {page.type === 'Event' && (
                           <>Learn more about the event</>
                         )}
-                        {(page.type === 'Opinion' || page.type === 'Essay Series') && (
+                        {page.type === 'Opinion' && (
                           <>
                             Read&nbsp;
-                            {page.subtype}
+                            {singularizeTitle(page.subtype)}
                           </>
                         )}
-                        {(page.subtype === 'Audio') && <>Listen to the episode</>}
+                        {page.type === 'Essay Series' && <>Read essay series</>}
+                        {page.subtype === 'Audio' && <>Listen to the episode</>}
                       </span>
                     </p>
                   </a>
@@ -263,4 +297,7 @@ export default AnnualReportOutputsSlide;
 AnnualReportOutputsSlide.propTypes = {
   slide: PropTypes.object.isRequired,
   lang: PropTypes.string.isRequired,
+  defaultImage: PropTypes.string.isRequired,
+  defaultImageThumbnail: PropTypes.string.isRequired,
+  setLightHeader: PropTypes.func.isRequired,
 };

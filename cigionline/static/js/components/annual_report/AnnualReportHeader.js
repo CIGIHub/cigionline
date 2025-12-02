@@ -19,6 +19,7 @@ function AnnualReportHeader({
   fadeableClass,
   showTOC,
   setShowTOC,
+  lightHeaderClass,
 }) {
   const backgroundClass = showTOC
     ? 'background-black'
@@ -26,7 +27,7 @@ function AnnualReportHeader({
         slideTypeBackgrounds[slides[currentIndex].slide_type] || 'black'
       }`;
   return (
-    <header className={`cigi-top-bar ${backgroundClass} ${fadeableClass}`}>
+    <header className={`cigi-top-bar ${backgroundClass} ${fadeableClass} ${lightHeaderClass}`}>
       <div className="container">
         <div className="row">
           <div className="col">
@@ -83,6 +84,7 @@ AnnualReportHeader.propTypes = {
   fadeableClass: PropTypes.string.isRequired,
   showTOC: PropTypes.bool.isRequired,
   setShowTOC: PropTypes.func.isRequired,
+  lightHeaderClass: PropTypes.string.isRequired,
 };
 
 export default AnnualReportHeader;

@@ -56,6 +56,7 @@ function AnnualReportSlide({ slides, basePath }) {
   const [hoverNav, setHoverNav] = useState(false);
   const defaultImage = slides[1]?.background_image || '';
   const defaultImageThumbnail = slides[1]?.background_image_thumbnail || '';
+  const [lightHeader, setLightHeader] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
 
@@ -78,6 +79,11 @@ function AnnualReportSlide({ slides, basePath }) {
   const revealableClass = useMemo(
     () => `hover-reveal${dimUI ? ' is-revealed' : ''}`,
     [dimUI],
+  );
+
+  const lightHeaderClass = useMemo(
+    () => (lightHeader ? ' light-header' : ''),
+    [lightHeader],
   );
 
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
@@ -187,6 +193,7 @@ function AnnualReportSlide({ slides, basePath }) {
         fadeableClass={fadeableClass}
         showTOC={showTOC}
         setShowTOC={setShowTOC}
+        lightHeaderClass={lightHeaderClass}
       />
       <div
         key={currentSlide.id || currentSlide.slug}
@@ -238,6 +245,7 @@ function AnnualReportSlide({ slides, basePath }) {
           dimUI={dimUI}
           defaultImage={defaultImage}
           defaultImageThumbnail={defaultImageThumbnail}
+          setLightHeader={setLightHeader}
         />
       )}
 

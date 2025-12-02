@@ -3,41 +3,43 @@
 
 .cigi-top-bar {
   &.background-white {
-    .annual-report-hamburger-menu {
-      .ar-lang-toggle {
-        button {
-          color: $black;
+    &:not(.light-header) {
+      .annual-report-hamburger-menu {
+        .ar-lang-toggle {
+          button {
+            color: $black;
 
-          &:hover {
-            color: $cigi-primary-colour;
-          }
-
-          &.active {
-            color: $grey-selected;
-            cursor: default;
-
-            &::before {
-              background-color: $grey-selected;
+            &:hover {
+              color: $cigi-primary-colour;
             }
-          }
 
-          &.disabled {
-            cursor: default;
-            color: $grey-selected;
-          }
+            &.active {
+              color: $grey-selected;
+              cursor: default;
 
-          &:first-child {
-            &::after {
-              color: $black;
+              &::before {
+                background-color: $grey-selected;
+              }
+            }
+
+            &.disabled {
+              cursor: default;
+              color: $grey-selected;
+            }
+
+            &:first-child {
+              &::after {
+                color: $black;
+              }
             }
           }
         }
-      }
 
-      .hamburger-btn {
-        span {
-          i {
-            color: $black;
+        .hamburger-btn {
+          span {
+            i {
+              color: $black;
+            }
           }
         }
       }

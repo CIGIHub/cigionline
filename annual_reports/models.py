@@ -774,9 +774,10 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                             image_thumb_url = ''
 
                     output_type = getattr(page, 'contenttype', None) or ""
+                        
                     subtype = (v.get("type_override") or
                                getattr(page, 'contentsubtype', None) or
-                               "")
+                               "").lower()
                     date = getattr(page, 'publishing_date', None) or None
 
                     theme["pages"].append({

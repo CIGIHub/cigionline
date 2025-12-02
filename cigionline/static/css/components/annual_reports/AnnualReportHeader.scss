@@ -19,29 +19,31 @@
   }
 
   &.background-white {
-    .cigi-logo {
-      svg {
-        fill: $black;
+    &:not(.light-header) {
+      .cigi-logo {
+        svg {
+          fill: $black;
+        }
       }
-    }
-
-    .cigi-menu {
-      a,
-      button {
-        color: $black;
-      }
-
-      span {
-        color: $black;
-      }
-
-      .intl-disabled {
-        color: $grey-selected;
-      }
-
-      .intl-selected {
-        border-bottom: 1px solid $grey-selected;
-        color: $grey-selected;
+  
+      .cigi-menu {
+        a,
+        button {
+          color: $black;
+        }
+  
+        span {
+          color: $black;
+        }
+  
+        .intl-disabled {
+          color: $grey-selected;
+        }
+  
+        .intl-selected {
+          border-bottom: 1px solid $grey-selected;
+          color: $grey-selected;
+        }
       }
     }
   }
