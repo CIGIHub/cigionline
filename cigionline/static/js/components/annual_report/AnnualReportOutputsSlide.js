@@ -17,14 +17,14 @@ const formatDate = (dateStr) => {
 
 const backLinkIconClass = (type) => {
   switch (type) {
-    case 'Publication':
-      return 'publication';
-    case 'Event':
-      return 'event';
-    case 'Opinion':
-      return 'article';
-    default:
-      return 'default';
+  case 'Publication':
+    return 'publication';
+  case 'Event':
+    return 'event';
+  case 'Opinion':
+    return 'article';
+  default:
+    return 'default';
   }
 };
 
@@ -44,6 +44,8 @@ function AnnualReportOutputsSlide({ slide, lang }) {
     const trimmed = pathname.replace(/\/+$/, '');
     return subSlug ? trimmed.replace(/\/[^/]+$/, '') : trimmed;
   }, [pathname, subSlug]);
+
+  console.log(slide);
 
   useEffect(() => {
     if (!subSlug && tabs.length > 0) {
@@ -116,7 +118,7 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                   <h6>
                     {formatDate(p.date)}
                     <span>|</span>
-                    {p.type}
+                    {p.subtype || p.type}
                   </h6>
                   <h5>
                     <span className="underline">{p.title}</span>
@@ -130,7 +132,7 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                   <h6>
                     {formatDate(p.date)}
                     <span>|</span>
-                    {p.type}
+                    {p.subtype || p.type}
                   </h6>
                   <h5>
                     <span className="underline">{p.title}</span>
@@ -237,7 +239,13 @@ function AnnualReportOutputsSlide({ slide, lang }) {
                         {page.type === 'Event' && (
                           <>Learn more about the event</>
                         )}
-                        {page.type === 'Opinion' && <>Read opinion</>}
+                        {(page.type === 'Opinion' || page.type === 'Essay Series') && (
+                          <>
+                            Read&nbsp;
+                            {page.subtype}
+                          </>
+                        )}
+                        {(page.subtype === 'Audio') && <>Listen to the episode</>}
                       </span>
                     </p>
                   </a>
