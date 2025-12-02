@@ -279,7 +279,7 @@ function AnnualReportOutputsSlide({
                           </>
                         )}
                         {page.type === 'Essay Series' && <>Read essay series</>}
-                        {page.subtype === 'Audio' && <>Listen to the episode</>}
+                        {page.subtype === 'audio' && <>Listen to the episode</>}
                       </span>
                     </p>
                   </a>
