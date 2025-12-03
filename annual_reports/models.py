@@ -535,7 +535,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                                     link = content_val.get("link_override") or (content_val.get("page").specific.url if content_val.get("page") else None)
                                     column_content["content"].append({
                                         "type": content_val.get("type"),
-                                        "type_fr": dict(CONTENT_TYPES_FR).get(content_val.get("type"), ""), 
+                                        "type_fr": dict(CONTENT_TYPES_FR).get(content_val.get("type"), ""),
                                         "type_override": content_val.get("type_override") if content_val.get("type_override") else "",
                                         "type_override_fr": content_val.get("type_override_fr") if content_val.get("type_override_fr") else "",
                                         "link": link,
@@ -774,7 +774,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                             image_thumb_url = ''
 
                     output_type = getattr(page, 'contenttype', None) or ""
-                        
+
                     subtype = (v.get("type_override") or
                                getattr(page, 'contentsubtype', None) or
                                "").lower()
@@ -806,7 +806,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             return data
 
         year = self.get_parent().specific.year
-        content_pages = ContentPage.objects.live().filter(projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).filter(publishing_date__range=[f'{year - 1}-08-01', f'{year}-07-31'])
+        content_pages = ContentPage.objects.live().filter(projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).exclude(
+            publicationpage__publication_type__title='Working Paper'
+        ).filter(publishing_date__range=[f'{year - 1}-08-01', f'{year}-07-31'])
 
         json_items = []
 
@@ -834,8 +836,13 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             if content_page.contenttype == 'Opinion':
                 content_type = 'article'
                 subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
-                image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
-                image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
+                if content_page.specific.image_hero:
+                    image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url
+                    image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url
+                elif content_page.specific.image_feature:
+                    image = content_page.specific.image_feature.get_rendition('fill-2560x1600').url
+                    image_thumbnail = content_page.specific.image_feature.get_rendition('fill-142x80').url
+
             if content_page.contenttype == 'Publication':
                 content_type = 'publication'
                 subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
