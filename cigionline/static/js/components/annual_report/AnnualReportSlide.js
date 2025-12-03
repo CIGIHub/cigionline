@@ -220,6 +220,7 @@ function AnnualReportSlide({ slides, basePath }) {
         fadeableClass={fadeableClass}
         lang={currentLang}
         setHoverNav={setHoverNav}
+        lightHeaderClass={lightHeaderClass}
       />
 
       {currentSlide.slide_type === 'toc' ? (

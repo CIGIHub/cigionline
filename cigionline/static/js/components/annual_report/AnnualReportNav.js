@@ -17,6 +17,7 @@ function AnnualReportNav({
   fadeableClass,
   lang,
   setHoverNav,
+  lightHeaderClass,
 }) {
   const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ function AnnualReportNav({
   }`;
 
   return (
-    <div className={`annual-report-nav ${backgroundClass} ${fadeableClass}`}>
+    <div className={`annual-report-nav ${backgroundClass} ${fadeableClass} ${lightHeaderClass}`}>
       {prevSlide && (
         <button
           type="button"
@@ -54,7 +55,7 @@ function AnnualReportNav({
           <span>Next Slide</span>
         </button>
       )}
-      <div className={`dot-nav d-none d-lg-block ${backgroundClass}`}>
+      <div className={`dot-nav d-none d-lg-block ${backgroundClass} ${lightHeaderClass}`}>
         {slides.map((slide, index) => (
           <div key={slide.slug}>
             {currentIndex === index ? (
@@ -114,6 +115,7 @@ AnnualReportNav.propTypes = {
   fadeableClass: PropTypes.string.isRequired,
   lang: PropTypes.string.isRequired,
   setHoverNav: PropTypes.func.isRequired,
+  lightHeaderClass: PropTypes.string.isRequired,
 };
 
 export default AnnualReportNav;

@@ -8,45 +8,47 @@
 
 .annual-report-nav {
   &.background-white {
-    .slide-nav {
-      .nav-circle {
-        border-color: $black;
-
-        &::before {
-          background-color: $black;
-        }
-
-        &:hover {
+    &:not(.light-header) {
+      .slide-nav {
+        .nav-circle {
           border-color: $black;
 
           &::before {
             background-color: $black;
           }
+
+          &:hover {
+            border-color: $black;
+
+            &::before {
+              background-color: $black;
+            }
+          }
+
+          &.active {
+            &::before {
+              background-color: $black;
+            }
+          }
         }
 
-        &.active {
-          &::before {
-            background-color: $black;
+        .nav-tooltip {
+          background-color: rgba(255, 255, 255, 0.9);
+          color: $black;
+
+          &::after {
+            border-color: transparent transparent transparent
+              rgba(255, 255, 255, 0.9);
           }
         }
       }
 
-      .nav-tooltip {
-        background-color: rgba(255, 255, 255, 0.9);
-        color: $black;
+      .nav-arrow {
+        border-color: $black;
 
-        &::after {
-          border-color: transparent transparent transparent
-            rgba(255, 255, 255, 0.9);
+        &:hover {
+          border-color: $cigi-primary-colour;
         }
-      }
-    }
-
-    .nav-arrow {
-      border-color: $black;
-
-      &:hover {
-        border-color: $cigi-primary-colour;
       }
     }
   }
@@ -122,17 +124,19 @@
   }
 
   &.background-white {
-    li {
-      .current-page,
-      .link-dot {
-        .dot-circle {
-          border-color: $black;
+    &:not(.light-header) {
+      li {
+        .current-page,
+        .link-dot {
+          .dot-circle {
+            border-color: $black;
+          }
         }
-      }
 
-      .current-page {
-        .dot-circle {
-          background-color: $black;
+        .current-page {
+          .dot-circle {
+            background-color: $black;
+          }
         }
       }
     }
