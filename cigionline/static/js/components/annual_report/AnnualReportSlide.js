@@ -175,6 +175,7 @@ function AnnualReportSlide({ slides, basePath }) {
 
   useEffect(() => {
     setHoverNav(false);
+    setLightHeader(false);
   }, [currentIndex]);
 
   const currentSlide = slides[currentIndex];
