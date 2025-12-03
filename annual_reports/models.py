@@ -808,7 +808,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         year = self.get_parent().specific.year
         content_pages = ContentPage.objects.live().filter(projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).exclude(
             publicationpage__publication_type__title='Working Paper'
-        ).filter(publishing_date__range=[f'{year - 1}-08-01', f'{year}-07-31'])
+        ).filter(publishing_date__range=[f'{year - 1}-08-01', f'{year}-07-31']).order_by('publishing_date')
 
         json_items = []
 
