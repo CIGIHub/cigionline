@@ -23,39 +23,6 @@ from wagtail.models import Page
 from .tasks import generate_tts_for_page
 
 
-# class DummyPublishOption(ActionMenuItem):
-#     label = "Dummy Action"
-#     name = "action-dummy"
-
-#     def is_shown(self, context):
-#         # context has: view, page, parent_page, request, etc.
-#         page = context.get("page")
-#         if page is None:
-#             return False
-
-#         # Import here to avoid circular imports
-#         from .models import ArticlePage
-#         return isinstance(page, ArticlePage)
-
-#     def get_url(self, context):
-#         page = context.get("page")
-#         if not page:
-#             return "#"
-#         # Could be any URL – here we just point back to edit as a proof of concept
-#         return reverse("wagtailadmin_pages:edit", args=[page.id])
-
-#     # Optional – default template is fine for dropdown items,
-#     # so you can omit this entirely.
-#     # def get_template(self, context):
-#     #     return "wagtailadmin/shared/action_menu/menu_item.html"
-
-
-# @hooks.register("register_page_action_menu_item")
-# def register_dummy_publish_action():
-#     # Large order → near bottom of the list / dropdown
-#     return DummyPublishOption(order=999)
-
-
 class GenerateTTS(ActionMenuItem):
     label = "Generate TTS audio"
     name = "action-generate-tts"
