@@ -31,7 +31,6 @@ def send_facility_rental_email(request, recipients: list[str], form_data: dict):
     # Multi-select spaces → labels
     space_values = form_data.get("space") or []
     space_labels = [SPACE_LABELS.get(v, v) for v in space_values]
-    space_labels_str = ", ".join(space_labels) if space_labels else "No space selected"
 
     subject = (
         f"[Rental Inquiry] {start_date_str} — {company} - "
@@ -41,7 +40,6 @@ def send_facility_rental_email(request, recipients: list[str], form_data: dict):
     context = {
         "data": form_data,
         "space_labels": space_labels,
-        "space_labels_str": space_labels_str,
     }
 
     html_body = render_to_string("core/email/facility_rental_notification.html", context)
