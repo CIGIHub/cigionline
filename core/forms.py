@@ -52,7 +52,7 @@ class FacilityRentalInquiryForm(forms.Form):
     start_time = forms.TimeField(label="Event Start Time", widget=forms.TimeInput(attrs={"type": "time"}))
     end_time = forms.TimeField(label="Event End Time", widget=forms.TimeInput(attrs={"type": "time"}))
 
-    space = forms.ChoiceField(label="What CIGI Event Space are you interested in", choices=CIGI_EVENT_SPACE_CHOICES)
+    space = forms.MultipleChoiceField(label="What CIGI Event Space are you interested in", choices=CIGI_EVENT_SPACE_CHOICES, widget=forms.CheckboxSelectMultiple, required=True)
     attendees = forms.IntegerField(label="Number of Attendees", min_value=1)
 
     details = forms.CharField(label="Additional Details", widget=forms.Textarea)
@@ -80,3 +80,9 @@ class FacilityRentalInquiryForm(forms.Form):
             self.add_error("liability_contact_if_cannot",
                            "Please provide a contact if you cannot provide the liability certificate.")
         return cleaned
+
+    def clean_space(self):
+        values = self.cleaned_data.get("space") or []
+        if not values:
+            raise forms.ValidationError("Select at least one space.")
+        return values
