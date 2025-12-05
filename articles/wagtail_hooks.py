@@ -14,6 +14,18 @@ from wagtail.admin.ui.tables import Column
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 from wagtail import hooks
 
+# TTS
+# from django.urls import path, reverse
+# from django.shortcuts import redirect, get_object_or_404
+# from django.contrib.auth.decorators import login_required
+# from wagtail.admin import messages as wagtail_messages
+# from wagtail.models import Page
+# from .tasks import generate_tts_for_page
+# from wagtail.admin.action_menu import ActionMenuItem
+
+# articles/wagtail_hooks.py
+from wagtail.admin.widgets import PageListingButton
+
 
 @hooks.register('register_rich_text_features')
 def register_rich_text_end_of_article(features):
@@ -168,3 +180,23 @@ class ArticleViewSetGroup(ViewSetGroup):
 @hooks.register("register_admin_viewset")
 def register_article_viewset():
     return ArticleViewSetGroup()
+
+
+# 1) Put a dummy item in the ⋯ More menu (appears before 'Edit', 'View live', etc.)
+@hooks.register('construct_page_listing_more_buttons')
+def add_debug_item_to_more_menu(buttons, page, page_perms, request, context=None):
+    # Only for ArticlePage rows (remove this isinstance check if you want it on all pages)
+    # from .models import ArticlePage
+    # try:
+    #     if not isinstance(page.specific, ArticlePage):
+    #         return
+    # except Exception:
+    #     return
+
+    # Prepend a non-functional item
+    buttons.insert(0, PageListingButton(
+        label='DEBUG: TTS',
+        url='#',
+        priority=0,  # not strictly used here, but harmless
+        attrs={'onclick': 'return false;', 'title': 'Debug placeholder'},
+    ))

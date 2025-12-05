@@ -41,6 +41,8 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/overlapping-topics/$', research_views.overlapping_topics_verification),
     re_path(r'^api/themes/$', research_views.themes),
     re_path(r'^api/programs/$', research_views.programs),
+    re_path(r'^api/program-contentpages/$', research_views.program_content_within_range),
+    re_path(r'^api/program-affiliates/$', research_views.program_affiliates),
     re_path(r'^api/annual-reports/', annual_report_views.all_annual_reports),
     re_path(r'^api/events/$', events_views.events_api),
     re_path(r'^api/ar_timeline_pages/$', core_views.ar_timeline_pages),
