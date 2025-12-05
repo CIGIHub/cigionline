@@ -15,16 +15,75 @@ from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElement
 from wagtail import hooks
 
 # TTS
-# from django.urls import path, reverse
-# from django.shortcuts import redirect, get_object_or_404
-# from django.contrib.auth.decorators import login_required
-# from wagtail.admin import messages as wagtail_messages
-# from wagtail.models import Page
-# from .tasks import generate_tts_for_page
-# from wagtail.admin.action_menu import ActionMenuItem
+from wagtail.admin.action_menu import ActionMenuItem
+from django.shortcuts import redirect
+from django.urls import path, reverse
+from wagtail.admin import messages
+from wagtail.models import Page
+from .tasks import generate_tts_for_page
 
-# articles/wagtail_hooks.py
-from wagtail.admin.widgets import PageListingButton
+
+# class DummyPublishOption(ActionMenuItem):
+#     label = "Dummy Action"
+#     name = "action-dummy"
+
+#     def is_shown(self, context):
+#         # context has: view, page, parent_page, request, etc.
+#         page = context.get("page")
+#         if page is None:
+#             return False
+
+#         # Import here to avoid circular imports
+#         from .models import ArticlePage
+#         return isinstance(page, ArticlePage)
+
+#     def get_url(self, context):
+#         page = context.get("page")
+#         if not page:
+#             return "#"
+#         # Could be any URL – here we just point back to edit as a proof of concept
+#         return reverse("wagtailadmin_pages:edit", args=[page.id])
+
+#     # Optional – default template is fine for dropdown items,
+#     # so you can omit this entirely.
+#     # def get_template(self, context):
+#     #     return "wagtailadmin/shared/action_menu/menu_item.html"
+
+
+# @hooks.register("register_page_action_menu_item")
+# def register_dummy_publish_action():
+#     # Large order → near bottom of the list / dropdown
+#     return DummyPublishOption(order=999)
+
+
+class GenerateTTS(ActionMenuItem):
+    label = "Generate TTS audio"
+    name = "action-generate-tts"
+
+    def is_shown(self, context):
+        page_object = context.get("page")
+        if page_object is None:
+            return False
+
+        from articles.models import ArticlePage
+
+        specific_page = page_object.specific
+        is_article_page = isinstance(specific_page, ArticlePage)
+        has_tts_enabled = getattr(specific_page, "tts_enabled", False)
+
+        if is_article_page and has_tts_enabled:
+            return True
+
+        return False
+
+    def get_url(self, context):
+        page_object = context.get("page")
+        return reverse("articlepage_generate_tts", args=[page_object.id])
+
+
+@hooks.register("register_page_action_menu_item")
+def register_generate_tts_action():
+    return GenerateTTS(order=999)
 
 
 @hooks.register('register_rich_text_features')
@@ -182,21 +241,30 @@ def register_article_viewset():
     return ArticleViewSetGroup()
 
 
-# 1) Put a dummy item in the ⋯ More menu (appears before 'Edit', 'View live', etc.)
-@hooks.register('construct_page_listing_more_buttons')
-def add_debug_item_to_more_menu(buttons, page, page_perms, request, context=None):
-    # Only for ArticlePage rows (remove this isinstance check if you want it on all pages)
-    # from .models import ArticlePage
-    # try:
-    #     if not isinstance(page.specific, ArticlePage):
-    #         return
-    # except Exception:
-    #     return
+def generate_tts_view(request, page_id):
+    page_object = Page.objects.get(pk=page_id).specific
 
-    # Prepend a non-functional item
-    buttons.insert(0, PageListingButton(
-        label='DEBUG: TTS',
-        url='#',
-        priority=0,  # not strictly used here, but harmless
-        attrs={'onclick': 'return false;', 'title': 'Debug placeholder'},
-    ))
+    from articles.models import ArticlePage
+
+    is_article_page = isinstance(page_object, ArticlePage)
+    has_tts_enabled = getattr(page_object, "tts_enabled", False)
+
+    if is_article_page and has_tts_enabled:
+        generate_tts_for_page(page_object.id)
+        messages.success(request, "TTS generation triggered for this page.")
+    else:
+        messages.warning(request, "TTS is not enabled for this page.")
+
+    edit_url = reverse("wagtailadmin_pages:edit", args=[page_id])
+    return redirect(edit_url)
+
+
+@hooks.register("register_admin_urls")
+def register_tts_admin_url():
+    return [
+        path(
+            "pages/<int:page_id>/generate-tts/",
+            generate_tts_view,
+            name="articlepage_generate_tts",
+        ),
+    ]
