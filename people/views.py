@@ -7,9 +7,6 @@ from django.core.cache import cache
 from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
-import csv
-from django.http import HttpResponse
-import datetime
 
 EXPERTS_API_CACHE_TIMEOUT = 86400
 
