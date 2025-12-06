@@ -23,9 +23,9 @@ from wagtail.models import Orderable, Page
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
-from django.utils.html import strip_tags
 import datetime
 import pytz
+from .tts import extract_body_text
 
 
 class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -440,26 +440,9 @@ class ArticlePage(
             if series_item.content_page.id == self.id:
                 return current_series_title
 
-    # collect readable text
     def get_plaintext(self):
         '''Return a readable plaintext of the article.'''
-        chunks = []
-        if self.title:
-            chunks.append(self.title)
-        if self.subtitle:
-            chunks.append(strip_tags(self.subtitle))
-        if self.body:
-            for block in self.body:
-                if hasattr(block, 'value'):
-                    val = block.value
-                    if isinstance(val, str):
-                        chunks.append(strip_tags(val))
-                    elif hasattr(val, 'source'):  # RichText
-                        chunks.append(strip_tags(val.source))
-                    elif hasattr(val, 'get') and val.get('text'):
-                        chunks.append(strip_tags(val.get('text')))
-        text = '\n\n'.join([c for c in chunks if c and c.strip()])
-        return ' '.join(text.split())
+        return extract_body_text(self)
 
     content_panels = [
         BasicPageAbstract.title_panel,

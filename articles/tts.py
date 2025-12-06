@@ -82,60 +82,6 @@ def _block_html_to_text(html_string):
     return output_text
 
 
-# def _html_value_to_string(html_value):
-#     """
-#     Normalize various Wagtail / Django rich text-ish values to a plain string.
-#     Handles:
-#     - str
-#     - wagtail.rich_text.RichText (or anything with .source)
-#     - Other objects via str() fallback.
-#     """
-#     if html_value is None:
-#         return None
-
-#     if isinstance(html_value, str):
-#         return html_value
-
-#     if isinstance(html_value, RichText):
-#         return html_value.source
-
-#     if hasattr(html_value, 'source'):
-#         return html_value.source
-
-#     return str(html_value)
-
-
-# def extract_body_text(page):
-#     parts = []
-#     body_text_segments = []
-
-#     if getattr(page, 'body', None):
-#         for stream_block in page.body:
-#             block_value = getattr(stream_block, 'value', None)
-#             html_string = None
-
-#             if isinstance(block_value, str):
-#                 html_string = block_value
-
-#             elif isinstance(block_value, RichText) or hasattr(block_value, 'source'):
-#                 html_string = _html_value_to_string(block_value)
-
-#             elif hasattr(block_value, 'get') and block_value.get('text'):
-#                 text_value = block_value.get('text')
-#                 html_string = _html_value_to_string(text_value)
-
-#             if html_string:
-#                 text_from_block = _block_html_to_text(html_string)
-#                 if text_from_block:
-#                     body_text_segments.append(text_from_block)
-
-#     if body_text_segments:
-#         body_clean = re.sub(r'\s+', ' ', ' '.join(body_text_segments)).strip()
-#         parts.append(body_clean)
-
-#     return ' '.join(part.strip() for part in parts if part and part.strip())
-
-
 def extract_body_text(page):
     parts = []
     body_text = []
@@ -149,7 +95,11 @@ def extract_body_text(page):
             elif hasattr(val, 'source'):   # RichText
                 html = val.source
             elif hasattr(val, 'get') and val.get('text'):
-                html = val.get('text')
+                text_value = val.get('text')
+                if isinstance(text_value, RichText):
+                    html = text_value.source
+                else:
+                    html = text_value
             if html:
                 block_text = _block_html_to_text(html)
                 if block_text:
