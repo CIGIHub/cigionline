@@ -161,9 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Pause if navigating away (optional)
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && !audio.paused) audio.pause();
-  });
+  // document.addEventListener('visibilitychange', () => {
+  //   if (document.hidden && !audio.paused) audio.pause();
+  // });
 
   // If page loads with a non-zero currentTime, show progress immediately
   if ((audio.currentTime || 0) > 0) {

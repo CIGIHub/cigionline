@@ -344,22 +344,16 @@ class ArticlePage(
 
     # TTS controls
     POLLY_VOICE_CHOICES = [
-        ('Joanna', 'Joanna'),
-        ('Matthew', 'Matthew'),
-        ('Salli', 'Salli'),
-        ('Stephen', 'Stephen'),
-        ('Danielle', 'Danielle'),
-        ('Gregory', 'Gregory'),
-        ('Ruth', 'Ruth'),
-        ('Patrick', 'Patrick'),
+        ('danielle_longform', 'Danielle - Longform'),
+        ('ruth_generative', 'Ruth - Generative'),
+        ('danielle_generative', 'Danielle - Generative'),
     ]
-    tts_enabled = models.BooleanField(default=True, help_text='Generate audio for this article.')
     tts_voice = models.CharField(
         max_length=32,
         choices=POLLY_VOICE_CHOICES,
-        default='Joanna',
+        default='danielle_longform',
         blank=True,
-        help_text='Amazon Polly voice ID (e.g., Joanna, Matthew, Amy, Takumi).'
+        help_text='Amazon Polly voice ID',
     )
     tts_last_generated = models.DateTimeField(null=True, blank=True)
     audio_file = models.FileField(upload_to='tts/', blank=True, null=True)
@@ -474,7 +468,6 @@ class ArticlePage(
         ContentPage.authors_panel,
         MultiFieldPanel(
             [
-                FieldPanel('tts_enabled'),
                 FieldPanel('tts_voice'),
                 FieldPanel('audio_file'),
             ],

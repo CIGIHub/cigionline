@@ -23,36 +23,6 @@ from wagtail.models import Page
 from .tasks import generate_tts_for_page
 
 
-class GenerateTTS(ActionMenuItem):
-    label = "Generate TTS audio"
-    name = "action-generate-tts"
-
-    def is_shown(self, context):
-        page_object = context.get("page")
-        if page_object is None:
-            return False
-
-        from articles.models import ArticlePage
-
-        specific_page = page_object.specific
-        is_article_page = isinstance(specific_page, ArticlePage)
-        has_tts_enabled = getattr(specific_page, "tts_enabled", False)
-
-        if is_article_page and has_tts_enabled:
-            return True
-
-        return False
-
-    def get_url(self, context):
-        page_object = context.get("page")
-        return reverse("articlepage_generate_tts", args=[page_object.id])
-
-
-@hooks.register("register_page_action_menu_item")
-def register_generate_tts_action():
-    return GenerateTTS(order=999)
-
-
 @hooks.register('register_rich_text_features')
 def register_rich_text_end_of_article(features):
     feature_name = 'endofarticle'
@@ -208,15 +178,43 @@ def register_article_viewset():
     return ArticleViewSetGroup()
 
 
+class GenerateTTS(ActionMenuItem):
+    label = "Generate TTS audio"
+    name = "action-generate-tts"
+
+    def is_shown(self, context):
+        page_object = context.get("page")
+        if page_object is None:
+            return False
+
+        from articles.models import ArticlePage
+
+        specific_page = page_object.specific
+        is_article_page = isinstance(specific_page, ArticlePage)
+
+        if is_article_page:
+            return True
+
+        return False
+
+    def get_url(self, context):
+        page_object = context.get("page")
+        return reverse("articlepage_generate_tts", args=[page_object.id])
+
+
+@hooks.register("register_page_action_menu_item")
+def register_generate_tts_action():
+    return GenerateTTS(order=999)
+
+
 def generate_tts_view(request, page_id):
     page_object = Page.objects.get(pk=page_id).specific
 
     from articles.models import ArticlePage
 
     is_article_page = isinstance(page_object, ArticlePage)
-    has_tts_enabled = getattr(page_object, "tts_enabled", False)
 
-    if is_article_page and has_tts_enabled:
+    if is_article_page:
         generate_tts_for_page(page_object.id)
         messages.success(request, "TTS generation triggered for this page.")
     else:

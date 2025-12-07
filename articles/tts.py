@@ -11,6 +11,7 @@ import re
 
 POLLY_CHAR_LIMIT = 3000
 AWS_REGION = getattr(settings, 'AWS_REGION_NAME', None) or os.getenv('AWS_REGION_NAME')
+default_voice = getattr(settings, 'POLLY_DEFAULT_VOICE_ID', None) or os.getenv('POLLY_DEFAULT_VOICE_ID')
 
 _TERMINALS = '.!?…'
 _CLOSERS = '\'"”’»)]}'
@@ -127,24 +128,19 @@ def chunk_text(text: str, limit: int = POLLY_CHAR_LIMIT):
     return [c.strip() for c in out if c.strip()]
 
 
-def synthesize_chunk(polly_client, text, voice_id='Joanna', use_ssml=False, format='mp3'):
+def synthesize_chunk(polly_client, text, voice_id=default_voice, use_ssml=False, format='mp3'):
     voice_engine = {
-        'Danielle': 'generative',
-        'Gregory': 'long-form',
-        'Ruth': 'generative',
-        'Patrick': 'long-form',
-        'Joanna': 'generative',
-        'Salli': 'generative',
-        'Matthew': 'generative',
-        'Stephen': 'generative',
+        'danielle_longform': {'voice': 'Danielle', 'engine': 'long-form'},
+        'ruth_generative': {'voice': 'Ruth', 'engine': 'generative'},
+        'danielle_generative': {'voice': 'Danielle', 'engine': 'generative'},
     }
 
     if voice_id in voice_engine:
         resp = polly_client.synthesize_speech(
             Text=text,
             OutputFormat=format,
-            VoiceId=voice_id,
-            Engine='standard',
+            VoiceId=voice_engine[voice_id]['voice'],
+            Engine=voice_engine[voice_id]['engine'],
         )
     else:
         resp = polly_client.synthesize_speech(
@@ -156,7 +152,7 @@ def synthesize_chunk(polly_client, text, voice_id='Joanna', use_ssml=False, form
     return AudioSegment.from_file(io.BytesIO(audio_bytes), format=format)
 
 
-def synthesize_plain_with_title_pause(page, voice_id='Joanna', title_pause_ms=800):
+def synthesize_plain_with_title_pause(page, voice_id=default_voice, title_pause_ms=800):
     # Plain-text synthesis with a precise silence inserted right after the title.
     polly = boto3.client('polly', region_name=AWS_REGION)
     title_text = extract_title_text(page)

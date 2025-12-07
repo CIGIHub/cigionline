@@ -7,13 +7,11 @@ from .models import ArticlePage
 def generate_tts_for_page(page_id):
     # 1. Update the live page row
     try:
-        page = ArticlePage.objects.get(pk=page_id)
+        article_page = ArticlePage.objects.get(pk=page_id)
     except ArticlePage.DoesNotExist:
         return
 
-    if not getattr(page, "tts_enabled", False):
-        return
-
+    page = article_page.get_latest_revision().as_object()
     text = page.get_plaintext()
     if not text:
         return
