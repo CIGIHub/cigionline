@@ -1,5 +1,5 @@
 from core.models import ArchiveablePageAbstract
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from .models import TopicPage, ThemePage, ProjectPage
 
@@ -9,6 +9,9 @@ from multimedia.models import MultimediaPage
 from events.models import EventPage
 
 from core.models import ContentPage
+from datetime import date
+import csv
+from urllib.parse import unquote
 
 
 def all_topics(request):
@@ -149,3 +152,120 @@ def programs(request):
         "name": "Themes",
         "children": theme_results,
     })
+
+
+def program_content_within_range(request):
+    start_date = date(2024, 8, 1)
+    end_date = date(2025, 7, 31)
+    themes = ThemePage.objects.live().filter(archive=0).order_by('title')
+    results = []
+
+    for theme in themes:
+        topic_pages = TopicPage.objects.filter(program_theme=theme)
+        theme_content_pages = []
+
+        for topic in topic_pages:
+            all_slugs = list(
+                topic.content_pages.live().filter(
+                    publishing_date__gte=start_date,
+                    publishing_date__lte=end_date
+                ).values_list('slug', flat=True)
+            )
+            theme_content_pages += all_slugs
+
+        results.append({
+            "name": theme.title,
+            "all_content_pages": list(set(theme_content_pages)),
+        })
+
+    return JsonResponse({
+        "name": "Themes",
+        "children": results,
+    })
+
+
+def program_affiliates(request):
+    request_type = request.GET.get('type')
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response.write('\ufeff')
+
+    # results = []
+    pages_list = []
+    authors_list = []
+    projects = ProjectPage.objects.live().filter(archive=0).order_by('title')
+
+    for project in projects:
+        # include landing page
+        url = unquote(project.url)
+        if url.startswith("https://www.cigionline.org"):
+            url = url[len("https://www.cigionline.org"):]
+        pages_list.append({
+            'program': project.title,
+            'title': project.title,
+            'url': url,
+            'pdf': '',
+        })
+
+        # pull content pages
+        content_pages = project.content_pages.live().all()
+        authors = []
+
+        for page in content_pages:
+            if hasattr(page.specific, 'pdf_downloads'):
+                for pdf in page.specific.pdf_downloads:
+                    url = unquote(page.url)
+                    if url.startswith("https://www.cigionline.org"):
+                        url = url[len("https://www.cigionline.org"):]
+                    pdf_url = unquote(pdf.value['file'].url) if pdf.value['file'] else ''
+                    if not pdf_url.startswith("https://www.cigionline.org"):
+                        pdf_url = f'https://www.cigionline.org{pdf_url}'
+                    pages_list.append({
+                        'program': project.title,
+                        'title': page.title,
+                        'url': url,
+                        'pdf': pdf_url,
+                    })
+            else:
+                url = unquote(page.url)
+                if url.startswith("https://www.cigionline.org"):
+                    url = url[len("https://www.cigionline.org"):]
+                pages_list.append({
+                    'program': project.title,
+                    'title': page.title,
+                    'url': url,
+                    'pdf': '',
+                })
+
+            authors += [author for author in getattr(page.specific, 'authors', None).all()]
+
+        authors_list += [{
+            'program': project.title,
+            'name': author.author.title,
+            'url': unquote(author.author.url) if author.author.url else '',
+        } for author in list(set(authors))]
+
+        # results.append({
+        #     "project": project.title,
+        #     "project_slug": project.slug,
+        #     "content_pages": pages_list,
+        #     "authors": authors_list,
+        # })
+
+    # request experts
+    if request_type == 'experts':
+        response['Content-Disposition'] = 'attachment; filename="program_experts.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Program', 'Expert', 'URL'])
+        for author in authors_list:
+            writer.writerow([author['program'], author['name'], author['url']])
+        return response
+
+    # default to content page requests
+    response['Content-Disposition'] = 'attachment; filename="program_pages.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Program', 'Page', 'URL', 'PDF'])
+    for page in pages_list:
+        writer.writerow([page['program'], page['title'], page['url'], page['pdf']])
+
+    # return JsonResponse(results, safe=False)
+    return response
