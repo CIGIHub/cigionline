@@ -19,7 +19,6 @@ def generate_tts_for_page(page_id):
     audio_bytes = synthesize_plain_with_title_pause(
         page,
         voice_id=page.tts_voice,
-        title_pause_ms=getattr(page, "tts_title_pause_ms", 800),
     )
 
     if not audio_bytes:

@@ -40,11 +40,16 @@ def _ensure_terminal_punct(text, terminal_mark='.'):
 
 
 def extract_title_text(page):
-    return (getattr(page, 'title', '') or '').strip()
+    text = (getattr(page, 'title', '') or '').strip()
+    if not text:
+        return ''
+    # If last character is already terminal punctuation, leave it
+    if text[-1] in '.!?…':
+        return text
+    return text + '.'
 
 
 def extract_meta_text(page):
-    subtitle_text = (getattr(page, 'subtitle', '') or '').strip()
     authors_text = ''
     author_relation = getattr(page, 'authors', None)
     if author_relation:
@@ -57,8 +62,9 @@ def extract_meta_text(page):
             if len(author_names) == 1:
                 authors_text = f'By {author_names[0]}'
             else:
-                authors_text = f'By {", ".join(author_names[:-1])} and {author_names[-1]}'
-    return strip_tags(f'{subtitle_text} {authors_text}').strip()
+                authors_text = f'By {", ".join(author_names[:-1])} and {author_names[-1]}.'
+    disclaimer = 'This CG article is being read by an AI-generated voice.'
+    return strip_tags(f'{authors_text} {disclaimer}').strip()
 
 
 def _block_html_to_text(html_string):
@@ -152,7 +158,7 @@ def synthesize_chunk(polly_client, text, voice_id=default_voice, use_ssml=False,
     return AudioSegment.from_file(io.BytesIO(audio_bytes), format=format)
 
 
-def synthesize_plain_with_title_pause(page, voice_id=default_voice, title_pause_ms=800):
+def synthesize_plain_with_title_pause(page, voice_id=default_voice):
     # Plain-text synthesis with a precise silence inserted right after the title.
     polly = boto3.client('polly', region_name=AWS_REGION)
     title_text = extract_title_text(page)
@@ -164,16 +170,11 @@ def synthesize_plain_with_title_pause(page, voice_id=default_voice, title_pause_
     if title_text:
         title_seg = synthesize_chunk(polly, title_text, voice_id=voice_id, format='mp3')
         combined = title_seg
-        # Insert exact silence after title
-        if title_pause_ms and title_pause_ms > 0:
-            combined += AudioSegment.silent(duration=int(title_pause_ms))
 
     # 2) request meta
     if meta_text:
         meta_seg = synthesize_chunk(polly, meta_text, voice_id=voice_id, format='mp3')
         combined = meta_seg if combined is None else (combined + meta_seg)
-        if title_pause_ms and title_pause_ms > 0:
-            combined += AudioSegment.silent(duration=int(title_pause_ms))
 
     # 3) request body
     if body_text:
