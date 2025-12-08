@@ -20,7 +20,10 @@ from django.shortcuts import redirect
 from django.urls import path, reverse
 from wagtail.admin import messages
 from wagtail.models import Page
-from .tasks import generate_tts_for_page
+import threading
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @hooks.register('register_rich_text_features')
@@ -207,6 +210,16 @@ def register_generate_tts_action():
     return GenerateTTS(order=999)
 
 
+def run_tts_in_background(page_id):
+    from .tasks import generate_tts_for_page
+
+    try:
+        generate_tts_for_page(page_id)
+        logger.info("TTS generation completed for page %s", page_id)
+    except Exception:
+        logger.exception("TTS generation failed for page %s", page_id)
+
+
 def generate_tts_view(request, page_id):
     page_object = Page.objects.get(pk=page_id).specific
 
@@ -215,10 +228,17 @@ def generate_tts_view(request, page_id):
     is_article_page = isinstance(page_object, ArticlePage)
 
     if is_article_page:
-        generate_tts_for_page(page_object.id)
-        messages.success(request, "TTS generation triggered for this page.")
-    else:
-        messages.warning(request, "TTS is not enabled for this page.")
+        background_thread = threading.Thread(
+            target=run_tts_in_background,
+            args=(page_object.id,),
+            daemon=True,
+        )
+        background_thread.start()
+
+        messages.success(
+            request,
+            'Audio generation started in the background. Please refresh this page in a few minutes and check the "Audio file" field. (800 words ~= 5000 characters ~= 1 minute processing time.)',
+        )
 
     edit_url = reverse("wagtailadmin_pages:edit", args=[page_id])
     return redirect(edit_url)
