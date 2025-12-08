@@ -63,7 +63,7 @@ def extract_meta_text(page):
                 authors_text = f'By {author_names[0]}'
             else:
                 authors_text = f'By {", ".join(author_names[:-1])} and {author_names[-1]}.'
-    disclaimer = 'This CG article is being read by an AI-generated voice. — .'
+    disclaimer = 'This CG article is being read by an AI-generated voice. .'
     return strip_tags(f'{authors_text} {disclaimer}').strip()
 
 
@@ -161,13 +161,16 @@ def synthesize_chunk(polly_client, text, voice_id=default_voice, use_ssml=False,
 def synthesize_plain_with_title_pause(page, voice_id=default_voice):
     polly = boto3.client('polly', region_name=AWS_REGION)
     article_text = f'{extract_title_text(page)} {extract_meta_text(page)} {extract_body_text(page)}'
+    combined = None
 
     if not article_text:
         return None
 
-    article_audio = synthesize_chunk(polly, article_text, voice_id=voice_id, format='mp3')
+    for ch in chunk_text(article_text):
+        seg = synthesize_chunk(polly, ch, voice_id=voice_id, format='mp3')
+        combined = seg if combined is None else (combined + seg)
 
     out = io.BytesIO()
-    article_audio.export(out, format='mp3')
+    combined.export(out, format='mp3')
     out.seek(0)
     return out.getvalue()
