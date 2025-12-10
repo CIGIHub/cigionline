@@ -303,7 +303,8 @@ class MultimediaPage(
         if self.podcast_episode is None:
             return None
         next_episode_number = self.podcast_episode + 1
-        return MultimediaPage.objects.filter(multimedia_series=self.multimedia_series, podcast_episode=next_episode_number).first()
+        season_number = self.podcast_season
+        return MultimediaPage.objects.filter(multimedia_series=self.multimedia_series, podcast_episode=next_episode_number, podcast_season=season_number).first()
 
     def get_transcript(self):
         soup = BeautifulSoup(self.transcript[0].value['text'].source, 'html.parser')
