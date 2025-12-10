@@ -54,6 +54,11 @@ class FacilityRentalInquiryForm(forms.Form):
 
     space = forms.MultipleChoiceField(label="What CIGI Event Space are you interested in", choices=CIGI_EVENT_SPACE_CHOICES, widget=forms.CheckboxSelectMultiple, required=True)
     attendees = forms.IntegerField(label="Number of Attendees", min_value=1)
+    space_other_details = forms.CharField(
+        label="If Other, please describe",
+        required=False,
+        widget=forms.Textarea,
+    )
 
     details = forms.CharField(label="Additional Details", widget=forms.Textarea)
 

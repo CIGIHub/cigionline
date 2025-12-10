@@ -73,6 +73,16 @@
     <td>{{ space_labels|join:", " }}</td>
   </tr>
   <tr>
+  <th align="left">Other Space Details</th>
+    <td>
+      {% if data.space_other_details %}
+        {{ data.space_other_details|linebreaksbr }}
+      {% else %}
+        —
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
     <th align="left">Attendees</th>
     <td>{{ data.attendees }}</td>
   </tr>

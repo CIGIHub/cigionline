@@ -120,11 +120,32 @@
             <div class="field field--full">
               <p>* Please include setup and tear down time.</p>
             </div>
-
-            <div class="field">
-              <label for="{{ form.space.id_for_label }}">Event Space</label>
-              {{ form.space }}
+            
+            {# Event Space checkbox group #}
+            <div class="field--full">
+              <label class="form-label">Event Space</label>
+              <div class="form-check-group">
+                {% for subwidget in form.space %}
+                  <div class="form-check">
+                    {{ subwidget.tag }}
+                    <label class="form-check-label" for="{{ subwidget.id_for_label }}">
+                      {{ subwidget.choice_label }}
+                    </label>
+                  </div>
+                {% endfor %}
+              </div>
             </div>
+
+            {# "Other" details text box – initially hidden unless Other is selected #}
+            <div class="field field--full"
+                id="space-other-wrapper"
+                {% if not form.space.value or "other" not in form.space.value %}style="display:none"{% endif %}>
+              <label for="{{ form.space_other_details.id_for_label }}">
+                {{ form.space_other_details.label }}
+              </label>
+              {{ form.space_other_details }}
+            </div>
+
             <div class="field">
               <label for="{{ form.attendees.id_for_label }}">Number of Attendees</label>
               {{ form.attendees }}
