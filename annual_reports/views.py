@@ -3,7 +3,7 @@ from .models import AnnualReportPage, AnnualReportSlidePage, AnnualReportSPAPage
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from wagtail.api.v2.views import PagesAPIViewSet
-from utils.helpers import richtext_html, richtext_to_inline_html
+from utils.helpers import richtext_to_inline_html
 
 
 def all_annual_reports(request):
