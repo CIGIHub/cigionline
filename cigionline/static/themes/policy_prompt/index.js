@@ -83,7 +83,8 @@ function scrollToElement(e) {
   const OFFSET = 80;
   const targetId = this.getAttribute('href').substring(1);
   const targetElement = document.getElementById(targetId);
-  const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - OFFSET;
+  const targetPosition =
+    targetElement.getBoundingClientRect().top + window.scrollY - OFFSET;
 
   window.scrollTo({
     top: targetPosition,
@@ -147,8 +148,10 @@ $(document).ready(function () {
     const time = chapter.getAttribute('data-timestamp');
     if (time) {
       const timeArray = time.split(':');
-      const seconds = parseInt(timeArray[0], 10) * 3600
-        + parseInt(timeArray[1], 10) * 60 + parseInt(timeArray[2], 10);
+      const seconds =
+        parseInt(timeArray[0], 10) * 3600 +
+        parseInt(timeArray[1], 10) * 60 +
+        parseInt(timeArray[2], 10);
       podcastPlayer[0].setCurrentTime(seconds);
       podcastPlayer[0].play();
     }
@@ -204,4 +207,30 @@ $(document).ready(function () {
       startTyping(texts, speed);
     }, 2000);
   }
+
+  const tabs = document.querySelectorAll('.season-tab');
+  const panes = document.querySelectorAll('.season-pane');
+
+  function showPane(id) {
+    panes.forEach((p) => p.classList.add('d-none'));
+    const target = document.getElementById(id);
+    if (target) target.classList.remove('d-none');
+  }
+
+  function setActive(btn) {
+    tabs.forEach((b) => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+  }
+
+  tabs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-season');
+      setActive(btn);
+      showPane(id);
+    });
+  });
 });

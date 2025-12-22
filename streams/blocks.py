@@ -392,6 +392,7 @@ class ImageBlock(blocks.StructBlock, ThemeableBlock):
         'data_series_opinion',
         'longform_2_opinion',
         'space_series_opinion',
+        'dph_page',
     ]
 
     def get_template(self, value, context, *args, **kwargs):
@@ -518,7 +519,8 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         'platform_governance_series_opinion_series',
         'women_and_trade_series_opinion_series',
         'big_tech_s3_multimedia_series',
-        'indigenous_lands_series_opinion_series'
+        'indigenous_lands_series_opinion_series',
+        'dph_page',
     ]
 
     def get_template(self, value, context, *args, **kwargs):
@@ -1306,7 +1308,7 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
         ],
         required=True,
     )
-
+    cohort = blocks.CharBlock(required=False)
     implemented_themes = [
         'ges_activity',
     ]
@@ -1323,6 +1325,7 @@ class PersonsListBlock(blocks.StructBlock, ThemeableBlock):
 
 
 class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
+    title = blocks.CharBlock(required=False)
     publication_type = blocks.PageChooserBlock(page_type='publications.PublicationTypePage', required=False, help_text='Select a publication type to automatically populate with this type of publications.')
     publications = blocks.StreamBlock(
         [
@@ -1332,16 +1335,38 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
     )
     implemented_themes = [
         'dph_page',
+        'digital_finance_event',
     ]
 
     def get_publications_by_type(self, publication_type):
         from publications.models import PublicationPage
         return PublicationPage.objects.live().public().filter(publication_type__title=publication_type).order_by('-publishing_date')
 
+    def get_publications_by_type_sorted(self, publication_type, by='date'):
+        qs = self.get_publications_by_type(publication_type)
+
+        if by == 'author':
+            pubs = list(qs)
+
+            def first_author_last(pub):
+                first_author_rel = pub.authors.order_by('sort_order').first()
+                if first_author_rel and first_author_rel.author:
+                    return (first_author_rel.author.last_name or '').lower()
+                return 'zzzz'
+
+            pubs.sort(key=first_author_last)
+            return pubs
+
+        return qs
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
+
         if value.get('publication_type'):
-            context['publications_by_type'] = self.get_publications_by_type(value.get('publication_type').specific.title)
+            pub_type = value['publication_type'].specific.title
+
+            context['publications_by_type'] = self.get_publications_by_type(pub_type)
+            context['publications_by_author'] = self.get_publications_by_type_sorted(pub_type, by='author')
         return context
 
     def get_template(self, value, context, *args, **kwargs):
@@ -1355,13 +1380,21 @@ class PublicationsListBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/publications_list_block.html'
 
 
-class AddtionalPagesBlock(blocks.StructBlock):
+class AddtionalPagesBlock(blocks.StructBlock, ThemeableBlock):
     pages = blocks.StreamBlock(
         [
             ('page', blocks.PageChooserBlock(required=True)),
         ],
         required=True,
     )
+
+    implemented_themes = [
+        'dph_page',
+    ]
+
+    def get_template(self, value, context, *args, **kwargs):
+        standard_template = super(AddtionalPagesBlock, self).get_template(value, context, *args, **kwargs)
+        return self.get_theme_template(standard_template, context, 'additional_pages_block')
 
     class Meta:
         icon = 'doc-full'

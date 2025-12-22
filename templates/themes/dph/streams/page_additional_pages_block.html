@@ -1,0 +1,15 @@
+{% load wagtailcore_tags %}
+
+<div class="additional-pages-block">
+  {% for page in self.pages %}
+    <article class="feature-content">
+      <h3 class="feature-content-title">
+        <a href="{% pageurl page.value %}">
+          {{ page.value.title }}
+        </a>
+      </h3>
+      <div class="feature-content-date meta">{{ page.value.specific.publishing_date|date:"F j, Y" }}</div>
+    </article>
+  {% endfor %}
+</div>
+

@@ -46,7 +46,7 @@ section {
       font-size: 0.75em;
       margin-bottom: 0;
       text-transform: uppercase;
-  
+
       li {
         color: $cigi-text-grey;
         display: inline;
@@ -106,6 +106,20 @@ section {
     .singular-feature {
       .feature-content-image {
         flex: 0 0 33.3333%;
+      }
+    }
+  }
+
+  &.persons-list-block {
+    margin-bottom: 4rem;
+
+    ul {
+      margin-bottom: 0;
+
+      li {
+        &:last-child {
+          padding-bottom: 0;
+        }
       }
     }
   }
@@ -256,6 +270,8 @@ section {
   }
 
   .persons-list-block {
+    margin-bottom: 4rem;
+
     h2 {
       margin-top: 1.5em;
     }
@@ -265,9 +281,19 @@ section {
         margin-bottom: 0;
       }
     }
+
+    ul {
+      margin-bottom: 0;
+
+      li {
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+    }
   }
 }
 
 .search-table-container {
-  margin-top: 2em;
+  margin-top: 0;
 }

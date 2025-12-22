@@ -28,7 +28,7 @@ footer {
         padding-left: 1rem;
 
         &::placeholder {
-          color: $cigi-medium-light-grey;
+          color: $white;
         }
       }
 
@@ -80,15 +80,13 @@ footer {
     }
   }
 
-  svg {
-    &.mitacs {
-      width: 10rem;
-      margin-bottom: 1rem;
-
-      path,
-      polyline {
-        fill: $white;
+  .partners {
+    .mitacs-logo {
+      @include media-breakpoint-up(md) {
+        margin-bottom: 1rem;
       }
+      width: 15rem;
+      margin-bottom: 2rem;
     }
   }
 
@@ -99,25 +97,29 @@ footer {
     margin-top: 1rem;
 
     nav {
-      @include link($color: $white, $hover-color: $cigi-dark-pink);
-
       .nav-tabs {
         @include media-breakpoint-only(md) {
           flex-direction: column;
         }
 
         .nav-link {
-          @include media-breakpoint-only(md) {
-            padding: 0;
-          }
+          color: $dph-light-green;
+          padding: 0;
           padding-top: 0;
           padding-bottom: 0;
 
-          &:not(:last-child) {
-            @include media-breakpoint-only(md) {
-              border: 0;
+          &.active {
+            color: $dph-light-green;
+
+            &::after {
+              background-color: $dph-light-green;
             }
-            border-right: 2px solid $cigi-text-grey;
+          }
+
+          &:hover {
+            &::after {
+              background-color: $dph-light-green;
+            }
           }
         }
       }
@@ -125,11 +127,7 @@ footer {
   }
 
   .copyright {
-    @include link(
-      $color: $cigi-medium-light-grey,
-      $hover-color: $cigi-primary-colour
-    );
-    color: $cigi-medium-light-grey;
+    @include link($color: $cigi-light-grey, $hover-color: $cigi-primary-colour);
     margin-top: 2rem;
     text-align: center;
   }

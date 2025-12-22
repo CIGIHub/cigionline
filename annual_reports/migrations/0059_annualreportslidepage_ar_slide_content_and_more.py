@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('annual_reports', '0055_alter_annualreportlistpage_body'),
+        ('annual_reports', '0058_alter_annualreportlistpage_body'),
         ('images', '0005_cigionlineimage_description'),
         ('wagtaildocs', '0014_alter_document_file_size'),
     ]

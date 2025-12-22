@@ -13,7 +13,7 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render
 from django.utils import timezone
 from modelcluster.fields import ParentalKey
-from streams.blocks import AbstractSubmissionBlock, CollapsibleParagraphBlock
+from streams.blocks import AbstractSubmissionBlock
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
 from wagtail.admin.panels import (
@@ -187,7 +187,6 @@ class EventPage(
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             ('abstract_submission_block', AbstractSubmissionBlock()),
-            ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
         ],
         blank=True,
     )
@@ -200,16 +199,16 @@ class EventPage(
         related_name='+',
         verbose_name='Event agenda',
     )
-    event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=False)
+    event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=True)
     event_end = models.DateTimeField(blank=True, null=True)
     event_format = models.CharField(
-        blank=False,
+        blank=True,
         max_length=32,
         null=True,
         choices=EventFormats.choices,
     )
     event_type = models.CharField(
-        blank=False,
+        blank=True,
         max_length=32,
         null=True,
         choices=EventTypes.choices,
@@ -262,7 +261,7 @@ class EventPage(
         max_length=64,
         help_text='Override the button text for the event website. If empty, the button will read "Event Website".'
     )
-    website_url = models.URLField(blank=True, max_length=512)
+    website_url = models.URLField(blank=True, null=True, max_length=512)
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)

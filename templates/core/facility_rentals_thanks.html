@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+{% render_bundle 'facilityRentalsPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+{% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+<section class="facility-rentals">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8">
+        <h2>Thank you for your Event Rental Inquiry!</h2>
+        <p>Your inquiry was submitted successfully. A member of our CIGI Event
+          Team will get back to you shortly.</p>
+
+        <p><a class="button" href="{{ self.url }}">Back to Facility Rentals</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

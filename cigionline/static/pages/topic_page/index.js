@@ -77,6 +77,7 @@ root.render(
         value: 'News Releases',
       }],
     }]}
+    exclusions={['working-papers']}
     RowComponent={TopicContentListing}
     tableColumns={[{
       colSpan: 6,

@@ -86,6 +86,29 @@
     </section>
   {% endcache %}
 
+  {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview self.featured_events_revision_created_at|date:"c" %}
+    <section class="homepage-featured-events">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="homepage-subheading">
+              <a href="/events/">
+                Events
+              </a>
+            </h2>
+          </div>
+        </div>
+        <div class="events-container row">
+          {% for event in featured_events %}
+            <div class="col-12 col-md-4 homepage-featured-event-row">
+              {% include "includes/features/feature_event.html" with event=event %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endcache %}
+
   {% cache 86400 homepage_featured_publications self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_publications_revision_created_at|date:"c" %}
     <section class="homepage-featured-publications">
       <div class="container">
@@ -171,27 +194,24 @@
       </div>
     </section>
   {% endcache %}
-
-  {% cache 86400 homepage_featured_events self.latest_revision_created_at|date:"c" is_preview self.featured_events_revision_created_at|date:"c" %}
-    <section class="homepage-featured-events">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="homepage-subheading">
-              <a href="/events/">
-                Events
-              </a>
-            </h2>
-          </div>
+  <section class="homepage-email-list">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-5">
+          <p>Get regular updates on our research and events in your inbox.</p>
         </div>
-        <div class="events-container row">
-          {% for event in featured_events %}
-            <div class="col-12 col-md-4 homepage-featured-event-row">
-              {% include "includes/features/feature_event.html" with event=event %}
-            </div>
-          {% endfor %}
+        <div class="col-12 col-md-7">
+          <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
+            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
+              class="form-email required" required="required" aria-required="true">
+            <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
+          </form>
         </div>
       </div>
-    </section>
-  {% endcache %}
+    </div>
+  </section>
 {% endblock content %}
+
+{% block footer %}
+  {% include "./includes/footer.html" %}
+{% endblock footer %}

@@ -48,6 +48,11 @@ function TopicContentListing(props) {
               <i className="fal fa-bullhorn" />
             </span>
           )}
+          {row.contenttype === 'Activity' && (
+            <span className="table-icon icon-activity">
+              <i className="fal fa-file-search" />
+            </span>
+          )}
           <div className="table-infos">
             <a href={row.url} className="table-title-link">
               {row.title}

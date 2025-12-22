@@ -37,6 +37,14 @@
       margin-bottom: 0;
     }
   }
+
+  .row {
+    &:last-child {
+      hr {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 .search-table-container {
@@ -56,7 +64,7 @@ h2 {
 }
 
 .persons-list-block {
-  margin: 2em 0;
+  margin: 4rem 0;
 
   .block-title {
     font-weight: 700;

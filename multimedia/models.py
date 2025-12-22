@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from bs4 import BeautifulSoup
 from core.models import (
     BasicPageAbstract,
@@ -302,7 +303,8 @@ class MultimediaPage(
         if self.podcast_episode is None:
             return None
         next_episode_number = self.podcast_episode + 1
-        return MultimediaPage.objects.filter(multimedia_series=self.multimedia_series, podcast_episode=next_episode_number).first()
+        season_number = self.podcast_season
+        return MultimediaPage.objects.filter(multimedia_series=self.multimedia_series, podcast_episode=next_episode_number, podcast_season=season_number).first()
 
     def get_transcript(self):
         soup = BeautifulSoup(self.transcript[0].value['text'].source, 'html.parser')
@@ -572,20 +574,16 @@ class MultimediaSeriesPage(
 
     @property
     def series_seasons(self):
-        episode_filter = {
-            'multimedia_series': self,
-        }
+        episode_filter = {'multimedia_series': self}
         series_episodes = MultimediaPage.objects.filter(**episode_filter).order_by('-publishing_date')
-        series_seasons = {}
+        seasons = {}
         for episode in series_episodes:
-            episode_season = episode.specific.podcast_season if episode.specific.podcast_season else 0
-            if episode_season not in series_seasons:
-                series_seasons.update({episode_season: {'published': [], 'unpublished': []}})
-            if episode.live:
-                series_seasons[episode_season]['published'].append(episode)
-            else:
-                series_seasons[episode_season]['unpublished'].append(episode)
-        return series_seasons
+            season = episode.specific.podcast_season or 0
+            if season not in seasons:
+                seasons[season] = {'published': [], 'unpublished': []}
+            (seasons[season]['published'] if episode.live else seasons[season]['unpublished']).append(episode)
+
+        return OrderedDict(sorted(seasons.items(), key=lambda x: x[0]))
 
     @property
     def latest_episode(self):

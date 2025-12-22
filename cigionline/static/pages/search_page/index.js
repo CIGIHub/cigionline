@@ -174,6 +174,7 @@ root.render(
         value: 'research.ProjectPage',
       }],
     }].sort((a, b) => a.name.localeCompare(b.name))}
+    exclusions={['working-papers']}
     RowComponent={SearchResultListing}
   />,
 );

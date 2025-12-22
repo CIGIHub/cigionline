@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.contrib import messages
 from django.db import models
 from django.db.models.fields import CharField
 from django.http import JsonResponse, HttpResponseForbidden
@@ -50,6 +51,7 @@ from streams.blocks import (
     FilesBlock,
     SovereignCanadaRationaleBlock,
     SovereignCanadaDashboardBlock,
+    CollapsibleParagraphBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -65,13 +67,16 @@ from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, Collection
 from wagtail.url_routing import RouteResult
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.documents.models import Document
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.snippets.models import register_snippet
-from .forms import Think7AbstractUploadForm
+from .forms import Think7AbstractUploadForm, FacilityRentalInquiryForm
+from .emailing import send_facility_rental_confirmation_email, send_facility_rental_email
+from .models_settings import EmailFormSettings
 import math
 
 
@@ -95,6 +100,7 @@ class BasicPageAbstract(models.Model):
         ('publications_list_block', PublicationsListBlock()),
         ('additional_pages_block', AddtionalPagesBlock()),
         ('files_block', FilesBlock()),
+        ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
@@ -555,7 +561,7 @@ class ContentPage(Page, SearchablePageAbstract):
         ).exclude(
             articlepage__article_type__title='CIGI in the News'
         ).exclude(
-            publicationpage__publication_type__title='Working Paper'
+            publicationpage__publication_type__title__in=['Working Paper', 'DigiFin Policy Brief']
         ).exclude(
             path__startswith='00010002'
         ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_content)])
@@ -795,6 +801,7 @@ class BasicPage(
         'core.FundingPage',
         'core.TwentiethPage',
         'core.TwentiethPageSingleton',
+        'core.FacilityRentalsPage',
         'people.PersonListPage',
         'research.ProjectPage',
     ]
@@ -889,6 +896,97 @@ class PrivacyNoticePage(
 
     class Meta:
         verbose_name = 'Privacy Notice'
+
+
+class FacilityRentalsPage(
+    RoutablePageMixin,
+    Page,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+):
+    """
+    A special singleton page for /about/facility-rentals that contains
+    an email form for contacting about rental details.
+    """
+
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+
+        ],
+        blank=True,
+    )
+    related_files = StreamField(
+        [
+            ('file', DocumentChooserBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('related_files'),
+            ],
+            heading='Related Files',
+            classname='collapsible collapsed',
+        ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    def get_context(self, request, *args, **kwargs):
+        ctx = super().get_context(request, *args, **kwargs)
+        ctx["form"] = FacilityRentalInquiryForm()
+        return ctx
+
+    def serve(self, request, *args, **kwargs):
+        if request.method == "POST":
+            form = FacilityRentalInquiryForm(request.POST)
+            if form.is_valid():
+                recipients = EmailFormSettings.for_request(request).recipients
+                if not recipients:
+                    form.add_error(None, "No recipients are configured. Please contact the site administrator.")
+                else:
+                    try:
+                        send_facility_rental_email(request, recipients, form.cleaned_data)
+                        send_facility_rental_confirmation_email(form.cleaned_data)
+                    except Exception as e:
+                        print(f"Error sending facility rental inquiry email: {e}")
+                        form.add_error(None, "There was an error sending your request. Please try again later.")
+                    else:
+                        messages.success(request, "Thanks! Your facility rental inquiry has been sent.")
+                        return redirect(self.url + "thank-you/")
+
+            # Render with bound form (errors or success)
+            context = self.get_context(request)
+            context["form"] = form
+            return render(request, self.template, context)
+        return super().serve(request, *args, **kwargs)
+
+    @route(r"^thank-you/$")
+    def thank_you(self, request, *args, **kwargs):
+        return render(request, "core/facility_rentals_thanks.html", {"self": self})
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    template = 'core/facility_rentals_page.html'
+
+    class Meta:
+        verbose_name = 'Facility Rentals Page'
 
 
 class TwentiethPage(

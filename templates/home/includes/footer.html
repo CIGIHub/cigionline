@@ -1,0 +1,60 @@
+{% load wagtailcore_tags topic_tags menu_tags cache %}
+
+{% cache 86400 footer_homepage %}
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="logo-container">
+            {% include 'includes/footer_cigi_logo.svg' %}
+          </div>
+          {% include 'includes/footer_bracket.svg' %}
+          {% highlighted_topics %}
+        </div>
+      </div>
+      <div class="row justify-content-center footer-content">
+        <div class="col-md-6">
+          {% get_menu_items 'footer' as footer_menu_items %}
+          <ul class="footer-menu">
+            {% for menu_item in footer_menu_items %}
+              {% if menu_item.link_page %}
+                <li>
+                  <a href="{% pageurl menu_item.link_page %}">
+                    {{ menu_item.title }}
+                  </a>
+                </li>
+              {% elif menu_item.link_url %}
+                <li>
+                  <a href="{{ menu_item.link_url }}">
+                    {{ menu_item.title }}
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <ul class="social-links">
+            <li>
+              <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's X profile"><i class="fa-brands fa-x-twitter"></i></a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's LinkedIn profile"><i class="fa-brands fa-linkedin-in"></i></a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Youtube channel"><i class="fa-brands fa-youtube"></i></a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
+            </li>
+            <li>
+              <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page">{% include 'includes/substack-logo.svg' %}</a>
+            </li>
+            <li>
+              <a href="https://medium.com/centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Medium page">{% include 'includes/medium-logo.svg' %}</a>
+            </li>
+          </ul>
+          <div class="copyright">&copy; {% now "Y" %} Centre for International Governance Innovation</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+{% endcache %}

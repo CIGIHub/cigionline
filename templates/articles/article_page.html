@@ -51,6 +51,9 @@
 {% block extra_css %}
   {% render_bundle 'articlePage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'articlePage' 'js' attrs='defer' %}
+{% endblock %}
 
 {% block content %}
   {% preview_cache_bust as is_preview %}
