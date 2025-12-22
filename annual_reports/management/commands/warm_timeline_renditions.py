@@ -1,11 +1,7 @@
 from datetime import date
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Prefetch, Q
 from images.models import CigionlineRendition as Rendition
-from itertools import chain
-
-# Adjust these imports to your project
-from core.models import ContentPage  # or wherever ContentPage lives
+from core.models import ContentPage
 
 DEFAULT_FILTER_SPECS = ["fill-142x80", "fill-2560x1600"]
 
