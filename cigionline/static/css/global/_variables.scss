@@ -54,6 +54,7 @@ $cigi-text-grey-dark: #4a4a4a;
 $cigi-dark-line-grey: #404040;
 $cigi-dark-grey: #2f2f2f;
 $cigi-darkest-grey: #373737;
+$grey-selected: #999;
 
 // Box Greys
 $hover-grey: $cigi-light-grey;
@@ -84,5 +85,18 @@ $black-alpha-30: rgba(0, 0, 0, 0.3);
 $black-alpha-40: rgba(0, 0, 0, 0.4);
 $black-alpha-50: rgba(0, 0, 0, 0.5);
 $black-alpha-65: rgba(0, 0, 0, 0.65);
+$black-alpha-70: rgba(0, 0, 0, 0.7);
 $black-alpha-80: rgba(0, 0, 0, 0.8);
 $black-alpha-85: rgba(0, 0, 0, 0.85);
+
+//ar
+$ar-background-overlay: rgba(0, 0, 0, 0.7);
+$ar-tooltip-background: #373737;
+$ar-timeline-event: #e7bc5d;
+$ar-timeline-opinion: #63a9a4;
+$ar-timeline-publication: $cigi-primary-colour;
+$ar-timeline-outline: #5f5f5f;
+$ar-dark-grey: #494949;
+$ar-grey-selected: #999;
+$ar-grey-button: #666;
+$ar-grey-button-hover: #333;

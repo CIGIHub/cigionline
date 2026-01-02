@@ -1,0 +1,365 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+
+.cigi-top-bar {
+  &.background-white {
+    &:not(.light-header) {
+      .annual-report-hamburger-menu {
+        .ar-lang-toggle {
+          button {
+            color: $black;
+
+            &:hover {
+              color: $cigi-primary-colour;
+            }
+
+            &.active {
+              color: $grey-selected;
+              cursor: default;
+
+              &::before {
+                background-color: $grey-selected;
+              }
+            }
+
+            &.disabled {
+              cursor: default;
+              color: $grey-selected;
+            }
+
+            &:first-child {
+              &::after {
+                color: $black;
+              }
+            }
+          }
+        }
+
+        .hamburger-btn {
+          span {
+            i {
+              color: $black;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.annual-report-hamburger-menu {
+  display: flex;
+  justify-content: flex-end;
+  z-index: 101;
+
+  .ar-lang-toggle {
+    button {
+      color: $white;
+      margin: 0 0.75rem;
+      transition: color ease 0.2s;
+      position: relative;
+
+      &:hover {
+        color: $cigi-primary-colour;
+      }
+
+      &.active {
+        color: $grey-selected;
+        cursor: default;
+
+        &::before {
+          content: '';
+          background-color: $grey-selected;
+          display: block;
+          width: 100%;
+          height: 1px;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+        }
+      }
+
+      &.disabled {
+        cursor: default;
+        color: $grey-selected;
+      }
+
+      &:first-child {
+        &::after {
+          content: '/';
+          color: $white;
+          position: absolute;
+          right: -1em;
+        }
+      }
+    }
+
+    .intl-disabled {
+      margin: 0 0.75rem;
+      color: $grey-selected;
+    }
+  }
+
+  .hamburger-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 1.25rem;
+    margin-left: 0.5rem;
+    position: relative;
+    width: 1rem;
+
+    &:hover {
+      i {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    span {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      i {
+        color: $white;
+        transition: color ease 0.2s;
+      }
+    }
+  }
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $black;
+  z-index: 100;
+  color: $white;
+}
+
+.menu-content {
+  width: 100%;
+  z-index: 101;
+
+  @include media-breakpoint-down(med) {
+    max-height: 100vh;
+    min-height: 85vh;
+    padding-bottom: 30px;
+    padding-top: 10px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    height: 441px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-55%);
+  }
+
+  @include media-breakpoint-up(xl) {
+    height: 501px;
+  }
+
+  button {
+    text-align: left;
+  }
+
+  h2 {
+    animation-duration: 1000ms;
+    animation-name: tocTitleFade;
+    animation-timing-function: ease-in;
+    position: relative;
+  }
+
+  .toc-content {
+    animation-duration: 1000ms;
+    animation-name: tocMobileFade;
+    animation-timing-function: ease-in;
+    position: relative;
+
+    @include media-breakpoint-up(med) {
+      animation-duration: 1500ms;
+      animation-name: tocContentFade;
+      animation-timing-function: ease-in;
+    }
+
+    .toc-menu {
+      border-bottom: 1px solid $grey-selected;
+      color: $grey-selected;
+      font-family: $primary-font-family, sans-serif;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      text-transform: uppercase;
+
+      span {
+        margin: 0 5px;
+      }
+
+      button {
+        background-image: linear-gradient(
+          transparent calc(100% - 2px),
+          $cigi-primary-colour 10px
+        );
+        background-repeat: no-repeat;
+        background-size: 0% 100%;
+        color: $white;
+        font-weight: 600;
+        text-transform: uppercase;
+        transition: background-size 500ms;
+
+        &:hover {
+          background-size: 100% 100%;
+        }
+      }
+    }
+
+    .credits-message {
+      font-size: 14px;
+      line-height: 1.3;
+
+      @include media-breakpoint-up(xl) {
+        font-size: 16px;
+      }
+    }
+
+    .credits-border {
+      border-bottom: 1px solid $grey-selected;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    .credits-content,
+    .slide-content {
+      animation-duration: 500ms;
+      animation-name: creditsFade;
+      animation-timing-function: ease-in;
+    }
+
+    .credits-title {
+      color: $white;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      margin: 0;
+      padding-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .executive-credits {
+      .credits-block {
+        min-height: 30px;
+        @include media-breakpoint-up(med) {
+          min-height: 60px;
+        }
+      }
+    }
+
+    .credits-block {
+      flex: 0 0 50%;
+      padding: 0 0 3px;
+
+      @include media-breakpoint-up(med) {
+        flex: 0 0 33%;
+      }
+      @include media-breakpoint-up(lg) {
+        flex: 0 0 25%;
+      }
+
+      @include media-breakpoint-up(xl) {
+        padding: 0 0 7px;
+      }
+
+      &.credits-border {
+        border-bottom: 1px solid $white;
+      }
+
+      button {
+        transition: color 250ms;
+
+        &:hover {
+          color: $cigi-primary-colour;
+        }
+      }
+
+      h5 {
+        color: $white;
+        font-size: 14px;
+        line-height: 1.1;
+        margin: 5px 15px 2px 0;
+
+        @include media-breakpoint-up(xl) {
+          font-size: 16px;
+          margin: 5px 0;
+        }
+
+        button {
+          line-height: initial;
+        }
+      }
+
+      h6 {
+        color: $white;
+        font-size: 10px;
+        line-height: 1.1;
+        margin: 0 15px 5px 0;
+
+        @include media-breakpoint-up(xl) {
+          font-size: 11px;
+          margin: 5px 0;
+        }
+      }
+    }
+
+    .slide-link {
+      line-height: 18px;
+      margin-bottom: 5px;
+
+      @include media-breakpoint-up(xl) {
+        margin-bottom: 10px;
+      }
+
+      .slide-number {
+        color: $white;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 10px 0 0;
+
+        &.slide-current {
+          color: $grey-selected;
+        }
+      }
+
+      a {
+        background-image: linear-gradient(
+          transparent calc(100% - 2px),
+          $cigi-primary-colour 10px
+        );
+        background-repeat: no-repeat;
+        background-size: 0% 100%;
+        color: $white;
+        font-weight: 400;
+        transition: background-size 500ms;
+
+        &:hover {
+          background-size: 100% 100%;
+        }
+      }
+
+      span {
+        color: $grey-selected;
+        font-family: $primary-font-family, sans-serif;
+        font-style: normal;
+        font-weight: 400;
+      }
+    }
+  }
+}

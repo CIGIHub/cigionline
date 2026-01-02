@@ -2,17 +2,18 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-const TwentiethPageSlide4Content = ({ slide }) => (
-  <div className="slide-content">
-    <div className="container">
-      <div className="row justify-content-center text-center">
-        <div className="col-md-10 col-lg-8 slide-2">
-          {slide.title && <h1>{slide.title}</h1>}
+function TwentiethPageSlide4Content({ slide }) {
+  return (
+    <div className="slide-content">
+      <div className="container">
+        <div className="row justify-content-center text-center">
+          <div className="col-md-10 col-lg-8 slide-2">
+            {slide.title && <h1>{slide.title}</h1>}
+          </div>
         </div>
-      </div>
-      <div className="row justify-content-center">
-        <div className="col-md-8 col-lg-6 slide-2">
-          {slide.body
+        <div className="row justify-content-center">
+          <div className="col-md-8 col-lg-6 slide-2">
+            {slide.body
             && slide.body.map((block) => {
               if (block.type === 'text') {
                 return (
@@ -45,10 +46,11 @@ const TwentiethPageSlide4Content = ({ slide }) => (
               }
               return <div key={uuidv4()}>{block.value}</div>;
             })}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+}
 
 export default TwentiethPageSlide4Content;

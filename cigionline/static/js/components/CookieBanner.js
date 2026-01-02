@@ -82,6 +82,7 @@ class CookieBanner extends React.Component {
                     bannerClicked && 'accepted-banner',
                   ].join(' ')}
                   onClick={() => this.handleBanner()}
+                  aria-label="Close cookie banner"
                 >
                   <i className="fal fa-times" />
                 </button>

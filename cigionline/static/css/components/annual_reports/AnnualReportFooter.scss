@@ -1,0 +1,160 @@
+@import '../../global/variables.scss';
+@import '../../global/mixins.scss';
+
+@keyframes footerFade {
+  0% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  66% {
+    opacity: 0;
+    top: 10px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes socialFade {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0;
+  }
+
+  66% {
+    opacity: 0.66;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.footer {
+  align-items: center;
+  bottom: 2%;
+  display: flex;
+  justify-content: flex-end;
+  left: 50%;
+  max-width: 1140px;
+  padding: 15px 10px;
+  position: absolute;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 5;
+
+  @include media-breakpoint-up(md) {
+    padding: 20px 15px;
+  }
+
+  &.footer-dark {
+    .footer-icon-btn {
+      border-color: $black;
+      color: $black;
+    }
+
+    .cigi-social {
+      a,
+      button {
+        color: $black;
+      }
+    }
+  }
+
+  .footer-icon-btn {
+    animation-duration: 1500ms;
+    animation-name: footerFade;
+    animation-timing-function: ease-in;
+    border-color: $white;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 1px;
+    color: $white;
+    display: block;
+    font-size: 12px;
+    height: 38px;
+    line-height: 37px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    width: 38px;
+  }
+
+  .footer-description {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    right: 120px;
+    text-align: right;
+    top: 62%;
+    transform: translateY(-50%);
+    visibility: hidden;
+    width: 400px;
+
+    span {
+      background-color: $black-alpha-70;
+      padding: 2px 5px;
+    }
+  }
+
+  .cigi-social {
+    animation-duration: 1500ms;
+    animation-name: footerFade;
+    animation-timing-function: ease-in;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2px;
+    margin-left: 10px;
+    position: relative;
+    width: 40px;
+    transition: width 1s ease;
+
+    &.open {
+      width: 9rem;
+    }
+
+    a,
+    button {
+      color: $white;
+      font-size: 14px;
+      margin-left: 20px;
+      transition: color 250ms;
+
+      &:hover {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    button {
+      height: 20px;
+    }
+
+    .social-1-btn,
+    .social-2-btn,
+    .social-3-btn {
+      position: absolute;
+      top: 0;
+      animation: socialFade 1500ms ease-in;
+    }
+
+    .social-1-btn {
+      left: 0;
+    }
+    .social-2-btn {
+      left: 2rem;
+    }
+    .social-3-btn {
+      left: 4rem;
+    }
+  }
+}
