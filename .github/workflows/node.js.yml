@@ -27,11 +27,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
+      - name: Assert FontAwesome token exists
+        run: |
+          if [ -z "${FONTAWESOME_NPM_AUTH_TOKEN}" ]; then
+            echo "FONTAWESOME_NPM_AUTH_TOKEN is empty or not set."
+            exit 1
+          fi
+        env:
+          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
       - name: Configure .npmrc for FontAwesome Pro
         env:
           FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
         run: |
-          echo "@fortawesome:registry=https://npm.fontawesome.com/" > ~/.npmrc
+          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> ~/.npmrc
           echo "//npm.fontawesome.com/:_authToken=${FONTAWESOME_NPM_AUTH_TOKEN}" >> ~/.npmrc
       - name: Install dependencies
         run: npm ci
@@ -61,7 +69,7 @@ jobs:
         env:
           FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
         run: |
-          echo "@fortawesome:registry=https://npm.fontawesome.com/" > ~/.npmrc
+          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> ~/.npmrc
           echo "//npm.fontawesome.com/:_authToken=${FONTAWESOME_NPM_AUTH_TOKEN}" >> ~/.npmrc
       - name: Install dependencies
         run: npm ci
