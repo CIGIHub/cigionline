@@ -7,40 +7,29 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
 
+env:
+  FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
+
 jobs:
   lint-js:
     runs-on: ubuntu-latest
 
     if: |
-      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
-      (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
+        (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
+        (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
       - name: Check out repository code
         if: ${{ github.event_name != 'pull_request_target' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Check out Dependabot
         if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: 20
-      - name: Assert FontAwesome token exists
-        run: |
-          if [ -z "${FONTAWESOME_NPM_AUTH_TOKEN}" ]; then
-            echo "FONTAWESOME_NPM_AUTH_TOKEN is empty or not set."
-            exit 1
-          fi
-        env:
-          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-      - name: Configure .npmrc for FontAwesome Pro
-        env:
-          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-        run: |
-          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> ~/.npmrc
-          echo "//npm.fontawesome.com/:_authToken=${FONTAWESOME_NPM_AUTH_TOKEN}" >> ~/.npmrc
       - name: Install dependencies
         run: npm ci
       - name: Run JS linter
@@ -50,26 +39,20 @@ jobs:
     runs-on: ubuntu-latest
 
     if: |
-      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
-      (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
+        (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
+        (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
     steps:
       - name: Check out repository code
         if: ${{ github.event_name != 'pull_request_target' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Check out Dependabot
         if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: 20
-      - name: Configure .npmrc for FontAwesome Pro
-        env:
-          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-        run: |
-          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> ~/.npmrc
-          echo "//npm.fontawesome.com/:_authToken=${FONTAWESOME_NPM_AUTH_TOKEN}" >> ~/.npmrc
       - name: Install dependencies
         run: npm ci
