@@ -6,6 +6,7 @@ import {
   faShareNodes,
   faMessageQuote,
   faArrowRight,
+  faCameraRetro,
 } from '@fortawesome/pro-light-svg-icons';
 import {
   faFacebookSquare,
@@ -80,13 +81,23 @@ function AnnualReportFooter({ slide, onHoverChange, dimUI }) {
               </div>
             </div>
           </div>
-          <FontAwesomeIcon
-            icon={faMessageQuote}
-            className="svg-inline--fa fa-camera-retro fa-lg"
-            aria-hidden="true"
-            focusable="false"
-            role="img"
-          />
+          {(slide.background_quote && (
+            <FontAwesomeIcon
+              icon={faMessageQuote}
+              className="svg-inline--fa fa-camera-retro fa-lg"
+              aria-hidden="true"
+              focusable="false"
+              role="img"
+            />
+          )) || (
+            <FontAwesomeIcon
+              icon={faCameraRetro}
+              className="svg-inline--fa fa-camera-retro fa-lg"
+              aria-hidden="true"
+              focusable="false"
+              role="img"
+            />
+          )}
         </button>
       )}
       <div
