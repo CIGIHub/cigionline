@@ -50,7 +50,7 @@
         <div class="row">
           <div class="col-12 col-md-8">
             {% if featured_pages|length > 0 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0.page hide_publication_date=featured_pages.0.hide_publication_date %}
             {% endif %}
           </div>
           <hr class="has-margin">
@@ -60,7 +60,7 @@
               {% if forloop.counter > 1 %}
                 <hr>
               {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+              {% include "includes/features/feature_content_small.html" with content=item.page hide_publication_date=item.hide_publication_date cta=True %}
             {% endfor %}
           {% endwith %}
           </div>
@@ -77,7 +77,7 @@
               {% if forloop.counter > 1 %}
                 <hr>
               {% endif %}
-              {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
+              {% include "includes/features/feature_content_medium.html" with content=item.page hide_publication_date=item.hide_publication_date cta=True %}
             </div>
           {% endfor %}
         {% endwith %}

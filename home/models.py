@@ -115,11 +115,13 @@ class HomePage(Page):
         try:
             featured_pages_list = HomePageFeaturedContentList.objects.first().featured_pages
             featured_page_ids = [page.value['page'].id for page in featured_pages_list]
+            hide_flags = [bool(item.value.get("hide_publication_date")) for item in featured_pages_list]
+            featured_items = [{"page_id": pid, "hide_publication_date": hide} for pid, hide in zip(featured_page_ids, hide_flags)]
         except Exception:
             error(traceback.format_exc())
             featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
         pages = Page.objects.specific().in_bulk(featured_page_ids)
-        return [pages[x] for x in featured_page_ids]
+        return [{"page": pages[x["page_id"]], "hide_publication_date": x["hide_publication_date"]} for x in featured_items]
 
     def get_featured_experts(self):
         try:
