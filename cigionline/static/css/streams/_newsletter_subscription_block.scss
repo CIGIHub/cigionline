@@ -1,0 +1,53 @@
+.newsletter-subscription-block-container {
+  background-color: $cigi-light-grey-bg;
+}
+
+.newsletter-subscription-block {
+  padding: 2rem 3rem;
+  margin: 2rem 0;
+
+  form {
+    display: flex;
+    height: 2em;
+  }
+
+  input {
+    &[type='email'] {
+      border-bottom: 2px solid $cigi-primary-colour;
+      background-color: $cigi-light-grey-bg;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+      color: $white;
+      font-size: 1rem;
+      margin: 0;
+      margin-right: 5px;
+      width: calc(100% - 95px);
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &::placeholder {
+      color: $white;
+    }
+  }
+
+  button {
+    background: $cigi-primary-colour;
+    border-radius: 2px;
+    color: $white;
+    font-size: 14px;
+    text-transform: uppercase;
+    width: 90px;
+
+    i {
+      margin-right: 0.3em;
+    }
+  }
+
+  p {
+    text-align: center;
+  }
+}
