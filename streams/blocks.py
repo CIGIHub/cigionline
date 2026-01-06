@@ -2055,3 +2055,12 @@ class CAIAIObjectivesBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'CAI AI Objectives'
         template = 'streams/caiai_objectives_block.html'
+
+
+class NewsletterSubscriptionBlock(blocks.StructBlock):
+    """A block for displaying a newsletter subscription form."""
+
+    class Meta:
+        icon = 'mail'
+        label = 'Newsletter Subscription'
+        template = 'streams/newsletter_subscription_block.html'
