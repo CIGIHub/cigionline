@@ -52,6 +52,7 @@ from streams.blocks import (
     SovereignCanadaRationaleBlock,
     SovereignCanadaDashboardBlock,
     CollapsibleParagraphBlock,
+    NewsletterSubscriptionBlock
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -127,6 +128,7 @@ class BasicPageAbstract(models.Model):
     additional_image_block = ('additional_image', AdditionalImageBlock())
     additional_disclaimer_block = ('additional_disclaimer', AdditionalDisclaimerBlock())
     line_break_block = ('linebreak', LineBreakBlock())
+    newsletter_subscription_block = ('newsletter_subscription', NewsletterSubscriptionBlock())
 
     body = StreamField(
         body_default_blocks,

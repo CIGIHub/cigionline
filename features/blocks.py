@@ -1,4 +1,4 @@
-from wagtail.blocks import StructBlock, PageChooserBlock
+from wagtail.blocks import StructBlock, PageChooserBlock, BooleanBlock
 from wagtail.snippets.blocks import SnippetChooserBlock
 from promotions.models import PromotionBlock
 
@@ -17,6 +17,11 @@ class FeaturedPageBlock(StructBlock):
         'annual_reports.StrategicPlanSPAPage',
     ]
     page = PageChooserBlock(page_type=page_types)
+    hide_publication_date = BooleanBlock(
+        required=False,
+        default=False,
+        help_text="Hide the publication date on the large feature rendering."
+    )
 
     class Meta:
         icon = 'pick'

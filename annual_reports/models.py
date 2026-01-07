@@ -1,13 +1,17 @@
+from django.http import Http404
 from core.models import (
     BasicPageAbstract,
+    ContentPage,
     FeatureablePageAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract
 )
+from django.core.cache import cache
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.shortcuts import render
-from streams.blocks import ARSlideChooserBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from django.shortcuts import render, redirect
+from django.utils.text import slugify
+from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -15,9 +19,12 @@ from wagtail.admin.panels import (
 from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
-from wagtail.rich_text import expand_db_html
+from django.utils.html import strip_tags
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
+from wagtailmedia.widgets import AdminMediaChooser
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from utils.helpers import richtext_html, richtext_to_inline_html
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -147,9 +154,10 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         verbose_name_plural = 'Annual Report Pages'
 
 
-class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
+class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, SearchablePageAbstract, ShareablePageAbstract, Page):
     """View annual report SPA page"""
 
+    year = models.PositiveIntegerField(blank=False, null=True)
     slides = StreamField(
         [("slide", ARSlideChooserBlock())],
         blank=True,
@@ -158,6 +166,7 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
+                FieldPanel("year"),
                 FieldPanel("slides"),
             ],
             heading="Slides",
@@ -165,7 +174,36 @@ class AnnualReportSPAPage(FeatureablePageAbstract, Page, SearchablePageAbstract)
         ),
     ]
 
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+
     subpage_types = ["AnnualReportSlidePage"]
+
+    def get_template(self, request, *args, **kwargs):
+        return "annual_reports/annual_report_spa_page.html"
+
+    @route(r'^(en|fr)/(?P<slide_slug>[-\w]+)(?:/(?P<subslug>[-\w]+))?/?$')
+    def slide_with_lang_and_optional_subslug(self, request, slide_slug, *args, **kwargs):
+        slide = (self.get_children()
+                 .type(AnnualReportSlidePage)
+                 .live()
+                 .filter(slug=slide_slug)
+                 .specific()
+                 .first())
+        if not slide:
+            raise Http404("Slide not found")
+        return slide._serve_spa(request)
+
+    @route(r'^(?P<slide_slug>[-\w]+)(?:/(?P<subslug>[-\w]+))?/?$')
+    def slide_without_lang(self, request, slide_slug, subslug=None, *args, **kwargs):
+        base_url = self.url
+        new_path = f"{base_url}en/{slide_slug}/"
+        if subslug:
+            new_path += f"{subslug}/"
+        return redirect(new_path)
 
 
 class SlidePageAbstract(models.Model):
@@ -241,16 +279,608 @@ class SlidePageAbstract(models.Model):
         abstract = True
 
 
-class AnnualReportSlidePage(SlidePageAbstract, Page):
+class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
     """Each individual slide within the annual report."""
 
-    parent_page_types = ["AnnualReportSPAPage"]
+    def _serve_spa(self, request):
+        parent = self.get_parent().specific
+        ctx = {
+            "page": parent,
+            "self": self,
+        }
+        return render(request, "annual_reports/annual_report_spa_page.html", ctx)
+
+    @route(r"^$")
+    def slide_root(self, request, *args, **kwargs):
+        return self._serve_spa(request)
+
+    @route(r"^fr/?$")
+    def slide_fr(self, request, *args, **kwargs):
+        return self._serve_spa(request)
+
+    @route(r"^(?P<trailing>[/]+)?$")
+    def slide_catchall(self, request, trailing=None, *args, **kwargs):
+        return self._serve_spa(request)
+
+    SLIDE_TYPES = [
+        ('title', 'Title'),
+        ('toc', 'Table of Contents'),
+        ('chairs_message', 'Chair\'s Message'),
+        ('presidents-message', 'President\'s Message'),
+        ('standard', 'Standard'),
+        ('outputs_and_activities', 'Outputs and Activities'),
+        ('timeline', 'Timeline'),
+        ('financials', 'Financials'),
+    ]
+
+    QUOTE_POSITIONS = [
+        ('right', 'Right'),
+        ('left', 'Left'),
+        ('top-left', 'Top Left'),
+        ('top-right', 'Top Right'),
+        ('bottom-left', 'Bottom Left'),
+        ('bottom-right', 'Bottom Right'),
+    ]
+    QUOTE_SIZES = [
+        ('smaller', 'Smaller'),
+        ('small', 'Small'),
+        ('medium', 'Medium'),
+        ('large', 'Large'),
+    ]
+
+    slide_type = models.CharField(
+        max_length=255,
+        choices=SLIDE_TYPES,
+        default='standard',
+        help_text='Type of slide',
+    )
+
+    slide_title = RichTextField(max_length=255, help_text="Title of the slide")
+    slide_title_fr = RichTextField(max_length=255, help_text="Title of the slide (French)", blank=True)
+    french_slide = models.BooleanField(
+        default=True,
+        help_text="Indicates if this slide has a French version",
+    )
+
+    ar_slide_content = StreamField(
+        [
+            ("column", ARSlideColumnBlock()),
+            ("board", ARSlideBoardBlock()),
+            ("auditor_report", ARFinancialsAuditorReportBlock()),
+            ("financial_position", ARFinancialPositionBlock()),
+            ("fund_balances", ARFundBalancesBlock()),
+            ("outputs_and_activities", AROutputsBlock()),
+        ],
+        blank=True,
+        help_text="Content of the slide",
+    )
+    download_pdf = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    background_quote = RichTextField(blank=True, help_text="quote for the background image", features=['bold', 'italic', 'link', 'source'])
+    background_quote_font_size = models.CharField(
+        max_length=255,
+        choices=QUOTE_SIZES,
+        default='medium',
+        help_text="Font size of the quote",
+    )
+    background_quote_fr = RichTextField(blank=True, help_text="quote for the background image (French)", features=['bold', 'italic', 'link', 'source'])
+    background_quote_font_size_fr = models.CharField(
+        max_length=255,
+        choices=QUOTE_SIZES,
+        default='medium',
+        help_text="Font size of the quote (French)",
+    )
+    background_quote_position = models.CharField(
+        max_length=255,
+        choices=QUOTE_POSITIONS,
+        blank=True,
+        help_text="Position of the quote",
+    )
+
+    parent_page_types = ['AnnualReportSPAPage']
     subpage_types = []
 
-    def serve(self, request):
-        """Always serve the SPA regardless of sub-page requested."""
-        parent = self.get_parent().specific
-        return render(request, "annual_reports/annual_report_spa_page.html", {"page": parent, "self": self})
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("slide_title"),
+                FieldPanel("slide_title_fr"),
+                FieldPanel("slide_subtitle"),
+                FieldPanel("slide_type"),
+            ],
+            heading="Slide title",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("ar_slide_content"),
+                FieldPanel("download_pdf"),
+            ],
+            heading="Slide Content",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("background_image"),
+                FieldPanel("background_video", widget=AdminMediaChooser),
+                FieldPanel("background_colour"),
+                FieldPanel("background_images"),
+                FieldPanel("background_quote"),
+                FieldPanel("background_quote_font_size"),
+                FieldPanel("background_quote_fr"),
+                FieldPanel("background_quote_font_size_fr"),
+                FieldPanel("background_quote_position"),
+            ],
+            heading="Background",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("include_on_toc"),
+                FieldPanel("french_slide"),
+            ],
+            heading="Slide Settings",
+            classname="collapsible collapsed",
+        ),
+    ]
+
+    def get_annual_report_slide_content(self):
+        CONTENT_TYPES_FR = [
+            ('publication', 'Publication'),
+            ('opinion', 'Opinion'),
+            ('video', 'Vidéo'),
+            ('podcast', 'Balado'),
+            ('event', 'Événement'),
+            ('essay series', 'Série d\'essais'),
+            ('media', 'Média'),
+            ('news release', 'Communiqué de presse'),
+            ('experts', 'Experts'),
+            ('subscribe', 'Abonnez-vous'),
+            ('listen', 'À écouter'),
+            ('explore', 'Explorer'),
+            ('episode', 'Épisode'),
+            ('research', 'Recherche'),
+            ('survey', 'Sondage'),
+            ('t7', 'T7'),
+            ('website', 'Site web'),
+        ]
+        content = {}
+        if self.slide_type == 'toc':
+            boards = {}
+            credits_message = {}
+            member_counter = 1
+
+            for block in self.ar_slide_content:
+                if block.block_type == "board":
+                    board_block = block.value
+                    board_type = board_block["board_type"]
+
+                    boards.setdefault(board_type, [])
+
+                    for member in board_block["board_members"]:
+                        if member.block_type == "member":
+                            image = member.value.get("image_override") or (member.value.get("page").specific.image_square if member.value.get("page") else None)
+                            link = member.value.get("link_override") or (member.value.get("page").specific.url if member.value.get("page") else None)
+                            boards[board_type].append({
+                                "id": member_counter,
+                                "name": member.value["name"],
+                                "title": member.value["title"],
+                                "title_fr": member.value["title_fr"],
+                                "title_line_2": member.value.get("title_line_2", ""),
+                                "title_line_2_fr": member.value.get("title_line_2_fr", ""),
+                                "bio_en": richtext_html(member.value.get("bio_en")) if member.value.get("bio_en") else "",
+                                "bio_fr": richtext_html(member.value.get("bio_fr")) if member.value.get("bio_fr") else "",
+                                "image": image.get_rendition('fill-150x150').file.url if image else '',
+                                "link": link,
+                            })
+                            member_counter += 1
+
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    for paragraph_column in column:
+                        if paragraph_column.block_type == "paragraph_column":
+                            credits_message["en"] = strip_tags(paragraph_column.value.get("en").source) or ""
+                            credits_message["fr"] = strip_tags(paragraph_column.value.get("fr").source) or ""
+
+            content = {
+                "boards": boards,
+                "credits_message": credits_message,
+            }
+
+        elif self.slide_type in ['chairs_message', 'presidents_message']:
+            columns = []
+            for block in self.ar_slide_content:
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    column_content = {
+                        "en": [],
+                        "fr": [],
+                    }
+                    for paragraph_column in column:
+                        if paragraph_column.block_type == "paragraph_column":
+                            column_content["en"].append(richtext_html(paragraph_column.value.get("en")))
+                            column_content["fr"].append(richtext_html(paragraph_column.value.get("fr")))
+                    columns.append(column_content)
+            content = {
+                "columns": columns,
+            }
+        elif self.slide_type == 'standard':
+            columns = []
+            for block in self.ar_slide_content:
+                if block.block_type == "column":
+                    column = block.value.get("column")
+                    column_content = {
+                        "en": [],
+                        "fr": [],
+                        "content": [],
+                    }
+                    for subblock in column:
+                        if subblock.block_type == "paragraph_column":
+                            column_content["en"].append(
+                                richtext_html(subblock.value.get("en"))
+                            )
+                            column_content["fr"].append(
+                                richtext_html(subblock.value.get("fr"))
+                            )
+
+                        elif subblock.block_type == "content_column":
+                            for content_item in subblock.value:
+                                if content_item.block_type == "content":
+                                    content_val = content_item.value
+                                    link = content_val.get("link_override") or (content_val.get("page").specific.url if content_val.get("page") else None)
+                                    column_content["content"].append({
+                                        "type": content_val.get("type"),
+                                        "type_fr": dict(CONTENT_TYPES_FR).get(content_val.get("type"), ""),
+                                        "type_override": content_val.get("type_override") if content_val.get("type_override") else "",
+                                        "type_override_fr": content_val.get("type_override_fr") if content_val.get("type_override_fr") else "",
+                                        "link": link,
+                                        "title_en": richtext_to_inline_html(content_val.get("title_en")) if content_val.get("title_en") else "",
+                                        "title_fr": richtext_to_inline_html(content_val.get("title_fr")) if content_val.get("title_fr") else "",
+                                    })
+
+                    columns.append(column_content)
+
+            content = {
+                "columns": columns,
+            }
+        elif self.slide_type == 'financials':
+            auditor_reports = []
+            financial_position = []
+            tabs = []
+            pdf = self.download_pdf.file.url if self.download_pdf else ''
+            for block in self.ar_slide_content:
+                if block.block_type == "auditor_report":
+                    columns = []
+                    for column_block in (block.value.get("columns") or []):
+                        en_stream = column_block.value.get("en") or []
+                        fr_stream = column_block.value.get("fr") or []
+
+                        col = {"en": [], "fr": []}
+
+                        for child in en_stream:
+                            if child.block_type == "paragraph":
+                                rt = child.value
+                                col["en"].append(richtext_html(rt))
+                            elif child.block_type == "signature":
+                                sig = child.value
+                                sig_img = sig.get("signature")
+                                col["en"].append({
+                                    "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
+                                    "signature_text": richtext_html(sig.get("signature_text")) if sig.get("signature_text") else "",
+                                })
+                            else:
+                                col["en"].append(str(child.value))
+
+                        for child in fr_stream:
+                            if child.block_type == "paragraph":
+                                rt = child.value
+                                col["fr"].append(richtext_html(rt))
+                            elif child.block_type == "signature":
+                                sig = child.value
+                                sig_img = sig.get("signature")
+                                col["fr"].append({
+                                    "signature": (sig_img.get_rendition('fill-105x18').file.url if sig_img else ''),
+                                    "signature_text": richtext_html(sig.get("signature_text")) if sig.get("signature_text") else "",
+                                })
+                            else:
+                                col["fr"].append(str(child.value))
+
+                        columns.append(col)
+
+                    title_en = block.value.get("title_en") or ""
+                    title_fr = block.value.get("title_fr") or ""
+
+                    auditor_reports = {
+                        "title_en": title_en,
+                        "title_fr": title_fr,
+                        "slug_en": slugify(title_en) if title_en else "auditor-report-en",
+                        "slug_fr": slugify(title_fr) if title_fr else "auditor-report-fr",
+                        "columns": columns,
+                    }
+
+                    tabs.append(auditor_reports)
+                elif block.block_type == "financial_position":
+                    title_en = block.value.get("title_en") or ""
+                    title_fr = block.value.get("title_fr") or ""
+                    description_en = richtext_html(block.value.get("description_en")) or ""
+                    description_fr = richtext_html(block.value.get("description_fr")) or ""
+                    amounts = block.value.get("amounts")
+                    current_year = amounts.get("year_current")
+                    previous_year = amounts.get("year_previous")
+                    year_current = {
+                        "year_label": current_year.get("year_label"),
+                        "cash_and_cash_equivalents": current_year.get("cash_and_cash_equivalents") or "",
+                        "portfolio_investments": current_year.get("portfolio_investments") or "",
+                        "amounts_receivable": current_year.get("amounts_receivable") or "",
+                        "prepaid_expenses": current_year.get("prepaid_expenses") or "",
+                        "current_assets_subtotal": current_year.get("current_assets_subtotal") or "",
+                        "property_and_equipment": current_year.get("property_and_equipment") or "",
+                        "lease_inducement": current_year.get("lease_inducement") or "",
+                        "other_assets_subtotal": current_year.get("other_assets_subtotal") or "",
+                        "total_assets": current_year.get("total_assets") or "",
+                        "accounts_payable_and_accrued_liabilities": current_year.get("accounts_payable_and_accrued_liabilities") or "",
+                        "deferred_revenue": current_year.get("deferred_revenue") or "",
+                        "total_liabilities": current_year.get("total_liabilities") or "",
+                        "invested_in_capital_assets": current_year.get("invested_in_capital_assets") or "",
+                        "externally_restricted": current_year.get("externally_restricted") or "",
+                        "internally_restricted": current_year.get("internally_restricted") or "",
+                        "unrestricted": current_year.get("unrestricted") or "",
+                        "total_fund_balances": current_year.get("total_fund_balances") or "",
+                        "total_liabilities_and_fund_balances": current_year.get("total_liabilities_and_fund_balances") or "",
+                    }
+                    year_previous = {
+                        "year_label": previous_year.get("year_label"),
+                        "cash_and_cash_equivalents": previous_year.get("cash_and_cash_equivalents") or "",
+                        "portfolio_investments": previous_year.get("portfolio_investments") or "",
+                        "amounts_receivable": previous_year.get("amounts_receivable") or "",
+                        "prepaid_expenses": previous_year.get("prepaid_expenses") or "",
+                        "current_assets_subtotal": previous_year.get("current_assets_subtotal") or "",
+                        "property_and_equipment": previous_year.get("property_and_equipment") or "",
+                        "lease_inducement": previous_year.get("lease_inducement") or "",
+                        "other_assets_subtotal": previous_year.get("other_assets_subtotal") or "",
+                        "total_assets": previous_year.get("total_assets") or "",
+                        "accounts_payable_and_accrued_liabilities": previous_year.get("accounts_payable_and_accrued_liabilities") or "",
+                        "deferred_revenue": previous_year.get("deferred_revenue") or "",
+                        "total_liabilities": previous_year.get("total_liabilities") or "",
+                        "invested_in_capital_assets": previous_year.get("invested_in_capital_assets") or "",
+                        "externally_restricted": previous_year.get("externally_restricted") or "",
+                        "internally_restricted": previous_year.get("internally_restricted") or "",
+                        "unrestricted": previous_year.get("unrestricted") or "",
+                        "total_fund_balances": previous_year.get("total_fund_balances") or "",
+                        "total_liabilities_and_fund_balances": previous_year.get("total_liabilities_and_fund_balances") or "",
+                    }
+                    financial_position = {
+                        "title_en": title_en,
+                        "title_fr": title_fr,
+                        "description_en": description_en,
+                        "description_fr": description_fr,
+                        "slug_en": slugify(title_en) if title_en else "financial-position-en",
+                        "slug_fr": slugify(title_fr) if title_fr else "financial-position-fr",
+                        "year_current": year_current,
+                        "year_previous": year_previous,
+                    }
+                    tabs.append(financial_position)
+                elif block.block_type == "fund_balances":
+                    title_en = block.value.get("title_en") or ""
+                    title_fr = block.value.get("title_fr") or ""
+                    description_en = richtext_html(block.value.get("description_en")) or ""
+                    description_fr = richtext_html(block.value.get("description_fr")) or ""
+                    amounts = block.value.get("amounts")
+                    current_year = amounts.get("year_current")
+                    previous_year = amounts.get("year_previous")
+                    year_current = {
+                        "year_label": current_year.get("year_label"),
+                        "realized_investment_income": current_year.get("realized_investment_income") or "",
+                        "unrealized_investment_gains": current_year.get("unrealized_investment_gains") or "",
+                        "other": current_year.get("other") or "",
+                        "government_and_other_grants": current_year.get("government_and_other_grants") or "",
+                        "total_revenue": current_year.get("total_revenue") or "",
+                        "research_and_conferences": current_year.get("research_and_conferences") or "",
+                        "amortization": current_year.get("amortization") or "",
+                        "administration": current_year.get("administration") or "",
+                        "facilities": current_year.get("facilities") or "",
+                        "technical_support": current_year.get("technical_support") or "",
+                        "total_expenses": current_year.get("total_expenses") or "",
+                        "excess_of_expenses_over_revenue": current_year.get("excess_of_expenses_over_revenue") or "",
+                        "fund_balances_beginning_of_year": current_year.get("fund_balances_beginning_of_year") or "",
+                        "fund_balances_end_of_year": current_year.get("fund_balances_end_of_year") or "",
+                    }
+                    year_previous = {
+                        "year_label": previous_year.get("year_label"),
+                        "realized_investment_income": previous_year.get("realized_investment_income") or "",
+                        "unrealized_investment_gains": previous_year.get("unrealized_investment_gains") or "",
+                        "other": previous_year.get("other") or "",
+                        "government_and_other_grants": previous_year.get("government_and_other_grants") or "",
+                        "total_revenue": previous_year.get("total_revenue") or "",
+                        "research_and_conferences": previous_year.get("research_and_conferences") or "",
+                        "amortization": previous_year.get("amortization") or "",
+                        "administration": previous_year.get("administration") or "",
+                        "facilities": previous_year.get("facilities") or "",
+                        "technical_support": previous_year.get("technical_support") or "",
+                        "total_expenses": previous_year.get("total_expenses") or "",
+                        "excess_of_expenses_over_revenue": previous_year.get("excess_of_expenses_over_revenue") or "",
+                        "fund_balances_beginning_of_year": previous_year.get("fund_balances_beginning_of_year") or "",
+                        "fund_balances_end_of_year": previous_year.get("fund_balances_end_of_year") or "",
+                    }
+                    fund_balances = {
+                        "title_en": title_en,
+                        "title_fr": title_fr,
+                        "description_en": description_en,
+                        "description_fr": description_fr,
+                        "slug_en": slugify(title_en) if title_en else "fund-balances-en",
+                        "slug_fr": slugify(title_fr) if title_fr else "fund-balances-fr",
+                        "year_current": year_current,
+                        "year_previous": year_previous,
+                    }
+                    tabs.append(fund_balances)
+
+            content = {
+                "tabs": tabs,
+                "pdf": pdf,
+            }
+        elif self.slide_type == 'timeline':
+            content = {
+                "nodes": self.timeline_pages(),
+            }
+        elif self.slide_type == 'outputs_and_activities':
+            outputs_and_activities = []
+
+            for block in self.ar_slide_content:
+                title_for_section = block.value.get("title") or ""
+                theme = {
+                    "title": title_for_section,
+                    "slug": slugify(title_for_section),
+                    "pages": [],
+                }
+                outputs_stream = block.value.get("outputs") or []
+
+                for output in outputs_stream:
+                    if output.block_type != 'output':
+                        continue
+
+                    v = output.value
+
+                    page = v.get("page")
+                    page = page.specific if page else None
+
+                    item_title = v.get("title_override") or (page.title if page else "")
+
+                    desc_override = v.get("description_override")
+                    description = (getattr(desc_override, 'source', None) or str(desc_override) or
+                                   getattr(page, 'short_description', '') or
+                                   getattr(page, 'subtitle', '') or '')
+
+                    link = v.get("link_override") or (page.url if page else "")
+
+                    image_obj = v.get("image_override") or \
+                        getattr(page, 'image_hero', None) or \
+                        getattr(page, 'image_feature', None)
+                    image_url = ''
+                    image_thumb_url = ''
+                    authors = getattr(page, 'author_names', '') if page else ''
+                    if image_obj:
+                        try:
+                            image_url = image_obj.get_rendition('fill-2560x1600').url
+                        except Exception:
+                            image_url = ''
+                        try:
+                            image_thumb_url = image_obj.get_rendition('fill-142x80').url
+                        except Exception:
+                            image_thumb_url = ''
+
+                    output_type = getattr(page, 'contenttype', None) or ""
+
+                    subtype = (v.get("type_override") or
+                               getattr(page, 'contentsubtype', None) or
+                               "").lower()
+                    date = getattr(page, 'publishing_date', None) or None
+
+                    theme["pages"].append({
+                        "title": item_title,
+                        "link": link,
+                        "description": description,
+                        "image": image_url,
+                        "image_thumbnail": image_thumb_url,
+                        "type": output_type,
+                        "subtype": subtype,
+                        "date": date,
+                        "authors": authors,
+                    })
+                outputs_and_activities.append(theme)
+
+            content = {"outputs_and_activities": outputs_and_activities}
+        return content
+
+    def timeline_pages(self):
+        version_part = (self.last_published_at or self.latest_revision_created_at or self.first_published_at)
+        version_str = version_part.strftime("%Y%m%d%H%M%S") if version_part else "v0"
+        cache_key = f"timeline:pages:{self.id}:{version_str}"
+
+        data = cache.get(cache_key)
+        if data is not None:
+            return data
+
+        year = self.get_parent().specific.year
+        content_pages = ContentPage.objects.live().filter(path__startswith='00010001',
+                                                          projectpage=None, publicationseriespage=None, multimediaseriespage=None, twentiethpagesingleton=None, multimediapage=None, articleseriespage=None).exclude(articlepage__article_type__title__in=['CIGI in the News', 'News Releases', 'Op-Eds']).exclude(
+            publicationpage__publication_type__title='Working Paper'
+        ).filter(publishing_date__range=[f'{year - 1}-08-01', f'{year}-07-31']).order_by('publishing_date')
+
+        json_items = []
+
+        for content_page in content_pages:
+            content_type = ''
+            subtype = []
+            authors = ''
+            speakers = ''
+            event_date = ''
+            summary = ''
+            subtitle = content_page.specific.subtitle
+            publishing_date = ''
+            image = ''
+            image_thumbnail = ''
+            if content_page.contenttype == 'Event':
+                content_type = 'event'
+                speakers = content_page.author_names
+                event_date = content_page.publishing_date
+                image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url if content_page.specific.image_hero else ''
+                image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url if content_page.specific.image_hero else ''
+            else:
+                authors = content_page.author_names
+                publishing_date = content_page.publishing_date
+
+            if content_page.contenttype == 'Opinion':
+                content_type = 'article'
+                subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
+                if content_page.specific.image_hero:
+                    image = content_page.specific.image_hero.get_rendition('fill-2560x1600').url
+                    image_thumbnail = content_page.specific.image_hero.get_rendition('fill-142x80').url
+                elif content_page.specific.image_feature:
+                    image = content_page.specific.image_feature.get_rendition('fill-2560x1600').url
+                    image_thumbnail = content_page.specific.image_feature.get_rendition('fill-142x80').url
+
+            if content_page.contenttype == 'Publication':
+                content_type = 'publication'
+                subtype = [content_page.contentsubtype] if content_page.contentsubtype else []
+                image = content_page.specific.image_feature.get_rendition('fill-2560x1600').url if content_page.specific.image_feature else ''
+                image_thumbnail = content_page.specific.image_feature.get_rendition('fill-142x80').url if content_page.specific.image_feature else ''
+            try:
+                summary = content_page.specific.short_description
+            except AttributeError:
+                summary = ''
+                if content_page.specific.subtitle:
+                    summary = content_page.specific.subtitle
+                else:
+                    for block in content_page.specific.body:
+                        if block.block_type == 'paragraph':
+                            summary += str(block.value)
+
+            json_items.append({
+                'id': str(content_page.id),
+                'title': content_page.title,
+                'subtitle': subtitle,
+                'authors': authors if authors else [],
+                'speakers': speakers if speakers else [],
+                'published_date': publishing_date,
+                'event_date': event_date,
+                'url_landing_page': content_page.url,
+                'pdf_url': content_page.pdf_download,
+                'type': content_type,
+                'subtype': subtype,
+                'word_count': content_page.specific.word_count,
+                'summary': summary,
+                'image': image,
+                'image_thumbnail': image_thumbnail,
+            })
+
+        data = {"items": json_items}
+        cache.set(cache_key, data, timeout=60 * 60 * 24)
+        return data
 
 
 class StrategicPlanSPAPage(FeatureablePageAbstract, Page, ShareablePageAbstract, SearchablePageAbstract):
@@ -402,9 +1032,9 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
 
         for block in self.strategic_plan_slide_content:
             if block.block_type == 'column':
-                content['columns'].append(expand_db_html(block.value.source))
+                content['columns'].append(richtext_html(block.value))
             elif block.block_type == 'acknowledgements':
-                content['acknowledgements'].append(expand_db_html(block.value.source))
+                content['acknowledgements'].append(richtext_html(block.value))
             elif block.block_type == 'framework_block':
                 block = {
                     'title': block.value['title'],

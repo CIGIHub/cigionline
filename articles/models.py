@@ -25,6 +25,7 @@ from wagtail.search import index
 from wagtailmedia.edit_handlers import MediaChooserPanel
 import datetime
 import pytz
+from .tts import extract_body_text
 
 
 class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -199,6 +200,7 @@ class ArticlePage(
             BasicPageAbstract.additional_image_block,
             BasicPageAbstract.additional_disclaimer_block,
             BasicPageAbstract.line_break_block,
+            BasicPageAbstract.newsletter_subscription_block,
         ],
         blank=True,
         use_json_field=True,
@@ -341,6 +343,22 @@ class ArticlePage(
         ],
     )
 
+    # TTS controls
+    POLLY_VOICE_CHOICES = [
+        ('danielle_longform', 'Danielle - Longform'),
+        ('ruth_generative', 'Ruth - Generative'),
+        ('danielle_generative', 'Danielle - Generative'),
+    ]
+    tts_voice = models.CharField(
+        max_length=32,
+        choices=POLLY_VOICE_CHOICES,
+        default='danielle_longform',
+        blank=True,
+        help_text='Amazon Polly voice ID',
+    )
+    tts_last_generated = models.DateTimeField(null=True, blank=True)
+    audio_file = models.FileField(upload_to='tts/', blank=True, null=True)
+
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
@@ -417,6 +435,10 @@ class ArticlePage(
             if series_item.content_page.id == self.id:
                 return current_series_title
 
+    def get_plaintext(self):
+        '''Return a readable plaintext of the article.'''
+        return extract_body_text(self)
+
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
@@ -445,6 +467,14 @@ class ArticlePage(
             classname='collapsible collapsed',
         ),
         ContentPage.authors_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('tts_voice'),
+                FieldPanel('audio_file'),
+            ],
+            heading='Text-to-Speech',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('image_hero'),

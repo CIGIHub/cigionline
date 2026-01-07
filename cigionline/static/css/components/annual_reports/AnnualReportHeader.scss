@@ -1,0 +1,108 @@
+@import '../../global/variables.scss';
+@import '../../global/mixins.scss';
+
+.cigi-top-bar {
+  align-items: center;
+  background: transparent;
+  display: flex;
+  justify-content: space-between;
+  left: 50%;
+  padding: 15px 0;
+  position: relative;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 6;
+
+  @include media-breakpoint-up(lg) {
+    padding: 20px 0;
+    position: absolute;
+  }
+
+  &.background-white {
+    &:not(.light-header) {
+      .cigi-logo {
+        svg {
+          fill: $black;
+        }
+      }
+  
+      .cigi-menu {
+        a,
+        button {
+          color: $black;
+        }
+  
+        span {
+          color: $black;
+        }
+  
+        .intl-disabled {
+          color: $grey-selected;
+        }
+  
+        .intl-selected {
+          border-bottom: 1px solid $grey-selected;
+          color: $grey-selected;
+        }
+      }
+    }
+  }
+
+  &.black-background {
+    background: $black;
+  }
+
+  .cigi-logo {
+    float: left;
+
+    svg {
+      fill: $white;
+      height: 30px;
+      transition: fill 500ms;
+
+      @include media-breakpoint-up(lg) {
+        height: 40px;
+      }
+    }
+  }
+
+  .cigi-menu {
+    align-items: center;
+    display: flex;
+    font-family: $primary-font-family, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+
+    a,
+    button {
+      font-size: 14px;
+      margin-left: 20px;
+      transition: color 250ms;
+
+      &:hover {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    span,
+    .intl-link {
+      color: $white;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+
+    .intl-selected {
+      border-bottom: 1px solid $grey-selected;
+      color: $grey-selected;
+    }
+
+    .intl-disabled {
+      color: $grey-selected;
+    }
+
+    .hide-menu {
+      visibility: hidden;
+    }
+  }
+}

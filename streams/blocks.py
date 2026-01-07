@@ -1642,6 +1642,220 @@ class SPSlideBoardBlock(blocks.StructBlock):
     ])
 
 
+class ARSlideBoardBlock(blocks.StructBlock):
+    BOARD_TYPES = [
+        ('board', 'Board'),
+        ('executive', 'Executive'),
+    ]
+    board_type = blocks.ChoiceBlock(choices=BOARD_TYPES, required=True)
+    board_members = blocks.StreamBlock([
+        ('member', blocks.StructBlock([
+            ('name', blocks.CharBlock(required=True)),
+            ('title', blocks.CharBlock(required=True)),
+            ('title_line_2', blocks.CharBlock(required=False)),
+            ('title_fr', blocks.CharBlock(required=True)),
+            ('title_line_2_fr', blocks.CharBlock(required=False)),
+            ('bio_en', blocks.RichTextBlock(required=False)),
+            ('bio_fr', blocks.RichTextBlock(required=False)),
+            ('page', blocks.PageChooserBlock(page_type='people.PersonPage', required=False)),
+            ('image_override', ImageChooserBlock(required=False)),
+            ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this person')),
+        ])),
+    ])
+
+
+class ARSlideColumnBlock(blocks.StructBlock):
+    CONTENT_TYPES = [
+        ('publication', 'Publication'),
+        ('opinion', 'Opinion'),
+        ('video', 'Video'),
+        ('podcast', 'Podcast'),
+        ('event', 'Event'),
+        ('essay series', 'Essay Series'),
+        ('media', 'Media'),
+        ('news release', 'News Release'),
+        ('experts', 'Experts'),
+        ('subscribe', 'Subscribe'),
+        ('listen', 'Listen'),
+        ('explore', 'Explore'),
+        ('episode', 'Episode'),
+        ('research', 'Research'),
+        ('survey', 'Survey'),
+        ('t7', 'T7'),
+        ('website', 'Website'),
+    ]
+    column = blocks.StreamBlock([
+        ('paragraph_column', blocks.StructBlock([
+            ('en', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'red-line', 'chair-name'])),
+            ('fr', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'red-line', 'chair-name'])),
+        ])),
+        ('content_column', blocks.StreamBlock(
+            [
+                ('content', blocks.StructBlock(
+                    [
+                        ('type', blocks.ChoiceBlock(choices=CONTENT_TYPES, required=True)),
+                        ('type_override', blocks.CharBlock(required=False, help_text='Override the content type label for this content item')),
+                        ('type_override_fr', blocks.CharBlock(required=False, help_text='Override the content type label for this content item in French')),
+                        ('page', blocks.PageChooserBlock(required=False)),
+                        ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this content item')),
+                        ('title_en', blocks.RichTextBlock(required=False, help_text='Override the title for this content item')),
+                        ('title_fr', blocks.RichTextBlock(required=False, help_text='Override the title for this content item')),
+                    ]
+                ))
+            ],
+            required=False
+        )),
+    ])
+
+
+class ARFinancialsSignatureBlock(blocks.StructBlock):
+    signature = ImageChooserBlock(required=False)
+    signature_text = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link'])
+
+    class Meta:
+        icon = 'user'
+        label = 'Signature'
+        template = 'annual_reports/streams/ar_financials_signature_block.html'
+
+
+class ARFinancialsAuditorReportBlock(blocks.StructBlock):
+    title_en = blocks.CharBlock(required=False)
+    title_fr = blocks.CharBlock(required=False)
+    columns = blocks.StreamBlock([
+        ('column', blocks.StructBlock([
+            ('en', blocks.StreamBlock([
+                ('paragraph', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'h4'])),
+                ('signature', ARFinancialsSignatureBlock()),
+            ])),
+            ('fr', blocks.StreamBlock([
+                ('paragraph', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'h4'])),
+                ('signature', ARFinancialsSignatureBlock()),
+            ])),
+        ]))
+    ])
+
+
+class ARFinancialPositionBlock(blocks.StructBlock):
+    title_en = blocks.CharBlock(required=False)
+    title_fr = blocks.CharBlock(required=False)
+    description_en = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+    description_fr = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+
+    amounts = blocks.StructBlock([
+        ('year_current', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('cash_and_cash_equivalents', (blocks.CharBlock(required=False))),
+            ('portfolio_investments', (blocks.CharBlock(required=False))),
+            ('amounts_receivable', (blocks.CharBlock(required=False))),
+            ('prepaid_expenses', (blocks.CharBlock(required=False))),
+            ('current_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('property_and_equipment', (blocks.CharBlock(required=False))),
+            ('lease_inducement', (blocks.CharBlock(required=False))),
+            ('other_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('total_assets', (blocks.CharBlock(required=False))),
+            ('accounts_payable_and_accrued_liabilities', (blocks.CharBlock(required=False))),
+            ('deferred_revenue', (blocks.CharBlock(required=False))),
+            ('total_liabilities', (blocks.CharBlock(required=False))),
+            ('invested_in_capital_assets', (blocks.CharBlock(required=False))),
+            ('externally_restricted', (blocks.CharBlock(required=False))),
+            ('internally_restricted', (blocks.CharBlock(required=False))),
+            ('unrestricted', (blocks.CharBlock(required=False))),
+            ('total_fund_balances', (blocks.CharBlock(required=False))),
+            ('total_liabilities_and_fund_balances', (blocks.CharBlock(required=False))),
+        ])),
+        ('year_previous', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('cash_and_cash_equivalents', (blocks.CharBlock(required=False))),
+            ('portfolio_investments', (blocks.CharBlock(required=False))),
+            ('amounts_receivable', (blocks.CharBlock(required=False))),
+            ('prepaid_expenses', (blocks.CharBlock(required=False))),
+            ('current_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('property_and_equipment', (blocks.CharBlock(required=False))),
+            ('lease_inducement', (blocks.CharBlock(required=False))),
+            ('other_assets_subtotal', (blocks.CharBlock(required=False))),
+            ('total_assets', (blocks.CharBlock(required=False))),
+            ('accounts_payable_and_accrued_liabilities', (blocks.CharBlock(required=False))),
+            ('deferred_revenue', (blocks.CharBlock(required=False))),
+            ('total_liabilities', (blocks.CharBlock(required=False))),
+            ('invested_in_capital_assets', (blocks.CharBlock(required=False))),
+            ('externally_restricted', (blocks.CharBlock(required=False))),
+            ('internally_restricted', (blocks.CharBlock(required=False))),
+            ('unrestricted', (blocks.CharBlock(required=False))),
+            ('total_fund_balances', (blocks.CharBlock(required=False))),
+            ('total_liabilities_and_fund_balances', (blocks.CharBlock(required=False))),
+        ]))
+    ])
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Financial Position'
+        template = 'annual_reports/streams/ar_financial_position_block.html'
+
+
+class ARFundBalancesBlock(blocks.StructBlock):
+    title_en = blocks.CharBlock(required=False)
+    title_fr = blocks.CharBlock(required=False)
+    description_en = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+    description_fr = blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'ol', 'ul'])
+
+    amounts = blocks.StructBlock([
+        ('year_current', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('realized_investment_income', (blocks.CharBlock(required=False))),
+            ('unrealized_investment_gains', (blocks.CharBlock(required=False))),
+            ('other', (blocks.CharBlock(required=False))),
+            ('government_and_other_grants', (blocks.CharBlock(required=False))),
+            ('total_revenue', (blocks.CharBlock(required=False))),
+            ('research_and_conferences', (blocks.CharBlock(required=False))),
+            ('amortization', (blocks.CharBlock(required=False))),
+            ('administration', (blocks.CharBlock(required=False))),
+            ('facilities', (blocks.CharBlock(required=False))),
+            ('technical_support', (blocks.CharBlock(required=False))),
+            ('total_expenses', (blocks.CharBlock(required=False))),
+            ('excess_of_expenses_over_revenue', (blocks.CharBlock(required=False))),
+            ('fund_balances_beginning_of_year', (blocks.CharBlock(required=False))),
+            ('fund_balances_end_of_year', (blocks.CharBlock(required=False))),
+        ])),
+        ('year_previous', blocks.StructBlock([
+            ('year_label', blocks.CharBlock(required=False)),
+            ('realized_investment_income', (blocks.CharBlock(required=False))),
+            ('unrealized_investment_gains', (blocks.CharBlock(required=False))),
+            ('other', (blocks.CharBlock(required=False))),
+            ('government_and_other_grants', (blocks.CharBlock(required=False))),
+            ('total_revenue', (blocks.CharBlock(required=False))),
+            ('research_and_conferences', (blocks.CharBlock(required=False))),
+            ('amortization', (blocks.CharBlock(required=False))),
+            ('administration', (blocks.CharBlock(required=False))),
+            ('facilities', (blocks.CharBlock(required=False))),
+            ('technical_support', (blocks.CharBlock(required=False))),
+            ('total_expenses', (blocks.CharBlock(required=False))),
+            ('excess_of_expenses_over_revenue', (blocks.CharBlock(required=False))),
+            ('fund_balances_beginning_of_year', (blocks.CharBlock(required=False))),
+            ('fund_balances_end_of_year', (blocks.CharBlock(required=False))),
+        ]))
+    ])
+
+    class Meta:
+        icon = 'doc-full'
+        label = 'Fund Balances'
+        template = 'annual_reports/streams/ar_fund_balances_block.html'
+
+
+class AROutputsBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+
+    outputs = blocks.StreamBlock([
+        ('output', blocks.StructBlock([
+            ('page', blocks.PageChooserBlock(required=False)),
+            ('title_override', blocks.CharBlock(required=False)),
+            ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this content item')),
+            ('description_override', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link'])),
+            ('image_override', ImageChooserBlock(required=False)),
+            ('type_override', blocks.CharBlock(required=False, help_text='Override the type of output (e.g., Publication, Opinion, Video, Podcast, Event).'))
+        ])),
+    ])
+
+
 class ResourceBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     description = blocks.RichTextBlock(required=False)
@@ -1841,3 +2055,12 @@ class CAIAIObjectivesBlock(blocks.StructBlock):
         icon = 'doc-full'
         label = 'CAI AI Objectives'
         template = 'streams/caiai_objectives_block.html'
+
+
+class NewsletterSubscriptionBlock(blocks.StructBlock):
+    """A block for displaying a newsletter subscription form."""
+
+    class Meta:
+        icon = 'mail'
+        label = 'Newsletter Subscription'
+        template = 'streams/newsletter_subscription_block.html'

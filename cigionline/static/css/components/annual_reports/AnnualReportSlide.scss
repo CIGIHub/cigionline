@@ -1,0 +1,469 @@
+@import '../../global/variables';
+@import '../../global/mixins';
+
+$lightbox-background: rgba(0, 0, 0, 0.2);
+$quote-background-overlay: rgba(0, 0, 0, 0.9);
+
+.ar-slide-content {
+  @include media-breakpoint-down(md) {
+    padding-bottom: 40px;
+    padding-top: 10px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-55%);
+  }
+
+  position: relative;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.annual-report-slide {
+  width: 100%;
+  z-index: 2;
+  color: white;
+
+  &.title-slide {
+    height: 100vh;
+
+    h1 {
+      @include media-breakpoint-up(lg) {
+        font-size: 3.5em;
+      }
+      font-size: 2.5em;
+      font-weight: 400;
+    }
+
+    p {
+      font-size: 1.25em;
+    }
+
+    .row {
+      height: 100%;
+    }
+
+    .col-9 {
+      height: 100%;
+    }
+
+    .title-slide-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .years {
+        color: $cigi-primary-colour;
+        font-weight: 500;
+        font-size: 1.1em;
+      }
+    }
+
+    .large-logo {
+      width: 150px;
+      fill: $white;
+      transition: fill 0.3s ease;
+
+      &:hover {
+        fill: $cigi-primary-colour;
+      }
+    }
+
+    .title-slide__title {
+      padding-top: 10em;
+
+      p {
+        font-size: 1em;
+      }
+    }
+
+    .title-slide__content {
+      font-size: 1.5em;
+    }
+  }
+
+  h1 {
+    font-size: clamp(1.5em, 5vw, 2em);
+    font-weight: 400;
+  }
+
+  ul {
+    padding-left: 1.5em;
+  }
+
+  p {
+    line-height: 1.25;
+
+    li {
+      margin-bottom: 0.5em;
+    }
+
+    &.subtitle {
+      font-size: 1.1em;
+    }
+  }
+}
+
+.background-image {
+  background-position: center top;
+  background-size: cover;
+}
+
+.hover-reveal {
+  height: 100vh;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+
+  &.hover-reveal-gradient-right {
+    &::after {
+      background-image: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent 30%,
+        $lightbox-background 58%,
+        $quote-background-overlay 100%
+      );
+      content: '';
+      height: 100%;
+      left: 0%;
+      position: absolute;
+      top: 0%;
+      width: 100%;
+      z-index: 2;
+    }
+  }
+
+  &.hover-reveal-gradient-left {
+    &::after {
+      background-image: linear-gradient(
+        to left,
+        transparent 0%,
+        transparent 30%,
+        $lightbox-background 58%,
+        $quote-background-overlay 100%
+      );
+      content: '';
+      height: 100%;
+      left: 0%;
+      position: absolute;
+      top: 0%;
+      width: 100%;
+      z-index: 2;
+    }
+  }
+
+  .quote {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-55%);
+    width: 500px;
+    z-index: 3;
+
+    &.quote-right {
+      right: 5%;
+    }
+
+    &.quote-left {
+      left: 5%;
+    }
+
+    &.quote-top-right {
+      right: 5%;
+      top: 33.3333%;
+    }
+
+    &.quote-top-left {
+      left: 5%;
+      top: 33.3333%;
+    }
+
+    &.quote-bottom-right {
+      right: 5%;
+      bottom: 33.3333%;
+    }
+
+    &.quote-bottom-left {
+      left: 5%;
+      bottom: 33.3333%;
+    }
+
+    &.quote-slide-4 {
+      width: 550px;
+    }
+
+    span {
+      margin-left: 12px;
+    }
+
+    .hover-reveal-quote {
+      color: $white;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      position: relative;
+      --reveal-delay: 0s;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease var(--reveal-delay),
+        transform 0.5s ease var(--reveal-delay);
+
+      &.is-revealed {
+        --reveal-delay: 0.7s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      &.no-indent {
+        padding-left: 0;
+        text-indent: 0;
+      }
+
+      &.font-size-smaller {
+        font-size: 24px;
+      }
+
+      &.font-size-small {
+        font-size: 28px;
+      }
+
+      &.font-size-medium {
+        font-size: 32px;
+      }
+
+      &.font-size-large {
+        font-size: 36px;
+      }
+    }
+
+    .hover-reveal-quote-line {
+      border-top: 4px solid $cigi-primary-colour;
+      display: block;
+      margin: 20px 0;
+      opacity: 1;
+      --reveal-delay: 0s;
+      width: 0px;
+      transition: width 0.5s ease var(--reveal-delay);
+
+      &.is-revealed {
+        --reveal-delay: 0.7s;
+        width: 100px;
+      }
+    }
+
+    .hover-reveal-quote-source {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.3;
+      position: relative;
+      margin: 0;
+    }
+  }
+
+  .quote-long {
+    width: 600px;
+  }
+}
+
+.radial-progress {
+  background-color: transparent;
+  border-radius: 50%;
+  height: 38px;
+  position: absolute;
+  width: 38px;
+  z-index: -1;
+
+  &.is-dimmed {
+    .circle {
+      .mask {
+        &.left {
+          transform: rotate(180deg);
+        }
+
+        .fill {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+
+  .circle {
+    .fill,
+    .mask {
+      border-radius: 50%;
+      height: 38px;
+      position: absolute;
+      width: 38px;
+    }
+
+    .mask {
+      clip: rect(0, 38px, 38px, 19px);
+      transition: transform 500ms;
+
+      .fill {
+        -webkit-backface-visibility: hidden;
+        background-color: $cigi-primary-colour;
+        clip: rect(0, 19px, 38px, 0);
+        transition: transform 500ms;
+      }
+    }
+  }
+}
+
+.hover-reveal-hide {
+  opacity: 1;
+  transition: opacity 0.7s ease;
+  will-change: opacity;
+
+  &.is-dimmed {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.hover-reveal {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  will-change: opacity;
+
+  &.is-revealed {
+    opacity: 1;
+  }
+}
+
+.background-row {
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  @include media-breakpoint-up(lg) {
+    height: 105vh;
+    position: relative;
+    top: -20px;
+  }
+
+  video {
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+    object-position: left center;
+  }
+
+  .background-image {
+    background-position: center center;
+    background-size: cover;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    background-repeat: no-repeat;
+
+    @include media-breakpoint-up(lg) {
+      background-position: left center;
+    }
+
+    &.align-bottom {
+      background-position: center bottom;
+    }
+
+    &.align-top {
+      background-position: center top;
+    }
+
+    &.background-image-wide {
+      background-position: center center;
+    }
+
+    &.responsive-video-background {
+      background-size: cover;
+
+      @include media-breakpoint-up(lg) {
+        background-position: center;
+        background-size: cover;
+      }
+    }
+
+    &.chairs-message-background-img {
+      background-position: center top;
+      background-size: cover;
+    }
+  }
+
+  &.video-slide {
+    .background-image {
+      @include media-breakpoint-up(lg) {
+        background-image: none;
+      }
+    }
+  }
+
+  .background-overlay {
+    background: $ar-background-overlay;
+    height: 100%;
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    @include media-breakpoint-up(md) {
+      height: 105vh;
+    }
+
+    &.is-dimmed {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .background-gradient-overlay {
+    background: linear-gradient(to right, transparent, $black);
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 60%;
+    &.is-dimmed {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .background-table-of-contents {
+    background-color: $black;
+  }
+
+  .responsive-video-background {
+    @include media-breakpoint-up(md) {
+      align-items: center;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      video {
+        @media (min-aspect-ratio: 16 / 9) {
+          height: 100%;
+          width: auto;
+        }
+
+        @media (max-aspect-ratio: 16 / 9) {
+          height: auto;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

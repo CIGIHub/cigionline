@@ -51,8 +51,10 @@ section {
   }
 
   label {
-    font-weight: 600;
-    margin-bottom: 0.35rem;
+    &:not([for*='id_space']) {
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
   }
 
   input[type='text'],

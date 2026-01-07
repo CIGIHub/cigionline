@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import '../../../css/components/AnnualReportSPA.scss';
 import StrategicPlanSlide from './StrategicPlanSlide';
 import Loader from '../Loader';
 import preloadAllSlideAssets from './preloadAllSlideAssets';
@@ -19,7 +18,7 @@ const fetchSlides = async (strategicPlanSPAId) => {
   }
 };
 
-const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
+function StrategicPlan({ strategicPlanSPAId, basePath }) {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,20 +41,18 @@ const StrategicPlan = ({ strategicPlanSPAId, basePath }) => {
   }
 
   return (
-    <>
-      <Routes>
-        <Route
-          path={`${basePath}/:slug`}
-          element={<StrategicPlanSlide slides={slides} basePath={basePath} />}
-        />
-        <Route
-          path="*"
-          element={<Navigate to={`${basePath}/${slides[0]?.slug || ''}`} />}
-        />
-      </Routes>
-    </>
+    <Routes>
+      <Route
+        path={`${basePath}/:slug`}
+        element={<StrategicPlanSlide slides={slides} basePath={basePath} />}
+      />
+      <Route
+        path="*"
+        element={<Navigate to={`${basePath}/${slides[0]?.slug || ''}`} />}
+      />
+    </Routes>
   );
-};
+}
 
 StrategicPlan.propTypes = {
   strategicPlanSPAId: PropTypes.string.isRequired,

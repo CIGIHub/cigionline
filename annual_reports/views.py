@@ -3,6 +3,7 @@ from .models import AnnualReportPage, AnnualReportSlidePage, AnnualReportSPAPage
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from wagtail.api.v2.views import PagesAPIViewSet
+from utils.helpers import richtext_to_inline_html
 
 
 def all_annual_reports(request):
@@ -39,37 +40,55 @@ class AnnualReportSlidePageAPIViewSet(PagesAPIViewSet):
 
 
 def get_ordered_slides_annual_report(request, page_id):
+    gradient_positions = {
+        'left': 'left',
+        'right': 'right',
+        'top-left': 'left',
+        'top-right': 'right',
+        'bottom-left': 'left',
+        'bottom-right': 'right',
+    }
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
+    year = page.year
+
     if isinstance(page, AnnualReportSPAPage):
         slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
-    elif isinstance(page, StrategicPlanSPAPage):
-        slides = StrategicPlanSlidePage.objects.filter(id__in=slide_ids)
     else:
         slides = []
     slide_map = {slide.id: slide for slide in slides}
     ordered_slides = [slide_map[id] for id in slide_ids if id in slide_map]
 
+    slides = []
+    for slide in ordered_slides:
+        background_image = slide.background_image.get_rendition('fill-2400x1350').file.url if slide.background_image else ''
+        background_image_thumbnail = slide.background_image.get_rendition('fill-384x216').file.url if slide.background_image else ''
+        slides.append({
+            "id": slide.id,
+            "title": slide.title,
+            "slug": slide.slug,
+            "slide_title": richtext_to_inline_html(slide.slide_title),
+            "slide_title_fr": richtext_to_inline_html(slide.slide_title_fr),
+            "slide_subtitle": slide.slide_subtitle,
+            "slide_content": slide.get_annual_report_slide_content(),
+            "slide_type": slide.slide_type,
+            "year": year,
+            "background_image": background_image,
+            "background_image_thumbnail": background_image_thumbnail,
+            "background_video": slide.background_video.file.url if slide.background_video else '',
+            "background_quote": slide.background_quote,
+            "background_quote_font_size": slide.background_quote_font_size,
+            "background_quote_fr": slide.background_quote_fr,
+            "background_quote_font_size_fr": slide.background_quote_font_size_fr,
+            "background_quote_position": slide.background_quote_position,
+            "background_gradient_position": gradient_positions.get(slide.background_quote_position, 'left') if slide.background_quote_position else 'left',
+            "background_colour": slide.background_colour.replace("_", "-"),
+            "include_on_toc": slide.include_on_toc,
+            "french_slide": slide.french_slide,
+        })
+
     response_data = {
-        "slides": [
-            {
-                "id": slide.id,
-                "title": slide.title,
-                "slug": slide.slug,
-                "slide_title": slide.slide_title,
-                "slide_subtitle": slide.slide_subtitle,
-                "slide_content": slide.slide_content,
-                "slide_type": slide.slide_type,
-                "slide_theme": slide.slide_theme,
-                "background_image": slide.background_image.get_rendition('original').file.url if slide.background_image else '',
-                "background_video": slide.background_video.file.url if slide.background_video else '',
-                "background_colour": slide.background_colour.replace("_", "-"),
-                "include_on_toc": slide.include_on_toc,
-                "columns": slide.columns if hasattr(slide, "columns") else '',
-                "wide_column": slide.wide_column if hasattr(slide, "wide_column") else '',
-            }
-            for slide in ordered_slides
-        ]
+        "slides": slides
     }
 
     return JsonResponse(response_data)
@@ -78,9 +97,8 @@ def get_ordered_slides_annual_report(request, page_id):
 def get_ordered_slides_strategic_plan(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
     slide_ids = [block.value["slide"].id for block in page.slides]
-    if isinstance(page, AnnualReportSPAPage):
-        slides = AnnualReportSlidePage.objects.filter(id__in=slide_ids)
-    elif isinstance(page, StrategicPlanSPAPage):
+
+    if isinstance(page, StrategicPlanSPAPage):
         slides = StrategicPlanSlidePage.objects.filter(id__in=slide_ids)
     else:
         slides = []
