@@ -1,7 +1,4 @@
-from .forms import build_dynamic_form
 from .forms_admin import EventPageAdminForm
-from .panels import RegistrationFormFieldPanel
-from .utils import save_registrant_from_form
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -10,21 +7,17 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
-from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db import models, transaction
 from django.core import signing
-from django.core.exceptions import PermissionDenied
-from django.contrib import messages
-from django import forms
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from django.core.exceptions import ValidationError
+from modelcluster.fields import ParentalKey
 from streams.blocks import AbstractSubmissionBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    FieldRowPanel,
 )
 from wagtail.admin.panels import TabbedInterface, ObjectList
 from wagtail.fields import RichTextField, StreamField
@@ -38,6 +31,21 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 import pytz
 import re
 import urllib.parse
+
+
+def _split_slugs(s: str):
+    return [x.strip() for x in (s or "").split(",") if x.strip()]
+
+
+def _match(rule: str, slugs: list[str], current_slug: str) -> bool:
+    S = set(slugs)
+    if rule == "all":
+        return True
+    if rule == "only":
+        return current_slug in S
+    if rule == "except":
+        return current_slug not in S
+    return True
 
 
 class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -553,91 +561,108 @@ class EventPage(
         """
         invite = self._get_invite_from_request(request)
 
-        if self.is_private_registration and not invite:
-            # private event, no token
-            raise PermissionDenied("Private registration")
-
-        # Compute allowed types
-        if invite and invite.allowed_types.exists():
-            types_qs = self.registration_types.filter(
-                id__in=invite.allowed_types.values_list('id', flat=True)
-            )
-        elif self.is_private_registration:
-            # private but invite doesn't specify types => no choices
-            types_qs = self.registration_types.none()
-        else:
-            # public event: show only public types
-            types_qs = self.registration_types.filter(is_public=True)
-
-        types = list(types_qs.order_by('sort_order'))
-
-        if not types:
-            return render(request, "events/registration_no_types.html", {"event": self})
-
-        if len(types) == 1:
-            # Skip chooser and go straight to form for the single allowed type
-            return redirect(self.url + f"register/{types[0].slug}/")
-
-        return render(request, "events/registration_type_select.html", {
-            "event": self, "types": types, "invite": invite
-        })
-
-    @route(r"^register/(?P<type_slug>[-\w]+)/$")
-    def register_form(self, request, type_slug, *args, **kwargs):
-        """
-        The actual registration page. Renders dynamic fields based on
-        the chosen RegistrationType and (optionally) the invite token.
-        """
-        reg_type = get_object_or_404(self.registration_types, slug=type_slug)
-
-        invite = self._get_invite_from_request(request)
-
+        # Decide what types to show on the chooser
         if self.is_private_registration:
             if not invite or not invite.is_valid():
-                raise PermissionDenied("Invite invalid or expired.")
-            # If invite restricts types, enforce it:
-            if invite.allowed_types.exists() and reg_type.id not in invite.allowed_types.values_list('id', flat=True):
-                raise PermissionDenied("Invite not valid for this registration type.")
+                return self.render(request, context_overrides={
+                    "registration_error": "Private registration. Please use your invite link."
+                })
+            types_qs = self.registration_types.all()
+            if invite.allowed_rule == "only":
+                allowed = set(_split_slugs(invite.allowed_type_slugs))
+                types_qs = types_qs.filter(slug__in=allowed)
+        else:
+            types_qs = self.registration_types.filter(is_public=True)
 
-        # Build dynamic form (see helper below)
+        types = list(types_qs.order_by("sort_order"))
+        if not types:
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
+
+        if len(types) == 1:
+            return self.redirect((self.url or "") + f"register/{types[0].slug}/")
+
+        return self.render(
+            request,
+            template="events/registration_type_select.html",
+            context_overrides={"event": self, "types": types, "invite": invite},
+        )
+
+    @route(r"^register/(?P<type_slug>[-\w]+)/$")
+    def register_form(self, request, type_slug: str, *args, **kwargs):
+        from .forms import build_dynamic_form
+        from .utils import save_registrant_from_form
+        from .emailing import send_confirmation_email
+
+        if not self.registration_open:
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
+
+        try:
+            reg_type = self.registration_types.get(slug=type_slug)
+        except RegistrationType.DoesNotExist:
+            return self.render(
+                request, template="events/registration_no_types.html", context_overrides={"event": self}
+            )
+
+        invite = self._get_invite_from_request(request)
+        if self.is_private_registration:
+            if not invite or not invite.is_valid():
+                return self.render(
+                    request,
+                    template="events/registration_no_types.html",
+                    context_overrides={"event": self},
+                )
+            if invite.allowed_rule == "only" and not invite.allows_type_slug(reg_type.slug):
+                return self.render(
+                    request,
+                    template="events/registration_no_types.html",
+                    context_overrides={"event": self},
+                )
+
         form_class = build_dynamic_form(self, reg_type, invite)
+
         if request.method == "POST":
+            # Honeypot quick check (template includes a 'website' field off-screen if you added it)
+            if request.POST.get("website"):
+                # Silently ignore bots
+                return self.redirect(self.url or "/")
+
             form = form_class(request.POST, request.FILES)
             if form.is_valid():
                 registrant = save_registrant_from_form(self, reg_type, form, invite)
+
                 # Atomically burn invite usage if present
                 if invite:
-                    updated = Invite.objects.filter(pk=invite.pk, used_count__lt=models.F('max_uses')) \
-                                            .update(used_count=models.F('used_count') + 1)
-                    if not updated:
-                        form.add_error(None, "This invite link has already been used.")
-                        return render(request, "events/registration_form.html",
-                                      {"event": self, "reg_type": reg_type, "form": form, "invite": invite})
+                    Invite.objects.filter(
+                        pk=invite.pk, used_count__lt=models.F("max_uses")
+                    ).update(used_count=models.F("used_count") + 1)
 
                 confirmed = registrant.confirm_with_capacity()
-                # send_confirmation_async(registrant, confirmed)
-                messages.success(request, "Thanks—you're {}.".format("confirmed" if confirmed else "on the waitlist"))
-                return redirect(self.url)
+                send_confirmation_email(registrant, confirmed)
+                return self.redirect(self.url or "/")
         else:
             form = form_class()
 
-        return render(request, "events/registration_form.html", {
-            "event": self, "reg_type": reg_type, "form": form, "invite": invite
-        })
+        return self.render(
+            request,
+            template="events/registration_form.html",
+            context_overrides={"event": self, "reg_type": reg_type, "form": form, "invite": invite},
+        )
 
     def _get_invite_from_request(self, request):
-        """
-        Accepts invite via ?invite=TOKEN once, then persists it in session.
-        """
         token = request.GET.get("invite")
         if token:
-            # validate basic shape; we’ll check is_valid() later
-            invite = Invite.objects.filter(event=self, token=token).first()
-            if invite:
+            inv = Invite.objects.filter(event=self, token=token).first()
+            if inv:
                 request.session[f"invite:{self.id}"] = token
-                return invite
-
-        # fallback to session
+                return inv
         token = request.session.get(f"invite:{self.id}")
         if token:
             return Invite.objects.filter(event=self, token=token).first()
@@ -776,40 +801,82 @@ class EventPage(
 
 
 class RegistrationType(Orderable):
-    event = ParentalKey('events.EventPage', on_delete=models.CASCADE, related_name='registration_types')
+    event = ParentalKey(
+        "events.EventPage", related_name="registration_types", on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=120)
     slug = models.SlugField(max_length=140)
     capacity = models.PositiveIntegerField(null=True, blank=True)
-    is_public = models.BooleanField(default=True, help_text="If False, only invitees can see/use.")
+    is_public = models.BooleanField(default=True)
     custom_confirmation_text = RichTextField(blank=True)
 
     panels = [
-        FieldRowPanel([FieldPanel('name'), FieldPanel('slug')]),
-        FieldRowPanel([FieldPanel('capacity'), FieldPanel('is_public')]),
-        FieldPanel('custom_confirmation_text'),
+        FieldPanel("name"),
+        FieldPanel("slug"),
+        FieldPanel("capacity"),
+        FieldPanel("is_public"),
+        FieldPanel("custom_confirmation_text"),
     ]
 
-    @property
-    def confirmed_count(self):
-        return self.event.registrants.filter(
-            registration_type_id=self.id, status=Registrant.Status.CONFIRMED
-        ).count()
-
-    def __str__(self):
-        if self.capacity is not None:
-            return f"{self.name} (cap {self.capacity})"
-        return self.name
+    def __str__(self) -> str:
+        return f"{self.name}" + (f" (cap {self.capacity})" if self.capacity is not None else "")
 
 
 class RegistrationFormField(AbstractFormField):
-    event = ParentalKey('events.EventPage', on_delete=models.CASCADE, related_name='form_fields')
-    show_for_types = ParentalManyToManyField('events.RegistrationType', blank=True)
-    required_for_types = ParentalManyToManyField('events.RegistrationType', blank=True, related_name='+')
+    """
+    No M2Ms in InlinePanel. We control visibility/requiredness by rules:
+      - visible_rule:  all / only / except
+      - visible_type_slugs: comma-separated slugs (e.g., "vip,speaker")
+      - required_rule: all / only / except
+      - required_type_slugs: comma-separated slugs
+    """
+    event = ParentalKey(
+        "events.EventPage", related_name="form_fields", on_delete=models.CASCADE
+    )
+
+    class Rule(models.TextChoices):
+        ALL = "all", "All types"
+        ONLY = "only", "Only these types"
+        EXCEPT = "except", "All except these types"
+
+    visible_rule = models.CharField(max_length=10, choices=Rule.choices, default=Rule.ALL)
+    visible_type_slugs = models.TextField(blank=True, help_text="Comma-separated type slugs (e.g., vip,speaker)")
+
+    required_rule = models.CharField(max_length=10, choices=Rule.choices, default=Rule.ALL)
+    required_type_slugs = models.TextField(blank=True, help_text="Comma-separated type slugs")
 
     panels = AbstractFormField.panels + [
-        FieldPanel('show_for_types', widget=forms.CheckboxSelectMultiple),
-        FieldPanel('required_for_types', widget=forms.CheckboxSelectMultiple),
+        MultiFieldPanel(
+            [
+                FieldPanel("visible_rule"),
+                FieldPanel("visible_type_slugs"),
+            ],
+            heading="Visibility rules",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("required_rule"),
+                FieldPanel("required_type_slugs"),
+            ],
+            heading="Requiredness rules",
+        ),
     ]
+
+    def clean(self):
+        super().clean()
+        # Optional: keep editors from referencing foreign slugs
+        if not getattr(self.event, "pk", None):
+            return
+        ev_slugs = set(self.event.registration_types.values_list("slug", flat=True))
+        bad_v = [s for s in _split_slugs(self.visible_type_slugs) if s not in ev_slugs]
+        bad_r = [s for s in _split_slugs(self.required_type_slugs) if s not in ev_slugs]
+        errors = {}
+        if bad_v:
+            errors["visible_type_slugs"] = [f"Unknown/foreign slugs: {', '.join(bad_v)}"]
+        if bad_r:
+            errors["required_type_slugs"] = [f"Unknown/foreign slugs: {', '.join(bad_r)}"]
+        if errors:
+            raise ValidationError(errors)
 
 
 class Invite(models.Model):
@@ -843,36 +910,39 @@ class Registrant(models.Model):
     email = models.EmailField()
     first_name = models.CharField(max_length=120, blank=True)
     last_name = models.CharField(max_length=120, blank=True)
-    # Store editor‑defined answers
     answers = models.JSONField(default=dict, blank=True)
-    # Uploaded files stored as Documents; keep ids here for quick access
     uploaded_document_ids = models.JSONField(default=list, blank=True)
     invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = [('event', 'email', 'registration_type')]  # tweak if needed
+    def __str__(self) -> str:
+        return f"{self.email} @ {self.event.title} ({self.registration_type.name})"
 
-    @transaction.atomic
-    def confirm_with_capacity(self):
-        # Capacity‑safe transition to CONFIRMED, else WAITLIST if enabled
-        ev = self.event
-        if ev.has_capacity_for(self.registration_type_id):
-            # Lock row(s) to avoid race
-            type_row = RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
-            total_cap = ev.max_total_capacity
-            # Recheck in tx
-            if ((type_row.capacity is None or
-                 ev.registrants.filter(registration_type=type_row, status=self.Status.CONFIRMED).count() < type_row.capacity) and
-                    (total_cap is None or ev.registrants.filter(status=self.Status.CONFIRMED).count() < total_cap)):
-                self.status = self.Status.CONFIRMED
-                self.save(update_fields=['status'])
+    def confirm_with_capacity(self) -> bool:
+        """
+        Try to confirm respecting capacity. If capacity is None, always confirm.
+        Uses an atomic update on the type to avoid race conditions.
+        """
+        if self.registration_type.capacity is None:
+            self.status = Registrant.Status.CONFIRMED
+            self.save(update_fields=["status"])
+            return True
+
+        with transaction.atomic():
+            # Count current confirmed
+            confirmed_count = Registrant.objects.select_for_update().filter(
+                registration_type=self.registration_type, status=Registrant.Status.CONFIRMED
+            ).count()
+
+            if confirmed_count < (self.registration_type.capacity or 0):
+                self.status = Registrant.Status.CONFIRMED
+                self.save(update_fields=["status"])
                 return True
-        if ev.waitlist_enabled:
-            self.status = self.Status.WAITLISTED
-            self.save(update_fields=['status'])
-        return False
+
+            self.status = Registrant.Status.WAITLISTED
+            self.save(update_fields=["status"])
+            return False
 
 
 @register_snippet
