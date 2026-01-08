@@ -7,6 +7,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
+from datetime import timedelta
 from django.utils import timezone
 from django.db import models, transaction
 from django.core import signing
@@ -28,6 +29,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail import blocks
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+import secrets
 import pytz
 import re
 import urllib.parse
@@ -771,13 +773,36 @@ class EventPage(
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
                     FieldPanel('max_capacity'),
-                    InlinePanel('registration_types', label='Registration Types'),
-                    InlinePanel('form_fields', label='Registration Form Fields'),
+                ],
+                heading='Registration',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
                     FieldPanel('confirmation_template'),
                     FieldPanel('reminder_template'),
                 ],
-                heading='Registration',
-                classname='collapsible',
+                heading='Email Templates',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
+                    InlinePanel('registration_types', label='Registration Types'),
+                ],
+                heading='Registration Types',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
+                    InlinePanel('form_fields', label='Registration Form Fields'),
+                ],
+                heading='Registration Form Fields',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [InlinePanel("invites", label="Invites")],
+                heading="Invites",
+                classname="collapsible collapsed",
             ),
         ], heading='Registration'),
         ObjectList(promote_panels, heading='Promote'),
@@ -879,23 +904,40 @@ class RegistrationFormField(AbstractFormField):
             raise ValidationError(errors)
 
 
-class Invite(models.Model):
-    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='invites')
-    email = models.EmailField()
-    token = models.CharField(max_length=64, unique=True)
-    allowed_types = models.ManyToManyField(RegistrationType, blank=True)
+class Invite(Orderable):
+    event = ParentalKey("events.EventPage", related_name="invites", on_delete=models.CASCADE)
+
+    email = models.EmailField(blank=True)
     max_uses = models.PositiveIntegerField(default=1)
     used_count = models.PositiveIntegerField(default=0)
     expires_at = models.DateTimeField(null=True, blank=True)
 
-    def is_valid(self):
-        if self.expires_at and timezone.now() > self.expires_at:
-            return False
-        return self.used_count < self.max_uses
+    allowed_rule = models.CharField(
+        max_length=10,
+        choices=[("all", "All public types"), ("only", "Only these types")],
+        default="all",
+    )
+    allowed_type_slugs = models.TextField(blank=True)
 
-    @staticmethod
-    def generate_token(payload: dict):
-        return signing.TimestampSigner().sign_object(payload)
+    token = models.CharField(max_length=64, unique=True, db_index=True, blank=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel("email"),
+        FieldPanel("allowed_rule"),
+        FieldPanel("allowed_type_slugs"),
+        FieldPanel("max_uses"),
+        FieldPanel("expires_at"),
+        FieldPanel("used_count", read_only=True),
+        FieldPanel("token", read_only=True),
+        # token/used_count auto-managed; no need to expose here
+    ]
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            import secrets
+            self.token = secrets.token_urlsafe(24)
+        super().save(*args, **kwargs)
 
 
 class Registrant(models.Model):
@@ -905,15 +947,19 @@ class Registrant(models.Model):
         WAITLISTED = "waitlisted", "Waitlisted"
         CANCELLED = "cancelled", "Cancelled"
 
-    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='registrants')
-    registration_type = models.ForeignKey(RegistrationType, on_delete=models.PROTECT)
+    event = models.ForeignKey("events.EventPage", on_delete=models.CASCADE, related_name="registrants")
+    registration_type = models.ForeignKey(RegistrationType, on_delete=models.PROTECT, related_name="registrants")
     email = models.EmailField()
     first_name = models.CharField(max_length=120, blank=True)
     last_name = models.CharField(max_length=120, blank=True)
+
+    # Store dynamic answers + uploaded docs metadata
     answers = models.JSONField(default=dict, blank=True)
     uploaded_document_ids = models.JSONField(default=list, blank=True)
-    invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL)
+
+    invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL, related_name="registrants")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
