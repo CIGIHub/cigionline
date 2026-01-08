@@ -79,7 +79,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'adv_cache_tag',
 
-    # 'wagtail_2fa',
+    'wagtail_2fa',
     'django_otp',
     'django_otp.plugins.otp_totp',
 
@@ -104,7 +104,7 @@ MIDDLEWARE = [
 
     'cigionline.middleware.BasicAuthMiddleware',
 
-    # 'wagtail_2fa.middleware.VerifyUserMiddleware',
+    'wagtail_2fa.middleware.VerifyUserMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
