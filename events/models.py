@@ -7,11 +7,13 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
-from django.utils import timezone
+from django.contrib import messages
 from django.db import models, transaction
+from django.utils import timezone
+from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _
 from modelcluster.fields import ParentalKey
 from streams.blocks import AbstractSubmissionBlock
 from wagtail.admin.panels import (
@@ -19,6 +21,7 @@ from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
+    HelpPanel,
 )
 from wagtail.admin.panels import TabbedInterface, ObjectList
 from wagtail.fields import RichTextField, StreamField
@@ -30,7 +33,6 @@ from wagtail import blocks
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.contrib.forms.utils import get_field_clean_name
-import secrets
 import pytz
 import re
 import urllib.parse
@@ -285,7 +287,6 @@ class EventPage(
 
     # Registration related fields
     registration_open = models.BooleanField(default=False)
-    max_capacity = models.IntegerField(blank=True, null=True)
     is_private_registration = models.BooleanField(
         default=False, help_text="Require invite token or private link to register."
     )
@@ -539,16 +540,6 @@ class EventPage(
     def total_confirmed(self):
         return self.registrants.filter(status=Registrant.Status.CONFIRMED).count()
 
-    def has_capacity_for(self, reg_type_id: int) -> bool:
-        # Check per‑type and overall capacity
-        rt = self.registration_types.get(id=reg_type_id)
-        if rt.capacity is not None:
-            if rt.confirmed_count >= rt.capacity:
-                return False
-        if self.max_total_capacity is not None and self.total_confirmed >= self.max_total_capacity:
-            return False
-        return True
-
     @property
     def register_url(self):
         return self.url + "register/"
@@ -564,16 +555,20 @@ class EventPage(
         """
         invite = self._get_invite_from_request(request)
 
-        # Decide what types to show on the chooser
         if self.is_private_registration:
             if not invite or not invite.is_valid():
                 return self.render(request, context_overrides={
                     "registration_error": "Private registration. Please use your invite link."
                 })
             types_qs = self.registration_types.all()
-            if invite.allowed_rule == "only":
+            rule = invite.allowed_rule
+            if rule == "only":
                 allowed = set(_split_slugs(invite.allowed_type_slugs))
                 types_qs = types_qs.filter(slug__in=allowed)
+            elif rule == "except":
+                blocked = set(_split_slugs(invite.allowed_type_slugs))
+                if blocked:
+                    types_qs = types_qs.exclude(slug__in=blocked)
         else:
             types_qs = self.registration_types.filter(is_public=True)
 
@@ -593,6 +588,23 @@ class EventPage(
             request,
             template="events/registration_type_select.html",
             context_overrides={"event": self, "types": types, "invite": invite},
+        )
+
+    @route(r"^register/result/$")
+    def register_result(self, request, *args, **kwargs):
+        from .models import Registrant
+        status = request.GET.get("s")
+        rid = request.GET.get("rid")
+        registrant = None
+        if rid and status in {"ok", "wait"}:
+            registrant = (
+                Registrant.objects.select_related("registration_type")
+                .filter(pk=rid, event=self).first()
+            )
+        return self.render(
+            request,
+            template="events/registration_result.html",
+            context_overrides={"event": self, "status": status, "registrant": registrant},
         )
 
     @route(r"^register/(?P<type_slug>[-\w]+)/$")
@@ -623,7 +635,7 @@ class EventPage(
                     template="events/registration_no_types.html",
                     context_overrides={"event": self},
                 )
-            if invite.allowed_rule == "only" and not invite.allows_type_slug(reg_type.slug):
+            if not invite.allows_type_slug(reg_type.slug):
                 return self.render(
                     request,
                     template="events/registration_no_types.html",
@@ -634,7 +646,8 @@ class EventPage(
 
         if request.method == "POST":
             if request.POST.get("website"):
-                return redirect(self.url or "/")
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return redirect(f"{base}register/result/?s=bot")
 
             form = form_class(request.POST, request.FILES)
             if form.is_valid():
@@ -666,7 +679,19 @@ class EventPage(
 
                 confirmed = registrant.confirm_with_capacity()
                 send_confirmation_email(registrant, confirmed)
-                return redirect(self.url or "/")
+
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                s = "ok" if confirmed else "wait"
+                return redirect(f"{base}register/result/?s={s}&rid={registrant.pk}")
+            else:
+                # Collect a friendly error summary
+                for field, errs in form.errors.items():
+                    label = form.fields.get(field).label if field in form.fields else field
+                    for e in errs:
+                        messages.error(request, f"{label}: {e}" if label else str(e))
+
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return redirect(f"{base}register/result/?s=err")
         else:
             form = form_class()
 
@@ -790,9 +815,8 @@ class EventPage(
                 [
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
-                    FieldPanel('max_capacity'),
                 ],
-                heading='Registration',
+                heading='General Settings',
                 classname='collapsible collapsed',
             ),
             MultiFieldPanel(
@@ -964,12 +988,11 @@ class Invite(Orderable):
     used_count = models.PositiveIntegerField(default=0)
     expires_at = models.DateTimeField(null=True, blank=True)
 
-    allowed_rule = models.CharField(
-        max_length=10,
-        choices=[("all", "All public types"), ("only", "Only these types")],
-        default="all",
-    )
-    allowed_type_slugs = models.TextField(blank=True)
+    class Rule(models.TextChoices):
+        ALL = "all", "All"
+        ONLY = "only", "Only these"
+    allowed_rule = models.CharField(max_length=10, choices=Rule.choices, default=Rule.ALL)
+    allowed_type_slugs = models.TextField(blank=True, help_text="Example: vip,speaker")
 
     token = models.CharField(max_length=64, unique=True, db_index=True, blank=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -982,7 +1005,7 @@ class Invite(Orderable):
         FieldPanel("expires_at"),
         FieldPanel("used_count", read_only=True),
         FieldPanel("token", read_only=True),
-        # token/used_count auto-managed; no need to expose here
+        HelpPanel(template="events/includes/invite_link_help_panel.html", heading="Invite link"),
     ]
 
     def save(self, *args, **kwargs):
@@ -990,6 +1013,30 @@ class Invite(Orderable):
             import secrets
             self.token = secrets.token_urlsafe(24)
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Invite for {self.event.title} ({self.email or self.token})"
+
+    def is_valid(self) -> bool:
+        """Still usable? (not expired, under max uses)"""
+        if self.expires_at and timezone.now() >= self.expires_at:
+            print("expired")
+            return False
+        if self.max_uses is not None and self.used_count >= self.max_uses:
+            print("maxed out")
+            return False
+        return True
+
+    def _allowed_set(self):
+        return {s.strip() for s in (self.allowed_type_slugs or "").split(",") if s.strip()}
+
+    def allows_type_slug(self, slug: str) -> bool:
+        s = slug.strip()
+        if self.allowed_rule == self.Rule.ONLY:
+            return s in self._allowed_set()
+        if self.allowed_rule == self.Rule.EXCEPT:
+            return s not in self._allowed_set()
+        return True
 
 
 class Registrant(models.Model):

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 mt-5">
+      <h1>Registration status</h1>
+
+      {% if status == "ok" %}
+      <div class="alert alert-success" role="alert">
+        Thanks! Your registration{% if registrant and registrant.registration_type %}
+        for <strong>{{ registrant.registration_type.name }}</strong>{% endif %} was received and confirmed.
+        We’ve emailed you a confirmation.
+      </div>
+
+      {% elif status == "wait" %}
+      <div class="alert alert-warning" role="alert">
+        Thanks! You’re on the waitlist. We’ll email you if a spot opens.
+      </div>
+
+      {% elif status == "err" %}
+      <div class="alert alert-danger" role="alert">
+        We couldn’t submit your registration. Please review the issues below and try again.
+      </div>
+      {% if messages %}
+      <ul class="mb-4">
+        {% for m in messages %}
+        <li>{{ m }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% elif status == "bot" %}
+      <div class="alert alert-info" role="alert">
+        It looks like the form wasn’t submitted correctly. Please try again.
+      </div>
+      {% else %}
+      <div class="alert alert-secondary" role="alert">
+        Registration status unknown. Please return to the event page and try again.
+      </div>
+      {% endif %}
+
+      <p class="mt-4">
+        <a class="btn btn-primary" href="{{ event.get_url }}">{{ event.title }} — Back to event</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

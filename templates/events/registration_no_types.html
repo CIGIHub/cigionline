@@ -1,57 +1,64 @@
-{# templates/events/registration_no_types.html #}
 {% extends "base.html" %}
+{% load webpack_loader %}
+{% block extra_css %}
+{% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+{% block title %}Registration Unavailable — {{ event.title }}{% endblock %}
+
 
 {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
+<section class="event-registration-no-types-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
 
-      <h1 class="mb-3">Registration isn’t available</h1>
-      <p class="lead mb-4">
-        We couldn’t find any registration options for <strong>{{ event.title }}</strong>.
-      </p>
+        <h1 class="mb-3">Registration isn’t available</h1>
+        <p class="lead mb-4">
+          We couldn’t find any registration options for <strong>{{ event.title }}</strong>.
+        </p>
 
-      {# Helpful, situation-specific messages #}
-      {% if not event.registration_open %}
+        {# Helpful, situation-specific messages #}
+        {% if not event.registration_open %}
         <div class="alert alert-warning">
           Registration for this event is currently closed.
         </div>
-      {% elif event.is_private_registration %}
+        {% elif event.is_private_registration %}
         <div class="alert alert-info">
           This event uses private invitations. Please open the registration link from your
           invitation email. If you believe this is an error, contact the organizer.
         </div>
-      {% else %}
+        {% else %}
         <div class="alert alert-secondary">
           There are no registration types available at the moment. Please check back later.
         </div>
-      {% endif %}
+        {% endif %}
 
-      {# Event quick facts (optional niceties) #}
-      <div class="card my-4">
-        <div class="card-body">
-          <h2 class="h5 mb-3">Event details</h2>
-          <dl class="row mb-0">
-            <dt class="col-sm-3">Date &amp; time</dt>
-            <dd class="col-sm-9">{{ event.date_time|date:"F j, Y · g:ia T" }}</dd>
+        {# Event quick facts (optional niceties) #}
+        <div class="card my-4">
+          <div class="card-body">
+            <h2 class="h5 mb-3">Event details</h2>
+            <dl class="row mb-0">
+              <dt class="col-sm-3">Date &amp; time</dt>
+              <dd class="col-sm-9">{{ event.date_time|date:"F j, Y · g:ia T" }}</dd>
 
-            {% if event.location %}
-            <dt class="col-sm-3">Location</dt>
-            <dd class="col-sm-9">{{ event.location }}</dd>
-            {% endif %}
-          </dl>
+              {% if event.location %}
+              <dt class="col-sm-3">Location</dt>
+              <dd class="col-sm-9">{{ event.location }}</dd>
+              {% endif %}
+            </dl>
+          </div>
         </div>
-      </div>
 
-      {# Optional organizer contact if you have one on the model (safe to leave; won’t render if blank) #}
-      {% if event.contact_email %}
+        {# Optional organizer contact if you have one on the model (safe to leave; won’t render if blank) #}
+        {% if event.contact_email %}
         <p class="mb-4">
           Questions? Email <a href="mailto:{{ event.contact_email }}">{{ event.contact_email }}</a>.
         </p>
-      {% endif %}
+        {% endif %}
 
-      <a href="{{ event.url }}" class="btn btn-secondary">Back to event</a>
+        <a href="{{ event.url }}" class="btn btn-primary">Back to event</a>
+      </div>
     </div>
   </div>
-</div>
+</section>
 {% endblock %}

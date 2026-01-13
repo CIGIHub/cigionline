@@ -24,3 +24,24 @@
     }
   }
 }
+
+.event-registration-form-section {
+  margin-top: 6em;
+  margin-bottom: 4em;
+
+  .form-group {
+    &.form-website {
+      display: none;
+    }
+  }
+}
+
+.event-registration-type-select-section {
+  margin-top: 6em;
+  margin-bottom: 4em;
+}
+
+.event-registration-no-types-section {
+  margin-top: 6em;
+  margin-bottom: 4em;
+}

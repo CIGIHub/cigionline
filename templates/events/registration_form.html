@@ -1,33 +1,40 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
 {% block title %}Register — {{ event.title }} · {{ reg_type.name }}{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8 mt-5">
-      <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; Back to event</a>
-      <h1 class="mb-1">{{ event.title }}</h1>
-      <p class="text-muted mb-4">Registration type: {{ reg_type.name }}</p>
-
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} mb-4">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-          <div class="form-group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}  <!-- let Django render the right widget -->
-            {% if field.help_text %}<small class="help">{{ field.help_text }}</small>{% endif %}
-            {% for error in field.errors %}<div class="error">{{ error }}</div>{% endfor %}
-          </div>
-        {% endfor %}
-        <button type="submit">Submit</button>
-      </form>
+<section class="event-registration-form-section">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; Back to event</a>
+        <h1 class="mb-1">{{ event.title }}</h1>
+        <p class="text-muted mb-4">Registration type: {{ reg_type.name }}</p>
+  
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} mb-4">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+  
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {% for field in form %}
+            <div class="form-group form-{{ field.label|slugify }}">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}  <!-- let Django render the right widget -->
+              {% if field.help_text %}<small class="help">{{ field.help_text }}</small>{% endif %}
+              {% for error in field.errors %}<div class="error">{{ error }}</div>{% endfor %}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+</section>
 {% endblock %}

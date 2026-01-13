@@ -128,7 +128,7 @@ def build_dynamic_form(event, reg_type, invite=None):
     # Honeypot (off-screen in template CSS, but keep it a real input)
     fields.append((
         HoneypotMixin.hp_field,
-        forms.CharField(required=False, label="Leave this field blank",
+        forms.CharField(required=False, label="website",
                         widget=forms.TextInput(attrs={"autocomplete": "off"})),
     ))
 
