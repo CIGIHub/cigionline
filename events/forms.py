@@ -1,7 +1,20 @@
 from wagtail.contrib.forms.utils import get_field_clean_name
 from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 from .models import _split_slugs, _match
+
+
+def _parse_exts(text: str) -> list[str]:
+    # normalize: "pdf, docx, png" -> ["pdf","docx","png"]
+    return [t.lower().lstrip(".") for t in (text or "").replace(" ", "").split(",") if t]
+
+
+def _max_size_validator(max_mb: int):
+    def _v(f):
+        if f.size > max_mb * 1024 * 1024:
+            raise ValidationError(f"File too large. Max size is {max_mb} MB.")
+    return _v
 
 
 class HoneypotMixin:
@@ -43,6 +56,7 @@ WAGTAIL_FIELD_MAP = {
     'checkbox': forms.BooleanField,
     'checkboxes': forms.MultipleChoiceField,
     'dropdown': forms.ChoiceField,
+    'multiselect': forms.MultipleChoiceField,
     'radio': forms.ChoiceField,
     'date': forms.DateField,
     'datetime': forms.DateTimeField,
@@ -56,17 +70,13 @@ def build_dynamic_form(event, reg_type, invite=None):
     """
     fields = []
 
-    # Person basics first
     email_initial = invite.email if getattr(invite, "email", None) else None
 
-    # first_name
     fields.append(("first_name", forms.CharField(label="First name", required=True)))
-    # last_name
     fields.append(("last_name", forms.CharField(label="Last name", required=True)))
-    # email
     email_field = forms.EmailField(label="Email", required=True, initial=email_initial)
     if email_initial:
-        email_field.widget.attrs["readonly"] = "readonly"  # visual lock; we'll enforce server-side too
+        email_field.widget.attrs["readonly"] = "readonly"
     fields.append(("email", email_field))
 
     current_slug = reg_type.slug
@@ -83,16 +93,35 @@ def build_dynamic_form(event, reg_type, invite=None):
         FieldClass = WAGTAIL_FIELD_MAP.get(ff.field_type, forms.CharField)
         kwargs = {"label": ff.label, "help_text": ff.help_text, "required": is_required}
 
-        if ff.field_type in ("dropdown", "radio", "checkboxes"):
+        if ff.field_type in ("dropdown", "radio", "checkboxes", "multiselect", "date", "datetime", "file"):
             choices = [(x.strip(), x.strip()) for x in ff.choices.splitlines() if x.strip()]
             kwargs["choices"] = choices
             if ff.field_type == "checkboxes":
-                kwargs["widget"] = forms.CheckboxSelectMultiple
+                kwargs["widget"] = forms.CheckboxSelectMultiple()
             if ff.field_type == "radio":
-                kwargs["widget"] = forms.RadioSelect
+                kwargs["widget"] = forms.RadioSelect()
+            if ff.field_type == "multiselect":
+                kwargs["widget"] = forms.SelectMultiple()
+            if ff.field_type == "date":
+                kwargs["widget"] = forms.DateInput(attrs={"type": "date"})
+                kwargs.pop("choices", None)  # DateField does not take choices
+            if ff.field_type == "datetime":
+                kwargs["widget"] = forms.DateTimeInput(attrs={"type": "datetime-local"})
+                kwargs.pop("choices", None)  # DateTimeField does not take choices
+            if ff.field_type == "file":
+                kwargs["widget"] = forms.ClearableFileInput()
+                kwargs.pop("choices", None)
+                validators = []
+                exts = _parse_exts(getattr(ff, "file_allowed_types", ""))
+                if exts:
+                    validators.append(FileExtensionValidator(allowed_extensions=exts))
+                if ff.file_max_mb:
+                    validators.append(_max_size_validator(ff.file_max_mb))
+                if validators:
+                    kwargs["validators"] = validators
 
         if ff.field_type == "multiline":
-            kwargs["widget"] = forms.Textarea
+            kwargs["widget"] = forms.Textarea()
 
         fields.append((clean_name, FieldClass(**kwargs)))
 

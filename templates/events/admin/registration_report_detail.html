@@ -1,0 +1,55 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+{% block titletag %}{{ event.title }} — {% trans "Registration Capacity" %}{% endblock %}
+
+{% block content %}
+<header class="nice-padding">
+  <div class="row">
+    <div class="left">
+      <h1 class="icon icon-date">{{ event.title }}</h1>
+      <p class="help-block">
+        {% trans "Capacity report by registration type." %}
+        <br>
+        <a href="{% url index_url_name %}">{% trans "Back to Events" %}</a> ·
+        <a href="{{ event.url }}" target="_blank" rel="noopener">{% trans "View event" %}</a>
+        <a class="button bicolor button-small" href="{% url export_csv_url_name pk=event.pk %}">
+          Download CSV
+        </a>
+      </p>
+    </div>
+  </div>
+</header>
+
+<div class="nice-padding">
+  <table class="listing">
+    <thead>
+      <tr>
+        <th>{% trans "Type" %}</th>
+        <th class="w-min">{% trans "Slug" %}</th>
+        <th class="w-min">{% trans "Capacity" %}</th>
+        <th class="w-min">{% trans "Confirmed" %}</th>
+        <th class="w-min">{% trans "Waitlisted" %}</th>
+        <th class="w-min">{% trans "Remaining" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in type_rows %}
+      <tr>
+        <td>{{ r.name }}</td>
+        <td class="w-min"><code>{{ r.slug }}</code></td>
+        <td class="w-min">{% if r.capacity %}{{ r.capacity }}{% else %}—{% endif %}</td>
+        <td class="w-min">{{ r.confirmed }}</td>
+        <td class="w-min">{{ r.waitlisted }}</td>
+        <td class="w-min">
+          {% if r.remaining is not None %}{{ r.remaining }}{% else %}—{% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6">{% trans "No registration types found for this event." %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

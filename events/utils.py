@@ -2,6 +2,24 @@ from __future__ import annotations
 from django.db import transaction
 from wagtail.documents.models import Document
 from django.apps import apps
+from datetime import date, datetime, time
+from decimal import Decimal
+from django.core.files.uploadedfile import UploadedFile
+
+
+def _jsonable(value):
+    """Make form values safe to stash in a JSONField/TextField."""
+    if isinstance(value, (date, datetime, time)):
+        return value.isoformat()
+    if isinstance(value, Decimal):
+        return float(value)
+    if isinstance(value, UploadedFile):
+        return {"name": value.name}
+    if isinstance(value, dict):
+        return {k: _jsonable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_jsonable(v) for v in value]
+    return value
 
 
 def save_registrant_from_form(event, reg_type, form, invite=None):
@@ -22,6 +40,8 @@ def save_registrant_from_form(event, reg_type, form, invite=None):
             doc = Document.objects.create(title=getattr(val, "name", "upload"), file=val)
             uploaded_doc_ids.append(doc.id)
             cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
+
+    cleaned = {k: _jsonable(v) for k, v in cleaned.items()}
 
     with transaction.atomic():
         registrant = Registrant.objects.create(

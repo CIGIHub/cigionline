@@ -7,11 +7,11 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
-from datetime import timedelta
 from django.utils import timezone
 from django.db import models, transaction
-from django.core import signing
 from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 from modelcluster.fields import ParentalKey
 from streams.blocks import AbstractSubmissionBlock
 from wagtail.admin.panels import (
@@ -29,6 +29,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail import blocks
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.contrib.forms.utils import get_field_clean_name
 import secrets
 import pytz
 import re
@@ -585,7 +586,8 @@ class EventPage(
             )
 
         if len(types) == 1:
-            return self.redirect((self.url or "") + f"register/{types[0].slug}/")
+            base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+            return redirect(f"{base}register/{types[0].slug}/")
 
         return self.render(
             request,
@@ -631,14 +633,30 @@ class EventPage(
         form_class = build_dynamic_form(self, reg_type, invite)
 
         if request.method == "POST":
-            # Honeypot quick check (template includes a 'website' field off-screen if you added it)
             if request.POST.get("website"):
-                # Silently ignore bots
-                return self.redirect(self.url or "/")
+                return redirect(self.url or "/")
 
             form = form_class(request.POST, request.FILES)
             if form.is_valid():
                 registrant = save_registrant_from_form(self, reg_type, form, invite)
+
+                cleanname_to_ff = {
+                    get_field_clean_name(ff.label): ff
+                    for ff in self.form_fields.all()
+                }
+                for clean_name, value in form.cleaned_data.items():
+                    ff = cleanname_to_ff.get(clean_name)
+                    if not ff:
+                        continue
+                    if ff.field_type == "file" and value:
+                        # value is an UploadedFile; assign and save
+                        upload = RegistrantUpload(
+                            registrant=registrant,
+                            field=ff,
+                            original_name=getattr(value, "name", ""),
+                        )
+                        upload.file = value
+                        upload.save()
 
                 # Atomically burn invite usage if present
                 if invite:
@@ -648,7 +666,7 @@ class EventPage(
 
                 confirmed = registrant.confirm_with_capacity()
                 send_confirmation_email(registrant, confirmed)
-                return self.redirect(self.url or "/")
+                return redirect(self.url or "/")
         else:
             form = form_class()
 
@@ -855,8 +873,40 @@ class RegistrationFormField(AbstractFormField):
       - required_rule: all / only / except
       - required_type_slugs: comma-separated slugs
     """
+
+    FIELD_CHOICES = (
+        ("singleline", _("Single line text")),
+        ("multiline", _("Multi-line text")),
+        ("email", _("Email")),
+        ("number", _("Number")),
+        ("url", _("URL")),
+        ("checkbox", _("Checkbox")),
+        ("checkboxes", _("Checkboxes")),
+        ("dropdown", _("Drop down")),
+        ("multiselect", _("Multiple select")),
+        ("radio", _("Radio buttons")),
+        ("date", _("Date")),
+        ("datetime", _("Date/time")),
+        ("hidden", _("Hidden field")),
+        ("file", _("File upload")),
+    )
     event = ParentalKey(
         "events.EventPage", related_name="form_fields", on_delete=models.CASCADE
+    )
+
+    file_allowed_types = models.CharField(
+        max_length=255, blank=True,
+        help_text="Allowed extensions (comma-separated), e.g. pdf,docx,png"
+    )
+    file_max_mb = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Max file size (MB). Leave blank for no limit."
+    )
+
+    field_type = models.CharField(
+        max_length=16,
+        choices=FIELD_CHOICES,
+        default="singleline",
     )
 
     class Rule(models.TextChoices):
@@ -889,12 +939,14 @@ class RegistrationFormField(AbstractFormField):
 
     def clean(self):
         super().clean()
-        # Optional: keep editors from referencing foreign slugs
-        if not getattr(self.event, "pk", None):
+
+        if not self.event_id:
             return
+
         ev_slugs = set(self.event.registration_types.values_list("slug", flat=True))
         bad_v = [s for s in _split_slugs(self.visible_type_slugs) if s not in ev_slugs]
         bad_r = [s for s in _split_slugs(self.required_type_slugs) if s not in ev_slugs]
+
         errors = {}
         if bad_v:
             errors["visible_type_slugs"] = [f"Unknown/foreign slugs: {', '.join(bad_v)}"]
@@ -989,6 +1041,17 @@ class Registrant(models.Model):
             self.status = Registrant.Status.WAITLISTED
             self.save(update_fields=["status"])
             return False
+
+
+class RegistrantUpload(models.Model):
+    registrant = models.ForeignKey("events.Registrant", related_name="uploads", on_delete=models.CASCADE)
+    field = models.ForeignKey("events.RegistrationFormField", on_delete=models.PROTECT)
+    file = models.FileField(upload_to="event_uploads/%Y/%m/%d")
+    original_name = models.CharField(max_length=255, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.registrant_id} :: {self.field.label} :: {self.file.name}"
 
 
 @register_snippet

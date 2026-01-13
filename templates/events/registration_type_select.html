@@ -2,17 +2,21 @@
 {% block title %}Register — {{ event.title }}{% endblock %}
 {% block content %}
 <div class="container py-5">
-  <h1 class="mb-3">Register for {{ event.title }}</h1>
-  <p class="mb-4">Choose your registration type:</p>
-  <ul>
-    {% for t in types %}
-      <li>
-        <a href="{{ event.url }}register/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
-          {{ t.name }}{% if t.capacity %} ({{ t.capacity }} max){% endif %}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-  <p><a href="{{ event.url }}">Back to event</a></p>
+  <div class="row justify-content-center">
+    <div class="col-lg-8 mt-5">
+      <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; Back to event</a>
+      <h1 class="mb-3">Register for {{ event.title }}</h1>
+      <p class="mb-4">Choose your registration type:</p>
+      <ul>
+        {% for t in types %}
+        <li>
+          <a href="{{ event.url }}register/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
+            {{ t.name }}{% if t.capacity %} ({{ t.capacity }} max){% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
 {% endblock %}

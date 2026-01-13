@@ -1,0 +1,46 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+{% block titletag %}{% trans "Registration Reports" %}{% endblock %}
+
+{% block content %}
+  <header class="nice-padding">
+    <div class="row">
+      <div class="left">
+        <h1 class="icon icon-table">{% trans "Registration-enabled Events" %}</h1>
+        <p class="help-block">{% trans "Only events with registration_open = True" %}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="nice-padding">
+    <table class="listing">
+      <thead>
+        <tr>
+          <th>{% trans "Event" %}</th>
+          <th class="w-min">{% trans "Types" %}</th>
+          <th class="w-min">{% trans "Confirmed (total)" %}</th>
+          <th class="w-min">{% trans "View" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <td>
+              <a href="{{ row.event.url }}" target="_blank" rel="noopener">{{ row.event.title }}</a>
+              <div class="help-block">{{ row.event.get_site.root_url }}{{ row.event.url_path }}</div>
+            </td>
+            <td class="w-min">{{ row.type_count }}</td>
+            <td class="w-min">{{ row.confirmed_total }}</td>
+            <td class="w-min">
+              <a href="{% url detail_url_name pk=row.event.pk %}" class="button bicolor button-small">
+                Details
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">{% trans "No events with registration enabled." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
