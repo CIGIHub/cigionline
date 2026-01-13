@@ -1,0 +1,54 @@
+{% load events_form %}
+
+<div class="cigi-field{% if field.errors %} has-errors{% endif %}">
+  {# single checkbox: label after input #}
+  {% if field|is_single_checkbox %}
+    <label class="cigi-checkbox">
+      {{ field }}
+      <span>{{ field.label }}{% if field.field.required %} <span class="req">*</span>{% endif %}</span>
+    </label>
+
+  {# radio / checkbox groups #}
+  {% elif field|is_choice_group %}
+    <div class="cigi-label">
+      <span>{{ field.label }}</span>{% if field.field.required %}<span class="req">*</span>{% endif %}
+    </div>
+    <div class="cigi-options">
+      {% for sub in field %}
+        <label class="cigi-option">
+          {{ sub.tag }}
+          <span>{{ sub.choice_label }}</span>
+        </label>
+      {% endfor %}
+    </div>
+
+  {# file input #}
+  {% elif field|is_file %}
+    <label class="cigi-label" for="{{ field.id_for_label }}">
+      <span>{{ field.label }}</span>{% if field.field.required %}<span class="req">*</span>{% endif %}
+    </label>
+    <div class="cigi-file">
+      {{ field }}
+      <div class="file-meta" aria-live="polite"></div>
+    </div>
+
+  {# everything else (text, email, select, textarea, etc.) #}
+  {% else %}
+    <label class="cigi-label" for="{{ field.id_for_label }}">
+      <span>{{ field.label }}</span>{% if field.field.required %}<span class="req">*</span>{% endif %}
+    </label>
+    {{ field }}
+  {% endif %}
+
+  {% if field.help_text %}
+    <div class="cigi-help">{{ field.help_text|safe }}</div>
+  {% endif %}
+
+  {% if field.errors %}
+    <ul class="cigi-errors">
+      {% for e in field.errors %}
+        <li>{{ e }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

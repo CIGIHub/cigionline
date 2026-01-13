@@ -4,13 +4,16 @@
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'eventPage' 'js' %}
+{% endblock %}
 
 {% block content %}
 <section class="event-registration-form-section">
   <div class="container py-5">
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; Back to event</a>
+        <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
         <h1 class="mb-1">{{ event.title }}</h1>
         <p class="text-muted mb-4">Registration type: {{ reg_type.name }}</p>
   
@@ -22,16 +25,39 @@
   
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          {{ form.non_field_errors }}
-          {% for field in form %}
-            <div class="form-group form-{{ field.label|slugify }}">
-              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {{ field }}  <!-- let Django render the right widget -->
-              {% if field.help_text %}<small class="help">{{ field.help_text }}</small>{% endif %}
-              {% for error in field.errors %}<div class="error">{{ error }}</div>{% endfor %}
+          {# Non-field errors if you render them here #}
+          {% if form.non_field_errors %}
+            <div class="cigi-alert">
+              <ul>{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
             </div>
+          {% endif %}
+
+          {# Basic identity — two columns #}
+          <div class="cigi-grid cigi-grid--2">
+            {% include "events/includes/_field.html" with field=form.first_name %}
+            {% include "events/includes/_field.html" with field=form.last_name %}
+          </div>
+
+          {% include "events/includes/_field.html" with field=form.email %}
+
+          {# Dynamic questions (skip core + honeypot) #}
+          {% for field in form %}
+            {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
+              {% include "events/includes/_field.html" with field=field %}
+            {% endif %}
           {% endfor %}
-          <button class="btn btn-primary" type="submit">Submit</button>
+
+          {# Honeypot: render but hide visually #}
+          {% if form.website %}
+            <div class="visually-hidden" aria-hidden="true">
+              {{ form.website.label_tag }}{{ form.website }}
+            </div>
+          {% endif %}
+
+          <div class="cigi-actions">
+            <button type="submit" class="btn btn-primary">Submit registration</button>
+            <a class="btn" href="{{ event.url }}">Back to event</a>
+          </div>
         </form>
       </div>
     </div>

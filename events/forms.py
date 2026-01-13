@@ -4,6 +4,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from .models import _split_slugs, _match
 
+BASE_INPUT_CLASS = "cigi-input"
+BASE_SELECT_CLASS = "cigi-select"
+BASE_GROUP_CLASS = "cigi-group"       # radios/checkbox groups
+BASE_FILE_CLASS = "cigi-file-input"
+BASE_DATE_CLASS = "cigi-date-input"  # date + datetime
+ERROR_CLASS = "has-errors"
+
 
 def _parse_exts(text: str) -> list[str]:
     # normalize: "pdf, docx, png" -> ["pdf","docx","png"]
@@ -68,6 +75,7 @@ def build_dynamic_form(event, reg_type, invite=None):
     """
     Build a dynamic Form class from RegistrationFormField rules (no admin/panels tricks).
     """
+
     fields = []
 
     email_initial = invite.email if getattr(invite, "email", None) else None
@@ -122,8 +130,30 @@ def build_dynamic_form(event, reg_type, invite=None):
 
         if ff.field_type == "multiline":
             kwargs["widget"] = forms.Textarea()
+        
+        field_obj = FieldClass(**kwargs)
+        print(field_obj)
 
-        fields.append((clean_name, FieldClass(**kwargs)))
+        # Add consistent CSS classes to the widget (so templates can stay simple)
+        w = field_obj.widget
+        cls = w.attrs.get("class", "")
+
+        if ff.field_type in ("dropdown",):
+            w.attrs["class"] = f"{cls} {BASE_SELECT_CLASS}".strip()
+        elif ff.field_type in ("multiselect",):
+            w.attrs["class"] = f"{cls} {BASE_SELECT_CLASS} {BASE_SELECT_CLASS}--multiple".strip()
+        elif ff.field_type in ("radio", "checkboxes"):
+            # Applies to the group container and/or subwidgets (Django assigns to each subwidget)
+            w.attrs["class"] = f"{cls} {BASE_GROUP_CLASS}".strip()
+        elif ff.field_type in ("date", "datetime"):
+            w.attrs["class"] = f"{cls} {BASE_INPUT_CLASS} {BASE_DATE_CLASS}".strip()
+        elif ff.field_type == "file":
+            w.attrs["class"] = f"{cls} {BASE_FILE_CLASS}".strip()
+        else:
+            # default text-ish
+            w.attrs["class"] = f"{cls} {BASE_INPUT_CLASS}".strip()
+
+        fields.append((clean_name, field_obj))
 
     # Honeypot (off-screen in template CSS, but keep it a real input)
     fields.append((

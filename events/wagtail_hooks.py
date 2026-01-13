@@ -252,7 +252,6 @@ class RegistrationReportViewSet(ViewSet):
         header = [
             "Registrant ID",
             "Created",
-            "Updated",
             "Status",
             "Registration Type",
             "Type Slug",
@@ -282,7 +281,6 @@ class RegistrationReportViewSet(ViewSet):
             base_row = [
                 r.pk,
                 getattr(r, "created_at", "") or "",
-                getattr(r, "updated_at", "") or "",
                 getattr(r, "status", ""),
                 getattr(r.registration_type, "name", ""),
                 getattr(r.registration_type, "slug", ""),
