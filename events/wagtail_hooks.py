@@ -1,5 +1,6 @@
 import csv
-from .models import Invite, Registrant, EventListPage, EventPage
+from .models import Invite, Registrant, EventListPage, EventPage, RegistrantUpload
+from django.db.models import Prefetch
 from django.urls import path
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -216,18 +217,36 @@ class RegistrationReportViewSet(ViewSet):
         """
         event = get_object_or_404(EventPage.objects.specific(), pk=pk)
 
-        # Prefetch related data to keep this fast
+        def _abs_url(url: str) -> str:
+            if not url:
+                return ""
+            return url if url.startswith("http://") or url.startswith("https://") else request.build_absolute_uri(url)
+
+        def _fmt(val):
+            if val is None:
+                return ""
+            if isinstance(val, (list, tuple)):
+                return "; ".join(str(v) for v in val)
+            if isinstance(val, bool):
+                return "Yes" if val else "No"
+            if isinstance(val, dict):
+                if "name" in val:
+                    return val.get("name") or ""
+                return "; ".join(f"{k}={v}" for k, v in val.items())
+            return str(val)
+
         registrants = (
             Registrant.objects
             .filter(event=event)
             .select_related("registration_type", "invite")
-            .prefetch_related("uploads__field")   # if you added RegistrantUpload(field, file)
+            .prefetch_related(
+                Prefetch("uploads", queryset=RegistrantUpload.objects.select_related("field").only("id", "field_id", "file", "original_name"))
+            )
+            .only("id", "created_at", "status", "first_name", "last_name", "email", "registration_type__name", "registration_type__slug", "answers", "invite_id", "invite__email")
             .order_by("created_at")
         )
 
-        # Build columns: base + question labels + file columns
         form_fields = list(event.form_fields.all().order_by("sort_order"))
-        label_by_clean = {get_field_clean_name(ff.label): ff.label for ff in form_fields}
         file_fields = [ff for ff in form_fields if ff.field_type == "file"]
 
         header = [
@@ -240,18 +259,16 @@ class RegistrationReportViewSet(ViewSet):
             "First Name",
             "Last Name",
             "Email",
-            "Invited?",            # yes/no
-            "Invite Email",        # if any
+            "Invited?",
+            "Invite Email",
         ]
-        # one column per non-file question (by label)
+
         for ff in form_fields:
             if ff.field_type != "file":
                 header.append(ff.label)
 
-        # file columns (name, path, url) per file-question
         for ff in file_fields:
-            base = ff.label
-            header.extend([f"{base} (file name)", f"{base} (file path)", f"{base} (file url)"])
+            header.append(f"{ff.label} (file url)")
 
         # CSV response (with BOM so Excel handles UTF-8)
         filename = f"{slugify(event.title)}-registrants-{timezone.now().date().isoformat()}.csv"
@@ -259,23 +276,7 @@ class RegistrationReportViewSet(ViewSet):
         resp["Content-Disposition"] = f'attachment; filename="{filename}"'
         resp.write("\ufeff")  # UTF-8 BOM for Excel
         writer = csv.writer(resp)
-
         writer.writerow(header)
-
-        # Helper to humanize answer values
-        def _fmt(val):
-            if val is None:
-                return ""
-            if isinstance(val, (list, tuple)):
-                return "; ".join(str(v) for v in val)
-            if isinstance(val, bool):
-                return "Yes" if val else "No"
-            if isinstance(val, dict):
-                # e.g., {"document_id": 123, "name": "file.pdf"} from your saver
-                if "name" in val:
-                    return val.get("name") or ""
-                return "; ".join(f"{k}={v}" for k, v in val.items())
-            return str(val)
 
         for r in registrants:
             base_row = [
@@ -292,44 +293,27 @@ class RegistrationReportViewSet(ViewSet):
                 getattr(r.invite, "email", "") if getattr(r, "invite_id", None) else "",
             ]
 
-            # Answers dictionary keyed by clean_name
             answers = getattr(r, "answers", {}) or {}
 
-            # Non-file answers in label order
-            answer_cells = []
+            non_file_cells = []
             for ff in form_fields:
                 if ff.field_type == "file":
                     continue
                 clean = get_field_clean_name(ff.label)
-                answer_cells.append(_fmt(answers.get(clean)))
+                non_file_cells.append(_fmt(answers.get(clean)))
+            uploads_by_field_id = {up.field_id: up for up in r.uploads.all()}
 
-            # File answers: prefer RegistrantUpload, fallback to answers dict
-            upload_cells = []
-            # Build a quick map of file uploads by field id
-            uploads_by_field_id = {}
-            for up in getattr(r, "uploads", []).all() if hasattr(r, "uploads") else []:
-                if getattr(up, "field_id", None):
-                    uploads_by_field_id[up.field_id] = up
-
+            file_url_cells = []
             for ff in file_fields:
-                name, path, url = "", "", ""
-                # Prefer RegistrantUpload row
+                url = ""
                 up = uploads_by_field_id.get(ff.id)
-                if up:
-                    name = getattr(up, "original_name", "") or (getattr(up.file, "name", "").split("/")[-1] if getattr(up, "file", None) else "")
-                    path = getattr(up.file, "name", "") if getattr(up, "file", None) else ""
-                    url = getattr(up.file, "url", "") if getattr(up, "file", None) and hasattr(up.file, "url") else ""
+                if up and getattr(up, "file", None) and hasattr(up.file, "url"):
+                    url = _abs_url(up.file.url)
                 else:
-                    # Fallback if using the answers dict document reference
-                    clean = get_field_clean_name(ff.label)
-                    v = answers.get(clean)
-                    if isinstance(v, dict):
-                        name = v.get("name", "")
-                        path = f"document:{v.get('document_id')}" if v.get("document_id") else ""
-                        url = ""  # could resolve Document and pull .url, but avoids extra queries
-                upload_cells.extend([name, path, url])
+                    pass
+                file_url_cells.append(url)
 
-            writer.writerow(base_row + answer_cells + upload_cells)
+            writer.writerow(base_row + non_file_cells + file_url_cells)
 
         return resp
 
