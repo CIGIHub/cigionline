@@ -153,7 +153,7 @@ function AnnualReportTOC({
                                       </span>
                                     )}
                                     {boardKey === 'executive' && (
-                                      <span>Executive</span>
+                                      <span>{lang === 'en' ? 'Executive' : 'Exécutif'}</span>
                                     )}
                                   </h4>
                                   <div className="row credits-block">
