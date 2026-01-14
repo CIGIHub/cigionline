@@ -3,16 +3,16 @@
 {% block titletag %}{% trans "Registration Reports" %}{% endblock %}
 
 {% block content %}
-  <header class="nice-padding">
+  <header class="nice-padding registration-reports-header">
     <div class="row">
       <div class="left">
-        <h1 class="icon icon-table">{% trans "Registration-enabled Events" %}</h1>
-        <p class="help-block">{% trans "Only events with registration_open = True" %}</p>
+        <h1 class="icon icon-table title">{% trans "Registration-enabled Events" %}</h1>
+        <p class="help-block title">{% trans "Only events with registration_open = True" %}</p>
       </div>
     </div>
   </header>
 
-  <div class="nice-padding">
+  <div class="nice-padding registration-reports-body">
     <table class="listing">
       <thead>
         <tr>
@@ -25,13 +25,12 @@
       <tbody>
         {% for row in rows %}
           <tr>
-            <td>
+            <td class="title">
               <a href="{{ row.event.url }}" target="_blank" rel="noopener">{{ row.event.title }}</a>
-              <div class="help-block">{{ row.event.get_site.root_url }}{{ row.event.url_path }}</div>
             </td>
             <td class="w-min">{{ row.type_count }}</td>
             <td class="w-min">{{ row.confirmed_total }}</td>
-            <td class="w-min">
+            <td class="w-min column-view">
               <a href="{% url detail_url_name pk=row.event.pk %}" class="button bicolor button-small">
                 Details
               </a>

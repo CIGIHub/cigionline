@@ -1,12 +1,13 @@
 import csv
 from .models import Invite, Registrant, EventListPage, EventPage, RegistrantUpload
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from django.urls import path
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.http import HttpResponse
 from django.utils.text import slugify
 from django.utils import timezone
+from django.core.paginator import Paginator
 from wagtail import hooks
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
@@ -136,7 +137,6 @@ class RegistrationReportViewSet(ViewSet):
     icon = "table"
     menu_label = "Registration Reports"
     menu_order = 40
-    add_to_admin_menu = True
     name = "registration_reports"
     url_prefix = "event-registrations/reports"
 
@@ -187,6 +187,7 @@ class RegistrationReportViewSet(ViewSet):
             cap = rtype.capacity  # can be None
             remaining = None if cap is None else max(cap - confirmed, 0)
             type_rows.append({
+                "id": rtype.pk,
                 "name": rtype.name,
                 "slug": rtype.slug,
                 "capacity": cap,
@@ -205,6 +206,7 @@ class RegistrationReportViewSet(ViewSet):
                 "index_url_name": self.get_url_name("index"),
                 "detail_url_name": self.get_url_name("detail"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
+                "type_url_name": self.get_url_name("type_registrants"),
             },
         )
 
@@ -315,11 +317,54 @@ class RegistrationReportViewSet(ViewSet):
 
         return resp
 
+    def type_registrants_view(self, request, pk: int, type_id: int):
+        event = get_object_or_404(EventPage.objects.specific(), pk=pk)
+        rtype = get_object_or_404(event.registration_types, pk=type_id)
+
+        q = (request.GET.get("q") or "").strip()
+        status = (request.GET.get("status") or "").strip().lower()  # e.g., confirmed|waitlisted|pending
+
+        registrants = (
+            Registrant.objects
+            .filter(event=event, registration_type=rtype)
+            .select_related("invite")
+            .order_by("-created_at")
+        )
+        if q:
+            registrants = registrants.filter(
+                Q(email__icontains=q) |
+                Q(first_name__icontains=q) |
+                Q(last_name__icontains=q)
+            )
+        if status in {"confirmed", "waitlisted", "pending"}:
+            registrants = registrants.filter(status=status)
+
+        paginator = Paginator(registrants, 50)
+        page_obj = paginator.get_page(request.GET.get("p", 1))
+
+        return TemplateResponse(
+            request,
+            "events/admin/registration_report_type.html",
+            {
+                "view": self,
+                "event": event,
+                "rtype": rtype,
+                "page_obj": page_obj,
+                "q": q,
+                "status": status,
+                "index_url_name": self.get_url_name("index"),
+                "detail_url_name": self.get_url_name("detail"),
+                "type_url_name": self.get_url_name("type_registrants"),
+                "export_csv_url_name": self.get_url_name("export_csv"),
+            },
+        )
+
     def get_urlpatterns(self):
         return [
             path("", self.index_view, name="index"),
             path("<int:pk>/", self.detail_view, name="detail"),
             path("<int:pk>/export.csv", self.export_csv_view, name="export_csv"),
+            path("<int:pk>/type/<int:type_id>/", self.type_registrants_view, name="type_registrants"),
         ]
 
 

@@ -1,0 +1,67 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+
+{% block titletag %}Registrants · {{ rtype.name }} · {{ event.title }}{% endblock %}
+
+{% block content %}
+  <header class="nice-padding">
+    <h1 class="w-header__title">
+      Registrants – {{ rtype.name }} <small>({{ event.title }})</small>
+    </h1>
+    <p>
+      <a href="{% url detail_url_name event.pk %}" class="button button-secondary">Back to event</a>
+    </p>
+  </header>
+
+  <section class="nice-padding">
+    <form method="get" class="filter-form">
+      <input type="text" name="q" value="{{ q }}" placeholder="Search name or email">
+      <select name="status">
+        <option value="">All statuses</option>
+        <option value="confirmed" {% if status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+        <option value="waitlisted" {% if status == 'waitlisted' %}selected{% endif %}>Waitlisted</option>
+        <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+      </select>
+      <button class="button">Filter</button>
+    </form>
+
+    <table class="listing full-width">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Created</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Invited</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in page_obj.object_list %}
+          <tr>
+            <td>{{ r.pk }}</td>
+            <td>{{ r.created_at }}</td>
+            <td>{{ r.first_name }} {{ r.last_name }}</td>
+            <td>{{ r.email }}</td>
+            <td>{{ r.status|title }}</td>
+            <td>{% if r.invite_id %}Yes{% else %}No{% endif %}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No registrants found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="pagination">
+        {% if page_obj.has_previous %}
+          <a class="button" href="?p={{ page_obj.previous_page_number }}&q={{ q }}&status={{ status }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+          <a class="button" href="?p={{ page_obj.next_page_number }}&q={{ q }}&status={{ status }}">Next</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -55,3 +55,32 @@
   width: 80%;
   fill: white;
 }
+
+.registration-reports-header .title {
+  color: #c8c8c8;
+}
+
+.registration-reports-body .title .help-block {
+  color: #c8c8c8;
+}
+
+.registration-reports-body .column-view .button {
+  padding: 0.5em;
+  height: auto;
+}
+
+.registration-types-report-header .help-block {
+  color: #c8c8c8;
+  margin-bottom: 0.5em;
+}
+
+.registration-types-report-header .registration-types-report-nav {
+  display: flex;
+  gap: 0.5em;
+  margin-bottom: 2rem;
+}
+
+.registration-types-report-header .registration-types-report-nav .button {
+  padding: 0.5em;
+  height: auto;
+}

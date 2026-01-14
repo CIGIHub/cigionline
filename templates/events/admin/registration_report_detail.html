@@ -3,24 +3,25 @@
 {% block titletag %}{{ event.title }} — {% trans "Registration Capacity" %}{% endblock %}
 
 {% block content %}
-<header class="nice-padding">
+<header class="nice-padding registration-types-report-header">
   <div class="row">
     <div class="left">
       <h1 class="icon icon-date">{{ event.title }}</h1>
       <p class="help-block">
         {% trans "Capacity report by registration type." %}
-        <br>
-        <a href="{% url index_url_name %}">{% trans "Back to Events" %}</a> ·
-        <a href="{{ event.url }}" target="_blank" rel="noopener">{% trans "View event" %}</a>
+      </p>
+      <div class="registration-types-report-nav">
+        <a href="{% url index_url_name %}" class="button bicolor button-small">{% trans "Back to Events" %}</a>
+        <a href="{{ event.url }}" target="_blank" rel="noopener" class="button bicolor button-small">{% trans "View event" %}</a>
         <a class="button bicolor button-small" href="{% url export_csv_url_name pk=event.pk %}">
           Download CSV
         </a>
-      </p>
+      </div>
     </div>
   </div>
 </header>
 
-<div class="nice-padding">
+<div class="nice-padding registration-report-detail-body">
   <table class="listing">
     <thead>
       <tr>
@@ -35,7 +36,11 @@
     <tbody>
       {% for r in type_rows %}
       <tr>
-        <td>{{ r.name }}</td>
+        <td>
+          <a href="{% url type_url_name event.pk r.id %}">
+            {{ r.name }}
+          </a>
+        </td>
         <td class="w-min"><code>{{ r.slug }}</code></td>
         <td class="w-min">{% if r.capacity %}{{ r.capacity }}{% else %}—{% endif %}</td>
         <td class="w-min">{{ r.confirmed }}</td>

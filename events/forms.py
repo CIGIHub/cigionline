@@ -132,7 +132,6 @@ def build_dynamic_form(event, reg_type, invite=None):
             kwargs["widget"] = forms.Textarea()
         
         field_obj = FieldClass(**kwargs)
-        print(field_obj)
 
         # Add consistent CSS classes to the widget (so templates can stay simple)
         w = field_obj.widget
