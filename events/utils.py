@@ -30,6 +30,8 @@ def save_registrant_from_form(event, reg_type, form, invite=None):
     last = cleaned.pop("last_name", "")
     email = cleaned.pop("email", "")
 
+    cleaned.pop("website", None)  # honeypot field
+
     if invite and getattr(invite, "email", None):
         email = invite.email
 
@@ -37,11 +39,17 @@ def save_registrant_from_form(event, reg_type, form, invite=None):
     # convert uploaded files to Wagtail Documents
     for key, val in list(cleaned.items()):
         if hasattr(val, "read"):
-            doc = Document.objects.create(title=getattr(val, "name", "upload"), file=val)
+            doc = Document.objects.create(
+                title=getattr(val, "name", "upload"),
+                file=val
+            )
             uploaded_doc_ids.append(doc.id)
-            cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
+            cleaned[key] = {
+                "document_id": doc.id,
+                "name": getattr(val, "name", "upload")
+            }
 
-    cleaned = {k: _jsonable(v) for k, v in cleaned.items()}
+    cleaned = _jsonable(cleaned)
 
     with transaction.atomic():
         registrant = Registrant.objects.create(

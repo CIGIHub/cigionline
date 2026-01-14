@@ -1,6 +1,6 @@
 import csv
-from .models import Invite, Registrant, EventListPage, EventPage, RegistrantUpload
-from django.db.models import Prefetch, Q
+from .models import Invite, Registrant, EventListPage, EventPage
+from django.db.models import Q
 from django.urls import path
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -9,6 +9,7 @@ from django.utils.text import slugify
 from django.utils import timezone
 from django.core.paginator import Paginator
 from wagtail import hooks
+from wagtail.documents.models import Document
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
 from wagtail.admin.widgets import AdminPageChooser
@@ -241,9 +242,6 @@ class RegistrationReportViewSet(ViewSet):
             Registrant.objects
             .filter(event=event)
             .select_related("registration_type", "invite")
-            .prefetch_related(
-                Prefetch("uploads", queryset=RegistrantUpload.objects.select_related("field").only("id", "field_id", "file", "original_name"))
-            )
             .only("id", "created_at", "status", "first_name", "last_name", "email", "registration_type__name", "registration_type__slug", "answers", "invite_id", "invite__email")
             .order_by("created_at")
         )
@@ -301,16 +299,19 @@ class RegistrationReportViewSet(ViewSet):
                     continue
                 clean = get_field_clean_name(ff.label)
                 non_file_cells.append(_fmt(answers.get(clean)))
-            uploads_by_field_id = {up.field_id: up for up in r.uploads.all()}
 
             file_url_cells = []
             for ff in file_fields:
                 url = ""
-                up = uploads_by_field_id.get(ff.id)
-                if up and getattr(up, "file", None) and hasattr(up.file, "url"):
-                    url = _abs_url(up.file.url)
-                else:
-                    pass
+                clean = get_field_clean_name(ff.label)
+                meta = (answers or {}).get(clean) or {}
+                if isinstance(meta, dict):
+                    doc_id = meta.get("document_id")
+                    if doc_id:
+                        doc = Document.objects.filter(pk=doc_id).only("id", "file").first()
+                        if doc and getattr(doc.file, "url", None):
+                            url = _abs_url(doc.file.url)
+
                 file_url_cells.append(url)
 
             writer.writerow(base_row + non_file_cells + file_url_cells)

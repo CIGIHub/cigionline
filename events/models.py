@@ -653,24 +653,6 @@ class EventPage(
             if form.is_valid():
                 registrant = save_registrant_from_form(self, reg_type, form, invite)
 
-                cleanname_to_ff = {
-                    get_field_clean_name(ff.label): ff
-                    for ff in self.form_fields.all()
-                }
-                for clean_name, value in form.cleaned_data.items():
-                    ff = cleanname_to_ff.get(clean_name)
-                    if not ff:
-                        continue
-                    if ff.field_type == "file" and value:
-                        # value is an UploadedFile; assign and save
-                        upload = RegistrantUpload(
-                            registrant=registrant,
-                            field=ff,
-                            original_name=getattr(value, "name", ""),
-                        )
-                        upload.file = value
-                        upload.save()
-
                 # Atomically burn invite usage if present
                 if invite:
                     Invite.objects.filter(
@@ -1075,9 +1057,10 @@ class Registrant(models.Model):
             return True
 
         with transaction.atomic():
-            # Count current confirmed
-            confirmed_count = Registrant.objects.select_for_update().filter(
-                registration_type=self.registration_type, status=Registrant.Status.CONFIRMED
+            RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
+            confirmed_count = Registrant.objects.filter(
+                registration_type_id=self.registration_type_id,
+                status=Registrant.Status.CONFIRMED
             ).count()
 
             if confirmed_count < (self.registration_type.capacity or 0):
@@ -1088,17 +1071,6 @@ class Registrant(models.Model):
             self.status = Registrant.Status.WAITLISTED
             self.save(update_fields=["status"])
             return False
-
-
-class RegistrantUpload(models.Model):
-    registrant = models.ForeignKey("events.Registrant", related_name="uploads", on_delete=models.CASCADE)
-    field = models.ForeignKey("events.RegistrationFormField", on_delete=models.PROTECT)
-    file = models.FileField(upload_to="event_uploads/%Y/%m/%d")
-    original_name = models.CharField(max_length=255, blank=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.registrant_id} :: {self.field.label} :: {self.file.name}"
 
 
 @register_snippet
