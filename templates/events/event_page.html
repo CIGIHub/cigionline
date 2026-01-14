@@ -68,19 +68,21 @@
     </section>
   {% endif %}
 
-  <section>
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <a href="{{ self.url }}register/">
-            <button class="register btn btn-primary btn-lg mb-4">
-              Register
-            </button>
-          </a>
+  {% if self.registration_open and not self.is_private_registration %}
+    <section>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <a href="{{ self.url }}register/">
+              <button class="register btn btn-primary btn-lg mb-4">
+                Register
+              </button>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
 
   {% include "includes/body.html" with body=self.body %}
 
