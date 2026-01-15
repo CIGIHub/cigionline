@@ -5,17 +5,17 @@
 {% endblock %}
 {% block title %}Register — {{ event.title }}{% endblock %}
 {% block content %}
+{% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
 <section class="event-registration-type-select-section">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; Back to event</a>
-        <h1 class="mb-3">Register for {{ event.title }}</h1>
+        <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
         <p class="mb-4">Choose your registration type:</p>
-        <ul>
+        <ul class="types-list">
           {% for t in types %}
           <li>
-            <a href="{{ event.url }}register/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
+            <a class="btn btn-primary" href="{{ event.url }}register/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
               {{ t.name }}{% if t.capacity %} ({{ t.capacity }} max){% endif %}
             </a>
           </li>
