@@ -76,26 +76,28 @@
     margin-left: 0.25rem;
   }
 
-  .cigi-form input[type='text'],
-  .cigi-form input[type='email'],
-  .cigi-form input[type='url'],
-  .cigi-form input[type='number'],
-  .cigi-form input[type='date'],
-  .cigi-form input[type='datetime-local'],
-  .cigi-form select,
-  .cigi-form textarea {
-    width: 100%;
-    display: block;
-    padding: 0.625rem 0.75rem;
-    border: 1px solid #d0d4d9;
-    border-radius: 8px;
-    background: #fff;
-    line-height: 1.3;
-  }
+  .cigi-form {
+    input[type='text'],
+    input[type='email'],
+    input[type='url'],
+    input[type='number'],
+    input[type='date'],
+    input[type='datetime-local'],
+    select,
+    textarea {
+      width: 100%;
+      display: block;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid #d0d4d9;
+      border-radius: 8px;
+      background: #fff;
+      line-height: 1.3;
+    }
 
-  .cigi-form textarea {
-    min-height: 120px;
-    resize: vertical;
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
   }
 
   .cigi-checkbox,
@@ -109,14 +111,25 @@
     gap: 0.375rem;
   }
 
-  /* file */
-  .cigi-file input[type='file'] {
-    display: block;
+  .cigi-checkbox {
+    &.cigi-checkbox--conditional {
+      input {
+        width: auto;
+      }
+    }
   }
-  .cigi-file .file-meta {
-    font-size: 0.875rem;
-    color: #555;
-    margin-top: 0.25rem;
+
+  /* file */
+  .cigi-file {
+    input[type='file'] {
+      display: block;
+    }
+
+    .file-meta {
+      font-size: 0.875rem;
+      color: #555;
+      margin-top: 0.25rem;
+    }
   }
 
   /* help / errors */
@@ -130,11 +143,15 @@
     padding-left: 1.125rem;
     color: #a40000;
   }
-  .cigi-field.has-errors input,
-  .cigi-field.has-errors select,
-  .cigi-field.has-errors textarea {
-    border-color: #e05;
-    box-shadow: 0 0 0 2px rgba(238, 0, 85, 0.08);
+  .cigi-field {
+    &.has-errors {
+      input,
+      select,
+      textarea {
+        border-color: #e05;
+        box-shadow: 0 0 0 2px rgba(238, 0, 85, 0.08);
+      }
+    }
   }
 
   .cigi-alert {
@@ -156,17 +173,18 @@
     text-decoration: none;
     display: inline-flex;
     gap: 0.5rem;
-  }
-  .btn:hover {
-    background: #eef0f3;
+
+    &:hover {
+      background: #eef0f3;
+    }
   }
   .btn-primary {
     border-color: #2663eb;
     background: #2d6aec;
     color: #fff;
-  }
-  .btn-primary:hover {
-    background: #235de0;
+    &:hover {
+      background: #235de0;
+    }
   }
 
   /* a11y */
@@ -199,12 +217,14 @@
     line-height: 1.3;
   }
 
-  .cigi-input:focus,
-  .cigi-select:focus,
-  .cigi-file-input:focus {
-    outline: none;
-    border-color: #2d6aec;
-    box-shadow: 0 0 0 3px rgba(45, 106, 236, 0.15);
+  .cigi-input,
+  .cigi-select,
+  .cigi-file-input {
+    &:focus {
+      outline: none;
+      border-color: #2d6aec;
+      box-shadow: 0 0 0 3px rgba(45, 106, 236, 0.15);
+    }
   }
 
   /* Selects */
@@ -222,9 +242,6 @@
   }
 
   /* Radio / Checkbox groups */
-  .cigi-group {
-    /* container applied by widget attrs (and to each subwidget in modern Django) */
-  }
   .cigi-options {
     display: grid;
     gap: 0.375rem;
@@ -233,11 +250,11 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-  }
-  .cigi-option input {
-    accent-color: #2d6aec;
-  } /* modern browsers */
 
+    input {
+      accent-color: #2d6aec;
+    }
+  }
   /* Single checkbox inline */
   .cigi-checkbox input {
     accent-color: #2d6aec;
@@ -257,20 +274,25 @@
   .cigi-file-input {
     display: block;
   }
-  .cigi-file .file-meta {
-    font-size: 0.875rem;
-    color: #555;
-    margin-top: 0.25rem;
+  .cigi-file {
+    .file-meta {
+      font-size: 0.875rem;
+      color: #555;
+      margin-top: 0.25rem;
+    }
   }
 
   /* Errors */
-  .cigi-field.has-errors .cigi-input,
-  .cigi-field.has-errors .cigi-select,
-  .cigi-field.has-errors .cigi-file-input,
-  .cigi-field.has-errors .cigi-date-input {
-    border-color: #e05;
-    box-shadow: 0 0 0 2px rgba(238, 0, 85, 0.08);
+  .cigi-field.has-errors {
+    .cigi-input,
+    .cigi-select,
+    .cigi-file-input,
+    .cigi-date-input {
+      border-color: #e05;
+      box-shadow: 0 0 0 2px rgba(238, 0, 85, 0.08);
+    }
   }
+
   .cigi-errors {
     margin: 0.375rem 0 0;
     padding-left: 1.125rem;

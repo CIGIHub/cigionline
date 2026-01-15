@@ -12,3 +12,26 @@ document.addEventListener('change', function (e) {
     }
   }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-conditional-target]').forEach((toggle) => {
+    const detailsName = toggle.getAttribute('data-conditional-target');
+    const detailsInput = document.getElementById(`id_${detailsName}`);
+    if (!detailsInput) return;
+
+    // Prefer a wrapper if you have one; fallback to parent
+    const wrapper =
+      detailsInput.closest('.cigi-field') ||
+      detailsInput.closest('.w-field') ||
+      detailsInput.parentElement;
+
+    const sync = () => {
+      const show = toggle.checked;
+      if (wrapper) wrapper.style.display = show ? '' : 'none';
+      if (!show) detailsInput.value = '';
+    };
+
+    sync();
+    toggle.addEventListener('change', sync);
+  });
+});

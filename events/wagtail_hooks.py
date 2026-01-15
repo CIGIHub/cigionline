@@ -361,11 +361,20 @@ class RegistrationReportViewSet(ViewSet):
 
         columns = []
         for ff in form_fields:
-            columns.append({
-                "label": ff.label,
-                "clean": get_field_clean_name(ff.label),
-                "type": ff.field_type,
-            })
+            base_clean = get_field_clean_name(ff.label)
+            if ff.field_type == "conditional_text":
+                columns.append({
+                    "label": ff.label,
+                    "type": "conditional_text",
+                    "clean_enabled": f"{base_clean}__enabled",
+                    "clean_details": f"{base_clean}__details",
+                })
+            else:
+                columns.append({
+                    "label": ff.label,
+                    "type": ff.field_type,
+                    "clean": base_clean,
+                })
 
         paginator = Paginator(registrants, 50)
         page_obj = paginator.get_page(request.GET.get("p", 1))
@@ -389,6 +398,18 @@ class RegistrationReportViewSet(ViewSet):
             cells = []
 
             for col in columns:
+                # --- CONDITIONAL TEXT (checkbox + details) ---
+                if col["type"] == "conditional_text":
+                    enabled = bool(ans.get(col["clean_enabled"]))
+                    details = (ans.get(col["clean_details"]) or "").strip()
+
+                    cells.append({
+                        "text": (details or "Yes") if enabled else "",
+                        "url": "",
+                    })
+                    continue
+
+                # --- NORMAL FIELDS ---
                 val = ans.get(col["clean"])
 
                 # file field: answers store {"document_id":..., "name":...}

@@ -966,7 +966,7 @@ class RegistrationFormField(AbstractFormField):
                 FieldPanel("visible_type_slugs"),
             ],
             heading="Visibility rules",
-            classes="collapsible collapsed",
+            classname="collapsible collapsed",
         ),
         MultiFieldPanel(
             [
@@ -974,7 +974,7 @@ class RegistrationFormField(AbstractFormField):
                 FieldPanel("required_type_slugs"),
             ],
             heading="Requiredness rules",
-            classes="collapsible collapsed",
+            classname="collapsible collapsed",
         ),
         MultiFieldPanel(
             [
@@ -983,8 +983,8 @@ class RegistrationFormField(AbstractFormField):
                 FieldPanel("conditional_details_help_text"),
                 FieldPanel("conditional_details_required"),
             ],
-            heading="Dietary details settings",
-            classes="collapsible collapsed",
+            heading="Conditional form settings",
+            classname="collapsible collapsed",
         ),
     ]
 

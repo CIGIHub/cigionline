@@ -1,8 +1,24 @@
 {% load events_form %}
 
 <div class="cigi-field{% if field.errors %} has-errors{% endif %}">
+  {% if field|is_conditional_toggle %}
+    <div class="cigi-label">
+      <span>
+        {{ field.label }}
+      </span>
+      {% if field.field.required %}
+        <span class="req">*</span>
+      {% endif %}
+    </div>
+
+    <label class="cigi-checkbox cigi-checkbox--conditional">
+      {{ field }}
+      <span>
+        {{ field.field.widget.attrs.data_conditional_checkbox_label|default:"Yes" }}
+      </span>
+    </label>
   {# single checkbox: label after input #}
-  {% if field|is_single_checkbox %}
+  {% elif field|is_single_checkbox %}
     <label class="cigi-checkbox">
       {{ field }}
       <span>{{ field.label }}{% if field.field.required %} <span class="req">*</span>{% endif %}</span>

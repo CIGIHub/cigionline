@@ -131,22 +131,25 @@ def build_dynamic_form(event, reg_type, invite=None):
 
         if ff.field_type == "multiline":
             kwargs["widget"] = forms.Textarea()
-        
+
         if ff.field_type == "conditional_text":
             needs_key = f"{clean_name}__enabled"
             details_key = f"{clean_name}__details"
-
-            checkbox_label = ff.conditional_label.strip() if getattr(ff, "conditional_label", "") else ff.label
             details_label = ff.conditional_details_label.strip() if getattr(ff, "conditional_details_label", "") else "Please specify"
             details_help = getattr(ff, "conditional_details_help_text", "") or ""
 
             needs_field = forms.BooleanField(
-                label=checkbox_label,
+                label=ff.label,
                 required=False,
                 help_text=ff.help_text,
             )
             needs_field.widget.attrs["class"] = BASE_INPUT_CLASS
+            needs_field.widget.attrs["data-conditional-toggle"] = "1"
             needs_field.widget.attrs["data-conditional-target"] = details_key
+            needs_field.widget.attrs["data-conditional-question"] = ff.label
+            needs_field.widget.attrs["data_conditional_checkbox_label"] = (
+                ff.conditional_label.strip() if getattr(ff, "conditional_label", "") else "Yes"
+            )
 
             details_field = forms.CharField(
                 label=details_label,
@@ -169,7 +172,7 @@ def build_dynamic_form(event, reg_type, invite=None):
                 "error": f"{details_label}: this field is required.",
             })
             continue
-        
+
         field_obj = FieldClass(**kwargs)
 
         # Add consistent CSS classes to the widget (so templates can stay simple)
@@ -200,5 +203,25 @@ def build_dynamic_form(event, reg_type, invite=None):
                         widget=forms.TextInput(attrs={"autocomplete": "off"})),
     ))
 
-    # Build a concrete Form
-    return type("EventDynamicForm", (HoneypotMixin, forms.Form), dict(fields))
+    attrs = dict(fields)
+    attrs["__module__"] = __name__
+
+    DynamicForm = type("EventDynamicForm", (HoneypotMixin, forms.Form), attrs)
+
+    def _dynamic_clean(self):
+        cleaned = super(DynamicForm, self).clean()
+
+        for rule in conditional_rules:
+            enabled = bool(cleaned.get(rule["needs_key"]))
+            details = (cleaned.get(rule["details_key"]) or "").strip()
+
+            if enabled and rule["details_required"] and not details:
+                self.add_error(rule["details_key"], "Please specify.")
+            if not enabled:
+                # keep answers tidy
+                cleaned[rule["details_key"]] = ""
+
+        return cleaned
+
+    DynamicForm.clean = _dynamic_clean
+    return DynamicForm
