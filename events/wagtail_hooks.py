@@ -1,13 +1,16 @@
 import csv
 from .models import Invite, Registrant, EventListPage, EventPage
+from django.core.paginator import Paginator
 from django.db.models import Q
-from django.urls import path
-from django.shortcuts import get_object_or_404
+from django.urls import path, reverse
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.http import HttpResponse
 from django.utils.text import slugify
 from django.utils import timezone
-from django.core.paginator import Paginator
+from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.utils.decorators import method_decorator
 from wagtail import hooks
 from wagtail.documents.models import Document
 from wagtail.admin.viewsets.model import ModelViewSet
@@ -102,6 +105,7 @@ class InviteViewSet(ModelViewSet):
 
 class RegistrantViewSet(ModelViewSet):
     model = Registrant
+    name = "registrants"
     icon = "user"
     menu_label = "Registrants"
     menu_order = 20
@@ -127,7 +131,6 @@ class RegistrantViewSet(ModelViewSet):
         "first_name",
         "last_name",
         "status",
-        # Show read-only blobs if you want:
         "answers",
         "uploaded_document_ids",
         "invite",
@@ -319,6 +322,20 @@ class RegistrationReportViewSet(ViewSet):
         return resp
 
     def type_registrants_view(self, request, pk: int, type_id: int):
+        def _fmt_answer(val, field_type: str):
+            if val is None:
+                return ""
+            if isinstance(val, bool):
+                return "Yes" if val else "No"
+            if isinstance(val, (list, tuple)):
+                return "; ".join(str(v) for v in val)
+            if isinstance(val, dict):
+                # file field stored like {"document_id": 123, "name": "x.pdf"}
+                if field_type == "file":
+                    return val.get("name") or ""
+                return "; ".join(f"{k}={v}" for k, v in val.items())
+            return str(val)
+
         event = get_object_or_404(EventPage.objects.specific(), pk=pk)
         rtype = get_object_or_404(event.registration_types, pk=type_id)
 
@@ -340,8 +357,56 @@ class RegistrationReportViewSet(ViewSet):
         if status in {"confirmed", "waitlisted", "pending"}:
             registrants = registrants.filter(status=status)
 
+        form_fields = list(event.form_fields.all().order_by("sort_order"))
+
+        columns = []
+        for ff in form_fields:
+            columns.append({
+                "label": ff.label,
+                "clean": get_field_clean_name(ff.label),
+                "type": ff.field_type,
+            })
+
         paginator = Paginator(registrants, 50)
         page_obj = paginator.get_page(request.GET.get("p", 1))
+
+        doc_ids = set()
+        for r in page_obj.object_list:
+            ans = r.answers or {}
+            for col in columns:
+                if col["type"] == "file":
+                    meta = ans.get(col["clean"]) or {}
+                    if isinstance(meta, dict) and meta.get("document_id"):
+                        doc_ids.add(meta["document_id"])
+
+        docs_by_id = {
+            d.id: d
+            for d in Document.objects.filter(id__in=doc_ids).only("id", "file", "title")
+        }
+
+        for r in page_obj.object_list:
+            ans = r.answers or {}
+            cells = []
+
+            for col in columns:
+                val = ans.get(col["clean"])
+
+                # file field: answers store {"document_id":..., "name":...}
+                if col["type"] == "file" and isinstance(val, dict) and val.get("document_id"):
+                    doc = docs_by_id.get(val["document_id"])
+                    cells.append({
+                        "text": val.get("name") or (doc.title if doc else ""),
+                        "url": (doc.file.url if doc and getattr(doc.file, "url", None) else ""),
+                    })
+                else:
+                    cells.append({
+                        "text": _fmt_answer(val, col["type"]),
+                        "url": "",
+                    })
+
+            r.answer_cells = cells
+            r.invited = bool(getattr(r, "invite_id", None))
+            r.edit_url = reverse("registrants:edit", args=[r.pk])
 
         return TemplateResponse(
             request,
@@ -357,8 +422,51 @@ class RegistrationReportViewSet(ViewSet):
                 "detail_url_name": self.get_url_name("detail"),
                 "type_url_name": self.get_url_name("type_registrants"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
+                "unregister_url_name": self.get_url_name("unregister"),
+                "columns": columns,
             },
         )
+
+    @method_decorator(require_POST, name="unregister_registrant_view")
+    def unregister_registrant_view(self, request, pk: int, registrant_id: int):
+        event = get_object_or_404(EventPage.objects.specific(), pk=pk)
+
+        if not request.user.has_perm("events.change_registrant"):
+            return HttpResponse("Forbidden", status=403)
+
+        registrant = get_object_or_404(
+            Registrant.objects.select_related("registration_type"),
+            pk=registrant_id,
+            event=event,
+        )
+
+        if registrant.status != Registrant.Status.CANCELLED:
+            old_status = registrant.status
+            registrant.status = Registrant.Status.CANCELLED
+            registrant.save(update_fields=["status"])
+            messages.success(request, f"Unregistered ID: {registrant.pk} - {registrant.first_name} {registrant.last_name} ({registrant.email}) (was {old_status}).")
+
+            if old_status == Registrant.Status.CONFIRMED and registrant.registration_type.capacity is not None:
+                next_up = (
+                    Registrant.objects
+                    .filter(
+                        event=event,
+                        registration_type=registrant.registration_type,
+                        status=Registrant.Status.WAITLISTED,
+                    )
+                    .order_by("created_at")
+                    .first()
+                )
+                if next_up:
+                    next_up.status = Registrant.Status.CONFIRMED
+                    next_up.save(update_fields=["status"])
+                    messages.success(request, f"Promoted ID: {next_up.pk} - {next_up.first_name} {next_up.last_name} ({next_up.email}) from waitlist.")
+        else:
+            messages.info(request, f"{registrant.email} is already cancelled.")
+
+        # ✅ Redirect back to the same type registrants page
+        url = reverse(self.get_url_name("type_registrants"), args=[event.pk, registrant.registration_type_id])
+        return redirect(url)
 
     def get_urlpatterns(self):
         return [
@@ -366,6 +474,7 @@ class RegistrationReportViewSet(ViewSet):
             path("<int:pk>/", self.detail_view, name="detail"),
             path("<int:pk>/export.csv", self.export_csv_view, name="export_csv"),
             path("<int:pk>/type/<int:type_id>/", self.type_registrants_view, name="type_registrants"),
+            path("<int:pk>/unregister/<int:registrant_id>/", self.unregister_registrant_view, name="unregister"),
         ]
 
 

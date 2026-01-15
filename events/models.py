@@ -259,6 +259,15 @@ class EventPage(
     )
     registration_url = models.URLField(blank=True, max_length=512)
     registration_text = models.CharField(blank=True, max_length=64)
+    registration_image_banner = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+        help_text='A banner image to be displayed as background of the hero section.',
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -666,14 +675,17 @@ class EventPage(
                 s = "ok" if confirmed else "wait"
                 return redirect(f"{base}register/result/?s={s}&rid={registrant.pk}")
             else:
-                # Collect a friendly error summary
                 for field, errs in form.errors.items():
                     label = form.fields.get(field).label if field in form.fields else field
                     for e in errs:
                         messages.error(request, f"{label}: {e}" if label else str(e))
 
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                return redirect(f"{base}register/result/?s=err")
+                return self.render(
+                    request,
+                    template="events/registration_form.html",
+                    context_overrides={"event": self, "reg_type": reg_type, "form": form, "invite": invite},
+                )
         else:
             form = form_class()
 
@@ -797,6 +809,7 @@ class EventPage(
                 [
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
+                    FieldPanel('registration_image_banner'),
                 ],
                 heading='General Settings',
                 classname='collapsible collapsed',
@@ -895,6 +908,7 @@ class RegistrationFormField(AbstractFormField):
         ("datetime", _("Date/time")),
         ("hidden", _("Hidden field")),
         ("file", _("File upload")),
+        ("conditional_text", _("Conditional text (checkbox + details)")),
     )
     event = ParentalKey(
         "events.EventPage", related_name="form_fields", on_delete=models.CASCADE
@@ -926,6 +940,25 @@ class RegistrationFormField(AbstractFormField):
     required_rule = models.CharField(max_length=10, choices=Rule.choices, default=Rule.ALL)
     required_type_slugs = models.TextField(blank=True, help_text="Comma-separated type slugs")
 
+    conditional_label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Label shown for the checkbox. If blank, uses the field's main label.",
+    )
+    conditional_details_label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Label for the details textbox (shown only when checked).",
+    )
+    conditional_details_help_text = models.TextField(
+        blank=True,
+        help_text="Help text shown under the details textbox.",
+    )
+    conditional_details_required = models.BooleanField(
+        default=True,
+        help_text="Require details textbox when checkbox is checked.",
+    )
+
     panels = AbstractFormField.panels + [
         MultiFieldPanel(
             [
@@ -933,6 +966,7 @@ class RegistrationFormField(AbstractFormField):
                 FieldPanel("visible_type_slugs"),
             ],
             heading="Visibility rules",
+            classes="collapsible collapsed",
         ),
         MultiFieldPanel(
             [
@@ -940,6 +974,17 @@ class RegistrationFormField(AbstractFormField):
                 FieldPanel("required_type_slugs"),
             ],
             heading="Requiredness rules",
+            classes="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("conditional_label"),
+                FieldPanel("conditional_details_label"),
+                FieldPanel("conditional_details_help_text"),
+                FieldPanel("conditional_details_required"),
+            ],
+            heading="Dietary details settings",
+            classes="collapsible collapsed",
         ),
     ]
 

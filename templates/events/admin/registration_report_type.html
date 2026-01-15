@@ -13,7 +13,7 @@
     </p>
   </header>
 
-  <section class="nice-padding">
+  <section class="nice-padding registration-registrants-report-section">
     <form method="get" class="filter-form">
       <input type="text" name="q" value="{{ q }}" placeholder="Search name or email">
       <select name="status">
@@ -25,32 +25,63 @@
       <button class="button">Filter</button>
     </form>
 
-    <table class="listing full-width">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Created</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Status</th>
-          <th>Invited</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in page_obj.object_list %}
+    <div class="x-scroll">
+      <table class="listing full-width nowrap">
+        <thead>
           <tr>
-            <td>{{ r.pk }}</td>
-            <td>{{ r.created_at }}</td>
-            <td>{{ r.first_name }} {{ r.last_name }}</td>
-            <td>{{ r.email }}</td>
-            <td>{{ r.status|title }}</td>
-            <td>{% if r.invite_id %}Yes{% else %}No{% endif %}</td>
+            <th>ID</th>
+            <th>Created</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Invited</th>
+            <th>Edit</th>
+  
+            {% for col in columns %}
+              <th>{{ col.label }}</th>
+            {% endfor %}
           </tr>
-        {% empty %}
-          <tr><td colspan="6">No registrants found.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for r in page_obj %}
+            <tr>
+              <td>{{ r.pk }}</td>
+              <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+              <td>
+                <a href="{{ r.edit_url }}">
+                  {{ r.first_name }} {{ r.last_name }}
+                </a>
+              </td>
+              <td>{{ r.email }}</td>
+              <td>{{ r.status }}</td>
+              <td>{{ r.invited }}</td>
+  
+              <td class="actions">
+                <a class="button button-small" href="{{ r.edit_url }}">Edit</a>
+  
+                <form method="post" action="{% url unregister_url_name pk=event.pk registrant_id=r.pk %}" style="display:inline">
+                  {% csrf_token %}
+                  <button class="button button-small button-secondary"
+                          onclick="return confirm('Unregister {{ r.email }}?');">
+                    Unregister
+                  </button>
+                </form>
+              </td>
+  
+              {% for cell in r.answer_cells %}
+                <td>
+                  {% if cell.url %}
+                    <a href="{{ cell.url }}" target="_blank" rel="noopener noreferrer">{{ cell.text }}</a>
+                  {% else %}
+                    {{ cell.text }}
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
     {% if page_obj.paginator.num_pages > 1 %}
       <nav class="pagination">

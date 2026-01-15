@@ -77,6 +77,7 @@ def build_dynamic_form(event, reg_type, invite=None):
     """
 
     fields = []
+    conditional_rules = []
 
     email_initial = invite.email if getattr(invite, "email", None) else None
 
@@ -130,6 +131,44 @@ def build_dynamic_form(event, reg_type, invite=None):
 
         if ff.field_type == "multiline":
             kwargs["widget"] = forms.Textarea()
+        
+        if ff.field_type == "conditional_text":
+            needs_key = f"{clean_name}__enabled"
+            details_key = f"{clean_name}__details"
+
+            checkbox_label = ff.conditional_label.strip() if getattr(ff, "conditional_label", "") else ff.label
+            details_label = ff.conditional_details_label.strip() if getattr(ff, "conditional_details_label", "") else "Please specify"
+            details_help = getattr(ff, "conditional_details_help_text", "") or ""
+
+            needs_field = forms.BooleanField(
+                label=checkbox_label,
+                required=False,
+                help_text=ff.help_text,
+            )
+            needs_field.widget.attrs["class"] = BASE_INPUT_CLASS
+            needs_field.widget.attrs["data-conditional-target"] = details_key
+
+            details_field = forms.CharField(
+                label=details_label,
+                required=False,  # enforced conditionally in clean()
+                help_text=details_help,
+                widget=forms.Textarea(attrs={
+                    "rows": 3,
+                    "class": BASE_INPUT_CLASS,
+                    "data-conditional-details-for": needs_key,
+                }),
+            )
+
+            fields.append((needs_key, needs_field))
+            fields.append((details_key, details_field))
+
+            conditional_rules.append({
+                "needs_key": needs_key,
+                "details_key": details_key,
+                "details_required": bool(getattr(ff, "conditional_details_required", True)),
+                "error": f"{details_label}: this field is required.",
+            })
+            continue
         
         field_obj = FieldClass(**kwargs)
 
