@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags webpack_loader %}
+{% block title %}Register — {{ event.title }} · {{ reg_type.name }}{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'eventPage' 'js' %}
+{% endblock %}
+
+{% block content %}
+{% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
+<section class="registration-banner-image-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col">
+        {% if event.registration_image_banner %}
+          {% image event.registration_image_banner width-1280 %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<section class="event-registration-form-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
+        <p class="text-muted mb-4">Registration type: {{ reg_type.name }}</p>
+  
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} mb-4">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+  
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {# Non-field errors if you render them here #}
+          {% if form.non_field_errors %}
+            <div class="cigi-alert">
+              <ul>{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+            </div>
+          {% endif %}
+
+          {# Basic identity — two columns #}
+          <div class="cigi-grid cigi-grid--2">
+            {% include "events/includes/_field.html" with field=form.first_name %}
+            {% include "events/includes/_field.html" with field=form.last_name %}
+          </div>
+
+          {% include "events/includes/_field.html" with field=form.email %}
+
+          {# Dynamic questions (skip core + honeypot) #}
+          {% for field in form %}
+            {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
+              {% include "events/includes/_field.html" with field=field %}
+            {% endif %}
+          {% endfor %}
+
+          {# Honeypot: render but hide visually #}
+          {% if form.website %}
+            <div class="visually-hidden" aria-hidden="true">
+              {{ form.website.label_tag }}{{ form.website }}
+            </div>
+          {% endif %}
+
+          <div class="cigi-actions">
+            <button type="submit" class="btn btn-primary">Submit registration</button>
+            <a class="btn" href="{{ event.url }}">Back to event</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
