@@ -113,6 +113,7 @@ def search_api(request):
         experts=request.GET.get('expert', None),
         countries=request.GET.getlist('country', None),
         exclusions=request.GET.getlist('exclusions', None),
+        additional_authored_pages=request.GET.get('additional_authored_pages', None),
     )
     promoted_pages = []
     if request.GET.get('searchpage'):
