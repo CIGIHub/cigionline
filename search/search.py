@@ -220,7 +220,7 @@ class CIGIOnlineSearchQueryCompiler:
             pub_type_exclusions.append('Working Paper')
         exclusions = {'contentpage__publicationpage__publication_type__title__in': pub_type_exclusions}
         base = Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
-        
+
         if self.additional_authored_pages:
             forced = Page.objects.filter(id__in=self.additional_authored_pages.split(',')).live()
             return (base | forced).distinct()

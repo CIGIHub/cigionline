@@ -353,7 +353,7 @@ class PersonPage(
     @property
     def is_external_profile(self):
         return self.person_types.filter(name='External profile').exists()
-    
+
     def additional_authored_pages_json(self):
         pages = []
         for block in self.additional_authored_pages:
