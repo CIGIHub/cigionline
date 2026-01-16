@@ -53,9 +53,11 @@
   {% render_bundle 'personPage' 'js' attrs='defer' %}
 {% endblock %}
 
+
 {% block body_class %}person-page{% for person_type in page.person_types.all %} {{person_type|slugify}}{% endfor %}{% endblock %}
 
 {% block content %}
+{{ self.additional_authored_pages_json|json_script:"additional-authored-pages" }}
   <article>
     <section class="hero{% if page.archive %} archived{% endif %}">
       <div class="container">

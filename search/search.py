@@ -156,6 +156,7 @@ class CIGIOnlineSearchQueryCompiler:
         experts,
         countries,
         exclusions,
+        additional_authored_pages,
     ):
         if content_type is None:
             content_type = 'wagtailcore.Page'
@@ -177,6 +178,7 @@ class CIGIOnlineSearchQueryCompiler:
         self.experts = None
         self.countries = None
         self.exclusions = None
+        self.additional_authored_pages = None
 
         if contenttypes and len(contenttypes) > 0:
             self.contenttypes = contenttypes
@@ -208,6 +210,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.countries = countries
         if exclusions and len(exclusions) > 0:
             self.exclusions = exclusions
+        if additional_authored_pages and len(additional_authored_pages) > 0:
+            self.additional_authored_pages = additional_authored_pages
 
     @property
     def queryset(self):
@@ -215,8 +219,13 @@ class CIGIOnlineSearchQueryCompiler:
         if 'working-papers' in self.exclusions if self.exclusions else []:
             pub_type_exclusions.append('Working Paper')
         exclusions = {'contentpage__publicationpage__publication_type__title__in': pub_type_exclusions}
+        base = Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 
-        return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
+        if self.additional_authored_pages:
+            forced = Page.objects.filter(id__in=self.additional_authored_pages.split(',')).live()
+            return (base | forced).distinct()
+
+        return base
 
     def get_query(self):
         if self.searchtext:
@@ -488,7 +497,8 @@ def cigi_search(content_type=None,
                 eventaccess=None,
                 experts=None,
                 countries=None,
-                exclusions=None):
+                exclusions=None,
+                additional_authored_pages=None,):
     return CIGIOnlineElasticsearchResults(
         get_search_backend(),
         CIGIOnlineSearchQueryCompiler(content_type,
@@ -508,7 +518,8 @@ def cigi_search(content_type=None,
                                       eventaccess,
                                       experts,
                                       countries,
-                                      exclusions),
+                                      exclusions,
+                                      additional_authored_pages)
     )
 
 
