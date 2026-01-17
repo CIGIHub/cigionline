@@ -81,6 +81,156 @@ from .models_settings import EmailFormSettings
 import math
 
 
+def _extract_person_ids_from_persons_list_block(block_value):
+    ids = []
+    for child in block_value.get("persons", []):
+        if child.block_type == "person" and child.value:
+            ids.append(child.value.id)
+    return sorted(set(ids))
+
+
+def get_cohort_person_ids_from_body(body, cohort_label):
+    target = (cohort_label or "").strip().lower()
+    ids = []
+
+    for block in body:
+        if block.block_type != "persons_list_block":
+            continue
+
+        v = block.value
+        cohort = (v.get("cohort") or "").strip().lower()
+        title = (v.get("title") or "").strip().lower()
+
+        if cohort == target or title == target:
+            ids = ids + _extract_person_ids_from_persons_list_block(v)
+
+    return ids
+
+
+@staticmethod
+def build_alumni_theme_people_map(alumni_person_ids):
+    from collections import defaultdict
+    from people.models import PersonPage
+    from publications.models import PublicationPage
+    if not alumni_person_ids:
+        return {"themes": [], "theme_to_person_ids": {}}
+
+    alumni_qs = PersonPage.objects.filter(id__in=alumni_person_ids)
+
+    papers_qs = (
+        PublicationPage.objects.live().public()
+        .filter(publication_type__title="Working Paper")
+        .filter(authors__author__in=alumni_qs)
+        .distinct()
+        .prefetch_related(
+            models.Prefetch(
+                "authors",
+                queryset=ContentPageAuthor.objects.select_related("author").order_by("sort_order"),
+            ),
+            "topics",
+            "topics__program_theme",
+        )
+    )
+
+    theme_to_people = defaultdict(set)
+    themes = {}
+
+    for paper in papers_qs:
+        paper_author_ids = {rel.author_id for rel in paper.authors.all() if rel.author_id in alumni_person_ids}
+
+        for topic in paper.topics.all():
+            theme = getattr(topic, "program_theme", None)
+            if not theme:
+                continue
+
+            themes[theme.id] = {"id": theme.id, "title": theme.title, "slug": theme.slug}
+            for pid in paper_author_ids:
+                theme_to_people[theme.id].add(pid)
+
+    # finalize
+    themes_list = sorted(themes.values(), key=lambda t: (t["title"] or "").lower())
+    theme_to_person_ids = {str(tid): sorted(pids) for tid, pids in theme_to_people.items()}
+
+    return {"themes": themes_list, "theme_to_person_ids": theme_to_person_ids}
+
+
+@staticmethod
+def build_theme_topic_papers_dataset(papers_qs):
+    # import slugify locally (safe) to avoid top-level imports causing cycles
+    from django.utils.text import slugify
+
+    themes = {}  # theme_id -> payload
+
+    for paper in papers_qs:
+        author_names = [rel.author.title for rel in paper.authors.all() if rel.author]
+
+        year = None
+        if getattr(paper, "publication_date", None):
+            year = paper.publication_date.year
+        elif getattr(paper, "first_published_at", None):
+            year = paper.first_published_at.year
+
+        paper_payload = {
+            "id": paper.id,
+            "title": paper.title,
+            "url": paper.url,
+            "year": year,
+            "authors": author_names,
+        }
+        print(paper_payload)
+
+        for topic in paper.topics.all():
+            print(topic)
+            theme = getattr(topic, "program_theme", None)
+            if not theme:
+                continue
+
+            theme_entry = themes.get(theme.id)
+            if not theme_entry:
+                theme_entry = {
+                    "id": theme.id,
+                    "title": theme.title,
+                    "slug": getattr(theme, "slug", None) or slugify(theme.title),
+                    "topics": {},
+                }
+                themes[theme.id] = theme_entry
+
+            topics_map = theme_entry["topics"]
+            topic_entry = topics_map.get(topic.id)
+            if not topic_entry:
+                topic_entry = {
+                    "id": topic.id,
+                    "title": topic.title,
+                    "slug": getattr(topic, "slug", None) or slugify(topic.title),
+                    "papers": [],
+                    "_paper_ids": set(),  # internal dedupe per topic
+                }
+                topics_map[topic.id] = topic_entry
+
+            if paper.id not in topic_entry["_paper_ids"]:
+                topic_entry["_paper_ids"].add(paper.id)
+                topic_entry["papers"].append(paper_payload)
+
+    # finalize: maps -> lists + sorting
+    theme_list = list(themes.values())
+    theme_list.sort(key=lambda t: t["title"].lower())
+
+    for t in theme_list:
+        topic_list = list(t["topics"].values())
+        topic_list.sort(key=lambda x: x["title"].lower())
+
+        for tp in topic_list:
+            tp.pop("_paper_ids", None)
+            tp["papers"].sort(
+                key=lambda p: ((p["year"] or 0), p["title"].lower()),
+                reverse=True,
+            )
+
+        t["topics"] = topic_list
+
+    return {"themes": theme_list}
+
+
 class BasicPageAbstract(models.Model):
     """Page with subtitle."""
 
@@ -813,6 +963,19 @@ class BasicPage(
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
         pages = Page.objects.specific().in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
+
+    def get_cohort_data(self):
+        current_ids = get_cohort_person_ids_from_body(self.body, "current")
+        alumni_ids  = get_cohort_person_ids_from_body(self.body, "alumni")
+        alumni_people = Page.objects.filter(id__in=alumni_ids).specific()
+        alumni_theme_data = build_alumni_theme_people_map(alumni_ids)
+
+        return {
+            "current_person_ids": current_ids,
+            "alumni_person_ids": alumni_ids,
+            "alumni_people": alumni_people,
+            "alumni_theme_data": alumni_theme_data,
+        }
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)

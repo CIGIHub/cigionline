@@ -1,0 +1,35 @@
+{% load wagtailimages_tags %}
+
+<li>
+  <div class="person-info">
+    <a href="{{ person.url }}" class="person-photo">
+      <div class="img-wrapper">
+        {% if person.image_square %}
+        {% image person.image_square fill-300x300 %}
+        {% endif %}
+      </div>
+    </a>
+
+    <div>
+      <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
+      <div class="person-function">
+        {% if page == 'dph_landing' and person.position_dph %}
+        {{ person.position_dph }}
+        {% else %}
+        {{ person.position }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="person-description">
+    {% if person.dph_bio %}
+    {{ person.dph_bio|safe }}
+    {% elif self.bio_source_field and self.bio_source_field == 'short_bio' %}
+    {{ person.short_bio|safe }}
+    {% else %}
+    {% for block in person.body %}
+    {{ block.value|safe }}
+    {% endfor %}
+    {% endif %}
+  </div>
+</li>
