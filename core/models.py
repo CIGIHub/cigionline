@@ -156,10 +156,9 @@ def build_alumni_theme_people_map(alumni_person_ids):
 
 @staticmethod
 def build_theme_topic_papers_dataset(papers_qs):
-    # import slugify locally (safe) to avoid top-level imports causing cycles
     from django.utils.text import slugify
 
-    themes = {}  # theme_id -> payload
+    themes = {}
 
     for paper in papers_qs:
         author_names = [rel.author.title for rel in paper.authors.all() if rel.author]
@@ -177,10 +176,8 @@ def build_theme_topic_papers_dataset(papers_qs):
             "year": year,
             "authors": author_names,
         }
-        print(paper_payload)
 
         for topic in paper.topics.all():
-            print(topic)
             theme = getattr(topic, "program_theme", None)
             if not theme:
                 continue
@@ -211,7 +208,6 @@ def build_theme_topic_papers_dataset(papers_qs):
                 topic_entry["_paper_ids"].add(paper.id)
                 topic_entry["papers"].append(paper_payload)
 
-    # finalize: maps -> lists + sorting
     theme_list = list(themes.values())
     theme_list.sort(key=lambda t: t["title"].lower())
 

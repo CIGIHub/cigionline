@@ -400,10 +400,8 @@ function cohortTabs() {
     pane.setAttribute('aria-labelledby', `${slug}-tab`);
     pane.dataset.cohortTitleSlug = slug;
 
-    // ✅ Alumni tab should use theme filter (NOT the cohort dropdown like "Fall 2024")
     const isAlumniTab = (slug || '').trim().toLowerCase() === 'alumni';
     if (isAlumniTab) {
-      // Build the alumni theme UI right into the pane
       const toolbar = document.createElement('div');
       toolbar.className = 'toolbar';
 
@@ -431,8 +429,6 @@ function cohortTabs() {
       pane.appendChild(block);
       panels.appendChild(pane);
 
-      // Only init once the elements exist
-      // If Alumni is initially active, init now; otherwise init when tab is clicked.
       if (idx === 0) initAlumniThemeFilter();
 
       idx += 1;
