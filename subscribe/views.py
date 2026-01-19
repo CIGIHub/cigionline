@@ -8,16 +8,6 @@ from django.shortcuts import render
 from mailchimp_marketing.api_client import ApiClientError
 
 logger = logging.getLogger('cigionline')
-api_key = None
-server = None
-list_id = None
-
-if hasattr(settings, 'MAILCHIMP_API_KEY_DPH'):
-    api_key = settings.MAILCHIMP_API_KEY_DPH
-if hasattr(settings, 'MAILCHIMP_DATA_CENTER_DPH'):
-    server = settings.MAILCHIMP_DATA_CENTER_DPH
-if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_DPH'):
-    list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_DPH
 
 
 class EmailOnlySubscribeForm(forms.Form):
@@ -26,163 +16,102 @@ class EmailOnlySubscribeForm(forms.Form):
     }))
 
 
-def subscribe_dph(request):
-    status = None
-    email = None
-    form = EmailOnlySubscribeForm(request.POST)
-    if form.is_valid():
-        email = form.cleaned_data['email']
-        member_info = {
-            'email_address': email,
-            'status': 'pending'
+def _get_mailchimp_config(list_key):
+    mapping = {
+        'dph': {
+            'api_key': 'MAILCHIMP_API_KEY_DPH',
+            'server': 'MAILCHIMP_DATA_CENTER_DPH',
+            'list_id': 'MAILCHIMP_NEWSLETTER_LIST_ID_DPH',
+            'template': 'subscribe/subscribe_page_landing.html',
+            'subscription_type': 'dph',
+        },
+        'think7': {
+            'api_key': 'MAILCHIMP_API_KEY_THINK7',
+            'server': 'MAILCHIMP_DATA_CENTER_THINK7',
+            'list_id': 'MAILCHIMP_NEWSLETTER_LIST_ID_THINK7',
+            'template': 'think7/subscribe_page_landing.html',
+            'subscription_type': 'think7',
+        },
+        'digital_finance': {
+            'api_key': 'MAILCHIMP_API_KEY_DIGITAL_FINANCE',
+            'server': 'MAILCHIMP_DATA_CENTER_DIGITAL_FINANCE',
+            'list_id': 'MAILCHIMP_NEWSLETTER_LIST_ID_DIGITAL_FINANCE',
+            'template': 'subscribe/subscribe_page_landing.html',
+            'subscription_type': 'digital_finance',
+        },
+        'safer_digital_spaces': {
+            'api_key': 'MAILCHIMP_API_KEY_SAFER_DIGITAL_SPACES',
+            'server': 'MAILCHIMP_DATA_CENTER_SAFER_DIGITAL_SPACES',
+            'list_id': 'MAILCHIMP_NEWSLETTER_LIST_ID_SAFER_DIGITAL_SPACES',
+            'template': 'subscribe/subscribe_page_landing.html',
+            'subscription_type': 'safer_digital_spaces',
         }
+    }
 
-    if not email:
-        return JsonResponse({'error': 'Email is required'}, status=400)
+    cfg = mapping.get(list_key)
+    if not cfg:
+        return None
+
+    return {
+        'api_key': getattr(settings, cfg['api_key'], None),
+        'server': getattr(settings, cfg['server'], None),
+        'list_id': getattr(settings, cfg['list_id'], None),
+        'template': cfg['template'],
+        'subscription_type': cfg['subscription_type'],
+    }
+
+
+def _handle_mailchimp_subscription(api_key, server, list_id, email):
+    client = MailchimpMarketing.Client()
+    client.set_config({'api_key': api_key, 'server': server})
+
+    member_id = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
+    member_info = {'email_address': email, 'status': 'pending'}
 
     try:
-        if api_key and server and list_id:
-            client = MailchimpMarketing.Client()
-            client.set_config({
-                'api_key': api_key,
-                'server': server,
-            })
-
-            member_id = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
-            response = client.lists.get_list_member(list_id, member_id)
-
-            if response['status'] == 'unsubscribed':
-                status = 'unsubscribed'
-            elif response['status'] == 'subscribed':
-                status = 'subscribed'
-            elif response['status'] == 'pending':
-                status = 'pending'
+        response = client.lists.get_list_member(list_id, member_id)
+        status = None
+        if response.get('status') == 'unsubscribed':
+            status = 'unsubscribed'
+        elif response.get('status') == 'subscribed':
+            status = 'subscribed'
+        elif response.get('status') == 'pending':
+            status = 'pending'
+        return status
     except ApiClientError as error:
-        error_text = (error.text)
-        logger.error('An error occurred with Mailchimp: {}'.format(error_text))
-
+        error_text = getattr(error, 'text', str(error))
+        logger.error('An error occurred with Mailchimp: %s', error_text)
+        # If member not found, add them
         if '404' in error_text:
             try:
-                response = client.lists.add_list_member(list_id, member_info)
+                client.lists.add_list_member(list_id, member_info)
+                return 'subscribed_success'
             except ApiClientError as error:
-                logger.error('An error occurred with Mailchimp: {}'.format(error.text))
-                status = 'error'
-            status = 'subscribed_success'
-
-    return render(request, 'subscribe/subscribe_page_landing.html', {'status': status, 'subscription_type': 'dph'})
+                logger.error('An error occurred adding member to Mailchimp: %s', getattr(error, 'text', str(error)))
+                return 'error'
+        return 'error'
 
 
-def subscribe_think7(request):
-    api_key = None
-    server = None
-    list_id = None
+def subscribe_to_list(request, list_key):
+    cfg = _get_mailchimp_config(list_key)
+    if not cfg:
+        return JsonResponse({'error': 'Unknown list'}, status=400)
 
-    if hasattr(settings, 'MAILCHIMP_API_KEY_THINK7'):
-        api_key = settings.MAILCHIMP_API_KEY_THINK7
-    if hasattr(settings, 'MAILCHIMP_DATA_CENTER_THINK7'):
-        server = settings.MAILCHIMP_DATA_CENTER_THINK7
-    if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_THINK7'):
-        list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_THINK7
-
-    status = None
-    email = None
     form = EmailOnlySubscribeForm(request.POST)
-    if form.is_valid():
-        email = form.cleaned_data['email']
-        member_info = {
-            'email_address': email,
-            'status': 'pending'
-        }
-
-    if not email:
+    if not form.is_valid():
         return JsonResponse({'error': 'Email is required'}, status=400)
 
-    try:
-        if api_key and server and list_id:
-            client = MailchimpMarketing.Client()
-            client.set_config({
-                'api_key': api_key,
-                'server': server,
-            })
+    email = form.cleaned_data['email']
+    api_key = cfg['api_key']
+    server = cfg['server']
+    list_id = cfg['list_id']
 
-            member_id = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
-            response = client.lists.get_list_member(list_id, member_id)
+    if not (api_key and server and list_id):
+        logger.error('Missing Mailchimp configuration for list: %s', list_key)
+        return JsonResponse({'error': 'Mailchimp configuration missing for this list'}, status=500)
 
-            if response['status'] == 'unsubscribed':
-                status = 'unsubscribed'
-            elif response['status'] == 'subscribed':
-                status = 'subscribed'
-            elif response['status'] == 'pending':
-                status = 'pending'
-    except ApiClientError as error:
-        error_text = (error.text)
-        logger.error('An error occurred with Mailchimp: {}'.format(error_text))
+    status = _handle_mailchimp_subscription(api_key, server, list_id, email)
+    print(status)
+    print(cfg['subscription_type'])
 
-        if '404' in error_text:
-            try:
-                response = client.lists.add_list_member(list_id, member_info)
-            except ApiClientError as error:
-                logger.error('An error occurred with Mailchimp: {}'.format(error.text))
-                status = 'error'
-            status = 'subscribed_success'
-
-    return render(request, 'think7/subscribe_page_landing.html', {'status': status, 'subscription_type': 'think7'})
-
-
-def subscribe_digital_finance(request):
-    api_key = None
-    server = None
-    list_id = None
-
-    if hasattr(settings, 'MAILCHIMP_API_KEY_DIGITAL_FINANCE'):
-        api_key = settings.MAILCHIMP_API_KEY_DIGITAL_FINANCE
-    if hasattr(settings, 'MAILCHIMP_DATA_CENTER_DIGITAL_FINANCE'):
-        server = settings.MAILCHIMP_DATA_CENTER_DIGITAL_FINANCE
-    if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID_DIGITAL_FINANCE'):
-        list_id = settings.MAILCHIMP_NEWSLETTER_LIST_ID_DIGITAL_FINANCE
-    print(api_key, server, list_id)
-    status = None
-    email = None
-    form = EmailOnlySubscribeForm(request.POST)
-    if form.is_valid():
-        email = form.cleaned_data['email']
-        member_info = {
-            'email_address': email,
-            'status': 'pending'
-        }
-
-    if not email:
-        return JsonResponse({'error': 'Email is required'}, status=400)
-
-    try:
-        if api_key and server and list_id:
-            client = MailchimpMarketing.Client()
-            client.set_config({
-                'api_key': api_key,
-                'server': server,
-            })
-
-            member_id = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
-            response = client.lists.get_list_member(list_id, member_id)
-            print(response)
-
-            if response['status'] == 'unsubscribed':
-                status = 'unsubscribed'
-            elif response['status'] == 'subscribed':
-                status = 'subscribed'
-            elif response['status'] == 'pending':
-                status = 'pending'
-    except ApiClientError as error:
-        error_text = (error.text)
-        logger.error('An error occurred with Mailchimp: {}'.format(error_text))
-
-        if '404' in error_text:
-            try:
-                response = client.lists.add_list_member(list_id, member_info)
-                print(response)
-            except ApiClientError as error:
-                logger.error('An error occurred with Mailchimp: {}'.format(error.text))
-                status = 'error'
-            status = 'subscribed_success'
-
-    return render(request, 'subscribe/subscribe_page_landing.html', {'status': status, 'subscription_type': 'digital_finance'})
+    return render(request, cfg['template'], {'status': status, 'subscription_type': cfg['subscription_type']})

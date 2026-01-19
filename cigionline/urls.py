@@ -13,7 +13,7 @@ from search import views as search_views
 from events import views as events_views
 from articles import views as article_views
 from annual_reports import views as annual_report_views
-from subscribe.views import subscribe_dph, subscribe_think7, subscribe_digital_finance
+from subscribe.views import subscribe_to_list
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.contrib.sitemaps.views import sitemap
@@ -50,9 +50,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/years/$', core_views.years),
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
     re_path(r'^api/document_uploads/download/', DocumentZipAPIView.as_view(), name='document_zip_api'),
-    re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
-    re_path(r'^subscribe_think7$', subscribe_think7, name='subscribe_think7'),
-    re_path(r'^subscribe_digital_finance$', subscribe_digital_finance, name='subscribe_digital_finance'),
+    re_path(r'^subscribe/(?P<list_key>[^/]+)/$', subscribe_to_list, name='subscribe_to_list'),
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),

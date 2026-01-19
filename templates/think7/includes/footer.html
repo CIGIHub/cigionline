@@ -27,7 +27,7 @@
           <p>
             Sign up for the email list to stay up to date:
           </p>
-          <form id='subscribe-form-think7' action="{% url 'subscribe_think7' %}" method="POST">
+          <form id='subscribe-form-think7' action="{% url 'subscribe_to_list' 'think7' %}" method="POST">
             {% csrf_token %}
             <input type="email" name="email" placeholder="enter your email" required>
             <input type="submit" value="Sign up">
