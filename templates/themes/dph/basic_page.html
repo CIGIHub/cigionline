@@ -70,6 +70,17 @@
       </div>
     </section>
   {% elif self.slug == "current-cohort-alumni" %}
+    {% with cohort=self.get_cohort_data %}
+      {{ cohort.alumni_theme_data|json_script:"alumni-theme-data" }}
+
+      <div id="alumni-person-templates" class="d-none">
+        {% for person in cohort.alumni_people %}
+          <template data-person-id="{{ person.id }}">
+            {% include "./includes/person_card.html" with person=person %}
+          </template>
+        {% endfor %}
+      </div>
+    {% endwith %}
     <section class="body">
       <div class="container">
         <div class="row justify-content-center">
@@ -114,7 +125,11 @@
               </div>
             </div>
 
-            <div id="cohorts-panels" class="cohorts-list tab-content"></div>
+            <div class="row justify-content-center">
+              <div class="col-12">
+                <div id="cohorts-panels" class="cohorts-list tab-content"></div>
+              </div>
+            </div>
 
             <div class="row justify-content-center">
               <div class="col">
