@@ -966,7 +966,7 @@ class BasicPage(
 
     def get_cohort_data(self):
         current_ids = get_cohort_person_ids_from_body(self.body, "current")
-        alumni_ids  = get_cohort_person_ids_from_body(self.body, "alumni")
+        alumni_ids = get_cohort_person_ids_from_body(self.body, "alumni")
         alumni_people = Page.objects.filter(id__in=alumni_ids).specific()
         alumni_theme_data = build_alumni_theme_people_map(alumni_ids)
 
