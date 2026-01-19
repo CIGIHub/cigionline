@@ -116,6 +116,7 @@ def build_alumni_theme_people_map(alumni_person_ids):
         return {"themes": [], "theme_to_person_ids": {}}
 
     alumni_qs = PersonPage.objects.filter(id__in=alumni_person_ids)
+    person_map = {p.id: p for p in alumni_qs}
 
     papers_qs = (
         PublicationPage.objects.live().public()
@@ -151,6 +152,18 @@ def build_alumni_theme_people_map(alumni_person_ids):
     themes_list = sorted(themes.values(), key=lambda t: (t["title"] or "").lower())
     theme_to_person_ids = {str(tid): sorted(pids) for tid, pids in theme_to_people.items()}
 
+    def last_name_key(pid):
+        p = person_map.get(pid)
+        if not p:
+            return ''
+        last = getattr(p, 'last_name', None)
+        if last:
+            return last.strip().lower()
+        parts = (p.title or '').strip().split()
+        return parts[-1].lower() if parts else ''
+
+    themes_list = sorted(themes.values(), key=lambda t: (t["title"] or "").lower())
+    theme_to_person_ids = {str(tid): sorted(list(pids), key=last_name_key) for tid, pids in theme_to_people.items()}
     return {"themes": themes_list, "theme_to_person_ids": theme_to_person_ids}
 
 
