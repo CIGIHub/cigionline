@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags cache %}
 
 {% block theme_css %}
   {% render_bundle 'themeDPH' 'css' %}
@@ -141,6 +141,8 @@
       </div>
     </section>
   {% else %}
+  {% preview_cache_bust as is_preview %}
+  {% cache 86400 dph_body self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview self.featured_content_revision_created_at|date:"c" %}
     <section class="body">
       <div class="container">
         <div class="row justify-content-center">
@@ -155,6 +157,7 @@
         </div>
       </div>
     </section>
+  {% endcache %}
   {% endif %}
 {% endblock content %}
 
