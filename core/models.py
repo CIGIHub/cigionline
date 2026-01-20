@@ -119,7 +119,7 @@ def build_alumni_theme_people_map(alumni_person_ids):
     person_map = {p.id: p for p in alumni_qs}
 
     papers_qs = (
-        PublicationPage.objects.live().public()
+        PublicationPage.objects.public()
         .filter(publication_type__title="Working Paper")
         .filter(authors__author__in=alumni_qs)
         .distinct()
