@@ -1026,7 +1026,13 @@ class RegistrationFormTemplate(ClusterableModel):
     panels = [
         FieldPanel("title"),
         FieldPanel("description"),
-        InlinePanel("fields", label="Fields"),
+        MultiFieldPanel(
+            [
+                InlinePanel("fields", label="Fields"),
+            ],
+            heading="Form Fields",
+            classname="js-registration-fields-inline"
+        ),
     ]
 
     def __str__(self):

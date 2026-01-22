@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
+from django.utils.html import format_html
 from wagtail import hooks
 from wagtail.documents.models import Document
 from wagtail.admin.viewsets.model import ModelViewSet
@@ -530,3 +531,11 @@ class EventViewSetGroup(ViewSetGroup):
 @hooks.register('register_admin_viewset')
 def register_event_viewsets():
     return EventViewSetGroup()
+
+
+@hooks.register("insert_global_admin_js")
+def registration_fields_admin_js():
+    return format_html(
+        '<script src="{}"></script>',
+        "/static/js/admin/registration_fields_admin.js",
+    )
