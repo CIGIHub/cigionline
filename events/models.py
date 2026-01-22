@@ -868,24 +868,6 @@ class RegistrationFormField(AbstractFormField):
         ),
     ]
 
-    def clean(self):
-        super().clean()
-
-        if not self.template_id:
-            return
-
-        ev_slugs = set(self.event.registration_types.values_list("slug", flat=True))
-        bad_v = [s for s in _split_slugs(self.visible_type_slugs) if s not in ev_slugs]
-        bad_r = [s for s in _split_slugs(self.required_type_slugs) if s not in ev_slugs]
-
-        errors = {}
-        if bad_v:
-            errors["visible_type_slugs"] = [f"Unknown/foreign slugs: {', '.join(bad_v)}"]
-        if bad_r:
-            errors["required_type_slugs"] = [f"Unknown/foreign slugs: {', '.join(bad_r)}"]
-        if errors:
-            raise ValidationError(errors)
-
 
 class Invite(Orderable):
     event = ParentalKey("events.EventPage", related_name="invites", on_delete=models.CASCADE)
