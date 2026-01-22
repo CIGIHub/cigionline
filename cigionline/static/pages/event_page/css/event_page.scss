@@ -228,7 +228,9 @@
   }
 
   /* Text-ish inputs */
-  .cigi-input {
+  .cigi-input,
+  input[type='text'],
+  input[type='email'] {
     width: 100%;
     display: block;
     padding: 0.625rem 0.75rem;

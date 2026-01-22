@@ -47,7 +47,6 @@
 
           {% include "events/includes/_field.html" with field=form.email %}
 
-          {# Dynamic questions (skip core + honeypot) #}
           {% for field in form %}
             {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
               {% include "events/includes/_field.html" with field=field %}

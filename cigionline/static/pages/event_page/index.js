@@ -34,4 +34,28 @@ document.addEventListener('DOMContentLoaded', () => {
     sync();
     toggle.addEventListener('change', sync);
   });
+
+  document
+    .querySelectorAll("[data-conditional-select='1']")
+    .forEach((select) => {
+      const targetName = select.getAttribute('data-conditional-target');
+      const triggerValue =
+        select.getAttribute('data-conditional-trigger-value') || 'Other';
+      const otherInput = document.getElementById(`id_${targetName}`);
+      if (!otherInput) return;
+
+      const wrapper =
+        otherInput.closest('.cigi-field') ||
+        otherInput.closest('.field') ||
+        otherInput.parentElement;
+
+      const sync = () => {
+        const show = (select.value || '').trim() === triggerValue;
+        if (wrapper) wrapper.style.display = show ? '' : 'none';
+        if (!show) otherInput.value = '';
+      };
+
+      sync();
+      select.addEventListener('change', sync);
+    });
 });

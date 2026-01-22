@@ -364,7 +364,16 @@ class RegistrationReportViewSet(ViewSet):
         for ff in form_fields:
             base = f"f_{ff.field_key}"
 
-            if ff.field_type == "conditional_text":
+            if ff.field_type == "conditional_dropdown_other":
+                trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
+                columns.append({
+                    "label": ff.label,
+                    "type": "conditional_dropdown_other",
+                    "key_select": base,
+                    "key_other": f"{base}__other",
+                    "trigger_value": trigger,
+                })
+            elif ff.field_type == "conditional_text":
                 columns.append({
                     "label": ff.label,
                     "type": "conditional_text",
@@ -409,6 +418,26 @@ class RegistrationReportViewSet(ViewSet):
                         "text": (details or "Yes") if enabled else "",
                         "url": "",
                     })
+                    continue
+
+                # --- CONDITIONAL DROPDOWN + OTHER TEXTBOX (combined column) ---
+                if col["type"] == "conditional_dropdown_other":
+                    selected = (ans.get(col["key_select"]) or "").strip()
+                    other = (ans.get(col["key_other"]) or "").strip()
+                    trigger = (col.get("trigger_value") or "Other").strip()
+
+                    # display rules:
+                    # - if nothing selected: blank
+                    # - if selected == trigger and other has text: show other (or "Other — <other>")
+                    # - otherwise show selected
+                    if not selected:
+                        text = ""
+                    elif selected == trigger:
+                        text = f"{trigger} — {other}" if other else trigger
+                    else:
+                        text = selected
+
+                    cells.append({"text": text, "url": ""})
                     continue
 
                 # --- NORMAL FIELDS ---
@@ -512,6 +541,7 @@ class RegistrationFormTemplate(ModelViewSet):
     ]
     search_fields = ('title',)
     ordering = ['title']
+    panels = RegistrationFormTemplate.panels
 
 
 class EventViewSetGroup(ViewSetGroup):

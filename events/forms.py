@@ -81,8 +81,8 @@ def build_dynamic_form(event, reg_type, invite=None):
 
     email_initial = invite.email if getattr(invite, "email", None) else None
 
-    fields.append(("first_name", forms.CharField(label="First name", required=True)))
-    fields.append(("last_name", forms.CharField(label="Last name", required=True)))
+    fields.append(("first_name", forms.CharField(label="First Name", required=True)))
+    fields.append(("last_name", forms.CharField(label="Last Name", required=True)))
     email_field = forms.EmailField(label="Email", required=True, initial=email_initial)
     if email_initial:
         email_field.widget.attrs["readonly"] = "readonly"
@@ -100,13 +100,14 @@ def build_dynamic_form(event, reg_type, invite=None):
         req_slugs = _split_slugs(ff.required_type_slugs)
         is_required = bool(ff.required) or _match(ff.required_rule, req_slugs, current_slug)
 
-        clean_name = get_field_clean_name(ff.label)
         key = f"f_{ff.field_key}"
         FieldClass = WAGTAIL_FIELD_MAP.get(ff.field_type, forms.CharField)
         kwargs = {"label": ff.label, "help_text": ff.help_text, "required": is_required}
 
         if ff.field_type in ("dropdown", "radio", "checkboxes", "multiselect", "date", "datetime", "file"):
             choices = [(x.strip(), x.strip()) for x in ff.choices.splitlines() if x.strip()]
+            if ff.field_type == "dropdown":
+                choices = [("", "Select an option…")] + choices
             kwargs["choices"] = choices
             if ff.field_type == "checkboxes":
                 kwargs["widget"] = forms.CheckboxSelectMultiple()
@@ -176,7 +177,52 @@ def build_dynamic_form(event, reg_type, invite=None):
                 "error": f"{details_label}: this field is required.",
             })
             continue
+        if ff.field_type == "conditional_dropdown_other":
+            base_key = f"f_{ff.field_key}"
+            select_key = base_key
+            other_key = f"{base_key}__other"
 
+            choices = [(x.strip(), x.strip()) for x in ff.choices.splitlines() if x.strip()]
+            choices = [("", "Select an option…")] + choices
+
+            other_value = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
+            other_label = (getattr(ff, "conditional_other_label", "") or "").strip() or "Please specify"
+            other_help = getattr(ff, "conditional_other_help_text", "") or ""
+            other_required = bool(getattr(ff, "conditional_other_required", True))
+
+            select_field = forms.ChoiceField(
+                label=ff.label,
+                required=is_required,
+                help_text=ff.help_text,
+                choices=choices,
+            )
+            select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS}".strip()
+
+            select_field.widget.attrs["data-conditional-select"] = "1"
+            select_field.widget.attrs["data-conditional-target"] = other_key
+            select_field.widget.attrs["data-conditional-trigger-value"] = other_value
+
+            other_field = forms.CharField(
+                label=other_label,
+                required=False,
+                help_text=other_help,
+                widget=forms.TextInput(attrs={"class": BASE_INPUT_CLASS}),
+            )
+
+            other_field.widget.attrs["data-conditional-details-for"] = select_key
+
+            fields.append((select_key, select_field))
+            fields.append((other_key, other_field))
+
+            conditional_rules.append({
+                "kind": "select_other",
+                "select_key": select_key,
+                "other_key": other_key,
+                "trigger_value": other_value,
+                "other_required": other_required,
+                "error": "Please specify.",
+            })
+            continue
         field_obj = FieldClass(**kwargs)
 
         # Add consistent CSS classes to the widget (so templates can stay simple)
@@ -216,13 +262,22 @@ def build_dynamic_form(event, reg_type, invite=None):
         cleaned = super(DynamicForm, self).clean()
 
         for rule in conditional_rules:
+            if rule.get("kind") == "select_other":
+                selected = (cleaned.get(rule["select_key"]) or "").strip()
+                other = (cleaned.get(rule["other_key"]) or "").strip()
+
+                if selected == rule["trigger_value"]:
+                    if rule["other_required"] and not other:
+                        self.add_error(rule["other_key"], rule["error"])
+                else:
+                    cleaned[rule["other_key"]] = ""
+                continue
             enabled = bool(cleaned.get(rule["needs_key"]))
             details = (cleaned.get(rule["details_key"]) or "").strip()
 
             if enabled and rule["details_required"] and not details:
                 self.add_error(rule["details_key"], "Please specify.")
             if not enabled:
-                # keep answers tidy
                 cleaned[rule["details_key"]] = ""
 
         return cleaned

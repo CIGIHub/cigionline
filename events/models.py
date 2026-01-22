@@ -786,6 +786,7 @@ class RegistrationFormField(AbstractFormField):
         ("hidden", _("Hidden field")),
         ("file", _("File upload")),
         ("conditional_text", _("Conditional text (checkbox + details)")),
+        ("conditional_dropdown_other", _("Conditional dropdown (Other + textbox)")),
     )
     field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     template = ParentalKey(
@@ -804,7 +805,7 @@ class RegistrationFormField(AbstractFormField):
     )
 
     field_type = models.CharField(
-        max_length=16,
+        max_length=32,
         choices=FIELD_CHOICES,
         default="singleline",
     )
@@ -838,6 +839,24 @@ class RegistrationFormField(AbstractFormField):
         default=True,
         help_text="Require details textbox when checkbox is checked.",
     )
+    conditional_other_value = models.CharField(
+        max_length=120,
+        blank=True,
+        help_text='Which dropdown value triggers the textbox (default: "Other").',
+    )
+    conditional_other_label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Label for the textbox shown when 'Other' is selected.",
+    )
+    conditional_other_help_text = models.TextField(
+        blank=True,
+        help_text="Help text for the 'Other' textbox.",
+    )
+    conditional_other_required = models.BooleanField(
+        default=True,
+        help_text="Require textbox when 'Other' is selected.",
+    )
 
     panels = AbstractFormField.panels + [
         MultiFieldPanel(
@@ -866,6 +885,16 @@ class RegistrationFormField(AbstractFormField):
             heading="Conditional form settings",
             classname="collapsible collapsed",
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel("conditional_other_value"),
+                FieldPanel("conditional_other_label"),
+                FieldPanel("conditional_other_help_text"),
+                FieldPanel("conditional_other_required"),
+            ],
+            heading="Conditional 'Other' settings",
+            classname="collapsible collapsed",
+        )
     ]
 
 
